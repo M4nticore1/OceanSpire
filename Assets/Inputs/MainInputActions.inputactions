@@ -1,0 +1,135 @@
+{
+    "version": 1,
+    "name": "MainInputActions",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "7ae312ad-20ea-4d2f-841c-e323a9eecc28",
+            "actions": [
+                {
+                    "name": "FirstTouchPress",
+                    "type": "Button",
+                    "id": "a39e9c99-ec81-4630-a87b-20cbcf2c854a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FirstTouchPosition",
+                    "type": "Value",
+                    "id": "d0aae5f3-3ac0-49e6-b4ae-83939263da7e",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "FirstTouchMove",
+                    "type": "Value",
+                    "id": "af6cf4ba-fd2f-48a3-8f43-c5731ab777a5",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "SecondTouchPress",
+                    "type": "Button",
+                    "id": "d0d67b95-a1f3-414e-9dde-ad540f12f6b1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SecondTouchPosition",
+                    "type": "Value",
+                    "id": "f38bdd01-a3bc-494d-82f6-f1117405a9ae",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "SecondTouchMove",
+                    "type": "Value",
+                    "id": "c95765a7-b5cf-44a9-9882-2f4f0645058c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3acc9355-f06d-494f-a65a-dcbe655f5150",
+                    "path": "<Touchscreen>/touch0/delta",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FirstTouchMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2bde3a2e-a10e-40aa-a197-5d5ca4840ce8",
+                    "path": "<Touchscreen>/touch0/position",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FirstTouchPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "21a296fc-b517-4fb5-a103-758c1b032c74",
+                    "path": "<Touchscreen>/touch0/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FirstTouchPress",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f63ff30e-f9a0-4216-a8eb-49daf513027d",
+                    "path": "<Touchscreen>/touch1/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondTouchPress",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "43257946-3e9e-48a0-ac30-4ad758fbf0dd",
+                    "path": "<Touchscreen>/touch1/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondTouchPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e58d4fab-2c66-4346-8375-b38595215507",
+                    "path": "<Touchscreen>/touch1/delta",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondTouchMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

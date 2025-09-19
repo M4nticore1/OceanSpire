@@ -1,0 +1,127 @@
+using System.Collections.Generic;
+using Unity.Mathematics;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UIElements;
+
+[AddComponentMenu("Buildings/ElevatorBuilding")]
+public class ElevatorBuilding : RoomBuilding
+{
+    private bool hasElevatorPlatform = false;
+    public ElevatorPlatformConstruction spawnedElevatorPlatform = null;
+
+    public List<Entity> elevatorWaitingPassengers { get; private set; } = new List<Entity>();
+    public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();
+
+    protected override void Update()
+    {
+        base.Update();
+    }
+
+    public override void Place(BuildingPlace buildingPlace)
+    {
+        base.Place(buildingPlace);
+
+        if (GetType() == typeof(ElevatorBuilding))
+            InvokeBuildingPlaced(this);
+    }
+
+    protected override void UpdateBuildingConstruction()
+    {
+        base.UpdateBuildingConstruction();
+
+        if (isConnectedAbove)
+        {
+            ElevatorBuilding elevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
+
+            spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
+        }
+        else if (isConnectedBelow)
+        {
+            ElevatorBuilding elevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
+
+            spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
+        }
+        else
+        {
+            //int levelData = levelIndex
+            ElevatorBuildingLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorBuildingLevelData;
+
+            if (buildingPosition == BuildingPosition.Straight)
+                spawnedElevatorPlatform = Instantiate(elevatorBuildingLevelData.elevatorPlatformStraight, cityManager.towerRoot);
+            else
+                spawnedElevatorPlatform = Instantiate(elevatorBuildingLevelData.elevatorPlatformCorner, cityManager.towerRoot);
+
+            spawnedElevatorPlatform.transform.position = transform.position;
+            spawnedElevatorPlatform.transform.rotation = transform.rotation;
+
+            spawnedElevatorPlatform.Build();
+            spawnedElevatorPlatform.SetElevatorBuilding(this);
+            //spawnedElevatorPlatform.SetMoveSpeed(elevatorBuildingLevelData.elevatorMoveSpeed);
+            //spawnedElevatorPlatform.SetFloorIndex(floorIndex);
+        }
+    }
+
+    public override void EnterBuilding(Entity entity)
+    {
+        base.EnterBuilding(entity);
+
+        Debug.Log(entity.pathIndex);
+
+        if (entity.pathBuildings[entity.pathIndex] == this)
+        {
+            Debug.Log("EnterBuilding (elevator)");
+
+            if (!entity.isElevatorRiding)
+            {
+                if (spawnedElevatorPlatform.currentFloorIndex == floorIndex)
+                {
+                    if (spawnedElevatorPlatform.elevatorRidingPassengers.Count < buildingLevelsData[levelIndex].maxResidentsCount)
+                        entity.StartElevatorRiding(this);
+                    else
+                        entity.StartElevatorWaiting(this);
+                }
+                else
+                {
+                    entity.StartElevatorWaiting(this);
+                }
+            }
+        }
+    }
+
+    public override void ExitBuilding(Entity entity)
+    {
+        //entity.EnterBuilding(this);
+    }
+
+    public void AddRidingPassenger(Entity entity)
+    {
+        spawnedElevatorPlatform.AddRidingPassenger(entity);
+    }
+
+    public void RemoveRidingPassenger(Entity entity)
+    {
+        spawnedElevatorPlatform.RemoveRidingPassenger(entity);
+    }
+
+    public void AddWaitingPassenger(Entity entity)
+    {
+        elevatorWaitingPassengers.Add(entity);
+        spawnedElevatorPlatform.AddWaitingPassenger(entity);
+    }
+
+    public void RemoveWaitingPassenger(Entity entity)
+    {
+        elevatorWaitingPassengers.Remove(entity);
+    }
+
+    public void AddWalkingPassenger(Entity entity)
+    {
+        elevatorWalkingPassengers.Add(entity);
+    }
+
+    public void RemoveWalkingPassenger(Entity entity)
+    {
+        elevatorWalkingPassengers.Remove(entity);
+    }
+}

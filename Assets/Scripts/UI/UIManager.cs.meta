@@ -1,0 +1,59 @@
+fileFormatVersion: 2
+guid: 99aee27a09c8e2b45a3c436ce53e7646
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - buildingWidgetPrefab: {fileID: 4936279183464857374, guid: fed55f7ae730fde45ae18812d6a1b8f5, type: 3}
+  - storageResourceWidgetPrefab: {fileID: 3414861423065995257, guid: 3b3b6b0f75cfee945b83c38763bbe3f6, type: 3}
+  - buildingActionResourceWidgetPrefab: {fileID: 3414861423065995257, guid: 182cd47f78642304fb945011b714a68e, type: 3}
+  - managementMenu: {instanceID: 0}
+  - buildingListsMenu: {instanceID: 0}
+  - storageListsMenu: {instanceID: 0}
+  - buildingMenuButton: {instanceID: 0}
+  - storageMenuButton: {instanceID: 0}
+  - buildingsListsMenuButton: {instanceID: 0}
+  - storageListsMenuButton: {instanceID: 0}
+  - closeManagementMenuButton: {instanceID: 0}
+  - constructionBuildingsList: {instanceID: 0}
+  - residentalBuildingsList: {instanceID: 0}
+  - productionBuildingsList: {instanceID: 0}
+  - storageBuildingsList: {instanceID: 0}
+  - economyBuildingsList: {instanceID: 0}
+  - researchBuildingsList: {instanceID: 0}
+  - constructionBuildingsListButton: {instanceID: 0}
+  - residentalBuildingsListButton: {instanceID: 0}
+  - productionBuildingsListButton: {instanceID: 0}
+  - storageBuildingsListButton: {instanceID: 0}
+  - economyBuildingsListButton: {instanceID: 0}
+  - researchBuildingsListButton: {instanceID: 0}
+  - buildingResourcesList: {instanceID: 0}
+  - craftingResourcesList: {instanceID: 0}
+  - weaponResourcesList: {instanceID: 0}
+  - buildingResourcesListButton: {instanceID: 0}
+  - craftingResourcesListButton: {instanceID: 0}
+  - weaponResourcesListButton: {instanceID: 0}
+  - buildingManagementMenu: {instanceID: 0}
+  - buildingManagementMenuPanel: {instanceID: 0}
+  - buildingManagementMenuNameText: {instanceID: 0}
+  - buildingManagementMenuLevelText: {instanceID: 0}
+  - closeBuildingManagementMenuButton: {instanceID: 0}
+  - showUpgradeBuildingResourcesButton: {instanceID: 0}
+  - showDemolishBuildingResourcesButton: {instanceID: 0}
+  - buildingResourcesMenuPanel: {instanceID: 0}
+  - buildingResourcesMenuBackground: {instanceID: 0}
+  - closeBuildingResourcesMenuBackgroundButton: {instanceID: 0}
+  - closeBuildingResourcesMenuButton: {instanceID: 0}
+  - actionResourcesLayourGroup: {instanceID: 0}
+  - upgradeBuildingMenu: {instanceID: 0}
+  - upgradeBuildingButton: {instanceID: 0}
+  - demolishBuildingMenu: {instanceID: 0}
+  - demolishBuildingButton: {instanceID: 0}
+  - repairBuildingMenu: {instanceID: 0}
+  - repairBuildingButton: {instanceID: 0}
+  - repairBuildingNameText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

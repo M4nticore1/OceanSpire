@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3980113925021139364
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3275737552088690731}
+  - component: {fileID: -255987306672972499}
+  - component: {fileID: -312919418568159975}
+  m_Layer: 6
+  m_Name: CoalGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3275737552088690731
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3980113925021139364}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-255987306672972499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3980113925021139364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2665c07387d67614998ea718af530a4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingData: {fileID: 11400000, guid: 729d9660a6c906e4daee160193b3e157, type: 2}
+  buildingLevelsData:
+  - {fileID: 11400000, guid: 4bbb3a2a17e937e4ab3c5a716e539a8f, type: 2}
+  - {fileID: 11400000, guid: 687824843f2188141b52eb67883dae9d, type: 2}
+  - {fileID: 11400000, guid: aa09133ea6ebbae49be51d0b319c99bb, type: 2}
+  spawnedBuildingConstruction: {fileID: 0}
+  isRuined: 0
+  isConnectedLeft: 0
+  isConnectedRight: 0
+  leftConnectedBuilding: {fileID: 0}
+  rightConnectedBuilding: {fileID: 0}
+--- !u!114 &-312919418568159975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3980113925021139364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2b4ff3b0e36d0a4aa38f9a9189d5390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownedBuilding: {fileID: 0}
+  productionBuildingLevelsData:
+  - {fileID: 11400000, guid: 2b61ec27db2b0eb4481a6d2149707dc7, type: 2}
+  - {fileID: 11400000, guid: 55253cdd475b872499a636b6bca9cff6, type: 2}
+  - {fileID: 11400000, guid: 499d2140c592e71468edbf455d97af49, type: 2}
+  readyToCollect: 0
+  collectResourceWidgetPrefab: {fileID: 0}

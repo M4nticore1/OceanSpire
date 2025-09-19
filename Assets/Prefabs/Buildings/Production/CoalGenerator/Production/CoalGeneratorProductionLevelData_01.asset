@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6ada3316b484b749b58ea57c530f988, type: 3}
+  m_Name: CoalGeneratorProductionLevelData_01
+  m_EditorClassIdentifier: 
+  produceResource: {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
+  produceResourceAmount: 5
+  consumeResource: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+  consumeResourceAmount: 50
+  maxResourceAmount: 10
+  produceTime: 5
