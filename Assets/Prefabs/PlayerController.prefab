@@ -51,6 +51,7 @@ MonoBehaviour:
   mainCamera: {fileID: 3364798657196465612}
   "\u0441ameraHolder": {fileID: 9020790906093603443}
   mainInputActionsAsset: {fileID: -944628639613478452, guid: e3db4645d0ae36245a27082f5b603306, type: 3}
+  buildingToPlace: {fileID: 0}
   clickableLayers:
     serializedVersion: 2
     m_Bits: 503
@@ -150,7 +151,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 10000
   field of view: 90
   orthographic: 0
   orthographic size: 5

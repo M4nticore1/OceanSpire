@@ -118,7 +118,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     {
         if (targetFloorIndex != currentFloorIndex)
         {
-            Debug.Log("StartMoving");
+            //Debug.Log("StartMoving");
 
             isMoving = true;
             startFloorIndex = currentFloorIndex;
@@ -153,12 +153,12 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         {
             if (elevatorRidingPassengers[i].pathBuildings[elevatorRidingPassengers[i].pathIndex].floorIndex == currentFloorIndex)
             {
-                Debug.Log("Path");
+                //Debug.Log("Path");
                 elevatorRidingPassengers[i].StopElevatorRiding(elevatorBuilding);
             }
             else
             {
-                Debug.Log("!Path");
+                //Debug.Log("!Path");
                 isNeededToMove = true;
             }
         }
@@ -172,10 +172,15 @@ public class ElevatorPlatformConstruction : BuildingConstruction
             elevatorBuilding.elevatorWaitingPassengers[i].StartElevatorRiding(elevatorBuilding);
         }
 
-        //if (isNeededToMove)
-        //StartMovingToFloor(GetNextFloor());
+        if (elevatorWaitingPassengers.Count > 0 && newRidersCount == 0)
+        {
+            isNeededToMove = true;
+        }
 
-        StartMovingToFloor(GetNextFloor());
+        if (isNeededToMove)
+            StartMovingToFloor(GetNextFloor());
+
+        //StartMovingToFloor(GetNextFloor());
     }
 
     private int GetNextFloor()
@@ -189,6 +194,8 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
         if (elevatorRidingPassengers.Count > 0 /*elevatorWaitingPassengers.Count > 0*/ /*elevatorRidingPassengers.Count < elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex].maxResidentsCount*/)
         {
+            Debug.Log("elevatorRidingPassengers.Count > 0");
+
             if (targetFloorIndex > currentFloorIndex)
             {
                 nearestFloorIndex = elevatorBuilding.cityManager.builtFloorsCount - 1;
@@ -226,6 +233,8 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         }
         else if (elevatorWaitingPassengers.Count > 0)
         {
+            Debug.Log(elevatorWaitingPassengers.Count);
+
             nearestFloorIndex = elevatorWaitingPassengers[0].currentFloorIndex;
         }
         else
@@ -249,6 +258,8 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     public void AddWaitingPassenger(Entity passenger)
     {
         elevatorWaitingPassengers.Add(passenger);
+
+        Debug.Log(passenger.currentFloorIndex);
 
         StartMovingToFloor(GetNextFloor());
     }

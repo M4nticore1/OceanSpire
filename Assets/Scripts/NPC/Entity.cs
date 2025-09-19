@@ -20,6 +20,7 @@ public class Entity : MonoBehaviour
     [HideInInspector] public int currentFloorIndex { get; protected set; } = 0;
 
     protected bool isWalking = false;
+    public bool isRidingOnElevator { get; protected set; } = false;
     public bool isElevatorRiding { get; protected set; } = false;
     public bool isElevatorWaiting { get; protected set; } = false;
     public bool isElevatorWalking { get; protected set; } = false;
@@ -79,13 +80,13 @@ public class Entity : MonoBehaviour
         {
             pathIndex++;
 
-            FollowPath();
+            //FollowPath();
         }
     }
 
     private void FollowPath()
     {
-        if (pathIndex < pathBuildings.Count)
+        if (!isElevatorRiding && pathIndex < pathBuildings.Count)
         {
             ElevatorBuilding currentElevatorBuilding = currentBuilding as ElevatorBuilding;
             Building nextBuilding = pathBuildings[pathIndex];
@@ -118,6 +119,7 @@ public class Entity : MonoBehaviour
                 {
                     if (nextElevatorBuilding.spawnedBuildingConstruction.buildingInteractions.Count > 0)
                     {
+                        //Debug.Log("Moving to interaction point");
                         navMeshAgent.SetDestination(nextElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[nextElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].position);
                     }
                     else
@@ -216,16 +218,16 @@ public class Entity : MonoBehaviour
 
     public void StartElevatorRiding(ElevatorBuilding elevatorBuilding)
     {
-        Debug.Log("Start Riding");
+        //Debug.Log("Start Riding");
 
         isElevatorWaiting = false;
         isElevatorWalking = false;
 
-        //ElevatorPlatformConstruction elevatorPlatformConstruction = elevatorBuilding.spawnedElevatorPlatform;
+        ElevatorPlatformConstruction elevatorPlatformConstruction = elevatorBuilding.spawnedElevatorPlatform;
 
-        //navMeshAgent.SetDestination(elevatorPlatformConstruction.buildingInteractions[elevatorPlatformConstruction.elevatorRidingPassengers.Count].waypoints[0].position);
+        navMeshAgent.SetDestination(elevatorPlatformConstruction.buildingInteractions[elevatorPlatformConstruction.elevatorRidingPassengers.Count].waypoints[0].position);
 
-        FollowPath();
+        //FollowPath();
 
         elevatorBuilding.AddRidingPassenger(this);
         elevatorBuilding.RemoveWaitingPassenger(this);
@@ -245,7 +247,7 @@ public class Entity : MonoBehaviour
 
     public void StartElevatorWaiting(ElevatorBuilding elevatorBuilding)
     {
-        Debug.Log("Start Waiting");
+        //Debug.Log("Start Waiting");
 
         isElevatorRiding = false;
         isElevatorWaiting = true;

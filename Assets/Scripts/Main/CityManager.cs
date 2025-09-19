@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
 using Unity.Mathematics;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class CityManager : MonoBehaviour
@@ -41,6 +40,7 @@ public class CityManager : MonoBehaviour
 
     [HideInInspector] public const int roomsCountPerFloor = 8;
     [HideInInspector] public const int elevatorsCountPerFloor = 12;
+    [HideInInspector] public const int startBuildingCityFloorIndex = 1;
     [HideInInspector] public float cityHeight = 0;
 
     private bool areBuildingsInitialized = false;
@@ -587,112 +587,160 @@ public class CityManager : MonoBehaviour
             //Debug.Log("StartIndex = " + startFloorIndex);
             //Debug.Log("targetBuilding = " + targetFloorIndex);
 
-            for (int i = startFloorIndex; targetFloorIndex > startFloorIndex ? i < targetBuilding.floorIndex + 1 : targetFloorIndex < startFloorIndex ? i > targetBuilding.floorIndex - 1 : i == startFloorIndex;)
+            List<List<Building>> allPaths = new List<List<Building>>();
+
+            int pathIndex = 0;
+
+            if (FindTargetBuilding(startBuilding, targetBuilding, startBuilding, allPaths, pathIndex))
             {
-                if (i == startFloorIndex && i == targetFloorIndex)
-                {
-                    if (targetFloorIndex > startFloorIndex)
-                        i++;
-                    else if (targetFloorIndex < startFloorIndex)
-                        i--;
-                    else
-                        break;
 
-                    continue;
-                }
-
-                ElevatorBuilding leftElevator = null;
-                ElevatorBuilding rightElevator = null;
-
-                ElevatorBuilding topElevator = null;
-                ElevatorBuilding bottomElevator = null;
-
-                for (int j = 0; j < roomsCountPerFloor / 2; j++)
-                {
-                    leftElevator = null;
-                    rightElevator = null;
-
-                    topElevator = null;
-                    bottomElevator = null;
-
-                    int lastEntraceBuildingIndex = 0;
-
-                    if (lastEntranceBuilding)
-                        lastEntraceBuildingIndex = lastEntranceBuilding.buildingIndex;
-                    else
-                        lastEntraceBuildingIndex = secondFloorEntraceIndex;
-
-                    leftElevator = spawnedFloors[i].roomBuildingPlaces[(lastEntraceBuildingIndex + j) % (roomsCountPerFloor - 1)].placedBuilding as ElevatorBuilding;
-                    rightElevator = spawnedFloors[i].roomBuildingPlaces[math.abs(lastEntraceBuildingIndex - j) % (roomsCountPerFloor - 1)].placedBuilding as ElevatorBuilding;
-
-                    if (leftElevator)
-                    {
-                        if (spawnedFloors.Count > i && i > 0 && i != targetBuilding.floorIndex && (startBuilding ? i != startBuilding.floorIndex : true))
-                        {
-                            topElevator = spawnedFloors[i + 1].roomBuildingPlaces[(lastEntraceBuildingIndex + j) % (roomsCountPerFloor - 1)].placedBuilding as ElevatorBuilding;
-                            bottomElevator = spawnedFloors[i - 1].roomBuildingPlaces[(lastEntraceBuildingIndex + j) % (roomsCountPerFloor - 1)].placedBuilding as ElevatorBuilding;
-
-                            if (!topElevator || !bottomElevator)
-                                buildingsPath.Add(leftElevator);
-                        }
-                        else
-                        {
-                            buildingsPath.Add(leftElevator);
-                        }
-
-                        break;
-                    }
-                    else if (rightElevator)
-                    {
-                        if (spawnedFloors.Count > i && i > 0 && i != targetBuilding.floorIndex && (startBuilding ? i != startBuilding.floorIndex : true))
-                        {
-                            topElevator = spawnedFloors[i + 1].roomBuildingPlaces[math.abs(lastEntraceBuildingIndex - j) % (roomsCountPerFloor - 1)].placedBuilding as ElevatorBuilding;
-                            bottomElevator = spawnedFloors[i - 1].roomBuildingPlaces[math.abs(lastEntraceBuildingIndex - j) % (roomsCountPerFloor - 1)].placedBuilding as ElevatorBuilding;
-
-                            if (!topElevator || !bottomElevator)
-                                buildingsPath.Add(rightElevator);
-                        }
-                        else
-                        {
-                            buildingsPath.Add(rightElevator);
-                        }
-
-                        break;
-                    }
-                }
-
-                if (!leftElevator && !rightElevator)
-                {
-                    //Debug.Log("Is's not founded");
-
-                    buildingsPath.Clear();
-
-                    return false;
-                }
-
-                if (targetFloorIndex > startFloorIndex)
-                    i++;
-                else if (targetFloorIndex < startFloorIndex)
-                    i--;
-                else
-                    break;
             }
-
-            buildingsPath.Add(targetBuilding);
-
-            //Debug.Log("Elevator path founded");
-
-            //for (int i = 0; i < buildingsPath.Count; i++)
-            //{
-            //    Debug.Log("BuildingsPath: " + buildingsPath[i].floorIndex + " " + buildingsPath[i].buildingIndex);
-            //}
-
-            return true;
         }
     }
 
-    //public List<Building> FindPathOnFloor(Building finishBuilding)
-    //{
-    //    return true;
-    //}
+    private bool FindTargetBuilding(Building startBuilding, Building targetBuilding, Building lastBuilding, List<List<Building>> allPaths, int pathIndex)
+    {
+        int startFloorIndex = startBuilding.floorIndex;
+        int startBuildingIndex = startBuilding.buildingIndex;
+
+        //Building leftBuilding = null;
+        //Building rightBuilding = null;
+
+        // Vertical elevators
+
+        bool hasUpDownElevators = false;
+        bool isTargetBuildingFounded = false;
+
+        if (!hasUpDownElevators)
+            hasUpDownElevators = FindUpDownElevators(startBuilding, targetBuilding, startBuilding, allPaths, pathIndex);
+        else
+            FindUpDownElevators(startBuilding, targetBuilding, startBuilding, allPaths, pathIndex);
+
+        // Check the buildings on the left side
+        for (int i = 1; i < roomsCountPerFloor / 2; i++)
+        {
+            int leftBuildingIndex = (startBuildingIndex + i) % (roomsCountPerFloor - 1);
+            Building leftBuilding = spawnedFloors[startFloorIndex].roomBuildingPlaces[leftBuildingIndex].placedBuilding;
+
+            if (leftBuilding)
+            {
+                // Left side is not empty
+                if (leftBuilding.floorIndex == targetBuilding.floorIndex && leftBuilding.buildingIndex == targetBuilding.buildingIndex)
+                {
+                    // Target building is founded
+                    allPaths[pathIndex].Add(leftBuilding);
+
+                    return true;
+                }
+                else
+                {
+                    // Left elevator is founded
+                    ElevatorBuilding leftElevatorBuilding = leftBuilding as ElevatorBuilding;
+
+                    if (leftElevatorBuilding)
+                    {
+                        if (!hasUpDownElevators)
+                            hasUpDownElevators = FindUpDownElevators(leftElevatorBuilding, targetBuilding, startBuilding, allPaths, pathIndex);
+                        else
+                            FindUpDownElevators(leftElevatorBuilding, targetBuilding, startBuilding, allPaths, pathIndex);
+                    }
+                }
+            }
+            else
+            {
+                // Left side is empty
+                break;
+            }
+        }
+
+        // Check the buildings on the right side
+        for (int i = 1; i < roomsCountPerFloor / 2; i++)
+        {
+            int rightBuildingIndex = (startBuildingIndex - i) % (roomsCountPerFloor - 1);
+            Building rightBuilding = spawnedFloors[startFloorIndex].roomBuildingPlaces[rightBuildingIndex].placedBuilding;
+
+            if (rightBuilding)
+            {
+                // Left side is not empty
+                if (rightBuilding.floorIndex == targetBuilding.floorIndex && rightBuilding.buildingIndex == targetBuilding.buildingIndex)
+                {
+                    // Target building is founded
+
+                    return true;
+                }
+                else
+                {
+                    // Left elevator is founded
+                    ElevatorBuilding rightElevatorBuilding = rightBuilding as ElevatorBuilding;
+
+                    if (rightElevatorBuilding)
+                    {
+                        ElevatorBuilding rightTopElevatorBuilding = spawnedFloors[startFloorIndex + 1].roomBuildingPlaces[rightBuildingIndex].placedBuilding as ElevatorBuilding;
+
+                        if (!hasUpDownElevators)
+                            hasUpDownElevators = FindUpDownElevators(rightTopElevatorBuilding, targetBuilding, startBuilding, allPaths, pathIndex);
+                        else
+                            FindUpDownElevators(rightTopElevatorBuilding, targetBuilding, startBuilding, allPaths, pathIndex);
+                    }
+                }
+            }
+            else
+            {
+                // Left side is empty
+                break;
+            }
+        }
+
+        //if ((!leftBuilding && !rightBuilding) || (leftBuilding && leftBuilding != targetBuilding && rightBuilding && rightBuilding != targetBuilding) || (leftBuilding && leftBuilding != targetBuilding && !rightBuilding) || (rightBuilding && rightBuilding != targetBuilding && !leftBuilding))
+        //{
+        //    return false;
+        //}
+        //else
+        //{
+        //    return true;
+        //}
+
+        if (hasUpDownElevators || isTargetBuildingFounded)
+            return true;
+        else
+            return false;
+    }
+
+    private bool FindUpDownElevators(Building startBuilding, Building targetBuilding, Building lastBuilding, List<List<Building>> allPaths, int pathIndex)
+    {
+        bool hasUpElevator = false;
+        bool hasDownElevator = false;
+
+        if (startBuilding.floorIndex < builtFloorsCount - 1){
+            ElevatorBuilding upElevatorBuilding = spawnedFloors[startBuilding.floorIndex + 1].roomBuildingPlaces[startBuilding.buildingIndex].placedBuilding as ElevatorBuilding;
+
+            if (upElevatorBuilding)
+            {
+                allPaths[pathIndex].Add(upElevatorBuilding);
+
+                hasUpElevator = FindTargetBuilding(upElevatorBuilding, targetBuilding, lastBuilding, allPaths, pathIndex);
+
+                pathIndex++;
+            }
+        }
+
+        if (startBuilding.floorIndex > startBuildingCityFloorIndex)
+        {
+            ElevatorBuilding downElevatorBuilding = spawnedFloors[startBuilding.floorIndex - 1].roomBuildingPlaces[startBuilding.buildingIndex].placedBuilding as ElevatorBuilding;
+
+            if (downElevatorBuilding)
+            {
+                allPaths[pathIndex].Add(downElevatorBuilding);
+
+                hasDownElevator = FindTargetBuilding(downElevatorBuilding, targetBuilding, lastBuilding, allPaths, pathIndex);
+
+                pathIndex++;
+            }
+        }
+
+        if (hasUpElevator || hasDownElevator)
+            return true;
+        else
+            return false;
+    }
 }
