@@ -74,7 +74,7 @@ public class ElevatorBuilding : RoomBuilding
 
             if (!entity.isElevatorRiding)
             {
-                if (spawnedElevatorPlatform.currentFloorIndex == floorIndex)
+                if (spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex())
                 {
                     if (spawnedElevatorPlatform.elevatorRidingPassengers.Count < buildingLevelsData[levelIndex].maxResidentsCount)
                     {

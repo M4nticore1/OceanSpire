@@ -37,9 +37,9 @@ public class Resident : Entity
         }
     }
 
-    public override void EnterBuilding(Building building)
+    public override void EnterBuilding(Building buildingPlace)
     {
-        base.EnterBuilding(building);
+        base.EnterBuilding(buildingPlace);
 
         if (currentBuilding == workBuilding)
         {
@@ -92,7 +92,7 @@ public class Resident : Entity
 
         SetTargetBuilding(building);
 
-        if (currentFloorIndex <= 1 && workBuilding.floorIndex <= 1)
+        if (currentFloorIndex <= 1 && workBuilding.GetFloorIndex() <= 1)
         {
             if (workBuilding.spawnedBuildingConstruction.buildingInteractions.Count > workerIndex)
             {

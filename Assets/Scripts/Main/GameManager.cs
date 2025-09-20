@@ -243,9 +243,9 @@ public class GameManager : MonoBehaviour
     //    if (buildingToPlace.buildingData.buildingType == BuildingType.Room)
     //    {
     //        int floorIndex = buildingPlace.floorIndex;
-    //        int buildingIndex = buildingPlace.buildingPlaceIndex;
+    //        int buildingPlace.buildingPlaceIndex = buildingPlace.buildingPlaceIndex;
 
-    //        allRooms[floorIndex][buildingIndex] = buildingToPlace as RoomBuilding;
+    //        allRooms[floorIndex][buildingPlace.buildingPlaceIndex] = buildingToPlace as RoomBuilding;
     //        currentRoomsNumberOnFloor[buildingPlace.floorIndex]++;
 
     //        buildingPlace.PlaceBuilding(buildingToPlace);

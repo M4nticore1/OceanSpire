@@ -32,8 +32,8 @@ public class Building : MonoBehaviour
 
     private BuildingPlace buildingPlace = null;
 
-    [HideInInspector] public int floorIndex { get; private set; } = 0;
-    [HideInInspector] public int buildingIndex { get; private set; } = 0;
+    //[HideInInspector] public int floorIndex { get; private set; } = 0;
+    //[HideInInspector] public int buildingPlace.buildingPlaceIndex { get; private set; } = 0;
 
     [Header("Construction")]
     public BuildingConstruction spawnedBuildingConstruction = null;
@@ -58,8 +58,8 @@ public class Building : MonoBehaviour
         gameManager = FindAnyObjectByType<GameManager>();
 		cityManager = FindAnyObjectByType<CityManager>();
 
-        floorIndex = buildingPlace.floorIndex;
-        buildingIndex = buildingPlace.buildingPlaceIndex;
+        //floorIndex = buildingPlace.floorIndex;
+        //buildingPlace.buildingPlaceIndex = buildingPlace.buildingPlaceIndex;
 
         //Debug.Log(buildingPlace.floorIndex + buildingData.buildingName + buildingPlace.floorIndex + " " + buildingPlace.buildingPlaceIndex);
 
@@ -125,8 +125,6 @@ public class Building : MonoBehaviour
 
     public virtual void ExitBuilding(Entity entity)
     {
-        entity.EnterBuilding(this);
-
         entities.Remove(entity);
     }
 
@@ -155,5 +153,29 @@ public class Building : MonoBehaviour
     protected void InvokeBuildingUpgraded(Building building)
     {
         OnBuildingUpgraded?.Invoke(building);
+    }
+
+    public int GetFloorIndex()
+    {
+        if (buildingPlace)
+        {
+            return buildingPlace.floorIndex;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    public int GetBuildingPlaceIndex()
+    {
+        if (buildingPlace)
+        {
+            return buildingPlace.buildingPlaceIndex;
+        }
+        else
+        {
+            return -1;
+        }
     }
 }

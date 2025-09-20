@@ -13,11 +13,12 @@ public class Entity : MonoBehaviour
     [SerializeField] protected int maxHealth = 100;
     public int MaxHealth => maxHealth;
     protected int currentHealth = 100;
-    [HideInInspector] public Building targetBuilding { get; protected set; } = null;
     [HideInInspector] public Building currentBuilding { get; protected set; } = null;
+    [HideInInspector] public Building targetBuildingPlace { get; protected set; } = null;
     public List<Building> pathBuildings = new List<Building>();
     [HideInInspector] public int pathIndex = 0;
     [HideInInspector] public int currentFloorIndex { get; protected set; } = 0;
+    [HideInInspector] public int currentBuildingPlaceIndex { get; protected set; } = 0;
 
     protected bool isWalking = false;
     public bool isRidingOnElevator { get; protected set; } = false;
@@ -39,14 +40,22 @@ public class Entity : MonoBehaviour
 
     }
 
-    public virtual void SetTargetBuilding(Building building)
+    public virtual void SetTargetBuilding(Building targetBuilding)
     {
-        targetBuilding = building;
+        targetBuildingPlace = targetBuilding;
         pathIndex = 0;
 
         if (cityManager)
         {
-            bool isPathFounded = cityManager.FindPathToBuilding(currentBuilding, targetBuilding, pathBuildings);
+            BuildingPlace startBuildingPlace = null;
+            BuildingPlace targetBuildingPlace = cityManager.spawnedFloors[targetBuilding.GetFloorIndex()].roomBuildingPlaces[targetBuilding.GetBuildingPlaceIndex()];
+
+            if (currentBuilding)
+                startBuildingPlace = cityManager.spawnedFloors[currentBuilding.GetFloorIndex()].roomBuildingPlaces[currentBuilding.GetBuildingPlaceIndex()];
+            else
+                startBuildingPlace = cityManager.spawnedFloors[CityManager.firstBuildCityFloorIndex].roomBuildingPlaces[CityManager.firstBuildCitybuildingPlace];
+
+            bool isPathFounded = cityManager.FindPathToBuilding(startBuildingPlace, targetBuildingPlace, pathBuildings);
 
             if (isPathFounded)
             {
@@ -69,18 +78,21 @@ public class Entity : MonoBehaviour
 
     public virtual void EnterBuilding(Building building)
     {
-        //Debug.Log("Enter Building (entity)");
-
-        currentBuilding = building;
-        currentFloorIndex = building.floorIndex;
-
-        building.EnterBuilding(this);
-
-        if (currentBuilding == pathBuildings[pathIndex])
+        if (building)
         {
-            pathIndex++;
+            //Debug.Log("Enter Building (entity)");
 
-            //FollowPath();
+            currentBuilding = building;
+            currentFloorIndex = building.GetFloorIndex();
+
+            building.EnterBuilding(this);
+
+            if (currentBuilding == pathBuildings[pathIndex])
+            {
+                pathIndex++;
+
+                //FollowPath();
+            }
         }
     }
 
@@ -94,7 +106,7 @@ public class Entity : MonoBehaviour
 
             if (currentElevatorBuilding)
             {
-                if (nextElevatorBuilding && nextElevatorBuilding.buildingIndex == currentElevatorBuilding.buildingIndex && nextElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
+                if (nextElevatorBuilding && nextElevatorBuilding.GetBuildingPlaceIndex() == currentElevatorBuilding.GetBuildingPlaceIndex() && nextElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
                 {
                     //Debug.Log("First Elevator");
                     navMeshAgent.SetDestination(currentElevatorBuilding.spawnedElevatorPlatform.buildingInteractions[currentElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
@@ -139,7 +151,7 @@ public class Entity : MonoBehaviour
             //{
             //    //Debug.Log("FollowPath");
 
-            //    if (currentElevatorBuilding && nextElevatorBuilding && nextElevatorBuilding.buildingIndex == currentElevatorBuilding.buildingIndex && nextElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
+            //    if (currentElevatorBuilding && nextElevatorBuilding && nextElevatorBuilding.buildingPlace.buildingPlaceIndex == currentElevatorBuilding.buildingPlace.buildingPlaceIndex && nextElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
             //    {
             //        //Debug.Log("1 1");
 
@@ -197,7 +209,7 @@ public class Entity : MonoBehaviour
             //    }
             //}
 
-            //Debug.Log(pathBuildings[pathIndex].floorIndex + " " + pathBuildings[pathIndex].buildingIndex);
+            //Debug.Log(pathBuildings[pathIndex].floorIndex + " " + pathBuildings[pathIndex].buildingPlace.buildingPlaceIndex);
         }
     }
 

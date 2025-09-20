@@ -103,9 +103,9 @@ public class FloorBuilding : Building
                     {
                         for (int j = 1; j <= buildingData.buildingFloors; j++)
                         {
-                            BuildingPlace buildingPlace = cityManager.spawnedFloors[floorIndex - j].roomBuildingPlaces[i];
+                            BuildingPlace currentBuildingPlace = cityManager.spawnedFloors[GetFloorIndex() - j].roomBuildingPlaces[i];
 
-                            if (buildingPlace.emptyBuildingPlacesAbove == buildingData.buildingFloors - 1)
+                            if (currentBuildingPlace.emptyBuildingPlacesAbove == buildingData.buildingFloors - 1)
                             {
                                 break;
                             }
@@ -116,7 +116,7 @@ public class FloorBuilding : Building
         }
         else if (buildingData.buildingType == BuildingType.Hall)
         {
-            if (!hallBuildingPlace.isBuildingPlaced && cityManager.currentRoomsNumberOnFloor[floorIndex] == 0)
+            if (!hallBuildingPlace.isBuildingPlaced && cityManager.currentRoomsNumberOnFloor[GetFloorIndex()] == 0)
             {
                 if(hallBuildingPlace.emptyBuildingPlacesAbove >= buildingHeight - 1)
                     hasPlaceAbove = true;
