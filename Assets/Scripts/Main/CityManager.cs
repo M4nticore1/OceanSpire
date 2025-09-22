@@ -2,6 +2,7 @@ using NUnit.Framework.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
@@ -625,6 +626,11 @@ public class CityManager : MonoBehaviour
         if (!startBuilding)
         {
             startBuilding = FindPathPointByPlaceIndex(startBuildingPlace, targetBuilding, startBuildingPlace, ref allPaths, ref pathIndex, 0);
+
+            if (startBuilding && startBuilding.GetFloorIndex() == targetBuilding.floorIndex && startBuilding.GetBuildingPlaceIndex() == targetBuilding.buildingPlaceIndex)
+            {
+                return true;
+            }
         }
 
         // Check buildings between first and finish buildings
@@ -634,17 +640,10 @@ public class CityManager : MonoBehaviour
             {
                 if (leftBuilding)
                 {
-                    pathIndex++;
-
-                    allPaths.Add(new List<Building>());
-
-                    for (int j = 0; j < allPaths[pathIndex - 1].Count; j++)
-                    {
-                        allPaths[pathIndex].Add(allPaths[pathIndex - 1][j]);
-                    }
+                    AddNewPath(ref allPaths, ref pathIndex);
                 }
 
-                if (leftBuilding)
+                if (!leftBuilding)
                 {
                     leftBuilding = FindPathPointByPlaceIndex(startBuildingPlace, targetBuilding, startBuildingPlace, ref allPaths, ref pathIndex, i);
 
@@ -657,28 +656,18 @@ public class CityManager : MonoBehaviour
                     }
                 }
 
-                if (rightBuilding)
+                if (!rightBuilding)
                 {
                     if (leftBuilding)
                     {
-                        pathIndex++;
-
-                        allPaths.Add(new List<Building>());
-
-                        for (int j = 0; j < allPaths[pathIndex - 1].Count; j++)
-                        {
-                            allPaths[pathIndex].Add(allPaths[pathIndex - 1][j]);
-                        }
+                        AddNewPath(ref allPaths, ref pathIndex);
                     }
 
                     rightBuilding = FindPathPointByPlaceIndex(startBuildingPlace, targetBuilding, startBuildingPlace, ref allPaths, ref pathIndex, -i);
 
-                    if (rightBuilding)
+                    if (rightBuilding && rightBuilding.GetFloorIndex() == targetBuilding.floorIndex && rightBuilding.GetBuildingPlaceIndex() == targetBuilding.buildingPlaceIndex)
                     {
-                        if (rightBuilding.GetFloorIndex() == targetBuilding.floorIndex && rightBuilding.GetBuildingPlaceIndex() == targetBuilding.buildingPlaceIndex)
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
 
@@ -696,12 +685,14 @@ public class CityManager : MonoBehaviour
             return false;
 
         // Check finish building
-        if (finishBuilding && (leftBuilding || rightBuilding))
+        if (!finishBuilding && (leftBuilding || rightBuilding))
         {
             finishBuilding = FindPathPointByPlaceIndex(startBuildingPlace, targetBuilding, startBuildingPlace, ref allPaths, ref pathIndex, roomsCountPerFloor / 2);
 
             if (finishBuilding)
-                pathIndex++;
+            {
+                AddNewPath(ref allPaths, ref pathIndex);
+            }
         }
 
         // If any building is found
@@ -761,14 +752,7 @@ public class CityManager : MonoBehaviour
 
                             if (hasUpElevator && hasDownElevator)
                             {
-                                pathIndex++;
-
-                                allPaths.Add(new List<Building>());
-
-                                for (int i = 0; i < allPaths[pathIndex - 1].Count; i++)
-                                {
-                                    allPaths[pathIndex].Add(allPaths[pathIndex - 1][i]);
-                                }
+                                AddNewPath(ref allPaths, ref pathIndex);
                             }
                         }
 
@@ -851,5 +835,17 @@ public class CityManager : MonoBehaviour
         }
 
         return foundTargetBuilding;
+    }
+
+    private void AddNewPath(ref List<List<Building>> allPaths, ref int pathIndex)
+    {
+        pathIndex++;
+
+        allPaths.Add(new List<Building>());
+
+        for (int i = 0; i < allPaths[pathIndex - 1].Count; i++)
+        {
+            allPaths[pathIndex].Add(allPaths[pathIndex - 1][i]);
+        }
     }
 }
