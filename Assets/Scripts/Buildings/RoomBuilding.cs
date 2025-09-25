@@ -10,10 +10,10 @@ public class RoomBuilding : Building
     [HideInInspector] public bool isConnectedAbove = false;
     [HideInInspector] public bool isConnectedBelow = false;
 
-    [HideInInspector] public RoomBuilding leftConnectedBuilding = null;
-    [HideInInspector] public RoomBuilding rightConnectedBuilding = null;
-    [HideInInspector] public RoomBuilding aboveConnectedBuilding = null;
-    [HideInInspector] public RoomBuilding belowConnectedBuilding = null;
+    public RoomBuilding leftConnectedBuilding = null;
+    public RoomBuilding rightConnectedBuilding = null;
+    public RoomBuilding aboveConnectedBuilding = null;
+    public RoomBuilding belowConnectedBuilding = null;
 
     protected override void Start()
     {
@@ -82,74 +82,83 @@ public class RoomBuilding : Building
                 rightRoom.isConnectedLeft = true;
                 rightRoom.BuildConstruction();
             }
+
+            BuildConstruction();
         }
         else if (buildingData.connectionType == ConnectionType.Vertical)
         {
-            //Debug.Log(cityManager.builtFloorsCount);
+            bool hadUpConnect = aboveConnectedBuilding != null;
+            bool hadDownConnect = belowConnectedBuilding != null;
 
-            RoomBuilding topRoom = null;
+            Debug.Log(cityManager.spawnedFloors.Count);
 
-            if (GetFloorIndex() < cityManager.builtFloorsCount - 1)
+            if (!aboveConnectedBuilding && GetFloorIndex() < cityManager.spawnedFloors.Count - 1)
             {
-                topRoom = cityManager.spawnedFloors[GetFloorIndex() + 1].roomBuildingPlaces[GetBuildingPlaceIndex()].placedBuilding as RoomBuilding;
+                RoomBuilding topRoom = cityManager.spawnedFloors[GetFloorIndex() + 1].roomBuildingPlaces[GetBuildingPlaceIndex()].placedBuilding as RoomBuilding;
 
                 Debug.Log("get");
-            }
 
-            if (topRoom && topRoom.buildingData.buildingIdName == buildingData.buildingIdName)
-            {
-                Debug.Log("this");
+                if (topRoom && topRoom.buildingData.buildingIdName == buildingData.buildingIdName)
+                {
+                    Debug.Log("this");
 
-                if (topRoom.levelIndex == levelIndex)
-                {
-                    isConnectedAbove = true;
-                    aboveConnectedBuilding = topRoom;
-                    Debug.Log("topRoom");
-                    topRoom.isConnectedBelow = true;
-                    topRoom.BuildConstruction();
-                }
-                else
-                {
-                    if (topRoom.isConnectedBelow)
+                    if (topRoom.levelIndex == levelIndex)
                     {
-                        topRoom.isConnectedBelow = false;
-                        topRoom.BuildConstruction();
+                        isConnectedAbove = true;
+                        aboveConnectedBuilding = topRoom;
+                        Debug.Log("topRoom");
+                        topRoom.isConnectedBelow = true;
+                        topRoom.UpdateBuildingConstruction();
+                    }
+                    else
+                    {
+                        if (topRoom.isConnectedBelow)
+                        {
+                            topRoom.isConnectedBelow = false;
+                            topRoom.UpdateBuildingConstruction();
+                        }
                     }
                 }
             }
 
-            RoomBuilding belowRoom = null;
-
-            if (GetFloorIndex() > 0)
+            if (!belowConnectedBuilding && GetFloorIndex() > 0)
             {
-                belowRoom = cityManager.spawnedFloors[GetFloorIndex() - 1].roomBuildingPlaces[GetBuildingPlaceIndex()].placedBuilding as RoomBuilding;
-            }
+                RoomBuilding belowRoom = cityManager.spawnedFloors[GetFloorIndex() - 1].roomBuildingPlaces[GetBuildingPlaceIndex()].placedBuilding as RoomBuilding;
 
-            if (belowRoom && belowRoom.buildingData.buildingIdName == buildingData.buildingIdName)
-            {
-                if (belowRoom.levelIndex == levelIndex)
+                if (belowRoom && belowRoom.buildingData.buildingIdName == buildingData.buildingIdName)
                 {
-                    isConnectedBelow = true;
-                    belowConnectedBuilding = belowRoom;
-                    belowRoom.isConnectedAbove = true;
-                    belowRoom.BuildConstruction();
-                }
-                else
-                {
-                    if (belowRoom.isConnectedAbove)
+                    Debug.Log("belowRoom");
+
+                    if (belowRoom.levelIndex == levelIndex)
                     {
-                        belowRoom.isConnectedAbove = false;
-                        belowRoom.BuildConstruction();
+                        isConnectedBelow = true;
+                        belowConnectedBuilding = belowRoom;
+                        belowRoom.isConnectedAbove = true;
+                        belowRoom.UpdateBuildingConstruction();
+
+                        if (belowRoom.GetFloorIndex() < cityManager.spawnedFloors.Count - 1)
+                            Debug.Log("belowRoom.BuildConstruction " + belowRoom.GetFloorIndex());
+                    }
+                    else
+                    {
+                        if (belowRoom.isConnectedAbove)
+                        {
+                            belowRoom.isConnectedAbove = false;
+                            belowRoom.UpdateBuildingConstruction();
+                        }
                     }
                 }
             }
+
+            if ((!hadUpConnect && aboveConnectedBuilding) || (!hadDownConnect && belowConnectedBuilding))
+                BuildConstruction();
         }
-
-        BuildConstruction();
     }
 
     protected override void BuildConstruction()
     {
+        Debug.Log("construct");
+
         base.BuildConstruction();
 
         RoomBuildingLevelData roomLevelData = buildingLevelsData[levelIndex] as RoomBuildingLevelData;

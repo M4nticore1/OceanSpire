@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI;
@@ -66,6 +67,7 @@ public class Entity : MonoBehaviour
             if (isPathFounded)
             {
                 FollowPath();
+                pathIndex++;
             }
         }
         else
@@ -95,9 +97,8 @@ public class Entity : MonoBehaviour
 
             if (currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex() && currentBuilding.GetBuildingPlaceIndex() == pathBuildings[pathIndex].GetBuildingPlaceIndex())
             {
-                pathIndex++;
-
                 FollowPath();
+                pathIndex++;
             }
         }
     }
@@ -114,13 +115,10 @@ public class Entity : MonoBehaviour
             {
                 if (nextElevatorBuilding && nextElevatorBuilding.GetBuildingPlaceIndex() == currentElevatorBuilding.GetBuildingPlaceIndex() && nextElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
                 {
-                    //Debug.Log("First Elevator");
                     navMeshAgent.SetDestination(currentElevatorBuilding.spawnedElevatorPlatform.buildingInteractions[currentElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
                 }
                 else
                 {
-                    //Debug.Log("Second Elevator");
-
                     if (nextElevatorBuilding)
                     {
                         navMeshAgent.SetDestination(nextElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[nextElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
@@ -152,70 +150,6 @@ public class Entity : MonoBehaviour
                     navMeshAgent.SetDestination(nextBuilding.spawnedBuildingConstruction.transform.position);
                 }
             }
-
-            //if (!isElevatorRiding)
-            //{
-            //    //Debug.Log("FollowPath");
-
-            //    if (currentElevatorBuilding && nextElevatorBuilding && nextElevatorBuilding.buildingPlace.buildingPlaceIndex == currentElevatorBuilding.buildingPlace.buildingPlaceIndex && nextElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
-            //    {
-            //        //Debug.Log("1 1");
-
-            //        ElevatorPlatformConstruction elevatorPlatformConstruction = nextElevatorBuilding.spawnedElevatorPlatform;
-            //        int ridingResidentIndex = elevatorPlatformConstruction.elevatorRidingPassengers.Count;
-
-            //        int levelIndex = nextBuilding.levelIndex;
-
-            //        if (elevatorPlatformConstruction.elevatorRidingPassengers.Count < nextBuilding.buildingLevelsData[levelIndex].maxResidentsCount)
-            //        {
-            //            if (navMeshAgent && navMeshAgent.enabled)
-            //                navMeshAgent.SetDestination(elevatorPlatformConstruction.buildingInteractions[ridingResidentIndex].waypoints[0].position);
-            //        }
-            //        else
-            //        {
-            //            StartElevatorWaiting(currentElevatorBuilding);
-            //        }
-
-            //        //if (elevatorPlatformConstruction.currentFloorIndex == currentFloorIndex)
-            //        //{
-            //        //    currentElevatorBuilding.RemoveWalkingPassenger(this);
-            //        //}
-            //        //else
-            //        //{
-            //        //    currentElevatorBuilding.RemoveWalkingPassenger(this);
-            //        //}
-            //    }
-            //    else
-            //    {
-            //        //Debug.Log("1 2");
-
-            //        if (nextElevatorBuilding)
-            //        {
-            //            ElevatorPlatformConstruction elevatorPlatformConstruction = nextElevatorBuilding.spawnedElevatorPlatform;
-            //            BuildingConstruction elevatorConstruction = nextBuilding.spawnedBuildingConstruction;
-
-            //            //StartElevatorWalking(nextElevatorBuilding);
-
-            //            int waitingResidentIndex = nextElevatorBuilding.elevatorWaitingPassengers.Count;
-
-            //            if (elevatorConstruction.buildingInteractions.Count > waitingResidentIndex)
-            //            {
-            //                navMeshAgent.SetDestination(elevatorConstruction.buildingInteractions[waitingResidentIndex].waypoints[0].position);
-            //            }
-            //            else
-            //            {
-            //                navMeshAgent.SetDestination(elevatorPlatformConstruction.transform.position);
-            //                Debug.LogWarning("buildingInteractions.Count < waitingResidentIndex");
-            //            }
-            //        }
-            //        else
-            //        {
-            //            navMeshAgent.SetDestination(nextBuilding.spawnedBuildingConstruction.buildingInteractions[0].waypoints[0].position);
-            //        }
-            //    }
-            //}
-
-            //Debug.Log(pathBuildings[pathIndex].floorIndex + " " + pathBuildings[pathIndex].buildingPlace.buildingPlaceIndex);
         }
     }
 

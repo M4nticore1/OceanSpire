@@ -7,34 +7,45 @@ public class FloorBuilding : Building
     // Building Places
     public List<BuildingPlace> roomBuildingPlaces;
     public BuildingPlace hallBuildingPlace;
-    //public List<BuildingPlace> elevatorsBuildingPlaces;
     public BuildingPlace floorBuildingPlace;
 
     public override void Place(BuildingPlace buildingPlace)
     {
         base.Place(buildingPlace);
 
-        cityManager.AddFloor(this);
+        cityManager.InitializeFloor(this);
 
-        InitializeFloor();
+        InitializeFloor(buildingPlace.floorIndex);
 
         if (GetType() == typeof(FloorBuilding))
             InvokeBuildingPlaced(this);
     }
 
-    public void InitializeFloor()
+    public void AddFloor(CityManager cityManager)
+    {
+        FloorBuilding nextFloorBuilding = floorBuildingPlace.placedBuilding as FloorBuilding;
+
+        if (nextFloorBuilding)
+        {
+            nextFloorBuilding.AddFloor(cityManager);
+
+            cityManager.AddFloorCount(nextFloorBuilding);
+        }
+    }
+
+    public void InitializeFloor(int floorIndex)
     {
         gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
 
-        for (int i = 0; i < roomBuildingPlaces.Count; i++)
+        for (int i = 0; i < CityManager.roomsCountPerFloor; i++)
         {
-            roomBuildingPlaces[i].InitializeBuildingPlace(cityManager.builtFloorsCount - 1);
+            roomBuildingPlaces[i].InitializeBuildingPlace(floorIndex);
         }
 
-        hallBuildingPlace.InitializeBuildingPlace(cityManager.builtFloorsCount - 1);
+        hallBuildingPlace.InitializeBuildingPlace(floorIndex);
 
-        floorBuildingPlace.InitializeBuildingPlace(cityManager.builtFloorsCount);
+        floorBuildingPlace.InitializeBuildingPlace(floorIndex + 1);
     }
 
     public void ShowBuildingPlacesByType(Building building)

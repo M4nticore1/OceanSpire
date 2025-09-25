@@ -198,7 +198,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
             if (targetFloorIndex > currentFloorIndex)
             {
-                nearestFloorIndex = elevatorBuilding.cityManager.builtFloorsCount - 1;
+                nearestFloorIndex = elevatorBuilding.cityManager.spawnedFloors.Count - 1;
 
                 for (int i = 0; i < elevatorWaitingPassengers.Count; i++)
                 {

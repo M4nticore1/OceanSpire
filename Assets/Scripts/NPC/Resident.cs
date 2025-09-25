@@ -77,13 +77,6 @@ public class Resident : Entity
         }
     }
 
-    public override void SetTargetBuilding(Building targetBuilding)
-    {
-        base.SetTargetBuilding(targetBuilding);
-
-
-    }
-
     public void SetWorkBuilding(Building building)
     {
         isWorker = true;
@@ -92,28 +85,28 @@ public class Resident : Entity
 
         SetTargetBuilding(building);
 
-        if (currentFloorIndex <= 1 && workBuilding.GetFloorIndex() <= 1)
-        {
-            if (workBuilding.spawnedBuildingConstruction.buildingInteractions.Count > workerIndex)
-            {
-                BuildingAction buildingAction = workBuilding.spawnedBuildingConstruction.buildingInteractions[workerIndex];
+        //if (currentFloorIndex <= 1 && workBuilding.GetFloorIndex() <= 1)
+        //{
+        //    if (workBuilding.spawnedBuildingConstruction.buildingInteractions.Count > workerIndex)
+        //    {
+        //        BuildingAction buildingAction = workBuilding.spawnedBuildingConstruction.buildingInteractions[workerIndex];
 
-                if (buildingAction.waypoints.Count > 0)
-                {
-                    navMeshAgent.SetDestination(buildingAction.waypoints[0].position);
-                }
-                else
-                {
-                    Debug.Log("buildingActions.waypoints.Count == 0");
-                }
-            }
-            else
-            {
-                navMeshAgent.SetDestination(workBuilding.transform.position);
+        //        if (buildingAction.waypoints.Count > 0)
+        //        {
+        //            navMeshAgent.SetDestination(buildingAction.waypoints[0].position);
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("buildingActions.waypoints.Count == 0");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        navMeshAgent.SetDestination(workBuilding.transform.position);
 
-                Debug.Log("buildingActions.Count <= workerIndex");
-            }
-        }
+        //        Debug.Log("buildingActions.Count <= workerIndex");
+        //    }
+        //}
 
         building.AddWorker(this);
 

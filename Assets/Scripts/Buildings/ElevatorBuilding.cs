@@ -30,17 +30,19 @@ public class ElevatorBuilding : RoomBuilding
     {
         base.UpdateBuildingConstruction();
 
-        if (isConnectedAbove)
+        if (aboveConnectedBuilding)
         {
             ElevatorBuilding elevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
 
-            spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
+            if (elevatorBuilding)
+                spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
         }
-        else if (isConnectedBelow)
+        else if (belowConnectedBuilding)
         {
             ElevatorBuilding elevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
 
-            spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
+            if (elevatorBuilding)
+                spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
         }
         else
         {
