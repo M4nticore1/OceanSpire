@@ -30,7 +30,7 @@ public class Building : MonoBehaviour
 
     public BuildingLevelData[] buildingLevelsData = { };
 
-    private BuildingPlace buildingPlace = null;
+    public BuildingPlace buildingPlace = null;
 
     //[HideInInspector] public int floorIndex { get; private set; } = 0;
     //[HideInInspector] public int buildingPlace.buildingPlaceIndex { get; private set; } = 0;

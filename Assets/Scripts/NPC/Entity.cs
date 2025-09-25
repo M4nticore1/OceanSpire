@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI;
@@ -14,7 +15,7 @@ public class Entity : MonoBehaviour
     public int MaxHealth => maxHealth;
     protected int currentHealth = 100;
     [HideInInspector] public Building currentBuilding { get; protected set; } = null;
-    [HideInInspector] public Building targetBuildingPlace { get; protected set; } = null;
+    [HideInInspector] public Building targetBuilding { get; protected set; } = null;
     public List<Building> pathBuildings = new List<Building>();
     [HideInInspector] public int pathIndex = 0;
     [HideInInspector] public int currentFloorIndex { get; protected set; } = 0;
@@ -42,20 +43,25 @@ public class Entity : MonoBehaviour
 
     public virtual void SetTargetBuilding(Building targetBuilding)
     {
-        targetBuildingPlace = targetBuilding;
+        //if (currentBuilding)
+        //    Debug.Log(currentBuilding.buildingData.buildingIdName);
+        //else
+        //    Debug.Log("!CurrentBuilding");
+
+        this.targetBuilding = targetBuilding;
         pathIndex = 0;
 
         if (cityManager)
         {
             BuildingPlace startBuildingPlace = null;
-            BuildingPlace targetBuildingPlace = cityManager.spawnedFloors[targetBuilding.GetFloorIndex()].roomBuildingPlaces[targetBuilding.GetBuildingPlaceIndex()];
+            //BuildingPlace targetBuildingPlace = cityManager.spawnedFloors[targetBuilding.GetFloorIndex()].roomBuildingPlaces[targetBuilding.GetBuildingPlaceIndex()];
 
             if (currentBuilding)
                 startBuildingPlace = cityManager.spawnedFloors[currentBuilding.GetFloorIndex()].roomBuildingPlaces[currentBuilding.GetBuildingPlaceIndex()];
             else
                 startBuildingPlace = cityManager.spawnedFloors[CityManager.firstBuildCityFloorIndex].roomBuildingPlaces[CityManager.firstBuildCitybuildingPlace];
 
-            bool isPathFounded = cityManager.FindPathToBuilding(startBuildingPlace, targetBuildingPlace, pathBuildings);
+            bool isPathFounded = cityManager.FindPathToBuilding(startBuildingPlace, targetBuilding.buildingPlace, ref pathBuildings);
 
             if (isPathFounded)
             {
@@ -87,11 +93,11 @@ public class Entity : MonoBehaviour
 
             building.EnterBuilding(this);
 
-            if (currentBuilding == pathBuildings[pathIndex])
+            if (currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex() && currentBuilding.GetBuildingPlaceIndex() == pathBuildings[pathIndex].GetBuildingPlaceIndex())
             {
                 pathIndex++;
 
-                //FollowPath();
+                FollowPath();
             }
         }
     }
@@ -215,7 +221,7 @@ public class Entity : MonoBehaviour
 
     public virtual void ExitBuilding()
     {
-        currentBuilding = null;
+        //currentBuilding = null;
     }
 
     public void SetFloorIndex(int newFloorIndex)

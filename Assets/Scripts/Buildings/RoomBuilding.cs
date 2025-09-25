@@ -85,19 +85,26 @@ public class RoomBuilding : Building
         }
         else if (buildingData.connectionType == ConnectionType.Vertical)
         {
+            //Debug.Log(cityManager.builtFloorsCount);
+
             RoomBuilding topRoom = null;
 
             if (GetFloorIndex() < cityManager.builtFloorsCount - 1)
             {
                 topRoom = cityManager.spawnedFloors[GetFloorIndex() + 1].roomBuildingPlaces[GetBuildingPlaceIndex()].placedBuilding as RoomBuilding;
+
+                Debug.Log("get");
             }
 
             if (topRoom && topRoom.buildingData.buildingIdName == buildingData.buildingIdName)
             {
+                Debug.Log("this");
+
                 if (topRoom.levelIndex == levelIndex)
                 {
                     isConnectedAbove = true;
                     aboveConnectedBuilding = topRoom;
+                    Debug.Log("topRoom");
                     topRoom.isConnectedBelow = true;
                     topRoom.BuildConstruction();
                 }
