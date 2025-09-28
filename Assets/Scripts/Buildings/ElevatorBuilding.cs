@@ -72,19 +72,17 @@ public class ElevatorBuilding : RoomBuilding
 
         if (entity.pathBuildings[entity.pathIndex] == this)
         {
-            //Debug.Log("EnterBuilding (elevator)");
-
             if (!entity.isElevatorRiding)
             {
                 if (spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex())
                 {
-                    if (spawnedElevatorPlatform.elevatorRidingPassengers.Count < buildingLevelsData[levelIndex].maxResidentsCount)
+                    if (spawnedElevatorPlatform.isMoving || spawnedElevatorPlatform.elevatorRidingPassengers.Count == buildingLevelsData[levelIndex].maxResidentsCount)
                     {
-                        entity.StartElevatorRiding(this);
+                        entity.StartElevatorWaiting(this);
                     }
                     else
                     {
-                        entity.StartElevatorWaiting(this);
+                        entity.StartElevatorWalking(this);
                     }
                 }
                 else
@@ -130,10 +128,12 @@ public class ElevatorBuilding : RoomBuilding
     public void AddWalkingPassenger(Entity entity)
     {
         elevatorWalkingPassengers.Add(entity);
+        spawnedElevatorPlatform.AddWalkingPassenger(entity);
     }
 
     public void RemoveWalkingPassenger(Entity entity)
     {
         elevatorWalkingPassengers.Remove(entity);
+        spawnedElevatorPlatform.RemoveWalkingPassenger(entity);
     }
 }

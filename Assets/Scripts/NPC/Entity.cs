@@ -1,11 +1,6 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.Collections.LowLevel.Unsafe;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class Entity : MonoBehaviour
 {
@@ -67,7 +62,6 @@ public class Entity : MonoBehaviour
             if (isPathFounded)
             {
                 FollowPath();
-                pathIndex++;
             }
         }
         else
@@ -105,51 +99,59 @@ public class Entity : MonoBehaviour
 
     private void FollowPath()
     {
+        //Debug.Log("FollowPath");
+
         if (!isElevatorRiding && pathIndex < pathBuildings.Count)
         {
             ElevatorBuilding currentElevatorBuilding = currentBuilding as ElevatorBuilding;
-            Building nextBuilding = pathBuildings[pathIndex];
-            ElevatorBuilding nextElevatorBuilding = nextBuilding as ElevatorBuilding;
+            Building currentPathBuilding = pathBuildings[pathIndex];
+            ElevatorBuilding currentPathElevatorBuilding = currentPathBuilding as ElevatorBuilding;
 
             if (currentElevatorBuilding)
             {
-                if (nextElevatorBuilding && nextElevatorBuilding.GetBuildingPlaceIndex() == currentElevatorBuilding.GetBuildingPlaceIndex() && nextElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
+                //Debug.Log("currentElevatorBuilding");
+
+                if (currentPathElevatorBuilding && currentPathElevatorBuilding.GetBuildingPlaceIndex() == currentElevatorBuilding.GetBuildingPlaceIndex() && currentPathElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
                 {
-                    navMeshAgent.SetDestination(currentElevatorBuilding.spawnedElevatorPlatform.buildingInteractions[currentElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
+                    //navMeshAgent.SetDestination(currentPathElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[currentPathElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
                 }
                 else
                 {
-                    if (nextElevatorBuilding)
+                    if (currentPathElevatorBuilding)
                     {
-                        navMeshAgent.SetDestination(nextElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[nextElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
+                        //Debug.Log("currentPathElevatorBuilding");
+                        navMeshAgent.SetDestination(currentPathElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[currentPathElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
                     }
-                    else if (nextBuilding)
+                    else if (currentPathBuilding)
                     {
-                        navMeshAgent.SetDestination(nextBuilding.spawnedBuildingConstruction.transform.position);
+                        //Debug.Log("currentPathBuilding");
+                        navMeshAgent.SetDestination(currentPathBuilding.spawnedBuildingConstruction.transform.position);
                     }
                 }
             }
             else
             {
-                if (nextElevatorBuilding)
+                if (currentPathElevatorBuilding)
                 {
-                    if (nextElevatorBuilding.spawnedBuildingConstruction.buildingInteractions.Count > 0)
+                    if (currentPathElevatorBuilding.spawnedBuildingConstruction.buildingInteractions.Count > 0)
                     {
                         //Debug.Log("Moving to interaction point");
-                        navMeshAgent.SetDestination(nextElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[nextElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].position);
+                        navMeshAgent.SetDestination(currentPathElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[currentPathElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].position);
                     }
                     else
                     {
                         Debug.LogWarning("buildingInteractions.Count is less");
 
-                        navMeshAgent.SetDestination(nextElevatorBuilding.spawnedBuildingConstruction.transform.position);
+                        navMeshAgent.SetDestination(currentPathElevatorBuilding.spawnedBuildingConstruction.transform.position);
                     }
                 }
-                else if (nextBuilding)
+                else if (currentPathBuilding)
                 {
-                    navMeshAgent.SetDestination(nextBuilding.spawnedBuildingConstruction.transform.position);
+                    navMeshAgent.SetDestination(currentPathBuilding.spawnedBuildingConstruction.transform.position);
                 }
             }
+
+            //pathIndex++;
         }
     }
 
@@ -168,18 +170,63 @@ public class Entity : MonoBehaviour
         transform.position += direction * speed;
     }
 
+    public void StartElevatorWalking(ElevatorBuilding elevatorBuilding)
+    {
+        Debug.Log("Start Walking");
+
+        isElevatorWalking = true;
+        isElevatorWaiting = false;
+        isElevatorRiding = false;
+
+        ElevatorPlatformConstruction elevatorPlatformConstruction = elevatorBuilding.spawnedElevatorPlatform;
+        navMeshAgent.SetDestination(elevatorPlatformConstruction.buildingInteractions[elevatorPlatformConstruction.elevatorRidingPassengers.Count].waypoints[0].position);
+
+        Debug.Log(navMeshAgent.destination);
+
+        elevatorBuilding.AddWalkingPassenger(this);
+        elevatorBuilding.RemoveWaitingPassenger(this);
+        elevatorBuilding.RemoveRidingPassenger(this);
+    }
+
+    public void StopElevatorWalking(ElevatorBuilding elevatorBuilding)
+    {
+        //isElevatorWalking = false;
+
+        elevatorBuilding.RemoveWalkingPassenger(this);
+    }
+
+    public void StartElevatorWaiting(ElevatorBuilding elevatorBuilding)
+    {
+        Debug.Log("Start Waiting");
+
+        isElevatorWalking = false;
+        isElevatorWaiting = true;
+        isElevatorRiding = false;
+
+        BuildingConstruction buildingConstruction = elevatorBuilding.spawnedBuildingConstruction;
+        navMeshAgent.SetDestination(buildingConstruction.buildingInteractions[elevatorBuilding.elevatorWalkingPassengers.Count].waypoints[0].position);
+
+        elevatorBuilding.RemoveRidingPassenger(this);
+        elevatorBuilding.AddWaitingPassenger(this);
+        elevatorBuilding.RemoveWalkingPassenger(this);
+    }
+
+    public void StopElevatorWaiting(ElevatorBuilding elevatorBuilding)
+    {
+        isElevatorWaiting = false;
+
+        elevatorBuilding.RemoveWaitingPassenger(this);
+    }
+
     public void StartElevatorRiding(ElevatorBuilding elevatorBuilding)
     {
         //Debug.Log("Start Riding");
 
-        isElevatorWaiting = false;
         isElevatorWalking = false;
+        isElevatorWaiting = false;
+        isElevatorRiding = true;
 
-        ElevatorPlatformConstruction elevatorPlatformConstruction = elevatorBuilding.spawnedElevatorPlatform;
-
-        navMeshAgent.SetDestination(elevatorPlatformConstruction.buildingInteractions[elevatorPlatformConstruction.elevatorRidingPassengers.Count].waypoints[0].position);
-
-        //FollowPath();
+        navMeshAgent.enabled = false;
 
         elevatorBuilding.AddRidingPassenger(this);
         elevatorBuilding.RemoveWaitingPassenger(this);
@@ -195,64 +242,5 @@ public class Entity : MonoBehaviour
         FollowPath();
 
         elevatorBuilding.RemoveRidingPassenger(this);
-    }
-
-    public void StartElevatorWaiting(ElevatorBuilding elevatorBuilding)
-    {
-        //Debug.Log("Start Waiting");
-
-        isElevatorRiding = false;
-        isElevatorWaiting = true;
-        isElevatorWalking = false;
-
-        //BuildingConstruction buildingConstruction = elevatorBuilding.spawnedBuildingConstruction;
-
-        //navMeshAgent.SetDestination(buildingConstruction.buildingInteractions[elevatorBuilding.elevatorWalkingPassengers.Count].waypoints[0].position);
-
-        //FollowPath();
-
-        elevatorBuilding.RemoveRidingPassenger(this);
-        elevatorBuilding.AddWaitingPassenger(this);
-        elevatorBuilding.RemoveWalkingPassenger(this);
-    }
-
-    public void StopElevatorWaiting(ElevatorBuilding elevatorBuilding)
-    {
-        isElevatorWaiting = false;
-
-        elevatorBuilding.RemoveWaitingPassenger(this);
-    }
-
-    public void StartElevatorWalking(ElevatorBuilding elevatorBuilding)
-    {
-        Debug.Log("Start Walking");
-
-        isElevatorRiding = false;
-        isElevatorWaiting = false;
-        isElevatorWalking = true;
-
-        //BuildingConstruction buildingConstruction = elevatorBuilding.spawnedBuildingConstruction;
-
-        //FollowPath();
-
-        //navMeshAgent.SetDestination(buildingConstruction.buildingInteractions[elevatorBuilding.elevatorWalkingPassengers.Count].waypoints[0].position);
-
-        elevatorBuilding.RemoveRidingPassenger(this);
-        elevatorBuilding.RemoveWaitingPassenger(this);
-        elevatorBuilding.AddWalkingPassenger(this);
-    }
-
-    public void StopElevatorWalking(ElevatorBuilding elevatorBuilding)
-    {
-        isElevatorWalking = false;
-
-        elevatorBuilding.RemoveWalkingPassenger(this);
-    }
-
-    public void StartRidingOnElevator()
-    {
-        isElevatorRiding = true;
-
-        navMeshAgent.enabled = false;
     }
 }

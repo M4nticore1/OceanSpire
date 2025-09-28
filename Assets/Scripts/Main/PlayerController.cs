@@ -1,13 +1,9 @@
-using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
-using UnityEngine.InputSystem.EnhancedTouch;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,22 +14,29 @@ public class PlayerController : MonoBehaviour
 
     // Camera Movement
     [SerializeField] private Camera mainCamera = null;
-    [SerializeField] private GameObject ñameraHolder = null;
+    [SerializeField] private GameObject cameraHolder = null;
 
     private Vector3 ñameraHolderStartPosition = Vector3.zero;
     private Quaternion ñameraHolderStartRotation = new Quaternion(0f, 0f, 0f, 0);
 
-    private Vector3 cameraPosition = Vector3.zero;
-    private Vector3 cameraRotation = Vector3.zero;
+    private Vector3 cameraVerticalPosition = Vector3.zero;
+    private Vector3 cameraHorizontalPosition = Vector3.zero;
+
+    private Vector3 cameraHorizontalRotation = Vector3.zero;
+    private Vector3 cameraVerticalRotation = Vector3.zero;
 
     private Vector2 CameraMoveSensitivity = new Vector2(5.0f, 1.0f);
-    private const float cameraStopMoveSpeed = 10.0f;
+    private const float cameraStopMoveSpeed = 9.0f;
 
     private Vector2 cameraMoveVelocity = Vector2.zero;
     private const float cameraHeightBoundaryPadding = 10.0f;
     private const float cameraHeightReturnSpeed = 5.0f;
 
     private float cameraMoveMultiplier = 1.0f;
+    private float cameraMoveAlpha = 0.0f;
+    float moveStateValue = 0;
+
+    private const int cameraMovingDistance = 8;
 
     // Camera Arm
     private float startCameraArmLength = 0.0f;
@@ -51,7 +54,7 @@ public class PlayerController : MonoBehaviour
     private bool isFirstTouchPressed = false;
     private bool isSecondTouchPressed = false;
 
-    private PlayerInput playerInput;
+    private PlayerInput playerInput = null;
     [SerializeField] private InputActionAsset mainInputActionsAsset = null;
     private InputActionMap touchInputActionMap = null;
 
@@ -84,9 +87,11 @@ public class PlayerController : MonoBehaviour
 
     private Building selectedBuilding = null;
     private bool isSelectedBuilding = false;
-    [SerializeField] private LayerMask clickableLayers;
 
-    private bool isPressedOnGUI = false;
+    // Raycast
+    private GraphicRaycaster graphicRaycaster = null;
+    private EventSystem eventSystem = null;
+    [SerializeField] private LayerMask clickableLayers;
 
     private void Awake()
     {
@@ -95,21 +100,23 @@ public class PlayerController : MonoBehaviour
         gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
         UIManager = FindAnyObjectByType<UIManager>();
-        //UIManager.InitializeUIManager();
+        graphicRaycaster = UIManager.gameObject.GetComponent<GraphicRaycaster>();
+        //eventSystem = FindAnyObjectByType<EventSystem>();
 
         SetInputSystem();
-
-        ñameraHolderStartPosition = ñameraHolder.transform.position;
-        ñameraHolderStartRotation = ñameraHolder.transform.rotation;
-
-        cameraPosition = ñameraHolderStartPosition;
-        cameraRotation = ñameraHolderStartRotation.eulerAngles;
     }
 
     private void Start()
     {
+        ñameraHolderStartPosition = cameraHolder.transform.position;
+        ñameraHolderStartRotation = cameraHolder.transform.rotation;
+        cameraVerticalRotation = new Vector3(cameraHolder.transform.rotation.eulerAngles.x, 0f, 0f);
+
         currentCameraArmLength = -mainCamera.transform.localPosition.z;
         startCameraArmLength = -currentCameraArmLength;
+
+        cameraMoveAlpha = 0.5f;
+        moveStateValue = 1f / CityManager.roomsCountPerFloor;
     }
 
     private void Update()
@@ -186,39 +193,65 @@ public class PlayerController : MonoBehaviour
 
     private void MoveCamera()
     {
-        if (cameraPosition.y > cityManager.cityHeight)
-            cameraMoveMultiplier = math.pow(((cityManager.cityHeight - cameraPosition.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f);
-        else if (cameraPosition.y < 0.0f)
-            cameraMoveMultiplier = ((0 - math.abs(cameraPosition.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding;
+        if (cameraHolder.transform.position.y > cityManager.cityHeight)
+            cameraMoveMultiplier = math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f);
+        else if (cameraHolder.transform.position.y < 0.0f)
+            cameraMoveMultiplier = ((0 - math.abs(cameraHolder.transform.position.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding;
 
         Vector3 currentCameraMoveVelocity = new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime * cameraMoveMultiplier;
-        cameraPosition -= currentCameraMoveVelocity;
-        ñameraHolder.transform.position = cameraPosition;
+        cameraVerticalPosition -= currentCameraMoveVelocity;
 
-        Vector3 cameraRotationVelocity = new Vector3(0, cameraMoveVelocity.x, 0) * Time.deltaTime;
-        cameraRotation += cameraRotationVelocity;
-        Quaternion newCameraQuaternion = Quaternion.Euler(cameraRotation);
-        ñameraHolder.transform.rotation = newCameraQuaternion;
+        // Camera horizontal move
+        float shiftedAlpha = cameraMoveAlpha - (1 - (moveStateValue / 2));
+        shiftedAlpha = Mathf.Repeat(shiftedAlpha, 1f);
+        int moveStateIndex = (int)(shiftedAlpha / moveStateValue);
+
+        cameraHorizontalRotation.y = cameraMoveAlpha * 360f;
+
+        int positionHalfLenght = cameraMovingDistance / 2;
+
+        float position = shiftedAlpha % moveStateValue * CityManager.roomsCountPerFloor * cameraMovingDistance - positionHalfLenght;
+        float cameraSensitivityMultiplier = moveStateIndex % 2 == 0 ? 0.5f : 1f;
+
+        if (moveStateIndex == 0)
+            cameraHorizontalPosition = new Vector3(-position, 0, -positionHalfLenght);
+        if (moveStateIndex == 1)
+            cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, -positionHalfLenght);
+        else if (moveStateIndex == 2)
+            cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, position);
+        else if (moveStateIndex == 3)
+            cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, positionHalfLenght);
+        else if (moveStateIndex == 4)
+            cameraHorizontalPosition = new Vector3(position, 0, positionHalfLenght);
+        else if (moveStateIndex == 5)
+            cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, positionHalfLenght);
+        else if (moveStateIndex == 6)
+            cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -position);
+        else if (moveStateIndex == 7)
+            cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -positionHalfLenght);
+
+        int sign = cameraMoveVelocity.x > 0 ? 1 : cameraMoveVelocity.x < 0 ? -1 : 0;
+        cameraMoveAlpha += cameraMoveVelocity.x * cameraSensitivityMultiplier / 360f * Time.deltaTime;
+        cameraMoveAlpha = Mathf.Repeat(cameraMoveAlpha, 1f);
 
         if (!isFirstTouchPressed)
         {
             Vector3 clampPosition = Vector3.zero;
 
-            if (cameraPosition.y > cityManager.cityHeight)
+            if (cameraVerticalPosition.y > cityManager.cityHeight)
             {
                 clampPosition.y = cityManager.cityHeight;
-                cameraPosition = math.lerp(cameraPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
+                cameraVerticalPosition = math.lerp(cameraVerticalPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
             }
-            else if (cameraPosition.y < 0.0f)
+            else if (cameraVerticalPosition.y < 0.0f)
             {
-                cameraPosition = math.lerp(cameraPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
+                cameraVerticalPosition = math.lerp(cameraVerticalPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
                 clampPosition.y = 0;
             }
-
-            ñameraHolder.transform.position = cameraPosition;
         }
 
-        //ñameraHolder.transform.SetPositionAndRotation(newCameraPosition, newCameraQuaternion);
+        cameraHolder.transform.rotation = Quaternion.Euler(cameraHorizontalRotation + cameraVerticalRotation);
+        cameraHolder.transform.position = cameraHorizontalPosition + cameraVerticalPosition;
     }
 
     private void SetCameraArmLength()
@@ -283,15 +316,20 @@ public class PlayerController : MonoBehaviour
             {
                 if (firstTouchStartPosition == firstTouchCurrentPosition)
                 {
-                    int clickableMask = LayerMask.GetMask("Clickable");
-                    int UIMask = LayerMask.GetMask("UI");
-                    Ray ray = mainCamera.ScreenPointToRay(firstTouchCurrentPosition);
+                    PointerEventData pointerEventData = new PointerEventData(eventSystem);
+                    pointerEventData.position = firstTouchCurrentPosition;
+                    List<RaycastResult> results = new List<RaycastResult>();
+                    graphicRaycaster.Raycast(pointerEventData, results);
 
-                    RaycastHit hit;
-
-                    if (Physics.Raycast(ray, out hit, 500, clickableLayers))
+                    if (results.Count == 0)
                     {
-                        if (!EventSystem.current.IsPointerOverGameObject(Input.touchCount > 0 ? Input.GetTouch(0).fingerId : 0))
+                        int clickableMask = LayerMask.GetMask("Clickable");
+                        int UIMask = LayerMask.GetMask("UI");
+                        Ray ray = mainCamera.ScreenPointToRay(firstTouchCurrentPosition);
+
+                        RaycastHit hit;
+
+                        if (Physics.Raycast(ray, out hit, 500, clickableLayers))
                         {
                             if (isBuildingToPlaceSelected && buildingToPlace)
                             {
@@ -360,10 +398,6 @@ public class PlayerController : MonoBehaviour
                             //UnselectBuilding();
                         }
                     }
-                    else
-                    {
-                        //UnselectBuilding();
-                    }
                 }
             }
 
@@ -408,11 +442,21 @@ public class PlayerController : MonoBehaviour
                 firstTouchCurrentPosition = firstTouchPositionAction.ReadValue<Vector2>();
                 firstTouchMoveInput = firstTouchMoveAction.ReadValue<Vector2>();
             }
+            else
+            {
+                firstTouchCurrentPosition = Vector3.zero;
+                firstTouchMoveInput = Vector3.zero;
+            }
 
             if (isSecondTouchPressed)
             {
                 secondTouchCurrentPosition = secondTouchPositionAction.ReadValue<Vector2>();
                 secondTouchMoveInput = secondTouchMoveAction.ReadValue<Vector2>();
+            }
+            else
+            {
+                secondTouchCurrentPosition = Vector3.zero;
+                secondTouchMoveInput = Vector3.zero;
             }
 
             cameraMoveVelocity.x = (firstTouchMoveInput.x + secondTouchMoveInput.x) * CameraMoveSensitivity.x;
@@ -420,8 +464,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (!isFirstTouchPressed && !isSecondTouchPressed)
         {
-            float CameraStopSpeed = cameraStopMoveSpeed * Time.deltaTime;
-            cameraMoveVelocity = Vector2.Lerp(cameraMoveVelocity, Vector2.zero, CameraStopSpeed);
+            cameraMoveVelocity = Vector2.Lerp(cameraMoveVelocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
         }
     }
 
@@ -567,6 +610,8 @@ public class PlayerController : MonoBehaviour
 
     private void SelectBuilding(Building building)
     {
+        //Debug.Log("select " + building);
+
         isSelectedBuilding = true;
         selectedBuilding = building;
 
@@ -580,7 +625,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void UnselectBuilding()
+    public void UnselectBuilding()
     {
         if (!UIManager.isBuildingResourcesMenuOpened)
         {

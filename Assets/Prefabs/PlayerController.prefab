@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 3364798657196465612}
-  "\u0441ameraHolder": {fileID: 9020790906093603443}
+  cameraHolder: {fileID: 9020790906093603443}
   mainInputActionsAsset: {fileID: -944628639613478452, guid: e3db4645d0ae36245a27082f5b603306, type: 3}
   buildingToPlace: {fileID: 0}
   clickableLayers:

@@ -1,12 +1,8 @@
-using NUnit.Framework.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using Unity.AI.Navigation;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 enum Direction
@@ -46,14 +42,16 @@ public class CityManager : MonoBehaviour
     [HideInInspector] public List<bool> hasHallOnFloors = new List<bool>();
     [HideInInspector] public List<bool> hasFloorFrameOnFloors = new List<bool>();
 
-    public const float floorHeight = 5.0f;
-    public const float firstFloorHeight = 5.0f;
+    public const int floorHeight = 5;
+    public const int firstFloorHeight = 5;
 
     private Vector3 roomSize = new Vector3(8, 5, 8);
     private Vector3 hallSize = new Vector3(24, 5, 24);
 
     [HideInInspector] public const int roomsCountPerFloor = 8;
-    [HideInInspector] public const int elevatorsCountPerFloor = 12;
+    [HideInInspector] public const int roomsCountPerSide = 3;
+    [HideInInspector] public const int roomsWidth = 8;
+    [HideInInspector] public const int floorWidth = 24;
     [HideInInspector] public const int firstBuildCityFloorIndex = 1;
     [HideInInspector] public const int firstBuildCitybuildingPlace = 1;
     [HideInInspector] public float cityHeight = 0;
@@ -636,54 +634,49 @@ public class CityManager : MonoBehaviour
 
         int pathIndex = 0;
 
-        //if ((!startBuildingPlace || startBuildingPlace && startBuildingPlace.floorIndex == 0 || startBuildingPlace.floorIndex == 1) && (targetBuildingPlace && targetBuildingPlace.floorIndex == 0 || targetBuildingPlace.floorIndex == 1))
-        //{
-        //    Debug.Log("A");
+        if (!startBuildingPlace)
+            startBuildingPlace = spawnedFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCitybuildingPlace];
 
-        //    AddPath(ref allPaths, ref pathIndex);
+        allPaths.Add(new List<Building>());
 
-        //    buildingsPath.Add(targetBuildingPlace.placedBuilding);
-
-        //    return true;
-        //}
-        //else
-        if (true)
+        if (FindTargetBuildingOnFloor(startBuildingPlace, targetBuildingPlace, null, ref allPaths, ref pathIndex))
         {
-            if (!startBuildingPlace)
-                startBuildingPlace = spawnedFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCitybuildingPlace];
-
-            allPaths.Add(new List<Building>());
-
-            bool isPathFounded = FindTargetBuildingOnFloor(startBuildingPlace, targetBuildingPlace, null, ref allPaths, ref pathIndex);
-
-            if (isPathFounded)
+            for (int i = 0; i < allPaths.Count; i++)
             {
-                for (int i = 0; i < allPaths.Count; i++)
+                allPaths2.Add(new BuildingPath());
+
+                allPaths2[i].paths = allPaths[i];
+
+                if (allPaths[i].Count > 0 && allPaths[i][allPaths[i].Count - 1].GetFloorIndex() == targetBuildingPlace.floorIndex && allPaths[i][allPaths[i].Count - 1].GetBuildingPlaceIndex() == targetBuildingPlace.buildingPlaceIndex)
                 {
-                    allPaths2.Add(new BuildingPath());
-
-                    for (int j = 0; j < allPaths[i].Count; j++)
-                    {
-                        allPaths2[i].paths.Add(allPaths[i][j]);
-                    }
-
-                    if (allPaths[i].Count > 0 && allPaths[i][allPaths[i].Count - 1].GetFloorIndex() == targetBuildingPlace.floorIndex && allPaths[i][allPaths[i].Count - 1].GetBuildingPlaceIndex() == targetBuildingPlace.buildingPlaceIndex)
-                    {
-                        //buildingsPath = allPaths[i];
-
-                        //for (int j = 0; j < allPaths[i].Count; j++)
-                        //{
-                        //    buildingsPath.Add(allPaths[i][j]);
-                        //}
-                    }
+                    buildingsPath = allPaths[i];
                 }
-
-                buildingsPath = allPaths[allPaths.Count - 1];
             }
 
-            Debug.Log("return" + isPathFounded);
+            for (int i = 0; i < buildingsPath.Count; i++)
+            {
+                Building currentBuilding = buildingsPath[i];
+                ElevatorBuilding currentElevatorBuilding = currentBuilding as ElevatorBuilding;
 
-            return isPathFounded;
+                Building nextBuilding = buildingsPath[i];
+                ElevatorBuilding nextElevatorBuilding = currentBuilding as ElevatorBuilding;
+
+                if (buildingsPath.Count > i + 2)
+                {
+                    if (buildingsPath[i].GetBuildingPlaceIndex() == buildingsPath[i + 1].GetBuildingPlaceIndex() && buildingsPath[i].GetBuildingPlaceIndex() == buildingsPath[i + 2].GetBuildingPlaceIndex())
+                    {
+                        buildingsPath.RemoveAt(i + 1);
+                        i--;
+                    }
+                }
+            }
+
+            return true;
+        }
+        else
+        {
+            Debug.Log("Path wasn't found");
+            return false;
         }
     }
 
@@ -691,7 +684,6 @@ public class CityManager : MonoBehaviour
     {
         if (startBuildingPlace)
         {
-            //
             List <ElevatorBuilding> elevatorBuildingsOnFloor = new List<ElevatorBuilding>();
             Building startBuilding = null;
             Building leftBuilding = null;
@@ -702,9 +694,6 @@ public class CityManager : MonoBehaviour
             bool isNeededToCheckRightSide = true;
 
             int startPathIndex = pathIndex;
-
-            // 
-            //AddPath(ref allPaths, ref pathIndex);
 
             // Check Start Building
             startBuilding = startBuildingPlace.placedBuilding;
@@ -737,8 +726,6 @@ public class CityManager : MonoBehaviour
                 {
                     int index = (startBuildingPlace.buildingPlaceIndex + i + roomsCountPerFloor) % roomsCountPerFloor;
 
-                    Debug.Log("startBuilding floorIndex: " + startBuilding.GetFloorIndex() + " buildingPlaceIndex: " + index);
-
                     if (isNeededToCheckLeftSide)
                     {
                         int leftIndex = (startBuildingPlace.buildingPlaceIndex + i + roomsCountPerFloor) % roomsCountPerFloor;
@@ -751,20 +738,18 @@ public class CityManager : MonoBehaviour
 
                             if (elevatorBuilding)
                             {
-                                Debug.Log("leftElevatorBuilding: " + elevatorBuilding + " " + elevatorBuilding.GetFloorIndex() + " " + elevatorBuilding.GetBuildingPlaceIndex());
+                                if (AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex))
+                                    return true;
 
-                                AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex);
-                                AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex);
+                                if (AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex))
+                                    return true;
                             }
                             else
                             {
-                                Debug.Log("leftBuilding: " + leftBuilding + " " + leftBuilding.GetFloorIndex() + " " + leftBuilding.GetBuildingPlaceIndex());
-
                                 allPaths[startPathIndex].Add(leftBuilding);
 
                                 if (leftBuilding.GetFloorIndex() == targetBuildingPlace.floorIndex && leftBuilding.GetBuildingPlaceIndex() == targetBuildingPlace.buildingPlaceIndex)
                                 {
-                                    Debug.Log("Target was found");
                                     return true;
                                 }
                             }
@@ -772,8 +757,6 @@ public class CityManager : MonoBehaviour
                         else
                         {
                             isNeededToCheckLeftSide = false;
-
-                            Debug.Log(startBuilding.GetFloorIndex() + " " + isNeededToCheckLeftSide);
                         }
                     }
 
@@ -789,10 +772,11 @@ public class CityManager : MonoBehaviour
 
                             if (elevatorBuilding)
                             {
-                                Debug.Log("rightElevatorBuilding: " + elevatorBuilding + " " + elevatorBuilding.GetFloorIndex() + " " + elevatorBuilding.GetBuildingPlaceIndex());
+                                if (AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex))
+                                    return true;
 
-                                AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex);
-                                AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex);
+                                if (AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex))
+                                    return true;
                             }
                             else
                             {
@@ -819,8 +803,6 @@ public class CityManager : MonoBehaviour
                 {
                     int finishIndex = (startBuildingPlace.buildingPlaceIndex + (roomsCountPerFloor / 2) + roomsCountPerFloor) % roomsCountPerFloor;
 
-                    Debug.Log("finishBuilding floorIndex: " + startBuilding.GetFloorIndex() + " buildingPlaceIndex: " + finishIndex);
-
                     finishBuilding = GetBuildingByIndex(startBuildingPlace.floorIndex, finishIndex);
 
                     if (finishBuilding)
@@ -829,15 +811,14 @@ public class CityManager : MonoBehaviour
 
                         if (elevatorBuilding)
                         {
-                            Debug.Log("finishElevatorBuilding: " + elevatorBuilding + " " + elevatorBuilding.GetFloorIndex() + " " + elevatorBuilding.GetBuildingPlaceIndex());
+                            if (AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex))
+                                return true;
 
-                            AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex);
-                            AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex);
+                            if (AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingPlace, lastBuildingPlace, ref pathIndex))
+                                return true;
                         }
                         else
                         {
-                            Debug.Log("finishBuilding: " + finishBuilding + " " + finishBuilding.GetFloorIndex() + " " + finishBuilding.GetBuildingPlaceIndex());
-
                             allPaths[startPathIndex].Add(finishBuilding);
 
                             if (finishBuilding.GetFloorIndex() == targetBuildingPlace.floorIndex && finishBuilding.GetBuildingPlaceIndex() == targetBuildingPlace.buildingPlaceIndex)
@@ -845,31 +826,16 @@ public class CityManager : MonoBehaviour
                         }
                     }
                 }
-
-                if (finishBuilding || (!isNeededToCheckLeftSide && !isNeededToCheckRightSide))
-                {
-                    return true;
-                }
-
-                return false;
             }
-
-            return false;
         }
 
         return false;
     }
 
-
-    private void AddElevatorPath(ElevatorBuilding verticalElevatorBuilding, ElevatorBuilding startElevatorBuilding, BuildingPlace targetBuildingPlace, BuildingPlace lastBuildingPlace, ref int pathIndex)
+    private bool AddElevatorPath(ElevatorBuilding verticalElevatorBuilding, ElevatorBuilding startElevatorBuilding, BuildingPlace targetBuildingPlace, BuildingPlace lastBuildingPlace, ref int pathIndex)
     {
-        //ElevatorBuilding verticalElevatorBuilding = direction == Direction.Forward ? elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding : elevatorBuilding.belowConnectedBuilding as ElevatorBuilding;
-        //GetVerticalBuilding(elevatorBuilding.buildingPlace, direction) as ElevatorBuilding;
-
         if (verticalElevatorBuilding && verticalElevatorBuilding.buildingPlace != lastBuildingPlace)
         {
-            Debug.Log(verticalElevatorBuilding);
-
             if (verticalElevatorBuilding.buildingData.buildingIdName == startElevatorBuilding.buildingData.buildingIdName)
             {
                 pathIndex++;
@@ -881,7 +847,6 @@ public class CityManager : MonoBehaviour
 
                     for (int j = 1; j < lastPathCount; j++)
                     {
-                        Debug.Log("Add");
                         allPaths[pathIndex].Add(allPaths[j][j - 1]);
                     }
                 }
@@ -889,290 +854,12 @@ public class CityManager : MonoBehaviour
                 allPaths[pathIndex].Add(startElevatorBuilding);
                 allPaths[pathIndex].Add(verticalElevatorBuilding);
 
-                FindTargetBuildingOnFloor(verticalElevatorBuilding.buildingPlace, targetBuildingPlace, startElevatorBuilding.buildingPlace, ref allPaths, ref pathIndex);
+                return FindTargetBuildingOnFloor(verticalElevatorBuilding.buildingPlace, targetBuildingPlace, startElevatorBuilding.buildingPlace, ref allPaths, ref pathIndex);
             }
+            else
+                return false;
         }
+        else
+            return false;
     }
-
-    //private bool FindTargetBuilding(BuildingPlace startBuildingPlace, BuildingPlace targetBuilding, BuildingPlace lastBuilding, ref List<List<Building>> allPaths, ref int pathIndex)
-    //{
-    //    // This function checks the new full floor after the path to it has been found.
-
-    //    int startPathIndex = pathIndex;
-    //    int currentIndex = startPathIndex;
-
-    //    AddPath(ref allPaths, ref pathIndex);
-
-    //    bool needToAddPath = false;
-
-    //    bool hasStartBuilding = true;
-    //    bool hasFinishBuilding = true;
-    //    bool hasLeftBuilding = true;
-    //    bool hasRightBuilding = true;
-
-    //    Building startBuilding = null;
-    //    Building finishBuilding = null;
-    //    Building leftBuilding = null;
-    //    Building rightBuilding = null;
-
-    //    // Check start building
-    //    if (!startBuilding)
-    //    {
-    //        startBuilding = FindPathPointByPlaceIndex(startBuildingPlace, targetBuilding, startBuildingPlace, ref allPaths, ref currentIndex, 0);
-
-    //        if (startBuilding)
-    //        {
-    //            ElevatorBuilding elevatorBuilding = startBuilding as ElevatorBuilding;
-
-    //            if (elevatorBuilding)
-    //            {
-    //                if (needToAddPath)
-    //                    AddPath(ref allPaths, ref currentIndex);
-    //                else
-    //                    needToAddPath = true;
-    //            }
-    //            else
-    //            {
-    //                if (startBuilding.GetFloorIndex() == targetBuilding.floorIndex && startBuilding.GetBuildingPlaceIndex() == targetBuilding.buildingPlaceIndex)
-    //                {
-    //                    return true;
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    // Check buildings between first and finish buildings
-    //    for (int i = 1; i < roomsCountPerFloor / 2; i++)
-    //    {
-    //        if (!leftBuilding && hasLeftBuilding)
-    //        {
-    //            leftBuilding = FindPathPointByPlaceIndex(startBuildingPlace, targetBuilding, startBuildingPlace, ref allPaths, ref currentIndex, i);
-
-    //            if (leftBuilding)
-    //            {
-    //                ElevatorBuilding elevatorBuilding = leftBuilding as ElevatorBuilding;
-
-    //                if (elevatorBuilding)
-    //                {
-    //                    if (needToAddPath)
-    //                        AddPath(ref allPaths, ref currentIndex);
-    //                    else
-    //                        needToAddPath = true;
-    //                }
-    //                else
-    //                {
-    //                    if (leftBuilding.GetFloorIndex() == targetBuilding.floorIndex && leftBuilding.GetBuildingPlaceIndex() == targetBuilding.buildingPlaceIndex)
-    //                    {
-    //                        return true;
-    //                    }
-    //                }
-    //            }
-    //            else
-    //            {
-    //                hasLeftBuilding = false;
-    //            }
-    //        }
-
-    //        if (!rightBuilding && hasRightBuilding)
-    //        {
-    //            rightBuilding = FindPathPointByPlaceIndex(startBuildingPlace, targetBuilding, startBuildingPlace, ref allPaths, ref currentIndex, -i);
-
-    //            if (rightBuilding)
-    //            {
-    //                ElevatorBuilding elevatorBuilding = rightBuilding as ElevatorBuilding;
-
-    //                if (elevatorBuilding)
-    //                {
-    //                    if (needToAddPath)
-    //                        AddPath(ref allPaths, ref currentIndex);
-    //                    else
-    //                        needToAddPath = true;
-    //                }
-    //                else
-    //                {
-    //                    if (rightBuilding.GetFloorIndex() == targetBuilding.floorIndex && rightBuilding.GetBuildingPlaceIndex() == targetBuilding.buildingPlaceIndex)
-    //                    {
-    //                        return true;
-    //                    }
-    //                }
-    //            }
-    //            else
-    //            {
-    //                hasRightBuilding = false;
-    //            }
-    //        }
-
-    //        if (!leftBuilding && !rightBuilding)
-    //            break;
-    //    }
-
-    //    // Check finish building
-    //    if (!finishBuilding && (hasLeftBuilding || hasRightBuilding))
-    //    {
-    //        Debug.Log(hasRightBuilding);
-
-    //        finishBuilding = FindPathPointByPlaceIndex(startBuildingPlace, targetBuilding, startBuildingPlace, ref allPaths, ref currentIndex, roomsCountPerFloor / 2);
-
-    //        if (finishBuilding)
-    //        {
-    //            ElevatorBuilding elevatorBuilding = finishBuilding as ElevatorBuilding;
-
-    //            if (elevatorBuilding)
-    //            {
-    //                if (needToAddPath)
-    //                    AddPath(ref allPaths, ref currentIndex);
-    //                else
-    //                    needToAddPath = true;
-    //            }
-    //            else
-    //            {
-    //                if (finishBuilding.GetFloorIndex() == targetBuilding.floorIndex && finishBuilding.GetBuildingPlaceIndex() == targetBuilding.buildingPlaceIndex)
-    //                {
-    //                    return true;
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    // If any building is found
-    //    if (startBuilding || leftBuilding || rightBuilding || finishBuilding)
-    //        return true;
-    //    else
-    //        return false;
-    //}
-
-    //private Building FindPathPointByPlaceIndex(BuildingPlace startBuildingPlace, BuildingPlace targetBuildingPlace, BuildingPlace lastBuildingPlace, ref List<List<Building>> allPaths, ref int pathIndex, int sidebuildingPlaceIndexOffset)
-    //{
-    //    // This function checks the one building on new floor by index.
-
-    //    bool hasUpTargetBuilding = true;
-    //    bool hasDownTargetBuilding = true;
-
-    //    Building upElevatorBuilding = null;
-    //    Building downElevatorBuilding = null;
-
-    //    int buildingPlaceIndex = (startBuildingPlace.buildingPlaceIndex + sidebuildingPlaceIndexOffset + roomsCountPerFloor) % (roomsCountPerFloor);
-
-    //    Debug.Log(startBuildingPlace.buildingPlaceIndex + " " + sidebuildingPlaceIndexOffset);
-    //    //Debug.Log("Check floor by index: " + startBuildingPlace.floorIndex + " building by index: " + buildingPlaceIndex);
-    
-    //    BuildingPlace offsetBuildingPlace = spawnedFloors[startBuildingPlace.floorIndex].roomBuildingPlaces[buildingPlaceIndex];
-
-    //    if (offsetBuildingPlace)
-    //    {
-    //        Building building = offsetBuildingPlace.placedBuilding;
-
-    //        if (building)
-    //        {
-    //            if (building.GetFloorIndex() == targetBuildingPlace.floorIndex && building.GetBuildingPlaceIndex() == targetBuildingPlace.buildingPlaceIndex)
-    //            {
-    //                allPaths[pathIndex].Add(building);
-
-    //                return building;
-    //            }
-    //            else
-    //            {
-    //                // Getting elevator on floor
-    //                ElevatorBuilding elevatorBuilding = building as ElevatorBuilding;
-
-    //                if (elevatorBuilding)
-    //                {
-    //                    allPaths[pathIndex].Add(elevatorBuilding);
-
-    //                    if (!upElevatorBuilding)
-    //                    {
-    //                        upElevatorBuilding = FindConnectedElevator(offsetBuildingPlace, targetBuildingPlace, lastBuildingPlace, ref allPaths, ref pathIndex, Direction.Forward);
-
-    //                        if (upElevatorBuilding)
-    //                        {
-    //                            //allPaths[pathIndex].Add(upElevatorBuilding);
-
-    //                            hasUpTargetBuilding = FindTargetBuilding(upElevatorBuilding.buildingPlace, targetBuildingPlace, offsetBuildingPlace, ref allPaths, ref pathIndex);
-    //                        }
-    //                    }
-
-    //                    //if (!downElevatorBuilding)
-    //                    //{
-    //                    //    downElevatorBuilding = FindConnectedElevator(offsetBuildingPlace, targetBuildingPlace, lastBuildingPlace, ref allPaths, ref pathIndex, Direction.Back);
-
-    //                    //    if (downElevatorBuilding)
-    //                    //    {
-    //                    //        if (upElevatorBuilding)
-    //                    //        {
-    //                    //            AddPath(ref allPaths, ref pathIndex);
-    //                    //            allPaths[pathIndex].Add(downElevatorBuilding);
-    //                    //            pathIndex++;
-    //                    //        }
-
-    //                    //        hasDownTargetBuilding = FindTargetBuilding(downElevatorBuilding.buildingPlace, targetBuildingPlace, startBuildingPlace, ref allPaths, ref pathIndex);
-    //                    //    }
-    //                    //}
-
-    //                    if (upElevatorBuilding || downElevatorBuilding)
-    //                        return elevatorBuilding;
-    //                    else
-    //                        return null;
-    //                }
-    //                else
-    //                {
-    //                    return building;
-    //                }
-    //            }
-    //        }
-    //        else
-    //        {
-    //            //Debug.Log("false");
-    //            return null;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        //Debug.Log("false");
-    //        return null;
-    //    }
-    //}
-
-    //private Building FindConnectedElevator(BuildingPlace startBuildingPlace, BuildingPlace targetBuildingPlace, BuildingPlace lastBuildingPlace, ref List<List<Building>> allPaths, ref int pathIndex, Direction direction)
-    //{
-    //    // This function checks the elevators from above or below if an elevator has been found on the current floor.
-
-    //    ElevatorBuilding verticalElevatorBuilding = null;
-
-    //    if (startBuildingPlace)
-    //    {
-    //        ElevatorBuilding startElevatorBuilding = startBuildingPlace.placedBuilding as ElevatorBuilding;
-
-    //        if (startElevatorBuilding)
-    //        {
-    //            if (direction == Direction.Forward ? (startBuildingPlace && startBuildingPlace.floorIndex < builtFloorsCount - 1) : (startBuildingPlace && startBuildingPlace.floorIndex > firstBuildCityFloorIndex + 1))
-    //            {
-    //                BuildingPlace verticalBuildingPlace = spawnedFloors[startBuildingPlace.floorIndex + (direction == Direction.Forward ? 1 : -1)].roomBuildingPlaces[startBuildingPlace.buildingPlaceIndex];
-    //                Building verticalBuilding = verticalBuildingPlace.placedBuilding as ElevatorBuilding;
-
-    //                if (verticalBuilding && verticalBuilding.buildingData.buildingIdName == startElevatorBuilding.buildingData.buildingIdName)
-    //                {
-    //                    verticalElevatorBuilding = verticalBuilding as ElevatorBuilding;
-
-    //                    //AddPath(ref allPaths, ref pathIndex);
-    //                }
-    //            }
-    //        }
-    //    }
-
-    //    return verticalElevatorBuilding;
-    //}
-
-    //private void AddPath(ref List<List<Building>> allPaths, ref int pathIndex)
-    //{
-    //    //pathIndex++;
-
-    //    allPaths.Add(new List<Building>());
-
-    //    //for (int i = 0; i < allPaths[pathIndex].Count; i++)
-    //    //{
-    //    //    allPaths[pathIndex + 1].Add(allPaths[pathIndex][i]);
-    //    //}
-
-    //    pathIndex++;
-    //}
 }

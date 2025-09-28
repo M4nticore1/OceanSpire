@@ -90,23 +90,16 @@ public class RoomBuilding : Building
             bool hadUpConnect = aboveConnectedBuilding != null;
             bool hadDownConnect = belowConnectedBuilding != null;
 
-            Debug.Log(cityManager.spawnedFloors.Count);
-
             if (!aboveConnectedBuilding && GetFloorIndex() < cityManager.spawnedFloors.Count - 1)
             {
                 RoomBuilding topRoom = cityManager.spawnedFloors[GetFloorIndex() + 1].roomBuildingPlaces[GetBuildingPlaceIndex()].placedBuilding as RoomBuilding;
 
-                Debug.Log("get");
-
                 if (topRoom && topRoom.buildingData.buildingIdName == buildingData.buildingIdName)
                 {
-                    Debug.Log("this");
-
                     if (topRoom.levelIndex == levelIndex)
                     {
                         isConnectedAbove = true;
                         aboveConnectedBuilding = topRoom;
-                        Debug.Log("topRoom");
                         topRoom.isConnectedBelow = true;
                         topRoom.UpdateBuildingConstruction();
                     }
@@ -127,17 +120,12 @@ public class RoomBuilding : Building
 
                 if (belowRoom && belowRoom.buildingData.buildingIdName == buildingData.buildingIdName)
                 {
-                    Debug.Log("belowRoom");
-
                     if (belowRoom.levelIndex == levelIndex)
                     {
                         isConnectedBelow = true;
                         belowConnectedBuilding = belowRoom;
                         belowRoom.isConnectedAbove = true;
                         belowRoom.UpdateBuildingConstruction();
-
-                        if (belowRoom.GetFloorIndex() < cityManager.spawnedFloors.Count - 1)
-                            Debug.Log("belowRoom.BuildConstruction " + belowRoom.GetFloorIndex());
                     }
                     else
                     {
@@ -157,8 +145,6 @@ public class RoomBuilding : Building
 
     protected override void BuildConstruction()
     {
-        Debug.Log("construct");
-
         base.BuildConstruction();
 
         RoomBuildingLevelData roomLevelData = buildingLevelsData[levelIndex] as RoomBuildingLevelData;
