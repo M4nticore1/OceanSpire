@@ -37,6 +37,7 @@ public class Building : MonoBehaviour
     [Header("Construction")]
     public BuildingConstruction spawnedBuildingConstruction = null;
     public bool isRuined = false;
+    private GameObject spawedBuildingDetails = null;
 
     public static event Action<Building> OnBuildingPlaced;
     public static event Action<Building> OnBuildingUpgraded;
@@ -69,6 +70,12 @@ public class Building : MonoBehaviour
 		    storageBuilding.Build();
 
 		UpdateBuildingConstruction();
+
+        if (spawnedBuildingConstruction && spawnedBuildingConstruction.buildingDetails.Count > 0)
+        {
+            int buildingDetailsIndex = UnityEngine.Random.Range(0, spawnedBuildingConstruction.buildingDetails.Count);
+            spawedBuildingDetails = Instantiate<GameObject>(spawnedBuildingConstruction.buildingDetails[buildingDetailsIndex], transform);
+        }
 
         if (GetType() == typeof(Building))
             InvokeBuildingPlaced(this);

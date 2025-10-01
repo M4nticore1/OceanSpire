@@ -41,7 +41,11 @@ public class RoomBuilding : Building
             buildingPosition = BuildingPosition.Straight;
         }
 
-        if (buildingData.connectionType == ConnectionType.Horizontal)
+        if (buildingData.connectionType == ConnectionType.None)
+        {
+            BuildConstruction();
+        }
+        else if (buildingData.connectionType == ConnectionType.Horizontal)
         {
             // Check the left room
             RoomBuilding leftRoom = null;
@@ -149,7 +153,22 @@ public class RoomBuilding : Building
 
         RoomBuildingLevelData roomLevelData = buildingLevelsData[levelIndex] as RoomBuildingLevelData;
 
-        if (buildingData.connectionType == ConnectionType.Horizontal)
+        if (buildingData.connectionType == ConnectionType.None)
+        {
+            if (buildingPosition == BuildingPosition.Straight)
+            {
+                if (roomLevelData.buildingStraight)
+                    spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraight, gameObject.transform);
+
+                Debug.Log("Straight");
+            }
+            else if (buildingPosition == BuildingPosition.Corner)
+            {
+                if (roomLevelData.BuildingCorner)
+                    spawnedBuildingConstruction = Instantiate(roomLevelData.BuildingCorner, gameObject.transform);
+            }
+        }
+        else if (buildingData.connectionType == ConnectionType.Horizontal)
         {
             if (buildingPosition == BuildingPosition.Straight)
             {

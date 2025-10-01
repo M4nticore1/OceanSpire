@@ -204,7 +204,7 @@ public class Entity : MonoBehaviour
         isElevatorRiding = false;
 
         BuildingConstruction buildingConstruction = elevatorBuilding.spawnedBuildingConstruction;
-        navMeshAgent.SetDestination(buildingConstruction.buildingInteractions[elevatorBuilding.elevatorWalkingPassengers.Count].waypoints[0].position);
+        navMeshAgent.SetDestination(buildingConstruction.buildingInteractions[elevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].position);
 
         elevatorBuilding.RemoveRidingPassenger(this);
         elevatorBuilding.AddWaitingPassenger(this);

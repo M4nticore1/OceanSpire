@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
     // Camera Arm
     private float startCameraArmLength = 0.0f;
     private float currentCameraArmLength = 0.0f;
-    private const float minCameraArmLength = 30.0f;
+    private const float minCameraArmLength = 20.0f;
     private const float maxCameraArmLength = 100.0f;
 
     private const float nearCameraArmBoundaryPadding = 5.0f;

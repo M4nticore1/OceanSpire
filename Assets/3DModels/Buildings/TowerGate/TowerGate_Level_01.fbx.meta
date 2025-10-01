@@ -7,8 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: BrownWood
+    second: {fileID: 2100000, guid: e92b0caa584b16a4aa5893b444a5c9bf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: BrownWoodenPlanks
     second: {fileID: 2100000, guid: b7a392d6a3fbe3248965dfd2aeae80d8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Planks_Painted_Blue
+    second: {fileID: 2100000, guid: 17fe44bb49ab0a64283e3a2d60199a23, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

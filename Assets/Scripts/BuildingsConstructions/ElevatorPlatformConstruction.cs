@@ -63,7 +63,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
                 {
                     float distance = math.distance(elevatorWalkingPassengers[i].transform.position, buildingInteractions[i].waypoints[0].position);
 
-                    if (distance < 1f && elevatorWalkingPassengers[i].navMeshAgent.velocity == Vector3.zero)
+                    if (distance <= 1f && elevatorWalkingPassengers[i].navMeshAgent.velocity == Vector3.zero)
                     {
                         elevatorWalkingPassengers[i].StartElevatorRiding(elevatorBuilding);
                         i--;
@@ -83,6 +83,24 @@ public class ElevatorPlatformConstruction : BuildingConstruction
             else if (elevatorRidingPassengers.Count > 0)
             {
 
+            }
+            else if (elevatorWaitingPassengers.Count > 0)
+            {
+                Debug.Log(elevatorWaitingPassengers.Count);
+
+                bool canMove = true;
+
+                float distance = math.distance(elevatorWaitingPassengers[0].transform.position, elevatorWaitingPassengers[0].currentBuilding.spawnedBuildingConstruction.buildingInteractions[0].waypoints[0].position);
+
+                if (distance > 1f || elevatorWaitingPassengers[0].navMeshAgent.velocity != Vector3.zero)
+                {
+                    canMove = false;
+                }
+
+                if (canMove)
+                {
+                    StartMovingToFloor(GetNextFloor());
+                }
             }
         }
     }
@@ -124,7 +142,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         {
             if (elevatorRidingPassengers[i].pathBuildings[elevatorRidingPassengers[i].pathIndex - 1].GetFloorIndex() == currentFloorIndex)
             {
-                //Debug.Log("StopElevatorRiding");
                 elevatorRidingPassengers[i].StopElevatorRiding(elevatorBuilding);
             }
             else
@@ -141,6 +158,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         for (int i = 0; i < newRidersCount; i++)
         {
             elevatorBuilding.elevatorWaitingPassengers[i].StartElevatorWalking(elevatorBuilding);
+            i--;
         }
 
         if (elevatorWaitingPassengers.Count > 0 && newRidersCount == 0)
@@ -267,10 +285,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     public void AddWaitingPassenger(Entity passenger)
     {
         elevatorWaitingPassengers.Add(passenger);
-
-        Debug.Log(passenger.currentFloorIndex);
-
-        StartMovingToFloor(GetNextFloor());
     }
 
     public void RemoveWaitingPassenger(Entity passenger)

@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -11,6 +12,8 @@ public struct BuildingAction
 
 public class BuildingConstruction : MonoBehaviour
 {
+    public List<GameObject> buildingDetails = new List<GameObject>();
+
     public List<BuildingAction> buildingInteractions = new List<BuildingAction>();
 
     public virtual void Build()
