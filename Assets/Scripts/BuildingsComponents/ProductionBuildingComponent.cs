@@ -11,7 +11,7 @@ public class ProductionBuildingComponent : BuildingComponent
     bool isStorageFull = false;
 
     private float storageFillPercentToReadyToCollect = 0.5f;
-    [HideInInspector] public bool readyToCollect = false;
+    [HideInInspector] public bool isReadyToCollect = false;
 
     [SerializeField] private CollectResourceWidget collectResourceWidgetPrefab = null;
     private CollectResourceWidget collectResourceWidget = null;
@@ -33,21 +33,28 @@ public class ProductionBuildingComponent : BuildingComponent
         BuildingLevelData buildingLevelData = ownedBuilding.buildingLevelsData[levelIndex];
         ProductionBuildingLevelData productionBuildingLevelData = productionBuildingLevelsData[levelIndex];
 
-        int currentPeopleCount = ownedBuilding.workersCount;
-        int maxPeopleCount = buildingLevelData.maxResidentsCount;
-        float productionTime = productionBuildingLevelData.produceTime;
+        int currentPeopleCount = ownedBuilding.currentWorkers.Count;
 
-        float productionSpeed = productionTime * (currentPeopleCount / maxPeopleCount);
+        if (currentPeopleCount > 0)
+        {
+            int maxPeopleCount = buildingLevelData.maxResidentsCount;
+            float productionTime = productionBuildingLevelData.produceTime;
 
-        if (produceTime < productionBuildingLevelsData[ownedBuilding.levelIndex].produceTime && !isStorageFull)
-        {
-            produceTime += Time.deltaTime * productionSpeed;
-        }
-        else
-        {
-            if (!isStorageFull)
+            float productionSpeed = productionTime * ((float)currentPeopleCount / (float)maxPeopleCount);
+
+            if (produceTime < productionBuildingLevelsData[ownedBuilding.levelIndex].produceTime && !isStorageFull)
             {
-                AddProduceResourceAmount();
+                //Debug.Log("produceTime " + produceTime);
+                produceTime += Time.deltaTime * productionSpeed;
+            }
+            else
+            {
+                //Debug.Log("AddProduceResourceAmount");
+
+                if (!isStorageFull)
+                {
+                    AddProduceResourceAmount();
+                }
             }
         }
     }
@@ -67,9 +74,10 @@ public class ProductionBuildingComponent : BuildingComponent
     {
         if (producedItem.amount > 0 && producedItem.maxAmount / producedItem.amount >= storageFillPercentToReadyToCollect)
         {
-            if (!readyToCollect)
+            if (!isReadyToCollect)
             {
-                readyToCollect = true;
+                Debug.Log("readyToCollect");
+                isReadyToCollect = true;
 
                 Vector3 position = new Vector3(0, 2, 2);
                 Quaternion rotation = Quaternion.identity;
@@ -83,7 +91,7 @@ public class ProductionBuildingComponent : BuildingComponent
         }
         else
         {
-            readyToCollect = false;
+            isReadyToCollect = false;
 
             if (collectResourceWidget)
             {
@@ -97,10 +105,13 @@ public class ProductionBuildingComponent : BuildingComponent
         return producedItem;
     }
 
-    public ItemInstance TakeProducedItem(int remainingStorageCapacity)
+    public ItemInstance TakeProducedItem()
     {
         if (producedItem.amount > 0)
         {
+            ItemInstance storageItemInstance = cityManager.items[gameManager.GetItemIndexByIdName(GetProducedItem().itemData.itemIdName)];
+            int remainingStorageCapacity = storageItemInstance.maxAmount - storageItemInstance.amount;
+
             isStorageFull = false;
 
             int amountToTake = 0;
@@ -110,9 +121,9 @@ public class ProductionBuildingComponent : BuildingComponent
             else
                 amountToTake = producedItem.amount - remainingStorageCapacity;
 
-            ItemInstance itemToTake = new ItemInstance(producedItem.itemData, producedItem.amount, producedItem.maxAmount);
-
+            ItemInstance itemToTake = new ItemInstance(producedItem.itemData, amountToTake, amountToTake);
             producedItem.SubtractAmount(amountToTake);
+
             SetReadyToCollect();
 
             return itemToTake;

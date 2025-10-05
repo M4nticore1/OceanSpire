@@ -44,18 +44,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02b87d0f526dfb74ab84ecf3ce16c525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildedFloorsCount: 0
   towerRoot: {fileID: 0}
-  spawnedFloors: []
-  spawnedHallPlaces: []
-  spawnedFloorPlaces: []
+  builtFloors: []
+  floorsCount: 0
+  buildingIds: 
   currentRoomsNumberOnFloor: 
-  currentHallsNumberOnFloor: 
-  currentElevatorsNumberOnFloor: 
-  currentFloorFrameNumberOnFloor: 
   cityHeight: 0
   residents: []
-  residentsCount: 4
+  residentsCount: 0
   employedResidentCount: 0
   unemployedResidentCount: 0
+  residentPositions: []
   entitySpawnPositions: []
+  allPaths2: []

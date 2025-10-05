@@ -19,13 +19,13 @@ public class PlayerController : MonoBehaviour
     private Vector3 ñameraHolderStartPosition = Vector3.zero;
     private Quaternion ñameraHolderStartRotation = new Quaternion(0f, 0f, 0f, 0);
 
-    private Vector3 cameraVerticalPosition = Vector3.zero;
-    private Vector3 cameraHorizontalPosition = Vector3.zero;
+    [HideInInspector] public Vector3 cameraVerticalPosition = Vector3.zero;
+    [HideInInspector] public Vector3 cameraHorizontalPosition = Vector3.zero;
 
     private Vector3 cameraHorizontalRotation = Vector3.zero;
     private Vector3 cameraVerticalRotation = Vector3.zero;
 
-    private Vector2 CameraMoveSensitivity = new Vector2(5.0f, 1.0f);
+    private Vector2 CameraMoveSensitivity = new Vector2(6.0f, 1.0f);
     private const float cameraStopMoveSpeed = 9.0f;
 
     private Vector2 cameraMoveVelocity = Vector2.zero;
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     private const float cameraHeightReturnSpeed = 5.0f;
 
     private float cameraMoveMultiplier = 1.0f;
-    private float cameraMoveAlpha = 0.0f;
+    [HideInInspector] public float cameraYawRotateAlpha = 0.0f;
     float moveStateValue = 0;
 
     private const int cameraMovingDistance = 8;
@@ -93,6 +93,8 @@ public class PlayerController : MonoBehaviour
     private EventSystem eventSystem = null;
     [SerializeField] private LayerMask clickableLayers;
 
+    private float lastSaveDataTime = 0.0f;
+
     private void Awake()
     {
         Application.targetFrameRate = 60;
@@ -101,13 +103,14 @@ public class PlayerController : MonoBehaviour
         cityManager = FindAnyObjectByType<CityManager>();
         UIManager = FindAnyObjectByType<UIManager>();
         graphicRaycaster = UIManager.gameObject.GetComponent<GraphicRaycaster>();
-        //eventSystem = FindAnyObjectByType<EventSystem>();
 
         SetInputSystem();
     }
 
     private void Start()
     {
+        LoadData();
+
         ñameraHolderStartPosition = cameraHolder.transform.position;
         ñameraHolderStartRotation = cameraHolder.transform.rotation;
         cameraVerticalRotation = new Vector3(cameraHolder.transform.rotation.eulerAngles.x, 0f, 0f);
@@ -115,7 +118,9 @@ public class PlayerController : MonoBehaviour
         currentCameraArmLength = -mainCamera.transform.localPosition.z;
         startCameraArmLength = -currentCameraArmLength;
 
-        cameraMoveAlpha = 0.5f;
+        if (!gameManager.hasSavedData)
+            cameraYawRotateAlpha = 0.5f;
+
         moveStateValue = 1f / CityManager.roomsCountPerFloor;
     }
 
@@ -124,6 +129,12 @@ public class PlayerController : MonoBehaviour
         OnTouchPresing();
         MoveCamera();
         SetCameraArmLength();
+
+        if (Time.time >= lastSaveDataTime + GameManager.autoSaveFrequency)
+        {
+            SaveData();
+            lastSaveDataTime = Time.time;
+        }
     }
 
     private void OnEnable()
@@ -202,11 +213,11 @@ public class PlayerController : MonoBehaviour
         cameraVerticalPosition -= currentCameraMoveVelocity;
 
         // Camera horizontal move
-        float shiftedAlpha = cameraMoveAlpha - (1 - (moveStateValue / 2));
+        float shiftedAlpha = cameraYawRotateAlpha - (1 - (moveStateValue / 2));
         shiftedAlpha = Mathf.Repeat(shiftedAlpha, 1f);
         int moveStateIndex = (int)(shiftedAlpha / moveStateValue);
 
-        cameraHorizontalRotation.y = cameraMoveAlpha * 360f;
+        cameraHorizontalRotation.y = cameraYawRotateAlpha * 360f;
 
         int positionHalfLenght = cameraMovingDistance / 2;
 
@@ -231,8 +242,8 @@ public class PlayerController : MonoBehaviour
             cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -positionHalfLenght);
 
         int sign = cameraMoveVelocity.x > 0 ? 1 : cameraMoveVelocity.x < 0 ? -1 : 0;
-        cameraMoveAlpha += cameraMoveVelocity.x * cameraSensitivityMultiplier / 360f * Time.deltaTime;
-        cameraMoveAlpha = Mathf.Repeat(cameraMoveAlpha, 1f);
+        cameraYawRotateAlpha += cameraMoveVelocity.x * cameraSensitivityMultiplier / 360f * Time.deltaTime;
+        cameraYawRotateAlpha = Mathf.Repeat(cameraYawRotateAlpha, 1f);
 
         if (!isFirstTouchPressed)
         {
@@ -264,9 +275,9 @@ public class PlayerController : MonoBehaviour
             touchPitchVelocity = touchPitchInput - touchPitchLastInput;
             touchPitchLastInput = touchPitchInput;
 
-            if (currentCameraArmLength > maxCameraArmLength && touchPitchVelocity > 0)
+            if (currentCameraArmLength > maxCameraArmLength && touchPitchVelocity < 0)
                 cameraArmMoveMultiplier = 1.0f - ((currentCameraArmLength - maxCameraArmLength) / farCameraArmBoundaryPadding);
-            else if (currentCameraArmLength < minCameraArmLength && touchPitchVelocity < 0)
+            else if (currentCameraArmLength < minCameraArmLength && touchPitchVelocity > 0)
                 cameraArmMoveMultiplier = 1.0f - (math.abs(minCameraArmLength - currentCameraArmLength) / nearCameraArmBoundaryPadding);
             else
                 cameraArmMoveMultiplier = 1;
@@ -274,8 +285,6 @@ public class PlayerController : MonoBehaviour
             cameraArmMoveMultiplier = math.clamp(cameraArmMoveMultiplier, 0, 1);
 
             currentCameraArmLength -= touchPitchVelocity * touchPitchSensitivity * cameraArmMoveMultiplier;
-
-            Debug.Log(touchPitchVelocity);
 
             currentCameraArmLength = math.clamp(currentCameraArmLength, minCameraArmLength - nearCameraArmBoundaryPadding, maxCameraArmLength + farCameraArmBoundaryPadding);
         }
@@ -343,41 +352,18 @@ public class PlayerController : MonoBehaviour
                             else
                             {
                                 LootContainer hittedLootContainer = hit.collider.gameObject.GetComponent<LootContainer>();
-                                Building hittedBuilding = hit.collider.gameObject.GetComponent<Building>();
-                                BuildingConstruction hittedBuildingConstruction = null;
+                                Building hittedBuilding = null;
 
-                                if (hit.collider.gameObject.transform.parent)
-                                    hittedBuildingConstruction = hit.collider.gameObject.transform.parent.GetComponent<BuildingConstruction>();
+                                if (hit.collider && hit.collider.gameObject.transform.parent && hit.collider.gameObject.transform.parent.GetComponent<Building>())
+                                    hittedBuilding = hit.collider.gameObject.transform.parent.GetComponent<Building>();
 
-                                if (hittedLootContainer)
+                                if (hittedBuilding)
                                 {
-                                    TakeItems(hittedLootContainer.GetContainedLoot());
-                                    hittedLootContainer.TakeItems();
+                                    ProductionBuildingComponent hittedProductionBuilding = hittedBuilding.GetComponent<ProductionBuildingComponent>();
 
-                                    UnselectBuilding();
-                                }
-                                else if (hittedBuilding || hittedBuildingConstruction)
-                                {
-                                    if (hittedBuildingConstruction)
-                                        hittedBuilding = hittedBuildingConstruction.transform.parent.GetComponent<Building>();
-
-                                    ProductionBuildingComponent hittedProductionBuilding = hit.collider.gameObject.GetComponent<ProductionBuildingComponent>();
-
-                                    if (hittedProductionBuilding)
+                                    if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect)
                                     {
-                                        if (hittedProductionBuilding.readyToCollect)
-                                        {
-                                            ItemInstance storageItemInstance = cityManager.items[gameManager.GetItemIndexByIdName(hittedProductionBuilding.GetProducedItem().itemData.itemIdName)];
-
-                                            TakeItem(hittedProductionBuilding.TakeProducedItem(storageItemInstance.maxAmount - storageItemInstance.amount));
-                                        }
-                                        else
-                                        {
-                                            if (!isSelectedBuilding || selectedBuilding != hittedBuilding)
-                                                SelectBuilding(hittedBuilding);
-                                            else
-                                                UnselectBuilding();
-                                        }
+                                        TakeItem(hittedProductionBuilding.TakeProducedItem());
                                     }
                                     else
                                     {
@@ -386,6 +372,13 @@ public class PlayerController : MonoBehaviour
                                         else
                                             UnselectBuilding();
                                     }
+                                }
+                                else if (hittedLootContainer)
+                                {
+                                    TakeItems(hittedLootContainer.GetContainedLoot());
+                                    hittedLootContainer.TakeItems();
+
+                                    UnselectBuilding();
                                 }
                                 else
                                 {
@@ -549,6 +542,8 @@ public class PlayerController : MonoBehaviour
             buildingToPlace = null;
 
             UIManager.OnBuildingPlacingStopped();
+
+            SaveData();
         }
     }
 
@@ -637,5 +632,23 @@ public class PlayerController : MonoBehaviour
         {
             UIManager.CloseBuildingActionMenu();
         }
+    }
+
+    private void SaveData()
+    {
+       SaveSystem.SaveData(this, cityManager);
+    }
+
+    private void LoadData()
+    {
+        SaveData data = SaveSystem.LoadData();
+
+        if (data != null)
+        {
+            gameManager.hasSavedData = true;
+            cameraYawRotateAlpha = data.cameraYawRotation;
+        }
+
+        cityManager.LoadCity(data);
     }
 }

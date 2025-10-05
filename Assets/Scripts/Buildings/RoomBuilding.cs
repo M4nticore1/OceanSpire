@@ -20,9 +20,9 @@ public class RoomBuilding : Building
         base.Start();
     }
 
-    public override void Place(BuildingPlace buildingPlace)
+    public override void Build(BuildingPlace buildingPlace)
     {
-        base.Place(buildingPlace);
+        base.Build(buildingPlace);
 
         if (GetType() == typeof(RoomBuilding))
             InvokeBuildingPlaced(this);
@@ -32,7 +32,7 @@ public class RoomBuilding : Building
     {
         base.UpdateBuildingConstruction();
 
-        if (GetBuildingPlaceIndex() % 2 == 0)
+        if (GetPlaceIndex() % 2 == 0)
         {
             buildingPosition = BuildingPosition.Corner;
         }
@@ -50,13 +50,13 @@ public class RoomBuilding : Building
             // Check the left room
             RoomBuilding leftRoom = null;
 
-            if (GetBuildingPlaceIndex() < CityManager.roomsCountPerFloor - 1)
+            if (GetPlaceIndex() < CityManager.roomsCountPerFloor - 1)
             {
-                leftRoom = cityManager.spawnedFloors[GetFloorIndex()].roomBuildingPlaces[GetBuildingPlaceIndex() + 1].placedBuilding as RoomBuilding;
+                leftRoom = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[GetPlaceIndex() + 1].placedBuilding as RoomBuilding;
             }
-            else if (GetBuildingPlaceIndex() == CityManager.roomsCountPerFloor - 1)
+            else if (GetPlaceIndex() == CityManager.roomsCountPerFloor - 1)
             {
-                leftRoom = cityManager.spawnedFloors[GetFloorIndex()].roomBuildingPlaces[0].placedBuilding as RoomBuilding;
+                leftRoom = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[0].placedBuilding as RoomBuilding;
             }
 
             if (leftRoom && leftRoom.buildingData.buildingIdName == buildingData.buildingIdName && leftRoom.levelIndex == levelIndex)
@@ -70,13 +70,13 @@ public class RoomBuilding : Building
             // Check the Right room
             RoomBuilding rightRoom = null;
 
-            if (GetBuildingPlaceIndex() > 0)
+            if (GetPlaceIndex() > 0)
             {
-                rightRoom = cityManager.spawnedFloors[GetFloorIndex()].roomBuildingPlaces[GetBuildingPlaceIndex() - 1].placedBuilding as RoomBuilding;
+                rightRoom = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[GetPlaceIndex() - 1].placedBuilding as RoomBuilding;
             }
-            else if (GetBuildingPlaceIndex() == 0)
+            else if (GetPlaceIndex() == 0)
             {
-                rightRoom = cityManager.spawnedFloors[GetFloorIndex()].roomBuildingPlaces[CityManager.roomsCountPerFloor - 1].placedBuilding as RoomBuilding;
+                rightRoom = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[CityManager.roomsCountPerFloor - 1].placedBuilding as RoomBuilding;
             }
 
             if (rightRoom && rightRoom.buildingData.buildingIdName == buildingData.buildingIdName && rightRoom.levelIndex == levelIndex)
@@ -94,9 +94,9 @@ public class RoomBuilding : Building
             bool hadUpConnect = aboveConnectedBuilding != null;
             bool hadDownConnect = belowConnectedBuilding != null;
 
-            if (!aboveConnectedBuilding && GetFloorIndex() < cityManager.spawnedFloors.Count - 1)
+            if (!aboveConnectedBuilding && GetFloorIndex() < cityManager.builtFloors.Count - 1)
             {
-                RoomBuilding topRoom = cityManager.spawnedFloors[GetFloorIndex() + 1].roomBuildingPlaces[GetBuildingPlaceIndex()].placedBuilding as RoomBuilding;
+                RoomBuilding topRoom = cityManager.builtFloors[GetFloorIndex() + 1].roomBuildingPlaces[GetPlaceIndex()].placedBuilding as RoomBuilding;
 
                 if (topRoom && topRoom.buildingData.buildingIdName == buildingData.buildingIdName)
                 {
@@ -120,7 +120,7 @@ public class RoomBuilding : Building
 
             if (!belowConnectedBuilding && GetFloorIndex() > 0)
             {
-                RoomBuilding belowRoom = cityManager.spawnedFloors[GetFloorIndex() - 1].roomBuildingPlaces[GetBuildingPlaceIndex()].placedBuilding as RoomBuilding;
+                RoomBuilding belowRoom = cityManager.builtFloors[GetFloorIndex() - 1].roomBuildingPlaces[GetPlaceIndex()].placedBuilding as RoomBuilding;
 
                 if (belowRoom && belowRoom.buildingData.buildingIdName == buildingData.buildingIdName)
                 {
@@ -159,8 +159,6 @@ public class RoomBuilding : Building
             {
                 if (roomLevelData.buildingStraight)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraight, gameObject.transform);
-
-                Debug.Log("Straight");
             }
             else if (buildingPosition == BuildingPosition.Corner)
             {

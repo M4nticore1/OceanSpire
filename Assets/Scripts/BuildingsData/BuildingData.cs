@@ -2,7 +2,24 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public enum BuildingType 
+public enum BuildingId
+{
+    TowerGate,
+    FloorFrame,
+    Dock,
+    BasicElevator,
+    FastElevator,
+    HeavyElevator,
+    LivingRooms,
+    CoalGenerator,
+    WoodStorage,
+    MetalStorage,
+    PlasticStorage,
+    Lighthouse,
+};
+
+[Serializable]
+public enum BuildingType
 {
     Room,
     Hall,
@@ -33,6 +50,7 @@ public enum ConnectionType
 public class BuildingData : ScriptableObject
 {
     [Header("Main")]
+    public BuildingId buildingId = BuildingId.TowerGate;
     public string buildingIdName = "";
     public string buildingName = "";
     public BuildingType buildingType = BuildingType.Room;

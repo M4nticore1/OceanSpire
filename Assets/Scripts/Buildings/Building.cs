@@ -20,9 +20,9 @@ public class Building : MonoBehaviour
     public CityManager cityManager = null;
 
     [HideInInspector] public int levelIndex { get; private set; } = 0;
-	[HideInInspector] public int workersCount { get; private set; } = 0;
     public List<Entity> entities { get; private set; } = new List<Entity>();
     public List<Resident> workers { get; private set; } = new List<Resident>();
+    public List<Resident> currentWorkers { get; private set; } = new List<Resident>();
 
     [Header("Data")]
     public BuildingData buildingData = null;
@@ -52,19 +52,13 @@ public class Building : MonoBehaviour
 
     }
 
-    public virtual void Place(BuildingPlace buildingPlace)
+    public virtual void Build(BuildingPlace buildingPlace)
     {
         this.buildingPlace = buildingPlace;
         gameManager = FindAnyObjectByType<GameManager>();
 		cityManager = FindAnyObjectByType<CityManager>();
 
-        //floorIndex = buildingPlace.floorIndex;
-        //buildingPlace.buildingPlaceIndex = buildingPlace.buildingPlaceIndex;
-
-        //Debug.Log(buildingPlace.floorIndex + buildingData.buildingName + buildingPlace.floorIndex + " " + buildingPlace.buildingPlaceIndex);
-
         StorageBuildingComponent storageBuilding = GetComponent<StorageBuildingComponent>();
-        //TowerGateBuilding towerGateComponent = GetComponent<TowerGateBuilding>();
 
         if (storageBuilding)
 		    storageBuilding.Build();
@@ -127,6 +121,14 @@ public class Building : MonoBehaviour
     public virtual void EnterBuilding(Entity entity)
     {
         entities.Add(entity);
+
+        Resident resident = entity as Resident;
+
+        if (resident)
+        {
+            if (resident.workBuilding == this)
+                AddCurrentWorker(resident);
+        }
     }
 
     public virtual void ExitBuilding(Entity entity)
@@ -136,18 +138,31 @@ public class Building : MonoBehaviour
 
     public void AddWorker(Resident worker)
     {
-        workersCount++;
         workers.Add(worker);
     }
 
     public void RemoveWorker(Resident worker)
 	{
         workers.RemoveAt(worker.workerIndex);
-        workersCount--;
 
-        for (int i = 0; i < workersCount; i++)
+        for (int i = 0; i < workers.Count; i++)
         {
             workers[i].SetWorkerIndex(i);
+        }
+    }
+
+    public void AddCurrentWorker(Resident worker)
+    {
+        currentWorkers.Add(worker);
+    }
+
+    public void RemoveCurrentWorker(Resident worker)
+    {
+        currentWorkers.RemoveAt(worker.workerIndex);
+
+        for (int i = 0; i < currentWorkers.Count; i++)
+        {
+            currentWorkers[i].SetWorkerIndex(i);
         }
     }
 
@@ -173,7 +188,7 @@ public class Building : MonoBehaviour
         }
     }
 
-    public int GetBuildingPlaceIndex()
+    public int GetPlaceIndex()
     {
         if (buildingPlace)
         {

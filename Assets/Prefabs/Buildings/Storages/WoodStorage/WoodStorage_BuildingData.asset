@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
   m_Name: WoodStorage_BuildingData
   m_EditorClassIdentifier: 
+  buildingId: 8
   buildingIdName: wood_storage
   buildingName: Wood Storage
   buildingType: 0
   buildingCategory: 3
-  buildingLevelsData:
-  - {fileID: 11400000, guid: 4a32de5aafe6aad43a860f0acca81021, type: 2}
-  - {fileID: 11400000, guid: 78201f3cdafbb824e889425616d94a3e, type: 2}
-  - {fileID: 11400000, guid: 81e7e3e3100ef7d46bc116acafbd4b67, type: 2}
+  connectionType: 0
+  buildingFloors: 1
+  maxBuildingFloors: 1
+  isDemolishable: 1
+  buildingManagementMenuWidget: {fileID: 0}

@@ -33,21 +33,19 @@ public class BuildingPlace : MonoBehaviour
     private MaterialPropertyBlock materialPropertyBlock = null;
     private MaterialPropertyBlock outlineMaterialPropertyBlock = null;
 
-    private Color BuildingPlaceValidColor = new Color(0.08f, 1, 0, 1);
-    private Color BuildingPlaceWarningColor = new Color(1, 1, 0, 1);
-    private Color BuildingPlaceInvalidColor = new Color(1, 0, 0, 1);
+    private Color buildingPlaceValidColor = new Color(0.2f, 1, 0.2f, 1);
+    private Color buildingPlaceWarningColor = new Color(1, 1, 0, 1);
+    private Color buildingPlaceInvalidColor = new Color(1, 0, 0, 1);
 
-    private Color BuildingPlaceValidOutlineColor = new Color(0.035f, 1, 0, 1);
-    private Color BuildingPlaceWarningOutlineColor = new Color(1, 1, 0, 1);
-    private Color BuildingPlaceInvalidOutlineColor = new Color(1, 0, 0, 1);
+    private Color buildingPlaceValidOutlineColor = new Color(0.035f, 1, 0, 1);
+    private Color buildingPlaceWarningOutlineColor = new Color(1, 1, 0, 1);
+    private Color buildingPlaceInvalidOutlineColor = new Color(1, 0, 0, 1);
 
     public void InitializeBuildingPlace(int newFloorNumber)
     {
         floorIndex = newFloorNumber;
-        //Debug.Log(floorIndex);
 
         cityManager = FindAnyObjectByType<CityManager>();
-        //boxCollider = GetComponent<BoxCollider>();
 
         buildingZoneMeshRenderer = buildingZone.GetComponent<MeshRenderer>();
         materialPropertyBlock = new MaterialPropertyBlock();
@@ -77,7 +75,7 @@ public class BuildingPlace : MonoBehaviour
                     placedBuilding.transform.SetParent(transform);
             }
 
-            placedBuilding.Place(this);
+            placedBuilding.Build(this);
 
             if (buildingFrame)
                 buildingFrame.SetActive(false);
@@ -126,18 +124,18 @@ public class BuildingPlace : MonoBehaviour
 
         if (buildingPlaceState == BuildingPlaceState.Valid)
         {
-            mainColor = BuildingPlaceValidColor;
-            outlineColor = BuildingPlaceValidOutlineColor;
+            mainColor = buildingPlaceValidColor;
+            outlineColor = buildingPlaceValidOutlineColor;
         }
         else if (buildingPlaceState == BuildingPlaceState.Warning)
         {
-            mainColor = BuildingPlaceWarningColor;
-            outlineColor = BuildingPlaceWarningOutlineColor;
+            mainColor = buildingPlaceWarningColor;
+            outlineColor = buildingPlaceWarningOutlineColor;
         }
         else if (buildingPlaceState == BuildingPlaceState.Invalid)
         {
-            mainColor = BuildingPlaceInvalidColor;
-            outlineColor = BuildingPlaceInvalidOutlineColor;
+            mainColor = buildingPlaceInvalidColor;
+            outlineColor = buildingPlaceInvalidOutlineColor;
         }
 
         materialPropertyBlock.SetColor("_BaseColor", mainColor);

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3475577279437917896}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Waypoint_02_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 6510800926057895866}
   - component: {fileID: 5637281329337928482}
   - component: {fileID: 7491937495058861705}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: CoalGenerator_Level_01_FrontLeftRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,13 +79,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingActions:
-  - waypoints:
-    - {fileID: 3647850061133685346}
-    actionTimes: 00000000
-  - waypoints:
-    - {fileID: 3475577279437917896}
-    actionTimes: 00000000
+  buildingDetails: []
+  buildingInteractions: []
 --- !u!64 &7491937495058861705
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -117,7 +112,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3647850061133685346}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Waypoint_01_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,7 +188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5aae9a888ebbaa94dbabf7bb64d9e87d, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

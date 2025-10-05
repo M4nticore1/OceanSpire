@@ -91,60 +91,32 @@ public class GameManager : MonoBehaviour
     private const float windDirectionMinChangeSpeed = 0.04f;
     private const float windDirectionMaxChangeSpeed = 0.05f;
 
+    public const float autoSaveFrequency = 1;
+
+    public bool hasSavedData = false;
+
     // Delegates
     //public delegate void StorageCapacityChangedHandler();
     //public static event System.Action OnStorageCapacityChanged;
 
-    private void Awake()
+    private void Start()
     {
         SetLootContainersSpawnTime();
 
         windSpeed = windMinSpeed;
         ChangeWind();
 
-        //InitializeItems();
-
-        //for (int i = 0; i < spawnedFloors.Count; i++)
-        //{
-        //    spawnedFloors[i].InitializeBuildingPlaces();
-
-        //    buildedFloorsCount++;
-        //    currentRoomsNumberOnFloor.Add(0);
-        //    currentHallsNumberOnFloor.Add(0);
-        //    currentElevatorsNumberOnFloor.Add(0);
-        //    currentFloorFrameNumberOnFloor.Add(0);
-
-        //    spawnedRoomPlaces.Add(spawnedFloors[i].roomsBuildingPlaces);
-        //    spawnedHallPlaces.Add(spawnedFloors[i].hallBuildingPlace);
-        //    spawnedElevatorPlaces.Add(spawnedFloors[i].elevatorsBuildingPlaces);
-
-        //    List<RoomBuilding> rooms = new List <RoomBuilding>();
-        //    for (int j = 0; j < roomsCountPerFloor; j++)
-        //        rooms.Add(null);
-        //    allRooms.Add(rooms);
-
-        //    cityHeight = spawnedFloors[buildedFloorsCount - 1].transform.position.y + floorHeight;
-        //}
-
-        //HideAllBuildigPlaces();
-
         for (int i = 0; i < lootContainerPrefabs.Count; i++)
             spawnedLootContainersTime.Add(0.0f);
     }
 
-    private void Start()
+    private void OnEnable()
     {
-        //allBuildings.AddRange(FindObjectsByType<Building>(FindObjectsSortMode.None).ToList());
+    }
 
-        //for (int i = 0; i < allBuildings.Count; i++)
-        //{
-        //    StorageBuildingComponent storageBuidling = allBuildings[i].GetComponent<StorageBuildingComponent>();
+    private void OnDisable()
+    {
 
-        //    if (storageBuidling)
-        //    {
-        //        spawnedStorageBuildings.Add(storageBuidling);
-        //    }
-        //}
     }
 
     private void Update()
@@ -154,300 +126,6 @@ public class GameManager : MonoBehaviour
         SpawningLootContainers();
         ChangingWind();
     }
-
-    //// Building Places
-    //public void AddFloor(Floor newFloor)
-    //{
-    //    buildedFloorsCount++;
-    //    spawnedFloors.Add(newFloor);
-
-    //    currentRoomsNumberOnFloor.Add(0);
-    //    currentHallsNumberOnFloor.Add(0);
-    //    currentElevatorsNumberOnFloor.Add(0);
-    //    currentFloorFrameNumberOnFloor.Add(0);
-
-    //    spawnedRoomPlaces.Add(newFloor.roomsBuildingPlaces);
-    //    spawnedHallPlaces.Add(newFloor.hallBuildingPlace);
-    //    spawnedElevatorPlaces.Add(newFloor.elevatorsBuildingPlaces);
-    //    spawnedFloorPlaces.Add(newFloor.floorBuildingPlace);
-
-    //    List<RoomBuilding> rooms = new List<RoomBuilding>();
-    //    for (int j = 0; j < roomsCountPerFloor; j++)
-    //        rooms.Add(null);
-    //    allRooms.Add(rooms);
-
-    //    cityHeight = spawnedFloors[buildedFloorsCount - 1 - (spawnedFloorPlaces.Count() - 1)].transform.position.y + floorHeight;
-    //}
-
-    //public void ShowBuildingPlacesByType(BuildingType buildingType)
-    //{
-    //    HideAllBuildigPlaces();
-
-    //    for (int i = 0; i < spawnedFloors.Count; i++)
-    //    {
-    //        spawnedFloors[i].ShowBuildingPlacesByType(buildingType);
-    //    }
-    //}
-
-    //public void HideBuildingPlacesByType(BuildingType buildingType)
-    //{
-    //    if (buildingType == BuildingType.Room)
-    //    {
-    //        for (int i = 0; i < buildedFloorsCount; i++)
-    //        {
-    //            for (int j = 0; j < spawnedFloors[i].roomsBuildingPlaces.Count; j++)
-    //            {
-    //                if (spawnedRoomPlaces[i][j] != null)
-    //                {
-    //                    spawnedRoomPlaces[i][j].HideBuildingPlace();
-    //                }
-    //            }
-    //        }
-    //    }
-    //    else if (buildingType == BuildingType.Hall)
-    //    {
-    //        for (int i = 0; i < buildedFloorsCount; i++)
-    //        {
-    //            if (spawnedHallPlaces[i] != null)
-    //            {
-    //                spawnedHallPlaces[i].HideBuildingPlace();
-    //            }
-    //        }
-    //    }
-    //    else if (buildingType == BuildingType.Elevator)
-    //    {
-    //        for (int i = 0; i < buildedFloorsCount; i++)
-    //        {
-    //            for (int j = 0; j < spawnedFloors[i].elevatorsBuildingPlaces.Count; j++)
-    //            {
-    //                if (spawnedFloors[i].elevatorsBuildingPlaces[j])
-    //                {
-    //                    spawnedFloors[i].elevatorsBuildingPlaces[j].HideBuildingPlace();
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-
-    //private void HideAllBuildigPlaces()
-    //{
-    //    for (int i = 0; i < spawnedFloors.Count; i++)
-    //    {
-    //        spawnedFloors[i].HideAllBuildingPlaces();
-    //    }
-    //}
-
-    //// BUildings
-    //public void PlaceBuilding(Building buildingToPlace, BuildingPlace buildingPlace)
-    //{
-    //    if (buildingToPlace.buildingData.buildingType == BuildingType.Room)
-    //    {
-    //        int floorIndex = buildingPlace.floorIndex;
-    //        int buildingPlace.buildingPlaceIndex = buildingPlace.buildingPlaceIndex;
-
-    //        allRooms[floorIndex][buildingPlace.buildingPlaceIndex] = buildingToPlace as RoomBuilding;
-    //        currentRoomsNumberOnFloor[buildingPlace.floorIndex]++;
-
-    //        buildingPlace.PlaceBuilding(buildingToPlace);
-    //    }
-    //    else if (buildingToPlace.buildingData.buildingType == BuildingType.Hall)
-    //    {
-    //        buildingPlace.PlaceBuilding(buildingToPlace);
-
-    //        for (int i = 0; i < roomsCountPerFloor; i++)
-    //        {
-    //            spawnedRoomPlaces[buildingPlace.floorIndex][i].AddPlacedBuilding(buildingToPlace);
-    //        }
-
-    //        currentHallsNumberOnFloor[buildingPlace.floorIndex]++;
-    //    }
-    //    else if (buildingToPlace.buildingData.buildingType == BuildingType.Elevator)
-    //    {
-    //        buildingPlace.PlaceBuilding(buildingToPlace);
-
-    //        currentElevatorsNumberOnFloor[buildingPlace.floorIndex]++;
-    //    }
-    //    else if (buildingToPlace.buildingData.buildingType == BuildingType.FloorFrame)
-    //    {
-    //        buildingPlace.PlaceBuilding(buildingToPlace);
-
-    //        currentFloorFrameNumberOnFloor[buildingPlace.floorIndex]++;
-    //    }
-
-    //    StorageBuildingComponent storageBuilding = buildingToPlace.GetComponent<StorageBuildingComponent>();
-
-    //    if (storageBuilding)
-    //    {
-    //        spawnedStorageBuildings.Add(storageBuilding);
-    //    }
-
-    //    // Spend Build Resources
-    //    //List<ResourceToBuild> resourcesToBuild = buildingToPlace.buildingLevelsData[0].ResourcesToBuild;
-
-    //    //for (int i = 0; i < resourcesToBuild.Count(); i++)
-    //    //{
-    //    //    string itemIdName = resourcesToBuild[i].resourceData.itemIdName;
-    //    //    int itemAmount = resourcesToBuild[i].amount;
-
-    //    //    SpendItemByIdName(itemIdName, itemAmount);
-    //    //}
-
-    //    HideAllBuildigPlaces();
-    //}
-
-    //public void TryToUpgradeBuilding(Building building)
-    //{
-    //    int levelIndex = building.levelIndex + (building.isRuined ? 0 : 1);
-
-    //    if (building.buildingLevelsData.Count() > levelIndex)
-    //    {
-    //        bool isResourcesToUpgradeEnough = true;
-
-    //        int itemIndex = 0;
-    //        int itemAmount = 0;
-    //        List<ResourceToBuild> resourcesToUpgrade = building.buildingLevelsData[levelIndex].ResourcesToBuild;
-
-    //        for (int i = 0; i < resourcesToUpgrade.Count; i++)
-    //        {
-    //            itemIndex = GetItemIndexByIdName(resourcesToUpgrade[i].resourceData.itemIdName);
-    //            itemAmount = resourcesToUpgrade[i].amount;
-
-    //            if (items[itemIndex].amount < itemAmount)
-    //            {
-    //                isResourcesToUpgradeEnough = false;
-    //                break;
-    //            }
-    //        }
-
-    //        if (isResourcesToUpgradeEnough)
-    //        {
-    //            for (int i = 0; i < resourcesToUpgrade.Count; i++)
-    //            {
-    //                itemIndex = GetItemIndexByIdName(resourcesToUpgrade[i].resourceData.itemIdName);
-    //                itemAmount = resourcesToUpgrade[i].amount;
-    //                SpendItemByIndex(itemIndex, itemAmount);
-    //            }
-
-    //            building.Upgrade();
-    //        }
-    //    }
-    //}
-
-    //public void DemolishBuilding(Building building)
-    //{
-    //    building.Demolish();
-    //}
-
-    //// Resources
-    //public void AddStorageCapacity(StorageBuildingLevelData storageLevelData)
-    //{
-    //    ChangeStorageCapacity(storageLevelData, true);
-    //}
-
-    //public void SubtractStorageCapacity(StorageBuildingLevelData storageLevelData)
-    //{
-    //    ChangeStorageCapacity(storageLevelData, false);
-    //}
-
-    //private void ChangeStorageCapacity(StorageBuildingLevelData storageLevelData, bool isIncreasing)
-    //{
-    //    for (int i = 0; i < storageLevelData.storageItems.Count(); i++)
-    //    {
-    //        int index = GetItemIndexByIdName(storageLevelData.storageItems[i].itemdata.itemIdName);
-    //        int changeValue = storageLevelData.storageItems[i].capacity;
-
-    //        if (isIncreasing)
-    //            items[index].AddMaxAmount(changeValue);
-    //        else
-    //            items[index].SubtractMaxAmount(changeValue);
-    //    }
-
-    //    for (int i = 0; i < storageLevelData.storageItemCategories.Count(); i++)
-    //    {
-    //        for (int j = 0; j < items.Count(); j++)
-    //        {
-    //            if (items[j].itemData.itemCategory == storageLevelData.storageItemCategories[i].itemCategory)
-    //            {
-    //                int changeValue = storageLevelData.storageItemCategories[i].capacity;
-
-    //                if (isIncreasing)
-    //                    items[j].AddMaxAmount(changeValue);
-    //                else
-    //                    items[j].SubtractMaxAmount(changeValue);
-    //            }
-    //        }
-    //    }
-
-    //    OnStorageCapacityChanged?.Invoke();
-    //}
-
-    //private void InitializeItems()
-    //{
-    //    //itemsMaxAmount.Add(ItemType.Population, 8);
-    //    //itemsMaxAmount.Add(ItemType.Food, 100);
-    //    //itemsMaxAmount.Add(ItemType.Electricity, 100);
-    //    //itemsMaxAmount.Add(ItemType.Building, 1000);
-    //    //itemsMaxAmount.Add(ItemType.Crafting, 10);
-    //    //itemsMaxAmount.Add(ItemType.Weapon, 0);
-
-    //    for (int i = 0; i < itemsData.Count; i++)
-    //    {
-    //        items.Add(new ItemInstance(itemsData[i], 0, 0));
-    //    }
-    //}
-
-    //public void AddItemByIndex(int index, int amount)
-    //{
-    //    items[index].AddAmount(amount);
-    //}
-
-    //public void SpendItemByIndex(int index, int amount)
-    //{
-    //    items[index].SubtractAmount(amount);
-    //}
-
-    //public void SpendItems(List<ItemInstance> itemsToSpend)
-    //{
-    //    for (int i = 0; i < itemsToSpend.Count; i++)
-    //    {
-    //        int index = GetItemIndexByIdName(itemsToSpend[i].itemData.itemIdName);
-    //        int amountToSpend = itemsToSpend[i].amount;
-
-    //        SpendItemByIndex(index, amountToSpend);
-    //    }
-    //}
-
-    //public int GetItemIndexByIdName(string idName)
-    //{
-    //    int id = 0;
-
-    //    for (int i = 0; i < items.Count(); i++)
-    //    {
-    //        if (items[i].itemData.itemIdName == idName)
-    //        {
-    //            id = i;
-    //            break;
-    //        }
-    //    }
-
-    //    return id;
-    //}
-
-    //public int GetItemIndexById(int id)
-    //{
-    //    int currentId = 0;
-
-    //    for (int i = 0; i < items.Count(); i++)
-    //    {
-    //        if (items[i].itemData.itemId == id)
-    //        {
-    //            currentId = i;
-    //            break;
-    //        }
-    //    }
-
-    //    return currentId;
-    //}
 
     private void SpawningLootContainers()
     {
@@ -544,7 +222,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < itemsData.Count(); i++)
         {
-            if (itemsData[i].itemId == id)
+            if ((int)itemsData[i].itemId == id)
             {
                 currentId = i;
                 break;
@@ -552,5 +230,31 @@ public class GameManager : MonoBehaviour
         }
 
         return currentId;
+    }
+
+    public Building GetBuildingPrefabById(int buildingId)
+    {
+        for (int i = 0; i < buildingPrefabs.Count; i++)
+        {
+            if ((int)buildingPrefabs[i].buildingData.buildingId == buildingId)
+            {
+                return buildingPrefabs[i];
+            }
+        }
+
+        return null;
+    }
+
+    public Building GetBuildingPrefabByIdName(string buildingIdName)
+    {
+        for (int i = 0; i < buildingPrefabs.Count; i++)
+        {
+            if (buildingPrefabs[i].buildingData.buildingIdName == buildingIdName)
+            {
+                return buildingPrefabs[i];
+            }
+        }
+
+        return null;
     }
 }

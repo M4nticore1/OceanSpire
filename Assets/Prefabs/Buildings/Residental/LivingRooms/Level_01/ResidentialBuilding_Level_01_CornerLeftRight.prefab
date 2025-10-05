@@ -47,7 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingActions: []
+  buildingDetails: []
+  buildingInteractions: []
 --- !u!64 &-5452145885955212426
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -121,6 +122,10 @@ PrefabInstance:
     - target: {fileID: 8609880662699405998, guid: e55b56b00be72534bb477db29e5b498e, type: 3}
       propertyPath: m_Name
       value: RoomClickCollision
+      objectReference: {fileID: 0}
+    - target: {fileID: 8609880662699405998, guid: e55b56b00be72534bb477db29e5b498e, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

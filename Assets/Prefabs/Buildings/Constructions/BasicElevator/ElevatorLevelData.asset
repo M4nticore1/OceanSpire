@@ -32,4 +32,4 @@ MonoBehaviour:
   buildingCornerAboveBelow: {fileID: 5195973711087995694, guid: c8926d1c98ac9ea4d82cf63a9302bbe4, type: 3}
   elevatorPlatformStraight: {fileID: 9121983844208753504, guid: e10d6143f9cb8ff4e88a82028c416afb, type: 3}
   elevatorPlatformCorner: {fileID: 6317132314724744191, guid: 7d90808e21dfe624d82b51156fd5f94e, type: 3}
-  elevatorMoveSpeed: 5
+  elevatorMoveSpeed: 1.25

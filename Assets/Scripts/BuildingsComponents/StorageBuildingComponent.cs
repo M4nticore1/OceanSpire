@@ -18,7 +18,10 @@ public class StorageBuildingComponent : BuildingComponent
     {
         base.Build();
 
-        AddStorageCapacity(levelsData[ownedBuilding.levelIndex]);
+        if (levelsData.Count > ownedBuilding.levelIndex && levelsData[ownedBuilding.levelIndex])
+            AddStorageCapacity(levelsData[ownedBuilding.levelIndex]);
+        else
+            Debug.LogError("levelsData[ownedBuilding.levelIndex] is NULL");
     }
 
     public override void LevelUp()

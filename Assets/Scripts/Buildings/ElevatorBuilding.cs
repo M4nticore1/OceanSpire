@@ -9,6 +9,7 @@ public class ElevatorBuilding : RoomBuilding
 {
     private bool hasElevatorPlatform = false;
     public ElevatorPlatformConstruction spawnedElevatorPlatform = null;
+    public int elevatorGroupId = 0;
 
     public List<Entity> elevatorWaitingPassengers { get; private set; } = new List<Entity>();
     public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();
@@ -18,9 +19,9 @@ public class ElevatorBuilding : RoomBuilding
         base.Update();
     }
 
-    public override void Place(BuildingPlace buildingPlace)
+    public override void Build(BuildingPlace buildingPlace)
     {
-        base.Place(buildingPlace);
+        base.Build(buildingPlace);
 
         if (GetType() == typeof(ElevatorBuilding))
             InvokeBuildingPlaced(this);
@@ -30,12 +31,24 @@ public class ElevatorBuilding : RoomBuilding
     {
         base.UpdateBuildingConstruction();
 
-        if (aboveConnectedBuilding)
+        if (aboveConnectedBuilding && belowConnectedBuilding)
+        {
+            ElevatorBuilding upElevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
+            ElevatorBuilding downElevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
+
+            if (downElevatorBuilding)
+                spawnedElevatorPlatform = downElevatorBuilding.spawnedElevatorPlatform;
+
+            elevatorGroupId = downElevatorBuilding.elevatorGroupId;
+        }
+        else if (aboveConnectedBuilding)
         {
             ElevatorBuilding elevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
 
             if (elevatorBuilding)
                 spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
+
+            elevatorGroupId = elevatorBuilding.elevatorGroupId;
         }
         else if (belowConnectedBuilding)
         {
@@ -43,10 +56,11 @@ public class ElevatorBuilding : RoomBuilding
 
             if (elevatorBuilding)
                 spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
+
+            elevatorGroupId = elevatorBuilding.elevatorGroupId;
         }
         else
         {
-            //int levelData = levelIndex
             ElevatorBuildingLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorBuildingLevelData;
 
             if (buildingPosition == BuildingPosition.Straight)
@@ -59,8 +73,8 @@ public class ElevatorBuilding : RoomBuilding
 
             spawnedElevatorPlatform.Build();
             spawnedElevatorPlatform.SetElevatorBuilding(this);
-            //spawnedElevatorPlatform.SetMoveSpeed(elevatorBuildingLevelData.elevatorMoveSpeed);
-            //spawnedElevatorPlatform.SetFloorIndex(floorIndex);
+
+            elevatorGroupId = cityManager.elevatorGroups.Count;
         }
     }
 
@@ -68,11 +82,9 @@ public class ElevatorBuilding : RoomBuilding
     {
         base.EnterBuilding(entity);
 
-        //Debug.Log(entity.pathIndex);
-
-        if (entity.pathBuildings[entity.pathIndex] == this)
+        if (entity.pathBuildings.Count > 0 && entity.pathBuildings.Count > entity.pathIndex && entity.pathBuildings[entity.pathIndex] == this)
         {
-            if (!entity.isElevatorRiding)
+            if (!entity.isRidingOnElevator)
             {
                 if (spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex())
                 {
@@ -82,6 +94,7 @@ public class ElevatorBuilding : RoomBuilding
                     }
                     else
                     {
+                        Debug.Log("StartElevatorWalking");
                         entity.StartElevatorWalking(this);
                     }
                 }

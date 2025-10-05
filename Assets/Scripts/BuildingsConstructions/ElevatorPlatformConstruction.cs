@@ -11,9 +11,10 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     public List<Entity> elevatorRidingPassengers { get; private set; } = new List<Entity>();
 
     public bool isMoving { get; private set; } = false;
-    public int currentFloorIndex { get; private set; } = 0;
+    public int currentFloorIndex = 0;
     public int startFloorIndex { get; private set; } = 0;
     public int currentTargetFloorIndex { get; private set; } = 0;
+    public int placeIndex { get; private set; } = 0;
 
     private float moveSpeed = 0.0f;
     private Vector3 moveDirection = Vector3.zero;
@@ -24,29 +25,11 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     {
         if (isMoving)
         {
-            int floorIndex = 0;
-
-            if (currentTargetFloorIndex > currentFloorIndex)
-            {
-                floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight) / CityManager.floorHeight);
-
-                if (floorIndex < startFloorIndex)
-                    floorIndex = startFloorIndex;
-            }
-            else
-            {
-                floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight + CityManager.floorHeight) / CityManager.floorHeight);
-
-                if (floorIndex > startFloorIndex)
-                    floorIndex = startFloorIndex;
-            }
+            SetFloorIndex(GetFloorIndexByPosition(currentTargetFloorIndex));
 
             float speed = moveSpeed * Time.deltaTime;
             Move(moveDirection, speed);
 
-            SetFloorIndex(floorIndex);
-
-            Debug.Log(currentTargetFloorIndex);
             if (currentFloorIndex == currentTargetFloorIndex)
             {
                 StopMoving();
@@ -58,15 +41,14 @@ public class ElevatorPlatformConstruction : BuildingConstruction
             {
                 bool canMove = true;
 
-                int count = elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex].maxResidentsCount - elevatorRidingPassengers.Count;
-                for (int i = 0; i < elevatorWalkingPassengers.Count; i++)
+                List<Entity> currentElevatorWalkingPassengers = elevatorWalkingPassengers;
+                for (int i = 0; i < currentElevatorWalkingPassengers.Count; i++)
                 {
-                    float distance = math.distance(elevatorWalkingPassengers[i].transform.position, buildingInteractions[i].waypoints[0].position);
+                    float distance = math.distance(currentElevatorWalkingPassengers[i].transform.position, buildingInteractions[i].waypoints[0].position);
 
-                    if (distance <= 1f && elevatorWalkingPassengers[i].navMeshAgent.velocity == Vector3.zero)
+                    if (distance <= 1f && currentElevatorWalkingPassengers[i].navMeshAgent.velocity == Vector3.zero)
                     {
-                        elevatorWalkingPassengers[i].StartElevatorRiding(elevatorBuilding);
-                        i--;
+                        currentElevatorWalkingPassengers[i].StartElevatorRiding(elevatorBuilding);
                     }
                     else
                     {
@@ -76,17 +58,15 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
                 if (canMove)
                 {
-                    Debug.Log(GetNextFloor());
                     StartMovingToFloor(GetNextFloor());
                 }
             }
             else if (elevatorRidingPassengers.Count > 0)
             {
-
+                StartMovingToFloor(GetNextFloor());
             }
             else if (elevatorWaitingPassengers.Count > 0)
             {
-                Debug.Log(elevatorWaitingPassengers.Count);
 
                 bool canMove = true;
 
@@ -108,10 +88,14 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     public override void Build()
     {
         base.Build();
+
+        cityManager = FindAnyObjectByType<CityManager>();
     }
 
     public void StartMovingToFloor(int targetFloorIndex)
     {
+        Debug.Log("Try to start moving elevator from " + currentFloorIndex + " to " + targetFloorIndex);
+
         if (targetFloorIndex != currentFloorIndex)
         {
             Debug.Log("StartMoving");
@@ -157,8 +141,13 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
         for (int i = 0; i < newRidersCount; i++)
         {
-            elevatorBuilding.elevatorWaitingPassengers[i].StartElevatorWalking(elevatorBuilding);
-            i--;
+            if (elevatorBuilding.elevatorWaitingPassengers.Count > i)
+            {
+                elevatorBuilding.elevatorWaitingPassengers[i].StartElevatorWalking(elevatorBuilding);
+                i--;
+            }
+            else
+                break;
         }
 
         if (elevatorWaitingPassengers.Count > 0 && newRidersCount == 0)
@@ -172,64 +161,22 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
     private int GetNextFloor()
     {
-        int nearestFloorIndex = 0;
+        int nearestFloorIndex = currentFloorIndex;
+
+        Debug.Log("GetNextFloor");
 
         if (elevatorRidingPassengers.Count > 0)
         {
-            if (elevatorRidingPassengers.Count < elevatorBuilding.buildingData.maxBuildingFloors && elevatorWaitingPassengers.Count > 0)
+            Debug.Log("elevatorRidingPassengers.Count > 0");
+
+            if (true || elevatorRidingPassengers.Count == elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex].maxResidentsCount)
             {
+                Debug.Log("if");
                 int currentTargetFloorIndex = elevatorRidingPassengers[0].pathBuildings[elevatorRidingPassengers[0].pathIndex].GetFloorIndex();
 
                 if (currentTargetFloorIndex > currentFloorIndex)
                 {
-                    nearestFloorIndex = elevatorBuilding.cityManager.spawnedFloors.Count - 1;
-
-                    for (int i = 0; i < elevatorWaitingPassengers.Count; i++)
-                    {
-                        if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() < currentTargetFloorIndex && elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() > currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() > currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() <= currentTargetFloorIndex)
-                        {
-                            if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() < nearestFloorIndex)
-                            {
-                                nearestFloorIndex = elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex();
-
-                                if (nearestFloorIndex == currentFloorIndex + 1)
-                                    break;
-                            }
-                        }
-                    }
-                }
-                else if (currentTargetFloorIndex < currentFloorIndex)
-                {
-                    nearestFloorIndex = 0;
-
-                    for (int i = 0; i < elevatorWaitingPassengers.Count; i++)
-                    {
-                        if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() > currentTargetFloorIndex && elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() < currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() < currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() >= currentTargetFloorIndex)
-                        {
-                            if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() > nearestFloorIndex)
-                            {
-                                nearestFloorIndex = elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex();
-
-                                if (nearestFloorIndex == currentFloorIndex - 1)
-                                    break;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    nearestFloorIndex = currentTargetFloorIndex;
-                }
-            }
-            else
-            {
-                Debug.Log("2");
-
-                int currentTargetFloorIndex = elevatorRidingPassengers[0].pathBuildings[elevatorRidingPassengers[0].pathIndex].GetFloorIndex();
-
-                if (currentTargetFloorIndex > currentFloorIndex)
-                {
-                    nearestFloorIndex = elevatorBuilding.cityManager.spawnedFloors.Count - 1;
+                    nearestFloorIndex = elevatorBuilding.cityManager.builtFloors.Count - 1;
 
                     for (int i = 0; i < elevatorRidingPassengers.Count; i++)
                     {
@@ -241,6 +188,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
                 }
                 else
                 {
+                    Debug.Log("else");
                     nearestFloorIndex = 0;
 
                     for (int i = 0; i < elevatorRidingPassengers.Count; i++)
@@ -249,6 +197,54 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
                         if (nextFloorIndex > nearestFloorIndex)
                             nearestFloorIndex = nextFloorIndex;
+                    }
+                }
+            }
+            else
+            {
+                if (elevatorWaitingPassengers.Count > 0)
+                {
+                    int currentTargetFloorIndex = elevatorRidingPassengers[0].pathBuildings[elevatorRidingPassengers[0].pathIndex].GetFloorIndex();
+
+                    if (currentTargetFloorIndex > currentFloorIndex)
+                    {
+                        nearestFloorIndex = elevatorBuilding.cityManager.builtFloors.Count - 1;
+
+                        for (int i = 0; i < elevatorWaitingPassengers.Count; i++)
+                        {
+                            if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() < currentTargetFloorIndex && elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() > currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() > currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() <= currentTargetFloorIndex)
+                            {
+                                if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() < nearestFloorIndex)
+                                {
+                                    nearestFloorIndex = elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex();
+
+                                    if (nearestFloorIndex == currentFloorIndex + 1)
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    else if (currentTargetFloorIndex < currentFloorIndex)
+                    {
+                        nearestFloorIndex = 0;
+
+                        for (int i = 0; i < elevatorWaitingPassengers.Count; i++)
+                        {
+                            if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() > currentTargetFloorIndex && elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() < currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() < currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() >= currentTargetFloorIndex)
+                            {
+                                if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() > nearestFloorIndex)
+                                {
+                                    nearestFloorIndex = elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex();
+
+                                    if (nearestFloorIndex == currentFloorIndex - 1)
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        nearestFloorIndex = currentTargetFloorIndex;
                     }
                 }
             }
@@ -294,6 +290,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
     public void AddRidingPassenger(Entity passenger)
     {
+        Debug.Log("AddRidingPassenger");
         elevatorRidingPassengers.Add(passenger);
     }
 
@@ -312,13 +309,36 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         if (newFloorIndex != currentFloorIndex)
         {
             currentFloorIndex = newFloorIndex;
-            elevatorBuilding = cityManager.spawnedFloors[newFloorIndex].roomBuildingPlaces[elevatorBuilding.GetBuildingPlaceIndex()].placedBuilding as ElevatorBuilding;
+
+            elevatorBuilding = cityManager.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding as ElevatorBuilding;
 
             for (int i = 0; i < elevatorRidingPassengers.Count; i++)
             {
                 elevatorRidingPassengers[i].EnterBuilding(elevatorBuilding);
             }
         }
+    }
+
+    public int GetFloorIndexByPosition(int targetFloor)
+    {
+        int floorIndex = 0;
+
+        if (targetFloor >= currentFloorIndex)
+        {
+            floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight) / CityManager.floorHeight);
+
+            if (floorIndex < startFloorIndex)
+                floorIndex = startFloorIndex;
+        }
+        else
+        {
+            floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight + CityManager.floorHeight) / CityManager.floorHeight);
+
+            if (floorIndex > startFloorIndex)
+                floorIndex = startFloorIndex;
+        }
+
+        return floorIndex;
     }
 
     public void SetElevatorBuilding(ElevatorBuilding elevatorBuilding)
@@ -330,6 +350,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         moveSpeed = elevatorBuildingLevelData.elevatorMoveSpeed;
 
         SetFloorIndex(elevatorBuilding.GetFloorIndex());
-        
+        placeIndex = elevatorBuilding.GetPlaceIndex();
     }
 }

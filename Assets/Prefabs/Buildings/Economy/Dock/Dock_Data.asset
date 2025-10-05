@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
   m_Name: Dock_Data
   m_EditorClassIdentifier: 
+  buildingId: 2
   buildingIdName: dock
   buildingName: Dock
   buildingType: 4
   buildingCategory: 2
+  connectionType: 0
+  buildingFloors: 1
+  maxBuildingFloors: 1
   isDemolishable: 0
   buildingManagementMenuWidget: {fileID: 0}

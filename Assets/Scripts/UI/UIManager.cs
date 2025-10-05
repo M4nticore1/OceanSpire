@@ -489,7 +489,8 @@ public class UIManager : MonoBehaviour
 
         // Set parents of resident widgets
         int buildingWorkerWidgetIndex = 0;
-        for (int i = 0; i < cityManager.residentsCount; i++)
+        Debug.Log(cityManager.residents.Count);
+        for (int i = 0; i < cityManager.residents.Count; i++)
         {
             spawnedResidentWidgets[i].InitializeResidentWidget(cityManager.residents[i], selectedBuilding, this);
 
@@ -534,12 +535,12 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < selectedBuilding.workersCount; i++)
+        for (int i = 0; i < selectedBuilding.workers.Count; i++)
         {
             spawnedBuildingWorkerEmptyWidgets[i].gameObject.SetActive(false);
         }
 
-        for (int i = selectedBuilding.workersCount; i < maxBuildingWorkersCount; i++)
+        for (int i = selectedBuilding.workers.Count; i < maxBuildingWorkersCount; i++)
         {
             spawnedBuildingWorkerEmptyWidgets[i].gameObject.SetActive(true);
         }
@@ -591,15 +592,15 @@ public class UIManager : MonoBehaviour
         // Building workers
         SetWorkerListSize(buildingWorkersMenu, buildingWorkersList, null, maxBuildingWorkersCount, residentWidgetsColumnCount);
         // Unemployed residents
-        SetWorkerListSize(unemployedResidentsMenu, unemployedResidentsList, haveNoUnemployedResidentsText, cityManager.unemployedResidentCount, residentWidgetsColumnCount);
+        SetWorkerListSize(unemployedResidentsMenu, unemployedResidentsList, haveNoUnemployedResidentsText, cityManager.unemployedResidentsCount, residentWidgetsColumnCount);
         // Employed residents
-        SetWorkerListSize(employedResidentsMenu, employedResidentsList, haveNoEmployedResidentsText, cityManager.employedResidentCount - selectedBuilding.workersCount, residentWidgetsColumnCount);
+        SetWorkerListSize(employedResidentsMenu, employedResidentsList, haveNoEmployedResidentsText, cityManager.employedResidentCount - selectedBuilding.workers.Count, residentWidgetsColumnCount);
     }
 
     public void SelectBuildingWorker(ResidentWidget residentWidget)
     {
         Resident resident = residentWidget.resident;
-        int workersCount = selectedBuilding.workersCount;
+        int workersCount = selectedBuilding.workers.Count;
 
         if (resident.isWorker)
         {
@@ -608,7 +609,7 @@ public class UIManager : MonoBehaviour
                 residentWidget.transform.SetParent(buildingWorkersList.transform);
                 residentWidget.transform.SetSiblingIndex(workersCount - 1);
 
-                int index = selectedBuilding.workersCount - 1;
+                int index = selectedBuilding.workers.Count - 1;
                 spawnedBuildingWorkerEmptyWidgets[index].gameObject.SetActive(false);
             }
             else

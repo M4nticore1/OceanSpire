@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
   m_Name: LivingRoomsData
   m_EditorClassIdentifier: 
+  buildingId: 6
   buildingIdName: living_rooms
   buildingName: Living Rooms
   buildingType: 0

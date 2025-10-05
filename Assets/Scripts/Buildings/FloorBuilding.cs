@@ -8,9 +8,9 @@ public class FloorBuilding : Building
     public BuildingPlace hallBuildingPlace;
     public BuildingPlace floorBuildingPlace;
 
-    public override void Place(BuildingPlace buildingPlace)
+    public override void Build(BuildingPlace buildingPlace)
     {
-        base.Place(buildingPlace);
+        base.Build(buildingPlace);
 
         cityManager.InitializeFloor(this);
 
@@ -113,7 +113,7 @@ public class FloorBuilding : Building
                     {
                         for (int j = 1; j <= buildingData.buildingFloors; j++)
                         {
-                            BuildingPlace currentBuildingPlace = cityManager.spawnedFloors[GetFloorIndex() - j].roomBuildingPlaces[i];
+                            BuildingPlace currentBuildingPlace = cityManager.builtFloors[GetFloorIndex() - j].roomBuildingPlaces[i];
 
                             if (currentBuildingPlace.emptyBuildingPlacesAbove == buildingData.buildingFloors - 1)
                             {

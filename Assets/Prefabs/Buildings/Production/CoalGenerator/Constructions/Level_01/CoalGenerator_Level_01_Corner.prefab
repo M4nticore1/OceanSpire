@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1881450747995571914}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Waypoint_02_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3641052005684655222}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Waypoint_01_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 6510800926057895866}
   - component: {fileID: 5637281329337928482}
   - component: {fileID: -5131437744679499090}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: CoalGenerator_Level_01_Corner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,13 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingActions:
-  - waypoints:
-    - {fileID: 3641052005684655222}
-    actionTimes: 00000000
-  - waypoints:
-    - {fileID: 1881450747995571914}
-    actionTimes: 00000000
+  buildingDetails: []
+  buildingInteractions: []
 --- !u!64 &-5131437744679499090
 MeshCollider:
   m_ObjectHideFlags: 0

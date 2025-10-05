@@ -81,32 +81,9 @@ public class Resident : Entity
     {
         isWorker = true;
         workBuilding = building;
-        workerIndex = building.workersCount;
+        workerIndex = building.workers.Count;
 
         SetTargetBuilding(building);
-
-        //if (currentFloorIndex <= 1 && workBuilding.GetFloorIndex() <= 1)
-        //{
-        //    if (workBuilding.spawnedBuildingConstruction.buildingInteractions.Count > workerIndex)
-        //    {
-        //        BuildingAction buildingAction = workBuilding.spawnedBuildingConstruction.buildingInteractions[workerIndex];
-
-        //        if (buildingAction.waypoints.Count > 0)
-        //        {
-        //            navMeshAgent.SetDestination(buildingAction.waypoints[0].position);
-        //        }
-        //        else
-        //        {
-        //            Debug.Log("buildingActions.waypoints.Count == 0");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        navMeshAgent.SetDestination(workBuilding.transform.position);
-
-        //        Debug.Log("buildingActions.Count <= workerIndex");
-        //    }
-        //}
 
         building.AddWorker(this);
 
@@ -120,6 +97,9 @@ public class Resident : Entity
         workBuilding = null;
 
         StopWorking();
+
+        if(targetBuilding)
+            targetBuilding = null;
 
         OnWorkerRemove?.Invoke();
     }

@@ -9,14 +9,19 @@ public class BuildingComponent : MonoBehaviour
 
     protected virtual void Awake()
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
-        ownedBuilding = GetComponent<Building>();
+        //gameManager = FindAnyObjectByType<GameManager>();
+        //cityManager = FindAnyObjectByType<CityManager>();
+        //ownedBuilding = GetComponent<Building>();
     }
 
     public virtual void Build()
     {
+        gameManager = FindAnyObjectByType<GameManager>();
+        cityManager = FindAnyObjectByType<CityManager>();
+        ownedBuilding = GetComponent<Building>();
 
+        if (!ownedBuilding)
+            ownedBuilding = GetComponent<Building>();
     }
 
     public virtual void LevelUp()

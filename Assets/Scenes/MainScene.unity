@@ -1482,13 +1482,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17101003, y: 0.8137978, z: -0.2961981, w: 0.46984628}
+  m_LocalRotation: {x: 0.161729, y: 0.8373192, z: -0.34682897, w: 0.39044833}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2717670}
-  m_LocalEulerAnglesHint: {x: 40, y: 120, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 130, z: 0}
 --- !u!114 &410087042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1892,9 +1892,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1290994963}
     - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
+      propertyPath: builtFloors.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
       propertyPath: spawnedFloors.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
+      propertyPath: 'builtFloors.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2135494683}
     - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
       propertyPath: 'spawnedFloors.Array.data[0]'
       value: 

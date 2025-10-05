@@ -19,17 +19,21 @@ public class Entity : MonoBehaviour
 
     protected bool isWalking = false;
     public bool isRidingOnElevator { get; protected set; } = false;
-    public bool isElevatorRiding { get; protected set; } = false;
-    public bool isElevatorWaiting { get; protected set; } = false;
-    public bool isElevatorWalking { get; protected set; } = false;
+    public bool isWaitingForElevator { get; protected set; } = false;
+    public bool isWalkingToElevator { get; protected set; } = false;
 
     public string firstName = "";
     public string lastName = "";
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
         cityManager = FindAnyObjectByType<CityManager>();
         navMeshAgent = GetComponent<NavMeshAgent>();
+    }
+
+    protected virtual void Start()
+    {
+
     }
 
     protected virtual void Update()
@@ -39,24 +43,20 @@ public class Entity : MonoBehaviour
 
     public virtual void SetTargetBuilding(Building targetBuilding)
     {
-        //if (currentBuilding)
-        //    Debug.Log(currentBuilding.buildingData.buildingIdName);
-        //else
-        //    Debug.Log("!CurrentBuilding");
-
         this.targetBuilding = targetBuilding;
         pathIndex = 0;
 
         if (cityManager)
         {
             BuildingPlace startBuildingPlace = null;
-            //BuildingPlace targetBuildingPlace = cityManager.spawnedFloors[targetBuilding.GetFloorIndex()].roomBuildingPlaces[targetBuilding.GetBuildingPlaceIndex()];
 
             if (currentBuilding)
-                startBuildingPlace = cityManager.spawnedFloors[currentBuilding.GetFloorIndex()].roomBuildingPlaces[currentBuilding.GetBuildingPlaceIndex()];
+                startBuildingPlace = cityManager.builtFloors[currentBuilding.GetFloorIndex()].roomBuildingPlaces[currentBuilding.GetPlaceIndex()];
             else
-                startBuildingPlace = cityManager.spawnedFloors[CityManager.firstBuildCityFloorIndex].roomBuildingPlaces[CityManager.firstBuildCitybuildingPlace];
+                startBuildingPlace = cityManager.builtFloors[CityManager.firstBuildCityFloorIndex].roomBuildingPlaces[CityManager.firstBuildCitybuildingPlace];
 
+            //Debug.Log(startBuildingPlace.placedBuilding);
+            //Debug.Log(targetBuilding);
             bool isPathFounded = cityManager.FindPathToBuilding(startBuildingPlace, targetBuilding.buildingPlace, ref pathBuildings);
 
             if (isPathFounded)
@@ -89,7 +89,7 @@ public class Entity : MonoBehaviour
 
             building.EnterBuilding(this);
 
-            if (currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex() && currentBuilding.GetBuildingPlaceIndex() == pathBuildings[pathIndex].GetBuildingPlaceIndex())
+            if (pathBuildings.Count > pathIndex && currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex() && currentBuilding.GetPlaceIndex() == pathBuildings[pathIndex].GetPlaceIndex())
             {
                 FollowPath();
                 pathIndex++;
@@ -101,7 +101,7 @@ public class Entity : MonoBehaviour
     {
         //Debug.Log("FollowPath");
 
-        if (!isElevatorRiding && pathIndex < pathBuildings.Count)
+        if (!isRidingOnElevator && pathIndex < pathBuildings.Count)
         {
             ElevatorBuilding currentElevatorBuilding = currentBuilding as ElevatorBuilding;
             Building currentPathBuilding = pathBuildings[pathIndex];
@@ -111,7 +111,7 @@ public class Entity : MonoBehaviour
             {
                 //Debug.Log("currentElevatorBuilding");
 
-                if (currentPathElevatorBuilding && currentPathElevatorBuilding.GetBuildingPlaceIndex() == currentElevatorBuilding.GetBuildingPlaceIndex() && currentPathElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
+                if (currentPathElevatorBuilding && currentPathElevatorBuilding.GetPlaceIndex() == currentElevatorBuilding.GetPlaceIndex() && currentPathElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
                 {
                     //navMeshAgent.SetDestination(currentPathElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[currentPathElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
                 }
@@ -174,14 +174,12 @@ public class Entity : MonoBehaviour
     {
         Debug.Log("Start Walking");
 
-        isElevatorWalking = true;
-        isElevatorWaiting = false;
-        isElevatorRiding = false;
+        isWalkingToElevator = true;
+        isWaitingForElevator = false;
+        isRidingOnElevator = false;
 
         ElevatorPlatformConstruction elevatorPlatformConstruction = elevatorBuilding.spawnedElevatorPlatform;
         navMeshAgent.SetDestination(elevatorPlatformConstruction.buildingInteractions[elevatorPlatformConstruction.elevatorRidingPassengers.Count].waypoints[0].position);
-
-        Debug.Log(navMeshAgent.destination);
 
         elevatorBuilding.AddWalkingPassenger(this);
         elevatorBuilding.RemoveWaitingPassenger(this);
@@ -190,7 +188,7 @@ public class Entity : MonoBehaviour
 
     public void StopElevatorWalking(ElevatorBuilding elevatorBuilding)
     {
-        //isElevatorWalking = false;
+        isWalkingToElevator = false;
 
         elevatorBuilding.RemoveWalkingPassenger(this);
     }
@@ -199,9 +197,9 @@ public class Entity : MonoBehaviour
     {
         Debug.Log("Start Waiting");
 
-        isElevatorWalking = false;
-        isElevatorWaiting = true;
-        isElevatorRiding = false;
+        isWalkingToElevator = false;
+        isWaitingForElevator = true;
+        isRidingOnElevator = false;
 
         BuildingConstruction buildingConstruction = elevatorBuilding.spawnedBuildingConstruction;
         navMeshAgent.SetDestination(buildingConstruction.buildingInteractions[elevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].position);
@@ -213,29 +211,29 @@ public class Entity : MonoBehaviour
 
     public void StopElevatorWaiting(ElevatorBuilding elevatorBuilding)
     {
-        isElevatorWaiting = false;
+        isWaitingForElevator = false;
 
         elevatorBuilding.RemoveWaitingPassenger(this);
     }
 
     public void StartElevatorRiding(ElevatorBuilding elevatorBuilding)
     {
-        //Debug.Log("Start Riding");
+        Debug.Log("Start Riding");
 
-        isElevatorWalking = false;
-        isElevatorWaiting = false;
-        isElevatorRiding = true;
+        isRidingOnElevator = true;
+        isWalkingToElevator = false;
+        isWaitingForElevator = false;
 
         navMeshAgent.enabled = false;
 
         elevatorBuilding.AddRidingPassenger(this);
-        elevatorBuilding.RemoveWaitingPassenger(this);
         elevatorBuilding.RemoveWalkingPassenger(this);
+        elevatorBuilding.RemoveWaitingPassenger(this);
     }
 
     public void StopElevatorRiding(ElevatorBuilding elevatorBuilding)
     {
-        isElevatorRiding = false;
+        isRidingOnElevator = false;
 
         navMeshAgent.enabled = true;
 

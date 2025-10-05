@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
   m_Name: FloorFrameData
   m_EditorClassIdentifier: 
+  buildingId: 1
   buildingIdName: floor_frame
   buildingName: Floor Frame
   buildingType: 3
   buildingCategory: 0
-  buildingLevelsData:
-  - {fileID: 11400000, guid: 900d1236c8a702a49b3effad3a42c5f0, type: 2}
+  connectionType: 0
+  buildingFloors: 1
+  maxBuildingFloors: 1
+  isDemolishable: 1
+  buildingManagementMenuWidget: {fileID: 0}

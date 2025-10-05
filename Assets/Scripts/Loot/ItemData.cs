@@ -1,5 +1,15 @@
 using UnityEngine;
 
+public enum ItemID
+{
+    Population,
+    Food,
+    Electricity,
+    Wood,
+    Metal,
+    Plastic,
+}
+
 //[System.Serializable]
 public enum ItemCategory
 {
@@ -9,12 +19,12 @@ public enum ItemCategory
     Weapon,
 }
 
-[CreateAssetMenu(fileName = "ResourceData", menuName = "Scriptable Objects/ResourceData")]
+[CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/ItemData")]
 public class ItemData : ScriptableObject
 {
-    public int itemId;
-    public string itemIdName;
-    public string itemName;
-    public Sprite itemIcon;
-    public ItemCategory itemCategory;
+    public ItemID itemId = ItemID.Population;
+    public string itemIdName = "";
+    public string itemName = "";
+    public Sprite itemIcon = null;
+    public ItemCategory itemCategory = ItemCategory.Society;
 }
