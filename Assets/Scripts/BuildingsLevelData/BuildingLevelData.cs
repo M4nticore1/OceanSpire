@@ -15,4 +15,7 @@ public class BuildingLevelData : ScriptableObject
     [Header("Main")]
     public List<ResourceToBuild> ResourcesToBuild = new List<ResourceToBuild>();
     public int maxResidentsCount = 0;
+
+    public GameObject constructionStraight = null;
+    public GameObject constructionCorner = null;
 }

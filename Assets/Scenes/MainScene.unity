@@ -1904,6 +1904,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2135494683}
     - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
+      propertyPath: 'builtFloors.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1761258038}
+    - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
+      propertyPath: 'builtFloors.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1761258038}
+    - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
+      propertyPath: 'builtFloors.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1761258038}
+    - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
       propertyPath: 'spawnedFloors.Array.data[0]'
       value: 
       objectReference: {fileID: 2135494683}

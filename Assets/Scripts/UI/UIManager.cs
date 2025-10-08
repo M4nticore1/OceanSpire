@@ -164,13 +164,13 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Building.OnBuildingUpgraded += OnBuildingUpgraded;
+        //Building.OnBuildingFinishConstructing += OnBuildingUpgraded;
         cityManager.OnResidentAdded += AddResidentWidget;
     }
 
     private void OnDisable()
     {
-        Building.OnBuildingUpgraded -= OnBuildingUpgraded;
+        //Building.OnBuildingFinishConstructing -= OnBuildingUpgraded;
         cityManager.OnResidentAdded -= AddResidentWidget;
     }
 
@@ -349,7 +349,11 @@ public class UIManager : MonoBehaviour
         {
             int amount = cityManager.items[indexes[i]].amount;
             int maxAmount = cityManager.items[indexes[i]].maxAmount;
-            storageResourceWidgets[indexes[i]].UpdateStorageWidget(amount, maxAmount);
+
+            if (storageResourceWidgets.Count > indexes[i])
+                storageResourceWidgets[indexes[i]].UpdateStorageWidget(amount, maxAmount);
+            else
+                Debug.LogError("storageResourceWidgets.Count > indexes[i]");
         }
     }
 
@@ -722,12 +726,18 @@ public class UIManager : MonoBehaviour
     // Placing Building
     public void OnBuildingPlacingStarted()
     {
-        stopPlacingBuildingButton.gameObject.SetActive(true);
+        if (stopPlacingBuildingButton)
+            stopPlacingBuildingButton.gameObject.SetActive(true);
+        else
+            Debug.Log("stopPlacingBuildingButton is NULL");
     }
 
     public void OnBuildingPlacingStopped()
     {
-        stopPlacingBuildingButton.gameObject.SetActive(false);
+        if (stopPlacingBuildingButton)
+            stopPlacingBuildingButton.gameObject.SetActive(false);
+        else
+            Debug.Log("stopPlacingBuildingButton is NULL");
     }
 
     private void StopPlacingBuilding()

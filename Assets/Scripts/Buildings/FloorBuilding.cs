@@ -8,43 +8,37 @@ public class FloorBuilding : Building
     public BuildingPlace hallBuildingPlace;
     public BuildingPlace floorBuildingPlace;
 
-    public override void Build(BuildingPlace buildingPlace)
+    public override void Place(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
     {
-        base.Build(buildingPlace);
+        base.Place(buildingPlace, levelIndex, isUnderConstruction);
 
-        cityManager.InitializeFloor(this);
+        InitializeFloor();
 
-        InitializeFloor(buildingPlace.floorIndex);
+        floorBuildingPlace.InitializePlacedBuilding();
+    }
+
+    public override void StartBuilding(int nextLevel)
+    {
+        base.StartBuilding(nextLevel);
 
         if (GetType() == typeof(FloorBuilding))
-            InvokeBuildingPlaced(this);
+            InvokeStartConstructing(this);
     }
 
-    public void AddFloor(CityManager cityManager)
+    public override void Build(int newLevelIndex)
     {
-        FloorBuilding nextFloorBuilding = floorBuildingPlace.placedBuilding as FloorBuilding;
+        base.Build(newLevelIndex);
 
-        if (nextFloorBuilding)
-        {
-            nextFloorBuilding.AddFloor(cityManager);
-
-            cityManager.AddFloorCount(nextFloorBuilding);
-        }
+        if (GetType() == typeof(FloorBuilding))
+            InvokeFinishConstructing(this);
     }
 
-    public void InitializeFloor(int floorIndex)
+    public void InitializeFloor()
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
-
+        floorBuildingPlace.InitializeBuildingPlace(GetFloorIndex() + 1);
+        hallBuildingPlace.InitializeBuildingPlace(GetFloorIndex());
         for (int i = 0; i < CityManager.roomsCountPerFloor; i++)
-        {
-            roomBuildingPlaces[i].InitializeBuildingPlace(floorIndex);
-        }
-
-        hallBuildingPlace.InitializeBuildingPlace(floorIndex);
-
-        floorBuildingPlace.InitializeBuildingPlace(floorIndex + 1);
+            roomBuildingPlaces[i].InitializeBuildingPlace(GetFloorIndex());
     }
 
     public void ShowBuildingPlacesByType(Building building)

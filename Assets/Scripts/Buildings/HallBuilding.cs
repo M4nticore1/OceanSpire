@@ -9,16 +9,16 @@ public class HallBuilding : Building
 
 	}
 
-    protected override void UpdateBuildingConstruction()
+    protected override void UpdateBuildingConstruction(int levelIndex)
     {
-        base.UpdateBuildingConstruction();
+        base.UpdateBuildingConstruction(levelIndex);
 
-        BuildConstruction();
+        BuildConstruction(levelIndex);
 	}
 
-	protected override void BuildConstruction()
+	protected override void BuildConstruction(int levelIndex)
     {
-        base.BuildConstruction();
+        base.BuildConstruction(levelIndex);
 
 		HallBuildingLevelData hallLevelData = buildingLevelsData[levelIndex] as HallBuildingLevelData;
 

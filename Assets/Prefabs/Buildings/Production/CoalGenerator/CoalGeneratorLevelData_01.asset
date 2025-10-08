@@ -20,8 +20,10 @@ MonoBehaviour:
   - resourceData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
     amount: 200
   maxResidentsCount: 2
+  constructionStraight: {fileID: 0}
+  constructionCorner: {fileID: 0}
   buildingStraight: {fileID: 5637281329337928482, guid: 2571542a8acd4b44ba3fa0ff65f62351, type: 3}
-  BuildingCorner: {fileID: 5637281329337928482, guid: c2688b5ea8ee2464e9af2f23673a38c1, type: 3}
+  buildingCorner: {fileID: 5637281329337928482, guid: c2688b5ea8ee2464e9af2f23673a38c1, type: 3}
   buildingStraightLeft: {fileID: 5637281329337928482, guid: da575eae7bde7f7449d1d41be3d87b96, type: 3}
   buildingStraightRight: {fileID: 5637281329337928482, guid: 61ce8cd4a45021d48885d9ca6650e65f, type: 3}
   buildingStraightLeftRight: {fileID: 5637281329337928482, guid: 9d3b5a2f4a18bc7419143862da88caff, type: 3}

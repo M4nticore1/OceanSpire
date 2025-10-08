@@ -19,6 +19,6 @@ MonoBehaviour:
   buildingCategory: 0
   connectionType: 2
   buildingFloors: 1
-  maxBuildingFloors: 1
+  maxBuildingFloors: 0
   isDemolishable: 1
   buildingManagementMenuWidget: {fileID: 0}

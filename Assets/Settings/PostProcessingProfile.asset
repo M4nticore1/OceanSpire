@@ -107,6 +107,29 @@ MonoBehaviour:
   - {fileID: 5651477428211340366}
   - {fileID: 4343081922134147735}
   - {fileID: 2407815637655286651}
+  - {fileID: 594257261634682476}
+--- !u!114 &594257261634682476
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70afe9e12c7a7ed47911bb608a23a8ff, type: 3}
+  m_Name: SplitToning
+  m_EditorClassIdentifier: 
+  active: 0
+  shadows:
+    m_OverrideState: 0
+    m_Value: {r: 0.5, g: 0.49166667, b: 0.45, a: 1}
+  highlights:
+    m_OverrideState: 1
+    m_Value: {r: 0.73800004, g: 0.7222806, b: 0.63320404, a: 1}
+  balance:
+    m_OverrideState: 0
+    m_Value: 0
 --- !u!114 &2407815637655286651
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -119,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb60a22f311433c4c962b888d1393f88, type: 3}
   m_Name: PaniniProjection
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   distance:
     m_OverrideState: 0
     m_Value: 0
@@ -138,7 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bd486065ce11414fa40e631affc4900, type: 3}
   m_Name: ProbeVolumesOptions
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   normalBias:
     m_OverrideState: 1
     m_Value: 0.16
@@ -184,16 +207,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5485954d14dfb9a4c8ead8edb0ded5b1, type: 3}
   m_Name: LiftGammaGain
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   lift:
     m_OverrideState: 0
-    m_Value: {x: 0.9910348, y: 0.9698879, z: 1, w: 0}
+    m_Value: {x: 0.94418067, y: 1, z: 0.9325495, w: 0}
   gamma:
     m_OverrideState: 0
-    m_Value: {x: 0.97711664, y: 1, z: 0.9859382, w: 0}
+    m_Value: {x: 0.96501464, y: 1, z: 0.9567938, w: 0}
   gain:
     m_OverrideState: 0
-    m_Value: {x: 0.9748283, y: 1, z: 0.94965667, w: 0}
+    m_Value: {x: 0.9343218, y: 1, z: 0.96277666, w: 0}
 --- !u!114 &4842003563284973181
 MonoBehaviour:
   m_ObjectHideFlags: 3

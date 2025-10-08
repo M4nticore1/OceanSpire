@@ -5,7 +5,7 @@ public class RoomBuildingLevelData : BuildingLevelData
 {
     [Header("Non Connected")]
     public BuildingConstruction buildingStraight;
-    public BuildingConstruction BuildingCorner;
+    public BuildingConstruction buildingCorner;
 
     [Header("Horizontal")]
     [Header("Front")]

@@ -104,6 +104,8 @@ public class PlayerController : MonoBehaviour
         UIManager = FindAnyObjectByType<UIManager>();
         graphicRaycaster = UIManager.gameObject.GetComponent<GraphicRaycaster>();
 
+        UIManager.InitializeUIManager();
+
         SetInputSystem();
     }
 
@@ -154,7 +156,7 @@ public class PlayerController : MonoBehaviour
         secondTouchPositionAction?.Enable();
 
         CityManager.OnStorageCapacityUpdated += UpdateUIStorageItems;
-        Building.OnBuildingPlaced += StopPlacingBuilding;
+        Building.OnBuildingStartConstructing += StopPlacingBuilding;
     }
 
     private void OnDisable()
@@ -478,58 +480,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlaceBuilding(BuildingPlace buildingPlace)
     {
-        //bool canPlace = true;
-
-        //if (buildingToPlace.buildingData.buildingType != BuildingType.FloorFrame)
-        //{
-        //    if (cityManager.buildedFloorsCount >= buildingPlace.floorIndex + buildingToPlace.buildingData.buildingHeightInFloors &&)
-
-        //    {
-        //        for (int i = 0; i < buildingToPlace.buildingData.buildingHeightInFloors; i++)
-        //        {
-        //            if (buildingToPlace.buildingData.buildingType == BuildingType.Room)
-        //            {
-        //                int floorIndex = buildingPlace.floorIndex + i;
-        //                int roomIndex = buildingPlace.buildingPlaceIndex;
-
-        //                if (cityManager.spawnedFloors[floorIndex].roomsBuildingPlaces[roomIndex].isBuildingPlaced)
-        //                {
-        //                    canPlace = false;
-        //                    break;
-        //                }
-        //            }
-        //            else if (buildingToPlace.buildingData.buildingType == BuildingType.Hall)
-        //            {
-        //                int floorIndex = buildingPlace.floorIndex + i;
-
-        //                if (cityManager.currentRoomsNumberOnFloor[floorIndex] > 0 || cityManager.currentHallsNumberOnFloor[floorIndex] > 0)
-        //                {
-        //                    canPlace = false;
-        //                    break;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        canPlace = false;
-        //    }
-        //}
-
-        //if (canPlace)
-        //{
-        //    List<ResourceToBuild> resourcesToBuild = buildingToPlace.buildingLevelsData[0].ResourcesToBuild;
-
-        //    cityManager.PlaceBuilding(buildingToPlace, buildingPlace);
-        //    StopPlacingBuilding();
-
-        //    SpendItems(resourcesToBuild);
-        //}
-
-        cityManager.PlaceBuilding(buildingToPlace, buildingPlace);
-
-        //if (buildingPlace.isBuildingPlaced)
-            //StopPlacingBuilding();
+        cityManager.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
     }
 
     public void StopPlacingBuilding(Building building)

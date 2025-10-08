@@ -7,16 +7,4 @@ public class TowerGateBuilding : HallBuilding
     {
 
     }
-
-    protected override void UpdateBuildingConstruction()
-    {
-        base.UpdateBuildingConstruction();
-
-    }
-
-    protected override void BuildConstruction()
-    {
-        base.BuildConstruction();
-
-    }
 }

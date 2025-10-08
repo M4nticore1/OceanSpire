@@ -5,10 +5,10 @@ using UnityEngine;
 public class RoomBuilding : Building
 {
     protected BuildingPosition buildingPosition = BuildingPosition.Straight;
-    [HideInInspector] public bool isConnectedLeft = false;
-    [HideInInspector] public bool isConnectedRight = false;
-    [HideInInspector] public bool isConnectedAbove = false;
-    [HideInInspector] public bool isConnectedBelow = false;
+    //[HideInInspector] public bool isConnectedLeft = false;
+    //[HideInInspector] public bool isConnectedRight = false;
+    //[HideInInspector] public bool isConnectedAbove = false;
+    //[HideInInspector] public bool isConnectedBelow = false;
 
     public RoomBuilding leftConnectedBuilding = null;
     public RoomBuilding rightConnectedBuilding = null;
@@ -20,136 +20,100 @@ public class RoomBuilding : Building
         base.Start();
     }
 
-    public override void Build(BuildingPlace buildingPlace)
+    public override void StartBuilding(int nextLevel)
     {
-        base.Build(buildingPlace);
+        base.StartBuilding(nextLevel);
 
         if (GetType() == typeof(RoomBuilding))
-            InvokeBuildingPlaced(this);
+            InvokeStartConstructing(this);
     }
 
-    protected override void UpdateBuildingConstruction()
+    public override void Build(int newLevelIndex)
     {
-        base.UpdateBuildingConstruction();
+        base.Build(newLevelIndex);
 
-        if (GetPlaceIndex() % 2 == 0)
+        if (GetType() == typeof(RoomBuilding))
+            InvokeFinishConstructing(this);
+    }
+
+    protected override void UpdateBuildingConstruction(int levelIndex)
+    {
+        base.UpdateBuildingConstruction(levelIndex);
+
+        if (buildingPlace)
         {
-            buildingPosition = BuildingPosition.Corner;
-        }
-        else
-        {
-            buildingPosition = BuildingPosition.Straight;
-        }
-
-        if (buildingData.connectionType == ConnectionType.None)
-        {
-            BuildConstruction();
-        }
-        else if (buildingData.connectionType == ConnectionType.Horizontal)
-        {
-            // Check the left room
-            RoomBuilding leftRoom = null;
-
-            if (GetPlaceIndex() < CityManager.roomsCountPerFloor - 1)
+            if (GetPlaceIndex() % 2 == 0)
             {
-                leftRoom = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[GetPlaceIndex() + 1].placedBuilding as RoomBuilding;
+                buildingPosition = BuildingPosition.Corner;
             }
-            else if (GetPlaceIndex() == CityManager.roomsCountPerFloor - 1)
+            else
             {
-                leftRoom = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[0].placedBuilding as RoomBuilding;
+                buildingPosition = BuildingPosition.Straight;
             }
 
-            if (leftRoom && leftRoom.buildingData.buildingIdName == buildingData.buildingIdName && leftRoom.levelIndex == levelIndex)
+            if (buildingData.connectionType == ConnectionType.None)
             {
-                isConnectedLeft = true;
-                leftConnectedBuilding = leftRoom;
-                leftRoom.isConnectedRight = true;
-                leftRoom.BuildConstruction();
+                BuildConstruction(levelIndex);
             }
-
-            // Check the Right room
-            RoomBuilding rightRoom = null;
-
-            if (GetPlaceIndex() > 0)
+            else if (buildingData.connectionType == ConnectionType.Horizontal)
             {
-                rightRoom = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[GetPlaceIndex() - 1].placedBuilding as RoomBuilding;
-            }
-            else if (GetPlaceIndex() == 0)
-            {
-                rightRoom = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[CityManager.roomsCountPerFloor - 1].placedBuilding as RoomBuilding;
-            }
-
-            if (rightRoom && rightRoom.buildingData.buildingIdName == buildingData.buildingIdName && rightRoom.levelIndex == levelIndex)
-            {
-                isConnectedRight = true;
-                rightConnectedBuilding = rightRoom;
-                rightRoom.isConnectedLeft = true;
-                rightRoom.BuildConstruction();
-            }
-
-            BuildConstruction();
-        }
-        else if (buildingData.connectionType == ConnectionType.Vertical)
-        {
-            bool hadUpConnect = aboveConnectedBuilding != null;
-            bool hadDownConnect = belowConnectedBuilding != null;
-
-            if (!aboveConnectedBuilding && GetFloorIndex() < cityManager.builtFloors.Count - 1)
-            {
-                RoomBuilding topRoom = cityManager.builtFloors[GetFloorIndex() + 1].roomBuildingPlaces[GetPlaceIndex()].placedBuilding as RoomBuilding;
-
-                if (topRoom && topRoom.buildingData.buildingIdName == buildingData.buildingIdName)
+                if (!leftConnectedBuilding)
                 {
-                    if (topRoom.levelIndex == levelIndex)
+                    int leftRoomIndex = (GetPlaceIndex() + 1 + CityManager.roomsCountPerFloor) % (CityManager.roomsCountPerFloor - 1);
+                    RoomBuilding leftRoom = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[leftRoomIndex].placedBuilding as RoomBuilding;
+                    leftConnectedBuilding = leftRoom;
+
+                    if (leftRoom && leftRoom.buildingData.buildingIdName == buildingData.buildingIdName && leftRoom.levelIndex == levelIndex)
+                        leftRoom.BuildConstruction(levelIndex);
+                }
+
+                if (!rightConnectedBuilding)
+                {
+                    int rightRoomIndex = (GetPlaceIndex() - 1 + CityManager.roomsCountPerFloor) % (CityManager.roomsCountPerFloor - 1);
+                    RoomBuilding rightRoom = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[rightRoomIndex].placedBuilding as RoomBuilding;
+                    rightConnectedBuilding = rightRoom;
+
+                    if (rightRoom && rightRoom.buildingData.buildingIdName == buildingData.buildingIdName && rightRoom.levelIndex == levelIndex)
+                        rightRoom.BuildConstruction(levelIndex);
+                }
+
+                BuildConstruction(levelIndex);
+            }
+            else if (buildingData.connectionType == ConnectionType.Vertical)
+            {
+                if (cityManager)
+                {
+                    if (!aboveConnectedBuilding && cityManager.builtFloors.Count > 0 && cityManager.builtFloors.Count > GetFloorIndex() + 1)
                     {
-                        isConnectedAbove = true;
-                        aboveConnectedBuilding = topRoom;
-                        topRoom.isConnectedBelow = true;
-                        topRoom.UpdateBuildingConstruction();
+                        RoomBuilding connectedRoom = cityManager.builtFloors[GetFloorIndex() + 1].roomBuildingPlaces[GetPlaceIndex()].placedBuilding as RoomBuilding;
+                        aboveConnectedBuilding = connectedRoom;
+
+                        if (connectedRoom && connectedRoom.buildingData.buildingIdName == buildingData.buildingIdName && connectedRoom.levelIndex == levelIndex)
+                            connectedRoom.UpdateBuildingConstruction(levelIndex);
                     }
-                    else
+
+                    if (!belowConnectedBuilding && GetFloorIndex() > 0)
                     {
-                        if (topRoom.isConnectedBelow)
-                        {
-                            topRoom.isConnectedBelow = false;
-                            topRoom.UpdateBuildingConstruction();
-                        }
+                        RoomBuilding connectedRoom = cityManager.builtFloors[GetFloorIndex() - 1].roomBuildingPlaces[GetPlaceIndex()].placedBuilding as RoomBuilding;
+                        belowConnectedBuilding = connectedRoom;
+
+                        if (connectedRoom && connectedRoom.buildingData.buildingIdName == buildingData.buildingIdName && connectedRoom.levelIndex == levelIndex)
+                            connectedRoom.UpdateBuildingConstruction(levelIndex);
                     }
                 }
-            }
-
-            if (!belowConnectedBuilding && GetFloorIndex() > 0)
-            {
-                RoomBuilding belowRoom = cityManager.builtFloors[GetFloorIndex() - 1].roomBuildingPlaces[GetPlaceIndex()].placedBuilding as RoomBuilding;
-
-                if (belowRoom && belowRoom.buildingData.buildingIdName == buildingData.buildingIdName)
+                else
                 {
-                    if (belowRoom.levelIndex == levelIndex)
-                    {
-                        isConnectedBelow = true;
-                        belowConnectedBuilding = belowRoom;
-                        belowRoom.isConnectedAbove = true;
-                        belowRoom.UpdateBuildingConstruction();
-                    }
-                    else
-                    {
-                        if (belowRoom.isConnectedAbove)
-                        {
-                            belowRoom.isConnectedAbove = false;
-                            belowRoom.UpdateBuildingConstruction();
-                        }
-                    }
+                    Debug.LogError("cityManager is NULL " + this);
                 }
-            }
 
-            if ((!hadUpConnect && aboveConnectedBuilding) || (!hadDownConnect && belowConnectedBuilding))
-                BuildConstruction();
+                BuildConstruction(levelIndex);
+            }
         }
     }
 
-    protected override void BuildConstruction()
+    protected override void BuildConstruction(int levelIndex)
     {
-        base.BuildConstruction();
+        base.BuildConstruction(levelIndex);
 
         RoomBuildingLevelData roomLevelData = buildingLevelsData[levelIndex] as RoomBuildingLevelData;
 
@@ -162,58 +126,58 @@ public class RoomBuilding : Building
             }
             else if (buildingPosition == BuildingPosition.Corner)
             {
-                if (roomLevelData.BuildingCorner)
-                    spawnedBuildingConstruction = Instantiate(roomLevelData.BuildingCorner, gameObject.transform);
+                if (roomLevelData.buildingCorner)
+                    spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCorner, gameObject.transform);
             }
         }
         else if (buildingData.connectionType == ConnectionType.Horizontal)
         {
             if (buildingPosition == BuildingPosition.Straight)
             {
-                if (isConnectedLeft && isConnectedRight && roomLevelData.buildingStraightLeftRight)
+                if (leftConnectedBuilding && rightConnectedBuilding && roomLevelData.buildingStraightLeftRight)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightLeftRight, gameObject.transform);
-                else if (isConnectedLeft && roomLevelData.buildingStraightLeft)
+                else if (leftConnectedBuilding && roomLevelData.buildingStraightLeft)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightLeft, gameObject.transform);
-                else if (isConnectedRight && roomLevelData.buildingStraightRight)
+                else if (rightConnectedBuilding && roomLevelData.buildingStraightRight)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightRight, gameObject.transform);
-                else if (!isConnectedLeft && !isConnectedRight && roomLevelData.buildingStraight)
+                else if (!leftConnectedBuilding && !rightConnectedBuilding && roomLevelData.buildingStraight)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraight, gameObject.transform);
             }
             else if (buildingPosition == BuildingPosition.Corner)
             {
-                if (isConnectedLeft && isConnectedRight && roomLevelData.buildingCornerLeftRight)
+                if (leftConnectedBuilding && rightConnectedBuilding && roomLevelData.buildingCornerLeftRight)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerLeftRight, gameObject.transform);
-                else if (isConnectedLeft && roomLevelData.buildingCornerLeft)
+                else if (leftConnectedBuilding && roomLevelData.buildingCornerLeft)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerLeft, gameObject.transform);
-                else if (isConnectedRight && roomLevelData.buildingCornerRight)
+                else if (rightConnectedBuilding && roomLevelData.buildingCornerRight)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerRight, gameObject.transform);
-                else if (!isConnectedLeft && !isConnectedRight && roomLevelData.BuildingCorner)
-                    spawnedBuildingConstruction = Instantiate(roomLevelData.BuildingCorner, gameObject.transform);
+                else if (!leftConnectedBuilding && !rightConnectedBuilding && roomLevelData.buildingCorner)
+                    spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCorner, gameObject.transform);
             }
         }
         else if (buildingData.connectionType == ConnectionType.Vertical)
         {
             if (buildingPosition == BuildingPosition.Straight)
             {
-                if (isConnectedAbove && isConnectedBelow && roomLevelData.buildingStraightAboveBelow)
+                if (aboveConnectedBuilding && belowConnectedBuilding && roomLevelData.buildingStraightAboveBelow)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightAboveBelow, gameObject.transform);
-                else if (isConnectedAbove && roomLevelData.buildingStraightAbove)
+                else if (aboveConnectedBuilding && roomLevelData.buildingStraightAbove)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightAbove, gameObject.transform);
-                else if (isConnectedBelow && roomLevelData.buildingStraightBelow)
+                else if (belowConnectedBuilding && roomLevelData.buildingStraightBelow)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightBelow, gameObject.transform);
-                else if (!isConnectedAbove && !isConnectedBelow && roomLevelData.buildingStraight)
+                else if (!aboveConnectedBuilding && !belowConnectedBuilding && roomLevelData.buildingStraight)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraight, gameObject.transform);
             }
             else if (buildingPosition == BuildingPosition.Corner)
             {
-                if (isConnectedAbove && isConnectedBelow && roomLevelData.buildingCornerAboveBelow)
+                if (aboveConnectedBuilding && belowConnectedBuilding && roomLevelData.buildingCornerAboveBelow)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerAboveBelow, gameObject.transform);
-                else if (isConnectedAbove && roomLevelData.buildingCornerAbove)
+                else if (aboveConnectedBuilding && roomLevelData.buildingCornerAbove)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerAbove, gameObject.transform);
-                else if (isConnectedBelow && roomLevelData.buildingCornerBelow)
+                else if (belowConnectedBuilding && roomLevelData.buildingCornerBelow)
                     spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerBelow, gameObject.transform);
-                else if (!isConnectedAbove && !isConnectedBelow && roomLevelData.BuildingCorner)
-                    spawnedBuildingConstruction = Instantiate(roomLevelData.BuildingCorner, gameObject.transform);
+                else if (!aboveConnectedBuilding && !belowConnectedBuilding && roomLevelData.buildingCorner)
+                    spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCorner, gameObject.transform);
             }
         }
 
@@ -224,17 +188,4 @@ public class RoomBuilding : Building
     {
         base.EnterBuilding(entity);
     }
-
-    //public override void Upgrade()
-    //{
-    //    base.Upgrade();
-
-    //    //SetBuildingConstruction();
-    //    //BuildConstruction();
-    //}
-
-    //public override void Demolish()
-    //{
-    //    base.Demolish();
-    //}
 }

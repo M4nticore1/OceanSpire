@@ -9,9 +9,11 @@ public class SaveData
     public float cameraHeightPosition = 0;
 
     // City
-    public int floorsCount = 0;
-    public int[] buildingIds = new int[0];
-    public int[] buildingDetailsIds = new int[0];
+    public int builtFloorsCount = 0;
+    public int[] placedBuildingIds = new int[0];
+    public int[] placedBuildingLevels = new int[0];
+    public bool[] placedBuildingsUnderConstruction = new bool[0];
+    public int[] placedBuildingDetailsIds = new int[0];
 
     public float[] elevatorPlatformHeights = new float[0];
 
@@ -36,18 +38,23 @@ public class SaveData
         cameraHeightPosition = playerController.cameraVerticalPosition.y;
 
         // City
-        floorsCount = cityManager.builtFloors.Count;
-        buildingIds = new int[floorsCount * CityManager.roomsCountPerFloor];
+        builtFloorsCount = cityManager.builtFloors.Count;
+        int roomsCount = builtFloorsCount * CityManager.roomsCountPerFloor;
+        placedBuildingIds = new int[roomsCount];
+        placedBuildingLevels = new int[roomsCount];
+        placedBuildingsUnderConstruction = new bool[roomsCount];
         elevatorPlatformHeights = new float[cityManager.elevatorGroups.Count];
 
         int placeIndex = 0;
         int lastElevatorGroupId = -1;
-        for (int i = 0; i < floorsCount; i++)
+        for (int i = 0; i < builtFloorsCount; i++)
         {
             for (int j = 0; j < CityManager.roomsCountPerFloor; j++)
             {
                 Building placedBuilding = cityManager.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
-                buildingIds[placeIndex] = placedBuilding ? (int)placedBuilding.buildingData.buildingId : -1;
+                placedBuildingIds[placeIndex] = placedBuilding ? (int)placedBuilding.buildingData.buildingId : -1;
+                placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.levelIndex : 0;
+                placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.isUnderConstruction : false;
 
                 // Elevators
                 ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;
@@ -55,7 +62,9 @@ public class SaveData
                 if (elevatorBuilding && elevatorBuilding.elevatorGroupId > lastElevatorGroupId)
                 {
                     lastElevatorGroupId = elevatorBuilding.elevatorGroupId;
-                    elevatorPlatformHeights[lastElevatorGroupId] = elevatorBuilding.spawnedElevatorPlatform.transform.position.y;
+
+                    if (elevatorPlatformHeights.Length > lastElevatorGroupId)
+                        elevatorPlatformHeights[lastElevatorGroupId] = elevatorBuilding.spawnedElevatorPlatform ? elevatorBuilding.spawnedElevatorPlatform.transform.position.y : elevatorBuilding.transform.position.y;
                 }
 
                 placeIndex++;

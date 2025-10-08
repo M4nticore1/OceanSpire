@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static BuildingData;
@@ -43,23 +44,22 @@ public class BuildingPlace : MonoBehaviour
 
     public void InitializeBuildingPlace(int newFloorNumber)
     {
+        cityManager = FindAnyObjectByType<CityManager>();
+        buildingZoneMeshRenderer = buildingZone.GetComponent<MeshRenderer>();
+
         floorIndex = newFloorNumber;
 
-        cityManager = FindAnyObjectByType<CityManager>();
-
-        buildingZoneMeshRenderer = buildingZone.GetComponent<MeshRenderer>();
         materialPropertyBlock = new MaterialPropertyBlock();
         outlineMaterialPropertyBlock = new MaterialPropertyBlock();
-
-        if (placedBuilding)
-        {
-            PlaceBuilding(placedBuilding);
-        }
-
-        //HideBuildingPlace();
     }
 
-    public void PlaceBuilding(Building buildingToPlace)
+    public void InitializePlacedBuilding()
+    {
+        if (placedBuilding)
+            PlaceBuilding(placedBuilding, placedBuilding.levelIndex, placedBuilding.isUnderConstruction);
+    }
+
+    public void PlaceBuilding(Building buildingToPlace, int levelIndex, bool isUnderConstruction)
     {
         if (emptyBuildingPlacesAbove >= buildingToPlace.buildingData.buildingFloors - 1)
         {
@@ -75,11 +75,17 @@ public class BuildingPlace : MonoBehaviour
                     placedBuilding.transform.SetParent(transform);
             }
 
-            placedBuilding.Build(this);
+            placedBuilding.Place(this, levelIndex, isUnderConstruction);
 
             if (buildingFrame)
                 buildingFrame.SetActive(false);
         }
+    }
+
+    private IEnumerator PlaceBuildingCoroutine(Building buildingToPlace, int levelIndex, bool isUnderConstruction)
+    {
+        yield return new WaitForEndOfFrame();
+        PlaceBuilding(buildingToPlace, levelIndex, isUnderConstruction);
     }
 
     public void DestroyBuilding()
