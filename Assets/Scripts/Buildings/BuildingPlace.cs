@@ -23,7 +23,7 @@ public class BuildingPlace : MonoBehaviour
     public int emptyBuildingPlacesAbove = 0;
     public int emptyBuildingPlacesBelow = 0;
 
-    public bool isBuildingPlaced = false;
+    //public bool isBuildingPlaced = false;
     public Building placedBuilding = null;
 
     [SerializeField] private GameObject buildingZone = null;
@@ -63,8 +63,6 @@ public class BuildingPlace : MonoBehaviour
     {
         if (emptyBuildingPlacesAbove >= buildingToPlace.buildingData.buildingFloors - 1)
         {
-            isBuildingPlaced = true;
-
             if (!placedBuilding)
             {
                 placedBuilding = Instantiate(buildingToPlace, transform.position, transform.rotation);
@@ -90,11 +88,11 @@ public class BuildingPlace : MonoBehaviour
 
     public void DestroyBuilding()
     {
-        if (isBuildingPlaced)
+        if (placedBuilding)
         {
             boxCollider.enabled = true;
 
-            isBuildingPlaced = false;
+            //isBuildingPlaced = false;
             placedBuilding = null;
 
             if (buildingFrame)
@@ -104,7 +102,7 @@ public class BuildingPlace : MonoBehaviour
 
     public void AddPlacedBuilding(Building newPlacedBuilding)
     {
-        isBuildingPlaced = true;
+        //isBuildingPlaced = true;
         placedBuilding = newPlacedBuilding;
 
         if (buildingFrame)
@@ -113,7 +111,7 @@ public class BuildingPlace : MonoBehaviour
 
     public void RemoveBuildingPlaced()
     {
-        isBuildingPlaced = false;
+        //isBuildingPlaced = false;
         placedBuilding = null;
 
         if (buildingFrame)

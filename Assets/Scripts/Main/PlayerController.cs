@@ -346,7 +346,7 @@ public class PlayerController : MonoBehaviour
                             {
                                 BuildingPlace hittedBuildingPlace = hit.collider.gameObject.GetComponent<BuildingPlace>();
 
-                                if (hittedBuildingPlace && !hittedBuildingPlace.isBuildingPlaced)
+                                if (hittedBuildingPlace && !hittedBuildingPlace.placedBuilding)
                                 {
                                     PlaceBuilding(hittedBuildingPlace);
                                 }

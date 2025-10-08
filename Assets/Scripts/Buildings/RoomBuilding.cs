@@ -81,29 +81,22 @@ public class RoomBuilding : Building
             }
             else if (buildingData.connectionType == ConnectionType.Vertical)
             {
-                if (cityManager)
+                if (!aboveConnectedBuilding && cityManager.builtFloors.Count > 0 && cityManager.builtFloors.Count > GetFloorIndex() + 1)
                 {
-                    if (!aboveConnectedBuilding && cityManager.builtFloors.Count > 0 && cityManager.builtFloors.Count > GetFloorIndex() + 1)
-                    {
-                        RoomBuilding connectedRoom = cityManager.builtFloors[GetFloorIndex() + 1].roomBuildingPlaces[GetPlaceIndex()].placedBuilding as RoomBuilding;
-                        aboveConnectedBuilding = connectedRoom;
+                    RoomBuilding connectedRoom = cityManager.builtFloors[GetFloorIndex() + 1].roomBuildingPlaces[GetPlaceIndex()].placedBuilding as RoomBuilding;
+                    aboveConnectedBuilding = connectedRoom;
 
-                        if (connectedRoom && connectedRoom.buildingData.buildingIdName == buildingData.buildingIdName && connectedRoom.levelIndex == levelIndex)
-                            connectedRoom.UpdateBuildingConstruction(levelIndex);
-                    }
-
-                    if (!belowConnectedBuilding && GetFloorIndex() > 0)
-                    {
-                        RoomBuilding connectedRoom = cityManager.builtFloors[GetFloorIndex() - 1].roomBuildingPlaces[GetPlaceIndex()].placedBuilding as RoomBuilding;
-                        belowConnectedBuilding = connectedRoom;
-
-                        if (connectedRoom && connectedRoom.buildingData.buildingIdName == buildingData.buildingIdName && connectedRoom.levelIndex == levelIndex)
-                            connectedRoom.UpdateBuildingConstruction(levelIndex);
-                    }
+                    if (connectedRoom && connectedRoom.buildingData.buildingIdName == buildingData.buildingIdName && connectedRoom.levelIndex == levelIndex)
+                        connectedRoom.UpdateBuildingConstruction(levelIndex);
                 }
-                else
+
+                if (!belowConnectedBuilding && GetFloorIndex() > 0)
                 {
-                    Debug.LogError("cityManager is NULL " + this);
+                    RoomBuilding connectedRoom = cityManager.builtFloors[GetFloorIndex() - 1].roomBuildingPlaces[GetPlaceIndex()].placedBuilding as RoomBuilding;
+                    belowConnectedBuilding = connectedRoom;
+
+                    if (connectedRoom && connectedRoom.buildingData.buildingIdName == buildingData.buildingIdName && connectedRoom.levelIndex == levelIndex)
+                        connectedRoom.UpdateBuildingConstruction(levelIndex);
                 }
 
                 BuildConstruction(levelIndex);

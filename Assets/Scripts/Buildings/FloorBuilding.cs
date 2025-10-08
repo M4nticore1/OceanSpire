@@ -12,9 +12,7 @@ public class FloorBuilding : Building
     {
         base.Place(buildingPlace, levelIndex, isUnderConstruction);
 
-        InitializeFloor();
-
-        floorBuildingPlace.InitializePlacedBuilding();
+        InitializeBuilding(buildingPlace);
     }
 
     public override void StartBuilding(int nextLevel)
@@ -33,8 +31,10 @@ public class FloorBuilding : Building
             InvokeFinishConstructing(this);
     }
 
-    public void InitializeFloor()
+    public override void InitializeBuilding(BuildingPlace buildingPlace)
     {
+        base.InitializeBuilding(buildingPlace);
+
         floorBuildingPlace.InitializeBuildingPlace(GetFloorIndex() + 1);
         hallBuildingPlace.InitializeBuildingPlace(GetFloorIndex());
         for (int i = 0; i < CityManager.roomsCountPerFloor; i++)
@@ -96,7 +96,7 @@ public class FloorBuilding : Building
                 if (roomBuildingPlaces[i].emptyBuildingPlacesBelow >= buildingHeight - 1)
                     hasPlaceBelow = true;
 
-                if (!roomBuildingPlaces[i].isBuildingPlaced)
+                if (!roomBuildingPlaces[i].placedBuilding)
                 {
                     if (hasPlaceAbove || hasPlaceBelow)
                         roomBuildingPlaces[i].ShowBuildingPlace(BuildingPlaceState.Valid);
@@ -120,7 +120,7 @@ public class FloorBuilding : Building
         }
         else if (buildingData.buildingType == BuildingType.Hall)
         {
-            if (!hallBuildingPlace.isBuildingPlaced && cityManager.currentRoomsNumberOnFloor[GetFloorIndex()] == 0)
+            if (!hallBuildingPlace.placedBuilding && cityManager.currentRoomsNumberOnFloor[GetFloorIndex()] == 0)
             {
                 if(hallBuildingPlace.emptyBuildingPlacesAbove >= buildingHeight - 1)
                     hasPlaceAbove = true;
@@ -135,7 +135,7 @@ public class FloorBuilding : Building
         }
         else if (buildingData.buildingType == BuildingType.FloorFrame)
         {
-            if (!floorBuildingPlace.isBuildingPlaced)
+            if (!floorBuildingPlace.placedBuilding)
             {
                 floorBuildingPlace.ShowBuildingPlace(BuildingPlaceState.Valid);
             }

@@ -59,16 +59,23 @@ public class Building : MonoBehaviour
 
     }
 
-    public virtual void Place(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
+    public virtual void InitializeBuilding(BuildingPlace buildingPlace)
     {
         this.buildingPlace = buildingPlace;
         gameManager = FindAnyObjectByType<GameManager>();
-		cityManager = FindAnyObjectByType<CityManager>();
+        cityManager = FindAnyObjectByType<CityManager>();
+    }
+
+    public virtual void Place(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
+    {
+        InitializeBuilding(buildingPlace);
 
         if (isUnderConstruction)
             StartBuilding(levelIndex);
         else
             Build(levelIndex);
+
+        Debug.Log(buildingPlace);
 	}
 
     public virtual void StartBuilding(int nextLevel)
@@ -202,13 +209,15 @@ public class Building : MonoBehaviour
 
     public int GetFloorIndex()
     {
+        Debug.Log(buildingPlace);
+
         if (buildingPlace)
         {
             return buildingPlace.floorIndex;
         }
         else
         {
-            return -1;
+            return 0;
         }
     }
 
@@ -220,7 +229,7 @@ public class Building : MonoBehaviour
         }
         else
         {
-            return -1;
+            return 0;
         }
     }
 }

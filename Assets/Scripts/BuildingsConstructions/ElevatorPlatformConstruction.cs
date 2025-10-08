@@ -306,10 +306,12 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
     public void SetFloorIndex(int newFloorIndex)
     {
-        if (newFloorIndex != currentFloorIndex)
+        if (newFloorIndex != currentFloorIndex && newFloorIndex >= 0)
         {
             currentFloorIndex = newFloorIndex;
 
+            Debug.Log(newFloorIndex);
+            Debug.Log(placeIndex);
             elevatorBuilding = cityManager.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding as ElevatorBuilding;
 
             for (int i = 0; i < elevatorRidingPassengers.Count; i++)
@@ -343,13 +345,16 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
     public void SetElevatorBuilding(ElevatorBuilding elevatorBuilding)
     {
-        ElevatorBuildingLevelData elevatorBuildingLevelData = elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex] as ElevatorBuildingLevelData;
+        if (elevatorBuilding)
+        {
+            ElevatorBuildingLevelData elevatorBuildingLevelData = elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex] as ElevatorBuildingLevelData;
 
-        this.elevatorBuilding = elevatorBuilding;
-        cityManager = elevatorBuilding.cityManager;
-        moveSpeed = elevatorBuildingLevelData.elevatorMoveSpeed;
+            this.elevatorBuilding = elevatorBuilding;
+            cityManager = elevatorBuilding.cityManager;
+            moveSpeed = elevatorBuildingLevelData.elevatorMoveSpeed;
 
-        SetFloorIndex(elevatorBuilding.GetFloorIndex());
-        placeIndex = elevatorBuilding.GetPlaceIndex();
+            SetFloorIndex(elevatorBuilding.GetFloorIndex());
+            placeIndex = elevatorBuilding.GetPlaceIndex();
+        }
     }
 }

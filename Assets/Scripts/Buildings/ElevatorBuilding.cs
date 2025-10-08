@@ -39,49 +39,42 @@ public class ElevatorBuilding : RoomBuilding
     {
         base.UpdateBuildingConstruction(levelIndex);
 
-        if (cityManager)
+        ElevatorBuilding belowElevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
+        ElevatorBuilding aboveElevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
+        if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorPlatform)
         {
-            ElevatorBuilding belowElevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
-            ElevatorBuilding aboveElevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
-            if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorPlatform)
-            {
-                ElevatorBuilding elevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
+            ElevatorBuilding elevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
 
-                if (elevatorBuilding)
-                    spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
+            if (elevatorBuilding)
+                spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
 
-                elevatorGroupId = elevatorBuilding.elevatorGroupId;
-            }
-            else if (aboveElevatorBuilding && aboveElevatorBuilding.spawnedElevatorPlatform)
-            {
-                ElevatorBuilding elevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
+            elevatorGroupId = elevatorBuilding.elevatorGroupId;
+        }
+        else if (aboveElevatorBuilding && aboveElevatorBuilding.spawnedElevatorPlatform)
+        {
+            ElevatorBuilding elevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
 
-                if (elevatorBuilding)
-                    spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
+            if (elevatorBuilding)
+                spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
 
-                elevatorGroupId = elevatorBuilding.elevatorGroupId;
-            }
-            else
-            {
-                ElevatorBuildingLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorBuildingLevelData;
-
-                if (buildingPosition == BuildingPosition.Straight)
-                    spawnedElevatorPlatform = Instantiate(elevatorBuildingLevelData.elevatorPlatformStraight, cityManager.towerRoot);
-                else
-                    spawnedElevatorPlatform = Instantiate(elevatorBuildingLevelData.elevatorPlatformCorner, cityManager.towerRoot);
-
-                spawnedElevatorPlatform.transform.position = transform.position;
-                spawnedElevatorPlatform.transform.rotation = transform.rotation;
-
-                spawnedElevatorPlatform.Build();
-                spawnedElevatorPlatform.SetElevatorBuilding(this);
-
-                elevatorGroupId = cityManager.elevatorGroups.Count;
-            }
+            elevatorGroupId = elevatorBuilding.elevatorGroupId;
         }
         else
         {
-            Debug.LogError("cityManager is NULL " + this);
+            ElevatorBuildingLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorBuildingLevelData;
+
+            if (buildingPosition == BuildingPosition.Straight)
+                spawnedElevatorPlatform = Instantiate(elevatorBuildingLevelData.elevatorPlatformStraight, cityManager.towerRoot);
+            else
+                spawnedElevatorPlatform = Instantiate(elevatorBuildingLevelData.elevatorPlatformCorner, cityManager.towerRoot);
+
+            spawnedElevatorPlatform.transform.position = transform.position;
+            spawnedElevatorPlatform.transform.rotation = transform.rotation;
+
+            spawnedElevatorPlatform.Build();
+            spawnedElevatorPlatform.SetElevatorBuilding(this);
+
+            elevatorGroupId = cityManager.elevatorGroups.Count;
         }
     }
 
