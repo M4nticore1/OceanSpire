@@ -15,36 +15,12 @@ public struct ResourceStack
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public static CityManager cityManager;
 
     [HideInInspector] public float worldTime = 0.0f;
 
-    // Buildings
-    //[HideInInspector] public int buildedFloorsCount = 0;
-
     [Header("Buildings")]
     public List<Building> buildingPrefabs = new List<Building>();
-    //public List<Floor> spawnedFloors = new List<Floor>();
-
-    //private List<List<BuildingPlace>> spawnedRoomPlaces = new List<List<BuildingPlace>>();
-    //[SerializeField] private List<BuildingPlace> spawnedHallPlaces = new List<BuildingPlace>();
-    //private List<List<BuildingPlace>> spawnedElevatorPlaces = new List<List<BuildingPlace>>();
-    //[SerializeField] private List<BuildingPlace> spawnedFloorPlaces = new List<BuildingPlace>();
-
-    //[HideInInspector] public List<Building> allBuildings = new List<Building>();
-    //[HideInInspector] public List<List<RoomBuilding>> allRooms = new List<List<RoomBuilding>>();
-    //[HideInInspector] public List<List<ElevatorBuilding>> allElevators = new List<List<ElevatorBuilding>>();
-    //[HideInInspector] public List<StorageBuildingComponent> spawnedStorageBuildings = new List<StorageBuildingComponent>();
-
-    //[HideInInspector] public List<int> currentRoomsNumberOnFloor = new List<int>();
-    //[HideInInspector] public List<int> currentHallsNumberOnFloor = new List<int>();
-    //[HideInInspector] public List<int> currentElevatorsNumberOnFloor = new List<int>();
-    //[HideInInspector] public List<int> currentFloorFrameNumberOnFloor = new List<int>();
-
-    //private const float firstFloorHeight = 5.0f;
-    //[HideInInspector] public const int roomsCountPerFloor = 8;
-    //[HideInInspector] public const int elevatorsCountPerFloor = 12;
-    //[HideInInspector] public float cityHeight = 0;
-
     public const float demolitionResourceRefundRate = 0.2f;
 
     // Items
@@ -95,9 +71,10 @@ public class GameManager : MonoBehaviour
 
     public bool hasSavedData = false;
 
-    // Delegates
-    //public delegate void StorageCapacityChangedHandler();
-    //public static event System.Action OnStorageCapacityChanged;
+    private void Awake()
+    {
+        cityManager = FindAnyObjectByType<CityManager>();
+    }
 
     private void Start()
     {
@@ -137,19 +114,20 @@ public class GameManager : MonoBehaviour
             {
                 spawnedLootContainersTime[i] += currentTimeToSpawnLootContainer;
 
-                if (spawnedLootContainersTime[i] >= lootContainerPrefabs[i].spawnTime)
+                if (cityManager.builtFloors.Count >= lootContainerPrefabs[i].floorsCountToSpawn && spawnedLootContainersTime[i] >= lootContainerPrefabs[i].spawnTime)
                 {
                     float spawnPositionOffsetYaw = UnityEngine.Random.Range(-lootContainersSpawnMaxOffsetYaw / 2, lootContainersSpawnMaxOffsetYaw / 2);
                     Quaternion rotation = Quaternion.Euler(0, spawnPositionOffsetYaw, 0);
                     Vector3 direction = rotation * new Vector3(windDirection.x, 0, windDirection.y);
-                    Vector2 newWindDirection = new Vector2(direction.x, direction.z).normalized;
+                    Vector2 normalizedWindDirection = new Vector2(direction.x, direction.z).normalized;
 
                     //float angle = Mathf.Atan2(windDirection.y, windDirection.x) * Mathf.Rad2Deg;
                     float angle = UnityEngine.Random.Range(0, 360);
                     Quaternion spawnRotation = Quaternion.Euler(0, angle, 0);
 
-                    Vector2 rangePosition = new Vector2(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f)).normalized;
-                    Vector3 spawnPosition = new Vector3(-newWindDirection.x, 0, -newWindDirection.y) * lootContainersSpawnDistance + new Vector3(rangePosition.x, 0, rangePosition.y);
+                    Vector3 rangePosition = new Vector3(UnityEngine.Random.Range(-1.0f, 1.0f), 0, UnityEngine.Random.Range(-1.0f, 1.0f)).normalized;
+                    float spawnPositionY = UnityEngine.Random.Range((float)lootContainerPrefabs[i].minSpawnFloorNumber, lootContainerPrefabs[i].maxSpawnFloorNumber > 0 ? (float)lootContainerPrefabs[i].maxSpawnFloorNumber : (float)(cityManager.builtFloors.Count + LootContainer.limitSpawnFloorsCount)) * CityManager.floorHeight;
+                    Vector3 spawnPosition = new Vector3(-normalizedWindDirection.x * lootContainersSpawnDistance, spawnPositionY, -normalizedWindDirection.y * lootContainersSpawnDistance) + rangePosition;
 
                     Instantiate(lootContainerPrefabs[i], spawnPosition, spawnRotation);
 

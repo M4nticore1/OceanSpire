@@ -53,7 +53,8 @@ public class CityManager : MonoBehaviour
     [HideInInspector] public List<List<ElevatorBuilding>> elevatorGroups = new List<List<ElevatorBuilding>>();
 
     // Items
-    [HideInInspector] public List<ItemInstance> items = new List<ItemInstance>();
+    public List<ItemAmountEntry> startResources = new List<ItemAmountEntry>();
+    public List<ItemInstance> items = new List<ItemInstance>();
 
     [Header("NPC")]
     [HideInInspector] public List<Resident> residents = new List<Resident>();
@@ -113,17 +114,6 @@ public class CityManager : MonoBehaviour
 
         if (builtFloors.Count > 0)
         {
-            //builtFloors[0].InitializeFloor();
-            //builtFloors[0].floorBuildingPlace.InitializePlacedBuilding();
-
-            //if (data != null)
-            //{
-            //    for (int i = builtFloors.Count - 1; i < data.builtFloorsCount - 1; i++)
-            //    {
-            //        builtFloors[i].floorBuildingPlace.PlaceBuilding(gameManager.buildingPrefabs[0], 0, false);
-            //    }
-            //}
-
             // Build saved buildings
             int placeIndex = 0;
             int lastElevatorGropId = -1;
@@ -132,7 +122,8 @@ public class CityManager : MonoBehaviour
             {
                 if (i < builtFloors.Count)
                 {
-                    builtFloors[i].InitializeBuilding(i - 1 >= 0 ? builtFloors[i - 1].floorBuildingPlace : null);
+                    builtFloors[i].Place(i - 1 >= 0 ? builtFloors[i - 1].floorBuildingPlace : null, 0, false);
+                    //builtFloors[i].InitializeBuilding(i - 1 >= 0 ? builtFloors[i - 1].floorBuildingPlace : null);
                 }
                 else
                 {
@@ -147,12 +138,36 @@ public class CityManager : MonoBehaviour
                     {
                         if (data.placedBuildingIds[placeIndex] >= 0)
                         {
-                            builtFloors[i].roomBuildingPlaces[j].PlaceBuilding(gameManager.buildingPrefabs[data.placedBuildingIds[placeIndex]], data.placedBuildingLevels[placeIndex], data.placedBuildingsUnderConstruction[placeIndex]);
+                            int buildingId = data.placedBuildingIds != null ? data.placedBuildingIds[placeIndex] : 0;
+                            int buildingLevelIndex = data.placedBuildingLevels != null ? data.placedBuildingLevels[placeIndex] : 0;
+                            bool buildingIsUnderConstruction = data.placedBuildingsUnderConstruction != null ? data.placedBuildingsUnderConstruction[placeIndex] : false;
+                            builtFloors[i].roomBuildingPlaces[j].PlaceBuilding(gameManager.buildingPrefabs[buildingId], buildingLevelIndex, buildingIsUnderConstruction);
                         }
                         else
                         {
                             if (builtFloors[i].roomBuildingPlaces[j].placedBuilding)
                                 builtFloors[i].roomBuildingPlaces[j].DestroyBuilding();
+                        }
+
+                        if (data.placedBuildingIds != null && data.placedBuildingIds.Length > placeIndex)
+                        {
+                            BuildingPlace buildingPlace = builtFloors[i].roomBuildingPlaces[j];
+
+                            if (data.placedBuildingIds[placeIndex] >= 0)
+                            {
+                                ElevatorBuilding elevatorBuilding = buildingPlace.placedBuilding as ElevatorBuilding;
+
+                                if (elevatorBuilding)
+                                {
+                                    if (elevatorBuilding.elevatorGroupId > lastElevatorGropId)
+                                    {
+                                        elevatorBuilding.spawnedElevatorPlatform.transform.position = new Vector3(elevatorBuilding.spawnedElevatorPlatform.transform.position.x, data.elevatorPlatformHeights[elevatorBuilding.elevatorGroupId], elevatorBuilding.spawnedElevatorPlatform.transform.position.z);
+                                        elevatorBuilding.spawnedElevatorPlatform.SetFloorIndex(elevatorBuilding.spawnedElevatorPlatform.GetFloorIndexByPosition(elevatorBuilding.spawnedElevatorPlatform.currentFloorIndex));
+
+                                        lastElevatorGropId = elevatorBuilding.elevatorGroupId;
+                                    }
+                                }
+                            }
                         }
                     }
                     else
@@ -160,55 +175,38 @@ public class CityManager : MonoBehaviour
                         builtFloors[i].roomBuildingPlaces[j].InitializePlacedBuilding();
                     }
 
-                    //if (data != null)
-                    //{
-                    //    if (data.placedBuildingIds != null && data.placedBuildingIds.Length > placeIndex)
-                    //    {
-                    //        BuildingPlace buildingPlace = builtFloors[i].roomBuildingPlaces[j];
-
-                    //        if (data.placedBuildingIds[placeIndex] >= 0)
-                    //        {
-                    //            Building buildingToPlace = gameManager.GetBuildingPrefabById(data.placedBuildingIds[placeIndex]);
-
-                    //            int buildingLevelIndex = data.placedBuildingLevels != null ? data.placedBuildingLevels[placeIndex] : 0;
-                    //            bool buildingIsUnderConstruction = data.placedBuildingsUnderConstruction != null ? data.placedBuildingsUnderConstruction[placeIndex] : false;
-                    //            buildingPlace.PlaceBuilding(buildingToPlace, buildingLevelIndex, buildingIsUnderConstruction);
-
-                    //            ElevatorBuilding elevatorBuilding = buildingPlace.placedBuilding as ElevatorBuilding;
-
-                    //            if (elevatorBuilding)
-                    //            {
-                    //                if (elevatorBuilding.elevatorGroupId > lastElevatorGropId)
-                    //                {
-                    //                    elevatorBuilding.spawnedElevatorPlatform.transform.position = new Vector3(elevatorBuilding.spawnedElevatorPlatform.transform.position.x, data.elevatorPlatformHeights[elevatorBuilding.elevatorGroupId], elevatorBuilding.spawnedElevatorPlatform.transform.position.z);
-                    //                    elevatorBuilding.spawnedElevatorPlatform.SetFloorIndex(elevatorBuilding.spawnedElevatorPlatform.GetFloorIndexByPosition(elevatorBuilding.spawnedElevatorPlatform.currentFloorIndex));
-
-                    //                    lastElevatorGropId = elevatorBuilding.elevatorGroupId;
-                    //                }
-                    //            }
-                    //        }
-                    //        else
-                    //        {
-                    //            Building building = buildingPlace.placedBuilding;
-
-                    //            if (building)
-                    //                building.Demolish();
-                    //        }
-
-                    //        placeIndex++;
-                    //    }
-                    //}
-
                     placeIndex++;
                 }
             }
 
-            //for (int i = builtFloors.Count - 1; i > data.builtFloorsCount; i--)
-            //{
-            //    builtFloors[i].Demolish();
-            //}
+            if (data != null)
+            {
+                for (int i = builtFloors.Count - 1; i > data.builtFloorsCount; i--)
+                {
+                    builtFloors[i].Demolish();
+                }
+            }
 
             cityHeight = builtFloors[builtFloors.Count - 1].transform.position.y + CityManager.floorHeight;
+
+            // Resources
+            if (data != null)
+            {
+                if (data.resourcesAmount != null)
+                {
+                    for (int i = 0; i < data.resourcesAmount.Length; i++)
+                    {
+                        items[i].SetAmount(data.resourcesAmount[i]);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < startResources.Count; i++)
+                {
+                    items[(int)startResources[i].itemdata.itemId].SetAmount(startResources[i].capacity);
+                }
+            }
         }
         else
             Debug.LogError("The count of builtFloors is 0");
@@ -340,7 +338,9 @@ public class CityManager : MonoBehaviour
     // Building Places
     public void InitializeFloor(FloorBuilding floor)
     {
-        builtFloors.Add(floor);
+        if (builtFloors.Count == floor.GetFloorIndex())
+            builtFloors.Add(floor);
+
         currentRoomsNumberOnFloor.Add(0);
 
         UpdateEmptyBuildingPlacesCount();

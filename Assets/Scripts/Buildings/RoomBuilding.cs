@@ -43,13 +43,9 @@ public class RoomBuilding : Building
         if (buildingPlace)
         {
             if (GetPlaceIndex() % 2 == 0)
-            {
                 buildingPosition = BuildingPosition.Corner;
-            }
             else
-            {
                 buildingPosition = BuildingPosition.Straight;
-            }
 
             if (buildingData.connectionType == ConnectionType.None)
             {
@@ -87,7 +83,7 @@ public class RoomBuilding : Building
                     aboveConnectedBuilding = connectedRoom;
 
                     if (connectedRoom && connectedRoom.buildingData.buildingIdName == buildingData.buildingIdName && connectedRoom.levelIndex == levelIndex)
-                        connectedRoom.UpdateBuildingConstruction(levelIndex);
+                        connectedRoom.BuildConstruction(levelIndex);
                 }
 
                 if (!belowConnectedBuilding && GetFloorIndex() > 0)
@@ -96,7 +92,7 @@ public class RoomBuilding : Building
                     belowConnectedBuilding = connectedRoom;
 
                     if (connectedRoom && connectedRoom.buildingData.buildingIdName == buildingData.buildingIdName && connectedRoom.levelIndex == levelIndex)
-                        connectedRoom.UpdateBuildingConstruction(levelIndex);
+                        connectedRoom.BuildConstruction(levelIndex);
                 }
 
                 BuildConstruction(levelIndex);

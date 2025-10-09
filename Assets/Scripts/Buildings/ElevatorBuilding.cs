@@ -41,26 +41,22 @@ public class ElevatorBuilding : RoomBuilding
 
         ElevatorBuilding belowElevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
         ElevatorBuilding aboveElevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
+
         if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorPlatform)
         {
-            ElevatorBuilding elevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
+            spawnedElevatorPlatform = belowElevatorBuilding.spawnedElevatorPlatform;
 
-            if (elevatorBuilding)
-                spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
-
-            elevatorGroupId = elevatorBuilding.elevatorGroupId;
+            elevatorGroupId = belowElevatorBuilding.elevatorGroupId;
         }
         else if (aboveElevatorBuilding && aboveElevatorBuilding.spawnedElevatorPlatform)
         {
-            ElevatorBuilding elevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
+            spawnedElevatorPlatform = aboveElevatorBuilding.spawnedElevatorPlatform;
 
-            if (elevatorBuilding)
-                spawnedElevatorPlatform = elevatorBuilding.spawnedElevatorPlatform;
-
-            elevatorGroupId = elevatorBuilding.elevatorGroupId;
+            elevatorGroupId = aboveElevatorBuilding.elevatorGroupId;
         }
         else
         {
+            Debug.Log("Spawn");
             ElevatorBuildingLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorBuildingLevelData;
 
             if (buildingPosition == BuildingPosition.Straight)

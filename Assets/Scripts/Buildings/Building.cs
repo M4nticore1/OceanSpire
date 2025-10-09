@@ -74,8 +74,6 @@ public class Building : MonoBehaviour
             StartBuilding(levelIndex);
         else
             Build(levelIndex);
-
-        Debug.Log(buildingPlace);
 	}
 
     public virtual void StartBuilding(int nextLevel)
@@ -209,8 +207,6 @@ public class Building : MonoBehaviour
 
     public int GetFloorIndex()
     {
-        Debug.Log(buildingPlace);
-
         if (buildingPlace)
         {
             return buildingPlace.floorIndex;

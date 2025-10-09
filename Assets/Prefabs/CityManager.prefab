@@ -45,15 +45,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerRoot: {fileID: 0}
-  builtFloors: []
-  floorsCount: 0
-  buildingIds: 
+  builtFloors:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   currentRoomsNumberOnFloor: 
   cityHeight: 0
+  startResources:
+  - itemdata: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    capacity: 500
+  items: []
   residents: []
-  residentsCount: 0
   employedResidentCount: 0
-  unemployedResidentCount: 0
-  residentPositions: []
-  entitySpawnPositions: []
+  unemployedResidentsCount: 0
+  entitySpawnPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   allPaths2: []

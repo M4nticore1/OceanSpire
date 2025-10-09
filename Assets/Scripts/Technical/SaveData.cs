@@ -17,6 +17,9 @@ public class SaveData
 
     public float[] elevatorPlatformHeights = new float[0];
 
+    // Resources
+    public int[] resourcesAmount = new int[0];
+
     // Residents
     public int residentsCount = 0;
     public float[] residentPositionsX = new float[0];
@@ -44,6 +47,7 @@ public class SaveData
         placedBuildingLevels = new int[roomsCount];
         placedBuildingsUnderConstruction = new bool[roomsCount];
         elevatorPlatformHeights = new float[cityManager.elevatorGroups.Count];
+        resourcesAmount = new int[cityManager.items.Count];
 
         int placeIndex = 0;
         int lastElevatorGroupId = -1;
@@ -69,6 +73,11 @@ public class SaveData
 
                 placeIndex++;
             }
+        }
+
+        for (int i = 0; i < cityManager.items.Count; i++)
+        {
+            resourcesAmount[i] = cityManager.items[i].amount;
         }
 
         // Residents

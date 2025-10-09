@@ -1892,10 +1892,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1290994963}
     - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
-      propertyPath: builtFloors.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
       propertyPath: spawnedFloors.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -1923,10 +1919,6 @@ PrefabInstance:
       propertyPath: 'spawnedFloors.Array.data[1]'
       value: 
       objectReference: {fileID: 1218081183}
-    - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
-      propertyPath: entitySpawnPositions.Array.size
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
       propertyPath: 'entitySpawnPositions.Array.data[0]'
       value: 

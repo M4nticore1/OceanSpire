@@ -2,6 +2,7 @@ using System;
 using Unity.Mathematics;
 using UnityEngine;
 
+[System.Serializable]
 public class ItemInstance
 {
     public ItemData itemData;

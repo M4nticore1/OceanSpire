@@ -310,8 +310,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         {
             currentFloorIndex = newFloorIndex;
 
-            Debug.Log(newFloorIndex);
-            Debug.Log(placeIndex);
             elevatorBuilding = cityManager.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding as ElevatorBuilding;
 
             for (int i = 0; i < elevatorRidingPassengers.Count; i++)

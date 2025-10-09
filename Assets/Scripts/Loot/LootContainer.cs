@@ -31,14 +31,20 @@ public class LootContainer : MonoBehaviour
     [SerializeField] private float moveSpeed = 0.0f;
 
     [Header("Spawn")]
-    public float spawnMinTime = 0.0f;
-    public float spawnMaxTime = 0.0f;
+    public int floorsCountToSpawn = 0;
+    public int minSpawnFloorNumber = 0;
+    public int maxSpawnFloorNumber = 0;
+    public int spawnFloorNumber { get; private set; } = 0;
+    public float spawnMinTime = 0;
+    public float spawnMaxTime = 0;
     [HideInInspector] public float spawnTime = 0.0f;
 
     private float checkPositionTime = 0.0f;
     private const float checkPositionRate = 3.0f;
 
     private const float despawnDistance = 100.0f;
+
+    public const int limitSpawnFloorsCount = 10;
 
     private void Awake()
     {
@@ -47,9 +53,7 @@ public class LootContainer : MonoBehaviour
 
     private void Start()
     {
-        CreateLoot();
-
-        checkPositionTime = Time.time;
+        InitializeLootContainer();
     }
 
     private void Update()
@@ -58,8 +62,11 @@ public class LootContainer : MonoBehaviour
         CheckPosition();
     }
 
-    private void CreateLoot()
+    private void InitializeLootContainer()
     {
+        checkPositionTime = Time.time;
+        spawnFloorNumber = (int)(transform.position.y / CityManager.floorHeight);
+
         for (int i = 0; i < possibleLoot.Count; i++)
         {
             int chance = Random.Range(0, 100);
