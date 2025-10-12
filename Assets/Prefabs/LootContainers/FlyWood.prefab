@@ -140,13 +140,13 @@ MonoBehaviour:
   isMovable: 1
   transportMethod: 0
   moveSpeed: 4
+  moveDirection: {x: 0, y: 0, z: 0}
   floorsCountToSpawn: 0
   minSpawnFloorNumber: 6
   maxSpawnFloorNumber: 0
-  floorsCountToCollect: 0
-  spawnMinTime: 5
-  spawnMaxTime: 15
-  spawnTime: 5.2306395
+  spawnMinTime: 4
+  spawnMaxTime: 60
+  spawnTime: 37.156013
 --- !u!65 &3113521155065601208
 BoxCollider:
   m_ObjectHideFlags: 0

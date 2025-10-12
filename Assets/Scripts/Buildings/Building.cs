@@ -2,8 +2,6 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
-//using UnityEditor;
-//using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 using static BuildingData;
 

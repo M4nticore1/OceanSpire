@@ -45,4 +45,17 @@ public class SaveSystem
             return null;
         }
     }
+
+    public static void DeleteSave(int saveIndex)
+    {
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            Debug.Log("Сохранение удалено!");
+        }
+        else
+        {
+            Debug.Log("Файл сохранения не найден.");
+        }
+    }
 }

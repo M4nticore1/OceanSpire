@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -35,28 +36,18 @@ public class UIManager : MonoBehaviour
     [Header("Menu Buttons")]
     [SerializeField] private Button buildingMenuButton = null;
     [SerializeField] private Button storageMenuButton = null;
-    [SerializeField] private Button buildingsListsMenuButton = null;
-    [SerializeField] private Button storageListsMenuButton = null;
+    [SerializeField] private MainButton buildingListsMenuButton = null;
+    [SerializeField] private MainButton storageListsMenuButton = null;
     [SerializeField] private Button closeManagementMenuButton = null;
     [SerializeField] private Button stopPlacingBuildingButton = null;
 
     // Buildings
     [Header("Buildings")]
-    [SerializeField] private VerticalLayoutGroup constructionBuildingsList = null;
-    [SerializeField] private VerticalLayoutGroup residentalBuildingsList = null;
-    [SerializeField] private VerticalLayoutGroup productionBuildingsList = null;
-    [SerializeField] private VerticalLayoutGroup storageBuildingsList = null;
-    [SerializeField] private VerticalLayoutGroup economyBuildingsList = null;
-    [SerializeField] private VerticalLayoutGroup researchBuildingsList = null;
+    [SerializeField] private List<VerticalLayoutGroup> buildingLists = new List<VerticalLayoutGroup>();
 
     // Buildings List Buttons
     [Header("Buildings List Buttons")]
-    [SerializeField] private Button constructionBuildingsListButton = null;
-    [SerializeField] private Button residentalBuildingsListButton = null;
-    [SerializeField] private Button productionBuildingsListButton = null;
-    [SerializeField] private Button storageBuildingsListButton = null;
-    [SerializeField] private Button economyBuildingsListButton = null;
-    [SerializeField] private Button researchBuildingsListButton = null;
+    [SerializeField] private List<MainButton> buildingListButtons = new List<MainButton>();
 
     // Storage List
     [Header("Storage List")]
@@ -140,6 +131,15 @@ public class UIManager : MonoBehaviour
     int maxBuildingWorkersCount = 0;
     int residentWidgetsColumnCount = 0;
 
+    // Colors
+    [Header("Colors")]
+    //private ColorBlock notSelectedBlueButtonColorBlock = new ColorBlock();
+    //private ColorBlock selectedBlueButtonColorBlock = new ColorBlock();
+
+    [SerializeField] private UIColor blueColor;
+    [SerializeField] private UIColor lightBlueColor;
+    [SerializeField] private UIColor darkBlueColor;
+
     private void Awake()
     {
         InitializeUIManager();
@@ -180,10 +180,6 @@ public class UIManager : MonoBehaviour
         cityManager = FindAnyObjectByType<CityManager>();
         playerController = transform.parent.GetComponent<PlayerController>();
 
-        managementMenu.SetActive(false);
-        selectBuildingWorkersMenu.gameObject.SetActive(false);
-        stopPlacingBuildingButton.gameObject.SetActive(false);
-
         CreateBuildingWidgets();
         CreateItemWidgets();
 
@@ -193,20 +189,22 @@ public class UIManager : MonoBehaviour
         buildingMenuButton.onClick.AddListener(OpenBuildingMenu);
         storageMenuButton.onClick.AddListener(OpenStorageMenu);
 
-        buildingsListsMenuButton.onClick.AddListener(OpenBuildingListMenu);
+        buildingListsMenuButton.onClick.AddListener(OpenBuildingListsMenu);
         storageListsMenuButton.onClick.AddListener(OpenStorageListsMenu);
 
         closeManagementMenuButton.onClick.AddListener(CloseManagementMenu);
 
         stopPlacingBuildingButton.onClick.AddListener(StopPlacingBuilding);
 
-        constructionBuildingsListButton.onClick.AddListener(() => OpenBuildingsListByCategory(BuildingCategory.Construction));
-        residentalBuildingsListButton.onClick.AddListener(() => OpenBuildingsListByCategory(BuildingCategory.Residental));
-        productionBuildingsListButton.onClick.AddListener(() => OpenBuildingsListByCategory(BuildingCategory.Production));
-        storageBuildingsListButton.onClick.AddListener(() => OpenBuildingsListByCategory(BuildingCategory.Storage));
-        economyBuildingsListButton.onClick.AddListener(() => OpenBuildingsListByCategory(BuildingCategory.Economy));
-        researchBuildingsListButton.onClick.AddListener(() => OpenBuildingsListByCategory(BuildingCategory.Research));
+        // Building List Buttons
+        System.Array buildingCategoriesEnum = System.Enum.GetValues(typeof(BuildingCategory));
+        for (int i = 0; i < buildingCategoriesEnum.Length; i++)
+        {
+            int index = i;
+            buildingListButtons[index].onClick.AddListener(() => OpenBuildingsListByCategory((BuildingCategory)buildingCategoriesEnum.GetValue(index)));
+        }
 
+        // Resource Lists
         buildingResourcesListButton.onClick.AddListener(() => OpenStorageListByCategory(ItemCategory.Building));
         craftingResourcesListButton.onClick.AddListener(() => OpenStorageListByCategory(ItemCategory.Crafting));
         weaponResourcesListButton.onClick.AddListener(() => OpenStorageListByCategory(ItemCategory.Weapon));
@@ -223,6 +221,11 @@ public class UIManager : MonoBehaviour
         upgradeBuildingButton.onClick.AddListener(TryToUpgradeBuilding);
         demolishBuildingButton.onClick.AddListener(TryToDemolishBuilding);
         repairBuildingButton.onClick.AddListener(TryToUpgradeBuilding);
+
+        managementMenu.SetActive(false);
+        buildingListsMenu.SetActive(false);
+        selectBuildingWorkersMenu.gameObject.SetActive(false);
+        stopPlacingBuildingButton.gameObject.SetActive(false);
     }
 
     // Management Menu
@@ -231,14 +234,18 @@ public class UIManager : MonoBehaviour
         isManagementMenuOpened = true;
         managementMenu.SetActive(true);
         UpdateBuildingWidgetsResourcesAmount();
-        StopPlacingBuilding();
     }
 
     private void OpenBuildingMenu()
     {
         OpenManagementMenu();
-        OpenBuildingListMenu();
+        OpenBuildingListsMenu();
         OpenBuildingsListByCategory(lastOpenedBuildingsListCategory);
+
+        buildingListsMenuButton.GetComponent<RectTransform>().localScale = new Vector3(MainButton.selectedButtonUpScaleValue, MainButton.selectedButtonUpScaleValue, 1f);
+        storageListsMenuButton.GetComponent<RectTransform>().localScale = Vector3.one;
+
+        buildingListButtons[(int)lastOpenedBuildingsListCategory].GetComponent<RectTransform>().localScale = new Vector3(MainButton.selectedButtonUpScaleValue, MainButton.selectedButtonUpScaleValue, 1f);
     }
 
     private void OpenStorageMenu()
@@ -246,18 +253,29 @@ public class UIManager : MonoBehaviour
         OpenManagementMenu();
         OpenStorageListsMenu();
         OpenStorageListByCategory(lastOpenedStorageListCategory);
+
+        buildingListsMenuButton.GetComponent<RectTransform>().localScale = Vector3.one;
+        storageListsMenuButton.GetComponent<RectTransform>().localScale = new Vector3(MainButton.selectedButtonUpScaleValue, MainButton.selectedButtonUpScaleValue, 1f);
     }
 
-    private void OpenBuildingListMenu()
+    private void OpenBuildingListsMenu()
     {
         buildingListsMenu.SetActive(true);
         storageListsMenu.SetActive(false);
+
+        buildingListsMenuButton.Select();
+        storageListsMenuButton.Deselect();
+
+        OpenBuildingsListByCategory(lastOpenedBuildingsListCategory);
     }
 
     private void OpenStorageListsMenu()
     {
         storageListsMenu.SetActive(true);
         buildingListsMenu.SetActive(false);
+        
+        buildingListsMenuButton.Deselect();
+        storageListsMenuButton.Select();
     }
 
     public void CloseManagementMenu()
@@ -268,12 +286,26 @@ public class UIManager : MonoBehaviour
 
     private void OpenBuildingsListByCategory(BuildingCategory buildingCategory)
     {
-        constructionBuildingsList.gameObject.SetActive(buildingCategory == BuildingCategory.Construction ? true : false);
-        residentalBuildingsList.gameObject.SetActive(buildingCategory == BuildingCategory.Residental ? true : false);
-        productionBuildingsList.gameObject.SetActive(buildingCategory == BuildingCategory.Production ? true : false);
-        storageBuildingsList.gameObject.SetActive(buildingCategory == BuildingCategory.Storage ? true : false);
-        economyBuildingsList.gameObject.SetActive(buildingCategory == BuildingCategory.Economy ? true : false);
-        researchBuildingsList.gameObject.SetActive(buildingCategory == BuildingCategory.Research ? true : false);
+        Button selectedButton = null;
+
+        for (int i = 0; i < buildingListButtons.Count; i++)
+        {
+            if (i == (int)buildingCategory)
+            {
+                buildingLists[i].gameObject.SetActive(true);
+                buildingListButtons[i].Select();
+                selectedButton = buildingListButtons[i];
+            }
+            else
+            {
+                buildingLists[i].gameObject.SetActive(false);
+                buildingListButtons[i].Deselect();
+            }
+
+            buildingListButtons[i].transform.SetSiblingIndex(buildingListButtons.Count - i - 1);
+        }
+
+        selectedButton.transform.SetAsLastSibling();
 
         lastOpenedBuildingsListCategory = buildingCategory;
     }
@@ -301,18 +333,7 @@ public class UIManager : MonoBehaviour
             spawnedBuildingWidget.InitializeBuildingWidget(gameManager.buildingPrefabs[i]);
             spawnedBuildingWidget.cityManager = cityManager;
 
-            if (buildingCategory == BuildingCategory.Construction)
-                spawnedBuildingWidget.transform.SetParent(constructionBuildingsList.transform);
-            else if (buildingCategory == BuildingCategory.Residental)
-                spawnedBuildingWidget.transform.SetParent(residentalBuildingsList.transform);
-            else if (buildingCategory == BuildingCategory.Production)
-                spawnedBuildingWidget.transform.SetParent(productionBuildingsList.transform);
-            else if (buildingCategory == BuildingCategory.Storage)
-                spawnedBuildingWidget.transform.SetParent(storageBuildingsList.transform);
-            else if (buildingCategory == BuildingCategory.Economy)
-                spawnedBuildingWidget.transform.SetParent(economyBuildingsList.transform);
-            else if (buildingCategory == BuildingCategory.Research)
-                spawnedBuildingWidget.transform.SetParent(researchBuildingsList.transform);
+            spawnedBuildingWidget.transform.SetParent(buildingLists[(int)buildingCategory].transform);
 
             spawnedBuildingWidget.cityManager = cityManager;
         }

@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviour
         UIManager = FindAnyObjectByType<UIManager>();
         graphicRaycaster = UIManager.gameObject.GetComponent<GraphicRaycaster>();
 
-        UIManager.InitializeUIManager();
+        //UIManager.InitializeUIManager();
 
         SetInputSystem();
     }

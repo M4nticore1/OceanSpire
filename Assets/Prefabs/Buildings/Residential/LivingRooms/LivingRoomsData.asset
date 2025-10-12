@@ -18,6 +18,7 @@ MonoBehaviour:
   buildingType: 0
   buildingCategory: 1
   connectionType: 0
+  thumbImage: {fileID: 21300000, guid: 198ac3d9d3301d44bbd04ca385d822f9, type: 3}
   buildingFloors: 1
   maxBuildingFloors: 1
   isDemolishable: 1

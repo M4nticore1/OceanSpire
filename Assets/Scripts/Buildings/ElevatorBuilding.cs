@@ -56,7 +56,6 @@ public class ElevatorBuilding : RoomBuilding
         }
         else
         {
-            Debug.Log("Spawn");
             ElevatorBuildingLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorBuildingLevelData;
 
             if (buildingPosition == BuildingPosition.Straight)

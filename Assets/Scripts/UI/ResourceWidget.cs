@@ -20,7 +20,8 @@ public class ResourceWidget : MonoBehaviour
         resourceAmountText.text = currentResourceAmount.ToString() + "/" + maxResourceAmount.ToString();
 
         float alpha = (float)currentResourceAmount / (float)maxResourceAmount;
-        resourceAmountBar.fillAmount = alpha;
+        if (resourceAmountBar)
+            resourceAmountBar.fillAmount = alpha;
     }
 
     public void UpdateBuildWidget(int resourceAmount)

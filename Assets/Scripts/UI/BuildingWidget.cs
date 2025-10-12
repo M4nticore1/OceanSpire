@@ -11,10 +11,11 @@ public class BuildingWidget : MonoBehaviour
     private PlayerController playerController = null;
     private UIManager UIManager = null;
 
-    [SerializeField] private Building building = null;
+    private Building building = null;
     [SerializeField] private BuildingResourceWidget buildingResourceWidget = null;
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
 
+    [SerializeField] private Image buildingImage = null;
     [SerializeField] private Button buildButton = null;
     [SerializeField] private Button buildingInformationButton = null;
     private bool isInformationOpened = false;
@@ -44,6 +45,8 @@ public class BuildingWidget : MonoBehaviour
         else
             Debug.Log("building.buildingLevelsData[0] is NULL " + building.buildingData.buildingIdName);
 
+        if (newBuilding.buildingData.thumbImage)
+            buildingImage.sprite = newBuilding.buildingData.thumbImage;
         DrawResourcesToBuild();
     }
 

@@ -32,7 +32,7 @@ public enum BuildingType
 public enum BuildingCategory
 {
     Construction,
-    Residental,
+    Residential,
     Production,
     Storage,
     Economy,
@@ -56,6 +56,7 @@ public class BuildingData : ScriptableObject
     public BuildingType buildingType = BuildingType.Room;
     public BuildingCategory buildingCategory = BuildingCategory.Construction;
     public ConnectionType connectionType = ConnectionType.None;
+    public Sprite thumbImage = null;
 
     public int buildingFloors = 1;
     public int maxBuildingFloors = 1;
