@@ -3,9 +3,13 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class BuildingWidget : MonoBehaviour
+public class BuildingWidget : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    public System.Action OnPress;
+    public System.Action OnRelease;
+
     [HideInInspector] public GameManager gameManager = null;
     [HideInInspector] public CityManager cityManager = null;
     private PlayerController playerController = null;
@@ -16,8 +20,8 @@ public class BuildingWidget : MonoBehaviour
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
 
     [SerializeField] private Image buildingImage = null;
-    [SerializeField] private Button buildButton = null;
-    [SerializeField] private Button buildingInformationButton = null;
+    public Button buildButton = null;
+    public Button buildingInformationButton = null;
     private bool isInformationOpened = false;
 
     [SerializeField] private TextMeshProUGUI buildingNameText = null;
@@ -123,4 +127,6 @@ public class BuildingWidget : MonoBehaviour
             spawnedBuildingResourceWidgets[i].SetResourceText(cityManager.items[index].amount, building.buildingLevelsData[0].ResourcesToBuild[i].amount);
         }
     }
+
+    public void onpoin
 }

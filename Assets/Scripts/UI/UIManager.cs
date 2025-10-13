@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.Mathematics;
@@ -17,7 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private BuildingWidget buildingWidgetPrefab = null;
     [SerializeField] private ResourceWidget storageResourceWidgetPrefab = null;
     [SerializeField] private ResourceWidget buildingActionResourceWidgetPrefab = null;
-    private List<BuildingWidget> buildingWidgets = new List<BuildingWidget>();
+    private List<List<BuildingWidget>> buildingWidgets = new List<List<BuildingWidget>>();
     [SerializeField] private List<ResourceWidget> storageResourceWidgets = new List<ResourceWidget>();
     private List<ResourceWidget> buildingActionResourceWidgets = new List<ResourceWidget>();
 
@@ -27,6 +28,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject buildingListsMenu = null;
     [SerializeField] private GameObject storageListsMenu = null;
     private bool isManagementMenuOpened = false;
+    private bool isBuildingListsMenuOpened = false;
+    private bool isStorageListsMenuOpened = false;
     private bool isBuildingManagementMenuOpened = false;
 
     BuildingCategory lastOpenedBuildingsListCategory = BuildingCategory.Construction;
@@ -42,12 +45,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button stopPlacingBuildingButton = null;
 
     // Buildings
-    [Header("Buildings")]
+    [Header("Building Lists")]
     [SerializeField] private List<VerticalLayoutGroup> buildingLists = new List<VerticalLayoutGroup>();
-
-    // Buildings List Buttons
-    [Header("Buildings List Buttons")]
     [SerializeField] private List<MainButton> buildingListButtons = new List<MainButton>();
+    private bool isBuildingsListGrabbed = false;
+    private float dragBuildingsListSpeed = 10.0f;
 
     // Storage List
     [Header("Storage List")]
@@ -147,6 +149,7 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        // Building Management Menu
         if (isBuildingManagementMenuOpened)
             buildingManagementMenuCurrentPosition.y = math.lerp(buildingManagementMenuCurrentPosition.y, buildingManagementMenu.rect.size.y, buildingManagementMenuToggleSpeed * Time.deltaTime);
         else
@@ -160,6 +163,16 @@ public class UIManager : MonoBehaviour
             buildingResourcesMenuCurrentPosition.y = math.lerp(buildingResourcesMenuCurrentPosition.y, 0, buildingResourcesMenuPanelToggleSpeed * Time.deltaTime);
 
         buildingResourcesMenuPanel.anchoredPosition = buildingResourcesMenuCurrentPosition;
+
+        // Drag Building List
+        if (isBuildingListsMenuOpened)
+        {
+            for (int i = 0; i < buildingWidgets[(int)lastOpenedBuildingsListCategory].Count; i++)
+            {
+                if (buildingWidgets[(int)lastOpenedBuildingsListCategory][i].buildButton.is)
+                buildingLists[(int)lastOpenedBuildingsListCategory].GetComponent<RectTransform>().anchoredPosition += new Vector2(0, playerController.dragMoveVelocity.y * dragBuildingsListSpeed * Time.deltaTime);
+            }
+        }
     }
 
     private void OnEnable()
@@ -260,6 +273,9 @@ public class UIManager : MonoBehaviour
 
     private void OpenBuildingListsMenu()
     {
+        isBuildingListsMenuOpened = true;
+        isStorageListsMenuOpened = false;
+
         buildingListsMenu.SetActive(true);
         storageListsMenu.SetActive(false);
 
@@ -271,6 +287,9 @@ public class UIManager : MonoBehaviour
 
     private void OpenStorageListsMenu()
     {
+        isStorageListsMenuOpened = true;
+        isBuildingListsMenuOpened = false;
+
         storageListsMenu.SetActive(true);
         buildingListsMenu.SetActive(false);
         
@@ -321,6 +340,12 @@ public class UIManager : MonoBehaviour
 
     private void CreateBuildingWidgets()
     {
+        int length = Enum.GetValues(typeof(BuildingCategory)).Length;
+        for (int i = 0; i < length; i++)
+        {
+            buildingWidgets.Add(new List<BuildingWidget>());
+        }
+
         for (int i = 0; i < gameManager.buildingPrefabs.Count; i++)
         {
             if (!gameManager.buildingPrefabs[i].buildingData.isDemolishable) continue;
@@ -328,7 +353,7 @@ public class UIManager : MonoBehaviour
             BuildingCategory buildingCategory = gameManager.buildingPrefabs[i].buildingData.buildingCategory;
             BuildingWidget spawnedBuildingWidget = null;
             spawnedBuildingWidget = Instantiate<BuildingWidget>(buildingWidgetPrefab, transform);
-            buildingWidgets.Add(spawnedBuildingWidget);
+            buildingWidgets[(int)gameManager.buildingPrefabs[i].buildingData.buildingCategory].Add(spawnedBuildingWidget);
 
             spawnedBuildingWidget.InitializeBuildingWidget(gameManager.buildingPrefabs[i]);
             spawnedBuildingWidget.cityManager = cityManager;
@@ -719,29 +744,6 @@ public class UIManager : MonoBehaviour
         }
 
         buildingActionResourceWidgets.Clear();
-    }
-
-    private void UpdateResidentsLists()
-    {
-        //for (int i = 0; i < spawnedAllWorkersWidgets.Count; i++)
-        //{
-        //    Destroy(spawnedAllWorkersWidgets[i].gameObject);
-        //}
-
-        //spawnedAllWorkersWidgets.Clear();
-
-        //for (int i = 0; i < spawnedSelectedBuildingWorkersWidgets.Count; i++)
-        //{
-        //    Destroy(spawnedSelectedBuildingWorkersWidgets[i].gameObject);
-        //}
-
-        //spawnedSelectedBuildingWorkersWidgets.Clear();
-
-        //for (int i = 0; i < cityManager.
-        //; i++)
-        //{
-        //    spawnedAllWorkersWidgets
-        //}
     }
 
     // Placing Building

@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 CameraMoveSensitivity = new Vector2(6.0f, 1.0f);
     private const float cameraStopMoveSpeed = 9.0f;
 
+    [HideInInspector] public Vector2 dragMoveVelocity = Vector2.zero;
     private Vector2 cameraMoveVelocity = Vector2.zero;
     private const float cameraHeightBoundaryPadding = 10.0f;
     private const float cameraHeightReturnSpeed = 5.0f;
@@ -427,7 +428,7 @@ public class PlayerController : MonoBehaviour
             isSecondTouchPressed = false;
         }
     }
-
+    
     private void OnTouchPresing()
     {
         if (isFirstTouchPressed || isSecondTouchPressed)
@@ -454,8 +455,11 @@ public class PlayerController : MonoBehaviour
                 secondTouchMoveInput = Vector3.zero;
             }
 
-            cameraMoveVelocity.x = (firstTouchMoveInput.x + secondTouchMoveInput.x) * CameraMoveSensitivity.x;
-            cameraMoveVelocity.y = (firstTouchMoveInput.y + secondTouchMoveInput.y) * CameraMoveSensitivity.y;
+            dragMoveVelocity.x = firstTouchMoveInput.x + secondTouchMoveInput.x;
+            dragMoveVelocity.y = firstTouchMoveInput.y + secondTouchMoveInput.y;
+
+            cameraMoveVelocity.x = dragMoveVelocity.x * CameraMoveSensitivity.x;
+            cameraMoveVelocity.y = dragMoveVelocity.y * CameraMoveSensitivity.y;
         }
         else if (!isFirstTouchPressed && !isSecondTouchPressed)
         {
