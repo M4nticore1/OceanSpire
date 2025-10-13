@@ -65,8 +65,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
   lootContainerPrefabs:
   - {fileID: 1163065957676753421, guid: af311279b2bbd5340b546e8435ae6bf8, type: 3}
+  - {fileID: 1163065957676753421, guid: 2a682736948bcc843bdaea7b612fa403, type: 3}
   - {fileID: 1163065957676753421, guid: b441e98c27058704694aa7ff7dcec351, type: 3}
   residentPrefab: {fileID: 6103850784313419152, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
   windDirection: {x: 0, y: 0}
+  windRotation: 0
   windSpeed: 0
   hasSavedData: 0

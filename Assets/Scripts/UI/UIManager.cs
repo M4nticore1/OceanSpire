@@ -46,10 +46,9 @@ public class UIManager : MonoBehaviour
 
     // Buildings
     [Header("Building Lists")]
-    [SerializeField] private List<VerticalLayoutGroup> buildingLists = new List<VerticalLayoutGroup>();
+    [SerializeField] private List<GridLayoutGroup> buildingLists = new List<GridLayoutGroup>();
     [SerializeField] private List<MainButton> buildingListButtons = new List<MainButton>();
-    private bool isBuildingsListGrabbed = false;
-    private float dragBuildingsListSpeed = 10.0f;
+    [SerializeField] private ScrollRect buildingListsScrollRect = null;
 
     // Storage List
     [Header("Storage List")]
@@ -63,13 +62,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button craftingResourcesListButton = null;
     [SerializeField] private Button weaponResourcesListButton = null;
 
-    private Vector2 buildingsListMenuCurrentPosition = Vector2.zero;
-    private Vector2 buildingsListMenuClosedPosition = Vector2.zero;
-    private Vector2 buildingsListMenuOpenedPosition = Vector2.zero;
-    private float buildingListmenuToggleSpeed = 5000.0f;
-
     // Building Management Menu
-    [Header("Building Management Manu")]
+    [Header("Building Management Menu")]
     [SerializeField] private RectTransform buildingManagementMenu = null;
     [SerializeField] private RectTransform buildingManagementMenuPanel = null;
     private Vector2 buildingManagementMenuCurrentPosition = Vector2.zero;
@@ -111,10 +105,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Building Workers Menu")]
     [SerializeField] private ResidentWidget residentWidgetPrefab = null;
-    //[SerializeField] private ResidentWidget selectBuildingWorkerWidgetPrefab = null;
 
-    //private List<ResidentWidget> spawnedEmployedResidentWidgets = new List<ResidentWidget>();
-    //private List<ResidentWidget> spawnedUnemployedResidentWidgets = new List<ResidentWidget>();
     private List<ResidentWidget> spawnedBuildingWorkerEmptyWidgets = new List<ResidentWidget>();
     private List<ResidentWidget> spawnedResidentWidgets = new List<ResidentWidget>();
 
@@ -135,16 +126,32 @@ public class UIManager : MonoBehaviour
 
     // Colors
     [Header("Colors")]
-    //private ColorBlock notSelectedBlueButtonColorBlock = new ColorBlock();
-    //private ColorBlock selectedBlueButtonColorBlock = new ColorBlock();
-
     [SerializeField] private UIColor blueColor;
     [SerializeField] private UIColor lightBlueColor;
     [SerializeField] private UIColor darkBlueColor;
 
     private void Awake()
     {
+        gameManager = FindAnyObjectByType<GameManager>();
+        cityManager = FindAnyObjectByType<CityManager>();
+        playerController = transform.parent.GetComponent<PlayerController>();
+    }
+
+    private void Start()
+    {
         InitializeUIManager();
+    }
+
+    private void OnEnable()
+    {
+        //Building.OnBuildingFinishConstructing += OnBuildingUpgraded;
+        cityManager.OnResidentAdded += AddResidentWidget;
+    }
+
+    private void OnDisable()
+    {
+        //Building.OnBuildingFinishConstructing -= OnBuildingUpgraded;
+        cityManager.OnResidentAdded -= AddResidentWidget;
     }
 
     private void Update()
@@ -163,36 +170,10 @@ public class UIManager : MonoBehaviour
             buildingResourcesMenuCurrentPosition.y = math.lerp(buildingResourcesMenuCurrentPosition.y, 0, buildingResourcesMenuPanelToggleSpeed * Time.deltaTime);
 
         buildingResourcesMenuPanel.anchoredPosition = buildingResourcesMenuCurrentPosition;
-
-        // Drag Building List
-        if (isBuildingListsMenuOpened)
-        {
-            for (int i = 0; i < buildingWidgets[(int)lastOpenedBuildingsListCategory].Count; i++)
-            {
-                if (buildingWidgets[(int)lastOpenedBuildingsListCategory][i].buildButton.is)
-                buildingLists[(int)lastOpenedBuildingsListCategory].GetComponent<RectTransform>().anchoredPosition += new Vector2(0, playerController.dragMoveVelocity.y * dragBuildingsListSpeed * Time.deltaTime);
-            }
-        }
-    }
-
-    private void OnEnable()
-    {
-        //Building.OnBuildingFinishConstructing += OnBuildingUpgraded;
-        cityManager.OnResidentAdded += AddResidentWidget;
-    }
-
-    private void OnDisable()
-    {
-        //Building.OnBuildingFinishConstructing -= OnBuildingUpgraded;
-        cityManager.OnResidentAdded -= AddResidentWidget;
     }
 
     public void InitializeUIManager()
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
-        playerController = transform.parent.GetComponent<PlayerController>();
-
         CreateBuildingWidgets();
         CreateItemWidgets();
 
@@ -327,6 +308,8 @@ public class UIManager : MonoBehaviour
         selectedButton.transform.SetAsLastSibling();
 
         lastOpenedBuildingsListCategory = buildingCategory;
+
+        buildingListsScrollRect.content = buildingLists[(int)buildingCategory].GetComponent<RectTransform>();
     }
 
     private void OpenStorageListByCategory(ItemCategory itemCategory)
@@ -353,7 +336,9 @@ public class UIManager : MonoBehaviour
             BuildingCategory buildingCategory = gameManager.buildingPrefabs[i].buildingData.buildingCategory;
             BuildingWidget spawnedBuildingWidget = null;
             spawnedBuildingWidget = Instantiate<BuildingWidget>(buildingWidgetPrefab, transform);
-            buildingWidgets[(int)gameManager.buildingPrefabs[i].buildingData.buildingCategory].Add(spawnedBuildingWidget);
+
+            int categoryIndex = (int)gameManager.buildingPrefabs[i].buildingData.buildingCategory;
+            buildingWidgets[categoryIndex].Add(spawnedBuildingWidget);
 
             spawnedBuildingWidget.InitializeBuildingWidget(gameManager.buildingPrefabs[i]);
             spawnedBuildingWidget.cityManager = cityManager;
@@ -361,6 +346,18 @@ public class UIManager : MonoBehaviour
             spawnedBuildingWidget.transform.SetParent(buildingLists[(int)buildingCategory].transform);
 
             spawnedBuildingWidget.cityManager = cityManager;
+        }
+
+        for (int i = 0; i < length; i++)
+        {
+            RectTransform rectTransform = buildingLists[i].GetComponent<RectTransform>();
+            Vector2 initialSizeDelta = rectTransform.rect.size;
+            Vector2 size = buildingLists[i].transform.childCount * (buildingLists[i].cellSize + buildingLists[i].spacing) - buildingLists[i].spacing;
+
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+
+            if (rectTransform.sizeDelta.y < initialSizeDelta.y)
+                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, initialSizeDelta.y);
         }
     }
 
@@ -415,7 +412,10 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < buildingWidgets.Count; i++)
         {
-            buildingWidgets[i].UpdateResourcesToBuild();
+            for (int j = 0; j < buildingWidgets[i].Count; j++)
+            {
+                buildingWidgets[i][j].UpdateResourcesToBuild();
+            }
         }
     }
 

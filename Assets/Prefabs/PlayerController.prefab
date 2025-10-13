@@ -51,6 +51,7 @@ MonoBehaviour:
   cameraHolder: {fileID: 9020790906093603443}
   cameraVerticalPosition: {x: 0, y: 0, z: 0}
   cameraHorizontalPosition: {x: 0, y: 0, z: 0}
+  dragMoveVelocity: {x: 0, y: 0}
   cameraYawRotateAlpha: 0
   mainInputActionsAsset: {fileID: -944628639613478452, guid: e3db4645d0ae36245a27082f5b603306, type: 3}
   buildingToPlace: {fileID: 0}
@@ -500,6 +501,10 @@ PrefabInstance:
     - target: {fileID: 4405103202460231820, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
       propertyPath: m_Name
       value: PlayerUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147959992463781598, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5323392907551205864, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
       propertyPath: m_AnchorMax.y

@@ -134,8 +134,8 @@ MonoBehaviour:
   cityManager: {fileID: 0}
   buildingResourceWidget: {fileID: 2815948240187871119, guid: 9d3feffcad0e637408bef2ff4d7db94d, type: 3}
   buildingImage: {fileID: 2114355288455175088}
-  buildButton: {fileID: 1660339997871809746}
-  buildingInformationButton: {fileID: 8493737861632576973}
+  buildButton: {fileID: 3753086174136718447}
+  buildingInformationButton: {fileID: 42081283019150995}
   buildingNameText: {fileID: 2869115394412868553}
   resourcesToBuildLayoutGroup: {fileID: 5228974229580240534}
 --- !u!1 &3306016871298986454
@@ -485,7 +485,7 @@ GameObject:
   - component: {fileID: 2935036107710263794}
   - component: {fileID: 5618792243054099559}
   - component: {fileID: 8287378216999079271}
-  - component: {fileID: 8493737861632576973}
+  - component: {fileID: 42081283019150995}
   m_Layer: 5
   m_Name: InformationButton
   m_TagString: Untagged
@@ -550,7 +550,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8493737861632576973
+--- !u!114 &42081283019150995
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -559,7 +559,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7545732244426481678}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -571,11 +571,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0}
-    m_PressedColor: {r: 0.773, g: 0.773, b: 0.773, a: 0.101960786}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 0, g: 0, b: 0, a: 0}
+    m_HighlightedColor: {r: 0, g: 0, b: 0, a: 0}
+    m_PressedColor: {r: 0.77254903, g: 0.77254903, b: 0.77254903, a: 0.101960786}
+    m_SelectedColor: {r: 0, g: 0, b: 0, a: 0}
+    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -594,6 +594,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  rectTransform: {fileID: 2935036107710263794}
+  isSelectable: 0
+  isScalable: 0
+  isNeededCorrectPosition: 0
+  correctPositionDirection: {x: 0, y: 0}
+  content: {fileID: 0}
+  normalColor: {fileID: 11400000, guid: 946eea9e47a3a0844b10ee957b3eb7eb, type: 2}
+  pressedColor: {fileID: 11400000, guid: 46099d51a8d0d36469d3aed97b6a3e18, type: 2}
+  selectedColor: {fileID: 11400000, guid: 946eea9e47a3a0844b10ee957b3eb7eb, type: 2}
+  contentNormalColor: {fileID: 11400000, guid: 697cab64e0e585c4c9dc69aad0677e56, type: 2}
+  contentSelectedColor: {fileID: 11400000, guid: 697cab64e0e585c4c9dc69aad0677e56, type: 2}
 --- !u!1 &7642038641422561977
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,8 +639,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 2475}
-  m_SizeDelta: {x: 550, y: 550}
+  m_AnchoredPosition: {x: 0, y: 2250}
+  m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 5}
 --- !u!222 &6328201746784720391
 CanvasRenderer:
@@ -771,7 +782,7 @@ GameObject:
   - component: {fileID: 1603433769933191045}
   - component: {fileID: 5911863147813292838}
   - component: {fileID: 8369071072566013778}
-  - component: {fileID: 1660339997871809746}
+  - component: {fileID: 3753086174136718447}
   m_Layer: 5
   m_Name: BuildButton
   m_TagString: Untagged
@@ -837,7 +848,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1660339997871809746
+--- !u!114 &3753086174136718447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -846,7 +857,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8061749931158324390}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -859,10 +870,10 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_PressedColor: {r: 0.77254903, g: 0.77254903, b: 0.77254903, a: 0.101960786}
     m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -881,3 +892,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  rectTransform: {fileID: 1603433769933191045}
+  isSelectable: 0
+  isScalable: 0
+  isNeededCorrectPosition: 0
+  correctPositionDirection: {x: 0, y: 0}
+  content: {fileID: 0}
+  normalColor: {fileID: 11400000, guid: 2c537556a9897754791c21e314ee9ddd, type: 2}
+  pressedColor: {fileID: 11400000, guid: 46099d51a8d0d36469d3aed97b6a3e18, type: 2}
+  selectedColor: {fileID: 11400000, guid: 2c537556a9897754791c21e314ee9ddd, type: 2}
+  contentNormalColor: {fileID: 11400000, guid: 697cab64e0e585c4c9dc69aad0677e56, type: 2}
+  contentSelectedColor: {fileID: 11400000, guid: 697cab64e0e585c4c9dc69aad0677e56, type: 2}

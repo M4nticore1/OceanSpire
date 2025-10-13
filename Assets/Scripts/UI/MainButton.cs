@@ -39,6 +39,9 @@ public class MainButton : Button
     private ColorBlock notSelectedColorBlock = new ColorBlock();
     private ColorBlock selectedColorBlock = new ColorBlock();
 
+    public System.Action onPress;
+    public System.Action onRelease;
+
     protected override void Awake()
     {
         base.Awake();
@@ -76,14 +79,23 @@ public class MainButton : Button
         base.OnPointerDown(eventData);
 
         if (!isSelected)
+        {
             isPressed = true;
+
+            onPress?.Invoke();
+        }
     }
 
     public override void OnPointerUp(PointerEventData eventData)
     {
         base.OnPointerUp(eventData);
 
-        isPressed = false;
+        if (isPressed)
+        {
+            isPressed = false;
+
+            onRelease?.Invoke();
+        }
     }
 
     public override void Select()

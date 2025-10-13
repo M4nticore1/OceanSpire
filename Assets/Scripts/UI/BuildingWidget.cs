@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class BuildingWidget : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class BuildingWidget : MonoBehaviour
 {
     public System.Action OnPress;
     public System.Action OnRelease;
@@ -20,8 +20,8 @@ public class BuildingWidget : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
 
     [SerializeField] private Image buildingImage = null;
-    public Button buildButton = null;
-    public Button buildingInformationButton = null;
+    [SerializeField] private MainButton buildButton = null;
+    [SerializeField] private MainButton buildingInformationButton = null;
     private bool isInformationOpened = false;
 
     [SerializeField] private TextMeshProUGUI buildingNameText = null;
@@ -29,6 +29,22 @@ public class BuildingWidget : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     //[SerializeField] private HorizontalLayoutGroup resourcesToBuildHorizontalLayoutGroupWidget = null;
 
     int resourcesToBuildNumber = 0;
+
+    private void OnEnable()
+    {
+        buildButton.onPress += () => OnPress?.Invoke();
+        buildingInformationButton.onPress += () => OnPress?.Invoke();
+        buildButton.onRelease += () => OnRelease?.Invoke();
+        buildingInformationButton.onRelease += () => OnRelease?.Invoke();
+    }
+
+    private void OnDisable()
+    {
+        buildButton.onPress -= () => OnPress?.Invoke();
+        buildingInformationButton.onPress -= () => OnPress?.Invoke();
+        buildButton.onRelease -= () => OnRelease?.Invoke();
+        buildingInformationButton.onRelease -= () => OnRelease?.Invoke();
+    }
 
     public void InitializeBuildingWidget(Building newBuilding)
     {
@@ -127,6 +143,4 @@ public class BuildingWidget : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             spawnedBuildingResourceWidgets[i].SetResourceText(cityManager.items[index].amount, building.buildingLevelsData[0].ResourcesToBuild[i].amount);
         }
     }
-
-    public void onpoin
 }
