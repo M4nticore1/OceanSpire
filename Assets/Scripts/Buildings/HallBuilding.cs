@@ -3,12 +3,6 @@ using UnityEngine;
 [AddComponentMenu("Buildings/HallBuilding")]
 public class HallBuilding : Building
 {
-    protected override void Start()
-    {
-        base.Start();
-
-	}
-
     protected override void UpdateBuildingConstruction(int levelIndex)
     {
         base.UpdateBuildingConstruction(levelIndex);

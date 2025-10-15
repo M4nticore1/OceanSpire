@@ -29,34 +29,41 @@ public class ProductionBuildingComponent : BuildingComponent
 
     private void Production()
     {
-        int levelIndex = ownedBuilding.levelIndex;
-        BuildingLevelData buildingLevelData = ownedBuilding.buildingLevelsData[levelIndex];
-        ProductionBuildingLevelData productionBuildingLevelData = productionBuildingLevelsData[levelIndex];
-
-        int currentPeopleCount = ownedBuilding.currentWorkers.Count;
-
-        if (currentPeopleCount > 0)
+        if (ownedBuilding)
         {
-            int maxPeopleCount = buildingLevelData.maxResidentsCount;
-            float productionTime = productionBuildingLevelData.produceTime;
-
-            float productionSpeed = productionTime * ((float)currentPeopleCount / (float)maxPeopleCount);
-
-            if (produceTime < productionBuildingLevelsData[ownedBuilding.levelIndex].produceTime && !isStorageFull)
+            if (!ownedBuilding.isUnderConstruction)
             {
-                //Debug.Log("produceTime " + produceTime);
-                produceTime += Time.deltaTime * productionSpeed;
-            }
-            else
-            {
-                //Debug.Log("AddProduceResourceAmount");
+                BuildingLevelData buildingLevelData = ownedBuilding.buildingLevelsData[ownedBuilding.levelIndex];
+                ProductionBuildingLevelData productionBuildingLevelData = productionBuildingLevelsData[ownedBuilding.levelIndex];
 
-                if (!isStorageFull)
+                int currentPeopleCount = ownedBuilding.currentWorkers.Count;
+
+                if (currentPeopleCount > 0)
                 {
-                    AddProduceResourceAmount();
+                    int maxPeopleCount = buildingLevelData.maxResidentsCount;
+                    float productionTime = productionBuildingLevelData.produceTime;
+
+                    float productionSpeed = productionTime * ((float)currentPeopleCount / (float)maxPeopleCount);
+
+                    if (produceTime < productionBuildingLevelsData[ownedBuilding.levelIndex].produceTime && !isStorageFull)
+                    {
+                        //Debug.Log("produceTime " + produceTime);
+                        produceTime += Time.deltaTime * productionSpeed;
+                    }
+                    else
+                    {
+                        //Debug.Log("AddProduceResourceAmount");
+
+                        if (!isStorageFull)
+                        {
+                            AddProduceResourceAmount();
+                        }
+                    }
                 }
             }
         }
+        else
+            Debug.LogError("ownedBuilding is NULL");
     }
 
     private void AddProduceResourceAmount()

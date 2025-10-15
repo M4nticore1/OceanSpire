@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 cameraVerticalRotation = Vector3.zero;
 
     private Vector2 CameraMoveSensitivity = new Vector2(6.0f, 1.0f);
-    private const float cameraStopMoveSpeed = 9.0f;
+    private const float cameraStopMoveSpeed = 8.0f;
 
     [HideInInspector] public Vector2 dragMoveVelocity = Vector2.zero;
     private Vector2 cameraMoveVelocity = Vector2.zero;
@@ -36,8 +36,6 @@ public class PlayerController : MonoBehaviour
     private float cameraMoveMultiplier = 1.0f;
     [HideInInspector] public float cameraYawRotateAlpha = 0.0f;
     float moveStateValue = 0;
-
-    private const int cameraMovingDistance = 8;
 
     // Camera Arm
     private float startCameraArmLength = 0.0f;
@@ -50,6 +48,8 @@ public class PlayerController : MonoBehaviour
     private const float cameraArmReturnSpeed = 5.0f;
 
     private float cameraArmMoveMultiplier = 1.0f;
+
+    private const int cameraMovingDistance = 16;
 
     // Input System
     private bool isFirstTouchPressed = false;
@@ -65,6 +65,8 @@ public class PlayerController : MonoBehaviour
     private InputAction secondTouchPressAction = null;
     private InputAction secondTouchPositionAction = null;
     private InputAction secondTouchMoveAction = null;
+
+    private InputAction mouseScrollAction = null;
 
     private Vector2 firstTouchStartPosition = Vector2.zero;
     private Vector2 firstTouchCurrentPosition = Vector2.zero;
@@ -142,42 +144,34 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
+        touchInputActionMap.Enable();
+
         firstTouchPressAction.performed += OnFirstTouchStarted;
         firstTouchPressAction.canceled += OnFirstTouchEnded;
-        firstTouchPressAction.Enable();
 
         secondTouchPressAction.performed += OnSecondTouchStarted;
         secondTouchPressAction.canceled += OnSecondTouchEnded;
-        secondTouchPressAction.Enable();
 
-        firstTouchMoveAction?.Enable();
-        firstTouchPositionAction?.Enable();
-
-        secondTouchMoveAction?.Enable();
-        secondTouchPositionAction?.Enable();
+        mouseScrollAction.performed += OnMouseScroll;
 
         CityManager.OnStorageCapacityUpdated += UpdateUIStorageItems;
-        Building.OnBuildingStartConstructing += StopPlacingBuilding;
+        Building.onAnyBuildingStartConstructing += StopPlacingBuilding;
     }
 
     private void OnDisable()
     {
-        if (firstTouchPressAction != null)
-        {
-            firstTouchPressAction.performed -= OnFirstTouchStarted;
-            firstTouchPressAction.canceled -= OnFirstTouchEnded;
-            firstTouchPressAction.Disable();
-        }
-        else
-            Debug.Log("void PlayerController : OnEnable() touchPressAction is NULL");
+        firstTouchPressAction.performed -= OnFirstTouchStarted;
+        firstTouchPressAction.canceled -= OnFirstTouchEnded;
 
-        firstTouchMoveAction?.Disable();
-        firstTouchPositionAction?.Disable();
+        secondTouchPressAction.performed -= OnSecondTouchStarted;
+        secondTouchPressAction.canceled -= OnSecondTouchEnded;
 
-        secondTouchMoveAction?.Disable();
-        secondTouchPositionAction?.Disable();
+        mouseScrollAction.performed -= OnMouseScroll;
+
+        touchInputActionMap.Disable();
 
         CityManager.OnStorageCapacityUpdated -= UpdateUIStorageItems;
+        Building.onAnyBuildingStartConstructing -= StopPlacingBuilding;
     }
 
     private void SetInputSystem()
@@ -197,6 +191,8 @@ public class PlayerController : MonoBehaviour
                 secondTouchPressAction = touchInputActionMap.FindAction("SecondTouchPress");
                 secondTouchPositionAction = touchInputActionMap.FindAction("SecondTouchPosition");
                 secondTouchMoveAction = touchInputActionMap.FindAction("SecondTouchMove");
+
+                mouseScrollAction = touchInputActionMap.FindAction("MouseScroll");
             }
             else
                 Debug.Log("void PlayerController : SetInputSystem() touchInputActionMap is NULL");
@@ -465,6 +461,11 @@ public class PlayerController : MonoBehaviour
         {
             cameraMoveVelocity = Vector2.Lerp(cameraMoveVelocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
         }
+    }
+
+    private void OnMouseScroll(InputAction.CallbackContext context)
+    {
+        Debug.Log("Scroll");
     }
 
     public void StartPlacingBuilding(Building newBuildingToPlace)

@@ -51,16 +51,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private ScrollRect buildingListsScrollRect = null;
 
     // Storage List
-    [Header("Storage List")]
-    [SerializeField] private GridLayoutGroup buildingResourcesList = null;
-    [SerializeField] private GridLayoutGroup craftingResourcesList = null;
-    [SerializeField] private GridLayoutGroup weaponResourcesList = null;
-
-    // Storage List
-    [Header("Storage List Buttons")]
-    [SerializeField] private Button buildingResourcesListButton = null;
-    [SerializeField] private Button craftingResourcesListButton = null;
-    [SerializeField] private Button weaponResourcesListButton = null;
+    [Header("Storage Lists")]
+    [SerializeField] private List<GridLayoutGroup> storageLists = new List<GridLayoutGroup>();
+    [SerializeField] private List<MainButton> storageListButtons = new List<MainButton>();
 
     // Building Management Menu
     [Header("Building Management Menu")]
@@ -198,10 +191,13 @@ public class UIManager : MonoBehaviour
             buildingListButtons[index].onClick.AddListener(() => OpenBuildingsListByCategory((BuildingCategory)buildingCategoriesEnum.GetValue(index)));
         }
 
-        // Resource Lists
-        buildingResourcesListButton.onClick.AddListener(() => OpenStorageListByCategory(ItemCategory.Building));
-        craftingResourcesListButton.onClick.AddListener(() => OpenStorageListByCategory(ItemCategory.Crafting));
-        weaponResourcesListButton.onClick.AddListener(() => OpenStorageListByCategory(ItemCategory.Weapon));
+        // Storage List Buttons
+        System.Array itemCategoriesEnum = System.Enum.GetValues(typeof(ItemCategory));
+        for (int i = 0; i < storageListButtons.Count; i++)
+        {
+            int index = i;
+            storageListButtons[i].onClick.AddListener(() => OpenStorageListByCategory((ItemCategory)itemCategoriesEnum.GetValue(index)));
+        }
 
         closeBuildingManagementMenuButton.onClick.AddListener(CloseBuildingManagementMenu);
         showUpgradeBuildingResourcesButton.onClick.AddListener(OpenUpgradeBuildingMenu);
@@ -314,9 +310,8 @@ public class UIManager : MonoBehaviour
 
     private void OpenStorageListByCategory(ItemCategory itemCategory)
     {
-        buildingResourcesList.gameObject.SetActive(itemCategory == ItemCategory.Building ? true : false);
-        craftingResourcesList.gameObject.SetActive(itemCategory == ItemCategory.Crafting ? true : false);
-        weaponResourcesList.gameObject.SetActive(itemCategory == ItemCategory.Weapon ? true : false);
+        storageLists[(int)itemCategory].gameObject.SetActive(true);
+        storageLists[(int)lastOpenedStorageListCategory].gameObject.SetActive(false);
 
         lastOpenedStorageListCategory = itemCategory;
     }
@@ -377,12 +372,7 @@ public class UIManager : MonoBehaviour
             int itemMaxAmount = cityManager.items[i].maxAmount;
             storageResourceWidget.UpdateStorageWidget(itemAmount, itemMaxAmount);
 
-            if (itemCategory == ItemCategory.Building)
-                storageResourceWidget.transform.SetParent(buildingResourcesList.transform);
-            else if (itemCategory == ItemCategory.Crafting)
-                storageResourceWidget.transform.SetParent(craftingResourcesList.transform);
-            else if (itemCategory == ItemCategory.Weapon)
-                storageResourceWidget.transform.SetParent(weaponResourcesList.transform);
+            storageResourceWidget.transform.SetParent(storageLists[(int)itemCategory].transform);
         }
     }
 

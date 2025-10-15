@@ -5,20 +5,11 @@ using UnityEngine;
 public class RoomBuilding : Building
 {
     protected BuildingPosition buildingPosition = BuildingPosition.Straight;
-    //[HideInInspector] public bool isConnectedLeft = false;
-    //[HideInInspector] public bool isConnectedRight = false;
-    //[HideInInspector] public bool isConnectedAbove = false;
-    //[HideInInspector] public bool isConnectedBelow = false;
 
     public RoomBuilding leftConnectedBuilding = null;
     public RoomBuilding rightConnectedBuilding = null;
     public RoomBuilding aboveConnectedBuilding = null;
     public RoomBuilding belowConnectedBuilding = null;
-
-    protected override void Start()
-    {
-        base.Start();
-    }
 
     public override void StartBuilding(int nextLevel)
     {
@@ -32,8 +23,8 @@ public class RoomBuilding : Building
     {
         base.Build(newLevelIndex);
 
-        if (GetType() == typeof(RoomBuilding))
-            InvokeFinishConstructing(this);
+        //if (GetType() == typeof(RoomBuilding))
+            //InvokeFinishConstructing(this);
     }
 
     protected override void UpdateBuildingConstruction(int levelIndex)

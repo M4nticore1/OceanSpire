@@ -9,7 +9,12 @@ public class SaveSystem
     public static void SaveData(PlayerController playerController, CityManager cityManger)
     {
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(path, FileMode.Create);
+        FileStream stream = null;
+
+        if (File.Exists(path))
+            stream = new FileStream(path, FileMode.Create);
+        else
+            stream = new FileStream(path, FileMode.CreateNew);
 
         SaveData playerData = new SaveData(playerController, cityManger);
 

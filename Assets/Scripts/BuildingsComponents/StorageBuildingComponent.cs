@@ -8,15 +8,11 @@ public class StorageBuildingComponent : BuildingComponent
 {
     public List<StorageBuildingLevelData> levelsData = new List<StorageBuildingLevelData>();
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-    }
-
     public override void Build()
     {
         base.Build();
+
+        //Debug.Log("Storage: " + ownedBuilding.GetType());
 
         if (levelsData.Count > ownedBuilding.levelIndex && levelsData[ownedBuilding.levelIndex])
             AddStorageCapacity(levelsData[ownedBuilding.levelIndex]);
@@ -28,11 +24,8 @@ public class StorageBuildingComponent : BuildingComponent
     {
         base.LevelUp();
 
-        int currentLevel = ownedBuilding.levelIndex;
-        AddStorageCapacity(levelsData[currentLevel]);
-
-        int previousLevel = ownedBuilding.levelIndex - 1;
-        SubtractStorageCapacity(levelsData[previousLevel]);
+        AddStorageCapacity(levelsData[ownedBuilding.levelIndex]);
+        SubtractStorageCapacity(levelsData[ownedBuilding.levelIndex - 1]);
     }
 
     private void AddStorageCapacity(StorageBuildingLevelData levelData)

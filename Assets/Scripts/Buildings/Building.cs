@@ -16,6 +16,7 @@ public class Building : MonoBehaviour
 {
     protected GameManager gameManager = null;
     public CityManager cityManager = null;
+    public bool isInitialized = false;
 
     [HideInInspector] public int levelIndex { get; private set; } = 0;
     [HideInInspector] public bool isUnderConstruction { get; private set; } = false;
@@ -30,16 +31,15 @@ public class Building : MonoBehaviour
 
     public BuildingPlace buildingPlace = null;
 
-    //[HideInInspector] public int floorIndex { get; private set; } = 0;
-    //[HideInInspector] public int buildingPlace.buildingPlaceIndex { get; private set; } = 0;
-
     [Header("Construction")]
     public BuildingConstruction spawnedBuildingConstruction = null;
     public bool isRuined = false;
     private GameObject spawedBuildingDetails = null;
 
-    public static event Action<Building> OnBuildingStartConstructing;
-    public static event Action<Building> OnBuildingFinishConstructing;
+    public static event Action<Building> onAnyBuildingStartConstructing;
+    public event Action onBuildingStartConstructing;
+    public static event Action<Building> onAnyBuildingFinishConstructing;
+    public event Action onBuildingFinishConstructing;
 
     protected virtual void Awake()
     {
@@ -49,8 +49,14 @@ public class Building : MonoBehaviour
 
     protected virtual void Start()
     {
+        //Debug.Log("Start " + this.GetType());
+        InitializeBuilding(buildingPlace);
 
-	}
+        if (isUnderConstruction)
+            StartBuilding(levelIndex);
+        else
+            Build(levelIndex);
+    }
 
     protected virtual void Update()
     {
@@ -62,16 +68,14 @@ public class Building : MonoBehaviour
         this.buildingPlace = buildingPlace;
         gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
+        isInitialized = true;
     }
 
     public virtual void Place(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
     {
-        InitializeBuilding(buildingPlace);
-
-        if (isUnderConstruction)
-            StartBuilding(levelIndex);
-        else
-            Build(levelIndex);
+        this.buildingPlace = buildingPlace;
+        this.levelIndex = levelIndex;
+        this.isUnderConstruction = isUnderConstruction;
 	}
 
     public virtual void StartBuilding(int nextLevel)
@@ -104,14 +108,16 @@ public class Building : MonoBehaviour
 
     public virtual void Build(int newLevelIndex)
     {
+        //Debug.Log("Build " + this.GetType());
         StorageBuildingComponent storageBuilding = GetComponent<StorageBuildingComponent>();
+        ProductionBuildingComponent productionBuildingComponent = GetComponent<ProductionBuildingComponent>();
 
-        if (storageBuilding)
-            storageBuilding.Build();
+        //if (storageBuilding)
+        //    storageBuilding.Build();
 
         UpdateBuildingConstruction(levelIndex);
 
-        if (GetType() == typeof(Building))
+        //if (GetType() == typeof(Building))
             InvokeFinishConstructing(this);
     }
 
@@ -127,7 +133,7 @@ public class Building : MonoBehaviour
             cityManager.AddItemByIndex(itemIndex, itemAmount);
         }
 
-        OnBuildingFinishConstructing?.Invoke(this);
+        onAnyBuildingFinishConstructing?.Invoke(this);
         buildingPlace.DestroyBuilding();
         Destroy(gameObject);
     }
@@ -195,12 +201,14 @@ public class Building : MonoBehaviour
 
     protected void InvokeStartConstructing(Building building)
     {
-        OnBuildingStartConstructing?.Invoke(building);
+        onAnyBuildingStartConstructing?.Invoke(building);
+        onBuildingStartConstructing?.Invoke();
     }
 
     protected void InvokeFinishConstructing(Building building)
     {
-        OnBuildingFinishConstructing?.Invoke(building);
+        onAnyBuildingFinishConstructing?.Invoke(building);
+        onBuildingFinishConstructing?.Invoke();
     }
 
     public int GetFloorIndex()
