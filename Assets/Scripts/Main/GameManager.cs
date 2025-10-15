@@ -48,23 +48,12 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public float windRotation = 0;
     private Vector2 newWindDirection = Vector2.zero;
 
-    [HideInInspector] public float windSpeed = 0.0f;
-    private float newWindSpeed = 0.0f;
-    private const float windMinSpeed = 4.0f;
-    private const float windMaxSppeed = 10.0f;
+    public const float windSpeed = 5.0f;
 
-    private float windSpeedChangingSpeed = 0.0f;
-    private const float windMinSpeedChangingSpeed = 0.05f;
-    private const float windMaxSpeedChangingSpeed = 0.1f;
+    private const float windChangingSpeed = 0.05f;
 
-    private float windDirectionChangeRate = 0.0f;
-    private const float windDirectionChanceMinRate = 120.0f;
-    private const float windDirectionChanceMaxRate = 300.0f;
+    private float windDirectionChangeRate = 300.0f;
     private float windDirectionChangeTime = 0.0f;
-
-    private float windDirectionChangeSpeed = 0.0f;
-    private const float windDirectionMinChangeSpeed = 0.04f;
-    private const float windDirectionMaxChangeSpeed = 0.05f;
 
     public const float autoSaveFrequency = 1;
 
@@ -80,7 +69,6 @@ public class GameManager : MonoBehaviour
         SetLootContainersSpawnTime();
 
         ChangeWind();
-        windSpeed = newWindSpeed;
         windDirection = newWindDirection;
 
         for (int i = 0; i < lootContainerPrefabs.Count; i++)
@@ -164,8 +152,7 @@ public class GameManager : MonoBehaviour
             ChangeWind();
         }
 
-        windDirection = math.lerp(windDirection, newWindDirection, windDirectionChangeSpeed * Time.deltaTime);
-        windSpeed = math.lerp(windSpeed, newWindSpeed, windSpeedChangingSpeed * Time.deltaTime);
+        windDirection = math.lerp(windDirection, newWindDirection, windChangingSpeed * Time.deltaTime);
     }
 
     private void ChangeWind()
@@ -174,12 +161,7 @@ public class GameManager : MonoBehaviour
         float yAxis = UnityEngine.Random.Range(-1.0f, 1.0f);
         newWindDirection = new Vector2(xAxis, yAxis).normalized;
 
-        windDirectionChangeRate = UnityEngine.Random.Range(windDirectionChanceMinRate, windDirectionChanceMaxRate);
-        windDirectionChangeSpeed = UnityEngine.Random.Range(windDirectionMinChangeSpeed, windDirectionMaxChangeSpeed);
-        newWindSpeed = UnityEngine.Random.Range(windMinSpeed, windMaxSppeed);
-        windSpeedChangingSpeed = UnityEngine.Random.Range(windMinSpeedChangingSpeed, windMaxSpeedChangingSpeed);
-
-        windDirectionChangeTime = 0;
+        windDirectionChangeTime = Time.time;
     }
 
     private void CheckLootContainersPosition()

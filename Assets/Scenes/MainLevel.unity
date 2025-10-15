@@ -1463,7 +1463,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 2
-  m_ColorTemperature: 5200
+  m_ColorTemperature: 5100
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -5078,10 +5078,6 @@ PrefabInstance:
     - target: {fileID: 6321264932016869851, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6380372327402564249, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -124.999756
       objectReference: {fileID: 0}
     - target: {fileID: 6529888374576440956, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_Color.a
