@@ -27,8 +27,8 @@ public class FloorBuilding : Building
     {
         base.Build(newLevelIndex);
 
-        if (GetType() == typeof(FloorBuilding))
-            InvokeFinishConstructing(this);
+        //if (GetType() == typeof(FloorBuilding))
+            //InvokeFinishConstructing(this);
     }
 
     public override void InitializeBuilding(BuildingPlace buildingPlace)

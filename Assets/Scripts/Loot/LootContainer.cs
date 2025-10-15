@@ -65,12 +65,11 @@ public class LootContainer : MonoBehaviour
         InitializeLootContainer();
     }
 
-    private void Update()
+    public void Tick()
     {
         Move();
         CheckPosition();
     }
-
     private void InitializeLootContainer()
     {
         checkPositionTime = Time.time;
@@ -138,7 +137,7 @@ public class LootContainer : MonoBehaviour
         {
             float distance = Vector3.Distance(Vector3.zero, transform.position);
 
-            if (distance > GameManager.lootContainersSpawnDistance + despawnDistance)
+            if (distance > LootManager.lootContainersSpawnDistance + despawnDistance)
             {
                 Destroy(this.gameObject);
             }
