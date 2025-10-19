@@ -19,9 +19,9 @@ public class RoomBuilding : Building
             InvokeStartConstructing(this);
     }
 
-    public override void Build(int newLevelIndex)
+    public override void Build(int newLevelIndex, int interiorIndex)
     {
-        base.Build(newLevelIndex);
+        base.Build(newLevelIndex, interiorIndex);
 
         //if (GetType() == typeof(RoomBuilding))
             //InvokeFinishConstructing(this);

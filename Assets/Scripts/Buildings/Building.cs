@@ -34,7 +34,8 @@ public class Building : MonoBehaviour
     [Header("Construction")]
     public BuildingConstruction spawnedBuildingConstruction = null;
     public bool isRuined = false;
-    private GameObject spawedBuildingDetails = null;
+    private GameObject spawedBuildingInterior = null;
+    [HideInInspector] public int interiorIndex = 0;
 
     public static event Action<Building> onAnyBuildingStartConstructing;
     public event Action onBuildingStartConstructing;
@@ -43,19 +44,18 @@ public class Building : MonoBehaviour
 
     protected virtual void Awake()
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
+        //gameManager = FindAnyObjectByType<GameManager>();
+        //cityManager = FindAnyObjectByType<CityManager>();
     }
 
     protected virtual void Start()
     {
-        //Debug.Log("Start " + this.GetType());
-        InitializeBuilding(buildingPlace);
+        //InitializeBuilding(buildingPlace);
 
-        if (isUnderConstruction)
-            StartBuilding(levelIndex);
-        else
-            Build(levelIndex);
+        //if (isUnderConstruction)
+        //    StartBuilding(levelIndex);
+        //else
+        //    Build(levelIndex, interiorIndex);
     }
 
     protected virtual void Update()
@@ -71,24 +71,25 @@ public class Building : MonoBehaviour
         isInitialized = true;
     }
 
-    public virtual void Place(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
+    public virtual void Place(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
     {
-        this.buildingPlace = buildingPlace;
+        InitializeBuilding(buildingPlace);
+
         this.levelIndex = levelIndex;
         this.isUnderConstruction = isUnderConstruction;
-	}
+        this.interiorIndex = interiorIndex;
+
+        if (isUnderConstruction)
+            StartBuilding(levelIndex);
+        else
+            Build(levelIndex, interiorIndex);
+    }
 
     public virtual void StartBuilding(int nextLevel)
     {
         isUnderConstruction = true;
 
         UpdateBuildingConstruction(nextLevel);
-
-        if (spawnedBuildingConstruction && spawnedBuildingConstruction.buildingDetails.Count > 0)
-        {
-            int buildingDetailsIndex = UnityEngine.Random.Range(0, spawnedBuildingConstruction.buildingDetails.Count);
-            spawedBuildingDetails = Instantiate<GameObject>(spawnedBuildingConstruction.buildingDetails[buildingDetailsIndex], transform);
-        }
 
         if (GetType() == typeof(Building))
             InvokeStartConstructing(this);
@@ -103,22 +104,33 @@ public class Building : MonoBehaviour
         else
             levelIndex++;
 
-        Build(levelIndex);
+        interiorIndex = UnityEngine.Random.Range(0, spawnedBuildingConstruction.buildingInteriors.Count);
+
+        Build(levelIndex, interiorIndex);
     }
 
-    public virtual void Build(int newLevelIndex)
+    public virtual void Build(int newLevelIndex, int interiorIndex)
     {
-        //Debug.Log("Build " + this.GetType());
         StorageBuildingComponent storageBuilding = GetComponent<StorageBuildingComponent>();
         ProductionBuildingComponent productionBuildingComponent = GetComponent<ProductionBuildingComponent>();
 
-        //if (storageBuilding)
-        //    storageBuilding.Build();
+        if (storageBuilding)
+            storageBuilding.Build();
+        if(productionBuildingComponent)
+            productionBuildingComponent.Build();
 
         UpdateBuildingConstruction(levelIndex);
 
+        if (spawnedBuildingConstruction && spawnedBuildingConstruction.buildingInteriors.Count > 0)
+        {
+            if (interiorIndex < 0)
+                interiorIndex = UnityEngine.Random.Range(0, spawnedBuildingConstruction.buildingInteriors.Count);
+
+            spawedBuildingInterior = Instantiate(spawnedBuildingConstruction.buildingInteriors[interiorIndex], transform);
+        }
+
         //if (GetType() == typeof(Building))
-            InvokeFinishConstructing(this);
+        InvokeFinishConstructing(this);
     }
 
     public virtual void Demolish()

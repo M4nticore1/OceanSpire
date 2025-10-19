@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 cameraHorizontalRotation = Vector3.zero;
     private Vector3 cameraVerticalRotation = Vector3.zero;
 
-    private Vector2 CameraMoveSensitivity = new Vector2(6.0f, 1.0f);
+    private Vector2 cameraMoveSensitivity = new Vector2(6.0f, 1.0f);
     private const float cameraStopMoveSpeed = 8.0f;
 
     [HideInInspector] public Vector2 dragMoveVelocity = Vector2.zero;
@@ -35,12 +36,12 @@ public class PlayerController : MonoBehaviour
 
     private float cameraMoveMultiplier = 1.0f;
     [HideInInspector] public float cameraYawRotateAlpha = 0.0f;
-    float moveStateValue = 0;
+    private float moveStateValue = 0;
+    private int moveStateIndex = 0;
 
     // Camera Arm
-    private float startCameraArmLength = 0.0f;
     private float currentCameraArmLength = 0.0f;
-    private const float minCameraArmLength = 20.0f;
+    private const float minCameraArmLength = 12.0f;
     private const float maxCameraArmLength = 100.0f;
 
     private const float nearCameraArmBoundaryPadding = 5.0f;
@@ -48,8 +49,17 @@ public class PlayerController : MonoBehaviour
     private const float cameraArmReturnSpeed = 5.0f;
 
     private float cameraArmMoveMultiplier = 1.0f;
+    private float currentCameraDistance = 0.0f;
 
-    private const int cameraMovingDistance = 16;
+    private const int cameraMovingDistance = 20;
+    private const int cameraDistanceToShowBuildingStats = 15;
+    private const int cameraHeightOffsetToShowBuildingStats = 0;
+
+    // Camera Shake
+    private const float cameraShakeAmplitude = 1f;
+    private const float cameraShakeSpeed = 0.5f;
+    private Vector3 currentCameraShakeForce = Vector3.zero;
+    private Vector3 currentCameraShakeRotation = Vector3.zero;
 
     // Input System
     private bool isFirstTouchPressed = false;
@@ -121,7 +131,6 @@ public class PlayerController : MonoBehaviour
         cameraVerticalRotation = new Vector3(cameraHolder.transform.rotation.eulerAngles.x, 0f, 0f);
 
         currentCameraArmLength = -mainCamera.transform.localPosition.z;
-        startCameraArmLength = -currentCameraArmLength;
 
         if (!gameManager.hasSavedData)
             cameraYawRotateAlpha = 0.5f;
@@ -134,6 +143,29 @@ public class PlayerController : MonoBehaviour
         OnTouchPresing();
         MoveCamera();
         SetCameraArmLength();
+        CameraShake();
+
+        mainCamera.transform.localRotation = Quaternion.Euler(currentCameraShakeRotation);
+
+        int placeIndex;
+        if (moveStateIndex <= 5)
+            placeIndex = (5 - moveStateIndex) % 6;
+        else
+            placeIndex = 13 - moveStateIndex;
+
+        Debug.Log(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats) + "/" + placeIndex);
+
+        Building buildingToShowStats = cityManager.GetBuildingByIndex(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
+
+        if (currentCameraDistance <= cameraDistanceToShowBuildingStats)
+        {
+            if (buildingToShowStats)
+                UIManager.OpenBuildingStatsPanel(buildingToShowStats);
+            else
+                UIManager.CloseBuildingStatsPanel();
+        }
+        else
+            UIManager.CloseBuildingStatsPanel();
 
         if (Time.time >= lastSaveDataTime + GameManager.autoSaveFrequency)
         {
@@ -152,7 +184,7 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed += OnSecondTouchStarted;
         secondTouchPressAction.canceled += OnSecondTouchEnded;
 
-        mouseScrollAction.performed += OnMouseScroll;
+        //mouseScrollAction.performed += OnMouseScroll;
 
         CityManager.OnStorageCapacityUpdated += UpdateUIStorageItems;
         Building.onAnyBuildingStartConstructing += StopPlacingBuilding;
@@ -166,7 +198,7 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed -= OnSecondTouchStarted;
         secondTouchPressAction.canceled -= OnSecondTouchEnded;
 
-        mouseScrollAction.performed -= OnMouseScroll;
+        //mouseScrollAction.performed -= OnMouseScroll;
 
         touchInputActionMap.Disable();
 
@@ -192,7 +224,7 @@ public class PlayerController : MonoBehaviour
                 secondTouchPositionAction = touchInputActionMap.FindAction("SecondTouchPosition");
                 secondTouchMoveAction = touchInputActionMap.FindAction("SecondTouchMove");
 
-                mouseScrollAction = touchInputActionMap.FindAction("MouseScroll");
+                //mouseScrollAction = touchInputActionMap.FindAction("MouseScroll");
             }
             else
                 Debug.Log("void PlayerController : SetInputSystem() touchInputActionMap is NULL");
@@ -201,6 +233,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("void PlayerController : SetInputSystem() inputActions is NULL");
     }
 
+    // Camera
     private void MoveCamera()
     {
         if (cameraHolder.transform.position.y > cityManager.cityHeight)
@@ -212,11 +245,9 @@ public class PlayerController : MonoBehaviour
         cameraVerticalPosition -= currentCameraMoveVelocity;
 
         // Camera horizontal move
-        float shiftedAlpha = cameraYawRotateAlpha - (1 - (moveStateValue / 2));
+        float shiftedAlpha = cameraYawRotateAlpha - (1f - (moveStateValue / 2f));
         shiftedAlpha = Mathf.Repeat(shiftedAlpha, 1f);
-        int moveStateIndex = (int)(shiftedAlpha / moveStateValue);
-
-        cameraHorizontalRotation.y = cameraYawRotateAlpha * 360f;
+        moveStateIndex = (int)(shiftedAlpha / moveStateValue);
 
         int positionHalfLenght = cameraMovingDistance / 2;
 
@@ -225,7 +256,7 @@ public class PlayerController : MonoBehaviour
 
         if (moveStateIndex == 0)
             cameraHorizontalPosition = new Vector3(-position, 0, -positionHalfLenght);
-        if (moveStateIndex == 1)
+        else if (moveStateIndex == 1)
             cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, -positionHalfLenght);
         else if (moveStateIndex == 2)
             cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, position);
@@ -240,9 +271,10 @@ public class PlayerController : MonoBehaviour
         else if (moveStateIndex == 7)
             cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -positionHalfLenght);
 
-        int sign = cameraMoveVelocity.x > 0 ? 1 : cameraMoveVelocity.x < 0 ? -1 : 0;
         cameraYawRotateAlpha += cameraMoveVelocity.x * cameraSensitivityMultiplier / 360f * Time.deltaTime;
         cameraYawRotateAlpha = Mathf.Repeat(cameraYawRotateAlpha, 1f);
+
+        cameraHorizontalRotation.y = cameraYawRotateAlpha * 360f;
 
         if (!isFirstTouchPressed)
         {
@@ -302,6 +334,14 @@ public class PlayerController : MonoBehaviour
         }
 
         mainCamera.transform.localPosition = new Vector3(mainCamera.transform.localPosition.x, mainCamera.transform.localPosition.y, -currentCameraArmLength);
+        currentCameraDistance = Vector3.Distance(cameraHolder.transform.position, mainCamera.transform.position);
+    }
+
+    private void CameraShake()
+    {
+        currentCameraShakeForce = new Vector3(math.sin(Time.time * cameraShakeSpeed) * cameraShakeAmplitude, math.cos(Time.time * cameraShakeSpeed / 2) * cameraShakeAmplitude, 0);
+
+        currentCameraShakeRotation = math.lerp(currentCameraShakeRotation, currentCameraShakeForce, cameraShakeSpeed * Time.deltaTime);
     }
 
     private void OnFirstTouchStarted(InputAction.CallbackContext context)
@@ -406,7 +446,6 @@ public class PlayerController : MonoBehaviour
         {
             secondTouchStartPosition = Touchscreen.current.touches[1].position.ReadValue();
             firstTouchCurrentPosition = firstTouchPositionAction.ReadValue<Vector2>();
-            startCameraArmLength = mainCamera.transform.localPosition.z;
 
             startTouchPitchDistance = Vector2.Distance(firstTouchCurrentPosition, secondTouchStartPosition);
 
@@ -454,8 +493,8 @@ public class PlayerController : MonoBehaviour
             dragMoveVelocity.x = firstTouchMoveInput.x + secondTouchMoveInput.x;
             dragMoveVelocity.y = firstTouchMoveInput.y + secondTouchMoveInput.y;
 
-            cameraMoveVelocity.x = dragMoveVelocity.x * CameraMoveSensitivity.x;
-            cameraMoveVelocity.y = dragMoveVelocity.y * CameraMoveSensitivity.y;
+            cameraMoveVelocity.x = dragMoveVelocity.x * cameraMoveSensitivity.x;
+            cameraMoveVelocity.y = dragMoveVelocity.y * cameraMoveSensitivity.y;
         }
         else if (!isFirstTouchPressed && !isSecondTouchPressed)
         {

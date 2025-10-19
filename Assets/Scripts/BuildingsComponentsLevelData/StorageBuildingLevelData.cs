@@ -17,7 +17,7 @@ public struct ItemCategoryAmountEntry
 }
 
 [CreateAssetMenu(fileName = "StorageBuildingLevelData", menuName = "Scriptable Objects/StorageBuildingLevelData")]
-public class StorageBuildingLevelData : ScriptableObject
+public class StorageBuildingLevelData : BuildingComponentLevelData
 {
     public List<ItemAmountEntry> storageItems = new List<ItemAmountEntry>();
     public List<ItemCategoryAmountEntry> storageItemCategories = new List<ItemCategoryAmountEntry>();

@@ -57,6 +57,7 @@ public class BuildingData : ScriptableObject
     public BuildingCategory buildingCategory = BuildingCategory.Construction;
     public ConnectionType connectionType = ConnectionType.None;
     public Sprite thumbImage = null;
+    public string description = "";
 
     public int buildingFloors = 1;
     public int maxBuildingFloors = 1;

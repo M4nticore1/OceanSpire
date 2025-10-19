@@ -70,6 +70,7 @@ public class LootContainer : MonoBehaviour
         Move();
         CheckPosition();
     }
+
     private void InitializeLootContainer()
     {
         checkPositionTime = Time.time;

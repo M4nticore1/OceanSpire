@@ -27,9 +27,9 @@ public class ElevatorBuilding : RoomBuilding
             InvokeStartConstructing(this);
     }
 
-    public override void Build(int newLevelIndex)
+    public override void Build(int newLevelIndex, int interiorIndex)
     {
-        base.Build(newLevelIndex);
+        base.Build(newLevelIndex, interiorIndex);
 
         if (GetType() == typeof(ElevatorBuilding))
             InvokeFinishConstructing(this);

@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingDetails:
+  buildingInteriors:
   - {fileID: 6700634590843854582, guid: d17a6134631d90e44a176720083f5f27, type: 3}
   - {fileID: 6700634590843854582, guid: 49e3329895419544fa3171a5cec36b6c, type: 3}
   buildingInteractions:

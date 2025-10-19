@@ -56,10 +56,10 @@ public class BuildingPlace : MonoBehaviour
     public void InitializePlacedBuilding()
     {
         if (placedBuilding)
-            PlaceBuilding(placedBuilding, placedBuilding.levelIndex, placedBuilding.isUnderConstruction);
+            PlaceBuilding(placedBuilding, placedBuilding.levelIndex, placedBuilding.isUnderConstruction, -1);
     }
 
-    public void PlaceBuilding(Building buildingToPlace, int levelIndex, bool isUnderConstruction)
+    public void PlaceBuilding(Building buildingToPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
     {
         if (emptyBuildingPlacesAbove >= buildingToPlace.buildingData.buildingFloors - 1)
         {
@@ -73,17 +73,17 @@ public class BuildingPlace : MonoBehaviour
                     placedBuilding.transform.SetParent(transform);
             }
 
-            placedBuilding.Place(this, levelIndex, isUnderConstruction);
+            placedBuilding.Place(this, levelIndex, isUnderConstruction, interiorIndex);
 
             if (buildingFrame)
                 buildingFrame.SetActive(false);
         }
     }
 
-    private IEnumerator PlaceBuildingCoroutine(Building buildingToPlace, int levelIndex, bool isUnderConstruction)
+    private IEnumerator PlaceBuildingCoroutine(Building buildingToPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
     {
         yield return new WaitForEndOfFrame();
-        PlaceBuilding(buildingToPlace, levelIndex, isUnderConstruction);
+        PlaceBuilding(buildingToPlace, levelIndex, isUnderConstruction, interiorIndex);
     }
 
     public void DestroyBuilding()

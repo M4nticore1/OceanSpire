@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cityManager: {fileID: 0}
+  isInitialized: 0
   buildingData: {fileID: 11400000, guid: 26e0e8f1af0bf15439c009989780e92c, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 9d8ec01473900714e981f509172553cc, type: 2}
@@ -57,10 +58,6 @@ MonoBehaviour:
   buildingPlace: {fileID: 0}
   spawnedBuildingConstruction: {fileID: 0}
   isRuined: 0
-  isConnectedLeft: 0
-  isConnectedRight: 0
-  isConnectedAbove: 0
-  isConnectedBelow: 0
   leftConnectedBuilding: {fileID: 0}
   rightConnectedBuilding: {fileID: 0}
   aboveConnectedBuilding: {fileID: 0}
@@ -78,6 +75,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ownedBuilding: {fileID: 0}
+  levelsData: []
 --- !u!114 &3811934750841452471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,6 +93,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dcb8f13e848ee6e468c985082f7bf736, type: 2}
   - {fileID: 11400000, guid: a02f84d729e85bf41897a5937ca6fd24, type: 2}
   - {fileID: 11400000, guid: f0916980bad56584e9eb36653d10d3ad, type: 2}
+  levelData: {fileID: 0}
 --- !u!1001 &6218910802165466108
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 1186100079346962137}
   - component: {fileID: 4936279183464857374}
   m_Layer: 5
-  m_Name: PlaceBuildingWidget
+  m_Name: BuildingWidget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -135,7 +135,7 @@ MonoBehaviour:
   buildingResourceWidget: {fileID: 2815948240187871119, guid: 9d3feffcad0e637408bef2ff4d7db94d, type: 3}
   buildingImage: {fileID: 2114355288455175088}
   buildButton: {fileID: 3753086174136718447}
-  buildingInformationButton: {fileID: 42081283019150995}
+  informationButton: {fileID: 42081283019150995}
   buildingNameText: {fileID: 2869115394412868553}
   resourcesToBuildLayoutGroup: {fileID: 5228974229580240534}
 --- !u!1 &3306016871298986454
@@ -871,7 +871,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_PressedColor: {r: 0.77254903, g: 0.77254903, b: 0.77254903, a: 0.101960786}
+    m_PressedColor: {r: 0.77254903, g: 0.77254903, b: 0.77254903, a: 0.8}
     m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
     m_DisabledColor: {r: 0, g: 0, b: 0, a: 0}
     m_ColorMultiplier: 1
@@ -897,7 +897,7 @@ MonoBehaviour:
   isScalable: 0
   isNeededCorrectPosition: 0
   correctPositionDirection: {x: 0, y: 0}
-  content: {fileID: 0}
+  content: {fileID: 4427824139254346479}
   normalColor: {fileID: 11400000, guid: 2c537556a9897754791c21e314ee9ddd, type: 2}
   pressedColor: {fileID: 11400000, guid: 46099d51a8d0d36469d3aed97b6a3e18, type: 2}
   selectedColor: {fileID: 11400000, guid: 2c537556a9897754791c21e314ee9ddd, type: 2}

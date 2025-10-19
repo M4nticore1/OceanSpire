@@ -9,17 +9,16 @@ public class LootManager : MonoBehaviour
     [SerializeField] private List<LootContainer> lootContainerPrefabs = new List<LootContainer>();
     private List<LootContainer> spawnedLootContainers = new List<LootContainer>();
     private List<float> spawnedLootContainersTime = new List<float>();
-    private float lootUpdateInterval = 0.1f;
-    private float lastUpdateTime = 0f;
+    private float lootUpdateInterval = 0.04f;
+    private double lastUpdateTime = 0f;
 
     private const float lootContainerSpawnFrequency = 0.1f;
+    private double lastLootContainerSpawnTime = 0f;
     private float currentTimeToSpawnLootContainer = 0.0f;
 
     public const float lootContainersSpawnDistance = 250.0f;
     private const float lootContainersSpawnOffsetYaw = 30.0f;
 
-    private float checkLootContainersPositionTime = 0.0f;
-    private const float checkLootContainersPositionRate = 2.0f;
     private void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
@@ -38,22 +37,20 @@ public class LootManager : MonoBehaviour
     {
         SpawningLootContainers();
 
-        if (Time.time >= lastUpdateTime + lootUpdateInterval)
+        if (Time.realtimeSinceStartupAsDouble >= lastUpdateTime + lootUpdateInterval)
         {
             for (int i = 0; i < spawnedLootContainers.Count; i++)
             {
                 spawnedLootContainers[i].Tick();
             }
 
-            lastUpdateTime = Time.time;
+            lastUpdateTime = Time.realtimeSinceStartupAsDouble;
         }
     }
 
     private void SpawningLootContainers()
     {
-        currentTimeToSpawnLootContainer += Time.deltaTime;
-
-        if (currentTimeToSpawnLootContainer >= lootContainerSpawnFrequency)
+        if (Time.realtimeSinceStartupAsDouble >= lastLootContainerSpawnTime)
         {
             for (int i = 0; i < lootContainerPrefabs.Count; i++)
             {
@@ -84,13 +81,14 @@ public class LootManager : MonoBehaviour
 
                     LootContainer lootContainer = Instantiate(lootContainerPrefabs[i], spawnPosition, spawnRotation);
                     lootContainer.moveDirection = new Vector3(gameManager.windDirection.x, 0, gameManager.windDirection.y).normalized;
+                    spawnedLootContainers.Add(lootContainer);
 
                     lootContainerPrefabs[i].spawnTime = UnityEngine.Random.Range(lootContainerPrefabs[i].spawnMinTime, lootContainerPrefabs[i].spawnMaxTime);
                     spawnedLootContainersTime[i] = 0;
                 }
             }
 
-            currentTimeToSpawnLootContainer = 0;
+            lastLootContainerSpawnTime = Time.realtimeSinceStartupAsDouble;
         }
     }
 
@@ -100,9 +98,5 @@ public class LootManager : MonoBehaviour
         {
             lootContainerPrefabs[i].spawnTime = UnityEngine.Random.Range(lootContainerPrefabs[i].spawnMinTime, lootContainerPrefabs[i].spawnMaxTime);
         }
-    }
-    private void CheckLootContainersPosition()
-    {
-        checkLootContainersPositionTime += Time.deltaTime;
     }
 }

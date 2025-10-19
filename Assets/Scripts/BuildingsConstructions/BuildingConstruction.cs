@@ -12,7 +12,7 @@ public struct BuildingAction
 
 public class BuildingConstruction : MonoBehaviour
 {
-    public List<GameObject> buildingDetails = new List<GameObject>();
+    public List<GameObject> buildingInteriors = new List<GameObject>();
 
     public List<BuildingAction> buildingInteractions = new List<BuildingAction>();
 

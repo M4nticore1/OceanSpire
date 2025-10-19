@@ -7,8 +7,8 @@ using UnityEngine.EventSystems;
 
 public class BuildingWidget : MonoBehaviour
 {
-    public System.Action OnPress;
-    public System.Action OnRelease;
+    //public System.Action OnPress;
+    //public System.Action OnRelease;
 
     [HideInInspector] public GameManager gameManager = null;
     [HideInInspector] public CityManager cityManager = null;
@@ -21,8 +21,7 @@ public class BuildingWidget : MonoBehaviour
 
     [SerializeField] private Image buildingImage = null;
     [SerializeField] private MainButton buildButton = null;
-    [SerializeField] private MainButton buildingInformationButton = null;
-    private bool isInformationOpened = false;
+    [SerializeField] private MainButton informationButton = null;
 
     [SerializeField] private TextMeshProUGUI buildingNameText = null;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup = null;
@@ -32,18 +31,18 @@ public class BuildingWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        buildButton.onPress += () => OnPress?.Invoke();
-        buildingInformationButton.onPress += () => OnPress?.Invoke();
-        buildButton.onRelease += () => OnRelease?.Invoke();
-        buildingInformationButton.onRelease += () => OnRelease?.Invoke();
+        //buildButton.onPress += () => OnPress?.Invoke();
+        //openInformationButton.onPress += () => OnPress?.Invoke();
+        //buildButton.onRelease += () => OnRelease?.Invoke();
+        //openInformationButton.onRelease += () => OnRelease?.Invoke();
     }
 
     private void OnDisable()
     {
-        buildButton.onPress -= () => OnPress?.Invoke();
-        buildingInformationButton.onPress -= () => OnPress?.Invoke();
-        buildButton.onRelease -= () => OnRelease?.Invoke();
-        buildingInformationButton.onRelease -= () => OnRelease?.Invoke();
+        //buildButton.onPress -= () => OnPress?.Invoke();
+        //openInformationButton.onPress -= () => OnPress?.Invoke();
+        //buildButton.onRelease -= () => OnRelease?.Invoke();
+        //openInformationButton.onRelease -= () => OnRelease?.Invoke();
     }
 
     public void InitializeBuildingWidget(Building newBuilding)
@@ -56,14 +55,11 @@ public class BuildingWidget : MonoBehaviour
         UIManager = playerController.GetComponentInChildren<UIManager>();
 
         buildButton.onClick.AddListener(StartPlacingBuilding);
-        buildingInformationButton.onClick.AddListener(ToggleBuildingInformation);
+        informationButton.onClick.AddListener(OpenBuildingInformationMenu);
 
         buildingNameText.SetText(building.buildingData.buildingName);
 
-        if (building.buildingLevelsData.Count() > 0 && building.buildingLevelsData[0])
-            resourcesToBuildNumber = building.buildingLevelsData[0].ResourcesToBuild.Count();
-        else
-            Debug.Log("building.buildingLevelsData[0] is NULL " + building.buildingData.buildingIdName);
+        resourcesToBuildNumber = building.buildingLevelsData[0].ResourcesToBuild.Count();
 
         if (newBuilding.buildingData.thumbImage)
             buildingImage.sprite = newBuilding.buildingData.thumbImage;
@@ -112,26 +108,9 @@ public class BuildingWidget : MonoBehaviour
         }
     }
 
-    private void ToggleBuildingInformation()
+    private void OpenBuildingInformationMenu()
     {
-        if (isInformationOpened)
-        {
-            CloseBuildingInformation();
-        }
-        else
-        {
-            OpenBuildingInformation();
-        }
-    }
-
-    private void OpenBuildingInformation()
-    {
-        isInformationOpened = true;
-    }
-
-    private void CloseBuildingInformation()
-    {
-        isInformationOpened = false;
+        UIManager.OpenBuildingInformationMenu(building);
     }
 
     public void UpdateResourcesToBuild()

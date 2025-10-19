@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cityManager: {fileID: 0}
+  isInitialized: 0
   buildingData: {fileID: 11400000, guid: 729d9660a6c906e4daee160193b3e157, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 4bbb3a2a17e937e4ab3c5a716e539a8f, type: 2}
@@ -56,10 +57,6 @@ MonoBehaviour:
   buildingPlace: {fileID: 0}
   spawnedBuildingConstruction: {fileID: 0}
   isRuined: 0
-  isConnectedLeft: 0
-  isConnectedRight: 0
-  isConnectedAbove: 0
-  isConnectedBelow: 0
   leftConnectedBuilding: {fileID: 0}
   rightConnectedBuilding: {fileID: 0}
   aboveConnectedBuilding: {fileID: 0}
@@ -77,11 +74,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ownedBuilding: {fileID: 0}
-  productionBuildingLevelsData:
+  levelsData:
   - {fileID: 11400000, guid: 2b61ec27db2b0eb4481a6d2149707dc7, type: 2}
   - {fileID: 11400000, guid: 55253cdd475b872499a636b6bca9cff6, type: 2}
   - {fileID: 11400000, guid: 499d2140c592e71468edbf455d97af49, type: 2}
-  readyToCollect: 0
+  levelData: {fileID: 0}
+  isReadyToCollect: 0
   collectResourceWidgetPrefab: {fileID: 0}
 --- !u!1001 &4500102122576390995
 PrefabInstance:

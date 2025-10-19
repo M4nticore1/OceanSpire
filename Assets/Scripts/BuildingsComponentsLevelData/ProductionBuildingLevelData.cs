@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ProductionBuildingLevelData", menuName = "Scriptable Objects/ProductionBuildingLevelData")]
-public class ProductionBuildingLevelData : ScriptableObject
+public class ProductionBuildingLevelData : BuildingComponentLevelData
 {
     public ItemData produceResource = null;
     public int produceResourceAmount = 0;

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("BuildingComponents/ProductionBuildingComponent")]
 public class ProductionBuildingComponent : BuildingComponent
 {
-    [SerializeField] private List<ProductionBuildingLevelData> productionBuildingLevelsData = new List<ProductionBuildingLevelData>();
+    [HideInInspector] public ProductionBuildingLevelData levelData = null;
 
     ItemInstance producedItem = null;
     private float produceTime = 0.0f;
@@ -16,15 +17,24 @@ public class ProductionBuildingComponent : BuildingComponent
     [SerializeField] private CollectResourceWidget collectResourceWidgetPrefab = null;
     private CollectResourceWidget collectResourceWidget = null;
 
-    private void Start()
-    {
-        ProductionBuildingLevelData levelsData = productionBuildingLevelsData[ownedBuilding.levelIndex];
-        producedItem = new ItemInstance(levelsData.produceResource, 0, levelsData.maxResourceAmount);
-    }
-
     private void Update()
     {
         Production();
+    }
+
+    public override void Build()
+    {
+        base.Build();
+
+        levelData = levelsData[ownedBuilding.levelIndex] as ProductionBuildingLevelData;
+        producedItem = new ItemInstance(levelData.produceResource, 0, levelData.maxResourceAmount);
+    }
+
+    public override void LevelUp()
+    {
+        base.LevelUp();
+
+        levelData = levelsData[ownedBuilding.levelIndex] as ProductionBuildingLevelData;
     }
 
     private void Production()
@@ -34,7 +44,7 @@ public class ProductionBuildingComponent : BuildingComponent
             if (!ownedBuilding.isUnderConstruction)
             {
                 BuildingLevelData buildingLevelData = ownedBuilding.buildingLevelsData[ownedBuilding.levelIndex];
-                ProductionBuildingLevelData productionBuildingLevelData = productionBuildingLevelsData[ownedBuilding.levelIndex];
+                ProductionBuildingLevelData productionBuildingLevelData = levelsData[ownedBuilding.levelIndex] as ProductionBuildingLevelData;
 
                 int currentPeopleCount = ownedBuilding.currentWorkers.Count;
 
@@ -45,7 +55,7 @@ public class ProductionBuildingComponent : BuildingComponent
 
                     float productionSpeed = productionTime * ((float)currentPeopleCount / (float)maxPeopleCount);
 
-                    if (produceTime < productionBuildingLevelsData[ownedBuilding.levelIndex].produceTime && !isStorageFull)
+                    if (produceTime < productionBuildingLevelData.produceTime && !isStorageFull)
                     {
                         //Debug.Log("produceTime " + produceTime);
                         produceTime += Time.deltaTime * productionSpeed;
@@ -68,7 +78,7 @@ public class ProductionBuildingComponent : BuildingComponent
 
     private void AddProduceResourceAmount()
     {
-        producedItem.AddAmount(productionBuildingLevelsData[ownedBuilding.levelIndex].produceResourceAmount);
+        producedItem.AddAmount(levelData.produceResourceAmount);
         SetReadyToCollect();
 
         if (producedItem.amount == producedItem.maxAmount)

@@ -13,7 +13,7 @@ public class SaveData
     public int[] placedBuildingIds = new int[0];
     public int[] placedBuildingLevels = new int[0];
     public bool[] placedBuildingsUnderConstruction = new bool[0];
-    public int[] placedBuildingDetailsIds = new int[0];
+    public int[] placedBuildingInteriorIds = new int[0];
 
     public float[] elevatorPlatformHeights = new float[0];
 
@@ -46,6 +46,7 @@ public class SaveData
         placedBuildingIds = new int[roomsCount];
         placedBuildingLevels = new int[roomsCount];
         placedBuildingsUnderConstruction = new bool[roomsCount];
+        placedBuildingInteriorIds = new int[roomsCount];
         elevatorPlatformHeights = new float[cityManager.elevatorGroups.Count];
         resourcesAmount = new int[cityManager.items.Count];
 
@@ -59,6 +60,7 @@ public class SaveData
                 placedBuildingIds[placeIndex] = placedBuilding ? (int)placedBuilding.buildingData.buildingId : -1;
                 placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.levelIndex : 0;
                 placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.isUnderConstruction : false;
+                placedBuildingInteriorIds[placeIndex] = placedBuilding ? placedBuilding.interiorIndex : -1;
 
                 // Elevators
                 ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;

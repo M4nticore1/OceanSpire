@@ -6,16 +6,18 @@ using UnityEngine.UIElements;
 [AddComponentMenu("BuildingComponents/StorageBuildingComponent")]
 public class StorageBuildingComponent : BuildingComponent
 {
-    public List<StorageBuildingLevelData> levelsData = new List<StorageBuildingLevelData>();
+    [HideInInspector] public StorageBuildingLevelData levelData = null;
 
     public override void Build()
     {
         base.Build();
 
+        levelData = levelsData[ownedBuilding.levelIndex] as StorageBuildingLevelData;
+
         //Debug.Log("Storage: " + ownedBuilding.GetType());
 
-        if (levelsData.Count > ownedBuilding.levelIndex && levelsData[ownedBuilding.levelIndex])
-            AddStorageCapacity(levelsData[ownedBuilding.levelIndex]);
+        if (levelsData.Length > ownedBuilding.levelIndex && levelsData[ownedBuilding.levelIndex])
+            AddStorageCapacity(levelData);
         else
             Debug.LogError("levelsData[ownedBuilding.levelIndex] is NULL");
     }
@@ -24,8 +26,10 @@ public class StorageBuildingComponent : BuildingComponent
     {
         base.LevelUp();
 
-        AddStorageCapacity(levelsData[ownedBuilding.levelIndex]);
-        SubtractStorageCapacity(levelsData[ownedBuilding.levelIndex - 1]);
+        levelData = levelsData[ownedBuilding.levelIndex] as StorageBuildingLevelData;
+
+        AddStorageCapacity(levelData);
+        SubtractStorageCapacity(levelsData[ownedBuilding.levelIndex - 1] as StorageBuildingLevelData);
     }
 
     private void AddStorageCapacity(StorageBuildingLevelData levelData)

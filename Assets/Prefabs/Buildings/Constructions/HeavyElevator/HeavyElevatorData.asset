@@ -12,9 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
   m_Name: HeavyElevatorData
   m_EditorClassIdentifier: 
+  buildingId: 5
   buildingIdName: heavy_elevator
   buildingName: Heavy Elevator
   buildingType: 2
   buildingCategory: 0
-  buildingLevelsData:
-  - {fileID: 11400000, guid: 271d34bd90f7e8a43a63c217f4799481, type: 2}
+  connectionType: 0
+  thumbImage: {fileID: 0}
+  description: 
+  buildingFloors: 1
+  maxBuildingFloors: 1
+  isDemolishable: 1
+  buildingManagementMenuWidget: {fileID: 0}

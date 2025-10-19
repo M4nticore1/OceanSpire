@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         cityManager = FindAnyObjectByType<CityManager>();
+
+        //buildingPrefabs.Sort((a, b) => a.buildingData.buildingId.CompareTo(b.buildingData.buildingId));
     }
 
     private void Start()

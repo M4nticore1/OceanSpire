@@ -8,9 +8,9 @@ public class FloorBuilding : Building
     public BuildingPlace hallBuildingPlace;
     public BuildingPlace floorBuildingPlace;
 
-    public override void Place(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
+    public override void Place(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
     {
-        base.Place(buildingPlace, levelIndex, isUnderConstruction);
+        base.Place(buildingPlace, levelIndex, isUnderConstruction, interiorIndex);
 
         InitializeBuilding(buildingPlace);
     }
@@ -23,9 +23,9 @@ public class FloorBuilding : Building
             InvokeStartConstructing(this);
     }
 
-    public override void Build(int newLevelIndex)
+    public override void Build(int newLevelIndex, int interiorIndex)
     {
-        base.Build(newLevelIndex);
+        base.Build(newLevelIndex, interiorIndex);
 
         //if (GetType() == typeof(FloorBuilding))
             //InvokeFinishConstructing(this);
