@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3275737552088690731}
   - component: {fileID: -255987306672972499}
   - component: {fileID: -312919418568159975}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: CoalGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,6 +57,7 @@ MonoBehaviour:
   buildingPlace: {fileID: 0}
   spawnedBuildingConstruction: {fileID: 0}
   isRuined: 0
+  interiorIndex: 0
   leftConnectedBuilding: {fileID: 0}
   rightConnectedBuilding: {fileID: 0}
   aboveConnectedBuilding: {fileID: 0}
@@ -134,6 +135,10 @@ PrefabInstance:
       value: RoomTrigger
       objectReference: {fileID: 0}
     - target: {fileID: 5908939746028889819, guid: 20082656584423c46ba94b7a4a40b999, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5908939746028889819, guid: 20082656584423c46ba94b7a4a40b999, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -198,6 +203,10 @@ PrefabInstance:
     - target: {fileID: 8609880662699405998, guid: e55b56b00be72534bb477db29e5b498e, type: 3}
       propertyPath: m_Name
       value: RoomBoxCollision
+      objectReference: {fileID: 0}
+    - target: {fileID: 8609880662699405998, guid: e55b56b00be72534bb477db29e5b498e, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

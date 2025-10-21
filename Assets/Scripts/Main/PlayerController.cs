@@ -99,7 +99,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Building buildingToPlace = null;
 
     private Building selectedBuilding = null;
-    private bool isSelectedBuilding = false;
+    private Resident selectedResident = null;
+    //private bool isSelectedBuilding = false;
 
     // Raycast
     private GraphicRaycaster graphicRaycaster = null;
@@ -371,13 +372,11 @@ public class PlayerController : MonoBehaviour
 
                     if (results.Count == 0)
                     {
-                        int clickableMask = LayerMask.GetMask("Clickable");
-                        int UIMask = LayerMask.GetMask("UI");
                         Ray ray = mainCamera.ScreenPointToRay(firstTouchCurrentPosition);
 
                         RaycastHit hit;
 
-                        if (Physics.Raycast(ray, out hit, 500, clickableLayers))
+                        if (Physics.Raycast(ray, out hit, 500))
                         {
                             if (isBuildingToPlaceSelected && buildingToPlace)
                             {
@@ -391,6 +390,7 @@ public class PlayerController : MonoBehaviour
                             else
                             {
                                 LootContainer hittedLootContainer = hit.collider.gameObject.GetComponent<LootContainer>();
+                                Resident hittedResident = hit.collider.gameObject.GetComponent<Resident>();
                                 Building hittedBuilding = null;
 
                                 if (hit.collider && hit.collider.gameObject.transform.parent && hit.collider.gameObject.transform.parent.GetComponent<Building>())
@@ -403,25 +403,30 @@ public class PlayerController : MonoBehaviour
                                     if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect)
                                     {
                                         TakeItem(hittedProductionBuilding.TakeProducedItem());
+                                        DeselectAll();
                                     }
                                     else
                                     {
-                                        if (!isSelectedBuilding || selectedBuilding != hittedBuilding)
+                                        if (selectedBuilding != hittedBuilding)
                                             SelectBuilding(hittedBuilding);
                                         else
-                                            UnselectBuilding();
+                                            DeselectBuilding();
                                     }
+                                }
+                                else if (hittedResident)
+                                {
+                                    SelectResident(hittedResident);
                                 }
                                 else if (hittedLootContainer)
                                 {
                                     TakeItems(hittedLootContainer.GetContainedLoot());
                                     hittedLootContainer.TakeItems();
 
-                                    UnselectBuilding();
+                                    DeselectAll();
                                 }
                                 else
                                 {
-                                    UnselectBuilding();
+                                    DeselectAll();
                                 }
                             }
                         }
@@ -600,9 +605,8 @@ public class PlayerController : MonoBehaviour
 
     private void SelectBuilding(Building building)
     {
-        //Debug.Log("select " + building);
+        DeselectBuilding();
 
-        isSelectedBuilding = true;
         selectedBuilding = building;
 
         if (building.isRuined)
@@ -612,20 +616,67 @@ public class PlayerController : MonoBehaviour
         else
         {
             UIManager.OpenBuildingManagementMenu(building);
+
+            SetLayer(building.transform, LayerMask.NameToLayer("Outlined"));
+        }
+
+        DeselectResident();
+    }
+
+    public void DeselectBuilding()
+    {
+        if (selectedBuilding)
+        {
+            SetLayer(selectedBuilding.transform, LayerMask.NameToLayer("Default"));
+
+            if (!UIManager.isBuildingResourcesMenuOpened)
+            {
+                selectedBuilding = null;
+
+                UIManager.CloseBuildingManagementMenu();
+            }
+            else
+            {
+                UIManager.CloseBuildingActionMenu();
+            }
         }
     }
 
-    public void UnselectBuilding()
+    private void SelectResident(Resident resident)
     {
-        if (!UIManager.isBuildingResourcesMenuOpened)
-        {
-            isSelectedBuilding = false;
+        DeselectResident();
 
-            UIManager.CloseBuildingManagementMenu();
-        }
-        else
+        selectedResident = resident;
+
+        if (selectedResident)
         {
-            UIManager.CloseBuildingActionMenu();
+            SetLayer(resident.transform, LayerMask.NameToLayer("Outlined"));
+        }
+
+        DeselectBuilding();
+    }
+
+    public void DeselectResident()
+    {
+        if (selectedResident)
+        {
+            SetLayer(selectedResident.transform, LayerMask.NameToLayer("Default"));
+            selectedResident = null;
+        }
+    }
+
+    public void DeselectAll()
+    {
+        DeselectBuilding();
+        DeselectResident();
+    }
+
+    void SetLayer(Transform parent, int layer)
+    {
+        parent.gameObject.layer = layer;
+        foreach (Transform child in parent)
+        {
+            SetLayer(child, layer);
         }
     }
 

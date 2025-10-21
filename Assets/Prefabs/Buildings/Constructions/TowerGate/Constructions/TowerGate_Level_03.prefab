@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4883502308080682885}
   - component: {fileID: 4756684054310717060}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: TowerGate_Level_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,4 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingActions: []
+  buildingInteriors: []
+  buildingInteractions: []

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2576698104072742168}
   - component: {fileID: 7008323806768352302}
   - component: {fileID: 5091475841039188524}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: BasicElevator_Corner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingDetails: []
+  buildingInteriors: []
   buildingInteractions: []
 --- !u!64 &5091475841039188524
 MeshCollider:

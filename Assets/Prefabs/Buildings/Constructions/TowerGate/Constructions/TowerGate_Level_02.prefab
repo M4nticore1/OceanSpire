@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4883502308080682885}
   - component: {fileID: 5417680268855369957}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: TowerGate_Level_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingActions: []
+  buildingInteriors: []
+  buildingInteractions: []
 --- !u!1001 &8007287503902062262
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -100,7 +101,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 48f0b393ecb2e6c43960d3fd54ac8952, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

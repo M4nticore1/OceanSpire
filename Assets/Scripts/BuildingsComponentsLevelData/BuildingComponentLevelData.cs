@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BuildingComponentLevelData : MonoBehaviour
+public class BuildingComponentLevelData : ScriptableObject
 {
 
 }

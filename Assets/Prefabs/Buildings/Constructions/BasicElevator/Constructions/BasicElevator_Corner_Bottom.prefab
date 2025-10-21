@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2576698104072742168}
   - component: {fileID: -8607344046475679114}
   - component: {fileID: -2328155760362487098}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: BasicElevator_Corner_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingDetails: []
+  buildingInteriors: []
   buildingInteractions:
   - waypoints:
     - {fileID: 3839961210089820969}
@@ -86,7 +86,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8490381622987998994}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Waypoint_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3839961210089820969}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Waypoint_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5948254842792651290}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Waypoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}

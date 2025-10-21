@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2501287360220567352}
   - component: {fileID: 4292116147884430282}
   - component: {fileID: 2205748918384376513}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Dock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,12 +46,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a9aab4738e87cd40beead4fc9a3a207, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cityManager: {fileID: 0}
+  isInitialized: 0
   buildingData: {fileID: 11400000, guid: ccb7e31f2afcb32489365485829535c1, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: d7f0a759f61058d4f903fc26dc960d36, type: 2}
   - {fileID: 11400000, guid: 245cd4840c9ee2445832a2d6ee727b8e, type: 2}
+  buildingPlace: {fileID: 0}
   spawnedBuildingConstruction: {fileID: 0}
   isRuined: 0
+  interiorIndex: 0
 --- !u!114 &2205748918384376513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ownedBuilding: {fileID: 0}
+  levelsData: []
 --- !u!1001 &8605352773958091886
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -113,9 +118,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3479131098259698642, guid: f2075504176cfba459275d554718139e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4346732332498891303, guid: f2075504176cfba459275d554718139e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4833008114223399334, guid: f2075504176cfba459275d554718139e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4926728105433943699, guid: f2075504176cfba459275d554718139e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6689345443082316083, guid: f2075504176cfba459275d554718139e, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7744920326237737537, guid: f2075504176cfba459275d554718139e, type: 3}
       propertyPath: m_Name
       value: Pier_Ruin
+      objectReference: {fileID: 0}
+    - target: {fileID: 7744920326237737537, guid: f2075504176cfba459275d554718139e, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

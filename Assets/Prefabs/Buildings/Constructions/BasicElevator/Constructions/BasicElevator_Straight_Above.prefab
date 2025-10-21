@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2576698104072742168}
   - component: {fileID: -219413339955794822}
   - component: {fileID: 5283171801875202098}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: BasicElevator_Straight_Above
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingDetails: []
+  buildingInteriors: []
   buildingInteractions: []
 --- !u!64 &5283171801875202098
 MeshCollider:
@@ -124,7 +124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a3d42d389f42a8c4a816005de5ef920d, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
