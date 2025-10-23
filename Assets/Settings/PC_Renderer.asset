@@ -66,7 +66,8 @@ MonoBehaviour:
   - {fileID: 3663556256187340890}
   - {fileID: -3425353639086950150}
   - {fileID: 3531567072447064838}
-  m_RendererFeatureMap: 5ad8b4300191d732fa78217803b376d0066bac958aa50231
+  - {fileID: 6105443867308133911}
+  m_RendererFeatureMap: 5ad8b4300191d732fa78217803b376d0066bac958aa50231170efd6ad9e4ba54
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -104,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a86669ab35b69e459bfd7d3384e1a9a, type: 3}
   m_Name: SimpleFillFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   _material: {fileID: 2100000, guid: 4f5a0dad835fab5428d49d075bb5cf7a, type: 2}
 --- !u!114 &3663556256187340890
 MonoBehaviour:
@@ -124,3 +125,45 @@ MonoBehaviour:
     mask: {fileID: 4800000, guid: 19ae7b440d27f4f9990007afdc74ddaf, type: 3}
     outline: {fileID: 4800000, guid: fb375234a1509436fa2a7d37f08912f8, type: 3}
     clear: {fileID: 4800000, guid: b854aa374420b4b47992044f7c9a0719, type: 3}
+--- !u!114 &6105443867308133911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
+  m_Name: RenderObjects
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    passTag: RenderObjects
+    Event: 500
+    filterSettings:
+      RenderQueueType: 0
+      LayerMask:
+        serializedVersion: 2
+        m_Bits: 64
+      PassNames: []
+    overrideMaterial: {fileID: 2100000, guid: 79ff3fbc3ea8dbc46a14b0e0d188c3b8, type: 2}
+    overrideMaterialPassIndex: 0
+    overrideShader: {fileID: 0}
+    overrideShaderPassIndex: 0
+    overrideMode: 1
+    overrideDepthState: 1
+    depthCompareFunction: 4
+    enableWrite: 1
+    stencilSettings:
+      overrideStencilState: 1
+      stencilReference: 1
+      stencilCompareFunction: 7
+      passOperation: 5
+      failOperation: 5
+      zFailOperation: 5
+    cameraSettings:
+      overrideCamera: 0
+      restoreCamera: 1
+      offset: {x: 0, y: 0, z: 0, w: 0}
+      cameraFieldOfView: 60
