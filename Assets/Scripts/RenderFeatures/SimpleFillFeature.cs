@@ -2,51 +2,96 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class SimpleFillFeature : ScriptableRendererFeature
+public class OutlineFeature : ScriptableRendererFeature
 {
-    class SimpleFillPass : ScriptableRenderPass
+    class OutlinePass : ScriptableRenderPass
     {
-        private Material _material;
+        private RTHandle source { get; set; }
+        private RTHandle destination { get; set; }
+        public Material outlineMaterial = null;
+        RTHandle temporaryColorTexture;
 
-        public SimpleFillPass(Material material)
+        public void Setup(RTHandle source, RTHandle destination)
         {
-            _material = material;
-            renderPassEvent = RenderPassEvent.AfterRendering; // после всего рендеринга
+            this.source = source;
+            this.destination = destination;
+        }
+
+        public OutlinePass(Material outlineMaterial)
+        {
+            this.outlineMaterial = outlineMaterial;
+        }
+
+        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+        {
+            temporaryColorTexture = RTHandles.Alloc("_TemporaryColor", name: "_TemporaryColor");
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            CommandBuffer cmd = CommandBufferPool.Get("SimpleFillPass");
+            CommandBuffer cmd = CommandBufferPool.Get("_OutlinePass");
 
-            // Рисуем прямо на камеру
-            CoreUtils.SetRenderTarget(cmd, renderingData.cameraData.renderer.cameraColorTargetHandle, ClearFlag.All, Color.black);
+            RenderTextureDescriptor opaqueDescriptor = renderingData.cameraData.cameraTargetDescriptor;
+            opaqueDescriptor.depthBufferBits = 0;
 
-            // Рисуем FullScreen Quad с материалом
-            CoreUtils.DrawFullScreen(cmd, _material);
+            Debug.Log("Executing outline renderer");
+
+            if (renderingData.cameraData.cameraType == CameraType.Game)
+            {
+                cmd.GetTemporaryRT(Shader.PropertyToID(temporaryColorTexture.name), opaqueDescriptor, FilterMode.Point);
+                Blit(cmd, source, temporaryColorTexture, outlineMaterial, 0);
+                Blit(cmd, temporaryColorTexture, source);
+                // Blit(cmd, source, source);
+            }
+            else
+            {
+                Blit(cmd, source, destination, outlineMaterial, 0);
+            }
 
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
         }
+
+        public override void FrameCleanup(CommandBuffer cmd)
+        {
+            if (temporaryColorTexture != null)
+            {
+                RTHandles.Release(temporaryColorTexture);
+                temporaryColorTexture = null;
+            }
+        }
     }
 
-    [SerializeField] private Material _material;
+    [System.Serializable]
+    public class OutlineSettings
+    {
+        public Material outlineMaterial = null;
+    }
 
-    private SimpleFillPass _pass;
+    public OutlineSettings settings = new OutlineSettings();
+    OutlinePass outlinePass;
+    RTHandle outlineTexture;
 
     public override void Create()
     {
-        // Если материала нет, создаём простейший Unlit/Color
-        if (_material == null)
-        {
-            _material = new Material(Shader.Find("Unlit/Color"));
-            _material.SetColor("_Color", Color.green);
-        }
-
-        _pass = new SimpleFillPass(_material);
+        outlinePass = new OutlinePass(settings.outlineMaterial);
+        outlinePass.renderPassEvent = RenderPassEvent.AfterRenderingTransparents;
+        outlineTexture = RTHandles.Alloc("_OutlineTexture", name: "_OutlineTexture");
+        // outlineTexture.Init("_OutlineTexture");
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        renderer.EnqueuePass(_pass);
+        if (settings.outlineMaterial == null)
+        {
+            Debug.LogWarningFormat("Missing Outline Material");
+            return;
+        }
+        renderer.EnqueuePass(outlinePass);
+    }
+
+    public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
+    {
+        outlinePass.Setup(renderer.cameraColorTargetHandle, renderer.cameraColorTargetHandle);
     }
 }

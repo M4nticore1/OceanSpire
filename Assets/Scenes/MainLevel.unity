@@ -3420,6 +3420,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 455527463}
     m_Modifications:
+    - target: {fileID: 1501878950507669841, guid: 693ccb3407afb664cbc92be0896a8efc, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e79c4ec9a28acf54295e522b79a8042d, type: 2}
     - target: {fileID: 3687494267303527126, guid: 693ccb3407afb664cbc92be0896a8efc, type: 3}
       propertyPath: m_Name
       value: Rock_Large_01
@@ -4649,6 +4653,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3289710465086233410, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364798657196465612, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_BackGroundColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364798657196465612, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364798657196465612, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364798657196465612, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_BackGroundColor.r
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3507872351267919767, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}

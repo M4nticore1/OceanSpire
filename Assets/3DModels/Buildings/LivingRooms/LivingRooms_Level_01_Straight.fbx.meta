@@ -17,6 +17,16 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Plaster_White
+    second: {fileID: 2100000, guid: 17a05b3a120207c4c808d9c1cf125778, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Stone_Tiles
+    second: {fileID: 2100000, guid: 6de42b58460dcbd44becb0b644a0764c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Wood_Brown
     second: {fileID: 2100000, guid: e92b0caa584b16a4aa5893b444a5c9bf, type: 2}
   materials:

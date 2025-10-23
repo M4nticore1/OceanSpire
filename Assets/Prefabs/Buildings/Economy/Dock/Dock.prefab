@@ -54,7 +54,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 245cd4840c9ee2445832a2d6ee727b8e, type: 2}
   buildingPlace: {fileID: 0}
   spawnedBuildingConstruction: {fileID: 0}
-  isRuined: 0
+  isRuined: 1
   interiorIndex: 0
 --- !u!114 &2205748918384376513
 MonoBehaviour:

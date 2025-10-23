@@ -41,6 +41,8 @@ public class Initial : ScriptableRendererFeature
         // FrameData is a context container through which URP resources can be accessed and managed.
         public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
         {
+            Debug.Log("RecordRenderGraph");
+
             const string passName = "Render Custom Pass";
 
             // This adds a raster render pass to the graph, specifying the name and the data type that will be passed to the ExecutePass function.
@@ -84,6 +86,7 @@ public class Initial : ScriptableRendererFeature
         // You don't have to call ScriptableRenderContext.submit, the render pipeline will call it at specific points in the pipeline.
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
+            Debug.Log("Executing");
         }
 
         // NOTE: This method is part of the compatibility rendering path, please use the Render Graph API above instead.

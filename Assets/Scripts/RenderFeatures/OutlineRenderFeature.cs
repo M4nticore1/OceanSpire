@@ -1,142 +1,424 @@
-using LineworkLite.Common.Utils;
-using System;
-using System.Collections.Generic;
+п»їusing System.Collections.Generic;
+using UnityEditor.IMGUI.Controls;
+using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.RendererUtils;
-using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using static Unity.Burst.Intrinsics.X86.Avx;
 
+//public class OutlineRenderFeature : ScriptableRendererFeature
+//{
+//    public bool needsBlur = true;
+
+//    private RTHandle renderedTexture;
+//    private RTHandle bluredTexture;
+
+//    public LayerMask layerMask = 0;
+//    public Color fillColor = Color.red;
+//    private RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingOpaques;
+
+//    [SerializeField] private string _renderTextureName;
+//    [SerializeField] private RenderSettings _renderSettings;
+
+//    RenderPass renderPass;
+//    BlurPass blurPass;
+//    OutlinePass outlinePass;
+
+//    [System.Serializable]
+//    public class BlurSettings
+//    {
+//        public Material BlurMaterial;
+//        public int DownSample = 1;
+//        public int PassesCount = 1;
+//    }
+
+//    [SerializeField] private string _bluredTextureName;
+//    [SerializeField] private BlurSettings blurSettings;
+
+//    [SerializeField] private Material _outlineMaterial;
+//    private OutlinePass _outlinePass;
+
+//    public override void Create()
+//    {
+//        renderPass = new RenderPass(renderedTexture, layerMask, fillColor)
+//        {
+//            renderPassEvent = renderPassEvent
+//        };
+
+//        blurPass = new BlurPass(needsBlur, blurSettings.BlurMaterial, 1, 1)
+//        {
+//            renderPassEvent = renderPassEvent
+//        };
+
+//        outlinePass = new OutlinePass(_outlineMaterial)
+//        {
+//            renderPassEvent = renderPassEvent
+//        };
+
+//        //renderedTexture = RTHandles.Alloc(Vector2.one, depthBufferBits: DepthBits.None, colorFormat: GraphicsFormat.R8G8B8A8_UNorm, name: "_RenderTexture");
+//        //bluredTexture = RTHandles.Alloc(Vector2.one, depthBufferBits: DepthBits.None, colorFormat: GraphicsFormat.R8G8B8A8_UNorm, name: "_BlurTexture");
+//    }
+
+//    public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
+//    {
+//        renderPass.Setup(renderedTexture);
+//        renderer.EnqueuePass(renderPass);
+
+//        blurPass.Setup(bluredTexture);
+//        renderer.EnqueuePass(blurPass);
+//        renderer.EnqueuePass(outlinePass);
+//    }
+
+//    class RenderPass : ScriptableRenderPass
+//    {
+//        private CommandBuffer cmd;
+//        private RenderTargetIdentifier cameraTarget;
+//        private RTHandle destination;
+
+//        private List<ShaderTagId> shaderTagIdList = new List<ShaderTagId>() { new ShaderTagId("UniversalForward") };
+//        private FilteringSettings filteringSettings;
+//        private RenderStateBlock renderStateBlock;
+
+//        private LayerMask layerMask;
+//        private Color fillColor;
+//        private Material whiteMaterial;
+//        private Material blackMaterial;
+
+//        public RenderPass(RTHandle destination, LayerMask layerMask, Color fillColor)
+//        {
+//            this.layerMask = layerMask;
+//            this.fillColor = fillColor;
+
+//            whiteMaterial = new Material(Shader.Find("Unlit/Color"));
+//            whiteMaterial.color = Color.white;
+
+//            blackMaterial = new Material(Shader.Find("Unlit/Color"));
+//            blackMaterial.color = Color.black;
+
+//            filteringSettings = new FilteringSettings(RenderQueueRange.opaque, layerMask);
+//            renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
+//        }
+
+//        public void Setup(RTHandle destination)
+//        {
+//            this.destination = destination;
+//        }
+
+//        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+//        {
+//            ConfigureTarget(destination);
+//            ConfigureClear(ClearFlag.All, Color.clear);
+//        }
+
+//        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+//        {
+//            Debug.Log("Executing Render");
+
+//            SortingCriteria sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
+//            DrawingSettings drawingSettings = CreateDrawingSettings(shaderTagIdList, ref renderingData, sortingCriteria);
+//            drawingSettings.overrideMaterial = whiteMaterial;
+
+//            context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref filteringSettings);
+//        }
+//    }
+
+//    class BlurPass : ScriptableRenderPass
+//    {
+//        private int _tmpBlurRTId1 = Shader.PropertyToID("_TempBlurTexture1");
+//        private int _tmpBlurRTId2 = Shader.PropertyToID("_TempBlurTexture2");
+
+//        private RenderTargetIdentifier _tmpBlurRT1;
+//        private RenderTargetIdentifier _tmpBlurRT2;
+
+//        private RenderTargetIdentifier _source;
+//        private RTHandle destination;
+
+//        private int _passesCount;
+//        private int _downSample;
+//        private Material _blurMaterial;
+
+//        bool needsBlur;
+
+//        public BlurPass(bool needsBlur, Material blurMaterial, int downSample, int passesCount)
+//        {
+//            this.needsBlur = needsBlur;
+//            _blurMaterial = blurMaterial;
+//            _downSample = downSample;
+//            _passesCount = passesCount;
+//        }
+
+//        public void Setup(RTHandle destination)
+//        {
+//            this.destination = destination;
+//        }
+
+//        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+//        {
+//            int width = Mathf.Max(1, cameraTextureDescriptor.width >> _downSample);
+//            int height = Mathf.Max(1, cameraTextureDescriptor.height >> _downSample);
+//            RenderTextureDescriptor blurTextureDesc = new RenderTextureDescriptor(width, height, RenderTextureFormat.ARGB32, 0, 0);
+
+//            _tmpBlurRT1 = new RenderTargetIdentifier(_tmpBlurRTId1);
+//            _tmpBlurRT2 = new RenderTargetIdentifier(_tmpBlurRTId2);
+
+//            cmd.GetTemporaryRT(_tmpBlurRTId1, blurTextureDesc, FilterMode.Bilinear);
+//            cmd.GetTemporaryRT(_tmpBlurRTId2, blurTextureDesc, FilterMode.Bilinear);
+
+//            cmd.GetTemporaryRT(0, blurTextureDesc, FilterMode.Bilinear);
+//            ConfigureTarget(destination);
+//        }
+
+//        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+//        {
+//            if (needsBlur)
+//            {
+//                Debug.Log("Execute blur");
+
+//                var cmd = CommandBufferPool.Get("BlurPass");
+
+//                if (_passesCount > 0)
+//                {
+//                    cmd.Blit(_source, _tmpBlurRT1, _blurMaterial, 0);
+//                    for (int i = 0; i < _passesCount - 1; i++)
+//                    {
+//                        cmd.Blit(_tmpBlurRT1, _tmpBlurRT2, _blurMaterial, 0);
+//                        var t = _tmpBlurRT1;
+//                        _tmpBlurRT1 = _tmpBlurRT2;
+//                        _tmpBlurRT2 = t;
+//                    }
+//                    cmd.Blit(_tmpBlurRT1, destination);
+//                }
+//                else
+//                    cmd.Blit(_source, destination);
+//                context.ExecuteCommandBuffer(cmd);
+//                CommandBufferPool.Release(cmd);
+//            }
+//        }
+//    }
+
+//    class OutlinePass : ScriptableRenderPass
+//    {
+//        private string _profilerTag = "Outline";
+//        private Material _material;
+
+//        public OutlinePass(Material material)
+//        {
+//            _material = material;
+//        }
+
+//        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+//        {
+//            //var cmd = CommandBufferPool.Get(_profilerTag);
+
+//            //using (new ProfilingSample(cmd, _profilerTag))
+//            //{
+//            //    var mesh = RenderingUtils.fullscreenMesh;
+//            //    cmd.DrawMesh(mesh, Matrix4x4.identity, _material, 0, 0);
+//            //}
+
+//            //context.ExecuteCommandBuffer(cmd);
+//            //CommandBufferPool.Release(cmd);
+//        }
+//    }
+//}
+
+//public class OutlineRenderFeature : ScriptableRendererFeature
+//{
+//    private RTHandle renderedTexture;
+
+//    public LayerMask layerMask = 0;
+//    public Color fillColor = Color.red;
+//    private RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingOpaques;
+
+//    RenderPass renderPass;
+
+//    public override void Create()
+//    {
+//        renderPass = new RenderPass(renderedTexture, layerMask, fillColor)
+//        {
+//            renderPassEvent = renderPassEvent
+//        };
+//    }
+
+//    public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
+//    {
+//        renderPass.Setup(renderedTexture);
+//        renderer.EnqueuePass(renderPass);
+//    }
+
+//    class RenderPass : ScriptableRenderPass
+//    {
+//        private CommandBuffer cmd;
+//        private RenderTargetIdentifier cameraTarget;
+//        private RTHandle destination;
+
+//        private List<ShaderTagId> shaderTagIdList = new List<ShaderTagId>() { new ShaderTagId("UniversalForward") };
+//        private FilteringSettings filteringSettings;
+//        private RenderStateBlock renderStateBlock;
+
+//        private LayerMask layerMask;
+//        private Color fillColor;
+//        private Material whiteMaterial;
+//        private Material blackMaterial;
+
+//        public RenderPass(RTHandle destination, LayerMask layerMask, Color fillColor)
+//        {
+//            this.layerMask = layerMask;
+//            this.fillColor = fillColor;
+
+//            whiteMaterial = new Material(Shader.Find("Unlit/Color"));
+//            whiteMaterial.color = Color.white;
+
+//            blackMaterial = new Material(Shader.Find("Unlit/Color"));
+//            blackMaterial.color = Color.black;
+
+//            filteringSettings = new FilteringSettings(RenderQueueRange.opaque, layerMask);
+//            renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
+//        }
+
+//        public void Setup(RTHandle destination)
+//        {
+//            this.destination = destination;
+//        }
+
+//        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+//        {
+//            ConfigureTarget(destination);
+//            ConfigureClear(ClearFlag.All, Color.clear);
+//        }
+
+//        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+//        {
+//            Debug.Log("Executing Render");
+
+//            SortingCriteria sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
+//            DrawingSettings drawingSettings = CreateDrawingSettings(shaderTagIdList, ref renderingData, sortingCriteria);
+//            drawingSettings.overrideMaterial = whiteMaterial;
+
+//            context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref filteringSettings);
+//        }
+//    }
+//}
+
 public class OutlineRenderFeature : ScriptableRendererFeature
 {
-    //OutlinePass m_ScriptablePass;
-
-    [System.Serializable]
-    public class RenderSettings
-    {
-        public Material material = null;
-        public LayerMask layer = 0;
-    }
-
-    [SerializeField] private string _renderTextureName;
-    [SerializeField] private RenderSettings _renderSettings;
-
-    private RTHandle _renderTexture;
-    private OutlinePass _renderPass;
+    public LayerMask layerMask;
+    public RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
+    public Material outlineMaterial;
+    private RTHandle destination;
+    private RTHandle maskRT;
+    private RTHandle tmp1;
+    private RTHandle tmp2;
+    private MaskPass maskPasm;
+    //private OutlinePass outlinePass;
 
     public override void Create()
     {
-        _renderTexture = RTHandles.Alloc(_renderTextureName);
-        _renderPass = new OutlinePass(_renderTexture, _renderSettings.layer, _renderSettings.material);
-        _renderPass.renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
+        maskPasm = new MaskPass(layerMask, outlineMaterial, destination);
+        maskPasm.Setup(maskRT, tmp1, tmp2);
+        maskPasm.renderPassEvent = renderPassEvent;
+
+        //outlinePass = new OutlinePass(layerMask);
+        //outlinePass.Setup(maskRT, tmp1, tmp2);
+        //outlinePass.renderPassEvent = renderPassEvent;
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        renderer.EnqueuePass(_renderPass);
+        renderer.EnqueuePass(maskPasm);
+        //renderer.EnqueuePass(outlinePass);
     }
 
-    class OutlinePass : ScriptableRenderPass
+    class MaskPass : ScriptableRenderPass
     {
-        private RTHandle _rtHandle;
-        private CommandBuffer _cmd;
+        RTHandle destination;
+        RTHandle maskRT;
+        RTHandle tmp1;
+        RTHandle tmp2;
+        Material whiteMaterial;
+        Material blurMaterial;
+        Material outlineMaterial;
+        private List<ShaderTagId> shaderTagIdList;
+        FilteringSettings filteringSettings;
+        private RenderStateBlock renderStateBlock;
 
-        private List<ShaderTagId> _shaderTagIdList = new List<ShaderTagId>() { new ShaderTagId("UniversalForward") };
-        private FilteringSettings _filteringSettings;
-        private RenderStateBlock _renderStateBlock;
-
-        private Material _material;
-        private LayerMask _layer = 0;
-
-        private class PassData
+        public MaskPass(LayerMask layerMask, Material outlineMaterial, RTHandle destination)
         {
+            this.destination = destination;
 
+            shaderTagIdList = new List<ShaderTagId>() { new ShaderTagId("UniversalForward") };
+            filteringSettings = new FilteringSettings(RenderQueueRange.all, layerMask);
+
+            whiteMaterial = new Material(Shader.Find("Unlit/Color"));
+            whiteMaterial.color = Color.white;
+
+            blurMaterial = new Material(Shader.Find("Hidden/BlurSimple"));
+            blurMaterial.color = Color.white;
+
+            this.outlineMaterial = outlineMaterial;
+            renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
         }
 
-        public OutlinePass(RTHandle rtHandle, int layerMask, Material overrideMaterial)
+        public void Setup(RTHandle maskRT, RTHandle tmp1, RTHandle tmp2)
         {
-            _rtHandle = rtHandle;
-
-            _filteringSettings = new FilteringSettings(RenderQueueRange.opaque, layerMask);
-            _renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
-
-            _material = overrideMaterial;
+            this.maskRT = maskRT;
+            this.tmp1 = tmp1;
+            this.tmp2 = tmp2;
         }
 
-        public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
+        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
-            ConfigureTarget(_rtHandle);
+            if (destination == null)
+                destination = RTHandles.Alloc(Vector2.one, colorFormat: GraphicsFormat.B8G8R8A8_SRGB, name: "_destination");
+            if (maskRT == null)
+                maskRT = RTHandles.Alloc(Vector2.one, colorFormat: GraphicsFormat.B8G8R8A8_SRGB, name: "_maskRT");
+            if (tmp1 == null)
+                tmp1 = RTHandles.Alloc(Vector2.one, colorFormat: GraphicsFormat.B8G8R8A8_SRGB, name: "_tmp1");
+            if (tmp2 == null)
+                tmp2 = RTHandles.Alloc(Vector2.one, colorFormat: GraphicsFormat.B8G8R8A8_SRGB, name: "_tmp2");
+
+            ConfigureTarget(tmp1);
+            ConfigureClear(ClearFlag.All, Color.clear);
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            var cmd = CommandBufferPool.Get("OutlinePass");
+            CommandBuffer cmd = CommandBufferPool.Get("Outline");
 
-            // Устанавливаем камеру как render target
-            CoreUtils.SetRenderTarget(cmd, renderingData.cameraData.renderer.cameraColorTargetHandle, ClearFlag.All, Color.black);
+            // Render
+            SortingCriteria sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
+            DrawingSettings drawingSettings = CreateDrawingSettings(shaderTagIdList, ref renderingData, sortingCriteria);
+            drawingSettings.overrideMaterial = whiteMaterial;
 
-            // Создаём DrawingSettings для нужного слоя
-            var sortingCriteria = SortingCriteria.CommonOpaque;
-            var drawingSettings = RenderingUtils.CreateDrawingSettings(new ShaderTagId("UniversalForward"), ref renderingData, sortingCriteria);
+            context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref filteringSettings, ref renderStateBlock);
 
-            drawingSettings.overrideMaterial = _material;
+            // Blur
+            Blitter.BlitCameraTexture(cmd, maskRT, tmp1, blurMaterial, 0);
+            for (int i = 0; i < 2; i++)
+            {
+                cmd.Blit(tmp1, tmp2, blurMaterial, 0);
+                var t = tmp1;
+                tmp1 = tmp2;
+                tmp2 = t;
+            }
+            Blitter.BlitCameraTexture(cmd, tmp2, maskRT);
 
-            // Фильтруем по слою
-            var filteringSettings = new FilteringSettings(RenderQueueRange.opaque, 1 << _layer);
+            //Draw
+            Blitter.BlitCameraTexture(cmd, tmp1, renderingData.cameraData.renderer.cameraColorTargetHandle);
 
-            // Рисуем объекты на экран
-            context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref filteringSettings);
+            // Outline
+            cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, outlineMaterial, 0, 0);
 
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
-
-            //var maskCmd = CommandBufferPool.Get();
-
-            //var sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
-
-            //var drawingSettings = RenderingUtils.CreateDrawingSettings(RenderUtils.DefaultShaderTagIds, ref renderingData, sortingCriteria);
-            //drawingSettings.overrideMaterial = _material;
-
-            //context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref _filteringSettings, ref _renderStateBlock);
-
-            //// TODO: сюда добавляем рендеринг объектов или постэффект
-            ////SortingCriteria sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
-            ////DrawingSettings drawingSettings = CreateDrawingSettings(_shaderTagIdList, ref renderingData, sortingCriteria);
-            ////drawingSettings.overrideMaterial = _material;
-
-            ////CoreUtils.SetRenderTarget(maskCmd, _rtHandle, ClearFlag.All, Color.green);
-            ////CoreUtils.DrawFullScreen(maskCmd, _material, _rtHandle);
-            ////maskCmd.Blit(_rtHandle, renderingData.cameraData.renderer.cameraColorTargetHandle);
-
-            //context.ExecuteCommandBuffer(maskCmd);
-            //CommandBufferPool.Release(maskCmd);
         }
 
-        public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
+        public override void OnCameraCleanup(CommandBuffer cmd)
         {
-            using (var builder = renderGraph.AddRasterRenderPass<PassData>(passName, out var passData))
-            {
-                // Use this scope to set the required inputs and outputs of the pass and to
-                // setup the passData with the required properties needed at pass execution time.
-
-                // Make use of frameData to access resources and camera data through the dedicated containers.
-                // Eg:
-                // UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
-                UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
-
-                // Setup pass inputs and outputs through the builder interface.
-                // Eg:
-                // builder.UseTexture(sourceTexture);
-                // TextureHandle destination = UniversalRenderer.CreateRenderGraphTexture(renderGraph, cameraData.cameraTargetDescriptor, "Destination Texture", false);
-
-                // This sets the render target of the pass to the active color texture. Change it to your own render target as needed.
-                builder.SetRenderAttachment(resourceData.activeColorTexture, 0);
-
-                // Assigns the ExecutePass function to the render pass delegate. This will be called by the render graph when executing the pass.
-                //builder.SetRenderFunc((PassData data, RasterGraphContext context) => Execute(context, data));
-            }
+            //if (tmp1 != null)
+                //tmp1?.Release();
         }
     }
 }
