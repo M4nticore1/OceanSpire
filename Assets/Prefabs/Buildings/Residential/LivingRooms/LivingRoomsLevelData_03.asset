@@ -13,18 +13,20 @@ MonoBehaviour:
   m_Name: LivingRoomsLevelData_03
   m_EditorClassIdentifier: 
   ResourcesToBuild: []
-  maxResidentsCount: 2
-  BuildingFront: {fileID: 0}
-  BuildingCorner: {fileID: 0}
-  BuildingFrontLeft: {fileID: 0}
-  BuildingFrontRight: {fileID: 0}
-  BuildingFrontLeftRight: {fileID: 0}
-  BuildingCornerLeft: {fileID: 0}
-  BuildingCornerRight: {fileID: 6099634805767211038, guid: 2fd34cc7f9b575441af443aea1d41848, type: 3}
-  BuildingCornerLeftRight: {fileID: 0}
-  BuildingFrontTop: {fileID: 0}
-  BuildingFrontBottom: {fileID: 0}
-  BuildingFrontTopBottom: {fileID: 0}
-  BuildingCornerTop: {fileID: 0}
-  BuildingCornerBottom: {fileID: 0}
-  BuildingCornerTopBottom: {fileID: 0}
+  maxResidentsCount: 4
+  constructionStraight: {fileID: 0}
+  constructionCorner: {fileID: 0}
+  buildingStraight: {fileID: 0}
+  buildingCorner: {fileID: 0}
+  buildingStraightLeft: {fileID: 0}
+  buildingStraightRight: {fileID: 0}
+  buildingStraightLeftRight: {fileID: 0}
+  buildingCornerLeft: {fileID: 0}
+  buildingCornerRight: {fileID: 0}
+  buildingCornerLeftRight: {fileID: 0}
+  buildingStraightAbove: {fileID: 0}
+  buildingStraightBelow: {fileID: 0}
+  buildingStraightAboveBelow: {fileID: 0}
+  buildingCornerAbove: {fileID: 0}
+  buildingCornerBelow: {fileID: 0}
+  buildingCornerAboveBelow: {fileID: 0}

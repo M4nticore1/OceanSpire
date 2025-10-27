@@ -12,23 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc00b654cdc25d14f9d66d50f8c357bf, type: 3}
   m_Name: LivingRoomsLevelData_02
   m_EditorClassIdentifier: 
-  ResourcesToBuild:
-  - resourceData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+  resourcesToBuild:
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     amount: 800
-  - resourceData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-    amount: 50
-  maxResidentsCount: 2
-  BuildingFront: {fileID: 0}
-  BuildingCorner: {fileID: 0}
-  BuildingFrontLeft: {fileID: 0}
-  BuildingFrontRight: {fileID: 0}
-  BuildingFrontLeftRight: {fileID: 0}
-  BuildingCornerLeft: {fileID: 0}
-  BuildingCornerRight: {fileID: 6099634805767211038, guid: 2fd34cc7f9b575441af443aea1d41848, type: 3}
-  BuildingCornerLeftRight: {fileID: 0}
-  BuildingFrontTop: {fileID: 0}
-  BuildingFrontBottom: {fileID: 0}
-  BuildingFrontTopBottom: {fileID: 0}
-  BuildingCornerTop: {fileID: 0}
-  BuildingCornerBottom: {fileID: 0}
-  BuildingCornerTopBottom: {fileID: 0}
+  - itemData: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+    amount: 200
+  maxResidentsCount: 4
+  constructionStraight: {fileID: 7469822553162115358, guid: 60e42ddbd68ab3c4792b7af128f1f8bd, type: 3}
+  constructionCorner: {fileID: 7469822553162115358, guid: bcec1e3ec4873b5438b6d0837104fc9c, type: 3}
+  buildingStraight: {fileID: 3176227969852827642, guid: d70dd4d7c8b95c94381f919c166bcf80, type: 3}
+  buildingCorner: {fileID: 7469822553162115358, guid: 76552122967f442478bece6b61dd80b6, type: 3}
+  buildingStraightLeft: {fileID: 3176227969852827642, guid: d44781ada62466748accfb2af712853a, type: 3}
+  buildingStraightRight: {fileID: 6099634805767211038, guid: 9b9e68c4c87f97742ba5b69f00bb81f6, type: 3}
+  buildingStraightLeftRight: {fileID: 7336832484127668197, guid: 7d9f992ed6ad6c848bcbc586f173f3eb, type: 3}
+  buildingCornerLeft: {fileID: 6541505085108518086, guid: d4d035724ddaff842bf98d41c12dfbc2, type: 3}
+  buildingCornerRight: {fileID: 2290663980851308725, guid: 3fe436d2253b230468920e2215e31a2e, type: 3}
+  buildingCornerLeftRight: {fileID: 2290663980851308725, guid: 9c83b6f31999d0f4e982c999f8f76f08, type: 3}
+  buildingStraightAbove: {fileID: 0}
+  buildingStraightBelow: {fileID: 0}
+  buildingStraightAboveBelow: {fileID: 0}
+  buildingCornerAbove: {fileID: 0}
+  buildingCornerBelow: {fileID: 0}
+  buildingCornerAboveBelow: {fileID: 0}

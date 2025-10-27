@@ -89,36 +89,43 @@ public class GameManager : MonoBehaviour
         windDirectionChangeTime = Time.time;
     }
 
-    public int GetItemIndexByIdName(string idName)
+    public static int GetItemIndexByIdName(List<ItemData> itemsList, string idName)
     {
         int id = 0;
 
-        for (int i = 0; i < itemsData.Count; i++)
+        for (int i = 0; i < itemsList.Count; i++)
         {
-            if (itemsData[i].itemIdName == idName)
+            if (itemsList[i].itemIdName == idName)
             {
                 id = i;
-                break;
+                return id;
             }
         }
 
-        return id;
+        return -1;
     }
 
-    public int GetItemIndexById(int id)
+    public static int GetItemIndexById(List<ItemData> itemsList, int id)
     {
-        int currentId = 0;
-
-        for (int i = 0; i < itemsData.Count; i++)
+        if ((int)itemsList[id].itemId == id)
         {
-            if ((int)itemsData[i].itemId == id)
-            {
-                currentId = i;
-                break;
-            }
+            return id;
         }
+        else
+        {
+            int currentId = 0;
 
-        return currentId;
+            for (int i = 0; i < itemsList.Count; i++)
+            {
+                if ((int)itemsList[i].itemId == id)
+                {
+                    currentId = i;
+                    return currentId;
+                }
+            }
+
+            return -1;
+        }
     }
 
     public Building GetBuildingPrefabById(int buildingId)

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4207ac79800eb744ba4944814a85a8f9, type: 3}
+  m_Name: TowerGateStorageLevelData_01
+  m_EditorClassIdentifier: 
+  storageItems:
+  - itemData: {fileID: 11400000, guid: 550b2a9af4e53db4990bef7a9fceb5fa, type: 2}
+    amount: 4
+  - itemData: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
+    amount: 100
+  - itemData: {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
+    amount: 100
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 1000
+  - itemData: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+    amount: 400
+  - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    amount: 200
+  - itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+    amount: 500
+  storageItemCategories: []

@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 cameraVerticalRotation = Vector3.zero;
 
     private Vector2 cameraMoveSensitivity = new Vector2(6.0f, 1.0f);
-    private const float cameraStopMoveSpeed = 8.0f;
+    private const float cameraStopMoveSpeed = 6.0f;
 
     [HideInInspector] public Vector2 dragMoveVelocity = Vector2.zero;
     private Vector2 cameraMoveVelocity = Vector2.zero;
@@ -91,8 +91,8 @@ public class PlayerController : MonoBehaviour
     private float touchPitchInput = 0.0f;
     private float touchPitchLastInput = 0.0f;
     private float touchPitchVelocity = 0.0f;
-    private float touchPitchSensitivity = 0.1f;
-    private float pitchStopSpeed = 25.0f;
+    private const float touchPitchSensitivity = 0.1f;
+    private const float pitchStopSpeed = 25.0f;
 
     // Building
     private bool isBuildingToPlaceSelected = false;
@@ -402,7 +402,7 @@ public class PlayerController : MonoBehaviour
 
                                     if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect)
                                     {
-                                        TakeItem(hittedProductionBuilding.TakeProducedItem());
+                                        CollectItem(hittedProductionBuilding.TakeProducedItem());
                                         DeselectAll();
                                     }
                                     else
@@ -419,7 +419,7 @@ public class PlayerController : MonoBehaviour
                                 }
                                 else if (hittedLootContainer)
                                 {
-                                    TakeItems(hittedLootContainer.GetContainedLoot());
+                                    CollectItems(hittedLootContainer.GetContainedLoot());
                                     hittedLootContainer.TakeItems();
 
                                     DeselectAll();
@@ -547,9 +547,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void TakeItem(ItemInstance item)
+    private void CollectItem(ItemInstance item)
     {
-        int index = gameManager.GetItemIndexByIdName(item.itemData.itemIdName);
+        int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)item.itemData.itemId);
 
         if (cityManager.items[index].amount < cityManager.items[index].maxAmount)
         {
@@ -558,28 +558,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void TakeItems(List<ItemInstance> items)
+    private void CollectItems(List<ItemInstance> items)
     {
         for (int i = 0; i < items.Count; i++)
         {
-            int index = gameManager.GetItemIndexByIdName(items[i].itemData.itemIdName);
+            int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)items[i].itemData.itemId);
 			if (cityManager.items[index].amount < cityManager.items[index].maxAmount)
             {
                 cityManager.AddItemByIndex(index, items[i].amount);
-
 				UpdateUIStorageItemByIndex(index);
             }
-        }
-    }
-
-    private void SpendItems(List<ResourceToBuild> items)
-    {
-        for (int i = 0; i < items.Count; i++)
-        {
-            int index = gameManager.GetItemIndexByIdName(items[i].resourceData.itemIdName);
-
-            cityManager.SpendItemById(index, items[i].amount);
-            UpdateUIStorageItemByIndex(index);
         }
     }
 
@@ -587,7 +575,7 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < cityManager.items.Count; i++)
         {
-            int index = gameManager.GetItemIndexByIdName(cityManager.items[i].itemData.itemIdName);
+            int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)cityManager.items[i].itemData.itemId);
             int amount = cityManager.items[index].amount;
             int maxAmount = cityManager.items[index].maxAmount;
 
@@ -608,6 +596,8 @@ public class PlayerController : MonoBehaviour
         DeselectBuilding();
 
         selectedBuilding = building;
+        selectedBuilding.Select();
+        DeselectResident();
 
         if (building.isRuined)
         {
@@ -616,18 +606,14 @@ public class PlayerController : MonoBehaviour
         else
         {
             UIManager.OpenBuildingManagementMenu(building);
-
-            SetLayer(building.transform, LayerMask.NameToLayer("Outlined"));
         }
-
-        DeselectResident();
     }
 
     public void DeselectBuilding()
     {
         if (selectedBuilding)
         {
-            SetLayer(selectedBuilding.transform, LayerMask.NameToLayer("Default"));
+            selectedBuilding.Deselect();
 
             if (!UIManager.isBuildingResourcesMenuOpened)
             {
@@ -648,11 +634,7 @@ public class PlayerController : MonoBehaviour
 
         selectedResident = resident;
 
-        if (selectedResident)
-        {
-            SetLayer(resident.transform, LayerMask.NameToLayer("Outlined"));
-        }
-
+        selectedResident.Select();
         DeselectBuilding();
     }
 
@@ -660,7 +642,7 @@ public class PlayerController : MonoBehaviour
     {
         if (selectedResident)
         {
-            SetLayer(selectedResident.transform, LayerMask.NameToLayer("Default"));
+            selectedResident.Deselect();
             selectedResident = null;
         }
     }
@@ -669,15 +651,6 @@ public class PlayerController : MonoBehaviour
     {
         DeselectBuilding();
         DeselectResident();
-    }
-
-    void SetLayer(Transform parent, int layer)
-    {
-        parent.gameObject.layer = layer;
-        foreach (Transform child in parent)
-        {
-            SetLayer(child, layer);
-        }
     }
 
     private void SaveData()

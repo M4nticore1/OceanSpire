@@ -377,7 +377,7 @@ namespace LineworkLite.FreeOutline
                     CoreUtils.SetRenderTarget(outlineCmd, renderingData.cameraData.renderer.cameraColorTargetHandle, cameraDepthRTHandle); // if using cameraColorRTHandle this does not render in scene view when rendering after post processing with post processing enabled
                     context.ExecuteCommandBuffer(outlineCmd);
                     outlineCmd.Clear();
-                    
+
                     var sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
                     var renderQueueRange = RenderQueueRange.opaque;
 
@@ -387,7 +387,7 @@ namespace LineworkLite.FreeOutline
                         {
                             continue;
                         }
-                        
+
                         renderQueueRange = outline.renderQueue switch
                         {
                             OutlineRenderQueue.Opaque => RenderQueueRange.opaque,
@@ -398,12 +398,12 @@ namespace LineworkLite.FreeOutline
 
                         var drawingSettings = RenderingUtils.CreateDrawingSettings(RenderUtils.DefaultShaderTagIds, ref renderingData, sortingCriteria);
                         drawingSettings.overrideMaterial = outline.material;
-                        drawingSettings.overrideMaterialPassIndex = (int) outline.extrusionMethod;
+                        drawingSettings.overrideMaterialPassIndex = (int)outline.extrusionMethod;
                         drawingSettings.perObjectData = PerObjectData.None;
                         drawingSettings.enableInstancing = false;
 
                         var filteringSettings = new FilteringSettings(renderQueueRange, outline.layerMask, outline.RenderingLayer);
-                        
+
                         var renderStateBlock = new RenderStateBlock(RenderStateMask.Nothing);
                         if (ShouldRenderStencilMask(outline))
                         {
@@ -416,27 +416,27 @@ namespace LineworkLite.FreeOutline
                             renderStateBlock.stencilReference = 1;
                             renderStateBlock.stencilState = stencilState;
                         }
-                        
+
                         context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref filteringSettings, ref renderStateBlock);
                     }
                 }
 
                 context.ExecuteCommandBuffer(outlineCmd);
                 CommandBufferPool.Release(outlineCmd);
-                
+
                 // 3. Clear stencil.
                 // -> Clear the stencil buffer.
                 var clearStencilCmd = CommandBufferPool.Get();
-                
+
                 using (new ProfilingScope(clearStencilCmd, outlineSampler))
                 {
                     context.ExecuteCommandBuffer(clearStencilCmd);
                     clearStencilCmd.Clear();
-                
+
                     CoreUtils.SetRenderTarget(clearStencilCmd, renderingData.cameraData.renderer.cameraColorTargetHandle, cameraDepthRTHandle); // if using cameraColorRTHandle this does not render in scene view when rendering after post processing with post processing enabled
-                    clearStencilCmd.DrawProcedural(Matrix4x4.identity, clear, 0, MeshTopology.Triangles, 3, 1); 
+                    clearStencilCmd.DrawProcedural(Matrix4x4.identity, clear, 0, MeshTopology.Triangles, 3, 1);
                 }
-                
+
                 context.ExecuteCommandBuffer(clearStencilCmd);
                 CommandBufferPool.Release(clearStencilCmd);
             }

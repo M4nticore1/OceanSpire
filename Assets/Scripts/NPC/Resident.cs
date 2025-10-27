@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
@@ -37,13 +39,19 @@ public class Resident : Entity
         }
     }
 
+    // Movement
     public override void EnterBuilding(Building buildingPlace)
     {
         base.EnterBuilding(buildingPlace);
 
-        if (currentBuilding == workBuilding)
+        if (currentBuilding == targetBuilding)
         {
-            StartWorking();
+            targetBuilding = null;
+
+            if (isWorker)
+            {
+                StartWorking();
+            }
         }
     }
 
@@ -52,6 +60,7 @@ public class Resident : Entity
         base.ExitBuilding();
     }
 
+    // Work
     private void Work()
     {
         if (workBuilding.spawnedBuildingConstruction.buildingInteractions.Count > workerIndex)
@@ -83,7 +92,7 @@ public class Resident : Entity
         workBuilding = building;
         workerIndex = building.workers.Count;
 
-        SetTargetBuilding(building);
+        SetTargetBuilding(b => b.GetFloorIndex() == building.GetFloorIndex() && b.GetPlaceIndex() == building.GetPlaceIndex());
 
         building.AddWorker(this);
 
@@ -118,5 +127,32 @@ public class Resident : Entity
     {
         isWorking = false;
         navMeshAgent.ResetPath();
+    }
+
+    private void StartConstructingBuilding()
+    {
+
+    }
+
+    // Buildings
+    protected override void OnBuildingStartConstructing(Building building)
+    {
+        base.OnBuildingStartConstructing(building);
+
+        if (!targetBuilding)
+        {
+            if (!workBuilding)
+            {
+                SetTargetBuilding(b =>
+                {
+                    StorageBuildingComponent storage = b.GetComponent<StorageBuildingComponent>();
+                    if (!storage) return false;
+
+                    int itemIndex = GameManager.GetItemIndexById(storage.storedItems.Select(x => x.itemData).ToList(), (int)building.buildingLevelsData[building.levelIndex].resourcesToBuild[0].itemData.itemId);
+
+                    return itemIndex >= 0 && storage.storedItems[itemIndex].amount > 0;
+                });
+            }
+        }
     }
 }

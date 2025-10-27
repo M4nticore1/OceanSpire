@@ -126,7 +126,7 @@ public class ProductionBuildingComponent : BuildingComponent
     {
         if (producedItem.amount > 0)
         {
-            ItemInstance storageItemInstance = cityManager.items[gameManager.GetItemIndexByIdName(GetProducedItem().itemData.itemIdName)];
+            ItemInstance storageItemInstance = cityManager.items[GameManager.GetItemIndexById(gameManager.itemsData, (int)GetProducedItem().itemData.itemId)];
             int remainingStorageCapacity = storageItemInstance.maxAmount - storageItemInstance.amount;
 
             isStorageFull = false;

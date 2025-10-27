@@ -52,9 +52,7 @@ MonoBehaviour:
   - {fileID: 0}
   currentRoomsNumberOnFloor: 
   cityHeight: 0
-  startResources:
-  - itemdata: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    capacity: 500
+  startResources: []
   items: []
   residents: []
   employedResidentCount: 0

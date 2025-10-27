@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -31,6 +32,16 @@ public class Entity : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
+    protected virtual void OnEnable()
+    {
+        Building.onAnyBuildingStartConstructing += OnBuildingStartConstructing;
+    }
+
+    protected virtual void OnDisable()
+    {
+        Building.onAnyBuildingStartConstructing -= OnBuildingStartConstructing;
+    }
+
     protected virtual void Start()
     {
 
@@ -41,9 +52,8 @@ public class Entity : MonoBehaviour
 
     }
 
-    public virtual void SetTargetBuilding(Building targetBuilding)
+    public virtual void SetTargetBuilding(Func<Building, bool> targetBuildingCondition)
     {
-        this.targetBuilding = targetBuilding;
         pathIndex = 0;
 
         if (cityManager)
@@ -55,12 +65,11 @@ public class Entity : MonoBehaviour
             else
                 startBuildingPlace = cityManager.builtFloors[CityManager.firstBuildCityFloorIndex].roomBuildingPlaces[CityManager.firstBuildCitybuildingPlace];
 
-            //Debug.Log(startBuildingPlace.placedBuilding);
-            //Debug.Log(targetBuilding);
-            bool isPathFounded = cityManager.FindPathToBuilding(startBuildingPlace, targetBuilding.buildingPlace, ref pathBuildings);
+            bool isPathFounded = cityManager.FindPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings);
 
             if (isPathFounded)
             {
+                targetBuilding = pathBuildings[pathBuildings.Count - 1];
                 FollowPath();
             }
         }
@@ -170,6 +179,7 @@ public class Entity : MonoBehaviour
         transform.position += direction * speed;
     }
 
+    // Elevators
     public void StartElevatorWalking(ElevatorBuilding elevatorBuilding)
     {
         Debug.Log("Start Walking");
@@ -240,5 +250,30 @@ public class Entity : MonoBehaviour
         FollowPath();
 
         elevatorBuilding.RemoveRidingPassenger(this);
+    }
+
+    // Buildings
+    protected virtual void OnBuildingStartConstructing(Building building)
+    {
+        if (targetBuilding)
+        {
+            SetTargetBuilding(b => b.GetFloorIndex() == targetBuilding.GetFloorIndex() && b.GetPlaceIndex() == targetBuilding.GetPlaceIndex());
+        }
+    }
+
+    public void Select()
+    {
+        foreach (GameObject child in GameUtils.GetAllChildren(transform))
+        {
+            child.layer = LayerMask.NameToLayer("Outlined");
+        }
+    }
+
+    public void Deselect()
+    {
+        foreach (GameObject child in GameUtils.GetAllChildren(transform))
+        {
+            child.layer = LayerMask.NameToLayer("Default");
+        }
     }
 }

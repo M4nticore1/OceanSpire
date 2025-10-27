@@ -1,10 +1,5 @@
-Shader "Hidden/BlurSimple"
-{
-    Properties
-    {
-        _MainTex ("Texture", 2D) = "white" {}
-    }
-    
+Shader "Hidden/SimpleBlur"
+{  
     SubShader
     {     
         HLSLINCLUDE
@@ -25,6 +20,7 @@ Shader "Hidden/BlurSimple"
 
         TEXTURE2D_X(_MainTex);
         SAMPLER(sampler_MainTex);
+
         float4 _MainTex_TexelSize;
             
         Varyings Vert(Attributes input)
@@ -46,7 +42,7 @@ Shader "Hidden/BlurSimple"
             color += SAMPLE_TEXTURE2D_X(_MainTex, sampler_MainTex, input.uv + float2( 1,-1) * offset);
             color += SAMPLE_TEXTURE2D_X(_MainTex, sampler_MainTex, input.uv + float2(-1,-1) * offset);
             
-            return color/5.0;
+            return color / 5.0;
         }
 
         ENDHLSL
@@ -54,6 +50,9 @@ Shader "Hidden/BlurSimple"
         Pass
         {
             HLSLPROGRAM
+            #pragma target 2.0
+            #pragma multi_compile _ _STEREO_MULTIVIEW_ON
+            #pragma multi_compile_fragment _ _SAMPLE_TEXTURE2D_X
 
             #pragma vertex Vert
             #pragma fragment Frag

@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
   m_Name: FloorFrameLevelData
   m_EditorClassIdentifier: 
-  ResourcesToBuild:
-  - resourceData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+  resourcesToBuild:
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     amount: 500
-  maxPeople: 0
+  maxResidentsCount: 0
+  constructionStraight: {fileID: 0}
+  constructionCorner: {fileID: 0}

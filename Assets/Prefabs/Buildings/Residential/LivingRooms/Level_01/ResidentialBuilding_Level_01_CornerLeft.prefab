@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingDetails: []
+  buildingInteriors: []
   buildingInteractions: []
 --- !u!64 &9097415370073276759
 MeshCollider:
@@ -70,7 +70,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: -6209692846270416709, guid: 4a12affb5acf32d4aaf06033b3030945, type: 3}
+  m_Mesh: {fileID: -6209692846270416709, guid: fc09e6eea98381443a812b9df2b24b3f, type: 3}
 --- !u!1001 &1910306088369090283
 PrefabInstance:
   m_ObjectHideFlags: 0

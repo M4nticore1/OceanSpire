@@ -1,4 +1,4 @@
-﻿﻿Shader "Custom/Outline"
+﻿﻿Shader "RenderFeature/Outline"
 {
     Properties
     {
@@ -26,6 +26,9 @@
             half2 uv            : TEXCOORD0;
         };
 
+        TEXTURE2D(_MainTex);
+        SAMPLER(sampler_MainTex);
+
         TEXTURE2D_X(_OutlineRenderTexture);
         SAMPLER(sampler_OutlineRenderTexture);
 
@@ -47,12 +50,14 @@
 
         half4 Fragment(Varyings input) : SV_Target
         {
+            half4 baseColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
             float2 uv = UnityStereoTransformScreenSpaceTex(input.uv);
             half4 prepassColor = SAMPLE_TEXTURE2D_X(_OutlineRenderTexture, sampler_OutlineRenderTexture, uv);
             half4 bluredColor = SAMPLE_TEXTURE2D_X(_OutlineBluredTexture, sampler_OutlineBluredTexture,uv);
             half4 difColor = max( 0, bluredColor - prepassColor);
             half4 color = difColor* _Color * _Intensity;
-            color.a = 1;    
+            color.a = 1;
+
             return color;
         }
         
@@ -61,9 +66,9 @@
         Pass
         {
             Blend [_SrcBlend] [_DstBlend]
-            ZTest Always    // всегда рисуем, независимо от текущей глубины в буфере
-            ZWrite Off      // и ничего в него не пишем
-            Cull Off        // рисуем все стороны меша
+            ZTest Always
+            ZWrite Off
+            Cull Off
 
             HLSLPROGRAM
            
@@ -74,4 +79,3 @@
         }
     }
 }
-

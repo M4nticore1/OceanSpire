@@ -468,7 +468,7 @@ public class UIManager : MonoBehaviour
         if (storageBuilding)
         {
             StorageBuildingLevelData levelData = storageBuilding.levelsData[0] as StorageBuildingLevelData;
-            CreateBuildingCharacteristicWidget("Storage capacity", levelData.storageItems[0].capacity, levelData.storageItems[0].itemdata.itemIcon, ref index);
+            CreateBuildingCharacteristicWidget("Storage capacity", levelData.storageItems[0].amount, levelData.storageItems[0].itemData.itemIcon, ref index);
         }
     }
 
@@ -541,10 +541,10 @@ public class UIManager : MonoBehaviour
 
         List<int> indexes = new List<int>();
 
-        List<ResourceToBuild> previousResourcesToUpgrade = building.buildingLevelsData[building.levelIndex].ResourcesToBuild;
+        List<ItemEntry> previousResourcesToUpgrade = building.buildingLevelsData[building.levelIndex].resourcesToBuild;
 
         for (int i = 0; i < previousResourcesToUpgrade.Count; i++)
-            indexes.Add(gameManager.GetItemIndexByIdName(previousResourcesToUpgrade[i].resourceData.itemIdName));
+            indexes.Add(GameManager.GetItemIndexById(gameManager.itemsData, (int)previousResourcesToUpgrade[i].itemData.itemId));
 
         UpdateStorageItemsByIndexes(indexes);
 
@@ -605,7 +605,7 @@ public class UIManager : MonoBehaviour
         CleanResourceToUpgradeWidgets();
 
         int nextLevelIndex = selectedBuilding.levelIndex + 1;
-        List<ResourceToBuild> resourcesToUpgrade = selectedBuilding.buildingLevelsData[nextLevelIndex].ResourcesToBuild;
+        List<ItemEntry> resourcesToUpgrade = selectedBuilding.buildingLevelsData[nextLevelIndex].resourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
         {
@@ -627,7 +627,7 @@ public class UIManager : MonoBehaviour
         CleanResourceToUpgradeWidgets();
 
         int levelIndex = selectedBuilding.levelIndex;
-        List<ResourceToBuild> resourcesToUpgrade = selectedBuilding.buildingLevelsData[levelIndex].ResourcesToBuild;
+        List<ItemEntry> resourcesToUpgrade = selectedBuilding.buildingLevelsData[levelIndex].resourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
         {
@@ -819,7 +819,7 @@ public class UIManager : MonoBehaviour
         repairBuildingNameText.SetText(building.buildingData.buildingName + " (Ruin)");
 
         int nextLevelIndex = 0;
-        List<ResourceToBuild> resourcesToUpgrade = building.buildingLevelsData[nextLevelIndex].ResourcesToBuild;
+        List<ItemEntry> resourcesToUpgrade = building.buildingLevelsData[nextLevelIndex].resourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
         {

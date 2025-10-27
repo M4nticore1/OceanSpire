@@ -135,11 +135,30 @@ MonoBehaviour:
   possibleLoot:
   - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     dropChance: 100
-    minAmount: 500
-    maxAmount: 500
+    minAmount: 5000
+    maxAmount: 5000
+  - itemData: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+    dropChance: 100
+    minAmount: 5000
+    maxAmount: 5000
+  - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    dropChance: 100
+    minAmount: 5000
+    maxAmount: 5000
+  - itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+    dropChance: 100
+    minAmount: 5000
+    maxAmount: 5000
   isMovable: 0
   transportMethod: 0
   moveSpeed: 0
+  moveDirection: {x: 0, y: 0, z: 0}
+  floorsCountToSpawn: 0
+  minSpawnFloorNumber: 0
+  maxSpawnFloorNumber: 0
+  spawnMinTime: 0
+  spawnMaxTime: 0
+  spawnTime: 0
 --- !u!65 &8136641020633126798
 BoxCollider:
   m_ObjectHideFlags: 0

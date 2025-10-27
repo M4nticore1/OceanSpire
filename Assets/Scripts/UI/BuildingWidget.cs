@@ -59,7 +59,7 @@ public class BuildingWidget : MonoBehaviour
 
         buildingNameText.SetText(building.buildingData.buildingName);
 
-        resourcesToBuildNumber = building.buildingLevelsData[0].ResourcesToBuild.Count();
+        resourcesToBuildNumber = building.buildingLevelsData[0].resourcesToBuild.Count();
 
         if (newBuilding.buildingData.thumbImage)
             buildingImage.sprite = newBuilding.buildingData.thumbImage;
@@ -82,7 +82,7 @@ public class BuildingWidget : MonoBehaviour
             BuildingResourceWidget spawnedBuildingResourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);
             spawnedBuildingResourceWidgets.Add(spawnedBuildingResourceWidget);
 
-            spawnedBuildingResourceWidgets[i].Initialize(building.buildingLevelsData[0].ResourcesToBuild[i].amount, building.buildingLevelsData[0].ResourcesToBuild[i].resourceData.itemIcon);
+            spawnedBuildingResourceWidgets[i].Initialize(building.buildingLevelsData[0].resourcesToBuild[i].amount, building.buildingLevelsData[0].resourcesToBuild[i].itemData.itemIcon);
         }
     }
 
@@ -92,9 +92,9 @@ public class BuildingWidget : MonoBehaviour
 
         for (int i = 0; i < resourcesToBuildNumber; i++)
         {
-            int index = gameManager.GetItemIndexByIdName(building.buildingLevelsData[0].ResourcesToBuild[i].resourceData.itemIdName);
+            int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)building.buildingLevelsData[0].resourcesToBuild[i].itemData.itemId);
 
-            if (cityManager.items[index].amount >= building.buildingLevelsData[0].ResourcesToBuild[i].amount)
+            if (cityManager.items[index].amount >= building.buildingLevelsData[0].resourcesToBuild[i].amount)
                 haveResourcesToBuild.Add(true);
             else
                 haveResourcesToBuild.Add(false);
@@ -117,9 +117,9 @@ public class BuildingWidget : MonoBehaviour
     {
         for (int i = 0; i < resourcesToBuildNumber; i++)
         {
-            int index = gameManager.GetItemIndexByIdName(building.buildingLevelsData[0].ResourcesToBuild[i].resourceData.itemIdName);
+            int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)building.buildingLevelsData[0].resourcesToBuild[i].itemData.itemId);
 
-            spawnedBuildingResourceWidgets[i].SetResourceText(cityManager.items[index].amount, building.buildingLevelsData[0].ResourcesToBuild[i].amount);
+            spawnedBuildingResourceWidgets[i].SetResourceText(cityManager.items[index].amount, building.buildingLevelsData[0].resourcesToBuild[i].amount);
         }
     }
 }

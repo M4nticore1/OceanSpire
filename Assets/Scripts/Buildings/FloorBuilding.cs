@@ -15,22 +15,6 @@ public class FloorBuilding : Building
         InitializeBuilding(buildingPlace);
     }
 
-    public override void StartBuilding(int nextLevel)
-    {
-        base.StartBuilding(nextLevel);
-
-        if (GetType() == typeof(FloorBuilding))
-            InvokeStartConstructing(this);
-    }
-
-    public override void Build(int newLevelIndex, int interiorIndex)
-    {
-        base.Build(newLevelIndex, interiorIndex);
-
-        //if (GetType() == typeof(FloorBuilding))
-            //InvokeFinishConstructing(this);
-    }
-
     public override void InitializeBuilding(BuildingPlace buildingPlace)
     {
         base.InitializeBuilding(buildingPlace);

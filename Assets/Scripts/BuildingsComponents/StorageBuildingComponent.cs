@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [AddComponentMenu("BuildingComponents/StorageBuildingComponent")]
 public class StorageBuildingComponent : BuildingComponent
 {
     [HideInInspector] public StorageBuildingLevelData levelData = null;
+    public List<ItemEntry> storedItems = new List<ItemEntry>();
 
     public override void Build()
     {
@@ -42,26 +42,15 @@ public class StorageBuildingComponent : BuildingComponent
 		cityManager.SubtractStorageCapacity(levelData);
     }
 
-    //private void ChangeItemCapacity(int level, bool isIncreasing)
-    //{
-    //    for (int i = 0; i < levelsData[level].storageItems.Count(); i++)
-    //    {
-    //        int changeValue = levelsData[level].storageItems[i].capacity;
+    public int GiveItemAmount(ItemEntry item)
+    {
+        int amountToGive = item.amount;
+        int storedAmount = storedItems[(int)item.itemData.itemId].amount;
+        if (amountToGive > storedAmount)
+            amountToGive = storedAmount;
 
-    //        cityManager.items[cityManager.GetItemIndexByIdName(levelsData[level].storageItems[i].itemdata.itemIdName)].maxAmount += isIncreasing ? changeValue : -changeValue;
-    //    }
+        cityManager.SpendItemById((int)item.itemData.itemId, amountToGive);
 
-    //    for (int i = 0; i < levelsData[level].storageItemCategories.Count(); i++)
-    //    {
-    //        for (int j = 0; j < cityManager.items.Count(); j++)
-    //        {
-    //            if (cityManager.items[j].itemData.itemCategory == levelsData[level].storageItemCategories[i].itemCategory)
-    //            {
-    //                int changeValue = levelsData[level].storageItemCategories[i].capacity;
-
-    //                cityManager.items[j].maxAmount += isIncreasing ? changeValue : -changeValue;
-    //            }
-    //        }
-    //    }
-    //}
+        return amountToGive;
+    }
 }

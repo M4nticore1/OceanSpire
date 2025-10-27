@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c8ae1ed452b6e748a22ece1468822aa, type: 3}
   m_Name: ElevatorLevelData
   m_EditorClassIdentifier: 
-  ResourcesToBuild:
-  - resourceData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 350
+  resourcesToBuild:
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 400
   maxResidentsCount: 4
   constructionStraight: {fileID: 0}
   constructionCorner: {fileID: 0}

@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
+[System.Serializable]
 public struct ResourceToBuild
 {
-    public ItemData resourceData;
+    public ItemData itemData;
     public int amount;
 }
 
@@ -13,9 +12,9 @@ public struct ResourceToBuild
 public class BuildingLevelData : ScriptableObject
 {
     [Header("Main")]
-    public List<ResourceToBuild> ResourcesToBuild = new List<ResourceToBuild>();
+    public List<ItemEntry> resourcesToBuild = new List<ItemEntry>();
     public int maxResidentsCount = 0;
 
-    public GameObject constructionStraight = null;
-    public GameObject constructionCorner = null;
+    public BuildingConstruction constructionStraight = null;
+    public BuildingConstruction constructionCorner = null;
 }

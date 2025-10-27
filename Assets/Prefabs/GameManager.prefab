@@ -44,7 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ad56024aca1e4b4db659747187211f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldTime: 0
   buildingPrefabs:
   - {fileID: 5682727777084949512, guid: 6228e009c15c9cd438645bd5c5075d4b, type: 3}
   - {fileID: 2892744138841790576, guid: b502e72fb7c0d1c4ea2bca5ae9b69e09, type: 3}
@@ -61,14 +60,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
   - {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
   - {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+  - {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
   - {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
   - {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
-  lootContainerPrefabs:
-  - {fileID: 1163065957676753421, guid: af311279b2bbd5340b546e8435ae6bf8, type: 3}
-  - {fileID: 1163065957676753421, guid: 2a682736948bcc843bdaea7b612fa403, type: 3}
-  - {fileID: 1163065957676753421, guid: b441e98c27058704694aa7ff7dcec351, type: 3}
   residentPrefab: {fileID: 6103850784313419152, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
   windDirection: {x: 0, y: 0}
   windRotation: 0
-  windSpeed: 0
   hasSavedData: 0

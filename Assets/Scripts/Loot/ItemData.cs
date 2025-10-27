@@ -6,6 +6,7 @@ public enum ItemID
     Food,
     Electricity,
     Wood,
+    Stone,
     Metal,
     Plastic,
 }

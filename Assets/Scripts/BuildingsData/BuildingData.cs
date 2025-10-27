@@ -56,6 +56,7 @@ public class BuildingData : ScriptableObject
     public BuildingType buildingType = BuildingType.Room;
     public BuildingCategory buildingCategory = BuildingCategory.Construction;
     public ConnectionType connectionType = ConnectionType.None;
+    //public bool requiresConstruction = true;
     public Sprite thumbImage = null;
     public string description = "";
 

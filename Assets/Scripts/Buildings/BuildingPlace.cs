@@ -28,7 +28,7 @@ public class BuildingPlace : MonoBehaviour
 
     [SerializeField] private GameObject buildingZone = null;
     [SerializeField] private GameObject buildingFrame = null;
-    private MeshRenderer buildingZoneMeshRenderer = null;
+    [SerializeField] private MeshRenderer buildingZoneMeshRenderer = null;
     [SerializeField] private BoxCollider boxCollider = null;
 
     private MaterialPropertyBlock materialPropertyBlock = null;
@@ -42,12 +42,12 @@ public class BuildingPlace : MonoBehaviour
     private Color buildingPlaceWarningOutlineColor = new Color(1, 1, 0, 1);
     private Color buildingPlaceInvalidOutlineColor = new Color(1, 0, 0, 1);
 
-    public void InitializeBuildingPlace(int newFloorNumber)
+    public void InitializeBuildingPlace(int newFloorindex)
     {
         cityManager = FindAnyObjectByType<CityManager>();
         buildingZoneMeshRenderer = buildingZone.GetComponent<MeshRenderer>();
 
-        floorIndex = newFloorNumber;
+        floorIndex = newFloorindex;
 
         materialPropertyBlock = new MaterialPropertyBlock();
         outlineMaterialPropertyBlock = new MaterialPropertyBlock();
@@ -67,23 +67,18 @@ public class BuildingPlace : MonoBehaviour
             {
                 placedBuilding = Instantiate(buildingToPlace, transform.position, transform.rotation);
 
-                if(placedBuilding.buildingData.buildingType == BuildingType.FloorFrame)
+                if (placedBuilding.buildingData.buildingType == BuildingType.FloorFrame)
                     placedBuilding.transform.SetParent(cityManager.towerRoot);
                 else
                     placedBuilding.transform.SetParent(transform);
             }
 
+            Debug.Log(floorIndex + " " + buildingPlaceIndex);
             placedBuilding.Place(this, levelIndex, isUnderConstruction, interiorIndex);
 
             if (buildingFrame)
                 buildingFrame.SetActive(false);
         }
-    }
-
-    private IEnumerator PlaceBuildingCoroutine(Building buildingToPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
-    {
-        yield return new WaitForEndOfFrame();
-        PlaceBuilding(buildingToPlace, levelIndex, isUnderConstruction, interiorIndex);
     }
 
     public void DestroyBuilding()

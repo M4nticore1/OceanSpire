@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct ItemAmountEntry
+public struct ItemEntry
 {
-    public ItemData itemdata;
-    public int capacity;
+    public ItemData itemData;
+    public int amount;
 }
 
 [Serializable]
-public struct ItemCategoryAmountEntry
+public struct ItemCategoryEntry
 {
     public ItemCategory itemCategory;
     public int capacity;
@@ -19,6 +19,6 @@ public struct ItemCategoryAmountEntry
 [CreateAssetMenu(fileName = "StorageBuildingLevelData", menuName = "Scriptable Objects/StorageBuildingLevelData")]
 public class StorageBuildingLevelData : BuildingComponentLevelData
 {
-    public List<ItemAmountEntry> storageItems = new List<ItemAmountEntry>();
-    public List<ItemCategoryAmountEntry> storageItemCategories = new List<ItemCategoryAmountEntry>();
+    public List<ItemEntry> storageItems = new List<ItemEntry>();
+    public List<ItemCategoryEntry> storageItemCategories = new List<ItemCategoryEntry>();
 }
