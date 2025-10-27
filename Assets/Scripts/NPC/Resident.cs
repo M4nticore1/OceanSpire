@@ -145,12 +145,17 @@ public class Resident : Entity
             {
                 SetTargetBuilding(b =>
                 {
+                    Debug.Log(b.storageComponent);
+
                     StorageBuildingComponent storage = b.GetComponent<StorageBuildingComponent>();
-                    if (!storage) return false;
+                    if (!b.storageComponent) return false;
 
-                    int itemIndex = GameManager.GetItemIndexById(storage.storedItems.Select(x => x.itemData).ToList(), (int)building.buildingLevelsData[building.levelIndex].resourcesToBuild[0].itemData.itemId);
+                    //int itemIndex = GameManager.GetItemIndexById(storage.storedItems.Select(x => x.itemData).ToList(), (int)building.buildingLevelsData[building.levelIndex].resourcesToBuild[0].itemData.itemId);
 
-                    return itemIndex >= 0 && storage.storedItems[itemIndex].amount > 0;
+                    //return itemIndex >= 0 && storage.storedItems[itemIndex].amount > 0;
+
+                    Debug.Log(b);
+                    return true;
                 });
             }
         }

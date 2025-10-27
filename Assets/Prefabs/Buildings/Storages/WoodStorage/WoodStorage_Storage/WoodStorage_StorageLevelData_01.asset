@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: WoodStorage_StorageLevelData_01
   m_EditorClassIdentifier: 
   storageItems:
-  - itemdata: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    capacity: 500
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 500
   storageItemCategories: []

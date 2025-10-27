@@ -137,6 +137,8 @@ public class PlayerController : MonoBehaviour
             cameraYawRotateAlpha = 0.5f;
 
         moveStateValue = 1f / CityManager.roomsCountPerFloor;
+
+        SaveData();
     }
 
     private void Update()
@@ -153,8 +155,6 @@ public class PlayerController : MonoBehaviour
             placeIndex = (5 - moveStateIndex) % 6;
         else
             placeIndex = 13 - moveStateIndex;
-
-        Debug.Log(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats) + "/" + placeIndex);
 
         Building buildingToShowStats = cityManager.GetBuildingByIndex(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
 

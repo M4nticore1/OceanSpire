@@ -69,7 +69,7 @@ public class Entity : MonoBehaviour
 
             if (isPathFounded)
             {
-                targetBuilding = pathBuildings[pathBuildings.Count - 1];
+                //targetBuilding = pathBuildings[0];
                 FollowPath();
             }
         }
@@ -108,7 +108,7 @@ public class Entity : MonoBehaviour
 
     private void FollowPath()
     {
-        //Debug.Log("FollowPath");
+        Debug.Log("FollowPath");
 
         if (!isRidingOnElevator && pathIndex < pathBuildings.Count)
         {
@@ -156,7 +156,7 @@ public class Entity : MonoBehaviour
                 }
                 else if (currentPathBuilding)
                 {
-                    navMeshAgent.SetDestination(currentPathBuilding.spawnedBuildingConstruction.transform.position);
+                    navMeshAgent.SetDestination(currentPathBuilding.transform.position);
                 }
             }
 

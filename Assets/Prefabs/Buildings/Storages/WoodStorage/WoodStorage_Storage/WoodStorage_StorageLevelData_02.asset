@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4207ac79800eb744ba4944814a85a8f9, type: 3}
   m_Name: WoodStorage_StorageLevelData_02
   m_EditorClassIdentifier: 
-  storageItems: []
+  storageItems:
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 1000
   storageItemCategories: []

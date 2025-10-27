@@ -8,12 +8,12 @@ public class FloorBuilding : Building
     public BuildingPlace hallBuildingPlace;
     public BuildingPlace floorBuildingPlace;
 
-    public override void Place(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
-    {
-        base.Place(buildingPlace, levelIndex, isUnderConstruction, interiorIndex);
+    //public override void Place(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
+    //{
+    //    base.Place(buildingPlace, levelIndex, isUnderConstruction, interiorIndex);
 
-        InitializeBuilding(buildingPlace);
-    }
+    //    InitializeBuilding(buildingPlace);
+    //}
 
     public override void InitializeBuilding(BuildingPlace buildingPlace)
     {

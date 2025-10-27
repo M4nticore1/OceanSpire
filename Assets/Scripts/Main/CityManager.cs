@@ -109,11 +109,14 @@ public class CityManager : MonoBehaviour
 
     public void LoadCity(SaveData data)
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        towerNavMeshSurface = towerRoot.GetComponent<NavMeshSurface>();
-
         InitializeItems();
+        LoadBuildings(data);
+        LoadResources(data);
+        LoadEntities(data);
+    }
 
+    private void LoadBuildings(SaveData data)
+    {
         if (builtFloors.Count > 0)
         {
             // Build saved buildings
@@ -197,11 +200,37 @@ public class CityManager : MonoBehaviour
 
         if (bakeNavMeshSurfaceCoroutine == null)
             bakeNavMeshSurfaceCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
-
-        StartCoroutine(LoadCityCoroutine(data));
     }
 
-    // Entities
+    private void InitializeItems()
+    {
+        for (int i = 0; i < gameManager.itemsData.Count; i++)
+        {
+            items.Add(new ItemInstance(gameManager.itemsData[i], 0, 0));
+        }
+    }
+
+    private void LoadResources(SaveData data)
+    {
+        if (data != null)
+        {
+            if (data.resourcesAmount != null)
+            {
+                for (int i = 0; i < data.resourcesAmount.Length; i++)
+                {
+                    AddItemByIndex(i, data.resourcesAmount[i]);
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < startResources.Count; i++)
+            {
+                AddItemByIndex((int)startResources[i].itemData.itemId, startResources[i].amount);
+            }
+        }
+    }
+
     private void LoadEntities(SaveData data)
     {
         if (data != null)
@@ -286,25 +315,7 @@ public class CityManager : MonoBehaviour
         if (bakeNavMeshSurfaceCoroutine != null)
             yield return bakeNavMeshSurfaceCoroutine;
 
-        // Resources
-        if (data != null)
-        {
-            if (data.resourcesAmount != null)
-            {
-                for (int i = 0; i < data.resourcesAmount.Length; i++)
-                {
-                    items[i].SetAmount(data.resourcesAmount[i]);
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < startResources.Count; i++)
-            {
-                items[(int)startResources[i].itemData.itemId].SetAmount(startResources[i].amount);
-            }
-        }
-
+        LoadResources(data);
         LoadEntities(data);
     }
 
@@ -678,14 +689,6 @@ public class CityManager : MonoBehaviour
         OnStorageCapacityUpdated?.Invoke();
     }
 
-    private void InitializeItems()
-    {
-        for (int i = 0; i < gameManager.itemsData.Count; i++)
-        {
-            items.Add(new ItemInstance(gameManager.itemsData[i], 0, 0));
-        }
-    }
-
     public void AddItemByIndex(int index, int amount)
     {
         items[index].AddAmount(amount);
@@ -824,6 +827,7 @@ public class CityManager : MonoBehaviour
 
             if (startBuilding)
             {
+                // Left Buildings
                 for (int i = 1; i < roomsCountPerFloor / 2; i++)
                 {
                     int index = (startBuildingPlace.buildingPlaceIndex + i + roomsCountPerFloor) % roomsCountPerFloor;
@@ -851,7 +855,10 @@ public class CityManager : MonoBehaviour
                                 allPaths[startPathIndex].Add(leftBuilding);
 
                                 if (targetBuildingCondition(leftBuilding))
+                                {
+                                    Debug.Log("return true" + leftBuilding.GetFloorIndex() + " " + leftBuilding.GetPlaceIndex());
                                     return true;
+                                }
                             }
                         }
                         else
@@ -860,6 +867,7 @@ public class CityManager : MonoBehaviour
                         }
                     }
 
+                    // Right Buildings
                     if (isNeededToCheckRightSide)
                     {
                         int rightIndex = (startBuildingPlace.buildingPlaceIndex - i + roomsCountPerFloor) % roomsCountPerFloor;
@@ -883,7 +891,10 @@ public class CityManager : MonoBehaviour
                                 allPaths[startPathIndex].Add(rightBuilding);
 
                                 if (targetBuildingCondition(rightBuilding))
+                                {
+                                    Debug.Log("return true" + rightBuilding.GetFloorIndex() + " " + rightBuilding.GetPlaceIndex());
                                     return true;
+                                }
                             }
                         }
                         else

@@ -46,15 +46,16 @@ public class Building : MonoBehaviour
     public static event Action<Building> onAnyBuildingFinishConstructing;
     public event Action onBuildingFinishConstructing;
 
+    public static event Action<Building> onAnyBuildingDemolished;
+    public event Action onBuildingDemolished;
+
+    [HideInInspector] public StorageBuildingComponent storageComponent = null;
+    [HideInInspector] public ProductionBuildingComponent productionComponent = null;
+
     protected virtual void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
-    }
-
-    protected virtual void Start()
-    {
-
     }
 
     protected virtual void Update()
@@ -67,11 +68,23 @@ public class Building : MonoBehaviour
     {
         this.buildingPlace = buildingPlace;
         isInitialized = true;
+
+        storageComponent = GetComponent<StorageBuildingComponent>();
+        productionComponent = GetComponent<ProductionBuildingComponent>();
     }
 
     public virtual void Place(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
     {
-        StartCoroutine(PlaceCoroutine(buildingPlace, levelIndex, requiresConstruction, interiorIndex));
+        InitializeBuilding(buildingPlace);
+
+        if (isUnderConstruction)
+            StartBuilding(levelIndex);
+        else
+            Build(levelIndex, interiorIndex);
+
+        this.levelIndex = levelIndex;
+        isUnderConstruction = requiresConstruction;
+        this.interiorIndex = interiorIndex;
     }
 
     private IEnumerator PlaceCoroutine(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
@@ -116,13 +129,13 @@ public class Building : MonoBehaviour
 
     private void Build(int newLevelIndex, int interiorIndex)
     {
-        StorageBuildingComponent storageBuilding = GetComponent<StorageBuildingComponent>();
-        ProductionBuildingComponent productionBuildingComponent = GetComponent<ProductionBuildingComponent>();
+        //StorageBuildingComponent storageBuilding = GetComponent<StorageBuildingComponent>();
+        //ProductionBuildingComponent productionBuildingComponent = GetComponent<ProductionBuildingComponent>();
 
-        if (storageBuilding)
-            storageBuilding.Build();
-        if (productionBuildingComponent)
-            productionBuildingComponent.Build();
+        if (storageComponent)
+            storageComponent.Build();
+        if (productionComponent)
+            productionComponent.Build();
 
         UpdateBuildingConstruction(levelIndex);
 
@@ -134,7 +147,9 @@ public class Building : MonoBehaviour
             spawedBuildingInterior = Instantiate(spawnedBuildingConstruction.buildingInteriors[interiorIndex], transform);
         }
 
-        InvokeFinishConstructing(this);
+        onAnyBuildingFinishConstructing?.Invoke(this);
+        onBuildingFinishConstructing?.Invoke();
+        //InvokeFinishConstructing(this);
     }
 
     public virtual void Demolish()

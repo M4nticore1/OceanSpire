@@ -12,15 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a152c24115ebab4b957adfb74815f21, type: 3}
   m_Name: WoodStorage_LevelBuildingData_01
   m_EditorClassIdentifier: 
-  ResourcesToBuild:
-  - resourceData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 500
-  maxPeople: 2
-  BuildingFront: {fileID: 0}
-  BuildingFrontLeft: {fileID: 0}
-  BuildingFrontRight: {fileID: 0}
-  BuildingFrontLeftRight: {fileID: 0}
-  BuildingCorner: {fileID: 0}
-  BuildingCornerLeft: {fileID: 0}
-  BuildingCornerRight: {fileID: 0}
-  BuildingCornerLeftRight: {fileID: 0}
+  resourcesToBuild: []
+  maxResidentsCount: 1
+  constructionStraight: {fileID: 0}
+  constructionCorner: {fileID: 0}
+  buildingStraight: {fileID: 0}
+  buildingCorner: {fileID: 0}
+  buildingStraightLeft: {fileID: 0}
+  buildingStraightRight: {fileID: 0}
+  buildingStraightLeftRight: {fileID: 0}
+  buildingCornerLeft: {fileID: 0}
+  buildingCornerRight: {fileID: 0}
+  buildingCornerLeftRight: {fileID: 0}
+  buildingStraightAbove: {fileID: 0}
+  buildingStraightBelow: {fileID: 0}
+  buildingStraightAboveBelow: {fileID: 0}
+  buildingCornerAbove: {fileID: 0}
+  buildingCornerBelow: {fileID: 0}
+  buildingCornerAboveBelow: {fileID: 0}

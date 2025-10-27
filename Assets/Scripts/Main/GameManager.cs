@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
 
     public static int GetItemIndexById(List<ItemData> itemsList, int id)
     {
-        if ((int)itemsList[id].itemId == id)
+        if (itemsList.Count > id && (int)itemsList[id].itemId == id)
         {
             return id;
         }

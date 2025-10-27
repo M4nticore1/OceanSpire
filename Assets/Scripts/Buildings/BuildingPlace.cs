@@ -73,7 +73,6 @@ public class BuildingPlace : MonoBehaviour
                     placedBuilding.transform.SetParent(transform);
             }
 
-            Debug.Log(floorIndex + " " + buildingPlaceIndex);
             placedBuilding.Place(this, levelIndex, isUnderConstruction, interiorIndex);
 
             if (buildingFrame)
