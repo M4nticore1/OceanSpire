@@ -1,19 +1,12 @@
-using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
 
 public class Resident : Entity
 {
-    [HideInInspector] public bool isWorker { get; private set; } = false;
-    [HideInInspector] public bool isWorking { get; private set; } = false;
-    [HideInInspector] public int workerIndex { get; private set; } = 0;
-    [HideInInspector] public Building workBuilding { get; private set; } = null;
-
-    private float actionTime = 0.0f;
-    private int actionIndex = 0;
-
     public static event System.Action OnWorkerAdd;
     public static event System.Action OnWorkerRemove;
 
@@ -34,7 +27,14 @@ public class Resident : Entity
             }
             else
             {
+                if (currentBuilding == targetBuilding)
+                {
+                    float distance = Vector3.Distance(transform.position, targetPosition);
+                    if (distance < applyTargetPosition && navMeshAgent.velocity == Vector3.zero)
+                    {
 
+                    }
+                }
             }
         }
     }
@@ -88,15 +88,18 @@ public class Resident : Entity
 
     public void SetWorkBuilding(Building building)
     {
-        isWorker = true;
-        workBuilding = building;
-        workerIndex = building.workers.Count;
+        if (building)
+        {
+            isWorker = true;
+            workBuilding = building;
+            workerIndex = building.workers.Count;
 
-        SetTargetBuilding(b => b.GetFloorIndex() == building.GetFloorIndex() && b.GetPlaceIndex() == building.GetPlaceIndex());
+            SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == building.GetFloorIndex() && b.GetPlaceIndex() == building.GetPlaceIndex());
 
-        building.AddWorker(this);
+            building.AddWorker(this);
 
-        OnWorkerAdd?.Invoke();
+            OnWorkerAdd?.Invoke();
+        }
     }
 
     public void RemoveWorkBuilding()
@@ -135,28 +138,27 @@ public class Resident : Entity
     }
 
     // Buildings
-    protected override void OnBuildingStartConstructing(Building building)
+    protected override IEnumerator OnBuildingStartConstructingCoroutine(Building building)
     {
-        base.OnBuildingStartConstructing(building);
+        base.EnterBuilding(building);
+
+        yield return new WaitForEndOfFrame();
 
         if (!targetBuilding)
         {
             if (!workBuilding)
             {
-                SetTargetBuilding(b =>
+                if (SetTargetBuilding(building.buildingPlace, b =>
                 {
-                    Debug.Log(b.storageComponent);
+                    if (!b.storageComponent || (b.GetFloorIndex() == building.GetFloorIndex() && b.GetPlaceIndex() == building.GetPlaceIndex())) return false;
 
-                    StorageBuildingComponent storage = b.GetComponent<StorageBuildingComponent>();
-                    if (!b.storageComponent) return false;
+                    int itemIndex = (int)building.buildingLevelsData[building.levelIndex].resourcesToBuild[0].itemData.itemId;
 
-                    //int itemIndex = GameManager.GetItemIndexById(storage.storedItems.Select(x => x.itemData).ToList(), (int)building.buildingLevelsData[building.levelIndex].resourcesToBuild[0].itemData.itemId);
-
-                    //return itemIndex >= 0 && storage.storedItems[itemIndex].amount > 0;
-
-                    Debug.Log(b);
-                    return true;
-                });
+                    return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
+                }))
+                {
+                    StartWorking();
+                }
             }
         }
     }

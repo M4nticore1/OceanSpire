@@ -6,7 +6,7 @@ using UnityEngine;
 public class StorageBuildingComponent : BuildingComponent
 {
     [HideInInspector] public StorageBuildingLevelData levelData = null;
-    public List<ItemEntry> storedItems = new List<ItemEntry>();
+    public Dictionary<int, int> storedItems = new Dictionary<int, int>();
 
     public override void Build()
     {
@@ -14,12 +14,14 @@ public class StorageBuildingComponent : BuildingComponent
 
         levelData = levelsData[ownedBuilding.levelIndex] as StorageBuildingLevelData;
 
-        //Debug.Log("Storage: " + ownedBuilding.GetType());
+        AddStorageCapacity(levelData);
 
-        if (levelsData.Length > ownedBuilding.levelIndex && levelsData[ownedBuilding.levelIndex])
-            AddStorageCapacity(levelData);
-        else
-            Debug.LogError("levelsData[ownedBuilding.levelIndex] is NULL");
+        for (int i = 0; i < levelData.storageItems.Count; i++)
+        {
+            int key = (int)levelData.storageItems[i].itemData.itemId;
+            int value = levelData.storageItems[i].amount;
+            storedItems.Add(key, 0);
+        }
     }
 
     public override void LevelUp()
@@ -45,7 +47,7 @@ public class StorageBuildingComponent : BuildingComponent
     public int GiveItemAmount(ItemEntry item)
     {
         int amountToGive = item.amount;
-        int storedAmount = storedItems[(int)item.itemData.itemId].amount;
+        int storedAmount = storedItems[(int)item.itemData.itemId];
         if (amountToGive > storedAmount)
             amountToGive = storedAmount;
 

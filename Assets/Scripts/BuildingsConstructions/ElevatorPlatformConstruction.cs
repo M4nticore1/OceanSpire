@@ -94,11 +94,11 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
     public void StartMovingToFloor(int targetFloorIndex)
     {
-        Debug.Log("Try to start moving elevator from " + currentFloorIndex + " to " + targetFloorIndex);
+        //Debug.Log("Try to start moving elevator from " + currentFloorIndex + " to " + targetFloorIndex);
 
         if (targetFloorIndex != currentFloorIndex)
         {
-            Debug.Log("StartMoving");
+            //Debug.Log("StartMoving");
 
             isMoving = true;
             startFloorIndex = currentFloorIndex;
@@ -117,7 +117,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
     public void StopMoving()
     {
-        Debug.Log("StopMoving");
+        //Debug.Log("StopMoving");
 
         isMoving = false;
         transform.position = new Vector3(transform.position.x, currentFloorIndex * CityManager.floorHeight + CityManager.firstFloorHeight, transform.position.z);
@@ -163,15 +163,10 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     {
         int nearestFloorIndex = currentFloorIndex;
 
-        Debug.Log("GetNextFloor");
-
         if (elevatorRidingPassengers.Count > 0)
         {
-            Debug.Log("elevatorRidingPassengers.Count > 0");
-
             if (true || elevatorRidingPassengers.Count == elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex].maxResidentsCount)
             {
-                Debug.Log("if");
                 int currentTargetFloorIndex = elevatorRidingPassengers[0].pathBuildings[elevatorRidingPassengers[0].pathIndex].GetFloorIndex();
 
                 if (currentTargetFloorIndex > currentFloorIndex)
@@ -188,7 +183,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
                 }
                 else
                 {
-                    Debug.Log("else");
                     nearestFloorIndex = 0;
 
                     for (int i = 0; i < elevatorRidingPassengers.Count; i++)

@@ -77,14 +77,14 @@ public class Building : MonoBehaviour
     {
         InitializeBuilding(buildingPlace);
 
+        this.levelIndex = levelIndex;
+        isUnderConstruction = requiresConstruction;
+        this.interiorIndex = interiorIndex;
+
         if (isUnderConstruction)
             StartBuilding(levelIndex);
         else
             Build(levelIndex, interiorIndex);
-
-        this.levelIndex = levelIndex;
-        isUnderConstruction = requiresConstruction;
-        this.interiorIndex = interiorIndex;
     }
 
     private IEnumerator PlaceCoroutine(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
@@ -204,8 +204,18 @@ public class Building : MonoBehaviour
 
         if (resident)
         {
-            if (resident.workBuilding == this)
-                AddCurrentWorker(resident);
+            if (resident.isWorking) // If constructing building
+            {
+                if (resident.pathBuildings[resident.pathBuildings.Count - 1])
+                {
+
+                }
+            }
+            else if (resident.isWorker) // If worker of some building
+            {
+                if (resident.workBuilding == this)
+                    AddCurrentWorker(resident);
+            }
         }
     }
 
@@ -279,24 +289,40 @@ public class Building : MonoBehaviour
     public int GetFloorIndex()
     {
         if (buildingPlace)
-        {
             return buildingPlace.floorIndex;
-        }
         else
-        {
             return 0;
-        }
     }
 
     public int GetPlaceIndex()
     {
         if (buildingPlace)
-        {
             return buildingPlace.buildingPlaceIndex;
-        }
         else
-        {
             return 0;
-        }
+    }
+
+    public int GetTotalIndex()
+    {
+        if (buildingPlace)
+            return GetFloorIndex() * GetPlaceIndex() + GetPlaceIndex();
+        else
+            return 0;
+    }
+
+    public Vector3 GetInteractionPointPosition()
+    {
+        if (spawnedBuildingConstruction.buildingInteractions.Count > 0 && spawnedBuildingConstruction.buildingInteractions[0].waypoints.Count > 0)
+            return spawnedBuildingConstruction.buildingInteractions[0].waypoints[0].position;
+        else
+            return transform.position;
+    }
+
+    public Vector3 GetPickupItemPointPosition()
+    {
+        if (spawnedBuildingConstruction.pickupItemPoints.Count > 0)
+            return spawnedBuildingConstruction.pickupItemPoints[0].position;
+        else
+            return transform.position;
     }
 }

@@ -53,8 +53,10 @@ public class BuildingPlace : MonoBehaviour
         outlineMaterialPropertyBlock = new MaterialPropertyBlock();
     }
 
-    public void InitializePlacedBuilding()
+    public void LoadPlacedBuilding()
     {
+        if (placedBuilding.isInitialized) return;
+
         if (placedBuilding)
             PlaceBuilding(placedBuilding, placedBuilding.levelIndex, placedBuilding.isUnderConstruction, -1);
     }

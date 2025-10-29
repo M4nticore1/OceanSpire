@@ -16,6 +16,9 @@ public class BuildingConstruction : MonoBehaviour
 
     public List<BuildingAction> buildingInteractions = new List<BuildingAction>();
 
+    [Header("Storage")]
+    public List<Transform> pickupItemPoints = new List<Transform>();
+
     public virtual void Build()
     {
 

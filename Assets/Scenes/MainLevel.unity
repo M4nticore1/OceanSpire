@@ -1091,6 +1091,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4224940035859385010, guid: b502e72fb7c0d1c4ea2bca5ae9b69e09, type: 3}
+      propertyPath: placedBuilding
+      value: 
+      objectReference: {fileID: 1603894180}
     - target: {fileID: 4467962403722579608, guid: b502e72fb7c0d1c4ea2bca5ae9b69e09, type: 3}
       propertyPath: m_Name
       value: FloorFrame_02
@@ -3220,6 +3224,7 @@ Transform:
   - {fileID: 278999631}
   - {fileID: 930224587}
   - {fileID: 650886243}
+  - {fileID: 1603894179}
   - {fileID: 2039053235}
   - {fileID: 65505826}
   - {fileID: 1787946471}
@@ -5705,6 +5710,79 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: 865e4d4ba8d60ba499751bda6823e55f, type: 3}
   m_PrefabInstance: {fileID: 123805247}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1603894178
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1290994963}
+    m_Modifications:
+    - target: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6862616296361636375, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+      propertyPath: m_Name
+      value: LivingRooms (17)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+--- !u!4 &1603894179 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1503349866729519722, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+  m_PrefabInstance: {fileID: 1603894178}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1603894180 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3470290697830555302, guid: b27870fc6762cc5409fe29aa15f8b052, type: 3}
+  m_PrefabInstance: {fileID: 1603894178}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2665c07387d67614998ea718af530a4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1604052378 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: 91569d626b646a446a179ace24aa35e8, type: 3}

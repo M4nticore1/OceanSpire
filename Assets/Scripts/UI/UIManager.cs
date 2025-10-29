@@ -654,7 +654,6 @@ public class UIManager : MonoBehaviour
 
         // Set parents of resident widgets
         int buildingWorkerWidgetIndex = 0;
-        Debug.Log(cityManager.residents.Count);
         for (int i = 0; i < cityManager.residents.Count; i++)
         {
             spawnedResidentWidgets[i].InitializeResidentWidget(cityManager.residents[i], selectedBuilding, this);
