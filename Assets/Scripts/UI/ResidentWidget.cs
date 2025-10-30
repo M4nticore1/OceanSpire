@@ -96,7 +96,7 @@ public class ResidentWidget : MonoBehaviour
 
     private void ClickWidget()
     {
-        if (resident.isWorker)
+        if (resident.currentWork != ResidentWork.None)
         {
             if (resident.workBuilding == selectedBuilding)
             {
@@ -107,7 +107,7 @@ public class ResidentWidget : MonoBehaviour
                 if (selectedBuilding.workers.Count < selectedBuilding.buildingLevelsData[selectedBuilding.levelIndex].maxResidentsCount)
                 {
                     resident.RemoveWorkBuilding();
-                    resident.SetWorkBuilding(selectedBuilding);
+                    resident.SetWork(ResidentWork.BuildingWork, selectedBuilding);
                 }
             }
         }
@@ -115,7 +115,7 @@ public class ResidentWidget : MonoBehaviour
         {
             if (selectedBuilding.workers.Count < selectedBuilding.buildingLevelsData[selectedBuilding.levelIndex].maxResidentsCount)
             {
-                resident.SetWorkBuilding(selectedBuilding);
+                resident.SetWork(ResidentWork.BuildingWork, selectedBuilding);
             }
         }
 

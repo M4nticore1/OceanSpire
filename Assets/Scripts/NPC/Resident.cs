@@ -19,23 +19,9 @@ public class Resident : Entity
     {
         base.Update();
 
-        if (isWorker)
+        if (isWorking)
         {
-            if (isWorking)
-            {
-                Work();
-            }
-            else
-            {
-                if (currentBuilding == targetBuilding)
-                {
-                    float distance = Vector3.Distance(transform.position, targetPosition);
-                    if (distance < applyTargetPosition && navMeshAgent.velocity == Vector3.zero)
-                    {
-
-                    }
-                }
-            }
+            Work();
         }
     }
 
@@ -48,7 +34,7 @@ public class Resident : Entity
         {
             targetBuilding = null;
 
-            if (isWorker)
+            if (currentWork != ResidentWork.None)
             {
                 StartWorking();
             }
@@ -63,48 +49,61 @@ public class Resident : Entity
     // Work
     private void Work()
     {
-        if (workBuilding.spawnedBuildingConstruction.buildingInteractions.Count > workerIndex)
+        if (currentWork == ResidentWork.BuildingWork)
         {
-            BuildingAction buildingAction = workBuilding.spawnedBuildingConstruction.buildingInteractions[workerIndex];
-
-            if (buildingAction.actionTimes[actionIndex] > 0)
+            if (workBuilding.spawnedBuildingConstruction.buildingInteractions.Count > workerIndex)
             {
-                actionTime += Time.deltaTime;
+                BuildingAction buildingAction = workBuilding.spawnedBuildingConstruction.buildingInteractions[workerIndex];
 
-                if (actionTime >= buildingAction.actionTimes[actionIndex])
+                if (buildingAction.actionTimes[actionIndex] > 0)
                 {
-                    if (actionIndex < buildingAction.actionTimes.Count - 1)
-                        actionIndex++;
-                    else
-                        actionIndex = 0;
+                    actionTime += Time.deltaTime;
 
-                    actionTime = 0;
+                    if (actionTime >= buildingAction.actionTimes[actionIndex])
+                    {
+                        if (actionIndex < buildingAction.actionTimes.Count - 1)
+                            actionIndex++;
+                        else
+                            actionIndex = 0;
 
-                    navMeshAgent.SetDestination(buildingAction.waypoints[actionIndex].position);
+                        actionTime = 0;
+
+                        navMeshAgent.SetDestination(buildingAction.waypoints[actionIndex].position);
+                    }
+                }
+            }
+        }
+        else if (currentWork == ResidentWork.ConstructingBuilding)
+        {
+            if (currentBuilding == targetBuilding)
+            {
+                float distance = Vector3.Distance(transform.position, targetPosition);
+                if (distance < applyTargetPosition && navMeshAgent.velocity == Vector3.zero)
+                {
+
                 }
             }
         }
     }
 
-    public void SetWorkBuilding(Building building)
-    {
-        if (building)
-        {
-            isWorker = true;
-            workBuilding = building;
-            workerIndex = building.workers.Count;
+    //public void SetWorkBuilding(Building building)
+    //{
+    //    if (building)
+    //    {
+    //        workBuilding = building;
+    //        workerIndex = building.workers.Count;
 
-            SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == building.GetFloorIndex() && b.GetPlaceIndex() == building.GetPlaceIndex());
+    //        SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == building.GetFloorIndex() && b.GetPlaceIndex() == building.GetPlaceIndex(), ResidentWork.BuildingWork);
 
-            building.AddWorker(this);
+    //        building.AddWorker(this);
 
-            OnWorkerAdd?.Invoke();
-        }
-    }
+    //        OnWorkerAdd?.Invoke();
+    //    }
+    //}
 
     public void RemoveWorkBuilding()
     {
-        isWorker = false;
+        currentWork = ResidentWork.None;
         workBuilding.RemoveWorker(this);
         workBuilding = null;
 
@@ -121,6 +120,40 @@ public class Resident : Entity
         workerIndex = index;
     }
 
+    public void SetWork(ResidentWork newWork, Building newWorkBuilding)
+    {
+        currentWork = newWork;
+
+        if (newWorkBuilding)
+        {
+            workBuilding = newWorkBuilding;
+
+            if (newWork == ResidentWork.BuildingWork)
+            {
+                workBuilding = newWorkBuilding;
+                newWorkBuilding.AddWorker(this);
+
+                SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == newWorkBuilding.GetFloorIndex() && b.GetPlaceIndex() == newWorkBuilding.GetPlaceIndex());
+
+                OnWorkerAdd?.Invoke();
+            }
+            else if (newWork == ResidentWork.ConstructingBuilding)
+            {
+                if (SetTargetBuilding(newWorkBuilding.buildingPlace, b =>
+                {
+                    if (!b.storageComponent || (b.GetFloorIndex() == newWorkBuilding.GetFloorIndex() && b.GetPlaceIndex() == newWorkBuilding.GetPlaceIndex())) return false;
+
+                    int itemIndex = (int)newWorkBuilding.buildingLevelsData[newWorkBuilding.levelIndex].resourcesToBuild[0].itemData.itemId;
+
+                    return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
+                }))
+                {
+                    StartWorking();
+                }
+            }
+        }
+    }
+
     private void StartWorking()
     {
         isWorking = true;
@@ -131,7 +164,6 @@ public class Resident : Entity
         isWorking = false;
         navMeshAgent.ResetPath();
     }
-
     private void StartConstructingBuilding()
     {
 
@@ -140,26 +172,13 @@ public class Resident : Entity
     // Buildings
     protected override IEnumerator OnBuildingStartConstructingCoroutine(Building building)
     {
-        base.EnterBuilding(building);
+        base.OnBuildingStartConstructingCoroutine(building);
 
         yield return new WaitForEndOfFrame();
 
-        if (!targetBuilding)
+        if (currentWork == ResidentWork.None)
         {
-            if (!workBuilding)
-            {
-                if (SetTargetBuilding(building.buildingPlace, b =>
-                {
-                    if (!b.storageComponent || (b.GetFloorIndex() == building.GetFloorIndex() && b.GetPlaceIndex() == building.GetPlaceIndex())) return false;
-
-                    int itemIndex = (int)building.buildingLevelsData[building.levelIndex].resourcesToBuild[0].itemData.itemId;
-
-                    return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
-                }))
-                {
-                    StartWorking();
-                }
-            }
+            SetWork(ResidentWork.ConstructingBuilding, building);
         }
     }
 }

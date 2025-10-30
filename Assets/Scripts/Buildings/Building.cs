@@ -211,7 +211,7 @@ public class Building : MonoBehaviour
 
                 }
             }
-            else if (resident.isWorker) // If worker of some building
+            else if (resident.currentWork != ResidentWork.None) // If worker of some building
             {
                 if (resident.workBuilding == this)
                     AddCurrentWorker(resident);
@@ -227,6 +227,7 @@ public class Building : MonoBehaviour
     public void AddWorker(Resident worker)
     {
         workers.Add(worker);
+        worker.SetWorkerIndex(workers.Count);
     }
 
     public void RemoveWorker(Resident worker)

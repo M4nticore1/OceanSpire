@@ -658,7 +658,7 @@ public class UIManager : MonoBehaviour
         {
             spawnedResidentWidgets[i].InitializeResidentWidget(cityManager.residents[i], selectedBuilding, this);
 
-            if (cityManager.residents[i].isWorker)
+            if (cityManager.residents[i].currentWork != ResidentWork.None)
             {
                 if (cityManager.residents[i].workBuilding == selectedBuilding)
                 {
@@ -766,7 +766,7 @@ public class UIManager : MonoBehaviour
         Resident resident = residentWidget.resident;
         int workersCount = selectedBuilding.workers.Count;
 
-        if (resident.isWorker)
+        if (resident.currentWork != ResidentWork.None)
         {
             if (resident.workBuilding == selectedBuilding)
             {
