@@ -9,6 +9,7 @@ public static class LocalizationSystem
     {
         List<string> keys = new List<string>
         {
+            "language.name",
             "menu.load",
             "menu.remove",
             "menu.exit",
