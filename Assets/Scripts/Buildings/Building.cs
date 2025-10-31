@@ -23,8 +23,8 @@ public class Building : MonoBehaviour
 
     [HideInInspector] public int levelIndex { get; private set; } = 0;
     public List<Entity> entities { get; private set; } = new List<Entity>();
-    public List<Resident> workers { get; private set; } = new List<Resident>();
-    public List<Resident> currentWorkers { get; private set; } = new List<Resident>();
+    public List<Entity> workers { get; private set; } = new List<Entity>();
+    public List<Entity> currentWorkers { get; private set; } = new List<Entity>();
 
     [Header("Data")]
     public BuildingData buildingData = null;
@@ -224,13 +224,13 @@ public class Building : MonoBehaviour
         entities.Remove(entity);
     }
 
-    public void AddWorker(Resident worker)
+    public void AddWorker(Entity worker)
     {
         workers.Add(worker);
         worker.SetWorkerIndex(workers.Count);
     }
 
-    public void RemoveWorker(Resident worker)
+    public void RemoveWorker(Entity worker)
 	{
         workers.RemoveAt(worker.workerIndex);
 
@@ -240,7 +240,7 @@ public class Building : MonoBehaviour
         }
     }
 
-    public void AddCurrentWorker(Resident worker)
+    public void AddCurrentWorker(Entity worker)
     {
         currentWorkers.Add(worker);
     }

@@ -1,0 +1,16 @@
+{
+  "menu.load": "",
+  "menu.remove": "",
+  "menu.exit": "",
+  "menu.close": "",
+  "menu.level": "",
+  "building.livingRooms.name": "",
+  "building.livingRooms.description": "",
+  "building.woodGenerator.name": "",
+  "building.woodGenerator.description": "",
+  "building.characteristic.storageCapacity": "",
+  "item.wood": "Wood",
+  "item.stone": "Stone",
+  "item.metal": "Metal",
+  "item.plastic": "Plastic"
+}

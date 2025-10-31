@@ -46,8 +46,8 @@ public class Entity : MonoBehaviour
     public string firstName = "";
     public string lastName = "";
 
-    public static string[] possibleFirstNames = { "", };
-    public static string[] possibleLastNames = { "", };
+    public static event System.Action OnWorkerAdd;
+    public static event System.Action OnWorkerRemove;
 
     protected virtual void Awake()
     {
@@ -72,68 +72,122 @@ public class Entity : MonoBehaviour
 
     protected virtual void Update()
     {
-        Debug.Log(currentBuilding);
+        if (isWorking)
+        {
+            Work();
+        }
     }
 
-    public Building SetTargetBuilding(BuildingPlace startBuildingPlace, Func<Building, bool> targetBuildingCondition)
+    // Work
+    private void Work()
     {
-        pathIndex = 0;
-
-        if (cityManager)
+        if (currentWork == ResidentWork.BuildingWork)
         {
-            targetBuilding = cityManager.FindPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings);
-
-            if (targetBuilding)
+            if (workBuilding.spawnedBuildingConstruction.buildingInteractions.Count > workerIndex)
             {
-                if (startBuildingPlace == (currentBuilding ? currentBuilding.buildingPlace : null))
+                BuildingAction buildingAction = workBuilding.spawnedBuildingConstruction.buildingInteractions[workerIndex];
+
+                if (buildingAction.actionTimes[actionIndex] > 0)
                 {
-                    FollowPath();
-                    return targetBuilding;
-                }
-                else
-                {
-                    if (cityManager.FindPathToBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == targetBuilding.GetFloorIndex() && b.GetPlaceIndex() == targetBuilding.GetPlaceIndex(), ref pathBuildings))
+                    actionTime += Time.deltaTime;
+
+                    if (actionTime >= buildingAction.actionTimes[actionIndex])
                     {
-                        FollowPath();
-                        return targetBuilding;
+                        if (actionIndex < buildingAction.actionTimes.Count - 1)
+                            actionIndex++;
+                        else
+                            actionIndex = 0;
+
+                        actionTime = 0;
+
+                        navMeshAgent.SetDestination(buildingAction.waypoints[actionIndex].position);
                     }
                 }
             }
         }
-
-        Debug.LogError("cityManager is NULL");
-        return null;
-    }
-
-    public void TakeDamage(int damange)
-    {
-        if (damange > 0)
+        else if (currentWork == ResidentWork.ConstructingBuilding)
         {
-            currentHealth -= damange;
-
-            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        }
-    }
-
-    public virtual void EnterBuilding(Building building)
-    {
-        if (building)
-        {
-            currentBuilding = building;
-            currentFloorIndex = building.GetFloorIndex();
-
-            building.EnterBuilding(this);
-
-            if (pathBuildings.Count > pathIndex && currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex() && currentBuilding.GetPlaceIndex() == pathBuildings[pathIndex].GetPlaceIndex())
+            if (currentBuilding == targetBuilding)
             {
-                FollowPath();
-                pathIndex++;
+                float distance = Vector3.Distance(transform.position, targetPosition);
+                if (distance < applyTargetPosition && navMeshAgent.velocity == Vector3.zero)
+                {
+
+                }
             }
         }
-        else
-            Debug.LogWarning("building is NULL");
     }
 
+    public void RemoveWorkBuilding()
+    {
+        currentWork = ResidentWork.None;
+        workBuilding.RemoveWorker(this);
+        workBuilding = null;
+
+        StopWorking();
+
+        if (targetBuilding)
+            targetBuilding = null;
+
+        OnWorkerRemove?.Invoke();
+    }
+
+    public void SetWorkerIndex(int index)
+    {
+        workerIndex = index;
+    }
+
+    public void SetWork(ResidentWork newWork, Building newWorkBuilding)
+    {
+        currentWork = newWork;
+
+        if (newWorkBuilding)
+        {
+            workBuilding = newWorkBuilding;
+
+            if (newWork == ResidentWork.BuildingWork)
+            {
+                workBuilding = newWorkBuilding;
+                newWorkBuilding.AddWorker(this);
+
+                SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == newWorkBuilding.GetFloorIndex() && b.GetPlaceIndex() == newWorkBuilding.GetPlaceIndex());
+
+                OnWorkerAdd?.Invoke();
+            }
+            else if (newWork == ResidentWork.ConstructingBuilding)
+            {
+                if (SetTargetBuilding(newWorkBuilding.buildingPlace, b =>
+                {
+                    if (!b.storageComponent || (b.GetFloorIndex() == newWorkBuilding.GetFloorIndex() && b.GetPlaceIndex() == newWorkBuilding.GetPlaceIndex())) return false;
+
+                    int itemIndex = (int)newWorkBuilding.buildingLevelsData[newWorkBuilding.levelIndex].resourcesToBuild[0].itemData.itemId;
+
+                    return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
+                }))
+                {
+                    StartWorking();
+                }
+            }
+        }
+    }
+
+    private void StartWorking()
+    {
+        isWorking = true;
+    }
+
+    private void StopWorking()
+    {
+        isWorking = false;
+        navMeshAgent.ResetPath();
+    }
+
+    private void StartConstructingBuilding()
+    {
+
+    }
+
+    // Movement
     private void FollowPath()
     {
         if (!isRidingOnElevator && pathIndex < pathBuildings.Count)
@@ -198,11 +252,6 @@ public class Entity : MonoBehaviour
                 }
             }
         }
-    }
-
-    public virtual void ExitBuilding()
-    {
-        //currentBuilding = null;
     }
 
     public void SetFloorIndex(int newFloorIndex)
@@ -289,6 +338,74 @@ public class Entity : MonoBehaviour
     }
 
     // Buildings
+    public virtual void EnterBuilding(Building building)
+    {
+        if (building)
+        {
+            currentBuilding = building;
+            currentFloorIndex = building.GetFloorIndex();
+
+            building.EnterBuilding(this);
+
+            if (pathBuildings.Count > pathIndex && currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex() && currentBuilding.GetPlaceIndex() == pathBuildings[pathIndex].GetPlaceIndex())
+            {
+                FollowPath();
+                pathIndex++;
+            }
+
+            if (currentBuilding == targetBuilding)
+            {
+                targetBuilding = null;
+
+                if (currentWork != ResidentWork.None)
+                {
+                    StartWorking();
+                }
+            }
+        }
+        else
+            Debug.LogWarning("building is NULL");
+    }
+
+    public virtual void ExitBuilding()
+    {
+        //currentBuilding = null;
+    }
+
+    public Building SetTargetBuilding(BuildingPlace startBuildingPlace, Func<Building, bool> targetBuildingCondition)
+    {
+        pathIndex = 0;
+
+        if (cityManager)
+        {
+            targetBuilding = cityManager.FindPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings);
+
+            if (targetBuilding)
+            {
+                if (startBuildingPlace == (currentBuilding ? currentBuilding.buildingPlace : null))
+                {
+                    FollowPath();
+                    return targetBuilding;
+                }
+                else
+                {
+                    if (cityManager.FindPathToBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == targetBuilding.GetFloorIndex() && b.GetPlaceIndex() == targetBuilding.GetPlaceIndex(), ref pathBuildings))
+                    {
+                        FollowPath();
+                        return targetBuilding;
+                    }
+                }
+            }
+
+            return null;
+        }
+        else
+        {
+            Debug.LogError("cityManager is NULL");
+            return null;
+        }
+    }
+
     protected void OnBuildingStartConstructing(Building building)
     {
         StartCoroutine(OnBuildingStartConstructingCoroutine(building));
@@ -302,8 +419,33 @@ public class Entity : MonoBehaviour
         {
             SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == targetBuilding.GetFloorIndex() && b.GetPlaceIndex() == targetBuilding.GetPlaceIndex());
         }
+        else
+        {
+            if (currentWork == ResidentWork.None)
+            {
+                SetWork(ResidentWork.ConstructingBuilding, building);
+            }
+        }
+
     }
 
+    // Actions
+    private void TakeItem(int itemId, int itemAmount)
+    {
+
+    }
+
+    public void TakeDamage(int damange)
+    {
+        if (damange > 0)
+        {
+            currentHealth -= damange;
+
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        }
+    }
+
+    // Select
     public void Select()
     {
         foreach (GameObject child in GameUtils.GetAllChildren(transform))
