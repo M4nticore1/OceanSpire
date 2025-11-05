@@ -1,51 +1,44 @@
 using System;
-using Unity.Mathematics;
 using UnityEngine;
+
+[System.Serializable]
+public struct ItemCategoryEntry
+{
+    public ItemCategory itemCategory;
+    public int amount;
+}
 
 [System.Serializable]
 public class ItemInstance
 {
-    public ItemData itemData;
-    public int amount;
-    public int maxAmount;
+    [SerializeField] private ItemData itemData;
+    public ItemData ItemData => itemData;
+    [SerializeField] private int amount;
+    public int Amount => amount;
 
-    public ItemInstance(ItemData itemData, int amount, int maxAmount)
+    public ItemInstance(ItemData itemData, int amount = 0)
     {
         this.itemData = itemData;
         this.amount = amount;
-        this.maxAmount = maxAmount;
+        //this.maxAmount = maxAmount;
     }
 
     // Amount
-    public void SetAmount(int newAmount)
+    public void SetAmount(int amount)
     {
-        amount = newAmount;
-        amount = math.clamp(newAmount, 0, maxAmount);
+        this.amount = amount;
     }
 
-    public void AddAmount(int amount)
+    public void AddAmount(int amount, int maxAmount = 0)
     {
-        SetAmount(this.amount += amount);
+        if (maxAmount == 0)
+            this.amount += amount;
+        else if(maxAmount > 0)
+            this.amount += Math.Clamp(amount, 0, maxAmount);
     }
 
     public void SubtractAmount(int amount)
     {
         SetAmount(this.amount -= amount);
-    }
-
-    // Max Amount
-    public void SetMaxAmount(int amount)
-    {
-        this.maxAmount = amount;
-    }
-
-    public void AddMaxAmount(int amount)
-    {
-        SetMaxAmount(this.maxAmount += amount);
-    }
-
-    public void SubtractMaxAmount(int amount)
-    {
-        SetMaxAmount(this.maxAmount -= amount);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Android.Gradle.Manifest;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,7 +12,7 @@ public class PlayerController : MonoBehaviour
     // Main
     private GameManager gameManager = null;
     private CityManager cityManager = null;
-    private UIManager UIManager = null;
+    private UIManager uiManager = null;
 
     // Camera Movement
     [SerializeField] private Camera mainCamera = null;
@@ -111,20 +112,18 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        Application.targetFrameRate = 60;
-
-        gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
-        UIManager = FindAnyObjectByType<UIManager>();
-        graphicRaycaster = UIManager.gameObject.GetComponent<GraphicRaycaster>();
-
-        //UIManager.InitializeUIManager();
-
         SetInputSystem();
     }
 
-    private void Start()
+    public void Load(SaveData saveData)
     {
+        gameManager = FindAnyObjectByType<GameManager>();
+        cityManager = FindAnyObjectByType<CityManager>();
+        uiManager = FindAnyObjectByType<UIManager>();
+        graphicRaycaster = uiManager.gameObject.GetComponent<GraphicRaycaster>();
+
+        //UIManager.InitializeUIManager();
+
         LoadData();
 
         ñameraHolderStartPosition = cameraHolder.transform.position;
@@ -133,15 +132,23 @@ public class PlayerController : MonoBehaviour
 
         currentCameraArmLength = -mainCamera.transform.localPosition.z;
 
-        if (!gameManager.hasSavedData)
+        if (SaveSystem.saveData == null)
+        {
             cameraYawRotateAlpha = 0.5f;
+        }
+        else
+        {
+            cameraYawRotateAlpha = saveData.cameraYawRotation;
+        }
+
+        cameraYawRotateAlpha = 0.52f;
 
         moveStateValue = 1f / CityManager.roomsCountPerFloor;
 
         SaveData();
     }
 
-    private void Update()
+    public void Tick()
     {
         OnTouchPresing();
         MoveCamera();
@@ -161,12 +168,12 @@ public class PlayerController : MonoBehaviour
         if (currentCameraDistance <= cameraDistanceToShowBuildingStats)
         {
             if (buildingToShowStats)
-                UIManager.OpenBuildingStatsPanel(buildingToShowStats);
+                uiManager.OpenBuildingStatsPanel(buildingToShowStats);
             else
-                UIManager.CloseBuildingStatsPanel();
+                uiManager.CloseBuildingStatsPanel();
         }
         else
-            UIManager.CloseBuildingStatsPanel();
+            uiManager.CloseBuildingStatsPanel();
 
         if (Time.time >= lastSaveDataTime + GameManager.autoSaveFrequency)
         {
@@ -185,9 +192,6 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed += OnSecondTouchStarted;
         secondTouchPressAction.canceled += OnSecondTouchEnded;
 
-        //mouseScrollAction.performed += OnMouseScroll;
-
-        CityManager.OnStorageCapacityUpdated += UpdateUIStorageItems;
         Building.onAnyBuildingStartConstructing += StopPlacingBuilding;
     }
 
@@ -199,11 +203,8 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed -= OnSecondTouchStarted;
         secondTouchPressAction.canceled -= OnSecondTouchEnded;
 
-        //mouseScrollAction.performed -= OnMouseScroll;
-
         touchInputActionMap.Disable();
 
-        CityManager.OnStorageCapacityUpdated -= UpdateUIStorageItems;
         Building.onAnyBuildingStartConstructing -= StopPlacingBuilding;
     }
 
@@ -419,8 +420,7 @@ public class PlayerController : MonoBehaviour
                                 }
                                 else if (hittedLootContainer)
                                 {
-                                    CollectItems(hittedLootContainer.GetContainedLoot());
-                                    hittedLootContainer.TakeItems();
+                                    CollectItems(hittedLootContainer.TakeItems());
 
                                     DeselectAll();
                                 }
@@ -507,11 +507,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnMouseScroll(InputAction.CallbackContext context)
-    {
-        Debug.Log("Scroll");
-    }
-
     public void StartPlacingBuilding(Building newBuildingToPlace)
     {
         if (isBuildingToPlaceSelected)
@@ -523,8 +518,8 @@ public class PlayerController : MonoBehaviour
         buildingToPlace = newBuildingToPlace;
 
         cityManager.ShowBuildingPlacesByType(newBuildingToPlace);
-        UIManager.CloseBuildingManagementMenu();
-        UIManager.OnBuildingPlacingStarted();
+        uiManager.CloseBuildingManagementMenu();
+        uiManager.OnBuildingPlacingStarted();
     }
 
     private void PlaceBuilding(BuildingPlace buildingPlace)
@@ -541,7 +536,7 @@ public class PlayerController : MonoBehaviour
             isBuildingToPlaceSelected = false;
             buildingToPlace = null;
 
-            UIManager.OnBuildingPlacingStopped();
+            uiManager.OnBuildingPlacingStopped();
 
             SaveData();
         }
@@ -549,46 +544,24 @@ public class PlayerController : MonoBehaviour
 
     private void CollectItem(ItemInstance item)
     {
-        int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)item.itemData.itemId);
-
-        if (cityManager.items[index].amount < cityManager.items[index].maxAmount)
+        int id = item.ItemData.ItemId;
+        if (cityManager.items[id].Amount < cityManager.totalStorageCapacity[id].Amount)
         {
-            cityManager.AddItemByIndex(index, item.amount);
-            UpdateUIStorageItemByIndex(index);
+            cityManager.AddItem(item);
         }
     }
 
     private void CollectItems(List<ItemInstance> items)
     {
-        for (int i = 0; i < items.Count; i++)
+        foreach (ItemInstance item in items)
         {
-            int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)items[i].itemData.itemId);
-			if (cityManager.items[index].amount < cityManager.items[index].maxAmount)
+            int id = item.ItemData.ItemId;
+            int amount = item.Amount;
+            if (cityManager.items[id].Amount < cityManager.totalStorageCapacity[id].Amount)
             {
-                cityManager.AddItemByIndex(index, items[i].amount);
-				UpdateUIStorageItemByIndex(index);
+                cityManager.AddItem(id, amount);
             }
         }
-    }
-
-    private void UpdateUIStorageItems()
-    {
-        for (int i = 0; i < cityManager.items.Count; i++)
-        {
-            int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)cityManager.items[i].itemData.itemId);
-            int amount = cityManager.items[index].amount;
-            int maxAmount = cityManager.items[index].maxAmount;
-
-            UIManager.UpdateStorageItemByIndex(index, amount, maxAmount);
-        }
-    }
-
-    private void UpdateUIStorageItemByIndex(int index)
-    {
-        int amount = cityManager.items[index].amount;
-        int maxAmount = cityManager.items[index].maxAmount;
-
-        UIManager.UpdateStorageItemByIndex(index, amount, maxAmount);
     }
 
     private void SelectBuilding(Building building)
@@ -601,11 +574,11 @@ public class PlayerController : MonoBehaviour
 
         if (building.isRuined)
         {
-            UIManager.OpenRepairBuildingMenu(building);
+            uiManager.OpenRepairBuildingMenu(building);
         }
         else
         {
-            UIManager.OpenBuildingManagementMenu(building);
+            uiManager.OpenBuildingManagementMenu(building);
         }
     }
 
@@ -615,15 +588,15 @@ public class PlayerController : MonoBehaviour
         {
             selectedBuilding.Deselect();
 
-            if (!UIManager.isBuildingResourcesMenuOpened)
+            if (!uiManager.isBuildingResourcesMenuOpened)
             {
                 selectedBuilding = null;
 
-                UIManager.CloseBuildingManagementMenu();
+                uiManager.CloseBuildingManagementMenu();
             }
             else
             {
-                UIManager.CloseBuildingActionMenu();
+                uiManager.CloseBuildingActionMenu();
             }
         }
     }
@@ -660,14 +633,7 @@ public class PlayerController : MonoBehaviour
 
     private void LoadData()
     {
-        SaveData data = SaveSystem.LoadData();
-
-        if (data != null)
-        {
-            gameManager.hasSavedData = true;
-            cameraYawRotateAlpha = data.cameraYawRotation;
-        }
-
-        cityManager.LoadCity(data);
+        LocalizationSystem.LoadLocalizations();
+        LocalizationSystem.SetLocalization(Settings.currentLanguageKey);
     }
 }

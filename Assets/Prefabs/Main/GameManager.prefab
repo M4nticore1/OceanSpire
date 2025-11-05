@@ -55,14 +55,7 @@ MonoBehaviour:
   - {fileID: -255987306672972499, guid: 14aa197ddc225d54f9bbbd6b72a19577, type: 3}
   - {fileID: 7452491075021778987, guid: afedc523fc07a7c4fb612b9c7e79faad, type: 3}
   - {fileID: 8489345420242549701, guid: 7e1a807cc0d71f343983305a1bb05e1d, type: 3}
-  itemsData:
-  - {fileID: 11400000, guid: 550b2a9af4e53db4990bef7a9fceb5fa, type: 2}
-  - {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
-  - {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
-  - {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-  - {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
-  - {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-  - {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+  itemDatabase: {fileID: 11400000, guid: 37d08d00fe179484e852e0e0d46b8744, type: 2}
   residentPrefab: {fileID: 6103850784313419152, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
   windDirection: {x: 0, y: 0}
   windRotation: 0

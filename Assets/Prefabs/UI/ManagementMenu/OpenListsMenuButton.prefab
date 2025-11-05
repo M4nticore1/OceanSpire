@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1556928868931172324}
   - component: {fileID: 5602703382885182902}
   - component: {fileID: 8098942685961320592}
+  - component: {fileID: 2644724989629075397}
   m_Layer: 5
   m_Name: OpenBuildingsListButtonText
   m_TagString: Untagged
@@ -136,6 +137,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2644724989629075397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1896712456115936182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: common.construction
 --- !u!1 &4456157408004065638
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,53 +1,92 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public static class LocalizationSystem
 {
+    private static string localizationFolder = "Localization";
+
+    public static bool areLocalizationsInitialized { get; private set; } = false;
+    public static List<Dictionary<string, string>> localizations { get; private set; } = new List<Dictionary<string, string>>();
+    private static int currentLocalizationIndex = 0;
+
+    public static event System.Action OnLocalizationChanged;
+
+    private static Dictionary<string, string> originalLocalization = new Dictionary<string, string>
+    {
+        { "language.name", "English" },
+        { "language.code", "en" },
+        { "common.building", "Building" },
+        { "common.construction", "Construction" },
+        { "common.storage", "Storage" },
+        { "common.level", "Level" },
+        { "menu.load", "Load"},
+        { "menu.remove", "Remove" },
+        { "menu.exit", "Exit" },
+        { "menu.close", "Close" },
+        { "building.livingRooms.name", "Living Rooms" },
+        { "building.livingRooms.description", "" },
+        { "building.woodGenerator.name", "Wood Generator" },
+        { "building.woodGenerator.description", "" },
+        { "building.stats.storageCapacity", "Capacity" },
+        { "stats.population", "Population" },
+        { "stats.food", "Food" },
+        { "stats.water", "Water" },
+        { "stats.electricity", "Electricity" },
+        { "item.stone", "Stone" },
+        { "item.metal", "Metal" },
+        { "item.plastic", "Plastic" },
+
+    };
+
     [UnityEditor.MenuItem("Tools/Generate Localization File")]
     public static void GenerateLocalizationFile()
     {
-        List<string> keys = new List<string>
-        {
-            "language.name",
-            "menu.load",
-            "menu.remove",
-            "menu.exit",
-            "menu.close",
-            "menu.level",
-            "building.livingRooms.name",
-            "building.livingRooms.description",
-            "building.woodGenerator.name",
-            "building.woodGenerator.description",
-            "building.characteristic.storageCapacity",
-            "item.wood",
-            "item.stone",
-            "item.metal",
-            "item.plastic",
-        };
-
-        string dir = Path.Combine(Application.streamingAssetsPath, "Localization");
+        string dir = Path.Combine(Application.streamingAssetsPath, localizationFolder);
         if (!Directory.Exists(dir))
             Directory.CreateDirectory(dir);
         string path = Path.Combine(dir, "localization.json");
 
-        // Читаем существующий JSON
-        Dictionary<string, string> existingDict = File.Exists(path) ? JsonToDictionary(File.ReadAllText(path)) : new Dictionary<string, string>();
-
-        // Создаем новый словарь для сохранения порядка из списка
-        var orderedDict = new Dictionary<string, string>();
-
-        foreach (var key in keys)
-        {
-            if (existingDict.ContainsKey(key))
-                orderedDict[key] = existingDict[key]; // старое значение сохраняем
-            else
-                orderedDict[key] = ""; // новое значение пустое
-        }
-
-        // Сохраняем JSON
-        File.WriteAllText(path, DictionaryToJson(orderedDict));
+        string json = JsonConvert.SerializeObject(originalLocalization, Formatting.Indented);
+        File.WriteAllText(path, json);
         Debug.Log("JSON file updated at: " + path);
+    }
+
+    [UnityEditor.MenuItem("Tools/Update All Localizations File")]
+    public static void UpdateAllLocalizationFiles()
+    {
+        string folderPath = Path.Combine(Application.streamingAssetsPath, localizationFolder);
+        if (!Directory.Exists(folderPath))
+            Directory.CreateDirectory(folderPath);
+
+        string[] files = Directory.GetFiles(folderPath, "*.json");
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            var jsonText = File.ReadAllText(files[i]);
+            var localizationDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonText);
+            if (localizationDict.ContainsKey("language.code"))
+            {
+                string jsonName = localizationDict["language.code"] + ".json";
+                string jsonPath = Path.Combine(folderPath, jsonName);
+
+                Dictionary<string, string> existingDict = File.Exists(jsonPath) ? JsonToDictionary(File.ReadAllText(jsonPath)) : new Dictionary<string, string>();
+
+                var updatedDict = new Dictionary<string, string>();
+
+                foreach (var kvp in originalLocalization)
+                {
+                    if (existingDict.ContainsKey(kvp.Key))
+                        updatedDict[kvp.Key] = existingDict[kvp.Key];
+                    else
+                        updatedDict[kvp.Key] = kvp.Value;
+                }
+
+                File.WriteAllText(jsonPath, DictionaryToJson(updatedDict));
+                Debug.Log("JSON file updated at: " + jsonPath);
+            }
+        }
     }
 
     static string DictionaryToJson(Dictionary<string, string> dict)
@@ -83,5 +122,50 @@ public static class LocalizationSystem
             }
         }
         return dict;
+    }
+
+    public static void LoadLocalizations()
+    {
+        if (!areLocalizationsInitialized)
+        {
+            string folderPath = Path.Combine(Application.streamingAssetsPath, localizationFolder);
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            string[] files = Directory.GetFiles(folderPath, "*.json");
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                string json = File.ReadAllText(files[i]);
+
+                var localizationDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                localizations.Add(localizationDict);
+                //Debug.Log($"Локализация '{localizations[]}' загружена, {localizationDict.Count} записей.");
+            }
+
+            areLocalizationsInitialized = true;
+        }
+    }
+
+    public static string GetLocalizationText(string key)
+    {
+        if (localizations.Count > currentLocalizationIndex && localizations[currentLocalizationIndex] != null)
+            return localizations[currentLocalizationIndex][key];
+        else
+            return originalLocalization[key];
+    }
+
+    public static void SetLocalization(string languageKey)
+    {
+        for (int i = 0; i < localizations.Count; i++)
+        {
+            if (localizations[i]["language.code"] == languageKey)
+            {
+                currentLocalizationIndex = i;
+                break;
+            }
+        }
+
+        OnLocalizationChanged?.Invoke();
     }
 }

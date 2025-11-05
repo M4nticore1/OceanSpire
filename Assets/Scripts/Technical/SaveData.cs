@@ -79,7 +79,7 @@ public class SaveData
 
         for (int i = 0; i < cityManager.items.Count; i++)
         {
-            resourcesAmount[i] = cityManager.items[i].amount;
+            resourcesAmount[i] = cityManager.items[i].Amount;
         }
 
         // Residents
@@ -116,7 +116,7 @@ public class SaveData
                 residentTargetBuildingIndexes[i] = -1;
 
             residentsRidingOnElevator[i] = cityManager.residents[i].isRidingOnElevator;
-            residentsWalkingToElevator[i] = cityManager.residents[i].isWalkingToElevator;
+            //residentsWalkingToElevator[i] = cityManager.residents[i].isWalkingToElevator;
             residentsWaitingForElevator[i] = cityManager.residents[i].isWaitingForElevator;
         }
     }

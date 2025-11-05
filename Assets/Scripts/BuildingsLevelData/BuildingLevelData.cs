@@ -12,7 +12,7 @@ public struct ResourceToBuild
 public class BuildingLevelData : ScriptableObject
 {
     [Header("Main")]
-    public List<ItemEntry> resourcesToBuild = new List<ItemEntry>();
+    public List<ItemInstance> resourcesToBuild = new List<ItemInstance>();
     public int maxResidentsCount = 0;
 
     public BuildingConstruction constructionStraight = null;

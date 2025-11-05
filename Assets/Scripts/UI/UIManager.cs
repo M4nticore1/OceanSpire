@@ -67,6 +67,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private List<GridLayoutGroup> storageLists = new List<GridLayoutGroup>();
     [SerializeField] private List<MainButton> storageListButtons = new List<MainButton>();
 
+    private List<bool> itemsToUpdate = new List<bool>();
+
     // Building Management Menu
     [Header("Building Management Menu")]
     [SerializeField] private RectTransform buildingManagementMenu = null;
@@ -197,7 +199,7 @@ public class UIManager : MonoBehaviour
         buildingStatsPanelOpenedPosition = buildingStatsPanel.anchoredPosition;
         buildingStatsPanel.anchoredPosition = Vector2.zero;
 
-        buildingMenuButton.onClick.AddListener(OpenBuildingMenu);
+        buildingMenuButton.onClick.AddListener(OpenConstructionMenu);
         storageMenuButton.onClick.AddListener(OpenStorageMenu);
 
         buildingListsMenuButton.onClick.AddListener(OpenBuildingListsMenu);
@@ -241,6 +243,9 @@ public class UIManager : MonoBehaviour
 
         buildingCharacteristicHeight = buildingCharacteristicWidget.characteristicValueBox.sizeDelta.y;
 
+        for (int i = 0; i < ItemDatabase.items.Count; i++)
+            itemsToUpdate.Add(false);
+
         managementMenu.SetActive(false);
         buildingListsMenu.SetActive(false);
         selectBuildingWorkersMenu.gameObject.SetActive(false);
@@ -256,7 +261,7 @@ public class UIManager : MonoBehaviour
         UpdateBuildingWidgetsResourcesAmount();
     }
 
-    private void OpenBuildingMenu()
+    private void OpenConstructionMenu()
     {
         OpenManagementMenu();
         OpenBuildingListsMenu();
@@ -266,6 +271,8 @@ public class UIManager : MonoBehaviour
         storageListsMenuButton.GetComponent<RectTransform>().localScale = Vector3.one;
 
         buildingListButtons[(int)lastOpenedBuildingsListCategory].GetComponent<RectTransform>().localScale = new Vector3(MainButton.selectedButtonUpScaleValue, MainButton.selectedButtonUpScaleValue, 1f);
+
+        UpdateItemAmounts();
     }
 
     private void OpenStorageMenu()
@@ -391,42 +398,63 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < cityManager.items.Count; i++)
         {
             //string itemName = gameManager.buildingPrefabs[i].buildingData.buildingIdName;
-            if (cityManager.items[i].itemData.itemCategory == ItemCategory.Society) continue;
+            if (cityManager.items[i].ItemData.itemCategory == ItemCategory.Society) continue;
 
-            ItemCategory itemCategory = cityManager.items[i].itemData.itemCategory;
+            ItemCategory itemCategory = cityManager.items[i].ItemData.itemCategory;
 
             ResourceWidget storageResourceWidget = Instantiate(storageResourceWidgetPrefab);
             storageResourceWidgets.Add(storageResourceWidget);
 
-            int itemAmount = cityManager.items[i].amount;
-            int itemMaxAmount = cityManager.items[i].maxAmount;
+            int itemAmount = cityManager.items[i].Amount;
+            int itemMaxAmount = cityManager.totalStorageCapacity[i].Amount;
             storageResourceWidget.UpdateStorageWidget(itemAmount, itemMaxAmount);
 
             storageResourceWidget.transform.SetParent(storageLists[(int)itemCategory].transform);
         }
     }
 
-    public void UpdateStorageItemsByIndexes(List<int> indexes)
+    public void AddItemIdToUpdate(int id)
     {
-        for (int i = 0; i < indexes.Count; i++)
-        {
-            int amount = cityManager.items[indexes[i]].amount;
-            int maxAmount = cityManager.items[indexes[i]].maxAmount;
+        itemsToUpdate[id] = true;
+    }
 
-            if (storageResourceWidgets.Count > indexes[i])
-                storageResourceWidgets[indexes[i]].UpdateStorageWidget(amount, maxAmount);
-            else
-                Debug.LogError("storageResourceWidgets.Count > indexes[i]");
+    private void UpdateItemAmounts()
+    {
+        Debug.Log("UpdateItemAmounts");
+        // Update Storage Menu
+        for (int i = 0; i < itemsToUpdate.Count; i++)
+        {
+            if (itemsToUpdate[i] == true)
+            {
+                int amount = cityManager.items[i].Amount;
+                int maxAmount = cityManager.totalStorageCapacity[i].Amount;
+
+                if (storageResourceWidgets.Count > i)
+                    storageResourceWidgets[i].UpdateStorageWidget(amount, maxAmount);
+                else
+                    Debug.LogError("storageResourceWidgets.Count > indexes[i]");
+
+                itemsToUpdate[i] = false;
+            }
+        }
+
+        // Update Construction Menu
+        for (int i = 0; i < spawnedBuildingWidgets.Count; i++)
+        {
+            for (int j = 0; j < spawnedBuildingWidgets[i].Count; j++)
+            {
+                spawnedBuildingWidgets[i][j].UpdateResourcesToBuild();
+            }
         }
     }
 
-    public void UpdateStorageItemByIndex(int itemIndex, int currentResourceAmount, int maxResourceAmount)
-    {
-        if (storageResourceWidgets.Count > itemIndex && storageResourceWidgets[itemIndex])
-        {
-            storageResourceWidgets[itemIndex].UpdateStorageWidget(currentResourceAmount, maxResourceAmount);
-        }
-    }
+    //private void UpdateStorageItemByIndex(int itemIndex, int currentResourceAmount, int maxResourceAmount)
+    //{
+    //    if (storageResourceWidgets.Count > itemIndex && storageResourceWidgets[itemIndex])
+    //    {
+    //        storageResourceWidgets[itemIndex].UpdateStorageWidget(currentResourceAmount, maxResourceAmount);
+    //    }
+    //}
 
     public void UpdateBuildingWidgetsResourcesAmount()
     {
@@ -468,7 +496,7 @@ public class UIManager : MonoBehaviour
         if (storageBuilding)
         {
             StorageBuildingLevelData levelData = storageBuilding.levelsData[0] as StorageBuildingLevelData;
-            CreateBuildingCharacteristicWidget("Storage capacity", levelData.storageItems[0].amount, levelData.storageItems[0].itemData.itemIcon, ref index);
+            CreateBuildingCharacteristicWidget("Storage capacity", levelData.storageItems[0].Amount, levelData.storageItems[0].ItemData.itemIcon, ref index);
         }
     }
 
@@ -536,17 +564,17 @@ public class UIManager : MonoBehaviour
 
     public void OnBuildingUpgraded(Building building)
     {
-        buildingManagementMenuNameText.SetText(building.buildingData.buildingName);
-        buildingManagementMenuLevelText.SetText("Level " + (building.levelIndex + 1).ToString());
+        //buildingManagementMenuNameText.SetText(building.buildingData.buildingName);
+        //buildingManagementMenuLevelText.SetText("Level " + (building.levelIndex + 1).ToString());
 
-        List<int> indexes = new List<int>();
+        //List<int> indexes = new List<int>();
 
-        List<ItemEntry> previousResourcesToUpgrade = building.buildingLevelsData[building.levelIndex].resourcesToBuild;
+        //List<ItemInstance> previousResourcesToUpgrade = building.buildingLevelsData[building.levelIndex].resourcesToBuild;
 
-        for (int i = 0; i < previousResourcesToUpgrade.Count; i++)
-            indexes.Add(GameManager.GetItemIndexById(gameManager.itemsData, (int)previousResourcesToUpgrade[i].itemData.itemId));
+        //for (int i = 0; i < previousResourcesToUpgrade.Count; i++)
+        //    indexes.Add(previousResourcesToUpgrade[i].ItemData.ItemId);
 
-        UpdateStorageItemsByIndexes(indexes);
+        //UpdateStorageItemsByIndexes(indexes);
 
         //selectedBuilding = null;
     }
@@ -605,14 +633,14 @@ public class UIManager : MonoBehaviour
         CleanResourceToUpgradeWidgets();
 
         int nextLevelIndex = selectedBuilding.levelIndex + 1;
-        List<ItemEntry> resourcesToUpgrade = selectedBuilding.buildingLevelsData[nextLevelIndex].resourcesToBuild;
+        List<ItemInstance> resourcesToUpgrade = selectedBuilding.buildingLevelsData[nextLevelIndex].resourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
         {
             ResourceWidget resourceWidget = Instantiate(buildingActionResourceWidgetPrefab, actionResourcesLayourGroup.transform);
             spawnedBuildingActionResourceWidgets.Add(resourceWidget);
 
-            int amount = resourcesToUpgrade[i].amount;
+            int amount = resourcesToUpgrade[i].Amount;
             resourceWidget.UpdateBuildWidget(amount);
         }
 
@@ -627,14 +655,14 @@ public class UIManager : MonoBehaviour
         CleanResourceToUpgradeWidgets();
 
         int levelIndex = selectedBuilding.levelIndex;
-        List<ItemEntry> resourcesToUpgrade = selectedBuilding.buildingLevelsData[levelIndex].resourcesToBuild;
+        List<ItemInstance> resourcesToUpgrade = selectedBuilding.buildingLevelsData[levelIndex].resourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
         {
             ResourceWidget resourceWidget = Instantiate(buildingActionResourceWidgetPrefab, actionResourcesLayourGroup.transform);
             spawnedBuildingActionResourceWidgets.Add(resourceWidget);
 
-            int amount = (int)math.ceil(resourcesToUpgrade[i].amount * GameManager.demolitionResourceRefundRate);
+            int amount = (int)math.ceil(resourcesToUpgrade[i].Amount * GameManager.demolitionResourceRefundRate);
             resourceWidget.UpdateBuildWidget(amount);
         }
 
@@ -818,14 +846,14 @@ public class UIManager : MonoBehaviour
         repairBuildingNameText.SetText(building.buildingData.buildingName + " (Ruin)");
 
         int nextLevelIndex = 0;
-        List<ItemEntry> resourcesToUpgrade = building.buildingLevelsData[nextLevelIndex].resourcesToBuild;
+        List<ItemInstance> resourcesToUpgrade = building.buildingLevelsData[nextLevelIndex].resourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
         {
             ResourceWidget resourceWidget = Instantiate(buildingActionResourceWidgetPrefab, actionResourcesLayourGroup.transform);
             spawnedBuildingActionResourceWidgets.Add(resourceWidget);
 
-            int amount = resourcesToUpgrade[i].amount;
+            int amount = resourcesToUpgrade[i].Amount;
             resourceWidget.UpdateBuildWidget(amount);
         }
 

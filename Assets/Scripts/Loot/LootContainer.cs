@@ -88,7 +88,7 @@ public class LootContainer : MonoBehaviour
             if (chance <= possibleLoot[i].dropChance)
             {
                 int itemAmount = (int)UnityEngine.Random.Range(possibleLoot[i].minAmount, possibleLoot[i].maxAmount);
-                containedLoot.Add(new ItemInstance(possibleLoot[i].itemData, itemAmount, possibleLoot[i].maxAmount));
+                containedLoot.Add(new ItemInstance(possibleLoot[i].itemData, itemAmount));
             }
         }
 
@@ -145,9 +145,11 @@ public class LootContainer : MonoBehaviour
         }
     }
 
-    public void TakeItems()
+    public List<ItemInstance> TakeItems()
     {
         Destroy(gameObject);
+        List<ItemInstance> loot = containedLoot;
+        return loot;
     }
 
     public List<ItemInstance> GetContainedLoot()

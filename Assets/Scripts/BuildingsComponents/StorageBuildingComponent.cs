@@ -14,13 +14,13 @@ public class StorageBuildingComponent : BuildingComponent
 
         levelData = levelsData[ownedBuilding.levelIndex] as StorageBuildingLevelData;
 
-        AddStorageCapacity(levelData);
+        //AddStorageCapacity(levelData);
 
         for (int i = 0; i < levelData.storageItems.Count; i++)
         {
-            int key = (int)levelData.storageItems[i].itemData.itemId;
-            int value = levelData.storageItems[i].amount;
-            storedItems.Add(key, 0);
+            int id = levelData.storageItems[i].ItemData.ItemId;
+            int amount = levelData.storageItems[i].Amount;
+            storedItems.Add(id, amount);
         }
     }
 
@@ -30,29 +30,61 @@ public class StorageBuildingComponent : BuildingComponent
 
         levelData = levelsData[ownedBuilding.levelIndex] as StorageBuildingLevelData;
 
-        AddStorageCapacity(levelData);
-        SubtractStorageCapacity(levelsData[ownedBuilding.levelIndex - 1] as StorageBuildingLevelData);
+        //AddStorageCapacity(levelData);
+        //SubtractStorageCapacity(levelsData[ownedBuilding.levelIndex - 1] as StorageBuildingLevelData);
     }
 
-    private void AddStorageCapacity(StorageBuildingLevelData levelData)
+  //  private void AddStorageCapacity(StorageBuildingLevelData levelData)
+  //  {
+		//cityManager.AddStorageCapacity(levelData);
+  //  }
+
+  //  private void SubtractStorageCapacity(StorageBuildingLevelData levelData)
+  //  {
+		//cityManager.SubtractStorageCapacity(levelData);
+  //  }
+
+    public int StoreItem(int itemId, int amount)
     {
-		cityManager.AddStorageCapacity(levelData);
+        return StoreItem_Internal(itemId, amount);
     }
 
-    private void SubtractStorageCapacity(StorageBuildingLevelData levelData)
+    public int StoreItem(ItemInstance item)
     {
-		cityManager.SubtractStorageCapacity(levelData);
+        return StoreItem_Internal((int)item.ItemData.ItemId, item.Amount);
     }
 
-    public int GiveItemAmount(ItemEntry item)
+    private int StoreItem_Internal(int itemId, int amount)
     {
-        int amountToGive = item.amount;
-        int storedAmount = storedItems[(int)item.itemData.itemId];
+        int amountToGive = amount;
+        int storedAmount = storedItems[itemId];
         if (amountToGive > storedAmount)
             amountToGive = storedAmount;
 
-        cityManager.SpendItemById((int)item.itemData.itemId, amountToGive);
+        cityManager.SpendItem(itemId, amountToGive);
 
+        return amountToGive;
+    }
+
+    public int SpendItem(int itemId, int amount)
+    {
+        return SpendItem_Internal(itemId, amount);
+    }
+
+    public int SpendItem(ItemInstance item)
+    {
+        return SpendItem_Internal(item.ItemData.ItemId, item.Amount);
+    }
+
+    private int SpendItem_Internal(int itemId, int amount)
+    {
+        int amountToGive = amount;
+        int storedAmount = storedItems[itemId];
+        if (amountToGive > storedAmount)
+            amountToGive = storedAmount;
+
+        cityManager.SpendItem(itemId, amountToGive);
+        Debug.Log(amountToGive);
         return amountToGive;
     }
 }

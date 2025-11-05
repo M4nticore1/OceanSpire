@@ -10,7 +10,6 @@ public class BuildingWidget : MonoBehaviour
     //public System.Action OnPress;
     //public System.Action OnRelease;
 
-    [HideInInspector] public GameManager gameManager = null;
     [HideInInspector] public CityManager cityManager = null;
     private PlayerController playerController = null;
     private UIManager UIManager = null;
@@ -47,8 +46,6 @@ public class BuildingWidget : MonoBehaviour
 
     public void InitializeBuildingWidget(Building newBuilding)
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-
         building = newBuilding;
 
         playerController = GetComponentInParent<PlayerController>();
@@ -82,7 +79,7 @@ public class BuildingWidget : MonoBehaviour
             BuildingResourceWidget spawnedBuildingResourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);
             spawnedBuildingResourceWidgets.Add(spawnedBuildingResourceWidget);
 
-            spawnedBuildingResourceWidgets[i].Initialize(building.buildingLevelsData[0].resourcesToBuild[i].amount, building.buildingLevelsData[0].resourcesToBuild[i].itemData.itemIcon);
+            //spawnedBuildingResourceWidgets[i].Initialize(building.buildingLevelsData[0].resourcesToBuild[i].Amount, building.buildingLevelsData[0].resourcesToBuild[i].ItemData.itemIcon);
         }
     }
 
@@ -92,9 +89,9 @@ public class BuildingWidget : MonoBehaviour
 
         for (int i = 0; i < resourcesToBuildNumber; i++)
         {
-            int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)building.buildingLevelsData[0].resourcesToBuild[i].itemData.itemId);
+            int id = building.buildingLevelsData[0].resourcesToBuild[i].ItemData.ItemId;
 
-            if (cityManager.items[index].amount >= building.buildingLevelsData[0].resourcesToBuild[i].amount)
+            if (cityManager.items[id].Amount >= building.buildingLevelsData[0].resourcesToBuild[i].Amount)
                 haveResourcesToBuild.Add(true);
             else
                 haveResourcesToBuild.Add(false);
@@ -117,9 +114,9 @@ public class BuildingWidget : MonoBehaviour
     {
         for (int i = 0; i < resourcesToBuildNumber; i++)
         {
-            int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)building.buildingLevelsData[0].resourcesToBuild[i].itemData.itemId);
+            int id = building.buildingLevelsData[0].resourcesToBuild[i].ItemData.ItemId;
 
-            spawnedBuildingResourceWidgets[i].SetResourceText(cityManager.items[index].amount, building.buildingLevelsData[0].resourcesToBuild[i].amount);
+            spawnedBuildingResourceWidgets[i].SetResourceText(cityManager.items[id].Amount, building.buildingLevelsData[0].resourcesToBuild[i].Amount);
         }
     }
 }

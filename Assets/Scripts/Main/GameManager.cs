@@ -12,7 +12,7 @@ public struct ResourceStack
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;
+    private  PlayerController playerController;
     public static CityManager cityManager;
 
     [Header("Buildings")]
@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     // Items
     [Header("Items")]
-    public List<ItemData> itemsData = new List<ItemData>();
+    //public static List<ItemData> itemsData = new List<ItemData>();
     //[HideInInspector] public List<ItemInstance> items = new List<ItemInstance>();
 
     [Header("NPC")]
@@ -41,17 +41,22 @@ public class GameManager : MonoBehaviour
 
     public const float autoSaveFrequency = 1;
 
-    public bool hasSavedData = false;
-
     private void Awake()
     {
-        cityManager = FindAnyObjectByType<CityManager>();
+        Application.targetFrameRate = 60;
 
-        //buildingPrefabs.Sort((a, b) => a.buildingData.buildingId.CompareTo(b.buildingData.buildingId));
+        cityManager = FindAnyObjectByType<CityManager>();
+        playerController = FindAnyObjectByType<PlayerController>();
     }
 
     private void Start()
     {
+        ItemDatabase.Load();
+
+        SaveData data = SaveSystem.LoadData();
+        cityManager.Load(data);
+        playerController.Load(data);
+
         ChangeWind();
         windDirection = newWindDirection;
     }
@@ -67,6 +72,8 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        playerController.Tick();
+
         ChangingWind();
     }
 
@@ -87,45 +94,6 @@ public class GameManager : MonoBehaviour
         newWindDirection = new Vector2(xAxis, yAxis).normalized;
 
         windDirectionChangeTime = Time.time;
-    }
-
-    public static int GetItemIndexByIdName(List<ItemData> itemsList, string idName)
-    {
-        int id = 0;
-
-        for (int i = 0; i < itemsList.Count; i++)
-        {
-            if (itemsList[i].itemIdName == idName)
-            {
-                id = i;
-                return id;
-            }
-        }
-
-        return -1;
-    }
-
-    public static int GetItemIndexById(List<ItemData> itemsList, int id)
-    {
-        if (itemsList.Count > id && (int)itemsList[id].itemId == id)
-        {
-            return id;
-        }
-        else
-        {
-            int currentId = 0;
-
-            for (int i = 0; i < itemsList.Count; i++)
-            {
-                if ((int)itemsList[i].itemId == id)
-                {
-                    currentId = i;
-                    return currentId;
-                }
-            }
-
-            return -1;
-        }
     }
 
     public Building GetBuildingPrefabById(int buildingId)

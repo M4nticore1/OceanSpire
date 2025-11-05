@@ -2,10 +2,12 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static BuildingData;
+using static UnityEditor.Progress;
 
 public enum BuildingPosition
 {
@@ -37,6 +39,11 @@ public class Building : MonoBehaviour
     [HideInInspector] public bool isUnderConstruction { get; private set; } = false;
     private List<int> currentConstructingResourceAmount = new List<int>();
     [HideInInspector] public BuildingConstruction spawnedBuildingConstruction = null;
+  
+    public List<ItemInstance> incomingConstructionResources { get; private set; } = new List<ItemInstance>();
+    public Dictionary<int, ItemInstance> incomingConstructionResourcesDict { get; private set; } = new Dictionary<int, ItemInstance>();
+    public List<ItemInstance> deliveredConstructionResources { get; private set; } = new List<ItemInstance>();
+    public Dictionary<int, ItemInstance> deliveredConstructionResourcesDict { get; private set; } = new Dictionary<int, ItemInstance>();
 
     [HideInInspector] private GameObject spawedBuildingInterior = null;
     [HideInInspector] public int interiorIndex = 0;
@@ -60,7 +67,8 @@ public class Building : MonoBehaviour
 
     protected virtual void Update()
     {
-
+        if(incomingConstructionResources.Count > 0)
+            Debug.Log(incomingConstructionResources[0].Amount);
     }
 
     // Constructing
@@ -154,14 +162,14 @@ public class Building : MonoBehaviour
 
     public virtual void Demolish()
     {
-        List<ItemEntry> resourceToBuilds = buildingLevelsData[levelIndex].resourcesToBuild;
+        List<ItemInstance> resourceToBuilds = buildingLevelsData[levelIndex].resourcesToBuild;
 
         for (int i = 0; i < resourceToBuilds.Count; i++)
         {
-            int itemIndex = GameManager.GetItemIndexById(gameManager.itemsData, (int)resourceToBuilds[i].itemData.itemId);
-            int itemAmount = (int)math.ceil(resourceToBuilds[i].amount * GameManager.demolitionResourceRefundRate);
+            int id = resourceToBuilds[i].ItemData.ItemId;
+            int amount = (int)math.ceil(resourceToBuilds[i].Amount * GameManager.demolitionResourceRefundRate);
 
-            cityManager.AddItemByIndex(itemIndex, itemAmount);
+            cityManager.AddItem(id, amount);
         }
 
         onAnyBuildingFinishConstructing?.Invoke(this);
@@ -183,16 +191,17 @@ public class Building : MonoBehaviour
         }
     }
 
-    public void AddConstructingResources(ItemEntry item)
+    public void AddConstructingResources(ItemInstance item)
     {
-        List<ItemData> itemsData = new List<ItemData>();
-        for (int i = 0; i < buildingLevelsData[levelIndex].resourcesToBuild.Count; i++)
-        {
-            itemsData.Add(buildingLevelsData[levelIndex].resourcesToBuild[i].itemData);
-        }
-        int index = GameManager.GetItemIndexById(itemsData, (int)item.itemData.itemId);
+        //List<ItemData> itemsData = new List<ItemData>();
+        //for (int i = 0; i < buildingLevelsData[levelIndex].resourcesToBuild.Count; i++)
+        //{
+        //    itemsData.Add(buildingLevelsData[levelIndex].resourcesToBuild[i].ItemData);
+        //}
 
-        currentConstructingResourceAmount[index] += item.amount;
+        int index = item.ItemData.ItemId;
+
+        currentConstructingResourceAmount[index] += item.Amount;
     }
 
     // Residents Management
@@ -227,7 +236,7 @@ public class Building : MonoBehaviour
     public void AddWorker(Entity worker)
     {
         workers.Add(worker);
-        worker.SetWorkerIndex(workers.Count);
+        worker.SetWorkerIndex(workers.Count - 1);
     }
 
     public void RemoveWorker(Entity worker)
@@ -253,6 +262,46 @@ public class Building : MonoBehaviour
         {
             currentWorkers[i].SetWorkerIndex(i);
         }
+    }
+
+    public void AddIncomingConstructionResources(int itemId, int itemAmount)
+    {
+        AddIncomingConstructionResources_Internal(itemId, itemAmount);
+    }
+
+    public void AddIncomingConstructionResources(ItemInstance item)
+    {
+        AddIncomingConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
+    }
+
+    private void AddIncomingConstructionResources_Internal(int itemId, int itemAmount)
+    {
+        if (incomingConstructionResourcesDict.ContainsKey(itemId))
+        {
+            // We can change only the list or dictionary because we use the same item instance for them.
+            ItemDatabase.GetItem(itemId, incomingConstructionResources).AddAmount(itemAmount);
+        }
+        else
+        {
+            ItemInstance item = new ItemInstance(ItemDatabase.GetItemData(itemId, (List<ItemData>)null), itemAmount); // The same item instance for list and dictionary.
+            incomingConstructionResources.Add(item);
+            incomingConstructionResourcesDict.Add(item.ItemData.ItemId, item);
+        }
+    }
+
+    public void AddResourcesToBuild(ItemInstance item)
+    {
+        AddResourcesToBuild_Internal(item.ItemData.ItemId, item.Amount);
+    }
+
+    public void AddResourcesToBuild(int itemId, int amount)
+    {
+        AddResourcesToBuild_Internal(itemId, amount);
+    }
+
+    public void AddResourcesToBuild_Internal(int itemId, int amount)
+    {
+        Debug.Log("AddResourcesToBuild " + ItemDatabase.items[itemId].itemIdName + " " + amount);
     }
 
     protected void InvokeStartConstructing(Building building)
@@ -311,7 +360,7 @@ public class Building : MonoBehaviour
             return 0;
     }
 
-    public Vector3 GetInteractionPointPosition()
+    public Vector3 GetInteractionPosition()
     {
         if (spawnedBuildingConstruction.buildingInteractions.Count > 0 && spawnedBuildingConstruction.buildingInteractions[0].waypoints.Count > 0)
             return spawnedBuildingConstruction.buildingInteractions[0].waypoints[0].position;
@@ -321,8 +370,8 @@ public class Building : MonoBehaviour
 
     public Vector3 GetPickupItemPointPosition()
     {
-        if (spawnedBuildingConstruction.pickupItemPoints.Count > 0)
-            return spawnedBuildingConstruction.pickupItemPoints[0].position;
+        if (spawnedBuildingConstruction.collectItemPoints.Count > 0)
+            return spawnedBuildingConstruction.collectItemPoints[0].position;
         else
             return transform.position;
     }

@@ -97,6 +97,7 @@ Transform:
   - {fileID: 6224386978513098779}
   - {fileID: 6712350658530394246}
   - {fileID: 7793949054541591815}
+  - {fileID: 1547046230084987352}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8449339325450574553
@@ -125,6 +126,8 @@ MonoBehaviour:
   - waypoints:
     - {fileID: 6224386978513098779}
     actionTimes: 00000000
+  collectItemPoints:
+  - {fileID: 1547046230084987352}
 --- !u!64 &1600456539545249674
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -147,6 +150,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5890453824614587081, guid: 3e1eec047e7057a4d8e04eea8514b62d, type: 3}
+--- !u!1 &2881172264745807467
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1547046230084987352}
+  m_Layer: 0
+  m_Name: CollectItemPoint_01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1547046230084987352
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2881172264745807467}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4883502308080682885}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4506125580141421575
 GameObject:
   m_ObjectHideFlags: 0

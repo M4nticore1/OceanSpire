@@ -23,7 +23,8 @@ public enum ItemCategory
 [CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/ItemData")]
 public class ItemData : ScriptableObject
 {
-    public ItemID itemId = ItemID.Population;
+    [SerializeField] private ItemID itemId = ItemID.Population;
+    public int ItemId => (int)itemId;
     public string itemIdName = "";
     public string itemName = "";
     public Sprite itemIcon = null;

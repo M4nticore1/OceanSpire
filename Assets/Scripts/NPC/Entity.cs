@@ -1,9 +1,13 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
+using static UnityEditor.Progress;
 
 public enum ResidentWork
 {
@@ -27,7 +31,7 @@ public class Entity : MonoBehaviour
     [HideInInspector] public int pathIndex = 0;
     [HideInInspector] public int currentFloorIndex { get; protected set; } = 0;
     [HideInInspector] public int currentBuildingPlaceIndex { get; protected set; } = 0;
-    protected Vector3 targetPosition = Vector3.zero;
+    public Vector3 targetPosition = Vector3.zero;
     protected const float applyTargetPosition = 1.0f;
 
     protected bool isWalking = false;
@@ -40,11 +44,18 @@ public class Entity : MonoBehaviour
     [HideInInspector] public int workerIndex { get; protected set; } = 0;
     [HideInInspector] public Building workBuilding { get; protected set; } = null;
 
-    protected float actionTime = 0.0f;
-    protected int actionIndex = 0;
+    public List<ItemInstance> carriedItems = new List<ItemInstance>();
+    public Dictionary<int, ItemInstance> carriedItemsDict = new Dictionary<int, ItemInstance>();
+
+    protected double currentActionTime = 0.0f;
+    protected int currentActionIndex = 0;
+    private const float takeItemDuration = 1.0f;
 
     public string firstName = "";
     public string lastName = "";
+
+    // Stats
+    [SerializeField] private int ñarryWeight = 100;
 
     public static event System.Action OnWorkerAdd;
     public static event System.Action OnWorkerRemove;
@@ -87,32 +98,77 @@ public class Entity : MonoBehaviour
             {
                 BuildingAction buildingAction = workBuilding.spawnedBuildingConstruction.buildingInteractions[workerIndex];
 
-                if (buildingAction.actionTimes[actionIndex] > 0)
+                if (buildingAction.actionTimes[currentActionIndex] > 0)
                 {
-                    actionTime += Time.deltaTime;
-
-                    if (actionTime >= buildingAction.actionTimes[actionIndex])
+                    currentActionTime += Time.deltaTime;
+                    if (currentActionTime >= buildingAction.actionTimes[currentActionIndex])
                     {
-                        if (actionIndex < buildingAction.actionTimes.Count - 1)
-                            actionIndex++;
+                        if (currentActionIndex < buildingAction.actionTimes.Count - 1)
+                            currentActionIndex++;
                         else
-                            actionIndex = 0;
+                            currentActionIndex = 0;
 
-                        actionTime = 0;
+                        currentActionTime = 0;
 
-                        navMeshAgent.SetDestination(buildingAction.waypoints[actionIndex].position);
+                        navMeshAgent.SetDestination(buildingAction.waypoints[currentActionIndex].position);
                     }
                 }
             }
         }
         else if (currentWork == ResidentWork.ConstructingBuilding)
         {
-            if (currentBuilding == targetBuilding)
+            if (currentBuilding == workBuilding)
             {
                 float distance = Vector3.Distance(transform.position, targetPosition);
-                if (distance < applyTargetPosition && navMeshAgent.velocity == Vector3.zero)
+                if (distance < applyTargetPosition)
                 {
+                    currentActionTime += Time.deltaTime;
+                    if (currentActionTime >= takeItemDuration)
+                    {
+                        int level = workBuilding.levelIndex;
+                        List<ItemInstance> resourcesToBuild = workBuilding.buildingLevelsData[level].resourcesToBuild;
+                        int itemId = resourcesToBuild[0].ItemData.ItemId;
+                        int itemAmount = resourcesToBuild[0].Amount;
 
+                        for (int i = 0; i < carriedItems.Count; i++)
+                        {
+                            workBuilding.AddResourcesToBuild(carriedItems[i]);
+                        }
+
+                        SetTargetBuilding(currentBuilding.buildingPlace, b =>
+                        {
+                            if (!b.storageComponent || (b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex())) return false;
+
+                            int itemIndex = (int)workBuilding.buildingLevelsData[workBuilding.levelIndex].resourcesToBuild[0].ItemData.ItemId;
+
+                            return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
+                        });
+
+                        currentActionTime = 0;
+                    }
+                }
+            }
+            else if (currentBuilding == targetBuilding)
+            {
+                float distance = Vector3.Distance(transform.position, targetPosition);
+                if (distance < applyTargetPosition)
+                {
+                    currentActionTime += Time.deltaTime;
+                    if (currentActionTime >= takeItemDuration)
+                    {
+                        int level = workBuilding.levelIndex;
+                        List<ItemInstance> resourcesToBuild = workBuilding.buildingLevelsData[level].resourcesToBuild;
+                        int itemId = resourcesToBuild[0].ItemData.ItemId;
+
+                        for (int i = 0; i < resourcesToBuild.Count; i++)
+                        {
+                            TakeItem(itemId, currentBuilding.storageComponent.SpendItem(resourcesToBuild[0]));
+                        }
+
+                        SetTargetBuilding(currentBuilding.buildingPlace, b => b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex());
+
+                        currentActionTime = 0;
+                    }
                 }
             }
         }
@@ -139,14 +195,13 @@ public class Entity : MonoBehaviour
 
     public void SetWork(ResidentWork newWork, Building newWorkBuilding)
     {
-        currentWork = newWork;
-
         if (newWorkBuilding)
         {
             workBuilding = newWorkBuilding;
 
             if (newWork == ResidentWork.BuildingWork)
             {
+                currentWork = newWork;
                 workBuilding = newWorkBuilding;
                 newWorkBuilding.AddWorker(this);
 
@@ -156,16 +211,29 @@ public class Entity : MonoBehaviour
             }
             else if (newWork == ResidentWork.ConstructingBuilding)
             {
-                if (SetTargetBuilding(newWorkBuilding.buildingPlace, b =>
+                int levelIndex = newWorkBuilding.levelIndex;
+                List<ItemInstance> resourcesToBuild = newWorkBuilding.buildingLevelsData[levelIndex].resourcesToBuild;
+                for (int i = 0; i < resourcesToBuild.Count; i++)
                 {
-                    if (!b.storageComponent || (b.GetFloorIndex() == newWorkBuilding.GetFloorIndex() && b.GetPlaceIndex() == newWorkBuilding.GetPlaceIndex())) return false;
+                    if (newWorkBuilding.incomingConstructionResources.Count <= i || newWorkBuilding.incomingConstructionResources[i].Amount < resourcesToBuild[i].Amount)
+                    {
+                        if (SetTargetBuilding(newWorkBuilding.buildingPlace, b =>
+                        {
+                            if (!b.storageComponent || (b.GetFloorIndex() == newWorkBuilding.GetFloorIndex() && b.GetPlaceIndex() == newWorkBuilding.GetPlaceIndex())) return false;
 
-                    int itemIndex = (int)newWorkBuilding.buildingLevelsData[newWorkBuilding.levelIndex].resourcesToBuild[0].itemData.itemId;
+                            int itemIndex = newWorkBuilding.buildingLevelsData[newWorkBuilding.levelIndex].resourcesToBuild[0].ItemData.ItemId;
 
-                    return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
-                }))
-                {
-                    StartWorking();
+                            return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
+                        }))
+                        {
+                            currentWork = newWork;
+                            StartWorking();
+
+                            newWorkBuilding.AddIncomingConstructionResources(resourcesToBuild[i].ItemData.ItemId, ñarryWeight);
+                        }
+
+                        break;
+                    }
                 }
             }
         }
@@ -190,67 +258,94 @@ public class Entity : MonoBehaviour
     // Movement
     private void FollowPath()
     {
+        if (isWalkingToElevator)
+            Debug.Log(isWalkingToElevator);
+        if (isWaitingForElevator)
+            Debug.Log(isWaitingForElevator);
+        if (isRidingOnElevator)
+            Debug.Log(isRidingOnElevator);
+
         if (!isRidingOnElevator && pathIndex < pathBuildings.Count)
         {
             ElevatorBuilding currentElevatorBuilding = currentBuilding as ElevatorBuilding;
-            Building nextBuilding = pathBuildings[pathIndex];
-            ElevatorBuilding nextElevatorBuilding = nextBuilding as ElevatorBuilding;
+            Building currentPathBuilding = pathBuildings[pathIndex];
+            ElevatorBuilding currentPathElevator = currentPathBuilding as ElevatorBuilding;
 
-            if (nextBuilding)
+            Building nextPathBuilding = null;
+            ElevatorBuilding nextPathElevator = null;
+            if (pathIndex + 1 < pathBuildings.Count)
             {
-                if (nextBuilding == targetBuilding)
+                nextPathBuilding = pathBuildings[pathIndex + 1];
+                nextPathElevator = nextPathBuilding as ElevatorBuilding;
+            }
+
+            if (currentPathBuilding)
+            {
+                if (currentPathBuilding == targetBuilding)
                 {
                     if (currentWork != ResidentWork.None)
                     {
                         if (currentWork == ResidentWork.BuildingWork)
                         {
-                            targetPosition = nextBuilding.GetInteractionPointPosition();
+                            targetPosition = currentPathBuilding.GetInteractionPosition();
                         }
                         else if (currentWork == ResidentWork.ConstructingBuilding)
                         {
-                            targetPosition = nextBuilding.GetPickupItemPointPosition();
+                            targetPosition = currentPathBuilding.GetPickupItemPointPosition();
                         }
+                    }
+                }
+                else if (currentPathElevator)
+                {
+                    Debug.Log(pathIndex);
 
-                        navMeshAgent.SetDestination(targetPosition);
+                    if (nextPathElevator)
+                    {
+                        if (isWalkingToElevator)
+                            targetPosition = currentPathElevator.GetPlatformRidingPosition();
+                        else
+                            targetPosition = currentPathElevator.GetInteractionPosition();
+                    }
+                    else if (nextPathBuilding)
+                    {
+                        targetPosition = nextPathBuilding.GetInteractionPosition();
                     }
                 }
-                else if (nextElevatorBuilding)
-                {
-                    navMeshAgent.SetDestination(nextElevatorBuilding.GetInteractionPointPosition());
-                }
+
+                navMeshAgent.SetDestination(targetPosition);
             }
-            else
-            {
-                if (currentElevatorBuilding)
-                {
-                    if (nextElevatorBuilding && nextElevatorBuilding.GetPlaceIndex() == currentElevatorBuilding.GetPlaceIndex() && nextElevatorBuilding.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
-                    {
-                        //navMeshAgent.SetDestination(currentPathElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[currentPathElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
-                    }
-                    else
-                    {
-                        if (nextElevatorBuilding)
-                        {
-                            navMeshAgent.SetDestination(nextElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[nextElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
-                        }
-                        else if (nextBuilding)
-                        {
-                            navMeshAgent.SetDestination(nextBuilding.spawnedBuildingConstruction.transform.position);
-                        }
-                    }
-                }
-                else
-                {
-                    if (nextElevatorBuilding)
-                    {
-                        navMeshAgent.SetDestination(nextElevatorBuilding.GetInteractionPointPosition());
-                    }
-                    else if (nextBuilding)
-                    {
-                        navMeshAgent.SetDestination(nextBuilding.transform.position);
-                    }
-                }
-            }
+            //else
+            //{
+            //    if (currentElevatorBuilding)
+            //    {
+            //        if (currentPathElevator && currentPathElevator.GetPlaceIndex() == currentElevatorBuilding.GetPlaceIndex() && currentPathElevator.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
+            //        {
+            //            //navMeshAgent.SetDestination(currentPathElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[currentPathElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
+            //        }
+            //        else
+            //        {
+            //            if (currentPathElevator)
+            //            {
+            //                navMeshAgent.SetDestination(currentPathElevator.spawnedBuildingConstruction.buildingInteractions[currentPathElevator.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
+            //            }
+            //            else if (currentPathBuilding)
+            //            {
+            //                navMeshAgent.SetDestination(currentPathBuilding.spawnedBuildingConstruction.transform.position);
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (currentPathElevator)
+            //        {
+            //            navMeshAgent.SetDestination(currentPathElevator.GetInteractionPointPosition());
+            //        }
+            //        else if (currentPathBuilding)
+            //        {
+            //            navMeshAgent.SetDestination(currentPathBuilding.transform.position);
+            //        }
+            //    }
+            //}
         }
     }
 
@@ -265,12 +360,12 @@ public class Entity : MonoBehaviour
     }
 
     // Elevators
-    public void StartElevatorWalking(ElevatorBuilding elevatorBuilding)
+    public void StartElevatorWalking()
     {
-        Debug.Log("Start Walking");
+        ElevatorBuilding elevatorBuilding = pathBuildings[pathIndex] as ElevatorBuilding;
 
-        isWalkingToElevator = true;
         isWaitingForElevator = false;
+        isWalkingToElevator = true;
         isRidingOnElevator = false;
 
         ElevatorPlatformConstruction elevatorPlatformConstruction = elevatorBuilding.spawnedElevatorPlatform;
@@ -281,19 +376,17 @@ public class Entity : MonoBehaviour
         elevatorBuilding.RemoveRidingPassenger(this);
     }
 
-    public void StopElevatorWalking(ElevatorBuilding elevatorBuilding)
+    public void StopElevatorWalking()
     {
-        isWalkingToElevator = false;
-
+        ElevatorBuilding elevatorBuilding = pathBuildings[pathIndex] as ElevatorBuilding;
         elevatorBuilding.RemoveWalkingPassenger(this);
     }
 
-    public void StartElevatorWaiting(ElevatorBuilding elevatorBuilding)
+    public void StartElevatorWaiting()
     {
-        Debug.Log("Start Waiting");
-
-        isWalkingToElevator = false;
+        ElevatorBuilding elevatorBuilding = pathBuildings[pathIndex] as ElevatorBuilding;
         isWaitingForElevator = true;
+        isWalkingToElevator = false;
         isRidingOnElevator = false;
 
         BuildingConstruction buildingConstruction = elevatorBuilding.spawnedBuildingConstruction;
@@ -304,17 +397,17 @@ public class Entity : MonoBehaviour
         elevatorBuilding.RemoveWalkingPassenger(this);
     }
 
-    public void StopElevatorWaiting(ElevatorBuilding elevatorBuilding)
+    public void StopElevatorWaiting()
     {
+        ElevatorBuilding elevatorBuilding = pathBuildings[pathIndex] as ElevatorBuilding;
         isWaitingForElevator = false;
 
         elevatorBuilding.RemoveWaitingPassenger(this);
     }
 
-    public void StartElevatorRiding(ElevatorBuilding elevatorBuilding)
+    public void StartElevatorRiding()
     {
-        Debug.Log("Start Riding");
-
+        ElevatorBuilding elevatorBuilding = pathBuildings[pathIndex] as ElevatorBuilding;
         isRidingOnElevator = true;
         isWalkingToElevator = false;
         isWaitingForElevator = false;
@@ -326,15 +419,23 @@ public class Entity : MonoBehaviour
         elevatorBuilding.RemoveWaitingPassenger(this);
     }
 
-    public void StopElevatorRiding(ElevatorBuilding elevatorBuilding)
+    public void StopElevatorRiding()
     {
+        Building building = null;
+
+        if (pathIndex > 0)
+            building = pathBuildings[pathIndex - 1];
+        else
+            building = pathBuildings[pathIndex];
+
+        ElevatorBuilding elevatorBuilding = building as ElevatorBuilding;
         isRidingOnElevator = false;
 
         navMeshAgent.enabled = true;
-
-        FollowPath();
-
         elevatorBuilding.RemoveRidingPassenger(this);
+
+        Debug.Log(pathBuildings[pathIndex].GetFloorIndex());
+        EnterBuilding(pathBuildings[pathIndex]);
     }
 
     // Buildings
@@ -342,24 +443,30 @@ public class Entity : MonoBehaviour
     {
         if (building)
         {
-            currentBuilding = building;
-            currentFloorIndex = building.GetFloorIndex();
-
-            building.EnterBuilding(this);
-
-            if (pathBuildings.Count > pathIndex && currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex() && currentBuilding.GetPlaceIndex() == pathBuildings[pathIndex].GetPlaceIndex())
+            if (!isRidingOnElevator)
             {
-                FollowPath();
-                pathIndex++;
-            }
+                Debug.Log("EnterBuilding");
+                currentBuilding = building;
+                currentFloorIndex = building.GetFloorIndex();
 
-            if (currentBuilding == targetBuilding)
-            {
-                targetBuilding = null;
+                building.EnterBuilding(this);
 
-                if (currentWork != ResidentWork.None)
+                if (currentBuilding == targetBuilding)
                 {
-                    StartWorking();
+                    if (currentWork != ResidentWork.None)
+                    {
+                        StartWorking();
+                    }
+                }
+
+                if (currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex())
+                    Debug.Log(true);
+
+                if (pathBuildings.Count > pathIndex && currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex() && currentBuilding.GetPlaceIndex() == pathBuildings[pathIndex].GetPlaceIndex())
+                {
+                    Debug.Log("FollowPath");
+                    FollowPath();
+                    pathIndex++;
                 }
             }
         }
@@ -415,16 +522,13 @@ public class Entity : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
-        if (targetBuilding)
+        if (currentWork == ResidentWork.None)
         {
-            SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == targetBuilding.GetFloorIndex() && b.GetPlaceIndex() == targetBuilding.GetPlaceIndex());
+            SetWork(ResidentWork.ConstructingBuilding, building);
         }
         else
         {
-            if (currentWork == ResidentWork.None)
-            {
-                SetWork(ResidentWork.ConstructingBuilding, building);
-            }
+            SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == targetBuilding.GetFloorIndex() && b.GetPlaceIndex() == targetBuilding.GetPlaceIndex());
         }
 
     }
@@ -432,7 +536,27 @@ public class Entity : MonoBehaviour
     // Actions
     private void TakeItem(int itemId, int itemAmount)
     {
+        TakeItem_Internal(itemId, itemAmount);
+    }
 
+    private void TakeItem(ItemInstance item)
+    {
+        TakeItem_Internal(item.ItemData.ItemId, item.Amount);
+    }
+
+    private void TakeItem_Internal(int itemId, int itemAmount)
+    {
+        if (carriedItemsDict.ContainsKey(itemId))
+        {
+            // We can change only the list or dictionary because we use the same item instance for them.
+            carriedItems[ItemDatabase.GetItemIndex(itemId, carriedItems)].AddAmount(itemAmount);
+        }
+        else
+        {
+            ItemInstance item = new ItemInstance(ItemDatabase.itemsById[itemId], itemAmount); // The same item instance for list and dictionary.
+            carriedItems.Add(item);
+            carriedItemsDict.Add(itemId, item);
+        }
     }
 
     public void TakeDamage(int damange)

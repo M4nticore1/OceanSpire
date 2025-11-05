@@ -27,7 +27,7 @@ public class ProductionBuildingComponent : BuildingComponent
         base.Build();
 
         levelData = levelsData[ownedBuilding.levelIndex] as ProductionBuildingLevelData;
-        producedItem = new ItemInstance(levelData.produceResource, 0, levelData.maxResourceAmount);
+        producedItem = new ItemInstance(levelData.produceResource);
     }
 
     public override void LevelUp()
@@ -81,7 +81,7 @@ public class ProductionBuildingComponent : BuildingComponent
         producedItem.AddAmount(levelData.produceResourceAmount);
         SetReadyToCollect();
 
-        if (producedItem.amount == producedItem.maxAmount)
+        if (producedItem.Amount == levelData.maxResourceAmount)
             isStorageFull = true;
 
         produceTime = 0.0f;
@@ -89,7 +89,7 @@ public class ProductionBuildingComponent : BuildingComponent
 
     private void SetReadyToCollect()
     {
-        if (producedItem.amount > 0 && producedItem.maxAmount / producedItem.amount >= storageFillPercentToReadyToCollect)
+        if (producedItem.Amount > 0 && levelData.maxResourceAmount / producedItem.Amount >= storageFillPercentToReadyToCollect)
         {
             if (!isReadyToCollect)
             {
@@ -124,21 +124,21 @@ public class ProductionBuildingComponent : BuildingComponent
 
     public ItemInstance TakeProducedItem()
     {
-        if (producedItem.amount > 0)
+        if (producedItem.Amount > 0)
         {
-            ItemInstance storageItemInstance = cityManager.items[GameManager.GetItemIndexById(gameManager.itemsData, (int)GetProducedItem().itemData.itemId)];
-            int remainingStorageCapacity = storageItemInstance.maxAmount - storageItemInstance.amount;
+            ItemInstance storageItemInstance = cityManager.items[producedItem.ItemData.ItemId];
+            int remainingStorageCapacity = levelData.maxResourceAmount - storageItemInstance.Amount;
 
             isStorageFull = false;
 
             int amountToTake = 0;
 
-            if (remainingStorageCapacity >= producedItem.amount)
-                amountToTake = producedItem.amount;
+            if (remainingStorageCapacity >= producedItem.Amount)
+                amountToTake = producedItem.Amount;
             else
-                amountToTake = producedItem.amount - remainingStorageCapacity;
+                amountToTake = producedItem.Amount - remainingStorageCapacity;
 
-            ItemInstance itemToTake = new ItemInstance(producedItem.itemData, amountToTake, amountToTake);
+            ItemInstance itemToTake = new ItemInstance(producedItem.ItemData, amountToTake);
             producedItem.SubtractAmount(amountToTake);
 
             SetReadyToCollect();

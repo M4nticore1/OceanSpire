@@ -13,13 +13,14 @@ public class TextLocalizer : MonoBehaviour
     {
         text = GetComponent<TextMeshProUGUI>();
         localizationManager = FindAnyObjectByType<LocalizationManager>();
+        ChangeLocalization();
     }
 
     private void OnEnable()
     {
+        LocalizationSystem.OnLocalizationChanged += ChangeLocalization;
         if (localizationManager)
         {
-            LocalizationManager.OnLanguageChanged += ChangeLanguage;
         }
         else
             Debug.LogWarning("localizationManager is null");
@@ -27,16 +28,17 @@ public class TextLocalizer : MonoBehaviour
 
     private void OnDisable()
     {
+        LocalizationSystem.OnLocalizationChanged -= ChangeLocalization;
         if (localizationManager)
         {
-
         }
         else
             Debug.LogWarning("localizationManager is null");
     }
 
-    private void ChangeLanguage(Dictionary<string, string> json)
+    private void ChangeLocalization()
     {
-        text.SetText(json[key]);
+        Debug.Log("GetLocalizationText");
+        text.SetText(LocalizationSystem.GetLocalizationText(key));
     }
 }

@@ -61,7 +61,7 @@ public class ElevatorBuilding : RoomBuilding
     {
         base.EnterBuilding(entity);
 
-        if (entity.pathBuildings.Count > 0 && entity.pathBuildings.Count > entity.pathIndex && entity.pathBuildings[entity.pathIndex] == this)
+        if (entity.pathBuildings.Count > 0 && entity.pathBuildings.Count > entity.pathIndex && entity.pathBuildings[entity.pathIndex] == this && entity.pathBuildings[entity.pathIndex + 1] as ElevatorBuilding)
         {
             if (!entity.isRidingOnElevator)
             {
@@ -69,17 +69,17 @@ public class ElevatorBuilding : RoomBuilding
                 {
                     if (spawnedElevatorPlatform.isMoving || spawnedElevatorPlatform.elevatorRidingPassengers.Count == buildingLevelsData[levelIndex].maxResidentsCount)
                     {
-                        entity.StartElevatorWaiting(this);
+                        entity.StartElevatorWaiting();
                     }
                     else
                     {
                         Debug.Log("StartElevatorWalking");
-                        entity.StartElevatorWalking(this);
+                        entity.StartElevatorWalking();
                     }
                 }
                 else
                 {
-                    entity.StartElevatorWaiting(this);
+                    entity.StartElevatorWaiting();
                 }
             }
         }
@@ -127,5 +127,16 @@ public class ElevatorBuilding : RoomBuilding
     {
         elevatorWalkingPassengers.Remove(entity);
         spawnedElevatorPlatform.RemoveWalkingPassenger(entity);
+    }
+
+    public bool IsPossibleToEnter()
+    {
+        return !spawnedElevatorPlatform.isMoving && spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex() && spawnedElevatorPlatform.elevatorRidingPassengers.Count < buildingLevelsData[levelIndex].maxResidentsCount;
+    }
+
+    public Vector3 GetPlatformRidingPosition()
+    {
+        int index = spawnedElevatorPlatform.elevatorRidingPassengers.Count % spawnedElevatorPlatform.buildingInteractions.Count;
+        return spawnedElevatorPlatform.buildingInteractions[index].waypoints[0].position;
     }
 }

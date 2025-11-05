@@ -51,8 +51,9 @@ public class CityManager : MonoBehaviour
     [HideInInspector] public List<List<ElevatorBuilding>> elevatorGroups = new List<List<ElevatorBuilding>>();
 
     // Items
-    public List<ItemEntry> startResources = new List<ItemEntry>();
-    public List<ItemInstance> items = new List<ItemInstance>();
+    public List<ItemInstance> startResources = new List<ItemInstance>();
+    public Dictionary<int, ItemInstance> items = new Dictionary<int, ItemInstance>();
+    public Dictionary<int, ItemInstance> totalStorageCapacity = new Dictionary<int, ItemInstance>();
 
     [Header("NPC")]
     [HideInInspector] public List<Resident> residents = new List<Resident>();
@@ -62,6 +63,7 @@ public class CityManager : MonoBehaviour
     [HideInInspector] public int unemployedResidentsCount = 0;
     [SerializeField] private List<Transform> entitySpawnPositions = new List<Transform>();
 
+    public static event Action<ItemData> OnItemAdded;
     public static event Action OnStorageCapacityUpdated;
     public event Action OnResidentsAdded;
     public event Action<Resident> OnResidentAdded;
@@ -71,12 +73,6 @@ public class CityManager : MonoBehaviour
     public List<BuildingPath> allPaths2 = new List<BuildingPath>();
 
     public Coroutine bakeNavMeshSurfaceCoroutine;
-
-    private void Awake()
-    {
-        gameManager = FindAnyObjectByType<GameManager>();
-        towerNavMeshSurface = towerRoot.GetComponent<NavMeshSurface>();
-    }
 
     private void OnEnable()
     {
@@ -96,8 +92,15 @@ public class CityManager : MonoBehaviour
         Resident.OnWorkerRemove -= RemoveWorker;
     }
 
-    public void LoadCity(SaveData data)
+    private void Update()
     {
+    }
+
+    public void Load(SaveData data)
+    {
+        gameManager = FindAnyObjectByType<GameManager>();
+        towerNavMeshSurface = towerRoot.GetComponent<NavMeshSurface>();
+
         InitializeItems();
         LoadBuildings(data);
         LoadResources(data);
@@ -193,9 +196,12 @@ public class CityManager : MonoBehaviour
 
     private void InitializeItems()
     {
-        for (int i = 0; i < gameManager.itemsData.Count; i++)
+        for (int i = 0; i < ItemDatabase.items.Count; i++)
         {
-            items.Add(new ItemInstance(gameManager.itemsData[i], 0, 0));
+            ItemData data = ItemDatabase.itemsById[i];
+            int id = data.ItemId;
+            items.Add(id, new ItemInstance(data));
+            totalStorageCapacity.Add(id, new ItemInstance(data));
         }
     }
 
@@ -207,7 +213,7 @@ public class CityManager : MonoBehaviour
             {
                 for (int i = 0; i < data.resourcesAmount.Length; i++)
                 {
-                    AddItemByIndex(i, data.resourcesAmount[i]);
+                    AddItem(i, data.resourcesAmount[i]);
                 }
             }
         }
@@ -215,7 +221,7 @@ public class CityManager : MonoBehaviour
         {
             for (int i = 0; i < startResources.Count; i++)
             {
-                AddItemByIndex((int)startResources[i].itemData.itemId, startResources[i].amount);
+                AddItem(startResources[i].ItemData.ItemId, startResources[i].Amount);
             }
         }
     }
@@ -246,7 +252,7 @@ public class CityManager : MonoBehaviour
                 {
                     ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
                     if (elevatorBuilding)
-                        resident.StartElevatorRiding(elevatorBuilding);
+                        resident.StartElevatorRiding();
 
                     resident.transform.position = spawnPosition;
                 }
@@ -256,7 +262,7 @@ public class CityManager : MonoBehaviour
                 {
                     ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
                     if (elevatorBuilding)
-                        resident.StartElevatorWalking(elevatorBuilding);
+                        resident.StartElevatorWalking();
                 }
 
                 // Set Waiting Elevator
@@ -264,7 +270,7 @@ public class CityManager : MonoBehaviour
                 {
                     ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
                     if (elevatorBuilding)
-                        resident.StartElevatorWaiting(elevatorBuilding);
+                        resident.StartElevatorWaiting();
                 }
 
                 // Set Target Building
@@ -518,7 +524,8 @@ public class CityManager : MonoBehaviour
     private void OnBuildingStartConstructing(Building building)
     {
         int levelIndex = building.levelIndex;
-        SpendItems(building.buildingLevelsData[levelIndex].resourcesToBuild);
+        //if (building.buildingData.instantConstruction)
+            //SpendItems(building.buildingLevelsData[levelIndex].resourcesToBuild);
 
         UpdateEmptyBuildingPlacesCount();
 
@@ -531,7 +538,8 @@ public class CityManager : MonoBehaviour
     private void OnBuildingFinishConstructing(Building building)
     {
         int levelIndex = building.levelIndex;
-        SpendItems(building.buildingLevelsData[levelIndex].resourcesToBuild);
+        //if (building.buildingData.instantConstruction)
+        //SpendItems(building.buildingLevelsData[levelIndex].resourcesToBuild);
 
         FloorBuilding floorBuilding = building as FloorBuilding;
         if (floorBuilding)
@@ -555,6 +563,18 @@ public class CityManager : MonoBehaviour
             }
         }
 
+        if (building.storageComponent)
+        {
+            if (building.levelIndex > 1)
+            {
+                StorageBuildingLevelData previousLevelData = building.storageComponent.levelsData[building.levelIndex - 1] as StorageBuildingLevelData;
+                SubtractStorageCapacity(previousLevelData, false);
+            }
+
+            StorageBuildingLevelData currentLevelData = building.storageComponent.levelData;
+            AddStorageCapacity(currentLevelData, false);
+        }
+
         HideAllBuildigPlaces();
     }
 
@@ -566,16 +586,16 @@ public class CityManager : MonoBehaviour
         {
             bool isResourcesToUpgradeEnough = true;
 
-            int itemIndex = 0;
-            int itemAmount = 0;
-            List<ItemEntry> resourcesToUpgrade = building.buildingLevelsData[nextLevelIndex].resourcesToBuild;
+            int index = 0;
+            int amount = 0;
+            List<ItemInstance> resourcesToUpgrade = building.buildingLevelsData[nextLevelIndex].resourcesToBuild;
 
             for (int i = 0; i < resourcesToUpgrade.Count; i++)
             {
-                itemIndex = GameManager.GetItemIndexById(gameManager.itemsData, (int)resourcesToUpgrade[i].itemData.itemId);
-                itemAmount = resourcesToUpgrade[i].amount;
+                index = resourcesToUpgrade[i].ItemData.ItemId;
+                amount = resourcesToUpgrade[i].Amount;
 
-                if (items[itemIndex].amount < itemAmount)
+                if (items[index].Amount < amount)
                 {
                     isResourcesToUpgradeEnough = false;
                     break;
@@ -586,9 +606,9 @@ public class CityManager : MonoBehaviour
             {
                 for (int i = 0; i < resourcesToUpgrade.Count; i++)
                 {
-                    itemIndex = GameManager.GetItemIndexById(gameManager.itemsData, (int)resourcesToUpgrade[i].itemData.itemId);
-                    itemAmount = resourcesToUpgrade[i].amount;
-                    SpendItemById(itemIndex, itemAmount);
+                    //itemIndex = GameManager.GetItemIndexById(GameManager.itemsData, resourcesToUpgrade[i].ItemData.ItemId);
+                    amount = resourcesToUpgrade[i].Amount;
+                    SpendItem(resourcesToUpgrade[i].ItemData.ItemId, amount);
                 }
 
                 building.StartBuilding(nextLevelIndex);
@@ -635,73 +655,91 @@ public class CityManager : MonoBehaviour
     }
 
     // Resources
-    public void AddStorageCapacity(StorageBuildingLevelData storageLevelData)
+    public void AddStorageCapacity(StorageBuildingLevelData storageLevelData, bool isNeededToUpdate)
     {
-        ChangeStorageCapacity(storageLevelData, true);
+        ChangeStorageCapacity(storageLevelData, true, isNeededToUpdate);
     }
 
-    public void SubtractStorageCapacity(StorageBuildingLevelData storageLevelData)
+    public void SubtractStorageCapacity(StorageBuildingLevelData storageLevelData, bool isNeededToUpdate)
     {
-        ChangeStorageCapacity(storageLevelData, false);
+        ChangeStorageCapacity(storageLevelData, false, isNeededToUpdate);
     }
 
-    private void ChangeStorageCapacity(StorageBuildingLevelData storageLevelData, bool isIncreasing)
+    private void ChangeStorageCapacity(StorageBuildingLevelData storageLevelData, bool isIncreasing, bool isNeededToUpdate)
     {
         for (int i = 0; i < storageLevelData.storageItems.Count; i++)
         {
-            int index = GameManager.GetItemIndexById(gameManager.itemsData, (int)storageLevelData.storageItems[i].itemData.itemId);
-            int changeValue = storageLevelData.storageItems[i].amount;
+            int id = storageLevelData.storageItems[i].ItemData.ItemId;
+            int changeValue = storageLevelData.storageItems[i].Amount;
 
             if (isIncreasing)
-                items[index].AddMaxAmount(changeValue);
+                totalStorageCapacity[id].AddAmount(changeValue);
             else
-                items[index].SubtractMaxAmount(changeValue);
+                totalStorageCapacity[id].AddAmount(changeValue);
         }
 
         for (int i = 0; i < storageLevelData.storageItemCategories.Count; i++)
         {
-            for (int j = 0; j < items.Count(); j++)
+            for (int j = 0; j < ItemDatabase.items.Count; j++)
             {
-                if (items[j].itemData.itemCategory == storageLevelData.storageItemCategories[i].itemCategory)
+                if (items[j].ItemData.itemCategory == storageLevelData.storageItemCategories[i].itemCategory)
                 {
-                    int changeValue = storageLevelData.storageItemCategories[i].capacity;
+                    int changeValue = storageLevelData.storageItemCategories[i].amount;
 
                     if (isIncreasing)
-                        items[j].AddMaxAmount(changeValue);
+                        totalStorageCapacity[j].AddAmount(changeValue);
                     else
-                        items[j].SubtractMaxAmount(changeValue);
+                        totalStorageCapacity[j].AddAmount(changeValue);
                 }
             }
         }
 
-        OnStorageCapacityUpdated?.Invoke();
+        if (isNeededToUpdate)
+            OnStorageCapacityUpdated?.Invoke();
     }
 
-    public void AddItemByIndex(int index, int amount)
+    public void AddItem(ItemInstance item)
     {
-        items[index].AddAmount(amount);
+        int id = item.ItemData.ItemId;
+        items[id].AddAmount(item.Amount, totalStorageCapacity[id].Amount);
+
+        OnItemAdded?.Invoke(item.ItemData);
     }
 
-    public void SpendItemById(int id, int amount)
+    public void AddItem(int itemId, int amount)
     {
-        int index = GameManager.GetItemIndexById(gameManager.itemsData, id);
+        items[itemId].AddAmount(amount, totalStorageCapacity[itemId].Amount);
+
+        OnItemAdded?.Invoke(ItemDatabase.items[itemId]);
+    }
+
+    public void AddItems(List<ItemInstance> items)
+    {
+        foreach (ItemInstance item in items)
+        {
+            AddItem(item.ItemData.ItemId, item.Amount);
+        }
+    }
+
+    public void SpendItem(int id, int amount)
+    {
+        items[id].SubtractAmount(amount);
+    }
+
+    public void SpendItem(string idName, int amount)
+    {
+        int index = ItemDatabase.itemsByIdName[idName].ItemId;
         items[index].SubtractAmount(amount);
     }
 
-    public void SpendItemByIdName(string idName, int amount)
-    {
-        int index = GameManager.GetItemIndexByIdName(gameManager.itemsData, idName);
-        items[index].SubtractAmount(amount);
-    }
-
-    public void SpendItems(List<ItemEntry> itemsToSpend)
+    public void SpendItems(List<ItemInstance> itemsToSpend)
     {
         for (int i = 0; i < itemsToSpend.Count; i++)
         {
-            int id = (int)itemsToSpend[i].itemData.itemId;
-            int amount = itemsToSpend[i].amount;
+            int id = (int)itemsToSpend[i].ItemData.ItemId;
+            int amount = itemsToSpend[i].Amount;
 
-            SpendItemById(id, amount);
+            SpendItem(id, amount);
         }
     }
 
@@ -745,7 +783,7 @@ public class CityManager : MonoBehaviour
 
                 if (currentType == typeof(ElevatorBuilding))
                 {
-                    if (buildingsPath.Count > i + 2 && buildingsPath[i + 2])
+                    if (buildingsPath.Count > i + 2 && buildingsPath[i + 2] && buildingsPath[i].GetPlaceIndex() == buildingsPath[i + 2].GetPlaceIndex())
                     {
                         if (buildingsPath[i + 2].GetType() == currentType)
                         {

@@ -1,9 +1,11 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEditor.Overlays;
 using UnityEngine;
 
 public class SaveSystem
 {
+    public static SaveData saveData = null;
     private static string path = Application.persistentDataPath + "/OceanSpire.sav";
 
     public static void SaveData(PlayerController playerController, CityManager cityManger)
@@ -36,6 +38,7 @@ public class SaveSystem
 
                 Debug.Log(path);
 
+                saveData = data;
                 return data;
             }
             else
@@ -56,6 +59,7 @@ public class SaveSystem
         if (File.Exists(path))
         {
             File.Delete(path);
+            saveData = null;
             Debug.Log("Сохранение удалено!");
         }
         else
