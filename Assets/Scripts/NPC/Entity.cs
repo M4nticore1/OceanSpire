@@ -132,9 +132,9 @@ public class Entity : MonoBehaviour
                         int itemAmount = resourcesToBuild[0].Amount;
 
                         
-                        int id = item.ItemData.ItemId;
-                        int amountToSpend = currentBuilding.AddConstructionResources(item);
-                        SpendItem(id, amountToSpend);
+                        //int id = item.ItemData.ItemId;
+                        //int amountToSpend = currentBuilding.AddConstructionResources(item);
+                        //SpendItem(id, amountToSpend);
 
                         SetTargetBuilding(currentBuilding.buildingPlace, b =>
                         {
