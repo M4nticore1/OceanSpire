@@ -3,10 +3,16 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [System.Serializable]
-public struct ItemCategoryEntry
+public class ItemCategoryEntry
 {
     public ItemCategory itemCategory;
     public int amount;
+
+    public ItemCategoryEntry(ItemCategory itemCategory, int amount = 0)
+    {
+        this.itemCategory = itemCategory;
+        this.amount = amount;
+    }
 }
 
 [System.Serializable]
@@ -30,26 +36,23 @@ public class ItemInstance
     }
 
     // Amount
-    public void SetAmount(int amount)
-    {
-        this.amount = amount;
-    }
-
-    public void AddAmount(int amount, int maxAmount = 0)
+    public int SetAmount(int amount, int maxAmount = 0)
     {
         if (maxAmount == 0)
-            this.amount += amount;
-        else if(maxAmount > 0)
-            this.amount += math.clamp(amount, 0, maxAmount);
+            maxAmount = this.amount + amount;
+
+        int addAmount = math.clamp(amount, 0, maxAmount - this.amount);
+        this.amount += addAmount;
+        return addAmount;
+    }
+
+    public int AddAmount(int amount, int maxAmount = 0)
+    {
+        return SetAmount(this.amount + amount, maxAmount);
     }
 
     public int SubtractAmount(int amount, int maxAmount = 0)
     {
-        if(maxAmount == 0)
-            maxAmount = amount;
-
-        int newAmount = math.clamp(amount, 0, maxAmount);
-        SetAmount(newAmount);
-        return newAmount;
+        return SetAmount(this.amount - amount, maxAmount);
     }
 }

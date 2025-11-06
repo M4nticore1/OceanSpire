@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Bson;
 using NUnit.Framework;
 using System;
 using System.Collections;
@@ -132,7 +131,10 @@ public class Entity : MonoBehaviour
                         int itemId = resourcesToBuild[0].ItemData.ItemId;
                         int itemAmount = resourcesToBuild[0].Amount;
 
-                        DeliverItems(workBuilding, carriedItems);
+                        
+                        int id = item.ItemData.ItemId;
+                        int amountToSpend = currentBuilding.AddConstructionResources(item);
+                        SpendItem(id, amountToSpend);
 
                         SetTargetBuilding(currentBuilding.buildingPlace, b =>
                         {
@@ -140,7 +142,7 @@ public class Entity : MonoBehaviour
 
                             int itemIndex = workBuilding.buildingLevelsData[workBuilding.levelIndex].resourcesToBuild[0].ItemData.ItemId;
 
-                            return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
+                            return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
                         });
 
                         currentActionTime = 0;
@@ -232,7 +234,7 @@ public class Entity : MonoBehaviour
 
                             int itemIndex = newWorkBuilding.buildingLevelsData[newWorkBuilding.levelIndex].resourcesToBuild[0].ItemData.ItemId;
 
-                            return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
+                            return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
                         }))
                         {
                             StartWorking();
@@ -603,13 +605,21 @@ public class Entity : MonoBehaviour
             {
                 if (item.ItemData.ItemId == building.buildingLevelsData[levelIndex].resourcesToBuild[j].ItemData.ItemId)
                 {
-                    building.AddConstructionResources(item.ItemData.ItemId, SpendItem(item));
+                    int id = item.ItemData.ItemId;
+                    int amountToSpend = building.AddConstructionResources(item);
+                    SpendItem(id, amountToSpend);
                 }
             }
         }
         else if (building.storageComponent)
         {
-
+            if (building.storageComponent.storedItems.ContainsKey(item.ItemData.ItemId))
+            {
+                int id = item.ItemData.ItemId;
+                int amountToSpend = building.storageComponent.AddItem(item);
+                SpendItem(id, amountToSpend);
+                //building.storageComponent.AddItem(item.ItemData.ItemId, SpendItem(item));
+            }
         }
     }
 

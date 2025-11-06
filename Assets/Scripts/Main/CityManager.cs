@@ -276,7 +276,7 @@ public class CityManager : MonoBehaviour
                 // Set Target Building
                 if (data.residentTargetBuildingIndexes != null && data.residentTargetBuildingIndexes.Length > i && data.residentTargetBuildingIndexes[i] >= 0)
                 {
-                    Building targetBuilding = builtFloors[(int)(data.residentTargetBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentTargetBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
+                    Building targetBuilding = builtFloors[(data.residentTargetBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentTargetBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
                     if (targetBuilding)
                         resident.SetTargetBuilding(targetBuilding.buildingPlace, b => b.GetFloorIndex() == targetBuilding.GetFloorIndex() && b.GetPlaceIndex() == targetBuilding.GetPlaceIndex());
                 }
@@ -706,11 +706,11 @@ public class CityManager : MonoBehaviour
         OnItemAdded?.Invoke(item.ItemData);
     }
 
-    public void AddItem(int itemId, int amount)
+    public int AddItem(int itemId, int amount)
     {
-        items[itemId].AddAmount(amount, totalStorageCapacity[itemId].Amount);
-
         OnItemAdded?.Invoke(ItemDatabase.items[itemId]);
+
+        return items[itemId].AddAmount(amount, totalStorageCapacity[itemId].Amount);
     }
 
     public void AddItems(List<ItemInstance> items)

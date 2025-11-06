@@ -264,44 +264,38 @@ public class Building : MonoBehaviour
 
     private void AddIncomingConstructionResources_Internal(int itemId, int amount)
     {
-        if (incomingConstructionResourcesDict.ContainsKey(itemId))
-        {
-            // We can change only the list or dictionary because we use the same item instance for them.
-            //ItemDatabase.GetItem(itemId, incomingConstructionResources).AddAmount(amount);
-            incomingConstructionResourcesDict[itemId].AddAmount(amount);
-        }
-        else
+        if (!incomingConstructionResourcesDict.ContainsKey(itemId))
         {
             ItemInstance item = new ItemInstance(itemId, amount); // The same item instance for list and dictionary.
             incomingConstructionResources.Add(item);
-            incomingConstructionResourcesDict.Add(item.ItemData.ItemId, item);
+            incomingConstructionResourcesDict.Add(itemId, item);
         }
+
+        // We can change only the list or dictionary because we use the same item instance for them.
+        incomingConstructionResourcesDict[itemId].AddAmount(amount);
     }
 
-    public void AddConstructionResources(ItemInstance item)
+    public int AddConstructionResources(ItemInstance item)
     {
-        AddConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
+        return AddConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
     }
 
-    public void AddConstructionResources(int itemId, int amount)
+    public int AddConstructionResources(int itemId, int amount)
     {
-        AddConstructionResources_Internal(itemId, amount);
+        return AddConstructionResources_Internal(itemId, amount);
     }
 
-    private void AddConstructionResources_Internal(int itemId, int amount)
+    private int AddConstructionResources_Internal(int itemId, int amount)
     {
-        if (deliveredConstructionResourcesDict.ContainsKey(itemId))
+        if (!deliveredConstructionResourcesDict.ContainsKey(itemId))
         {
-            // We can change only the list or dictionary because we use the same item instance for them.
-            //ItemDatabase.GetItem(itemId, deliveredConstructionResources).AddAmount(amount);
-            deliveredConstructionResourcesDict[itemId].AddAmount(amount);
-        }
-        else
-        {
-            ItemInstance item = new ItemInstance(itemId, amount); // The same item instance for list and dictionary.
+            ItemInstance item = new ItemInstance(itemId); // The same item instance for list and dictionary.
             deliveredConstructionResources.Add(item);
-            deliveredConstructionResourcesDict.Add(item.ItemData.ItemId, item);
+            deliveredConstructionResourcesDict.Add(itemId, item);
         }
+
+        // We can change only the list or dictionary because we use the same item instance for them.
+        return deliveredConstructionResourcesDict[itemId].AddAmount(amount);
     }
 
     protected void InvokeStartConstructing(Building building)

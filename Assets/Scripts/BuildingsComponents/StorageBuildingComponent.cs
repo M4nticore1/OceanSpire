@@ -6,7 +6,7 @@ using UnityEngine;
 public class StorageBuildingComponent : BuildingComponent
 {
     [HideInInspector] public StorageBuildingLevelData levelData = null;
-    public Dictionary<int, int> storedItems = new Dictionary<int, int>();
+    public Dictionary<int, ItemInstance> storedItems = new Dictionary<int, ItemInstance>();
 
     public override void Build()
     {
@@ -19,8 +19,7 @@ public class StorageBuildingComponent : BuildingComponent
         for (int i = 0; i < levelData.storageItems.Count; i++)
         {
             int id = levelData.storageItems[i].ItemData.ItemId;
-            int amount = levelData.storageItems[i].Amount;
-            storedItems.Add(id, amount);
+            storedItems.Add(id, levelData.storageItems[i]);
         }
     }
 
@@ -44,26 +43,20 @@ public class StorageBuildingComponent : BuildingComponent
 		//cityManager.SubtractStorageCapacity(levelData);
   //  }
 
-    public int StoreItem(int itemId, int amount)
+    public int AddItem(int itemId, int amount)
     {
-        return StoreItem_Internal(itemId, amount);
+        return AddItem_Internal(itemId, amount);
     }
 
-    public int StoreItem(ItemInstance item)
+    public int AddItem(ItemInstance item)
     {
-        return StoreItem_Internal((int)item.ItemData.ItemId, item.Amount);
+        return AddItem_Internal(item.ItemData.ItemId, item.Amount);
     }
 
-    private int StoreItem_Internal(int itemId, int amount)
+    private int AddItem_Internal(int itemId, int amount)
     {
-        int amountToGive = amount;
-        int storedAmount = storedItems[itemId];
-        if (amountToGive > storedAmount)
-            amountToGive = storedAmount;
-
-        cityManager.SpendItem(itemId, amountToGive);
-
-        return amountToGive;
+        cityManager.AddItem(itemId, amount);
+        return storedItems[itemId].AddAmount(amount);
     }
 
     public int SpendItem(int itemId, int amount)
@@ -79,11 +72,10 @@ public class StorageBuildingComponent : BuildingComponent
     private int SpendItem_Internal(int itemId, int amount)
     {
         int amountToGive = amount;
-        int storedAmount = storedItems[itemId];
+        int storedAmount = storedItems[itemId].Amount;
         amountToGive = math.clamp(amountToGive, 0, storedAmount);
 
         cityManager.SpendItem(itemId, amountToGive);
-        Debug.Log(amountToGive);
         return amountToGive;
     }
 }
