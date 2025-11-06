@@ -80,8 +80,7 @@ public class StorageBuildingComponent : BuildingComponent
     {
         int amountToGive = amount;
         int storedAmount = storedItems[itemId];
-        if (amountToGive > storedAmount)
-            amountToGive = storedAmount;
+        amountToGive = math.clamp(amountToGive, 0, storedAmount);
 
         cityManager.SpendItem(itemId, amountToGive);
         Debug.Log(amountToGive);

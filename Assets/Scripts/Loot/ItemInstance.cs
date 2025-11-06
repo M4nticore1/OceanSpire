@@ -1,4 +1,5 @@
-using System;
+using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 [System.Serializable]
@@ -16,11 +17,16 @@ public class ItemInstance
     [SerializeField] private int amount;
     public int Amount => amount;
 
+    public ItemInstance(int itemId, int amount = 0)
+    {
+        itemData = ItemDatabase.GetItemData(itemId, (List<ItemData>)null);
+        this.amount = amount;
+    }
+
     public ItemInstance(ItemData itemData, int amount = 0)
     {
         this.itemData = itemData;
         this.amount = amount;
-        //this.maxAmount = maxAmount;
     }
 
     // Amount
@@ -34,11 +40,16 @@ public class ItemInstance
         if (maxAmount == 0)
             this.amount += amount;
         else if(maxAmount > 0)
-            this.amount += Math.Clamp(amount, 0, maxAmount);
+            this.amount += math.clamp(amount, 0, maxAmount);
     }
 
-    public void SubtractAmount(int amount)
+    public int SubtractAmount(int amount, int maxAmount = 0)
     {
-        SetAmount(this.amount -= amount);
+        if(maxAmount == 0)
+            maxAmount = amount;
+
+        int newAmount = math.clamp(amount, 0, maxAmount);
+        SetAmount(newAmount);
+        return newAmount;
     }
 }

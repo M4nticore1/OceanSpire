@@ -37,7 +37,8 @@ public class Building : MonoBehaviour
     [Header("Construction")]
     public bool isRuined = false;
     [HideInInspector] public bool isUnderConstruction { get; private set; } = false;
-    private List<int> currentConstructingResourceAmount = new List<int>();
+    //private List<int> currentConstructingResourceAmount = new List<int>();
+    //private Dictionary<int, int> currentConstructingResourceAmountById = new Dictionary<int, int>();
     [HideInInspector] public BuildingConstruction spawnedBuildingConstruction = null;
   
     public List<ItemInstance> incomingConstructionResources { get; private set; } = new List<ItemInstance>();
@@ -191,19 +192,6 @@ public class Building : MonoBehaviour
         }
     }
 
-    public void AddConstructingResources(ItemInstance item)
-    {
-        //List<ItemData> itemsData = new List<ItemData>();
-        //for (int i = 0; i < buildingLevelsData[levelIndex].resourcesToBuild.Count; i++)
-        //{
-        //    itemsData.Add(buildingLevelsData[levelIndex].resourcesToBuild[i].ItemData);
-        //}
-
-        int index = item.ItemData.ItemId;
-
-        currentConstructingResourceAmount[index] += item.Amount;
-    }
-
     // Residents Management
     public virtual void EnterBuilding(Entity entity)
     {
@@ -274,34 +262,46 @@ public class Building : MonoBehaviour
         AddIncomingConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
     }
 
-    private void AddIncomingConstructionResources_Internal(int itemId, int itemAmount)
+    private void AddIncomingConstructionResources_Internal(int itemId, int amount)
     {
         if (incomingConstructionResourcesDict.ContainsKey(itemId))
         {
             // We can change only the list or dictionary because we use the same item instance for them.
-            ItemDatabase.GetItem(itemId, incomingConstructionResources).AddAmount(itemAmount);
+            //ItemDatabase.GetItem(itemId, incomingConstructionResources).AddAmount(amount);
+            incomingConstructionResourcesDict[itemId].AddAmount(amount);
         }
         else
         {
-            ItemInstance item = new ItemInstance(ItemDatabase.GetItemData(itemId, (List<ItemData>)null), itemAmount); // The same item instance for list and dictionary.
+            ItemInstance item = new ItemInstance(itemId, amount); // The same item instance for list and dictionary.
             incomingConstructionResources.Add(item);
             incomingConstructionResourcesDict.Add(item.ItemData.ItemId, item);
         }
     }
 
-    public void AddResourcesToBuild(ItemInstance item)
+    public void AddConstructionResources(ItemInstance item)
     {
-        AddResourcesToBuild_Internal(item.ItemData.ItemId, item.Amount);
+        AddConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
     }
 
-    public void AddResourcesToBuild(int itemId, int amount)
+    public void AddConstructionResources(int itemId, int amount)
     {
-        AddResourcesToBuild_Internal(itemId, amount);
+        AddConstructionResources_Internal(itemId, amount);
     }
 
-    public void AddResourcesToBuild_Internal(int itemId, int amount)
+    private void AddConstructionResources_Internal(int itemId, int amount)
     {
-        Debug.Log("AddResourcesToBuild " + ItemDatabase.items[itemId].itemIdName + " " + amount);
+        if (deliveredConstructionResourcesDict.ContainsKey(itemId))
+        {
+            // We can change only the list or dictionary because we use the same item instance for them.
+            //ItemDatabase.GetItem(itemId, deliveredConstructionResources).AddAmount(amount);
+            deliveredConstructionResourcesDict[itemId].AddAmount(amount);
+        }
+        else
+        {
+            ItemInstance item = new ItemInstance(itemId, amount); // The same item instance for list and dictionary.
+            deliveredConstructionResources.Add(item);
+            deliveredConstructionResourcesDict.Add(item.ItemData.ItemId, item);
+        }
     }
 
     protected void InvokeStartConstructing(Building building)

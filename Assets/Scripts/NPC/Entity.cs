@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using NUnit.Framework;
 using System;
 using System.Collections;
@@ -117,6 +118,9 @@ public class Entity : MonoBehaviour
         }
         else if (currentWork == ResidentWork.ConstructingBuilding)
         {
+            int levelIndex = workBuilding.levelIndex;
+            List<ItemInstance> resourcesToBuild = workBuilding.buildingLevelsData[levelIndex].resourcesToBuild;
+
             if (currentBuilding == workBuilding)
             {
                 float distance = Vector3.Distance(transform.position, targetPosition);
@@ -125,21 +129,16 @@ public class Entity : MonoBehaviour
                     currentActionTime += Time.deltaTime;
                     if (currentActionTime >= takeItemDuration)
                     {
-                        int level = workBuilding.levelIndex;
-                        List<ItemInstance> resourcesToBuild = workBuilding.buildingLevelsData[level].resourcesToBuild;
                         int itemId = resourcesToBuild[0].ItemData.ItemId;
                         int itemAmount = resourcesToBuild[0].Amount;
 
-                        for (int i = 0; i < carriedItems.Count; i++)
-                        {
-                            workBuilding.AddResourcesToBuild(carriedItems[i]);
-                        }
+                        DeliverItems(workBuilding, carriedItems);
 
                         SetTargetBuilding(currentBuilding.buildingPlace, b =>
                         {
                             if (!b.storageComponent || (b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex())) return false;
 
-                            int itemIndex = (int)workBuilding.buildingLevelsData[workBuilding.levelIndex].resourcesToBuild[0].ItemData.ItemId;
+                            int itemIndex = workBuilding.buildingLevelsData[workBuilding.levelIndex].resourcesToBuild[0].ItemData.ItemId;
 
                             return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
                         });
@@ -150,26 +149,35 @@ public class Entity : MonoBehaviour
             }
             else if (currentBuilding == targetBuilding)
             {
-                float distance = Vector3.Distance(transform.position, targetPosition);
-                if (distance < applyTargetPosition)
+                for (int i = 0; i < resourcesToBuild.Count; i++)
                 {
-                    currentActionTime += Time.deltaTime;
-                    if (currentActionTime >= takeItemDuration)
+                    if (workBuilding.deliveredConstructionResources.Count <= i || workBuilding.deliveredConstructionResources[i].Amount + (workBuilding.incomingConstructionResources.Count > 0 ? workBuilding.incomingConstructionResources[i].Amount : 0) < resourcesToBuild[i].Amount)
                     {
-                        int level = workBuilding.levelIndex;
-                        List<ItemInstance> resourcesToBuild = workBuilding.buildingLevelsData[level].resourcesToBuild;
-                        int itemId = resourcesToBuild[0].ItemData.ItemId;
-
-                        for (int i = 0; i < resourcesToBuild.Count; i++)
+                        float distance = Vector3.Distance(transform.position, targetPosition);
+                        if (distance < applyTargetPosition)
                         {
-                            TakeItem(itemId, currentBuilding.storageComponent.SpendItem(resourcesToBuild[0]));
+                            currentActionTime += Time.deltaTime;
+                            if (currentActionTime >= takeItemDuration)
+                            {
+                                int itemId = resourcesToBuild[0].ItemData.ItemId;
+
+                                for (int j = 0; j < resourcesToBuild.Count; j++)
+                                {
+                                    TakeItem(itemId, currentBuilding.storageComponent.SpendItem(resourcesToBuild[0]));
+                                }
+
+                                SetTargetBuilding(currentBuilding.buildingPlace, b => b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex());
+
+                                targetBuilding.AddIncomingConstructionResources(resourcesToBuild[i].ItemData.ItemId, ñarryWeight);
+
+                                currentActionTime = 0;
+                            }
                         }
-
-                        SetTargetBuilding(currentBuilding.buildingPlace, b => b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex());
-
-                        currentActionTime = 0;
+                        return;
                     }
                 }
+
+                SetWork(ResidentWork.None);
             }
         }
     }
@@ -193,15 +201,16 @@ public class Entity : MonoBehaviour
         workerIndex = index;
     }
 
-    public void SetWork(ResidentWork newWork, Building newWorkBuilding)
+    public void SetWork(ResidentWork newWork, Building newWorkBuilding = null)
     {
+        currentWork = newWork;
+
         if (newWorkBuilding)
         {
             workBuilding = newWorkBuilding;
 
             if (newWork == ResidentWork.BuildingWork)
             {
-                currentWork = newWork;
                 workBuilding = newWorkBuilding;
                 newWorkBuilding.AddWorker(this);
 
@@ -226,10 +235,7 @@ public class Entity : MonoBehaviour
                             return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex] >= 0;
                         }))
                         {
-                            currentWork = newWork;
                             StartWorking();
-
-                            newWorkBuilding.AddIncomingConstructionResources(resourcesToBuild[i].ItemData.ItemId, ñarryWeight);
                         }
 
                         break;
@@ -556,6 +562,54 @@ public class Entity : MonoBehaviour
             ItemInstance item = new ItemInstance(ItemDatabase.itemsById[itemId], itemAmount); // The same item instance for list and dictionary.
             carriedItems.Add(item);
             carriedItemsDict.Add(itemId, item);
+        }
+    }
+
+    private int SpendItem(int itemId, int amount)
+    {
+        return SpendItem_Internal(itemId, carriedItemsDict[itemId].SubtractAmount(amount));
+    }
+
+    private int SpendItem(ItemInstance item)
+    {
+        int id = item.ItemData.ItemId;
+        int amount = item.Amount;
+        return SpendItem_Internal(id, carriedItemsDict[id].SubtractAmount(amount));
+    }
+
+    private int SpendItem_Internal(int itemId, int amount)
+    {
+        return carriedItemsDict[itemId].SubtractAmount(amount);
+    }
+
+    private void DeliverItem(Building building, ItemInstance item)
+    {
+        DeliverItem_Internal(building, item);
+    }
+
+    private void DeliverItems(Building building, List<ItemInstance> items)
+    {
+        for (int i = 0; i < items.Count; i++)
+            DeliverItem_Internal(building, items[i]);
+    }
+
+    private void DeliverItem_Internal(Building building, ItemInstance item)
+    {
+        if (building.isUnderConstruction)
+        {
+            int levelIndex = building.levelIndex;
+            List<ItemInstance> constructionResources = building.buildingLevelsData[levelIndex].resourcesToBuild;
+            for (int j = 0; j < building.buildingLevelsData[levelIndex].resourcesToBuild.Count; j++)
+            {
+                if (item.ItemData.ItemId == building.buildingLevelsData[levelIndex].resourcesToBuild[j].ItemData.ItemId)
+                {
+                    building.AddConstructionResources(item.ItemData.ItemId, SpendItem(item));
+                }
+            }
+        }
+        else if (building.storageComponent)
+        {
+
         }
     }
 
