@@ -1,13 +1,7 @@
-using NUnit.Framework;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static BuildingData;
-using static UnityEditor.Progress;
 
 public enum BuildingPosition
 {
@@ -49,13 +43,13 @@ public class Building : MonoBehaviour
     [HideInInspector] private GameObject spawedBuildingInterior = null;
     [HideInInspector] public int interiorIndex = 0;
 
-    public static event Action<Building> onAnyBuildingStartConstructing;
-    public event Action onBuildingStartConstructing;
-    public static event Action<Building> onAnyBuildingFinishConstructing;
-    public event Action onBuildingFinishConstructing;
+    public static event System.Action<Building> onAnyBuildingStartConstructing;
+    public event System.Action onBuildingStartConstructing;
+    public static event System.Action<Building> onAnyBuildingFinishConstructing;
+    public event System.Action onBuildingFinishConstructing;
 
-    public static event Action<Building> onAnyBuildingDemolished;
-    public event Action onBuildingDemolished;
+    public static event System.Action<Building> onAnyBuildingDemolished;
+    public event System.Action onBuildingDemolished;
 
     [HideInInspector] public StorageBuildingComponent storageComponent = null;
     [HideInInspector] public ProductionBuildingComponent productionComponent = null;
@@ -68,8 +62,10 @@ public class Building : MonoBehaviour
 
     protected virtual void Update()
     {
-        if(incomingConstructionResources.Count > 0)
-            Debug.Log(incomingConstructionResources[0].Amount);
+        if (incomingConstructionResources.Count > 0)
+            Debug.Log("incomingConstructionResources " + incomingConstructionResources[0].Amount);
+        if (deliveredConstructionResources.Count > 0)
+            Debug.Log("deliveredConstructionResources " + deliveredConstructionResources[0].Amount);
     }
 
     // Constructing
@@ -124,10 +120,10 @@ public class Building : MonoBehaviour
 
     public void FinishBuilding()
     {
-        isUnderConstruction = false;
-
         if (isRuined)
             isRuined = false;
+        else if (isUnderConstruction)
+            isUnderConstruction = false;
         else
             levelIndex++;
 
@@ -266,13 +262,32 @@ public class Building : MonoBehaviour
     {
         if (!incomingConstructionResourcesDict.ContainsKey(itemId))
         {
-            ItemInstance item = new ItemInstance(itemId, amount); // The same item instance for list and dictionary.
+            ItemInstance item = new ItemInstance(itemId); // The same item instance for list and dictionary.
             incomingConstructionResources.Add(item);
             incomingConstructionResourcesDict.Add(itemId, item);
         }
 
         // We can change only the list or dictionary because we use the same item instance for them.
         incomingConstructionResourcesDict[itemId].AddAmount(amount);
+    }
+
+    public void SubtractIncomingConstructionResources(int itemId, int itemAmount)
+    {
+        SubtractIncomingConstructionResources_Internal(itemId, itemAmount);
+    }
+
+    public void SubtractIncomingConstructionResources(ItemInstance item)
+    {
+        SubtractIncomingConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
+    }
+
+    private void SubtractIncomingConstructionResources_Internal(int itemId, int amount)
+    {
+        if (incomingConstructionResourcesDict.ContainsKey(itemId))
+        {
+            // We can change only the list or dictionary because we use the same item instance for them.
+            incomingConstructionResourcesDict[itemId].SubtractAmount(amount);
+        }
     }
 
     public int AddConstructionResources(ItemInstance item)
@@ -295,7 +310,19 @@ public class Building : MonoBehaviour
         }
 
         // We can change only the list or dictionary because we use the same item instance for them.
-        return deliveredConstructionResourcesDict[itemId].AddAmount(amount);
+        int amountToAdd = deliveredConstructionResourcesDict[itemId].AddAmount(amount);
+        SubtractIncomingConstructionResources(itemId, amountToAdd);
+
+        // Finish building
+        List<ItemInstance> resourcesToBuild = buildingLevelsData[levelIndex].resourcesToBuild;
+        if (deliveredConstructionResourcesDict[itemId].Amount >= ItemDatabase.GetItem(itemId, buildingLevelsData[levelIndex].resourcesToBuild).Amount)
+        {
+            foreach (var item in resourcesToBuild)
+                if (item.Amount < 0)
+                    return amountToAdd;
+            FinishBuilding();
+        }
+        return amountToAdd;
     }
 
     protected void InvokeStartConstructing(Building building)

@@ -1,7 +1,5 @@
 using TMPro;
 using UnityEngine;
-using SimpleJSON;
-using System.Collections.Generic;
 
 public class TextLocalizer : MonoBehaviour
 {

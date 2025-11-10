@@ -25,7 +25,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     {
         if (isMoving)
         {
-            SetFloorIndex(GetFloorIndexByPosition(currentTargetFloorIndex));
+            SetFloorIndex(GetFloorIndexByPosition());
 
             float speed = moveSpeed * Time.deltaTime;
             Move(moveDirection, speed);
@@ -99,8 +99,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     {
         if (targetFloorIndex != currentFloorIndex)
         {
-            Debug.Log(elevatorRidingPassengers.Count);
-
             isMoving = true;
             startFloorIndex = currentFloorIndex;
 
@@ -113,6 +111,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
     public void StopMoving()
     {
+        Debug.Log("StopMoving");
         isMoving = false;
 
         // Correct position
@@ -122,7 +121,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         for (int i = elevatorRidingPassengers.Count - 1; i >= 0; i--)
         {
             var rider = elevatorRidingPassengers[i];
-            if (rider.pathBuildings.Count > rider.pathIndex + 1 && rider.pathBuildings[rider.pathIndex + 1].GetFloorIndex() == currentFloorIndex)
+            if (rider.pathBuildings.Count > rider.pathIndex + 1)
             {
                 rider.StopElevatorRiding();
             }
@@ -132,7 +131,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
         newRidersCount = math.clamp(newRidersCount, 0, elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex].maxResidentsCount - elevatorRidingPassengers.Count);
 
-        Debug.Log(newRidersCount);
         for (int i = 0; i < newRidersCount; i++)
         {
             elevatorBuilding.elevatorWaitingPassengers[i].StartElevatorWalking();
@@ -292,11 +290,11 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         }
     }
 
-    public int GetFloorIndexByPosition(int targetFloor)
+    public int GetFloorIndexByPosition()
     {
         int floorIndex = 0;
 
-        if (targetFloor >= currentFloorIndex)
+        if (currentTargetFloorIndex >= currentFloorIndex)
         {
             floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight) / CityManager.floorHeight);
 

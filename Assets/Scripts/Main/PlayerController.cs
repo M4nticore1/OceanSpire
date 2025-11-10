@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -403,7 +401,7 @@ public class PlayerController : MonoBehaviour
 
                                     if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect)
                                     {
-                                        CollectItem(hittedProductionBuilding.TakeProducedItem());
+                                        CollectItems(hittedProductionBuilding.TakeProducedItem());
                                         DeselectAll();
                                     }
                                     else
@@ -420,7 +418,8 @@ public class PlayerController : MonoBehaviour
                                 }
                                 else if (hittedLootContainer)
                                 {
-                                    CollectItems(hittedLootContainer.TakeItems());
+                                    List<ItemInstance> takedItems = hittedLootContainer.TakeItems();
+                                    CollectItems(takedItems);
 
                                     DeselectAll();
                                 }
@@ -542,7 +541,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void CollectItem(ItemInstance item)
+    private void CollectItems(ItemInstance item)
     {
         int id = item.ItemData.ItemId;
         if (cityManager.items[id].Amount < cityManager.totalStorageCapacity[id].Amount)
@@ -553,15 +552,7 @@ public class PlayerController : MonoBehaviour
 
     private void CollectItems(List<ItemInstance> items)
     {
-        foreach (ItemInstance item in items)
-        {
-            int id = item.ItemData.ItemId;
-            int amount = item.Amount;
-            if (cityManager.items[id].Amount < cityManager.totalStorageCapacity[id].Amount)
-            {
-                cityManager.AddItem(id, amount);
-            }
-        }
+        cityManager.AddItems(items);
     }
 
     private void SelectBuilding(Building building)

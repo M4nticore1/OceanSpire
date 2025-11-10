@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using static BuildingData;
 
 [System.Serializable]
 public struct ResourceStack

@@ -1,13 +1,9 @@
-using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
-using static UnityEditor.Progress;
 
 public enum ResidentWork
 {
@@ -55,7 +51,7 @@ public class Entity : MonoBehaviour
     public string lastName = "";
 
     // Stats
-    [SerializeField] private int ñarryWeight = 100;
+    private const int ñarryWeight = 2000;
 
     public static event System.Action OnWorkerAdd;
     public static event System.Action OnWorkerRemove;
@@ -119,6 +115,10 @@ public class Entity : MonoBehaviour
         {
             int levelIndex = workBuilding.levelIndex;
             List<ItemInstance> resourcesToBuild = workBuilding.buildingLevelsData[levelIndex].resourcesToBuild;
+            List<ItemInstance> deliveredResources = workBuilding.deliveredConstructionResources;
+            List<ItemInstance> incomingResources = workBuilding.incomingConstructionResources;
+            Dictionary<int, ItemInstance> resourcesToBuildDict = workBuilding.buildingLevelsData[levelIndex].resourcesToBuildDict;
+            bool isNeededToWork = false;
 
             if (currentBuilding == workBuilding)
             {
@@ -128,68 +128,77 @@ public class Entity : MonoBehaviour
                     currentActionTime += Time.deltaTime;
                     if (currentActionTime >= takeItemDuration)
                     {
-                        int itemId = resourcesToBuild[0].ItemData.ItemId;
-                        int itemAmount = resourcesToBuild[0].Amount;
-
-                        
-                        //int id = item.ItemData.ItemId;
-                        //int amountToSpend = currentBuilding.AddConstructionResources(item);
-                        //SpendItem(id, amountToSpend);
-
-                        SetTargetBuilding(currentBuilding.buildingPlace, b =>
+                        for (int i = 0; i < carriedItems.Count; i++)
                         {
-                            if (!b.storageComponent || (b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex())) return false;
+                            int itemId = carriedItems[i].ItemData.ItemId;
+                            int amountToAdd = carriedItems[i].Amount;
+                            int amountToSpend = currentBuilding.AddConstructionResources(itemId, amountToAdd);
+                            SpendItem(itemId, amountToSpend);
 
-                            int itemIndex = workBuilding.buildingLevelsData[workBuilding.levelIndex].resourcesToBuild[0].ItemData.ItemId;
+                            if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount)
+                                isNeededToWork = true;
+                        }
 
-                            return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
-                        });
+                        if (isNeededToWork)
+                            SetTargetBuilding(currentBuilding.buildingPlace, b =>
+                            {
+                                if (!b.storageComponent || (b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex())) return false;
 
+                                int itemIndex = workBuilding.buildingLevelsData[workBuilding.levelIndex].resourcesToBuild[0].ItemData.ItemId;
+
+                                return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
+                            });
+                        else
+                            SetWork(ResidentWork.None);
                         currentActionTime = 0;
                     }
                 }
             }
             else if (currentBuilding == targetBuilding)
             {
-                for (int i = 0; i < resourcesToBuild.Count; i++)
+                float distance = Vector3.Distance(transform.position, targetPosition);
+                if (distance < applyTargetPosition)
                 {
-                    if (workBuilding.deliveredConstructionResources.Count <= i || workBuilding.deliveredConstructionResources[i].Amount + (workBuilding.incomingConstructionResources.Count > 0 ? workBuilding.incomingConstructionResources[i].Amount : 0) < resourcesToBuild[i].Amount)
+                    currentActionTime += Time.deltaTime;
+                    if (currentActionTime >= takeItemDuration)
                     {
-                        float distance = Vector3.Distance(transform.position, targetPosition);
-                        if (distance < applyTargetPosition)
+                        for (int i = 0; i < resourcesToBuild.Count; i++)
                         {
-                            currentActionTime += Time.deltaTime;
-                            if (currentActionTime >= takeItemDuration)
+                            if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount)
                             {
-                                int itemId = resourcesToBuild[0].ItemData.ItemId;
+                                int itemId = resourcesToBuild[i].ItemData.ItemId;
+                                if (targetBuilding.incomingConstructionResourcesDict.ContainsKey(itemId))
+                                    targetBuilding.incomingConstructionResourcesDict[itemId].SetAmount(0);
 
-                                for (int j = 0; j < resourcesToBuild.Count; j++)
-                                {
-                                    TakeItem(itemId, currentBuilding.storageComponent.SpendItem(resourcesToBuild[0]));
-                                }
+                                int remainedAmount = resourcesToBuild[i].Amount - (deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0);
+                                int amountToTake = currentBuilding.storageComponent.SpendItem(itemId, math.min(ñarryWeight, remainedAmount));
+                                TakeItem(itemId, amountToTake);
+                                int amountToIncoming = carriedItemsDict[itemId].Amount;
+                                targetBuilding.AddIncomingConstructionResources(itemId, amountToIncoming);
 
-                                SetTargetBuilding(currentBuilding.buildingPlace, b => b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex());
-
-                                targetBuilding.AddIncomingConstructionResources(resourcesToBuild[i].ItemData.ItemId, ñarryWeight);
-
-                                currentActionTime = 0;
+                                if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount)
+                                    isNeededToWork = true;
                             }
                         }
-                        return;
+
+                        if (isNeededToWork)
+                            SetTargetBuilding(currentBuilding.buildingPlace, b => b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex());
+                        else
+                            SetWork(ResidentWork.None);
+                        currentActionTime = 0;
                     }
                 }
-
-                SetWork(ResidentWork.None);
             }
         }
     }
 
     public void RemoveWorkBuilding()
     {
-        currentWork = ResidentWork.None;
-        workBuilding.RemoveWorker(this);
+        if (currentWork == ResidentWork.BuildingWork)
+            workBuilding.RemoveWorker(this);
         workBuilding = null;
 
+        currentWork = ResidentWork.None;
         StopWorking();
 
         if (targetBuilding)
@@ -209,8 +218,6 @@ public class Entity : MonoBehaviour
 
         if (newWorkBuilding)
         {
-            workBuilding = newWorkBuilding;
-
             if (newWork == ResidentWork.BuildingWork)
             {
                 workBuilding = newWorkBuilding;
@@ -237,6 +244,7 @@ public class Entity : MonoBehaviour
                             return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
                         }))
                         {
+                            workBuilding = newWorkBuilding;
                             StartWorking();
                         }
 
@@ -267,11 +275,11 @@ public class Entity : MonoBehaviour
     private void FollowPath()
     {
         if (isWalkingToElevator)
-            Debug.Log(isWalkingToElevator);
+            Debug.Log("isWalkingToElevator " + isWalkingToElevator);
         if (isWaitingForElevator)
-            Debug.Log(isWaitingForElevator);
+            Debug.Log("isWaitingForElevator " + isWaitingForElevator);
         if (isRidingOnElevator)
-            Debug.Log(isRidingOnElevator);
+            Debug.Log("isRidingOnElevator " + isRidingOnElevator);
 
         if (!isRidingOnElevator && pathIndex < pathBuildings.Count)
         {
@@ -305,8 +313,6 @@ public class Entity : MonoBehaviour
                 }
                 else if (currentPathElevator)
                 {
-                    Debug.Log(pathIndex);
-
                     if (nextPathElevator)
                     {
                         if (isWalkingToElevator)
@@ -442,7 +448,6 @@ public class Entity : MonoBehaviour
         navMeshAgent.enabled = true;
         elevatorBuilding.RemoveRidingPassenger(this);
 
-        Debug.Log(pathBuildings[pathIndex].GetFloorIndex());
         EnterBuilding(pathBuildings[pathIndex]);
     }
 
@@ -453,7 +458,6 @@ public class Entity : MonoBehaviour
         {
             if (!isRidingOnElevator)
             {
-                Debug.Log("EnterBuilding");
                 currentBuilding = building;
                 currentFloorIndex = building.GetFloorIndex();
 
@@ -467,12 +471,8 @@ public class Entity : MonoBehaviour
                     }
                 }
 
-                if (currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex())
-                    Debug.Log(true);
-
                 if (pathBuildings.Count > pathIndex && currentBuilding.GetFloorIndex() == pathBuildings[pathIndex].GetFloorIndex() && currentBuilding.GetPlaceIndex() == pathBuildings[pathIndex].GetPlaceIndex())
                 {
-                    Debug.Log("FollowPath");
                     FollowPath();
                     pathIndex++;
                 }
@@ -554,17 +554,15 @@ public class Entity : MonoBehaviour
 
     private void TakeItem_Internal(int itemId, int itemAmount)
     {
-        if (carriedItemsDict.ContainsKey(itemId))
+        if (!carriedItemsDict.ContainsKey(itemId))
         {
-            // We can change only the list or dictionary because we use the same item instance for them.
-            carriedItems[ItemDatabase.GetItemIndex(itemId, carriedItems)].AddAmount(itemAmount);
-        }
-        else
-        {
-            ItemInstance item = new ItemInstance(ItemDatabase.itemsById[itemId], itemAmount); // The same item instance for list and dictionary.
+            ItemInstance item = new ItemInstance(ItemDatabase.itemsById[itemId]); // The same item instance for list and dictionary.
             carriedItems.Add(item);
             carriedItemsDict.Add(itemId, item);
         }
+
+        // We can change only the list or dictionary because we use the same item instance for them.
+        carriedItemsDict[itemId].AddAmount(itemAmount);
     }
 
     private int SpendItem(int itemId, int amount)

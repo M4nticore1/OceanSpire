@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.UIElements;
 
 [AddComponentMenu("Buildings/ElevatorBuilding")]
 public class ElevatorBuilding : RoomBuilding

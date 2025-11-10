@@ -1,13 +1,9 @@
-using NUnit.Framework.Constraints;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
-using Unity.Collections.LowLevel.Unsafe;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 enum Direction
 {
@@ -57,7 +53,7 @@ public class CityManager : MonoBehaviour
 
     [Header("NPC")]
     [HideInInspector] public List<Resident> residents = new List<Resident>();
-    private int startResidentsCount = 4;
+    private const int startResidentsCount = 1;
     //[HideInInspector] public int residentsCount = 0;
     [HideInInspector] public int employedResidentCount = 0;
     [HideInInspector] public int unemployedResidentsCount = 0;
@@ -90,10 +86,6 @@ public class CityManager : MonoBehaviour
 
         Resident.OnWorkerAdd -= AddWorker;
         Resident.OnWorkerRemove -= RemoveWorker;
-    }
-
-    private void Update()
-    {
     }
 
     public void Load(SaveData data)
@@ -698,27 +690,52 @@ public class CityManager : MonoBehaviour
             OnStorageCapacityUpdated?.Invoke();
     }
 
-    public void AddItem(ItemInstance item)
+    public int AddItem(ItemInstance item)
     {
-        int id = item.ItemData.ItemId;
-        items[id].AddAmount(item.Amount, totalStorageCapacity[id].Amount);
-
-        OnItemAdded?.Invoke(item.ItemData);
+        return AddItem_Internal(item.ItemData.ItemId, item.Amount);
     }
 
     public int AddItem(int itemId, int amount)
     {
-        OnItemAdded?.Invoke(ItemDatabase.items[itemId]);
-
-        return items[itemId].AddAmount(amount, totalStorageCapacity[itemId].Amount);
+        return AddItem_Internal(itemId, amount);
     }
 
     public void AddItems(List<ItemInstance> items)
     {
         foreach (ItemInstance item in items)
+            AddItem_Internal(item.ItemData.ItemId, item.Amount);
+    }
+
+    private int AddItem_Internal(int itemId, int amount)
+    {
+        for (int i = 0; i < builtFloors.Count; i++)
         {
-            AddItem(item.ItemData.ItemId, item.Amount);
+            if (amount <= 0)
+                break;
+
+            for (int j = 0; j < roomsCountPerFloor; j++)
+            {
+                if (amount <= 0)
+                    break;
+
+                Building placedBuilding = builtFloors[i].roomBuildingPlaces[j].placedBuilding;
+                if (placedBuilding)
+                {
+                    if (placedBuilding.storageComponent)
+                    {
+                        int amountToAdd = placedBuilding.storageComponent.AddItem(itemId, amount);
+                        amount -= amountToAdd;
+                        items[itemId].AddAmount(amountToAdd, totalStorageCapacity[itemId].Amount);
+                    }
+
+                    if (placedBuilding.buildingData.buildingType == BuildingType.Hall)
+                        break;
+                }
+            }
         }
+
+        OnItemAdded?.Invoke(ItemDatabase.items[itemId]);
+        return items[itemId].Amount;
     }
 
     public void SpendItem(int id, int amount)

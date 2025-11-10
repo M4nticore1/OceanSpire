@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 [AddComponentMenu("BuildingComponents/StorageBuildingComponent")]
@@ -19,7 +18,7 @@ public class StorageBuildingComponent : BuildingComponent
         for (int i = 0; i < levelData.storageItems.Count; i++)
         {
             int id = levelData.storageItems[i].ItemData.ItemId;
-            storedItems.Add(id, levelData.storageItems[i]);
+            storedItems.Add(id, new ItemInstance(levelData.storageItems[i].ItemData, 0));
         }
     }
 
@@ -33,15 +32,20 @@ public class StorageBuildingComponent : BuildingComponent
         //SubtractStorageCapacity(levelsData[ownedBuilding.levelIndex - 1] as StorageBuildingLevelData);
     }
 
-  //  private void AddStorageCapacity(StorageBuildingLevelData levelData)
-  //  {
-		//cityManager.AddStorageCapacity(levelData);
-  //  }
+    //private void Update()
+    //{
 
-  //  private void SubtractStorageCapacity(StorageBuildingLevelData levelData)
-  //  {
-		//cityManager.SubtractStorageCapacity(levelData);
-  //  }
+    //}
+
+    //  private void AddStorageCapacity(StorageBuildingLevelData levelData)
+    //  {
+    //cityManager.AddStorageCapacity(levelData);
+    //  }
+
+    //  private void SubtractStorageCapacity(StorageBuildingLevelData levelData)
+    //  {
+    //cityManager.SubtractStorageCapacity(levelData);
+    //  }
 
     public int AddItem(int itemId, int amount)
     {
@@ -55,8 +59,11 @@ public class StorageBuildingComponent : BuildingComponent
 
     private int AddItem_Internal(int itemId, int amount)
     {
-        cityManager.AddItem(itemId, amount);
-        return storedItems[itemId].AddAmount(amount);
+        Debug.Log("ADD");
+        if (storedItems.ContainsKey(itemId))
+            return storedItems[itemId].AddAmount(amount, levelData.storageItems[itemId].Amount);
+        else
+            return 0;
     }
 
     public int SpendItem(int itemId, int amount)
@@ -71,11 +78,7 @@ public class StorageBuildingComponent : BuildingComponent
 
     private int SpendItem_Internal(int itemId, int amount)
     {
-        int amountToGive = amount;
-        int storedAmount = storedItems[itemId].Amount;
-        amountToGive = math.clamp(amountToGive, 0, storedAmount);
-
-        cityManager.SpendItem(itemId, amountToGive);
-        return amountToGive;
+        int amountToSpend = storedItems[itemId].SubtractAmount(amount);
+        return amountToSpend;
     }
 }

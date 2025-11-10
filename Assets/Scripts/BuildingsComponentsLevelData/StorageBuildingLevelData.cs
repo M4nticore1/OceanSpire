@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,8 +10,11 @@ public class StorageBuildingLevelData : BuildingComponentLevelData
     public Dictionary<int, ItemInstance> storageItemsDict = new Dictionary<int, ItemInstance>();
     public Dictionary<int, ItemCategoryEntry> storageItemCategoriesDict = new Dictionary<int, ItemCategoryEntry>();
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        Debug.Log("Add");
+
         for (int i = 0; i < storageItems.Count; i++)
         {
             int id = storageItems[i].ItemData.ItemId;

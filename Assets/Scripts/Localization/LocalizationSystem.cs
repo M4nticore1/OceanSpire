@@ -2,6 +2,9 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public static class LocalizationSystem
 {
@@ -40,7 +43,8 @@ public static class LocalizationSystem
 
     };
 
-    [UnityEditor.MenuItem("Tools/Generate Localization File")]
+#if UNITY_EDITOR
+    [MenuItem("Tools/Generate Localization File")]
     public static void GenerateLocalizationFile()
     {
         string dir = Path.Combine(Application.streamingAssetsPath, localizationFolder);
@@ -53,7 +57,7 @@ public static class LocalizationSystem
         Debug.Log("JSON file updated at: " + path);
     }
 
-    [UnityEditor.MenuItem("Tools/Update All Localizations File")]
+    [MenuItem("Tools/Update All Localizations File")]
     public static void UpdateAllLocalizationFiles()
     {
         string folderPath = Path.Combine(Application.streamingAssetsPath, localizationFolder);
@@ -88,6 +92,7 @@ public static class LocalizationSystem
             }
         }
     }
+#endif
 
     static string DictionaryToJson(Dictionary<string, string> dict)
     {

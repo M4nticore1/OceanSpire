@@ -13,7 +13,7 @@ public class LootManager : MonoBehaviour
     private double lastUpdateTime = 0f;
 
     private const float lootContainerSpawnFrequency = 0.1f;
-    private double lastLootContainerSpawnTime = 0f;
+    private double lastLootContainerSpawnTime = 0;
     private float currentTimeToSpawnLootContainer = 0.0f;
 
     public const float lootContainersSpawnDistance = 250.0f;
@@ -50,11 +50,14 @@ public class LootManager : MonoBehaviour
 
     private void SpawningLootContainers()
     {
-        if (Time.realtimeSinceStartupAsDouble >= lastLootContainerSpawnTime)
+        Debug.Log("Spawning");
+        if (Time.realtimeSinceStartupAsDouble >= lastLootContainerSpawnTime + lootContainerSpawnFrequency)
         {
+            Debug.Log("Spawn");
+
             for (int i = 0; i < lootContainerPrefabs.Count; i++)
             {
-                spawnedLootContainersTime[i] += currentTimeToSpawnLootContainer;
+                spawnedLootContainersTime[i] += (Time.deltaTime / lootContainerSpawnFrequency);
 
                 if (cityManager.builtFloors.Count >= lootContainerPrefabs[i].floorsCountToSpawn && spawnedLootContainersTime[i] >= lootContainerPrefabs[i].spawnTime)
                 {
