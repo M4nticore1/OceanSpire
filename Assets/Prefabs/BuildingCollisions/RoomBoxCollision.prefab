@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 989519807307170637}
   - component: {fileID: 1584638053178658034}
   - component: {fileID: 6597035491823612392}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: RoomBoxCollision
   m_TagString: Untagged
   m_Icon: {fileID: 0}

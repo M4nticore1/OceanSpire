@@ -9,12 +9,11 @@ public class LootManager : MonoBehaviour
     [SerializeField] private List<LootContainer> lootContainerPrefabs = new List<LootContainer>();
     private List<LootContainer> spawnedLootContainers = new List<LootContainer>();
     private List<float> spawnedLootContainersTime = new List<float>();
-    private float lootUpdateInterval = 0.04f;
+    private float lootUpdateFrequency = 0.02f;
     private double lastUpdateTime = 0f;
 
-    private const float lootContainerSpawnFrequency = 0.1f;
+    private const float lootContainerSpawnFrequency = 0.5f;
     private double lastLootContainerSpawnTime = 0;
-    private float currentTimeToSpawnLootContainer = 0.0f;
 
     public const float lootContainersSpawnDistance = 250.0f;
     private const float lootContainersSpawnOffsetYaw = 30.0f;
@@ -37,11 +36,11 @@ public class LootManager : MonoBehaviour
     {
         SpawningLootContainers();
 
-        if (Time.realtimeSinceStartupAsDouble >= lastUpdateTime + lootUpdateInterval)
+        if (Time.realtimeSinceStartupAsDouble >= lastUpdateTime + lootUpdateFrequency)
         {
             for (int i = 0; i < spawnedLootContainers.Count; i++)
             {
-                spawnedLootContainers[i].Tick();
+                spawnedLootContainers[i].Tick((float)(Time.realtimeSinceStartupAsDouble - lastUpdateTime));
             }
 
             lastUpdateTime = Time.realtimeSinceStartupAsDouble;
@@ -50,14 +49,11 @@ public class LootManager : MonoBehaviour
 
     private void SpawningLootContainers()
     {
-        Debug.Log("Spawning");
         if (Time.realtimeSinceStartupAsDouble >= lastLootContainerSpawnTime + lootContainerSpawnFrequency)
         {
-            Debug.Log("Spawn");
-
             for (int i = 0; i < lootContainerPrefabs.Count; i++)
             {
-                spawnedLootContainersTime[i] += (Time.deltaTime / lootContainerSpawnFrequency);
+                spawnedLootContainersTime[i] += (float)(Time.realtimeSinceStartupAsDouble - lastLootContainerSpawnTime);
 
                 if (cityManager.builtFloors.Count >= lootContainerPrefabs[i].floorsCountToSpawn && spawnedLootContainersTime[i] >= lootContainerPrefabs[i].spawnTime)
                 {
@@ -75,7 +71,7 @@ public class LootManager : MonoBehaviour
                     // Spawn position
                     Vector3 rangePosition = new Vector3(UnityEngine.Random.Range(-1.0f, 1.0f), 0, UnityEngine.Random.Range(-1.0f, 1.0f)).normalized;
                     int maxFloorNumber = lootContainerPrefabs[i].maxSpawnFloorNumber > 0 ? lootContainerPrefabs[i].maxSpawnFloorNumber : lootContainerPrefabs[i].minSpawnFloorNumber > 0 ? (cityManager.builtFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
-                    float spawnPositionY = UnityEngine.Random.Range((float)lootContainerPrefabs[i].minSpawnFloorNumber, maxFloorNumber) * CityManager.floorHeight;
+                    float spawnPositionY = Random.Range((float)lootContainerPrefabs[i].minSpawnFloorNumber, maxFloorNumber) * CityManager.floorHeight;
                     Vector3 spawnPosition = new Vector3(-normalizedWindDirection.x * lootContainersSpawnDistance, spawnPositionY, -normalizedWindDirection.y * lootContainersSpawnDistance);
 
                     // Spawn rotation
@@ -86,7 +82,7 @@ public class LootManager : MonoBehaviour
                     lootContainer.moveDirection = new Vector3(gameManager.windDirection.x, 0, gameManager.windDirection.y).normalized;
                     spawnedLootContainers.Add(lootContainer);
 
-                    lootContainerPrefabs[i].spawnTime = UnityEngine.Random.Range(lootContainerPrefabs[i].spawnMinTime, lootContainerPrefabs[i].spawnMaxTime);
+                    lootContainerPrefabs[i].spawnTime = Random.Range(lootContainerPrefabs[i].spawnMinTime, lootContainerPrefabs[i].spawnMaxTime);
                     spawnedLootContainersTime[i] = 0;
                 }
             }
@@ -99,7 +95,7 @@ public class LootManager : MonoBehaviour
     {
         for (int i = 0; i < lootContainerPrefabs.Count; i++)
         {
-            lootContainerPrefabs[i].spawnTime = UnityEngine.Random.Range(lootContainerPrefabs[i].spawnMinTime, lootContainerPrefabs[i].spawnMaxTime);
+            lootContainerPrefabs[i].spawnTime = Random.Range(lootContainerPrefabs[i].spawnMinTime, lootContainerPrefabs[i].spawnMaxTime);
         }
     }
 }

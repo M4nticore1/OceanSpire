@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a152c24115ebab4b957adfb74815f21, type: 3}
+  m_Name: Farm_LevelData_01
+  m_EditorClassIdentifier: 
+  resourcesToBuild:
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 3700
+  - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    amount: 400
+  - itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+    amount: 200
+  maxResidentsCount: 1
+  constructionStraight: {fileID: 566882254515453963, guid: 39ebc51f67994314a84ea65d901dd5aa, type: 3}
+  constructionCorner: {fileID: 0}
+  buildingStraight: {fileID: 0}
+  buildingCorner: {fileID: 0}
+  buildingStraightLeft: {fileID: 0}
+  buildingStraightRight: {fileID: 0}
+  buildingStraightLeftRight: {fileID: 0}
+  buildingCornerLeft: {fileID: 0}
+  buildingCornerRight: {fileID: 0}
+  buildingCornerLeftRight: {fileID: 0}
+  buildingStraightAbove: {fileID: 0}
+  buildingStraightBelow: {fileID: 0}
+  buildingStraightAboveBelow: {fileID: 0}
+  buildingCornerAbove: {fileID: 0}
+  buildingCornerBelow: {fileID: 0}
+  buildingCornerAboveBelow: {fileID: 0}

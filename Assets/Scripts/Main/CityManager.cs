@@ -11,7 +11,7 @@ enum Direction
     Back
 }
 
-[System.Serializable]
+[Serializable]
 public class BuildingPath
 {
     public List<Building> paths = new List<Building>();
@@ -23,26 +23,22 @@ public class CityManager : MonoBehaviour
 
     // Buildings
     [Header("Buildings")]
-    //public int builtFloorsCount = 0;
     public Transform towerRoot = null;
     private NavMeshSurface towerNavMeshSurface = null;
     public List<FloorBuilding> builtFloors = new List<FloorBuilding>();
 
-    [HideInInspector] public List<int> currentRoomsNumberOnFloor = new List<int>();
+    public List<int> currentRoomsNumberOnFloor { get; private set; } = new List<int>();
 
     public const int floorHeight = 5;
     public const int firstFloorHeight = 5;
 
-    private Vector3 roomSize = new Vector3(8, 5, 8);
-    private Vector3 hallSize = new Vector3(24, 5, 24);
-
-    [HideInInspector] public const int roomsCountPerFloor = 8;
-    [HideInInspector] public const int roomsCountPerSide = 3;
-    [HideInInspector] public const int roomsWidth = 8;
-    [HideInInspector] public const int floorWidth = 24;
-    [HideInInspector] public const int firstBuildCityFloorIndex = 1;
-    [HideInInspector] public const int firstBuildCitybuildingPlace = 1;
-    [HideInInspector] public float cityHeight = 0;
+    public const int roomsCountPerFloor = 8;
+    public const int roomsCountPerSide = 3;
+    public const int roomsWidth = 8;
+    public const int floorWidth = 24;
+    public const int firstBuildCityFloorIndex = 1;
+    public const int firstBuildCitybuildingPlace = 1;
+    public float cityHeight { get; private set; } = 0;
 
     [HideInInspector] public List<List<ElevatorBuilding>> elevatorGroups = new List<List<ElevatorBuilding>>();
 

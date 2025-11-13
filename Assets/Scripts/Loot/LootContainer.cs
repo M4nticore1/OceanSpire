@@ -64,9 +64,9 @@ public class LootContainer : MonoBehaviour
         InitializeLootContainer();
     }
 
-    public void Tick()
+    public void Tick(float deltaTime)
     {
-        Move();
+        Move(deltaTime);
         CheckPosition();
     }
 
@@ -95,7 +95,7 @@ public class LootContainer : MonoBehaviour
         startDirectionSum = startMoveDirection.x + startMoveDirection.y + startMoveDirection.z;
     }
 
-    private void Move()
+    private void Move(float deltaTime)
     {
         if (isMovable)
         {
@@ -123,24 +123,21 @@ public class LootContainer : MonoBehaviour
                 // если сильно отклонился (например, более 60°) и далеко от острова
                 if (dot < 0.9f)
                 {
-                    moveDirection = Vector3.Lerp(moveDirection, startMoveDirection, Time.deltaTime * 10.5f);
+                    moveDirection = Vector3.Lerp(moveDirection, startMoveDirection, deltaTime * 10.5f);
                 }
             }
 
-            transform.position += moveDirection * moveSpeed * Time.deltaTime;
+            transform.position += moveDirection * moveSpeed * deltaTime;
         }
     }
 
     private void CheckPosition()
     {
-        if (Time.time > checkPositionTime + checkPositionRate)
-        {
-            float distance = Vector3.Distance(Vector3.zero, transform.position);
+        float distance = Vector3.Distance(Vector3.zero, transform.position);
 
-            if (distance > LootManager.lootContainersSpawnDistance + despawnDistance)
-            {
-                Destroy(this.gameObject);
-            }
+        if (distance > LootManager.lootContainersSpawnDistance + despawnDistance)
+        {
+            Destroy(this.gameObject);
         }
     }
 

@@ -1,7 +1,9 @@
-using Newtonsoft.Json;
+using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
+using Newtonsoft.Json;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -131,25 +133,42 @@ public static class LocalizationSystem
 
     public static void LoadLocalizations()
     {
-        if (!areLocalizationsInitialized)
+        if (areLocalizationsInitialized)
+            return;
+
+        string folderPath = Path.Combine(Application.streamingAssetsPath, localizationFolder);
+
+        string[] files;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+        // На Android Directory.GetFiles не работает, поэтому нужно использовать прямой список файлов
+        files = new string[] { "en.json", "ru.json" }; // укажи свои файлы
+#else
+        if (!Directory.Exists(folderPath))
+            Directory.CreateDirectory(folderPath);
+
+        files = Directory.GetFiles(folderPath, "*.json");
+#endif
+
+        foreach (var fileName in files)
         {
-            string folderPath = Path.Combine(Application.streamingAssetsPath, localizationFolder);
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
+            string json;
 
-            string[] files = Directory.GetFiles(folderPath, "*.json");
+#if UNITY_ANDROID && !UNITY_EDITOR
+            string path = Path.Combine(Application.streamingAssetsPath, localizationFolder, fileName);
+            UnityWebRequest www = UnityWebRequest.Get(path);
+            www.SendWebRequest();
+            while (!www.isDone) { } // ждем завершения запроса
+            json = www.downloadHandler.text;
+#else
+            json = File.ReadAllText(fileName);
+#endif
 
-            for (int i = 0; i < files.Length; i++)
-            {
-                string json = File.ReadAllText(files[i]);
-
-                var localizationDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                localizations.Add(localizationDict);
-                //Debug.Log($"Локализация '{localizations[]}' загружена, {localizationDict.Count} записей.");
-            }
-
-            areLocalizationsInitialized = true;
+            var localizationDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            localizations.Add(localizationDict);
         }
+
+        areLocalizationsInitialized = true;
     }
 
     public static string GetLocalizationText(string key)

@@ -40,38 +40,32 @@ public class GameManager : MonoBehaviour
 
     public const float autoSaveFrequency = 1;
 
-    private void Awake()
-    {
-        Application.targetFrameRate = 60;
-
-        cityManager = FindAnyObjectByType<CityManager>();
-        playerController = FindAnyObjectByType<PlayerController>();
-    }
+    public static SaveData saveData = null;
 
     private void Start()
     {
+        cityManager = FindAnyObjectByType<CityManager>();
+        playerController = FindAnyObjectByType<PlayerController>();
+
         ItemDatabase.Load();
 
-        SaveData data = SaveSystem.LoadData();
-        cityManager.Load(data);
-        playerController.Load(data);
+        saveData = SaveSystem.LoadData();
+        cityManager.Load(saveData);
+        //playerController.Load(saveData);
 
         ChangeWind();
         windDirection = newWindDirection;
     }
 
-    private void OnEnable()
-    {
-    }
-
-    private void OnDisable()
-    {
-
-    }
-
     private void Update()
     {
-        playerController.Tick();
+        //if (!playerController)
+        //    playerController = FindAnyObjectByType<PlayerController>();
+
+        //if (playerController.isInitialized)
+        //    playerController.Tick();
+        //else
+        //    playerController.Load(saveData);
 
         ChangingWind();
     }

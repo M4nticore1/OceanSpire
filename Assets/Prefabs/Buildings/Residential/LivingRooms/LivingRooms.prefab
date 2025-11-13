@@ -56,9 +56,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a88f36ec1c9cdf1419c3734a2b6d83ca, type: 2}
   - {fileID: 11400000, guid: 54149f411e1def74499f8850f026b444, type: 2}
   buildingPlace: {fileID: 0}
-  spawnedBuildingConstruction: {fileID: 0}
   isRuined: 0
+  spawnedBuildingConstruction: {fileID: 0}
   interiorIndex: 0
+  storageComponent: {fileID: 0}
+  productionComponent: {fileID: 0}
   leftConnectedBuilding: {fileID: 0}
   rightConnectedBuilding: {fileID: 0}
   aboveConnectedBuilding: {fileID: 0}
@@ -147,14 +149,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoomTrigger
       objectReference: {fileID: 0}
-    - target: {fileID: 5908939746028889819, guid: 20082656584423c46ba94b7a4a40b999, type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5908939746028889819, guid: 20082656584423c46ba94b7a4a40b999, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -216,10 +210,6 @@ PrefabInstance:
     - target: {fileID: 8609880662699405998, guid: e55b56b00be72534bb477db29e5b498e, type: 3}
       propertyPath: m_Name
       value: RoomBoxCollision
-      objectReference: {fileID: 0}
-    - target: {fileID: 8609880662699405998, guid: e55b56b00be72534bb477db29e5b498e, type: 3}
-      propertyPath: m_Layer
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

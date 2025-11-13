@@ -9,6 +9,8 @@ public enum ItemID
     Stone,
     Metal,
     Plastic,
+    Water,
+    Potato,
 }
 
 //[System.Serializable]
@@ -17,7 +19,8 @@ public enum ItemCategory
     Society,
     Building,
     Crafting,
-    Weapon,
+    Food,
+    Weapon
 }
 
 [CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/ItemData")]

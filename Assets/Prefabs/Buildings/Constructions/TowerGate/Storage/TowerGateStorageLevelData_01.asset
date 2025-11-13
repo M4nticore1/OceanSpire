@@ -24,7 +24,7 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
     amount: 400
   - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-    amount: 200
+    amount: 500
   - itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
     amount: 500
   storageItemCategories: []

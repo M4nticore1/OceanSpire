@@ -489,8 +489,9 @@ public class UIManager : MonoBehaviour
         if (productionBuilding)
         {
             ProductionBuildingLevelData levelData = productionBuilding.levelsData[0] as ProductionBuildingLevelData;
-            CreateBuildingCharacteristicWidget("Produces", levelData.produceResourceAmount, levelData.produceResource.itemIcon, ref index);
-            CreateBuildingCharacteristicWidget("Consumes", levelData.produceResourceAmount, levelData.consumeResource.itemIcon, ref index);
+            ItemInstance producedResource = levelData.producedResources[productionBuilding.currentProducedItemIndex].producedResource;
+            CreateBuildingCharacteristicWidget("Produces", producedResource.Amount, producedResource.ItemData.itemIcon, ref index);
+            CreateBuildingCharacteristicWidget("Consumes", producedResource.Amount, producedResource.ItemData.itemIcon, ref index);
         }
 
         if (storageBuilding)

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourcesToBuild:
   - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 3500
+    amount: 3000
   maxResidentsCount: 4
   constructionStraight: {fileID: 7469822553162115358, guid: 894f18c1234aaab4481057b25e9fdef4, type: 3}
   constructionCorner: {fileID: 7469822553162115358, guid: 2b58060139b0fdb4ca6b86b1f5db430b, type: 3}

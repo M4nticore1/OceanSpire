@@ -1,8 +1,9 @@
-using System.Collections.Generic;
+Ôªøusing System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -16,14 +17,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera mainCamera = null;
     [SerializeField] private GameObject cameraHolder = null;
 
-    private Vector3 ÒameraHolderStartPosition = Vector3.zero;
-    private Quaternion ÒameraHolderStartRotation = new Quaternion(0f, 0f, 0f, 0);
+    private Vector3 —ÅameraHolderStartPosition = Vector3.zero;
+    private Quaternion —ÅameraHolderStartRotation = new Quaternion(0f, 0f, 0f, 0);
 
-    [HideInInspector] public Vector3 cameraVerticalPosition = Vector3.zero;
-    [HideInInspector] public Vector3 cameraHorizontalPosition = Vector3.zero;
+    [HideInInspector] public Vector3 cameraVerticalPosition { get; private set; } = Vector3.zero;
+    [HideInInspector] public Vector3 cameraHorizontalPosition { get; private set; } = Vector3.zero;
 
-    private Vector3 cameraHorizontalRotation = Vector3.zero;
-    private Vector3 cameraVerticalRotation = Vector3.zero;
+    //private Vector3 cameraHorizontalRotation = Vector3.zero;
+    private Vector3 cameraHolderRotation = Vector3.zero;
 
     private Vector2 cameraMoveSensitivity = new Vector2(6.0f, 1.0f);
     private const float cameraStopMoveSpeed = 6.0f;
@@ -75,8 +76,6 @@ public class PlayerController : MonoBehaviour
     private InputAction secondTouchPositionAction = null;
     private InputAction secondTouchMoveAction = null;
 
-    private InputAction mouseScrollAction = null;
-
     private Vector2 firstTouchStartPosition = Vector2.zero;
     private Vector2 firstTouchCurrentPosition = Vector2.zero;
     private Vector2 firstTouchMoveInput = Vector2.zero;
@@ -108,75 +107,92 @@ public class PlayerController : MonoBehaviour
 
     private float lastSaveDataTime = 0.0f;
 
-    private void Awake()
-    {
-        SetInputSystem();
-    }
+    public bool isInitialized { get; private set; } = false;
 
-    public void Load(SaveData saveData)
+    private void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
         uiManager = FindAnyObjectByType<UIManager>();
-        graphicRaycaster = uiManager.gameObject.GetComponent<GraphicRaycaster>();
+        if (uiManager) graphicRaycaster = uiManager.gameObject.GetComponent<GraphicRaycaster>();
+        else Debug.LogError("uiManager is NULL");
+        SetInputSystem();
+    }
 
-        //UIManager.InitializeUIManager();
+    private void Start()
+    {
+        Load(GameManager.saveData);
+    }
 
-        LoadData();
+    public void Load(SaveData saveData)
+    {
+        LoadLocalization();
 
-        ÒameraHolderStartPosition = cameraHolder.transform.position;
-        ÒameraHolderStartRotation = cameraHolder.transform.rotation;
-        cameraVerticalRotation = new Vector3(cameraHolder.transform.rotation.eulerAngles.x, 0f, 0f);
+        —ÅameraHolderStartPosition = cameraHolder.transform.position;
+        —ÅameraHolderStartRotation = cameraHolder.transform.rotation;
+        cameraHolderRotation = —ÅameraHolderStartRotation.eulerAngles;
 
         currentCameraArmLength = -mainCamera.transform.localPosition.z;
 
-        if (SaveSystem.saveData == null)
-        {
-            cameraYawRotateAlpha = 0.5f;
-        }
-        else
-        {
-            cameraYawRotateAlpha = saveData.cameraYawRotation;
-        }
+        if (SaveSystem.saveData == null) {
+            cameraYawRotateAlpha = 0.5f; }
+        else {
+            cameraYawRotateAlpha = saveData.cameraYawRotation; }
 
         cameraYawRotateAlpha = 0.52f;
 
         moveStateValue = 1f / CityManager.roomsCountPerFloor;
 
         SaveData();
+
+        isInitialized = true;
+    }
+
+    private void LoadLocalization()
+    {
+        LocalizationSystem.LoadLocalizations();
+        LocalizationSystem.SetLocalization(Settings.currentLanguageKey);
+    }
+
+    private void Update()
+    {
+        Tick();
     }
 
     public void Tick()
     {
-        OnTouchPresing();
-        MoveCamera();
-        SetCameraArmLength();
-        CameraShake();
-
-        mainCamera.transform.localRotation = Quaternion.Euler(currentCameraShakeRotation);
-
-        int placeIndex;
-        if (moveStateIndex <= 5)
-            placeIndex = (5 - moveStateIndex) % 6;
-        else
-            placeIndex = 13 - moveStateIndex;
-
-        Building buildingToShowStats = cityManager.GetBuildingByIndex(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
-
-        if (currentCameraDistance <= cameraDistanceToShowBuildingStats)
+        if (isInitialized)
         {
-            if (buildingToShowStats)
-                uiManager.OpenBuildingStatsPanel(buildingToShowStats);
+            OnTouchPresing();
+            MoveCamera();
+            SetCameraArmLength();
+            CameraShake();
+
+            mainCamera.transform.localRotation = Quaternion.Euler(currentCameraShakeRotation);
+
+            int placeIndex;
+            if (moveStateIndex <= 5)
+                placeIndex = (5 - moveStateIndex) % 6;
+            else
+                placeIndex = 13 - moveStateIndex;
+
+            Building buildingToShowStats = cityManager.GetBuildingByIndex(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
+
+            if (currentCameraDistance <= cameraDistanceToShowBuildingStats)
+            {
+                if (buildingToShowStats)
+                    uiManager.OpenBuildingStatsPanel(buildingToShowStats);
+                else
+                    uiManager.CloseBuildingStatsPanel();
+            }
             else
                 uiManager.CloseBuildingStatsPanel();
-        }
-        else
-            uiManager.CloseBuildingStatsPanel();
 
-        if (Time.time >= lastSaveDataTime + GameManager.autoSaveFrequency)
-        {
-            SaveData();
-            lastSaveDataTime = Time.time;
+            if (Time.time >= lastSaveDataTime + GameManager.autoSaveFrequency)
+            {
+                SaveData();
+                lastSaveDataTime = Time.time;
+            }
         }
     }
 
@@ -195,21 +211,19 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
+        touchInputActionMap.Disable();
+
         firstTouchPressAction.performed -= OnFirstTouchStarted;
         firstTouchPressAction.canceled -= OnFirstTouchEnded;
 
         secondTouchPressAction.performed -= OnSecondTouchStarted;
         secondTouchPressAction.canceled -= OnSecondTouchEnded;
 
-        touchInputActionMap.Disable();
-
         Building.onAnyBuildingStartConstructing -= StopPlacingBuilding;
     }
 
     private void SetInputSystem()
     {
-        playerInput = GetComponent<PlayerInput>();
-
         if (mainInputActionsAsset != null)
         {
             touchInputActionMap = mainInputActionsAsset.FindActionMap("Gameplay");
@@ -236,64 +250,75 @@ public class PlayerController : MonoBehaviour
     // Camera
     private void MoveCamera()
     {
-        if (cameraHolder.transform.position.y > cityManager.cityHeight)
-            cameraMoveMultiplier = math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f);
-        else if (cameraHolder.transform.position.y < 0.0f)
-            cameraMoveMultiplier = ((0 - math.abs(cameraHolder.transform.position.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding;
-
-        Vector3 currentCameraMoveVelocity = new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime * cameraMoveMultiplier;
-        cameraVerticalPosition -= currentCameraMoveVelocity;
-
-        // Camera horizontal move
-        float shiftedAlpha = cameraYawRotateAlpha - (1f - (moveStateValue / 2f));
-        shiftedAlpha = Mathf.Repeat(shiftedAlpha, 1f);
-        moveStateIndex = (int)(shiftedAlpha / moveStateValue);
-
-        int positionHalfLenght = cameraMovingDistance / 2;
-
-        float position = shiftedAlpha % moveStateValue * CityManager.roomsCountPerFloor * cameraMovingDistance - positionHalfLenght;
-        float cameraSensitivityMultiplier = moveStateIndex % 2 == 0 ? 0.5f : 1f;
-
-        if (moveStateIndex == 0)
-            cameraHorizontalPosition = new Vector3(-position, 0, -positionHalfLenght);
-        else if (moveStateIndex == 1)
-            cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, -positionHalfLenght);
-        else if (moveStateIndex == 2)
-            cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, position);
-        else if (moveStateIndex == 3)
-            cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, positionHalfLenght);
-        else if (moveStateIndex == 4)
-            cameraHorizontalPosition = new Vector3(position, 0, positionHalfLenght);
-        else if (moveStateIndex == 5)
-            cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, positionHalfLenght);
-        else if (moveStateIndex == 6)
-            cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -position);
-        else if (moveStateIndex == 7)
-            cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -positionHalfLenght);
-
-        cameraYawRotateAlpha += cameraMoveVelocity.x * cameraSensitivityMultiplier / 360f * Time.deltaTime;
-        cameraYawRotateAlpha = Mathf.Repeat(cameraYawRotateAlpha, 1f);
-
-        cameraHorizontalRotation.y = cameraYawRotateAlpha * 360f;
-
-        if (!isFirstTouchPressed)
+        if (cameraHolder && cityManager)
         {
-            Vector3 clampPosition = Vector3.zero;
+            if (cameraHolder.transform.position.y > cityManager.cityHeight)
+                cameraMoveMultiplier = math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f);
+            else if (cameraHolder.transform.position.y < 0.0f)
+                cameraMoveMultiplier = ((0 - math.abs(cameraHolder.transform.position.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding;
 
-            if (cameraVerticalPosition.y > cityManager.cityHeight)
+            Vector3 currentCameraMoveVelocity = new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime * cameraMoveMultiplier;
+            cameraVerticalPosition -= currentCameraMoveVelocity;
+
+            // Camera horizontal move
+            float shiftedAlpha = cameraYawRotateAlpha - (1f - (moveStateValue / 2f));
+            shiftedAlpha = Mathf.Repeat(shiftedAlpha, 1f);
+            moveStateIndex = (int)(shiftedAlpha / moveStateValue);
+
+            int positionHalfLenght = cameraMovingDistance / 2;
+            Debug.Log(positionHalfLenght);
+
+            float position = shiftedAlpha % moveStateValue * CityManager.roomsCountPerFloor * cameraMovingDistance - positionHalfLenght;
+            float cameraSensitivityMultiplier = moveStateIndex % 2 == 0 ? 0.5f : 1f;
+
+            if (moveStateIndex == 0)
+                cameraHorizontalPosition = new Vector3(-position, 0, -positionHalfLenght);
+            else if (moveStateIndex == 1)
+                cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, -positionHalfLenght);
+            else if (moveStateIndex == 2)
+                cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, position);
+            else if (moveStateIndex == 3)
+                cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, positionHalfLenght);
+            else if (moveStateIndex == 4)
+                cameraHorizontalPosition = new Vector3(position, 0, positionHalfLenght);
+            else if (moveStateIndex == 5)
+                cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, positionHalfLenght);
+            else if (moveStateIndex == 6)
+                cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -position);
+            else if (moveStateIndex == 7)
+                cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -positionHalfLenght);
+
+            cameraYawRotateAlpha += cameraMoveVelocity.x * cameraSensitivityMultiplier / 360f * Time.deltaTime;
+            cameraYawRotateAlpha = Mathf.Repeat(cameraYawRotateAlpha, 1f);
+
+            cameraHolderRotation.y = cameraYawRotateAlpha * 360f;
+
+            if (!isFirstTouchPressed)
             {
-                clampPosition.y = cityManager.cityHeight;
-                cameraVerticalPosition = math.lerp(cameraVerticalPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
+                Vector3 clampPosition = Vector3.zero;
+
+                if (cameraVerticalPosition.y > cityManager.cityHeight)
+                {
+                    clampPosition.y = cityManager.cityHeight;
+                    cameraVerticalPosition = math.lerp(cameraVerticalPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
+                }
+                else if (cameraVerticalPosition.y < 0.0f)
+                {
+                    cameraVerticalPosition = math.lerp(cameraVerticalPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
+                    clampPosition.y = 0;
+                }
             }
-            else if (cameraVerticalPosition.y < 0.0f)
-            {
-                cameraVerticalPosition = math.lerp(cameraVerticalPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
-                clampPosition.y = 0;
-            }
+
+            cameraHolder.transform.rotation = Quaternion.Euler(cameraHolderRotation);
+            cameraHolder.transform.position = cameraHorizontalPosition + cameraVerticalPosition;
         }
-
-        cameraHolder.transform.rotation = Quaternion.Euler(cameraHorizontalRotation + cameraVerticalRotation);
-        cameraHolder.transform.position = cameraHorizontalPosition + cameraVerticalPosition;
+        else
+        {
+            if (!cameraHolder)
+                Debug.LogError("cameraHolder is NULL");
+            if (!cityManager)
+                Debug.LogError("cityManager is NULL");
+        }
     }
 
     private void SetCameraArmLength()
@@ -620,11 +645,5 @@ public class PlayerController : MonoBehaviour
     private void SaveData()
     {
        SaveSystem.SaveData(this, cityManager);
-    }
-
-    private void LoadData()
-    {
-        LocalizationSystem.LoadLocalizations();
-        LocalizationSystem.SetLocalization(Settings.currentLanguageKey);
     }
 }

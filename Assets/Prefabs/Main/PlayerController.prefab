@@ -49,15 +49,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 3364798657196465612}
   cameraHolder: {fileID: 9020790906093603443}
-  cameraVerticalPosition: {x: 0, y: 0, z: 0}
-  cameraHorizontalPosition: {x: 0, y: 0, z: 0}
   dragMoveVelocity: {x: 0, y: 0}
   cameraYawRotateAlpha: 0
   mainInputActionsAsset: {fileID: -944628639613478452, guid: e3db4645d0ae36245a27082f5b603306, type: 3}
   buildingToPlace: {fileID: 0}
   clickableLayers:
     serializedVersion: 2
-    m_Bits: 503
+    m_Bits: 4294967295
 --- !u!1 &6429209848955281615
 GameObject:
   m_ObjectHideFlags: 0

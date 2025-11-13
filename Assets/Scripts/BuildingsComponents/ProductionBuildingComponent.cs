@@ -17,6 +17,9 @@ public class ProductionBuildingComponent : BuildingComponent
     [SerializeField] private CollectResourceWidget collectResourceWidgetPrefab = null;
     private CollectResourceWidget collectResourceWidget = null;
 
+    public int currentProducedItemIndex { get; private set; } = 0;
+    public ProducedResource CurrentProducedResource => levelData.producedResources[currentProducedItemIndex];
+
     private void Update()
     {
         Production();
@@ -27,7 +30,7 @@ public class ProductionBuildingComponent : BuildingComponent
         base.Build();
 
         levelData = levelsData[ownedBuilding.levelIndex] as ProductionBuildingLevelData;
-        producedItem = new ItemInstance(levelData.produceResource);
+        producedItem = new ItemInstance(CurrentProducedResource.producedResource.ItemData);
     }
 
     public override void LevelUp()
@@ -51,11 +54,11 @@ public class ProductionBuildingComponent : BuildingComponent
                 if (currentPeopleCount > 0)
                 {
                     int maxPeopleCount = buildingLevelData.maxResidentsCount;
-                    float productionTime = productionBuildingLevelData.produceTime;
+                    float productionTime = CurrentProducedResource.produceTime;
 
-                    float productionSpeed = productionTime * ((float)currentPeopleCount / (float)maxPeopleCount);
+                    float productionSpeed = productionTime * (currentPeopleCount / maxPeopleCount);
 
-                    if (produceTime < productionBuildingLevelData.produceTime && !isStorageFull)
+                    if (produceTime < productionTime && !isStorageFull)
                     {
                         //Debug.Log("produceTime " + produceTime);
                         produceTime += Time.deltaTime * productionSpeed;
@@ -78,10 +81,10 @@ public class ProductionBuildingComponent : BuildingComponent
 
     private void AddProduceResourceAmount()
     {
-        producedItem.AddAmount(levelData.produceResourceAmount);
+        producedItem.AddAmount(levelData.producedResources[currentProducedItemIndex].producedResource.Amount);
         SetReadyToCollect();
 
-        if (producedItem.Amount == levelData.maxResourceAmount)
+        if (producedItem.Amount == CurrentProducedResource.maxResourceAmount)
             isStorageFull = true;
 
         produceTime = 0.0f;
@@ -89,7 +92,7 @@ public class ProductionBuildingComponent : BuildingComponent
 
     private void SetReadyToCollect()
     {
-        if (producedItem.Amount > 0 && levelData.maxResourceAmount / producedItem.Amount >= storageFillPercentToReadyToCollect)
+        if (producedItem.Amount > 0 && CurrentProducedResource.maxResourceAmount / producedItem.Amount >= storageFillPercentToReadyToCollect)
         {
             if (!isReadyToCollect)
             {
@@ -127,7 +130,7 @@ public class ProductionBuildingComponent : BuildingComponent
         if (producedItem.Amount > 0)
         {
             ItemInstance storageItemInstance = cityManager.items[producedItem.ItemData.ItemId];
-            int remainingStorageCapacity = levelData.maxResourceAmount - storageItemInstance.Amount;
+            int remainingStorageCapacity = CurrentProducedResource.maxResourceAmount - storageItemInstance.Amount;
 
             isStorageFull = false;
 

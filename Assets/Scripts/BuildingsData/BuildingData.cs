@@ -16,6 +16,7 @@ public enum BuildingId
     MetalStorage,
     PlasticStorage,
     Lighthouse,
+    Farm,
 };
 
 [Serializable]

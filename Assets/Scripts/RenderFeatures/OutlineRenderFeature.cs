@@ -109,42 +109,42 @@ public class OutlineRenderFeature : ScriptableRendererFeature
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            //if (maskRT == null || blured1 == null || blured2 == null || finalRT == null || !outlineMaterial || !blurMaterial) return;
+            if (maskRT == null || blured1 == null || blured2 == null || finalRT == null || !outlineMaterial || !blurMaterial) return;
 
-            //CommandBuffer cmd = CommandBufferPool.Get("Outline");
+            CommandBuffer cmd = CommandBufferPool.Get("Outline");
 
-            //var renderer = renderingData.cameraData.renderer;
+            var renderer = renderingData.cameraData.renderer;
 
-            //// Render
-            //SortingCriteria sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
-            //DrawingSettings drawingSettings = CreateDrawingSettings(shaderTagIdList, ref renderingData, sortingCriteria);
-            //drawingSettings.overrideMaterial = whiteMaterial;
+            // Render
+            SortingCriteria sortingCriteria = renderingData.cameraData.defaultOpaqueSortFlags;
+            DrawingSettings drawingSettings = CreateDrawingSettings(shaderTagIdList, ref renderingData, sortingCriteria);
+            drawingSettings.overrideMaterial = whiteMaterial;
 
-            //context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref filteringSettings, ref renderStateBlock);
+            context.DrawRenderers(renderingData.cullResults, ref drawingSettings, ref filteringSettings, ref renderStateBlock);
 
-            //// Blur
-            //cmd.Blit(maskRT.rt, blured1.rt);
-            //blurMaterial.SetTexture("_MainTex", maskRT);
-            //for (int i = 0; i < blurPassesCount; i++)
-            //{
-            //    cmd.Blit(blured1.rt, blured2.rt, blurMaterial, 0);
-            //    var t = blured1;
-            //    blured1 = blured2;
-            //    blured2 = t;
-            //}
+            // Blur
+            cmd.Blit(maskRT.rt, blured1.rt);
+            blurMaterial.SetTexture("_MainTex", maskRT);
+            for (int i = 0; i < blurPassesCount; i++)
+            {
+                cmd.Blit(blured1.rt, blured2.rt, blurMaterial, 0);
+                var t = blured1;
+                blured1 = blured2;
+                blured2 = t;
+            }
 
-            //// Outline
-            //outlineMaterial.SetTexture("_MainTex", renderer.cameraColorTargetHandle.rt);
-            //outlineMaterial.SetTexture("_MaskTex", maskRT.rt);
-            //outlineMaterial.SetTexture("_BluredMaskTex", blured1.rt);
-            //outlineMaterial.SetFloat("_Intensity", outlineIntensity);
-            //outlineMaterial.SetColor("_Color", outlineColor);
+            // Outline
+            outlineMaterial.SetTexture("_MainTex", renderer.cameraColorTargetHandle.rt);
+            outlineMaterial.SetTexture("_MaskTex", maskRT.rt);
+            outlineMaterial.SetTexture("_BluredMaskTex", blured1.rt);
+            outlineMaterial.SetFloat("_Intensity", outlineIntensity);
+            outlineMaterial.SetColor("_Color", outlineColor);
 
-            //cmd.Blit(renderer.cameraColorTargetHandle.rt, finalRT.rt, outlineMaterial, 0);
-            //cmd.Blit(finalRT.rt, renderer.cameraColorTargetHandle.rt);
+            cmd.Blit(renderer.cameraColorTargetHandle.rt, finalRT.rt, outlineMaterial, 0);
+            cmd.Blit(finalRT.rt, renderer.cameraColorTargetHandle.rt);
 
-            //context.ExecuteCommandBuffer(cmd);
-            //CommandBufferPool.Release(cmd);
+            context.ExecuteCommandBuffer(cmd);
+            CommandBufferPool.Release(cmd);
         }
     }
 }
