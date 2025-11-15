@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f29b848e79513747acfa4a53b7f1504, type: 3}
-  m_Name: Dock_LevelData_01
+  m_Name: Pier_LevelData_01
   m_EditorClassIdentifier: 
   ResourcesToBuild:
   - resourceData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}

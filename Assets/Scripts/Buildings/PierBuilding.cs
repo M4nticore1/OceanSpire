@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DockBuildingComponent : BuildingComponent
+public class PierBuilding : EnvironmentBuilding
 {
     //protected override void UpdateBuildingConstruction()
     //{
