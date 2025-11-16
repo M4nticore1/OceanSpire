@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
+using Unity.Mathematics;
 using UnityEngine;
 
 enum Direction
@@ -68,8 +69,10 @@ public class CityManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Building.onAnyBuildingStartConstructing += OnBuildingStartConstructing;
-        Building.onAnyBuildingFinishConstructing += OnBuildingFinishConstructing;
+        ConstructionComponent.onAnyConstructionStartConstructing += OnBuildingStartConstructing;
+        ConstructionComponent.onAnyConstructionFinishConstructing += OnBuildingFinishConstructing;
+
+        ConstructionComponent.onAnyConstructionDemolished += OnConstructionDemolished;
 
         Resident.OnWorkerAdd += AddWorker;
         Resident.OnWorkerRemove += RemoveWorker;
@@ -77,8 +80,8 @@ public class CityManager : MonoBehaviour
 
     private void OnDisable()
     {
-        Building.onAnyBuildingStartConstructing -= OnBuildingStartConstructing;
-        Building.onAnyBuildingFinishConstructing -= OnBuildingFinishConstructing;
+        ConstructionComponent.onAnyConstructionStartConstructing -= OnBuildingStartConstructing;
+        ConstructionComponent.onAnyConstructionFinishConstructing -= OnBuildingFinishConstructing;
 
         Resident.OnWorkerAdd -= AddWorker;
         Resident.OnWorkerRemove -= RemoveWorker;
@@ -106,7 +109,7 @@ public class CityManager : MonoBehaviour
             {
                 if (i < builtFloors.Count)
                 {
-                    builtFloors[i].Place(i - 1 >= 0 ? builtFloors[i - 1].floorBuildingPlace : null, 0, false, -1);
+                    builtFloors[i].constructionComponent.Place(i - 1 >= 0 ? builtFloors[i - 1].floorBuildingPlace : null, 0, false, -1);
                 }
                 else
                 {
@@ -128,7 +131,7 @@ public class CityManager : MonoBehaviour
 
                             if (data.placedBuildingIds[placeIndex] >= 0)
                             {
-                                BuildingType buildingType = gameManager.buildingPrefabs[buildingId].buildingData.buildingType;
+                                BuildingType buildingType = gameManager.buildingPrefabs[buildingId].BuildingData.BuildingType;
 
                                 if (buildingType == BuildingType.Hall)
                                 {
@@ -152,12 +155,12 @@ public class CityManager : MonoBehaviour
                 }
                 else
                 {
-                    if (builtFloors[i].hallBuildingPlace.placedBuilding && builtFloors[i].hallBuildingPlace.placedBuilding.buildingData.buildingType == BuildingType.Hall)
+                    if (builtFloors[i].hallBuildingPlace.placedBuilding && builtFloors[i].hallBuildingPlace.placedBuilding.BuildingData.BuildingType == BuildingType.Hall)
                         builtFloors[i].hallBuildingPlace.LoadPlacedBuilding();
 
                     for (int j = 0; j < roomsCountPerFloor; j++)
                     {
-                        if (builtFloors[i].roomBuildingPlaces[j].placedBuilding && builtFloors[i].roomBuildingPlaces[j].placedBuilding.buildingData.buildingType == BuildingType.Room)
+                        if (builtFloors[i].roomBuildingPlaces[j].placedBuilding && builtFloors[i].roomBuildingPlaces[j].placedBuilding.BuildingData.BuildingType == BuildingType.Room)
                             builtFloors[i].roomBuildingPlaces[j].LoadPlacedBuilding();
                     }
                 }
@@ -167,7 +170,7 @@ public class CityManager : MonoBehaviour
             {
                 for (int i = builtFloors.Count - 1; i > data.builtFloorsCount; i--)
                 {
-                    builtFloors[i].Demolish();
+                    builtFloors[i].constructionComponent.Demolish();
                 }
             }
 
@@ -463,9 +466,9 @@ public class CityManager : MonoBehaviour
         bool canPlace = false;
         BuildingPlace currentBuildingPlace = null;
 
-        int buildingHeight = buildingToPlace.buildingData.buildingFloors;
+        int buildingHeight = buildingToPlace.BuildingData.BuildingFloors;
 
-        if (buildingToPlace.buildingData.buildingType == BuildingType.Room)
+        if (buildingToPlace.BuildingData.BuildingType == BuildingType.Room)
         {
             int floorIndex = buildingPlace.floorIndex;
             int buildingPlaceIndex = buildingPlace.buildingPlaceIndex;
@@ -474,7 +477,7 @@ public class CityManager : MonoBehaviour
 
             buildingPlace.PlaceBuilding(buildingToPlace, 0, true, -1);
         }
-        else if (buildingToPlace.buildingData.buildingType == BuildingType.Hall)
+        else if (buildingToPlace.BuildingData.BuildingType == BuildingType.Hall)
         {
             if (buildingPlace.emptyBuildingPlacesAbove >= buildingHeight - 1)
             {
@@ -503,15 +506,15 @@ public class CityManager : MonoBehaviour
                 }
             }
         }
-        else if (buildingToPlace.buildingData.buildingType == BuildingType.FloorFrame)
+        else if (buildingToPlace.BuildingData.BuildingType == BuildingType.FloorFrame)
         {
             buildingPlace.PlaceBuilding(buildingToPlace, 0, false, -1);
         }
     }
 
-    private void OnBuildingStartConstructing(Building building)
+    private void OnBuildingStartConstructing(ConstructionComponent building)
     {
-        int levelIndex = building.levelIndex;
+        int levelIndex = building.levelComponent.levelIndex;
         //if (building.buildingData.instantConstruction)
             //SpendItems(building.buildingLevelsData[levelIndex].resourcesToBuild);
 
@@ -523,60 +526,62 @@ public class CityManager : MonoBehaviour
         HideAllBuildigPlaces();
     }
 
-    private void OnBuildingFinishConstructing(Building building)
+    private void OnBuildingFinishConstructing(ConstructionComponent construction)
     {
-        int levelIndex = building.levelIndex;
-        //if (building.buildingData.instantConstruction)
-        //SpendItems(building.buildingLevelsData[levelIndex].resourcesToBuild);
+        int levelIndex = construction.levelComponent.levelIndex;
 
-        FloorBuilding floorBuilding = building as FloorBuilding;
-        if (floorBuilding)
+        Building building = construction.GetComponent<Building>();
+        if (building)
         {
-            InitializeFloor(floorBuilding);
-        }
-
-        ElevatorBuilding elevatorBuilding = building as ElevatorBuilding;
-
-        if (elevatorBuilding)
-        {
-            if (elevatorGroups.Count > elevatorBuilding.elevatorGroupId)
+            FloorBuilding floorBuilding = building as FloorBuilding;
+            if (floorBuilding)
             {
-                elevatorGroups[elevatorBuilding.elevatorGroupId].Add(elevatorBuilding);
-            }
-            else
-            {
-                List<ElevatorBuilding> elevatorGroup = new List<ElevatorBuilding>();
-                elevatorGroup.Add(elevatorBuilding);
-                elevatorGroups.Add(elevatorGroup);
-            }
-        }
-
-        if (building.storageComponent)
-        {
-            if (building.levelIndex > 1)
-            {
-                StorageBuildingLevelData previousLevelData = building.storageComponent.levelsData[building.levelIndex - 1] as StorageBuildingLevelData;
-                SubtractStorageCapacity(previousLevelData, false);
+                InitializeFloor(floorBuilding);
             }
 
-            StorageBuildingLevelData currentLevelData = building.storageComponent.levelData;
-            AddStorageCapacity(currentLevelData, false);
-        }
+            ElevatorBuilding elevatorBuilding = building as ElevatorBuilding;
 
-        HideAllBuildigPlaces();
+            if (elevatorBuilding)
+            {
+                if (elevatorGroups.Count > elevatorBuilding.elevatorGroupId)
+                {
+                    elevatorGroups[elevatorBuilding.elevatorGroupId].Add(elevatorBuilding);
+                }
+                else
+                {
+                    List<ElevatorBuilding> elevatorGroup = new List<ElevatorBuilding>();
+                    elevatorGroup.Add(elevatorBuilding);
+                    elevatorGroups.Add(elevatorGroup);
+                }
+            }
+
+            if (building.storageComponent)
+            {
+                if (building.levelComponent.levelIndex > 1)
+                {
+                    StorageBuildingLevelData previousLevelData = building.storageComponent.levelsData[building.levelComponent.levelIndex - 1] as StorageBuildingLevelData;
+                    SubtractStorageCapacity(previousLevelData, false);
+                }
+
+                StorageBuildingLevelData currentLevelData = building.storageComponent.levelData;
+                AddStorageCapacity(currentLevelData, false);
+            }
+
+            HideAllBuildigPlaces();
+        }
     }
 
     public void TryToUpgradeBuilding(Building building)
     {
-        int nextLevelIndex = building.levelIndex + (building.isRuined ? 0 : 1);
+        int nextLevelIndex = building.levelComponent.levelIndex + (building.constructionComponent.isRuined ? 0 : 1);
 
-        if (building.buildingLevelsData.Count() > nextLevelIndex)
+        if (building.BuildingLevelsData.Count() > nextLevelIndex)
         {
             bool isResourcesToUpgradeEnough = true;
 
             int index = 0;
             int amount = 0;
-            List<ItemInstance> resourcesToUpgrade = building.buildingLevelsData[nextLevelIndex].resourcesToBuild;
+            List<ItemInstance> resourcesToUpgrade = building.constructionComponent.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
 
             for (int i = 0; i < resourcesToUpgrade.Count; i++)
             {
@@ -599,14 +604,26 @@ public class CityManager : MonoBehaviour
                     SpendItem(resourcesToUpgrade[i].ItemData.ItemId, amount);
                 }
 
-                building.StartBuilding(nextLevelIndex);
+                building.constructionComponent.StartBuilding(nextLevelIndex);
             }
         }
     }
 
     public void DemolishBuilding(Building building)
     {
-        building.Demolish();
+        building.constructionComponent.Demolish();
+    }
+
+    private void OnConstructionDemolished(ConstructionComponent construction)
+    {
+        // Return the part of resources
+        List<ItemInstance> resourceToBuilds = construction.ConstructionLevelsData[construction.levelComponent.levelIndex].ResourcesToBuild;
+        for (int i = 0; i < resourceToBuilds.Count; i++)
+        {
+            int id = resourceToBuilds[i].ItemData.ItemId;
+            int amount = (int)math.ceil(resourceToBuilds[i].Amount * GameManager.demolitionResourceRefundRate);
+            AddItem(id, amount);
+        }
     }
 
     private IEnumerator BakeNavMeshSurfaceCoroutine()
@@ -724,7 +741,7 @@ public class CityManager : MonoBehaviour
                         items[itemId].AddAmount(amountToAdd, totalStorageCapacity[itemId].Amount);
                     }
 
-                    if (placedBuilding.buildingData.buildingType == BuildingType.Hall)
+                    if (placedBuilding.BuildingData.BuildingType == BuildingType.Hall)
                         break;
                 }
             }
@@ -1002,7 +1019,7 @@ public class CityManager : MonoBehaviour
     {
         if (verticalElevatorBuilding && verticalElevatorBuilding.buildingPlace != lastBuildingPlace)
         {
-            if (verticalElevatorBuilding.buildingData.buildingIdName == startElevatorBuilding.buildingData.buildingIdName)
+            if (verticalElevatorBuilding.BuildingData.BuildingIdName == startElevatorBuilding.BuildingData.BuildingIdName)
             {
                 pathIndex++;
                 allPaths.Add(new List<Building>());

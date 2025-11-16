@@ -51,7 +51,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 64
-  renderPassEvent: 450
+  renderPassEvent: 550
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineIntensity: 4
   blurPassesCount: 2

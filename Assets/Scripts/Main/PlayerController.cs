@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -96,8 +97,7 @@ public class PlayerController : MonoBehaviour
     private bool isBuildingToPlaceSelected = false;
     [HideInInspector] public Building buildingToPlace = null;
 
-    private Building selectedBuilding = null;
-    private Resident selectedResident = null;
+    private SelectComponent selectedComponent = null;
     //private bool isSelectedBuilding = false;
 
     // Raycast
@@ -206,7 +206,7 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed += OnSecondTouchStarted;
         secondTouchPressAction.canceled += OnSecondTouchEnded;
 
-        Building.onAnyBuildingStartConstructing += StopPlacingBuilding;
+        ConstructionComponent.onAnyConstructionStartConstructing += StopPlacingBuilding;
     }
 
     private void OnDisable()
@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed -= OnSecondTouchStarted;
         secondTouchPressAction.canceled -= OnSecondTouchEnded;
 
-        Building.onAnyBuildingStartConstructing -= StopPlacingBuilding;
+        ConstructionComponent.onAnyConstructionStartConstructing -= StopPlacingBuilding;
     }
 
     private void SetInputSystem()
@@ -427,36 +427,32 @@ public class PlayerController : MonoBehaviour
                                     if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect)
                                     {
                                         CollectItems(hittedProductionBuilding.TakeProducedItem());
-                                        DeselectAll();
+                                        DeselectComponent();
                                     }
                                     else
                                     {
-                                        if (selectedBuilding != hittedBuilding)
-                                            SelectBuilding(hittedBuilding);
+                                        if (selectedComponent != hittedBuilding)
+                                            SelectComponent(hittedBuilding.selectComponent);
                                         else
-                                            DeselectBuilding();
+                                            DeselectComponent();
                                     }
                                 }
                                 else if (hittedResident)
                                 {
-                                    SelectResident(hittedResident);
+                                    SelectComponent(hittedResident.selectComponent);
                                 }
                                 else if (hittedLootContainer)
                                 {
                                     List<ItemInstance> takedItems = hittedLootContainer.TakeItems();
                                     CollectItems(takedItems);
 
-                                    DeselectAll();
+                                    DeselectComponent();
                                 }
                                 else
                                 {
-                                    DeselectAll();
+                                    DeselectComponent();
                                 }
                             }
-                        }
-                        else
-                        {
-                            //UnselectBuilding();
                         }
                     }
                 }
@@ -531,17 +527,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void StartPlacingBuilding(Building newBuildingToPlace)
+    public void StartPlacingBuilding(ConstructionComponent newConstructionToPlace)
     {
+        Building building = newConstructionToPlace.GetComponent<Building>();
+
         if (isBuildingToPlaceSelected)
         {
-            StopPlacingBuilding(buildingToPlace);
+            StopPlacingBuilding(buildingToPlace.constructionComponent);
         }
 
         isBuildingToPlaceSelected = true;
-        buildingToPlace = newBuildingToPlace;
+        buildingToPlace = building;
 
-        cityManager.ShowBuildingPlacesByType(newBuildingToPlace);
+        cityManager.ShowBuildingPlacesByType(building);
         uiManager.CloseBuildingManagementMenu();
         uiManager.OnBuildingPlacingStarted();
     }
@@ -551,11 +549,11 @@ public class PlayerController : MonoBehaviour
         cityManager.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
     }
 
-    public void StopPlacingBuilding(Building building)
+    public void StopPlacingBuilding(ConstructionComponent construction)
     {
-        if (buildingToPlace && building && buildingToPlace.buildingData.buildingIdName == building.buildingData.buildingIdName)
+        if (buildingToPlace && construction)
         {
-            cityManager.HideBuildingPlacesByType(buildingToPlace.buildingData.buildingType);
+            cityManager.HideBuildingPlacesByType(buildingToPlace.BuildingData.BuildingType);
 
             isBuildingToPlaceSelected = false;
             buildingToPlace = null;
@@ -580,33 +578,46 @@ public class PlayerController : MonoBehaviour
         cityManager.AddItems(items);
     }
 
-    private void SelectBuilding(Building building)
+    private void SelectComponent(SelectComponent selectComponent)
     {
-        DeselectBuilding();
+        DeselectComponent();
 
-        selectedBuilding = building;
-        selectedBuilding.Select();
-        DeselectResident();
+        selectedComponent = selectComponent;
+        selectedComponent.Select();
 
-        if (building.isRuined)
+        Building building = selectComponent.GetComponent<Building>();
+        Entity entity = selectComponent.GetComponent<Entity>();
+        Boat boat = selectComponent.GetComponent<Boat>();
+        if (building)
         {
-            uiManager.OpenRepairBuildingMenu(building);
+            if (building.constructionComponent.isRuined)
+            {
+                uiManager.OpenRepairBuildingMenu(building);
+            }
+            else
+            {
+                uiManager.OpenBuildingManagementMenu(building);
+            }
         }
-        else
+        else if (entity)
         {
-            uiManager.OpenBuildingManagementMenu(building);
+
+        }
+        else if (boat)
+        {
+
         }
     }
 
-    public void DeselectBuilding()
+    public void DeselectComponent()
     {
-        if (selectedBuilding)
+        if (selectedComponent)
         {
-            selectedBuilding.Deselect();
+            selectedComponent.Deselect();
 
             if (!uiManager.isBuildingResourcesMenuOpened)
             {
-                selectedBuilding = null;
+                selectedComponent = null;
 
                 uiManager.CloseBuildingManagementMenu();
             }
@@ -615,31 +626,6 @@ public class PlayerController : MonoBehaviour
                 uiManager.CloseBuildingActionMenu();
             }
         }
-    }
-
-    private void SelectResident(Resident resident)
-    {
-        DeselectResident();
-
-        selectedResident = resident;
-
-        selectedResident.Select();
-        DeselectBuilding();
-    }
-
-    public void DeselectResident()
-    {
-        if (selectedResident)
-        {
-            selectedResident.Deselect();
-            selectedResident = null;
-        }
-    }
-
-    public void DeselectAll()
-    {
-        DeselectBuilding();
-        DeselectResident();
     }
 
     private void SaveData()

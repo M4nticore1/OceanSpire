@@ -3,189 +3,105 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public enum BuildingPosition
-{
-    Straight,
-    Corner
-}
-
-[AddComponentMenu("")]
+[AddComponentMenu("Buildings/Building")]
 public class Building : MonoBehaviour
 {
-    [HideInInspector] protected GameManager gameManager = null;
-    [HideInInspector] public CityManager cityManager = null;
-    [HideInInspector] public bool isInitialized = false;
-    [HideInInspector] protected bool isSelected = false;
+    protected GameManager gameManager { get; private set; } = null;
+    protected CityManager cityManager { get; private set; } = null;
+    public LevelComponent levelComponent { get; private set; } = null;
+    public ConstructionComponent constructionComponent { get; private set; } = null;
+    public SelectComponent selectComponent { get; private set; } = null;
+    public StorageBuildingComponent storageComponent { get; private set; } = null;
+    public ProductionBuildingComponent productionComponent { get; private set; } = null;
+    public bool isInitialized { get; private set; } = false;
+    protected bool isSelected { get; private set; } = false;
 
-    [HideInInspector] public int levelIndex { get; private set; } = 0;
+    //[HideInInspector] public int levelIndex { get; private set; } = 0;
     public List<Entity> entities { get; private set; } = new List<Entity>();
     public List<Entity> workers { get; private set; } = new List<Entity>();
     public List<Entity> currentWorkers { get; private set; } = new List<Entity>();
 
     [Header("Data")]
-    public BuildingData buildingData = null;
-    public BuildingLevelData[] buildingLevelsData = { };
+    [SerializeField] protected BuildingData buildingData = null;
+    public BuildingData BuildingData => buildingData;
+    [SerializeField] protected ConstructionLevelData[] buildingLevelsData = { };
+    public ConstructionLevelData[] BuildingLevelsData => buildingLevelsData;
 
     [HideInInspector] public BuildingPlace buildingPlace = null;
-
-    [Header("Construction")]
-    public bool isRuined = false;
-    [HideInInspector] public bool isUnderConstruction { get; private set; } = false;
-    //private List<int> currentConstructingResourceAmount = new List<int>();
-    //private Dictionary<int, int> currentConstructingResourceAmountById = new Dictionary<int, int>();
-    [HideInInspector] public BuildingConstruction spawnedBuildingConstruction = null;
-  
-    public List<ItemInstance> incomingConstructionResources { get; private set; } = new List<ItemInstance>();
-    public Dictionary<int, ItemInstance> incomingConstructionResourcesDict { get; private set; } = new Dictionary<int, ItemInstance>();
-    public List<ItemInstance> deliveredConstructionResources { get; private set; } = new List<ItemInstance>();
-    public Dictionary<int, ItemInstance> deliveredConstructionResourcesDict { get; private set; } = new Dictionary<int, ItemInstance>();
-
-    [HideInInspector] private GameObject spawedBuildingInterior = null;
-    [HideInInspector] public int interiorIndex = 0;
-
-    public static event System.Action<Building> onAnyBuildingStartConstructing;
-    public event System.Action onBuildingStartConstructing;
-    public static event System.Action<Building> onAnyBuildingFinishConstructing;
-    public event System.Action onBuildingFinishConstructing;
-
-    public static event System.Action<Building> onAnyBuildingDemolished;
-    public event System.Action onBuildingDemolished;
-
-    [HideInInspector] public StorageBuildingComponent storageComponent = null;
-    [HideInInspector] public ProductionBuildingComponent productionComponent = null;
 
     protected virtual void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
+        levelComponent = GetComponent<LevelComponent>();
+        constructionComponent = GetComponent<ConstructionComponent>();
+        storageComponent = GetComponent<StorageBuildingComponent>();
+        productionComponent = GetComponent<ProductionBuildingComponent>();
     }
 
-    protected virtual void Update()
+    protected void OnEnable()
     {
-        if (incomingConstructionResources.Count > 0)
-            Debug.Log("incomingConstructionResources " + incomingConstructionResources[0].Amount);
-        if (deliveredConstructionResources.Count > 0)
-            Debug.Log("deliveredConstructionResources " + deliveredConstructionResources[0].Amount);
+        constructionComponent.onBuildingStartConstructing += OnBuildingStartConstructing;
+        constructionComponent.onBuildingFinishConstructing += OnBuildingFinishConstructing;
+        constructionComponent.onConstructionDemolished += OnConstructionDemolised;
+    }
+
+    protected void OnDisable()
+    {
+        constructionComponent.onBuildingStartConstructing -= OnBuildingStartConstructing;
+        constructionComponent.onBuildingFinishConstructing -= OnBuildingFinishConstructing;
+        constructionComponent.onConstructionDemolished -= OnConstructionDemolised;
+    }
+
+    protected void Update()
+    {
+
     }
 
     // Constructing
     public virtual void InitializeBuilding(BuildingPlace buildingPlace)
     {
+        //gameManager = FindAnyObjectByType<GameManager>();
+        //cityManager = FindAnyObjectByType<CityManager>();
+        //levelComponent = GetComponent<LevelComponent>();
+        //constructionComponent = GetComponent<ConstructionComponent>();
+        //storageComponent = GetComponent<StorageBuildingComponent>();
+        //productionComponent = GetComponent<ProductionBuildingComponent>();
+
         this.buildingPlace = buildingPlace;
         isInitialized = true;
-
-        storageComponent = GetComponent<StorageBuildingComponent>();
-        productionComponent = GetComponent<ProductionBuildingComponent>();
     }
 
-    public virtual void Place(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
+    protected virtual void Place(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
     {
         InitializeBuilding(buildingPlace);
 
-        this.levelIndex = levelIndex;
-        isUnderConstruction = requiresConstruction;
-        this.interiorIndex = interiorIndex;
-
-        if (isUnderConstruction)
-            StartBuilding(levelIndex);
-        else
-            Build(levelIndex, interiorIndex);
+        //if (levelComponent)
+        //{
+        //    levelComponent.levelIndex = levelIndex;
+        //    if (constructionComponent)
+        //        constructionComponent.Place(buildingPlace, levelIndex, requiresConstruction, interiorIndex);
+        //}
     }
 
-    private IEnumerator PlaceCoroutine(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
+    protected void OnBuildingStartConstructing()
     {
-        yield return new WaitForEndOfFrame();
-
-        InitializeBuilding(buildingPlace);
-
-        if (isUnderConstruction)
-            StartBuilding(levelIndex);
-        else
-            Build(levelIndex, interiorIndex);
-
-        this.levelIndex = levelIndex;
-        isUnderConstruction = requiresConstruction;
-        this.interiorIndex = interiorIndex;
+        UpdateBuildingConstruction(levelComponent.levelIndex);
     }
 
-    public void StartBuilding(int nextLevelIndex)
+    protected virtual void OnBuildingFinishConstructing()
     {
-        isUnderConstruction = true;
-
-        UpdateBuildingConstruction(nextLevelIndex);
-
-        onAnyBuildingStartConstructing?.Invoke(this);
-        onBuildingStartConstructing?.Invoke();
-    }
-
-    public void FinishBuilding()
-    {
-        if (isRuined)
-            isRuined = false;
-        else if (isUnderConstruction)
-            isUnderConstruction = false;
-        else
-            levelIndex++;
-
-        interiorIndex = UnityEngine.Random.Range(0, spawnedBuildingConstruction.buildingInteriors.Count);
-
-        Build(levelIndex, interiorIndex);
-    }
-
-    private void Build(int newLevelIndex, int interiorIndex)
-    {
-        //StorageBuildingComponent storageBuilding = GetComponent<StorageBuildingComponent>();
-        //ProductionBuildingComponent productionBuildingComponent = GetComponent<ProductionBuildingComponent>();
-
         if (storageComponent)
-            storageComponent.Build();
+            storageComponent.Build(levelComponent.levelIndex);
         if (productionComponent)
-            productionComponent.Build();
+            productionComponent.Build(levelComponent.levelIndex);
 
-        UpdateBuildingConstruction(levelIndex);
-
-        if (spawnedBuildingConstruction && spawnedBuildingConstruction.buildingInteriors.Count > 0)
-        {
-            if (interiorIndex < 0)
-                interiorIndex = UnityEngine.Random.Range(0, spawnedBuildingConstruction.buildingInteriors.Count);
-
-            spawedBuildingInterior = Instantiate(spawnedBuildingConstruction.buildingInteriors[interiorIndex], transform);
-        }
-
-        onAnyBuildingFinishConstructing?.Invoke(this);
-        onBuildingFinishConstructing?.Invoke();
-        //InvokeFinishConstructing(this);
+        UpdateBuildingConstruction(levelComponent.levelIndex);
     }
 
-    public virtual void Demolish()
+    protected void OnConstructionDemolised()
     {
-        List<ItemInstance> resourceToBuilds = buildingLevelsData[levelIndex].resourcesToBuild;
-
-        for (int i = 0; i < resourceToBuilds.Count; i++)
-        {
-            int id = resourceToBuilds[i].ItemData.ItemId;
-            int amount = (int)math.ceil(resourceToBuilds[i].Amount * GameManager.demolitionResourceRefundRate);
-
-            cityManager.AddItem(id, amount);
-        }
-
-        onAnyBuildingFinishConstructing?.Invoke(this);
         buildingPlace.DestroyBuilding();
-        Destroy(gameObject);
-    }
-
-    protected virtual void UpdateBuildingConstruction(int levelIndex)
-    {
-
-    }
-
-	protected virtual void BuildConstruction(int levelIndex)
-	{
-		if (spawnedBuildingConstruction)
-        {
-            Destroy(spawnedBuildingConstruction.gameObject);
-            Destroy(spawedBuildingInterior);
-        }
     }
 
     // Residents Management
@@ -224,7 +140,7 @@ public class Building : MonoBehaviour
     }
 
     public void RemoveWorker(Entity worker)
-	{
+    {
         workers.RemoveAt(worker.workerIndex);
 
         for (int i = 0; i < workers.Count; i++)
@@ -248,113 +164,14 @@ public class Building : MonoBehaviour
         }
     }
 
-    public void AddIncomingConstructionResources(int itemId, int itemAmount)
+    protected virtual void UpdateBuildingConstruction(int levelIndex)
     {
-        AddIncomingConstructionResources_Internal(itemId, itemAmount);
+        BuildConstruction(levelIndex);
     }
 
-    public void AddIncomingConstructionResources(ItemInstance item)
+    protected virtual void BuildConstruction(int levelIndex)
     {
-        AddIncomingConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
-    }
 
-    private void AddIncomingConstructionResources_Internal(int itemId, int amount)
-    {
-        if (!incomingConstructionResourcesDict.ContainsKey(itemId))
-        {
-            ItemInstance item = new ItemInstance(itemId); // The same item instance for list and dictionary.
-            incomingConstructionResources.Add(item);
-            incomingConstructionResourcesDict.Add(itemId, item);
-        }
-
-        // We can change only the list or dictionary because we use the same item instance for them.
-        incomingConstructionResourcesDict[itemId].AddAmount(amount);
-    }
-
-    public void SubtractIncomingConstructionResources(int itemId, int itemAmount)
-    {
-        SubtractIncomingConstructionResources_Internal(itemId, itemAmount);
-    }
-
-    public void SubtractIncomingConstructionResources(ItemInstance item)
-    {
-        SubtractIncomingConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
-    }
-
-    private void SubtractIncomingConstructionResources_Internal(int itemId, int amount)
-    {
-        if (incomingConstructionResourcesDict.ContainsKey(itemId))
-        {
-            // We can change only the list or dictionary because we use the same item instance for them.
-            incomingConstructionResourcesDict[itemId].SubtractAmount(amount);
-        }
-    }
-
-    public int AddConstructionResources(ItemInstance item)
-    {
-        return AddConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
-    }
-
-    public int AddConstructionResources(int itemId, int amount)
-    {
-        return AddConstructionResources_Internal(itemId, amount);
-    }
-
-    private int AddConstructionResources_Internal(int itemId, int amount)
-    {
-        if (!deliveredConstructionResourcesDict.ContainsKey(itemId))
-        {
-            ItemInstance item = new ItemInstance(itemId); // The same item instance for list and dictionary.
-            deliveredConstructionResources.Add(item);
-            deliveredConstructionResourcesDict.Add(itemId, item);
-        }
-
-        // We can change only the list or dictionary because we use the same item instance for them.
-        int amountToAdd = deliveredConstructionResourcesDict[itemId].AddAmount(amount);
-        SubtractIncomingConstructionResources(itemId, amountToAdd);
-
-        // Finish building
-        List<ItemInstance> resourcesToBuild = buildingLevelsData[levelIndex].resourcesToBuild;
-        if (deliveredConstructionResourcesDict[itemId].Amount >= ItemDatabase.GetItem(itemId, buildingLevelsData[levelIndex].resourcesToBuild).Amount)
-        {
-            foreach (var item in resourcesToBuild)
-                if (item.Amount < 0)
-                    return amountToAdd;
-            FinishBuilding();
-        }
-        return amountToAdd;
-    }
-
-    protected void InvokeStartConstructing(Building building)
-    {
-        onAnyBuildingStartConstructing?.Invoke(building);
-        onBuildingStartConstructing?.Invoke();
-    }
-
-    protected void InvokeFinishConstructing(Building building)
-    {
-        onAnyBuildingFinishConstructing?.Invoke(building);
-        onBuildingFinishConstructing?.Invoke();
-    }
-
-    public void Select()
-    {
-        isSelected = true;
-
-        foreach (GameObject child in GameUtils.GetAllChildren(transform))
-        {
-            child.layer = LayerMask.NameToLayer("Outlined");
-        }
-    }
-
-    public void Deselect()
-    {
-        isSelected = false;
-
-        foreach (GameObject child in GameUtils.GetAllChildren(transform))
-        {
-            child.layer = LayerMask.NameToLayer("Default");
-        }
     }
 
     public int GetFloorIndex()
@@ -383,16 +200,17 @@ public class Building : MonoBehaviour
 
     public Vector3 GetInteractionPosition()
     {
-        if (spawnedBuildingConstruction.buildingInteractions.Count > 0 && spawnedBuildingConstruction.buildingInteractions[0].waypoints.Count > 0)
-            return spawnedBuildingConstruction.buildingInteractions[0].waypoints[0].position;
+        List<BuildingAction> buildingInteraction = constructionComponent.spawnedBuildingConstruction.buildingInteractions;
+        if (buildingInteraction.Count > 0 && buildingInteraction[0].waypoints.Count > 0)
+            return buildingInteraction[0].waypoints[0].position;
         else
             return transform.position;
     }
 
     public Vector3 GetPickupItemPointPosition()
     {
-        if (spawnedBuildingConstruction.collectItemPoints.Count > 0)
-            return spawnedBuildingConstruction.collectItemPoints[0].position;
+        if (constructionComponent.spawnedBuildingConstruction.collectItemPoints.Count > 0)
+            return constructionComponent.spawnedBuildingConstruction.collectItemPoints[0].position;
         else
             return transform.position;
     }

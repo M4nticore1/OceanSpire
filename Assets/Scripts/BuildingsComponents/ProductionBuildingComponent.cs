@@ -25,20 +25,20 @@ public class ProductionBuildingComponent : BuildingComponent
         Production();
     }
 
-    public override void Build()
+    public override void Build(int newLevel)
     {
-        base.Build();
+        base.Build(newLevel);
 
         levelData = levelsData[ownedBuilding.levelIndex] as ProductionBuildingLevelData;
         producedItem = new ItemInstance(CurrentProducedResource.producedResource.ItemData);
     }
 
-    public override void LevelUp()
-    {
-        base.LevelUp();
+    //public override void UpdateLevel(int newLevel)
+    //{
+    //    base.UpdateLevel(newLevel);
 
-        levelData = levelsData[ownedBuilding.levelIndex] as ProductionBuildingLevelData;
-    }
+    //    levelData = levelsData[ownedBuilding.levelIndex] as ProductionBuildingLevelData;
+    //}
 
     private void Production()
     {
@@ -46,7 +46,7 @@ public class ProductionBuildingComponent : BuildingComponent
         {
             if (!ownedBuilding.isUnderConstruction)
             {
-                BuildingLevelData buildingLevelData = ownedBuilding.buildingLevelsData[ownedBuilding.levelIndex];
+                ConstructionLevelData buildingLevelData = ownedBuilding.buildingLevelsData[ownedBuilding.levelIndex];
                 ProductionBuildingLevelData productionBuildingLevelData = levelsData[ownedBuilding.levelIndex] as ProductionBuildingLevelData;
 
                 int currentPeopleCount = ownedBuilding.currentWorkers.Count;

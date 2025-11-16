@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloorBuilding : Building
+public class FloorBuilding : TowerBuilding
 {
     // Building Places
     public List<BuildingPlace> roomBuildingPlaces;

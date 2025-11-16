@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2501287360220567352}
-  - component: {fileID: 4292116147884430282}
   - component: {fileID: 8331393561667859132}
   m_Layer: 0
   m_Name: Pier
@@ -34,30 +33,6 @@ Transform:
   - {fileID: 7759089002556087228}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4292116147884430282
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5635628443317392028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a9aab4738e87cd40beead4fc9a3a207, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cityManager: {fileID: 0}
-  isInitialized: 0
-  buildingData: {fileID: 11400000, guid: ccb7e31f2afcb32489365485829535c1, type: 2}
-  buildingLevelsData:
-  - {fileID: 11400000, guid: d7f0a759f61058d4f903fc26dc960d36, type: 2}
-  - {fileID: 11400000, guid: 245cd4840c9ee2445832a2d6ee727b8e, type: 2}
-  buildingPlace: {fileID: 0}
-  isRuined: 0
-  spawnedBuildingConstruction: {fileID: 0}
-  interiorIndex: 0
-  storageComponent: {fileID: 0}
-  productionComponent: {fileID: 0}
 --- !u!114 &8331393561667859132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,7 +54,6 @@ MonoBehaviour:
   buildingPlace: {fileID: 0}
   isRuined: 0
   spawnedBuildingConstruction: {fileID: 0}
-  interiorIndex: 0
   storageComponent: {fileID: 0}
   productionComponent: {fileID: 0}
 --- !u!1001 &6939328380463155996

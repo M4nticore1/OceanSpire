@@ -29,13 +29,13 @@ public class BuildingComponent : MonoBehaviour
         //ownedBuilding.onBuildingFinishConstructing -= Build;
     }
 
-    public virtual void Build()
+    public virtual void Build(int newLevel)
     {
 
     }
 
-    public virtual void LevelUp()
-    {
+    //public virtual void UpdateLevel(int newLevel)
+    //{
 
-    }
+    //}
 }

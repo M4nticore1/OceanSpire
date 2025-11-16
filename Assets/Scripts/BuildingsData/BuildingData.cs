@@ -51,21 +51,32 @@ public enum ConnectionType
 public class BuildingData : ScriptableObject
 {
     [Header("Main")]
-    public BuildingId buildingId = BuildingId.TowerGate;
-    public string buildingIdName = "";
-    public string buildingName = "";
-    public BuildingType buildingType = BuildingType.Room;
-    public BuildingCategory buildingCategory = BuildingCategory.Construction;
-    public ConnectionType connectionType = ConnectionType.None;
-    public bool instantConstruction = false;
-    public Sprite thumbImage = null;
-    public string description = "";
+    [SerializeField] private BuildingId buildingId = BuildingId.TowerGate;
+    public BuildingId BuildingId => buildingId;
+    [SerializeField] private string buildingIdName = "";
+    public string BuildingIdName => buildingIdName;
+    [SerializeField] private string buildingName = "";
+    public string BuildingName => buildingName;
+    [SerializeField] private BuildingType buildingType = BuildingType.Room;
+    public BuildingType BuildingType => buildingType;
+    [SerializeField] private BuildingCategory buildingCategory = BuildingCategory.Construction;
+    public BuildingCategory BuildingCategory => buildingCategory;
+    [SerializeField] private ConnectionType connectionType = ConnectionType.None;
+    public ConnectionType ConnectionType => connectionType;
+    [SerializeField] private bool instantConstruction = false;
+    public bool InstantConstruction => instantConstruction;
+    [SerializeField] private Sprite thumbImage = null;
+    public Sprite ThumbImage => thumbImage;
 
-    public int buildingFloors = 1;
-    public int maxBuildingFloors = 1;
+    [SerializeField] private int buildingFloors = 1;
+    public int BuildingFloors => buildingFloors;
+    [SerializeField] private int maxBuildingFloors = 1;
+    public int MaxBuildingFloors => maxBuildingFloors;
 
-    public bool isDemolishable = true;
+    [SerializeField] private bool isDemolishable = true;
+    public bool IsDemolishable => isDemolishable;
 
     [Header("UI")]
-    public GameObject buildingManagementMenuWidget = null;
+    [SerializeField] private GameObject buildingManagementMenuWidget = null;
+    public GameObject BuildingManagementMenuWidget => buildingManagementMenuWidget;
 }

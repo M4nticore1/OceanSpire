@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ElevatorLevelData", menuName = "Scriptable Objects/ElevatorLevelData")]
-public class ElevatorBuildingLevelData : RoomBuildingLevelData
+[CreateAssetMenu(fileName = "ElevatorLevelData", menuName = "Constructions Level Data/ElevatorLevelData")]
+public class ElevatorLevelData : RoomLevelData
 {
     [Header("Elevator Constructions")]
     public ElevatorPlatformConstruction elevatorPlatformStraight;

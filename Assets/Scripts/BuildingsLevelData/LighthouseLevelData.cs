@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "LighthouseLevelData", menuName = "Scriptable Objects/LighthouseLevelData")]
-public class LighthouseLevelData : HallBuildingLevelData
+[CreateAssetMenu(fileName = "LighthouseLevelData", menuName = "Constructions Level Data/LighthouseLevelData")]
+public class LighthouseLevelData : TowerBuildingLevelData
 {
     
 }

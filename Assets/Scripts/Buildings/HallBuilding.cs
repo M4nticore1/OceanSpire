@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [AddComponentMenu("Buildings/HallBuilding")]
-public class HallBuilding : Building
+public class HallBuilding : TowerBuilding
 {
     protected override void UpdateBuildingConstruction(int levelIndex)
     {

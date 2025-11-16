@@ -40,7 +40,13 @@ public class LootManager : MonoBehaviour
         {
             for (int i = 0; i < spawnedLootContainers.Count; i++)
             {
-                spawnedLootContainers[i].Tick((float)(Time.realtimeSinceStartupAsDouble - lastUpdateTime));
+                if (spawnedLootContainers[i])
+                    spawnedLootContainers[i].Tick((float)(Time.realtimeSinceStartupAsDouble - lastUpdateTime));
+                else
+                {
+                    spawnedLootContainers.RemoveAt(i);
+                    i--;
+                }
             }
 
             lastUpdateTime = Time.realtimeSinceStartupAsDouble;

@@ -7,11 +7,11 @@ public class StorageBuildingComponent : BuildingComponent
     [HideInInspector] public StorageBuildingLevelData levelData = null;
     public Dictionary<int, ItemInstance> storedItems = new Dictionary<int, ItemInstance>();
 
-    public override void Build()
+    public override void Build(int newLevel)
     {
-        base.Build();
+        base.Build(newLevel);
 
-        levelData = levelsData[ownedBuilding.levelIndex] as StorageBuildingLevelData;
+        levelData = levelsData[newLevel] as StorageBuildingLevelData;
 
         //AddStorageCapacity(levelData);
 
@@ -22,15 +22,15 @@ public class StorageBuildingComponent : BuildingComponent
         }
     }
 
-    public override void LevelUp()
-    {
-        base.LevelUp();
+    //public override void UpdateLevel(int newLevel)
+    //{
+    //    base.UpdateLevel(newLevel);
 
-        levelData = levelsData[ownedBuilding.levelIndex] as StorageBuildingLevelData;
+    //    levelData = levelsData[ownedBuilding.levelIndex] as StorageBuildingLevelData;
 
-        //AddStorageCapacity(levelData);
-        //SubtractStorageCapacity(levelsData[ownedBuilding.levelIndex - 1] as StorageBuildingLevelData);
-    }
+    //    //AddStorageCapacity(levelData);
+    //    //SubtractStorageCapacity(levelsData[ownedBuilding.levelIndex - 1] as StorageBuildingLevelData);
+    //}
 
     //private void Update()
     //{

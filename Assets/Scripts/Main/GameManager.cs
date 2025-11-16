@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < buildingPrefabs.Count; i++)
         {
-            if ((int)buildingPrefabs[i].buildingData.buildingId == buildingId)
+            if ((int)buildingPrefabs[i].BuildingData.BuildingId == buildingId)
             {
                 return buildingPrefabs[i];
             }
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < buildingPrefabs.Count; i++)
         {
-            if (buildingPrefabs[i].buildingData.buildingIdName == buildingIdName)
+            if (buildingPrefabs[i].BuildingData.BuildingIdName == buildingIdName)
             {
                 return buildingPrefabs[i];
             }

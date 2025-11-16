@@ -1,13 +1,7 @@
 using UnityEngine;
 
-[AddComponentMenu("Buildings/EnvironmentBuilding")]
-public class EnvironmentBuilding : Building
+public class EnvironmetBuilding : Building
 {
-    protected override void UpdateBuildingConstruction(int levelIndex)
-    {
-        BuildConstruction(levelIndex);
-    }
-
     protected override void BuildConstruction(int levelIndex)
     {
         base.BuildConstruction(levelIndex);

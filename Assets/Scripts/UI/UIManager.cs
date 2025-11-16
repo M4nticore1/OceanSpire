@@ -873,7 +873,7 @@ public class UIManager : MonoBehaviour
     {
         OpenBuildingActionMenu();
 
-        selectedBuilding.Demolish();
+        selectedBuilding.OnConstructionDemolised();
 
 
         CloseBuildingManagementMenu();

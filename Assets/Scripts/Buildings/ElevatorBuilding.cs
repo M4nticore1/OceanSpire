@@ -11,11 +11,6 @@ public class ElevatorBuilding : RoomBuilding
     public List<Entity> elevatorWaitingPassengers { get; private set; } = new List<Entity>();
     public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();
 
-    protected override void Update()
-    {
-        base.Update();
-    }
-
     protected override void UpdateBuildingConstruction(int levelIndex)
     {
         base.UpdateBuildingConstruction(levelIndex);
@@ -37,7 +32,7 @@ public class ElevatorBuilding : RoomBuilding
         }
         else
         {
-            ElevatorBuildingLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorBuildingLevelData;
+            ElevatorLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorLevelData;
 
             if (buildingPosition == BuildingPosition.Straight)
                 spawnedElevatorPlatform = Instantiate(elevatorBuildingLevelData.elevatorPlatformStraight, cityManager.towerRoot);
@@ -64,7 +59,7 @@ public class ElevatorBuilding : RoomBuilding
             {
                 if (spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex())
                 {
-                    if (spawnedElevatorPlatform.isMoving || spawnedElevatorPlatform.elevatorRidingPassengers.Count == buildingLevelsData[levelIndex].maxResidentsCount)
+                    if (spawnedElevatorPlatform.isMoving || spawnedElevatorPlatform.elevatorRidingPassengers.Count == buildingLevelsData[levelComponent.levelIndex].maxResidentsCount)
                     {
                         entity.StartElevatorWaiting();
                     }
@@ -128,7 +123,7 @@ public class ElevatorBuilding : RoomBuilding
 
     public bool IsPossibleToEnter()
     {
-        return !spawnedElevatorPlatform.isMoving && spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex() && spawnedElevatorPlatform.elevatorRidingPassengers.Count < buildingLevelsData[levelIndex].maxResidentsCount;
+        return !spawnedElevatorPlatform.isMoving && spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex() && spawnedElevatorPlatform.elevatorRidingPassengers.Count < buildingLevelsData[levelComponent.levelIndex].maxResidentsCount;
     }
 
     public Vector3 GetPlatformRidingPosition()

@@ -316,7 +316,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     {
         if (elevatorBuilding)
         {
-            ElevatorBuildingLevelData elevatorBuildingLevelData = elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex] as ElevatorBuildingLevelData;
+            ElevatorLevelData elevatorBuildingLevelData = elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex] as ElevatorLevelData;
 
             this.elevatorBuilding = elevatorBuilding;
             cityManager = elevatorBuilding.cityManager;

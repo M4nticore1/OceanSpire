@@ -15,6 +15,8 @@ public enum ResidentWork
 public class Entity : MonoBehaviour
 {
     protected CityManager cityManager = null;
+    public LevelComponent levelComponent { get; private set; } = null;
+    public SelectComponent selectComponent { get; private set; } = null;
     public NavMeshAgent navMeshAgent { get; private set; } = null;
 
     [SerializeField] protected int maxHealth = 100;
@@ -59,17 +61,19 @@ public class Entity : MonoBehaviour
     protected virtual void Awake()
     {
         cityManager = FindAnyObjectByType<CityManager>();
+        levelComponent = GetComponent<LevelComponent>();
+        selectComponent = GetComponent<SelectComponent>();
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
     protected virtual void OnEnable()
     {
-        Building.onAnyBuildingStartConstructing += OnBuildingStartConstructing;
+        ConstructionComponent.onAnyConstructionStartConstructing += OnBuildingStartConstructing;
     }
 
     protected virtual void OnDisable()
     {
-        Building.onAnyBuildingStartConstructing -= OnBuildingStartConstructing;
+        ConstructionComponent.onAnyConstructionFinishConstructing -= OnBuildingStartConstructing;
     }
 
     protected virtual void Start()
