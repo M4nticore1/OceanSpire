@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SelectComponent : MonoBehaviour
 {
+    public bool isSelected = false;
+
     public void Select()
     {
         isSelected = true;

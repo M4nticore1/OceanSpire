@@ -575,7 +575,7 @@ public class CityManager : MonoBehaviour
     {
         int nextLevelIndex = building.levelComponent.levelIndex + (building.constructionComponent.isRuined ? 0 : 1);
 
-        if (building.BuildingLevelsData.Count() > nextLevelIndex)
+        if (building.ConstructionLevelsData.Count() > nextLevelIndex)
         {
             bool isResourcesToUpgradeEnough = true;
 

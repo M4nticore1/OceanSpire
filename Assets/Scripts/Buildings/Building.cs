@@ -7,7 +7,7 @@ using UnityEngine;
 public class Building : MonoBehaviour
 {
     protected GameManager gameManager { get; private set; } = null;
-    protected CityManager cityManager { get; private set; } = null;
+    public CityManager cityManager { get; private set; } = null;
     public LevelComponent levelComponent { get; private set; } = null;
     public ConstructionComponent constructionComponent { get; private set; } = null;
     public SelectComponent selectComponent { get; private set; } = null;
@@ -25,7 +25,7 @@ public class Building : MonoBehaviour
     [SerializeField] protected BuildingData buildingData = null;
     public BuildingData BuildingData => buildingData;
     [SerializeField] protected ConstructionLevelData[] buildingLevelsData = { };
-    public ConstructionLevelData[] BuildingLevelsData => buildingLevelsData;
+    public ConstructionLevelData[] ConstructionLevelsData => buildingLevelsData;
 
     [HideInInspector] public BuildingPlace buildingPlace = null;
 
@@ -200,7 +200,7 @@ public class Building : MonoBehaviour
 
     public Vector3 GetInteractionPosition()
     {
-        List<BuildingAction> buildingInteraction = constructionComponent.spawnedBuildingConstruction.buildingInteractions;
+        List<BuildingAction> buildingInteraction = constructionComponent.spawnedConstruction.buildingInteractions;
         if (buildingInteraction.Count > 0 && buildingInteraction[0].waypoints.Count > 0)
             return buildingInteraction[0].waypoints[0].position;
         else
@@ -209,8 +209,8 @@ public class Building : MonoBehaviour
 
     public Vector3 GetPickupItemPointPosition()
     {
-        if (constructionComponent.spawnedBuildingConstruction.collectItemPoints.Count > 0)
-            return constructionComponent.spawnedBuildingConstruction.collectItemPoints[0].position;
+        if (constructionComponent.spawnedConstruction.collectItemPoints.Count > 0)
+            return constructionComponent.spawnedConstruction.collectItemPoints[0].position;
         else
             return transform.position;
     }

@@ -54,24 +54,24 @@ public class BuildingPlace : MonoBehaviour
         if (placedBuilding.isInitialized) return;
 
         if (placedBuilding)
-            PlaceBuilding(placedBuilding, placedBuilding.levelIndex, placedBuilding.isUnderConstruction, -1);
+            PlaceBuilding(placedBuilding, placedBuilding.levelComponent.levelIndex, placedBuilding.constructionComponent.isUnderConstruction, -1);
     }
 
     public void PlaceBuilding(Building buildingToPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
     {
-        if (emptyBuildingPlacesAbove >= buildingToPlace.buildingData.buildingFloors - 1)
+        if (emptyBuildingPlacesAbove >= buildingToPlace.BuildingData.BuildingFloors - 1)
         {
             if (!placedBuilding)
             {
                 placedBuilding = Instantiate(buildingToPlace, transform.position, transform.rotation);
 
-                if (placedBuilding.buildingData.buildingType == BuildingType.FloorFrame)
+                if (placedBuilding.BuildingData.BuildingType == BuildingType.FloorFrame)
                     placedBuilding.transform.SetParent(cityManager.towerRoot);
                 else
                     placedBuilding.transform.SetParent(transform);
             }
 
-            placedBuilding.Place(this, levelIndex, isUnderConstruction, interiorIndex);
+            placedBuilding.constructionComponent.Place(this, levelIndex, isUnderConstruction, interiorIndex);
 
             if (buildingFrame)
                 buildingFrame.SetActive(false);

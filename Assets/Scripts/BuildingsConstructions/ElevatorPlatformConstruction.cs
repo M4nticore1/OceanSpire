@@ -73,7 +73,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
                 bool canMove = true;
 
-                float distance = math.distance(elevatorWaitingPassengers[0].transform.position, elevatorWaitingPassengers[0].currentBuilding.spawnedBuildingConstruction.buildingInteractions[0].waypoints[0].position);
+                float distance = math.distance(elevatorWaitingPassengers[0].transform.position, elevatorWaitingPassengers[0].currentBuilding.constructionComponent.spawnedConstruction.buildingInteractions[0].waypoints[0].position);
 
                 if (distance > 1f || elevatorWaitingPassengers[0].navMeshAgent.velocity != Vector3.zero)
                 {
@@ -129,7 +129,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
         int newRidersCount = elevatorBuilding.elevatorWaitingPassengers.Count;
 
-        newRidersCount = math.clamp(newRidersCount, 0, elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex].maxResidentsCount - elevatorRidingPassengers.Count);
+        newRidersCount = math.clamp(newRidersCount, 0, elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.levelIndex].maxResidentsCount - elevatorRidingPassengers.Count);
 
         for (int i = 0; i < newRidersCount; i++)
         {
@@ -143,13 +143,13 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
         if (elevatorRidingPassengers.Count > 0)
         {
-            if (true || elevatorRidingPassengers.Count == elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex].maxResidentsCount)
+            if (true || elevatorRidingPassengers.Count == elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.levelIndex].maxResidentsCount)
             {
                 int currentTargetFloorIndex = elevatorRidingPassengers[0].pathBuildings[elevatorRidingPassengers[0].pathIndex].GetFloorIndex();
 
                 if (currentTargetFloorIndex > currentFloorIndex)
                 {
-                    nearestFloorIndex = elevatorBuilding.cityManager.builtFloors.Count - 1;
+                    nearestFloorIndex = cityManager.builtFloors.Count - 1;
 
                     for (int i = 0; i < elevatorRidingPassengers.Count; i++)
                     {
@@ -180,7 +180,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
                     if (currentTargetFloorIndex > currentFloorIndex)
                     {
-                        nearestFloorIndex = elevatorBuilding.cityManager.builtFloors.Count - 1;
+                        nearestFloorIndex = cityManager.builtFloors.Count - 1;
 
                         for (int i = 0; i < elevatorWaitingPassengers.Count; i++)
                         {
@@ -316,7 +316,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     {
         if (elevatorBuilding)
         {
-            ElevatorLevelData elevatorBuildingLevelData = elevatorBuilding.buildingLevelsData[elevatorBuilding.levelIndex] as ElevatorLevelData;
+            ElevatorLevelData elevatorBuildingLevelData = elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.levelIndex] as ElevatorLevelData;
 
             this.elevatorBuilding = elevatorBuilding;
             cityManager = elevatorBuilding.cityManager;

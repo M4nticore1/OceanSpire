@@ -81,12 +81,12 @@ public class RoomBuilding : TowerBuilding
             if (buildingPosition == BuildingPosition.Straight)
             {
                 if (roomLevelData.constructionStraight)
-                    constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.constructionStraight, gameObject.transform);
+                    constructionComponent.spawnedConstruction = Instantiate(roomLevelData.constructionStraight, gameObject.transform);
             }
             else if (buildingPosition == BuildingPosition.Corner)
             {
                 if (roomLevelData.constructionCorner)
-                    constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.constructionCorner, gameObject.transform);
+                    constructionComponent.spawnedConstruction = Instantiate(roomLevelData.constructionCorner, gameObject.transform);
             }
         }
         else
@@ -96,12 +96,12 @@ public class RoomBuilding : TowerBuilding
                 if (buildingPosition == BuildingPosition.Straight)
                 {
                     if (roomLevelData.buildingStraight)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraight, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingStraight, gameObject.transform);
                 }
                 else if (buildingPosition == BuildingPosition.Corner)
                 {
                     if (roomLevelData.buildingCorner)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCorner, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingCorner, gameObject.transform);
                 }
             }
             else if (buildingData.ConnectionType == ConnectionType.Horizontal)
@@ -109,24 +109,24 @@ public class RoomBuilding : TowerBuilding
                 if (buildingPosition == BuildingPosition.Straight)
                 {
                     if (leftConnectedBuilding && rightConnectedBuilding && roomLevelData.buildingStraightLeftRight)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightLeftRight, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingStraightLeftRight, gameObject.transform);
                     else if (leftConnectedBuilding && roomLevelData.buildingStraightLeft)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightLeft, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingStraightLeft, gameObject.transform);
                     else if (rightConnectedBuilding && roomLevelData.buildingStraightRight)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightRight, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingStraightRight, gameObject.transform);
                     else if (!leftConnectedBuilding && !rightConnectedBuilding && roomLevelData.buildingStraight)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraight, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingStraight, gameObject.transform);
                 }
                 else if (buildingPosition == BuildingPosition.Corner)
                 {
                     if (leftConnectedBuilding && rightConnectedBuilding && roomLevelData.buildingCornerLeftRight)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerLeftRight, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingCornerLeftRight, gameObject.transform);
                     else if (leftConnectedBuilding && roomLevelData.buildingCornerLeft)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerLeft, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingCornerLeft, gameObject.transform);
                     else if (rightConnectedBuilding && roomLevelData.buildingCornerRight)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerRight, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingCornerRight, gameObject.transform);
                     else if (!leftConnectedBuilding && !rightConnectedBuilding && roomLevelData.buildingCorner)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCorner, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingCorner, gameObject.transform);
                 }
             }
             else if (buildingData.ConnectionType == ConnectionType.Vertical)
@@ -134,28 +134,28 @@ public class RoomBuilding : TowerBuilding
                 if (buildingPosition == BuildingPosition.Straight)
                 {
                     if (aboveConnectedBuilding && belowConnectedBuilding && roomLevelData.buildingStraightAboveBelow)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightAboveBelow, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingStraightAboveBelow, gameObject.transform);
                     else if (aboveConnectedBuilding && roomLevelData.buildingStraightAbove)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightAbove, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingStraightAbove, gameObject.transform);
                     else if (belowConnectedBuilding && roomLevelData.buildingStraightBelow)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraightBelow, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingStraightBelow, gameObject.transform);
                     else if (!aboveConnectedBuilding && !belowConnectedBuilding && roomLevelData.buildingStraight)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingStraight, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingStraight, gameObject.transform);
                 }
                 else if (buildingPosition == BuildingPosition.Corner)
                 {
                     if (aboveConnectedBuilding && belowConnectedBuilding && roomLevelData.buildingCornerAboveBelow)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerAboveBelow, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingCornerAboveBelow, gameObject.transform);
                     else if (aboveConnectedBuilding && roomLevelData.buildingCornerAbove)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerAbove, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingCornerAbove, gameObject.transform);
                     else if (belowConnectedBuilding && roomLevelData.buildingCornerBelow)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCornerBelow, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingCornerBelow, gameObject.transform);
                     else if (!aboveConnectedBuilding && !belowConnectedBuilding && roomLevelData.buildingCorner)
-                        constructionComponent.spawnedBuildingConstruction = Instantiate(roomLevelData.buildingCorner, gameObject.transform);
+                        constructionComponent.spawnedConstruction = Instantiate(roomLevelData.buildingCorner, gameObject.transform);
                 }
             }
 
-            constructionComponent.spawnedBuildingConstruction.Build();
+            constructionComponent.spawnedConstruction.Build();
         }
 
         if (isSelected)

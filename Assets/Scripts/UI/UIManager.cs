@@ -363,13 +363,13 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < gameManager.buildingPrefabs.Count; i++)
         {
-            if (!gameManager.buildingPrefabs[i].buildingData.isDemolishable) continue;
+            if (!gameManager.buildingPrefabs[i].BuildingData.IsDemolishable) continue;
 
-            BuildingCategory buildingCategory = gameManager.buildingPrefabs[i].buildingData.buildingCategory;
+            BuildingCategory buildingCategory = gameManager.buildingPrefabs[i].BuildingData.BuildingCategory;
             BuildingWidget spawnedBuildingWidget = null;
             spawnedBuildingWidget = Instantiate<BuildingWidget>(buildingWidgetPrefab, transform);
 
-            int categoryIndex = (int)gameManager.buildingPrefabs[i].buildingData.buildingCategory;
+            int categoryIndex = (int)gameManager.buildingPrefabs[i].BuildingData.BuildingCategory;
             spawnedBuildingWidgets[categoryIndex].Add(spawnedBuildingWidget);
 
             spawnedBuildingWidget.InitializeBuildingWidget(gameManager.buildingPrefabs[i]);
@@ -477,9 +477,9 @@ public class UIManager : MonoBehaviour
 
         buildingInformationMenu.SetActive(true);
 
-        buildingInformationMenuNameText.SetText(building.buildingData.buildingName);
-        buildingInformationMenuLevelNumberText.SetText("Level " + (building.levelIndex + 1).ToString());
-        buildingInformationMenuDescriptionText.SetText(building.buildingData.description);
+        buildingInformationMenuNameText.SetText(building.BuildingData.BuildingName);
+        buildingInformationMenuLevelNumberText.SetText("Level " + (building.levelComponent.levelIndex + 1).ToString());
+        //buildingInformationMenuDescriptionText.SetText(building.BuildingData.description);
 
         ProductionBuildingComponent productionBuilding = building.GetComponent<ProductionBuildingComponent>();
         StorageBuildingComponent storageBuilding = building.GetComponent<StorageBuildingComponent>();
@@ -544,16 +544,16 @@ public class UIManager : MonoBehaviour
         isBuildingStatsPanelOpened = false;
         selectedBuilding = building;
 
-        buildingManagementMenuNameText.SetText(building.buildingData.buildingName);
-        buildingManagementMenuLevelText.SetText("Level " + (building.levelIndex + 1).ToString());
+        buildingManagementMenuNameText.SetText(building.BuildingData.BuildingName);
+        buildingManagementMenuLevelText.SetText("Level " + (building.levelComponent.levelIndex + 1).ToString());
 
         if (spawnedBuildingManagementMenu)
             Destroy(spawnedBuildingManagementMenu);
 
-        if (building.buildingData.buildingManagementMenuWidget)
-            spawnedBuildingManagementMenu = Instantiate(building.buildingData.buildingManagementMenuWidget, buildingManagementMenuPanel.transform);
+        if (building.BuildingData.BuildingManagementMenuWidget)
+            spawnedBuildingManagementMenu = Instantiate(building.BuildingData.BuildingManagementMenuWidget, buildingManagementMenuPanel.transform);
 
-        if (building.buildingData.isDemolishable)
+        if (building.BuildingData.IsDemolishable)
         {
             showDemolishBuildingResourcesButton.interactable = true;
         }
@@ -594,8 +594,8 @@ public class UIManager : MonoBehaviour
     public void OpenBuildingStatsPanel(Building building)
     {
         isBuildingStatsPanelOpened = true;
-        buildingStatsPanelNameText.SetText(building.buildingData.buildingName);
-        buildingStatsPanelWorkersCountText.SetText(building.workers.Count + "/" + building.buildingLevelsData[building.levelIndex].maxResidentsCount);
+        buildingStatsPanelNameText.SetText(building.BuildingData.BuildingName);
+        buildingStatsPanelWorkersCountText.SetText(building.workers.Count + "/" + building.ConstructionLevelsData[building.levelComponent.levelIndex].maxResidentsCount);
     }
 
     public void CloseBuildingStatsPanel()
@@ -633,8 +633,8 @@ public class UIManager : MonoBehaviour
         OpenBuildingActionMenu();
         CleanResourceToUpgradeWidgets();
 
-        int nextLevelIndex = selectedBuilding.levelIndex + 1;
-        List<ItemInstance> resourcesToUpgrade = selectedBuilding.buildingLevelsData[nextLevelIndex].resourcesToBuild;
+        int nextLevelIndex = selectedBuilding.levelComponent.levelIndex + 1;
+        List<ItemInstance> resourcesToUpgrade = selectedBuilding.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
         {
@@ -655,8 +655,8 @@ public class UIManager : MonoBehaviour
         OpenBuildingActionMenu();
         CleanResourceToUpgradeWidgets();
 
-        int levelIndex = selectedBuilding.levelIndex;
-        List<ItemInstance> resourcesToUpgrade = selectedBuilding.buildingLevelsData[levelIndex].resourcesToBuild;
+        int levelIndex = selectedBuilding.levelComponent.levelIndex;
+        List<ItemInstance> resourcesToUpgrade = selectedBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
         {
@@ -675,7 +675,7 @@ public class UIManager : MonoBehaviour
     // Building Workers Menu
     private void OpenBuildingWorkersMenu()
     {
-        maxBuildingWorkersCount = selectedBuilding.buildingLevelsData[selectedBuilding.levelIndex].maxResidentsCount;
+        maxBuildingWorkersCount = selectedBuilding.ConstructionLevelsData[selectedBuilding.levelComponent.levelIndex].maxResidentsCount;
 
         residentWidgetsColumnCount = (int)(buildingWorkersList.GetComponent<RectTransform>().rect.width / buildingWorkersList.cellSize.x);
 
@@ -844,10 +844,10 @@ public class UIManager : MonoBehaviour
 
         selectedBuilding = building;
 
-        repairBuildingNameText.SetText(building.buildingData.buildingName + " (Ruin)");
+        repairBuildingNameText.SetText(building.BuildingData.BuildingName + " (Ruin)");
 
         int nextLevelIndex = 0;
-        List<ItemInstance> resourcesToUpgrade = building.buildingLevelsData[nextLevelIndex].resourcesToBuild;
+        List<ItemInstance> resourcesToUpgrade = building.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
         {
@@ -873,7 +873,7 @@ public class UIManager : MonoBehaviour
     {
         OpenBuildingActionMenu();
 
-        selectedBuilding.OnConstructionDemolised();
+        //selectedBuilding.OnConstructionDemolised();
 
 
         CloseBuildingManagementMenu();
@@ -908,6 +908,6 @@ public class UIManager : MonoBehaviour
 
     private void StopPlacingBuilding()
     {
-        playerController.StopPlacingBuilding(playerController.buildingToPlace);
+        playerController.StopPlacingBuilding(playerController.buildingToPlace.constructionComponent);
     }
 }

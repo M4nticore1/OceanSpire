@@ -14,7 +14,7 @@ public class ConstructionComponent : MonoBehaviour
     [Header("Construction")]
     public bool isRuined { get; private set; } = false;
     public bool isUnderConstruction { get; private set; } = false;
-    public BuildingConstruction spawnedBuildingConstruction = null;
+    public BuildingConstruction spawnedConstruction { get; private set; } = null;
 
     public List<ItemInstance> incomingConstructionResources { get; private set; } = new List<ItemInstance>();
     public Dictionary<int, ItemInstance> incomingConstructionResourcesDict { get; private set; } = new Dictionary<int, ItemInstance>();
@@ -32,12 +32,12 @@ public class ConstructionComponent : MonoBehaviour
     public static event System.Action<ConstructionComponent> onAnyConstructionDemolished;
     public event System.Action onConstructionDemolished;
 
-    public virtual void InitializeBuilding(BuildingPlace buildingPlace)
+    public void InitializeBuilding(BuildingPlace buildingPlace)
     {
         levelComponent = GetComponent<LevelComponent>();
     }
 
-    public virtual void Place(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
+    public void Place(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
     {
         InitializeBuilding(buildingPlace);
         isUnderConstruction = requiresConstruction;
@@ -84,21 +84,21 @@ public class ConstructionComponent : MonoBehaviour
         else
             levelComponent.levelIndex++;
 
-        interiorIndex = UnityEngine.Random.Range(0, spawnedBuildingConstruction.buildingInteriors.Count);
+        interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.buildingInteriors.Count);
 
         Build(levelComponent.levelIndex, interiorIndex);
     }
 
-    protected virtual void Build(int levelIndex, int interiorIndex)
+    protected void Build(int levelIndex, int interiorIndex)
     {
         //UpdateBuildingConstruction(levelIndex);
 
-        if (spawnedBuildingConstruction && spawnedBuildingConstruction.buildingInteriors.Count > 0)
+        if (spawnedConstruction && spawnedConstruction.buildingInteriors.Count > 0)
         {
             if (interiorIndex < 0)
-                interiorIndex = UnityEngine.Random.Range(0, spawnedBuildingConstruction.buildingInteriors.Count);
+                interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.buildingInteriors.Count);
 
-            spawedBuildingInterior = Instantiate(spawnedBuildingConstruction.buildingInteriors[interiorIndex], transform);
+            spawedBuildingInterior = Instantiate(spawnedConstruction.buildingInteriors[interiorIndex], transform);
         }
 
         onAnyConstructionFinishConstructing?.Invoke(this);
@@ -231,5 +231,11 @@ public class ConstructionComponent : MonoBehaviour
     {
         onAnyConstructionFinishConstructing?.Invoke(construction);
         onBuildingFinishConstructing?.Invoke();
+    }
+
+    public void SetConstruction(BuildingConstruction construction)
+    {
+        spawnedConstruction = construction;
+        spawnedConstruction.Build();
     }
 }

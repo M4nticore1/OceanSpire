@@ -53,12 +53,12 @@ public class BuildingWidget : MonoBehaviour
         buildButton.onClick.AddListener(StartPlacingBuilding);
         informationButton.onClick.AddListener(OpenBuildingInformationMenu);
 
-        buildingNameText.SetText(building.buildingData.buildingName);
+        buildingNameText.SetText(building.BuildingData.BuildingName);
 
-        resourcesToBuildNumber = building.buildingLevelsData[0].resourcesToBuild.Count();
+        resourcesToBuildNumber = building.ConstructionLevelsData[0].ResourcesToBuild.Count();
 
-        if (newBuilding.buildingData.thumbImage)
-            buildingImage.sprite = newBuilding.buildingData.thumbImage;
+        if (newBuilding.BuildingData.ThumbImage)
+            buildingImage.sprite = newBuilding.BuildingData.ThumbImage;
         DrawResourcesToBuild();
     }
 
@@ -70,7 +70,7 @@ public class BuildingWidget : MonoBehaviour
                 Debug.Log("building is NULL");
             if (!buildingResourceWidget)
                 Debug.Log("buildingResourceWidget is NULL");
-            if (!building.buildingLevelsData[0])
+            if (!building.ConstructionLevelsData[0])
                 Debug.Log("building.buildingLevelsData[0] is NULL");
             //if (building.buildingLevelsData[0].ResourcesToBuild[i])
                 //Debug.Log("building.buildingLevelsData[0].ResourcesToBuild[i] is NULL");
@@ -88,9 +88,9 @@ public class BuildingWidget : MonoBehaviour
 
         for (int i = 0; i < resourcesToBuildNumber; i++)
         {
-            int id = building.buildingLevelsData[0].resourcesToBuild[i].ItemData.ItemId;
+            int id = building.ConstructionLevelsData[0].ResourcesToBuild[i].ItemData.ItemId;
 
-            if (cityManager.items[id].Amount >= building.buildingLevelsData[0].resourcesToBuild[i].Amount)
+            if (cityManager.items[id].Amount >= building.ConstructionLevelsData[0].ResourcesToBuild[i].Amount)
                 haveResourcesToBuild.Add(true);
             else
                 haveResourcesToBuild.Add(false);
@@ -98,7 +98,7 @@ public class BuildingWidget : MonoBehaviour
 
         if (!haveResourcesToBuild.Contains(false) || resourcesToBuildNumber == 0)
         {
-            playerController.StartPlacingBuilding(building);
+            playerController.StartPlacingBuilding(building.constructionComponent);
 
             UIManager.CloseManagementMenu();
         }
@@ -113,9 +113,9 @@ public class BuildingWidget : MonoBehaviour
     {
         for (int i = 0; i < resourcesToBuildNumber; i++)
         {
-            int id = building.buildingLevelsData[0].resourcesToBuild[i].ItemData.ItemId;
+            int id = building.ConstructionLevelsData[0].ResourcesToBuild[i].ItemData.ItemId;
 
-            spawnedBuildingResourceWidgets[i].SetResourceText(cityManager.items[id].Amount, building.buildingLevelsData[0].resourcesToBuild[i].Amount);
+            spawnedBuildingResourceWidgets[i].SetResourceText(cityManager.items[id].Amount, building.ConstructionLevelsData[0].ResourcesToBuild[i].Amount);
         }
     }
 }

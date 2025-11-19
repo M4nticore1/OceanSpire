@@ -1,3 +1,4 @@
+using Mono.Cecil.Cil;
 using UnityEngine;
 
 [AddComponentMenu("Buildings/HallBuilding")]
@@ -14,11 +15,12 @@ public class HallBuilding : TowerBuilding
     {
         base.BuildConstruction(levelIndex);
 
-		HallBuildingLevelData hallLevelData = buildingLevelsData[levelIndex] as HallBuildingLevelData;
+        ConstructionLevelData levelData = buildingLevelsData[levelIndex];
 
-		if (hallLevelData.buildingConstruction)
-			spawnedBuildingConstruction = Instantiate(hallLevelData.buildingConstruction, transform);
-
-        spawnedBuildingConstruction.Build();
+		if (levelData)
+        {
+            BuildingConstruction construction = Instantiate(levelData.ConstructionStraight, transform);
+            constructionComponent.SetConstruction(construction);
+        }
     }
 }

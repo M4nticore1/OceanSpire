@@ -12,7 +12,7 @@ public class PierBuilding : EnvironmetBuilding
 
     public void AddBoat(Boat boat, int dockIndex)
     {
-        PierConstruction pierConstruction = constructionComponent.spawnedBuildingConstruction as PierConstruction;
+        PierConstruction pierConstruction = constructionComponent.spawnedConstruction as PierConstruction;
         Vector3 position = pierConstruction.BoatDockPositions[spawnedBoats.Count].transform.position;
         Quaternion rotation = pierConstruction.BoatDockPositions[spawnedBoats.Count].transform.rotation;
 
@@ -25,7 +25,7 @@ public class PierBuilding : EnvironmetBuilding
     {
         base.OnBuildingFinishConstructing();
 
-        PierConstruction pierConstruction = constructionComponent.spawnedBuildingConstruction as PierConstruction;
+        PierConstruction pierConstruction = constructionComponent.spawnedConstruction as PierConstruction;
         for (int i = spawnedBoats.Count; i < pierConstruction.BoatDockPositions.Count; i++)
         {
             spawnedBoats.Add(null);
