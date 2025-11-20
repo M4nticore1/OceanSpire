@@ -42,14 +42,14 @@ public class Building : MonoBehaviour
     {
         constructionComponent.onBuildingStartConstructing += StartConstructing;
         constructionComponent.onBuildingFinishConstructing += FinishConstructing;
-        constructionComponent.onConstructionDemolished += OnConstructionDemolised;
+        constructionComponent.onConstructionDemolished += Demolish;
     }
 
     protected virtual void OnDisable()
     {
         constructionComponent.onBuildingStartConstructing -= StartConstructing;
         constructionComponent.onBuildingFinishConstructing -= FinishConstructing;
-        constructionComponent.onConstructionDemolished -= OnConstructionDemolised;
+        constructionComponent.onConstructionDemolished -= Demolish;
     }
 
     protected virtual void Start()
@@ -63,29 +63,38 @@ public class Building : MonoBehaviour
     }
 
     // Constructing
-    public virtual void InitializeBuilding(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
+    public virtual void InitializeBuilding(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex = -1)
     {
         if (isInitialized) return;
 
-        if (BuildingData.BuildingIdName == "tower_gate")
-            Debug.Log("initialize");
+        this.buildingPlace = buildingPlace;
+        if (buildingPlace)
+        {
+            buildingPlace.SetPlacedBuilding(this);
+            if (BuildingData.BuildingType == BuildingType.Hall)
+            {
+                for (int i = 0; i < CityManager.roomsCountPerFloor; i++)
+                {
+                    cityManager.builtFloors[buildingPlace.floorIndex].roomBuildingPlaces[i].SetPlacedBuilding(this);
+                }
+            }
+        }
 
         constructionComponent.InitializeConstruction(levelIndex, requiresConstruction);
-        this.buildingPlace = buildingPlace;
         isInitialized = true;
     }
 
     protected virtual void Place(/*BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex*/)
     {
-        if (constructionComponent)
-        {
-            if (constructionComponent.isUnderConstruction)
-                StartConstructing();
-            else
-                FinishConstructing();
-        }
-        else
-            Debug.LogError(BuildingData.BuildingName + " has no constructionComponent");
+        //if (constructionComponent)
+        //{
+        //    if (constructionComponent.isUnderConstruction)
+        //        StartConstructing();
+        //    else
+        //        FinishConstructing();
+        //}
+        //else
+        //    Debug.LogError(BuildingData.BuildingName + " has no constructionComponent");
     }
 
     protected void StartConstructing()
@@ -110,9 +119,9 @@ public class Building : MonoBehaviour
         }
     }
 
-    protected void OnConstructionDemolised()
+    protected void Demolish()
     {
-        buildingPlace.DestroyBuilding();
+
     }
 
     // Residents Management

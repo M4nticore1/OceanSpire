@@ -24,9 +24,9 @@ public class ConstructionComponent : MonoBehaviour
     public Dictionary<int, ItemInstance> deliveredConstructionResourcesDict { get; private set; } = new Dictionary<int, ItemInstance>();
 
     protected GameObject spawedBuildingInterior { get; private set; } = null;
-    public int interiorIndex { get; private set; } = 0;
+    public int interiorIndex { get; private set; } = -1;
 
-    private bool isPlaced = false;
+    private bool IsInitialized = false;
 
     public static event System.Action<ConstructionComponent> onAnyConstructionStartConstructing;
     public event System.Action onBuildingStartConstructing;
@@ -49,7 +49,7 @@ public class ConstructionComponent : MonoBehaviour
 
     private void Start()
     {
-        
+
     }
 
     public void InitializeConstruction(int levelIndex, bool requiresConstruction)
@@ -57,44 +57,58 @@ public class ConstructionComponent : MonoBehaviour
         levelComponent = GetComponent<LevelComponent>();
 
         isUnderConstruction = requiresConstruction;
-        if (levelComponent)
-            levelComponent.LevelIndex = levelIndex;
+
+        if (isUnderConstruction)
+            StartConstructing(levelIndex);
+        else
+            FinishConstructing(levelIndex);
+
+        IsInitialized = true;
     }
 
-    public void Place()
-    {
-        isPlaced = true;
-    }
+    //public void Place()
+    //{
+    //    if (isUnderConstruction)
+    //        StartConstructing();
+    //    else
+    //        FinishConstructing();
 
-    public void StartConstructing()
+    //    IsInitialized = true;
+    //}
+
+    public void StartConstructing(int nextLevel = 0)
     {
         isUnderConstruction = true;
+        if (levelComponent && levelComponent.LevelIndex == 0)
+            levelComponent.LevelIndex = nextLevel;
 
         onAnyConstructionStartConstructing?.Invoke(this);
         onBuildingStartConstructing?.Invoke();
     }
 
-    public void FinishBuilding()
+    public void FinishConstructing(int nextLevel = 0)
     {
         if (isRuined)
             isRuined = false;
         else if (isUnderConstruction)
             isUnderConstruction = false;
 
-        interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.buildingInteriors.Count);
+        //interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.buildingInteriors.Count);
 
-        Build(levelComponent.LevelIndex + 1, interiorIndex);
+        Build(nextLevel);
     }
 
-    protected void Build(int levelIndex, int interiorIndex)
+    protected void Build(int levelIndex = 0)
     {
-        if (spawnedConstruction && spawnedConstruction.buildingInteriors.Count > 0)
-        {
-            if (interiorIndex < 0)
-                interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.buildingInteriors.Count);
+        if (levelComponent)
+            levelComponent.LevelIndex = levelIndex;
+        //if (spawnedConstruction && spawnedConstruction.buildingInteriors.Count > 0)
+        //{
+        //    if (interiorIndex < 0)
+        //        interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.buildingInteriors.Count);
 
-            spawedBuildingInterior = Instantiate(spawnedConstruction.buildingInteriors[interiorIndex], transform);
-        }
+        //    spawedBuildingInterior = Instantiate(spawnedConstruction.buildingInteriors[interiorIndex], transform);
+        //}
 
         if (levelComponent)
             levelComponent.LevelIndex = levelIndex;
@@ -103,7 +117,16 @@ public class ConstructionComponent : MonoBehaviour
         onBuildingFinishConstructing?.Invoke();
     }
 
-    public void Demolish()
+    public void StartUpgrading()
+    {
+        if (levelComponent)
+        {
+            int level = levelComponent.LevelIndex + 1;
+            StartConstructing(level);
+        }
+    }
+
+    public void StartDemolishing()
     {
         onAnyConstructionDemolished?.Invoke(this);
         Destroy(gameObject);
@@ -182,7 +205,7 @@ public class ConstructionComponent : MonoBehaviour
             foreach (var item in resourcesToBuild)
                 if (item.Amount < 0)
                     return amountToAdd;
-            FinishBuilding();
+            FinishConstructing();
         }
         return amountToAdd;
     }

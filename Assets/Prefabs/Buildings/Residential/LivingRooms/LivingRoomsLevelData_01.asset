@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68871d69a0d600f4db549ea34f879f9e, type: 3}
   m_Name: LivingRoomsLevelData_01
   m_EditorClassIdentifier: 
-  resourcesToBuild: []
+  resourcesToBuild:
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 3500
   maxResidentsCount: 2
   constructionStraight: {fileID: 3176227969852827642, guid: 06d631e848267bd4eb0767b007e141ea, type: 3}
   constructionCorner: {fileID: 7469822553162115358, guid: 7be9c1273098b514c95f8962bf7ad8ec, type: 3}

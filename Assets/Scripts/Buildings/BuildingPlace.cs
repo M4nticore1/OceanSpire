@@ -47,73 +47,84 @@ public class BuildingPlace : MonoBehaviour
         outlineMaterialPropertyBlock = new MaterialPropertyBlock();
     }
 
+    private void OnEnable()
+    {
+        if (placedBuilding)
+        {
+
+        }
+    }
+
+    private void OnDisable()
+    {
+        
+    }
+
     public void InitializeBuildingPlace(int newFloorindex)
     {
         floorIndex = newFloorindex;
     }
 
-    public void LoadPlacedBuilding()
+    //public void LoadPlacedBuilding()
+    //{
+    //    if (placedBuilding && !placedBuilding.isInitialized)
+    //        PlaceBuilding(placedBuilding, placedBuilding.levelComponent.LevelIndex, placedBuilding.constructionComponent.isUnderConstruction, -1);
+    //}
+
+    //public void PlaceBuilding(Building buildingToPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
+    //{
+    //    if (!buildingToPlace.isInitialized)
+    //    {
+    //        if (emptyBuildingPlacesAbove >= buildingToPlace.BuildingData.BuildingFloors - 1)
+    //        {
+    //            if (placedBuilding.BuildingData.BuildingIdName == "tower_gate")
+    //                Debug.Log("PlaceBuilding");
+
+    //            //if (placedBuilding)
+    //                //placedBuilding.constructionComponent.Demolish();
+
+    //            //placedBuilding = Instantiate(buildingToPlace, transform.position, transform.rotation);
+
+    //            if (placedBuilding.BuildingData.BuildingType == BuildingType.FloorFrame)
+    //                placedBuilding.transform.SetParent(cityManager.towerRoot);
+    //            else
+    //                placedBuilding.transform.SetParent(transform);
+
+    //            placedBuilding.InitializeBuilding(this, levelIndex, isUnderConstruction, interiorIndex);
+
+    //            if (buildingFrame)
+    //                buildingFrame.SetActive(false);
+    //        }
+    //    }
+    //}
+
+
+
+    //public void DestroyBuilding()
+    //{
+    //    if (placedBuilding)
+    //    {
+    //        boxCollider.enabled = true;
+
+    //        //isBuildingPlaced = false;
+    //        placedBuilding = null;
+
+    //        if (buildingFrame)
+    //            buildingFrame.SetActive(true);
+    //    }
+    //}
+
+    public void SetPlacedBuilding(Building building)
     {
-        if (placedBuilding && !placedBuilding.isInitialized)
-            PlaceBuilding(placedBuilding, placedBuilding.levelComponent.LevelIndex, placedBuilding.constructionComponent.isUnderConstruction, -1);
-    }
-
-    public void PlaceBuilding(Building buildingToPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
-    {
-        if (!buildingToPlace.isInitialized)
-        {
-            if (emptyBuildingPlacesAbove >= buildingToPlace.BuildingData.BuildingFloors - 1)
-            {
-                if (placedBuilding.BuildingData.BuildingIdName == "tower_gate")
-                    Debug.Log("PlaceBuilding");
-
-                //if (placedBuilding)
-                    //placedBuilding.constructionComponent.Demolish();
-
-                //placedBuilding = Instantiate(buildingToPlace, transform.position, transform.rotation);
-
-                if (placedBuilding.BuildingData.BuildingType == BuildingType.FloorFrame)
-                    placedBuilding.transform.SetParent(cityManager.towerRoot);
-                else
-                    placedBuilding.transform.SetParent(transform);
-
-                placedBuilding.InitializeBuilding(this, levelIndex, isUnderConstruction, interiorIndex);
-                //placedBuilding.constructionComponent.Place(this, levelIndex, isUnderConstruction, interiorIndex);
-
-                if (buildingFrame)
-                    buildingFrame.SetActive(false);
-            }
-        }
-    }
-
-    public void DestroyBuilding()
-    {
-        if (placedBuilding)
-        {
-            boxCollider.enabled = true;
-
-            //isBuildingPlaced = false;
-            placedBuilding = null;
-
-            if (buildingFrame)
-                buildingFrame.SetActive(true);
-        }
-    }
-
-    public void AddPlacedBuilding(Building newPlacedBuilding)
-    {
-        //isBuildingPlaced = true;
-        placedBuilding = newPlacedBuilding;
-
+        Debug.Log("SetPlacedBuilding");
+        placedBuilding = building;
         if (buildingFrame)
             buildingFrame.SetActive(false);
     }
 
     public void RemoveBuildingPlaced()
     {
-        //isBuildingPlaced = false;
         placedBuilding = null;
-
         if (buildingFrame)
             buildingFrame.SetActive(true);
     }

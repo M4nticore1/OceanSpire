@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class SelectComponent : MonoBehaviour
 {
-    public bool isSelected = false;
+    private bool isSelected = false;
 
     public void Select()
     {
-        isSelected = true;
+        //isSelected = true;
 
         foreach (GameObject child in GameUtils.GetAllChildren(transform))
         {
@@ -16,7 +16,7 @@ public class SelectComponent : MonoBehaviour
 
     public void Deselect()
     {
-        isSelected = false;
+        //isSelected = false;
 
         foreach (GameObject child in GameUtils.GetAllChildren(transform))
         {

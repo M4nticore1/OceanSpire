@@ -409,7 +409,7 @@ public class PlayerController : MonoBehaviour
 
                                 if (hittedBuildingPlace && !hittedBuildingPlace.placedBuilding)
                                 {
-                                    PlaceBuilding(hittedBuildingPlace);
+                                    PlaceConstruction(hittedBuildingPlace);
                                 }
                             }
                             else
@@ -545,9 +545,9 @@ public class PlayerController : MonoBehaviour
         //uiManager.OnBuildingPlacingStarted();
     }
 
-    private void PlaceBuilding(BuildingPlace buildingPlace)
+    private void PlaceConstruction(BuildingPlace buildingPlace)
     {
-        cityManager.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
+        cityManager.PlaceConstruction(buildingToPlace, buildingPlace, 0, true);
     }
 
     public void StopPlacingBuilding()

@@ -42,6 +42,8 @@ public class RoomBuilding : TowerBuilding
 
     public override void BuildConstruction(int levelIndex)
     {
+        Debug.Log(BuildingData.BuildingName);
+
         RoomLevelData roomLevelData = buildingLevelsData[levelIndex] as RoomLevelData;
 
         if (constructionComponent.isUnderConstruction)
