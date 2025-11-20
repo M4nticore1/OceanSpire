@@ -56,10 +56,10 @@ public class SaveData
             for (int j = 0; j < CityManager.roomsCountPerFloor; j++)
             {
                 Building placedBuilding = cityManager.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
-                placedBuildingIds[placeIndex] = placedBuilding ? (int)placedBuilding.buildingData.buildingId : -1;
-                placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.levelIndex : 0;
-                placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.isUnderConstruction : false;
-                placedBuildingInteriorIds[placeIndex] = placedBuilding ? placedBuilding.interiorIndex : -1;
+                placedBuildingIds[placeIndex] = placedBuilding ? (int)placedBuilding.BuildingData.BuildingId : -1;
+                placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.levelComponent.LevelIndex : 0;
+                placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.isUnderConstruction : false;
+                placedBuildingInteriorIds[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.interiorIndex : -1;
 
                 // Elevators
                 ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;

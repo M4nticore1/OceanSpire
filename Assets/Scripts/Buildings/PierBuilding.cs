@@ -1,11 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 
-public class PierBuilding : EnvironmetBuilding
+public class PierBuilding : Building
 {
     public List<Boat> spawnedBoats { get; private set; } = new List<Boat>();
 
-    public void OnEnable()
+    protected override void OnEnable()
     {
         Boat.OnBoadDestroyed += OnBoatDestroyed;
     }
@@ -21,15 +22,20 @@ public class PierBuilding : EnvironmetBuilding
         spawnedBoats[dockIndex] = spawnedBoat;
     }
 
-    protected override void OnBuildingFinishConstructing()
+    protected override void FinishConstructing()
     {
-        base.OnBuildingFinishConstructing();
+        base.FinishConstructing();
 
         PierConstruction pierConstruction = constructionComponent.spawnedConstruction as PierConstruction;
-        for (int i = spawnedBoats.Count; i < pierConstruction.BoatDockPositions.Count; i++)
+        if (pierConstruction)
         {
-            spawnedBoats.Add(null);
+            for (int i = spawnedBoats.Count; i < pierConstruction.BoatDockPositions.Count; i++)
+            {
+                spawnedBoats.Add(null);
+            }
         }
+        else
+            Debug.LogError(BuildingData.BuildingName + " has no pierConstruction");
     }
 
     private void OnBoatDestroyed(Boat boat)

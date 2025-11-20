@@ -9,26 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc00b654cdc25d14f9d66d50f8c357bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 68871d69a0d600f4db549ea34f879f9e, type: 3}
   m_Name: LivingRoomsLevelData_01
   m_EditorClassIdentifier: 
-  resourcesToBuild:
-  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 3000
-  maxResidentsCount: 4
-  constructionStraight: {fileID: 7469822553162115358, guid: 894f18c1234aaab4481057b25e9fdef4, type: 3}
-  constructionCorner: {fileID: 7469822553162115358, guid: 2b58060139b0fdb4ca6b86b1f5db430b, type: 3}
-  buildingStraight: {fileID: 3176227969852827642, guid: 06d631e848267bd4eb0767b007e141ea, type: 3}
-  buildingCorner: {fileID: 7469822553162115358, guid: 7be9c1273098b514c95f8962bf7ad8ec, type: 3}
-  buildingStraightLeft: {fileID: 3176227969852827642, guid: c3e5e296295eafd4d99b77fe946963de, type: 3}
-  buildingStraightRight: {fileID: 6099634805767211038, guid: 2fd34cc7f9b575441af443aea1d41848, type: 3}
-  buildingStraightLeftRight: {fileID: 7336832484127668197, guid: 78c0255cf4d4408468412eadc1a90938, type: 3}
-  buildingCornerLeft: {fileID: 6541505085108518086, guid: 34892497d3dade1419dd0b297460481f, type: 3}
-  buildingCornerRight: {fileID: 2290663980851308725, guid: 72edc7ef2c0b27441bbf48bb3f621392, type: 3}
-  buildingCornerLeftRight: {fileID: 2290663980851308725, guid: f33c37119beb2b14e9d33d2042e13d81, type: 3}
-  buildingStraightAbove: {fileID: 0}
-  buildingStraightBelow: {fileID: 0}
-  buildingStraightAboveBelow: {fileID: 0}
-  buildingCornerAbove: {fileID: 0}
-  buildingCornerBelow: {fileID: 0}
-  buildingCornerAboveBelow: {fileID: 0}
+  resourcesToBuild: []
+  maxResidentsCount: 2
+  constructionStraight: {fileID: 3176227969852827642, guid: 06d631e848267bd4eb0767b007e141ea, type: 3}
+  constructionCorner: {fileID: 7469822553162115358, guid: 7be9c1273098b514c95f8962bf7ad8ec, type: 3}
+  constructionStraightLeft: {fileID: 3176227969852827642, guid: c3e5e296295eafd4d99b77fe946963de, type: 3}
+  constructionStraightRight: {fileID: 6099634805767211038, guid: 2fd34cc7f9b575441af443aea1d41848, type: 3}
+  constructionStraightLeftRight: {fileID: 7336832484127668197, guid: 78c0255cf4d4408468412eadc1a90938, type: 3}
+  constructionCornerLeft: {fileID: 6541505085108518086, guid: 34892497d3dade1419dd0b297460481f, type: 3}
+  constructionCornerRight: {fileID: 2290663980851308725, guid: 72edc7ef2c0b27441bbf48bb3f621392, type: 3}
+  constructionCornerLeftRight: {fileID: 2290663980851308725, guid: f33c37119beb2b14e9d33d2042e13d81, type: 3}
+  constructionStraightAbove: {fileID: 0}
+  constructionStraightBelow: {fileID: 0}
+  constructionStraightAboveBelow: {fileID: 0}
+  constructionCornerAbove: {fileID: 0}
+  constructionCornerBelow: {fileID: 0}
+  constructionCornerAboveBelow: {fileID: 0}

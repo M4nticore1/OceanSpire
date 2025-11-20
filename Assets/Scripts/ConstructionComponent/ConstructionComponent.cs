@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class ConstructionComponent : MonoBehaviour
 {
+    private Building ownedBuilding = null;
+    private Boat ownedBoat = null;
     public LevelComponent levelComponent { get; private set; } = null;
 
     [Header("Main")]
-    [SerializeField] private List<ConstructionLevelData> constructionLevelsData = new List<ConstructionLevelData>();
-    public List<ConstructionLevelData> ConstructionLevelsData => constructionLevelsData;
+    public List<ConstructionLevelData> constructionLevelsData { get; private set; } = null;
+    //public List<ConstructionLevelData> ConstructionLevelsData => constructionLevelsData;
 
     [Header("Construction")]
     public bool isRuined { get; private set; } = false;
@@ -24,6 +26,8 @@ public class ConstructionComponent : MonoBehaviour
     protected GameObject spawedBuildingInterior { get; private set; } = null;
     public int interiorIndex { get; private set; } = 0;
 
+    private bool isPlaced = false;
+
     public static event System.Action<ConstructionComponent> onAnyConstructionStartConstructing;
     public event System.Action onBuildingStartConstructing;
     public static event System.Action<ConstructionComponent> onAnyConstructionFinishConstructing;
@@ -32,44 +36,39 @@ public class ConstructionComponent : MonoBehaviour
     public static event System.Action<ConstructionComponent> onAnyConstructionDemolished;
     public event System.Action onConstructionDemolished;
 
-    public void InitializeBuilding(BuildingPlace buildingPlace)
+    private void Awake()
     {
         levelComponent = GetComponent<LevelComponent>();
+        ownedBuilding = GetComponent<Building>();
+        ownedBoat = GetComponent<Boat>();
+        if (ownedBuilding)
+            constructionLevelsData = ownedBuilding.ConstructionLevelsData;
+        //else if (boat)
+            //constructionLevelsData = boat.;
     }
 
-    public void Place(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
+    private void Start()
     {
-        InitializeBuilding(buildingPlace);
-        isUnderConstruction = requiresConstruction;
-        this.interiorIndex = interiorIndex;
-
-        if (isUnderConstruction)
-            StartBuilding(levelIndex);
-        else
-            Build(levelIndex, interiorIndex);
+        
     }
 
-    //private IEnumerator PlaceCoroutine(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
-    //{
-    //    yield return new WaitForEndOfFrame();
+    public void InitializeConstruction(int levelIndex, bool requiresConstruction)
+    {
+        levelComponent = GetComponent<LevelComponent>();
 
-    //    InitializeBuilding(buildingPlace);
+        isUnderConstruction = requiresConstruction;
+        if (levelComponent)
+            levelComponent.LevelIndex = levelIndex;
+    }
 
-    //    if (isUnderConstruction)
-    //        StartBuilding(levelIndex);
-    //    else
-    //        Build(levelIndex, interiorIndex);
+    public void Place()
+    {
+        isPlaced = true;
+    }
 
-    //    this.levelIndex = levelIndex;
-    //    isUnderConstruction = requiresConstruction;
-    //    this.interiorIndex = interiorIndex;
-    //}
-
-    public void StartBuilding(int nextLevelIndex)
+    public void StartConstructing()
     {
         isUnderConstruction = true;
-
-        //UpdateBuildingConstruction(nextLevelIndex);
 
         onAnyConstructionStartConstructing?.Invoke(this);
         onBuildingStartConstructing?.Invoke();
@@ -81,18 +80,14 @@ public class ConstructionComponent : MonoBehaviour
             isRuined = false;
         else if (isUnderConstruction)
             isUnderConstruction = false;
-        else
-            levelComponent.levelIndex++;
 
         interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.buildingInteriors.Count);
 
-        Build(levelComponent.levelIndex, interiorIndex);
+        Build(levelComponent.LevelIndex + 1, interiorIndex);
     }
 
     protected void Build(int levelIndex, int interiorIndex)
     {
-        //UpdateBuildingConstruction(levelIndex);
-
         if (spawnedConstruction && spawnedConstruction.buildingInteriors.Count > 0)
         {
             if (interiorIndex < 0)
@@ -101,41 +96,12 @@ public class ConstructionComponent : MonoBehaviour
             spawedBuildingInterior = Instantiate(spawnedConstruction.buildingInteriors[interiorIndex], transform);
         }
 
+        if (levelComponent)
+            levelComponent.LevelIndex = levelIndex;
+
         onAnyConstructionFinishConstructing?.Invoke(this);
         onBuildingFinishConstructing?.Invoke();
     }
-
-    //protected virtual void UpdateBuildingConstruction(int levelIndex)
-    //{
-    //    BuildConstruction(levelIndex);
-    //}
-
-    //protected virtual void BuildConstruction(int levelIndex)
-    //{
-    //    if (spawnedBuildingConstruction)
-    //    {
-    //        Destroy(spawnedBuildingConstruction.gameObject);
-    //        Destroy(spawedBuildingInterior);
-    //    }
-
-    //    //if (ConstructionLevelsData[levelIndex] as RoomConstructionLevelData)
-    //    //{
-    //    //    RoomConstructionLevelData levelData = ConstructionLevelsData[levelIndex] as RoomConstructionLevelData;
-
-    //    //    if (levelData.ConstructionStraight)
-    //    //        spawnedBuildingConstruction = Instantiate(levelData.ConstructionStraight, transform);
-    //    //}
-    //    //else if (ConstructionLevelsData[levelIndex] as BuildingConstructionLevelData)
-    //    //{
-    //    //    BuildingConstructionLevelData levelData = ConstructionLevelsData[levelIndex] as BuildingConstructionLevelData;
-
-    //    //    if (levelData.ConstructionStraight)
-    //    //        spawnedBuildingConstruction = Instantiate(levelData.ConstructionStraight, transform);
-    //    //}
-
-    //    //if (spawnedBuildingConstruction)
-    //        //spawnedBuildingConstruction.Build();
-    //}
 
     public void Demolish()
     {
@@ -210,8 +176,8 @@ public class ConstructionComponent : MonoBehaviour
         SubtractIncomingConstructionResources(itemId, amountToAdd);
 
         // Finish building
-        List<ItemInstance> resourcesToBuild = constructionLevelsData[levelComponent.levelIndex].ResourcesToBuild;
-        if (deliveredConstructionResourcesDict[itemId].Amount >= ItemDatabase.GetItem(itemId, constructionLevelsData[levelComponent.levelIndex].ResourcesToBuild).Amount)
+        List<ItemInstance> resourcesToBuild = constructionLevelsData[levelComponent.LevelIndex].ResourcesToBuild;
+        if (deliveredConstructionResourcesDict[itemId].Amount >= ItemDatabase.GetItem(itemId, constructionLevelsData[levelComponent.LevelIndex].ResourcesToBuild).Amount)
         {
             foreach (var item in resourcesToBuild)
                 if (item.Amount < 0)
@@ -233,9 +199,16 @@ public class ConstructionComponent : MonoBehaviour
         onBuildingFinishConstructing?.Invoke();
     }
 
-    public void SetConstruction(BuildingConstruction construction)
+    public void BuildConstruction(BuildingConstruction buildingConstruction)
     {
+        BuildingConstruction construction = Instantiate(buildingConstruction, gameObject.transform);
         spawnedConstruction = construction;
         spawnedConstruction.Build();
     }
+
+    //public void SetConstruction(BuildingConstruction construction)
+    //{
+    //    spawnedConstruction = construction;
+    //    spawnedConstruction.Build();
+    //}
 }

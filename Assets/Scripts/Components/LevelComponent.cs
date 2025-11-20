@@ -4,9 +4,10 @@ public class LevelComponent : MonoBehaviour
 {
     private ConstructionComponent constructionComponent = null;
 
-    public int levelIndex
+    private int levelIndex = 0;
+    public int LevelIndex
     {
-        get { return levelIndex; }
+        get => levelIndex;
         set
         {
             if (value > levelIndex && value <= maxLevelIndex)
@@ -23,7 +24,7 @@ public class LevelComponent : MonoBehaviour
         constructionComponent = GetComponent<ConstructionComponent>();
         if (constructionComponent)
         {
-            int count = constructionComponent.ConstructionLevelsData.Count;
+            int count = constructionComponent.constructionLevelsData.Count;
             if (maxLevelIndex < count)
                 maxLevelIndex = count;
         }

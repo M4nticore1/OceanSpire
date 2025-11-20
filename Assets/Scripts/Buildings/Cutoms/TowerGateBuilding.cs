@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerGateBuilding : HallBuilding
+public class TowerGateBuilding : TowerBuilding
 {
 
 }

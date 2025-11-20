@@ -11,6 +11,8 @@ public class StorageBuildingComponent : BuildingComponent
     {
         base.Build(newLevel);
 
+        Debug.Log("Build " + ownedBuilding.BuildingData.BuildingName);
+
         levelData = levelsData[newLevel] as StorageBuildingLevelData;
 
         //AddStorageCapacity(levelData);
@@ -18,7 +20,10 @@ public class StorageBuildingComponent : BuildingComponent
         for (int i = 0; i < levelData.storageItems.Count; i++)
         {
             int id = levelData.storageItems[i].ItemData.ItemId;
-            storedItems.Add(id, new ItemInstance(levelData.storageItems[i].ItemData, 0));
+            if (!storedItems.ContainsKey(id))
+                storedItems.Add(id, new ItemInstance(levelData.storageItems[i].ItemData, 0));
+            else
+                Debug.LogError(ownedBuilding.BuildingData.BuildingName + $" has the same item by id {id}");
         }
     }
 

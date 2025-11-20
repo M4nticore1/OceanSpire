@@ -129,7 +129,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
         int newRidersCount = elevatorBuilding.elevatorWaitingPassengers.Count;
 
-        newRidersCount = math.clamp(newRidersCount, 0, elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.levelIndex].maxResidentsCount - elevatorRidingPassengers.Count);
+        newRidersCount = math.clamp(newRidersCount, 0, elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.LevelIndex].maxResidentsCount - elevatorRidingPassengers.Count);
 
         for (int i = 0; i < newRidersCount; i++)
         {
@@ -143,7 +143,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
         if (elevatorRidingPassengers.Count > 0)
         {
-            if (true || elevatorRidingPassengers.Count == elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.levelIndex].maxResidentsCount)
+            if (true || elevatorRidingPassengers.Count == elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.LevelIndex].maxResidentsCount)
             {
                 int currentTargetFloorIndex = elevatorRidingPassengers[0].pathBuildings[elevatorRidingPassengers[0].pathIndex].GetFloorIndex();
 
@@ -316,7 +316,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     {
         if (elevatorBuilding)
         {
-            ElevatorLevelData elevatorBuildingLevelData = elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.levelIndex] as ElevatorLevelData;
+            ElevatorLevelData elevatorBuildingLevelData = elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.LevelIndex] as ElevatorLevelData;
 
             this.elevatorBuilding = elevatorBuilding;
             cityManager = elevatorBuilding.cityManager;

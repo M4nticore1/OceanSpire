@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 [AddComponentMenu("Buildings/Building")]
@@ -24,8 +22,8 @@ public class Building : MonoBehaviour
     [Header("Data")]
     [SerializeField] protected BuildingData buildingData = null;
     public BuildingData BuildingData => buildingData;
-    [SerializeField] protected ConstructionLevelData[] buildingLevelsData = { };
-    public ConstructionLevelData[] ConstructionLevelsData => buildingLevelsData;
+    [SerializeField] protected List<ConstructionLevelData> buildingLevelsData = new List<ConstructionLevelData>();
+    public List<ConstructionLevelData> ConstructionLevelsData => buildingLevelsData;
 
     [HideInInspector] public BuildingPlace buildingPlace = null;
 
@@ -34,23 +32,29 @@ public class Building : MonoBehaviour
         gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
         levelComponent = GetComponent<LevelComponent>();
+        selectComponent = GetComponent<SelectComponent>();
         constructionComponent = GetComponent<ConstructionComponent>();
         storageComponent = GetComponent<StorageBuildingComponent>();
         productionComponent = GetComponent<ProductionBuildingComponent>();
     }
 
-    protected void OnEnable()
+    protected virtual void OnEnable()
     {
-        constructionComponent.onBuildingStartConstructing += OnBuildingStartConstructing;
-        constructionComponent.onBuildingFinishConstructing += OnBuildingFinishConstructing;
+        constructionComponent.onBuildingStartConstructing += StartConstructing;
+        constructionComponent.onBuildingFinishConstructing += FinishConstructing;
         constructionComponent.onConstructionDemolished += OnConstructionDemolised;
     }
 
-    protected void OnDisable()
+    protected virtual void OnDisable()
     {
-        constructionComponent.onBuildingStartConstructing -= OnBuildingStartConstructing;
-        constructionComponent.onBuildingFinishConstructing -= OnBuildingFinishConstructing;
+        constructionComponent.onBuildingStartConstructing -= StartConstructing;
+        constructionComponent.onBuildingFinishConstructing -= FinishConstructing;
         constructionComponent.onConstructionDemolished -= OnConstructionDemolised;
+    }
+
+    protected virtual void Start()
+    {
+        Place();
     }
 
     protected void Update()
@@ -59,44 +63,51 @@ public class Building : MonoBehaviour
     }
 
     // Constructing
-    public virtual void InitializeBuilding(BuildingPlace buildingPlace)
+    public virtual void InitializeBuilding(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
     {
-        //gameManager = FindAnyObjectByType<GameManager>();
-        //cityManager = FindAnyObjectByType<CityManager>();
-        //levelComponent = GetComponent<LevelComponent>();
-        //constructionComponent = GetComponent<ConstructionComponent>();
-        //storageComponent = GetComponent<StorageBuildingComponent>();
-        //productionComponent = GetComponent<ProductionBuildingComponent>();
+        if (isInitialized) return;
 
+        if (BuildingData.BuildingIdName == "tower_gate")
+            Debug.Log("initialize");
+
+        constructionComponent.InitializeConstruction(levelIndex, requiresConstruction);
         this.buildingPlace = buildingPlace;
         isInitialized = true;
     }
 
-    protected virtual void Place(BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex)
+    protected virtual void Place(/*BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex*/)
     {
-        InitializeBuilding(buildingPlace);
-
-        //if (levelComponent)
-        //{
-        //    levelComponent.levelIndex = levelIndex;
-        //    if (constructionComponent)
-        //        constructionComponent.Place(buildingPlace, levelIndex, requiresConstruction, interiorIndex);
-        //}
+        if (constructionComponent)
+        {
+            if (constructionComponent.isUnderConstruction)
+                StartConstructing();
+            else
+                FinishConstructing();
+        }
+        else
+            Debug.LogError(BuildingData.BuildingName + " has no constructionComponent");
     }
 
-    protected void OnBuildingStartConstructing()
+    protected void StartConstructing()
     {
-        UpdateBuildingConstruction(levelComponent.levelIndex);
+        UpdateBuildingConstruction(levelComponent.LevelIndex);
     }
 
-    protected virtual void OnBuildingFinishConstructing()
+    protected virtual void FinishConstructing()
     {
-        if (storageComponent)
-            storageComponent.Build(levelComponent.levelIndex);
-        if (productionComponent)
-            productionComponent.Build(levelComponent.levelIndex);
+        if (levelComponent)
+        {
+            if (storageComponent)
+                storageComponent.Build(levelComponent.LevelIndex);
+            if (productionComponent)
+                productionComponent.Build(levelComponent.LevelIndex);
 
-        UpdateBuildingConstruction(levelComponent.levelIndex);
+            UpdateBuildingConstruction(levelComponent.LevelIndex);
+        }
+        else
+        {
+            Debug.LogError(buildingData.BuildingName + " has no level component");
+        }
     }
 
     protected void OnConstructionDemolised()
@@ -166,12 +177,14 @@ public class Building : MonoBehaviour
 
     protected virtual void UpdateBuildingConstruction(int levelIndex)
     {
+        Debug.Log("UpdateBuildingConstruction");
+
         BuildConstruction(levelIndex);
     }
 
-    protected virtual void BuildConstruction(int levelIndex)
+    public virtual void BuildConstruction(int levelIndex)
     {
-
+        constructionComponent.BuildConstruction(buildingLevelsData[levelIndex].ConstructionStraight);
     }
 
     public int GetFloorIndex()
@@ -200,6 +213,9 @@ public class Building : MonoBehaviour
 
     public Vector3 GetInteractionPosition()
     {
+        if (!constructionComponent.spawnedConstruction)
+            Debug.Log("alaalaala");
+
         List<BuildingAction> buildingInteraction = constructionComponent.spawnedConstruction.buildingInteractions;
         if (buildingInteraction.Count > 0 && buildingInteraction[0].waypoints.Count > 0)
             return buildingInteraction[0].waypoints[0].position;

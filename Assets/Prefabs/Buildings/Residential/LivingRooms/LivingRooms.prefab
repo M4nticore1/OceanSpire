@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1503349866729519722}
   - component: {fileID: 3470290697830555302}
+  - component: {fileID: 8746668864095107714}
+  - component: {fileID: -1657011361127916883}
+  - component: {fileID: 8132388254202584564}
   - component: {fileID: 4050970085591835011}
   - component: {fileID: 3811934750841452471}
   m_Layer: 0
@@ -48,23 +51,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2665c07387d67614998ea718af530a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cityManager: {fileID: 0}
-  isInitialized: 0
   buildingData: {fileID: 11400000, guid: 26e0e8f1af0bf15439c009989780e92c, type: 2}
   buildingLevelsData:
-  - {fileID: 11400000, guid: 9d8ec01473900714e981f509172553cc, type: 2}
-  - {fileID: 11400000, guid: a88f36ec1c9cdf1419c3734a2b6d83ca, type: 2}
-  - {fileID: 11400000, guid: 54149f411e1def74499f8850f026b444, type: 2}
+  - {fileID: 11400000, guid: 9ddf731f81aabca4d85afc368dda3863, type: 2}
+  - {fileID: 11400000, guid: 3a20b8e9cab98ed4b9ebecbd695411cf, type: 2}
+  - {fileID: 11400000, guid: 651860c70a89fa7499edabcf11c546a6, type: 2}
   buildingPlace: {fileID: 0}
-  isRuined: 0
-  spawnedBuildingConstruction: {fileID: 0}
-  interiorIndex: 0
-  storageComponent: {fileID: 0}
-  productionComponent: {fileID: 0}
-  leftConnectedBuilding: {fileID: 0}
-  rightConnectedBuilding: {fileID: 0}
-  aboveConnectedBuilding: {fileID: 0}
-  belowConnectedBuilding: {fileID: 0}
+--- !u!114 &8746668864095107714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6862616296361636375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-1657011361127916883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6862616296361636375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9490cdbf4ab773d40821031b260bb65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8132388254202584564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6862616296361636375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSelected: 0
 --- !u!114 &4050970085591835011
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,9 +4,8 @@ using UnityEngine;
 [AddComponentMenu("Buildings/ElevatorBuilding")]
 public class ElevatorBuilding : RoomBuilding
 {
-    private bool hasElevatorPlatform = false;
-    public ElevatorPlatformConstruction spawnedElevatorPlatform = null;
-    public int elevatorGroupId = 0;
+    public ElevatorPlatformConstruction spawnedElevatorPlatform { get; private set; } = null;
+    public int elevatorGroupId { get; private set; } = 0;
 
     public List<Entity> elevatorWaitingPassengers { get; private set; } = new List<Entity>();
     public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();
@@ -59,7 +58,7 @@ public class ElevatorBuilding : RoomBuilding
             {
                 if (spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex())
                 {
-                    if (spawnedElevatorPlatform.isMoving || spawnedElevatorPlatform.elevatorRidingPassengers.Count == buildingLevelsData[levelComponent.levelIndex].maxResidentsCount)
+                    if (spawnedElevatorPlatform.isMoving || spawnedElevatorPlatform.elevatorRidingPassengers.Count == buildingLevelsData[levelComponent.LevelIndex].maxResidentsCount)
                     {
                         entity.StartElevatorWaiting();
                     }
@@ -123,7 +122,7 @@ public class ElevatorBuilding : RoomBuilding
 
     public bool IsPossibleToEnter()
     {
-        return !spawnedElevatorPlatform.isMoving && spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex() && spawnedElevatorPlatform.elevatorRidingPassengers.Count < buildingLevelsData[levelComponent.levelIndex].maxResidentsCount;
+        return !spawnedElevatorPlatform.isMoving && spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex() && spawnedElevatorPlatform.elevatorRidingPassengers.Count < buildingLevelsData[levelComponent.LevelIndex].maxResidentsCount;
     }
 
     public Vector3 GetPlatformRidingPosition()

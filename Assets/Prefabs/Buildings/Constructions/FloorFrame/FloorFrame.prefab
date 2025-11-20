@@ -49,6 +49,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1700118617512782249}
   - component: {fileID: 2892744138841790576}
+  - component: {fileID: 9152003786113258777}
   - component: {fileID: 8351084233807398188}
   m_Layer: 0
   m_Name: FloorFrame
@@ -87,12 +88,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6165b2d0b718b064d888d656eb7ec4a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cityManager: {fileID: 0}
   buildingData: {fileID: 11400000, guid: 7bdb47221b509ae4a8d761f7d061fd69, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 900d1236c8a702a49b3effad3a42c5f0, type: 2}
-  spawnedBuildingConstruction: {fileID: 0}
-  isRuined: 0
+  buildingPlace: {fileID: 0}
   roomBuildingPlaces:
   - {fileID: 5288579476968730045}
   - {fileID: 6586099082316172391}
@@ -104,6 +103,18 @@ MonoBehaviour:
   - {fileID: 4224940035859385010}
   hallBuildingPlace: {fileID: 5430133069112132628}
   floorBuildingPlace: {fileID: 1587205194201955145}
+--- !u!114 &9152003786113258777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4467962403722579608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9490cdbf4ab773d40821031b260bb65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8351084233807398188
 MonoBehaviour:
   m_ObjectHideFlags: 0

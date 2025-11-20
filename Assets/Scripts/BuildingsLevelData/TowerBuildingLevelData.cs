@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TowerBuildingLevelData", menuName = "Constructions Level Data/TowerBuildingLevelData")]
+[CreateAssetMenu(fileName = "TowerBuildingLevelData", menuName = "Constructions Level Data/Tower Building Level Data")]
 public class TowerBuildingLevelData : ConstructionLevelData
 {
 

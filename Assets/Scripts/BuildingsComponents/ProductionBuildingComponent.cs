@@ -29,7 +29,7 @@ public class ProductionBuildingComponent : BuildingComponent
     {
         base.Build(newLevel);
 
-        levelData = levelsData[ownedBuilding.levelComponent.levelIndex] as ProductionBuildingLevelData;
+        levelData = levelsData[ownedBuilding.levelComponent.LevelIndex] as ProductionBuildingLevelData;
         producedItem = new ItemInstance(CurrentProducedResource.producedResource.ItemData);
     }
 
@@ -46,8 +46,8 @@ public class ProductionBuildingComponent : BuildingComponent
         {
             if (!ownedBuilding.constructionComponent.isUnderConstruction)
             {
-                ConstructionLevelData buildingLevelData = ownedBuilding.ConstructionLevelsData[ownedBuilding.levelComponent.levelIndex];
-                ProductionBuildingLevelData productionBuildingLevelData = levelsData[ownedBuilding.levelComponent.levelIndex] as ProductionBuildingLevelData;
+                ConstructionLevelData buildingLevelData = ownedBuilding.ConstructionLevelsData[ownedBuilding.levelComponent.LevelIndex];
+                ProductionBuildingLevelData productionBuildingLevelData = levelsData[ownedBuilding.levelComponent.LevelIndex] as ProductionBuildingLevelData;
 
                 int currentPeopleCount = ownedBuilding.currentWorkers.Count;
 

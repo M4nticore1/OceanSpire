@@ -206,7 +206,8 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed += OnSecondTouchStarted;
         secondTouchPressAction.canceled += OnSecondTouchEnded;
 
-        ConstructionComponent.onAnyConstructionStartConstructing += StopPlacingBuilding;
+        BuildingWidget.OnBuildStartPlacing += OnBuildingStartPlacing;
+        UIManager.OnBuildStopPlacing += StopPlacingBuilding;
     }
 
     private void OnDisable()
@@ -219,7 +220,8 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed -= OnSecondTouchStarted;
         secondTouchPressAction.canceled -= OnSecondTouchEnded;
 
-        ConstructionComponent.onAnyConstructionStartConstructing -= StopPlacingBuilding;
+        BuildingWidget.OnBuildStartPlacing -= OnBuildingStartPlacing;
+        UIManager.OnBuildStopPlacing -= StopPlacingBuilding;
     }
 
     private void SetInputSystem()
@@ -266,7 +268,6 @@ public class PlayerController : MonoBehaviour
             moveStateIndex = (int)(shiftedAlpha / moveStateValue);
 
             int positionHalfLenght = cameraMovingDistance / 2;
-            Debug.Log(positionHalfLenght);
 
             float position = shiftedAlpha % moveStateValue * CityManager.roomsCountPerFloor * cameraMovingDistance - positionHalfLenght;
             float cameraSensitivityMultiplier = moveStateIndex % 2 == 0 ? 0.5f : 1f;
@@ -527,21 +528,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void StartPlacingBuilding(ConstructionComponent newConstructionToPlace)
+    private void OnBuildingStartPlacing(Building building)
     {
-        Building building = newConstructionToPlace.GetComponent<Building>();
+        //Building building = newConstructionToPlace.GetComponent<Building>();
 
-        if (isBuildingToPlaceSelected)
-        {
-            StopPlacingBuilding(buildingToPlace.constructionComponent);
-        }
+        //if (isBuildingToPlaceSelected)
+        //{
+        //    StopPlacingBuilding(buildingToPlace.constructionComponent);
+        //}
 
-        isBuildingToPlaceSelected = true;
-        buildingToPlace = building;
+        //isBuildingToPlaceSelected = true;
+        //buildingToPlace = building;
 
-        cityManager.ShowBuildingPlacesByType(building);
-        uiManager.CloseBuildingManagementMenu();
-        uiManager.OnBuildingPlacingStarted();
+        //cityManager.ShowBuildingPlacesByType(building);
+        //uiManager.CloseBuildingManagementMenu();
+        //uiManager.OnBuildingPlacingStarted();
     }
 
     private void PlaceBuilding(BuildingPlace buildingPlace)
@@ -549,18 +550,14 @@ public class PlayerController : MonoBehaviour
         cityManager.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
     }
 
-    public void StopPlacingBuilding(ConstructionComponent construction)
+    public void StopPlacingBuilding()
     {
-        if (buildingToPlace && construction)
+        if (buildingToPlace)
         {
-            cityManager.HideBuildingPlacesByType(buildingToPlace.BuildingData.BuildingType);
+            //cityManager.HideBuildingPlacesByType(buildingToPlace.BuildingData.BuildingType);
 
             isBuildingToPlaceSelected = false;
             buildingToPlace = null;
-
-            uiManager.OnBuildingPlacingStopped();
-
-            SaveData();
         }
     }
 

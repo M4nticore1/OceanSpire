@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.AI.Navigation;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 enum Direction
 {
@@ -69,6 +70,9 @@ public class CityManager : MonoBehaviour
 
     private void OnEnable()
     {
+        BuildingWidget.OnBuildStartPlacing += OnBuildingStartPlacing;
+        UIManager.OnBuildStopPlacing += HideAllBuildigPlaces;
+
         ConstructionComponent.onAnyConstructionStartConstructing += OnBuildingStartConstructing;
         ConstructionComponent.onAnyConstructionFinishConstructing += OnBuildingFinishConstructing;
 
@@ -109,7 +113,7 @@ public class CityManager : MonoBehaviour
             {
                 if (i < builtFloors.Count)
                 {
-                    builtFloors[i].constructionComponent.Place(i - 1 >= 0 ? builtFloors[i - 1].floorBuildingPlace : null, 0, false, -1);
+                    builtFloors[i].InitializeBuilding(i - 1 >= 0 ? builtFloors[i - 1].floorBuildingPlace : null, 0, false, -1);
                 }
                 else
                 {
@@ -512,9 +516,14 @@ public class CityManager : MonoBehaviour
         }
     }
 
+    private void OnBuildingStartPlacing(Building building)
+    {
+        ShowBuildingPlacesByType(building);
+    }
+
     private void OnBuildingStartConstructing(ConstructionComponent building)
     {
-        int levelIndex = building.levelComponent.levelIndex;
+        int levelIndex = building.levelComponent.LevelIndex;
         //if (building.buildingData.instantConstruction)
             //SpendItems(building.buildingLevelsData[levelIndex].resourcesToBuild);
 
@@ -528,20 +537,16 @@ public class CityManager : MonoBehaviour
 
     private void OnBuildingFinishConstructing(ConstructionComponent construction)
     {
-        int levelIndex = construction.levelComponent.levelIndex;
-
         Building building = construction.GetComponent<Building>();
         if (building)
         {
             FloorBuilding floorBuilding = building as FloorBuilding;
+            ElevatorBuilding elevatorBuilding = building as ElevatorBuilding;
             if (floorBuilding)
             {
                 InitializeFloor(floorBuilding);
             }
-
-            ElevatorBuilding elevatorBuilding = building as ElevatorBuilding;
-
-            if (elevatorBuilding)
+            else if (elevatorBuilding)
             {
                 if (elevatorGroups.Count > elevatorBuilding.elevatorGroupId)
                 {
@@ -557,14 +562,18 @@ public class CityManager : MonoBehaviour
 
             if (building.storageComponent)
             {
-                if (building.levelComponent.levelIndex > 1)
+                int level = building.levelComponent.LevelIndex;
+                if (level > 1)
                 {
-                    StorageBuildingLevelData previousLevelData = building.storageComponent.levelsData[building.levelComponent.levelIndex - 1] as StorageBuildingLevelData;
+                    StorageBuildingLevelData previousLevelData = building.storageComponent.levelsData[level - 1] as StorageBuildingLevelData;
                     SubtractStorageCapacity(previousLevelData, false);
                 }
 
-                StorageBuildingLevelData currentLevelData = building.storageComponent.levelData;
-                AddStorageCapacity(currentLevelData, false);
+                StorageBuildingLevelData currentLevelData = building.storageComponent.levelsData[level] as StorageBuildingLevelData;
+                if (currentLevelData)
+                    AddStorageCapacity(currentLevelData, false);
+                else
+                    Debug.LogError(building.BuildingData.BuildingName + $" has no StorageBuildingLevelData by level index {level}");
             }
 
             HideAllBuildigPlaces();
@@ -573,7 +582,7 @@ public class CityManager : MonoBehaviour
 
     public void TryToUpgradeBuilding(Building building)
     {
-        int nextLevelIndex = building.levelComponent.levelIndex + (building.constructionComponent.isRuined ? 0 : 1);
+        int nextLevelIndex = building.levelComponent.LevelIndex + (building.constructionComponent.isRuined ? 0 : 1);
 
         if (building.ConstructionLevelsData.Count() > nextLevelIndex)
         {
@@ -581,7 +590,7 @@ public class CityManager : MonoBehaviour
 
             int index = 0;
             int amount = 0;
-            List<ItemInstance> resourcesToUpgrade = building.constructionComponent.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
+            List<ItemInstance> resourcesToUpgrade = building.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
 
             for (int i = 0; i < resourcesToUpgrade.Count; i++)
             {
@@ -604,7 +613,7 @@ public class CityManager : MonoBehaviour
                     SpendItem(resourcesToUpgrade[i].ItemData.ItemId, amount);
                 }
 
-                building.constructionComponent.StartBuilding(nextLevelIndex);
+                building.constructionComponent.StartConstructing();
             }
         }
     }
@@ -617,7 +626,7 @@ public class CityManager : MonoBehaviour
     private void OnConstructionDemolished(ConstructionComponent construction)
     {
         // Return the part of resources
-        List<ItemInstance> resourceToBuilds = construction.ConstructionLevelsData[construction.levelComponent.levelIndex].ResourcesToBuild;
+        List<ItemInstance> resourceToBuilds = construction.constructionLevelsData[construction.levelComponent.LevelIndex].ResourcesToBuild;
         for (int i = 0; i < resourceToBuilds.Count; i++)
         {
             int id = resourceToBuilds[i].ItemData.ItemId;

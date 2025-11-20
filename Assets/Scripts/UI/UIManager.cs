@@ -144,6 +144,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private UIColor lightBlueColor;
     [SerializeField] private UIColor darkBlueColor;
 
+    public static event Action OnBuildStopPlacing;
+
     private void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
@@ -160,12 +162,16 @@ public class UIManager : MonoBehaviour
     {
         //Building.OnBuildingFinishConstructing += OnBuildingUpgraded;
         cityManager.OnResidentAdded += AddResidentWidget;
+
+        BuildingWidget.OnBuildStartPlacing += OnBuildingStartPlacing;
     }
 
     private void OnDisable()
     {
         //Building.OnBuildingFinishConstructing -= OnBuildingUpgraded;
         cityManager.OnResidentAdded -= AddResidentWidget;
+
+        BuildingWidget.OnBuildStartPlacing -= OnBuildingStartPlacing;
     }
 
     private void Update()
@@ -478,7 +484,7 @@ public class UIManager : MonoBehaviour
         buildingInformationMenu.SetActive(true);
 
         buildingInformationMenuNameText.SetText(building.BuildingData.BuildingName);
-        buildingInformationMenuLevelNumberText.SetText("Level " + (building.levelComponent.levelIndex + 1).ToString());
+        buildingInformationMenuLevelNumberText.SetText("Level " + (building.levelComponent.LevelIndex + 1).ToString());
         //buildingInformationMenuDescriptionText.SetText(building.BuildingData.description);
 
         ProductionBuildingComponent productionBuilding = building.GetComponent<ProductionBuildingComponent>();
@@ -545,7 +551,7 @@ public class UIManager : MonoBehaviour
         selectedBuilding = building;
 
         buildingManagementMenuNameText.SetText(building.BuildingData.BuildingName);
-        buildingManagementMenuLevelText.SetText("Level " + (building.levelComponent.levelIndex + 1).ToString());
+        buildingManagementMenuLevelText.SetText("Level " + (building.levelComponent.LevelIndex + 1).ToString());
 
         if (spawnedBuildingManagementMenu)
             Destroy(spawnedBuildingManagementMenu);
@@ -595,7 +601,7 @@ public class UIManager : MonoBehaviour
     {
         isBuildingStatsPanelOpened = true;
         buildingStatsPanelNameText.SetText(building.BuildingData.BuildingName);
-        buildingStatsPanelWorkersCountText.SetText(building.workers.Count + "/" + building.ConstructionLevelsData[building.levelComponent.levelIndex].maxResidentsCount);
+        buildingStatsPanelWorkersCountText.SetText(building.workers.Count + "/" + building.ConstructionLevelsData[building.levelComponent.LevelIndex].maxResidentsCount);
     }
 
     public void CloseBuildingStatsPanel()
@@ -633,7 +639,7 @@ public class UIManager : MonoBehaviour
         OpenBuildingActionMenu();
         CleanResourceToUpgradeWidgets();
 
-        int nextLevelIndex = selectedBuilding.levelComponent.levelIndex + 1;
+        int nextLevelIndex = selectedBuilding.levelComponent.LevelIndex + 1;
         List<ItemInstance> resourcesToUpgrade = selectedBuilding.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
@@ -655,7 +661,7 @@ public class UIManager : MonoBehaviour
         OpenBuildingActionMenu();
         CleanResourceToUpgradeWidgets();
 
-        int levelIndex = selectedBuilding.levelComponent.levelIndex;
+        int levelIndex = selectedBuilding.levelComponent.LevelIndex;
         List<ItemInstance> resourcesToUpgrade = selectedBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
@@ -675,7 +681,7 @@ public class UIManager : MonoBehaviour
     // Building Workers Menu
     private void OpenBuildingWorkersMenu()
     {
-        maxBuildingWorkersCount = selectedBuilding.ConstructionLevelsData[selectedBuilding.levelComponent.levelIndex].maxResidentsCount;
+        maxBuildingWorkersCount = selectedBuilding.ConstructionLevelsData[selectedBuilding.levelComponent.LevelIndex].maxResidentsCount;
 
         residentWidgetsColumnCount = (int)(buildingWorkersList.GetComponent<RectTransform>().rect.width / buildingWorkersList.cellSize.x);
 
@@ -890,24 +896,23 @@ public class UIManager : MonoBehaviour
     }
 
     // Placing Building
-    public void OnBuildingPlacingStarted()
+    private void OnBuildingStartPlacing(Building building)
     {
         if (stopPlacingBuildingButton)
             stopPlacingBuildingButton.gameObject.SetActive(true);
         else
             Debug.Log("stopPlacingBuildingButton is NULL");
+
+        CloseManagementMenu();
     }
 
-    public void OnBuildingPlacingStopped()
+    private void StopPlacingBuilding()
     {
         if (stopPlacingBuildingButton)
             stopPlacingBuildingButton.gameObject.SetActive(false);
         else
             Debug.Log("stopPlacingBuildingButton is NULL");
-    }
 
-    private void StopPlacingBuilding()
-    {
-        playerController.StopPlacingBuilding(playerController.buildingToPlace.constructionComponent);
+        OnBuildStopPlacing?.Invoke();
     }
 }

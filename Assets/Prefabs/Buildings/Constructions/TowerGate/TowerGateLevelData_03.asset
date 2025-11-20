@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 409c1a8b9901cbd48abf84871a2b062e, type: 3}
-  m_Name: TowerGate_LevelData_01
+  m_Script: {fileID: 11500000, guid: 8cef58eb745cafd4da808cf73cb2f46c, type: 3}
+  m_Name: TowerGateLevelData_03
   m_EditorClassIdentifier: 
-  ResourcesToBuild: []
+  resourcesToBuild: []
   maxResidentsCount: 4
-  buildingConstruction: {fileID: 8449339325450574553, guid: aeda8b6737958b446b688db508113d9d, type: 3}
+  constructionStraight: {fileID: 8449339325450574553, guid: aeda8b6737958b446b688db508113d9d, type: 3}

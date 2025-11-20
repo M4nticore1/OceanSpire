@@ -8,7 +8,7 @@ public struct ResourceToBuild
     public int amount;
 }
 
-[CreateAssetMenu(fileName = "ConstructionLevelData", menuName = "Constructions Level Data/ConstructionLevelData")]
+[CreateAssetMenu(fileName = "ConstructionLevelData", menuName = "Constructions Level Data/Construction Level Data")]
 public class ConstructionLevelData : ScriptableObject
 {
     [Header("Main")]

@@ -9,29 +9,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c8ae1ed452b6e748a22ece1468822aa, type: 3}
+  m_Script: {fileID: 11500000, guid: db4484ef3731afa4da1a2eba5bcc6b2b, type: 3}
   m_Name: ElevatorLevelData
   m_EditorClassIdentifier: 
-  resourcesToBuild:
-  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 400
-  maxResidentsCount: 4
-  constructionStraight: {fileID: 0}
-  constructionCorner: {fileID: 0}
-  buildingStraight: {fileID: 3845205293008637488, guid: 961c060a5cf64374492b029dd70644e6, type: 3}
-  buildingCorner: {fileID: 7008323806768352302, guid: dd21a2352ae8be74c81e203c1fc9bc45, type: 3}
-  buildingStraightLeft: {fileID: 0}
-  buildingStraightRight: {fileID: 0}
-  buildingStraightLeftRight: {fileID: 0}
-  buildingCornerLeft: {fileID: 0}
-  buildingCornerRight: {fileID: 0}
-  buildingCornerLeftRight: {fileID: 0}
-  buildingStraightAbove: {fileID: -219413339955794822, guid: f950051abaa026b4d88b41c97f107505, type: 3}
-  buildingStraightBelow: {fileID: 4935271926945872900, guid: f0cbe529b1e58c148965799803bcdf3e, type: 3}
-  buildingStraightAboveBelow: {fileID: -6582305650955945222, guid: fff39333bd5fe8941b6968a3cc562d82, type: 3}
-  buildingCornerAbove: {fileID: 1298800797060686452, guid: 6eec26090c7a4754ba476341bc3e38a3, type: 3}
-  buildingCornerBelow: {fileID: -8607344046475679114, guid: e159d7fa97e5be843a792f2fe1ecc6e5, type: 3}
-  buildingCornerAboveBelow: {fileID: 5195973711087995694, guid: c8926d1c98ac9ea4d82cf63a9302bbe4, type: 3}
+  resourcesToBuild: []
+  maxResidentsCount: 0
+  constructionStraight: {fileID: 3845205293008637488, guid: 961c060a5cf64374492b029dd70644e6, type: 3}
+  constructionCorner: {fileID: 7008323806768352302, guid: dd21a2352ae8be74c81e203c1fc9bc45, type: 3}
+  constructionStraightLeft: {fileID: 0}
+  constructionStraightRight: {fileID: 0}
+  constructionStraightLeftRight: {fileID: 0}
+  constructionCornerLeft: {fileID: 0}
+  constructionCornerRight: {fileID: 0}
+  constructionCornerLeftRight: {fileID: 0}
+  constructionStraightAbove: {fileID: -219413339955794822, guid: f950051abaa026b4d88b41c97f107505, type: 3}
+  constructionStraightBelow: {fileID: 4935271926945872900, guid: f0cbe529b1e58c148965799803bcdf3e, type: 3}
+  constructionStraightAboveBelow: {fileID: -6582305650955945222, guid: fff39333bd5fe8941b6968a3cc562d82, type: 3}
+  constructionCornerAbove: {fileID: 1298800797060686452, guid: 6eec26090c7a4754ba476341bc3e38a3, type: 3}
+  constructionCornerBelow: {fileID: -8607344046475679114, guid: e159d7fa97e5be843a792f2fe1ecc6e5, type: 3}
+  constructionCornerAboveBelow: {fileID: 5195973711087995694, guid: c8926d1c98ac9ea4d82cf63a9302bbe4, type: 3}
   elevatorPlatformStraight: {fileID: 9121983844208753504, guid: e10d6143f9cb8ff4e88a82028c416afb, type: 3}
   elevatorPlatformCorner: {fileID: 6317132314724744191, guid: 7d90808e21dfe624d82b51156fd5f94e, type: 3}
-  elevatorMoveSpeed: 1.25
+  elevatorMoveSpeed: 0

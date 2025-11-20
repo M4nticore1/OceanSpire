@@ -117,8 +117,8 @@ public class Entity : MonoBehaviour
         }
         else if (currentWork == ResidentWork.ConstructingBuilding)
         {
-            int levelIndex = workBuilding.levelComponent.levelIndex;
-            List<ItemInstance> resourcesToBuild = workBuilding.constructionComponent.ConstructionLevelsData[levelIndex].ResourcesToBuild;
+            int levelIndex = workBuilding.levelComponent.LevelIndex;
+            List<ItemInstance> resourcesToBuild = workBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
             List<ItemInstance> deliveredResources = workBuilding.constructionComponent.deliveredConstructionResources;
             List<ItemInstance> incomingResources = workBuilding.constructionComponent.incomingConstructionResources;
             bool isNeededToWork = false;
@@ -147,7 +147,7 @@ public class Entity : MonoBehaviour
                             {
                                 if (!b.storageComponent || (b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex())) return false;
 
-                                int itemIndex = workBuilding.ConstructionLevelsData[workBuilding.levelComponent.levelIndex].ResourcesToBuild[0].ItemData.ItemId;
+                                int itemIndex = workBuilding.ConstructionLevelsData[workBuilding.levelComponent.LevelIndex].ResourcesToBuild[0].ItemData.ItemId;
 
                                 return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
                             });
@@ -232,8 +232,8 @@ public class Entity : MonoBehaviour
             }
             else if (newWork == ResidentWork.ConstructingBuilding)
             {
-                int levelIndex = newWorkBuilding.levelComponent.levelIndex;
-                List<ItemInstance> resourcesToBuild = newWorkBuilding.constructionComponent.ConstructionLevelsData[levelIndex].ResourcesToBuild;
+                int levelIndex = newWorkBuilding.levelComponent.LevelIndex;
+                List<ItemInstance> resourcesToBuild = newWorkBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
                 for (int i = 0; i < resourcesToBuild.Count; i++)
                 {
                     if (newWorkBuilding.constructionComponent.incomingConstructionResources.Count <= i || newWorkBuilding.constructionComponent.incomingConstructionResources[i].Amount < resourcesToBuild[i].Amount)
@@ -242,7 +242,7 @@ public class Entity : MonoBehaviour
                         {
                             if (!b.storageComponent || (b.GetFloorIndex() == newWorkBuilding.GetFloorIndex() && b.GetPlaceIndex() == newWorkBuilding.GetPlaceIndex())) return false;
 
-                            int itemIndex = newWorkBuilding.constructionComponent.ConstructionLevelsData[newWorkBuilding.levelComponent.levelIndex].ResourcesToBuild[0].ItemData.ItemId;
+                            int itemIndex = newWorkBuilding.ConstructionLevelsData[newWorkBuilding.levelComponent.LevelIndex].ResourcesToBuild[0].ItemData.ItemId;
 
                             return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
                         }))
@@ -601,11 +601,11 @@ public class Entity : MonoBehaviour
     {
         if (building.constructionComponent.isUnderConstruction)
         {
-            int levelIndex = building.levelComponent.levelIndex;
-            List<ItemInstance> constructionResources = building.constructionComponent.ConstructionLevelsData[levelIndex].ResourcesToBuild;
-            for (int j = 0; j < building.constructionComponent.ConstructionLevelsData[levelIndex].ResourcesToBuild.Count; j++)
+            int levelIndex = building.levelComponent.LevelIndex;
+            List<ItemInstance> constructionResources = building.ConstructionLevelsData[levelIndex].ResourcesToBuild;
+            for (int j = 0; j < building.ConstructionLevelsData[levelIndex].ResourcesToBuild.Count; j++)
             {
-                if (item.ItemData.ItemId == building.constructionComponent.ConstructionLevelsData [levelIndex].ResourcesToBuild[j].ItemData.ItemId)
+                if (item.ItemData.ItemId == building.ConstructionLevelsData [levelIndex].ResourcesToBuild[j].ItemData.ItemId)
                 {
                     int id = item.ItemData.ItemId;
                     int amountToSpend = building.constructionComponent.AddConstructionResources(item);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -24,6 +25,8 @@ public class BuildingWidget : MonoBehaviour
     [SerializeField] private TextMeshProUGUI buildingNameText = null;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup = null;
     //[SerializeField] private HorizontalLayoutGroup resourcesToBuildHorizontalLayoutGroupWidget = null;
+
+    public static event Action<Building> OnBuildStartPlacing;
 
     int resourcesToBuildNumber = 0;
 
@@ -55,7 +58,10 @@ public class BuildingWidget : MonoBehaviour
 
         buildingNameText.SetText(building.BuildingData.BuildingName);
 
-        resourcesToBuildNumber = building.ConstructionLevelsData[0].ResourcesToBuild.Count();
+        if (building.ConstructionLevelsData.Count >= 1 && building.ConstructionLevelsData[0])
+            resourcesToBuildNumber = building.ConstructionLevelsData[0].ResourcesToBuild.Count();
+        else
+            Debug.LogWarning(building.BuildingData.BuildingName + " has no ConstructionLevelsData by index 0 or has not instance");
 
         if (newBuilding.BuildingData.ThumbImage)
             buildingImage.sprite = newBuilding.BuildingData.ThumbImage;
@@ -84,24 +90,26 @@ public class BuildingWidget : MonoBehaviour
 
     private void StartPlacingBuilding()
     {
-        List<bool> haveResourcesToBuild = new List<bool>();
+        //List<bool> haveResourcesToBuild = new List<bool>();
 
-        for (int i = 0; i < resourcesToBuildNumber; i++)
-        {
-            int id = building.ConstructionLevelsData[0].ResourcesToBuild[i].ItemData.ItemId;
+        //for (int i = 0; i < resourcesToBuildNumber; i++)
+        //{
+        //    int id = building.ConstructionLevelsData[0].ResourcesToBuild[i].ItemData.ItemId;
 
-            if (cityManager.items[id].Amount >= building.ConstructionLevelsData[0].ResourcesToBuild[i].Amount)
-                haveResourcesToBuild.Add(true);
-            else
-                haveResourcesToBuild.Add(false);
-        }
+        //    if (cityManager.items[id].Amount >= building.ConstructionLevelsData[0].ResourcesToBuild[i].Amount)
+        //        haveResourcesToBuild.Add(true);
+        //    else
+        //        haveResourcesToBuild.Add(false);
+        //}
 
-        if (!haveResourcesToBuild.Contains(false) || resourcesToBuildNumber == 0)
-        {
-            playerController.StartPlacingBuilding(building.constructionComponent);
+        //if (!haveResourcesToBuild.Contains(false) || resourcesToBuildNumber == 0)
+        //{
+        //    playerController.StartPlacingBuilding(building.constructionComponent);
 
-            UIManager.CloseManagementMenu();
-        }
+        //    UIManager.CloseManagementMenu();
+        //}
+
+        OnBuildStartPlacing?.Invoke(building);
     }
 
     private void OpenBuildingInformationMenu()

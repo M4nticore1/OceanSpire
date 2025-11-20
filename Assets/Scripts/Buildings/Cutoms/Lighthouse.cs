@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Lighthouse : HallBuilding
+public class Lighthouse : TowerBuilding
 {
 
 }

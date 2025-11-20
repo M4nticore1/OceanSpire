@@ -104,7 +104,7 @@ public class ResidentWidget : MonoBehaviour
             }
             else
             {
-                if (selectedBuilding.workers.Count < selectedBuilding.buildingLevelsData[selectedBuilding.levelIndex].maxResidentsCount)
+                if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelComponent.LevelIndex].maxResidentsCount)
                 {
                     resident.RemoveWorkBuilding();
                     resident.SetWork(ResidentWork.BuildingWork, selectedBuilding);
@@ -113,7 +113,7 @@ public class ResidentWidget : MonoBehaviour
         }
         else
         {
-            if (selectedBuilding.workers.Count < selectedBuilding.buildingLevelsData[selectedBuilding.levelIndex].maxResidentsCount)
+            if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelComponent.LevelIndex].maxResidentsCount)
             {
                 resident.SetWork(ResidentWork.BuildingWork, selectedBuilding);
             }

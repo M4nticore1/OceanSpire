@@ -14,8 +14,8 @@ public class BuildingPlace : MonoBehaviour
 
     public BuildingType buildingType = BuildingType.Room;
 
-    public int floorIndex = 0;
-    public int buildingPlaceIndex = 0;
+    public int floorIndex { get; private set; } = 0;
+    public int buildingPlaceIndex { get; private set; } = 0;
     public int emptyBuildingPlacesAbove = 0;
     public int emptyBuildingPlacesBelow = 0;
 
@@ -38,43 +38,51 @@ public class BuildingPlace : MonoBehaviour
     private Color buildingPlaceWarningOutlineColor = new Color(1, 1, 0, 1);
     private Color buildingPlaceInvalidOutlineColor = new Color(1, 0, 0, 1);
 
-    public void InitializeBuildingPlace(int newFloorindex)
+    private void Awake()
     {
         cityManager = FindAnyObjectByType<CityManager>();
         buildingZoneMeshRenderer = buildingZone.GetComponent<MeshRenderer>();
-
-        floorIndex = newFloorindex;
 
         materialPropertyBlock = new MaterialPropertyBlock();
         outlineMaterialPropertyBlock = new MaterialPropertyBlock();
     }
 
+    public void InitializeBuildingPlace(int newFloorindex)
+    {
+        floorIndex = newFloorindex;
+    }
+
     public void LoadPlacedBuilding()
     {
-        if (placedBuilding.isInitialized) return;
-
-        if (placedBuilding)
-            PlaceBuilding(placedBuilding, placedBuilding.levelComponent.levelIndex, placedBuilding.constructionComponent.isUnderConstruction, -1);
+        if (placedBuilding && !placedBuilding.isInitialized)
+            PlaceBuilding(placedBuilding, placedBuilding.levelComponent.LevelIndex, placedBuilding.constructionComponent.isUnderConstruction, -1);
     }
 
     public void PlaceBuilding(Building buildingToPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
     {
-        if (emptyBuildingPlacesAbove >= buildingToPlace.BuildingData.BuildingFloors - 1)
+        if (!buildingToPlace.isInitialized)
         {
-            if (!placedBuilding)
+            if (emptyBuildingPlacesAbove >= buildingToPlace.BuildingData.BuildingFloors - 1)
             {
-                placedBuilding = Instantiate(buildingToPlace, transform.position, transform.rotation);
+                if (placedBuilding.BuildingData.BuildingIdName == "tower_gate")
+                    Debug.Log("PlaceBuilding");
+
+                //if (placedBuilding)
+                    //placedBuilding.constructionComponent.Demolish();
+
+                //placedBuilding = Instantiate(buildingToPlace, transform.position, transform.rotation);
 
                 if (placedBuilding.BuildingData.BuildingType == BuildingType.FloorFrame)
                     placedBuilding.transform.SetParent(cityManager.towerRoot);
                 else
                     placedBuilding.transform.SetParent(transform);
+
+                placedBuilding.InitializeBuilding(this, levelIndex, isUnderConstruction, interiorIndex);
+                //placedBuilding.constructionComponent.Place(this, levelIndex, isUnderConstruction, interiorIndex);
+
+                if (buildingFrame)
+                    buildingFrame.SetActive(false);
             }
-
-            placedBuilding.constructionComponent.Place(this, levelIndex, isUnderConstruction, interiorIndex);
-
-            if (buildingFrame)
-                buildingFrame.SetActive(false);
         }
     }
 
@@ -134,11 +142,15 @@ public class BuildingPlace : MonoBehaviour
             outlineColor = buildingPlaceInvalidOutlineColor;
         }
 
-        materialPropertyBlock.SetColor("_BaseColor", mainColor);
+        if (materialPropertyBlock != null)
+            materialPropertyBlock.SetColor("_BaseColor", mainColor);
+        if (buildingZoneMeshRenderer)
         buildingZoneMeshRenderer.SetPropertyBlock(materialPropertyBlock, 0);
 
-        outlineMaterialPropertyBlock.SetColor("_OutlineColor", outlineColor);
-        buildingZoneMeshRenderer.SetPropertyBlock(outlineMaterialPropertyBlock, 1);
+        if (outlineMaterialPropertyBlock != null)
+            outlineMaterialPropertyBlock.SetColor("_OutlineColor", outlineColor);
+        if (buildingZoneMeshRenderer)
+            buildingZoneMeshRenderer.SetPropertyBlock(outlineMaterialPropertyBlock, 1);
     }
 
     public void HideBuildingPlace()

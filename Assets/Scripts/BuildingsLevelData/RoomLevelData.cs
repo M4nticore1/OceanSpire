@@ -3,7 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "RoomLevelData", menuName = "Constructions Level Data/RoomLevelData")]
 public class RoomLevelData : TowerBuildingLevelData
 {
-    [Header("Non Connected")]
     [SerializeField] private BuildingConstruction constructionCorner = null;
     public BuildingConstruction ConstructionCorner => constructionCorner;
 

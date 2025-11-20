@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2643200822590598374}
   - component: {fileID: 685680596195230801}
+  - component: {fileID: 6507768955256971624}
+  - component: {fileID: 625925633379528496}
+  - component: {fileID: 761287593078928609}
   m_Layer: 0
   m_Name: BasicElevator
   m_TagString: Untagged
@@ -46,21 +49,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f08c10878c07134abcad1e3dedc07f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cityManager: {fileID: 0}
-  isInitialized: 0
   buildingData: {fileID: 11400000, guid: 37514f549e594764a8ae2162a25ee80e, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 0c1371e5d17cbc04c8d54f3a8c4ad1e2, type: 2}
   buildingPlace: {fileID: 0}
-  spawnedBuildingConstruction: {fileID: 0}
-  isRuined: 0
-  interiorIndex: 0
-  leftConnectedBuilding: {fileID: 0}
-  rightConnectedBuilding: {fileID: 0}
-  aboveConnectedBuilding: {fileID: 0}
-  belowConnectedBuilding: {fileID: 0}
-  spawnedElevatorPlatform: {fileID: 0}
-  elevatorGroupId: 0
+--- !u!114 &6507768955256971624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048805386127403536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &625925633379528496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048805386127403536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9490cdbf4ab773d40821031b260bb65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &761287593078928609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048805386127403536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSelected: 0
 --- !u!1001 &1519071431873942614
 PrefabInstance:
   m_ObjectHideFlags: 0
