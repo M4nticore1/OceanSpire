@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Pier_LevelData_02
   m_EditorClassIdentifier: 
   resourcesToBuild: []
-  maxResidentsCount: 0
+  maxResidentsCount: 2
   constructionStraight: {fileID: 0}

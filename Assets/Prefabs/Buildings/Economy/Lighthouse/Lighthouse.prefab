@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4545521329317031714}
   - component: {fileID: 8489345420242549701}
+  - component: {fileID: -205652750299567560}
+  - component: {fileID: -5288382960514395403}
   m_Layer: 0
   m_Name: Lighthouse
   m_TagString: Untagged
@@ -44,9 +46,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c77a4c245409a42b389b9d5624787f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelIndex: 0
+  leftConnectedBuilding: {fileID: 0}
+  rightConnectedBuilding: {fileID: 0}
+  aboveConnectedBuilding: {fileID: 0}
+  belowConnectedBuilding: {fileID: 0}
   buildingData: {fileID: 11400000, guid: 256767049b3faa1468e6c74f041f88ff, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 8b8a9bd4fe925034996f86ca85af088d, type: 2}
-  spawnedBuildingConstruction: {fileID: 0}
-  isRuined: 0
+  buildingPlace: {fileID: 0}
+--- !u!114 &-205652750299567560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5829867001479362034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-5288382960514395403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5829867001479362034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9490cdbf4ab773d40821031b260bb65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

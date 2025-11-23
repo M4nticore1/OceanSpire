@@ -1,37 +1,48 @@
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
 public class SaveData
 {
     // Player
-    public float cameraYawRotation = 0;
-    public float cameraHeightPosition = 0;
+    public float cameraYawRotation { get; private set; } = 0;
+    public float cameraHeightPosition { get; private set; } = 0;
 
     // City
-    public int builtFloorsCount = 0;
-    public int[] placedBuildingIds = new int[0];
-    public int[] placedBuildingLevels = new int[0];
-    public bool[] placedBuildingsUnderConstruction = new bool[0];
-    public int[] placedBuildingInteriorIds = new int[0];
+    public int builtFloorsCount { get; private set; } = 0;
+    public int[] placedBuildingIds { get; private set; } = new int[0];
+    public int[] placedBuildingLevels { get; private set; } = new int[0];
+    public bool[] placedBuildingsUnderConstruction { get; private set; } = new bool[0];
+    public int[] placedBuildingInteriorIds { get; private set; } = new int[0];
 
-    public float[] elevatorPlatformHeights = new float[0];
+    public float[] elevatorPlatformHeights { get; private set; } = new float[0];
+
+    public int[] spawnedBoatIds { get; private set; } = new int[0];
+    public bool[] spawnedBoatsAreUnderConstruction { get; private set; } = new bool[0];
+    public bool[] spawnedBoatsAreMoving { get; private set; } = new bool[0];
+    public float[] spawnedBoatsHealth { get; private set; } = new float[0];
+    public float[] spawnedBoatPositionsX { get; private set; } = new float[0];
+    public float[] spawnedBoatPositionsZ { get; private set; } = new float[0];
+    public float[] spawnedBoatRotationsY { get; private set; } = new float[0];
 
     // Resources
-    public int[] resourcesAmount = new int[0];
+    public int[] resourcesAmount { get; private set; } = new int[0];
 
     // Residents
-    public int residentsCount = 0;
-    public float[] residentPositionsX = new float[0];
-    public float[] residentPositionsY = new float[0];
-    public float[] residentPositionsZ = new float[0];
-    public int[] residentFloorIndexes = new int[0];
+    public int residentsCount { get; private set; } = 0;
+    public float[] residentPositionsX { get; private set; } = new float[0];
+    public float[] residentPositionsY { get; private set; } = new float[0];
+    public float[] residentPositionsZ { get; private set; } = new float[0];
+    public int[] residentFloorIndexes { get; private set; } = new int[0];
 
-    public int[] residentCurrentBuildingIndexes = new int[0];
-    public int[] residentTargetBuildingIndexes = new int[0];
+    public int[] residentCurrentBuildingIndexes { get; private set; } = new int[0];
+    public int[] residentTargetBuildingIndexes { get; private set; } = new int[0];
 
-    public bool[] residentsRidingOnElevator = new bool[0];
-    public bool[] residentsWalkingToElevator = new bool[0];
-    public bool[] residentsWaitingForElevator = new bool[0];
+    public bool[] residentsRidingOnElevator { get; private set; } = new bool[0];
+    public bool[] residentsWalkingToElevator { get; private set; } = new bool[0];
+    public bool[] residentsWaitingForElevator { get; private set; } = new bool[0];
 
     public SaveData(PlayerController playerController, CityManager cityManager)
     {
@@ -56,7 +67,7 @@ public class SaveData
             for (int j = 0; j < CityManager.roomsCountPerFloor; j++)
             {
                 Building placedBuilding = cityManager.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
-                placedBuildingIds[placeIndex] = placedBuilding ? (int)placedBuilding.BuildingData.BuildingId : -1;
+                placedBuildingIds[placeIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingIdValue : -1;
                 placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.levelComponent.LevelIndex : 0;
                 placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.isUnderConstruction : false;
                 placedBuildingInteriorIds[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.interiorIndex : -1;
@@ -79,6 +90,29 @@ public class SaveData
         for (int i = 0; i < cityManager.items.Count; i++)
         {
             resourcesAmount[i] = cityManager.items[i].Amount;
+        }
+
+        // Boats
+        List<Boat> spawnedBoats = cityManager.PierBuilding.SpawnedBoats.ToList();
+        int boatsCount = spawnedBoats.Count;
+        spawnedBoatIds = new int[boatsCount];
+        spawnedBoatsAreUnderConstruction = new bool[boatsCount];
+        spawnedBoatsHealth = new float[boatsCount];
+        spawnedBoatsAreMoving = new bool[boatsCount];
+        spawnedBoatPositionsX = new float[boatsCount];
+        spawnedBoatPositionsZ = new float[boatsCount];
+        spawnedBoatRotationsY = new float[boatsCount];
+        for (int i = 0; i < boatsCount; i++)
+        {
+            Boat boat = spawnedBoats[i];
+            ConstructionComponent construction = boat.GetComponent<ConstructionComponent>();
+            spawnedBoatIds[i] = boat ? boat.BoatData.BoatId : -1;
+            spawnedBoatsAreUnderConstruction[i] = boat ? construction.isUnderConstruction : false;
+            spawnedBoatsAreMoving[i] = boat ? boat.isMoving : false;
+            spawnedBoatsHealth[i] = boat ? boat.currentHealth : 0;
+            spawnedBoatPositionsX[i] = boat ? boat.transform.position.x : 0;
+            spawnedBoatPositionsZ[i] = boat ? boat.transform.position.z : 0;
+            spawnedBoatRotationsY[i] = boat ? boat.transform.rotation.eulerAngles.y : 0;
         }
 
         // Residents

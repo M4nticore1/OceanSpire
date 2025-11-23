@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Buildings")]
     public List<Building> buildingPrefabs = new List<Building>();
+    public List<Boat> boatPrefabs = new List<Boat>();
     public const float demolitionResourceRefundRate = 0.2f;
 
     // Items
@@ -93,7 +94,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < buildingPrefabs.Count; i++)
         {
-            if ((int)buildingPrefabs[i].BuildingData.BuildingId == buildingId)
+            if ((int)buildingPrefabs[i].BuildingData.BuildingIdValue == buildingId)
             {
                 return buildingPrefabs[i];
             }

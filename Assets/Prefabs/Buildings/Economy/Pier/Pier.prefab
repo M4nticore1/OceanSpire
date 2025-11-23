@@ -48,11 +48,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c2e3585ca3f15148879e7d41a740cab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftConnectedBuilding: {fileID: 0}
+  rightConnectedBuilding: {fileID: 0}
+  aboveConnectedBuilding: {fileID: 0}
+  belowConnectedBuilding: {fileID: 0}
   buildingData: {fileID: 11400000, guid: ccb7e31f2afcb32489365485829535c1, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: d7f0a759f61058d4f903fc26dc960d36, type: 2}
   - {fileID: 11400000, guid: 245cd4840c9ee2445832a2d6ee727b8e, type: 2}
   buildingPlace: {fileID: 0}
+  spawnedBoats: []
 --- !u!114 &3221006765804929327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,7 +94,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSelected: 0
 --- !u!1001 &6939328380463155996
 PrefabInstance:
   m_ObjectHideFlags: 0

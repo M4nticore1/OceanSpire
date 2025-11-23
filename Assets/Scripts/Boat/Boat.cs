@@ -7,30 +7,35 @@ public class Boat : MonoBehaviour
     NavMeshAgent navAgent;
     ConstructionComponent constructionComponent;
 
+    [SerializeField] private BoatData boatData = null;
+    public BoatData BoatData => boatData;
+
+    public float currentHealth { get; private set; } = 0;
     public int dockIndex { get; private set; } = 0;
     public bool isMoving { get; private set; } = false;
-    [SerializeField] private int maxWeight = 0;
-    public int MaxWeight { get { return maxWeight; } }
 
     public static event System.Action<Boat> OnBoadDestroyed;
 
-    private void Initialize(int newBoatIndex)
+    public void Initialize(PierBuilding ownedPier, int dockIndex, bool isMoving = false, float? health = null, float? positionX = null, float? positionZ = null)
     {
+        Debug.Log("Initialize");
         navAgent = GetComponent<NavMeshAgent>();
         constructionComponent = GetComponent<ConstructionComponent>();
 
-        dockIndex = newBoatIndex;
+        this.ownedPier = ownedPier;
+        this.dockIndex = dockIndex;
+
+        constructionComponent.StartConstructing();
+    }
+
+    public void Demolish(bool isFXDemolish = true)
+    {
+        Destroy(gameObject);
     }
 
     private void SetTarget(Transform transform)
     {
         isMoving = true;
         navAgent.SetDestination(transform.position);
-    }
-
-    public void StartBuilding(PierBuilding ownedPier, int newBoatIndex)
-    {
-        this.ownedPier = ownedPier;
-        Initialize(newBoatIndex);
     }
 }

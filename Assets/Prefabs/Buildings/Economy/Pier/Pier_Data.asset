@@ -18,7 +18,9 @@ MonoBehaviour:
   buildingType: 4
   buildingCategory: 2
   connectionType: 0
+  instantConstruction: 0
+  thumbImage: {fileID: 0}
   buildingFloors: 1
   maxBuildingFloors: 1
   isDemolishable: 0
-  buildingManagementMenuWidget: {fileID: 0}
+  buildingManagementMenuWidget: {fileID: 91157242815144728, guid: 1288bf0508b5c844280dd15ecf64193b, type: 3}

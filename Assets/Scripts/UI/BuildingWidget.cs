@@ -14,7 +14,7 @@ public class BuildingWidget : MonoBehaviour
     private PlayerController playerController = null;
     private UIManager UIManager = null;
 
-    private Building building = null;
+    private ConstructionComponent constructionComponent = null;
     [SerializeField] private BuildingResourceWidget buildingResourceWidget = null;
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
 
@@ -26,7 +26,7 @@ public class BuildingWidget : MonoBehaviour
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup = null;
     //[SerializeField] private HorizontalLayoutGroup resourcesToBuildHorizontalLayoutGroupWidget = null;
 
-    public static event Action<Building> OnBuildStartPlacing;
+    public static event Action<ConstructionComponent> OnStartPlacingConstruction;
 
     int resourcesToBuildNumber = 0;
 
@@ -46,37 +46,47 @@ public class BuildingWidget : MonoBehaviour
         //openInformationButton.onRelease -= () => OnRelease?.Invoke();
     }
 
-    public void InitializeBuildingWidget(Building newBuilding)
+    public void InitializeBuildingWidget(ConstructionComponent construction)
     {
-        building = newBuilding;
+        if (construction)
+        {
+            constructionComponent = construction;
+            playerController = GetComponentInParent<PlayerController>();
+            UIManager = playerController.GetComponentInChildren<UIManager>();
 
-        playerController = GetComponentInParent<PlayerController>();
-        UIManager = playerController.GetComponentInChildren<UIManager>();
+            buildButton.onClick.AddListener(StartPlacingBuilding);
+            informationButton.onClick.AddListener(OpenBuildingInformationMenu);
 
-        buildButton.onClick.AddListener(StartPlacingBuilding);
-        informationButton.onClick.AddListener(OpenBuildingInformationMenu);
+            Building building = construction.GetComponentInChildren<Building>();
+            if (building)
+            {
+                buildingNameText.SetText(building.BuildingData.BuildingName);
 
-        buildingNameText.SetText(building.BuildingData.BuildingName);
+                if (building.ConstructionLevelsData.Count >= 1 && building.ConstructionLevelsData[0])
+                    resourcesToBuildNumber = building.ConstructionLevelsData[0].ResourcesToBuild.Count();
+                else
+                    Debug.LogWarning(building.BuildingData.BuildingName + " has no ConstructionLevelsData by index 0 or has not instance");
 
-        if (building.ConstructionLevelsData.Count >= 1 && building.ConstructionLevelsData[0])
-            resourcesToBuildNumber = building.ConstructionLevelsData[0].ResourcesToBuild.Count();
+                if (building.BuildingData.ThumbImage)
+                    buildingImage.sprite = building.BuildingData.ThumbImage;
+            }
+            DrawResourcesToBuild();
+        }
         else
-            Debug.LogWarning(building.BuildingData.BuildingName + " has no ConstructionLevelsData by index 0 or has not instance");
-
-        if (newBuilding.BuildingData.ThumbImage)
-            buildingImage.sprite = newBuilding.BuildingData.ThumbImage;
-        DrawResourcesToBuild();
+            Debug.LogError("construction is NULL");
     }
 
     private void DrawResourcesToBuild()
     {
+        Building building = constructionComponent.GetComponentInChildren<Building>();
+
         for (int i = 0; i < resourcesToBuildNumber; i++)
         {
-            if(!building)
+            if(!constructionComponent)
                 Debug.Log("building is NULL");
             if (!buildingResourceWidget)
                 Debug.Log("buildingResourceWidget is NULL");
-            if (!building.ConstructionLevelsData[0])
+            if (building && !building.ConstructionLevelsData[0])
                 Debug.Log("building.buildingLevelsData[0] is NULL");
             //if (building.buildingLevelsData[0].ResourcesToBuild[i])
                 //Debug.Log("building.buildingLevelsData[0].ResourcesToBuild[i] is NULL");
@@ -109,16 +119,17 @@ public class BuildingWidget : MonoBehaviour
         //    UIManager.CloseManagementMenu();
         //}
 
-        OnBuildStartPlacing?.Invoke(building);
+        OnStartPlacingConstruction?.Invoke(constructionComponent);
     }
 
     private void OpenBuildingInformationMenu()
     {
-        UIManager.OpenBuildingInformationMenu(building);
+        UIManager.OpenBuildingInformationMenu(constructionComponent);
     }
 
     public void UpdateResourcesToBuild()
     {
+        Building building = constructionComponent.GetComponentInChildren<Building>();
         for (int i = 0; i < resourcesToBuildNumber; i++)
         {
             int id = building.ConstructionLevelsData[0].ResourcesToBuild[i].ItemData.ItemId;

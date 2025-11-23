@@ -36,25 +36,18 @@ public class ConstructionComponent : MonoBehaviour
     public static event System.Action<ConstructionComponent> onAnyConstructionDemolished;
     public event System.Action onConstructionDemolished;
 
-    private void Awake()
+    private void GetComponents()
     {
         levelComponent = GetComponent<LevelComponent>();
         ownedBuilding = GetComponent<Building>();
         ownedBoat = GetComponent<Boat>();
         if (ownedBuilding)
             constructionLevelsData = ownedBuilding.ConstructionLevelsData;
-        //else if (boat)
-            //constructionLevelsData = boat.;
-    }
-
-    private void Start()
-    {
-
     }
 
     public void InitializeConstruction(int levelIndex, bool requiresConstruction)
     {
-        levelComponent = GetComponent<LevelComponent>();
+        GetComponents();
 
         isUnderConstruction = requiresConstruction;
 
@@ -210,23 +203,16 @@ public class ConstructionComponent : MonoBehaviour
         return amountToAdd;
     }
 
-    protected void InvokeStartConstructing(ConstructionComponent construction)
-    {
-        onAnyConstructionStartConstructing?.Invoke(construction);
-        onBuildingStartConstructing?.Invoke();
-    }
-
-    protected void InvokeFinishConstructing(ConstructionComponent construction)
-    {
-        onAnyConstructionFinishConstructing?.Invoke(construction);
-        onBuildingFinishConstructing?.Invoke();
-    }
-
     public void BuildConstruction(BuildingConstruction buildingConstruction)
     {
-        BuildingConstruction construction = Instantiate(buildingConstruction, gameObject.transform);
-        spawnedConstruction = construction;
-        spawnedConstruction.Build();
+        if (buildingConstruction)
+        {
+            BuildingConstruction construction = Instantiate(buildingConstruction, gameObject.transform);
+            spawnedConstruction = construction;
+            spawnedConstruction.Build();
+        }
+        else
+            Debug.LogError("buildingConstruction is NULL");
     }
 
     //public void SetConstruction(BuildingConstruction construction)

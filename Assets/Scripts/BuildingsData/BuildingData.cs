@@ -52,7 +52,7 @@ public class BuildingData : ScriptableObject
 {
     [Header("Main")]
     [SerializeField] private BuildingId buildingId = BuildingId.TowerGate;
-    public BuildingId BuildingId => buildingId;
+    public int BuildingIdValue { get { return (int)buildingId; } }
     [SerializeField] private string buildingIdName = "";
     public string BuildingIdName => buildingIdName;
     [SerializeField] private string buildingName = "";

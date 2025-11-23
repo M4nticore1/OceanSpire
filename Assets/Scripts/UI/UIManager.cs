@@ -163,7 +163,7 @@ public class UIManager : MonoBehaviour
         //Building.OnBuildingFinishConstructing += OnBuildingUpgraded;
         cityManager.OnResidentAdded += AddResidentWidget;
 
-        BuildingWidget.OnBuildStartPlacing += OnBuildingStartPlacing;
+        BuildingWidget.OnStartPlacingConstruction += OnBuildingStartPlacing;
     }
 
     private void OnDisable()
@@ -171,7 +171,7 @@ public class UIManager : MonoBehaviour
         //Building.OnBuildingFinishConstructing -= OnBuildingUpgraded;
         cityManager.OnResidentAdded -= AddResidentWidget;
 
-        BuildingWidget.OnBuildStartPlacing -= OnBuildingStartPlacing;
+        BuildingWidget.OnStartPlacingConstruction -= OnBuildingStartPlacing;
     }
 
     private void Update()
@@ -378,7 +378,8 @@ public class UIManager : MonoBehaviour
             int categoryIndex = (int)gameManager.buildingPrefabs[i].BuildingData.BuildingCategory;
             spawnedBuildingWidgets[categoryIndex].Add(spawnedBuildingWidget);
 
-            spawnedBuildingWidget.InitializeBuildingWidget(gameManager.buildingPrefabs[i]);
+            ConstructionComponent construction = gameManager.buildingPrefabs[i].GetComponent<ConstructionComponent>();
+            spawnedBuildingWidget.InitializeBuildingWidget(construction);
             spawnedBuildingWidget.cityManager = cityManager;
 
             spawnedBuildingWidget.transform.SetParent(buildingLists[(int)buildingCategory].transform);
@@ -473,8 +474,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void OpenBuildingInformationMenu(Building building)
+    public void OpenBuildingInformationMenu(ConstructionComponent construction)
     {
+        Building building = construction.GetComponent<Building>();
+
         foreach (var widget in spawnedBuildingCharacteristicWidgets)
         {
             Destroy(widget.gameObject);
@@ -484,7 +487,8 @@ public class UIManager : MonoBehaviour
         buildingInformationMenu.SetActive(true);
 
         buildingInformationMenuNameText.SetText(building.BuildingData.BuildingName);
-        buildingInformationMenuLevelNumberText.SetText("Level " + (building.levelComponent.LevelIndex + 1).ToString());
+        if (building.levelComponent)
+            buildingInformationMenuLevelNumberText.SetText("Level " + (building.levelComponent.LevelIndex + 1).ToString());
         //buildingInformationMenuDescriptionText.SetText(building.BuildingData.description);
 
         ProductionBuildingComponent productionBuilding = building.GetComponent<ProductionBuildingComponent>();
@@ -896,7 +900,7 @@ public class UIManager : MonoBehaviour
     }
 
     // Placing Building
-    private void OnBuildingStartPlacing(Building building)
+    private void OnBuildingStartPlacing(ConstructionComponent building)
     {
         if (stopPlacingBuildingButton)
             stopPlacingBuildingButton.gameObject.SetActive(true);

@@ -4,46 +4,10 @@ using UnityEngine;
 [AddComponentMenu("Buildings/RoomBuilding")]
 public class RoomBuilding : TowerBuilding
 {
-    protected BuildingPosition buildingPosition = BuildingPosition.Straight;
-
-    protected override void UpdateBuildingConstruction(int levelIndex)
-    {
-        if (buildingPlace)
-        {
-            if (GetPlaceIndex() % 2 == 0)
-                buildingPosition = BuildingPosition.Corner;
-            else
-                buildingPosition = BuildingPosition.Straight;
-
-            if (buildingData.ConnectionType == ConnectionType.None)
-            {
-                BuildConstruction(levelIndex);
-            }
-            else if (buildingData.ConnectionType == ConnectionType.Horizontal)
-            {
-                if (leftConnectedBuilding && !leftConnectedBuilding.constructionComponent.isUnderConstruction && leftConnectedBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && leftConnectedBuilding.levelComponent.LevelIndex == levelIndex)
-                    leftConnectedBuilding.BuildConstruction(levelIndex);
-
-                if (rightConnectedBuilding && !rightConnectedBuilding.constructionComponent.isUnderConstruction && rightConnectedBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && rightConnectedBuilding.levelComponent.LevelIndex == levelIndex)
-                    rightConnectedBuilding.BuildConstruction(levelIndex);
-
-            }
-            else if (buildingData.ConnectionType == ConnectionType.Vertical)
-            {
-                if (aboveConnectedBuilding && !aboveConnectedBuilding.constructionComponent.isUnderConstruction && aboveConnectedBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && aboveConnectedBuilding.levelComponent.LevelIndex == levelIndex)
-                    aboveConnectedBuilding.BuildConstruction(levelIndex);
-                if (belowConnectedBuilding && !belowConnectedBuilding.constructionComponent.isUnderConstruction && belowConnectedBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && belowConnectedBuilding.levelComponent.LevelIndex == levelIndex)
-                    belowConnectedBuilding.BuildConstruction(levelIndex);
-
-                BuildConstruction(levelIndex);
-            }
-        }
-    }
+    //protected BuildingPosition buildingPosition = BuildingPosition.Straight;
 
     public override void BuildConstruction(int levelIndex)
     {
-        Debug.Log(BuildingData.BuildingName);
-
         RoomLevelData roomLevelData = buildingLevelsData[levelIndex] as RoomLevelData;
 
         if (constructionComponent.isUnderConstruction)
@@ -101,10 +65,11 @@ public class RoomBuilding : TowerBuilding
             }
             else if (buildingData.ConnectionType == ConnectionType.Vertical)
             {
+                //Debug.Log(GetFloorIndex() + " " + GetPlaceIndex());
                 if (buildingPosition == BuildingPosition.Straight)
                 {
                     if (aboveConnectedBuilding && belowConnectedBuilding && roomLevelData.ConstructionStraightAboveBelow)
-                        constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerLeftRight);
+                        constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightAboveBelow);
                     else if (aboveConnectedBuilding && roomLevelData.ConstructionStraightAbove)
                         constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightAbove);
                     else if (belowConnectedBuilding && roomLevelData.ConstructionStraightBelow)
@@ -124,8 +89,6 @@ public class RoomBuilding : TowerBuilding
                         constructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
                 }
             }
-
-            constructionComponent.spawnedConstruction.Build();
         }
 
         if (isSelected)
@@ -135,5 +98,10 @@ public class RoomBuilding : TowerBuilding
     public override void EnterBuilding(Entity entity)
     {
         base.EnterBuilding(entity);
+    }
+
+    private bool GetPossibilityConnect(Building neightboorBuilding, int levelIndex)
+    {
+        return neightboorBuilding && !neightboorBuilding.constructionComponent.isUnderConstruction && neightboorBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && neightboorBuilding.levelComponent.LevelIndex == levelIndex;
     }
 }

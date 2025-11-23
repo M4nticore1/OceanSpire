@@ -12,12 +12,14 @@ public class BuildingPlace : MonoBehaviour
 {
     [HideInInspector] public CityManager cityManager = null;
 
-    public BuildingType buildingType = BuildingType.Room;
+    [SerializeField] private BuildingType buildingType = BuildingType.Room;
+    public BuildingType BuildingType => buildingType;
 
-    public int floorIndex { get; private set; } = 0;
-    public int buildingPlaceIndex { get; private set; } = 0;
-    public int emptyBuildingPlacesAbove = 0;
-    public int emptyBuildingPlacesBelow = 0;
+    public int floorIndex = 0;
+    [SerializeField] private int buildingPlaceIndex = 0;
+    public int BuildingPlaceIndex => buildingPlaceIndex;
+    public int emptyBuildingPlacesAbove { get; set; } = 0;
+    public int emptyBuildingPlacesBelow { get; set; } = 0;
 
     //public bool isBuildingPlaced = false;
     public Building placedBuilding = null;
@@ -116,7 +118,6 @@ public class BuildingPlace : MonoBehaviour
 
     public void SetPlacedBuilding(Building building)
     {
-        Debug.Log("SetPlacedBuilding");
         placedBuilding = building;
         if (buildingFrame)
             buildingFrame.SetActive(false);
@@ -131,8 +132,10 @@ public class BuildingPlace : MonoBehaviour
 
     public void ShowBuildingPlace(BuildingPlaceState buildingPlaceState)
     {
-        buildingZone.SetActive(true);
-        boxCollider.enabled = true;
+        if (buildingZone)
+            buildingZone.SetActive(true);
+        if (boxCollider)
+            boxCollider.enabled = true;
 
         Color mainColor = Color.black;
         Color outlineColor = Color.black;
@@ -166,8 +169,10 @@ public class BuildingPlace : MonoBehaviour
 
     public void HideBuildingPlace()
     {
-        buildingZone.SetActive(false);
-        boxCollider.enabled = false;
+        if (buildingZone)
+            buildingZone.SetActive(false);
+        if (boxCollider)
+            boxCollider.enabled = false;
     }
 
     public void SetColliderSize(Vector3 NewColliderSize)

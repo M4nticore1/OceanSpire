@@ -10,9 +10,6 @@ public class StorageBuildingComponent : BuildingComponent
     public override void Build(int newLevel)
     {
         base.Build(newLevel);
-
-        Debug.Log("Build " + ownedBuilding.BuildingData.BuildingName);
-
         levelData = levelsData[newLevel] as StorageBuildingLevelData;
 
         //AddStorageCapacity(levelData);

@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 3275737552088690731}
   - component: {fileID: -255987306672972499}
   - component: {fileID: -312919418568159975}
+  - component: {fileID: 6294028636610842851}
+  - component: {fileID: 8325560249525714879}
+  - component: {fileID: -2804250846909919817}
   m_Layer: 0
   m_Name: CoalGenerator
   m_TagString: Untagged
@@ -47,21 +50,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2665c07387d67614998ea718af530a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cityManager: {fileID: 0}
-  isInitialized: 0
+  leftConnectedBuilding: {fileID: 0}
+  rightConnectedBuilding: {fileID: 0}
+  aboveConnectedBuilding: {fileID: 0}
+  belowConnectedBuilding: {fileID: 0}
   buildingData: {fileID: 11400000, guid: 729d9660a6c906e4daee160193b3e157, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 4bbb3a2a17e937e4ab3c5a716e539a8f, type: 2}
   - {fileID: 11400000, guid: 687824843f2188141b52eb67883dae9d, type: 2}
   - {fileID: 11400000, guid: aa09133ea6ebbae49be51d0b319c99bb, type: 2}
   buildingPlace: {fileID: 0}
-  spawnedBuildingConstruction: {fileID: 0}
-  isRuined: 0
-  interiorIndex: 0
-  leftConnectedBuilding: {fileID: 0}
-  rightConnectedBuilding: {fileID: 0}
-  aboveConnectedBuilding: {fileID: 0}
-  belowConnectedBuilding: {fileID: 0}
 --- !u!114 &-312919418568159975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,6 +80,42 @@ MonoBehaviour:
   levelData: {fileID: 0}
   isReadyToCollect: 0
   collectResourceWidgetPrefab: {fileID: 0}
+--- !u!114 &6294028636610842851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3980113925021139364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8325560249525714879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3980113925021139364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9490cdbf4ab773d40821031b260bb65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-2804250846909919817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3980113925021139364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4500102122576390995
 PrefabInstance:
   m_ObjectHideFlags: 0

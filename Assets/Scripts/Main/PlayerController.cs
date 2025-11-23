@@ -94,7 +94,6 @@ public class PlayerController : MonoBehaviour
     private const float pitchStopSpeed = 25.0f;
 
     // Building
-    private bool isBuildingToPlaceSelected = false;
     [HideInInspector] public Building buildingToPlace = null;
 
     private SelectComponent selectedComponent = null;
@@ -105,7 +104,7 @@ public class PlayerController : MonoBehaviour
     private EventSystem eventSystem = null;
     [SerializeField] private LayerMask clickableLayers;
 
-    private float lastSaveDataTime = 0.0f;
+    private double lastSaveDataTime = 0.0f;
 
     public bool isInitialized { get; private set; } = false;
 
@@ -122,6 +121,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         Load(GameManager.saveData);
+
+        SaveSystem.SaveData(this, cityManager);
     }
 
     public void Load(SaveData saveData)
@@ -188,10 +189,10 @@ public class PlayerController : MonoBehaviour
             else
                 uiManager.CloseBuildingStatsPanel();
 
-            if (Time.time >= lastSaveDataTime + GameManager.autoSaveFrequency)
+            if (Time.timeAsDouble >= lastSaveDataTime + GameManager.autoSaveFrequency)
             {
                 SaveData();
-                lastSaveDataTime = Time.time;
+                lastSaveDataTime = Time.timeAsDouble;
             }
         }
     }
@@ -206,7 +207,7 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed += OnSecondTouchStarted;
         secondTouchPressAction.canceled += OnSecondTouchEnded;
 
-        BuildingWidget.OnBuildStartPlacing += OnBuildingStartPlacing;
+        BuildingWidget.OnStartPlacingConstruction += OnBuildingStartPlacing;
         UIManager.OnBuildStopPlacing += StopPlacingBuilding;
     }
 
@@ -220,7 +221,7 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed -= OnSecondTouchStarted;
         secondTouchPressAction.canceled -= OnSecondTouchEnded;
 
-        BuildingWidget.OnBuildStartPlacing -= OnBuildingStartPlacing;
+        BuildingWidget.OnStartPlacingConstruction -= OnBuildingStartPlacing;
         UIManager.OnBuildStopPlacing -= StopPlacingBuilding;
     }
 
@@ -403,7 +404,7 @@ public class PlayerController : MonoBehaviour
 
                         if (Physics.Raycast(ray, out hit, 500))
                         {
-                            if (isBuildingToPlaceSelected && buildingToPlace)
+                            if (buildingToPlace)
                             {
                                 BuildingPlace hittedBuildingPlace = hit.collider.gameObject.GetComponent<BuildingPlace>();
 
@@ -414,12 +415,16 @@ public class PlayerController : MonoBehaviour
                             }
                             else
                             {
-                                LootContainer hittedLootContainer = hit.collider.gameObject.GetComponent<LootContainer>();
-                                Resident hittedResident = hit.collider.gameObject.GetComponent<Resident>();
-                                Building hittedBuilding = null;
+                                LootContainer hittedLootContainer = hit.collider.GetComponent<LootContainer>();
+                                Resident hittedResident = hit.collider.GetComponent<Resident>();
 
-                                if (hit.collider && hit.collider.gameObject.transform.parent && hit.collider.gameObject.transform.parent.GetComponent<Building>())
-                                    hittedBuilding = hit.collider.gameObject.transform.parent.GetComponent<Building>();
+                                Transform parent = hit.collider.transform.parent;
+                                Building hittedBuilding = parent ? parent.GetComponent<Building>() : null;
+                                BuildingConstruction buildingConstruction = parent ? parent.GetComponent<BuildingConstruction>() : null;
+                                Boat hittedBoat = parent ? parent.GetComponent<Boat>() : null;
+
+                                if (!hittedBuilding && buildingConstruction)
+                                    hittedBuilding = buildingConstruction.transform.parent.GetComponent<Building>();
 
                                 if (hittedBuilding)
                                 {
@@ -428,30 +433,38 @@ public class PlayerController : MonoBehaviour
                                     if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect)
                                     {
                                         CollectItems(hittedProductionBuilding.TakeProducedItem());
-                                        DeselectComponent();
+                                        Deselect();
                                     }
                                     else
                                     {
-                                        if (selectedComponent != hittedBuilding)
-                                            SelectComponent(hittedBuilding.selectComponent);
+                                        if (selectedComponent != hittedBuilding.selectComponent)
+                                            Select(hittedBuilding.selectComponent);
                                         else
-                                            DeselectComponent();
+                                            Deselect();
                                     }
                                 }
                                 else if (hittedResident)
                                 {
-                                    SelectComponent(hittedResident.selectComponent);
+                                    Select(hittedResident.selectComponent);
+                                }
+                                else if (hittedBoat)
+                                {
+                                    SelectComponent selectComponent = hittedBoat.GetComponent<SelectComponent>();
+                                    if (selectedComponent != selectComponent)
+                                        Select(selectComponent);
+                                    else
+                                        Deselect();
                                 }
                                 else if (hittedLootContainer)
                                 {
                                     List<ItemInstance> takedItems = hittedLootContainer.TakeItems();
                                     CollectItems(takedItems);
 
-                                    DeselectComponent();
+                                    Deselect();
                                 }
                                 else
                                 {
-                                    DeselectComponent();
+                                    Deselect();
                                 }
                             }
                         }
@@ -528,9 +541,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnBuildingStartPlacing(Building building)
+    private void OnBuildingStartPlacing(ConstructionComponent construction)
     {
-        //Building building = newConstructionToPlace.GetComponent<Building>();
+        Building building = construction.GetComponent<Building>();
 
         //if (isBuildingToPlaceSelected)
         //{
@@ -538,7 +551,7 @@ public class PlayerController : MonoBehaviour
         //}
 
         //isBuildingToPlaceSelected = true;
-        //buildingToPlace = building;
+        buildingToPlace = building;
 
         //cityManager.ShowBuildingPlacesByType(building);
         //uiManager.CloseBuildingManagementMenu();
@@ -547,7 +560,8 @@ public class PlayerController : MonoBehaviour
 
     private void PlaceConstruction(BuildingPlace buildingPlace)
     {
-        cityManager.PlaceConstruction(buildingToPlace, buildingPlace, 0, true);
+        Debug.Log("Place");
+        cityManager.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
     }
 
     public void StopPlacingBuilding()
@@ -556,7 +570,6 @@ public class PlayerController : MonoBehaviour
         {
             //cityManager.HideBuildingPlacesByType(buildingToPlace.BuildingData.BuildingType);
 
-            isBuildingToPlaceSelected = false;
             buildingToPlace = null;
         }
     }
@@ -575,38 +588,41 @@ public class PlayerController : MonoBehaviour
         cityManager.AddItems(items);
     }
 
-    private void SelectComponent(SelectComponent selectComponent)
+    private void Select(SelectComponent selectComponent)
     {
-        DeselectComponent();
-
-        selectedComponent = selectComponent;
-        selectedComponent.Select();
-
-        Building building = selectComponent.GetComponent<Building>();
-        Entity entity = selectComponent.GetComponent<Entity>();
-        Boat boat = selectComponent.GetComponent<Boat>();
-        if (building)
+        if (selectComponent)
         {
-            if (building.constructionComponent.isRuined)
+            Deselect();
+
+            selectedComponent = selectComponent;
+            selectedComponent.Select();
+
+            Building building = selectComponent.GetComponent<Building>();
+            Entity entity = selectComponent.GetComponent<Entity>();
+            Boat boat = selectComponent.GetComponent<Boat>();
+            if (building)
             {
-                uiManager.OpenRepairBuildingMenu(building);
+                if (building.constructionComponent.isRuined)
+                {
+                    uiManager.OpenRepairBuildingMenu(building);
+                }
+                else
+                {
+                    uiManager.OpenBuildingManagementMenu(building);
+                }
             }
-            else
+            else if (entity)
             {
-                uiManager.OpenBuildingManagementMenu(building);
+
             }
-        }
-        else if (entity)
-        {
+            else if (boat)
+            {
 
-        }
-        else if (boat)
-        {
-
+            }
         }
     }
 
-    public void DeselectComponent()
+    public void Deselect()
     {
         if (selectedComponent)
         {

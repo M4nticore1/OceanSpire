@@ -1623,6 +1623,74 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
+--- !u!1001 &507881356
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 959300913105641093, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 959300913105641093, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.17000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 959300913105641093, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 42.54
+      objectReference: {fileID: 0}
+    - target: {fileID: 959300913105641093, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.73144406
+      objectReference: {fileID: 0}
+    - target: {fileID: 959300913105641093, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 959300913105641093, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.6819015
+      objectReference: {fileID: 0}
+    - target: {fileID: 959300913105641093, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 959300913105641093, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 959300913105641093, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -85.985
+      objectReference: {fileID: 0}
+    - target: {fileID: 959300913105641093, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9194760719431650583, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: m_Name
+      value: Boat (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+--- !u!114 &507881357 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8520330495291878649, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+  m_PrefabInstance: {fileID: 507881356}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7ae5fb5bee4b34683a3116056ed90d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &616800430
 GameObject:
   m_ObjectHideFlags: 0
@@ -1938,6 +2006,10 @@ PrefabInstance:
       propertyPath: floorsRoot
       value: 
       objectReference: {fileID: 1290994963}
+    - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
+      propertyPath: pierBuilding
+      value: 
+      objectReference: {fileID: 1394277909}
     - target: {fileID: 1859215036312310174, guid: dc16c144c316eb9449e3a97e63da34d1, type: 3}
       propertyPath: spawnedFloors.Array.size
       value: 1
@@ -3320,7 +3392,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.13333334
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 8216df87f1f27754fb3edae8e23f7d40, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: e74b599fa6ba19f42a22e86148fe7841, type: 2}
   m_BuildHeightMesh: 0
 --- !u!114 &1326211552 stripped
 MonoBehaviour:
@@ -3348,6 +3420,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2501287360220567352, guid: 0b6d32f3a8efa89429c4ae6f138b821f, type: 3}
   m_PrefabInstance: {fileID: 2116735562}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1394277909 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8331393561667859132, guid: 0b6d32f3a8efa89429c4ae6f138b821f, type: 3}
+  m_PrefabInstance: {fileID: 2116735562}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c2e3585ca3f15148879e7d41a740cab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1403165668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4420,6 +4503,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pier
       objectReference: {fileID: 0}
+    - target: {fileID: 8331393561667859132, guid: 0b6d32f3a8efa89429c4ae6f138b821f, type: 3}
+      propertyPath: spawnedBoats.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8331393561667859132, guid: 0b6d32f3a8efa89429c4ae6f138b821f, type: 3}
+      propertyPath: 'spawnedBoats.Array.data[0]'
+      value: 
+      objectReference: {fileID: 507881357}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4515,3 +4606,4 @@ SceneRoots:
   - {fileID: 636992499}
   - {fileID: 648285588}
   - {fileID: 932600878}
+  - {fileID: 507881356}

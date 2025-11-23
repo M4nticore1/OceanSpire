@@ -5,29 +5,27 @@ using UnityEngine;
 public class ElevatorBuilding : RoomBuilding
 {
     public ElevatorPlatformConstruction spawnedElevatorPlatform { get; private set; } = null;
-    public int elevatorGroupId { get; private set; } = 0;
+    public int elevatorGroupId = 0;
 
     public List<Entity> elevatorWaitingPassengers { get; private set; } = new List<Entity>();
     public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();
 
-    protected override void UpdateBuildingConstruction(int levelIndex)
+    public override void BuildConstruction(int levelIndex)
     {
-        base.UpdateBuildingConstruction(levelIndex);
+        base.BuildConstruction(levelIndex);
 
         ElevatorBuilding belowElevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
         ElevatorBuilding aboveElevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
 
         if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorPlatform)
         {
-            spawnedElevatorPlatform = belowElevatorBuilding.spawnedElevatorPlatform;
-
             elevatorGroupId = belowElevatorBuilding.elevatorGroupId;
+            spawnedElevatorPlatform = belowElevatorBuilding.spawnedElevatorPlatform;
         }
         else if (aboveElevatorBuilding && aboveElevatorBuilding.spawnedElevatorPlatform)
         {
-            spawnedElevatorPlatform = aboveElevatorBuilding.spawnedElevatorPlatform;
-
             elevatorGroupId = aboveElevatorBuilding.elevatorGroupId;
+            spawnedElevatorPlatform = aboveElevatorBuilding.spawnedElevatorPlatform;
         }
         else
         {

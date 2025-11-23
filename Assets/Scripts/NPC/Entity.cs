@@ -58,7 +58,7 @@ public class Entity : MonoBehaviour
     public static event System.Action OnWorkerAdd;
     public static event System.Action OnWorkerRemove;
 
-    protected virtual void Awake()
+    protected void Awake()
     {
         cityManager = FindAnyObjectByType<CityManager>();
         levelComponent = GetComponent<LevelComponent>();
@@ -66,22 +66,22 @@ public class Entity : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    protected virtual void OnEnable()
+    protected void OnEnable()
     {
         ConstructionComponent.onAnyConstructionStartConstructing += OnBuildingStartConstructing;
     }
 
-    protected virtual void OnDisable()
+    protected void OnDisable()
     {
         ConstructionComponent.onAnyConstructionFinishConstructing -= OnBuildingStartConstructing;
     }
 
-    protected virtual void Start()
+    protected void Start()
     {
 
     }
 
-    protected virtual void Update()
+    protected void Update()
     {
         if (isWorking)
         {
@@ -526,12 +526,12 @@ public class Entity : MonoBehaviour
 
     protected void OnBuildingStartConstructing(ConstructionComponent building)
     {
-        StartCoroutine(OnBuildingStartConstructingCoroutine(building));
+        //StartCoroutine(OnBuildingStartConstructingCoroutine(building));
     }
 
-    protected virtual IEnumerator OnBuildingStartConstructingCoroutine(ConstructionComponent construction)
+    protected IEnumerator OnBuildingStartConstructingCoroutine(ConstructionComponent construction)
     {
-        yield return new WaitForEndOfFrame();
+        yield return CityManager.bakeNavMeshSurfaceCoroutine;
 
         if (currentWork == ResidentWork.None)
         {

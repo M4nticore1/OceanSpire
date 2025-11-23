@@ -12,31 +12,43 @@ public enum BuildingPosition
 public enum Side
 {
     Left,
-    Right
+    Right,
+    Up,
+    Down
 }
 
 [AddComponentMenu("")]
 public class TowerBuilding : Building
 {
-    public TowerBuilding leftConnectedBuilding { get; private set; } = null;
-    public TowerBuilding rightConnectedBuilding { get; private set; } = null;
-    public TowerBuilding aboveConnectedBuilding { get; private set; } = null;
-    public TowerBuilding belowConnectedBuilding { get; private set; } = null;
+    //public TowerBuilding leftConnectedBuilding = null;
+    //public TowerBuilding rightConnectedBuilding = null;
+    //public TowerBuilding aboveConnectedBuilding = null;
+    //public TowerBuilding belowConnectedBuilding = null;
 
-    protected override void Place()
+    public override void InitializeBuilding(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction, int interiorIndex = -1)
     {
-        leftConnectedBuilding = GetNeightboorBuilding(Side.Left);
-        rightConnectedBuilding = GetNeightboorBuilding(Side.Right);
+        base.InitializeBuilding(buildingPlace, levelIndex, isUnderConstruction, interiorIndex);
 
-        base.Place();
+        //leftConnectedBuilding = GetNeightboorBuilding(Side.Left);
+        //rightConnectedBuilding = GetNeightboorBuilding(Side.Right);
+        //aboveConnectedBuilding = GetNeightboorBuilding(Side.Up);
+        //belowConnectedBuilding = GetNeightboorBuilding(Side.Down);
+
+        //if (GetPlaceIndex() % 2 == 0)
+        //    buildingPosition = BuildingPosition.Corner;
+        //else
+        //    buildingPosition = BuildingPosition.Straight;
     }
 
-    private TowerBuilding GetNeightboorBuilding(Side side)
-    {
-        int indexOffset = side == Side.Left ? 1 : -1;
+    //private TowerBuilding GetNeightboorBuilding(Side side)
+    //{
+    //    int horizontalIndexOffset = side == Side.Left ? 1 : side == Side.Right ? -1 : 0;
+    //    int verticalIndexOffset = side == Side.Up ? 1 : side == Side.Down ? -1 : 0;
+    //    int sideIndex = (GetPlaceIndex() + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
+    //    int verticalIndex = GetFloorIndex() + verticalIndexOffset;
+    //    if (verticalIndex < cityManager.builtFloors.Count && verticalIndex >= 0)
+    //        return cityManager.builtFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding as TowerBuilding;
 
-        int sideIndex = (GetPlaceIndex() + indexOffset + CityManager.roomsCountPerFloor) % (CityManager.roomsCountPerFloor - 1);
-        TowerBuilding sideBuilding = cityManager.builtFloors[GetFloorIndex()].roomBuildingPlaces[sideIndex].placedBuilding as TowerBuilding;
-        return sideBuilding;
-    }
+    //    return null;
+    //}
 }

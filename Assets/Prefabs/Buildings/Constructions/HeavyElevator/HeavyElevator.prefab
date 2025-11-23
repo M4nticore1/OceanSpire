@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2643200822590598374}
   - component: {fileID: 7098873123747204009}
+  - component: {fileID: -1101472900689338418}
+  - component: {fileID: 875227536550417410}
+  - component: {fileID: -5101612008091959577}
   m_Layer: 0
   m_Name: HeavyElevator
   m_TagString: Untagged
@@ -44,9 +47,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948dda070484eea44ac9c5089a182b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelIndex: 0
+  leftConnectedBuilding: {fileID: 0}
+  rightConnectedBuilding: {fileID: 0}
+  aboveConnectedBuilding: {fileID: 0}
+  belowConnectedBuilding: {fileID: 0}
   buildingData: {fileID: 11400000, guid: 51f0d12a0a9707f4aa42d4cf27010070, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 271d34bd90f7e8a43a63c217f4799481, type: 2}
-  spawnedBuildingConstruction: {fileID: 0}
-  isRuined: 0
+  buildingPlace: {fileID: 0}
+--- !u!114 &-1101472900689338418
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048805386127403536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &875227536550417410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048805386127403536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9490cdbf4ab773d40821031b260bb65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-5101612008091959577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2048805386127403536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

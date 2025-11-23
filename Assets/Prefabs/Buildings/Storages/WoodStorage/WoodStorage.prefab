@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 875568932980367447}
   - component: {fileID: 7452491075021778987}
   - component: {fileID: 3076258687782981500}
-  - component: {fileID: 4391227772612378318}
+  - component: {fileID: -6252753851395657963}
+  - component: {fileID: -994385094022573918}
+  - component: {fileID: -1012386527353814154}
   m_Layer: 0
   m_Name: WoodStorage
   m_TagString: Untagged
@@ -49,17 +51,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948dda070484eea44ac9c5089a182b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cityManager: {fileID: 0}
-  isInitialized: 0
+  leftConnectedBuilding: {fileID: 0}
+  rightConnectedBuilding: {fileID: 0}
+  aboveConnectedBuilding: {fileID: 0}
+  belowConnectedBuilding: {fileID: 0}
   buildingData: {fileID: 11400000, guid: 125116f10d362a140a6e3901d5e841e4, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 4a32de5aafe6aad43a860f0acca81021, type: 2}
   - {fileID: 11400000, guid: 78201f3cdafbb824e889425616d94a3e, type: 2}
   - {fileID: 11400000, guid: 81e7e3e3100ef7d46bc116acafbd4b67, type: 2}
   buildingPlace: {fileID: 0}
-  isRuined: 0
-  spawnedBuildingConstruction: {fileID: 0}
-  interiorIndex: 0
 --- !u!114 &3076258687782981500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,28 +79,42 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 673bc6793fc8ff6478a29a297febe774, type: 2}
   - {fileID: 11400000, guid: 741ad3e29109bfd44a7ca973806bce88, type: 2}
   levelData: {fileID: 0}
-  storedItems: []
---- !u!65 &4391227772612378318
-BoxCollider:
+--- !u!114 &-6252753851395657963
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2986797986013487974}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 8, y: 5, z: 8}
-  m_Center: {x: 0, y: 2.5, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-994385094022573918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2986797986013487974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9490cdbf4ab773d40821031b260bb65d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-1012386527353814154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2986797986013487974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7219386148970034341
 GameObject:
   m_ObjectHideFlags: 0

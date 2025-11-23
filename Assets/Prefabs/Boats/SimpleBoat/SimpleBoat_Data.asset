@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaf23feaaaab3d446a84f4c67432fbd2, type: 3}
-  m_Name: Pier_LevelData_01
+  m_Script: {fileID: 11500000, guid: 01fb52004f6d8b8408bca2f3111277d3, type: 3}
+  m_Name: SimpleBoat_Data
   m_EditorClassIdentifier: 
-  resourcesToBuild: []
-  maxResidentsCount: 1
-  constructionStraight: {fileID: 1914733326926101518, guid: badf20e085e5138479e28bd50ece45ae, type: 3}
+  boatId: 0
+  maxHealth: 0
+  speed: 0
