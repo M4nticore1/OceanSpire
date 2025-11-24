@@ -12,9 +12,11 @@ public struct BuildingAction
 
 public class BuildingConstruction : MonoBehaviour
 {
-    public List<GameObject> buildingInteriors = new List<GameObject>();
+    [SerializeField] private List<GameObject> buildingInteriors = new List<GameObject>();
+    public List<GameObject> BuildingInteriors => buildingInteriors;
 
-    public List<BuildingAction> buildingInteractions = new List<BuildingAction>();
+    [SerializeField] private List<BuildingAction> buildingInteractions = new List<BuildingAction>();
+    public List<BuildingAction> BuildingInteractions => buildingInteractions;
 
     [Header("Storage")]
     public List<Transform> collectItemPoints = new List<Transform>();

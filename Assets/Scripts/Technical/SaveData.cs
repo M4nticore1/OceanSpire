@@ -21,7 +21,8 @@ public class SaveData
 
     public int[] spawnedBoatIds { get; private set; } = new int[0];
     public bool[] spawnedBoatsAreUnderConstruction { get; private set; } = new bool[0];
-    public bool[] spawnedBoatsAreMoving { get; private set; } = new bool[0];
+    public bool[] spawnedBoatsAreDocked { get; private set; } = new bool[0];
+    public bool[] spawnedBoatsAreReturning { get; private set; } = new bool[0];
     public float[] spawnedBoatsHealth { get; private set; } = new float[0];
     public float[] spawnedBoatPositionsX { get; private set; } = new float[0];
     public float[] spawnedBoatPositionsZ { get; private set; } = new float[0];
@@ -98,21 +99,26 @@ public class SaveData
         spawnedBoatIds = new int[boatsCount];
         spawnedBoatsAreUnderConstruction = new bool[boatsCount];
         spawnedBoatsHealth = new float[boatsCount];
-        spawnedBoatsAreMoving = new bool[boatsCount];
+        spawnedBoatsAreDocked = new bool[boatsCount];
+        spawnedBoatsAreReturning = new bool[boatsCount];
         spawnedBoatPositionsX = new float[boatsCount];
         spawnedBoatPositionsZ = new float[boatsCount];
         spawnedBoatRotationsY = new float[boatsCount];
         for (int i = 0; i < boatsCount; i++)
         {
             Boat boat = spawnedBoats[i];
-            ConstructionComponent construction = boat.GetComponent<ConstructionComponent>();
-            spawnedBoatIds[i] = boat ? boat.BoatData.BoatId : -1;
-            spawnedBoatsAreUnderConstruction[i] = boat ? construction.isUnderConstruction : false;
-            spawnedBoatsAreMoving[i] = boat ? boat.isMoving : false;
-            spawnedBoatsHealth[i] = boat ? boat.currentHealth : 0;
-            spawnedBoatPositionsX[i] = boat ? boat.transform.position.x : 0;
-            spawnedBoatPositionsZ[i] = boat ? boat.transform.position.z : 0;
-            spawnedBoatRotationsY[i] = boat ? boat.transform.rotation.eulerAngles.y : 0;
+            if (boat)
+            {
+                ConstructionComponent construction = boat.GetComponent<ConstructionComponent>();
+                spawnedBoatIds[i] = boat ? boat.BoatData.BoatId : -1;
+                spawnedBoatsAreUnderConstruction[i] = boat ? construction.isUnderConstruction : false;
+                spawnedBoatsAreDocked[i] = boat ? boat.isDocked : false;
+                spawnedBoatsAreReturning[i] = boat ? boat.isReturningToDock : false;
+                spawnedBoatsHealth[i] = boat ? boat.currentHealth : 0;
+                spawnedBoatPositionsX[i] = boat ? boat.transform.position.x : 0;
+                spawnedBoatPositionsZ[i] = boat ? boat.transform.position.z : 0;
+                spawnedBoatRotationsY[i] = boat ? boat.transform.rotation.eulerAngles.y : 0;
+            }
         }
 
         // Residents

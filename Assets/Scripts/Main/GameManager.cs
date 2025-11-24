@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
 
         ChangeWind();
         windDirection = newWindDirection;
+        TimerManager.Start();
     }
 
     private void Update()
@@ -69,6 +70,7 @@ public class GameManager : MonoBehaviour
         //    playerController.Load(saveData);
 
         ChangingWind();
+        TimerManager.Tick();
     }
 
     private void ChangingWind()

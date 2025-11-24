@@ -45,7 +45,7 @@ public class ConstructionComponent : MonoBehaviour
             constructionLevelsData = ownedBuilding.ConstructionLevelsData;
     }
 
-    public void InitializeConstruction(int levelIndex, bool requiresConstruction)
+    public void InitializeConstruction(bool requiresConstruction = false, int levelIndex = 0)
     {
         GetComponents();
 
@@ -215,9 +215,29 @@ public class ConstructionComponent : MonoBehaviour
             Debug.LogError("buildingConstruction is NULL");
     }
 
-    //public void SetConstruction(BuildingConstruction construction)
+    //public Vector3 GetInteractionPosition()
     //{
-    //    spawnedConstruction = construction;
-    //    spawnedConstruction.Build();
+    //    List<BuildingAction> buildingInteraction = spawnedConstruction.BuildingInteractions;
+    //    if (buildingInteraction.Count > 0 && buildingInteraction[0].waypoints.Count > 0)
+    //        return GetInteractionPosition(0, 0);
+    //    else
+    //        return transform.position;
     //}
+
+    public Vector3 GetInteractionPosition(int interactionPointIndex, int waypointIndex = 0)
+    {
+        List<BuildingAction> buildingInteraction = spawnedConstruction.BuildingInteractions;
+        if (buildingInteraction.Count > interactionPointIndex && buildingInteraction[interactionPointIndex].waypoints.Count > waypointIndex)
+            return buildingInteraction[interactionPointIndex].waypoints[waypointIndex].position;
+        else
+            return transform.position;
+    }
+
+    public Vector3 GetPickupItemPointPosition()
+    {
+        if (spawnedConstruction.collectItemPoints.Count > 0)
+            return spawnedConstruction.collectItemPoints[0].position;
+        else
+            return transform.position;
+    }
 }

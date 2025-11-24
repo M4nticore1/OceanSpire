@@ -11,7 +11,7 @@ public class PierBuilding : Building
         Boat.OnBoadDestroyed += OnBoatDestroyed;
     }
 
-    public void CreateBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isMoving = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
+    public void CreateBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isDocked = true, bool isReturningToDock = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
     {
         PierConstruction pierConstruction = constructionComponent.spawnedConstruction as PierConstruction;
         if (dockIndex == null)
@@ -19,11 +19,14 @@ public class PierBuilding : Building
             for (int i = 0; i < spawnedBoats.Count; i++)
             {
                 if (!spawnedBoats[i])
+                {
                     dockIndex = i;
+                    break;
+                }
             }
         }
 
-        Vector3 position = pierConstruction.BoatDockPositions[dockIndex.Value].position;
+        Vector3 position = Vector3.zero /*pierConstruction.BoatDockPositions[dockIndex.Value].position*/;
         if (positionX != null) position.x = positionX.Value;
         if (positionZ != null) position.z = positionZ.Value;
 
@@ -33,8 +36,9 @@ public class PierBuilding : Building
 
         if (spawnedBoats[dockIndex.Value])
             spawnedBoats[dockIndex.Value].Demolish(false);
+
         Boat spawnedBoat = Instantiate(boat, position, rotation);
-        spawnedBoat.Initialize(this, dockIndex.Value, isMoving, health, positionX, positionZ);
+        spawnedBoat.Initialize(this, isUnderConstruction, dockIndex.Value, isDocked, isReturningToDock, health);
         spawnedBoats[dockIndex.Value] = spawnedBoat;
     }
 
@@ -69,5 +73,16 @@ public class PierBuilding : Building
     private void OnBoatDestroyed(Boat boat)
     {
         spawnedBoats[boat.dockIndex] = null;
+    }
+
+    public Boat GetBoatByIndex(int index)
+    {
+        for (int i = 0; i < SpawnedBoats.Count; i++)
+        {
+            if (SpawnedBoats[i])
+                return SpawnedBoats[i];
+        }
+
+        return null;
     }
 }

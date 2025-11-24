@@ -82,14 +82,13 @@ public class Building : MonoBehaviour
     }
 
     // Constructing
-    public virtual void InitializeBuilding(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction, int interiorIndex = -1)
+    public virtual void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
         if (isInitialized) return;
 
         GetComponents();
 
         this.buildingPlace = buildingPlace;
-        Debug.Log(GetFloorIndex());
 
         if (levelComponent)
             levelComponent.LevelIndex = levelIndex;
@@ -107,7 +106,7 @@ public class Building : MonoBehaviour
                 buildingPosition = BuildingPosition.Straight;
         }
 
-        constructionComponent.InitializeConstruction(levelIndex, isUnderConstruction);
+        constructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
 
         isInitialized = true;
     }
@@ -125,10 +124,10 @@ public class Building : MonoBehaviour
         //    Debug.LogError(BuildingData.BuildingName + " has no constructionComponent");
     }
 
-    protected IEnumerator PlaceCoroutine(int levelIndex, bool isUnderConstruction)
+    protected IEnumerator PlaceCoroutine(bool isUnderConstruction, int levelIndex)
     {
         yield return new WaitForEndOfFrame();
-        constructionComponent.InitializeConstruction(levelIndex, isUnderConstruction);
+        constructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
     }
 
     protected void StartConstructing()
@@ -269,25 +268,5 @@ public class Building : MonoBehaviour
         }
 
         return null;
-    }
-
-    public Vector3 GetInteractionPosition()
-    {
-        if (!constructionComponent.spawnedConstruction)
-            Debug.Log("alaalaala");
-
-        List<BuildingAction> buildingInteraction = constructionComponent.spawnedConstruction.buildingInteractions;
-        if (buildingInteraction.Count > 0 && buildingInteraction[0].waypoints.Count > 0)
-            return buildingInteraction[0].waypoints[0].position;
-        else
-            return transform.position;
-    }
-
-    public Vector3 GetPickupItemPointPosition()
-    {
-        if (constructionComponent.spawnedConstruction.collectItemPoints.Count > 0)
-            return constructionComponent.spawnedConstruction.collectItemPoints[0].position;
-        else
-            return transform.position;
     }
 }

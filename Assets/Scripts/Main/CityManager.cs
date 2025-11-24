@@ -41,7 +41,7 @@ public class CityManager : MonoBehaviour
     public const int roomsWidth = 8;
     public const int floorWidth = 24;
     public const int firstBuildCityFloorIndex = 1;
-    public const int firstBuildCitybuildingPlace = 1;
+    public const int firstBuildCityBuildingPlace = 1;
     public float cityHeight { get; private set; } = 0;
 
     [HideInInspector] public List<List<ElevatorBuilding>> elevatorGroups = new List<List<ElevatorBuilding>>();
@@ -103,7 +103,6 @@ public class CityManager : MonoBehaviour
         InitializeItems();
         LoadBuildings(data);
         LoadResources(data);
-        //LoadEntities(data);
         StartCoroutine(LoadCityCoroutine(data));
     }
 
@@ -116,7 +115,7 @@ public class CityManager : MonoBehaviour
             {
                 if (i < builtFloors.Count)
                 {
-                    builtFloors[i].InitializeBuilding(i > 0 ? builtFloors[i - 1].floorBuildingPlace : null, 0, false, -1);
+                    builtFloors[i].InitializeBuilding(i > 0 ? builtFloors[i - 1].floorBuildingPlace : null, false, 0, -1);
                 }
                 else
                 {
@@ -164,23 +163,7 @@ public class CityManager : MonoBehaviour
                         }
                     }
 
-                    pierBuilding.InitializeBuilding(null, pierBuilding.levelComponent.LevelIndex, pierBuilding.constructionComponent.isUnderConstruction);
-
-                    if (data.spawnedBoatIds != null)
-                    {
-                        for (int j = 0; j < data.spawnedBoatIds.Length; j++)
-                        {
-                            int id = data.spawnedBoatIds[j];
-                            bool isUnderConstruction = data.spawnedBoatsAreUnderConstruction[j];
-                            bool isMoving = data.spawnedBoatsAreMoving[j];
-                            float health = data.spawnedBoatsHealth[j];
-                            float positionX = data.spawnedBoatPositionsX[j];
-                            float positionZ = data.spawnedBoatPositionsZ[j];
-                            float rotationY = data.spawnedBoatRotationsY[j];
-
-                            PlaceBoat(gameManager.boatPrefabs[id], pierBuilding, isUnderConstruction, j, isMoving, positionX, positionZ, rotationY);
-                        }
-                    }
+                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelComponent.LevelIndex);
                 }
                 else
                 {
@@ -198,18 +181,7 @@ public class CityManager : MonoBehaviour
                     }
 
                     // Pier Building
-                    pierBuilding.InitializeBuilding(null, pierBuilding.levelComponent.LevelIndex, pierBuilding.constructionComponent.isUnderConstruction);
-                    List<Boat> spawnedBoats = pierBuilding.SpawnedBoats.ToList();
-                    for (int j = 0; j < spawnedBoats.Count; j++)
-                    {
-                        if (spawnedBoats[j])
-                        {
-                            PierConstruction construction = pierBuilding.constructionComponent.spawnedConstruction as PierConstruction;
-                            spawnedBoats[j].Initialize(pierBuilding, j);
-                            spawnedBoats[j].transform.position = construction.BoatDockPositions[j].position;
-                            spawnedBoats[j].transform.rotation = construction.BoatDockPositions[j].rotation;
-                        }
-                    }
+                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelComponent.LevelIndex);
                 }
             }
 
@@ -232,34 +204,40 @@ public class CityManager : MonoBehaviour
             bakeNavMeshSurfaceCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
     }
 
-    private void InitializeItems()
-    {
-        for (int i = 0; i < ItemDatabase.items.Count; i++)
-        {
-            ItemData data = ItemDatabase.itemsById[i];
-            int id = data.ItemId;
-            items.Add(id, new ItemInstance(data));
-            totalStorageCapacity.Add(id, new ItemInstance(data));
-        }
-    }
-
-    private void LoadResources(SaveData data)
+    private void LoadBoats(SaveData data)
     {
         if (data != null)
         {
-            if (data.resourcesAmount != null)
+            if (data.spawnedBoatIds != null)
             {
-                for (int i = 0; i < data.resourcesAmount.Length; i++)
+                for (int j = 0; j < data.spawnedBoatIds.Length; j++)
                 {
-                    AddItem(i, data.resourcesAmount[i]);
+                    int id = data.spawnedBoatIds[j];
+                    bool isUnderConstruction = data.spawnedBoatsAreUnderConstruction[j];
+                    bool isDocked = data.spawnedBoatsAreDocked[j];
+                    bool isReturning = data.spawnedBoatsAreReturning[j];
+                    float health = data.spawnedBoatsHealth[j];
+                    float positionX = data.spawnedBoatPositionsX[j];
+                    float positionZ = data.spawnedBoatPositionsZ[j];
+                    float rotationY = data.spawnedBoatRotationsY[j];
+                    Debug.Log(positionZ);
+
+                    PlaceBoat(gameManager.boatPrefabs[id], isUnderConstruction, j, isDocked, isReturning, health, positionX, positionZ, rotationY);
                 }
             }
         }
         else
         {
-            for (int i = 0; i < startResources.Count; i++)
+            List<Boat> spawnedBoats = pierBuilding.SpawnedBoats.ToList();
+            for (int j = 0; j < spawnedBoats.Count; j++)
             {
-                AddItem(startResources[i].ItemData.ItemId, startResources[i].Amount);
+                if (spawnedBoats[j])
+                {
+                    PierConstruction construction = pierBuilding.constructionComponent.spawnedConstruction as PierConstruction;
+                    spawnedBoats[j].Initialize(pierBuilding, false, j);
+                    spawnedBoats[j].transform.position = construction.BoatDockPositions[j].position;
+                    spawnedBoats[j].transform.rotation = construction.BoatDockPositions[j].rotation;
+                }
             }
         }
     }
@@ -343,12 +321,45 @@ public class CityManager : MonoBehaviour
         OnResidentsAdded?.Invoke();
     }
 
+    private void InitializeItems()
+    {
+        for (int i = 0; i < ItemDatabase.items.Count; i++)
+        {
+            ItemData data = ItemDatabase.itemsById[i];
+            int id = data.ItemId;
+            items.Add(id, new ItemInstance(data));
+            totalStorageCapacity.Add(id, new ItemInstance(data));
+        }
+    }
+
+    private void LoadResources(SaveData data)
+    {
+        if (data != null)
+        {
+            if (data.resourcesAmount != null)
+            {
+                for (int i = 0; i < data.resourcesAmount.Length; i++)
+                {
+                    AddItem(i, data.resourcesAmount[i]);
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < startResources.Count; i++)
+            {
+                AddItem(startResources[i].ItemData.ItemId, startResources[i].Amount);
+            }
+        }
+    }
+
     private IEnumerator LoadCityCoroutine(SaveData data)
     {
         if (bakeNavMeshSurfaceCoroutine != null)
             yield return bakeNavMeshSurfaceCoroutine;
 
         LoadEntities(data);
+        LoadBoats(data);
     }
 
     private void AddResident(Resident resident)
@@ -515,7 +526,7 @@ public class CityManager : MonoBehaviour
         if (building)
             ShowBuildingPlacesByType(building);
         else if (boat)
-            PlaceBoat(boat, pierBuilding, true);
+            PlaceBoat(boat, true);
     }
 
     public void PlaceBuilding(Building building, BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
@@ -549,7 +560,7 @@ public class CityManager : MonoBehaviour
                 }
             }
 
-            spawnedBuilding.InitializeBuilding(buildingPlace, levelIndex, isUnderConstruction);
+            spawnedBuilding.InitializeBuilding(buildingPlace, isUnderConstruction, levelIndex);
         }
 
         //bool canPlace = false;
@@ -601,9 +612,10 @@ public class CityManager : MonoBehaviour
         //}
     }
 
-    public void PlaceBoat(Boat boat, PierBuilding pierBuilding, bool isUnderConstruction = false, int? dockIndex = null, bool isMoving = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
+    public void PlaceBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isDocked = false, bool isReturningToDock = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
     {
-        pierBuilding.CreateBoat(boat, isUnderConstruction, dockIndex, isMoving, health, positionX, positionZ, rotationY);
+        Debug.Log(positionZ.Value);
+        pierBuilding.CreateBoat(boat, isUnderConstruction, dockIndex, isDocked, isReturningToDock, health, positionX, positionZ, rotationY);
     }
 
     public void DemolishContruction(Building building)
@@ -871,16 +883,48 @@ public class CityManager : MonoBehaviour
     }
 
     // Path finding
+    public Building FindPathToBuilding(BuildingPlace startBuildingPlace, Building targetBuilding, ref List<Building> buildingsPath)
+    {
+        return FindPathToBuilding_Internal(startBuildingPlace, targetBuilding, ref buildingsPath);
+    }
+
     public Building FindPathToBuilding(BuildingPlace startBuildingPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
     {
+        Building targetBuilding = null;
+        for (int i = 0; i < builtFloors.Count; i++)
+        {
+            Building hall = builtFloors[i].hallBuildingPlace.placedBuilding;
+            if (hall && targetBuildingCondition(hall))
+            {
+                targetBuilding = hall;
+                break;
+            }
+
+            for (int j = 0; j < roomsCountPerFloor; j++)
+            {
+                Building room = builtFloors[i].roomBuildingPlaces[j].placedBuilding;
+                if (room && targetBuildingCondition(room))
+                {
+                    targetBuilding = room;
+                    break;
+                }  
+            }
+
+            if (targetBuilding)
+                break;
+        }
+
+        return FindPathToBuilding_Internal(startBuildingPlace, targetBuilding, ref buildingsPath);
+    }
+
+    private Building FindPathToBuilding_Internal(BuildingPlace startBuildingPlace, Building targetBuilding, ref List<Building> buildingsPath)
+    {
+        // Preparing
         buildingsPath.Clear();
         allPaths.Clear();
         allPaths2.Clear();
 
         int pathIndex = 0;
-
-        if (!startBuildingPlace || startBuildingPlace.floorIndex < firstBuildCityFloorIndex)
-            startBuildingPlace = builtFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCitybuildingPlace];
 
         allPaths.Add(new List<Building>());
 
@@ -888,54 +932,67 @@ public class CityManager : MonoBehaviour
         for (int i = 0; i < builtFloors.Count * roomsCountPerFloor; i++)
             checkedBuildingPlaces.Add(false);
 
-        BuildingPlace targetBuildingPlace = FindTargetBuildingOnFloor(startBuildingPlace, targetBuildingCondition, null, ref allPaths, ref pathIndex, ref checkedBuildingPlaces);
-        if (targetBuildingPlace)
+        if (startBuildingPlace && startBuildingPlace.floorIndex < firstBuildCityFloorIndex)
+            startBuildingPlace = builtFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCityBuildingPlace];
+
+        // Main
+        if (startBuildingPlace || targetBuilding as TowerBuilding)
         {
-            for (int i = 0; i < allPaths.Count; i++)
+            BuildingPlace newStartBuildingPlace = !startBuildingPlace ? builtFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCityBuildingPlace] : startBuildingPlace;
+            Building newTargetBuilding = targetBuilding.GetType() == typeof(Building) ? builtFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCityBuildingPlace].placedBuilding : targetBuilding;
+
+            BuildingPlace targetBuildingPlace = FindTargetBuildingOnFloor(newStartBuildingPlace, newTargetBuilding, null, ref allPaths, ref pathIndex, ref checkedBuildingPlaces);
+            Debug.Log(targetBuildingPlace);
+            if (targetBuildingPlace)
             {
-                allPaths2.Add(new BuildingPath());
-
-                allPaths2[i].paths = allPaths[i];
-
-                if (allPaths[i].Count > 0 && targetBuildingCondition(allPaths[i][allPaths[i].Count - 1]) && targetBuildingCondition(allPaths[i][allPaths[i].Count - 1]))
+                for (int i = 0; i < allPaths.Count; i++)
                 {
-                    buildingsPath = allPaths[i];
-                }
-            }
+                    allPaths2.Add(new BuildingPath());
 
-            for (int i = 0; i < buildingsPath.Count - 1; i++)
-            {
-                Type currentType = buildingsPath[i].GetType();
-                Type nextType = buildingsPath[i + 1].GetType();
+                    allPaths2[i].paths = allPaths[i];
 
-                if (currentType == typeof(ElevatorBuilding))
-                {
-                    if (buildingsPath.Count > i + 2 && buildingsPath[i + 2] && buildingsPath[i].GetPlaceIndex() == buildingsPath[i + 2].GetPlaceIndex())
+                    if (allPaths[i].Count > 0 && targetBuilding == allPaths[i][allPaths[i].Count - 1] && targetBuilding == allPaths[i][allPaths[i].Count - 1])
                     {
-                        if (buildingsPath[i + 2].GetType() == currentType)
-                        {
-                            buildingsPath.RemoveAt(i + 1);
-                            i--;
-                        }
+                        buildingsPath = allPaths[i];
                     }
                 }
-                else
+
+                for (int i = 0; i < buildingsPath.Count - 1; i++)
                 {
-                    buildingsPath.RemoveAt(i);
-                    i--;
+                    Type currentType = buildingsPath[i].GetType();
+                    Type nextType = buildingsPath[i + 1].GetType();
+
+                    if (currentType == typeof(ElevatorBuilding))
+                    {
+                        if (buildingsPath.Count > i + 2 && buildingsPath[i + 2] && buildingsPath[i].GetPlaceIndex() == buildingsPath[i + 2].GetPlaceIndex())
+                        {
+                            if (buildingsPath[i + 2].GetType() == currentType)
+                            {
+                                buildingsPath.RemoveAt(i + 1);
+                                i--;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        buildingsPath.RemoveAt(i);
+                        i--;
+                    }
                 }
             }
 
-            return targetBuildingPlace.placedBuilding;
+            if (newTargetBuilding != targetBuilding)
+                buildingsPath.Add(targetBuilding);
         }
         else
         {
-            Debug.Log("Path wasn't found");
-            return null;
+            buildingsPath.Add(targetBuilding);
         }
+
+        return targetBuilding;
     }
 
-    private BuildingPlace FindTargetBuildingOnFloor(BuildingPlace startBuildingPlace, Func<Building, bool> targetBuildingCondition, BuildingPlace lastBuildingPlace, ref List<List<Building>> allPaths, ref int pathIndex, ref List<bool> checkedBuildingPlaces)
+    private BuildingPlace FindTargetBuildingOnFloor(BuildingPlace startBuildingPlace, Building targetBuilding, BuildingPlace lastBuildingPlace, ref List<List<Building>> allPaths, ref int pathIndex, ref List<bool> checkedBuildingPlaces)
     {
         if (startBuildingPlace)
         {
@@ -964,11 +1021,11 @@ public class CityManager : MonoBehaviour
 
                     if (elevatorBuilding)
                     {
-                        BuildingPlace upperTargetPlace = AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingCondition, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
+                        BuildingPlace upperTargetPlace = AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuilding, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
                         if (upperTargetPlace)
                             return upperTargetPlace;
 
-                        BuildingPlace lowerTargetPlace = AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingCondition, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
+                        BuildingPlace lowerTargetPlace = AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuilding, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
                         if (lowerTargetPlace)
                             return lowerTargetPlace;
                     }
@@ -976,7 +1033,7 @@ public class CityManager : MonoBehaviour
                     {
                         allPaths[startPathIndex].Add(startBuilding);
 
-                        if (targetBuildingCondition(startBuilding))
+                        if (startBuilding == targetBuilding)
                             return startBuilding.buildingPlace;
                     }
                 }
@@ -1002,11 +1059,11 @@ public class CityManager : MonoBehaviour
 
                                 if (elevatorBuilding)
                                 {
-                                    BuildingPlace upperTargetPlace = AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingCondition, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
+                                    BuildingPlace upperTargetPlace = AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuilding, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
                                     if (upperTargetPlace)
                                         return upperTargetPlace;
 
-                                    BuildingPlace lowerTargetPlace = AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingCondition, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
+                                    BuildingPlace lowerTargetPlace = AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuilding, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
                                     if (lowerTargetPlace)
                                         return lowerTargetPlace;
                                 }
@@ -1014,7 +1071,7 @@ public class CityManager : MonoBehaviour
                                 {
                                     allPaths[startPathIndex].Add(leftBuilding);
 
-                                    if (targetBuildingCondition(leftBuilding))
+                                    if (leftBuilding == targetBuilding)
                                         return leftBuilding.buildingPlace;
                                 }
                             }
@@ -1041,11 +1098,11 @@ public class CityManager : MonoBehaviour
 
                                 if (elevatorBuilding)
                                 {
-                                    BuildingPlace upperTargetPlace = AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingCondition, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
+                                    BuildingPlace upperTargetPlace = AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuilding, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
                                     if (upperTargetPlace)
                                         return upperTargetPlace;
 
-                                    BuildingPlace lowerTargetPlace = AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingCondition, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
+                                    BuildingPlace lowerTargetPlace = AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuilding, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
                                     if (lowerTargetPlace)
                                         return lowerTargetPlace;
                                 }
@@ -1053,7 +1110,7 @@ public class CityManager : MonoBehaviour
                                 {
                                     allPaths[startPathIndex].Add(rightBuilding);
 
-                                    if (targetBuildingCondition(rightBuilding))
+                                    if (rightBuilding == targetBuilding)
                                     {
                                         return rightBuilding.buildingPlace;
                                     }
@@ -1086,11 +1143,11 @@ public class CityManager : MonoBehaviour
 
                             if (elevatorBuilding)
                             {
-                                BuildingPlace upperTargetPlace = AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingCondition, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
+                                BuildingPlace upperTargetPlace = AddElevatorPath(elevatorBuilding.aboveConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuilding, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
                                 if (upperTargetPlace)
                                     return upperTargetPlace;
 
-                                BuildingPlace lowerTargetPlace = AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuildingCondition, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
+                                BuildingPlace lowerTargetPlace = AddElevatorPath(elevatorBuilding.belowConnectedBuilding as ElevatorBuilding, elevatorBuilding, targetBuilding, lastBuildingPlace, ref pathIndex, ref checkedBuildingPlaces);
                                 if (lowerTargetPlace)
                                     return lowerTargetPlace;
                             }
@@ -1098,7 +1155,7 @@ public class CityManager : MonoBehaviour
                             {
                                 allPaths[startPathIndex].Add(finishBuilding);
 
-                                if (targetBuildingCondition(finishBuilding))
+                                if (finishBuilding == targetBuilding)
                                     return finishBuilding.buildingPlace;
                             }
                         }
@@ -1112,7 +1169,7 @@ public class CityManager : MonoBehaviour
         return null;
     }
 
-    private BuildingPlace AddElevatorPath(ElevatorBuilding verticalElevatorBuilding, ElevatorBuilding startElevatorBuilding, Func<Building, bool> targetBuildingCondition, BuildingPlace lastBuildingPlace, ref int pathIndex, ref List<bool> checkedBuildingPlaces)
+    private BuildingPlace AddElevatorPath(ElevatorBuilding verticalElevatorBuilding, ElevatorBuilding startElevatorBuilding, Building targetBuilding, BuildingPlace lastBuildingPlace, ref int pathIndex, ref List<bool> checkedBuildingPlaces)
     {
         if (verticalElevatorBuilding && verticalElevatorBuilding.buildingPlace != lastBuildingPlace)
         {
@@ -1137,7 +1194,7 @@ public class CityManager : MonoBehaviour
                 allPaths[pathIndex].Add(startElevatorBuilding);
                 allPaths[pathIndex].Add(verticalElevatorBuilding);
 
-                return FindTargetBuildingOnFloor(verticalElevatorBuilding.buildingPlace, targetBuildingCondition, startElevatorBuilding.buildingPlace, ref allPaths, ref pathIndex, ref checkedBuildingPlaces);
+                return FindTargetBuildingOnFloor(verticalElevatorBuilding.buildingPlace, targetBuilding, startElevatorBuilding.buildingPlace, ref allPaths, ref pathIndex, ref checkedBuildingPlaces);
             }
             else
                 return null;

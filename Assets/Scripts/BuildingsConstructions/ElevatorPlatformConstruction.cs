@@ -46,7 +46,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
                 {
                     float distance = 0;
 
-                    if (buildingInteractions.Count > 0)
+                    if (BuildingInteractions.Count > 0)
                         distance = math.distance(currentElevatorWalkingPassengers[i].transform.position, currentElevatorWalkingPassengers[i].targetPosition);
 
                     if (distance <= 1f && currentElevatorWalkingPassengers[i].navMeshAgent.velocity == Vector3.zero)
@@ -73,7 +73,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
                 bool canMove = true;
 
-                float distance = math.distance(elevatorWaitingPassengers[0].transform.position, elevatorWaitingPassengers[0].currentBuilding.constructionComponent.spawnedConstruction.buildingInteractions[0].waypoints[0].position);
+                float distance = math.distance(elevatorWaitingPassengers[0].transform.position, elevatorWaitingPassengers[0].currentBuilding.constructionComponent.spawnedConstruction.BuildingInteractions[0].waypoints[0].position);
 
                 if (distance > 1f || elevatorWaitingPassengers[0].navMeshAgent.velocity != Vector3.zero)
                 {

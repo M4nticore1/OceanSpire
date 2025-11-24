@@ -30,9 +30,12 @@ public class Entity : MonoBehaviour
     [HideInInspector] public int currentFloorIndex { get; protected set; } = 0;
     [HideInInspector] public int currentBuildingPlaceIndex { get; protected set; } = 0;
     public Vector3 targetPosition = Vector3.zero;
-    protected const float applyTargetPosition = 1.0f;
+    protected const float applyTargetPosition = 0.5f;
+    private const float enteringBoatTime = 1;
 
-    protected bool isWalking = false;
+    private Boat currentBoat = null;
+
+    protected bool isMoving = false;
     public bool isRidingOnElevator { get; protected set; } = false;
     public bool isWaitingForElevator { get; protected set; } = false;
     public bool isWalkingToElevator { get; protected set; } = false;
@@ -69,11 +72,13 @@ public class Entity : MonoBehaviour
     protected void OnEnable()
     {
         ConstructionComponent.onAnyConstructionStartConstructing += OnBuildingStartConstructing;
+        Boat.onBoatDocked += OnBoatDocked;
     }
 
     protected void OnDisable()
     {
         ConstructionComponent.onAnyConstructionFinishConstructing -= OnBuildingStartConstructing;
+        Boat.onBoatDocked -= OnBoatDocked;
     }
 
     protected void Start()
@@ -87,6 +92,35 @@ public class Entity : MonoBehaviour
         {
             Work();
         }
+        else if (isMoving)
+        {
+            float distance = math.distance(transform.position, targetPosition);
+            if (distance < applyTargetPosition)
+            {
+                if (currentWork == ResidentWork.BuildingWork)
+                {
+                    if (workBuilding as PierBuilding)
+                    {
+                        Debug.Log("Enter");
+                        StartEnteringBoat();
+                    }
+                }
+
+                //if (currentBuilding)
+                //{
+                //    if (currentBuilding == workBuilding)
+                //    {
+                //        if (currentWork == ResidentWork.BuildingWork)
+                //        {
+                //            if (workBuilding as PierBuilding)
+                //            {
+                //                StartEnteringBoat();
+                //            }
+                //        }
+                //    }
+                //}
+            }
+        }
     }
 
     // Work
@@ -94,9 +128,9 @@ public class Entity : MonoBehaviour
     {
         if (currentWork == ResidentWork.BuildingWork)
         {
-            if (workBuilding.constructionComponent.spawnedConstruction.buildingInteractions.Count > workerIndex)
+            if (workBuilding.constructionComponent.spawnedConstruction.BuildingInteractions.Count > workerIndex)
             {
-                BuildingAction buildingAction = workBuilding.constructionComponent.spawnedConstruction.buildingInteractions[workerIndex];
+                BuildingAction buildingAction = workBuilding.constructionComponent.spawnedConstruction.BuildingInteractions[workerIndex];
 
                 if (buildingAction.actionTimes[currentActionIndex] > 0)
                 {
@@ -185,7 +219,7 @@ public class Entity : MonoBehaviour
                         }
 
                         if (isNeededToWork)
-                            SetTargetBuilding(currentBuilding.buildingPlace, b => b.GetFloorIndex() == workBuilding.GetFloorIndex() && b.GetPlaceIndex() == workBuilding.GetPlaceIndex());
+                            SetTargetBuilding(currentBuilding.buildingPlace, b => b ? b == workBuilding : false);
                         else
                             SetWork(ResidentWork.None);
                         currentActionTime = 0;
@@ -202,7 +236,7 @@ public class Entity : MonoBehaviour
         workBuilding = null;
 
         currentWork = ResidentWork.None;
-        StopWorking();
+        StopWork();
 
         if (targetBuilding)
             targetBuilding = null;
@@ -226,7 +260,7 @@ public class Entity : MonoBehaviour
                 workBuilding = newWorkBuilding;
                 newWorkBuilding.AddWorker(this);
 
-                SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == newWorkBuilding.GetFloorIndex() && b.GetPlaceIndex() == newWorkBuilding.GetPlaceIndex());
+                SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, newWorkBuilding);
 
                 OnWorkerAdd?.Invoke();
             }
@@ -240,7 +274,7 @@ public class Entity : MonoBehaviour
                     {
                         if (SetTargetBuilding(newWorkBuilding.buildingPlace, b =>
                         {
-                            if (!b.storageComponent || (b.GetFloorIndex() == newWorkBuilding.GetFloorIndex() && b.GetPlaceIndex() == newWorkBuilding.GetPlaceIndex())) return false;
+                            if (!b || !b.storageComponent || b == newWorkBuilding) return false;
 
                             int itemIndex = newWorkBuilding.ConstructionLevelsData[newWorkBuilding.levelComponent.LevelIndex].ResourcesToBuild[0].ItemData.ItemId;
 
@@ -261,6 +295,18 @@ public class Entity : MonoBehaviour
     private void StartWorking()
     {
         isWorking = true;
+    }
+
+    private void StopWork()
+    {
+        if (workBuilding as PierBuilding)
+        {
+            currentBoat.ReturnToDock();
+        }
+        else
+        {
+            StopWorking();
+        }
     }
 
     private void StopWorking()
@@ -302,15 +348,15 @@ public class Entity : MonoBehaviour
             {
                 if (currentPathBuilding == targetBuilding)
                 {
-                    if (currentWork != ResidentWork.None)
+                    if (workBuilding)
                     {
                         if (currentWork == ResidentWork.BuildingWork)
                         {
-                            targetPosition = currentPathBuilding.GetInteractionPosition();
+                            targetPosition = currentPathBuilding.constructionComponent.GetInteractionPosition(workBuilding.workers.Count - 1);
                         }
                         else if (currentWork == ResidentWork.ConstructingBuilding)
                         {
-                            targetPosition = currentPathBuilding.GetPickupItemPointPosition();
+                            targetPosition = currentPathBuilding.constructionComponent.GetPickupItemPointPosition();
                         }
                     }
                 }
@@ -321,48 +367,16 @@ public class Entity : MonoBehaviour
                         if (isWalkingToElevator)
                             targetPosition = currentPathElevator.GetPlatformRidingPosition();
                         else
-                            targetPosition = currentPathElevator.GetInteractionPosition();
+                            targetPosition = currentPathElevator.constructionComponent.GetInteractionPosition(0);
                     }
                     else if (nextPathBuilding)
                     {
-                        targetPosition = nextPathBuilding.GetInteractionPosition();
+                        targetPosition = nextPathBuilding.constructionComponent.GetInteractionPosition(0);
                     }
                 }
 
-                navMeshAgent.SetDestination(targetPosition);
+                StartMoving(targetPosition);
             }
-            //else
-            //{
-            //    if (currentElevatorBuilding)
-            //    {
-            //        if (currentPathElevator && currentPathElevator.GetPlaceIndex() == currentElevatorBuilding.GetPlaceIndex() && currentPathElevator.buildingData.buildingIdName == currentElevatorBuilding.buildingData.buildingIdName)
-            //        {
-            //            //navMeshAgent.SetDestination(currentPathElevatorBuilding.spawnedBuildingConstruction.buildingInteractions[currentPathElevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
-            //        }
-            //        else
-            //        {
-            //            if (currentPathElevator)
-            //            {
-            //                navMeshAgent.SetDestination(currentPathElevator.spawnedBuildingConstruction.buildingInteractions[currentPathElevator.elevatorWaitingPassengers.Count].waypoints[0].transform.position);
-            //            }
-            //            else if (currentPathBuilding)
-            //            {
-            //                navMeshAgent.SetDestination(currentPathBuilding.spawnedBuildingConstruction.transform.position);
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (currentPathElevator)
-            //        {
-            //            navMeshAgent.SetDestination(currentPathElevator.GetInteractionPointPosition());
-            //        }
-            //        else if (currentPathBuilding)
-            //        {
-            //            navMeshAgent.SetDestination(currentPathBuilding.transform.position);
-            //        }
-            //    }
-            //}
         }
     }
 
@@ -376,6 +390,19 @@ public class Entity : MonoBehaviour
         transform.position += direction * speed;
     }
 
+    private void StartMoving(Vector3 position)
+    {
+        isMoving = true;
+        navMeshAgent.SetDestination(position);
+    }
+
+    private void StopMoving()
+    {
+        isMoving = false;
+        navMeshAgent.isStopped = true;
+        navMeshAgent.ResetPath();
+    }
+
     // Elevators
     public void StartElevatorWalking()
     {
@@ -386,7 +413,7 @@ public class Entity : MonoBehaviour
         isRidingOnElevator = false;
 
         ElevatorPlatformConstruction elevatorPlatformConstruction = elevatorBuilding.spawnedElevatorPlatform;
-        navMeshAgent.SetDestination(elevatorPlatformConstruction.buildingInteractions[elevatorPlatformConstruction.elevatorRidingPassengers.Count].waypoints[0].position);
+        navMeshAgent.SetDestination(elevatorPlatformConstruction.BuildingInteractions[elevatorPlatformConstruction.elevatorRidingPassengers.Count].waypoints[0].position);
 
         elevatorBuilding.AddWalkingPassenger(this);
         elevatorBuilding.RemoveWaitingPassenger(this);
@@ -407,7 +434,7 @@ public class Entity : MonoBehaviour
         isRidingOnElevator = false;
 
         BuildingConstruction buildingConstruction = elevatorBuilding.constructionComponent.spawnedConstruction;
-        navMeshAgent.SetDestination(buildingConstruction.buildingInteractions[elevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].position);
+        navMeshAgent.SetDestination(buildingConstruction.BuildingInteractions[elevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].position);
 
         elevatorBuilding.RemoveRidingPassenger(this);
         elevatorBuilding.AddWaitingPassenger(this);
@@ -490,38 +517,81 @@ public class Entity : MonoBehaviour
         //currentBuilding = null;
     }
 
-    public Building SetTargetBuilding(BuildingPlace startBuildingPlace, Func<Building, bool> targetBuildingCondition)
+    public Building SetTargetBuilding(BuildingPlace startBuildingPlace, Building targetBuilding)
     {
         pathIndex = 0;
 
-        if (cityManager)
-        {
-            targetBuilding = cityManager.FindPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings);
-
-            if (targetBuilding)
-            {
-                if (startBuildingPlace == (currentBuilding ? currentBuilding.buildingPlace : null))
-                {
-                    FollowPath();
-                    return targetBuilding;
-                }
-                else
-                {
-                    if (cityManager.FindPathToBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == targetBuilding.GetFloorIndex() && b.GetPlaceIndex() == targetBuilding.GetPlaceIndex(), ref pathBuildings))
-                    {
-                        FollowPath();
-                        return targetBuilding;
-                    }
-                }
-            }
-
-            return null;
-        }
-        else
+        if (!cityManager)
         {
             Debug.LogError("cityManager is NULL");
             return null;
         }
+
+        this.targetBuilding = cityManager.FindPathToBuilding(startBuildingPlace, targetBuilding, ref pathBuildings);
+
+        if (!targetBuilding)
+            return null;
+
+        Debug.Log(this.targetBuilding);
+        Debug.Log(pathBuildings.Count);
+        FollowPath();
+        return targetBuilding;
+    }
+
+    public Building SetTargetBuilding(BuildingPlace startBuildingPlace, Func<Building, bool> targetBuildingCondition)
+    {
+        pathIndex = 0;
+
+        if (!cityManager)
+        {
+            Debug.LogError("cityManager is NULL");
+            return null;
+        }
+
+        targetBuilding = cityManager.FindPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings);
+
+        if (!targetBuilding)
+            return null;
+
+        Debug.Log(targetBuilding);
+        FollowPath();
+        return targetBuilding;
+
+        //if (startBuildingPlace == (currentBuilding ? currentBuilding.buildingPlace : null))
+        //{
+        //    FollowPath();
+        //    return targetBuilding;
+        //}
+        //else
+        //{
+        //    if (cityManager.FindPathToBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b == targetBuilding, ref pathBuildings))
+        //    {
+        //        FollowPath();
+        //        return targetBuilding;
+        //    }
+        //}
+
+        //return null;
+    }
+
+    private Building SetTargetBuilding_Internal(BuildingPlace startBuildingPlace, Func<Building, bool> condition)
+    {
+        pathIndex = 0;
+
+        if (!cityManager)
+        {
+            Debug.LogError("cityManager is NULL");
+            return null;
+        }
+
+        targetBuilding = cityManager.FindPathToBuilding(startBuildingPlace, condition, ref pathBuildings);
+
+        if (!targetBuilding)
+            return null;
+
+        Debug.Log(targetBuilding);
+        FollowPath();
+        return targetBuilding;
     }
 
     protected void OnBuildingStartConstructing(ConstructionComponent building)
@@ -543,6 +613,49 @@ public class Entity : MonoBehaviour
             SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.GetFloorIndex() == targetBuilding.GetFloorIndex() && b.GetPlaceIndex() == targetBuilding.GetPlaceIndex());
         }
 
+    }
+
+    private void StartEnteringBoat()
+    {
+        StopMoving();
+        TimerManager.SetTimer(enteringBoatTime, EnterBoat);
+    }
+
+    // Boat
+    private void EnterBoat()
+    {
+        PierBuilding workPier = workBuilding as PierBuilding;
+        if (workPier)
+        {
+            Debug.Log("EnterBoat");
+            PierBuilding pier = workBuilding as PierBuilding;
+            Boat boat = pier.GetBoatByIndex(workerIndex);
+            currentBoat = boat;
+            currentBoat.EnterBoat(this);
+
+            navMeshAgent.enabled = false;
+            transform.position = boat.SeatSlot.position;
+        }
+    }
+
+    private void StartExitingBoat()
+    {
+        TimerManager.SetTimer(enteringBoatTime, ExitBoat);
+    }
+
+    private void ExitBoat()
+    {
+        transform.position = currentBoat.ownedPier.constructionComponent.GetInteractionPosition(workBuilding.workers.Count - 1);
+        navMeshAgent.enabled = true;
+        StopWorking();
+    }
+
+    private void OnBoatDocked(Boat boat)
+    {
+        if (currentBoat == boat)
+        {
+            StartExitingBoat();
+        }
     }
 
     // Actions

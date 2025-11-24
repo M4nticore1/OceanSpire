@@ -25,9 +25,9 @@ public class TowerBuilding : Building
     //public TowerBuilding aboveConnectedBuilding = null;
     //public TowerBuilding belowConnectedBuilding = null;
 
-    public override void InitializeBuilding(BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction, int interiorIndex = -1)
+    public override void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
-        base.InitializeBuilding(buildingPlace, levelIndex, isUnderConstruction, interiorIndex);
+        base.InitializeBuilding(buildingPlace, isUnderConstruction, levelIndex, interiorIndex);
 
         //leftConnectedBuilding = GetNeightboorBuilding(Side.Left);
         //rightConnectedBuilding = GetNeightboorBuilding(Side.Right);

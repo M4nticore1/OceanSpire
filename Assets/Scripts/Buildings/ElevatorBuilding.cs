@@ -125,7 +125,7 @@ public class ElevatorBuilding : RoomBuilding
 
     public Vector3 GetPlatformRidingPosition()
     {
-        int index = spawnedElevatorPlatform.elevatorRidingPassengers.Count % spawnedElevatorPlatform.buildingInteractions.Count;
-        return spawnedElevatorPlatform.buildingInteractions[index].waypoints[0].position;
+        int index = spawnedElevatorPlatform.elevatorRidingPassengers.Count % spawnedElevatorPlatform.BuildingInteractions.Count;
+        return spawnedElevatorPlatform.BuildingInteractions[index].waypoints[0].position;
     }
 }
