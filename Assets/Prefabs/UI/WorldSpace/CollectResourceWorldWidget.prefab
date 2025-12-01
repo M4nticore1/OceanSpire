@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8116952406006874421}
   - component: {fileID: 3174750169516936147}
   m_Layer: 0
-  m_Name: CollectResourceWidget
+  m_Name: CollectResourceWorldWidget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

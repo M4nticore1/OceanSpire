@@ -101,7 +101,6 @@ public class Entity : MonoBehaviour
                 {
                     if (workBuilding as PierBuilding)
                     {
-                        Debug.Log("Enter");
                         StartEnteringBoat();
                     }
                 }
@@ -128,9 +127,9 @@ public class Entity : MonoBehaviour
     {
         if (currentWork == ResidentWork.BuildingWork)
         {
-            if (workBuilding.constructionComponent.spawnedConstruction.BuildingInteractions.Count > workerIndex)
+            if (workBuilding.constructionComponent.SpawnedConstruction.BuildingInteractions.Count > workerIndex)
             {
-                BuildingAction buildingAction = workBuilding.constructionComponent.spawnedConstruction.BuildingInteractions[workerIndex];
+                BuildingAction buildingAction = workBuilding.constructionComponent.SpawnedConstruction.BuildingInteractions[workerIndex];
 
                 if (buildingAction.actionTimes[currentActionIndex] > 0)
                 {
@@ -312,7 +311,7 @@ public class Entity : MonoBehaviour
     private void StopWorking()
     {
         isWorking = false;
-        navMeshAgent.ResetPath();
+        //navMeshAgent.ResetPath();
     }
 
     private void StartConstructingBuilding()
@@ -433,7 +432,7 @@ public class Entity : MonoBehaviour
         isWalkingToElevator = false;
         isRidingOnElevator = false;
 
-        BuildingConstruction buildingConstruction = elevatorBuilding.constructionComponent.spawnedConstruction;
+        BuildingConstruction buildingConstruction = elevatorBuilding.constructionComponent.SpawnedConstruction;
         navMeshAgent.SetDestination(buildingConstruction.BuildingInteractions[elevatorBuilding.elevatorWaitingPassengers.Count].waypoints[0].position);
 
         elevatorBuilding.RemoveRidingPassenger(this);
@@ -532,8 +531,6 @@ public class Entity : MonoBehaviour
         if (!targetBuilding)
             return null;
 
-        Debug.Log(this.targetBuilding);
-        Debug.Log(pathBuildings.Count);
         FollowPath();
         return targetBuilding;
     }
@@ -627,7 +624,6 @@ public class Entity : MonoBehaviour
         PierBuilding workPier = workBuilding as PierBuilding;
         if (workPier)
         {
-            Debug.Log("EnterBoat");
             PierBuilding pier = workBuilding as PierBuilding;
             Boat boat = pier.GetBoatByIndex(workerIndex);
             currentBoat = boat;
@@ -652,10 +648,10 @@ public class Entity : MonoBehaviour
 
     private void OnBoatDocked(Boat boat)
     {
-        if (currentBoat == boat)
-        {
-            StartExitingBoat();
-        }
+        //if (currentBoat == boat)
+        //{
+        //    StartExitingBoat();
+        //}
     }
 
     // Actions

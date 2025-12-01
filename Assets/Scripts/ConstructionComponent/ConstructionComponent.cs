@@ -14,9 +14,10 @@ public class ConstructionComponent : MonoBehaviour
     //public List<ConstructionLevelData> ConstructionLevelsData => constructionLevelsData;
 
     [Header("Construction")]
+    [SerializeField] private BuildingConstruction spawnedConstruction = null;
+    public BuildingConstruction SpawnedConstruction => spawnedConstruction;
     public bool isRuined { get; private set; } = false;
     public bool isUnderConstruction { get; private set; } = false;
-    public BuildingConstruction spawnedConstruction { get; private set; } = null;
 
     public List<ItemInstance> incomingConstructionResources { get; private set; } = new List<ItemInstance>();
     public Dictionary<int, ItemInstance> incomingConstructionResourcesDict { get; private set; } = new Dictionary<int, ItemInstance>();
@@ -207,6 +208,11 @@ public class ConstructionComponent : MonoBehaviour
     {
         if (buildingConstruction)
         {
+            if (spawnedConstruction)
+            {
+                Destroy(spawnedConstruction.gameObject);
+            }
+
             BuildingConstruction construction = Instantiate(buildingConstruction, gameObject.transform);
             spawnedConstruction = construction;
             spawnedConstruction.Build();

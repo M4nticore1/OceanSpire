@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: 07af6b02073e7f943abb14e81c8f2641
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - thumbImage: {instanceID: 0}
+  - detailsMenuWidget: {fileID: 1628767903394670288, guid: 817390674c4710845b657886745b41b6, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

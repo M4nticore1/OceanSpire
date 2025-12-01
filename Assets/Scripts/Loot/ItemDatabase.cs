@@ -24,10 +24,10 @@ public static class ItemDatabase
             else
                 Debug.LogWarning($"Duplicate ItemId {data.ItemId} for item {data.name}");
 
-            if (!itemsByIdName.ContainsKey(data.itemIdName))
-                itemsByIdName.Add(data.itemIdName, data);
+            if (!itemsByIdName.ContainsKey(data.ItemIdName))
+                itemsByIdName.Add(data.ItemIdName, data);
             else
-                Debug.LogWarning($"Duplicate itemIdName {data.itemIdName} for item {data.name}");
+                Debug.LogWarning($"Duplicate itemIdName {data.ItemIdName} for item {data.name}");
         }
     }
 
@@ -137,7 +137,7 @@ public static class ItemDatabase
 
         for (int i = 0; i < itemsList.Count; i++)
         {
-            if (itemsList[i].itemIdName == idName)
+            if (itemsList[i].ItemIdName == idName)
             {
                 id = i;
                 return i;

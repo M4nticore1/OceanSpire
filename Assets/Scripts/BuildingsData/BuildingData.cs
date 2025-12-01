@@ -77,6 +77,6 @@ public class BuildingData : ScriptableObject
     public bool IsDemolishable => isDemolishable;
 
     [Header("UI")]
-    [SerializeField] private GameObject buildingManagementMenuWidget = null;
-    public GameObject BuildingManagementMenuWidget => buildingManagementMenuWidget;
+    [SerializeField] private DetailsMenu detailsMenuWidget = null;
+    public DetailsMenu DetailsMenuWidget => detailsMenuWidget;
 }

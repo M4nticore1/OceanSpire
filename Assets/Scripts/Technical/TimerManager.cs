@@ -12,6 +12,7 @@ public class TimerManager
         {
             timers[i] = null;
         }
+        timers.Clear();
     }
 
     public static void Tick()
@@ -32,6 +33,12 @@ public class TimerManager
     public static void SetTimer(float delay, Action callback)
     {
         TimerHandle timerHandle = new TimerHandle();
+        timerHandle.SetTimer(delay, callback);
+        timers.Add(timerHandle);
+    }
+
+    public static void SetTimer(TimerHandle timerHandle, float delay, Action callback)
+    {
         timerHandle.SetTimer(delay, callback);
         timers.Add(timerHandle);
     }

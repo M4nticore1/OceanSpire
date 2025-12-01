@@ -11,9 +11,9 @@ public class PierBuilding : Building
         Boat.OnBoadDestroyed += OnBoatDestroyed;
     }
 
-    public void CreateBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isDocked = true, bool isReturningToDock = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
+    public void CreateBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isFloating = false, bool isReturningToDock = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
     {
-        PierConstruction pierConstruction = constructionComponent.spawnedConstruction as PierConstruction;
+        PierConstruction pierConstruction = constructionComponent.SpawnedConstruction as PierConstruction;
         if (dockIndex == null)
         {
             for (int i = 0; i < spawnedBoats.Count; i++)
@@ -38,7 +38,7 @@ public class PierBuilding : Building
             spawnedBoats[dockIndex.Value].Demolish(false);
 
         Boat spawnedBoat = Instantiate(boat, position, rotation);
-        spawnedBoat.Initialize(this, isUnderConstruction, dockIndex.Value, isDocked, isReturningToDock, health);
+        spawnedBoat.Initialize(this, isUnderConstruction, dockIndex.Value, isFloating, isReturningToDock, health);
         spawnedBoats[dockIndex.Value] = spawnedBoat;
     }
 
@@ -46,7 +46,7 @@ public class PierBuilding : Building
     {
         base.FinishConstructing();
 
-        PierConstruction pierConstruction = constructionComponent.spawnedConstruction as PierConstruction;
+        PierConstruction pierConstruction = constructionComponent.SpawnedConstruction as PierConstruction;
         if (pierConstruction)
         {
             int docksCount = pierConstruction.BoatDockPositions.Count;
@@ -54,7 +54,7 @@ public class PierBuilding : Building
             {
                 if (i < spawnedBoats.Count)
                 {
-                    if (spawnedBoats[i] && !spawnedBoats[i].isMoving)
+                    if (spawnedBoats[i] && !spawnedBoats[i].isFloating)
                     {
                         spawnedBoats[i].transform.position = pierConstruction.BoatDockPositions[i].position;
                         spawnedBoats[i].transform.rotation = pierConstruction.BoatDockPositions[i].rotation;

@@ -21,7 +21,7 @@ public class SaveData
 
     public int[] spawnedBoatIds { get; private set; } = new int[0];
     public bool[] spawnedBoatsAreUnderConstruction { get; private set; } = new bool[0];
-    public bool[] spawnedBoatsAreDocked { get; private set; } = new bool[0];
+    public bool[] spawnedBoatsAreFloating { get; private set; } = new bool[0];
     public bool[] spawnedBoatsAreReturning { get; private set; } = new bool[0];
     public float[] spawnedBoatsHealth { get; private set; } = new float[0];
     public float[] spawnedBoatPositionsX { get; private set; } = new float[0];
@@ -99,7 +99,7 @@ public class SaveData
         spawnedBoatIds = new int[boatsCount];
         spawnedBoatsAreUnderConstruction = new bool[boatsCount];
         spawnedBoatsHealth = new float[boatsCount];
-        spawnedBoatsAreDocked = new bool[boatsCount];
+        spawnedBoatsAreFloating = new bool[boatsCount];
         spawnedBoatsAreReturning = new bool[boatsCount];
         spawnedBoatPositionsX = new float[boatsCount];
         spawnedBoatPositionsZ = new float[boatsCount];
@@ -112,7 +112,7 @@ public class SaveData
                 ConstructionComponent construction = boat.GetComponent<ConstructionComponent>();
                 spawnedBoatIds[i] = boat ? boat.BoatData.BoatId : -1;
                 spawnedBoatsAreUnderConstruction[i] = boat ? construction.isUnderConstruction : false;
-                spawnedBoatsAreDocked[i] = boat ? boat.isDocked : false;
+                spawnedBoatsAreFloating[i] = boat ? boat.isFloating : false;
                 spawnedBoatsAreReturning[i] = boat ? boat.isReturningToDock : false;
                 spawnedBoatsHealth[i] = boat ? boat.currentHealth : 0;
                 spawnedBoatPositionsX[i] = boat ? boat.transform.position.x : 0;

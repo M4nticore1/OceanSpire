@@ -23,4 +23,4 @@ MonoBehaviour:
   buildingFloors: 1
   maxBuildingFloors: 1
   isDemolishable: 0
-  buildingManagementMenuWidget: {fileID: 91157242815144728, guid: 1288bf0508b5c844280dd15ecf64193b, type: 3}
+  detailsMenuWidget: {fileID: 1628767903394670288, guid: 817390674c4710845b657886745b41b6, type: 3}

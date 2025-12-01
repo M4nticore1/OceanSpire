@@ -18,7 +18,6 @@ public enum ItemCategory
 {
     Society,
     Building,
-    Crafting,
     Food,
     Weapon
 }
@@ -28,8 +27,14 @@ public class ItemData : ScriptableObject
 {
     [SerializeField] private ItemID itemId = ItemID.Population;
     public int ItemId => (int)itemId;
-    public string itemIdName = "";
-    public string itemName = "";
-    public Sprite itemIcon = null;
-    public ItemCategory itemCategory = ItemCategory.Society;
+    [SerializeField] private string itemIdName = "";
+    public string ItemIdName => itemIdName;
+    [SerializeField] private string itemName = "";
+    public string ItemName => itemName;
+    [SerializeField] private int weight = 0;
+    public int Weight => weight;
+    [SerializeField] private Sprite itemIcon = null;
+    public Sprite ItemIcon => itemIcon;
+    [SerializeField] private ItemCategory itemCategory = ItemCategory.Society;
+    public ItemCategory ItemCategory => itemCategory;
 }

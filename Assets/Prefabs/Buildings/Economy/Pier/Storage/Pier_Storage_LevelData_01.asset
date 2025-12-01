@@ -9,12 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc8039db3c8dae249b72a3acea657e28, type: 3}
-  m_Name: MetalItemData
+  m_Script: {fileID: 11500000, guid: 4207ac79800eb744ba4944814a85a8f9, type: 3}
+  m_Name: Pier_Storage_LevelData_01
   m_EditorClassIdentifier: 
-  itemId: 5
-  itemIdName: metal
-  itemName: Metal
-  weight: 10
-  itemIcon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  itemCategory: 1
+  storageItems:
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 10000
+  storageItemCategories: []

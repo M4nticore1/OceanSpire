@@ -1,7 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using TMPro;
 using Unity.Mathematics;
+using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 public class Boat : MonoBehaviour
 {
@@ -9,6 +13,7 @@ public class Boat : MonoBehaviour
     private NavMeshAgent navAgent = null;
     private LootManager lootManager = null;
     public ConstructionComponent constructionComponent { get; private set; } = null;
+    private SelectComponent selectComponent = null;
 
     [SerializeField] private BoatData boatData = null;
     public BoatData BoatData => boatData;
@@ -16,91 +21,287 @@ public class Boat : MonoBehaviour
     [SerializeField] private Transform seatSlot = null;
     public Transform SeatSlot => seatSlot;
 
-    private float applyPositionDistance = 0.5f;
+    private Entity rider = null;
 
-    public float currentHealth { get; private set; } = 0;
+    private const double updateDestinationRate = 1f;
+    private double lastUpdateDestinationTime = 0;
+
+    private Transform currentTarget = null;
+    private Vector3 currentTargetPosition = Vector3.zero;
+
+    public float currentHealth = 0;
     public int dockIndex { get; private set; } = 0;
-    public bool isMoving { get; private set; } = false;
+    public bool isFloating { get; private set; } = false;
     public bool isReturningToDock { get; private set; } = false;
-    public bool isDocked { get; private set; } = false;
+    public bool isCollectingLoot { get; private set; } = false;
 
-    private Vector3 targetPosition = Vector3.zero;
+    [SerializeField] private List<ItemInstance> storedLoot = new List<ItemInstance>();
+    private Dictionary<int, ItemInstance> storedLootDict = new Dictionary<int, ItemInstance>();
+    public float currentWeight { get; private set; } = 0;
+    private float lastMaxWeight = 0;
+    private float currentWeightToUnload = 0f;
+
+    private const float distanceToChangeLootTarget = 10.0f;
+    private bool isInitialized = false;
+
+    private double lastDrainHealthTime = 0d;
+    public bool isDemolished { get; private set; } = false;
+
+    public DetailsMenu spawnedDetailsMenu { get; set; } = null;
+    [SerializeField] private StatsWorldUI statsWorldWidget = null;
+
+    private TimerHandle collectLootTimer = new TimerHandle();
 
     public static event System.Action<Boat> OnBoadDestroyed;
     public static event System.Action<Boat> onBoatDocked;
 
-    private void Start()
+    private void Awake()
     {
-        
-    }
-
-    private void Update()
-    {
-        if (isMoving)
-        {
-            Debug.Log(transform.position);
-            Debug.Log(targetPosition);
-            float distance = math.distance(transform.position, targetPosition);
-            if (distance <= applyPositionDistance)
-            {
-                if (isReturningToDock)
-                    ToDock();
-                else
-                    StopMoving();
-            }
-        }
-    }
-
-    public void Initialize(PierBuilding ownedPier, bool isUnderConstruction, int dockIndex, bool isDocked = true, bool isReturningToDock = false, float? health = null)
-    {
-        Debug.Log("Initialize");
         navAgent = GetComponent<NavMeshAgent>();
         constructionComponent = GetComponent<ConstructionComponent>();
+        lootManager = FindAnyObjectByType<LootManager>();
+    }
+
+    private void OnEnable()
+    {
+        LootContainer.OnLootEntered += OnLootEntered;
+        LootContainer.OnLootExited += OnLootExited;
+    }
+
+    private void OnDisable()
+    {
+        LootContainer.OnLootEntered -= OnLootEntered;
+        LootContainer.OnLootExited -= OnLootExited;
+    }
+
+    public void Initialize(PierBuilding ownedPier, bool isUnderConstruction, int dockIndex, bool isFloating = false, bool isReturningToDock = false, float? health = null)
+    {
+        lastUpdateDestinationTime = Time.timeAsDouble - updateDestinationRate;
 
         this.ownedPier = ownedPier;
         this.dockIndex = dockIndex;
-        this.isDocked = isDocked;
-        this.isReturningToDock = isReturningToDock;
 
-        if (isDocked)
+        if (!isFloating)
             ToDock();
         else if (isReturningToDock)
             ReturnToDock();
 
+        if (health != null)
+            currentHealth = health.Value;
+        else
+            currentHealth = boatData.MaxHealth;
+
+        if (statsWorldWidget)
+            statsWorldWidget.Initialize(currentHealth, BoatData.MaxHealth, BoatData.healthDisplayThreshold);
+
         constructionComponent.InitializeConstruction(isUnderConstruction);
+        isInitialized = true;
+    }
+
+    private void Update()
+    {
+        Tick();
+    }
+
+    public void Tick()
+    {
+        if (!isDemolished)
+        {
+            if (isInitialized && rider)
+            {
+                if (isFloating)
+                {
+                    if (Time.timeAsDouble >= lastDrainHealthTime + BoatData.healthDrainInterval)
+                    {
+                        TakeDamage(1f);
+                        lastDrainHealthTime = Time.timeAsDouble;
+                    }
+
+                    if (isCollectingLoot)
+                    {
+                        if (statsWorldWidget)
+                            statsWorldWidget.SetActionProgressFillAmount(collectLootTimer.alpha);
+                    }
+                    else if (currentTarget || isReturningToDock)
+                    {
+                        if (currentTarget)
+                        {
+                            Debug.Log("currentTarget");
+                            UpdateDestination();
+                        }
+
+                        //float distance = math.distance(transform.position, currentTargetPosition);
+                        if (navAgent.hasPath && navAgent.remainingDistance <= navAgent.stoppingDistance)
+                        {
+                            if (isReturningToDock)
+                            {
+                                ToDock();
+                            }
+                            else if (currentTarget)
+                            {
+                                LootContainer loot = currentTarget.GetComponent<LootContainer>();
+                                if (loot && !isCollectingLoot)
+                                    StartCollectingLoot(loot);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //UpdateDestination();
+                    }
+                }
+                else
+                {
+                    if (transform.rotation != GetOwnedDockTransform().rotation)
+                        transform.rotation = Quaternion.Lerp(transform.rotation, GetOwnedDockTransform().rotation, BoatData.correctDockRotationSpeed * Time.deltaTime);
+
+                    if (currentWeight > 0)
+                    {
+                        currentWeightToUnload += BoatData.unloadLootSpeed * Time.deltaTime;
+                        StorageBuildingComponent storageComponent = ownedPier.storageComponent;
+                        StorageBuildingLevelData storageLevelData = storageComponent.levelsData[ownedPier.levelComponent.LevelIndex] as StorageBuildingLevelData;
+                        ItemInstance loot = storedLoot[0];
+                        int lootId = loot.ItemData.ItemId;
+
+                        if (currentWeightToUnload < loot.ItemData.Weight) return;
+
+                        int maxAmountToUnload = (int)(currentWeightToUnload / loot.ItemData.Weight);
+                        int minAmountToUnload = math.min(maxAmountToUnload, loot.Amount);
+                        int amountToUnload = math.min(minAmountToUnload, ItemDatabase.GetItem(lootId, storageLevelData.storageItems).Amount);
+                        int weightToUnload = amountToUnload * loot.ItemData.Weight;
+
+                        storedLootDict[lootId].SubtractAmount(amountToUnload);
+                        storageComponent.storedItems[lootId].AddAmount(amountToUnload);
+                        currentWeight -= weightToUnload;
+                        currentWeightToUnload -= weightToUnload;
+
+                        if (spawnedDetailsMenu)
+                            spawnedDetailsMenu.SetBoatCurrentWeight(currentWeight, BoatData.MaxWeight);
+                        if (statsWorldWidget)
+                        {
+                            float unloadAlpha = 1f - (currentWeight / lastMaxWeight);
+                            statsWorldWidget.SetActionProgressFillAmount(unloadAlpha);
+                        }
+                    }
+                    else
+                    {
+                        statsWorldWidget.HideActionProgressBar();
+                        FindNearestLootTarget();
+                    }
+                }
+            }
+        }
     }
 
     public void ReturnToDock()
     {
-        SetTargetPosition(GetOwnedDockPosition());
+        Debug.Log("ReturnToDock");
         isReturningToDock = true;
+        SetTargetPosition(GetOwnedDockTransform().position);
     }
 
-    private void SetTargetPosition(Vector3 position)
+    private void SetTarget(Transform target)
     {
-        navAgent.SetDestination(position);
-        isMoving = true;
-        targetPosition = position;
+        if (!target || !SetTargetPosition(target.position)) return;
+        currentTarget = target;
+    }
+
+    private bool SetTargetPosition(Vector3 position)
+    {
+        NavMeshHit hit;
+        if (!navAgent || !navAgent.SetDestination(position)) return false;
+        //NavMeshPath path = new NavMeshPath();
+        //if (!navAgent || navAgent.CalculatePath(position, path)) return;
+
+        Debug.Log("SetTargetPosition");
+        currentTargetPosition = position;
+        return true;
     }
 
     private void ToDock()
     {
-        isDocked = true;
+        isFloating = false;
+        isReturningToDock = false;
         StopMoving();
         onBoatDocked?.Invoke(this);
+
+        if (currentWeight > 0)
+            statsWorldWidget.ShowActionProgressBar();
+    }
+
+    private void StartCollectingLoot(LootContainer loot)
+    {
+        StopMoving();
+        float remainingWeight = BoatData.MaxWeight - currentWeight;
+        loot.StartCollecting(remainingWeight);
+        TimerManager.SetTimer(collectLootTimer, boatData.LootCollectTime, () => CollectLoot(loot));
+
+        if (statsWorldWidget)
+            statsWorldWidget.ShowActionProgressBar();
+
+        isCollectingLoot = true;
+    }
+
+    private void CollectLoot(LootContainer loot)
+    {
+        float remainingWeight = BoatData.MaxWeight - currentWeight;
+        List<ItemInstance> collectedLoot = loot.TakeItems(remainingWeight);
+        for (int i = 0; i < collectedLoot.Count; i++)
+        {
+            ItemInstance currentLoot = collectedLoot[i];
+            ItemData data = currentLoot.ItemData;
+            int id = currentLoot.ItemData.ItemId;
+            //int amount = (int)math.min(currentLoot.Amount, remainingWeight / data.Weight);
+            int weight = currentLoot.Amount * currentLoot.ItemData.Weight;
+
+            if (!storedLootDict.ContainsKey(id))
+            {
+                storedLootDict.Add(id, currentLoot);
+                storedLoot.Add(currentLoot);
+            }
+            else
+            {
+                storedLootDict[id].AddAmount(currentLoot.Amount);
+            }
+
+            currentWeight += weight;
+            lastMaxWeight = currentWeight;
+
+            if (spawnedDetailsMenu)
+                spawnedDetailsMenu.SetBoatCurrentWeight(currentWeight, BoatData.MaxWeight);
+        }
+
+        //Transform lastTarget = currentTarget;
+        //currentTarget = null;
+        isCollectingLoot = false;
+
+        if (statsWorldWidget)
+            statsWorldWidget.HideActionProgressBar();
+
+        if (currentWeight >= BoatData.MaxWeight)
+            ReturnToDock();
+        else
+            StartCoroutine(FindNearestLootTargetCoroutine());
     }
 
     private void StopMoving()
     {
-        isMoving = false;
-        isReturningToDock = false;
-        navAgent.isStopped = true;
+        currentTarget = null;
+        currentTargetPosition = Vector3.zero;
     }
 
     public void EnterBoat(Entity entity)
     {
-        ReturnToDock();
-        //SetTargetPosition(FindNearestLootPosition());
+        rider = entity;
+        navAgent.isStopped = false;
+        isFloating = true;
+        FindNearestLootTarget();
+        lastDrainHealthTime = Time.timeAsDouble;
+    }
+
+    public void ExitBoat()
+    {
+        rider = null;
     }
 
     public void Demolish(bool isFXDemolish = true)
@@ -108,14 +309,131 @@ public class Boat : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private Vector3 FindNearestLootPosition()
+    private void OnLootEntered(LootContainer loot)
     {
-        return Vector3.zero;
+        if (!isFloating || isReturningToDock) return;
+
+        if (currentTarget)
+        {
+            float oldDistance = math.distance(transform.position, currentTarget.position);
+            float newDistance = math.distance(transform.position, loot.transform.position);
+            if (newDistance <= distanceToChangeLootTarget && newDistance < oldDistance)
+                SetTarget(loot.transform);
+        }
+        else
+        {
+            SetTarget(loot.transform);
+        }
     }
 
-    private Vector3 GetOwnedDockPosition()
+    private void OnLootExited(LootContainer loot)
     {
-        PierConstruction pierConstruction = ownedPier.constructionComponent.spawnedConstruction.GetComponent<PierConstruction>();
-        return pierConstruction.BoatDockPositions[dockIndex].position;
+        LootContainer currentLoot = currentTarget ? currentTarget.GetComponent<LootContainer>() : null;
+        if (currentLoot && currentLoot == loot)
+        {
+            StopMoving();
+            FindNearestLootTarget();
+            //currentTarget = null;
+            //StopMoving();
+        }
+    }
+
+    private void FindNearestLootTarget()
+    {
+        Debug.Log("FindNearestLootTarget");
+        if (!isFloating || isReturningToDock) return;
+
+        int count = lootManager.spawnedLootContainers.Count;
+        if (count == 0) return;
+
+        Transform nearestTarget = null;
+        Vector3 nearestPosition = Vector3.zero;
+        float minDistance = 0f;
+
+        foreach (LootContainer loot in lootManager.spawnedLootContainers)
+        {
+            if (!loot || loot.currentTransportMethod == TransportMethod.Flying) continue;
+
+            Transform target = loot.GetComponent<Transform>();
+            Vector3 position = target.position;
+
+            NavMeshPath path = new NavMeshPath();
+            bool pathFound = NavMesh.CalculatePath(transform.position, position, NavMesh.AllAreas, path);
+            if (!pathFound)
+            {
+                if (currentTarget && loot.gameObject == currentTarget.gameObject)
+                    StopMoving();
+                continue;
+            }
+
+            float distance = math.distance(transform.position, position);
+
+            if (distance < minDistance || !nearestTarget)
+            {
+                minDistance = distance;
+                nearestTarget = target;
+            }
+        }
+        SetTarget(nearestTarget);
+    }
+
+    private IEnumerator FindNearestLootTargetCoroutine()
+    {
+        yield return new WaitUntil(() => currentTarget == null);
+        FindNearestLootTarget();
+    }
+
+    private void UpdateDestination()
+    {
+        if (Time.timeAsDouble >= lastUpdateDestinationTime + updateDestinationRate)
+        {
+            FindNearestLootTarget();
+            lastUpdateDestinationTime = Time.timeAsDouble;
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Demolish();
+        }
+
+        if (statsWorldWidget)
+        {
+            if (currentHealth <= BoatData.MaxHealth * BoatData.healthDisplayThreshold)
+            {
+                Debug.Log("rgterg");
+                if (!statsWorldWidget.isHealthBarShowed)
+                    statsWorldWidget.ShowHealthBar();
+                statsWorldWidget.SetHealthBarAlpha(currentHealth / BoatData.MaxHealth);
+            }
+            else
+            {
+                if (statsWorldWidget.isHealthBarShowed)
+                    statsWorldWidget.HideHealthBar();
+            }
+        }
+
+        if (selectComponent)
+        {
+            if (spawnedDetailsMenu)
+            {
+                spawnedDetailsMenu
+            }
+        }
+    }
+
+    private void Demolish()
+    {
+        isDemolished = true;
+    }
+
+    private Transform GetOwnedDockTransform()
+    {
+        PierConstruction pierConstruction = ownedPier.constructionComponent.SpawnedConstruction.GetComponent<PierConstruction>();
+        return pierConstruction.BoatDockPositions[dockIndex];
     }
 }

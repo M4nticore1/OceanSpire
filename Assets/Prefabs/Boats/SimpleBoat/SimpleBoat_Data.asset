@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: SimpleBoat_Data
   m_EditorClassIdentifier: 
   boatId: 0
-  maxHealth: 0
-  speed: 0
+  boatIdName: simple_boat
+  boatName: Simple Boat
+  maxHealth: 100
+  maxWeight: 300
+  lootCollectTime: 4
+  detailsMenuWidget: {fileID: 1628767903394670288, guid: 817390674c4710845b657886745b41b6, type: 3}

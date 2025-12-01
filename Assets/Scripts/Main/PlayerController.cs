@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
     private float cameraArmMoveMultiplier = 1.0f;
     private float currentCameraDistance = 0.0f;
 
-    private const int cameraMovingDistance = 20;
+    private const int cameraMovingDistance = 24;
     private const int cameraDistanceToShowBuildingStats = 15;
     private const int cameraHeightOffsetToShowBuildingStats = 0;
 
@@ -118,16 +118,17 @@ public class PlayerController : MonoBehaviour
         SetInputSystem();
     }
 
-    private void Start()
-    {
-        Load(GameManager.saveData);
+    //private void Start()
+    //{
+    //    //Load(GameManager.saveData);
 
-        SaveSystem.SaveData(this, cityManager);
-    }
+    //    //SaveSystem.SaveData(this, cityManager);
+    //}
 
     public void Load(SaveData saveData)
     {
         LoadLocalization();
+        uiManager.InitializeUIManager();
 
         сameraHolderStartPosition = cameraHolder.transform.position;
         сameraHolderStartRotation = cameraHolder.transform.rotation;
@@ -585,6 +586,7 @@ public class PlayerController : MonoBehaviour
 
     private void CollectItems(List<ItemInstance> items)
     {
+        Debug.Log("Collect");
         cityManager.AddItems(items);
     }
 
@@ -603,13 +605,9 @@ public class PlayerController : MonoBehaviour
             if (building)
             {
                 if (building.constructionComponent.isRuined)
-                {
                     uiManager.OpenRepairBuildingMenu(building);
-                }
                 else
-                {
-                    uiManager.OpenBuildingManagementMenu(building);
-                }
+                    uiManager.OpenDetailsMenu(building);
             }
             else if (entity)
             {
@@ -617,7 +615,8 @@ public class PlayerController : MonoBehaviour
             }
             else if (boat)
             {
-
+                if (!boat.isDemolished)
+                    uiManager.OpenDetailsMenu(boat);
             }
         }
     }
@@ -632,7 +631,7 @@ public class PlayerController : MonoBehaviour
             {
                 selectedComponent = null;
 
-                uiManager.CloseBuildingManagementMenu();
+                uiManager.CloseDetailsMenu();
             }
             else
             {

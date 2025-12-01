@@ -144,9 +144,9 @@ MonoBehaviour:
   floorsCountToSpawn: 0
   minSpawnFloorNumber: 6
   maxSpawnFloorNumber: 0
-  spawnMinTime: 4
+  spawnMinTime: 10
   spawnMaxTime: 60
-  spawnTime: 37.156013
+  spawnTime: 16.832317
 --- !u!65 &3113521155065601208
 BoxCollider:
   m_ObjectHideFlags: 0

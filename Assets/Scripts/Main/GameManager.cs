@@ -11,18 +11,17 @@ public struct ResourceStack
 
 public class GameManager : MonoBehaviour
 {
-    private  PlayerController playerController;
-    public static CityManager cityManager;
+    private PlayerController playerController = null;
+    public static CityManager cityManager { get; private set; } = null;
+    private LootManager lootManager = null;
 
     [Header("Buildings")]
     public List<Building> buildingPrefabs = new List<Building>();
     public List<Boat> boatPrefabs = new List<Boat>();
     public const float demolitionResourceRefundRate = 0.2f;
 
-    // Items
-    [Header("Items")]
-    //public static List<ItemData> itemsData = new List<ItemData>();
-    //[HideInInspector] public List<ItemInstance> items = new List<ItemInstance>();
+    // Loot
+    public const float triggerLootContainerRadius = 150f;
 
     [Header("NPC")]
     public Resident residentPrefab = null;
@@ -32,7 +31,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public float windRotation = 0;
     private Vector2 newWindDirection = Vector2.zero;
 
-    public const float windSpeed = 5.0f;
+    public const float windSpeed = 15.0f;
 
     private const float windChangingSpeed = 0.05f;
 
@@ -47,16 +46,19 @@ public class GameManager : MonoBehaviour
     {
         cityManager = FindAnyObjectByType<CityManager>();
         playerController = FindAnyObjectByType<PlayerController>();
+        lootManager = FindAnyObjectByType<LootManager>();
 
+        TimerManager.Start();
         ItemDatabase.Load();
-
-        saveData = SaveSystem.LoadData();
-        cityManager.Load(saveData);
-        //playerController.Load(saveData);
 
         ChangeWind();
         windDirection = newWindDirection;
-        TimerManager.Start();
+        lootManager.Initialize();
+
+        saveData = SaveSystem.LoadData();
+        cityManager.Load(saveData);
+
+        playerController.Load(saveData);
     }
 
     private void Update()

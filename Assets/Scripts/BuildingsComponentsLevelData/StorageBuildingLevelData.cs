@@ -26,7 +26,7 @@ public class StorageBuildingLevelData : BuildingComponentLevelData
         {
             int id = storageItems[i].ItemData.ItemId;
             if (!storageItemCategoriesDict.ContainsKey(id))
-                storageItemCategoriesDict.Add(id, new ItemCategoryEntry(storageItems[i].ItemData.itemCategory));
+                storageItemCategoriesDict.Add(id, new ItemCategoryEntry(storageItems[i].ItemData.ItemCategory));
         }
     }
 }

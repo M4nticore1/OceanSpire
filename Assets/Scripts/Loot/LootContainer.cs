@@ -28,18 +28,22 @@ public class LootContainer : MonoBehaviour
 
     [Header("Moving")]
     [SerializeField] private bool isMovable = true;
-    [SerializeField] private TransportMethod transportMethod = TransportMethod.Floating;
+    private bool isMoving = false;
+    public TransportMethod currentTransportMethod = TransportMethod.Floating;
     [SerializeField] private float moveSpeed = 0.0f;
+    private float currentMoveSpeedMultiplier = 1f;
+    private const float stopMovingSpeed = 1f;
 
     [HideInInspector] public Vector3 moveDirection = Vector3.zero;
     private Vector3 startMoveDirection = Vector3.zero;
-    private float startDirectionSum = 0;
+    private float windSpeed = 0;
 
     [Header("Spawn")]
-    public int floorsCountToSpawn = 0;
+    [SerializeField] private int floorsCountToSpawn = 0;
+    public int FloorsCountToSpawn => floorsCountToSpawn;
     public int minSpawnFloorNumber = 0;
     public int maxSpawnFloorNumber = 0;
-    public int spawnFloorNumber { get; private set; } = 0;
+    public int currentFloorIndex { get; private set; } = 0;
     public float spawnMinTime = 0;
     public float spawnMaxTime = 0;
     [HideInInspector] public float spawnTime = 0.0f;
@@ -54,6 +58,14 @@ public class LootContainer : MonoBehaviour
     private const int minDistanceToMoveAroundCity = 30;
     private const int maxDistanceToMoveAroundCity = 35;
 
+    private const float checkPositionFrequency = 1.0f;
+    private double lastCheckPositionTime = 0d;
+
+    private bool isInitialized = false;
+
+    public static System.Action<LootContainer> OnLootEntered;
+    public static System.Action<LootContainer> OnLootExited;
+
     private void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
@@ -61,7 +73,8 @@ public class LootContainer : MonoBehaviour
 
     private void Start()
     {
-        InitializeLootContainer();
+        if (!isInitialized)
+            Initialize(Vector2.zero, 0, 0);
     }
 
     public void Tick(float deltaTime)
@@ -70,15 +83,11 @@ public class LootContainer : MonoBehaviour
         CheckPosition();
     }
 
-    private void InitializeLootContainer()
+    public void Initialize(Vector2 moveDirection, int floorIndex, float windSpeed)
     {
         checkPositionTime = Time.time;
-        //spawnFloorNumber = (int)(transform.position.y / CityManager.floorHeight);
-        //Vector3 direction = new Vector3(-transform.position.x, 0, -transform.position.z).normalized;
-        //float directionOffset = Random.Range(30.0f, 30.0f);
-        ////directionOffset *= direction.y > gameManager.windDirection.y ? 1 : -1;
-        //Quaternion directionRotation = Quaternion.Euler(0, directionOffset, 0);
-        //moveDirection = directionRotation * direction;
+        if(isMovable)
+            isMoving = true;
 
         for (int i = 0; i < possibleLoot.Count; i++)
         {
@@ -91,60 +100,115 @@ public class LootContainer : MonoBehaviour
             }
         }
 
-        startMoveDirection = moveDirection;
-        startDirectionSum = startMoveDirection.x + startMoveDirection.y + startMoveDirection.z;
+        this.moveDirection = new Vector3(gameManager.windDirection.x, 0, gameManager.windDirection.y).normalized;
+        startMoveDirection = this.moveDirection;
+        currentFloorIndex = floorIndex;
+        if (floorIndex > 0)
+            currentTransportMethod = TransportMethod.Flying;
+        else
+            currentTransportMethod = TransportMethod.Floating;
+        this.windSpeed = windSpeed;
+
+        isInitialized = true;
     }
 
     private void Move(float deltaTime)
     {
         if (isMovable)
         {
-            Vector3 crossDirection = Vector3.Cross(moveDirection, new Vector3(-transform.position.x, 0, -transform.position.z).normalized);
-
-            float distanceToIsland = transform.position.magnitude;
-            if (distanceToIsland <= maxDistanceToMoveAroundCity)
+            if (isMoving)
             {
-                float alpha = 1 - ((distanceToIsland - minDistanceToMoveAroundCity) / (maxDistanceToMoveAroundCity - minDistanceToMoveAroundCity));
-                alpha = math.clamp(alpha, 0, 1);
+                Vector3 crossDirection = Vector3.Cross(moveDirection, new Vector3(-transform.position.x, 0, -transform.position.z).normalized);
 
-                float angleOffset = (crossDirection.y >= 0 ? 90 : -90) * alpha;
-                Quaternion rotation = Quaternion.Euler(0, -angleOffset, 0);
+                float distanceToIsland = transform.position.magnitude;
+                if (distanceToIsland <= maxDistanceToMoveAroundCity)
+                {
+                    float alpha = 1 - ((distanceToIsland - minDistanceToMoveAroundCity) / (maxDistanceToMoveAroundCity - minDistanceToMoveAroundCity));
+                    alpha = math.clamp(alpha, 0, 1);
 
-                moveDirection = rotation * startMoveDirection;
+                    float angleOffset = (crossDirection.y >= 0 ? 90 : -90) * alpha;
+                    Quaternion rotation = Quaternion.Euler(0, -angleOffset, 0);
+
+                    moveDirection = rotation * startMoveDirection;
+                }
+                else
+                {
+                    Vector3 currentMoveDirection = -transform.position.normalized;
+
+                    float dot = Vector3.Dot(currentMoveDirection, startMoveDirection.normalized);
+                    if (dot < 0.9f)
+                        moveDirection = Vector3.Lerp(moveDirection, startMoveDirection, deltaTime * 10.5f);
+                }
             }
             else
             {
-                Vector3 currentMoveDirection = -transform.position.normalized;
-
-                float dot = Vector3.Dot(currentMoveDirection, startMoveDirection.normalized);
-
-                //Debug.Log(dot);
-
-                // если сильно отклонился (например, более 60°) и далеко от острова
-                if (dot < 0.9f)
-                {
-                    moveDirection = Vector3.Lerp(moveDirection, startMoveDirection, deltaTime * 10.5f);
-                }
+                currentMoveSpeedMultiplier = math.lerp(currentMoveSpeedMultiplier, 0f, stopMovingSpeed);
             }
 
-            transform.position += moveDirection * moveSpeed * deltaTime;
+            transform.position += moveDirection * currentMoveSpeedMultiplier * deltaTime;
         }
     }
 
     private void CheckPosition()
     {
-        float distance = Vector3.Distance(Vector3.zero, transform.position);
-
-        if (distance > LootManager.lootContainersSpawnDistance + despawnDistance)
+        if (Time.timeAsDouble > lastCheckPositionTime + checkPositionFrequency)
         {
-            Destroy(this.gameObject);
+            float distance = Vector3.Distance(Vector3.zero, transform.position);
+
+            if (distance <= GameManager.triggerLootContainerRadius)
+                OnLootEntered?.Invoke(this);
+            else if (distance > LootManager.lootContainersSpawnDistance + despawnDistance)
+                Destroy(this.gameObject);
+            else if (distance > GameManager.triggerLootContainerRadius)
+                OnLootExited?.Invoke(this);
+
+            lastCheckPositionTime = Time.timeAsDouble;
         }
     }
 
-    public List<ItemInstance> TakeItems()
+    public void StartCollecting(float remainingWeight)
     {
-        Destroy(gameObject);
-        List<ItemInstance> loot = containedLoot;
+        StopMoving();
+    }
+
+    private void StopMoving()
+    {
+        isMoving = false;
+    }
+
+    public List<ItemInstance> TakeItems(float? remainingWeight = null)
+    {
+        List<ItemInstance> loot = new List<ItemInstance>();
+
+        if (remainingWeight != null)
+        {
+            bool isNeededToDestroy = true;
+            for (int i = 0; i < containedLoot.Count; i++)
+            {
+                ItemInstance currentLoot = containedLoot[i];
+                if (remainingWeight.Value < currentLoot.ItemData.Weight) {
+                    isNeededToDestroy = false;
+                    continue; }
+
+                ItemData data = currentLoot.ItemData;
+                int id = currentLoot.ItemData.ItemId;
+                int containedAmount = currentLoot.Amount;
+
+                int amountToCollect = (int)math.min(containedAmount, remainingWeight.Value / data.Weight);
+
+                currentLoot.SubtractAmount(amountToCollect);
+
+                loot.Add(new ItemInstance(id, amountToCollect));
+            }
+
+            if (isNeededToDestroy)
+                Destroy(gameObject);
+        }
+        else
+        {
+            loot = containedLoot;
+            Destroy(gameObject);
+        }
         return loot;
     }
 

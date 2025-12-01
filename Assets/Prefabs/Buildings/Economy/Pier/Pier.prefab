@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3221006765804929327}
   - component: {fileID: 6551275059440649917}
   - component: {fileID: 4756132135421014059}
+  - component: {fileID: 4262052173405425739}
   m_Layer: 0
   m_Name: Pier
   m_TagString: Untagged
@@ -94,6 +95,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4262052173405425739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5635628443317392028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ca4ab03ecbffe74d9a15a5f6bd30db2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ownedBuilding: {fileID: 0}
+  levelsData:
+  - {fileID: 11400000, guid: 8f2474055b74eb94899aae6c7b5bee25, type: 2}
+  levelData: {fileID: 0}
 --- !u!1001 &6939328380463155996
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -15,5 +15,6 @@ MonoBehaviour:
   itemId: 4
   itemIdName: stone
   itemName: Stone
+  weight: 5
   itemIcon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   itemCategory: 1

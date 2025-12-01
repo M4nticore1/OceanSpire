@@ -58,7 +58,7 @@ public class CityManager : MonoBehaviour
     [HideInInspector] public int unemployedResidentsCount = 0;
     [SerializeField] private List<Transform> entitySpawnPositions = new List<Transform>();
 
-    public static event Action<ItemData> OnItemAdded;
+    public static event Action OnLootAdded;
     public static event Action OnStorageCapacityUpdated;
     public event Action OnResidentsAdded;
     public event Action<Resident> OnResidentAdded;
@@ -93,6 +93,11 @@ public class CityManager : MonoBehaviour
 
         Resident.OnWorkerAdd -= AddWorker;
         Resident.OnWorkerRemove -= RemoveWorker;
+    }
+
+    private void Update()
+    {
+
     }
 
     public void Load(SaveData data)
@@ -214,7 +219,7 @@ public class CityManager : MonoBehaviour
                 {
                     int id = data.spawnedBoatIds[j];
                     bool isUnderConstruction = data.spawnedBoatsAreUnderConstruction[j];
-                    bool isDocked = data.spawnedBoatsAreDocked[j];
+                    bool isFloating = data.spawnedBoatsAreFloating[j];
                     bool isReturning = data.spawnedBoatsAreReturning[j];
                     float health = data.spawnedBoatsHealth[j];
                     float positionX = data.spawnedBoatPositionsX[j];
@@ -222,7 +227,7 @@ public class CityManager : MonoBehaviour
                     float rotationY = data.spawnedBoatRotationsY[j];
                     Debug.Log(positionZ);
 
-                    PlaceBoat(gameManager.boatPrefabs[id], isUnderConstruction, j, isDocked, isReturning, health, positionX, positionZ, rotationY);
+                    PlaceBoat(gameManager.boatPrefabs[id], isUnderConstruction, j, isFloating, isReturning, health, positionX, positionZ, rotationY);
                 }
             }
         }
@@ -233,7 +238,7 @@ public class CityManager : MonoBehaviour
             {
                 if (spawnedBoats[j])
                 {
-                    PierConstruction construction = pierBuilding.constructionComponent.spawnedConstruction as PierConstruction;
+                    PierConstruction construction = pierBuilding.constructionComponent.SpawnedConstruction as PierConstruction;
                     spawnedBoats[j].Initialize(pierBuilding, false, j);
                     spawnedBoats[j].transform.position = construction.BoatDockPositions[j].position;
                     spawnedBoats[j].transform.rotation = construction.BoatDockPositions[j].rotation;
@@ -612,10 +617,10 @@ public class CityManager : MonoBehaviour
         //}
     }
 
-    public void PlaceBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isDocked = false, bool isReturningToDock = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
+    public void PlaceBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isFloating = false, bool isReturningToDock = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
     {
         Debug.Log(positionZ.Value);
-        pierBuilding.CreateBoat(boat, isUnderConstruction, dockIndex, isDocked, isReturningToDock, health, positionX, positionZ, rotationY);
+        pierBuilding.CreateBoat(boat, isUnderConstruction, dockIndex, isFloating, isReturningToDock, health, positionX, positionZ, rotationY);
     }
 
     public void DemolishContruction(Building building)
@@ -665,7 +670,7 @@ public class CityManager : MonoBehaviour
                 elevatorGroups[elevatorBuilding.elevatorGroupId].Add(elevatorBuilding);
             }
 
-            if (building.storageComponent)
+            if (building.BuildingData.BuildingType != BuildingType.Environment && building.storageComponent)
             {
                 int level = building.levelComponent.LevelIndex;
                 if (level > 1)
@@ -676,7 +681,7 @@ public class CityManager : MonoBehaviour
 
                 StorageBuildingLevelData currentLevelData = building.storageComponent.levelsData[level] as StorageBuildingLevelData;
                 if (currentLevelData)
-                    AddStorageCapacity(currentLevelData, false);
+                    AddStorageCapacity(currentLevelData, true);
                 else
                     Debug.LogError(building.BuildingData.BuildingName + $" has no StorageBuildingLevelData by level index {level}");
             }
@@ -685,7 +690,7 @@ public class CityManager : MonoBehaviour
         }
     }
 
-    public void TryToUpgradeBuilding(Building building)
+    public void TryToUpgradeConstruction(Building building)
     {
         int nextLevelIndex = building.levelComponent.LevelIndex + (building.constructionComponent.isRuined ? 0 : 1);
 
@@ -789,21 +794,21 @@ public class CityManager : MonoBehaviour
             if (isIncreasing)
                 totalStorageCapacity[id].AddAmount(changeValue);
             else
-                totalStorageCapacity[id].AddAmount(changeValue);
+                totalStorageCapacity[id].SubtractAmount(changeValue);
         }
 
         for (int i = 0; i < storageLevelData.storageItemCategories.Count; i++)
         {
             for (int j = 0; j < ItemDatabase.items.Count; j++)
             {
-                if (items[j].ItemData.itemCategory == storageLevelData.storageItemCategories[i].itemCategory)
+                if (items[j].ItemData.ItemCategory == storageLevelData.storageItemCategories[i].itemCategory)
                 {
                     int changeValue = storageLevelData.storageItemCategories[i].amount;
 
                     if (isIncreasing)
                         totalStorageCapacity[j].AddAmount(changeValue);
                     else
-                        totalStorageCapacity[j].AddAmount(changeValue);
+                        totalStorageCapacity[j].SubtractAmount(changeValue);
                 }
             }
         }
@@ -814,50 +819,58 @@ public class CityManager : MonoBehaviour
 
     public int AddItem(ItemInstance item)
     {
-        return AddItem_Internal(item.ItemData.ItemId, item.Amount);
+        int amountToReturn = AddItem_Internal(item.ItemData.ItemId, item.Amount);
+        OnLootAdded?.Invoke();
+        return amountToReturn;
     }
 
     public int AddItem(int itemId, int amount)
     {
-        return AddItem_Internal(itemId, amount);
+        int amountToReturn = AddItem_Internal(itemId, amount);
+        OnLootAdded?.Invoke();
+        return amountToReturn;
     }
 
     public void AddItems(List<ItemInstance> items)
     {
         foreach (ItemInstance item in items)
             AddItem_Internal(item.ItemData.ItemId, item.Amount);
+        OnLootAdded?.Invoke();
     }
 
     private int AddItem_Internal(int itemId, int amount)
     {
-        for (int i = 0; i < builtFloors.Count; i++)
-        {
-            if (amount <= 0)
-                break;
+        Debug.Log("ermjgetigtekr");
+        Debug.Log(totalStorageCapacity[itemId].Amount);
+        return items[itemId].AddAmount(amount, totalStorageCapacity[itemId].Amount);
 
-            for (int j = 0; j < roomsCountPerFloor; j++)
-            {
-                if (amount <= 0)
-                    break;
+        //for (int i = 0; i < builtFloors.Count; i++)
+        //{
+        //    if (amount <= 0)
+        //        break;
 
-                Building placedBuilding = builtFloors[i].roomBuildingPlaces[j].placedBuilding;
-                if (placedBuilding)
-                {
-                    if (placedBuilding.storageComponent)
-                    {
-                        int amountToAdd = placedBuilding.storageComponent.AddItem(itemId, amount);
-                        amount -= amountToAdd;
-                        items[itemId].AddAmount(amountToAdd, totalStorageCapacity[itemId].Amount);
-                    }
+        //    for (int j = 0; j < roomsCountPerFloor; j++)
+        //    {
+        //        if (amount <= 0)
+        //            break;
 
-                    if (placedBuilding.BuildingData.BuildingType == BuildingType.Hall)
-                        break;
-                }
-            }
-        }
+        //        Building placedBuilding = builtFloors[i].roomBuildingPlaces[j].placedBuilding;
+        //        if (placedBuilding)
+        //        {
+        //            if (placedBuilding.storageComponent)
+        //            {
+        //                int amountToAdd = placedBuilding.storageComponent.AddItem(itemId, amount);
+        //                amount -= amountToAdd;
+        //                items[itemId].AddAmount(amountToAdd, totalStorageCapacity[itemId].Amount);
+        //            }
 
-        OnItemAdded?.Invoke(ItemDatabase.items[itemId]);
-        return items[itemId].Amount;
+        //            if (placedBuilding.BuildingData.BuildingType == BuildingType.Hall)
+        //                break;
+        //        }
+        //    }
+        //}
+
+        //return items[itemId].Amount;
     }
 
     public void SpendItem(int id, int amount)

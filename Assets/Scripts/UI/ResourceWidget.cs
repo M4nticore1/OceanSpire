@@ -4,34 +4,46 @@ using TMPro;
 
 public class ResourceWidget : MonoBehaviour
 {
-    [SerializeField] private ItemData resourceData;
     [SerializeField] private Image resourceImage;
     [SerializeField] private TextMeshProUGUI resourceAmountText;
     [SerializeField] private Image resourceAmountBar;
+
+    public void Initialize(ItemData itemData, int currentResourceAmount, int maxResourceAmount)
+    {
+        //SetWidgetResourceImage(itemData.ItemIcon);
+        //UpdateAmount(currentResourceAmount, maxResourceAmount);
+    }
 
     public void SetWidgetResourceAmount(int resourecAmount)
     {
         resourceAmountText.SetText(resourecAmount.ToString());
     }
 
-    public void SetWidgetResourceImage(Sprite resourceSprite)
+    public void UpdateAmount(int currentResourceAmount, int maxResourceAmount)
     {
-        resourceImage.sprite = resourceSprite;
-    }
-
-    public void UpdateStorageWidget(int currentResourceAmount, int maxResourceAmount)
-    {
-        resourceAmountText.text = currentResourceAmount.ToString() + "/" + maxResourceAmount.ToString();
+        resourceAmountText.SetText(currentResourceAmount.ToString() + "/" + maxResourceAmount.ToString());
 
         if (resourceAmountBar)
         {
-            float alpha = (float)currentResourceAmount / (float)maxResourceAmount;
+            float alpha = 0;
+            if (maxResourceAmount > 0)
+                alpha = (float)currentResourceAmount / (float)maxResourceAmount;
+            else
+                alpha = 0.0f;
+
+            Debug.Log(maxResourceAmount);
+
             resourceAmountBar.fillAmount = alpha;
         }
     }
 
-    public void UpdateBuildWidget(int resourceAmount)
+    public void UpdateAmount(int resourceAmount)
     {
         resourceAmountText.text = resourceAmount.ToString();
+    }
+
+    public void SetWidgetResourceImage(Sprite resourceSprite)
+    {
+        resourceImage.sprite = resourceSprite;
     }
 }
