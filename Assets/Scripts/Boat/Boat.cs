@@ -421,7 +421,7 @@ public class Boat : MonoBehaviour
         {
             if (spawnedDetailsMenu)
             {
-                spawnedDetailsMenu
+                //spawnedDetailsMenu;
             }
         }
     }

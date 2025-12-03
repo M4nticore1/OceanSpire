@@ -599,25 +599,7 @@ public class PlayerController : MonoBehaviour
             selectedComponent = selectComponent;
             selectedComponent.Select();
 
-            Building building = selectComponent.GetComponent<Building>();
-            Entity entity = selectComponent.GetComponent<Entity>();
-            Boat boat = selectComponent.GetComponent<Boat>();
-            if (building)
-            {
-                if (building.constructionComponent.isRuined)
-                    uiManager.OpenRepairBuildingMenu(building);
-                else
-                    uiManager.OpenDetailsMenu(building);
-            }
-            else if (entity)
-            {
-
-            }
-            else if (boat)
-            {
-                if (!boat.isDemolished)
-                    uiManager.OpenDetailsMenu(boat);
-            }
+            uiManager.OpenDetailsMenu(selectComponent.gameObject);
         }
     }
 

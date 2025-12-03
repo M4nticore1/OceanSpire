@@ -8,92 +8,103 @@ public class DetailsMenu : MonoBehaviour
     private UIManager uiManager = null;
 
     // General
-    [Header("General")]
+    [Header("Building")]
     [SerializeField] private TextMeshProUGUI nameText = null;
     [SerializeField] private TextMeshProUGUI healthValueText = null;
     [SerializeField] private TextMeshProUGUI levelNumberText = null;
-    [SerializeField] private Button upgradeButton = null;
-    [SerializeField] private Button demolishButton = null;
-    [SerializeField] private Button closeDetailsMenuButton = null;
+    [SerializeField] private Button closeMenuButton = null;
 
     // Building
     [Header("Building")]
-    [SerializeField] private Button openWorkersMenuButton = null;
+    [SerializeField] private GameObject buildingMenu = null;
+    [SerializeField] private Button buildingUpgradeButton = null;
+    [SerializeField] private Button buildingDemolishButton = null;
+
+    // Production
+    [Header("Production Building")]
+    [SerializeField] private GameObject productionBuildingMenu = null;
+    [SerializeField] private Button productionUpgradeButton = null;
+    [SerializeField] private Button productionDemolishButton = null;
+    [SerializeField] private Button productionWorkersMenuButton = null;
+
+    // Storage
+    [Header("Storage Building")]
+    [SerializeField] private GameObject storageBuildingMenu = null;
+    [SerializeField] private Button storageUpgradeButton = null;
+    [SerializeField] private Button storageDemolishButton = null;
+    [SerializeField] private Button storageWorkersMenuButton = null;
+    [SerializeField] private Button storageLootMenuButton = null;
 
     // Boat
     [Header("Boat")]
     [SerializeField] private GameObject boatMenu = null;
-    [SerializeField] private TextMeshProUGUI currentWeightText = null;
-    [SerializeField] private GridLayoutGroup currentResourcesLayoutGroup = null;
+    [SerializeField] private TextMeshProUGUI boatWeightValueText = null;
+    [SerializeField] private GridLayoutGroup boatLootLayoutGroup = null;
 
-    public void Initialize(Building building, UIManager uiManager)
+    private void Awake()
     {
-        Initialize_Internal(uiManager);
-
-        nameText.gameObject.SetActive(true);
-        levelNumberText.gameObject.SetActive(true);
-        upgradeButton.gameObject.SetActive(true);
-        demolishButton.gameObject.SetActive(true);
-        openWorkersMenuButton.gameObject.SetActive(true);
-
-        SetNameText(building.BuildingData.BuildingName);
-        SetLevelText(building.levelComponent.LevelIndex + 1);
-
-        if (building.BuildingData.IsDemolishable)
-            demolishButton.interactable = true;
-        else
-            demolishButton.interactable = false;
-
-        if (building.levelComponent.LevelIndex < building.ConstructionLevelsData.Count + 1)
-            upgradeButton.interactable = true;
-        else
-            upgradeButton.interactable = false;
+        uiManager = GetComponentInParent<UIManager>();
+        // Building
+        buildingUpgradeButton.onClick.AddListener(uiManager.OpenUpgradeBuildingMenu);
+        buildingDemolishButton.onClick.AddListener(uiManager.OpenDemolishBuildingMenu);
+        // Production
+        productionUpgradeButton.onClick.AddListener(uiManager.OpenUpgradeBuildingMenu);
+        productionDemolishButton.onClick.AddListener(uiManager.OpenDemolishBuildingMenu);
+        productionWorkersMenuButton.onClick.AddListener(uiManager.OpenBuildingWorkersMenu);
+        // Storage
+        storageUpgradeButton.onClick.AddListener(uiManager.OpenUpgradeBuildingMenu);
+        storageDemolishButton.onClick.AddListener(uiManager.OpenDemolishBuildingMenu);
+        storageWorkersMenuButton.onClick.AddListener(uiManager.OpenBuildingWorkersMenu);
+        //storageLootMenuButton.onClick.AddListener(uiManager.OpenUpgradeBuildingMenu);
     }
 
-    public void Initialize(Boat boat, UIManager uiManager)
+    public void Initialize(GameObject objectToShowDetails)
     {
-        Initialize_Internal(uiManager);
-
-        boat.spawnedDetailsMenu = this;
-
-        boatMenu.SetActive(true);
-        nameText.gameObject.SetActive(true);
-        currentWeightText.gameObject.SetActive(true);
-
-        SetNameText(boat.BoatData.BoatName);
-        SetBoatCurrentWeight(boat.currentWeight, boat.BoatData.MaxWeight);
-    }
-
-    public void Initialize(Entity entity, UIManager uiManager)
-    {
-        Initialize_Internal(uiManager);
-
-        nameText.gameObject.SetActive(true);
-
-        SetNameText(entity.firstName + " " + entity.lastName);
-    }
-
-    private void Initialize_Internal(UIManager uiManager)
-    {
-        if (!uiManager) {
-            Debug.Log("uiManager is NULL");
-            return; }
-
-        this.uiManager = uiManager;
-
+        buildingMenu.SetActive(false);
+        productionBuildingMenu.SetActive(false);
+        storageBuildingMenu.SetActive(false);
         boatMenu.SetActive(false);
-        nameText.gameObject.SetActive(false);
+        healthValueText.gameObject.SetActive(false);
         levelNumberText.gameObject.SetActive(false);
-        currentWeightText.gameObject.SetActive(false);
-        currentResourcesLayoutGroup.gameObject.SetActive(false);
 
-        upgradeButton.onClick.AddListener(uiManager.OpenUpgradeBuildingMenu);
-        upgradeButton.gameObject.SetActive(false);
+        Building building = objectToShowDetails.GetComponent<Building>();
+        Entity entity = objectToShowDetails.GetComponent<Entity>();
+        Boat boat = objectToShowDetails.GetComponent<Boat>();
 
-        openWorkersMenuButton.onClick.AddListener(uiManager.OpenBuildingWorkersMenu);
-        openWorkersMenuButton.gameObject.SetActive(false);
+        if (building)
+        {
+            levelNumberText.gameObject.SetActive(true);
 
-        closeDetailsMenuButton.onClick.AddListener(uiManager.CloseDetailsMenu);
+            SetNameText(building.BuildingData.BuildingName);
+            SetLevelText(building.levelComponent.LevelIndex + 1);
+
+            ProductionBuildingComponent productionBuilding = building.productionComponent;
+            StorageBuildingComponent storageBuilding = building.storageComponent;
+            if (productionBuilding)
+            {
+                productionBuildingMenu.SetActive(true);
+            }
+            else if (storageBuilding)
+            {
+                storageBuildingMenu.SetActive(true);
+            }
+            else
+            {
+                buildingMenu.SetActive(true);
+            }
+        }
+        else if (entity)
+        {
+            SetNameText(entity.firstName + " " + entity.lastName);
+        }
+        else if (boat)
+        {
+            boatMenu.SetActive(true);
+
+            SetNameText(boat.BoatData.BoatName);
+            SetHealthValue(boat.currentHealth, boat.BoatData.MaxHealth);
+            SetBoatCurrentWeight(boat.currentWeight, boat.BoatData.MaxWeight);
+        }
     }
 
     private void SetNameText(string name)
@@ -113,6 +124,6 @@ public class DetailsMenu : MonoBehaviour
 
     public void SetBoatCurrentWeight(float currentWeight, float maxWeight)
     {
-        currentWeightText.SetText("Weight\n" + (int)currentWeight + "/" + (int)maxWeight);
+        boatWeightValueText.SetText("Weight\n" + (int)currentWeight + "/" + (int)maxWeight);
     }
 }

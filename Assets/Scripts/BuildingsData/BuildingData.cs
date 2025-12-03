@@ -47,6 +47,13 @@ public enum ConnectionType
     Vertical
 }
 
+public enum DetailsWindowVariant
+{
+    Building,
+    ProductionBuilding,
+    StorageBuilding
+}
+
 [CreateAssetMenu(fileName = "BuildingData", menuName = "Scriptable Objects/BuildingData")]
 public class BuildingData : ScriptableObject
 {
@@ -63,6 +70,8 @@ public class BuildingData : ScriptableObject
     public BuildingCategory BuildingCategory => buildingCategory;
     [SerializeField] private ConnectionType connectionType = ConnectionType.None;
     public ConnectionType ConnectionType => connectionType;
+    [SerializeField] private DetailsWindowVariant detailsWindowVariant = DetailsWindowVariant.Building;
+    public DetailsWindowVariant DetailsWindowVariant => detailsWindowVariant;
     [SerializeField] private bool instantConstruction = false;
     public bool InstantConstruction => instantConstruction;
     [SerializeField] private Sprite thumbImage = null;

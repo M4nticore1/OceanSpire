@@ -17,6 +17,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Metal
+    second: {fileID: 2100000, guid: 3ecdbb2972fd1b644b8019fad4d3d5b5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Planks_Painted_Blue
     second: {fileID: 2100000, guid: 17fe44bb49ab0a64283e3a2d60199a23, type: 2}
   - first:

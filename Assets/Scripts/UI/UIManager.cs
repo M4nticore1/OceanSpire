@@ -76,7 +76,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button closeBuildingWorkersMenuButton = null;
     private Vector2 buildingManagementMenuCurrentPosition = Vector2.zero;
     private const float buildingManagementMenuToggleSpeed = 15.0f;
-    private DetailsMenu spawnedDetailsMenu = null;
+    [SerializeField] private DetailsMenu detailsMenu = null;
 
     [Header("Building Stats Panel")]
     [SerializeField] private RectTransform buildingStatsPanel = null;
@@ -553,56 +553,12 @@ public class UIManager : MonoBehaviour
     }
 
     // Management Menus
-    public void OpenDetailsMenu(Building building)
+    public void OpenDetailsMenu(GameObject objectToShowDetails)
     {
-        OpenDetailsMenu_Internal(building.gameObject);
-        if (!spawnedDetailsMenu) return;
-        spawnedDetailsMenu.Initialize(building, this);
-    }
-
-    public void OpenDetailsMenu(Boat boat)
-    {
-        OpenDetailsMenu_Internal(boat.gameObject);
-        if (!spawnedDetailsMenu) return;
-        spawnedDetailsMenu.Initialize(boat, this);
-    }
-
-    public void OpenDetailsMenu(Entity entity)
-    {
-        OpenDetailsMenu_Internal(entity.gameObject);
-        if (!spawnedDetailsMenu) return;
-        spawnedDetailsMenu.Initialize(entity, this);
-    }
-
-    private void OpenDetailsMenu_Internal(GameObject selectedObject)
-    {
+        selectedObject = objectToShowDetails;
         isDetailsMenuOpened = true;
         isInfoMenuOpened = false;
-        this.selectedObject = selectedObject;
-
-        if (spawnedDetailsMenu)
-        {
-            Destroy(spawnedDetailsMenu.gameObject);
-        }
-
-        Building building = selectedObject.GetComponent<Building>();
-        Boat boat = selectedObject.GetComponent<Boat>();
-        Entity entity = selectedObject.GetComponent<Entity>();
-
-        DetailsMenu detailsMenuWidget = null;
-
-        if (building)
-            detailsMenuWidget = building.BuildingData.DetailsMenuWidget;
-        else if (boat)
-            detailsMenuWidget = boat.BoatData.DetailsMenuWidget;
-        else if (entity)
-            detailsMenuWidget = null;
-
-        if (!detailsMenuWidget) {
-            Debug.Log("detailsMenuWidget is NULL");
-            return; }
-
-        spawnedDetailsMenu = Instantiate(detailsMenuWidget, buildingManagementMenu.transform);
+        detailsMenu.Initialize(objectToShowDetails);
     }
 
     public void OnBuildingUpgraded(Building building)
@@ -695,7 +651,7 @@ public class UIManager : MonoBehaviour
         repairBuildingMenu.gameObject.SetActive(false);
     }
 
-    private void OpenDemolishBuildingMenu()
+    public void OpenDemolishBuildingMenu()
     {
         Building building = selectedObject.GetComponent<Building>();
         if (!building) return;
