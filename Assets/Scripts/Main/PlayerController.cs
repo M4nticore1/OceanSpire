@@ -24,6 +24,10 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Vector3 cameraVerticalPosition { get; private set; } = Vector3.zero;
     [HideInInspector] public Vector3 cameraHorizontalPosition { get; private set; } = Vector3.zero;
 
+    private bool isCameraMovement = false;
+    private Vector2 cameraMove = Vector2.zero;
+    private Vector2 cameraMoveIntensity = new Vector2(25f, 25f);
+
     //private Vector3 cameraHorizontalRotation = Vector3.zero;
     private Vector3 cameraHolderRotation = Vector3.zero;
 
@@ -33,9 +37,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Vector2 dragMoveVelocity = Vector2.zero;
     private Vector2 cameraMoveVelocity = Vector2.zero;
     private const float cameraHeightBoundaryPadding = 10.0f;
-    private const float cameraHeightReturnSpeed = 5.0f;
+    private const float cameraVerticalReturnSpeed = 4.0f;
 
-    private float cameraMoveMultiplier = 1.0f;
+    private float cameraVerticalReturnMultiplier = 1.0f;
     [HideInInspector] public float cameraYawRotateAlpha = 0.0f;
     private float moveStateValue = 0;
     private int moveStateIndex = 0;
@@ -76,6 +80,8 @@ public class PlayerController : MonoBehaviour
     private InputAction secondTouchPressAction = null;
     private InputAction secondTouchPositionAction = null;
     private InputAction secondTouchMoveAction = null;
+    private InputAction cameraMoveIA = null;
+    private InputAction cameraZoomIA = null;
 
     private Vector2 firstTouchStartPosition = Vector2.zero;
     private Vector2 firstTouchCurrentPosition = Vector2.zero;
@@ -166,8 +172,8 @@ public class PlayerController : MonoBehaviour
         if (isInitialized)
         {
             OnTouchPresing();
-            MoveCamera();
-            SetCameraArmLength();
+            CameraMovement();
+            TouchScreenCameraZoom();
             CameraShake();
 
             mainCamera.transform.localRotation = Quaternion.Euler(currentCameraShakeRotation);
@@ -208,6 +214,9 @@ public class PlayerController : MonoBehaviour
         secondTouchPressAction.performed += OnSecondTouchStarted;
         secondTouchPressAction.canceled += OnSecondTouchEnded;
 
+        cameraMoveIA.performed += StartCameraMovement;
+        cameraMoveIA.canceled += FinishCameraMovement;
+
         BuildingWidget.OnStartPlacingConstruction += OnBuildingStartPlacing;
         UIManager.OnBuildStopPlacing += StopPlacingBuilding;
     }
@@ -242,7 +251,8 @@ public class PlayerController : MonoBehaviour
                 secondTouchPositionAction = touchInputActionMap.FindAction("SecondTouchPosition");
                 secondTouchMoveAction = touchInputActionMap.FindAction("SecondTouchMove");
 
-                //mouseScrollAction = touchInputActionMap.FindAction("MouseScroll");
+                cameraMoveIA = touchInputActionMap.FindAction("cameraMove");
+                cameraZoomIA = touchInputActionMap.FindAction("cameraZoom");
             }
             else
                 Debug.Log("void PlayerController : SetInputSystem() touchInputActionMap is NULL");
@@ -252,68 +262,90 @@ public class PlayerController : MonoBehaviour
     }
 
     // Camera
-    private void MoveCamera()
+    private void StartCameraMovement(InputAction.CallbackContext context)
+    {
+        isCameraMovement = true;
+        Vector2 direction = context.ReadValue<Vector2>();
+        cameraMove += new Vector2(direction.x, -direction.y);
+    }
+
+    private void FinishCameraMovement(InputAction.CallbackContext context)
+    {
+        isCameraMovement = false;
+        Vector2 direction = context.ReadValue<Vector2>();
+        cameraMove -= new Vector2(direction.x, -direction.y);
+    }
+
+    private void CameraMovement()
     {
         if (cameraHolder && cityManager)
         {
             if (cameraHolder.transform.position.y > cityManager.cityHeight)
-                cameraMoveMultiplier = math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f);
+                cameraVerticalReturnMultiplier = cameraHolder.transform.position.y - cityManager.cityHeight /*math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f)*/;
             else if (cameraHolder.transform.position.y < 0.0f)
-                cameraMoveMultiplier = ((0 - math.abs(cameraHolder.transform.position.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding;
+                cameraVerticalReturnMultiplier = -cameraHolder.transform.position.y /*((0 - math.abs(cameraHolder.transform.position.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding*/;
 
-            Vector3 currentCameraMoveVelocity = new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime * cameraMoveMultiplier;
-            cameraVerticalPosition -= currentCameraMoveVelocity;
+            cameraHolder.transform.position += new Vector3(0, cameraMove.y * cameraMoveIntensity.y, 0) * Time.deltaTime;
 
-            // Camera horizontal move
-            float shiftedAlpha = cameraYawRotateAlpha - (1f - (moveStateValue / 2f));
-            shiftedAlpha = Mathf.Repeat(shiftedAlpha, 1f);
-            moveStateIndex = (int)(shiftedAlpha / moveStateValue);
+            Vector3 cameraPosition = cameraHolder.transform.position;
+            float ceilDistance = math.distance(cameraPosition, 0);
+            float floorDistance = math.distance(cameraPosition, cityManager.cityHeight);
+            float targetHeight = ceilDistance < floorDistance ? 0 : cityManager.cityHeight;
+            cameraHolder.transform.position = Vector3.MoveTowards(cameraHolder.transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnMultiplier * cameraVerticalReturnSpeed * Time.deltaTime);
 
-            int positionHalfLenght = cameraMovingDistance / 2;
+            //Vector3 currentCameraMoveVelocity = new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime * cameraMoveMultiplier;
+            //cameraVerticalPosition -= currentCameraMoveVelocity;
 
-            float position = shiftedAlpha % moveStateValue * CityManager.roomsCountPerFloor * cameraMovingDistance - positionHalfLenght;
-            float cameraSensitivityMultiplier = moveStateIndex % 2 == 0 ? 0.5f : 1f;
+            //// Camera horizontal move
+            //float shiftedAlpha = cameraYawRotateAlpha - (1f - (moveStateValue / 2f));
+            //shiftedAlpha = Mathf.Repeat(shiftedAlpha, 1f);
+            //moveStateIndex = (int)(shiftedAlpha / moveStateValue);
 
-            if (moveStateIndex == 0)
-                cameraHorizontalPosition = new Vector3(-position, 0, -positionHalfLenght);
-            else if (moveStateIndex == 1)
-                cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, -positionHalfLenght);
-            else if (moveStateIndex == 2)
-                cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, position);
-            else if (moveStateIndex == 3)
-                cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, positionHalfLenght);
-            else if (moveStateIndex == 4)
-                cameraHorizontalPosition = new Vector3(position, 0, positionHalfLenght);
-            else if (moveStateIndex == 5)
-                cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, positionHalfLenght);
-            else if (moveStateIndex == 6)
-                cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -position);
-            else if (moveStateIndex == 7)
-                cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -positionHalfLenght);
+            //int positionHalfLenght = cameraMovingDistance / 2;
 
-            cameraYawRotateAlpha += cameraMoveVelocity.x * cameraSensitivityMultiplier / 360f * Time.deltaTime;
-            cameraYawRotateAlpha = Mathf.Repeat(cameraYawRotateAlpha, 1f);
+            //float position = shiftedAlpha % moveStateValue * CityManager.roomsCountPerFloor * cameraMovingDistance - positionHalfLenght;
+            //float cameraSensitivityMultiplier = moveStateIndex % 2 == 0 ? 0.5f : 1f;
 
-            cameraHolderRotation.y = cameraYawRotateAlpha * 360f;
+            //if (moveStateIndex == 0)
+            //    cameraHorizontalPosition = new Vector3(-position, 0, -positionHalfLenght);
+            //else if (moveStateIndex == 1)
+            //    cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, -positionHalfLenght);
+            //else if (moveStateIndex == 2)
+            //    cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, position);
+            //else if (moveStateIndex == 3)
+            //    cameraHorizontalPosition = new Vector3(-positionHalfLenght, 0, positionHalfLenght);
+            //else if (moveStateIndex == 4)
+            //    cameraHorizontalPosition = new Vector3(position, 0, positionHalfLenght);
+            //else if (moveStateIndex == 5)
+            //    cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, positionHalfLenght);
+            //else if (moveStateIndex == 6)
+            //    cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -position);
+            //else if (moveStateIndex == 7)
+            //    cameraHorizontalPosition = new Vector3(positionHalfLenght, 0, -positionHalfLenght);
 
-            if (!isFirstTouchPressed)
-            {
-                Vector3 clampPosition = Vector3.zero;
+            //cameraYawRotateAlpha += cameraMoveVelocity.x * cameraSensitivityMultiplier / 360f * Time.deltaTime;
+            //cameraYawRotateAlpha = Mathf.Repeat(cameraYawRotateAlpha, 1f);
 
-                if (cameraVerticalPosition.y > cityManager.cityHeight)
-                {
-                    clampPosition.y = cityManager.cityHeight;
-                    cameraVerticalPosition = math.lerp(cameraVerticalPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
-                }
-                else if (cameraVerticalPosition.y < 0.0f)
-                {
-                    cameraVerticalPosition = math.lerp(cameraVerticalPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
-                    clampPosition.y = 0;
-                }
-            }
+            //cameraHolderRotation.y = cameraYawRotateAlpha * 360f;
 
-            cameraHolder.transform.rotation = Quaternion.Euler(cameraHolderRotation);
-            cameraHolder.transform.position = cameraHorizontalPosition + cameraVerticalPosition;
+            //if (!isFirstTouchPressed)
+            //{
+            //    Vector3 clampPosition = Vector3.zero;
+
+            //    if (cameraVerticalPosition.y > cityManager.cityHeight)
+            //    {
+            //        clampPosition.y = cityManager.cityHeight;
+            //        cameraVerticalPosition = math.lerp(cameraVerticalPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
+            //    }
+            //    else if (cameraVerticalPosition.y < 0.0f)
+            //    {
+            //        cameraVerticalPosition = math.lerp(cameraVerticalPosition, clampPosition, cameraHeightReturnSpeed * Time.deltaTime);
+            //        clampPosition.y = 0;
+            //    }
+            //}
+
+            //cameraHolder.transform.rotation = Quaternion.Euler(cameraHolderRotation);
+            //cameraHolder.transform.position = cameraHorizontalPosition + cameraVerticalPosition;
         }
         else
         {
@@ -324,7 +356,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void SetCameraArmLength()
+    private void MouseScrollCameraZoom(InputAction.CallbackContext context)
+    {
+        
+    }
+
+    private void TouchScreenCameraZoom()
     {
         if (isFirstTouchPressed && isSecondTouchPressed)
         {
@@ -536,10 +573,10 @@ public class PlayerController : MonoBehaviour
             cameraMoveVelocity.x = dragMoveVelocity.x * cameraMoveSensitivity.x;
             cameraMoveVelocity.y = dragMoveVelocity.y * cameraMoveSensitivity.y;
         }
-        else if (!isFirstTouchPressed && !isSecondTouchPressed)
-        {
-            cameraMoveVelocity = Vector2.Lerp(cameraMoveVelocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
-        }
+        //else if (!isFirstTouchPressed && !isSecondTouchPressed)
+        //{
+        //    cameraMoveVelocity = Vector2.Lerp(cameraMoveVelocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+        //}
     }
 
     private void OnBuildingStartPlacing(ConstructionComponent construction)
