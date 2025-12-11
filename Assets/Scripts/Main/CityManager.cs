@@ -225,7 +225,6 @@ public class CityManager : MonoBehaviour
                     float positionX = data.spawnedBoatPositionsX[j];
                     float positionZ = data.spawnedBoatPositionsZ[j];
                     float rotationY = data.spawnedBoatRotationsY[j];
-                    Debug.Log(positionZ);
 
                     PlaceBoat(gameManager.boatPrefabs[id], isUnderConstruction, j, isFloating, isReturning, health, positionX, positionZ, rotationY);
                 }
@@ -619,7 +618,6 @@ public class CityManager : MonoBehaviour
 
     public void PlaceBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isFloating = false, bool isReturningToDock = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
     {
-        Debug.Log(positionZ.Value);
         pierBuilding.CreateBoat(boat, isUnderConstruction, dockIndex, isFloating, isReturningToDock, health, positionX, positionZ, rotationY);
     }
 
@@ -840,8 +838,6 @@ public class CityManager : MonoBehaviour
 
     private int AddItem_Internal(int itemId, int amount)
     {
-        Debug.Log("ermjgetigtekr");
-        Debug.Log(totalStorageCapacity[itemId].Amount);
         return items[itemId].AddAmount(amount, totalStorageCapacity[itemId].Amount);
 
         //for (int i = 0; i < builtFloors.Count; i++)
