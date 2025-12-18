@@ -58,6 +58,9 @@ public class CityManager : MonoBehaviour
     [HideInInspector] public int unemployedResidentsCount = 0;
     [SerializeField] private List<Transform> entitySpawnPositions = new List<Transform>();
 
+    public static event Action OnConstructionStartPlaced;
+    public static event Action OnConstructionPlaced;
+    public static event Action OnConstructionDestroyed;
     public static event Action OnLootAdded;
     public static event Action OnStorageCapacityUpdated;
     public event Action OnResidentsAdded;
@@ -565,6 +568,7 @@ public class CityManager : MonoBehaviour
             }
 
             spawnedBuilding.InitializeBuilding(buildingPlace, isUnderConstruction, levelIndex);
+            OnConstructionPlaced?.Invoke();
         }
 
         //bool canPlace = false;

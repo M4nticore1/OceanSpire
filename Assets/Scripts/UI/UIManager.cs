@@ -153,11 +153,11 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
+        BuildingWidget.OnStartPlacingConstruction += OnConstructionStartPlacing;
+        CityManager.OnConstructionPlaced += OnConstructionPlaced;
         CityManager.OnStorageCapacityUpdated += UpdateItemAmounts;
         CityManager.OnLootAdded += UpdateItemAmounts;
         cityManager.OnResidentAdded += AddResidentWidget;
-
-        BuildingWidget.OnStartPlacingConstruction += OnBuildingStartPlacing;
     }
 
     private void OnDisable()
@@ -166,7 +166,7 @@ public class UIManager : MonoBehaviour
         CityManager.OnLootAdded -= UpdateItemAmounts;
         cityManager.OnResidentAdded -= AddResidentWidget;
 
-        BuildingWidget.OnStartPlacingConstruction -= OnBuildingStartPlacing;
+        BuildingWidget.OnStartPlacingConstruction -= OnConstructionStartPlacing;
     }
 
     private void Update()
@@ -903,7 +903,7 @@ public class UIManager : MonoBehaviour
     }
 
     // Placing Building
-    private void OnBuildingStartPlacing(ConstructionComponent building)
+    private void OnConstructionStartPlacing(ConstructionComponent building)
     {
         if (stopPlacingBuildingButton)
             stopPlacingBuildingButton.gameObject.SetActive(true);
@@ -913,12 +913,14 @@ public class UIManager : MonoBehaviour
         CloseManagementMenu();
     }
 
+    private void OnConstructionPlaced()
+    {
+        stopPlacingBuildingButton.gameObject.SetActive(false);
+    }
+
     private void StopPlacingBuilding()
     {
-        if (stopPlacingBuildingButton)
-            stopPlacingBuildingButton.gameObject.SetActive(false);
-        else
-            Debug.Log("stopPlacingBuildingButton is NULL");
+        stopPlacingBuildingButton.gameObject.SetActive(false);
 
         OnBuildStopPlacing?.Invoke();
     }

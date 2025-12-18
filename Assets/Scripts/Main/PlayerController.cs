@@ -133,6 +133,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
+        // Gameplay Events
+        BuildingWidget.OnStartPlacingConstruction += OnBuildingStartPlacing;
+        CityManager.OnConstructionPlaced += OnConstructionPlaced;
+        UIManager.OnBuildStopPlacing += OnConstructionPlaced;
+
         touchInputActionMap.Enable();
 
         // Primary Interaction
@@ -159,14 +164,15 @@ public class PlayerController : MonoBehaviour
         cameraMoveButtonIA.performed += StartCameraMoving;
         cameraMoveButtonIA.canceled += StopCameraMoving;
         cameraZoomIA.performed += ZoomCamera;
-
-        // Gameplay Events
-        BuildingWidget.OnStartPlacingConstruction += OnBuildingStartPlacing;
-        UIManager.OnBuildStopPlacing += StopPlacingBuilding;
     }
 
     private void OnDisable()
     {
+
+        BuildingWidget.OnStartPlacingConstruction -= OnBuildingStartPlacing;
+        CityManager.OnConstructionPlaced -= OnConstructionPlaced;
+        UIManager.OnBuildStopPlacing -= OnConstructionPlaced;
+
         touchInputActionMap.Disable();
 
         // Primary Interaction
@@ -193,9 +199,6 @@ public class PlayerController : MonoBehaviour
         cameraMoveButtonIA.performed -= StartCameraMoving;
         cameraMoveButtonIA.canceled -= StopCameraMoving;
         cameraZoomIA.performed -= ZoomCamera;
-
-        BuildingWidget.OnStartPlacingConstruction -= OnBuildingStartPlacing;
-        UIManager.OnBuildStopPlacing -= StopPlacingBuilding;
     }
 
     private void SetInputSystem()
@@ -397,51 +400,35 @@ public class PlayerController : MonoBehaviour
 
     Vector2 SquareLoop(float t, float fullSize, float corner)
     {
-        // t = alpha from 0..1
         t = Mathf.Repeat(t, 1f);
         float halfSize = fullSize / 2;
 
-        float seg = 1f / 4f; // length of one side
+        float seg = 1f / 4f;
 
-        // 4 segments of movement
         if (t < seg) // Bottom → Right
         {
             float k = t / seg;
-            return new Vector2(
-                Mathf.Lerp(-halfSize, halfSize, Smooth(k, corner)),
-                -halfSize
-            );
+            return new Vector2(Mathf.Lerp(-halfSize, halfSize, Smooth(k, corner)), -halfSize);
         }
         else if (t < seg * 2f) // Right → Top
         {
             float k = (t - seg) / seg;
-            return new Vector2(
-                halfSize,
-                Mathf.Lerp(-halfSize, halfSize, Smooth(k, corner))
-            );
+            return new Vector2(halfSize, Mathf.Lerp(-halfSize, halfSize, Smooth(k, corner)));
         }
         else if (t < seg * 3f) // Top → Left
         {
             float k = (t - seg * 2f) / seg;
-            return new Vector2(
-                Mathf.Lerp(halfSize, -halfSize, Smooth(k, corner)),
-                halfSize
-            );
+            return new Vector2(Mathf.Lerp(halfSize, -halfSize, Smooth(k, corner)), halfSize);
         }
         else // Left → Bottom
         {
             float k = (t - seg * 3f) / seg;
-            return new Vector2(
-                -halfSize,
-                Mathf.Lerp(halfSize, -halfSize, Smooth(k, corner))
-            );
+            return new Vector2(-halfSize, Mathf.Lerp(halfSize, -halfSize, Smooth(k, corner)));
         }
     }
 
     float Smooth(float x, float corner)
     {
-        // corner = 0 → no smoothing (sharp corners)
-        // corner = 1 → max smoothing (round corners)
         return Mathf.SmoothStep(0f, 1f, Mathf.Lerp(x, x * x * (3 - 2 * x), corner));
     }
 
@@ -699,7 +686,7 @@ public class PlayerController : MonoBehaviour
         cityManager.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
     }
 
-    public void StopPlacingBuilding()
+    public void OnConstructionPlaced()
     {
         if (buildingToPlace)
         {
