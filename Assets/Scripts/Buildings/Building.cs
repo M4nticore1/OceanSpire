@@ -23,16 +23,17 @@ public class Building : MonoBehaviour
 
     protected BuildingPosition buildingPosition = BuildingPosition.Straight;
 
-    public Building leftConnectedBuilding = null;
-    public Building rightConnectedBuilding = null;
-    public Building aboveConnectedBuilding = null;
-    public Building belowConnectedBuilding = null;
+    public Building leftConnectedBuilding { get; private set; } = null;
+    public Building rightConnectedBuilding { get; private set; } = null;
+    public Building aboveConnectedBuilding { get; private set; } = null;
+    public Building belowConnectedBuilding { get; private set; } = null;
 
     [Header("Data")]
     [SerializeField] protected BuildingData buildingData = null;
     public BuildingData BuildingData => buildingData;
     [SerializeField] protected List<ConstructionLevelData> buildingLevelsData = new List<ConstructionLevelData>();
     public List<ConstructionLevelData> ConstructionLevelsData => buildingLevelsData;
+    public ConstructionLevelData currentLevelData => ConstructionLevelsData.Count > levelComponent.LevelIndex ? ConstructionLevelsData[levelComponent.LevelIndex] : null;
 
     public BuildingPlace buildingPlace = null;
 
@@ -70,8 +71,6 @@ public class Building : MonoBehaviour
 
     private void GetComponents()
     {
-        if (isInitialized) return;
-
         gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
         levelComponent = GetComponent<LevelComponent>();

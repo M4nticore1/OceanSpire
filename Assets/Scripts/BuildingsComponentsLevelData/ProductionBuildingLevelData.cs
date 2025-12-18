@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct ProducedResource
+public class ProducedResource
 {
     public ItemInstance producedResource;
     public int maxResourceAmount;

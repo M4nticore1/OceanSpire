@@ -359,7 +359,6 @@ public class PlayerController : MonoBehaviour
 
             // Sum Of Movings
             cameraMoveVelocity = (cameraMoveKeyboard + cameraMoveMouse + cameraMoveTouchScreen) * cameraMoveSensitivity;
-            Debug.Log(cameraHolder.transform.position.y);
 
             // Return Vertical Position
             if (cameraHolder.transform.position.y > cityManager.cityHeight)
@@ -457,7 +456,6 @@ public class PlayerController : MonoBehaviour
         else if (currentCameraArmLength > maxCameraArmLength && currentCameraZoomVelocity < 0)
             multiplier = 1f - math.clamp((currentCameraArmLength - maxCameraArmLength) / farCameraArmBoundaryPadding, 0f, 1f);
 
-        Debug.Log(multiplier);
         currentCameraArmLength -= cameraZoomIntensity * currentCameraZoomVelocity * multiplier;
     }
 
@@ -698,7 +696,6 @@ public class PlayerController : MonoBehaviour
 
     private void PlaceConstruction(BuildingPlace buildingPlace)
     {
-        Debug.Log("Place");
         cityManager.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
     }
 
@@ -723,7 +720,6 @@ public class PlayerController : MonoBehaviour
 
     private void CollectItems(List<ItemInstance> items)
     {
-        Debug.Log("Collect");
         cityManager.AddItems(items);
     }
 

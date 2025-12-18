@@ -31,8 +31,6 @@ public class ResourceWidget : MonoBehaviour
             else
                 alpha = 0.0f;
 
-            Debug.Log(maxResourceAmount);
-
             resourceAmountBar.fillAmount = alpha;
         }
     }

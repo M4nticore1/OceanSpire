@@ -15,6 +15,7 @@ public class StatsWorldUI : MonoBehaviour
     {
         if (healthBar)
         {
+            Debug.Log(currentHealth);
             if (currentHealth <= maxHealth * healthDisplayThreshold)
             {
                 ShowHealthBar();
@@ -39,12 +40,14 @@ public class StatsWorldUI : MonoBehaviour
 
     public void ShowHealthBar()
     {
+        Debug.Log("ShowHealthBar");
         healthBar.SetActive(true);
         isHealthBarShowed = true;
     }
 
     public void HideHealthBar()
     {
+        Debug.Log("HideHealthBar");
         healthBar.SetActive(false);
         isHealthBarShowed = false;
     }

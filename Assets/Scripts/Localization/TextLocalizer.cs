@@ -36,7 +36,6 @@ public class TextLocalizer : MonoBehaviour
 
     private void ChangeLocalization()
     {
-        Debug.Log("GetLocalizationText");
         text.SetText(LocalizationSystem.GetLocalizationText(key));
     }
 }

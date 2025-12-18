@@ -18,7 +18,7 @@ public class ProductionBuildingComponent : BuildingComponent
     private CollectResourceWidget collectResourceWidget = null;
 
     public int currentProducedItemIndex { get; private set; } = 0;
-    public ProducedResource CurrentProducedResource => levelData.producedResources[currentProducedItemIndex];
+    public ProducedResource CurrentProducedResource => levelData.producedResources.Count > currentProducedItemIndex ? levelData.producedResources[currentProducedItemIndex] : null;
 
     private void Update()
     {
@@ -30,7 +30,8 @@ public class ProductionBuildingComponent : BuildingComponent
         base.Build(newLevel);
 
         levelData = levelsData[ownedBuilding.levelComponent.LevelIndex] as ProductionBuildingLevelData;
-        producedItem = new ItemInstance(CurrentProducedResource.producedResource.ItemData);
+        if (CurrentProducedResource is ProducedResource resource)
+            producedItem = new ItemInstance(resource.producedResource.ItemData);
     }
 
     //public override void UpdateLevel(int newLevel)
@@ -42,7 +43,7 @@ public class ProductionBuildingComponent : BuildingComponent
 
     private void Production()
     {
-        if (ownedBuilding)
+        if (ownedBuilding && CurrentProducedResource != null)
         {
             if (!ownedBuilding.constructionComponent.isUnderConstruction)
             {
@@ -76,7 +77,12 @@ public class ProductionBuildingComponent : BuildingComponent
             }
         }
         else
-            Debug.LogError("ownedBuilding is NULL");
+        {
+            if (!ownedBuilding)
+                Debug.LogError("ownedBuilding is NULL");
+            if (CurrentProducedResource == null)
+                Debug.LogError("CurrentProducedResource is NULL");
+        }
     }
 
     private void AddProduceResourceAmount()

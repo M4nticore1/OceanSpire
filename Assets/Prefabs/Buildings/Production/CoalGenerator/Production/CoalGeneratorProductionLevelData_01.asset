@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ada3316b484b749b58ea57c530f988, type: 3}
   m_Name: CoalGeneratorProductionLevelData_01
   m_EditorClassIdentifier: 
-  produceResource: {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
-  produceResourceAmount: 5
-  consumeResource: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-  consumeResourceAmount: 50
-  maxResourceAmount: 10
-  produceTime: 5
+  producedResources:
+  - producedResource:
+      itemData: {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
+      amount: 10
+    maxResourceAmount: 10
+    produceTime: 60
+    consumeResources:
+    - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+      amount: 100

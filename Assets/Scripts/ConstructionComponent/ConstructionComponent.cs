@@ -48,6 +48,8 @@ public class ConstructionComponent : MonoBehaviour
 
     public void InitializeConstruction(bool requiresConstruction = false, int levelIndex = 0)
     {
+        if (IsInitialized) return;
+
         GetComponents();
 
         isUnderConstruction = requiresConstruction;
@@ -72,6 +74,7 @@ public class ConstructionComponent : MonoBehaviour
 
     public void StartConstructing(int nextLevel = 0)
     {
+        Debug.Log("StartConstructing");
         isUnderConstruction = true;
         if (levelComponent && levelComponent.LevelIndex == 0)
             levelComponent.LevelIndex = nextLevel;
@@ -87,8 +90,6 @@ public class ConstructionComponent : MonoBehaviour
         else if (isUnderConstruction)
             isUnderConstruction = false;
 
-        //interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.buildingInteriors.Count);
-
         Build(nextLevel);
     }
 
@@ -96,13 +97,6 @@ public class ConstructionComponent : MonoBehaviour
     {
         if (levelComponent)
             levelComponent.LevelIndex = levelIndex;
-        //if (spawnedConstruction && spawnedConstruction.buildingInteriors.Count > 0)
-        //{
-        //    if (interiorIndex < 0)
-        //        interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.buildingInteriors.Count);
-
-        //    spawedBuildingInterior = Instantiate(spawnedConstruction.buildingInteriors[interiorIndex], transform);
-        //}
 
         if (levelComponent)
             levelComponent.LevelIndex = levelIndex;
@@ -216,6 +210,16 @@ public class ConstructionComponent : MonoBehaviour
             BuildingConstruction construction = Instantiate(buildingConstruction, gameObject.transform);
             spawnedConstruction = construction;
             spawnedConstruction.Build();
+
+            if (spawnedConstruction && spawnedConstruction.BuildingInteriors.Count > 0)
+            {
+                interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.BuildingInteriors.Count);
+
+                if (interiorIndex < 0)
+                    interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.BuildingInteriors.Count);
+
+                spawedBuildingInterior = Instantiate(spawnedConstruction.BuildingInteriors[interiorIndex], transform);
+            }
         }
         else
             Debug.LogError("buildingConstruction is NULL");
