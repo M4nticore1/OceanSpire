@@ -205,20 +205,24 @@ public class ConstructionComponent : MonoBehaviour
             if (spawnedConstruction)
             {
                 Destroy(spawnedConstruction.gameObject);
+                spawnedConstruction = null;
             }
 
-            BuildingConstruction construction = Instantiate(buildingConstruction, gameObject.transform);
-            spawnedConstruction = construction;
-            spawnedConstruction.Build();
-
-            if (spawnedConstruction && spawnedConstruction.BuildingInteriors.Count > 0)
+            if (!spawnedConstruction)
             {
-                interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.BuildingInteriors.Count);
+                BuildingConstruction construction = Instantiate(buildingConstruction, gameObject.transform);
+                spawnedConstruction = construction;
+                spawnedConstruction.Build();
 
-                if (interiorIndex < 0)
+                if (spawnedConstruction && spawnedConstruction.BuildingInteriors.Count > 0)
+                {
                     interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.BuildingInteriors.Count);
 
-                spawedBuildingInterior = Instantiate(spawnedConstruction.BuildingInteriors[interiorIndex], transform);
+                    if (interiorIndex < 0)
+                        interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.BuildingInteriors.Count);
+
+                    spawedBuildingInterior = Instantiate(spawnedConstruction.BuildingInteriors[interiorIndex], transform);
+                }
             }
         }
         else

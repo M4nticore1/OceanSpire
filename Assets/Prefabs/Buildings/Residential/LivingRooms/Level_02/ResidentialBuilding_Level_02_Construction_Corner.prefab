@@ -16,7 +16,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &337465256166747431
 Transform:
@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingInteriors: []
   buildingInteractions: []
+  collectItemPoints: []
 --- !u!64 &-7796214933308666227
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -121,6 +122,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ae5bab04a1a32794bb800e654671eb14, type: 3}
       propertyPath: m_Name
       value: LivingRooms_Level_01_Construction_Corner
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ae5bab04a1a32794bb800e654671eb14, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

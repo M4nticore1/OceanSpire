@@ -18,10 +18,11 @@ public class ProductionBuildingComponent : BuildingComponent
     private CollectResourceWidget collectResourceWidget = null;
 
     public int currentProducedItemIndex { get; private set; } = 0;
-    public ProducedResource CurrentProducedResource => levelData.producedResources.Count > currentProducedItemIndex ? levelData.producedResources[currentProducedItemIndex] : null;
+    public ProducedResource CurrentProducedResource => levelData ? (levelData.producedResources.Count > currentProducedItemIndex ? levelData.producedResources[currentProducedItemIndex] : null) : null;
 
     private void Update()
     {
+        if (!ownedBuilding.buildingPlace) return;
         Production();
     }
 

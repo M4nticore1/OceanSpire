@@ -3,9 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -77,6 +75,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InputActionAsset mainInputActionsAsset = null;
     private InputActionMap touchInputActionMap = null;
 
+    private InputAction mousePositionIA = null;
+
     private InputAction primaryInteractionPressIA = null;
     private InputAction primaryInteractionPositionIA = null;
     private InputAction primaryInteractionDeltaIA = null;
@@ -126,8 +126,10 @@ public class PlayerController : MonoBehaviour
         gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
         uiManager = FindAnyObjectByType<UIManager>();
-        if (uiManager) graphicRaycaster = uiManager.gameObject.GetComponent<GraphicRaycaster>();
-        else Debug.LogError("uiManager is NULL");
+        if (uiManager)
+            graphicRaycaster = uiManager.gameObject.GetComponent<GraphicRaycaster>();
+        else
+            Debug.LogError("uiManager is NULL");
         SetInputSystem();
     }
 
@@ -140,12 +142,14 @@ public class PlayerController : MonoBehaviour
 
         touchInputActionMap.Enable();
 
+        //mouseInteractionPositionIA.performed
+
         // Primary Interaction
         primaryInteractionPressIA.performed += OnPrimaryInteractionStarted;
         primaryInteractionPressIA.canceled += OnPrimaryInteractionEnded;
 
-        primaryInteractionPositionIA.performed += OnPrimaryInteractionPosition;
-        primaryInteractionPositionIA.canceled += OnPrimaryInteractionPosition;
+        //primaryInteractionPositionIA.performed += OnPrimaryInteractionPosition;
+        //primaryInteractionPositionIA.canceled += OnPrimaryInteractionPosition;
 
         primaryInteractionDeltaIA.performed += OnPrimaryInteractionDelta;
         primaryInteractionDeltaIA.canceled += OnPrimaryInteractionDelta;
@@ -179,9 +183,6 @@ public class PlayerController : MonoBehaviour
         primaryInteractionPressIA.performed -= OnPrimaryInteractionStarted;
         primaryInteractionPressIA.canceled -= OnPrimaryInteractionEnded;
 
-        primaryInteractionPositionIA.performed -= OnPrimaryInteractionPosition;
-        primaryInteractionPositionIA.canceled -= OnPrimaryInteractionPosition;
-
         primaryInteractionDeltaIA.performed -= OnPrimaryInteractionDelta;
         primaryInteractionDeltaIA.canceled -= OnPrimaryInteractionDelta;
 
@@ -209,6 +210,8 @@ public class PlayerController : MonoBehaviour
 
             if (touchInputActionMap != null)
             {
+                mousePositionIA = touchInputActionMap.FindAction("MousePosition");
+
                 primaryInteractionPressIA = touchInputActionMap.FindAction("PrimaryInteractionPress");
                 primaryInteractionPositionIA = touchInputActionMap.FindAction("PrimaryInteractionPosition");
                 primaryInteractionDeltaIA = touchInputActionMap.FindAction("PrimaryInteractionDelta");
@@ -231,12 +234,12 @@ public class PlayerController : MonoBehaviour
             Debug.Log("void PlayerController : SetInputSystem() inputActions is NULL");
     }
 
-    //private void Start()
-    //{
-    //    //Load(GameManager.saveData);
+    private void Start()
+    {
+        Load(GameManager.saveData);
 
-    //    //SaveSystem.SaveData(this, cityManager);
-    //}
+        //SaveSystem.SaveData(this, cityManager);
+    }
 
     public void Load(SaveData saveData)
     {
@@ -258,9 +261,11 @@ public class PlayerController : MonoBehaviour
 
         moveStateValue = 1f / CityManager.roomsCountPerFloor;
 
-        SaveData();
-
+        SaveSystem.SaveData(this, cityManager);
         isInitialized = true;
+
+        if (!gameManager) Debug.LogError("gameManager is NULL");
+        if (!cityManager) Debug.LogError("cityManager is NULL");
     }
 
     private void LoadLocalization()
@@ -278,7 +283,6 @@ public class PlayerController : MonoBehaviour
     {
         if (isInitialized)
         {
-            //OnTouchPresing();
             CameraMovement();
             CameraZoom();
             CameraShake();
@@ -293,21 +297,24 @@ public class PlayerController : MonoBehaviour
             else
                 placeIndex = 13 - moveStateIndex;
 
-            Building buildingToShowStats = cityManager.GetBuildingByIndex(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
-
-            if (currentCameraDistance <= cameraDistanceToShowBuildingStats)
+            if (cityManager)
             {
-                if (buildingToShowStats)
-                    uiManager.OpenBuildingStatsPanel(buildingToShowStats);
+                Building buildingToShowStats = cityManager.GetBuildingByIndex(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
+
+                if (currentCameraDistance <= cameraDistanceToShowBuildingStats)
+                {
+                    if (buildingToShowStats)
+                        uiManager.OpenBuildingStatsPanel(buildingToShowStats);
+                    else
+                        uiManager.CloseBuildingStatsPanel();
+                }
                 else
                     uiManager.CloseBuildingStatsPanel();
             }
-            else
-                uiManager.CloseBuildingStatsPanel();
 
             if (Time.timeAsDouble >= lastSaveDataTime + GameManager.autoSaveFrequency)
             {
-                SaveData();
+                SaveSystem.SaveData(this, cityManager);
                 lastSaveDataTime = Time.timeAsDouble;
             }
         }
@@ -331,7 +338,7 @@ public class PlayerController : MonoBehaviour
 
     private void CameraMovement()
     {
-        if (cameraHolder && cityManager)
+        if (cameraHolder)
         {
             // Keybord Moving
             if (isCameraMoving)
@@ -340,7 +347,7 @@ public class PlayerController : MonoBehaviour
             {
                 cameraMoveKeyboard = Vector2.Lerp(cameraMoveKeyboard, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
 
-                if (cameraHolder.transform.position.y > cityManager.cityHeight || cameraHolder.transform.position.y < 0.0f)
+                if (cityManager ? (cameraHolder.transform.position.y > cityManager.cityHeight || cameraHolder.transform.position.y < 0.0f) : false)
                 {
                     Vector3 cameraPosition = cameraHolder.transform.position;
                     float targetHeight = cameraHolder.transform.position.y < 0f ? 0f : cityManager.cityHeight;
@@ -364,7 +371,7 @@ public class PlayerController : MonoBehaviour
             cameraMoveVelocity = (cameraMoveKeyboard + cameraMoveMouse + cameraMoveTouchScreen) * cameraMoveSensitivity;
 
             // Return Vertical Position
-            if (cameraHolder.transform.position.y > cityManager.cityHeight)
+            if (cityManager ? cameraHolder.transform.position.y > cityManager.cityHeight : false)
                 cameraVerticalReturnMultiplier = cameraHolder.transform.position.y - cityManager.cityHeight /*math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f)*/;
             else if (cameraHolder.transform.position.y < 0.0f)
                 cameraVerticalReturnMultiplier = -cameraHolder.transform.position.y /*((0 - math.abs(cameraHolder.transform.position.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding*/;
@@ -374,7 +381,7 @@ public class PlayerController : MonoBehaviour
             // Add Move
             float multiplier = 1f;
             float cameraHeight = math.abs(cameraHolder.transform.position.y);
-            if (cameraHolder.transform.position.y > cityManager.cityHeight && cameraMoveVelocity.y > 0f)
+            if (cityManager ? (cameraHolder.transform.position.y > cityManager.cityHeight && cameraMoveVelocity.y > 0f) : false)
                 multiplier = 1f - math.clamp((cameraHeight - cityManager.cityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
             else if (cameraHolder.transform.position.y < 0f && cameraMoveVelocity.y < 0f)
                 multiplier = 1f - math.clamp(cameraHeight / cameraVerticalBoundaryPadding, 0f, 1f);
@@ -393,8 +400,6 @@ public class PlayerController : MonoBehaviour
         {
             if (!cameraHolder)
                 Debug.LogError("cameraHolder is NULL");
-            if (!cityManager)
-                Debug.LogError("cityManager is NULL");
         }
     }
 
@@ -488,7 +493,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnPrimaryInteractionStarted(InputAction.CallbackContext context)
     {
-        primaryInteractionStartPosition = primaryInteractionPositionIA.ReadValue<Vector2>();
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+            primaryInteractionStartPosition = primaryInteractionPositionIA.ReadValue<Vector2>();
+        else
+            primaryInteractionStartPosition = mousePositionIA.ReadValue<Vector2>();
+
         startInteractionsPitch = Vector2.Distance(primaryInteractionStartPosition, secondaryInteractionPosition);
         isPrimaryInteractionPressed = true;
     }
@@ -497,6 +506,15 @@ public class PlayerController : MonoBehaviour
     {
         if (!isSecondaryInteractionPressed)
         {
+            // Get Pointer Position
+            var device = context.control.device;
+
+            if (device is Touchscreen)
+                primaryInteractionPosition = primaryInteractionPositionIA.ReadValue<Vector2>();
+            else if (device is Mouse)
+                primaryInteractionPosition = mousePositionIA.ReadValue<Vector2>();
+
+            // Main
             if (primaryInteractionStartPosition == primaryInteractionPosition)
             {
                 PointerEventData pointerEventData = new PointerEventData(eventSystem);
@@ -583,11 +601,11 @@ public class PlayerController : MonoBehaviour
         isPrimaryInteractionPressed = false;
     }
 
-    private void OnPrimaryInteractionPosition(InputAction.CallbackContext context)
-    {
-        Vector2 value = context.ReadValue<Vector2>();
-        primaryInteractionPosition = value;
-    }
+    //private void OnPrimaryInteractionPosition(InputAction.CallbackContext context)
+    //{
+    //    Vector2 value = context.ReadValue<Vector2>();
+    //    //primaryInteractionPosition = value;
+    //}
 
     private void OnPrimaryInteractionDelta(InputAction.CallbackContext context)
     {
@@ -740,10 +758,5 @@ public class PlayerController : MonoBehaviour
                 uiManager.CloseBuildingActionMenu();
             }
         }
-    }
-
-    private void SaveData()
-    {
-       SaveSystem.SaveData(this, cityManager);
     }
 }

@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8778658105591842211
 Transform:
@@ -45,7 +45,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1995151727134782109
 Transform:
@@ -78,7 +78,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &337465256166747431
 Transform:
@@ -119,6 +119,7 @@ MonoBehaviour:
   - waypoints:
     - {fileID: 8778658105591842211}
     actionTimes: 00000000
+  collectItemPoints: []
 --- !u!64 &-2333062292182902255
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -155,7 +156,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2161702520058076093
 Transform:
@@ -225,6 +226,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 767c8597b44008e4baa8a4f3f4fcb144, type: 3}
       propertyPath: m_Name
       value: LivingRooms_Level_02_Straight
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 767c8597b44008e4baa8a4f3f4fcb144, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

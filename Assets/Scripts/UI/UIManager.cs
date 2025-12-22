@@ -4,6 +4,7 @@ using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class UIManager : MonoBehaviour
 {
@@ -128,8 +129,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GridLayoutGroup unemployedResidentsList = null;
     [SerializeField] private GridLayoutGroup employedResidentsList = null;
 
+    [Header("FPS")]
+    [SerializeField] private TextMeshProUGUI fpsText = null;
+
     int maxBuildingWorkersCount = 0;
     int residentWidgetsColumnCount = 0;
+
+    int frames = 0;
+    double lastFPSCounterTime = 0d;
 
     // Colors
     [Header("Colors")]
@@ -157,14 +164,24 @@ public class UIManager : MonoBehaviour
         CityManager.OnConstructionPlaced += OnConstructionPlaced;
         CityManager.OnStorageCapacityUpdated += UpdateItemAmounts;
         CityManager.OnLootAdded += UpdateItemAmounts;
-        cityManager.OnResidentAdded += AddResidentWidget;
+        if (cityManager)
+        {
+            cityManager.OnResidentAdded += AddResidentWidget;
+        }
+        else
+            Debug.LogError("cityManager is NULL");
     }
 
     private void OnDisable()
     {
         CityManager.OnStorageCapacityUpdated -= UpdateItemAmounts;
         CityManager.OnLootAdded -= UpdateItemAmounts;
-        cityManager.OnResidentAdded -= AddResidentWidget;
+        if (cityManager)
+        {
+            cityManager.OnResidentAdded -= AddResidentWidget;
+        }
+        else
+            Debug.LogError("cityManager is NULL");
 
         BuildingWidget.OnStartPlacingConstruction -= OnConstructionStartPlacing;
     }
@@ -187,6 +204,7 @@ public class UIManager : MonoBehaviour
         buildingResourcesMenuPanel.anchoredPosition = buildingResourcesMenuCurrentPosition;
 
         UpdateBuildingStatsPanelPosition();
+        FPSCounter();
     }
 
     public void InitializeUIManager()
@@ -386,6 +404,10 @@ public class UIManager : MonoBehaviour
 
     private void CreateBuildingWidgets()
     {
+        if (!gameManager) {
+            Debug.LogError("gameManager is NULL");
+            return; }
+
         int length = Enum.GetValues(typeof(BuildingCategory)).Length;
         for (int i = 0; i < length; i++)
         {
@@ -915,13 +937,30 @@ public class UIManager : MonoBehaviour
 
     private void OnConstructionPlaced()
     {
-        stopPlacingBuildingButton.gameObject.SetActive(false);
+        if (stopPlacingBuildingButton)
+            stopPlacingBuildingButton.gameObject.SetActive(false);
     }
 
     private void StopPlacingBuilding()
     {
-        stopPlacingBuildingButton.gameObject.SetActive(false);
+        if (stopPlacingBuildingButton)
+            stopPlacingBuildingButton.gameObject.SetActive(false);
 
         OnBuildStopPlacing?.Invoke();
+    }
+
+    private void FPSCounter()
+    {
+        frames++;
+        double time = Time.timeAsDouble;
+
+        if (time >= lastFPSCounterTime + 0.5)
+        {
+            double delta = time - lastFPSCounterTime;
+            float fps = frames / (float)delta;
+            fpsText.text = $"FPS: {(int)fps}";
+            frames = 0;
+            lastFPSCounterTime = time;
+        }
     }
 }

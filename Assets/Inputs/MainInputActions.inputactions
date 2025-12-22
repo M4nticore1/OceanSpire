@@ -7,6 +7,24 @@
             "id": "7ae312ad-20ea-4d2f-841c-e323a9eecc28",
             "actions": [
                 {
+                    "name": "MousePosition",
+                    "type": "Value",
+                    "id": "e130026b-4457-404d-952c-af3a9eff2c39",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "MouseDelta",
+                    "type": "Value",
+                    "id": "132bda1c-65b9-442e-8b45-ca78ff8f3d60",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "PrimaryInteractionPress",
                     "type": "Button",
                     "id": "a39e9c99-ec81-4630-a87b-20cbcf2c854a",
@@ -109,61 +127,6 @@
             "bindings": [
                 {
                     "name": "2D Vector",
-                    "id": "69794f52-9e3e-43ef-9fc9-8fabb44df02a",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PrimaryInteractionDelta",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "1baccad1-6ecf-4ca5-9acb-6bff9a7dda21",
-                    "path": "<Mouse>/delta/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "PrimaryInteractionDelta",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "9b5cb581-389e-4a54-b184-2b010be5d83c",
-                    "path": "<Mouse>/delta/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "PrimaryInteractionDelta",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "0fef57f2-ee4f-4a06-a010-be0b5fd30de6",
-                    "path": "<Mouse>/delta/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "PrimaryInteractionDelta",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "89ff5052-1fd1-4f0e-b67f-9717befdaf1c",
-                    "path": "<Mouse>/delta/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "PrimaryInteractionDelta",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "2D Vector",
                     "id": "bc9d6cef-14a7-4a03-8402-b122d861cdfe",
                     "path": "2DVector",
                     "interactions": "",
@@ -219,23 +182,89 @@
                 },
                 {
                     "name": "",
-                    "id": "d5893c17-5182-4ffd-82f5-81891e375ad2",
-                    "path": "<Mouse>/position",
+                    "id": "2bde3a2e-a10e-40aa-a197-5d5ca4840ce8",
+                    "path": "<Touchscreen>/primaryTouch/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
+                    "groups": "",
                     "action": "PrimaryInteractionPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "2bde3a2e-a10e-40aa-a197-5d5ca4840ce8",
-                    "path": "<Touchscreen>/touch0/position",
-                    "interactions": "Press",
+                    "id": "9f32eac5-476d-4a8c-9781-6e1ada1bf515",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
                     "processors": "",
-                    "groups": ";TouchScreen",
-                    "action": "PrimaryInteractionPosition",
+                    "groups": "",
+                    "action": "MousePosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector",
+                    "id": "4bc0be04-18e6-4a3e-8e83-85953aeab35d",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseDelta",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "94c0748e-7b2f-4f14-ad45-b7e0f1c554cf",
+                    "path": "<Mouse>/delta/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MouseDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "51a1c07f-a705-4928-bd0a-d1f77f88e568",
+                    "path": "<Mouse>/delta/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MouseDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "e5a3f0b9-be98-4bac-ae85-0e800ca556db",
+                    "path": "<Mouse>/delta/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MouseDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "6e959bd5-d70b-4e17-9005-e7f329edb87a",
+                    "path": "<Mouse>/delta/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MouseDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "21a296fc-b517-4fb5-a103-758c1b032c74",
+                    "path": "<Touchscreen>/primaryTouch/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrimaryInteractionPress",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -245,18 +274,7 @@
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "PrimaryInteractionPress",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "21a296fc-b517-4fb5-a103-758c1b032c74",
-                    "path": "<Touchscreen>/touch0/press",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";TouchScreen",
+                    "groups": "",
                     "action": "PrimaryInteractionPress",
                     "isComposite": false,
                     "isPartOfComposite": false

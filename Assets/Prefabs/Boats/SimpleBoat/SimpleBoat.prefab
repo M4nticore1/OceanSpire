@@ -65,8 +65,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 9220349405578416699}
   - {fileID: 6760154088084576006}
+  - {fileID: 9220349405578416699}
   - {fileID: 6338914725495003467}
   - {fileID: 6805092659170808921}
   m_Father: {fileID: 0}
@@ -157,7 +157,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: a3f9e93a24972724a9c311d8b3ecb439, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a3f9e93a24972724a9c311d8b3ecb439, type: 3}
       propertyPath: m_LocalPosition.y
@@ -195,6 +195,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: a3f9e93a24972724a9c311d8b3ecb439, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a3f9e93a24972724a9c311d8b3ecb439, type: 3}
       propertyPath: m_Name
       value: SimpleBoat
@@ -202,8 +206,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a3f9e93a24972724a9c311d8b3ecb439, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 8558988273148221518}
   m_SourcePrefab: {fileID: 100100000, guid: a3f9e93a24972724a9c311d8b3ecb439, type: 3}
+--- !u!1 &6240639978970271164 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a3f9e93a24972724a9c311d8b3ecb439, type: 3}
+  m_PrefabInstance: {fileID: 6510618667654508781}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8558988273148221518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6240639978970271164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d511cb8398f1b43b37bcc206dccbfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6760154088084576006 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a3f9e93a24972724a9c311d8b3ecb439, type: 3}

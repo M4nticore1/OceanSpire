@@ -37,8 +37,8 @@ public class LootManager : MonoBehaviour
 
     private void Update()
     {
-        SpawningLootContainers();
-        UpdateLootContainers();
+        //SpawningLootContainers();
+        //UpdateLootContainers();
     }
 
     private void SpawningLootContainers()

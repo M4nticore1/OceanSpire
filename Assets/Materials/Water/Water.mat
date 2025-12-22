@@ -92,7 +92,7 @@ Material:
     - _ColorDeep: {r: 0, g: 0.2803233, b: 0.49056602, a: 0}
     - _ColorDepp: {r: 0.19339621, g: 0.38634863, b: 1, a: 0}
     - _ColorShallow: {r: 0.25882354, g: 0.84705883, b: 1, a: 0}
-    - _DeepColor: {r: 0.23921569, g: 0.52784306, b: 0.6, a: 1}
+    - _DeepColor: {r: 0.26039216, g: 0.5962251, b: 0.6509804, a: 1}
     - _EdgeFoamColor: {r: 0.6, g: 0.7, b: 0.8, a: 1}
     - _FirstColor: {r: 0, g: 0.33720446, b: 1, a: 0}
     - _FirstFlowDirection: {r: 1, g: 0.1, b: 0, a: 0}
@@ -101,7 +101,7 @@ Material:
     - _RipplesColor: {r: 0.3090196, g: 0.56561613, b: 0.77254903, a: 1}
     - _SecondColor: {r: 1, g: 1, b: 1, a: 0}
     - _SecondFlowDirection: {r: 0.5, g: 1, b: 0, a: 0}
-    - _ShallowColor: {r: 0.12156863, g: 0.5043136, b: 0.6, a: 0}
+    - _ShallowColor: {r: 0.11, g: 0.4619999, b: 0.55, a: 0}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
     - _UVTiling: {r: 0.05, g: 0.05, b: 0, a: 0}
     - _WaterSpeed: {r: 0.3, g: 0, b: 0, a: 0}

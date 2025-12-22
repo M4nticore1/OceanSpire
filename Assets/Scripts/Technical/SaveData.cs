@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -47,6 +46,11 @@ public class SaveData
 
     public SaveData(PlayerController playerController, CityManager cityManager)
     {
+        if (!playerController || !cityManager) {
+            if (!playerController) Debug.LogError("playerController is NULL");
+            if (!cityManager) Debug.LogError("cityManager is NULL");
+            return; }
+
         // Player
         cameraYawRotation = playerController.cameraYawRotateAlpha;
         cameraHeightPosition = playerController.cameraVerticalPosition.y;

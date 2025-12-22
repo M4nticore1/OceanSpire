@@ -53,12 +53,19 @@ public class GameManager : MonoBehaviour
 
         ChangeWind();
         windDirection = newWindDirection;
-        lootManager.Initialize();
+        if (lootManager)
+            lootManager.Initialize();
+        else
+            Debug.LogError("LootManager is NULL");
 
         saveData = SaveSystem.LoadData();
         cityManager.Load(saveData);
 
-        playerController.Load(saveData);
+        //playerController.Load(saveData);
+
+
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 120;
     }
 
     private void Update()

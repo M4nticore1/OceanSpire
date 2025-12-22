@@ -5,7 +5,6 @@ using System.Linq;
 using Unity.AI.Navigation;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 enum Direction
 {

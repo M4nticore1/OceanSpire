@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingInteriors: []
   buildingInteractions: []
+  collectItemPoints: []
 --- !u!64 &5283171801875202098
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -116,6 +117,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a3d42d389f42a8c4a816005de5ef920d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: a3d42d389f42a8c4a816005de5ef920d, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a3d42d389f42a8c4a816005de5ef920d, type: 3}

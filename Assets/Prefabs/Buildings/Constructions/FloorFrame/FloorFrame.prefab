@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 126
   m_IsActive: 1
 --- !u!4 &9109938831956375873
 Transform:
@@ -55,7 +55,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 126
   m_IsActive: 1
 --- !u!4 &1700118617512782249
 Transform:
@@ -87,10 +87,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6165b2d0b718b064d888d656eb7ec4a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftConnectedBuilding: {fileID: 0}
-  rightConnectedBuilding: {fileID: 0}
-  aboveConnectedBuilding: {fileID: 0}
-  belowConnectedBuilding: {fileID: 0}
   buildingData: {fileID: 11400000, guid: 7bdb47221b509ae4a8d761f7d061fd69, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 900d1236c8a702a49b3effad3a42c5f0, type: 2}
@@ -118,6 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9490cdbf4ab773d40821031b260bb65d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnedConstruction: {fileID: 0}
 --- !u!1001 &30210866506604592
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -288,6 +285,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1700118617512782249}
     m_Modifications:
+    - target: {fileID: 2987562058754367172, guid: 792208a8c3e99f24e8238af10b287b66, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
+      objectReference: {fileID: 0}
+    - target: {fileID: 2988926415483282778, guid: 792208a8c3e99f24e8238af10b287b66, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
+      objectReference: {fileID: 0}
+    - target: {fileID: 3859439699844814488, guid: 792208a8c3e99f24e8238af10b287b66, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
+      objectReference: {fileID: 0}
     - target: {fileID: 7072113992813098010, guid: 792208a8c3e99f24e8238af10b287b66, type: 3}
       propertyPath: m_Name
       value: HallPlace
@@ -596,6 +605,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1700118617512782249}
     m_Modifications:
+    - target: {fileID: 3859439699844814488, guid: 763e3a0b94d94e94ab687f7f6584a801, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
+      objectReference: {fileID: 0}
     - target: {fileID: 7072113992813098010, guid: 763e3a0b94d94e94ab687f7f6584a801, type: 3}
       propertyPath: m_Name
       value: FloorFramePlace

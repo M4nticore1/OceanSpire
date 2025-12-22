@@ -100,7 +100,14 @@ public class LootContainer : MonoBehaviour
             }
         }
 
-        this.moveDirection = new Vector3(gameManager.windDirection.x, 0, gameManager.windDirection.y).normalized;
+        if (gameManager)
+            this.moveDirection = new Vector3(gameManager.windDirection.x, 0, gameManager.windDirection.y).normalized;
+        else
+        {
+            this.moveDirection = -transform.position.normalized;
+            Debug.LogError("gameManager is NULL");
+        }
+
         startMoveDirection = this.moveDirection;
         currentFloorIndex = floorIndex;
         if (floorIndex > 0)

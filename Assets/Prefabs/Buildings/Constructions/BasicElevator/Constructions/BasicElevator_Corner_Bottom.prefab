@@ -55,6 +55,7 @@ MonoBehaviour:
   - waypoints:
     - {fileID: 8490381622987998994}
     actionTimes: 00000000
+  collectItemPoints: []
 --- !u!64 &-2328155760362487098
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -218,6 +219,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2367c3b4d38530241a2b3e43eec485a8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 2367c3b4d38530241a2b3e43eec485a8, type: 3}
+      propertyPath: m_CastShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2367c3b4d38530241a2b3e43eec485a8, type: 3}
