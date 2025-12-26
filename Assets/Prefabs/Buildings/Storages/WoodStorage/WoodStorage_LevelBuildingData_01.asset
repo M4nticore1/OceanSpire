@@ -9,24 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a152c24115ebab4b957adfb74815f21, type: 3}
+  m_Script: {fileID: 11500000, guid: 68871d69a0d600f4db549ea34f879f9e, type: 3}
   m_Name: WoodStorage_LevelBuildingData_01
   m_EditorClassIdentifier: 
   resourcesToBuild: []
-  maxResidentsCount: 1
+  maxResidentsCount: 0
   constructionStraight: {fileID: 0}
   constructionCorner: {fileID: 0}
-  buildingStraight: {fileID: 0}
-  buildingCorner: {fileID: 0}
-  buildingStraightLeft: {fileID: 0}
-  buildingStraightRight: {fileID: 0}
-  buildingStraightLeftRight: {fileID: 0}
-  buildingCornerLeft: {fileID: 0}
-  buildingCornerRight: {fileID: 0}
-  buildingCornerLeftRight: {fileID: 0}
-  buildingStraightAbove: {fileID: 0}
-  buildingStraightBelow: {fileID: 0}
-  buildingStraightAboveBelow: {fileID: 0}
-  buildingCornerAbove: {fileID: 0}
-  buildingCornerBelow: {fileID: 0}
-  buildingCornerAboveBelow: {fileID: 0}
+  constructionStraightLeft: {fileID: 0}
+  constructionStraightRight: {fileID: 0}
+  constructionStraightLeftRight: {fileID: 0}
+  constructionCornerLeft: {fileID: 0}
+  constructionCornerRight: {fileID: 0}
+  constructionCornerLeftRight: {fileID: 0}
+  constructionStraightAbove: {fileID: 0}
+  constructionStraightBelow: {fileID: 0}
+  constructionStraightAboveBelow: {fileID: 0}
+  constructionCornerAbove: {fileID: 0}
+  constructionCornerBelow: {fileID: 0}
+  constructionCornerAboveBelow: {fileID: 0}

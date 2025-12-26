@@ -17,21 +17,11 @@ public class TextLocalizer : MonoBehaviour
     private void OnEnable()
     {
         LocalizationSystem.OnLocalizationChanged += ChangeLocalization;
-        if (localizationManager)
-        {
-        }
-        else
-            Debug.LogWarning("localizationManager is null");
     }
 
     private void OnDisable()
     {
         LocalizationSystem.OnLocalizationChanged -= ChangeLocalization;
-        if (localizationManager)
-        {
-        }
-        else
-            Debug.LogWarning("localizationManager is null");
     }
 
     private void ChangeLocalization()

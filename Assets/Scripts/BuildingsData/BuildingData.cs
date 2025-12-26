@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public enum BuildingId
+public enum BuildingIdEnum
 {
-    TowerGate,
     FloorFrame,
+    TowerGate,
     Dock,
     BasicElevator,
     FastElevator,
@@ -58,8 +58,8 @@ public enum DetailsWindowVariant
 public class BuildingData : ScriptableObject
 {
     [Header("Main")]
-    [SerializeField] private BuildingId buildingId = BuildingId.TowerGate;
-    public int BuildingIdValue { get { return (int)buildingId; } }
+    [SerializeField] private BuildingIdEnum buildingId = BuildingIdEnum.TowerGate;
+    public int BuildingId { get { return (int)buildingId; } }
     [SerializeField] private string buildingIdName = "";
     public string BuildingIdName => buildingIdName;
     [SerializeField] private string buildingName = "";

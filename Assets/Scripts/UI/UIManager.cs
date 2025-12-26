@@ -180,8 +180,6 @@ public class UIManager : MonoBehaviour
         {
             cityManager.OnResidentAdded -= AddResidentWidget;
         }
-        else
-            Debug.LogError("cityManager is NULL");
 
         BuildingWidget.OnStartPlacingConstruction -= OnConstructionStartPlacing;
     }
@@ -257,7 +255,7 @@ public class UIManager : MonoBehaviour
 
         buildingCharacteristicHeight = buildingCharacteristicWidget.characteristicValueBox.sizeDelta.y;
 
-        for (int i = 0; i < ItemDatabase.items.Count; i++)
+        for (int i = 0; i < gameManager.LootList.Loot.Count; i++)
             itemsToUpdate.Add(false);
 
         managementMenu.SetActive(false);
@@ -270,9 +268,9 @@ public class UIManager : MonoBehaviour
     // Management Menu
     private void CreateItemWidgets()
     {
-        for (int i = 0; i < ItemDatabase.items.Count; i++)
+        for (int i = 0; i < gameManager.LootList.Loot.Count; i++)
         {
-            ItemData itemData = ItemDatabase.items[i];
+            ItemData itemData = gameManager.LootList.Loot[i];
             if (itemData.ItemCategory == ItemCategory.Society) continue;
 
             ItemCategory itemCategory = itemData.ItemCategory;
@@ -414,18 +412,18 @@ public class UIManager : MonoBehaviour
             spawnedBuildingWidgets.Add(new List<BuildingWidget>());
         }
 
-        for (int i = 0; i < gameManager.buildingPrefabs.Count; i++)
+        for (int i = 0; i < gameManager.BuildingPrefabsList.BuildingPrefabs.Count; i++)
         {
-            if (!gameManager.buildingPrefabs[i].BuildingData.IsDemolishable) continue;
+            if (!gameManager.BuildingPrefabsList.BuildingPrefabs[i].BuildingData.IsDemolishable) continue;
 
-            BuildingCategory buildingCategory = gameManager.buildingPrefabs[i].BuildingData.BuildingCategory;
+            BuildingCategory buildingCategory = gameManager.BuildingPrefabsList.BuildingPrefabs[i].BuildingData.BuildingCategory;
             BuildingWidget spawnedBuildingWidget = null;
             spawnedBuildingWidget = Instantiate<BuildingWidget>(buildingWidgetPrefab, transform);
 
-            int categoryIndex = (int)gameManager.buildingPrefabs[i].BuildingData.BuildingCategory;
+            int categoryIndex = (int)gameManager.BuildingPrefabsList.BuildingPrefabs[i].BuildingData.BuildingCategory;
             spawnedBuildingWidgets[categoryIndex].Add(spawnedBuildingWidget);
 
-            ConstructionComponent construction = gameManager.buildingPrefabs[i].GetComponent<ConstructionComponent>();
+            ConstructionComponent construction = gameManager.BuildingPrefabsList.BuildingPrefabs[i].GetComponent<ConstructionComponent>();
             spawnedBuildingWidget.InitializeBuildingWidget(construction);
             spawnedBuildingWidget.cityManager = cityManager;
 

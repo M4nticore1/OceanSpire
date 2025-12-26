@@ -126,7 +126,7 @@ public class CityManager : MonoBehaviour
                 }
                 else
                 {
-                    PlaceBuilding(gameManager.buildingPrefabs[1], builtFloors[i - 1].floorBuildingPlace, 0, false);
+                    PlaceBuilding(gameManager.BuildingPrefabsList.buildingPrefabsById[0], builtFloors[i - 1].floorBuildingPlace, 0, false);
                 }
 
                 if (data != null)
@@ -144,8 +144,8 @@ public class CityManager : MonoBehaviour
                                 int buildingLInteriorId = data.placedBuildingInteriorIds != null ? data.placedBuildingInteriorIds[placeIndex] : 0;
                                 bool buildingIsUnderConstruction = data.placedBuildingsUnderConstruction != null ? data.placedBuildingsUnderConstruction[placeIndex] : false;
 
-                                Building building = gameManager.buildingPrefabs[buildingId];
-                                BuildingType buildingType = gameManager.buildingPrefabs[buildingId].BuildingData.BuildingType;
+                                Building building = gameManager.BuildingPrefabsList.buildingPrefabsById[buildingId];
+                                BuildingType buildingType = gameManager.BuildingPrefabsList.buildingPrefabsById[buildingId].BuildingData.BuildingType;
 
                                 if (buildingType == BuildingType.Hall)
                                 {
@@ -228,7 +228,7 @@ public class CityManager : MonoBehaviour
                     float positionZ = data.spawnedBoatPositionsZ[j];
                     float rotationY = data.spawnedBoatRotationsY[j];
 
-                    PlaceBoat(gameManager.boatPrefabs[id], isUnderConstruction, j, isFloating, isReturning, health, positionX, positionZ, rotationY);
+                    PlaceBoat(gameManager.BoatPrefabsList.BoatPrefabs[id], isUnderConstruction, j, isFloating, isReturning, health, positionX, positionZ, rotationY);
                 }
             }
         }
@@ -329,9 +329,9 @@ public class CityManager : MonoBehaviour
 
     private void InitializeItems()
     {
-        for (int i = 0; i < ItemDatabase.items.Count; i++)
+        for (int i = 0; i < gameManager.LootList.Loot.Count; i++)
         {
-            ItemData data = ItemDatabase.itemsById[i];
+            ItemData data = gameManager.LootList.Loot[i];
             int id = data.ItemId;
             items.Add(id, new ItemInstance(data));
             totalStorageCapacity.Add(id, new ItemInstance(data));
@@ -800,7 +800,7 @@ public class CityManager : MonoBehaviour
 
         for (int i = 0; i < storageLevelData.storageItemCategories.Count; i++)
         {
-            for (int j = 0; j < ItemDatabase.items.Count; j++)
+            for (int j = 0; j < gameManager.LootList.Loot.Count; j++)
             {
                 if (items[j].ItemData.ItemCategory == storageLevelData.storageItemCategories[i].itemCategory)
                 {
@@ -879,7 +879,7 @@ public class CityManager : MonoBehaviour
 
     public void SpendItem(string idName, int amount)
     {
-        int index = ItemDatabase.itemsByIdName[idName].ItemId;
+        int index = gameManager.LootList.lootByIdName[idName].ItemId;
         items[index].SubtractAmount(amount);
     }
 
@@ -954,7 +954,6 @@ public class CityManager : MonoBehaviour
             Building newTargetBuilding = targetBuilding.GetType() == typeof(Building) ? builtFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCityBuildingPlace].placedBuilding : targetBuilding;
 
             BuildingPlace targetBuildingPlace = FindTargetBuildingOnFloor(newStartBuildingPlace, newTargetBuilding, null, ref allPaths, ref pathIndex, ref checkedBuildingPlaces);
-            Debug.Log(targetBuildingPlace);
             if (targetBuildingPlace)
             {
                 for (int i = 0; i < allPaths.Count; i++)

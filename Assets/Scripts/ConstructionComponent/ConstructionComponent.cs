@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ConstructionComponent : MonoBehaviour
 {
+    private GameManager gameManager = null;
     private Building ownedBuilding = null;
     private Boat ownedBoat = null;
     public LevelComponent levelComponent { get; private set; } = null;
@@ -39,6 +40,7 @@ public class ConstructionComponent : MonoBehaviour
 
     private void GetComponents()
     {
+        gameManager = FindAnyObjectByType<GameManager>();
         levelComponent = GetComponent<LevelComponent>();
         ownedBuilding = GetComponent<Building>();
         ownedBoat = GetComponent<Boat>();
@@ -121,9 +123,9 @@ public class ConstructionComponent : MonoBehaviour
     }
 
     // Resources
-    public void AddIncomingConstructionResources(int itemId, int itemAmount)
+    public void AddIncomingConstructionResources(int itemId, int amount)
     {
-        AddIncomingConstructionResources_Internal(itemId, itemAmount);
+        AddIncomingConstructionResources_Internal(itemId, amount);
     }
 
     public void AddIncomingConstructionResources(ItemInstance item)
@@ -131,17 +133,18 @@ public class ConstructionComponent : MonoBehaviour
         AddIncomingConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
     }
 
-    private void AddIncomingConstructionResources_Internal(int itemId, int amount)
+    private void AddIncomingConstructionResources_Internal(int lootId, int amount)
     {
-        if (!incomingConstructionResourcesDict.ContainsKey(itemId))
+        ItemData data = gameManager.LootList.lootById[lootId];
+        ItemInstance loot = new ItemInstance(data, amount);
+        if (!incomingConstructionResourcesDict.ContainsKey(lootId))
         {
-            ItemInstance item = new ItemInstance(itemId); // The same item instance for list and dictionary.
-            incomingConstructionResources.Add(item);
-            incomingConstructionResourcesDict.Add(itemId, item);
+            incomingConstructionResources.Add(loot);
+            incomingConstructionResourcesDict.Add(lootId, loot);
         }
 
         // We can change only the list or dictionary because we use the same item instance for them.
-        incomingConstructionResourcesDict[itemId].AddAmount(amount);
+        incomingConstructionResourcesDict[lootId].AddAmount(amount);
     }
 
     public void SubtractIncomingConstructionResources(int itemId, int itemAmount)
@@ -163,32 +166,33 @@ public class ConstructionComponent : MonoBehaviour
         }
     }
 
-    public int AddConstructionResources(ItemInstance item)
-    {
-        return AddConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
-    }
-
     public int AddConstructionResources(int itemId, int amount)
     {
         return AddConstructionResources_Internal(itemId, amount);
     }
 
-    private int AddConstructionResources_Internal(int itemId, int amount)
+    public int AddConstructionResources(ItemInstance item)
     {
-        if (!deliveredConstructionResourcesDict.ContainsKey(itemId))
+        return AddConstructionResources_Internal(item.ItemData.ItemId, item.Amount);
+    }
+
+    private int AddConstructionResources_Internal(int lootId, int amount)
+    {
+        if (!deliveredConstructionResourcesDict.ContainsKey(lootId))
         {
-            ItemInstance item = new ItemInstance(itemId); // The same item instance for list and dictionary.
+            ItemData data = gameManager.LootList.lootById[lootId];
+            ItemInstance item = new ItemInstance(data); // The same item instance for list and dictionary.
             deliveredConstructionResources.Add(item);
-            deliveredConstructionResourcesDict.Add(itemId, item);
+            deliveredConstructionResourcesDict.Add(lootId, item);
         }
 
         // We can change only the list or dictionary because we use the same item instance for them.
-        int amountToAdd = deliveredConstructionResourcesDict[itemId].AddAmount(amount);
-        SubtractIncomingConstructionResources(itemId, amountToAdd);
+        int amountToAdd = deliveredConstructionResourcesDict[lootId].AddAmount(amount);
+        SubtractIncomingConstructionResources(lootId, amountToAdd);
 
         // Finish building
         List<ItemInstance> resourcesToBuild = constructionLevelsData[levelComponent.LevelIndex].ResourcesToBuild;
-        if (deliveredConstructionResourcesDict[itemId].Amount >= ItemDatabase.GetItem(itemId, constructionLevelsData[levelComponent.LevelIndex].ResourcesToBuild).Amount)
+        if (deliveredConstructionResourcesDict[lootId].Amount >= gameManager.LootList.GetItem(lootId, constructionLevelsData[levelComponent.LevelIndex].ResourcesToBuild).Amount)
         {
             foreach (var item in resourcesToBuild)
                 if (item.Amount < 0)

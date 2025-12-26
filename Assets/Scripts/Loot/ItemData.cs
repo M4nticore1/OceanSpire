@@ -3,13 +3,13 @@ using UnityEngine;
 public enum ItemID
 {
     Population,
-    Food,
     Electricity,
+    Food,
+    Water,
     Wood,
     Stone,
     Metal,
     Plastic,
-    Water,
     Potato,
 }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc8039db3c8dae249b72a3acea657e28, type: 3}
   m_Name: MetalItemData
   m_EditorClassIdentifier: 
-  itemId: 5
+  itemId: 6
   itemIdName: metal
   itemName: Metal
   weight: 10

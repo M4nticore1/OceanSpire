@@ -14,6 +14,7 @@ public enum ResidentWork
 
 public class Entity : MonoBehaviour
 {
+    private GameManager gameManager = null;
     protected CityManager cityManager = null;
     public LevelComponent levelComponent { get; private set; } = null;
     public SelectComponent selectComponent { get; private set; } = null;
@@ -63,6 +64,7 @@ public class Entity : MonoBehaviour
 
     protected void Awake()
     {
+        gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
         levelComponent = GetComponent<LevelComponent>();
         selectComponent = GetComponent<SelectComponent>();
@@ -322,12 +324,12 @@ public class Entity : MonoBehaviour
     // Movement
     private void FollowPath()
     {
-        if (isWalkingToElevator)
-            Debug.Log("isWalkingToElevator " + isWalkingToElevator);
-        if (isWaitingForElevator)
-            Debug.Log("isWaitingForElevator " + isWaitingForElevator);
-        if (isRidingOnElevator)
-            Debug.Log("isRidingOnElevator " + isRidingOnElevator);
+        //if (isWalkingToElevator)
+        //    Debug.Log("isWalkingToElevator " + isWalkingToElevator);
+        //if (isWaitingForElevator)
+        //    Debug.Log("isWaitingForElevator " + isWaitingForElevator);
+        //if (isRidingOnElevator)
+        //    Debug.Log("isRidingOnElevator " + isRidingOnElevator);
 
         if (!isRidingOnElevator && pathIndex < pathBuildings.Count)
         {
@@ -669,7 +671,7 @@ public class Entity : MonoBehaviour
     {
         if (!carriedItemsDict.ContainsKey(itemId))
         {
-            ItemInstance item = new ItemInstance(ItemDatabase.itemsById[itemId]); // The same item instance for list and dictionary.
+            ItemInstance item = new ItemInstance(gameManager.LootList.lootById[itemId]); // The same item instance for list and dictionary.
             carriedItems.Add(item);
             carriedItemsDict.Add(itemId, item);
         }

@@ -9,6 +9,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Boat : MonoBehaviour
 {
+    private GameManager gameManager = null;
+
     public PierBuilding ownedPier { get; private set; } = null;
     private NavMeshAgent navAgent = null;
     private LootManager lootManager = null;
@@ -57,6 +59,7 @@ public class Boat : MonoBehaviour
 
     private void Awake()
     {
+        gameManager = FindAnyObjectByType<GameManager>();
         navAgent = GetComponent<NavMeshAgent>();
         constructionComponent = GetComponent<ConstructionComponent>();
         lootManager = FindAnyObjectByType<LootManager>();
@@ -167,7 +170,7 @@ public class Boat : MonoBehaviour
 
                         int maxAmountToUnload = (int)(currentWeightToUnload / loot.ItemData.Weight);
                         int minAmountToUnload = math.min(maxAmountToUnload, loot.Amount);
-                        int amountToUnload = math.min(minAmountToUnload, ItemDatabase.GetItem(lootId, storageLevelData.storageItems).Amount);
+                        int amountToUnload = math.min(minAmountToUnload, gameManager.LootList.GetItem(lootId, storageLevelData.storageItems).Amount);
                         int weightToUnload = amountToUnload * loot.ItemData.Weight;
 
                         storedLootDict[lootId].SubtractAmount(amountToUnload);

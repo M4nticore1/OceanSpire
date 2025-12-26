@@ -11,17 +11,17 @@ public struct ResourceStack
 
 public class GameManager : MonoBehaviour
 {
-    private PlayerController playerController = null;
-    public static CityManager cityManager { get; private set; } = null;
+    private CityManager cityManager = null;
     private LootManager lootManager = null;
 
-    [Header("Buildings")]
-    public List<Building> buildingPrefabs = new List<Building>();
-    public List<Boat> boatPrefabs = new List<Boat>();
-    public const float demolitionResourceRefundRate = 0.2f;
+    [Header("Content")]
+    [SerializeField] private LootList lootList = null;
+    [SerializeField] private BuildingPrefabsList buildingPrefabsList = null;
+    [SerializeField] private BoatPrefabsList boatPrefabsList = null;
 
-    // Loot
-    public const float triggerLootContainerRadius = 150f;
+    public LootList LootList => lootList;
+    public BuildingPrefabsList BuildingPrefabsList => buildingPrefabsList;
+    public BoatPrefabsList BoatPrefabsList => boatPrefabsList;
 
     [Header("NPC")]
     public Resident residentPrefab = null;
@@ -32,24 +32,29 @@ public class GameManager : MonoBehaviour
     private Vector2 newWindDirection = Vector2.zero;
 
     public const float windSpeed = 15.0f;
-
     private const float windChangingSpeed = 0.05f;
-
     private float windDirectionChangeRate = 300.0f;
     private float windDirectionChangeTime = 0.0f;
 
+    // Other
     public const float autoSaveFrequency = 1;
+    public const float triggerLootContainerRadius = 150f;
+    public const float demolitionResourceRefundRate = 0.2f;
 
     public static SaveData saveData = null;
+
+    private void Awake()
+    {
+        buildingPrefabsList.Initialize();
+    }
 
     private void Start()
     {
         cityManager = FindAnyObjectByType<CityManager>();
-        playerController = FindAnyObjectByType<PlayerController>();
         lootManager = FindAnyObjectByType<LootManager>();
 
         TimerManager.Start();
-        ItemDatabase.Load();
+        //ItemDatabase.Load();
 
         ChangeWind();
         windDirection = newWindDirection;
@@ -99,31 +104,5 @@ public class GameManager : MonoBehaviour
         newWindDirection = new Vector2(xAxis, yAxis).normalized;
 
         windDirectionChangeTime = Time.time;
-    }
-
-    public Building GetBuildingPrefabById(int buildingId)
-    {
-        for (int i = 0; i < buildingPrefabs.Count; i++)
-        {
-            if ((int)buildingPrefabs[i].BuildingData.BuildingIdValue == buildingId)
-            {
-                return buildingPrefabs[i];
-            }
-        }
-
-        return null;
-    }
-
-    public Building GetBuildingPrefabByIdName(string buildingIdName)
-    {
-        for (int i = 0; i < buildingPrefabs.Count; i++)
-        {
-            if (buildingPrefabs[i].BuildingData.BuildingIdName == buildingIdName)
-            {
-                return buildingPrefabs[i];
-            }
-        }
-
-        return null;
     }
 }

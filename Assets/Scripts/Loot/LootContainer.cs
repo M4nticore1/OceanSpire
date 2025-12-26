@@ -205,7 +205,8 @@ public class LootContainer : MonoBehaviour
 
                 currentLoot.SubtractAmount(amountToCollect);
 
-                loot.Add(new ItemInstance(id, amountToCollect));
+                ItemInstance newLoot = new ItemInstance(data, amountToCollect);
+                loot.Add(newLoot);
             }
 
             if (isNeededToDestroy)

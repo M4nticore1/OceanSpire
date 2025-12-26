@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc8039db3c8dae249b72a3acea657e28, type: 3}
   m_Name: FoodItemData
   m_EditorClassIdentifier: 
-  itemId: 1
+  itemId: 2
   itemIdName: food
   itemName: Food
+  weight: 0
   itemIcon: {fileID: 0}
   itemCategory: 0

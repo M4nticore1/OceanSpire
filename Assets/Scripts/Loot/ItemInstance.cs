@@ -23,12 +23,6 @@ public class ItemInstance
     [SerializeField] private int amount;
     public int Amount => amount;
 
-    public ItemInstance(int itemId, int amount = 0)
-    {
-        itemData = ItemDatabase.GetItemData(itemId, (List<ItemData>)null);
-        this.amount = amount;
-    }
-
     public ItemInstance(ItemData itemData, int amount = 0)
     {
         this.itemData = itemData;

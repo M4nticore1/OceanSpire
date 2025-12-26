@@ -65,7 +65,7 @@ public class BuildingWidget : MonoBehaviour
                 if (building.ConstructionLevelsData.Count >= 1 && building.ConstructionLevelsData[0])
                     resourcesToBuildNumber = building.ConstructionLevelsData[0].ResourcesToBuild.Count();
                 else
-                    Debug.LogWarning(building.BuildingData.BuildingName + " has no ConstructionLevelsData by index 0 or has not instance");
+                    Debug.LogWarning($"{building.BuildingData.BuildingName} has no LevelData by index 0 or has not instance");
 
                 if (building.BuildingData.ThumbImage)
                     buildingImage.sprite = building.BuildingData.ThumbImage;

@@ -9,11 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c8ae1ed452b6e748a22ece1468822aa, type: 3}
+  m_Script: {fileID: 11500000, guid: 68871d69a0d600f4db549ea34f879f9e, type: 3}
   m_Name: FastElevatorLevelData
   m_EditorClassIdentifier: 
-  ResourcesToBuild:
-  - resourceData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 800
-  - resourceData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-    amount: 100
+  resourcesToBuild: []
+  maxResidentsCount: 0
+  constructionStraight: {fileID: 0}
+  constructionCorner: {fileID: 0}
+  constructionStraightLeft: {fileID: 0}
+  constructionStraightRight: {fileID: 0}
+  constructionStraightLeftRight: {fileID: 0}
+  constructionCornerLeft: {fileID: 0}
+  constructionCornerRight: {fileID: 0}
+  constructionCornerLeftRight: {fileID: 0}
+  constructionStraightAbove: {fileID: 0}
+  constructionStraightBelow: {fileID: 0}
+  constructionStraightAboveBelow: {fileID: 0}
+  constructionCornerAbove: {fileID: 0}
+  constructionCornerBelow: {fileID: 0}
+  constructionCornerAboveBelow: {fileID: 0}

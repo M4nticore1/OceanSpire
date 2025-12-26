@@ -13,7 +13,6 @@ public class StorageBuildingLevelData : BuildingComponentLevelData
     protected override void Awake()
     {
         base.Awake();
-        Debug.Log("Add");
 
         for (int i = 0; i < storageItems.Count; i++)
         {
