@@ -22,6 +22,8 @@ public class Building : MonoBehaviour
     public List<Entity> currentWorkers { get; private set; } = new List<Entity>();
 
     protected BuildingPosition buildingPosition = BuildingPosition.Straight;
+    public int floorIndex => buildingPlace ? buildingPlace.floorIndex : 0;
+    public int placeIndex => buildingPlace ? buildingPlace.BuildingPlaceIndex : 0;
 
     public Building leftConnectedBuilding { get; private set; } = null;
     public Building rightConnectedBuilding { get; private set; } = null;
@@ -99,7 +101,7 @@ public class Building : MonoBehaviour
             aboveConnectedBuilding = GetConnectedBuilding(Side.Up);
             belowConnectedBuilding = GetConnectedBuilding(Side.Down);
 
-            if (GetPlaceIndex() % 2 == 0)
+            if (placeIndex % 2 == 0)
                 buildingPosition = BuildingPosition.Corner;
             else
                 buildingPosition = BuildingPosition.Straight;
@@ -174,7 +176,7 @@ public class Building : MonoBehaviour
 
                 }
             }
-            else if (resident.currentWork != ResidentWork.None) // If worker of some building
+            else if (resident.currentWork != ResidentWork.None) // If resident is worker
             {
                 if (resident.workBuilding == this)
                     AddCurrentWorker(resident);
@@ -228,36 +230,12 @@ public class Building : MonoBehaviour
         constructionComponent.BuildConstruction(buildingLevelsData[levelIndex].ConstructionStraight);
     }
 
-    public int GetFloorIndex()
-    {
-        if (buildingPlace)
-            return buildingPlace.floorIndex;
-        else
-            return 0;
-    }
-
-    public int GetPlaceIndex()
-    {
-        if (buildingPlace)
-            return buildingPlace.BuildingPlaceIndex;
-        else
-            return 0;
-    }
-
-    public int GetTotalIndex()
-    {
-        if (buildingPlace)
-            return GetFloorIndex() * GetPlaceIndex() + GetPlaceIndex();
-        else
-            return 0;
-    }
-
     protected Building GetConnectedBuilding(Side side)
     {
         int horizontalIndexOffset = side == Side.Left ? 1 : side == Side.Right ? -1 : 0;
         int verticalIndexOffset = side == Side.Up ? 1 : side == Side.Down ? -1 : 0;
-        int sideIndex = (GetPlaceIndex() + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
-        int verticalIndex = GetFloorIndex() + verticalIndexOffset;
+        int sideIndex = (placeIndex + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
+        int verticalIndex = floorIndex + verticalIndexOffset;
 
         if (verticalIndex < cityManager.builtFloors.Count && verticalIndex >= 0)
         {

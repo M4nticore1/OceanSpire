@@ -80,12 +80,15 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 2800000, guid: 24ec0e140fb444a44ab96ee80844e18e, type: 3}
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
   m_RendererFeatures:
-  - {fileID: -6803022318100391680}
-  m_RendererFeatureMap: 005992e23ecf96a1
+  - {fileID: 8766133192340956903}
+  m_RendererFeatureMap: e7663e87b18fa779
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
-  m_AssetVersion: 2
+  m_AssetVersion: 3
+  m_PrepassLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_OpaqueLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -107,3 +110,23 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
+--- !u!114 &8766133192340956903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fed2add3cfd90141aa0d057858d0fd3, type: 3}
+  m_Name: OutlineRenderFeature
+  m_EditorClassIdentifier: Assembly-CSharp::OutlineRenderFeature
+  m_Active: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  renderPassEvent: 300
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineIntensity: 3
+  blurPassesCount: 2

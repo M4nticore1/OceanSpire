@@ -12,6 +12,10 @@ public struct BuildingAction
 
 public class BuildingConstruction : MonoBehaviour
 {
+    [SerializeField] protected Building ownedBuilding = null;
+    public int floorIndex => ownedBuilding.floorIndex;
+    public int placeIndex => ownedBuilding.placeIndex;
+
     [SerializeField] private List<GameObject> buildingInteriors = new List<GameObject>();
     public List<GameObject> BuildingInteriors => buildingInteriors;
 
@@ -21,8 +25,18 @@ public class BuildingConstruction : MonoBehaviour
     [Header("Storage")]
     public List<Transform> collectItemPoints = new List<Transform>();
 
-    public virtual void Build()
+    protected virtual void OnEnable()
     {
 
+    }
+
+    protected virtual void OnDisable()
+    {
+
+    }
+
+    public virtual void Build(Building ownedBuilding)
+    {
+        this.ownedBuilding = ownedBuilding;
     }
 }

@@ -216,7 +216,7 @@ public class ConstructionComponent : MonoBehaviour
             {
                 BuildingConstruction construction = Instantiate(buildingConstruction, gameObject.transform);
                 spawnedConstruction = construction;
-                spawnedConstruction.Build();
+                spawnedConstruction.Build(ownedBuilding ? ownedBuilding : null);
 
                 if (spawnedConstruction && spawnedConstruction.BuildingInteriors.Count > 0)
                 {

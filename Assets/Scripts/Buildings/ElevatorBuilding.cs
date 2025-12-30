@@ -4,11 +4,11 @@ using UnityEngine;
 [AddComponentMenu("Buildings/ElevatorBuilding")]
 public class ElevatorBuilding : RoomBuilding
 {
-    public ElevatorPlatformConstruction spawnedElevatorPlatform { get; private set; } = null;
+    public ElevatorPlatformConstruction elevatorPlatform { get; private set; } = null;
     public int elevatorGroupId = 0;
 
     public List<Entity> elevatorWaitingPassengers { get; private set; } = new List<Entity>();
-    public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();
+    //public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();
 
     public override void BuildConstruction(int levelIndex)
     {
@@ -17,30 +17,29 @@ public class ElevatorBuilding : RoomBuilding
         ElevatorBuilding belowElevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
         ElevatorBuilding aboveElevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
 
-        if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorPlatform)
+        if (belowElevatorBuilding && belowElevatorBuilding.elevatorPlatform)
         {
             elevatorGroupId = belowElevatorBuilding.elevatorGroupId;
-            spawnedElevatorPlatform = belowElevatorBuilding.spawnedElevatorPlatform;
+            elevatorPlatform = belowElevatorBuilding.elevatorPlatform;
         }
-        else if (aboveElevatorBuilding && aboveElevatorBuilding.spawnedElevatorPlatform)
+        else if (aboveElevatorBuilding && aboveElevatorBuilding.elevatorPlatform)
         {
             elevatorGroupId = aboveElevatorBuilding.elevatorGroupId;
-            spawnedElevatorPlatform = aboveElevatorBuilding.spawnedElevatorPlatform;
+            elevatorPlatform = aboveElevatorBuilding.elevatorPlatform;
         }
         else
         {
             ElevatorLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorLevelData;
 
             if (buildingPosition == BuildingPosition.Straight)
-                spawnedElevatorPlatform = Instantiate(elevatorBuildingLevelData.elevatorPlatformStraight, cityManager.towerRoot);
+                elevatorPlatform = Instantiate(elevatorBuildingLevelData.ElevatorPlatformStraight, cityManager.towerRoot);
             else
-                spawnedElevatorPlatform = Instantiate(elevatorBuildingLevelData.elevatorPlatformCorner, cityManager.towerRoot);
+                elevatorPlatform = Instantiate(elevatorBuildingLevelData.ElevatorPlatformCorner, cityManager.towerRoot);
 
-            spawnedElevatorPlatform.transform.position = transform.position;
-            spawnedElevatorPlatform.transform.rotation = transform.rotation;
+            elevatorPlatform.transform.position = transform.position;
+            elevatorPlatform.transform.rotation = transform.rotation;
 
-            spawnedElevatorPlatform.Build();
-            spawnedElevatorPlatform.SetElevatorBuilding(this);
+            elevatorPlatform.Build(this);
 
             elevatorGroupId = cityManager.elevatorGroups.Count;
         }
@@ -50,28 +49,30 @@ public class ElevatorBuilding : RoomBuilding
     {
         base.EnterBuilding(entity);
 
-        if (entity.pathBuildings.Count > 0 && entity.pathBuildings.Count > entity.pathIndex && entity.pathBuildings[entity.pathIndex] == this && entity.pathBuildings[entity.pathIndex + 1] as ElevatorBuilding)
-        {
-            if (!entity.isRidingOnElevator)
-            {
-                if (spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex())
-                {
-                    if (spawnedElevatorPlatform.isMoving || spawnedElevatorPlatform.elevatorRidingPassengers.Count == buildingLevelsData[levelComponent.LevelIndex].maxResidentsCount)
-                    {
-                        entity.StartElevatorWaiting();
-                    }
-                    else
-                    {
-                        Debug.Log("StartElevatorWalking");
-                        entity.StartElevatorWalking();
-                    }
-                }
-                else
-                {
-                    entity.StartElevatorWaiting();
-                }
-            }
-        }
+        //if (entity.pathBuildings.Count > entity.pathIndex && entity.pathBuildings[entity.pathIndex + 1] as ElevatorBuilding)
+        //{
+        //    if (!entity.isRidingOnElevator)
+        //    {
+        //        if (spawnedElevatorPlatform.currentFloorIndex == floorIndex)
+        //        {
+        //            if (spawnedElevatorPlatform.isMoving || spawnedElevatorPlatform.elevatorRidingPassengers.Count == buildingLevelsData[levelComponent.LevelIndex].maxResidentsCount)
+        //            {
+        //                Debug.Log("StartElevatorWaiting");
+        //                entity.StartWaitingForElevator();
+        //            }
+        //            else
+        //            {
+        //                Debug.Log("StartElevatorWalking");
+        //                entity.StartWalkingToElevator();
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("StartElevatorWaiting");
+        //            entity.StartWaitingForElevator();
+        //        }
+        //    }
+        //}
     }
 
     public override void ExitBuilding(Entity entity)
@@ -79,53 +80,36 @@ public class ElevatorBuilding : RoomBuilding
         //entity.EnterBuilding(this);
     }
 
-    public void CallElevator(int startFloorIndex)
-    {
-        spawnedElevatorPlatform.StartMovingToFloor(startFloorIndex);
-    }
-
     public void AddRidingPassenger(Entity entity)
     {
-        spawnedElevatorPlatform.AddRidingPassenger(entity);
+        elevatorPlatform.AddRidingPassenger(entity);
     }
 
     public void RemoveRidingPassenger(Entity entity)
     {
-        spawnedElevatorPlatform.RemoveRidingPassenger(entity);
+        elevatorPlatform.RemoveRidingPassenger(entity);
     }
 
     public void AddWaitingPassenger(Entity entity)
     {
         elevatorWaitingPassengers.Add(entity);
-        spawnedElevatorPlatform.AddWaitingPassenger(entity);
+        elevatorPlatform.AddWaitingPassenger(entity);
     }
 
     public void RemoveWaitingPassenger(Entity entity)
     {
         elevatorWaitingPassengers.Remove(entity);
-        spawnedElevatorPlatform.RemoveWaitingPassenger(entity);
-    }
-
-    public void AddWalkingPassenger(Entity entity)
-    {
-        elevatorWalkingPassengers.Add(entity);
-        spawnedElevatorPlatform.AddWalkingPassenger(entity);
-    }
-
-    public void RemoveWalkingPassenger(Entity entity)
-    {
-        elevatorWalkingPassengers.Remove(entity);
-        spawnedElevatorPlatform.RemoveWalkingPassenger(entity);
+        elevatorPlatform.RemoveWaitingPassenger(entity);
     }
 
     public bool IsPossibleToEnter()
     {
-        return !spawnedElevatorPlatform.isMoving && spawnedElevatorPlatform.currentFloorIndex == GetFloorIndex() && spawnedElevatorPlatform.elevatorRidingPassengers.Count < buildingLevelsData[levelComponent.LevelIndex].maxResidentsCount;
+        return !elevatorPlatform.isMoving && elevatorPlatform.floorIndex == floorIndex && elevatorPlatform.ridingPassengers.Count < buildingLevelsData[levelComponent.LevelIndex].maxResidentsCount;
     }
 
     public Vector3 GetPlatformRidingPosition()
     {
-        int index = spawnedElevatorPlatform.elevatorRidingPassengers.Count % spawnedElevatorPlatform.BuildingInteractions.Count;
-        return spawnedElevatorPlatform.BuildingInteractions[index].waypoints[0].position;
+        int index = (elevatorPlatform.ridingPassengers.Count - 1) % elevatorPlatform.BuildingInteractions.Count;
+        return elevatorPlatform.BuildingInteractions[index].waypoints[0].position;
     }
 }

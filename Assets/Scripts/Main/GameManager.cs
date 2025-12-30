@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
         cityManager = FindAnyObjectByType<CityManager>();
         lootManager = FindAnyObjectByType<LootManager>();
 
-        TimerManager.Start();
+        TimerManager.Initialize();
         //ItemDatabase.Load();
 
         ChangeWind();

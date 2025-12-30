@@ -5,7 +5,7 @@ public class BuildingTrigger : MonoBehaviour
     private Building building;
 
     private void Awake()
-    {
+{
         building = transform.parent.GetComponent<Building>();
     }
 
@@ -13,17 +13,15 @@ public class BuildingTrigger : MonoBehaviour
     {
         Entity entity = other.GetComponent<Entity>();
 
-        //Debug.Log("Building trigger");
-
-        if (entity && building)
-        {
-            entity.EnterBuilding(building);
-            //entity.EnterBuilding(building);
+        if (entity && building) {
+            if (!entity.isRidingOnElevator) {
+                entity.EnterBuilding(building);
+            }
         }
-        else
-        {
-            if (!building)
+        else {
+            if (!building) {
                 Debug.LogError("BuildingTrigger: Building is NULL");
+            }
         }
     }
 
@@ -31,8 +29,7 @@ public class BuildingTrigger : MonoBehaviour
     {
         Entity entity = other.GetComponent<Entity>();
 
-        if (entity)
-        {
+        if (entity) {
             if (entity.currentBuilding == building)
                 entity.ExitBuilding();
         }

@@ -6,23 +6,21 @@ public class TimerManager
 {
     private static List<TimerHandle> timers = new List<TimerHandle>();
 
-    public static void Start()
+    public static void Initialize() // Run it once at the beginning of the scene.
     {
-        for (int i = 0; i < timers.Count; i++)
-        {
+        for (int i = 0; i < timers.Count; i++) {
             timers[i] = null;
         }
         timers.Clear();
     }
 
-    public static void Tick()
+    public static void Tick() // Run it from only one class in the update function.
     {
-        for (int i = 0; i < timers.Count; i++)
-        {
+        for (int i = 0; i < timers.Count; i++) {
             TimerHandle timer = timers[i];
             timer.Tick();
-            if (timer.isFinished)
-            {
+
+            if (timer.isFinished) {
                 timer = null;
                 timers.RemoveAt(i);
                 i--;
@@ -33,13 +31,20 @@ public class TimerManager
     public static void SetTimer(float delay, Action callback)
     {
         TimerHandle timerHandle = new TimerHandle();
-        timerHandle.SetTimer(delay, callback);
+        timerHandle.StartTimer(delay, callback);
         timers.Add(timerHandle);
     }
 
     public static void SetTimer(TimerHandle timerHandle, float delay, Action callback)
     {
-        timerHandle.SetTimer(delay, callback);
-        timers.Add(timerHandle);
+        timerHandle.StartTimer(delay, callback);
+        if (!timers.Contains(timerHandle))
+            timers.Add(timerHandle);
+    }
+
+    public static void RemoveTimer(TimerHandle timerHandle, Action callback)
+    {
+        if (!timers.Contains(timerHandle)) return;
+        timers.Remove(timerHandle);
     }
 }

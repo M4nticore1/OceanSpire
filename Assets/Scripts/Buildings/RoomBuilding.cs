@@ -67,7 +67,7 @@ public class RoomBuilding : TowerBuilding
                 }
                 else if (buildingData.ConnectionType == ConnectionType.Vertical)
                 {
-                    //Debug.Log(GetFloorIndex() + " " + GetPlaceIndex());
+                    //Debug.Log(GetfloorIndex + " " + GetplaceIndex);
                     if (buildingPosition == BuildingPosition.Straight)
                     {
                         if (aboveConnectedBuilding && belowConnectedBuilding && roomLevelData.ConstructionStraightAboveBelow)

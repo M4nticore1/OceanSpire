@@ -4,11 +4,14 @@ using UnityEngine;
 public class ElevatorLevelData : RoomLevelData
 {
     [Header("Elevator Constructions")]
-    public ElevatorPlatformConstruction elevatorPlatformStraight;
-    public ElevatorPlatformConstruction elevatorPlatformCorner;
+    [SerializeField] private ElevatorPlatformConstruction elevatorPlatformStraight;
+    public ElevatorPlatformConstruction ElevatorPlatformStraight => elevatorPlatformStraight;
+    [SerializeField] private ElevatorPlatformConstruction elevatorPlatformCorner;
+    public ElevatorPlatformConstruction ElevatorPlatformCorner => elevatorPlatformCorner;
 
     [Header("Elevator")]
-    public float elevatorMoveSpeed = 0.0f;
+    [SerializeField] private float elevatorMoveSpeed = 0.0f;
+    public float ElevatorMoveSpeed => elevatorMoveSpeed;
 
     //public BuildingConstruction elevator;
     //public BuildingConstruction elevatorButtom;

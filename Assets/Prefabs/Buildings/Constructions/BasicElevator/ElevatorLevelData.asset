@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ElevatorLevelData
   m_EditorClassIdentifier: 
   resourcesToBuild: []
-  maxResidentsCount: 0
+  maxResidentsCount: 2
   constructionStraight: {fileID: 3845205293008637488, guid: 961c060a5cf64374492b029dd70644e6, type: 3}
   constructionCorner: {fileID: 7008323806768352302, guid: dd21a2352ae8be74c81e203c1fc9bc45, type: 3}
   constructionStraightLeft: {fileID: 0}
@@ -30,4 +30,4 @@ MonoBehaviour:
   constructionCornerAboveBelow: {fileID: 5195973711087995694, guid: c8926d1c98ac9ea4d82cf63a9302bbe4, type: 3}
   elevatorPlatformStraight: {fileID: 9121983844208753504, guid: e10d6143f9cb8ff4e88a82028c416afb, type: 3}
   elevatorPlatformCorner: {fileID: 6317132314724744191, guid: 7d90808e21dfe624d82b51156fd5f94e, type: 3}
-  elevatorMoveSpeed: 0
+  elevatorMoveSpeed: 1

@@ -34,7 +34,7 @@ public class TowerBuilding : Building
         //aboveConnectedBuilding = GetNeightboorBuilding(Side.Up);
         //belowConnectedBuilding = GetNeightboorBuilding(Side.Down);
 
-        //if (GetPlaceIndex() % 2 == 0)
+        //if (GetplaceIndex % 2 == 0)
         //    buildingPosition = BuildingPosition.Corner;
         //else
         //    buildingPosition = BuildingPosition.Straight;
@@ -44,8 +44,8 @@ public class TowerBuilding : Building
     //{
     //    int horizontalIndexOffset = side == Side.Left ? 1 : side == Side.Right ? -1 : 0;
     //    int verticalIndexOffset = side == Side.Up ? 1 : side == Side.Down ? -1 : 0;
-    //    int sideIndex = (GetPlaceIndex() + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
-    //    int verticalIndex = GetFloorIndex() + verticalIndexOffset;
+    //    int sideIndex = (GetplaceIndex + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
+    //    int verticalIndex = GetfloorIndex + verticalIndexOffset;
     //    if (verticalIndex < cityManager.builtFloors.Count && verticalIndex >= 0)
     //        return cityManager.builtFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding as TowerBuilding;
 

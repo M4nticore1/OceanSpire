@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -6,324 +7,196 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 {
     private CityManager cityManager = null;
 
-    public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();
-    public List<Entity> elevatorWaitingPassengers { get; private set; } = new List<Entity>();
-    public List<Entity> elevatorRidingPassengers { get; private set; } = new List<Entity>();
+    //public List<Entity> walkingPassengers { get; private set; } = new List<Entity>();
+    public List<Entity> waitingPassengers = new List<Entity>();
+    public List<Entity> ridingPassengers = new List<Entity>();
 
     public bool isMoving { get; private set; } = false;
-    public int currentFloorIndex = 0;
     public int startFloorIndex { get; private set; } = 0;
-    public int currentTargetFloorIndex { get; private set; } = 0;
-    public int placeIndex { get; private set; } = 0;
+    public int nextFloorIndex { get; private set; } = 0;
 
-    private float moveSpeed = 0.0f;
+    private float moveSpeed => ((ElevatorLevelData)ownedBuilding.currentLevelData).ElevatorMoveSpeed;
     private Vector3 moveDirection = Vector3.zero;
 
-    private ElevatorBuilding elevatorBuilding = null;
+    private TimerHandle startMovingTimerHandle = new TimerHandle();
+    private const float delayToStartMoving = 1f;
+
+    public ElevatorBuilding ownedElevator => ownedBuilding as ElevatorBuilding;
+    public static event System.Action<ElevatorPlatformConstruction> onElevatorPlatformStopped;
+    public static event System.Action<ElevatorPlatformConstruction> onElevatorPlatformChangedFloor;
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        Entity.OnEntityStopped += OnEntityStopped;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        Entity.OnEntityStopped -= OnEntityStopped;
+    }
 
     protected void Update()
     {
         if (isMoving)
         {
-            SetFloorIndex(GetFloorIndexByPosition());
+            SetOwnedBuilding(GetFloorIndexByPosition());
 
             float speed = moveSpeed * Time.deltaTime;
             Move(moveDirection, speed);
 
-            if (currentFloorIndex == currentTargetFloorIndex)
-            {
+            if (floorIndex == nextFloorIndex)
                 StopMoving();
-            }
-        }
-        else
-        {
-            if (elevatorWalkingPassengers.Count > 0)
-            {
-                bool canMove = true;
-
-                List<Entity> currentElevatorWalkingPassengers = elevatorWalkingPassengers;
-                for (int i = 0; i < currentElevatorWalkingPassengers.Count; i++)
-                {
-                    float distance = 0;
-
-                    if (BuildingInteractions.Count > 0)
-                        distance = math.distance(currentElevatorWalkingPassengers[i].transform.position, currentElevatorWalkingPassengers[i].targetPosition);
-
-                    if (distance <= 1f && currentElevatorWalkingPassengers[i].navMeshAgent.velocity == Vector3.zero)
-                    {
-                        currentElevatorWalkingPassengers[i].StartElevatorRiding();
-                    }
-                    else
-                    {
-                        canMove = false;
-                    }
-                }
-
-                if (canMove)
-                {
-                    StartMovingToFloor(GetNextFloor());
-                }
-            }
-            else if (elevatorRidingPassengers.Count > 0)
-            {
-                StartMovingToFloor(GetNextFloor());
-            }
-            else if (elevatorWaitingPassengers.Count > 0)
-            {
-
-                bool canMove = true;
-
-                float distance = math.distance(elevatorWaitingPassengers[0].transform.position, elevatorWaitingPassengers[0].currentBuilding.constructionComponent.SpawnedConstruction.BuildingInteractions[0].waypoints[0].position);
-
-                if (distance > 1f || elevatorWaitingPassengers[0].navMeshAgent.velocity != Vector3.zero)
-                {
-                    canMove = false;
-                }
-
-                if (canMove)
-                {
-                    StartMovingToFloor(GetNextFloor());
-                }
-            }
         }
     }
 
-    public override void Build()
+    public override void Build(Building ownedBuilding)
     {
-        base.Build();
+        base.Build(ownedBuilding);
 
         cityManager = FindAnyObjectByType<CityManager>();
     }
 
-    public void StartMovingToFloor(int targetFloorIndex)
+    private void StartMovingToFloor(int targetFloorIndex)
     {
-        if (targetFloorIndex != currentFloorIndex)
+        if (targetFloorIndex != floorIndex)
         {
-            isMoving = true;
-            startFloorIndex = currentFloorIndex;
+            foreach (Entity rider in ridingPassengers) {
+                if (rider.isMoving) return;
+            }
 
-            if (currentTargetFloorIndex > currentFloorIndex)
+            isMoving = true;
+            startFloorIndex = floorIndex;
+
+            if (targetFloorIndex > floorIndex)
                 moveDirection = Vector3.up;
-            else if (currentTargetFloorIndex < currentFloorIndex)
+            else if (targetFloorIndex < floorIndex)
                 moveDirection = Vector3.down;
         }
     }
 
-    public void StopMoving()
+    private IEnumerator StartMovingToNextFloorCoroutine()
     {
-        Debug.Log("StopMoving");
+        yield return new WaitForSeconds(delayToStartMoving);
+        StartMovingToFloor(GetNextFloor());
+        //TimerManager.SetTimer(startMovingTimerHandle, delayToStartMoving, () => StartMovingToFloor(GetNextFloor()));
+    }
+
+    private void StopMoving()
+    {
         isMoving = false;
 
-        // Correct position
-        transform.position = new Vector3(transform.position.x, currentFloorIndex * CityManager.floorHeight + CityManager.firstFloorHeight, transform.position.z);
+        // Correct position.
+        transform.position = new Vector3(transform.position.x, floorIndex * CityManager.floorHeight + CityManager.firstFloorHeight, transform.position.z);
 
-        // Stop entities riding
-        for (int i = elevatorRidingPassengers.Count - 1; i >= 0; i--)
-        {
-            var rider = elevatorRidingPassengers[i];
-            if (rider.pathBuildings.Count > rider.pathIndex + 1)
-            {
-                rider.StopElevatorRiding();
-            }
+        // Stop entities riding.
+        onElevatorPlatformStopped?.Invoke(this);
+
+        // Continue riding to next floor.
+        if (ridingPassengers.Count > 0 || waitingPassengers.Count > 0) {
+            StartCoroutine(StartMovingToNextFloorCoroutine());
         }
+    }
 
-        int newRidersCount = elevatorBuilding.elevatorWaitingPassengers.Count;
+    private void TryToStopMovingToFloor()
+    {
+        if (isMoving) return;
 
-        newRidersCount = math.clamp(newRidersCount, 0, elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.LevelIndex].maxResidentsCount - elevatorRidingPassengers.Count);
-
-        for (int i = 0; i < newRidersCount; i++)
-        {
-            elevatorBuilding.elevatorWaitingPassengers[i].StartElevatorWalking();
-        }
+        //TimerManager.RemoveTimer
     }
 
     private int GetNextFloor()
     {
-        int nearestFloorIndex = currentFloorIndex;
+        if (ridingPassengers.Count > 0) {
+            Debug.Log("GetNextFloor: ridingPassengers.Count > 0");
+            Entity firstRider = ridingPassengers[0];
+            nextFloorIndex = firstRider.currentPathBuilding.floorIndex;
 
-        if (elevatorRidingPassengers.Count > 0)
-        {
-            if (true || elevatorRidingPassengers.Count == elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.LevelIndex].maxResidentsCount)
-            {
-                int currentTargetFloorIndex = elevatorRidingPassengers[0].pathBuildings[elevatorRidingPassengers[0].pathIndex].GetFloorIndex();
-
-                if (currentTargetFloorIndex > currentFloorIndex)
-                {
-                    nearestFloorIndex = cityManager.builtFloors.Count - 1;
-
-                    for (int i = 0; i < elevatorRidingPassengers.Count; i++)
-                    {
-                        int nextFloorIndex = elevatorRidingPassengers[i].pathBuildings[elevatorRidingPassengers[i].pathIndex].GetFloorIndex();
-
-                        if (nextFloorIndex < nearestFloorIndex)
-                            nearestFloorIndex = nextFloorIndex;
-                    }
-                }
-                else
-                {
-                    nearestFloorIndex = 0;
-
-                    for (int i = 0; i < elevatorRidingPassengers.Count; i++)
-                    {
-                        int nextFloorIndex = elevatorRidingPassengers[i].pathBuildings[elevatorRidingPassengers[i].pathIndex].GetFloorIndex();
-
-                        if (nextFloorIndex > nearestFloorIndex)
-                            nearestFloorIndex = nextFloorIndex;
-                    }
+            if (ridingPassengers.Count < ownedBuilding.currentLevelData.maxResidentsCount && waitingPassengers.Count > 0) {
+                foreach (Entity waiter in waitingPassengers) {
+                    if ((firstRider.currentPathBuilding.floorIndex < floorIndex && waiter.currentBuilding.floorIndex < floorIndex)
+                        || (firstRider.currentPathBuilding.floorIndex > floorIndex && waiter.currentBuilding.floorIndex > floorIndex))
+                        nextFloorIndex = waiter.currentBuilding.floorIndex;
                 }
             }
-            else
-            {
-                if (elevatorWaitingPassengers.Count > 0)
-                {
-                    int currentTargetFloorIndex = elevatorRidingPassengers[0].pathBuildings[elevatorRidingPassengers[0].pathIndex].GetFloorIndex();
-
-                    if (currentTargetFloorIndex > currentFloorIndex)
-                    {
-                        nearestFloorIndex = cityManager.builtFloors.Count - 1;
-
-                        for (int i = 0; i < elevatorWaitingPassengers.Count; i++)
-                        {
-                            if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() < currentTargetFloorIndex && elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() > currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() > currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() <= currentTargetFloorIndex)
-                            {
-                                if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() < nearestFloorIndex)
-                                {
-                                    nearestFloorIndex = elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex();
-
-                                    if (nearestFloorIndex == currentFloorIndex + 1)
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                    else if (currentTargetFloorIndex < currentFloorIndex)
-                    {
-                        nearestFloorIndex = 0;
-
-                        for (int i = 0; i < elevatorWaitingPassengers.Count; i++)
-                        {
-                            if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() > currentTargetFloorIndex && elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() < currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() < currentFloorIndex && elevatorWaitingPassengers[i].targetBuilding.GetFloorIndex() >= currentTargetFloorIndex)
-                            {
-                                if (elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex() > nearestFloorIndex)
-                                {
-                                    nearestFloorIndex = elevatorWaitingPassengers[i].currentBuilding.GetFloorIndex();
-
-                                    if (nearestFloorIndex == currentFloorIndex - 1)
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        nearestFloorIndex = currentTargetFloorIndex;
-                    }
+            else {
+                foreach (Entity rider in ridingPassengers) {
+                    if ((firstRider.currentPathBuilding.floorIndex < floorIndex && rider.currentPathBuilding.floorIndex < floorIndex && rider.currentPathBuilding.floorIndex > firstRider.currentPathBuilding.floorIndex)
+                        || (firstRider.currentPathBuilding.floorIndex > floorIndex && rider.currentPathBuilding.floorIndex > floorIndex && rider.currentPathBuilding.floorIndex < firstRider.currentPathBuilding.floorIndex))
+                        nextFloorIndex = rider.currentPathBuilding.floorIndex;
                 }
             }
         }
-        else if (elevatorWaitingPassengers.Count > 0)
-        {
-            nearestFloorIndex = elevatorWaitingPassengers[0].currentFloorIndex;
+        else if (waitingPassengers.Count > 0) {
+            Debug.Log("GetNextFloor: waitingPassengers.Count > 0");
+            nextFloorIndex = waitingPassengers[0].floorIndex;
+        }
+        else {
+            nextFloorIndex = floorIndex;
         }
 
-        currentTargetFloorIndex = nearestFloorIndex;
-        return nearestFloorIndex;
+        return nextFloorIndex;
     }
 
     private void Move(Vector3 direction, float speed)
     {
         transform.position += direction * speed;
 
-        for (int i = 0; i < elevatorRidingPassengers.Count; i++)
-        {
-            elevatorRidingPassengers[i].Move(direction, speed);
-        }
-    }
-
-    public void AddWalkingPassenger(Entity passenger)
-    {
-        elevatorWalkingPassengers.Add(passenger);
-    }
-
-    public void RemoveWalkingPassenger(Entity passenger)
-    {
-        elevatorWalkingPassengers.Remove(passenger);
+        for (int i = 0; i < ridingPassengers.Count; i++)
+            ridingPassengers[i].Move(direction, speed);
     }
 
     public void AddWaitingPassenger(Entity passenger)
     {
-        elevatorWaitingPassengers.Add(passenger);
+        waitingPassengers.Add(passenger);
     }
 
     public void RemoveWaitingPassenger(Entity passenger)
     {
-        elevatorWaitingPassengers.Remove(passenger);
+        waitingPassengers.Remove(passenger);
     }
 
     public void AddRidingPassenger(Entity passenger)
     {
-        elevatorRidingPassengers.Add(passenger);
+        ridingPassengers.Add(passenger);       
     }
 
     public void RemoveRidingPassenger(Entity passenger)
     {
-        elevatorRidingPassengers.Remove(passenger);
+        ridingPassengers.Remove(passenger);
     }
 
-    public void SetMoveSpeed(float moveSpeed)
+    private void OnEntityStopped(Entity entity)
     {
-        this.moveSpeed = moveSpeed;
+        if (entity.isRidingOnElevator && entity.currentElevator == ownedElevator)
+            StartCoroutine(StartMovingToNextFloorCoroutine());
+        else if (entity.isWaitingForElevator)
+            StartMovingToFloor(GetNextFloor());
     }
 
-    public void SetFloorIndex(int newFloorIndex)
+    public void SetOwnedBuilding(int newFloorIndex)
     {
-        if (newFloorIndex != currentFloorIndex && newFloorIndex >= 0)
-        {
-            currentFloorIndex = newFloorIndex;
-
-            elevatorBuilding = cityManager.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding as ElevatorBuilding;
-
-            for (int i = 0; i < elevatorRidingPassengers.Count; i++)
-            {
-                elevatorRidingPassengers[i].EnterBuilding(elevatorBuilding);
-            }
+        if (newFloorIndex != floorIndex && newFloorIndex >= 0) {
+            ownedBuilding = cityManager.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
+            onElevatorPlatformChangedFloor?.Invoke(this);
         }
     }
 
-    public int GetFloorIndexByPosition()
+    private int GetFloorIndexByPosition()
     {
         int floorIndex = 0;
 
-        if (currentTargetFloorIndex >= currentFloorIndex)
-        {
+        if (nextFloorIndex >= this.floorIndex) {
             floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight) / CityManager.floorHeight);
-
             if (floorIndex < startFloorIndex)
                 floorIndex = startFloorIndex;
         }
-        else
-        {
+        else {
             floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight + CityManager.floorHeight) / CityManager.floorHeight);
-
             if (floorIndex > startFloorIndex)
                 floorIndex = startFloorIndex;
         }
-
         return floorIndex;
-    }
-
-    public void SetElevatorBuilding(ElevatorBuilding elevatorBuilding)
-    {
-        if (elevatorBuilding)
-        {
-            ElevatorLevelData elevatorBuildingLevelData = elevatorBuilding.ConstructionLevelsData[elevatorBuilding.levelComponent.LevelIndex] as ElevatorLevelData;
-
-            this.elevatorBuilding = elevatorBuilding;
-            cityManager = elevatorBuilding.cityManager;
-            moveSpeed = elevatorBuildingLevelData.elevatorMoveSpeed;
-
-            SetFloorIndex(elevatorBuilding.GetFloorIndex());
-            placeIndex = elevatorBuilding.GetPlaceIndex();
-        }
     }
 }

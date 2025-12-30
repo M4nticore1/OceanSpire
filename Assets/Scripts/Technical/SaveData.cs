@@ -85,7 +85,7 @@ public class SaveData
                     lastElevatorGroupId = elevatorBuilding.elevatorGroupId;
 
                     if (elevatorPlatformHeights.Length > lastElevatorGroupId)
-                        elevatorPlatformHeights[lastElevatorGroupId] = elevatorBuilding.spawnedElevatorPlatform ? elevatorBuilding.spawnedElevatorPlatform.transform.position.y : elevatorBuilding.transform.position.y;
+                        elevatorPlatformHeights[lastElevatorGroupId] = elevatorBuilding.elevatorPlatform ? elevatorBuilding.elevatorPlatform.transform.position.y : elevatorBuilding.transform.position.y;
                 }
 
                 placeIndex++;
@@ -144,17 +144,17 @@ public class SaveData
             residentPositionsX[i] = cityManager.residents[i].transform.position.x;
             residentPositionsY[i] = cityManager.residents[i].transform.position.y;
             residentPositionsZ[i] = cityManager.residents[i].transform.position.z;
-            residentFloorIndexes[i] = cityManager.residents[i].currentFloorIndex;
+            residentFloorIndexes[i] = cityManager.residents[i].currentBuilding ? cityManager.residents[i].currentBuilding.floorIndex : 0;
 
             Building currentBuilding = cityManager.residents[i].currentBuilding;
             if (currentBuilding)
-                residentCurrentBuildingIndexes[i] = currentBuilding.GetFloorIndex() * CityManager.roomsCountPerFloor + currentBuilding.GetPlaceIndex();
+                residentCurrentBuildingIndexes[i] = currentBuilding.floorIndex * CityManager.roomsCountPerFloor + currentBuilding.placeIndex;
             else
                 residentCurrentBuildingIndexes[i] = -1;
 
             Building targetBuilding = cityManager.residents[i].targetBuilding;
             if (targetBuilding)
-                residentTargetBuildingIndexes[i] = targetBuilding.GetFloorIndex() * CityManager.roomsCountPerFloor + targetBuilding.GetPlaceIndex();
+                residentTargetBuildingIndexes[i] = targetBuilding.floorIndex * CityManager.roomsCountPerFloor + targetBuilding.placeIndex;
             else
                 residentTargetBuildingIndexes[i] = -1;
 

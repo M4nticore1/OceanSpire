@@ -12,10 +12,10 @@ public class FloorBuilding : TowerBuilding
     {
         base.InitializeBuilding(buildingPlace, requiresConstruction, levelIndex, interiorIndex);
 
-        floorBuildingPlace.InitializeBuildingPlace(GetFloorIndex() + 1);
-        hallBuildingPlace.InitializeBuildingPlace(GetFloorIndex());
+        floorBuildingPlace.InitializeBuildingPlace(floorIndex + 1);
+        hallBuildingPlace.InitializeBuildingPlace(floorIndex);
         for (int i = 0; i < CityManager.roomsCountPerFloor; i++)
-            roomBuildingPlaces[i].InitializeBuildingPlace(GetFloorIndex());
+            roomBuildingPlaces[i].InitializeBuildingPlace(floorIndex);
     }
 
     public void ShowBuildingPlacesByType(Building building)
@@ -84,7 +84,7 @@ public class FloorBuilding : TowerBuilding
                     {
                         for (int j = 1; j <= buildingData.BuildingFloors; j++)
                         {
-                            BuildingPlace currentBuildingPlace = cityManager.builtFloors[GetFloorIndex() - j].roomBuildingPlaces[i];
+                            BuildingPlace currentBuildingPlace = cityManager.builtFloors[floorIndex - j].roomBuildingPlaces[i];
 
                             if (currentBuildingPlace.emptyBuildingPlacesAbove == buildingData.BuildingFloors - 1)
                             {
@@ -97,7 +97,7 @@ public class FloorBuilding : TowerBuilding
         }
         else if (buildingData.BuildingType == BuildingType.Hall)
         {
-            if (!hallBuildingPlace.placedBuilding && cityManager.currentRoomsNumberOnFloor[GetFloorIndex()] == 0)
+            if (!hallBuildingPlace.placedBuilding && cityManager.currentRoomsNumberOnFloor[floorIndex] == 0)
             {
                 if(hallBuildingPlace.emptyBuildingPlacesAbove >= buildingHeight - 1)
                     hasPlaceAbove = true;

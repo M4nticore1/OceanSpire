@@ -11,6 +11,9 @@ public class BuildingPrefabsList : ScriptableObject
 
     public void Initialize()
     {
+        buildingPrefabsById.Clear();
+        buildingPrefabsByKey.Clear();
+
         foreach (Building building in buildingPrefabs)
         {
             BuildingData data = building.BuildingData;

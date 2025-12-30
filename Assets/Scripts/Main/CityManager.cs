@@ -52,7 +52,7 @@ public class CityManager : MonoBehaviour
 
     [Header("NPC")]
     [HideInInspector] public List<Resident> residents = new List<Resident>();
-    private const int startResidentsCount = 1;
+    private const int startResidentsCount = 2;
     [HideInInspector] public int employedResidentCount = 0;
     [HideInInspector] public int unemployedResidentsCount = 0;
     [SerializeField] private List<Transform> entitySpawnPositions = new List<Transform>();
@@ -273,8 +273,8 @@ public class CityManager : MonoBehaviour
                 if (data.residentsRidingOnElevator != null && data.residentsRidingOnElevator.Length > i && data.residentsRidingOnElevator[i])
                 {
                     ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                    if (elevatorBuilding)
-                        resident.StartElevatorRiding();
+                    //if (elevatorBuilding)
+                        //resident.StartRidingOnElevator();
 
                     resident.transform.position = spawnPosition;
                 }
@@ -283,16 +283,16 @@ public class CityManager : MonoBehaviour
                 if (data.residentsWalkingToElevator != null && data.residentsWalkingToElevator.Length > i && data.residentsWalkingToElevator[i])
                 {
                     ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                    if (elevatorBuilding)
-                        resident.StartElevatorWalking();
+                    //if (elevatorBuilding)
+                        //resident.StartWalkingToElevator();
                 }
 
                 // Set Waiting Elevator
                 if (data.residentsWaitingForElevator != null && data.residentsWaitingForElevator.Length > i && data.residentsWaitingForElevator[i])
                 {
                     ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                    if (elevatorBuilding)
-                        resident.StartElevatorWaiting();
+                    //if (elevatorBuilding)
+                        //resident.StartWaitingForElevator();
                 }
 
                 // Set Target Building
@@ -300,7 +300,7 @@ public class CityManager : MonoBehaviour
                 {
                     Building targetBuilding = builtFloors[(data.residentTargetBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentTargetBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
                     if (targetBuilding)
-                        resident.SetTargetBuilding(targetBuilding.buildingPlace, b => b.GetFloorIndex() == targetBuilding.GetFloorIndex() && b.GetPlaceIndex() == targetBuilding.GetPlaceIndex());
+                        resident.SetTargetBuilding(targetBuilding.buildingPlace, b => b.floorIndex == targetBuilding.floorIndex && b.placeIndex == targetBuilding.placeIndex);
                 }
             }
         }
@@ -399,7 +399,7 @@ public class CityManager : MonoBehaviour
     // Building Places
     public void InitializeFloor(FloorBuilding floor)
     {
-        if (builtFloors.Count == floor.GetFloorIndex())
+        if (builtFloors.Count == floor.floorIndex)
             builtFloors.Add(floor);
 
         currentRoomsNumberOnFloor.Add(0);
@@ -895,12 +895,12 @@ public class CityManager : MonoBehaviour
     }
 
     // Path finding
-    public Building FindPathToBuilding(BuildingPlace startBuildingPlace, Building targetBuilding, ref List<Building> buildingsPath)
+    public Building FindPathToBuilding(BuildingPlace startBuildingPlace, Building targetBuilding, ref List<Building> buildingsPath, bool addStartBuildingToPath = false)
     {
-        return FindPathToBuilding_Internal(startBuildingPlace, targetBuilding, ref buildingsPath);
+        return FindPathToBuilding_Internal(startBuildingPlace, targetBuilding, ref buildingsPath, addStartBuildingToPath);
     }
 
-    public Building FindPathToBuilding(BuildingPlace startBuildingPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
+    public Building FindPathToBuilding(BuildingPlace startBuildingPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath, bool addStartBuildingToPath = false)
     {
         Building targetBuilding = null;
         for (int i = 0; i < builtFloors.Count; i++)
@@ -926,10 +926,10 @@ public class CityManager : MonoBehaviour
                 break;
         }
 
-        return FindPathToBuilding_Internal(startBuildingPlace, targetBuilding, ref buildingsPath);
+        return FindPathToBuilding_Internal(startBuildingPlace, targetBuilding, ref buildingsPath, addStartBuildingToPath);
     }
 
-    private Building FindPathToBuilding_Internal(BuildingPlace startBuildingPlace, Building targetBuilding, ref List<Building> buildingsPath)
+    private Building FindPathToBuilding_Internal(BuildingPlace startBuildingPlace, Building targetBuilding, ref List<Building> buildingsPath, bool addStartBuildingToPath = false)
     {
         // Preparing
         buildingsPath.Clear();
@@ -975,7 +975,7 @@ public class CityManager : MonoBehaviour
 
                     if (currentType == typeof(ElevatorBuilding))
                     {
-                        if (buildingsPath.Count > i + 2 && buildingsPath[i + 2] && buildingsPath[i].GetPlaceIndex() == buildingsPath[i + 2].GetPlaceIndex())
+                        if (buildingsPath.Count > i + 2 && buildingsPath[i + 2] && buildingsPath[i].placeIndex == buildingsPath[i + 2].placeIndex)
                         {
                             if (buildingsPath[i + 2].GetType() == currentType)
                             {
@@ -990,6 +990,10 @@ public class CityManager : MonoBehaviour
                         i--;
                     }
                 }
+
+                if (addStartBuildingToPath) {
+                    buildingsPath.Insert(0, startBuildingPlace.placedBuilding);
+                }
             }
 
             if (newTargetBuilding != targetBuilding)
@@ -1003,7 +1007,7 @@ public class CityManager : MonoBehaviour
         return targetBuilding;
     }
 
-    private BuildingPlace FindTargetBuildingOnFloor(BuildingPlace startBuildingPlace, Building targetBuilding, BuildingPlace lastBuildingPlace, ref List<List<Building>> allPaths, ref int pathIndex, ref List<bool> checkedBuildingPlaces)
+    private BuildingPlace FindTargetBuildingOnFloor(BuildingPlace startBuildingPlace, Building targetBuilding, BuildingPlace lastBuildingPlace, ref List<List<Building>> allPaths, ref int pathIndex, ref List<bool> checkedBuildingPlaces, bool addStartBuildingToPath = false)
     {
         if (startBuildingPlace)
         {
@@ -1062,7 +1066,7 @@ public class CityManager : MonoBehaviour
 
                         if (leftBuilding)
                         {
-                            int buildingPlaceIndex = leftBuilding.GetFloorIndex() * roomsCountPerFloor + leftBuilding.GetPlaceIndex();
+                            int buildingPlaceIndex = leftBuilding.floorIndex * roomsCountPerFloor + leftBuilding.placeIndex;
                             if (!checkedBuildingPlaces[buildingPlaceIndex])
                             {
                                 checkedBuildingPlaces[buildingPlaceIndex] = true;
@@ -1101,7 +1105,7 @@ public class CityManager : MonoBehaviour
 
                         if (rightBuilding)
                         {
-                            int buildingPlaceIndex = rightBuilding.GetFloorIndex() * roomsCountPerFloor + rightBuilding.GetPlaceIndex();
+                            int buildingPlaceIndex = rightBuilding.floorIndex * roomsCountPerFloor + rightBuilding.placeIndex;
                             if (!checkedBuildingPlaces[buildingPlaceIndex])
                             {
                                 checkedBuildingPlaces[buildingPlaceIndex] = true;
@@ -1146,7 +1150,7 @@ public class CityManager : MonoBehaviour
 
                     if (finishBuilding)
                     {
-                        int buildingPlaceIndex = finishBuilding.GetFloorIndex() * roomsCountPerFloor + finishBuilding.GetPlaceIndex();
+                        int buildingPlaceIndex = finishBuilding.floorIndex * roomsCountPerFloor + finishBuilding.placeIndex;
                         if (!checkedBuildingPlaces[buildingPlaceIndex])
                         {
                             checkedBuildingPlaces[buildingPlaceIndex] = true;
