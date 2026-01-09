@@ -504,8 +504,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnPrimaryInteractionEnded(InputAction.CallbackContext context)
     {
-        if (!isSecondaryInteractionPressed)
-        {
+        if (!isSecondaryInteractionPressed) {
             // Get Pointer Position
             var device = context.control.device;
 
@@ -515,32 +514,26 @@ public class PlayerController : MonoBehaviour
                 primaryInteractionPosition = mousePositionIA.ReadValue<Vector2>();
 
             // Main
-            if (primaryInteractionStartPosition == primaryInteractionPosition)
-            {
+            if (primaryInteractionStartPosition == primaryInteractionPosition) {
                 PointerEventData pointerEventData = new PointerEventData(eventSystem);
                 pointerEventData.position = primaryInteractionPosition;
                 List<RaycastResult> results = new List<RaycastResult>();
                 graphicRaycaster.Raycast(pointerEventData, results);
 
-                if (results.Count == 0)
-                {
+                if (results.Count == 0) {
                     Ray ray = mainCamera.ScreenPointToRay(primaryInteractionPosition);
 
                     RaycastHit hit;
 
-                    if (Physics.Raycast(ray, out hit))
-                    {
-                        if (buildingToPlace)
-                        {
+                    if (Physics.Raycast(ray, out hit)) {
+                        if (buildingToPlace) {
                             BuildingPlace hittedBuildingPlace = hit.collider.gameObject.GetComponent<BuildingPlace>();
 
-                            if (hittedBuildingPlace && !hittedBuildingPlace.placedBuilding)
-                            {
+                            if (hittedBuildingPlace && !hittedBuildingPlace.placedBuilding) {
                                 PlaceConstruction(hittedBuildingPlace);
                             }
                         }
-                        else
-                        {
+                        else {
                             LootContainer hittedLootContainer = hit.collider.GetComponent<LootContainer>();
                             Resident hittedResident = hit.collider.GetComponent<Resident>();
 
@@ -552,44 +545,37 @@ public class PlayerController : MonoBehaviour
                             if (!hittedBuilding && buildingConstruction)
                                 hittedBuilding = buildingConstruction.transform.parent.GetComponent<Building>();
 
-                            if (hittedBuilding)
-                            {
-                                ProductionBuildingComponent hittedProductionBuilding = hittedBuilding.GetComponent<ProductionBuildingComponent>();
+                            if (hittedBuilding) {
+                                ProductionBuilding hittedProductionBuilding = hittedBuilding.GetComponent<ProductionBuilding>();
 
-                                if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect)
-                                {
+                                if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect) {
                                     CollectItems(hittedProductionBuilding.TakeProducedItem());
                                     Deselect();
                                 }
-                                else
-                                {
+                                else {
                                     if (selectedComponent != hittedBuilding.selectComponent)
                                         Select(hittedBuilding.selectComponent);
                                     else
                                         Deselect();
                                 }
                             }
-                            else if (hittedResident)
-                            {
+                            else if (hittedResident) {
                                 Select(hittedResident.selectComponent);
                             }
-                            else if (hittedBoat)
-                            {
+                            else if (hittedBoat) {
                                 SelectComponent selectComponent = hittedBoat.GetComponent<SelectComponent>();
                                 if (selectedComponent != selectComponent)
                                     Select(selectComponent);
                                 else
                                     Deselect();
                             }
-                            else if (hittedLootContainer)
-                            {
+                            else if (hittedLootContainer) {
                                 List<ItemInstance> takedItems = hittedLootContainer.TakeItems();
                                 CollectItems(takedItems);
 
                                 Deselect();
                             }
-                            else
-                            {
+                            else {
                                 Deselect();
                             }
                         }
@@ -737,7 +723,7 @@ public class PlayerController : MonoBehaviour
             selectedComponent = selectComponent;
             selectedComponent.Select();
 
-            uiManager.OpenDetailsMenu(selectComponent.gameObject);
+            uiManager.OpenContextMenu(selectComponent.gameObject);
         }
     }
 
@@ -751,7 +737,7 @@ public class PlayerController : MonoBehaviour
             {
                 selectedComponent = null;
 
-                uiManager.CloseDetailsMenu();
+                uiManager.CloseContextMenu();
             }
             else
             {

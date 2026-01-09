@@ -27,7 +27,7 @@ Material:
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 6
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -97,7 +97,7 @@ Material:
     m_Floats:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
-    - _AlphaFalloff: 0.12
+    - _AlphaFalloff: 0.07
     - _AlphaToMask: 0
     - _Blend: 2
     - _BlendModePreserveSpecular: 1
@@ -114,14 +114,17 @@ Material:
     - _EnvironmentReflections: 1
     - _FinishAlpha: 1
     - _FinishAlphaClamp: 0.5
+    - _FlickingMultiplier: 1
+    - _FlickingSpeed: 4
     - _Float: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _MaxAlphaClamp: 0.25
+    - _LightMultiplier: 0
+    - _MaxAlphaClamp: 0.5
     - _MaxClampAlpha: 1
     - _Metallic: 0
-    - _MinAlphaClamp: 0.05
+    - _MinAlphaClamp: 0.02
     - _MinClampAlpha: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -137,13 +140,18 @@ Material:
     - _StartAlpha: 0
     - _StartAlphaClamp: 0.5
     - _Surface: 1
+    - _ViewAngleExpancionMaxClamp: 1
+    - _ViewAngleMaxClamp: 0.15
+    - _ViewDirMaxClamp: 0.1
+    - _ViewDirStartValue: 0.7
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 1, g: 0.8143113, b: 0, a: 1}
+    - _BaseColor: {r: 1, g: 0.8333334, b: 0, a: 1}
     - _Color: {r: 0, g: 0.24999985, b: 1, a: 0.2}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _ViewDirStartValue: {r: 0, g: 0.9, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

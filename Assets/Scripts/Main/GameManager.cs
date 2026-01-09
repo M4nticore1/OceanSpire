@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
     public const float triggerLootContainerRadius = 150f;
     public const float demolitionResourceRefundRate = 0.2f;
 
+    public const float collectLootFlickingMultiplier = 0.35f;
+
     public static SaveData saveData = null;
 
     private void Awake()
@@ -64,7 +66,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("LootManager is NULL");
 
         saveData = SaveSystem.LoadData();
-        cityManager.Load(saveData);
+        //cityManager.Load(saveData);
 
         //playerController.Load(saveData);
 

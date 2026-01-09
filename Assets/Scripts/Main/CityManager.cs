@@ -5,6 +5,8 @@ using System.Linq;
 using Unity.AI.Navigation;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 enum Direction
 {
@@ -51,11 +53,15 @@ public class CityManager : MonoBehaviour
     public Dictionary<int, ItemInstance> totalStorageCapacity = new Dictionary<int, ItemInstance>();
 
     [Header("NPC")]
-    [HideInInspector] public List<Resident> residents = new List<Resident>();
+    [HideInInspector] public List<Entity> residents = new List<Entity>();
     private const int startResidentsCount = 2;
     [HideInInspector] public int employedResidentCount = 0;
     [HideInInspector] public int unemployedResidentsCount = 0;
     [SerializeField] private List<Transform> entitySpawnPositions = new List<Transform>();
+
+    [Header("Boats")]
+    [SerializeField] private List<Boat> spawnedBoats = new List<Boat>();
+    public IReadOnlyList<Boat> SpawnedBoats => spawnedBoats.AsReadOnly();
 
     public static event Action OnConstructionStartPlaced;
     public static event Action OnConstructionPlaced;
@@ -63,8 +69,8 @@ public class CityManager : MonoBehaviour
     public static event Action OnLootAdded;
     public static event Action OnStorageCapacityUpdated;
     public event Action OnResidentsAdded;
-    public event Action<Resident> OnResidentAdded;
-    public event Action<Resident> OnResidentRemoved;
+    public event Action<Entity> OnResidentAdded;
+    public event Action<Entity> OnResidentRemoved;
 
     public List<List<Building>> allPaths = new List<List<Building>>();
     public List<BuildingPath> allPaths2 = new List<BuildingPath>();
@@ -82,6 +88,8 @@ public class CityManager : MonoBehaviour
 
         Resident.OnWorkerAdd += AddWorker;
         Resident.OnWorkerRemove += RemoveWorker;
+
+        Boat.OnBoadDestroyed += OnBoatDestroyed;
     }
 
     private void OnDisable()
@@ -95,6 +103,13 @@ public class CityManager : MonoBehaviour
 
         Resident.OnWorkerAdd -= AddWorker;
         Resident.OnWorkerRemove -= RemoveWorker;
+
+        Boat.OnBoadDestroyed -= OnBoatDestroyed;
+    }
+
+    private void Start()
+    {
+        Load(GameManager.saveData);
     }
 
     private void Update()
@@ -110,92 +125,86 @@ public class CityManager : MonoBehaviour
         InitializeItems();
         LoadBuildings(data);
         LoadResources(data);
+        CreateEntities(data);
+        CreateLoads(data);
         StartCoroutine(LoadCityCoroutine(data));
     }
 
     private void LoadBuildings(SaveData data)
     {
-        if (builtFloors.Count > 0)
-        {
+        if (builtFloors.Count > 0) {
             int builtFloorsCount = data != null ? data.builtFloorsCount : builtFloors.Count;
-            for (int i = 0; i < builtFloorsCount; i++)
-            {
-                if (i < builtFloors.Count)
-                {
+            for (int i = 0; i < builtFloorsCount; i++) {
+                if (i < builtFloors.Count) {
                     builtFloors[i].InitializeBuilding(i > 0 ? builtFloors[i - 1].floorBuildingPlace : null, false, 0, -1);
                 }
-                else
-                {
+                else {
                     PlaceBuilding(gameManager.BuildingPrefabsList.buildingPrefabsById[0], builtFloors[i - 1].floorBuildingPlace, 0, false);
                 }
 
-                if (data != null)
-                {
-                    if (data.placedBuildingIds != null)
-                    {
-                        for (int j = 0; j < roomsCountPerFloor; j++)
-                        {
+                if (data != null) {
+                    if (data.placedBuildingIds != null) {
+                        for (int j = 0; j < roomsCountPerFloor; j++) {
                             int placeIndex = (i * roomsCountPerFloor) + j;
                             int buildingId = data.placedBuildingIds[placeIndex];
 
-                            if (data.placedBuildingIds[placeIndex] >= 0)
-                            {
+                            if (data.placedBuildingIds[placeIndex] >= 0) {
                                 int buildingLevelIndex = data.placedBuildingLevels != null ? data.placedBuildingLevels[placeIndex] : 0;
                                 int buildingLInteriorId = data.placedBuildingInteriorIds != null ? data.placedBuildingInteriorIds[placeIndex] : 0;
                                 bool buildingIsUnderConstruction = data.placedBuildingsUnderConstruction != null ? data.placedBuildingsUnderConstruction[placeIndex] : false;
 
-                                Building building = gameManager.BuildingPrefabsList.buildingPrefabsById[buildingId];
+                                Building buildingToPlace = gameManager.BuildingPrefabsList.buildingPrefabsById[buildingId];
+                                Building building = null;
                                 BuildingType buildingType = gameManager.BuildingPrefabsList.buildingPrefabsById[buildingId].BuildingData.BuildingType;
 
-                                if (buildingType == BuildingType.Hall)
-                                {
-                                    if (!builtFloors[i].hallBuildingPlace.placedBuilding || (builtFloors[i].hallBuildingPlace.placedBuilding && !builtFloors[i].hallBuildingPlace.placedBuilding.isInitialized))
-                                    {
+                                if (buildingType == BuildingType.Hall) {
+                                    if (!builtFloors[i].hallBuildingPlace.placedBuilding || (builtFloors[i].hallBuildingPlace.placedBuilding && !builtFloors[i].hallBuildingPlace.placedBuilding.isInitialized)) {
                                         BuildingPlace place = builtFloors[i].hallBuildingPlace;
-                                        PlaceBuilding(building, place, buildingLevelIndex, buildingIsUnderConstruction);
+                                        building = PlaceBuilding(buildingToPlace, place, buildingLevelIndex, buildingIsUnderConstruction);
                                     }
                                 }
-                                else if (buildingType == BuildingType.Room)
-                                {
+                                else /*(buildingType == BuildingType.Room)*/ {
                                     BuildingPlace place = builtFloors[i].roomBuildingPlaces[j];
-                                    PlaceBuilding(building, place, buildingLevelIndex, buildingIsUnderConstruction);
+                                    building = PlaceBuilding(buildingToPlace, place, buildingLevelIndex, buildingIsUnderConstruction);
+                                }
+
+                                if (building) {
+                                    ProductionBuilding productionBuilding = building.GetComponent<ProductionBuilding>();
+                                    if (productionBuilding) {
+                                        float time = data.buildingProductionTimers != null && data.buildingProductionTimers.Length > placeIndex ? data.buildingProductionTimers[placeIndex] : 0;
+                                        productionBuilding.SetProductionTime(time);
+                                    }
                                 }
                             }
-                            else
-                            {
+                            else {
                                 Building building = builtFloors[i].hallBuildingPlace.placedBuilding;
                                 if (building && !building.isInitialized)
                                     DemolishContruction(building);
                             }
                         }
                     }
-
-                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelComponent.LevelIndex);
+                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelIndex);
                 }
-                else
-                {
+                else {
                     BuildingPlace hallPlace = builtFloors[i].hallBuildingPlace;
                     Building hall = hallPlace.placedBuilding;
                     if (hall)
-                        PlaceBuilding(hall, hallPlace, hall.levelComponent.LevelIndex, hall.constructionComponent.isUnderConstruction);
+                        PlaceBuilding(hall, hallPlace, hall.levelIndex, hall.constructionComponent.isUnderConstruction);
 
-                    for (int j = 0; j < roomsCountPerFloor; j++)
-                    {
+                    for (int j = 0; j < roomsCountPerFloor; j++) {
                         BuildingPlace roomPlace = builtFloors[i].roomBuildingPlaces[j];
                         Building room = roomPlace.placedBuilding;
                         if (room)
-                            PlaceBuilding(room, roomPlace, room.levelComponent.LevelIndex, room.constructionComponent.isUnderConstruction);
+                            PlaceBuilding(room, roomPlace, room.levelIndex, room.constructionComponent.isUnderConstruction);
                     }
 
                     // Pier Building
-                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelComponent.LevelIndex);
+                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelIndex);
                 }
             }
 
-            if (data != null)
-            {
-                for (int i = builtFloors.Count - 1; i > data.builtFloorsCount; i--)
-                {
+            if (data != null) {
+                for (int i = builtFloors.Count - 1; i > data.builtFloorsCount; i--) {
                     builtFloors[i].constructionComponent.StartDemolishing();
                 }
             }
@@ -211,14 +220,99 @@ public class CityManager : MonoBehaviour
             bakeNavMeshSurfaceCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
     }
 
-    private void LoadBoats(SaveData data)
+    private void CreateEntities(SaveData data)
     {
-        if (data != null)
-        {
-            if (data.spawnedBoatIds != null)
-            {
-                for (int j = 0; j < data.spawnedBoatIds.Length; j++)
-                {
+        Vector3 position = Vector3.zero;
+        Quaternion rotation = Quaternion.identity;
+
+        if (data != null) {
+            for (int i = 0; i < data.residentsCount; i++) {
+                position = new Vector3(data.residentPositionsX[i], data.residentPositionsY[i], data.residentPositionsZ[i]);
+                rotation = Quaternion.identity;
+                CreateResident(position, rotation);
+            }
+        }
+        else {
+            for (int i = 0; i < startResidentsCount; i++) {
+                position = Vector3.zero;
+                rotation = Quaternion.identity;
+
+                if (entitySpawnPositions.Count > i && entitySpawnPositions[i]) {
+                    position = entitySpawnPositions[i].position;
+                    rotation = entitySpawnPositions[i].rotation;
+                    CreateResident(position, rotation);
+                }
+            }
+        }
+
+        OnResidentsAdded?.Invoke();
+    }
+
+    private void LoadEntities(SaveData data)
+    {
+        if (data != null) {
+            for (int i = 0; i < residents.Count; i++) {
+                Entity resident = residents[i];
+
+                resident.navMeshAgent.enabled = true;
+
+                // Set Current Building
+                if (data.residentCurrentBuildingIndexes != null && data.residentCurrentBuildingIndexes.Length > i && data.residentCurrentBuildingIndexes[i] >= 0) {
+                    Building building = builtFloors[(data.residentCurrentBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentCurrentBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
+                    if (building)
+                        resident.EnterBuilding(building);
+                }
+
+                // Set Work Building
+                if (data.residentWorkBuildingIndexes != null && data.residentWorkBuildingIndexes.Length > i && data.residentWorkBuildingIndexes[i] >= 0) {
+                    Building building = builtFloors[(data.residentCurrentBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentCurrentBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
+                    if (building)
+                        resident.SetWork(building);
+                }
+
+                //// Set Riding Elevator
+                //if (data.residentsRidingOnElevator != null && data.residentsRidingOnElevator.Length > i && data.residentsRidingOnElevator[i]) {
+                //    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
+                //    //if (elevatorBuilding)
+                //    //resident.StartRidingOnElevator();
+                //}
+
+                //// Set Walking Elevator
+                //if (data.residentsWalkingToElevator != null && data.residentsWalkingToElevator.Length > i && data.residentsWalkingToElevator[i]) {
+                //    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
+                //    //if (elevatorBuilding)
+                //    //resident.StartWalkingToElevator();
+                //}
+
+                //// Set Waiting Elevator
+                //if (data.residentsWaitingForElevator != null && data.residentsWaitingForElevator.Length > i && data.residentsWaitingForElevator[i]) {
+                //    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
+                //    //if (elevatorBuilding)
+                //    //resident.StartWaitingForElevator();
+                //}
+
+                //// Set Target Building
+                //if (data.residentTargetBuildingIndexes != null && data.residentTargetBuildingIndexes.Length > i && data.residentTargetBuildingIndexes[i] >= 0) {
+                //    Building targetBuilding = builtFloors[(data.residentTargetBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentTargetBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
+                //    if (targetBuilding)
+                //        resident.SetTargetBuilding(targetBuilding.buildingPlace, b => b.floorIndex == targetBuilding.floorIndex && b.placeIndex == targetBuilding.placeIndex);
+                //}
+            }
+        }
+        else {
+            for (int i = 0; i < residents.Count; i++) {
+                Entity resident = residents[i];
+
+                resident.navMeshAgent.enabled = true;
+            }
+        }
+    }
+
+    private void CreateLoads(SaveData data)
+    {
+        if (data != null) {
+            if (data.spawnedBoatIds != null) {
+                for (int j = 0; j < data.spawnedBoatIds.Length; j++) {
                     int id = data.spawnedBoatIds[j];
                     bool isUnderConstruction = data.spawnedBoatsAreUnderConstruction[j];
                     bool isFloating = data.spawnedBoatsAreFloating[j];
@@ -227,104 +321,21 @@ public class CityManager : MonoBehaviour
                     float positionX = data.spawnedBoatPositionsX[j];
                     float positionZ = data.spawnedBoatPositionsZ[j];
                     float rotationY = data.spawnedBoatRotationsY[j];
-
                     PlaceBoat(gameManager.BoatPrefabsList.BoatPrefabs[id], isUnderConstruction, j, isFloating, isReturning, health, positionX, positionZ, rotationY);
                 }
             }
         }
-        else
-        {
-            List<Boat> spawnedBoats = pierBuilding.SpawnedBoats.ToList();
-            for (int j = 0; j < spawnedBoats.Count; j++)
-            {
-                if (spawnedBoats[j])
-                {
+        else {
+            List<Boat> spawnedBoats = SpawnedBoats.ToList();
+            for (int j = 0; j < spawnedBoats.Count; j++) {
+                if (spawnedBoats[j]) {
                     PierConstruction construction = pierBuilding.constructionComponent.SpawnedConstruction as PierConstruction;
-                    spawnedBoats[j].Initialize(pierBuilding, false, j);
+                    spawnedBoats[j].Initialize(false, j);
                     spawnedBoats[j].transform.position = construction.BoatDockPositions[j].position;
                     spawnedBoats[j].transform.rotation = construction.BoatDockPositions[j].rotation;
                 }
             }
         }
-    }
-
-    private void LoadEntities(SaveData data)
-    {
-        if (data != null)
-        {
-            // Load entities
-            for (int i = 0; i < data.residentsCount; i++)
-            {
-                Vector3 spawnPosition = new Vector3(data.residentPositionsX[i], data.residentPositionsY[i], data.residentPositionsZ[i]);
-                Quaternion spawnRotation = Quaternion.identity;
-
-                Resident resident = Instantiate(gameManager.residentPrefab, spawnPosition, spawnRotation);
-                AddResident(resident);
-
-                // Set Current Building
-                if (data.residentCurrentBuildingIndexes != null && data.residentCurrentBuildingIndexes.Length > i && data.residentCurrentBuildingIndexes[i] >= 0)
-                {
-                    Building currentBuilding = builtFloors[(int)(data.residentCurrentBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentCurrentBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
-                    if (currentBuilding)
-                        resident.EnterBuilding(currentBuilding);
-                }
-
-                // Set Riding Elevator
-                if (data.residentsRidingOnElevator != null && data.residentsRidingOnElevator.Length > i && data.residentsRidingOnElevator[i])
-                {
-                    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                    //if (elevatorBuilding)
-                        //resident.StartRidingOnElevator();
-
-                    resident.transform.position = spawnPosition;
-                }
-
-                // Set Walking Elevator
-                if (data.residentsWalkingToElevator != null && data.residentsWalkingToElevator.Length > i && data.residentsWalkingToElevator[i])
-                {
-                    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                    //if (elevatorBuilding)
-                        //resident.StartWalkingToElevator();
-                }
-
-                // Set Waiting Elevator
-                if (data.residentsWaitingForElevator != null && data.residentsWaitingForElevator.Length > i && data.residentsWaitingForElevator[i])
-                {
-                    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                    //if (elevatorBuilding)
-                        //resident.StartWaitingForElevator();
-                }
-
-                // Set Target Building
-                if (data.residentTargetBuildingIndexes != null && data.residentTargetBuildingIndexes.Length > i && data.residentTargetBuildingIndexes[i] >= 0)
-                {
-                    Building targetBuilding = builtFloors[(data.residentTargetBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentTargetBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
-                    if (targetBuilding)
-                        resident.SetTargetBuilding(targetBuilding.buildingPlace, b => b.floorIndex == targetBuilding.floorIndex && b.placeIndex == targetBuilding.placeIndex);
-                }
-            }
-        }
-        else
-        {
-            // Create new residents
-            for (int i = 0; i < startResidentsCount; i++)
-            {
-                Vector3 spawnPosition = Vector3.zero;
-                Quaternion spawnRotation = Quaternion.identity;
-
-                if (entitySpawnPositions.Count > i && entitySpawnPositions[i])
-                {
-                    spawnPosition = entitySpawnPositions[i].position;
-                    spawnRotation = entitySpawnPositions[i].rotation;
-                }
-
-                Resident resident = Instantiate(gameManager.residentPrefab, spawnPosition, spawnRotation);
-
-                AddResident(resident);
-            }
-        }
-
-        OnResidentsAdded?.Invoke();
     }
 
     private void InitializeItems()
@@ -365,10 +376,19 @@ public class CityManager : MonoBehaviour
             yield return bakeNavMeshSurfaceCoroutine;
 
         LoadEntities(data);
-        LoadBoats(data);
     }
 
-    private void AddResident(Resident resident)
+    private void CreateResident(Vector3 spawnPosition, Quaternion spawnRotation)
+    {
+        Entity resident = Instantiate(gameManager.residentPrefab, spawnPosition, spawnRotation);
+        AddResident(resident);
+
+        if (bakeNavMeshSurfaceCoroutine != null) {
+            resident.navMeshAgent.enabled = false;
+        }
+    }
+
+    private void AddResident(Entity resident)
     {
         residents.Add(resident);
         unemployedResidentsCount++;
@@ -535,93 +555,62 @@ public class CityManager : MonoBehaviour
             PlaceBoat(boat, true);
     }
 
-    public void PlaceBuilding(Building building, BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
+    public Building PlaceBuilding(Building building, BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
     {
-        int buildingHeight = building.BuildingData.BuildingFloors;
-
-        if (buildingPlace)
-        {
-            Building spawnedBuilding = buildingPlace.placedBuilding;
+        Building spawnedBuilding = buildingPlace.placedBuilding;
+        if (buildingPlace) {
             if (!spawnedBuilding)
                 spawnedBuilding = Instantiate(building, buildingPlace.transform);
 
             buildingPlace.SetPlacedBuilding(spawnedBuilding);
             BuildingType type = spawnedBuilding.BuildingData.BuildingType;
-            if (type == BuildingType.Room)
-            {
+            if (type == BuildingType.Room) {
                 currentRoomsNumberOnFloor[buildingPlace.floorIndex]++;
             }
-            else if (type == BuildingType.Hall)
-            {
-                if (!spawnedBuilding.isInitialized)
-                {
-                    if (currentRoomsNumberOnFloor[buildingPlace.floorIndex] == 0)
-                    {
-                        for (int i = 0; i < roomsCountPerFloor; i++)
-                        {
+            else if (type == BuildingType.Hall)  {
+                if (!spawnedBuilding.isInitialized) {
+                    if (currentRoomsNumberOnFloor[buildingPlace.floorIndex] == 0) {
+                        for (int i = 0; i < roomsCountPerFloor; i++) {
                             builtFloors[buildingPlace.floorIndex].roomBuildingPlaces[i].SetPlacedBuilding(spawnedBuilding);
                             currentRoomsNumberOnFloor[buildingPlace.floorIndex]++;
                         }
                     }
                 }
             }
-
             spawnedBuilding.InitializeBuilding(buildingPlace, isUnderConstruction, levelIndex);
             OnConstructionPlaced?.Invoke();
         }
-
-        //bool canPlace = false;
-        //BuildingPlace currentBuildingPlace = null;
-
-        //int buildingHeight = buildingToPlace.BuildingData.BuildingFloors;
-
-        //if (buildingToPlace.BuildingData.BuildingType == BuildingType.Room)
-        //{
-        //    int floorIndex = buildingPlace.floorIndex;
-        //    int buildingPlaceIndex = buildingPlace.buildingPlaceIndex;
-
-        //    currentRoomsNumberOnFloor[buildingPlace.floorIndex]++;
-
-        //    buildingPlace.PlaceBuilding(buildingToPlace, 0, true, -1);
-        //}
-        //else if (buildingToPlace.BuildingData.BuildingType == BuildingType.Hall)
-        //{
-        //    if (buildingPlace.emptyBuildingPlacesAbove >= buildingHeight - 1)
-        //    {
-        //        canPlace = true;
-        //        currentBuildingPlace = buildingPlace;
-        //    }
-        //    else if (buildingPlace.emptyBuildingPlacesBelow >= buildingHeight - 1)
-        //    {
-        //        canPlace = true;
-        //        currentBuildingPlace = builtFloors[buildingPlace.floorIndex - (buildingHeight + buildingPlace.emptyBuildingPlacesAbove - 1)].hallBuildingPlace;
-        //    }
-
-        //    if (canPlace)
-        //    {
-        //        int floorIndex = currentBuildingPlace.floorIndex;
-        //        currentBuildingPlace.PlaceBuilding(buildingToPlace, levelIndex, isUnderConstruction, -1);
-        //        for (int i = 0; i < roomsCountPerFloor; i++)
-        //            builtFloors[floorIndex].roomBuildingPlaces[i].AddPlacedBuilding(buildingToPlace);
-
-        //        for (int i = floorIndex + 1; i < floorIndex + buildingHeight; i++)
-        //        {
-        //            builtFloors[i].hallBuildingPlace.AddPlacedBuilding(buildingToPlace);
-
-        //            for (int j = 0; j < roomsCountPerFloor; j++)
-        //                builtFloors[i].roomBuildingPlaces[j].AddPlacedBuilding(buildingToPlace);
-        //        }
-        //    }
-        //}
-        //else if (buildingToPlace.BuildingData.BuildingType == BuildingType.FloorFrame)
-        //{
-        //    buildingPlace.PlaceBuilding(buildingToPlace, 0, false, -1);
-        //}
+       return spawnedBuilding;
     }
 
     public void PlaceBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isFloating = false, bool isReturningToDock = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
     {
-        pierBuilding.CreateBoat(boat, isUnderConstruction, dockIndex, isFloating, isReturningToDock, health, positionX, positionZ, rotationY);
+        //pierBuilding.CreateBoat(boat, isUnderConstruction, dockIndex, isFloating, isReturningToDock, health, positionX, positionZ, rotationY);
+
+        PierConstruction pierConstruction = pierBuilding.constructionComponent.SpawnedConstruction as PierConstruction;
+        if (dockIndex == null) {
+            for (int i = 0; i < spawnedBoats.Count; i++) {
+                if (!spawnedBoats[i]) {
+                    dockIndex = i;
+                    break;
+                }
+            }
+        }
+
+        Vector3 position = Vector3.zero /*pierConstruction.BoatDockPositions[dockIndex.Value].position*/;
+        if (positionX != null) position.x = positionX.Value;
+        if (positionZ != null) position.z = positionZ.Value;
+
+        Quaternion rotation = Quaternion.identity;
+        if (rotationY != null) rotation = Quaternion.Euler(0, rotationY.Value, 0);
+        else rotation = pierConstruction.BoatDockPositions[dockIndex.Value].rotation;
+
+        if (spawnedBoats[dockIndex.Value])
+            spawnedBoats[dockIndex.Value].Demolish(false);
+
+        Boat spawnedBoat = Instantiate(boat, position, rotation);
+        spawnedBoat.Initialize(isUnderConstruction, dockIndex.Value, isFloating, isReturningToDock, health);
+        spawnedBoats[dockIndex.Value] = spawnedBoat;
     }
 
     public void DemolishContruction(Building building)
@@ -631,7 +620,7 @@ public class CityManager : MonoBehaviour
 
     private void OnBuildingStartConstructing(ConstructionComponent construction)
     {
-        int levelIndex = construction.levelComponent ? construction.levelComponent.LevelIndex : 0;
+        int levelIndex = construction.ownedBuilding.levelIndex;
 
         Building building = construction.GetComponent<Building>();
         if (building)
@@ -673,14 +662,14 @@ public class CityManager : MonoBehaviour
 
             if (building.BuildingData.BuildingType != BuildingType.Environment && building.storageComponent)
             {
-                int level = building.levelComponent.LevelIndex;
+                int level = building.levelIndex;
                 if (level > 1)
                 {
-                    StorageBuildingLevelData previousLevelData = building.storageComponent.levelsData[level - 1] as StorageBuildingLevelData;
+                    StorageBuildingLevelData previousLevelData = building.storageComponent.LevelsData[level - 1] as StorageBuildingLevelData;
                     SubtractStorageCapacity(previousLevelData, false);
                 }
 
-                StorageBuildingLevelData currentLevelData = building.storageComponent.levelsData[level] as StorageBuildingLevelData;
+                StorageBuildingLevelData currentLevelData = building.storageComponent.LevelsData[level] as StorageBuildingLevelData;
                 if (currentLevelData)
                     AddStorageCapacity(currentLevelData, true);
                 else
@@ -693,7 +682,7 @@ public class CityManager : MonoBehaviour
 
     public void TryToUpgradeConstruction(Building building)
     {
-        int nextLevelIndex = building.levelComponent.LevelIndex + (building.constructionComponent.isRuined ? 0 : 1);
+        int nextLevelIndex = building.levelIndex + (building.constructionComponent.isRuined ? 0 : 1);
 
         if (building.ConstructionLevelsData.Count() > nextLevelIndex)
         {
@@ -732,7 +721,7 @@ public class CityManager : MonoBehaviour
     private void OnConstructionDemolished(ConstructionComponent construction)
     {
         // Return the part of resources
-        List<ItemInstance> resourceToBuilds = construction.constructionLevelsData[construction.levelComponent.LevelIndex].ResourcesToBuild;
+        List<ItemInstance> resourceToBuilds = construction.constructionLevelsData[construction.ownedBuilding.levelIndex].ResourcesToBuild;
         for (int i = 0; i < resourceToBuilds.Count; i++)
         {
             int id = resourceToBuilds[i].ItemData.ItemId;
@@ -772,6 +761,22 @@ public class CityManager : MonoBehaviour
         int floorIndex = (int)((height - firstFloorHeight) / floorHeight);
         if (floorIndex < 0) floorIndex = 0;
         return floorIndex;
+    }
+
+    // Boats
+    private void OnBoatDestroyed(Boat boat)
+    {
+        spawnedBoats[boat.dockIndex] = null;
+    }
+
+    public Boat GetBoatByIndex(int index)
+    {
+        for (int i = 0; i < spawnedBoats.Count; i++) {
+            if (spawnedBoats[i])
+                return spawnedBoats[i];
+        }
+
+        return null;
     }
 
     // Resources

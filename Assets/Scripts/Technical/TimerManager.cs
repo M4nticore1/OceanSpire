@@ -28,21 +28,21 @@ public class TimerManager
         }
     }
 
-    public static void SetTimer(float delay, Action callback)
+    public static void StartTimer(float delay, Action callback)
     {
         TimerHandle timerHandle = new TimerHandle();
         timerHandle.StartTimer(delay, callback);
         timers.Add(timerHandle);
     }
 
-    public static void SetTimer(TimerHandle timerHandle, float delay, Action callback)
+    public static void StartTimer(TimerHandle timerHandle, float delay, Action callback)
     {
         timerHandle.StartTimer(delay, callback);
         if (!timers.Contains(timerHandle))
             timers.Add(timerHandle);
     }
 
-    public static void RemoveTimer(TimerHandle timerHandle, Action callback)
+    public static void StopTimer(TimerHandle timerHandle)
     {
         if (!timers.Contains(timerHandle)) return;
         timers.Remove(timerHandle);

@@ -18,6 +18,9 @@ public class SaveData
 
     public float[] elevatorPlatformHeights { get; private set; } = new float[0];
 
+    public float[] buildingProductionTimers { get; private set; } = new float[0];
+
+    // Boats
     public int[] spawnedBoatIds { get; private set; } = new int[0];
     public bool[] spawnedBoatsAreUnderConstruction { get; private set; } = new bool[0];
     public bool[] spawnedBoatsAreFloating { get; private set; } = new bool[0];
@@ -39,6 +42,7 @@ public class SaveData
 
     public int[] residentCurrentBuildingIndexes { get; private set; } = new int[0];
     public int[] residentTargetBuildingIndexes { get; private set; } = new int[0];
+    public int[] residentWorkBuildingIndexes { get; private set; } = new int[0];
 
     public bool[] residentsRidingOnElevator { get; private set; } = new bool[0];
     public bool[] residentsWalkingToElevator { get; private set; } = new bool[0];
@@ -62,6 +66,7 @@ public class SaveData
         placedBuildingLevels = new int[roomsCount];
         placedBuildingsUnderConstruction = new bool[roomsCount];
         placedBuildingInteriorIds = new int[roomsCount];
+        buildingProductionTimers = new float[roomsCount];
         elevatorPlatformHeights = new float[cityManager.elevatorGroups.Count];
         resourcesAmount = new int[cityManager.items.Count];
 
@@ -73,15 +78,17 @@ public class SaveData
             {
                 Building placedBuilding = cityManager.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
                 placedBuildingIds[placeIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingId : -1;
-                placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.levelComponent.LevelIndex : 0;
+                placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.levelIndex : 0;
                 placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.isUnderConstruction : false;
                 placedBuildingInteriorIds[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.interiorIndex : -1;
+
+                ProductionBuilding productionBuilding = placedBuilding ? placedBuilding.GetComponent<ProductionBuilding>() : null;
+                buildingProductionTimers[placeIndex] = productionBuilding ? productionBuilding.currentProductionTime : 0;
 
                 // Elevators
                 ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;
 
-                if (elevatorBuilding && elevatorBuilding.elevatorGroupId > lastElevatorGroupId)
-                {
+                if (elevatorBuilding && elevatorBuilding.elevatorGroupId > lastElevatorGroupId) {
                     lastElevatorGroupId = elevatorBuilding.elevatorGroupId;
 
                     if (elevatorPlatformHeights.Length > lastElevatorGroupId)
@@ -98,7 +105,7 @@ public class SaveData
         }
 
         // Boats
-        List<Boat> spawnedBoats = cityManager.PierBuilding.SpawnedBoats.ToList();
+        List<Boat> spawnedBoats = cityManager.SpawnedBoats.ToList();
         int boatsCount = spawnedBoats.Count;
         spawnedBoatIds = new int[boatsCount];
         spawnedBoatsAreUnderConstruction = new bool[boatsCount];
@@ -134,6 +141,7 @@ public class SaveData
 
         residentCurrentBuildingIndexes = new int[residentsCount];
         residentTargetBuildingIndexes = new int[residentsCount];
+        residentWorkBuildingIndexes = new int[residentsCount];
 
         residentsRidingOnElevator = new bool[residentsCount];
         residentsWalkingToElevator = new bool[residentsCount];
@@ -141,26 +149,34 @@ public class SaveData
 
         for (int i = 0; i < residentsCount; i++)
         {
-            residentPositionsX[i] = cityManager.residents[i].transform.position.x;
-            residentPositionsY[i] = cityManager.residents[i].transform.position.y;
-            residentPositionsZ[i] = cityManager.residents[i].transform.position.z;
-            residentFloorIndexes[i] = cityManager.residents[i].currentBuilding ? cityManager.residents[i].currentBuilding.floorIndex : 0;
+            Entity resident = cityManager.residents[i];
 
-            Building currentBuilding = cityManager.residents[i].currentBuilding;
+            residentPositionsX[i] = resident.transform.position.x;
+            residentPositionsY[i] = resident.transform.position.y;
+            residentPositionsZ[i] = resident.transform.position.z;
+            residentFloorIndexes[i] = resident.currentBuilding ? resident.currentBuilding.floorIndex : 0;
+
+            Building currentBuilding = resident.currentBuilding;
             if (currentBuilding)
                 residentCurrentBuildingIndexes[i] = currentBuilding.floorIndex * CityManager.roomsCountPerFloor + currentBuilding.placeIndex;
             else
                 residentCurrentBuildingIndexes[i] = -1;
 
-            Building targetBuilding = cityManager.residents[i].targetBuilding;
+            Building targetBuilding = resident.targetBuilding;
             if (targetBuilding)
                 residentTargetBuildingIndexes[i] = targetBuilding.floorIndex * CityManager.roomsCountPerFloor + targetBuilding.placeIndex;
             else
                 residentTargetBuildingIndexes[i] = -1;
 
-            residentsRidingOnElevator[i] = cityManager.residents[i].isRidingOnElevator;
-            //residentsWalkingToElevator[i] = cityManager.residents[i].isWalkingToElevator;
-            residentsWaitingForElevator[i] = cityManager.residents[i].isWaitingForElevator;
+            Building workBuilding = resident.workBuilding;
+            if (workBuilding)
+                residentWorkBuildingIndexes[i] = workBuilding.floorIndex * CityManager.roomsCountPerFloor + workBuilding.placeIndex;
+            else
+                residentWorkBuildingIndexes[i] = -1;
+
+            residentsRidingOnElevator[i] = resident.isRidingOnElevator;
+            //residentsWalkingToElevator[i] = resident.isWalkingToElevator;
+            residentsWaitingForElevator[i] = resident.isWaitingForElevator;
         }
     }
 }

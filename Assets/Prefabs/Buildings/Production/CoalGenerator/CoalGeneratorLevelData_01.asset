@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourcesToBuild: []
   maxResidentsCount: 2
-  constructionStraight: {fileID: 3395891878762895499, guid: e3789740ea7ffcc4e851b4fd4d8ef80c, type: 3}
-  constructionCorner: {fileID: 3395891878762895499, guid: 9ca647aeb76c6064382689744d563fbb, type: 3}
-  constructionStraightLeft: {fileID: 3395891878762895499, guid: 6533631c460cb6c4c949dadb4ef352ad, type: 3}
-  constructionStraightRight: {fileID: 3395891878762895499, guid: c9fe7bd04f155f34a82408d8f1f3ad20, type: 3}
-  constructionStraightLeftRight: {fileID: 3395891878762895499, guid: 1a7b056b108606844915ca2b5f698bf3, type: 3}
-  constructionCornerLeft: {fileID: 3395891878762895499, guid: 61ffdf107e256f041972e15ad28dc9b8, type: 3}
-  constructionCornerRight: {fileID: 3395891878762895499, guid: 3fa23394e1b359d45975dba076386a7b, type: 3}
-  constructionCornerLeftRight: {fileID: 3395891878762895499, guid: 0f1d48aff54d67c428219b1e3222f172, type: 3}
+  constructionStraight: {fileID: 8076214585303220704, guid: e3789740ea7ffcc4e851b4fd4d8ef80c, type: 3}
+  constructionCorner: {fileID: 7507276485578102838, guid: 9ca647aeb76c6064382689744d563fbb, type: 3}
+  constructionStraightLeft: {fileID: 5186597252285447374, guid: 6533631c460cb6c4c949dadb4ef352ad, type: 3}
+  constructionStraightRight: {fileID: -3282968233018703686, guid: c9fe7bd04f155f34a82408d8f1f3ad20, type: 3}
+  constructionStraightLeftRight: {fileID: -9013753657549747186, guid: 1a7b056b108606844915ca2b5f698bf3, type: 3}
+  constructionCornerLeft: {fileID: -626467885639997239, guid: 61ffdf107e256f041972e15ad28dc9b8, type: 3}
+  constructionCornerRight: {fileID: 1437646023951441717, guid: 3fa23394e1b359d45975dba076386a7b, type: 3}
+  constructionCornerLeftRight: {fileID: 8009294236326726701, guid: 0f1d48aff54d67c428219b1e3222f172, type: 3}
   constructionStraightAbove: {fileID: 0}
   constructionStraightBelow: {fileID: 0}
   constructionStraightAboveBelow: {fileID: 0}

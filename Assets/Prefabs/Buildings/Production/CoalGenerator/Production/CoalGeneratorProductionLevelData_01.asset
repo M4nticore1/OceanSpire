@@ -15,9 +15,9 @@ MonoBehaviour:
   producedResources:
   - producedResource:
       itemData: {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
-      amount: 10
-    maxResourceAmount: 10
-    produceTime: 60
+      amount: 1
+    maxAmount: 10
+    produceTime: 10
     consumeResources:
     - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
       amount: 100

@@ -109,7 +109,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     private int GetNextFloor()
     {
         if (ridingPassengers.Count > 0) {
-            Debug.Log("GetNextFloor: ridingPassengers.Count > 0");
             Entity firstRider = ridingPassengers[0];
             nextFloorIndex = firstRider.currentPathBuilding.floorIndex;
 
@@ -129,7 +128,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
             }
         }
         else if (waitingPassengers.Count > 0) {
-            Debug.Log("GetNextFloor: waitingPassengers.Count > 0");
             nextFloorIndex = waitingPassengers[0].floorIndex;
         }
         else {

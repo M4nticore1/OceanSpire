@@ -49,7 +49,7 @@ public class Boat : MonoBehaviour
     private double lastDrainHealthTime = 0d;
     public bool isDemolished { get; private set; } = false;
 
-    public DetailsMenu spawnedDetailsMenu { get; set; } = null;
+    public ContextMenu spawnedDetailsMenu { get; set; } = null;
     [SerializeField] private StatsWorldUI statsWorldWidget = null;
 
     private TimerHandle collectLootTimer = new TimerHandle();
@@ -77,7 +77,7 @@ public class Boat : MonoBehaviour
         LootContainer.OnLootExited -= OnLootExited;
     }
 
-    public void Initialize(PierBuilding ownedPier, bool isUnderConstruction, int dockIndex, bool isFloating = false, bool isReturningToDock = false, float? health = null)
+    public void Initialize(bool isUnderConstruction, int dockIndex, bool isFloating = false, bool isReturningToDock = false, float? health = null)
     {
         lastUpdateDestinationTime = Time.timeAsDouble - updateDestinationRate;
 
@@ -162,7 +162,7 @@ public class Boat : MonoBehaviour
                     {
                         currentWeightToUnload += BoatData.unloadLootSpeed * Time.deltaTime;
                         StorageBuildingComponent storageComponent = ownedPier.storageComponent;
-                        StorageBuildingLevelData storageLevelData = storageComponent.levelsData[ownedPier.levelComponent.LevelIndex] as StorageBuildingLevelData;
+                        StorageBuildingLevelData storageLevelData = storageComponent.StorageLevelData;
                         ItemInstance loot = storedLoot[0];
                         int lootId = loot.ItemData.ItemId;
 
@@ -237,7 +237,7 @@ public class Boat : MonoBehaviour
         StopMoving();
         float remainingWeight = BoatData.MaxWeight - currentWeight;
         loot.StartCollecting(remainingWeight);
-        TimerManager.SetTimer(collectLootTimer, boatData.LootCollectTime, () => CollectLoot(loot));
+        TimerManager.StartTimer(collectLootTimer, boatData.LootCollectTime, () => CollectLoot(loot));
 
         if (statsWorldWidget)
             statsWorldWidget.ShowActionProgressBar();

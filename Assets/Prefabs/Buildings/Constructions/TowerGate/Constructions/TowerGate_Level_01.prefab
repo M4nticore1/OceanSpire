@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ownedBuilding: {fileID: 0}
   buildingInteriors: []
   buildingInteractions:
   - waypoints:
@@ -286,18 +287,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7515429101286732190, guid: 98c2f025d16a26d4bbfcb18d7b00c5a4, type: 3}
       propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: 98c2f025d16a26d4bbfcb18d7b00c5a4, type: 3}
-      propertyPath: m_ReceiveGI
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: 98c2f025d16a26d4bbfcb18d7b00c5a4, type: 3}
-      propertyPath: m_CastShadows
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: 98c2f025d16a26d4bbfcb18d7b00c5a4, type: 3}
-      propertyPath: m_LightProbeUsage
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7395704305543789238, guid: 98c2f025d16a26d4bbfcb18d7b00c5a4, type: 3}

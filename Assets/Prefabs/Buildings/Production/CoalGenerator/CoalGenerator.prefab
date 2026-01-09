@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3275737552088690731}
   - component: {fileID: -255987306672972499}
-  - component: {fileID: -312919418568159975}
   - component: {fileID: 6294028636610842851}
   - component: {fileID: 8325560249525714879}
   - component: {fileID: -2804250846909919817}
+  - component: {fileID: 4203471900530315054}
   m_Layer: 0
   m_Name: CoalGenerator
   m_TagString: Untagged
@@ -56,26 +56,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 687824843f2188141b52eb67883dae9d, type: 2}
   - {fileID: 11400000, guid: aa09133ea6ebbae49be51d0b319c99bb, type: 2}
   buildingPlace: {fileID: 0}
---- !u!114 &-312919418568159975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3980113925021139364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2b4ff3b0e36d0a4aa38f9a9189d5390, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ownedBuilding: {fileID: 0}
-  levelsData:
-  - {fileID: 11400000, guid: 2b61ec27db2b0eb4481a6d2149707dc7, type: 2}
-  - {fileID: 11400000, guid: 55253cdd475b872499a636b6bca9cff6, type: 2}
-  - {fileID: 11400000, guid: 499d2140c592e71468edbf455d97af49, type: 2}
-  levelData: {fileID: 0}
-  isReadyToCollect: 0
-  collectResourceWidgetPrefab: {fileID: 0}
 --- !u!114 &6294028636610842851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,6 +93,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4203471900530315054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3980113925021139364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7727480b4347748488d4839455d4bc43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoalGenerator
+  ownedBuilding: {fileID: 0}
+  levelsData:
+  - {fileID: 11400000, guid: 2b61ec27db2b0eb4481a6d2149707dc7, type: 2}
+  smokePrefab: {fileID: 932927189342864260, guid: 5b46cb6248341f54c8bc5c365bedb7df, type: 3}
+  smokeGradient:
+    serializedVersion: 2
+    key0: {r: 0.24, g: 0.24, b: 0.24, a: 1}
+    key1: {r: 1, g: 0.73333335, b: 0, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
 --- !u!1001 &4500102122576390995
 PrefabInstance:
   m_ObjectHideFlags: 0

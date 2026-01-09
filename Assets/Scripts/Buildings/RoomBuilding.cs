@@ -105,6 +105,6 @@ public class RoomBuilding : TowerBuilding
 
     private bool GetPossibilityConnect(Building neightboorBuilding, int levelIndex)
     {
-        return neightboorBuilding && !neightboorBuilding.constructionComponent.isUnderConstruction && neightboorBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && neightboorBuilding.levelComponent.LevelIndex == levelIndex;
+        return neightboorBuilding && !neightboorBuilding.constructionComponent.isUnderConstruction && neightboorBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && neightboorBuilding.levelIndex == levelIndex;
     }
 }

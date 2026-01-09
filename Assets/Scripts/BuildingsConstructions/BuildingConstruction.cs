@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [System.Serializable]
 public struct BuildingAction
@@ -12,7 +12,7 @@ public struct BuildingAction
 
 public class BuildingConstruction : MonoBehaviour
 {
-    [SerializeField] protected Building ownedBuilding = null;
+    protected Building ownedBuilding = null;
     public int floorIndex => ownedBuilding.floorIndex;
     public int placeIndex => ownedBuilding.placeIndex;
 
@@ -24,6 +24,9 @@ public class BuildingConstruction : MonoBehaviour
 
     [Header("Storage")]
     public List<Transform> collectItemPoints = new List<Transform>();
+
+    private MeshRenderer[] meshRendererers = null;
+    private MaterialPropertyBlock propertyBlock = null;
 
     protected virtual void OnEnable()
     {
@@ -38,5 +41,15 @@ public class BuildingConstruction : MonoBehaviour
     public virtual void Build(Building ownedBuilding)
     {
         this.ownedBuilding = ownedBuilding;
+        meshRendererers = GetComponentsInChildren<MeshRenderer>();
+        propertyBlock = new MaterialPropertyBlock();
+    }
+
+    public void SetFlickingMultiplier(float multiplier)
+    {
+        Debug.Log("SetFlickingMultiplier " + multiplier);
+        propertyBlock.SetFloat("_FlickingMultiplier", multiplier);
+        foreach (MeshRenderer renderer in meshRendererers)
+            renderer.SetPropertyBlock(propertyBlock);
     }
 }

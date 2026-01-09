@@ -55,7 +55,7 @@ public class ElevatorBuilding : RoomBuilding
         //    {
         //        if (spawnedElevatorPlatform.currentFloorIndex == floorIndex)
         //        {
-        //            if (spawnedElevatorPlatform.isMoving || spawnedElevatorPlatform.elevatorRidingPassengers.Count == buildingLevelsData[levelComponent.LevelIndex].maxResidentsCount)
+        //            if (spawnedElevatorPlatform.isMoving || spawnedElevatorPlatform.elevatorRidingPassengers.Count == buildingLevelsData[levelIndex].maxResidentsCount)
         //            {
         //                Debug.Log("StartElevatorWaiting");
         //                entity.StartWaitingForElevator();
@@ -104,7 +104,7 @@ public class ElevatorBuilding : RoomBuilding
 
     public bool IsPossibleToEnter()
     {
-        return !elevatorPlatform.isMoving && elevatorPlatform.floorIndex == floorIndex && elevatorPlatform.ridingPassengers.Count < buildingLevelsData[levelComponent.LevelIndex].maxResidentsCount;
+        return !elevatorPlatform.isMoving && elevatorPlatform.floorIndex == floorIndex && elevatorPlatform.ridingPassengers.Count < buildingLevelsData[levelIndex].maxResidentsCount;
     }
 
     public Vector3 GetPlatformRidingPosition()

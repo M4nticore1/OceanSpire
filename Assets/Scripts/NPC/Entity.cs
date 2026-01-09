@@ -20,7 +20,7 @@ public class Entity : MonoBehaviour
     private CityManager cityManager = null;
     public LevelComponent levelComponent { get; private set; } = null;
     public SelectComponent selectComponent { get; private set; } = null;
-    private NavMeshAgent navMeshAgent = null;
+    public NavMeshAgent navMeshAgent { get; private set; } = null;
 
     // Stats
     [SerializeField] private int maxHealth = 100;
@@ -62,7 +62,7 @@ public class Entity : MonoBehaviour
     //public bool isWalkingToElevator { get; private set; } = false;
 
     // Work
-    public ResidentWork currentWork { get; private set; } = ResidentWork.None;
+    //public ResidentWork currentWork { get; private set; } = ResidentWork.None;
     public bool isWorking { get; private set; } = false;
     public int workerIndex { get; private set; } = 0;
     public Building workBuilding { get; private set; } = null;
@@ -124,158 +124,147 @@ public class Entity : MonoBehaviour
     // Work
     private void Work()
     {
-        if (currentWork == ResidentWork.BuildingWork)
-        {
-            if (workBuilding.constructionComponent.SpawnedConstruction.BuildingInteractions.Count > workerIndex)
-            {
-                BuildingAction buildingAction = workBuilding.constructionComponent.SpawnedConstruction.BuildingInteractions[workerIndex];
+        if (workBuilding) {
+            if (!workBuilding.constructionComponent.isUnderConstruction) {
+                if (workBuilding.constructionComponent.SpawnedConstruction.BuildingInteractions.Count > workerIndex) {
+                    BuildingAction buildingAction = workBuilding.constructionComponent.SpawnedConstruction.BuildingInteractions[workerIndex];
 
-                if (buildingAction.actionTimes[currentActionIndex] > 0)
-                {
-                    currentActionTime += Time.deltaTime;
-                    if (currentActionTime >= buildingAction.actionTimes[currentActionIndex])
-                    {
-                        if (currentActionIndex < buildingAction.actionTimes.Count - 1)
-                            currentActionIndex++;
-                        else
-                            currentActionIndex = 0;
+                    if (buildingAction.actionTimes[currentActionIndex] > 0) {
+                        currentActionTime += Time.deltaTime;
+                        if (currentActionTime >= buildingAction.actionTimes[currentActionIndex]) {
+                            if (currentActionIndex < buildingAction.actionTimes.Count - 1)
+                                currentActionIndex++;
+                            else
+                                currentActionIndex = 0;
 
-                        currentActionTime = 0;
+                            currentActionTime = 0;
 
-                        Vector3 position = buildingAction.waypoints[currentActionIndex].position;
-                        StartMoving(position);
-                    }
-                }
-            }
-        }
-        else if (currentWork == ResidentWork.ConstructingBuilding)
-        {
-            int levelIndex = workBuilding.levelComponent.LevelIndex;
-            List<ItemInstance> resourcesToBuild = workBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
-            List<ItemInstance> deliveredResources = workBuilding.constructionComponent.deliveredConstructionResources;
-            List<ItemInstance> incomingResources = workBuilding.constructionComponent.incomingConstructionResources;
-            bool isNeededToWork = false;
-
-            if (currentBuilding == workBuilding)
-            {
-                float distance = Vector3.Distance(transform.position, targetPosition);
-                if (distance < applyTargetPosition)
-                {
-                    currentActionTime += Time.deltaTime;
-                    if (currentActionTime >= takeItemDuration)
-                    {
-                        for (int i = 0; i < carriedItems.Count; i++)
-                        {
-                            int itemId = carriedItems[i].ItemData.ItemId;
-                            int amountToAdd = carriedItems[i].Amount;
-                            int amountToSpend = currentBuilding.constructionComponent.AddConstructionResources(itemId, amountToAdd);
-                            SpendItem(itemId, amountToSpend);
-
-                            if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount)
-                                isNeededToWork = true;
+                            Vector3 position = buildingAction.waypoints[currentActionIndex].position;
+                            StartMoving(position);
                         }
-
-                        if (isNeededToWork)
-                            SetTargetBuilding(currentBuilding.buildingPlace, b =>
-                            {
-                                if (!b.storageComponent || (b.floorIndex == workBuilding.floorIndex && b.placeIndex == workBuilding.placeIndex)) return false;
-
-                                int itemIndex = workBuilding.ConstructionLevelsData[workBuilding.levelComponent.LevelIndex].ResourcesToBuild[0].ItemData.ItemId;
-
-                                return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
-                            });
-                        else
-                            SetWork(ResidentWork.None);
-                        currentActionTime = 0;
                     }
                 }
             }
-            else if (currentBuilding == targetBuilding)
-            {
-                float distance = Vector3.Distance(transform.position, targetPosition);
-                if (distance < applyTargetPosition)
-                {
-                    currentActionTime += Time.deltaTime;
-                    if (currentActionTime >= takeItemDuration)
-                    {
-                        for (int i = 0; i < resourcesToBuild.Count; i++)
-                        {
-                            if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount)
-                            {
-                                int itemId = resourcesToBuild[i].ItemData.ItemId;
-                                if (targetBuilding.constructionComponent.incomingConstructionResourcesDict.ContainsKey(itemId))
-                                    targetBuilding.constructionComponent.incomingConstructionResourcesDict[itemId].SetAmount(0);
+            else {
+                int levelIndex = workBuilding.levelIndex;
+                List<ItemInstance> resourcesToBuild = workBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
+                List<ItemInstance> deliveredResources = workBuilding.constructionComponent.deliveredConstructionResources;
+                List<ItemInstance> incomingResources = workBuilding.constructionComponent.incomingConstructionResources;
+                bool isNeededToWork = false;
 
-                                int remainedAmount = resourcesToBuild[i].Amount - (deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0);
-                                int amountToTake = currentBuilding.storageComponent.SpendItem(itemId, math.min(currentMaxCarryWeight, remainedAmount));
-                                TakeItem(itemId, amountToTake);
-                                int amountToIncoming = carriedItemsDict[itemId].Amount;
-                                targetBuilding.constructionComponent.AddIncomingConstructionResources(itemId, amountToIncoming);
+                if (currentBuilding == workBuilding) {
+                    float distance = Vector3.Distance(transform.position, targetPosition);
+                    if (distance < applyTargetPosition) {
+                        currentActionTime += Time.deltaTime;
+                        if (currentActionTime >= takeItemDuration) {
+                            for (int i = 0; i < carriedItems.Count; i++) {
+                                int itemId = carriedItems[i].ItemData.ItemId;
+                                int amountToAdd = carriedItems[i].Amount;
+                                int amountToSpend = currentBuilding.constructionComponent.AddConstructionResources(itemId, amountToAdd);
+                                SpendItem(itemId, amountToSpend);
 
                                 if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount)
                                     isNeededToWork = true;
                             }
-                        }
 
-                        if (isNeededToWork)
-                            SetTargetBuilding(currentBuilding.buildingPlace, b => b ? b == workBuilding : false);
-                        else
-                            SetWork(ResidentWork.None);
-                        currentActionTime = 0;
+                            if (isNeededToWork)
+                                SetTargetBuilding(currentBuilding.buildingPlace, b =>
+                                {
+                                    if (!b.storageComponent || (b.floorIndex == workBuilding.floorIndex && b.placeIndex == workBuilding.placeIndex)) return false;
+
+                                    int itemIndex = workBuilding.ConstructionLevelsData[workBuilding.levelIndex].ResourcesToBuild[0].ItemData.ItemId;
+
+                                    return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
+                                });
+                            //else
+                                //SetWork(ResidentWork.None);
+                            currentActionTime = 0;
+                        }
+                    }
+                }
+                else if (currentBuilding == targetBuilding) {
+                    float distance = Vector3.Distance(transform.position, targetPosition);
+                    if (distance < applyTargetPosition) {
+                        currentActionTime += Time.deltaTime;
+                        if (currentActionTime >= takeItemDuration) {
+                            for (int i = 0; i < resourcesToBuild.Count; i++) {
+                                if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount) {
+                                    int itemId = resourcesToBuild[i].ItemData.ItemId;
+                                    if (targetBuilding.constructionComponent.incomingConstructionResourcesDict.ContainsKey(itemId))
+                                        targetBuilding.constructionComponent.incomingConstructionResourcesDict[itemId].SetAmount(0);
+
+                                    int remainedAmount = resourcesToBuild[i].Amount - (deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0);
+                                    int amountToTake = currentBuilding.storageComponent.SpendItem(itemId, math.min(currentMaxCarryWeight, remainedAmount));
+                                    TakeItem(itemId, amountToTake);
+                                    int amountToIncoming = carriedItemsDict[itemId].Amount;
+                                    targetBuilding.constructionComponent.AddIncomingConstructionResources(itemId, amountToIncoming);
+
+                                    if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount)
+                                        isNeededToWork = true;
+                                }
+                            }
+
+                            if (isNeededToWork)
+                                SetTargetBuilding(currentBuilding.buildingPlace, b => b ? b == workBuilding : false);
+                            //else
+                                //SetWork(ResidentWork.None);
+                            currentActionTime = 0;
+                        }
                     }
                 }
             }
         }
     }
 
-    public void RemoveWorkBuilding()
-    {
-        if (currentWork == ResidentWork.BuildingWork)
-            workBuilding.RemoveWorker(this);
-        workBuilding = null;
+    //public void RemoveWorkBuilding()
+    //{
+    //    if (currentWork == ResidentWork.BuildingWork)
+    //        workBuilding.RemoveWorker(this);
+    //    workBuilding = null;
 
-        currentWork = ResidentWork.None;
-        RemoveWork();
+    //    currentWork = ResidentWork.None;
 
-        OnWorkerRemove?.Invoke();
-    }
+    //    OnWorkerRemove?.Invoke();
+    //}
 
     public void SetWorkerIndex(int index)
     {
         workerIndex = index;
     }
 
-    public void SetWork(ResidentWork newWork, Building newWorkBuilding = null)
+    public void SetWork(Building workBuilding = null)
     {
-        currentWork = newWork;
+        //currentWork = work;
 
-        if (newWorkBuilding) {
-            if (newWork == ResidentWork.BuildingWork) {
-                workBuilding = newWorkBuilding;
-                newWorkBuilding.AddWorker(this);
+        if (workBuilding) {
+            if (!workBuilding.constructionComponent.isUnderConstruction) {
+                this.workBuilding = workBuilding;
+                workBuilding.AddWorker(this);
 
-                SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, newWorkBuilding);
+                if (currentBuilding == workBuilding)
+                    StartWorking();
+                else
+                    SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, workBuilding);
 
                 OnWorkerAdd?.Invoke();
             }
-            else if (newWork == ResidentWork.ConstructingBuilding) {
-                int levelIndex = newWorkBuilding.levelComponent.LevelIndex;
-                List<ItemInstance> resourcesToBuild = newWorkBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
+            else {
+                int levelIndex = workBuilding.levelIndex;
+                List<ItemInstance> resourcesToBuild = workBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
 
                 for (int i = 0; i < resourcesToBuild.Count; i++) {
-                    if (newWorkBuilding.constructionComponent.incomingConstructionResources.Count <= i || newWorkBuilding.constructionComponent.incomingConstructionResources[i].Amount < resourcesToBuild[i].Amount) {
-                        if (SetTargetBuilding(newWorkBuilding.buildingPlace, b => {
-                            if (!b || !b.storageComponent || b == newWorkBuilding) return false;
+                    if (workBuilding.constructionComponent.incomingConstructionResources.Count <= i || workBuilding.constructionComponent.incomingConstructionResources[i].Amount < resourcesToBuild[i].Amount) {
+                        if (SetTargetBuilding(workBuilding.buildingPlace, b => {
+                            if (!b || !b.storageComponent || b == workBuilding) return false;
 
-                            int itemIndex = newWorkBuilding.ConstructionLevelsData[newWorkBuilding.levelComponent.LevelIndex].ResourcesToBuild[0].ItemData.ItemId;
+                            int itemIndex = workBuilding.ConstructionLevelsData[workBuilding.levelIndex].ResourcesToBuild[0].ItemData.ItemId;
 
                             return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
                         }))
 {
-                            workBuilding = newWorkBuilding;
+                            this.workBuilding = workBuilding;
                             StartWorking();
                         }
-
                         break;
                     }
                 }
@@ -283,7 +272,7 @@ public class Entity : MonoBehaviour
         }
     }
 
-    private void RemoveWork()
+    public void RemoveWork()
     {
         StopWorking();
         pathBuildings.Clear();
@@ -293,20 +282,33 @@ public class Entity : MonoBehaviour
         else if (isWaitingForElevator)
             StopWaitingForElevator();
 
-        if (workBuilding as PierBuilding) {
-            currentBoat.ReturnToDock();
+        //currentWork = ResidentWork.None;
+        if (workBuilding) {
+            if (workBuilding as PierBuilding)
+                currentBoat.ReturnToDock();
+
+            workBuilding.RemoveWorker(this);
+            workBuilding = null;
         }
+
+        StopMoving();
+        OnWorkerRemove?.Invoke();
     }
 
     private void StartWorking()
     {
         isWorking = true;
+        if (workBuilding)
+            workBuilding.AddCurrentWorker(this);
     }
 
     private void StopWorking()
     {
+        if (!isWorking) return;
+
         isWorking = false;
-        //navMeshAgent.ResetPath();
+        if (workBuilding)
+            workBuilding.RemoveCurrentWorker(this);
     }
 
     private void StartConstructingBuilding()
@@ -335,10 +337,10 @@ public class Entity : MonoBehaviour
 
                 if (currentPathBuilding == targetBuilding) {
                     if (workBuilding) {
-                        if (currentWork == ResidentWork.BuildingWork) {
+                        if (!workBuilding.constructionComponent.isUnderConstruction) {
                             position = currentPathBuilding.constructionComponent.GetInteractionPosition(workerIndex);
                         }
-                        else if (currentWork == ResidentWork.ConstructingBuilding) {
+                        else {
                             position = currentPathBuilding.constructionComponent.GetPickupItemPointPosition();
                         }
                     }
@@ -351,7 +353,7 @@ public class Entity : MonoBehaviour
             }
         }
         else {
-            Vector3 position = currentBuilding.constructionComponent.GetInteractionPosition(currentBuilding.entities.Count);
+            Vector3 position = currentBuilding.constructionComponent.GetInteractionPosition(currentBuilding.enteredEntities.Count);
             StartMoving(position);
         }
 
@@ -374,6 +376,8 @@ public class Entity : MonoBehaviour
 
     private void StopMoving()
     {
+        if (!isMoving) return;
+
         isMoving = false;
         navMeshAgent.ResetPath();
         OnEntityStopped?.Invoke(this);
@@ -381,10 +385,8 @@ public class Entity : MonoBehaviour
         if (isRidingOnElevator) {
             navMeshAgent.enabled = false;
         }
-        else if (currentWork == ResidentWork.BuildingWork){
-            if (workBuilding as PierBuilding) {
-                StartEnteringBoat();
-            }
+        else if (workBuilding && workBuilding as PierBuilding) {
+            StartEnteringBoat();
         }
     }
 
@@ -396,7 +398,7 @@ public class Entity : MonoBehaviour
             building.EnterBuilding(this);
 
             if (building == targetBuilding) {
-                if (currentWork != ResidentWork.None) {
+                if (workBuilding) {
                     StartWorking();
                 }
             }
@@ -460,9 +462,9 @@ public class Entity : MonoBehaviour
     {
         yield return CityManager.bakeNavMeshSurfaceCoroutine;
 
-        if (currentWork == ResidentWork.None) {
+        if (!workBuilding) {
             Building building = construction.GetComponent<Building>();
-            SetWork(ResidentWork.ConstructingBuilding, building);
+            SetWork(building);
         }
         else {
             SetTargetBuilding(currentBuilding ? currentBuilding.buildingPlace : null, b => b.floorIndex == targetBuilding.floorIndex && b.placeIndex == targetBuilding.placeIndex);
@@ -472,7 +474,7 @@ public class Entity : MonoBehaviour
 
     private void StartEnteringBoat()
     {
-        TimerManager.SetTimer(enteringBoatTime, EnterBoat);
+        TimerManager.StartTimer(enteringBoatTime, EnterBoat);
     }
 
     // Elevators
@@ -548,7 +550,7 @@ public class Entity : MonoBehaviour
         if (workPier)
         {
             PierBuilding pier = workBuilding as PierBuilding;
-            Boat boat = pier.GetBoatByIndex(workerIndex);
+            Boat boat = cityManager.GetBoatByIndex(workerIndex);
             currentBoat = boat;
             currentBoat.EnterBoat(this);
 
@@ -559,7 +561,7 @@ public class Entity : MonoBehaviour
 
     private void StartExitingBoat()
     {
-        TimerManager.SetTimer(enteringBoatTime, ExitBoat);
+        TimerManager.StartTimer(enteringBoatTime, ExitBoat);
     }
 
     private void ExitBoat()
@@ -633,7 +635,7 @@ public class Entity : MonoBehaviour
     {
         if (building.constructionComponent.isUnderConstruction)
         {
-            int levelIndex = building.levelComponent.LevelIndex;
+            int levelIndex = building.levelIndex;
             List<ItemInstance> constructionResources = building.ConstructionLevelsData[levelIndex].ResourcesToBuild;
             for (int j = 0; j < building.ConstructionLevelsData[levelIndex].ResourcesToBuild.Count; j++)
             {

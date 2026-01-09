@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
     private bool isManagementMenuOpened = false;
     private bool isBuildingListsMenuOpened = false;
     private bool isStorageListsMenuOpened = false;
-    private bool isDetailsMenuOpened = false;
+    private bool isContextMenuOpened = false;
 
     BuildingCategory lastOpenedBuildingsListCategory = BuildingCategory.Construction;
     ItemCategory lastOpenedStorageListCategory = ItemCategory.Building;
@@ -71,20 +71,27 @@ public class UIManager : MonoBehaviour
 
     private List<bool> itemsToUpdate = new List<bool>();
 
-    // Building Management Menu
-    [Header("Building Management Menu")]
-    [SerializeField] private RectTransform buildingManagementMenu = null;
-    [SerializeField] private Button closeBuildingWorkersMenuButton = null;
-    private Vector2 buildingManagementMenuCurrentPosition = Vector2.zero;
-    private const float buildingManagementMenuToggleSpeed = 15.0f;
-    [SerializeField] private DetailsMenu detailsMenu = null;
-
     [Header("Building Stats Panel")]
     [SerializeField] private RectTransform buildingStatsPanel = null;
     [SerializeField] private TextMeshProUGUI buildingStatsPanelNameText = null;
     [SerializeField] private TextMeshProUGUI buildingStatsPanelWorkersCountText = null;
     private bool isInfoMenuOpened = false;
     private Vector2 buildingStatsPanelOpenedPosition = Vector2.zero;
+
+    [Header("Context Menu")]
+    [SerializeField] private RectTransform contextMenuTransform = null;
+    [SerializeField] private Button closeBuildingWorkersMenuButton = null;
+    private Vector2 buildingManagementMenuCurrentPosition = Vector2.zero;
+    private const float buildingManagementMenuToggleSpeed = 15.0f;
+    private ContextMenu openedContextMenu = null;
+
+    [Header("Building Context Menu")]
+    [SerializeField] private ContextMenu buildingContextMenu = null;
+    [SerializeField] private ContextMenu productionContextMenu = null;
+    [SerializeField] private ContextMenu storageContextMenu = null;
+
+    [Header("Boat Context Menu")]
+    [SerializeField] private ContextMenu boatContextMenu = null;
 
     [Header("Building Action Menu")]
     [SerializeField] private RectTransform buildingResourcesMenuPanel = null;
@@ -187,12 +194,12 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         // Building Management Menu
-        if (isDetailsMenuOpened)
-            buildingManagementMenuCurrentPosition.y = math.lerp(buildingManagementMenuCurrentPosition.y, buildingManagementMenu.rect.size.y, buildingManagementMenuToggleSpeed * Time.deltaTime);
+        if (isContextMenuOpened)
+            buildingManagementMenuCurrentPosition.y = math.lerp(buildingManagementMenuCurrentPosition.y, contextMenuTransform.rect.size.y, buildingManagementMenuToggleSpeed * Time.deltaTime);
         else
             buildingManagementMenuCurrentPosition.y = math.lerp(buildingManagementMenuCurrentPosition.y, 0, buildingManagementMenuToggleSpeed * Time.deltaTime);
 
-		buildingManagementMenu.anchoredPosition = buildingManagementMenuCurrentPosition;
+		contextMenuTransform.anchoredPosition = buildingManagementMenuCurrentPosition;
 
         if (isBuildingResourcesMenuOpened)
             buildingResourcesMenuCurrentPosition.y = math.lerp(buildingResourcesMenuCurrentPosition.y, buildingResourcesMenuOpenedPosition.y, buildingResourcesMenuPanelToggleSpeed * Time.deltaTime);
@@ -501,7 +508,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenBuildingInformationMenu(ConstructionComponent construction)
     {
-        Building building = construction.GetComponent<Building>();
+        Building building = construction.ownedBuilding;
 
         foreach (var widget in spawnedBuildingCharacteristicWidgets)
         {
@@ -512,18 +519,17 @@ public class UIManager : MonoBehaviour
         buildingInformationMenu.SetActive(true);
 
         buildingInformationMenuNameText.SetText(building.BuildingData.BuildingName);
-        if (building.levelComponent)
-            buildingInformationMenuLevelNumberText.SetText("Level " + (building.levelComponent.LevelIndex + 1).ToString());
+        buildingInformationMenuLevelNumberText.SetText("Level " + (building.levelIndex + 1).ToString());
         //buildingInformationMenuDescriptionText.SetText(building.BuildingData.description);
 
-        ProductionBuildingComponent productionBuilding = building.GetComponent<ProductionBuildingComponent>();
+        ProductionBuilding productionBuilding = building.GetComponent<ProductionBuilding>();
         StorageBuildingComponent storageBuilding = building.GetComponent<StorageBuildingComponent>();
 
         int index = 0;
 
         if (productionBuilding)
         {
-            ProductionBuildingLevelData levelData = productionBuilding.levelsData[0] as ProductionBuildingLevelData;
+            ProductionBuildingLevelData levelData = productionBuilding.ProductionLevelsData[0];
             ItemInstance producedResource = levelData.producedResources[productionBuilding.currentProducedItemIndex].producedResource;
             CreateBuildingCharacteristicWidget("Produces", producedResource.Amount, producedResource.ItemData.ItemIcon, ref index);
             CreateBuildingCharacteristicWidget("Consumes", producedResource.Amount, producedResource.ItemData.ItemIcon, ref index);
@@ -531,7 +537,7 @@ public class UIManager : MonoBehaviour
 
         if (storageBuilding)
         {
-            StorageBuildingLevelData levelData = storageBuilding.levelsData[0] as StorageBuildingLevelData;
+            StorageBuildingLevelData levelData = storageBuilding.StorageLevelsData[0];
             CreateBuildingCharacteristicWidget("Storage capacity", levelData.storageItems[0].Amount, levelData.storageItems[0].ItemData.ItemIcon, ref index);
         }
     }
@@ -573,12 +579,43 @@ public class UIManager : MonoBehaviour
     }
 
     // Management Menus
-    public void OpenDetailsMenu(GameObject objectToShowDetails)
+    public void OpenContextMenu(GameObject objectToShowDetails)
     {
+        if (openedContextMenu)
+            openedContextMenu.gameObject.SetActive(false);
+
         selectedObject = objectToShowDetails;
-        isDetailsMenuOpened = true;
+        isContextMenuOpened = true;
         isInfoMenuOpened = false;
-        detailsMenu.Initialize(objectToShowDetails);
+
+        Building building = objectToShowDetails.GetComponent<Building>();
+        Entity entity = objectToShowDetails.GetComponent<Entity>();
+        Boat boat = objectToShowDetails.GetComponent<Boat>();
+
+        if (building) {
+            if (building.productionComponent)
+                openedContextMenu = productionContextMenu;
+            else if (building.storageComponent)
+                openedContextMenu = storageContextMenu;
+            else
+                openedContextMenu = buildingContextMenu;
+        }
+        else if (entity) {
+
+        }
+        else if (boat) {
+            openedContextMenu = boatContextMenu;
+        }
+
+        if (openedContextMenu) {
+            openedContextMenu.gameObject.SetActive(true);
+            openedContextMenu.Open(objectToShowDetails);
+        }
+    }
+
+    public void CloseContextMenu()
+    {
+        isContextMenuOpened = false;
     }
 
     public void OnBuildingUpgraded(Building building)
@@ -598,22 +635,12 @@ public class UIManager : MonoBehaviour
         //selectedBuilding = null;
     }
 
-    public void CloseDetailsMenu()
-	{
-		isDetailsMenuOpened = false;
-        isBuildingResourcesMenuOpened = false;
-
-        //selectedBuilding = null;
-
-        CloseBuildingActionMenu();
-    }
-
     // Building Stats Panels
     public void OpenBuildingStatsPanel(Building building)
     {
         isInfoMenuOpened = true;
         buildingStatsPanelNameText.SetText(building.BuildingData.BuildingName);
-        buildingStatsPanelWorkersCountText.SetText(building.workers.Count + "/" + building.ConstructionLevelsData[building.levelComponent.LevelIndex].maxResidentsCount);
+        buildingStatsPanelWorkersCountText.SetText(building.workers.Count + "/" + building.ConstructionLevelsData[building.levelIndex].maxResidentsCount);
     }
 
     public void CloseBuildingStatsPanel()
@@ -654,7 +681,7 @@ public class UIManager : MonoBehaviour
         OpenBuildingActionMenu();
         CleanResourceToUpgradeWidgets();
 
-        int nextLevelIndex = building.levelComponent.LevelIndex + 1;
+        int nextLevelIndex = building.levelIndex + 1;
         List<ItemInstance> resourcesToUpgrade = building.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
@@ -679,7 +706,7 @@ public class UIManager : MonoBehaviour
         OpenBuildingActionMenu();
         CleanResourceToUpgradeWidgets();
 
-        int levelIndex = building.levelComponent.LevelIndex;
+        int levelIndex = building.levelIndex;
         List<ItemInstance> resourcesToUpgrade = building.ConstructionLevelsData[levelIndex].ResourcesToBuild;
 
         for (int i = 0; i < resourcesToUpgrade.Count; i++)
@@ -702,7 +729,7 @@ public class UIManager : MonoBehaviour
         Building building = selectedObject.GetComponent<Building>();
         if (!building) return;
 
-        maxBuildingWorkersCount = building.ConstructionLevelsData[building.levelComponent.LevelIndex].maxResidentsCount;
+        maxBuildingWorkersCount = building.ConstructionLevelsData[building.levelIndex].maxResidentsCount;
 
         residentWidgetsColumnCount = (int)(buildingWorkersList.GetComponent<RectTransform>().rect.width / buildingWorkersList.cellSize.x);
 
@@ -710,25 +737,21 @@ public class UIManager : MonoBehaviour
 
         // Set parents of resident widgets
         int buildingWorkerWidgetIndex = 0;
-        for (int i = 0; i < cityManager.residents.Count; i++)
-        {
+        for (int i = 0; i < cityManager.residents.Count; i++) {
             spawnedResidentWidgets[i].InitializeResidentWidget(cityManager.residents[i], building, this);
 
-            if (cityManager.residents[i].currentWork != ResidentWork.None)
-            {
+            if (cityManager.residents[i].workBuilding) {
                 if (cityManager.residents[i].workBuilding == building)
                 {
                     spawnedResidentWidgets[i].transform.SetParent(buildingWorkersList.transform);
                     spawnedResidentWidgets[i].transform.SetSiblingIndex(buildingWorkerWidgetIndex);
                     buildingWorkerWidgetIndex++;
                 }
-                else
-                {
+                else {
                     spawnedResidentWidgets[i].transform.SetParent(employedResidentsList.transform);
                 }
             }
-            else
-            {
+            else {
                 spawnedResidentWidgets[i].transform.SetParent(unemployedResidentsList.transform);
             }
         }
@@ -768,7 +791,7 @@ public class UIManager : MonoBehaviour
         UpdateWorkerListsSize();
     }
 
-    private void AddResidentWidget(Resident resident)
+    private void AddResidentWidget(Entity resident)
     {
         ResidentWidget residentWidget = Instantiate(residentWidgetPrefab, unemployedResidentsList.transform);
         residentWidget.transform.localScale = Vector3.one;
@@ -825,36 +848,30 @@ public class UIManager : MonoBehaviour
         Building building = selectedObject.GetComponent<Building>();
         if (!building) return;
 
-        Resident resident = residentWidget.resident;
+        Entity resident = residentWidget.resident;
         int workersCount = building.workers.Count;
 
-        if (resident.currentWork != ResidentWork.None)
-        {
-            if (resident.workBuilding == building)
-            {
+        if (resident.workBuilding) {
+            if (resident.workBuilding == building) {
                 residentWidget.transform.SetParent(buildingWorkersList.transform);
                 residentWidget.transform.SetSiblingIndex(workersCount - 1);
 
                 int index = building.workers.Count - 1;
                 spawnedBuildingWorkerEmptyWidgets[index].gameObject.SetActive(false);
             }
-            else
-            {
+            else {
                 residentWidget.transform.SetParent(employedResidentsList.transform);
 
-                if (workersCount < maxBuildingWorkersCount)
-                {
+                if (workersCount < maxBuildingWorkersCount) {
                     int index = maxBuildingWorkersCount - (maxBuildingWorkersCount - workersCount);
                     spawnedBuildingWorkerEmptyWidgets[index].gameObject.SetActive(true);
                 }
             }
         }
-        else
-        {
+        else {
             residentWidget.transform.SetParent(unemployedResidentsList.transform);
 
-            if (workersCount < maxBuildingWorkersCount)
-            {
+            if (workersCount < maxBuildingWorkersCount) {
                 int index = maxBuildingWorkersCount - (maxBuildingWorkersCount - workersCount);
                 spawnedBuildingWorkerEmptyWidgets[index].gameObject.SetActive(true);
             }
@@ -871,7 +888,7 @@ public class UIManager : MonoBehaviour
     // Repair Building Menu
     public void OpenRepairBuildingMenu(Building building)
     {
-        CloseDetailsMenu();
+        CloseContextMenu();
         OpenBuildingActionMenu();
         CleanResourceToUpgradeWidgets();
 
@@ -909,7 +926,7 @@ public class UIManager : MonoBehaviour
         //selectedBuilding.OnConstructionDemolised();
 
 
-        CloseDetailsMenu();
+        CloseContextMenu();
     }
 
     private void CleanResourceToUpgradeWidgets()

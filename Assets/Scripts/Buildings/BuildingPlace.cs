@@ -70,7 +70,7 @@ public class BuildingPlace : MonoBehaviour
     //public void LoadPlacedBuilding()
     //{
     //    if (placedBuilding && !placedBuilding.isInitialized)
-    //        PlaceBuilding(placedBuilding, placedBuilding.levelComponent.LevelIndex, placedBuilding.constructionComponent.isUnderConstruction, -1);
+    //        PlaceBuilding(placedBuilding, placedBuilding.levelIndex, placedBuilding.constructionComponent.isUnderConstruction, -1);
     //}
 
     //public void PlaceBuilding(Building buildingToPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)

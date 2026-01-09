@@ -1,24 +1,23 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("BuildingComponents/StorageBuildingComponent")]
 public class StorageBuildingComponent : BuildingComponent
 {
-    [HideInInspector] public StorageBuildingLevelData levelData = null;
+    public StorageBuildingLevelData[] StorageLevelsData => levelsData.OfType<StorageBuildingLevelData>().ToArray();
+    public StorageBuildingLevelData StorageLevelData => StorageLevelsData[levelIndex];
     public Dictionary<int, ItemInstance> storedItems = new Dictionary<int, ItemInstance>();
 
-    public override void Build(int newLevel)
+    protected override void BuildComponent()
     {
-        base.Build(newLevel);
-        levelData = levelsData[newLevel] as StorageBuildingLevelData;
+        base.BuildComponent();
 
-        //AddStorageCapacity(levelData);
-
-        for (int i = 0; i < levelData.storageItems.Count; i++)
+        for (int i = 0; i < StorageLevelData.storageItems.Count; i++)
         {
-            int id = levelData.storageItems[i].ItemData.ItemId;
+            int id = StorageLevelData.storageItems[i].ItemData.ItemId;
             if (!storedItems.ContainsKey(id))
-                storedItems.Add(id, new ItemInstance(levelData.storageItems[i].ItemData, 0));
+                storedItems.Add(id, new ItemInstance(StorageLevelData.storageItems[i].ItemData, 0));
             else
                 Debug.LogError(ownedBuilding.BuildingData.BuildingName + $" has the same item by id {id}");
         }
@@ -63,7 +62,7 @@ public class StorageBuildingComponent : BuildingComponent
     {
         Debug.Log("ADD");
         if (storedItems.ContainsKey(itemId))
-            return storedItems[itemId].AddAmount(amount, levelData.storageItems[itemId].Amount);
+            return storedItems[itemId].AddAmount(amount, StorageLevelData.storageItems[itemId].Amount);
         else
             return 0;
     }

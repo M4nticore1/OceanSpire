@@ -8,16 +8,20 @@ public class Building : MonoBehaviour
 {
     protected GameManager gameManager { get; private set; } = null;
     public CityManager cityManager { get; private set; } = null;
-    public LevelComponent levelComponent { get; private set; } = null;
+    //public LevelComponent levelComponent { get; private set; } = null;
     public ConstructionComponent constructionComponent { get; private set; } = null;
     public SelectComponent selectComponent { get; private set; } = null;
     public StorageBuildingComponent storageComponent { get; private set; } = null;
-    public ProductionBuildingComponent productionComponent { get; private set; } = null;
+    public ProductionBuilding productionComponent { get; private set; } = null;
+
+
     public bool isInitialized { get; private set; } = false;
+    public int levelIndex = 0;
+    private bool isWorking = false;
     protected bool isSelected { get; private set; } = false;
 
     //[HideInInspector] public int levelIndex { get; private set; } = 0;
-    public List<Entity> entities { get; private set; } = new List<Entity>();
+    public List<Entity> enteredEntities { get; private set; } = new List<Entity>();
     public List<Entity> workers { get; private set; } = new List<Entity>();
     public List<Entity> currentWorkers { get; private set; } = new List<Entity>();
 
@@ -35,12 +39,18 @@ public class Building : MonoBehaviour
     public BuildingData BuildingData => buildingData;
     [SerializeField] protected List<ConstructionLevelData> buildingLevelsData = new List<ConstructionLevelData>();
     public List<ConstructionLevelData> ConstructionLevelsData => buildingLevelsData;
-    public ConstructionLevelData currentLevelData => ConstructionLevelsData.Count > levelComponent.LevelIndex ? ConstructionLevelsData[levelComponent.LevelIndex] : null;
+    public ConstructionLevelData currentLevelData => ConstructionLevelsData.Count > levelIndex ? ConstructionLevelsData[levelIndex] : null;
 
     public BuildingPlace buildingPlace = null;
 
     //public static event System.Action<Building> onAnyBuildingFinishConstructing;
-    //public event System.Action onBuildingFinishConstructing;
+    public event System.Action onBuildingFinishConstructing;
+    public event System.Action onBuildingStartWorking;
+    public event System.Action onBuildingStopWorking;
+    public event System.Action onEnterBuilding;
+    public event System.Action onExitBuilding;
+    public event System.Action onResidentStartWorking;
+    public event System.Action onResidentStopWorking;
 
     protected virtual void Awake()
     {
@@ -75,11 +85,10 @@ public class Building : MonoBehaviour
     {
         gameManager = FindAnyObjectByType<GameManager>();
         cityManager = FindAnyObjectByType<CityManager>();
-        levelComponent = GetComponent<LevelComponent>();
         selectComponent = GetComponent<SelectComponent>();
         constructionComponent = GetComponent<ConstructionComponent>();
         storageComponent = GetComponent<StorageBuildingComponent>();
-        productionComponent = GetComponent<ProductionBuildingComponent>();
+        productionComponent = GetComponent<ProductionBuilding>();
     }
 
     // Constructing
@@ -90,12 +99,13 @@ public class Building : MonoBehaviour
         GetComponents();
 
         this.buildingPlace = buildingPlace;
-
-        if (levelComponent)
-            levelComponent.LevelIndex = levelIndex;
+        this.levelIndex = levelIndex;
 
         if (BuildingData.BuildingType == BuildingType.Room || BuildingData.BuildingType == BuildingType.Hall)
         {
+            if (storageComponent)
+                storageComponent.Initialize();
+
             leftConnectedBuilding = GetConnectedBuilding(Side.Left);
             rightConnectedBuilding = GetConnectedBuilding(Side.Right);
             aboveConnectedBuilding = GetConnectedBuilding(Side.Up);
@@ -114,15 +124,7 @@ public class Building : MonoBehaviour
 
     protected virtual void Place(/*BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex*/)
     {
-        //if (constructionComponent)
-        //{
-        //    if (constructionComponent.isUnderConstruction)
-        //        StartConstructing();
-        //    else
-        //        FinishConstructing();
-        //}
-        //else
-        //    Debug.LogError(BuildingData.BuildingName + " has no constructionComponent");
+
     }
 
     protected IEnumerator PlaceCoroutine(bool isUnderConstruction, int levelIndex)
@@ -133,26 +135,15 @@ public class Building : MonoBehaviour
 
     protected void StartConstructing()
     {
-        BuildConstruction(levelComponent.LevelIndex);
+        BuildConstruction(levelIndex);
     }
 
     public virtual void FinishConstructing()
     {
         if (BuildingData.BuildingIdName == "floor_frame") return;
 
-        if (levelComponent)
-        {
-            if (storageComponent)
-                storageComponent.Build(levelComponent.LevelIndex);
-            if (productionComponent)
-                productionComponent.Build(levelComponent.LevelIndex);
-
-            BuildConstruction(levelComponent.LevelIndex);
-        }
-        else
-        {
-            Debug.LogError(buildingData.BuildingName + " has no level component");
-        }
+        BuildConstruction(levelIndex);
+        onBuildingFinishConstructing?.Invoke();
     }
 
     protected void Demolish()
@@ -160,33 +151,43 @@ public class Building : MonoBehaviour
 
     }
 
+    // Working
+    private void StartWorking()
+    {
+        if (isWorking) return;
+        isWorking = true;
+        onBuildingStartWorking?.Invoke();
+    }
+
+    private void StopWorking()
+    {
+        if (!isWorking) return;
+        isWorking = false;
+        onBuildingStopWorking?.Invoke();
+    }
+
     // Residents Management
     public virtual void EnterBuilding(Entity entity)
     {
-        entities.Add(entity);
-
+        enteredEntities.Add(entity);
         Resident resident = entity as Resident;
 
-        if (resident)
-        {
-            if (resident.isWorking) // If constructing building
-            {
-                if (resident.pathBuildings[resident.pathBuildings.Count - 1])
-                {
+        if (resident) {
+            if (resident.isWorking) { // If constructing building
 
-                }
             }
-            else if (resident.currentWork != ResidentWork.None) // If resident is worker
-            {
-                if (resident.workBuilding == this)
-                    AddCurrentWorker(resident);
+            else if (resident.workBuilding == this) { // If resident is worker
+                StartWorking();
             }
         }
+
+        onEnterBuilding?.Invoke();
     }
 
     public virtual void ExitBuilding(Entity entity)
     {
-        entities.Remove(entity);
+        enteredEntities.Remove(entity);
+        onExitBuilding?.Invoke();
     }
 
     public void AddWorker(Entity worker)
@@ -198,26 +199,26 @@ public class Building : MonoBehaviour
     public void RemoveWorker(Entity worker)
     {
         workers.RemoveAt(worker.workerIndex);
-
-        for (int i = 0; i < workers.Count; i++)
-        {
-            workers[i].SetWorkerIndex(i);
-        }
     }
 
     public void AddCurrentWorker(Entity worker)
     {
         currentWorkers.Add(worker);
+        worker.SetWorkerIndex(currentWorkers.Count - 1);
+        onResidentStartWorking?.Invoke();
+        StartWorking();
     }
 
-    public void RemoveCurrentWorker(Resident worker)
+    public void RemoveCurrentWorker(Entity worker)
     {
+        Debug.Log("RemoveCurrentWorker");
         currentWorkers.RemoveAt(worker.workerIndex);
-
         for (int i = 0; i < currentWorkers.Count; i++)
-        {
             currentWorkers[i].SetWorkerIndex(i);
-        }
+        onResidentStopWorking?.Invoke();
+
+        if (currentWorkers.Count == 0)
+            StopWorking();
     }
 
     //protected virtual void UpdateBuildingConstruction(int levelIndex)
@@ -240,7 +241,7 @@ public class Building : MonoBehaviour
         if (verticalIndex < cityManager.builtFloors.Count && verticalIndex >= 0)
         {
             Building building = cityManager.builtFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding;
-            if (building && building.buildingData.BuildingIdName == BuildingData.BuildingIdName && building.levelComponent.LevelIndex == levelComponent.LevelIndex)
+            if (building && building.buildingData.BuildingIdName == BuildingData.BuildingIdName && building.levelIndex == levelIndex)
                 return building;
         }
 

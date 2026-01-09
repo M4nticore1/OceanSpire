@@ -6,11 +6,12 @@ using UnityEngine;
 public class ConstructionComponent : MonoBehaviour
 {
     private GameManager gameManager = null;
-    private Building ownedBuilding = null;
+    public Building ownedBuilding { get; private set; } = null;
     private Boat ownedBoat = null;
-    public LevelComponent levelComponent { get; private set; } = null;
+    //public LevelComponent levelComponent { get; private set; } = null;
 
     [Header("Main")]
+    private int levelIndex => ownedBuilding ? ownedBuilding.levelIndex : 0;
     public List<ConstructionLevelData> constructionLevelsData { get; private set; } = null;
     //public List<ConstructionLevelData> ConstructionLevelsData => constructionLevelsData;
 
@@ -41,7 +42,6 @@ public class ConstructionComponent : MonoBehaviour
     private void GetComponents()
     {
         gameManager = FindAnyObjectByType<GameManager>();
-        levelComponent = GetComponent<LevelComponent>();
         ownedBuilding = GetComponent<Building>();
         ownedBoat = GetComponent<Boat>();
         if (ownedBuilding)
@@ -78,8 +78,10 @@ public class ConstructionComponent : MonoBehaviour
     {
         Debug.Log("StartConstructing");
         isUnderConstruction = true;
-        if (levelComponent && levelComponent.LevelIndex == 0)
-            levelComponent.LevelIndex = nextLevel;
+        if (ownedBuilding) {
+            if (levelIndex == 0)
+                ownedBuilding.levelIndex = nextLevel;
+        }
 
         onAnyConstructionStartConstructing?.Invoke(this);
         onBuildingStartConstructing?.Invoke();
@@ -97,11 +99,9 @@ public class ConstructionComponent : MonoBehaviour
 
     protected void Build(int levelIndex = 0)
     {
-        if (levelComponent)
-            levelComponent.LevelIndex = levelIndex;
-
-        if (levelComponent)
-            levelComponent.LevelIndex = levelIndex;
+        if (ownedBuilding) {
+            ownedBuilding.levelIndex = levelIndex;
+        }
 
         onAnyConstructionFinishConstructing?.Invoke(this);
         onBuildingFinishConstructing?.Invoke();
@@ -109,11 +109,8 @@ public class ConstructionComponent : MonoBehaviour
 
     public void StartUpgrading()
     {
-        if (levelComponent)
-        {
-            int level = levelComponent.LevelIndex + 1;
-            StartConstructing(level);
-        }
+        int level = levelIndex + 1;
+        StartConstructing(level);
     }
 
     public void StartDemolishing()
@@ -191,8 +188,8 @@ public class ConstructionComponent : MonoBehaviour
         SubtractIncomingConstructionResources(lootId, amountToAdd);
 
         // Finish building
-        List<ItemInstance> resourcesToBuild = constructionLevelsData[levelComponent.LevelIndex].ResourcesToBuild;
-        if (deliveredConstructionResourcesDict[lootId].Amount >= gameManager.LootList.GetItem(lootId, constructionLevelsData[levelComponent.LevelIndex].ResourcesToBuild).Amount)
+        List<ItemInstance> resourcesToBuild = constructionLevelsData[levelIndex].ResourcesToBuild;
+        if (deliveredConstructionResourcesDict[lootId].Amount >= gameManager.LootList.GetItem(lootId, constructionLevelsData[levelIndex].ResourcesToBuild).Amount)
         {
             foreach (var item in resourcesToBuild)
                 if (item.Amount < 0)

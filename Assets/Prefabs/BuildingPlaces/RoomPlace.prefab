@@ -74,6 +74,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -96,9 +98,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &7072113992813098010
 GameObject:
@@ -189,6 +193,10 @@ PrefabInstance:
     - target: {fileID: 2569763168683146206, guid: 0877c3878a3196543ab690de8b6b2420, type: 3}
       propertyPath: m_Name
       value: ShadowPlatform
+      objectReference: {fileID: 0}
+    - target: {fileID: 2569763168683146206, guid: 0877c3878a3196543ab690de8b6b2420, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6834441055252940992, guid: 0877c3878a3196543ab690de8b6b2420, type: 3}
       propertyPath: m_LocalPosition.x

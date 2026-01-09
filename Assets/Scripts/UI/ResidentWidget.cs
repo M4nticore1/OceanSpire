@@ -14,7 +14,7 @@ public enum ResidentWidgetState
 
 public class ResidentWidget : MonoBehaviour
 {
-    [HideInInspector] public Resident resident = null;
+    [HideInInspector] public Entity resident = null;
     [HideInInspector] public Building selectedBuilding = null;
     private UIManager uiManager = null;
 
@@ -39,7 +39,7 @@ public class ResidentWidget : MonoBehaviour
         residentWidgetButton.onClick.RemoveAllListeners();
     }
 
-    public void InitializeResidentWidget(Resident resident, Building selectedBuilding, UIManager uiManager)
+    public void InitializeResidentWidget(Entity resident, Building selectedBuilding, UIManager uiManager)
     {
         this.resident = resident;
         this.selectedBuilding = selectedBuilding;
@@ -83,40 +83,30 @@ public class ResidentWidget : MonoBehaviour
     public void ShowResidentMenu()
     {
         selectedResidentMenu.SetActive(true);
-        //nonSelectedResidentMenu.SetActive(false);
-
         residentNameText.SetText(resident.firstName + "\n" + resident.lastName);
     }
 
     public void HideResidentMenu()
     {
         selectedResidentMenu.SetActive(false);
-        //nonSelectedResidentMenu.SetActive(true);
     }
 
     private void ClickWidget()
     {
-        if (resident.currentWork != ResidentWork.None)
-        {
-            if (resident.workBuilding == selectedBuilding)
-            {
-                resident.RemoveWorkBuilding();
+        if (resident.workBuilding) {
+            if (resident.workBuilding == selectedBuilding) {
+                resident.RemoveWork();
             }
-            else
-            {
-                if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelComponent.LevelIndex].maxResidentsCount)
-                {
-                    resident.RemoveWorkBuilding();
-                    resident.SetWork(ResidentWork.BuildingWork, selectedBuilding);
+            else {
+                if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelIndex].maxResidentsCount) {
+                    resident.RemoveWork();
+                    resident.SetWork(selectedBuilding);
                 }
             }
         }
-        else
-        {
-            if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelComponent.LevelIndex].maxResidentsCount)
-            {
-                resident.SetWork(ResidentWork.BuildingWork, selectedBuilding);
-            }
+        else {
+            if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelIndex].maxResidentsCount)
+                resident.SetWork(selectedBuilding);
         }
 
         uiManager.SelectBuildingWorker(this);

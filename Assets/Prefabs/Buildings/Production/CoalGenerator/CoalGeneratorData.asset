@@ -17,11 +17,10 @@ MonoBehaviour:
   buildingName: Coal Generator
   buildingType: 0
   buildingCategory: 2
-  connectionType: 0
+  connectionType: 1
   detailsWindowVariant: 0
   instantConstruction: 0
   thumbImage: {fileID: 0}
   buildingFloors: 1
   maxBuildingFloors: 1
   isDemolishable: 1
-  detailsMenuWidget: {fileID: 0}

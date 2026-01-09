@@ -5,7 +5,7 @@ using UnityEngine;
 public class ProducedResource
 {
     public ItemInstance producedResource;
-    public int maxResourceAmount;
+    public int maxAmount;
     public int produceTime;
     public List<ItemInstance> consumeResources;
 }
