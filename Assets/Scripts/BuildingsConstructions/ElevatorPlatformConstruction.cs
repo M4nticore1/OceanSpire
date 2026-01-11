@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class ElevatorPlatformConstruction : BuildingConstruction
@@ -60,8 +59,10 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
     private void StartMovingToFloor(int targetFloorIndex)
     {
+        Debug.Log("StartMovingToFloor " + targetFloorIndex);
         if (targetFloorIndex != floorIndex)
         {
+            Debug.Log("targetFloorIndex != floorIndex");
             foreach (Entity rider in ridingPassengers) {
                 if (rider.isMoving) return;
             }
@@ -109,21 +110,29 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     private int GetNextFloor()
     {
         if (ridingPassengers.Count > 0) {
-            Entity firstRider = ridingPassengers[0];
-            nextFloorIndex = firstRider.currentPathBuilding.floorIndex;
+            foreach (Entity rider in ridingPassengers) {
+                if (rider.currentPathBuilding) {
+                    nextFloorIndex = rider.currentPathBuilding.floorIndex;
+                    break;
+                }
+            }
 
             if (ridingPassengers.Count < ownedBuilding.currentLevelData.maxResidentsCount && waitingPassengers.Count > 0) {
                 foreach (Entity waiter in waitingPassengers) {
-                    if ((firstRider.currentPathBuilding.floorIndex < floorIndex && waiter.currentBuilding.floorIndex < floorIndex)
-                        || (firstRider.currentPathBuilding.floorIndex > floorIndex && waiter.currentBuilding.floorIndex > floorIndex))
-                        nextFloorIndex = waiter.currentBuilding.floorIndex;
+                    if (waiter.currentPathBuilding) {
+                        if ((nextFloorIndex < floorIndex && waiter.currentBuilding.floorIndex < floorIndex)
+                        || (nextFloorIndex > floorIndex && waiter.currentBuilding.floorIndex > floorIndex))
+                            nextFloorIndex = waiter.currentBuilding.floorIndex;
+                    }
                 }
             }
             else {
                 foreach (Entity rider in ridingPassengers) {
-                    if ((firstRider.currentPathBuilding.floorIndex < floorIndex && rider.currentPathBuilding.floorIndex < floorIndex && rider.currentPathBuilding.floorIndex > firstRider.currentPathBuilding.floorIndex)
-                        || (firstRider.currentPathBuilding.floorIndex > floorIndex && rider.currentPathBuilding.floorIndex > floorIndex && rider.currentPathBuilding.floorIndex < firstRider.currentPathBuilding.floorIndex))
-                        nextFloorIndex = rider.currentPathBuilding.floorIndex;
+                    if (rider.currentPathBuilding) {
+                        if ((nextFloorIndex < floorIndex && rider.currentPathBuilding.floorIndex < floorIndex && rider.currentPathBuilding.floorIndex > nextFloorIndex)
+                        || (nextFloorIndex > floorIndex && rider.currentPathBuilding.floorIndex > floorIndex && rider.currentPathBuilding.floorIndex < nextFloorIndex))
+                            nextFloorIndex = rider.currentPathBuilding.floorIndex;
+                    }
                 }
             }
         }
@@ -167,10 +176,16 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 
     private void OnEntityStopped(Entity entity)
     {
-        if (entity.isRidingOnElevator && entity.currentElevator == ownedElevator)
+        Debug.Log("OnEntityStopped");
+
+        if (entity.isRidingOnElevator && entity.currentElevator == ownedElevator) {
+            Debug.Log("1");
             StartCoroutine(StartMovingToNextFloorCoroutine());
-        else if (entity.isWaitingForElevator)
+        }
+        else if (entity.isWaitingForElevator) {
+            Debug.Log("2");
             StartMovingToFloor(GetNextFloor());
+        }
     }
 
     public void SetOwnedBuilding(int newFloorIndex)

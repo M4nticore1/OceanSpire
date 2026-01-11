@@ -110,7 +110,6 @@ public class ProductionBuilding : BuildingComponent
     {
         if (!isProducting || ownedBuilding.constructionComponent.isUnderConstruction || producingItem == null || ownedBuilding.currentWorkers.Count == 0) return;
 
-        Debug.Log("Залупа");
         if (Time.time > lastProduceTime + produceFrequency) {
             AddProducedTime(produceFrequency);
             lastProduceTime = Time.time;
@@ -135,7 +134,6 @@ public class ProductionBuilding : BuildingComponent
         float productionSpeed = currentPeopleCount / maxPeopleCount;
 
         int lootAmount = (int)math.lerp(0, producingItem.maxAmount, currentProductionTime / maxProductionTime);
-        Debug.Log(lootAmount);
         if (lootAmount != producedItem.Amount) {
             SetProduceLootAmount(lootAmount);
             OnLootProduct();

@@ -169,6 +169,15 @@ public class CityManager : MonoBehaviour
                                 }
 
                                 if (building) {
+                                    // Buildings
+                                    ElevatorBuilding elevator = building as ElevatorBuilding;
+                                    if (elevator) {
+                                        Vector3 platformPosition = elevator.elevatorPlatform.transform.position;
+                                        if (data.elevatorPlatformHeights != null && data.elevatorPlatformHeights.Length > placeIndex)
+                                        elevator.elevatorPlatform.transform.position = new Vector3(platformPosition.x, data.elevatorPlatformHeights[placeIndex], platformPosition.z);
+                                    }
+
+                                    // Building Components
                                     ProductionBuilding productionBuilding = building.GetComponent<ProductionBuilding>();
                                     if (productionBuilding) {
                                         float time = data.buildingProductionTimers != null && data.buildingProductionTimers.Length > placeIndex ? data.buildingProductionTimers[placeIndex] : 0;
@@ -254,8 +263,6 @@ public class CityManager : MonoBehaviour
             for (int i = 0; i < residents.Count; i++) {
                 Entity resident = residents[i];
 
-                resident.navMeshAgent.enabled = true;
-
                 // Set Current Building
                 if (data.residentCurrentBuildingIndexes != null && data.residentCurrentBuildingIndexes.Length > i && data.residentCurrentBuildingIndexes[i] >= 0) {
                     Building building = builtFloors[(data.residentCurrentBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentCurrentBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
@@ -263,40 +270,28 @@ public class CityManager : MonoBehaviour
                         resident.EnterBuilding(building);
                 }
 
+                // Elevator Action
+                if (data.residentsRidingOnElevator != null && data.residentsRidingOnElevator.Length > i && data.residentsRidingOnElevator[i]) {
+                    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
+                    if (elevatorBuilding) {
+                        resident.SetElevatorPassengerState(ElevatorPassengerState.Riding);
+                    }
+                }
+                else if (data.residentsWaitingForElevator != null && data.residentsWaitingForElevator.Length > i && data.residentsWaitingForElevator[i]) {
+                    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
+                    if (elevatorBuilding) {
+                        resident.SetElevatorPassengerState(ElevatorPassengerState.Waiting);
+                    }
+                }
+
+                resident.SetElevatorPassengerState(ElevatorPassengerState.None);
+
                 // Set Work Building
                 if (data.residentWorkBuildingIndexes != null && data.residentWorkBuildingIndexes.Length > i && data.residentWorkBuildingIndexes[i] >= 0) {
-                    Building building = builtFloors[(data.residentCurrentBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentCurrentBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
+                    Building building = builtFloors[(data.residentWorkBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentWorkBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
                     if (building)
                         resident.SetWork(building);
                 }
-
-                //// Set Riding Elevator
-                //if (data.residentsRidingOnElevator != null && data.residentsRidingOnElevator.Length > i && data.residentsRidingOnElevator[i]) {
-                //    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                //    //if (elevatorBuilding)
-                //    //resident.StartRidingOnElevator();
-                //}
-
-                //// Set Walking Elevator
-                //if (data.residentsWalkingToElevator != null && data.residentsWalkingToElevator.Length > i && data.residentsWalkingToElevator[i]) {
-                //    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                //    //if (elevatorBuilding)
-                //    //resident.StartWalkingToElevator();
-                //}
-
-                //// Set Waiting Elevator
-                //if (data.residentsWaitingForElevator != null && data.residentsWaitingForElevator.Length > i && data.residentsWaitingForElevator[i]) {
-                //    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                //    //if (elevatorBuilding)
-                //    //resident.StartWaitingForElevator();
-                //}
-
-                //// Set Target Building
-                //if (data.residentTargetBuildingIndexes != null && data.residentTargetBuildingIndexes.Length > i && data.residentTargetBuildingIndexes[i] >= 0) {
-                //    Building targetBuilding = builtFloors[(data.residentTargetBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentTargetBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
-                //    if (targetBuilding)
-                //        resident.SetTargetBuilding(targetBuilding.buildingPlace, b => b.floorIndex == targetBuilding.floorIndex && b.placeIndex == targetBuilding.placeIndex);
-                //}
             }
         }
         else {
@@ -996,9 +991,9 @@ public class CityManager : MonoBehaviour
                     }
                 }
 
-                if (addStartBuildingToPath) {
-                    buildingsPath.Insert(0, startBuildingPlace.placedBuilding);
-                }
+                //if (addStartBuildingToPath) {
+                //    buildingsPath.Insert(0, startBuildingPlace.placedBuilding);
+                //}
             }
 
             if (newTargetBuilding != targetBuilding)

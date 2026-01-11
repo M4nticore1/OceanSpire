@@ -35,6 +35,7 @@ public class SaveData
 
     // Residents
     public int residentsCount { get; private set; } = 0;
+    public bool[] residentsIsMoving { get; private set; } = new bool[0];
     public float[] residentPositionsX { get; private set; } = new float[0];
     public float[] residentPositionsY { get; private set; } = new float[0];
     public float[] residentPositionsZ { get; private set; } = new float[0];
@@ -67,7 +68,7 @@ public class SaveData
         placedBuildingsUnderConstruction = new bool[roomsCount];
         placedBuildingInteriorIds = new int[roomsCount];
         buildingProductionTimers = new float[roomsCount];
-        elevatorPlatformHeights = new float[cityManager.elevatorGroups.Count];
+        elevatorPlatformHeights = new float[roomsCount];
         resourcesAmount = new int[cityManager.items.Count];
 
         int placeIndex = 0;
@@ -86,15 +87,13 @@ public class SaveData
                 buildingProductionTimers[placeIndex] = productionBuilding ? productionBuilding.currentProductionTime : 0;
 
                 // Elevators
-                ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;
-
+               ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;
                 if (elevatorBuilding && elevatorBuilding.elevatorGroupId > lastElevatorGroupId) {
-                    lastElevatorGroupId = elevatorBuilding.elevatorGroupId;
-
-                    if (elevatorPlatformHeights.Length > lastElevatorGroupId)
-                        elevatorPlatformHeights[lastElevatorGroupId] = elevatorBuilding.elevatorPlatform ? elevatorBuilding.elevatorPlatform.transform.position.y : elevatorBuilding.transform.position.y;
+                    //lastElevatorGroupId = elevatorBuilding.elevatorGroupId;
+                    //if (elevatorPlatformHeights.Length > lastElevatorGroupId)
+                    //    elevatorPlatformHeights[lastElevatorGroupId] = elevatorBuilding.elevatorPlatform ? elevatorBuilding.elevatorPlatform.transform.position.y : elevatorBuilding.transform.position.y;
+                    elevatorPlatformHeights[placeIndex] = elevatorBuilding.elevatorPlatform.transform.position.y;
                 }
-
                 placeIndex++;
             }
         }
@@ -134,6 +133,7 @@ public class SaveData
 
         // Residents
         residentsCount = cityManager.residents.Count;
+        residentsIsMoving = new bool[residentsCount];
         residentPositionsX = new float[residentsCount];
         residentPositionsY = new float[residentsCount];
         residentPositionsZ = new float[residentsCount];
@@ -150,6 +150,8 @@ public class SaveData
         for (int i = 0; i < residentsCount; i++)
         {
             Entity resident = cityManager.residents[i];
+
+            residentsIsMoving[i] = resident.isMoving;
 
             residentPositionsX[i] = resident.transform.position.x;
             residentPositionsY[i] = resident.transform.position.y;

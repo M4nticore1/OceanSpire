@@ -243,7 +243,6 @@ public class PlayerController : MonoBehaviour
 
     public void Load(SaveData saveData)
     {
-        LoadLocalization();
         uiManager.InitializeUIManager();
 
         сameraHolderStartPosition = cameraHolder.transform.position;
@@ -266,12 +265,6 @@ public class PlayerController : MonoBehaviour
 
         if (!gameManager) Debug.LogError("gameManager is NULL");
         if (!cityManager) Debug.LogError("cityManager is NULL");
-    }
-
-    private void LoadLocalization()
-    {
-        LocalizationSystem.LoadLocalizations();
-        LocalizationSystem.SetLocalization(Settings.currentLanguageKey);
     }
 
     private void Update()

@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 {
     private CityManager cityManager = null;
     private LootManager lootManager = null;
+    public readonly LocalizationManager localizationManager = new LocalizationManager();
 
     [Header("Content")]
     [SerializeField] private LootList lootList = null;
@@ -47,7 +48,13 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        AwakeAsync();
         buildingPrefabsList.Initialize();
+    }
+
+    private async void AwakeAsync()
+    {
+        await localizationManager.InitializeAsync();
     }
 
     private void Start()
@@ -62,14 +69,8 @@ public class GameManager : MonoBehaviour
         windDirection = newWindDirection;
         if (lootManager)
             lootManager.Initialize();
-        else
-            Debug.LogError("LootManager is NULL");
 
         saveData = SaveSystem.LoadData();
-        //cityManager.Load(saveData);
-
-        //playerController.Load(saveData);
-
 
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 120;
