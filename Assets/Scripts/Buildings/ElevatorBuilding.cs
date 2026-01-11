@@ -4,7 +4,7 @@ using UnityEngine;
 [AddComponentMenu("Buildings/ElevatorBuilding")]
 public class ElevatorBuilding : RoomBuilding
 {
-    public ElevatorPlatformConstruction elevatorPlatform { get; private set; } = null;
+    public ElevatorPlatformConstruction spawnedElevatorCabin { get; private set; } = null;
     public int elevatorGroupId = 0;
 
     public List<Entity> elevatorWaitingPassengers { get; private set; } = new List<Entity>();
@@ -17,29 +17,29 @@ public class ElevatorBuilding : RoomBuilding
         ElevatorBuilding belowElevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
         ElevatorBuilding aboveElevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
 
-        if (belowElevatorBuilding && belowElevatorBuilding.elevatorPlatform)
+        if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorCabin)
         {
             elevatorGroupId = belowElevatorBuilding.elevatorGroupId;
-            elevatorPlatform = belowElevatorBuilding.elevatorPlatform;
+            spawnedElevatorCabin = belowElevatorBuilding.spawnedElevatorCabin;
         }
-        else if (aboveElevatorBuilding && aboveElevatorBuilding.elevatorPlatform)
+        else if (aboveElevatorBuilding && aboveElevatorBuilding.spawnedElevatorCabin)
         {
             elevatorGroupId = aboveElevatorBuilding.elevatorGroupId;
-            elevatorPlatform = aboveElevatorBuilding.elevatorPlatform;
+            spawnedElevatorCabin = aboveElevatorBuilding.spawnedElevatorCabin;
         }
         else
         {
             ElevatorLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorLevelData;
 
             if (buildingPosition == BuildingPosition.Straight)
-                elevatorPlatform = Instantiate(elevatorBuildingLevelData.ElevatorPlatformStraight, cityManager.towerRoot);
+                spawnedElevatorCabin = Instantiate(elevatorBuildingLevelData.ElevatorPlatformStraight, cityManager.towerRoot);
             else
-                elevatorPlatform = Instantiate(elevatorBuildingLevelData.ElevatorPlatformCorner, cityManager.towerRoot);
+                spawnedElevatorCabin = Instantiate(elevatorBuildingLevelData.ElevatorPlatformCorner, cityManager.towerRoot);
 
-            elevatorPlatform.transform.position = transform.position;
-            elevatorPlatform.transform.rotation = transform.rotation;
+            spawnedElevatorCabin.transform.position = transform.position;
+            spawnedElevatorCabin.transform.rotation = transform.rotation;
 
-            elevatorPlatform.Build(this);
+            spawnedElevatorCabin.Build(this);
 
             elevatorGroupId = cityManager.elevatorGroups.Count;
         }
@@ -80,36 +80,26 @@ public class ElevatorBuilding : RoomBuilding
         //entity.EnterBuilding(this);
     }
 
-    public void AddRidingPassenger(Entity entity)
+    public void AddPassenger(Entity passenger)
     {
-        elevatorPlatform.AddRidingPassenger(entity);
+        spawnedElevatorCabin.AddPassenger(passenger);
     }
 
-    public void RemoveRidingPassenger(Entity entity)
+    public void RemovePassenger(Entity passenger)
     {
-        elevatorPlatform.RemoveRidingPassenger(entity);
-    }
-
-    public void AddWaitingPassenger(Entity entity)
-    {
-        elevatorWaitingPassengers.Add(entity);
-        elevatorPlatform.AddWaitingPassenger(entity);
-    }
-
-    public void RemoveWaitingPassenger(Entity entity)
-    {
-        elevatorWaitingPassengers.Remove(entity);
-        elevatorPlatform.RemoveWaitingPassenger(entity);
+        spawnedElevatorCabin.RemovePassenger(passenger);
     }
 
     public bool IsPossibleToEnter()
     {
-        return !elevatorPlatform.isMoving && elevatorPlatform.floorIndex == floorIndex && elevatorPlatform.ridingPassengers.Count < buildingLevelsData[levelIndex].maxResidentsCount;
+        return !spawnedElevatorCabin.isMoving && spawnedElevatorCabin.floorIndex == floorIndex && spawnedElevatorCabin.ridingPassengers.Count < currentLevelData.maxResidentsCount;
     }
 
-    public Vector3 GetPlatformRidingPosition()
+    public Transform GetCabinRidingPosition()
     {
-        int index = (elevatorPlatform.ridingPassengers.Count - 1) % elevatorPlatform.BuildingInteractions.Count;
-        return elevatorPlatform.BuildingInteractions[index].waypoints[0].position;
+        int ridersCount = spawnedElevatorCabin.ridingPassengers.Count;
+        int goingToRidingCount = spawnedElevatorCabin.goingToRidingPassengers.Count;
+        int index = ((ridersCount > 0 ? (ridersCount - 1) : 0) + (goingToRidingCount > 0 ? (goingToRidingCount - 1) : 0)) % spawnedElevatorCabin.BuildingInteractions.Count;
+        return spawnedElevatorCabin.BuildingInteractions[index].waypoints[0];
     }
 }

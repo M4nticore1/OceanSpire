@@ -45,9 +45,7 @@ public class SaveData
     public int[] residentTargetBuildingIndexes { get; private set; } = new int[0];
     public int[] residentWorkBuildingIndexes { get; private set; } = new int[0];
 
-    public bool[] residentsRidingOnElevator { get; private set; } = new bool[0];
-    public bool[] residentsWalkingToElevator { get; private set; } = new bool[0];
-    public bool[] residentsWaitingForElevator { get; private set; } = new bool[0];
+    public int[] npcElevatorPassengerStates { get; private set; } = new int[0];
 
     public SaveData(PlayerController playerController, CityManager cityManager)
     {
@@ -92,7 +90,7 @@ public class SaveData
                     //lastElevatorGroupId = elevatorBuilding.elevatorGroupId;
                     //if (elevatorPlatformHeights.Length > lastElevatorGroupId)
                     //    elevatorPlatformHeights[lastElevatorGroupId] = elevatorBuilding.elevatorPlatform ? elevatorBuilding.elevatorPlatform.transform.position.y : elevatorBuilding.transform.position.y;
-                    elevatorPlatformHeights[placeIndex] = elevatorBuilding.elevatorPlatform.transform.position.y;
+                    elevatorPlatformHeights[placeIndex] = elevatorBuilding.spawnedElevatorCabin.transform.position.y;
                 }
                 placeIndex++;
             }
@@ -143,9 +141,7 @@ public class SaveData
         residentTargetBuildingIndexes = new int[residentsCount];
         residentWorkBuildingIndexes = new int[residentsCount];
 
-        residentsRidingOnElevator = new bool[residentsCount];
-        residentsWalkingToElevator = new bool[residentsCount];
-        residentsWaitingForElevator = new bool[residentsCount];
+        npcElevatorPassengerStates = new int[residentsCount];
 
         for (int i = 0; i < residentsCount; i++)
         {
@@ -176,9 +172,7 @@ public class SaveData
             else
                 residentWorkBuildingIndexes[i] = -1;
 
-            residentsRidingOnElevator[i] = resident.isRidingOnElevator;
-            //residentsWalkingToElevator[i] = resident.isWalkingToElevator;
-            residentsWaitingForElevator[i] = resident.isWaitingForElevator;
+            npcElevatorPassengerStates[i] = (int)resident.elevatorPassengerState;
         }
     }
 }

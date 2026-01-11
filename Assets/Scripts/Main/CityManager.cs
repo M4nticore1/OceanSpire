@@ -172,9 +172,9 @@ public class CityManager : MonoBehaviour
                                     // Buildings
                                     ElevatorBuilding elevator = building as ElevatorBuilding;
                                     if (elevator) {
-                                        Vector3 platformPosition = elevator.elevatorPlatform.transform.position;
+                                        Vector3 platformPosition = elevator.spawnedElevatorCabin.transform.position;
                                         if (data.elevatorPlatformHeights != null && data.elevatorPlatformHeights.Length > placeIndex)
-                                        elevator.elevatorPlatform.transform.position = new Vector3(platformPosition.x, data.elevatorPlatformHeights[placeIndex], platformPosition.z);
+                                        elevator.spawnedElevatorCabin.transform.position = new Vector3(platformPosition.x, data.elevatorPlatformHeights[placeIndex], platformPosition.z);
                                     }
 
                                     // Building Components
@@ -270,27 +270,16 @@ public class CityManager : MonoBehaviour
                         resident.EnterBuilding(building);
                 }
 
-                // Elevator Action
-                if (data.residentsRidingOnElevator != null && data.residentsRidingOnElevator.Length > i && data.residentsRidingOnElevator[i]) {
-                    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                    if (elevatorBuilding) {
-                        resident.SetElevatorPassengerState(ElevatorPassengerState.Riding);
-                    }
-                }
-                else if (data.residentsWaitingForElevator != null && data.residentsWaitingForElevator.Length > i && data.residentsWaitingForElevator[i]) {
-                    ElevatorBuilding elevatorBuilding = resident.currentBuilding as ElevatorBuilding;
-                    if (elevatorBuilding) {
-                        resident.SetElevatorPassengerState(ElevatorPassengerState.Waiting);
-                    }
-                }
-
-                resident.SetElevatorPassengerState(ElevatorPassengerState.None);
-
                 // Set Work Building
                 if (data.residentWorkBuildingIndexes != null && data.residentWorkBuildingIndexes.Length > i && data.residentWorkBuildingIndexes[i] >= 0) {
                     Building building = builtFloors[(data.residentWorkBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentWorkBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
                     if (building)
                         resident.SetWork(building);
+                }
+
+                if (data.npcElevatorPassengerStates != null && data.npcElevatorPassengerStates.Length > i && data.npcElevatorPassengerStates[i] >= 0) {
+                    ElevatorPassengerState state = (ElevatorPassengerState)data.npcElevatorPassengerStates[i];
+                    resident.SetElevatorPassengerState(state);
                 }
             }
         }

@@ -6,8 +6,9 @@ public class ElevatorPlatformConstruction : BuildingConstruction
 {
     private CityManager cityManager = null;
 
-    //public List<Entity> walkingPassengers { get; private set; } = new List<Entity>();
+    public List<Entity> goingForWaitingPassengers = new List<Entity>();
     public List<Entity> waitingPassengers = new List<Entity>();
+    public List<Entity> goingToRidingPassengers = new List<Entity>();
     public List<Entity> ridingPassengers = new List<Entity>();
 
     public bool isMoving { get; private set; } = false;
@@ -23,18 +24,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     public ElevatorBuilding ownedElevator => ownedBuilding as ElevatorBuilding;
     public static event System.Action<ElevatorPlatformConstruction> onElevatorPlatformStopped;
     public static event System.Action<ElevatorPlatformConstruction> onElevatorPlatformChangedFloor;
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        Entity.OnEntityStopped += OnEntityStopped;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-        Entity.OnEntityStopped -= OnEntityStopped;
-    }
 
     protected void Update()
     {
@@ -81,7 +70,6 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     {
         yield return new WaitForSeconds(delayToStartMoving);
         StartMovingToFloor(GetNextFloor());
-        //TimerManager.SetTimer(startMovingTimerHandle, delayToStartMoving, () => StartMovingToFloor(GetNextFloor()));
     }
 
     private void StopMoving()
@@ -92,7 +80,14 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         transform.position = new Vector3(transform.position.x, floorIndex * CityManager.floorHeight + CityManager.firstFloorHeight, transform.position.z);
 
         // Stop entities riding.
-        onElevatorPlatformStopped?.Invoke(this);
+        foreach (Entity npc in ridingPassengers.ToArray()) {
+            npc.OnElevatorPlatformStopped(this);
+        }
+        foreach (Entity npc in waitingPassengers.ToArray()) {
+            if (ridingPassengers.Count >= ownedBuilding.currentLevelData.maxResidentsCount)
+                break;
+            npc.OnElevatorPlatformStopped(this);
+        }
 
         // Continue riding to next floor.
         if (ridingPassengers.Count > 0 || waitingPassengers.Count > 0) {
@@ -154,29 +149,49 @@ public class ElevatorPlatformConstruction : BuildingConstruction
             ridingPassengers[i].Move(direction, speed);
     }
 
-    public void AddWaitingPassenger(Entity passenger)
+    public void AddPassenger(Entity passenger)
     {
-        waitingPassengers.Add(passenger);
+        switch (passenger.elevatorPassengerState) {
+            case ElevatorPassengerState.GoingToWaiting:
+                goingForWaitingPassengers.Add(passenger);
+                break;
+            case ElevatorPassengerState.Waiting:
+                waitingPassengers.Add(passenger);
+                break;
+            case ElevatorPassengerState.GoingToRiding:
+                goingToRidingPassengers.Add(passenger);
+                break;
+            case ElevatorPassengerState.Riding:
+                ridingPassengers.Add(passenger);
+                StartCoroutine(StartMovingToNextFloorCoroutine());
+                break;
+
+        }
     }
 
-    public void RemoveWaitingPassenger(Entity passenger)
+    public void RemovePassenger(Entity passenger)
     {
-        waitingPassengers.Remove(passenger);
-    }
+        switch (passenger.elevatorPassengerState) {
+            case ElevatorPassengerState.GoingToWaiting:
+                goingForWaitingPassengers.Remove(passenger);
+                break;
+            case ElevatorPassengerState.Waiting:
+                waitingPassengers.Remove(passenger);
+                break;
+            case ElevatorPassengerState.GoingToRiding:
+                goingToRidingPassengers.Remove(passenger);
+                break;
+            case ElevatorPassengerState.Riding:
+                ridingPassengers.Remove(passenger);
+                StartCoroutine(StartMovingToNextFloorCoroutine());
+                break;
 
-    public void AddRidingPassenger(Entity passenger)
-    {
-        ridingPassengers.Add(passenger);       
-    }
-
-    public void RemoveRidingPassenger(Entity passenger)
-    {
-        ridingPassengers.Remove(passenger);
+        }
     }
 
     private void OnEntityStopped(Entity entity)
     {
-        Debug.Log("OnEntityStopped");
+        Debug.Log(entity.elevatorPassengerState);
 
         if (entity.isRidingOnElevator && entity.currentElevator == ownedElevator) {
             Debug.Log("1");
@@ -192,7 +207,9 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     {
         if (newFloorIndex != floorIndex && newFloorIndex >= 0) {
             ownedBuilding = cityManager.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
-            onElevatorPlatformChangedFloor?.Invoke(this);
+            foreach (Entity npc in ridingPassengers) {
+                npc.OnElevatorCabinChangedFloor(this);
+            }
         }
     }
 

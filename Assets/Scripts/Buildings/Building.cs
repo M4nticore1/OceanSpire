@@ -247,4 +247,10 @@ public class Building : MonoBehaviour
 
         return null;
     }
+
+    public Transform GetInteractionTransform()
+    {
+        int index = (workers.Count - 1) % currentLevelData.maxResidentsCount;
+        return constructionComponent.SpawnedConstruction.BuildingInteractions[index].waypoints[0];
+    }
 }
