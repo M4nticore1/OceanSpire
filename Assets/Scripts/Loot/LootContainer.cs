@@ -46,7 +46,6 @@ public class LootContainer : MonoBehaviour
     public int currentFloorIndex { get; private set; } = 0;
     public float spawnMinTime = 0;
     public float spawnMaxTime = 0;
-    [HideInInspector] public float spawnTime = 0.0f;
 
     private float checkPositionTime = 0.0f;
     private const float checkPositionRate = 3.0f;
@@ -164,7 +163,7 @@ public class LootContainer : MonoBehaviour
 
             if (distance <= GameManager.triggerLootContainerRadius)
                 OnLootEntered?.Invoke(this);
-            else if (distance > LootManager.lootContainersSpawnDistance + despawnDistance)
+            else if (distance > LootManager.spawnDistance + despawnDistance)
                 Destroy(this.gameObject);
             else if (distance > GameManager.triggerLootContainerRadius)
                 OnLootExited?.Invoke(this);
