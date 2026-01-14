@@ -14,8 +14,8 @@ public class ElevatorBuilding : RoomBuilding
     {
         base.BuildConstruction(levelIndex);
 
-        ElevatorBuilding belowElevatorBuilding = belowConnectedBuilding as ElevatorBuilding;
-        ElevatorBuilding aboveElevatorBuilding = aboveConnectedBuilding as ElevatorBuilding;
+        ElevatorBuilding belowElevatorBuilding = downConnectedBuilding as ElevatorBuilding;
+        ElevatorBuilding aboveElevatorBuilding = upConnectedBuilding as ElevatorBuilding;
 
         if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorCabin)
         {
@@ -95,11 +95,16 @@ public class ElevatorBuilding : RoomBuilding
         return !spawnedElevatorCabin.isMoving && spawnedElevatorCabin.floorIndex == floorIndex && spawnedElevatorCabin.ridingPassengers.Count < currentLevelData.maxResidentsCount;
     }
 
-    public Transform GetCabinRidingPosition()
+    public bool IsPossibleToExit()
+    {
+        return !spawnedElevatorCabin.isMoving;
+    }
+
+    public Transform GetCabinRidingTransform()
     {
         int ridersCount = spawnedElevatorCabin.ridingPassengers.Count;
         int goingToRidingCount = spawnedElevatorCabin.goingToRidingPassengers.Count;
-        int index = ((ridersCount > 0 ? (ridersCount - 1) : 0) + (goingToRidingCount > 0 ? (goingToRidingCount - 1) : 0)) % spawnedElevatorCabin.BuildingInteractions.Count;
+        int index = ((ridersCount > 0 ? (ridersCount - 1) : 0) + (goingToRidingCount > 0 ? (goingToRidingCount - 1) : 0)) % spawnedElevatorCabin.BuildingInteractions.Length;
         return spawnedElevatorCabin.BuildingInteractions[index].waypoints[0];
     }
 }

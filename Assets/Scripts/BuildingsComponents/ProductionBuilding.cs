@@ -143,7 +143,6 @@ public class ProductionBuilding : BuildingComponent
     private void AddProducedTime(float time)
     {
         SetProductionTime(currentProductionTime + time);
-        Debug.Log(currentProductionTime);
     }
 
     private void SetProduceLootAmount(int amount)

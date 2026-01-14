@@ -152,15 +152,15 @@ public class SaveData
             residentPositionsX[i] = resident.transform.position.x;
             residentPositionsY[i] = resident.transform.position.y;
             residentPositionsZ[i] = resident.transform.position.z;
-            residentFloorIndexes[i] = resident.currentBuilding ? resident.currentBuilding.floorIndex : 0;
+            residentFloorIndexes[i] = resident.CurrentBuilding ? resident.CurrentBuilding.floorIndex : 0;
 
-            Building currentBuilding = resident.currentBuilding;
+            Building currentBuilding = resident.CurrentBuilding;
             if (currentBuilding)
                 residentCurrentBuildingIndexes[i] = currentBuilding.floorIndex * CityManager.roomsCountPerFloor + currentBuilding.placeIndex;
             else
                 residentCurrentBuildingIndexes[i] = -1;
 
-            Building targetBuilding = resident.targetBuilding;
+            Building targetBuilding = resident.TargetBuilding;
             if (targetBuilding)
                 residentTargetBuildingIndexes[i] = targetBuilding.floorIndex * CityManager.roomsCountPerFloor + targetBuilding.placeIndex;
             else

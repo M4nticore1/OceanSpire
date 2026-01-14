@@ -14,8 +14,9 @@ public class BuildingTrigger : MonoBehaviour
         Entity entity = other.GetComponent<Entity>();
 
         if (entity && building) {
-            if (!entity.isRidingOnElevator) {
+            if (!entity.IsRidingOnElevator) {
                 entity.EnterBuilding(building);
+                entity.DecideAction();
             }
         }
         else {
@@ -30,7 +31,7 @@ public class BuildingTrigger : MonoBehaviour
         Entity entity = other.GetComponent<Entity>();
 
         if (entity) {
-            if (entity.currentBuilding == building)
+            if (entity.CurrentBuilding == building)
                 entity.ExitBuilding();
         }
     }

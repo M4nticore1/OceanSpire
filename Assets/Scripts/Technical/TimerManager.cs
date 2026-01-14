@@ -42,9 +42,15 @@ public class TimerManager
             timers.Add(timerHandle);
     }
 
-    public static void StopTimer(TimerHandle timerHandle)
+    public static void RemoveTimer(TimerHandle timerHandle)
     {
         if (!timers.Contains(timerHandle)) return;
         timers.Remove(timerHandle);
+    }
+
+    public static void ResetTimer(TimerHandle timerHandle)
+    {
+        if (!timers.Contains(timerHandle)) return;
+        timerHandle.ResetTimer();
     }
 }

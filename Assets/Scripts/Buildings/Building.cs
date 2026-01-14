@@ -31,8 +31,8 @@ public class Building : MonoBehaviour
 
     public Building leftConnectedBuilding { get; private set; } = null;
     public Building rightConnectedBuilding { get; private set; } = null;
-    public Building aboveConnectedBuilding { get; private set; } = null;
-    public Building belowConnectedBuilding { get; private set; } = null;
+    public Building upConnectedBuilding { get; private set; } = null;
+    public Building downConnectedBuilding { get; private set; } = null;
 
     [Header("Data")]
     [SerializeField] protected BuildingData buildingData = null;
@@ -41,7 +41,7 @@ public class Building : MonoBehaviour
     public List<ConstructionLevelData> ConstructionLevelsData => buildingLevelsData;
     public ConstructionLevelData currentLevelData => ConstructionLevelsData.Count > levelIndex ? ConstructionLevelsData[levelIndex] : null;
 
-    public BuildingPlace buildingPlace = null;
+    public BuildingPlace buildingPlace { get; private set; } = null;
 
     //public static event System.Action<Building> onAnyBuildingFinishConstructing;
     public event System.Action onBuildingFinishConstructing;
@@ -108,8 +108,8 @@ public class Building : MonoBehaviour
 
             leftConnectedBuilding = GetConnectedBuilding(Side.Left);
             rightConnectedBuilding = GetConnectedBuilding(Side.Right);
-            aboveConnectedBuilding = GetConnectedBuilding(Side.Up);
-            belowConnectedBuilding = GetConnectedBuilding(Side.Down);
+            upConnectedBuilding = GetConnectedBuilding(Side.Up);
+            downConnectedBuilding = GetConnectedBuilding(Side.Down);
 
             if (placeIndex % 2 == 0)
                 buildingPosition = BuildingPosition.Corner;
@@ -193,12 +193,11 @@ public class Building : MonoBehaviour
     public void AddWorker(Entity worker)
     {
         workers.Add(worker);
-        worker.SetWorkerIndex(workers.Count - 1);
     }
 
     public void RemoveWorker(Entity worker)
     {
-        workers.RemoveAt(worker.workerIndex);
+        workers.Remove(worker);
     }
 
     public void AddCurrentWorker(Entity worker)
@@ -250,7 +249,57 @@ public class Building : MonoBehaviour
 
     public Transform GetInteractionTransform()
     {
-        int index = (workers.Count - 1) % currentLevelData.maxResidentsCount;
-        return constructionComponent.SpawnedConstruction.BuildingInteractions[index].waypoints[0];
+        int index = workers.Count > 0 ? ((workers.Count - 1) % currentLevelData.maxResidentsCount) : 0;
+        BuildingAction[] actions = constructionComponent.SpawnedConstruction.BuildingInteractions;
+        if (actions.Length > index) {
+            Transform[] waypoints = actions[index].waypoints;
+            if (waypoints.Length > 0) {
+                return actions[index].waypoints[0];
+            }
+            else {
+                Debug.LogError("waypoints.Length == 0");
+                return transform;
+            }
+        }
+        else {
+            Debug.LogError("actions.Length <= index");
+            return transform;
+        }
+    }
+
+    public bool ConnectedWith(Building target)
+    {
+        if (!target) {
+            Debug.Log("buildingToCheck == NULL");
+            return false;
+        }
+
+        Building start = this;
+        Building current = start;
+        var visited = new HashSet<Building>();
+        visited.Add(current);
+        if (buildingData.ConnectionType == ConnectionType.Horizontal) {
+            Building[] directions = { leftConnectedBuilding, rightConnectedBuilding };
+            foreach (var direction in directions) {
+                current = direction;
+                while (current && current.buildingData.BuildingId == buildingData.BuildingId) {
+                    if (!visited.Add(current)) return false;
+                    if (current == target) return true;
+                    current = (direction == leftConnectedBuilding) ? current.leftConnectedBuilding : current.rightConnectedBuilding;
+                }
+            }
+        }
+        else if (buildingData.ConnectionType == ConnectionType.Vertical) {
+            Building[] directions = { upConnectedBuilding, downConnectedBuilding };
+            foreach (var direction in directions) {
+                current = direction;
+                while (current && current.buildingData.BuildingId == buildingData.BuildingId) {
+                    if (!visited.Add(current)) return false;
+                    if (current == target) return true;
+                    current = (direction == upConnectedBuilding) ? current.upConnectedBuilding : current.downConnectedBuilding;
+                }
+            }
+        }
+        return false;
     }
 }

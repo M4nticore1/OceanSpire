@@ -21,7 +21,7 @@ public class TimerHandle
         this.callback = callback;
     }
 
-    public void StopTimer()
+    public void ResetTimer()
     {
         currentTime = 0;
         isFinished = false;

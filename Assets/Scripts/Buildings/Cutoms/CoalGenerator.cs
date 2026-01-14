@@ -24,7 +24,7 @@ public class CoalGenerator : ProductionBuilding
     protected override void OnStartProducting()
     {
         base.OnStartProducting();
-        TimerManager.StopTimer(stopProductingTimerHandle);
+        TimerManager.RemoveTimer(stopProductingTimerHandle);
         spawnedSmoke.gameObject.SetActive(true);
         spawnedSmoke.Play();
         //SetSmokeColor();

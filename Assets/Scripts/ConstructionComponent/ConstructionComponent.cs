@@ -215,12 +215,12 @@ public class ConstructionComponent : MonoBehaviour
                 spawnedConstruction = construction;
                 spawnedConstruction.Build(ownedBuilding ? ownedBuilding : null);
 
-                if (spawnedConstruction && spawnedConstruction.BuildingInteriors.Count > 0)
+                if (spawnedConstruction && spawnedConstruction.BuildingInteriors.Length > 0)
                 {
-                    interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.BuildingInteriors.Count);
+                    interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.BuildingInteriors.Length);
 
                     if (interiorIndex < 0)
-                        interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.BuildingInteriors.Count);
+                        interiorIndex = UnityEngine.Random.Range(0, spawnedConstruction.BuildingInteriors.Length);
 
                     spawedBuildingInterior = Instantiate(spawnedConstruction.BuildingInteriors[interiorIndex], transform);
                 }
@@ -241,8 +241,8 @@ public class ConstructionComponent : MonoBehaviour
 
     public Vector3 GetInteractionPosition(int interactionPointIndex, int waypointIndex = 0)
     {
-        List<BuildingAction> buildingInteraction = spawnedConstruction.BuildingInteractions;
-        if (buildingInteraction.Count > interactionPointIndex && buildingInteraction[interactionPointIndex].waypoints.Count > waypointIndex)
+        BuildingAction[] buildingInteraction = spawnedConstruction.BuildingInteractions;
+        if (buildingInteraction.Length > interactionPointIndex && buildingInteraction[interactionPointIndex].waypoints.Length > waypointIndex)
             return buildingInteraction[interactionPointIndex].waypoints[waypointIndex].position;
         else
             return transform.position;

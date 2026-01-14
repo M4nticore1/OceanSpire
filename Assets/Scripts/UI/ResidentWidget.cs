@@ -96,17 +96,20 @@ public class ResidentWidget : MonoBehaviour
         if (resident.workBuilding) {
             if (resident.workBuilding == selectedBuilding) {
                 resident.RemoveWork();
+                resident.DecideAction();
             }
             else {
                 if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelIndex].maxResidentsCount) {
-                    resident.RemoveWork();
                     resident.SetWork(selectedBuilding);
+                    resident.DecideAction();
                 }
             }
         }
         else {
-            if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelIndex].maxResidentsCount)
+            if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelIndex].maxResidentsCount) {
                 resident.SetWork(selectedBuilding);
+                resident.DecideAction();
+            }
         }
 
         uiManager.SelectBuildingWorker(this);

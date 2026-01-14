@@ -70,24 +70,24 @@ public class RoomBuilding : TowerBuilding
                     //Debug.Log(GetfloorIndex + " " + GetplaceIndex);
                     if (buildingPosition == BuildingPosition.Straight)
                     {
-                        if (aboveConnectedBuilding && belowConnectedBuilding && roomLevelData.ConstructionStraightAboveBelow)
+                        if (upConnectedBuilding && downConnectedBuilding && roomLevelData.ConstructionStraightAboveBelow)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightAboveBelow);
-                        else if (aboveConnectedBuilding && roomLevelData.ConstructionStraightAbove)
+                        else if (upConnectedBuilding && roomLevelData.ConstructionStraightAbove)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightAbove);
-                        else if (belowConnectedBuilding && roomLevelData.ConstructionStraightBelow)
+                        else if (downConnectedBuilding && roomLevelData.ConstructionStraightBelow)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightBelow);
-                        else if (!aboveConnectedBuilding && !belowConnectedBuilding && roomLevelData.ConstructionStraight)
+                        else if (!upConnectedBuilding && !downConnectedBuilding && roomLevelData.ConstructionStraight)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
                     }
                     else if (buildingPosition == BuildingPosition.Corner)
                     {
-                        if (aboveConnectedBuilding && belowConnectedBuilding && roomLevelData.ConstructionCornerAboveBelow)
+                        if (upConnectedBuilding && downConnectedBuilding && roomLevelData.ConstructionCornerAboveBelow)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerAboveBelow);
-                        else if (aboveConnectedBuilding && roomLevelData.ConstructionCornerAbove)
+                        else if (upConnectedBuilding && roomLevelData.ConstructionCornerAbove)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerAbove);
-                        else if (belowConnectedBuilding && roomLevelData.ConstructionCornerBelow)
+                        else if (downConnectedBuilding && roomLevelData.ConstructionCornerBelow)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerBelow);
-                        else if (!aboveConnectedBuilding && !belowConnectedBuilding && roomLevelData.ConstructionCorner)
+                        else if (!upConnectedBuilding && !downConnectedBuilding && roomLevelData.ConstructionCorner)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
                     }
                 }

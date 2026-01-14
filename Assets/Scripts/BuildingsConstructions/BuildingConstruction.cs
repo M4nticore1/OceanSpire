@@ -6,8 +6,8 @@ using UnityEngine;
 [System.Serializable]
 public struct BuildingAction
 {
-    public List<Transform> waypoints;
-    public List<int> actionTimes;
+    public Transform[] waypoints;
+    public int[] actionTimes;
 }
 
 public class BuildingConstruction : MonoBehaviour
@@ -16,11 +16,11 @@ public class BuildingConstruction : MonoBehaviour
     public int floorIndex => ownedBuilding.floorIndex;
     public int placeIndex => ownedBuilding.placeIndex;
 
-    [SerializeField] private List<GameObject> buildingInteriors = new List<GameObject>();
-    public List<GameObject> BuildingInteriors => buildingInteriors;
+    [SerializeField] private GameObject[] buildingInteriors;
+    public GameObject[] BuildingInteriors => buildingInteriors;
 
-    [SerializeField] private List<BuildingAction> buildingInteractions = new List<BuildingAction>();
-    public List<BuildingAction> BuildingInteractions => buildingInteractions;
+    [SerializeField] private BuildingAction[] buildingInteractions;
+    public BuildingAction[] BuildingInteractions => buildingInteractions;
 
     [Header("Storage")]
     public List<Transform> collectItemPoints = new List<Transform>();
