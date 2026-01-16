@@ -28,8 +28,9 @@ public class BuildingPath
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; } = null;
+
     [SerializeField] private PlayerController playerController = null;
-    public LootManager lootManager { get; private set; } = null;
 
     [Header("Content")]
     private const string listsFolder = "Lists";
@@ -113,7 +114,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        //AwakeAsync();
+        if (Instance != null) {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
 
         buildingsList = Resources.Load<buildingsList>($"{listsFolder}/buildingsList");
         creaturesList = Resources.Load<CreaturesList>($"{listsFolder}/CreaturesList");
@@ -121,7 +127,7 @@ public class GameManager : MonoBehaviour
         lootList = Resources.Load<lootList>($"{listsFolder}/lootList");
         lootContainersList = Resources.Load<LootContainersList>($"{listsFolder}/LootContainersList");
 
-        playerController.Initialize(this);
+        playerController.Initialize();
     }
 
     private async void AwakeAsync()
@@ -167,7 +173,7 @@ public class GameManager : MonoBehaviour
         ChangeWind();
         windDirection = newWindDirection;
 
-        lootManager = new LootManager(this);
+        new LootManager();
         saveData = SaveSystem.LoadData();
 
         InitializeItems();
@@ -207,7 +213,7 @@ public class GameManager : MonoBehaviour
             int builtFloorsCount = data != null ? data.builtFloorsCount : builtFloors.Count;
             for (int i = 0; i < builtFloorsCount; i++) {
                 if (i < builtFloors.Count) {
-                    builtFloors[i].InitializeBuilding(this, i > 0 ? builtFloors[i - 1].floorBuildingPlace : null, false, 0, -1);
+                    builtFloors[i].InitializeBuilding(i > 0 ? builtFloors[i - 1].floorBuildingPlace : null, false, 0, -1);
                 }
                 else {
                     PlaceBuilding(buildingsList.buildings[0], builtFloors[i - 1].floorBuildingPlace, 0, false);
@@ -263,7 +269,7 @@ public class GameManager : MonoBehaviour
                             }
                         }
                     }
-                    pierBuilding.InitializeBuilding(this, null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelIndex);
+                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelIndex);
                 }
                 else {
                     BuildingPlace hallPlace = builtFloors[i].hallBuildingPlace;
@@ -279,7 +285,7 @@ public class GameManager : MonoBehaviour
                     }
 
                     // Pier Building
-                    pierBuilding.InitializeBuilding(this, null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelIndex);
+                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelIndex);
                 }
             }
 
@@ -382,7 +388,7 @@ public class GameManager : MonoBehaviour
             for (int j = 0; j < spawnedBoats.Count; j++) {
                 if (spawnedBoats[j]) {
                     PierConstruction construction = pierBuilding.constructionComponent.SpawnedConstruction as PierConstruction;
-                    spawnedBoats[j].Initialize(this, false, j);
+                    spawnedBoats[j].Initialize(false, j);
                     spawnedBoats[j].transform.position = construction.BoatDockPositions[j].position;
                     spawnedBoats[j].transform.rotation = construction.BoatDockPositions[j].rotation;
                 }
@@ -428,7 +434,7 @@ public class GameManager : MonoBehaviour
     private void CreateResident(Vector3 spawnPosition, Quaternion spawnRotation)
     {
         Creature resident = Instantiate(creaturesList.resident, spawnPosition, spawnRotation);
-        resident.Initialize(this);
+        resident.Initialize();
         AddResident(resident);
         resident.navMeshAgent.enabled = false;
     }
@@ -590,7 +596,7 @@ public class GameManager : MonoBehaviour
         Building spawnedBuilding = buildingPlace.placedBuilding;
         if (buildingPlace) {
             if (!spawnedBuilding)
-                spawnedBuilding = Building.Instantiate(building, buildingPlace.transform);
+                spawnedBuilding = Instantiate(building, buildingPlace.transform);
 
             buildingPlace.SetPlacedBuilding((TowerBuilding)spawnedBuilding);
             BuildingType type = spawnedBuilding.BuildingData.BuildingType;
@@ -607,7 +613,7 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
-            spawnedBuilding.InitializeBuilding(this, buildingPlace, isUnderConstruction, levelIndex);
+            spawnedBuilding.InitializeBuilding(buildingPlace, isUnderConstruction, levelIndex);
             OnConstructionPlaced?.Invoke();
         }
         return spawnedBuilding;
@@ -639,7 +645,7 @@ public class GameManager : MonoBehaviour
             spawnedBoats[dockIndex.Value].Demolish(false);
 
         Boat spawnedBoat = Boat.Instantiate(boat, position, rotation);
-        spawnedBoat.Initialize(this, isUnderConstruction, dockIndex.Value, isFloating, isReturningToDock, health);
+        spawnedBoat.Initialize(isUnderConstruction, dockIndex.Value, isFloating, isReturningToDock, health);
         spawnedBoats[dockIndex.Value] = spawnedBoat;
     }
 

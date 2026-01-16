@@ -62,9 +62,8 @@ public class TowerBuilding : Building
             yield return downNeighborBuilding;
     }
 
-    public override void InitializeBuilding(GameManager gameManager, BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
+    public override void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
-        this.gameManager = gameManager;
         selectComponent = GetComponent<SelectComponent>();
         constructionComponent = GetComponent<ConstructionComponent>();
         storageComponent = GetComponent<StorageBuildingComponent>();
@@ -74,7 +73,7 @@ public class TowerBuilding : Building
         this.levelIndex = levelIndex;
 
         if (storageComponent)
-            storageComponent.Initialize(gameManager);
+            storageComponent.Initialize();
 
         leftNeighborBuilding = GetNeighborBuilding(Side.Left);
         rightNeighborBuilding = GetNeighborBuilding(Side.Right);
@@ -101,8 +100,8 @@ public class TowerBuilding : Building
         int sideIndex = (placeIndex + horizontalIndexOffset + GameManager.roomsCountPerFloor) % GameManager.roomsCountPerFloor;
         int verticalIndex = floorIndex + verticalIndexOffset;
 
-        if (verticalIndex < gameManager.builtFloors.Count && verticalIndex >= 0) {
-            Building building = gameManager.builtFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding;
+        if (verticalIndex < GameManager.Instance.builtFloors.Count && verticalIndex >= 0) {
+            Building building = GameManager.Instance.builtFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding;
             return building as TowerBuilding;
         }
         return null;

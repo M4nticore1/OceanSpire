@@ -176,7 +176,7 @@ public class ProductionBuilding : BuildingComponent
     public ItemInstance TakeProducedItem()
     {
         if (producedItem.Amount > 0) {
-            ItemInstance storageItemInstance = gameManager.items[producedItem.ItemData.ItemId];
+            ItemInstance storageItemInstance = GameManager.Instance.items[producedItem.ItemData.ItemId];
             int remainingStorageCapacity = producingItem.maxAmount - storageItemInstance.Amount;
 
             int amountToTake = 0;

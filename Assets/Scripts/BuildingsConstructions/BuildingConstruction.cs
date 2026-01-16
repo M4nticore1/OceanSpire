@@ -12,7 +12,6 @@ public struct BuildingAction
 
 public class BuildingConstruction : MonoBehaviour
 {
-    protected GameManager gameManager;
     protected Building ownedBuilding = null;
 
     [SerializeField] private GameObject[] buildingInteriors;
@@ -37,9 +36,8 @@ public class BuildingConstruction : MonoBehaviour
 
     }
 
-    public virtual void Build(GameManager gameManager, Building ownedBuilding)
+    public virtual void Build(Building ownedBuilding)
     {
-        this.gameManager = gameManager;
         this.ownedBuilding = ownedBuilding;
         meshRendererers = GetComponentsInChildren<MeshRenderer>();
         propertyBlock = new MaterialPropertyBlock();

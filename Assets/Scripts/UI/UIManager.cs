@@ -419,13 +419,13 @@ public class UIManager : MonoBehaviour
 
             BuildingCategory buildingCategory = building.BuildingData.BuildingCategory;
             BuildingWidget spawnedBuildingWidget = null;
-            spawnedBuildingWidget = Instantiate<BuildingWidget>(buildingWidgetPrefab, transform);
+            spawnedBuildingWidget = Instantiate(buildingWidgetPrefab, transform);
 
             int categoryIndex = (int)building.BuildingData.BuildingCategory;
             spawnedBuildingWidgets[categoryIndex].Add(spawnedBuildingWidget);
 
             ConstructionComponent construction = building.GetComponent<ConstructionComponent>();
-            spawnedBuildingWidget.InitializeBuildingWidget(gameManager, construction);
+            spawnedBuildingWidget.InitializeBuildingWidget(construction);
 
             spawnedBuildingWidget.transform.SetParent(buildingLists[(int)buildingCategory].transform);
         }

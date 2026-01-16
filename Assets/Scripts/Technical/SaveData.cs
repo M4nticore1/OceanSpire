@@ -47,15 +47,10 @@ public class SaveData
 
     public int[] npcElevatorPassengerStates { get; private set; } = new int[0];
 
-    public SaveData(PlayerController playerController, GameManager gameManager)
+    public SaveData(PlayerController playerController)
     {
         if (!playerController) {
             Debug.LogError("playerController is NULL");
-            return;
-        }
-
-        if (gameManager == null) {
-            Debug.LogError("cityManager is NULL");
             return;
         }
 
@@ -64,7 +59,7 @@ public class SaveData
         cameraHeightPosition = playerController.cameraVerticalPosition.y;
 
         // City
-        builtFloorsCount = gameManager.builtFloors.Count;
+        builtFloorsCount = GameManager.Instance.builtFloors.Count;
         int roomsCount = builtFloorsCount * GameManager.roomsCountPerFloor;
         placedBuildingIds = new int[roomsCount];
         placedBuildingLevels = new int[roomsCount];
@@ -72,15 +67,13 @@ public class SaveData
         placedBuildingInteriorIds = new int[roomsCount];
         buildingProductionTimers = new float[roomsCount];
         elevatorPlatformHeights = new float[roomsCount];
-        resourcesAmount = new int[gameManager.items.Count];
+        resourcesAmount = new int[GameManager.Instance.items.Count];
 
         int placeIndex = 0;
         int lastElevatorGroupId = -1;
-        for (int i = 0; i < builtFloorsCount; i++)
-        {
-            for (int j = 0; j < GameManager.roomsCountPerFloor; j++)
-            {
-                Building placedBuilding = gameManager.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
+        for (int i = 0; i < builtFloorsCount; i++) {
+            for (int j = 0; j < GameManager.roomsCountPerFloor; j++) {
+                Building placedBuilding = GameManager.Instance.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
                 placedBuildingIds[placeIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingId : -1;
                 placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.levelIndex : 0;
                 placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.isUnderConstruction : false;
@@ -101,13 +94,12 @@ public class SaveData
             }
         }
 
-        for (int i = 0; i < gameManager.items.Count; i++)
-        {
-            resourcesAmount[i] = gameManager.items[i].Amount;
+        for (int i = 0; i < GameManager.Instance.items.Count; i++) {
+            resourcesAmount[i] = GameManager.Instance.items[i].Amount;
         }
 
         // Boats
-        List<Boat> spawnedBoats = gameManager.spawnedBoats.ToList();
+        List<Boat> spawnedBoats = GameManager.Instance.spawnedBoats.ToList();
         int boatsCount = spawnedBoats.Count;
         spawnedBoatIds = new int[boatsCount];
         spawnedBoatsAreUnderConstruction = new bool[boatsCount];
@@ -135,7 +127,7 @@ public class SaveData
         }
 
         // Residents
-        residentsCount = gameManager.residents.Count;
+        residentsCount = GameManager.Instance.residents.Count;
         residentsIsMoving = new bool[residentsCount];
         residentPositionsX = new float[residentsCount];
         residentPositionsY = new float[residentsCount];
@@ -150,7 +142,7 @@ public class SaveData
 
         for (int i = 0; i < residentsCount; i++)
         {
-            Creature resident = gameManager.residents[i];
+            Creature resident = GameManager.Instance.residents[i];
 
             residentsIsMoving[i] = resident.isMoving;
 

@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class BuildingWidget : MonoBehaviour
 {
-    private GameManager gameManager = null;
     private PlayerController playerController = null;
     private UIManager UIManager = null;
 
@@ -43,9 +42,8 @@ public class BuildingWidget : MonoBehaviour
         //openInformationButton.onRelease -= () => OnRelease?.Invoke();
     }
 
-    public void InitializeBuildingWidget(GameManager gameManager, ConstructionComponent construction)
+    public void InitializeBuildingWidget(ConstructionComponent construction)
     {
-        this.gameManager = gameManager;
         constructionComponent = construction;
 
         playerController = GetComponentInParent<PlayerController>();
@@ -127,7 +125,7 @@ public class BuildingWidget : MonoBehaviour
         {
             int id = building.ConstructionLevelsData[0].ResourcesToBuild[i].ItemData.ItemId;
 
-            spawnedBuildingResourceWidgets[i].SetResourceText(gameManager.items[id].Amount, building.ConstructionLevelsData[0].ResourcesToBuild[i].Amount);
+            spawnedBuildingResourceWidgets[i].SetResourceText(GameManager.Instance.items[id].Amount, building.ConstructionLevelsData[0].ResourcesToBuild[i].Amount);
         }
     }
 }

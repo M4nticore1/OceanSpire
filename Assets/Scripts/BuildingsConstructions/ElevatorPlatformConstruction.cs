@@ -38,9 +38,9 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
         }
     }
 
-    public override void Build(GameManager gameManager, Building ownedBuilding)
+    public override void Build (Building ownedBuilding)
     {
-        base.Build(gameManager, ownedBuilding);
+        base.Build(ownedBuilding);
     }
 
     private void StartMovingToFloor(int targetFloorIndex)
@@ -214,7 +214,7 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
     public void SetOwnedBuilding(int newFloorIndex)
     {
         if (newFloorIndex != floorIndex && newFloorIndex >= 0) {
-            ownedBuilding = gameManager.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
+            ownedBuilding = GameManager.Instance.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
             foreach (Creature npc in ridingPassengers) {
                 npc.OnElevatorCabinChangedFloor(this);
             }

@@ -26,7 +26,6 @@ public enum ElevatorPassengerState
 
 public class Creature : MonoBehaviour
 {
-    private GameManager gameManager = null;
     public LevelComponent levelComponent { get; private set; } = null;
     public SelectComponent selectComponent { get; private set; } = null;
     public NavMeshAgent navMeshAgent { get; private set; } = null;
@@ -93,10 +92,8 @@ public class Creature : MonoBehaviour
     public static event Action OnWorkerRemove;
     public static event Action<Creature> OnEntityStopped;
 
-    public void Initialize(GameManager gameManager)
+    public void Initialize()
     {
-        this.gameManager = gameManager;
-        levelComponent = GetComponent<LevelComponent>();
         selectComponent = GetComponent<SelectComponent>();
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
@@ -610,14 +607,10 @@ public class Creature : MonoBehaviour
     public Building SetTargetBuilding(Building targetBuilding)
     {
         Debug.Log("SetTargetBuilding");
-        if (!gameManager) {
-            Debug.LogError("cityManager is NULL");
-            return null;
-        }
 
         Building startBuilding = GetPathStartBuilding();
         BuildingPlace startBuildingPlace = startBuilding ? startBuilding.buildingPlace : null;
-        Building target = gameManager.TryGetPathToBuilding(startBuildingPlace, targetBuilding, ref pathBuildings);
+        Building target = GameManager.Instance.TryGetPathToBuilding(startBuildingPlace, targetBuilding, ref pathBuildings);
         if (target && IsRidingOnElevator) {
             if (pathBuildings.Count == 1)
                 pathBuildings.Insert(0, CurrentElevator);
@@ -629,14 +622,10 @@ public class Creature : MonoBehaviour
 
     public Building SetTargetBuilding(Func<Building, bool> targetBuildingCondition)
     {
-        if (!gameManager) {
-            Debug.LogError("cityManager is NULL");
-            return null;
-        }
 
         Building startBuilding = GetPathStartBuilding();
         BuildingPlace startBuildingPlace = startBuilding ? startBuilding.buildingPlace : null;
-        Building target = gameManager.TryGetPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings);
+        Building target = GameManager.Instance.TryGetPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings);
         if (target && IsRidingOnElevator) {
             if (pathBuildings.Count == 1)
                 pathBuildings.Insert(0, CurrentElevator);
@@ -651,7 +640,7 @@ public class Creature : MonoBehaviour
         Building startBuilding = null;
         if (IsRidingOnElevator) {
             int floorIndex = CurrentElevator.spawnedElevatorCabin.startFloorIndex;
-            startBuilding = gameManager.builtFloors[floorIndex].roomBuildingPlaces[buildingIndex].placedBuilding;
+            startBuilding = GameManager.Instance.builtFloors[floorIndex].roomBuildingPlaces[buildingIndex].placedBuilding;
         }
         else {
             startBuilding = CurrentBuilding && CurrentBuilding.buildingPlace ? CurrentBuilding.buildingPlace.placedBuilding : null;
@@ -667,7 +656,7 @@ public class Creature : MonoBehaviour
 
     private IEnumerator OnBuildingStartConstructingCoroutine(ConstructionComponent construction)
     {
-        yield return gameManager.isBakingNavMesh;
+        yield return GameManager.Instance.isBakingNavMesh;
 
         if (!workBuilding) {
             Building building = construction.GetComponent<Building>();
@@ -738,7 +727,7 @@ public class Creature : MonoBehaviour
         if (workPier)
         {
             PierBuilding pier = workBuilding as PierBuilding;
-            Boat boat = gameManager.GetBoatByIndex(workerIndex);
+            Boat boat = GameManager.Instance.GetBoatByIndex(workerIndex);
             currentBoat = boat;
             currentBoat.EnterBoat(this);
 
@@ -782,7 +771,7 @@ public class Creature : MonoBehaviour
     {
         if (!carriedItemsDict.ContainsKey(itemId))
         {
-            ItemInstance item = new ItemInstance(gameManager.lootList.loot[itemId]); // The same item instance for list and dictionary.
+            ItemInstance item = new ItemInstance(GameManager.Instance.lootList.loot[itemId]); // The same item instance for list and dictionary.
             carriedItems.Add(item);
             carriedItemsDict.Add(itemId, item);
         }

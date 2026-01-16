@@ -3,7 +3,6 @@ using UnityEngine;
 
 public abstract class BuildingComponent : MonoBehaviour
 {
-    protected GameManager gameManager { get; private set; } = null;
     public Building ownedBuilding { get; protected set; } = null;
 
     protected int levelIndex => ownedBuilding.levelIndex;
@@ -38,9 +37,9 @@ public abstract class BuildingComponent : MonoBehaviour
         ownedBuilding.onResidentStopWorking -= OnResidentStopWorking;
     }
 
-    public void Initialize(GameManager gameManager)
+    public void Initialize()
     {
-        this.gameManager = gameManager;
+
     }
 
     protected virtual void BuildComponent()

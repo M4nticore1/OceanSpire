@@ -39,9 +39,9 @@ public class ElevatorBuilding : RoomBuilding
             spawnedElevatorCabin.transform.position = transform.position;
             spawnedElevatorCabin.transform.rotation = transform.rotation;
 
-            spawnedElevatorCabin.Build(gameManager, this);
+            spawnedElevatorCabin.Build(this);
 
-            elevatorGroupId = gameManager.elevatorGroups.Count;
+            elevatorGroupId = GameManager.Instance.elevatorGroups.Count;
         }
     }
 

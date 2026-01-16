@@ -17,7 +17,7 @@ public class SaveSystem
         else
             stream = new FileStream(path, FileMode.CreateNew);
 
-        SaveData playerData = new SaveData(playerController, gameManager);
+        SaveData playerData = new SaveData(playerController);
 
         formatter.Serialize(stream, playerData);
         stream.Close();

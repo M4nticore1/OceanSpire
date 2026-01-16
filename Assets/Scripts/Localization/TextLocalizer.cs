@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class TextLocalizer : MonoBehaviour
 {
-    //private GameManager gameManager = null;
     //private LocalizationManager LocalizationManager => gameManager.localizationManager;
     private TextMeshProUGUI text;
     private string keyText = "";
@@ -12,7 +11,6 @@ public class TextLocalizer : MonoBehaviour
     private void Awake()
     {
         text = GetComponent<TextMeshProUGUI>();
-        //gameManager = FindAnyObjectByType<GameManager>();
     }
 
     private void OnEnable()

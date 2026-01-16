@@ -10,11 +10,8 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Boat : MonoBehaviour
 {
-    private GameManager gameManager = null;
-
     public PierBuilding ownedPier { get; private set; } = null;
     private NavMeshAgent navAgent = null;
-    private LootManager lootManager = null;
     public ConstructionComponent constructionComponent { get; private set; } = null;
     private SelectComponent selectComponent = null;
 
@@ -70,10 +67,8 @@ public class Boat : MonoBehaviour
         LootContainer.OnLootExited -= OnLootExited;
     }
 
-    public void Initialize(GameManager gameManager, bool isUnderConstruction, int dockIndex, bool isFloating = false, bool isReturningToDock = false, float? health = null)
+    public void Initialize(bool isUnderConstruction, int dockIndex, bool isFloating = false, bool isReturningToDock = false, float? health = null)
     {
-        this.gameManager = gameManager;
-        lootManager = gameManager.lootManager;
         navAgent = GetComponent<NavMeshAgent>();
         constructionComponent = GetComponent<ConstructionComponent>();
 
@@ -168,7 +163,7 @@ public class Boat : MonoBehaviour
 
                         int maxAmountToUnload = (int)(currentWeightToUnload / loot.ItemData.Weight);
                         int minAmountToUnload = math.min(maxAmountToUnload, loot.Amount);
-                        int amountToUnload = math.min(minAmountToUnload, gameManager.lootList.GetItem(lootId, storageLevelData.storageItems).Amount);
+                        int amountToUnload = math.min(minAmountToUnload, GameManager.Instance.lootList.GetItem(lootId, storageLevelData.storageItems).Amount);
                         int weightToUnload = amountToUnload * loot.ItemData.Weight;
 
                         storedLootDict[lootId].SubtractAmount(amountToUnload);
@@ -341,14 +336,14 @@ public class Boat : MonoBehaviour
         Debug.Log("FindNearestLootTarget");
         if (!isFloating || isReturningToDock) return;
 
-        int count = lootManager.spawnedLootContainers.Count;
+        int count = LootManager.Instance.spawnedLootContainers.Count;
         if (count == 0) return;
 
         Transform nearestTarget = null;
         Vector3 nearestPosition = Vector3.zero;
         float minDistance = 0f;
 
-        foreach (LootContainer loot in lootManager.spawnedLootContainers)
+        foreach (LootContainer loot in LootManager.Instance.spawnedLootContainers)
         {
             if (!loot || loot.currentTransportMethod == TransportMethod.Flying) continue;
 

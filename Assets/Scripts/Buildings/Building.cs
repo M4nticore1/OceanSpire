@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 [AddComponentMenu("Buildings/Building")]
 public class Building : MonoBehaviour
 {
-    protected GameManager gameManager = null;
     public ConstructionComponent constructionComponent { get; protected set; } = null;
     public SelectComponent selectComponent { get; protected set; } = null;
     public StorageBuildingComponent storageComponent { get; protected set; } = null;
@@ -68,9 +67,8 @@ public class Building : MonoBehaviour
     }
 
     // Constructing
-    public virtual void InitializeBuilding(GameManager gameManager, BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
+    public virtual void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
-        this.gameManager = gameManager;
         selectComponent = GetComponent<SelectComponent>();
         constructionComponent = GetComponent<ConstructionComponent>();
         storageComponent = GetComponent<StorageBuildingComponent>();
@@ -80,9 +78,9 @@ public class Building : MonoBehaviour
         this.levelIndex = levelIndex;
 
         if (storageComponent)
-            storageComponent.Initialize(gameManager);
+            storageComponent.Initialize();
         if (productionComponent)
-            productionComponent.Initialize(gameManager);
+            productionComponent.Initialize();
 
         constructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
 

@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     // Main
-    private GameManager gameManager = null;
     [SerializeField] private UIManager uiManager = null;
 
     // Camera Movement
@@ -120,9 +119,8 @@ public class PlayerController : MonoBehaviour
 
     public bool isInitialized { get; private set; } = false;
 
-    public void Initialize(GameManager gameManager)
+    public void Initialize()
     {
-        this.gameManager = gameManager;
         if (uiManager)
             graphicRaycaster = uiManager.gameObject.GetComponent<GraphicRaycaster>();
         else
@@ -271,20 +269,16 @@ public class PlayerController : MonoBehaviour
             else
                 placeIndex = 13 - moveStateIndex;
 
-            if (gameManager)
-            {
-                Building buildingToShowStats = gameManager.GetBuildingByIndex(GameManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
+            Building buildingToShowStats = GameManager.Instance.GetBuildingByIndex(GameManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
 
-                if (currentCameraDistance <= cameraDistanceToShowBuildingStats)
-                {
-                    if (buildingToShowStats)
-                        uiManager.OpenBuildingStatsPanel(buildingToShowStats);
-                    else
-                        uiManager.CloseBuildingStatsPanel();
-                }
+            if (currentCameraDistance <= cameraDistanceToShowBuildingStats) {
+                if (buildingToShowStats)
+                    uiManager.OpenBuildingStatsPanel(buildingToShowStats);
                 else
                     uiManager.CloseBuildingStatsPanel();
             }
+            else
+                uiManager.CloseBuildingStatsPanel();
         }
     }
 
@@ -311,20 +305,15 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (!gameManager) {
-            Debug.LogError("cityManager is NULL");
-            return;
-        }
-
         // Keybord Moving
         if (isCameraMoving)
             cameraMoveKeyboard = cameraMoveKeyboardIA.ReadValue<Vector2>();
         else {
             cameraMoveKeyboard = Vector2.Lerp(cameraMoveKeyboard, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
 
-            if (cameraHolder.transform.position.y > gameManager.cityHeight || cameraHolder.transform.position.y < 0.0f) {
+            if (cameraHolder.transform.position.y > GameManager.Instance.cityHeight || cameraHolder.transform.position.y < 0.0f) {
                 Vector3 cameraPosition = cameraHolder.transform.position;
-                float targetHeight = cameraHolder.transform.position.y < 0f ? 0f : gameManager.cityHeight;
+                float targetHeight = cameraHolder.transform.position.y < 0f ? 0f : GameManager.Instance.cityHeight;
                 cameraHolder.transform.position = math.lerp(cameraHolder.transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
             }
         }
@@ -343,8 +332,8 @@ public class PlayerController : MonoBehaviour
         cameraMoveVelocity = (cameraMoveKeyboard + cameraMoveMouse + cameraMoveTouchScreen) * cameraMoveSensitivity;
 
         // Return Vertical Position
-        if (cameraHolder.transform.position.y > gameManager.cityHeight)
-            cameraVerticalReturnMultiplier = cameraHolder.transform.position.y - gameManager.cityHeight /*math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f)*/;
+        if (cameraHolder.transform.position.y > GameManager.Instance.cityHeight)
+            cameraVerticalReturnMultiplier = cameraHolder.transform.position.y - GameManager.Instance.cityHeight /*math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f)*/;
         else if (cameraHolder.transform.position.y < 0.0f)
             cameraVerticalReturnMultiplier = -cameraHolder.transform.position.y /*((0 - math.abs(cameraHolder.transform.position.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding*/;
         else
@@ -353,8 +342,8 @@ public class PlayerController : MonoBehaviour
         // Add Move
         float multiplier = 1f;
         float cameraHeight = math.abs(cameraHolder.transform.position.y);
-        if (cameraHolder.transform.position.y > gameManager.cityHeight && cameraMoveVelocity.y > 0f)
-            multiplier = 1f - math.clamp((cameraHeight - gameManager.cityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
+        if (cameraHolder.transform.position.y > GameManager.Instance.cityHeight && cameraMoveVelocity.y > 0f)
+            multiplier = 1f - math.clamp((cameraHeight - GameManager.Instance.cityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
         else if (cameraHolder.transform.position.y < 0f && cameraMoveVelocity.y < 0f)
             multiplier = 1f - math.clamp(cameraHeight / cameraVerticalBoundaryPadding, 0f, 1f);
 
@@ -653,7 +642,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlaceConstruction(BuildingPlace buildingPlace)
     {
-        gameManager.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
+        GameManager.Instance.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
     }
 
     public void OnConstructionPlaced()
@@ -669,14 +658,14 @@ public class PlayerController : MonoBehaviour
     private void CollectItems(ItemInstance item)
     {
         int id = item.ItemData.ItemId;
-        if (gameManager.items[id].Amount < gameManager.totalStorageCapacity[id].Amount) {
-            gameManager.AddItem(item);
+        if (GameManager.Instance.items[id].Amount < GameManager.Instance.totalStorageCapacity[id].Amount) {
+            GameManager.Instance.AddItem(item);
         }
     }
 
     private void CollectItems(List<ItemInstance> items)
     {
-        gameManager.AddItems(items);
+        GameManager.Instance.AddItems(items);
     }
 
     private void Select(SelectComponent selectComponent)

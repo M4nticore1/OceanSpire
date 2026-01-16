@@ -8,9 +8,9 @@ public class FloorBuilding : TowerBuilding
     public BuildingPlace hallBuildingPlace;
     public BuildingPlace floorBuildingPlace;
 
-    public override void InitializeBuilding(GameManager gameManager, BuildingPlace buildingPlace, bool requiresConstruction, int levelIndex, int interiorIndex)
+    public override void InitializeBuilding(BuildingPlace buildingPlace, bool requiresConstruction, int levelIndex, int interiorIndex)
     {
-        base.InitializeBuilding(gameManager, buildingPlace, requiresConstruction, levelIndex, interiorIndex);
+        base.InitializeBuilding(buildingPlace, requiresConstruction, levelIndex, interiorIndex);
 
         floorBuildingPlace.InitializeBuildingPlace(floorIndex + 1);
         hallBuildingPlace.InitializeBuildingPlace(floorIndex);
@@ -47,7 +47,7 @@ public class FloorBuilding : TowerBuilding
                     {
                         for (int j = 1; j <= buildingData.BuildingFloors; j++)
                         {
-                            BuildingPlace currentBuildingPlace = gameManager.builtFloors[floorIndex - j].roomBuildingPlaces[i];
+                            BuildingPlace currentBuildingPlace = GameManager.Instance.builtFloors[floorIndex - j].roomBuildingPlaces[i];
 
                             if (currentBuildingPlace.emptyBuildingPlacesAbove == buildingData.BuildingFloors - 1)
                             {
@@ -60,7 +60,7 @@ public class FloorBuilding : TowerBuilding
         }
         else if (buildingData.BuildingType == BuildingType.Hall)
         {
-            if (!hallBuildingPlace.placedBuilding && gameManager.currentRoomsNumberOnFloor[floorIndex] == 0)
+            if (!hallBuildingPlace.placedBuilding && GameManager.Instance.currentRoomsNumberOnFloor[floorIndex] == 0)
             {
                 if(hallBuildingPlace.emptyBuildingPlacesAbove >= buildingHeight - 1)
                     hasPlaceAbove = true;

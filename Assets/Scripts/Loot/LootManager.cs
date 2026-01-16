@@ -1,12 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class LootManager
 {
-    private GameManager gameManager = null;
+    private static LootManager _instance = null;
+    public static LootManager Instance => _instance ??= new LootManager();
 
     public List<LootContainer> spawnedLootContainers { get; private set; } = new List<LootContainer>();
     private List<float> currentSpawnContainersTime = new List<float>();
@@ -16,39 +15,38 @@ public class LootManager
     public const float spawnDistance = 250.0f;
     private const float spawnMaxOffsetYaw = 30.0f;
 
-    public LootManager(GameManager gameManager)
+    public LootManager()
     {
-        this.gameManager = gameManager;
+        Run();
     }
 
-    public async void Run()
+    private async void Run()
     {
         CreateLootContainersSpawnTime();
-        await SpawningLootContainers();
-        await UpdateLootContainers();
+        await UniTask.WhenAll(SpawningLootContainers(), UpdateLootContainers());
     }
 
     private void SpawnLootContainer(LootContainer container, int index)
     {
-        if (container.FloorsCountToSpawn < gameManager.builtFloors.Count) return;
+        if (container.FloorsCountToSpawn > GameManager.Instance.builtFloors.Count) return;
 
         currentSpawnContainersTime[index] += lootContainerSpawnFrequency;
 
         if (currentSpawnContainersTime[index] < currentTimeToSpawnContainers[index]) return;
 
-        float rotationOffsetYaw = UnityEngine.Random.Range(-spawnMaxOffsetYaw, spawnMaxOffsetYaw);
+        float rotationOffsetYaw = Random.Range(-spawnMaxOffsetYaw, spawnMaxOffsetYaw);
         Quaternion rotation = Quaternion.Euler(0, rotationOffsetYaw, 0);
-        Vector3 direction = rotation * new Vector3(gameManager.windDirection.x, 0, gameManager.windDirection.y);
+        Vector3 direction = rotation * new Vector3(GameManager.Instance.windDirection.x, 0, GameManager.Instance.windDirection.y);
         Vector2 normalizedDirection = new Vector2(direction.x, direction.z).normalized;
-        Vector2 windDorection = gameManager.windDirection.normalized;
+        Vector2 windDorection = GameManager.Instance.windDirection.normalized;
 
         // Spawn position
-        Vector3 rangePosition = new Vector3(UnityEngine.Random.Range(-1.0f, 1.0f), 0, UnityEngine.Random.Range(-1.0f, 1.0f)).normalized;
-        int maxFloorNumber = container.maxSpawnFloorNumber > 0 ? container.maxSpawnFloorNumber : container.minSpawnFloorNumber > 0 ? (gameManager.builtFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
-        float spawnFloorNumber = UnityEngine.Random.Range((float)container.minSpawnFloorNumber, maxFloorNumber);
+        Vector3 rangePosition = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f)).normalized;
+        int maxFloorNumber = container.maxSpawnFloorNumber > 0 ? container.maxSpawnFloorNumber : container.minSpawnFloorNumber > 0 ? (GameManager.Instance.builtFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
+        float spawnFloorNumber = Random.Range((float)container.minSpawnFloorNumber, maxFloorNumber);
         float positionY = spawnFloorNumber * GameManager.floorHeight;
-        float positionX = (-windDorection.x * spawnDistance) - (normalizedDirection.x * spawnDistance) + (gameManager.windDirection.x * spawnDistance);
-        float positionZ = (-windDorection.x * spawnDistance) - (normalizedDirection.y * spawnDistance) + (gameManager.windDirection.y * spawnDistance);
+        float positionX = (-windDorection.x * spawnDistance) - (normalizedDirection.x * spawnDistance) + (GameManager.Instance.windDirection.x * spawnDistance);
+        float positionZ = (-windDorection.x * spawnDistance) - (normalizedDirection.y * spawnDistance) + (GameManager.Instance.windDirection.y * spawnDistance);
         Vector3 spawnPosition = new Vector3(positionX, positionY, positionZ);
 
         // Spawn rotation
@@ -56,42 +54,53 @@ public class LootManager
         Quaternion spawnRotation = Quaternion.Euler(0, angle, 0);
 
         LootContainer lootContainer = Object.Instantiate(container, spawnPosition, spawnRotation);
-        lootContainer.InitializeContainer(gameManager, (int)spawnFloorNumber);
+        lootContainer.InitializeContainer(GameManager.Instance, (int)spawnFloorNumber);
         spawnedLootContainers.Add(lootContainer);
 
-        currentTimeToSpawnContainers[index] = UnityEngine.Random.Range(container.spawnMinTime, container.spawnMaxTime);
+        currentTimeToSpawnContainers[index] = Random.Range(container.spawnMinTime, container.spawnMaxTime);
         currentSpawnContainersTime[index] = 0;
     }
 
     private async UniTask SpawningLootContainers()
     {
         while (true) {
-            await UniTask.Delay(System.TimeSpan.FromSeconds(lootContainerSpawnFrequency));
-            for (int i = 0; i < gameManager.lootContainersList.lootContainers.Length; i++) {
-                SpawnLootContainer(gameManager.lootContainersList.lootContainers[i], i);
+            for (int i = 0; i < GameManager.Instance.lootContainersList.lootContainers.Length; i++) {
+                SpawnLootContainer(GameManager.Instance.lootContainersList.lootContainers[i], i);
             }
+            await UniTask.Delay(System.TimeSpan.FromSeconds(lootContainerSpawnFrequency));
         }
     }
 
     private async UniTask UpdateLootContainers()
     {
         while (true) {
-            await UniTask.Delay(System.TimeSpan.FromSeconds(updateLootFrequency));
+            int count = 0;
+            int maxCount = 20;
+
             for (int i = spawnedLootContainers.Count - 1; i >= 0; i--) {
+                Debug.Log("UpdateLootContainers");
                 var container = spawnedLootContainers[i];
                 if (container)
                     container.Tick(updateLootFrequency);
                 else
                     spawnedLootContainers.RemoveAt(i);
+
+                count++;
+                if (count >= maxCount) {
+                    count = 0;
+                    await UniTask.Yield(); // отдать кадр
+                }
             }
+
+            await UniTask.Delay(System.TimeSpan.FromSeconds(updateLootFrequency));
         }
     }
 
     private void CreateLootContainersSpawnTime()
     {
-        LootContainer[] lootContainer = gameManager.lootContainersList.lootContainers;
+        LootContainer[] lootContainer = GameManager.Instance.lootContainersList.lootContainers;
         for (int i = 0; i < lootContainer.Length; i++) {
-            float spawnTime = UnityEngine.Random.Range(lootContainer[i].spawnMinTime, lootContainer[i].spawnMaxTime);
+            float spawnTime = Random.Range(lootContainer[i].spawnMinTime, lootContainer[i].spawnMaxTime);
             currentTimeToSpawnContainers.Add(spawnTime);
             currentSpawnContainersTime.Add(0f);
         }
