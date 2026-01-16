@@ -35,7 +35,7 @@ public class ContextMenu : MonoBehaviour
     public void Open(GameObject objectToShowDetails)
     {
         Building building = objectToShowDetails.GetComponent<Building>();
-        Entity entity = objectToShowDetails.GetComponent<Entity>();
+        Creature entity = objectToShowDetails.GetComponent<Creature>();
         Boat boat = objectToShowDetails.GetComponent<Boat>();
 
         if (building) {

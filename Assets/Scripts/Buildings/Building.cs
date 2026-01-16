@@ -6,33 +6,21 @@ using UnityEngine.UIElements;
 [AddComponentMenu("Buildings/Building")]
 public class Building : MonoBehaviour
 {
-    protected GameManager gameManager { get; private set; } = null;
-    public CityManager cityManager { get; private set; } = null;
-    //public LevelComponent levelComponent { get; private set; } = null;
-    public ConstructionComponent constructionComponent { get; private set; } = null;
-    public SelectComponent selectComponent { get; private set; } = null;
-    public StorageBuildingComponent storageComponent { get; private set; } = null;
-    public ProductionBuilding productionComponent { get; private set; } = null;
+    protected GameManager gameManager = null;
+    public ConstructionComponent constructionComponent { get; protected set; } = null;
+    public SelectComponent selectComponent { get; protected set; } = null;
+    public StorageBuildingComponent storageComponent { get; protected set; } = null;
+    public ProductionBuilding productionComponent { get; protected set; } = null;
 
-
-    public bool isInitialized { get; private set; } = false;
-    public int levelIndex = 0;
+    public bool isInitialized { get; protected set; } = false;
+    public int levelIndex { get; protected set; } = 0;
     private bool isWorking = false;
     protected bool isSelected { get; private set; } = false;
 
     //[HideInInspector] public int levelIndex { get; private set; } = 0;
-    public List<Entity> enteredEntities { get; private set; } = new List<Entity>();
-    public List<Entity> workers { get; private set; } = new List<Entity>();
-    public List<Entity> currentWorkers { get; private set; } = new List<Entity>();
-
-    protected BuildingPosition buildingPosition = BuildingPosition.Straight;
-    public int floorIndex => buildingPlace ? buildingPlace.floorIndex : 0;
-    public int placeIndex => buildingPlace ? buildingPlace.BuildingPlaceIndex : 0;
-
-    public Building leftConnectedBuilding { get; private set; } = null;
-    public Building rightConnectedBuilding { get; private set; } = null;
-    public Building upConnectedBuilding { get; private set; } = null;
-    public Building downConnectedBuilding { get; private set; } = null;
+    public List<Creature> enteredEntities { get; private set; } = new List<Creature>();
+    public List<Creature> workers { get; private set; } = new List<Creature>();
+    public List<Creature> currentWorkers { get; private set; } = new List<Creature>();
 
     [Header("Data")]
     [SerializeField] protected BuildingData buildingData = null;
@@ -41,7 +29,7 @@ public class Building : MonoBehaviour
     public List<ConstructionLevelData> ConstructionLevelsData => buildingLevelsData;
     public ConstructionLevelData currentLevelData => ConstructionLevelsData.Count > levelIndex ? ConstructionLevelsData[levelIndex] : null;
 
-    public BuildingPlace buildingPlace { get; private set; } = null;
+    public BuildingPlace buildingPlace { get; protected set; } = null;
 
     //public static event System.Action<Building> onAnyBuildingFinishConstructing;
     public event System.Action onBuildingFinishConstructing;
@@ -54,7 +42,10 @@ public class Building : MonoBehaviour
 
     protected virtual void Awake()
     {
-        GetComponents();
+        selectComponent = GetComponent<SelectComponent>();
+        constructionComponent = GetComponent<ConstructionComponent>();
+        storageComponent = GetComponent<StorageBuildingComponent>();
+        productionComponent = GetComponent<ProductionBuilding>();
     }
 
     protected virtual void OnEnable()
@@ -76,46 +67,22 @@ public class Building : MonoBehaviour
         //Place();
     }
 
-    protected void Update()
+    // Constructing
+    public virtual void InitializeBuilding(GameManager gameManager, BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
-
-    }
-
-    private void GetComponents()
-    {
-        gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
+        this.gameManager = gameManager;
         selectComponent = GetComponent<SelectComponent>();
         constructionComponent = GetComponent<ConstructionComponent>();
         storageComponent = GetComponent<StorageBuildingComponent>();
         productionComponent = GetComponent<ProductionBuilding>();
-    }
-
-    // Constructing
-    public virtual void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
-    {
-        if (isInitialized) return;
-
-        GetComponents();
 
         this.buildingPlace = buildingPlace;
         this.levelIndex = levelIndex;
 
-        if (BuildingData.BuildingType == BuildingType.Room || BuildingData.BuildingType == BuildingType.Hall)
-        {
-            if (storageComponent)
-                storageComponent.Initialize();
-
-            leftConnectedBuilding = GetConnectedBuilding(Side.Left);
-            rightConnectedBuilding = GetConnectedBuilding(Side.Right);
-            upConnectedBuilding = GetConnectedBuilding(Side.Up);
-            downConnectedBuilding = GetConnectedBuilding(Side.Down);
-
-            if (placeIndex % 2 == 0)
-                buildingPosition = BuildingPosition.Corner;
-            else
-                buildingPosition = BuildingPosition.Straight;
-        }
+        if (storageComponent)
+            storageComponent.Initialize(gameManager);
+        if (productionComponent)
+            productionComponent.Initialize(gameManager);
 
         constructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
 
@@ -151,6 +118,11 @@ public class Building : MonoBehaviour
 
     }
 
+    public void SetLevelIndex(int level)
+    {
+        levelIndex = level;
+    }
+
     // Working
     private void StartWorking()
     {
@@ -167,7 +139,7 @@ public class Building : MonoBehaviour
     }
 
     // Residents Management
-    public virtual void EnterBuilding(Entity entity)
+    public virtual void EnterBuilding(Creature entity)
     {
         enteredEntities.Add(entity);
         Resident resident = entity as Resident;
@@ -184,23 +156,23 @@ public class Building : MonoBehaviour
         onEnterBuilding?.Invoke();
     }
 
-    public virtual void ExitBuilding(Entity entity)
+    public virtual void ExitBuilding(Creature entity)
     {
         enteredEntities.Remove(entity);
         onExitBuilding?.Invoke();
     }
 
-    public void AddWorker(Entity worker)
+    public void AddWorker(Creature worker)
     {
         workers.Add(worker);
     }
 
-    public void RemoveWorker(Entity worker)
+    public void RemoveWorker(Creature worker)
     {
         workers.Remove(worker);
     }
 
-    public void AddCurrentWorker(Entity worker)
+    public void AddCurrentWorker(Creature worker)
     {
         currentWorkers.Add(worker);
         worker.SetWorkerIndex(currentWorkers.Count - 1);
@@ -208,7 +180,7 @@ public class Building : MonoBehaviour
         StartWorking();
     }
 
-    public void RemoveCurrentWorker(Entity worker)
+    public void RemoveCurrentWorker(Creature worker)
     {
         Debug.Log("RemoveCurrentWorker");
         currentWorkers.RemoveAt(worker.workerIndex);
@@ -230,23 +202,6 @@ public class Building : MonoBehaviour
         constructionComponent.BuildConstruction(buildingLevelsData[levelIndex].ConstructionStraight);
     }
 
-    protected Building GetConnectedBuilding(Side side)
-    {
-        int horizontalIndexOffset = side == Side.Left ? 1 : side == Side.Right ? -1 : 0;
-        int verticalIndexOffset = side == Side.Up ? 1 : side == Side.Down ? -1 : 0;
-        int sideIndex = (placeIndex + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
-        int verticalIndex = floorIndex + verticalIndexOffset;
-
-        if (verticalIndex < cityManager.builtFloors.Count && verticalIndex >= 0)
-        {
-            Building building = cityManager.builtFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding;
-            if (building && building.buildingData.BuildingIdName == BuildingData.BuildingIdName && building.levelIndex == levelIndex)
-                return building;
-        }
-
-        return null;
-    }
-
     public Transform GetInteractionTransform()
     {
         int index = workers.Count > 0 ? ((workers.Count - 1) % currentLevelData.maxResidentsCount) : 0;
@@ -265,41 +220,5 @@ public class Building : MonoBehaviour
             Debug.LogError("actions.Length <= index");
             return transform;
         }
-    }
-
-    public bool ConnectedWith(Building target)
-    {
-        if (!target) {
-            Debug.Log("buildingToCheck == NULL");
-            return false;
-        }
-
-        Building start = this;
-        Building current = start;
-        var visited = new HashSet<Building>();
-        visited.Add(current);
-        if (buildingData.ConnectionType == ConnectionType.Horizontal) {
-            Building[] directions = { leftConnectedBuilding, rightConnectedBuilding };
-            foreach (var direction in directions) {
-                current = direction;
-                while (current && current.buildingData.BuildingId == buildingData.BuildingId) {
-                    if (!visited.Add(current)) return false;
-                    if (current == target) return true;
-                    current = (direction == leftConnectedBuilding) ? current.leftConnectedBuilding : current.rightConnectedBuilding;
-                }
-            }
-        }
-        else if (buildingData.ConnectionType == ConnectionType.Vertical) {
-            Building[] directions = { upConnectedBuilding, downConnectedBuilding };
-            foreach (var direction in directions) {
-                current = direction;
-                while (current && current.buildingData.BuildingId == buildingData.BuildingId) {
-                    if (!visited.Add(current)) return false;
-                    if (current == target) return true;
-                    current = (direction == upConnectedBuilding) ? current.upConnectedBuilding : current.downConnectedBuilding;
-                }
-            }
-        }
-        return false;
     }
 }

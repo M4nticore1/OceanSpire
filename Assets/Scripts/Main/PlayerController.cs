@@ -9,8 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     // Main
     private GameManager gameManager = null;
-    private CityManager cityManager = null;
-    private UIManager uiManager = null;
+    [SerializeField] private UIManager uiManager = null;
 
     // Camera Movement
     [SerializeField] private Camera mainCamera = null;
@@ -121,11 +120,9 @@ public class PlayerController : MonoBehaviour
 
     public bool isInitialized { get; private set; } = false;
 
-    private void Awake()
+    public void Initialize(GameManager gameManager)
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
-        uiManager = FindAnyObjectByType<UIManager>();
+        this.gameManager = gameManager;
         if (uiManager)
             graphicRaycaster = uiManager.gameObject.GetComponent<GraphicRaycaster>();
         else
@@ -137,7 +134,7 @@ public class PlayerController : MonoBehaviour
     {
         // Gameplay Events
         BuildingWidget.OnStartPlacingConstruction += OnBuildingStartPlacing;
-        CityManager.OnConstructionPlaced += OnConstructionPlaced;
+        GameManager.OnConstructionPlaced += OnConstructionPlaced;
         UIManager.OnBuildStopPlacing += OnConstructionPlaced;
 
         touchInputActionMap.Enable();
@@ -174,7 +171,7 @@ public class PlayerController : MonoBehaviour
     {
 
         BuildingWidget.OnStartPlacingConstruction -= OnBuildingStartPlacing;
-        CityManager.OnConstructionPlaced -= OnConstructionPlaced;
+        GameManager.OnConstructionPlaced -= OnConstructionPlaced;
         UIManager.OnBuildStopPlacing -= OnConstructionPlaced;
 
         touchInputActionMap.Disable();
@@ -234,13 +231,6 @@ public class PlayerController : MonoBehaviour
             Debug.Log("void PlayerController : SetInputSystem() inputActions is NULL");
     }
 
-    private void Start()
-    {
-        Load(GameManager.saveData);
-
-        //SaveSystem.SaveData(this, cityManager);
-    }
-
     public void Load(SaveData saveData)
     {
         uiManager.InitializeUIManager();
@@ -258,18 +248,9 @@ public class PlayerController : MonoBehaviour
 
         cameraYawRotateAlpha = 0.52f;
 
-        moveStateValue = 1f / CityManager.roomsCountPerFloor;
+        moveStateValue = 1f / GameManager.roomsCountPerFloor;
 
-        SaveSystem.SaveData(this, cityManager);
         isInitialized = true;
-
-        if (!gameManager) Debug.LogError("gameManager is NULL");
-        if (!cityManager) Debug.LogError("cityManager is NULL");
-    }
-
-    private void Update()
-    {
-        Tick();
     }
 
     public void Tick()
@@ -290,9 +271,9 @@ public class PlayerController : MonoBehaviour
             else
                 placeIndex = 13 - moveStateIndex;
 
-            if (cityManager)
+            if (gameManager)
             {
-                Building buildingToShowStats = cityManager.GetBuildingByIndex(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
+                Building buildingToShowStats = gameManager.GetBuildingByIndex(GameManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
 
                 if (currentCameraDistance <= cameraDistanceToShowBuildingStats)
                 {
@@ -303,12 +284,6 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                     uiManager.CloseBuildingStatsPanel();
-            }
-
-            if (Time.timeAsDouble >= lastSaveDataTime + GameManager.autoSaveFrequency)
-            {
-                SaveSystem.SaveData(this, cityManager);
-                lastSaveDataTime = Time.timeAsDouble;
             }
         }
     }
@@ -331,69 +306,67 @@ public class PlayerController : MonoBehaviour
 
     private void CameraMovement()
     {
-        if (cameraHolder)
-        {
-            // Keybord Moving
-            if (isCameraMoving)
-                cameraMoveKeyboard = cameraMoveKeyboardIA.ReadValue<Vector2>();
-            else
-            {
-                cameraMoveKeyboard = Vector2.Lerp(cameraMoveKeyboard, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
-
-                if (cityManager ? (cameraHolder.transform.position.y > cityManager.cityHeight || cameraHolder.transform.position.y < 0.0f) : false)
-                {
-                    Vector3 cameraPosition = cameraHolder.transform.position;
-                    float targetHeight = cameraHolder.transform.position.y < 0f ? 0f : cityManager.cityHeight;
-                    cameraHolder.transform.position = math.lerp(cameraHolder.transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
-                }
-            }
-
-            // Mouse & TouchScreen Moving
-            if (isPrimaryInteractionPressed)
-            {
-                cameraMoveMouse = cameraMoveMouseIA.ReadValue<Vector2>();
-                cameraMoveTouchScreen = cameraMoveTouchScreenIA.ReadValue<Vector2>();
-            }
-            else
-            {
-                cameraMoveMouse = Vector2.Lerp(cameraMoveMouse, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
-                cameraMoveTouchScreen = Vector2.Lerp(cameraMoveTouchScreen, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
-            }
-
-            // Sum Of Movings
-            cameraMoveVelocity = (cameraMoveKeyboard + cameraMoveMouse + cameraMoveTouchScreen) * cameraMoveSensitivity;
-
-            // Return Vertical Position
-            if (cityManager ? cameraHolder.transform.position.y > cityManager.cityHeight : false)
-                cameraVerticalReturnMultiplier = cameraHolder.transform.position.y - cityManager.cityHeight /*math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f)*/;
-            else if (cameraHolder.transform.position.y < 0.0f)
-                cameraVerticalReturnMultiplier = -cameraHolder.transform.position.y /*((0 - math.abs(cameraHolder.transform.position.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding*/;
-            else
-                cameraVerticalReturnMultiplier = 0f;
-
-            // Add Move
-            float multiplier = 1f;
-            float cameraHeight = math.abs(cameraHolder.transform.position.y);
-            if (cityManager ? (cameraHolder.transform.position.y > cityManager.cityHeight && cameraMoveVelocity.y > 0f) : false)
-                multiplier = 1f - math.clamp((cameraHeight - cityManager.cityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
-            else if (cameraHolder.transform.position.y < 0f && cameraMoveVelocity.y < 0f)
-                multiplier = 1f - math.clamp(cameraHeight / cameraVerticalBoundaryPadding, 0f, 1f);
-
-            cameraHolder.transform.position += new Vector3(0, cameraMoveVelocity.y, 0) * multiplier * Time.deltaTime;
-            Vector3 eulers = cameraHolder.transform.eulerAngles;
-            eulers.y += cameraMoveVelocity.x * Time.deltaTime;
-            cameraHolder.transform.eulerAngles = eulers;
-
-            // Square Move
-            float alpha = 1f - cameraHolder.transform.eulerAngles.y / 360f + 0.125f;
-            Vector2 pos = SquareLoop(alpha, 16f, 0.5f);
-            cameraHolder.transform.position = new Vector3(pos.x, cameraHolder.transform.position.y, pos.y);
+        if (!cameraHolder) {
+            Debug.LogError("cameraHolder is NULL");
+            return;
         }
+
+        if (!gameManager) {
+            Debug.LogError("cityManager is NULL");
+            return;
+        }
+
+        // Keybord Moving
+        if (isCameraMoving)
+            cameraMoveKeyboard = cameraMoveKeyboardIA.ReadValue<Vector2>();
+        else {
+            cameraMoveKeyboard = Vector2.Lerp(cameraMoveKeyboard, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+
+            if (cameraHolder.transform.position.y > gameManager.cityHeight || cameraHolder.transform.position.y < 0.0f) {
+                Vector3 cameraPosition = cameraHolder.transform.position;
+                float targetHeight = cameraHolder.transform.position.y < 0f ? 0f : gameManager.cityHeight;
+                cameraHolder.transform.position = math.lerp(cameraHolder.transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
+            }
+        }
+
+        // Mouse & TouchScreen Moving
+        if (isPrimaryInteractionPressed) {
+            cameraMoveMouse = cameraMoveMouseIA.ReadValue<Vector2>();
+            cameraMoveTouchScreen = cameraMoveTouchScreenIA.ReadValue<Vector2>();
+        }
+        else {
+            cameraMoveMouse = Vector2.Lerp(cameraMoveMouse, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+            cameraMoveTouchScreen = Vector2.Lerp(cameraMoveTouchScreen, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+        }
+
+        // Sum Of Movings
+        cameraMoveVelocity = (cameraMoveKeyboard + cameraMoveMouse + cameraMoveTouchScreen) * cameraMoveSensitivity;
+
+        // Return Vertical Position
+        if (cameraHolder.transform.position.y > gameManager.cityHeight)
+            cameraVerticalReturnMultiplier = cameraHolder.transform.position.y - gameManager.cityHeight /*math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f)*/;
+        else if (cameraHolder.transform.position.y < 0.0f)
+            cameraVerticalReturnMultiplier = -cameraHolder.transform.position.y /*((0 - math.abs(cameraHolder.transform.position.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding*/;
         else
-        {
-            if (!cameraHolder)
-                Debug.LogError("cameraHolder is NULL");
-        }
+            cameraVerticalReturnMultiplier = 0f;
+
+        // Add Move
+        float multiplier = 1f;
+        float cameraHeight = math.abs(cameraHolder.transform.position.y);
+        if (cameraHolder.transform.position.y > gameManager.cityHeight && cameraMoveVelocity.y > 0f)
+            multiplier = 1f - math.clamp((cameraHeight - gameManager.cityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
+        else if (cameraHolder.transform.position.y < 0f && cameraMoveVelocity.y < 0f)
+            multiplier = 1f - math.clamp(cameraHeight / cameraVerticalBoundaryPadding, 0f, 1f);
+
+        cameraHolder.transform.position += new Vector3(0, cameraMoveVelocity.y, 0) * multiplier * Time.deltaTime;
+        Vector3 eulers = cameraHolder.transform.eulerAngles;
+        eulers.y += cameraMoveVelocity.x * Time.deltaTime;
+        cameraHolder.transform.eulerAngles = eulers;
+
+        // Square Move
+        float alpha = 1f - cameraHolder.transform.eulerAngles.y / 360f + 0.125f;
+        Vector2 pos = SquareLoop(alpha, 16f, 0.5f);
+        cameraHolder.transform.position = new Vector3(pos.x, cameraHolder.transform.position.y, pos.y);
     }
 
     Vector2 SquareLoop(float t, float fullSize, float corner)
@@ -680,7 +653,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlaceConstruction(BuildingPlace buildingPlace)
     {
-        cityManager.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
+        gameManager.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
     }
 
     public void OnConstructionPlaced()
@@ -696,15 +669,14 @@ public class PlayerController : MonoBehaviour
     private void CollectItems(ItemInstance item)
     {
         int id = item.ItemData.ItemId;
-        if (cityManager.items[id].Amount < cityManager.totalStorageCapacity[id].Amount)
-        {
-            cityManager.AddItem(item);
+        if (gameManager.items[id].Amount < gameManager.totalStorageCapacity[id].Amount) {
+            gameManager.AddItem(item);
         }
     }
 
     private void CollectItems(List<ItemInstance> items)
     {
-        cityManager.AddItems(items);
+        gameManager.AddItems(items);
     }
 
     private void Select(SelectComponent selectComponent)

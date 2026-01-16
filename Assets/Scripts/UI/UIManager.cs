@@ -9,7 +9,6 @@ public class UIManager : MonoBehaviour
 {
     private PlayerController playerController;
     private GameManager gameManager;
-    private CityManager cityManager;
     private GameObject selectedObject = null;
 
     // Widgets
@@ -155,8 +154,12 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
         playerController = transform.parent.GetComponent<PlayerController>();
+    }
+
+    private void Initialize(GameManager gameManager)
+    {
+        this.gameManager = gameManager;
     }
 
     //private void Start()
@@ -167,25 +170,17 @@ public class UIManager : MonoBehaviour
     private void OnEnable()
     {
         BuildingWidget.OnStartPlacingConstruction += OnConstructionStartPlacing;
-        CityManager.OnConstructionPlaced += OnConstructionPlaced;
-        CityManager.OnStorageCapacityUpdated += UpdateItemAmounts;
-        CityManager.OnLootAdded += UpdateItemAmounts;
-        if (cityManager)
-        {
-            cityManager.OnResidentAdded += AddResidentWidget;
-        }
-        else
-            Debug.LogError("cityManager is NULL");
+        GameManager.OnConstructionPlaced += OnConstructionPlaced;
+        GameManager.OnStorageCapacityUpdated += UpdateItemAmounts;
+        GameManager.OnLootAdded += UpdateItemAmounts;
+        gameManager.OnResidentAdded += AddResidentWidget;
     }
 
     private void OnDisable()
     {
-        CityManager.OnStorageCapacityUpdated -= UpdateItemAmounts;
-        CityManager.OnLootAdded -= UpdateItemAmounts;
-        if (cityManager)
-        {
-            cityManager.OnResidentAdded -= AddResidentWidget;
-        }
+        GameManager.OnStorageCapacityUpdated -= UpdateItemAmounts;
+        GameManager.OnLootAdded -= UpdateItemAmounts;
+        gameManager.OnResidentAdded -= AddResidentWidget;
 
         BuildingWidget.OnStartPlacingConstruction -= OnConstructionStartPlacing;
     }
@@ -261,7 +256,7 @@ public class UIManager : MonoBehaviour
 
         buildingCharacteristicHeight = buildingCharacteristicWidget.characteristicValueBox.sizeDelta.y;
 
-        for (int i = 0; i < gameManager.LootList.Loot.Count; i++)
+        for (int i = 0; i < gameManager.lootList.loot.Count; i++)
             itemsToUpdate.Add(false);
 
         managementMenu.SetActive(false);
@@ -274,9 +269,9 @@ public class UIManager : MonoBehaviour
     // Management Menu
     private void CreateItemWidgets()
     {
-        for (int i = 0; i < gameManager.LootList.Loot.Count; i++)
+        for (int i = 0; i < gameManager.lootList.loot.Count; i++)
         {
-            ItemData itemData = gameManager.LootList.Loot[i];
+            ItemData itemData = gameManager.lootList.loot[i];
             if (itemData.ItemCategory == ItemCategory.Society) continue;
 
             ItemCategory itemCategory = itemData.ItemCategory;
@@ -284,8 +279,8 @@ public class UIManager : MonoBehaviour
             ResourceWidget storageResourceWidget = Instantiate(storageResourceWidgetPrefab, storageLists[(int)itemCategory - 1].transform);
             storageResourceWidgets.Add(storageResourceWidget);
 
-            int itemAmount = cityManager.items[i].Amount;
-            int itemMaxAmount = cityManager.totalStorageCapacity[i].Amount;
+            int itemAmount = gameManager.items[i].Amount;
+            int itemMaxAmount = gameManager.totalStorageCapacity[i].Amount;
             storageResourceWidget.Initialize(itemData, itemAmount, itemMaxAmount);
         }
     }
@@ -418,24 +413,21 @@ public class UIManager : MonoBehaviour
             spawnedBuildingWidgets.Add(new List<BuildingWidget>());
         }
 
-        for (int i = 0; i < gameManager.BuildingPrefabsList.BuildingPrefabs.Count; i++)
+        foreach (var building in gameManager.buildingsList.buildings)
         {
-            if (!gameManager.BuildingPrefabsList.BuildingPrefabs[i].BuildingData.IsDemolishable) continue;
+            if (!building.BuildingData.IsDemolishable) continue;
 
-            BuildingCategory buildingCategory = gameManager.BuildingPrefabsList.BuildingPrefabs[i].BuildingData.BuildingCategory;
+            BuildingCategory buildingCategory = building.BuildingData.BuildingCategory;
             BuildingWidget spawnedBuildingWidget = null;
             spawnedBuildingWidget = Instantiate<BuildingWidget>(buildingWidgetPrefab, transform);
 
-            int categoryIndex = (int)gameManager.BuildingPrefabsList.BuildingPrefabs[i].BuildingData.BuildingCategory;
+            int categoryIndex = (int)building.BuildingData.BuildingCategory;
             spawnedBuildingWidgets[categoryIndex].Add(spawnedBuildingWidget);
 
-            ConstructionComponent construction = gameManager.BuildingPrefabsList.BuildingPrefabs[i].GetComponent<ConstructionComponent>();
-            spawnedBuildingWidget.InitializeBuildingWidget(construction);
-            spawnedBuildingWidget.cityManager = cityManager;
+            ConstructionComponent construction = building.GetComponent<ConstructionComponent>();
+            spawnedBuildingWidget.InitializeBuildingWidget(gameManager, construction);
 
             spawnedBuildingWidget.transform.SetParent(buildingLists[(int)buildingCategory].transform);
-
-            spawnedBuildingWidget.cityManager = cityManager;
         }
 
         for (int i = 0; i < length; i++)
@@ -462,8 +454,8 @@ public class UIManager : MonoBehaviour
         // Update Storage Menu
         for (int i = 0; i < storageResourceWidgets.Count; i++)
         {
-            int amount = cityManager.items[i].Amount;
-            int maxAmount = cityManager.totalStorageCapacity[i].Amount;
+            int amount = gameManager.items[i].Amount;
+            int maxAmount = gameManager.totalStorageCapacity[i].Amount;
 
             if (storageResourceWidgets.Count > i)
                 storageResourceWidgets[i].UpdateAmount(amount, maxAmount);
@@ -588,7 +580,7 @@ public class UIManager : MonoBehaviour
         isInfoMenuOpened = false;
 
         Building building = objectToShowDetails.GetComponent<Building>();
-        Entity entity = objectToShowDetails.GetComponent<Entity>();
+        Creature entity = objectToShowDetails.GetComponent<Creature>();
         Boat boat = objectToShowDetails.GetComponent<Boat>();
 
         if (building) {
@@ -736,11 +728,11 @@ public class UIManager : MonoBehaviour
 
         // Set parents of resident widgets
         int buildingWorkerWidgetIndex = 0;
-        for (int i = 0; i < cityManager.residents.Count; i++) {
-            spawnedResidentWidgets[i].InitializeResidentWidget(cityManager.residents[i], building, this);
+        for (int i = 0; i < gameManager.residents.Count; i++) {
+            spawnedResidentWidgets[i].InitializeResidentWidget(gameManager.residents[i], building, this);
 
-            if (cityManager.residents[i].workBuilding) {
-                if (cityManager.residents[i].workBuilding == building)
+            if (gameManager.residents[i].workBuilding) {
+                if (gameManager.residents[i].workBuilding == building)
                 {
                     spawnedResidentWidgets[i].transform.SetParent(buildingWorkersList.transform);
                     spawnedResidentWidgets[i].transform.SetSiblingIndex(buildingWorkerWidgetIndex);
@@ -790,7 +782,7 @@ public class UIManager : MonoBehaviour
         UpdateWorkerListsSize();
     }
 
-    private void AddResidentWidget(Entity resident)
+    private void AddResidentWidget(Creature resident)
     {
         ResidentWidget residentWidget = Instantiate(residentWidgetPrefab, unemployedResidentsList.transform);
         residentWidget.transform.localScale = Vector3.one;
@@ -837,9 +829,9 @@ public class UIManager : MonoBehaviour
         // Building workers
         SetWorkerListSize(buildingWorkersMenu, buildingWorkersList, null, maxBuildingWorkersCount, residentWidgetsColumnCount);
         // Unemployed residents
-        SetWorkerListSize(unemployedResidentsMenu, unemployedResidentsList, haveNoUnemployedResidentsText, cityManager.unemployedResidentsCount, residentWidgetsColumnCount);
+        SetWorkerListSize(unemployedResidentsMenu, unemployedResidentsList, haveNoUnemployedResidentsText, gameManager.unemployedResidentsCount, residentWidgetsColumnCount);
         // Employed residents
-        SetWorkerListSize(employedResidentsMenu, employedResidentsList, haveNoEmployedResidentsText, cityManager.employedResidentCount - building.workers.Count, residentWidgetsColumnCount);
+        SetWorkerListSize(employedResidentsMenu, employedResidentsList, haveNoEmployedResidentsText, gameManager.employedResidentCount - building.workers.Count, residentWidgetsColumnCount);
     }
 
     public void SelectBuildingWorker(ResidentWidget residentWidget)
@@ -847,7 +839,7 @@ public class UIManager : MonoBehaviour
         Building building = selectedObject.GetComponent<Building>();
         if (!building) return;
 
-        Entity resident = residentWidget.resident;
+        Creature resident = residentWidget.resident;
         int workersCount = building.workers.Count;
 
         if (resident.workBuilding) {
@@ -915,7 +907,7 @@ public class UIManager : MonoBehaviour
     // Upgrade Building Menu
     private void TryToUpgradeBuilding()
     {
-        cityManager.TryToUpgradeConstruction(selectedObject.GetComponent<Building>());
+        gameManager.TryToUpgradeConstruction(selectedObject.GetComponent<Building>());
     }
 
     private void TryToDemolishBuilding()

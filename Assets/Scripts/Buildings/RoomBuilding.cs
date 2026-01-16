@@ -44,24 +44,24 @@ public class RoomBuilding : TowerBuilding
                 {
                     if (buildingPosition == BuildingPosition.Straight)
                     {
-                        if (leftConnectedBuilding && rightConnectedBuilding && roomLevelData.ConstructionStraightLeftRight)
+                        if (leftNeighborBuilding && rightNeighborBuilding && roomLevelData.ConstructionStraightLeftRight)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightLeftRight);
-                        else if (leftConnectedBuilding && roomLevelData.ConstructionStraightLeft)
+                        else if (leftNeighborBuilding && roomLevelData.ConstructionStraightLeft)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightLeft);
-                        else if (rightConnectedBuilding && roomLevelData.ConstructionStraightRight)
+                        else if (rightNeighborBuilding && roomLevelData.ConstructionStraightRight)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightRight);
-                        else if (!leftConnectedBuilding && !rightConnectedBuilding && roomLevelData.ConstructionStraight)
+                        else if (!leftNeighborBuilding && !rightNeighborBuilding && roomLevelData.ConstructionStraight)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
                     }
                     else if (buildingPosition == BuildingPosition.Corner)
                     {
-                        if (leftConnectedBuilding && rightConnectedBuilding && roomLevelData.ConstructionCornerLeftRight)
+                        if (leftNeighborBuilding && rightNeighborBuilding && roomLevelData.ConstructionCornerLeftRight)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerLeftRight);
-                        else if (leftConnectedBuilding && roomLevelData.ConstructionCornerLeft)
+                        else if (leftNeighborBuilding && roomLevelData.ConstructionCornerLeft)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerLeft);
-                        else if (rightConnectedBuilding && roomLevelData.ConstructionCornerRight)
+                        else if (rightNeighborBuilding && roomLevelData.ConstructionCornerRight)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerRight);
-                        else if (!leftConnectedBuilding && !rightConnectedBuilding && roomLevelData.ConstructionCorner)
+                        else if (!leftNeighborBuilding && !rightNeighborBuilding && roomLevelData.ConstructionCorner)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
                     }
                 }
@@ -70,24 +70,24 @@ public class RoomBuilding : TowerBuilding
                     //Debug.Log(GetfloorIndex + " " + GetplaceIndex);
                     if (buildingPosition == BuildingPosition.Straight)
                     {
-                        if (upConnectedBuilding && downConnectedBuilding && roomLevelData.ConstructionStraightAboveBelow)
+                        if (upNeighborBuilding && downNeighborBuilding && roomLevelData.ConstructionStraightAboveBelow)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightAboveBelow);
-                        else if (upConnectedBuilding && roomLevelData.ConstructionStraightAbove)
+                        else if (upNeighborBuilding && roomLevelData.ConstructionStraightAbove)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightAbove);
-                        else if (downConnectedBuilding && roomLevelData.ConstructionStraightBelow)
+                        else if (downNeighborBuilding && roomLevelData.ConstructionStraightBelow)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightBelow);
-                        else if (!upConnectedBuilding && !downConnectedBuilding && roomLevelData.ConstructionStraight)
+                        else if (!upNeighborBuilding && !downNeighborBuilding && roomLevelData.ConstructionStraight)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
                     }
                     else if (buildingPosition == BuildingPosition.Corner)
                     {
-                        if (upConnectedBuilding && downConnectedBuilding && roomLevelData.ConstructionCornerAboveBelow)
+                        if (upNeighborBuilding && downNeighborBuilding && roomLevelData.ConstructionCornerAboveBelow)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerAboveBelow);
-                        else if (upConnectedBuilding && roomLevelData.ConstructionCornerAbove)
+                        else if (upNeighborBuilding && roomLevelData.ConstructionCornerAbove)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerAbove);
-                        else if (downConnectedBuilding && roomLevelData.ConstructionCornerBelow)
+                        else if (downNeighborBuilding && roomLevelData.ConstructionCornerBelow)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerBelow);
-                        else if (!upConnectedBuilding && !downConnectedBuilding && roomLevelData.ConstructionCorner)
+                        else if (!upNeighborBuilding && !downNeighborBuilding && roomLevelData.ConstructionCorner)
                             constructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
                     }
                 }
@@ -98,7 +98,7 @@ public class RoomBuilding : TowerBuilding
         }
     }
 
-    public override void EnterBuilding(Entity entity)
+    public override void EnterBuilding(Creature entity)
     {
         base.EnterBuilding(entity);
     }

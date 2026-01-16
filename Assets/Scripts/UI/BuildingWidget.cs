@@ -7,10 +7,7 @@ using UnityEngine.UI;
 
 public class BuildingWidget : MonoBehaviour
 {
-    //public System.Action OnPress;
-    //public System.Action OnRelease;
-
-    [HideInInspector] public CityManager cityManager = null;
+    private GameManager gameManager = null;
     private PlayerController playerController = null;
     private UIManager UIManager = null;
 
@@ -46,34 +43,30 @@ public class BuildingWidget : MonoBehaviour
         //openInformationButton.onRelease -= () => OnRelease?.Invoke();
     }
 
-    public void InitializeBuildingWidget(ConstructionComponent construction)
+    public void InitializeBuildingWidget(GameManager gameManager, ConstructionComponent construction)
     {
-        if (construction)
-        {
-            constructionComponent = construction;
-            playerController = GetComponentInParent<PlayerController>();
-            UIManager = playerController.GetComponentInChildren<UIManager>();
+        this.gameManager = gameManager;
+        constructionComponent = construction;
 
-            buildButton.onClick.AddListener(StartPlacingBuilding);
-            informationButton.onClick.AddListener(OpenBuildingInformationMenu);
+        playerController = GetComponentInParent<PlayerController>();
+        UIManager = playerController.GetComponentInChildren<UIManager>();
 
-            Building building = construction.GetComponentInChildren<Building>();
-            if (building)
-            {
-                buildingNameText.SetText(building.BuildingData.BuildingName);
+        buildButton.onClick.AddListener(StartPlacingBuilding);
+        informationButton.onClick.AddListener(OpenBuildingInformationMenu);
 
-                if (building.ConstructionLevelsData.Count >= 1 && building.ConstructionLevelsData[0])
-                    resourcesToBuildNumber = building.ConstructionLevelsData[0].ResourcesToBuild.Count();
-                else
-                    Debug.LogWarning($"{building.BuildingData.BuildingName} has no LevelData by index 0 or has not instance");
+        Building building = construction.GetComponentInChildren<Building>();
+        if (building) {
+            buildingNameText.SetText(building.BuildingData.BuildingName);
 
-                if (building.BuildingData.ThumbImage)
-                    buildingImage.sprite = building.BuildingData.ThumbImage;
-            }
-            DrawResourcesToBuild();
+            if (building.ConstructionLevelsData.Count >= 1 && building.ConstructionLevelsData[0])
+                resourcesToBuildNumber = building.ConstructionLevelsData[0].ResourcesToBuild.Count();
+            else
+                Debug.LogWarning($"{building.BuildingData.BuildingName} has no LevelData by index 0 or has not instance");
+
+            if (building.BuildingData.ThumbImage)
+                buildingImage.sprite = building.BuildingData.ThumbImage;
         }
-        else
-            Debug.LogError("construction is NULL");
+        DrawResourcesToBuild();
     }
 
     private void DrawResourcesToBuild()
@@ -134,7 +127,7 @@ public class BuildingWidget : MonoBehaviour
         {
             int id = building.ConstructionLevelsData[0].ResourcesToBuild[i].ItemData.ItemId;
 
-            spawnedBuildingResourceWidgets[i].SetResourceText(cityManager.items[id].Amount, building.ConstructionLevelsData[0].ResourcesToBuild[i].Amount);
+            spawnedBuildingResourceWidgets[i].SetResourceText(gameManager.items[id].Amount, building.ConstructionLevelsData[0].ResourcesToBuild[i].Amount);
         }
     }
 }

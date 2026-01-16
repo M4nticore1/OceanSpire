@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class TextLocalizer : MonoBehaviour
 {
-    private GameManager gameManager = null;
-    private LocalizationManager LocalizationManager => gameManager.localizationManager;
+    //private GameManager gameManager = null;
+    //private LocalizationManager LocalizationManager => gameManager.localizationManager;
     private TextMeshProUGUI text;
     private string keyText = "";
     [SerializeField] private string key = "";
@@ -12,26 +12,26 @@ public class TextLocalizer : MonoBehaviour
     private void Awake()
     {
         text = GetComponent<TextMeshProUGUI>();
-        gameManager = FindAnyObjectByType<GameManager>();
+        //gameManager = FindAnyObjectByType<GameManager>();
     }
 
     private void OnEnable()
     {
-        LocalizationManager.OnLocalizationChanged += ChangeLocalization;
-        if (LocalizationManager.isInitialized && keyText != LocalizationManager.GetLocalizationText(key)) {
+        LocalizationManager.Instance.OnLocalizationChanged += ChangeLocalization;
+        if (LocalizationManager.Instance.isInitialized && keyText != LocalizationManager.Instance.GetLocalizationText(key)) {
             ChangeLocalization();
         }
     }
 
     private void OnDisable()
     {
-        LocalizationManager.OnLocalizationChanged -= ChangeLocalization;
+        LocalizationManager.Instance.OnLocalizationChanged -= ChangeLocalization;
     }
 
     private void ChangeLocalization()
     {
         Debug.Log(key);
-        keyText = LocalizationManager.GetLocalizationText(key);
+        keyText = LocalizationManager.Instance.GetLocalizationText(key);
         text.SetText(keyText);
     }
 }

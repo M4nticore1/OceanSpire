@@ -2,13 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "LootList", menuName = "GameContent/LootList")]
-public class LootList : ScriptableObject
+[CreateAssetMenu(fileName = "lootList", menuName = "GameContent/lootList")]
+public class lootList : ScriptableObject
 {
-    [SerializeField] private List<ItemData> loot = new List<ItemData>();
-    public List<ItemData> Loot => loot;
-    public Dictionary<int, ItemData> lootById { get; private set; } = new Dictionary<int, ItemData>();
-    public Dictionary<string, ItemData> lootByIdName { get; private set; } = new Dictionary<string, ItemData>();
+    [field: SerializeField] public List<ItemData> loot { get; private set; } = new List<ItemData>();
 
     //public static void Load()
     //{

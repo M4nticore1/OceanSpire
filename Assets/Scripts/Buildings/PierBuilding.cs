@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class PierBuilding : Building
 {
-    private IReadOnlyList<Boat> spawnedBoats => cityManager.SpawnedBoats;
-
     //public void CreateBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isFloating = false, bool isReturningToDock = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
     //{
     //    PierConstruction pierConstruction = constructionComponent.SpawnedConstruction as PierConstruction;
@@ -41,11 +39,11 @@ public class PierBuilding : Building
         if (pierConstruction) {
             int docksCount = pierConstruction.BoatDockPositions.Count;
             for (int i = 0; i < docksCount; i++) {
-                if (spawnedBoats.Count <= i) break;
+                if (gameManager.spawnedBoats.Count <= i) break;
 
-                if (spawnedBoats[i] && !spawnedBoats[i].isFloating) {
-                    spawnedBoats[i].transform.position = pierConstruction.BoatDockPositions[i].position;
-                    spawnedBoats[i].transform.rotation = pierConstruction.BoatDockPositions[i].rotation;
+                if (gameManager.spawnedBoats[i] && !gameManager.spawnedBoats[i].isFloating) {
+                    gameManager.spawnedBoats[i].transform.position = pierConstruction.BoatDockPositions[i].position;
+                    gameManager.spawnedBoats[i].transform.rotation = pierConstruction.BoatDockPositions[i].rotation;
                 }
             }
         }

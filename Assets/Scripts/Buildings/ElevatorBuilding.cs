@@ -7,15 +7,15 @@ public class ElevatorBuilding : RoomBuilding
     public ElevatorPlatformConstruction spawnedElevatorCabin { get; private set; } = null;
     public int elevatorGroupId = 0;
 
-    public List<Entity> elevatorWaitingPassengers { get; private set; } = new List<Entity>();
+    public List<Creature> elevatorWaitingPassengers { get; private set; } = new List<Creature>();
     //public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();
 
     public override void BuildConstruction(int levelIndex)
     {
         base.BuildConstruction(levelIndex);
 
-        ElevatorBuilding belowElevatorBuilding = downConnectedBuilding as ElevatorBuilding;
-        ElevatorBuilding aboveElevatorBuilding = upConnectedBuilding as ElevatorBuilding;
+        ElevatorBuilding belowElevatorBuilding = downNeighborBuilding as ElevatorBuilding;
+        ElevatorBuilding aboveElevatorBuilding = upNeighborBuilding as ElevatorBuilding;
 
         if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorCabin)
         {
@@ -32,20 +32,20 @@ public class ElevatorBuilding : RoomBuilding
             ElevatorLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorLevelData;
 
             if (buildingPosition == BuildingPosition.Straight)
-                spawnedElevatorCabin = Instantiate(elevatorBuildingLevelData.ElevatorPlatformStraight, cityManager.towerRoot);
+                spawnedElevatorCabin = Instantiate(elevatorBuildingLevelData.ElevatorPlatformStraight);
             else
-                spawnedElevatorCabin = Instantiate(elevatorBuildingLevelData.ElevatorPlatformCorner, cityManager.towerRoot);
+                spawnedElevatorCabin = Instantiate(elevatorBuildingLevelData.ElevatorPlatformCorner);
 
             spawnedElevatorCabin.transform.position = transform.position;
             spawnedElevatorCabin.transform.rotation = transform.rotation;
 
-            spawnedElevatorCabin.Build(this);
+            spawnedElevatorCabin.Build(gameManager, this);
 
-            elevatorGroupId = cityManager.elevatorGroups.Count;
+            elevatorGroupId = gameManager.elevatorGroups.Count;
         }
     }
 
-    public override void EnterBuilding(Entity entity)
+    public override void EnterBuilding(Creature entity)
     {
         base.EnterBuilding(entity);
 
@@ -75,24 +75,24 @@ public class ElevatorBuilding : RoomBuilding
         //}
     }
 
-    public override void ExitBuilding(Entity entity)
+    public override void ExitBuilding(Creature entity)
     {
         //entity.EnterBuilding(this);
     }
 
-    public void AddPassenger(Entity passenger)
+    public void AddPassenger(Creature passenger)
     {
         spawnedElevatorCabin.AddPassenger(passenger);
     }
 
-    public void RemovePassenger(Entity passenger)
+    public void RemovePassenger(Creature passenger)
     {
         spawnedElevatorCabin.RemovePassenger(passenger);
     }
 
     public bool IsPossibleToEnter()
     {
-        return !spawnedElevatorCabin.isMoving && spawnedElevatorCabin.floorIndex == floorIndex && spawnedElevatorCabin.ridingPassengers.Count < currentLevelData.maxResidentsCount;
+        return !spawnedElevatorCabin.isMoving && spawnedElevatorCabin.ownedElevator.floorIndex == floorIndex && spawnedElevatorCabin.ridingPassengers.Count < currentLevelData.maxResidentsCount;
     }
 
     public bool IsPossibleToExit()

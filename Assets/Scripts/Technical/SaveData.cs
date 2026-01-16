@@ -47,35 +47,40 @@ public class SaveData
 
     public int[] npcElevatorPassengerStates { get; private set; } = new int[0];
 
-    public SaveData(PlayerController playerController, CityManager cityManager)
+    public SaveData(PlayerController playerController, GameManager gameManager)
     {
-        if (!playerController || !cityManager) {
-            if (!playerController) Debug.LogError("playerController is NULL");
-            if (!cityManager) Debug.LogError("cityManager is NULL");
-            return; }
+        if (!playerController) {
+            Debug.LogError("playerController is NULL");
+            return;
+        }
+
+        if (gameManager == null) {
+            Debug.LogError("cityManager is NULL");
+            return;
+        }
 
         // Player
         cameraYawRotation = playerController.cameraYawRotateAlpha;
         cameraHeightPosition = playerController.cameraVerticalPosition.y;
 
         // City
-        builtFloorsCount = cityManager.builtFloors.Count;
-        int roomsCount = builtFloorsCount * CityManager.roomsCountPerFloor;
+        builtFloorsCount = gameManager.builtFloors.Count;
+        int roomsCount = builtFloorsCount * GameManager.roomsCountPerFloor;
         placedBuildingIds = new int[roomsCount];
         placedBuildingLevels = new int[roomsCount];
         placedBuildingsUnderConstruction = new bool[roomsCount];
         placedBuildingInteriorIds = new int[roomsCount];
         buildingProductionTimers = new float[roomsCount];
         elevatorPlatformHeights = new float[roomsCount];
-        resourcesAmount = new int[cityManager.items.Count];
+        resourcesAmount = new int[gameManager.items.Count];
 
         int placeIndex = 0;
         int lastElevatorGroupId = -1;
         for (int i = 0; i < builtFloorsCount; i++)
         {
-            for (int j = 0; j < CityManager.roomsCountPerFloor; j++)
+            for (int j = 0; j < GameManager.roomsCountPerFloor; j++)
             {
-                Building placedBuilding = cityManager.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
+                Building placedBuilding = gameManager.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
                 placedBuildingIds[placeIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingId : -1;
                 placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.levelIndex : 0;
                 placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.isUnderConstruction : false;
@@ -96,13 +101,13 @@ public class SaveData
             }
         }
 
-        for (int i = 0; i < cityManager.items.Count; i++)
+        for (int i = 0; i < gameManager.items.Count; i++)
         {
-            resourcesAmount[i] = cityManager.items[i].Amount;
+            resourcesAmount[i] = gameManager.items[i].Amount;
         }
 
         // Boats
-        List<Boat> spawnedBoats = cityManager.SpawnedBoats.ToList();
+        List<Boat> spawnedBoats = gameManager.spawnedBoats.ToList();
         int boatsCount = spawnedBoats.Count;
         spawnedBoatIds = new int[boatsCount];
         spawnedBoatsAreUnderConstruction = new bool[boatsCount];
@@ -130,7 +135,7 @@ public class SaveData
         }
 
         // Residents
-        residentsCount = cityManager.residents.Count;
+        residentsCount = gameManager.residents.Count;
         residentsIsMoving = new bool[residentsCount];
         residentPositionsX = new float[residentsCount];
         residentPositionsY = new float[residentsCount];
@@ -145,30 +150,45 @@ public class SaveData
 
         for (int i = 0; i < residentsCount; i++)
         {
-            Entity resident = cityManager.residents[i];
+            Creature resident = gameManager.residents[i];
 
             residentsIsMoving[i] = resident.isMoving;
 
             residentPositionsX[i] = resident.transform.position.x;
             residentPositionsY[i] = resident.transform.position.y;
             residentPositionsZ[i] = resident.transform.position.z;
-            residentFloorIndexes[i] = resident.CurrentBuilding ? resident.CurrentBuilding.floorIndex : 0;
+            residentFloorIndexes[i] = resident.CurrentBuilding ? ((TowerBuilding)resident.CurrentBuilding ? ((TowerBuilding)resident.CurrentBuilding).floorIndex : -1) : -1;
 
             Building currentBuilding = resident.CurrentBuilding;
-            if (currentBuilding)
-                residentCurrentBuildingIndexes[i] = currentBuilding.floorIndex * CityManager.roomsCountPerFloor + currentBuilding.placeIndex;
+            if (currentBuilding) {
+                TowerBuilding towerBuilding = (TowerBuilding)currentBuilding;
+                if (towerBuilding)
+                    residentCurrentBuildingIndexes[i] = towerBuilding.floorIndex * GameManager.roomsCountPerFloor + towerBuilding.placeIndex;
+                else
+                    residentCurrentBuildingIndexes[i] = -1;
+            }
             else
                 residentCurrentBuildingIndexes[i] = -1;
 
             Building targetBuilding = resident.TargetBuilding;
-            if (targetBuilding)
-                residentTargetBuildingIndexes[i] = targetBuilding.floorIndex * CityManager.roomsCountPerFloor + targetBuilding.placeIndex;
+            if (targetBuilding) {
+                TowerBuilding towerBuilding = (TowerBuilding)targetBuilding;
+                if (towerBuilding)
+                    residentTargetBuildingIndexes[i] = towerBuilding.floorIndex * GameManager.roomsCountPerFloor + towerBuilding.placeIndex;
+                else
+                    residentTargetBuildingIndexes[i] = -1;
+            }
             else
                 residentTargetBuildingIndexes[i] = -1;
 
             Building workBuilding = resident.workBuilding;
-            if (workBuilding)
-                residentWorkBuildingIndexes[i] = workBuilding.floorIndex * CityManager.roomsCountPerFloor + workBuilding.placeIndex;
+            if (workBuilding) {
+                TowerBuilding towerBuilding = (TowerBuilding)workBuilding;
+                if (towerBuilding)
+                    residentWorkBuildingIndexes[i] = towerBuilding.floorIndex * GameManager.roomsCountPerFloor + towerBuilding.placeIndex;
+                else
+                    residentWorkBuildingIndexes[i] = -1;
+            }
             else
                 residentWorkBuildingIndexes[i] = -1;
 

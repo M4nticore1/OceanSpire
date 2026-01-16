@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
+using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
@@ -23,7 +24,7 @@ public class Boat : MonoBehaviour
     [SerializeField] private Transform seatSlot = null;
     public Transform SeatSlot => seatSlot;
 
-    private Entity rider = null;
+    private Creature rider = null;
 
     private const double updateDestinationRate = 1f;
     private double lastUpdateDestinationTime = 0;
@@ -57,14 +58,6 @@ public class Boat : MonoBehaviour
     public static event System.Action<Boat> OnBoadDestroyed;
     public static event System.Action<Boat> onBoatDocked;
 
-    private void Awake()
-    {
-        gameManager = FindAnyObjectByType<GameManager>();
-        navAgent = GetComponent<NavMeshAgent>();
-        constructionComponent = GetComponent<ConstructionComponent>();
-        lootManager = FindAnyObjectByType<LootManager>();
-    }
-
     private void OnEnable()
     {
         LootContainer.OnLootEntered += OnLootEntered;
@@ -77,8 +70,13 @@ public class Boat : MonoBehaviour
         LootContainer.OnLootExited -= OnLootExited;
     }
 
-    public void Initialize(bool isUnderConstruction, int dockIndex, bool isFloating = false, bool isReturningToDock = false, float? health = null)
+    public void Initialize(GameManager gameManager, bool isUnderConstruction, int dockIndex, bool isFloating = false, bool isReturningToDock = false, float? health = null)
     {
+        this.gameManager = gameManager;
+        lootManager = gameManager.lootManager;
+        navAgent = GetComponent<NavMeshAgent>();
+        constructionComponent = GetComponent<ConstructionComponent>();
+
         lastUpdateDestinationTime = Time.timeAsDouble - updateDestinationRate;
 
         this.ownedPier = ownedPier;
@@ -170,7 +168,7 @@ public class Boat : MonoBehaviour
 
                         int maxAmountToUnload = (int)(currentWeightToUnload / loot.ItemData.Weight);
                         int minAmountToUnload = math.min(maxAmountToUnload, loot.Amount);
-                        int amountToUnload = math.min(minAmountToUnload, gameManager.LootList.GetItem(lootId, storageLevelData.storageItems).Amount);
+                        int amountToUnload = math.min(minAmountToUnload, gameManager.lootList.GetItem(lootId, storageLevelData.storageItems).Amount);
                         int weightToUnload = amountToUnload * loot.ItemData.Weight;
 
                         storedLootDict[lootId].SubtractAmount(amountToUnload);
@@ -211,10 +209,7 @@ public class Boat : MonoBehaviour
 
     private bool SetTargetPosition(Vector3 position)
     {
-        NavMeshHit hit;
         if (!navAgent || !navAgent.SetDestination(position)) return false;
-        //NavMeshPath path = new NavMeshPath();
-        //if (!navAgent || navAgent.CalculatePath(position, path)) return;
 
         Debug.Log("SetTargetPosition");
         currentTargetPosition = position;
@@ -293,7 +288,7 @@ public class Boat : MonoBehaviour
         currentTargetPosition = Vector3.zero;
     }
 
-    public void EnterBoat(Entity entity)
+    public void EnterBoat(Creature entity)
     {
         rider = entity;
         navAgent.isStopped = false;

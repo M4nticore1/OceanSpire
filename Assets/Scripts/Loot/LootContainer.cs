@@ -20,6 +20,7 @@ public enum TransportMethod
 
 public class LootContainer : MonoBehaviour
 {
+    [field: SerializeField] public LootContainerData containerData { get; private set; } = null;
     private GameManager gameManager = null;
 
     [Header("Loot")]
@@ -65,44 +66,25 @@ public class LootContainer : MonoBehaviour
     public static System.Action<LootContainer> OnLootEntered;
     public static System.Action<LootContainer> OnLootExited;
 
-    private void Awake()
+    public void InitializeContainer(GameManager gameManager, int floorIndex)
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-    }
-
-    private void Start()
-    {
-        if (!isInitialized)
-            Initialize(Vector2.zero, 0, 0);
-    }
-
-    public void Tick(float deltaTime)
-    {
-        Move(deltaTime);
-        CheckPosition();
-    }
-
-    public void Initialize(Vector2 moveDirection, int floorIndex, float windSpeed)
-    {
+        this.gameManager = gameManager;
         checkPositionTime = Time.time;
-        if(isMovable)
+        if (isMovable)
             isMoving = true;
 
-        for (int i = 0; i < possibleLoot.Count; i++)
-        {
+        for (int i = 0; i < possibleLoot.Count; i++) {
             int chance = UnityEngine.Random.Range(0, 100);
 
-            if (chance <= possibleLoot[i].dropChance)
-            {
-                int itemAmount = (int)UnityEngine.Random.Range(possibleLoot[i].minAmount, possibleLoot[i].maxAmount);
+            if (chance <= possibleLoot[i].dropChance) {
+                int itemAmount = UnityEngine.Random.Range(possibleLoot[i].minAmount, possibleLoot[i].maxAmount);
                 containedLoot.Add(new ItemInstance(possibleLoot[i].itemData, itemAmount));
             }
         }
 
         if (gameManager)
             this.moveDirection = new Vector3(gameManager.windDirection.x, 0, gameManager.windDirection.y).normalized;
-        else
-        {
+        else {
             this.moveDirection = -transform.position.normalized;
             Debug.LogError("gameManager is NULL");
         }
@@ -113,9 +95,14 @@ public class LootContainer : MonoBehaviour
             currentTransportMethod = TransportMethod.Flying;
         else
             currentTransportMethod = TransportMethod.Floating;
-        this.windSpeed = windSpeed;
 
         isInitialized = true;
+    }
+
+    public void Tick(float deltaTime)
+    {
+        Move(deltaTime);
+        CheckPosition();
     }
 
     private void Move(float deltaTime)

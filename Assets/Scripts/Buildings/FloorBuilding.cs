@@ -8,13 +8,13 @@ public class FloorBuilding : TowerBuilding
     public BuildingPlace hallBuildingPlace;
     public BuildingPlace floorBuildingPlace;
 
-    public override void InitializeBuilding(BuildingPlace buildingPlace, bool requiresConstruction, int levelIndex, int interiorIndex)
+    public override void InitializeBuilding(GameManager gameManager, BuildingPlace buildingPlace, bool requiresConstruction, int levelIndex, int interiorIndex)
     {
-        base.InitializeBuilding(buildingPlace, requiresConstruction, levelIndex, interiorIndex);
+        base.InitializeBuilding(gameManager, buildingPlace, requiresConstruction, levelIndex, interiorIndex);
 
         floorBuildingPlace.InitializeBuildingPlace(floorIndex + 1);
         hallBuildingPlace.InitializeBuildingPlace(floorIndex);
-        for (int i = 0; i < CityManager.roomsCountPerFloor; i++)
+        for (int i = 0; i < GameManager.roomsCountPerFloor; i++)
             roomBuildingPlaces[i].InitializeBuildingPlace(floorIndex);
     }
 
@@ -26,43 +26,6 @@ public class FloorBuilding : TowerBuilding
         bool hasPlaceBelow = false;
 
         int buildingHeight = buildingData.BuildingFloors;
-
-        //if (cityManager.buildedFloorsCount >= floorIndex + buildingHeight)
-        //{
-        //    for (int i = 0; i < buildingHeight; i++)
-        //    {
-        //        if (cityManager.spawnedFloors[floorIndex + i].hallBuildingPlace.isBuildingPlaced)
-        //        {
-        //            hasPlaceUp = false;
-
-        //            break;
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    hasPlaceUp = false;
-        //}
-
-        //if (floorIndex - buildingHeight >= 0)
-        //{
-        //    for (int i = floorIndex; i > floorIndex - buildingHeight; i--)
-        //    {
-        //        if (!cityManager.spawnedFloors[i].hallBuildingPlace.isBuildingPlaced)
-        //        {
-
-        //        }
-        //        else
-        //        {
-        //            hasPlaceDown = false;
-        //            break;
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    hasPlaceDown = false;
-        //}
 
         if (buildingData.BuildingType == BuildingType.Room)
         {
@@ -84,7 +47,7 @@ public class FloorBuilding : TowerBuilding
                     {
                         for (int j = 1; j <= buildingData.BuildingFloors; j++)
                         {
-                            BuildingPlace currentBuildingPlace = cityManager.builtFloors[floorIndex - j].roomBuildingPlaces[i];
+                            BuildingPlace currentBuildingPlace = gameManager.builtFloors[floorIndex - j].roomBuildingPlaces[i];
 
                             if (currentBuildingPlace.emptyBuildingPlacesAbove == buildingData.BuildingFloors - 1)
                             {
@@ -97,7 +60,7 @@ public class FloorBuilding : TowerBuilding
         }
         else if (buildingData.BuildingType == BuildingType.Hall)
         {
-            if (!hallBuildingPlace.placedBuilding && cityManager.currentRoomsNumberOnFloor[floorIndex] == 0)
+            if (!hallBuildingPlace.placedBuilding && gameManager.currentRoomsNumberOnFloor[floorIndex] == 0)
             {
                 if(hallBuildingPlace.emptyBuildingPlacesAbove >= buildingHeight - 1)
                     hasPlaceAbove = true;
@@ -132,13 +95,6 @@ public class FloorBuilding : TowerBuilding
         {
             hallBuildingPlace.HideBuildingPlace();
         }
-        //else if (buildingType == BuildingType.Elevator)
-        //{
-        //    for (int i = 0; i < elevatorsBuildingPlaces.Count; i++)
-        //    {
-        //        elevatorsBuildingPlaces[i].HideBuildingPlace();
-        //    }
-        //}
         else if (buildingType == BuildingType.FloorFrame)
         {
             floorBuildingPlace.HideBuildingPlace();

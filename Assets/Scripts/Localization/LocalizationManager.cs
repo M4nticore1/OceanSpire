@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class LocalizationManager
 {
+    private static LocalizationManager _instance;
+    public static LocalizationManager Instance => _instance ??= new LocalizationManager();
+
     public List<Dictionary<string, string>> localizations { get; private set; } = new List<Dictionary<string, string>>();
     private int currentLocalizationIndex = 0;
     public bool isInitialized { get; private set; } = false;

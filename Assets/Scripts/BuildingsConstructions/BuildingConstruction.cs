@@ -12,9 +12,8 @@ public struct BuildingAction
 
 public class BuildingConstruction : MonoBehaviour
 {
+    protected GameManager gameManager;
     protected Building ownedBuilding = null;
-    public int floorIndex => ownedBuilding.floorIndex;
-    public int placeIndex => ownedBuilding.placeIndex;
 
     [SerializeField] private GameObject[] buildingInteriors;
     public GameObject[] BuildingInteriors => buildingInteriors;
@@ -38,8 +37,9 @@ public class BuildingConstruction : MonoBehaviour
 
     }
 
-    public virtual void Build(Building ownedBuilding)
+    public virtual void Build(GameManager gameManager, Building ownedBuilding)
     {
+        this.gameManager = gameManager;
         this.ownedBuilding = ownedBuilding;
         meshRendererers = GetComponentsInChildren<MeshRenderer>();
         propertyBlock = new MaterialPropertyBlock();

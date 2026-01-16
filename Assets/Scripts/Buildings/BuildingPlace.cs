@@ -10,8 +10,6 @@ public enum BuildingPlaceState
 
 public class BuildingPlace : MonoBehaviour
 {
-    [HideInInspector] public CityManager cityManager = null;
-
     [SerializeField] private BuildingType buildingType = BuildingType.Room;
     public BuildingType BuildingType => buildingType;
 
@@ -22,7 +20,7 @@ public class BuildingPlace : MonoBehaviour
     public int emptyBuildingPlacesBelow { get; set; } = 0;
 
     //public bool isBuildingPlaced = false;
-    public Building placedBuilding = null;
+    public TowerBuilding placedBuilding = null;
 
     [SerializeField] private GameObject buildingZone = null;
     [SerializeField] private GameObject buildingFrame = null;
@@ -42,7 +40,6 @@ public class BuildingPlace : MonoBehaviour
 
     private void Awake()
     {
-        cityManager = FindAnyObjectByType<CityManager>();
         buildingZoneMeshRenderer = buildingZone.GetComponent<MeshRenderer>();
 
         materialPropertyBlock = new MaterialPropertyBlock();
@@ -67,41 +64,6 @@ public class BuildingPlace : MonoBehaviour
         floorIndex = newFloorindex;
     }
 
-    //public void LoadPlacedBuilding()
-    //{
-    //    if (placedBuilding && !placedBuilding.isInitialized)
-    //        PlaceBuilding(placedBuilding, placedBuilding.levelIndex, placedBuilding.constructionComponent.isUnderConstruction, -1);
-    //}
-
-    //public void PlaceBuilding(Building buildingToPlace, int levelIndex, bool isUnderConstruction, int interiorIndex)
-    //{
-    //    if (!buildingToPlace.isInitialized)
-    //    {
-    //        if (emptyBuildingPlacesAbove >= buildingToPlace.BuildingData.BuildingFloors - 1)
-    //        {
-    //            if (placedBuilding.BuildingData.BuildingIdName == "tower_gate")
-    //                Debug.Log("PlaceBuilding");
-
-    //            //if (placedBuilding)
-    //                //placedBuilding.constructionComponent.Demolish();
-
-    //            //placedBuilding = Instantiate(buildingToPlace, transform.position, transform.rotation);
-
-    //            if (placedBuilding.BuildingData.BuildingType == BuildingType.FloorFrame)
-    //                placedBuilding.transform.SetParent(cityManager.towerRoot);
-    //            else
-    //                placedBuilding.transform.SetParent(transform);
-
-    //            placedBuilding.InitializeBuilding(this, levelIndex, isUnderConstruction, interiorIndex);
-
-    //            if (buildingFrame)
-    //                buildingFrame.SetActive(false);
-    //        }
-    //    }
-    //}
-
-
-
     //public void DestroyBuilding()
     //{
     //    if (placedBuilding)
@@ -116,7 +78,7 @@ public class BuildingPlace : MonoBehaviour
     //    }
     //}
 
-    public void SetPlacedBuilding(Building building)
+    public void SetPlacedBuilding(TowerBuilding building)
     {
         placedBuilding = building;
         if (buildingFrame)

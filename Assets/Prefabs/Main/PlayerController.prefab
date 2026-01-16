@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e65e83ab08dfc0e48a34c6c7e30aef28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiManager: {fileID: 1412979276657768449}
   mainCamera: {fileID: 3364798657196465612}
   cameraHolder: {fileID: 9020790906093603443}
   cameraYawRotateAlpha: 0
@@ -576,6 +577,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+--- !u!114 &1412979276657768449 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7331670172294356713, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+  m_PrefabInstance: {fileID: 8513133735699425000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99aee27a09c8e2b45a3c436ce53e7646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &7728368124975035845 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2117843957883114285, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}

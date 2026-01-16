@@ -11,7 +11,7 @@ public class BuildingTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Entity entity = other.GetComponent<Entity>();
+        Creature entity = other.GetComponent<Creature>();
 
         if (entity && building) {
             if (!entity.IsRidingOnElevator) {
@@ -28,7 +28,7 @@ public class BuildingTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Entity entity = other.GetComponent<Entity>();
+        Creature entity = other.GetComponent<Creature>();
 
         if (entity) {
             if (entity.CurrentBuilding == building)

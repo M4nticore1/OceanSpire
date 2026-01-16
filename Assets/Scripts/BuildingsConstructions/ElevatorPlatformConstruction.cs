@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class ElevatorPlatformConstruction : BuildingConstruction
+public class ElevatorPlatformConstruction : TowerBuildingConstruction
 {
-    private CityManager cityManager = null;
-
-    public List<Entity> goingForWaitingPassengers = new List<Entity>();
-    public List<Entity> waitingPassengers = new List<Entity>();
-    public List<Entity> goingToRidingPassengers = new List<Entity>();
-    public List<Entity> ridingPassengers = new List<Entity>();
+    public List<Creature> goingForWaitingPassengers = new List<Creature>();
+    public List<Creature> waitingPassengers = new List<Creature>();
+    public List<Creature> goingToRidingPassengers = new List<Creature>();
+    public List<Creature> ridingPassengers = new List<Creature>();
 
     public bool isMoving { get; private set; } = false;
     public int startFloorIndex { get; private set; } = 0;
@@ -40,11 +38,9 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         }
     }
 
-    public override void Build(Building ownedBuilding)
+    public override void Build(GameManager gameManager, Building ownedBuilding)
     {
-        base.Build(ownedBuilding);
-
-        cityManager = FindAnyObjectByType<CityManager>();
+        base.Build(gameManager, ownedBuilding);
     }
 
     private void StartMovingToFloor(int targetFloorIndex)
@@ -83,13 +79,13 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         isMoving = false;
 
         // Correct position.
-        transform.position = new Vector3(transform.position.x, floorIndex * CityManager.floorHeight + CityManager.firstFloorHeight, transform.position.z);
+        transform.position = new Vector3(transform.position.x, floorIndex * GameManager.floorHeight + GameManager.firstFloorHeight, transform.position.z);
 
         // Stop entities riding.
-        foreach (Entity riders in ridingPassengers.ToArray()) {
+        foreach (Creature riders in ridingPassengers.ToArray()) {
             riders.OnElevatorPlatformStopped(this);
         }
-        foreach (Entity waiters in waitingPassengers.ToArray()) {
+        foreach (Creature waiters in waitingPassengers.ToArray()) {
             if (ridingPassengers.Count + goingToRidingPassengers.Count >= ownedBuilding.currentLevelData.maxResidentsCount)
                 break;
             waiters.OnElevatorPlatformStopped(this);
@@ -108,15 +104,15 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         }
 
         if (ridingPassengers.Count > 0) {
-            foreach (Entity rider in ridingPassengers) {
+            foreach (Creature rider in ridingPassengers) {
                 if (rider.CurrentPathBuilding) {
-                    nextFloorIndex = rider.CurrentPathBuilding.floorIndex;
+                    nextFloorIndex = ((TowerBuilding)rider.CurrentPathBuilding).floorIndex;
                     break;
                 }
             }
 
             if (ridingPassengers.Count < ownedBuilding.currentLevelData.maxResidentsCount && waitingPassengers.Count > 0) {
-                foreach (Entity waiter in waitingPassengers) {
+                foreach (Creature waiter in waitingPassengers) {
                     if (nextFloorIndex < floorIndex && waiter.floorIndex < floorIndex) {
                         nextFloorIndex = math.max(nextFloorIndex, waiter.floorIndex);
                     }
@@ -126,8 +122,8 @@ public class ElevatorPlatformConstruction : BuildingConstruction
                 }
             }
             else {
-                foreach (Entity rider in ridingPassengers) {
-                    int pathFloor = rider.CurrentPathBuilding.floorIndex;
+                foreach (Creature rider in ridingPassengers) {
+                    int pathFloor = ((TowerBuilding)rider.CurrentPathBuilding).floorIndex;
                     if (nextFloorIndex < floorIndex && pathFloor < floorIndex) {
                         nextFloorIndex = math.max(nextFloorIndex, pathFloor);
                     }
@@ -155,7 +151,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
             ridingPassengers[i].Move(direction, speed);
     }
 
-    public void AddPassenger(Entity passenger)
+    public void AddPassenger(Creature passenger)
     {
         switch (passenger.elevatorPassengerState) {
             case ElevatorPassengerState.GoingToWaiting:
@@ -180,7 +176,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         }
     }
 
-    public void RemovePassenger(Entity passenger)
+    public void RemovePassenger(Creature passenger)
     {
         switch (passenger.elevatorPassengerState) {
             case ElevatorPassengerState.GoingToWaiting:
@@ -203,7 +199,7 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         }
     }
 
-    private void OnEntityStopped(Entity entity)
+    private void OnEntityStopped(Creature entity)
     {
         Debug.Log(entity.elevatorPassengerState);
 
@@ -218,8 +214,8 @@ public class ElevatorPlatformConstruction : BuildingConstruction
     public void SetOwnedBuilding(int newFloorIndex)
     {
         if (newFloorIndex != floorIndex && newFloorIndex >= 0) {
-            ownedBuilding = cityManager.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
-            foreach (Entity npc in ridingPassengers) {
+            ownedBuilding = gameManager.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
+            foreach (Creature npc in ridingPassengers) {
                 npc.OnElevatorCabinChangedFloor(this);
             }
         }
@@ -230,12 +226,12 @@ public class ElevatorPlatformConstruction : BuildingConstruction
         int floorIndex = 0;
 
         if (nextFloorIndex >= this.floorIndex) {
-            floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight) / CityManager.floorHeight);
+            floorIndex = (int)((transform.position.y - GameManager.firstFloorHeight) / GameManager.floorHeight);
             if (floorIndex < startFloorIndex)
                 floorIndex = startFloorIndex;
         }
         else {
-            floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight + CityManager.floorHeight) / CityManager.floorHeight);
+            floorIndex = (int)((transform.position.y - GameManager.firstFloorHeight + GameManager.floorHeight) / GameManager.floorHeight);
             if (floorIndex > startFloorIndex)
                 floorIndex = startFloorIndex;
         }

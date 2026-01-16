@@ -24,10 +24,9 @@ public enum ElevatorPassengerState
     Riding
 }
 
-public class Entity : MonoBehaviour
+public class Creature : MonoBehaviour
 {
     private GameManager gameManager = null;
-    private CityManager cityManager = null;
     public LevelComponent levelComponent { get; private set; } = null;
     public SelectComponent selectComponent { get; private set; } = null;
     public NavMeshAgent navMeshAgent { get; private set; } = null;
@@ -56,8 +55,8 @@ public class Entity : MonoBehaviour
     public int pathIndex = 0;
 
     // Positions
-    public int floorIndex => CurrentBuilding.floorIndex;
-    public int buildingIndex => CurrentBuilding.placeIndex;
+    public int floorIndex => ((TowerBuilding)CurrentBuilding).floorIndex;
+    public int buildingIndex => ((TowerBuilding)CurrentBuilding).placeIndex;
     public Vector3 targetPosition = Vector3.zero;
     private const float applyTargetPosition = 0.6f;
     private const float applyTargetMagnitude = 0.1f;
@@ -92,12 +91,11 @@ public class Entity : MonoBehaviour
 
     public static event Action OnWorkerAdd;
     public static event Action OnWorkerRemove;
-    public static event Action<Entity> OnEntityStopped;
+    public static event Action<Creature> OnEntityStopped;
 
-    private void Awake()
+    public void Initialize(GameManager gameManager)
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
+        this.gameManager = gameManager;
         levelComponent = GetComponent<LevelComponent>();
         selectComponent = GetComponent<SelectComponent>();
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -117,11 +115,6 @@ public class Entity : MonoBehaviour
         Boat.onBoatDocked -= OnBoatDocked;
         ElevatorPlatformConstruction.onElevatorPlatformStopped -= OnElevatorPlatformStopped;
         ElevatorPlatformConstruction.onElevatorPlatformChangedFloor -= OnElevatorCabinChangedFloor;
-    }
-
-    private void Start()
-    {
-
     }
 
     private void Update()
@@ -454,7 +447,7 @@ public class Entity : MonoBehaviour
                             if (isNeededToWork)
                                 SetTargetBuilding(b =>
                                 {
-                                    if (!b.storageComponent || (b.floorIndex == workBuilding.floorIndex && b.placeIndex == workBuilding.placeIndex)) return false;
+                                    if (!b.storageComponent || (((TowerBuilding)b).floorIndex == ((TowerBuilding)workBuilding).floorIndex && ((TowerBuilding)b).placeIndex == ((TowerBuilding)workBuilding).placeIndex)) return false;
 
                                     int itemIndex = workBuilding.ConstructionLevelsData[workBuilding.levelIndex].ResourcesToBuild[0].ItemData.ItemId;
 
@@ -616,14 +609,15 @@ public class Entity : MonoBehaviour
 
     public Building SetTargetBuilding(Building targetBuilding)
     {
-        if (!cityManager) {
+        Debug.Log("SetTargetBuilding");
+        if (!gameManager) {
             Debug.LogError("cityManager is NULL");
             return null;
         }
 
         Building startBuilding = GetPathStartBuilding();
         BuildingPlace startBuildingPlace = startBuilding ? startBuilding.buildingPlace : null;
-        Building target = cityManager.TryGetPathToBuilding(startBuildingPlace, targetBuilding, ref pathBuildings, IsRidingOnElevator);
+        Building target = gameManager.TryGetPathToBuilding(startBuildingPlace, targetBuilding, ref pathBuildings);
         if (target && IsRidingOnElevator) {
             if (pathBuildings.Count == 1)
                 pathBuildings.Insert(0, CurrentElevator);
@@ -635,14 +629,14 @@ public class Entity : MonoBehaviour
 
     public Building SetTargetBuilding(Func<Building, bool> targetBuildingCondition)
     {
-        if (!cityManager) {
+        if (!gameManager) {
             Debug.LogError("cityManager is NULL");
             return null;
         }
 
         Building startBuilding = GetPathStartBuilding();
         BuildingPlace startBuildingPlace = startBuilding ? startBuilding.buildingPlace : null;
-        Building target = cityManager.TryGetPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings, IsRidingOnElevator);
+        Building target = gameManager.TryGetPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings);
         if (target && IsRidingOnElevator) {
             if (pathBuildings.Count == 1)
                 pathBuildings.Insert(0, CurrentElevator);
@@ -657,7 +651,7 @@ public class Entity : MonoBehaviour
         Building startBuilding = null;
         if (IsRidingOnElevator) {
             int floorIndex = CurrentElevator.spawnedElevatorCabin.startFloorIndex;
-            startBuilding = cityManager.builtFloors[floorIndex].roomBuildingPlaces[buildingIndex].placedBuilding;
+            startBuilding = gameManager.builtFloors[floorIndex].roomBuildingPlaces[buildingIndex].placedBuilding;
         }
         else {
             startBuilding = CurrentBuilding && CurrentBuilding.buildingPlace ? CurrentBuilding.buildingPlace.placedBuilding : null;
@@ -673,14 +667,14 @@ public class Entity : MonoBehaviour
 
     private IEnumerator OnBuildingStartConstructingCoroutine(ConstructionComponent construction)
     {
-        yield return CityManager.bakeNavMeshSurfaceCoroutine;
+        yield return gameManager.isBakingNavMesh;
 
         if (!workBuilding) {
             Building building = construction.GetComponent<Building>();
             SetWork(building);
         }
         else {
-            SetTargetBuilding(b => b.floorIndex == TargetBuilding.floorIndex && b.placeIndex == TargetBuilding.placeIndex);
+            SetTargetBuilding(b => ((TowerBuilding)b).floorIndex == ((TowerBuilding)TargetBuilding).floorIndex && ((TowerBuilding)b).placeIndex == ((TowerBuilding)TargetBuilding).placeIndex);
         }
 
     }
@@ -744,7 +738,7 @@ public class Entity : MonoBehaviour
         if (workPier)
         {
             PierBuilding pier = workBuilding as PierBuilding;
-            Boat boat = cityManager.GetBoatByIndex(workerIndex);
+            Boat boat = gameManager.GetBoatByIndex(workerIndex);
             currentBoat = boat;
             currentBoat.EnterBoat(this);
 
@@ -788,7 +782,7 @@ public class Entity : MonoBehaviour
     {
         if (!carriedItemsDict.ContainsKey(itemId))
         {
-            ItemInstance item = new ItemInstance(gameManager.LootList.lootById[itemId]); // The same item instance for list and dictionary.
+            ItemInstance item = new ItemInstance(gameManager.lootList.loot[itemId]); // The same item instance for list and dictionary.
             carriedItems.Add(item);
             carriedItemsDict.Add(itemId, item);
         }

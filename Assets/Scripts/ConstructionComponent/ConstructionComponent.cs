@@ -80,7 +80,7 @@ public class ConstructionComponent : MonoBehaviour
         isUnderConstruction = true;
         if (ownedBuilding) {
             if (levelIndex == 0)
-                ownedBuilding.levelIndex = nextLevel;
+                ownedBuilding.SetLevelIndex(nextLevel);
         }
 
         onAnyConstructionStartConstructing?.Invoke(this);
@@ -100,7 +100,7 @@ public class ConstructionComponent : MonoBehaviour
     protected void Build(int levelIndex = 0)
     {
         if (ownedBuilding) {
-            ownedBuilding.levelIndex = levelIndex;
+            ownedBuilding.SetLevelIndex(levelIndex);;
         }
 
         onAnyConstructionFinishConstructing?.Invoke(this);
@@ -132,7 +132,7 @@ public class ConstructionComponent : MonoBehaviour
 
     private void AddIncomingConstructionResources_Internal(int lootId, int amount)
     {
-        ItemData data = gameManager.LootList.lootById[lootId];
+        ItemData data = gameManager.lootList.loot[lootId];
         ItemInstance loot = new ItemInstance(data, amount);
         if (!incomingConstructionResourcesDict.ContainsKey(lootId))
         {
@@ -177,7 +177,7 @@ public class ConstructionComponent : MonoBehaviour
     {
         if (!deliveredConstructionResourcesDict.ContainsKey(lootId))
         {
-            ItemData data = gameManager.LootList.lootById[lootId];
+            ItemData data = gameManager.lootList.loot[lootId];
             ItemInstance item = new ItemInstance(data); // The same item instance for list and dictionary.
             deliveredConstructionResources.Add(item);
             deliveredConstructionResourcesDict.Add(lootId, item);
@@ -189,7 +189,7 @@ public class ConstructionComponent : MonoBehaviour
 
         // Finish building
         List<ItemInstance> resourcesToBuild = constructionLevelsData[levelIndex].ResourcesToBuild;
-        if (deliveredConstructionResourcesDict[lootId].Amount >= gameManager.LootList.GetItem(lootId, constructionLevelsData[levelIndex].ResourcesToBuild).Amount)
+        if (deliveredConstructionResourcesDict[lootId].Amount >= gameManager.lootList.GetItem(lootId, constructionLevelsData[levelIndex].ResourcesToBuild).Amount)
         {
             foreach (var item in resourcesToBuild)
                 if (item.Amount < 0)
@@ -213,7 +213,7 @@ public class ConstructionComponent : MonoBehaviour
             {
                 BuildingConstruction construction = Instantiate(buildingConstruction, gameObject.transform);
                 spawnedConstruction = construction;
-                spawnedConstruction.Build(ownedBuilding ? ownedBuilding : null);
+                spawnedConstruction.Build(gameManager, ownedBuilding ? ownedBuilding : null);
 
                 if (spawnedConstruction && spawnedConstruction.BuildingInteriors.Length > 0)
                 {

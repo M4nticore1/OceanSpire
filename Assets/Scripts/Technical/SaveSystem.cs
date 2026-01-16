@@ -7,7 +7,7 @@ public class SaveSystem
     public static SaveData saveData = null;
     private static string path = Application.persistentDataPath + "/OceanSpire.sav";
 
-    public static void SaveData(PlayerController playerController, CityManager cityManger)
+    public static void SaveData(PlayerController playerController, GameManager gameManager)
     {
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = null;
@@ -17,7 +17,7 @@ public class SaveSystem
         else
             stream = new FileStream(path, FileMode.CreateNew);
 
-        SaveData playerData = new SaveData(playerController, cityManger);
+        SaveData playerData = new SaveData(playerController, gameManager);
 
         formatter.Serialize(stream, playerData);
         stream.Close();

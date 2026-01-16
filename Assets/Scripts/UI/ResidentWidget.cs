@@ -14,7 +14,7 @@ public enum ResidentWidgetState
 
 public class ResidentWidget : MonoBehaviour
 {
-    [HideInInspector] public Entity resident = null;
+    [HideInInspector] public Creature resident = null;
     [HideInInspector] public Building selectedBuilding = null;
     private UIManager uiManager = null;
 
@@ -39,7 +39,7 @@ public class ResidentWidget : MonoBehaviour
         residentWidgetButton.onClick.RemoveAllListeners();
     }
 
-    public void InitializeResidentWidget(Entity resident, Building selectedBuilding, UIManager uiManager)
+    public void InitializeResidentWidget(Creature resident, Building selectedBuilding, UIManager uiManager)
     {
         this.resident = resident;
         this.selectedBuilding = selectedBuilding;

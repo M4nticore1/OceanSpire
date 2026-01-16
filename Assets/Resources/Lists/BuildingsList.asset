@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 104d433b4da342a41a58fcc9871f4605, type: 3}
-  m_Name: BuildingPrefabsList
+  m_Script: {fileID: 11500000, guid: 50dd9fcba643f3f48bc4ca0ce1aa947c, type: 3}
+  m_Name: BuildingsList
   m_EditorClassIdentifier: 
-  buildingPrefabs:
+  <buildings>k__BackingField:
   - {fileID: 2892744138841790576, guid: b502e72fb7c0d1c4ea2bca5ae9b69e09, type: 3}
   - {fileID: 5682727777084949512, guid: 6228e009c15c9cd438645bd5c5075d4b, type: 3}
   - {fileID: 8331393561667859132, guid: 0b6d32f3a8efa89429c4ae6f138b821f, type: 3}
@@ -21,6 +21,4 @@ MonoBehaviour:
   - {fileID: 7098873123747204009, guid: a7b3f771ef6391645bbc32d0df5a7447, type: 3}
   - {fileID: 2241001778374089610, guid: f3fb223c5ced85848b4d97f51c42eb7d, type: 3}
   - {fileID: -255987306672972499, guid: 14aa197ddc225d54f9bbbd6b72a19577, type: 3}
-  - {fileID: 3642305825997532937, guid: 02f19a6dfd105844aab888188d7ea324, type: 3}
-  - {fileID: 8489345420242549701, guid: 7e1a807cc0d71f343983305a1bb05e1d, type: 3}
   - {fileID: 7452491075021778987, guid: afedc523fc07a7c4fb612b9c7e79faad, type: 3}

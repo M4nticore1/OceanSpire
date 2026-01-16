@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("")]
-public class BuildingComponent : MonoBehaviour
+public abstract class BuildingComponent : MonoBehaviour
 {
     protected GameManager gameManager { get; private set; } = null;
-    protected CityManager cityManager { get; private set; } = null;
-    [SerializeField, HideInInspector] public Building ownedBuilding = null;
+    public Building ownedBuilding { get; protected set; } = null;
 
     protected int levelIndex => ownedBuilding.levelIndex;
     [SerializeField] protected BuildingComponentLevelData[] levelsData = { };
@@ -14,10 +12,8 @@ public class BuildingComponent : MonoBehaviour
     public BuildingComponentLevelData LevelData => levelsData[ownedBuilding.levelIndex];
     protected BuildingConstruction BuildingConstruction => ownedBuilding.constructionComponent.SpawnedConstruction;
 
-    protected virtual void Awake()
+    protected void Awake()
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
         ownedBuilding = GetComponent<Building>();
     }
 
@@ -42,11 +38,9 @@ public class BuildingComponent : MonoBehaviour
         ownedBuilding.onResidentStopWorking -= OnResidentStopWorking;
     }
 
-    public void Initialize()
+    public void Initialize(GameManager gameManager)
     {
-        gameManager = FindAnyObjectByType<GameManager>();
-        cityManager = FindAnyObjectByType<CityManager>();
-        ownedBuilding = GetComponent<Building>();
+        this.gameManager = gameManager;
     }
 
     protected virtual void BuildComponent()
