@@ -4,12 +4,22 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Boat : MonoBehaviour
+public class Boat : MonoBehaviour, IDamageable, ISelectable
 {
     public PierBuilding ownedPier { get; private set; } = null;
     private NavMeshAgent navAgent = null;
     public ConstructionComponent constructionComponent { get; private set; } = null;
     private SelectComponent selectComponent = null;
+
+    // Damageable
+    private float currentHealth = 0;
+    public float CurrentHealth { get { return currentHealth; } }
+    [SerializeField] private float maxHealth = 0;
+    public float MaxHealth { get { return maxHealth; } }
+
+    // Seletable
+    private bool isSelected = false;
+    public bool IsSelected { get { return isSelected; } set { isSelected = value; } }
 
     [SerializeField] private BoatData boatData = null;
     public BoatData BoatData => boatData;
@@ -25,7 +35,6 @@ public class Boat : MonoBehaviour
     private Transform currentTarget = null;
     private Vector3 currentTargetPosition = Vector3.zero;
 
-    public float currentHealth = 0;
     public int dockIndex { get; private set; } = 0;
     public bool isFloating { get; private set; } = false;
     public bool isReturningToDock { get; private set; } = false;
@@ -182,6 +191,55 @@ public class Boat : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    // Health
+    public void TakeDamage(float value)
+    {
+        currentHealth -= value;
+        if (CurrentHealth <= 0) {
+            Demolish();
+        }
+
+        if (statsWorldWidget) {
+            if (currentHealth <= BoatData.MaxHealth * BoatData.healthDisplayThreshold) {
+                if (!statsWorldWidget.isHealthBarShowed)
+                    statsWorldWidget.ShowHealthBar();
+                statsWorldWidget.SetHealthBarAlpha(currentHealth / BoatData.MaxHealth);
+            }
+            else {
+                if (statsWorldWidget.isHealthBarShowed)
+                    statsWorldWidget.HideHealthBar();
+            }
+        }
+    }
+
+    public void Heal(float value)
+    {
+        float valueToHeal = math.clamp(value, 0, MaxHealth - CurrentHealth);
+        currentHealth += valueToHeal;
+    }
+
+    private void Demolish()
+    {
+
+    }
+
+    // Select
+    public void Select()
+    {
+        isSelected = true;
+        foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
+            child.layer = LayerMask.NameToLayer("Outlined");
+        }
+    }
+
+    public void Deselect()
+    {
+        isSelected = false;
+        foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
+            child.layer = LayerMask.NameToLayer("Default");
         }
     }
 
@@ -379,45 +437,6 @@ public class Boat : MonoBehaviour
             FindNearestLootTarget();
             lastUpdateDestinationTime = Time.timeAsDouble;
         }
-    }
-
-    public void TakeDamage(float damage)
-    {
-        currentHealth -= damage;
-        if (currentHealth <= 0)
-        {
-            currentHealth = 0;
-            Demolish();
-        }
-
-        if (statsWorldWidget)
-        {
-            if (currentHealth <= BoatData.MaxHealth * BoatData.healthDisplayThreshold)
-            {
-                Debug.Log("rgterg");
-                if (!statsWorldWidget.isHealthBarShowed)
-                    statsWorldWidget.ShowHealthBar();
-                statsWorldWidget.SetHealthBarAlpha(currentHealth / BoatData.MaxHealth);
-            }
-            else
-            {
-                if (statsWorldWidget.isHealthBarShowed)
-                    statsWorldWidget.HideHealthBar();
-            }
-        }
-
-        if (selectComponent)
-        {
-            if (spawnedDetailsMenu)
-            {
-                //spawnedDetailsMenu;
-            }
-        }
-    }
-
-    private void Demolish()
-    {
-        isDemolished = true;
     }
 
     private Transform GetOwnedDockTransform()

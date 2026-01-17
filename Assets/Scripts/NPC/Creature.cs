@@ -21,21 +21,25 @@ public enum ElevatorPassengerState
     Riding
 }
 
-public class Creature : MonoBehaviour, ILevelable, ISelectable
+public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
 {
     public LevelComponent levelComponent { get; private set; } = null;
     public SelectComponent selectComponent { get; private set; } = null;
     public NavMeshAgent navMeshAgent { get; private set; } = null;
 
+    // Damageable
+    private float currentHealth = 0;
+    public float CurrentHealth { get { return currentHealth; } }
+    [SerializeField] private float maxHealth = 0;
+    public float MaxHealth { get { return maxHealth; } }
+
+    // Levelable
     private int levelIndex = 0;
     public int LevelIndex { get { return levelIndex; } set { levelIndex = value; } }
+
+    // Seletable
     private bool isSelected = false;
     public bool IsSelected { get { return isSelected; } set { isSelected = value; } }
-
-    // Stats
-    [SerializeField] private int maxHealth = 100;
-    public int MaxHealth => maxHealth;
-    private int currentHealth = 100;
 
     private const int currentMaxCarryWeight = 2000;
 
@@ -129,7 +133,7 @@ public class Creature : MonoBehaviour, ILevelable, ISelectable
         }
     }
 
-    // Main
+    // Brain
     public void DecideAction()
     {
         //Debug.Log("DecideAction");
@@ -259,6 +263,43 @@ public class Creature : MonoBehaviour, ILevelable, ISelectable
     public void SetLevel(int level)
     {
         LevelIndex = level;
+    }
+
+    // Health
+    public void TakeDamage(float value)
+    {
+        currentHealth -= value;
+        if (CurrentHealth <= 0) {
+            Die();
+        }
+    }
+
+    public void Heal(float value)
+    {
+        float valueToHeal = math.clamp(value, 0, MaxHealth - CurrentHealth);
+        currentHealth += valueToHeal;
+    }
+
+    private void Die()
+    {
+
+    }
+
+    // Select
+    public void Select()
+    {
+        isSelected = true;
+        foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
+            child.layer = LayerMask.NameToLayer("Outlined");
+        }
+    }
+
+    public void Deselect()
+    {
+        isSelected = false;
+        foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
+            child.layer = LayerMask.NameToLayer("Default");
+        }
     }
 
     // Work
@@ -803,35 +844,6 @@ public class Creature : MonoBehaviour, ILevelable, ISelectable
                 SpendItem(id, amountToSpend);
                 //building.storageComponent.AddItem(item.ItemData.ItemId, SpendItem(item));
             }
-        }
-    }
-
-    public void TakeDamage(int damange)
-    {
-        if (damange > 0)
-        {
-            currentHealth -= damange;
-
-            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        }
-    }
-
-    // Select
-    public void Select()
-    {
-        isSelected = true;
-        foreach (GameObject child in GameUtils.GetAllChildren(transform))
-        {
-            child.layer = LayerMask.NameToLayer("Outlined");
-        }
-    }
-
-    public void Deselect()
-    {
-        isSelected = false;
-        foreach (GameObject child in GameUtils.GetAllChildren(transform))
-        {
-            child.layer = LayerMask.NameToLayer("Default");
         }
     }
 }

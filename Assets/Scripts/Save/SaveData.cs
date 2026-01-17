@@ -119,7 +119,7 @@ public class SaveData
                 spawnedBoatsAreUnderConstruction[i] = boat ? construction.isUnderConstruction : false;
                 spawnedBoatsAreFloating[i] = boat ? boat.isFloating : false;
                 spawnedBoatsAreReturning[i] = boat ? boat.isReturningToDock : false;
-                spawnedBoatsHealth[i] = boat ? boat.currentHealth : 0;
+                spawnedBoatsHealth[i] = boat ? boat.CurrentHealth : 0;
                 spawnedBoatPositionsX[i] = boat ? boat.transform.position.x : 0;
                 spawnedBoatPositionsZ[i] = boat ? boat.transform.position.z : 0;
                 spawnedBoatRotationsY[i] = boat ? boat.transform.rotation.eulerAngles.y : 0;

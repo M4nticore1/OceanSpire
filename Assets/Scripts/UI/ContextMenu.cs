@@ -47,7 +47,7 @@ public class ContextMenu : MonoBehaviour
         }
         else if (boat) {
             SetNameText(boat.BoatData.BoatName);
-            SetHealthValue(boat.currentHealth, boat.BoatData.MaxHealth);
+            SetHealthValue(boat.CurrentHealth, boat.BoatData.MaxHealth);
             SetBoatCurrentWeight(boat.currentWeight, boat.BoatData.MaxWeight);
         }
     }
