@@ -11,9 +11,7 @@ GameObject:
   - component: {fileID: 6049562773193371310}
   - component: {fileID: 5682727777084949512}
   - component: {fileID: 6411716410431599606}
-  - component: {fileID: 5482272280646496618}
   - component: {fileID: 2446392354813267822}
-  - component: {fileID: 7075002831869000023}
   m_Layer: 0
   m_Name: TowerGate
   m_TagString: Untagged
@@ -57,7 +55,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 49d1db9d10cc6f1469b7f92eaebac9bb, type: 2}
   - {fileID: 11400000, guid: c7a746695d1e6c5489400e41050f3397, type: 2}
   - {fileID: 11400000, guid: bd1bfc204edda4440958dbfb73cb6bc5, type: 2}
-  buildingPlace: {fileID: 0}
+  leftNeighborBuilding: {fileID: 0}
+  rightNeighborBuilding: {fileID: 0}
+  upNeighborBuilding: {fileID: 0}
+  downNeighborBuilding: {fileID: 0}
 --- !u!114 &6411716410431599606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,24 +71,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca4ab03ecbffe74d9a15a5f6bd30db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedBuilding: {fileID: 0}
   levelsData:
   - {fileID: 11400000, guid: 3df92a01368400440822aef33eaa1485, type: 2}
   - {fileID: 11400000, guid: b83e4cf62f4ade34d8ecd72b2a4a6fd8, type: 2}
   - {fileID: 11400000, guid: b0c5078b3c219554eae031edd7ffa71a, type: 2}
-  levelData: {fileID: 0}
---- !u!114 &5482272280646496618
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7329349122022634892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2446392354813267822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,18 +88,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnedConstruction: {fileID: 0}
---- !u!114 &7075002831869000023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7329349122022634892}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2551677032185362530
 PrefabInstance:
   m_ObjectHideFlags: 0

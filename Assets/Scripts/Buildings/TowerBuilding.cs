@@ -64,13 +64,12 @@ public class TowerBuilding : Building
 
     public override void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
-        selectComponent = GetComponent<SelectComponent>();
         constructionComponent = GetComponent<ConstructionComponent>();
         storageComponent = GetComponent<StorageBuildingComponent>();
         productionComponent = GetComponent<ProductionBuilding>();
 
         this.buildingPlace = buildingPlace;
-        this.levelIndex = levelIndex;
+        this.LevelIndex = levelIndex;
 
         if (storageComponent)
             storageComponent.Initialize();

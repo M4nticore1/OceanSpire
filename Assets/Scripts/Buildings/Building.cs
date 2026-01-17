@@ -1,20 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-[AddComponentMenu("Buildings/Building")]
-public class Building : MonoBehaviour
+public abstract class Building : MonoBehaviour, ILevelable, ISelectable
 {
     public ConstructionComponent constructionComponent { get; protected set; } = null;
-    public SelectComponent selectComponent { get; protected set; } = null;
+    //public SelectComponent selectComponent { get; protected set; } = null;
     public StorageBuildingComponent storageComponent { get; protected set; } = null;
     public ProductionBuilding productionComponent { get; protected set; } = null;
 
     public bool isInitialized { get; protected set; } = false;
-    public int levelIndex { get; protected set; } = 0;
+    private int levelIndex = 0;
+    public int LevelIndex { get { return levelIndex; } set { levelIndex = value; } }
+    private bool isSelected = false;
+    public bool IsSelected { get { return isSelected; } set { isSelected = value; } }
     private bool isWorking = false;
-    protected bool isSelected { get; private set; } = false;
 
     //[HideInInspector] public int levelIndex { get; private set; } = 0;
     public List<Creature> enteredEntities { get; private set; } = new List<Creature>();
@@ -26,7 +26,7 @@ public class Building : MonoBehaviour
     public BuildingData BuildingData => buildingData;
     [SerializeField] protected List<ConstructionLevelData> buildingLevelsData = new List<ConstructionLevelData>();
     public List<ConstructionLevelData> ConstructionLevelsData => buildingLevelsData;
-    public ConstructionLevelData currentLevelData => ConstructionLevelsData.Count > levelIndex ? ConstructionLevelsData[levelIndex] : null;
+    public ConstructionLevelData currentLevelData => ConstructionLevelsData.Count > LevelIndex ? ConstructionLevelsData[LevelIndex] : null;
 
     public BuildingPlace buildingPlace { get; protected set; } = null;
 
@@ -41,7 +41,6 @@ public class Building : MonoBehaviour
 
     protected virtual void Awake()
     {
-        selectComponent = GetComponent<SelectComponent>();
         constructionComponent = GetComponent<ConstructionComponent>();
         storageComponent = GetComponent<StorageBuildingComponent>();
         productionComponent = GetComponent<ProductionBuilding>();
@@ -69,13 +68,12 @@ public class Building : MonoBehaviour
     // Constructing
     public virtual void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
-        selectComponent = GetComponent<SelectComponent>();
         constructionComponent = GetComponent<ConstructionComponent>();
         storageComponent = GetComponent<StorageBuildingComponent>();
         productionComponent = GetComponent<ProductionBuilding>();
 
         this.buildingPlace = buildingPlace;
-        this.levelIndex = levelIndex;
+        this.LevelIndex = levelIndex;
 
         if (storageComponent)
             storageComponent.Initialize();
@@ -100,14 +98,14 @@ public class Building : MonoBehaviour
 
     protected void StartConstructing()
     {
-        BuildConstruction(levelIndex);
+        BuildConstruction(LevelIndex);
     }
 
     public virtual void FinishConstructing()
     {
         if (BuildingData.BuildingIdName == "floor_frame") return;
 
-        BuildConstruction(levelIndex);
+        BuildConstruction(LevelIndex);
         onBuildingFinishConstructing?.Invoke();
     }
 
@@ -116,9 +114,9 @@ public class Building : MonoBehaviour
 
     }
 
-    public void SetLevelIndex(int level)
+    public void SetLevel(int level)
     {
-        levelIndex = level;
+        LevelIndex = level;
     }
 
     // Working
@@ -170,7 +168,7 @@ public class Building : MonoBehaviour
         workers.Remove(worker);
     }
 
-    public void AddCurrentWorker(Creature worker)
+    public  void AddCurrentWorker(Creature worker)
     {
         currentWorkers.Add(worker);
         worker.SetWorkerIndex(currentWorkers.Count - 1);
@@ -217,6 +215,22 @@ public class Building : MonoBehaviour
         else {
             Debug.LogError("actions.Length <= index");
             return transform;
+        }
+    }
+
+    public void Select()
+    {
+        IsSelected = true;
+        foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
+            child.layer = LayerMask.NameToLayer("Outlined");
+        }
+    }
+
+    public void Deselect()
+    {
+        IsSelected = false;
+        foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
+            child.layer = LayerMask.NameToLayer("Default");
         }
     }
 }

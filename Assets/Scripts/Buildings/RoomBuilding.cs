@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 [AddComponentMenu("Buildings/RoomBuilding")]
@@ -93,8 +92,8 @@ public class RoomBuilding : TowerBuilding
                 }
             }
 
-            if (isSelected)
-                selectComponent.Select();
+            if (IsSelected)
+                Select();
         }
     }
 
@@ -105,6 +104,6 @@ public class RoomBuilding : TowerBuilding
 
     private bool GetPossibilityConnect(Building neightboorBuilding, int levelIndex)
     {
-        return neightboorBuilding && !neightboorBuilding.constructionComponent.isUnderConstruction && neightboorBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && neightboorBuilding.levelIndex == levelIndex;
+        return neightboorBuilding && !neightboorBuilding.constructionComponent.isUnderConstruction && neightboorBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && neightboorBuilding.LevelIndex == levelIndex;
     }
 }

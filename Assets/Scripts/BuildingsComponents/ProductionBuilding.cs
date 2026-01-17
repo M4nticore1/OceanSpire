@@ -1,5 +1,3 @@
-using NUnit.Framework.Internal;
-using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
@@ -125,8 +123,8 @@ public class ProductionBuilding : BuildingComponent
     {
         currentProductionTime = time;
 
-        ConstructionLevelData buildingLevelData = ownedBuilding.ConstructionLevelsData[ownedBuilding.levelIndex];
-        ProductionBuildingLevelData productionBuildingLevelData = levelsData[ownedBuilding.levelIndex] as ProductionBuildingLevelData;
+        ConstructionLevelData buildingLevelData = ownedBuilding.ConstructionLevelsData[ownedBuilding.LevelIndex];
+        ProductionBuildingLevelData productionBuildingLevelData = levelsData[ownedBuilding.LevelIndex] as ProductionBuildingLevelData;
 
         int currentPeopleCount = ownedBuilding.currentWorkers.Count;
         int maxPeopleCount = buildingLevelData.maxResidentsCount;

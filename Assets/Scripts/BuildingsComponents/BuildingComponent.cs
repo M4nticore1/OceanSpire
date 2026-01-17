@@ -1,14 +1,13 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BuildingComponent : MonoBehaviour
 {
     public Building ownedBuilding { get; protected set; } = null;
 
-    protected int levelIndex => ownedBuilding.levelIndex;
+    protected int levelIndex => ownedBuilding.LevelIndex;
     [SerializeField] protected BuildingComponentLevelData[] levelsData = { };
     public BuildingComponentLevelData[] LevelsData => levelsData;
-    public BuildingComponentLevelData LevelData => levelsData[ownedBuilding.levelIndex];
+    public BuildingComponentLevelData LevelData => levelsData[ownedBuilding.LevelIndex];
     protected BuildingConstruction BuildingConstruction => ownedBuilding.constructionComponent.SpawnedConstruction;
 
     protected void Awake()

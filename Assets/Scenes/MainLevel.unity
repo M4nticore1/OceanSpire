@@ -742,6 +742,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 122399286}
     - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
+      propertyPath: towerNavMeshSurface
+      value: 
+      objectReference: {fileID: 1290994965}
+    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
       propertyPath: 'allBuildings.Array.data[0]'
       value: 
       objectReference: {fileID: 0}

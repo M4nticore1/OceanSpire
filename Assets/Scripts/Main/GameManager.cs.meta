@@ -6,7 +6,7 @@ MonoImporter:
   defaultReferences:
   - itemDatabase: {fileID: 11400000, guid: 37d08d00fe179484e852e0e0d46b8744, type: 2}
   - residentPrefab: {fileID: 6103850784313419152, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
-  executionOrder: 100
+  executionOrder: 200
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

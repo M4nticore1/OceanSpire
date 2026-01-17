@@ -14,29 +14,25 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera mainCamera = null;
     [SerializeField] private GameObject cameraHolder = null;
 
-    private Vector3 сameraHolderStartPosition = Vector3.zero;
-    private Quaternion сameraHolderStartRotation = new Quaternion(0f, 0f, 0f, 0);
-
-    [HideInInspector] public Vector3 cameraVerticalPosition { get; private set; } = Vector3.zero;
-    [HideInInspector] public Vector3 cameraHorizontalPosition { get; private set; } = Vector3.zero;
+    public Vector3 cameraVerticalPosition { get; private set; } = Vector3.zero;
+    public Vector3 cameraHorizontalPosition { get; private set; } = Vector3.zero;
 
     private bool isCameraMoving = false;
     private Vector2 cameraMoveVelocity = Vector2.zero;
-    private Vector2 cameraMoveKeyboard = Vector2.zero;
-    private Vector2 cameraMoveMouse = Vector2.zero;
-    private Vector2 cameraMoveTouchScreen = Vector2.zero;
+    private Vector2 keyboardCameraMove = Vector2.zero;
+    private Vector2 mouseCameraMove = Vector2.zero;
+    private Vector2 touchscreenCameraMove = Vector2.zero;
 
-    //private Vector3 cameraHorizontalRotation = Vector3.zero;
-    private Vector3 cameraHolderRotation = Vector3.zero;
-
-    private Vector2 cameraMoveSensitivity = new Vector2(100f, 50f);
+    private Vector2 keyboardCameraMoveSensitivity = new Vector2(50f, 50f);
+    private Vector2 mouseCameraMoveSensitivity = new Vector2(50f, 50f);
+    private Vector2 touchscreenCameraMoveSensitivity = new Vector2(150f, 50f);
     private const float cameraStopMoveSpeed = 6.0f;
 
     private const float cameraVerticalBoundaryPadding = 10.0f;
     private const float cameraVerticalReturnSpeed = 5.0f;
 
     private float cameraVerticalReturnMultiplier = 1.0f;
-    [HideInInspector] public float cameraYawRotateAlpha = 0.0f;
+    public float cameraYawRotateAlpha { get; private set; } = 0.0f;
     private float moveStateValue = 0;
     private int moveStateIndex = 0;
 
@@ -69,7 +65,6 @@ public class PlayerController : MonoBehaviour
     private bool isPrimaryInteractionPressed = false;
     private bool isSecondaryInteractionPressed = false;
 
-    private PlayerInput playerInput = null;
     [SerializeField] private InputActionAsset mainInputActionsAsset = null;
     private InputActionMap touchInputActionMap = null;
 
@@ -104,27 +99,23 @@ public class PlayerController : MonoBehaviour
     private const float touchPitchSensitivity = 0.1f;
     private const float pitchStopSpeed = 25.0f;
 
+    //private float farSensitivityMultiplier = 2f;
+
     // Building
     [HideInInspector] public Building buildingToPlace = null;
 
-    private SelectComponent selectedComponent = null;
-    //private bool isSelectedBuilding = false;
+    public ISelectable selectedObject = null;
 
     // Raycast
     private GraphicRaycaster graphicRaycaster = null;
     private EventSystem eventSystem = null;
     [SerializeField] private LayerMask clickableLayers;
 
-    private double lastSaveDataTime = 0.0f;
-
     public bool isInitialized { get; private set; } = false;
 
     public void Initialize()
     {
-        if (uiManager)
-            graphicRaycaster = uiManager.gameObject.GetComponent<GraphicRaycaster>();
-        else
-            Debug.LogError("uiManager is NULL");
+        graphicRaycaster = uiManager.GetComponent<GraphicRaycaster>();
         SetInputSystem();
     }
 
@@ -231,11 +222,7 @@ public class PlayerController : MonoBehaviour
 
     public void Load(SaveData saveData)
     {
-        uiManager.InitializeUIManager();
-
-        сameraHolderStartPosition = cameraHolder.transform.position;
-        сameraHolderStartRotation = cameraHolder.transform.rotation;
-        cameraHolderRotation = сameraHolderStartRotation.eulerAngles;
+        uiManager.InitializeUIManager(this);
 
         currentCameraArmLength = -mainCamera.transform.localPosition.z;
 
@@ -307,9 +294,9 @@ public class PlayerController : MonoBehaviour
 
         // Keybord Moving
         if (isCameraMoving)
-            cameraMoveKeyboard = cameraMoveKeyboardIA.ReadValue<Vector2>();
+            keyboardCameraMove = cameraMoveKeyboardIA.ReadValue<Vector2>();
         else {
-            cameraMoveKeyboard = Vector2.Lerp(cameraMoveKeyboard, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+            keyboardCameraMove = Vector2.Lerp(keyboardCameraMove, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
 
             if (cameraHolder.transform.position.y > GameManager.Instance.cityHeight || cameraHolder.transform.position.y < 0.0f) {
                 Vector3 cameraPosition = cameraHolder.transform.position;
@@ -320,16 +307,16 @@ public class PlayerController : MonoBehaviour
 
         // Mouse & TouchScreen Moving
         if (isPrimaryInteractionPressed) {
-            cameraMoveMouse = cameraMoveMouseIA.ReadValue<Vector2>();
-            cameraMoveTouchScreen = cameraMoveTouchScreenIA.ReadValue<Vector2>();
+            mouseCameraMove = cameraMoveMouseIA.ReadValue<Vector2>();
+            touchscreenCameraMove = cameraMoveTouchScreenIA.ReadValue<Vector2>();
         }
         else {
-            cameraMoveMouse = Vector2.Lerp(cameraMoveMouse, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
-            cameraMoveTouchScreen = Vector2.Lerp(cameraMoveTouchScreen, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+            mouseCameraMove = Vector2.Lerp(mouseCameraMove, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+            touchscreenCameraMove = Vector2.Lerp(touchscreenCameraMove, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
         }
 
         // Sum Of Movings
-        cameraMoveVelocity = (cameraMoveKeyboard + cameraMoveMouse + cameraMoveTouchScreen) * cameraMoveSensitivity;
+        cameraMoveVelocity = (keyboardCameraMove * keyboardCameraMoveSensitivity + mouseCameraMove * mouseCameraMoveSensitivity + touchscreenCameraMove * touchscreenCameraMoveSensitivity);
 
         // Return Vertical Position
         if (cameraHolder.transform.position.y > GameManager.Instance.cityHeight)
@@ -481,18 +468,20 @@ public class PlayerController : MonoBehaviour
                     RaycastHit hit;
 
                     if (Physics.Raycast(ray, out hit)) {
+                        GameObject hitted = hit.collider.gameObject;
+
                         if (buildingToPlace) {
-                            BuildingPlace hittedBuildingPlace = hit.collider.gameObject.GetComponent<BuildingPlace>();
+                            BuildingPlace hittedBuildingPlace = hitted.GetComponent<BuildingPlace>();
 
                             if (hittedBuildingPlace && !hittedBuildingPlace.placedBuilding) {
                                 PlaceConstruction(hittedBuildingPlace);
                             }
                         }
                         else {
-                            LootContainer hittedLootContainer = hit.collider.GetComponent<LootContainer>();
-                            Resident hittedResident = hit.collider.GetComponent<Resident>();
+                            LootContainer hittedLootContainer = hitted.GetComponent<LootContainer>();
+                            Resident hittedResident = hitted.GetComponent<Resident>();
 
-                            Transform parent = hit.collider.transform.parent;
+                            Transform parent = hitted.transform.parent;
                             Building hittedBuilding = parent ? parent.GetComponent<Building>() : null;
                             BuildingConstruction buildingConstruction = parent ? parent.GetComponent<BuildingConstruction>() : null;
                             Boat hittedBoat = parent ? parent.GetComponent<Boat>() : null;
@@ -500,6 +489,7 @@ public class PlayerController : MonoBehaviour
                             if (!hittedBuilding && buildingConstruction)
                                 hittedBuilding = buildingConstruction.transform.parent.GetComponent<Building>();
 
+                            ISelectable selected = null;
                             if (hittedBuilding) {
                                 ProductionBuilding hittedProductionBuilding = hittedBuilding.GetComponent<ProductionBuilding>();
 
@@ -508,31 +498,34 @@ public class PlayerController : MonoBehaviour
                                     Deselect();
                                 }
                                 else {
-                                    if (selectedComponent != hittedBuilding.selectComponent)
-                                        Select(hittedBuilding.selectComponent);
-                                    else
-                                        Deselect();
+                                    selected = hittedBuilding.GetComponent<ISelectable>();
                                 }
                             }
                             else if (hittedResident) {
-                                Select(hittedResident.selectComponent);
+                                selected = hittedResident.GetComponent<ISelectable>();
                             }
                             else if (hittedBoat) {
-                                SelectComponent selectComponent = hittedBoat.GetComponent<SelectComponent>();
-                                if (selectedComponent != selectComponent)
-                                    Select(selectComponent);
-                                else
-                                    Deselect();
+                                selected = hittedBoat.GetComponent<ISelectable>();
                             }
                             else if (hittedLootContainer) {
                                 List<ItemInstance> takedItems = hittedLootContainer.TakeItems();
                                 CollectItems(takedItems);
+                            }
 
-                                Deselect();
+                            if (selected != null) {
+                                if (selected == selectedObject) {
+                                    Deselect();
+                                }
+                                else {
+                                    if (selectedObject != null)
+                                        Deselect();
+                                    Select(selected);
+                                }
                             }
                             else {
                                 Deselect();
                             }
+
                         }
                     }
                 }
@@ -668,35 +661,26 @@ public class PlayerController : MonoBehaviour
         GameManager.Instance.AddItems(items);
     }
 
-    private void Select(SelectComponent selectComponent)
+    private void Select(ISelectable selectComponent)
     {
-        if (selectComponent)
-        {
-            Deselect();
-
-            selectedComponent = selectComponent;
-            selectedComponent.Select();
-
-            uiManager.OpenContextMenu(selectComponent.gameObject);
-        }
+        selectedObject = selectComponent;
+        selectedObject.Select();
+        uiManager.OpenContextMenu(selectedObject);
     }
 
     public void Deselect()
     {
-        if (selectedComponent)
-        {
-            selectedComponent.Deselect();
+        if (selectedObject == null) return;
 
-            if (!uiManager.isBuildingResourcesMenuOpened)
-            {
-                selectedComponent = null;
+        selectedObject.Deselect();
 
-                uiManager.CloseContextMenu();
-            }
-            else
-            {
-                uiManager.CloseBuildingActionMenu();
-            }
+        if (!uiManager.isBuildingResourcesMenuOpened) {
+            selectedObject = null;
+
+            uiManager.CloseContextMenu();
+        }
+        else {
+            uiManager.CloseBuildingActionMenu();
         }
     }
 }

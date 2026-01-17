@@ -5,17 +5,17 @@ using UnityEngine;
 public class SaveSystem
 {
     public static SaveData saveData = null;
-    private static string path = Application.persistentDataPath + "/OceanSpire.sav";
+    private static string worldSavesPath = Application.persistentDataPath + "/OceanSpire.sav";
 
     public static void SaveData(PlayerController playerController, GameManager gameManager)
     {
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream stream = null;
 
-        if (File.Exists(path))
-            stream = new FileStream(path, FileMode.Create);
+        if (File.Exists(worldSavesPath))
+            stream = new FileStream(worldSavesPath, FileMode.Create);
         else
-            stream = new FileStream(path, FileMode.CreateNew);
+            stream = new FileStream(worldSavesPath, FileMode.CreateNew);
 
         SaveData playerData = new SaveData(playerController);
 
@@ -25,17 +25,17 @@ public class SaveSystem
 
     public static SaveData LoadData()
     {
-        if (File.Exists(path))
+        if (File.Exists(worldSavesPath))
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(path, FileMode.Open);
+            FileStream stream = new FileStream(worldSavesPath, FileMode.Open);
 
             if (stream.Length > 0)
             {
                 SaveData data = formatter.Deserialize(stream) as SaveData;
                 stream.Close();
 
-                Debug.Log(path);
+                Debug.Log(worldSavesPath);
 
                 saveData = data;
                 return data;
@@ -48,16 +48,16 @@ public class SaveSystem
         }
         else
         {
-            Debug.Log("Save file not found in " + path);
+            Debug.Log("Save file not found in " + worldSavesPath);
             return null;
         }
     }
 
     public static void DeleteSave(int saveIndex)
     {
-        if (File.Exists(path))
+        if (File.Exists(worldSavesPath))
         {
-            File.Delete(path);
+            File.Delete(worldSavesPath);
             saveData = null;
             Debug.Log("Сохранение удалено!");
         }

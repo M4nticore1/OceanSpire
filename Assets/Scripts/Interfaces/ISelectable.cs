@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface ISelectable
 {
-    bool IsSelected { get; }
+    bool IsSelected { get; set; }
     void Select();
     void Deselect();
 }

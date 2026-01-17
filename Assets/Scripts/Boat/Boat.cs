@@ -1,12 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using Unity.Mathematics;
-using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 public class Boat : MonoBehaviour
 {

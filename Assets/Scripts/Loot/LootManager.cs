@@ -78,7 +78,6 @@ public class LootManager
             int maxCount = 20;
 
             for (int i = spawnedLootContainers.Count - 1; i >= 0; i--) {
-                Debug.Log("UpdateLootContainers");
                 var container = spawnedLootContainers[i];
                 if (container)
                     container.Tick(updateLootFrequency);

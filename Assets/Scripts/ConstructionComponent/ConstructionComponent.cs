@@ -10,7 +10,7 @@ public class ConstructionComponent : MonoBehaviour
     //public LevelComponent levelComponent { get; private set; } = null;
 
     [Header("Main")]
-    private int levelIndex => ownedBuilding ? ownedBuilding.levelIndex : 0;
+    private int levelIndex => ownedBuilding ? ownedBuilding.LevelIndex : 0;
     public List<ConstructionLevelData> constructionLevelsData { get; private set; } = null;
     //public List<ConstructionLevelData> ConstructionLevelsData => constructionLevelsData;
 
@@ -78,7 +78,7 @@ public class ConstructionComponent : MonoBehaviour
         isUnderConstruction = true;
         if (ownedBuilding) {
             if (levelIndex == 0)
-                ownedBuilding.SetLevelIndex(nextLevel);
+                ownedBuilding.SetLevel(nextLevel);
         }
 
         onAnyConstructionStartConstructing?.Invoke(this);
@@ -98,7 +98,7 @@ public class ConstructionComponent : MonoBehaviour
     protected void Build(int levelIndex = 0)
     {
         if (ownedBuilding) {
-            ownedBuilding.SetLevelIndex(levelIndex);;
+            ownedBuilding.SetLevel(levelIndex);;
         }
 
         onAnyConstructionFinishConstructing?.Invoke(this);

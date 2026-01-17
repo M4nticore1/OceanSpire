@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "buildingPrefabsList", menuName = "GameContent/buildingPrefabsList")]
 public class buildingsList : ScriptableObject

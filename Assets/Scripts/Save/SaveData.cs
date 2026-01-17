@@ -75,7 +75,7 @@ public class SaveData
             for (int j = 0; j < GameManager.roomsCountPerFloor; j++) {
                 Building placedBuilding = GameManager.Instance.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
                 placedBuildingIds[placeIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingId : -1;
-                placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.levelIndex : 0;
+                placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.LevelIndex : 0;
                 placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.isUnderConstruction : false;
                 placedBuildingInteriorIds[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.interiorIndex : -1;
 

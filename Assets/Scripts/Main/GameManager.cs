@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
     public List<List<Building>> allPaths = new List<List<Building>>();
     public List<BuildingPath> allPaths2 = new List<BuildingPath>();
 
-    public bool isBakingNavMesh { get; private set; } = false;
+    public Coroutine bakeNavMeshCoroutine { get; private set; } = null;
 
     [Header("NPC")]
     [field: SerializeField] public Transform entitySpawnPosition { get; private set; } = null;
@@ -167,7 +167,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(SaveDataCoroutine());
+        StartCoroutine(AutosaveCoroutine());
         TimerManager.Initialize();
 
         ChangeWind();
@@ -269,23 +269,23 @@ public class GameManager : MonoBehaviour
                             }
                         }
                     }
-                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelIndex);
+                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.LevelIndex);
                 }
                 else {
                     BuildingPlace hallPlace = builtFloors[i].hallBuildingPlace;
                     Building hall = hallPlace.placedBuilding;
                     if (hall)
-                        PlaceBuilding(hall, hallPlace, hall.levelIndex, hall.constructionComponent.isUnderConstruction);
+                        PlaceBuilding(hall, hallPlace, hall.LevelIndex, hall.constructionComponent.isUnderConstruction);
 
                     for (int j = 0; j < roomsCountPerFloor; j++) {
                         BuildingPlace roomPlace = builtFloors[i].roomBuildingPlaces[j];
                         Building room = roomPlace.placedBuilding;
                         if (room)
-                            PlaceBuilding(room, roomPlace, room.levelIndex, room.constructionComponent.isUnderConstruction);
+                            PlaceBuilding(room, roomPlace, room.LevelIndex, room.constructionComponent.isUnderConstruction);
                     }
 
                     // Pier Building
-                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.levelIndex);
+                    pierBuilding.InitializeBuilding(null, pierBuilding.constructionComponent.isUnderConstruction, pierBuilding.LevelIndex);
                 }
             }
 
@@ -299,10 +299,6 @@ public class GameManager : MonoBehaviour
         }
         else
             Debug.LogError("The count of builtFloors is 0");
-
-        UpdateEmptyBuildingPlacesCount();
-
-        BakeNavMeshSurface();
     }
 
     private void CreateEntities(SaveData data)
@@ -424,7 +420,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator LoadCityAsync(SaveData data)
     {
-        while (isBakingNavMesh) {
+        while (bakeNavMeshCoroutine != null) {
+            Debug.Log("bakeNavMeshCoroutine");
             yield return null;
         }
 
@@ -614,8 +611,15 @@ public class GameManager : MonoBehaviour
                 }
             }
             spawnedBuilding.InitializeBuilding(buildingPlace, isUnderConstruction, levelIndex);
+
+            UpdateEmptyBuildingPlacesCount();
+            HideAllBuildigPlaces();
+
             OnConstructionPlaced?.Invoke();
         }
+
+        BakeNavMeshSurface();
+
         return spawnedBuilding;
     }
 
@@ -656,17 +660,13 @@ public class GameManager : MonoBehaviour
 
     private void OnBuildingStartConstructing(ConstructionComponent construction)
     {
-        int levelIndex = construction.ownedBuilding.levelIndex;
+        int levelIndex = construction.ownedBuilding.LevelIndex;
 
         Building building = construction.GetComponent<Building>();
         if (building) {
             OnBuildingFinishConstructing(construction);
             //building.FinishConstructing();
         }
-
-        UpdateEmptyBuildingPlacesCount();
-        _ = BakeNavMeshSurface();
-        HideAllBuildigPlaces();
     }
 
     private void OnBuildingFinishConstructing(ConstructionComponent construction)
@@ -689,7 +689,7 @@ public class GameManager : MonoBehaviour
             }
 
             if (building.BuildingData.BuildingType != BuildingType.Environment && building.storageComponent) {
-                int level = building.levelIndex;
+                int level = building.LevelIndex;
                 if (level > 1) {
                     StorageBuildingLevelData previousLevelData = building.storageComponent.LevelsData[level - 1] as StorageBuildingLevelData;
                     SubtractStorageCapacity(previousLevelData, false);
@@ -708,7 +708,7 @@ public class GameManager : MonoBehaviour
 
     public void TryToUpgradeConstruction(Building building)
     {
-        int nextLevelIndex = building.levelIndex + (building.constructionComponent.isRuined ? 0 : 1);
+        int nextLevelIndex = building.LevelIndex + (building.constructionComponent.isRuined ? 0 : 1);
 
         if (building.ConstructionLevelsData.Count() > nextLevelIndex) {
             bool isResourcesToUpgradeEnough = true;
@@ -742,7 +742,7 @@ public class GameManager : MonoBehaviour
     private void OnConstructionDemolished(ConstructionComponent construction)
     {
         // Return the part of resources
-        List<ItemInstance> resourceToBuilds = construction.constructionLevelsData[construction.ownedBuilding.levelIndex].ResourcesToBuild;
+        List<ItemInstance> resourceToBuilds = construction.constructionLevelsData[construction.ownedBuilding.LevelIndex].ResourcesToBuild;
         for (int i = 0; i < resourceToBuilds.Count; i++) {
             int id = resourceToBuilds[i].ItemData.ItemId;
             int amount = (int)math.ceil(resourceToBuilds[i].Amount * GameManager.demolitionResourceRefundRate);
@@ -750,12 +750,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private IEnumerator BakeNavMeshSurface()
+    private void BakeNavMeshSurface()
     {
-        isBakingNavMesh = true;
+        if (bakeNavMeshCoroutine != null)
+            StopCoroutine(bakeNavMeshCoroutine);
+        bakeNavMeshCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
+    }
+
+    private IEnumerator BakeNavMeshSurfaceCoroutine()
+    {
         yield return new WaitForEndOfFrame();
         towerNavMeshSurface.BuildNavMesh();
-        isBakingNavMesh = false;
+        bakeNavMeshCoroutine = null;
     }
 
     // Get Buildings
@@ -880,12 +886,12 @@ public class GameManager : MonoBehaviour
     }
 
     // Path finding
-    public Building TryGetPathToBuilding(BuildingPlace startBuildingPlace, Building targetBuilding, ref List<Building> buildingsPath)
+    public bool TryGetPathToBuilding(BuildingPlace startBuildingPlace, Building targetBuilding, ref List<Building> buildingsPath)
     {
         return TryGetPathToBuilding_Internal(startBuildingPlace, targetBuilding, ref buildingsPath);
     }
 
-    public Building TryGetPathToBuilding(BuildingPlace startBuildingPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
+    public bool TryGetPathToBuilding(BuildingPlace startBuildingPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
     {
         Building targetBuilding = null;
         for (int i = 0; i < builtFloors.Count; i++) {
@@ -910,7 +916,7 @@ public class GameManager : MonoBehaviour
         return TryGetPathToBuilding_Internal(startBuildingPlace, targetBuilding, ref buildingsPath);
     }
 
-    private Building TryGetPathToBuilding_Internal(BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
+    private bool TryGetPathToBuilding_Internal(BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
     {
         // Preparing
         buildingsPath.Clear();
@@ -929,51 +935,21 @@ public class GameManager : MonoBehaviour
             startPlace = builtFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCityBuildingPlace];
 
         // Main
-        if (startPlace || targetBuilding as TowerBuilding) {
-            BuildingPlace newStartBuildingPlace = !startPlace ? builtFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCityBuildingPlace] : startPlace;
-            Building newTargetBuilding = targetBuilding.GetType() == typeof(Building) ? builtFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCityBuildingPlace].placedBuilding : targetBuilding;
+        HashSet<Building> visitedBuildings = new HashSet<Building>();
+        bool found = FindPath(startPlace, targetBuilding, allPaths, ref pathIndex, visitedBuildings);
 
-            HashSet<Building> visitedBuildings = new HashSet<Building>();
-
-            bool found = FindPath(startPlace, targetBuilding, allPaths, ref pathIndex, visitedBuildings);
-            for (int i = 0; i < allPaths.Count; i++) {
-                allPaths2.Add(new BuildingPath());
-                for (int j = 0; j < allPaths[i].Count; j++) {
-                    allPaths2[i].paths.Add(allPaths[i][j]);
-                }
-
-                //if (allPaths[i].Count > 0 && targetBuilding == allPaths[i][allPaths[i].Count - 1] && targetBuilding == allPaths[i][allPaths[i].Count - 1]) {
-                //    buildingsPath = allPaths[i];
-                //}
-            }
-            if (found) {
-                for (int i = 0; i < buildingsPath.Count - 1; i++) {
-                    Type currentType = buildingsPath[i].GetType();
-                    Type nextType = buildingsPath[i + 1].GetType();
-
-                    if (currentType == typeof(ElevatorBuilding)) {
-                        if (buildingsPath.Count > i + 2 && buildingsPath[i + 2] && ((TowerBuilding)buildingsPath[i]).placeIndex == ((TowerBuilding)buildingsPath[i + 2]).placeIndex) {
-                            if (buildingsPath[i + 2].GetType() == currentType) {
-                                buildingsPath.RemoveAt(i + 1);
-                                i--;
-                            }
-                        }
-                    }
-                    else {
-                        buildingsPath.RemoveAt(i);
-                        i--;
-                    }
-                }
-
-                if (newTargetBuilding != targetBuilding)
-                    buildingsPath.Add(targetBuilding);
+        for (int i = 0; i < allPaths.Count; i++) {
+            allPaths2.Add(new BuildingPath());
+            for (int j = 0; j < allPaths[i].Count; j++) {
+                allPaths2[i].paths.Add(allPaths[i][j]);
             }
         }
-        else {
-            buildingsPath.Add(targetBuilding);
+
+        if (found) {
+            buildingsPath = allPaths[allPaths.Count - 1].ToList();
         }
 
-        return targetBuilding;
+        return found;
     }
 
     private bool FindPath(BuildingPlace startPlace, Building targetBuilding, List<List<Building>> buildingPaths, ref int pathIndex, HashSet<Building> visitedBuildings, int enterPathIndex = 0, int pathLength = 0)
@@ -1045,7 +1021,7 @@ public class GameManager : MonoBehaviour
         windDirectionChangeTime = Time.time;
     }
 
-    private IEnumerator SaveDataCoroutine()
+    private IEnumerator AutosaveCoroutine()
     {
         while (true) {
             yield return new WaitForSeconds(autoSaveFrequency);

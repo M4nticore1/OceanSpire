@@ -52,7 +52,7 @@ MonoImporter:
   - repairBuildingMenu: {instanceID: 0}
   - repairBuildingButton: {instanceID: 0}
   - repairBuildingNameText: {instanceID: 0}
-  executionOrder: 0
+  executionOrder: 400
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

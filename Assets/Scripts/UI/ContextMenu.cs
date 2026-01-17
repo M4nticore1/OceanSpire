@@ -32,7 +32,7 @@ public class ContextMenu : MonoBehaviour
             workersButton.onClick.AddListener(uiManager.OpenBuildingWorkersMenu);
     }
 
-    public void Open(GameObject objectToShowDetails)
+    public void Open(MonoBehaviour objectToShowDetails)
     {
         Building building = objectToShowDetails.GetComponent<Building>();
         Creature entity = objectToShowDetails.GetComponent<Creature>();
@@ -40,7 +40,7 @@ public class ContextMenu : MonoBehaviour
 
         if (building) {
             SetNameText(building.BuildingData.BuildingName);
-            SetLevelText(building.levelIndex + 1);
+            SetLevelText(building.LevelIndex + 1);
         }
         else if (entity) {
             SetNameText(entity.firstName + " " + entity.lastName);

@@ -99,14 +99,14 @@ public class ResidentWidget : MonoBehaviour
                 resident.DecideAction();
             }
             else {
-                if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelIndex].maxResidentsCount) {
+                if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
                     resident.SetWork(selectedBuilding);
                     resident.DecideAction();
                 }
             }
         }
         else {
-            if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.levelIndex].maxResidentsCount) {
+            if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
                 resident.SetWork(selectedBuilding);
                 resident.DecideAction();
             }
