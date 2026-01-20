@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     // Main
-    [SerializeField] private UIManager uiManager = null;
+    [SerializeField] private PlayerUIManager uiManager = null;
 
     // Camera Movement
     [SerializeField] private Camera mainCamera = null;
@@ -107,8 +107,8 @@ public class PlayerController : MonoBehaviour
     public ISelectable selectedObject = null;
 
     // Raycast
-    private GraphicRaycaster graphicRaycaster = null;
     private EventSystem eventSystem = null;
+    private GraphicRaycaster graphicRaycaster = null;
     [SerializeField] private LayerMask clickableLayers;
 
     public bool isInitialized { get; private set; } = false;
@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour
         // Gameplay Events
         BuildingWidget.OnStartPlacingConstruction += OnBuildingStartPlacing;
         GameManager.OnConstructionPlaced += OnConstructionPlaced;
-        UIManager.OnBuildStopPlacing += OnConstructionPlaced;
+        PlayerUIManager.OnBuildStopPlacing += OnConstructionPlaced;
 
         touchInputActionMap.Enable();
 
@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour
 
         BuildingWidget.OnStartPlacingConstruction -= OnBuildingStartPlacing;
         GameManager.OnConstructionPlaced -= OnConstructionPlaced;
-        UIManager.OnBuildStopPlacing -= OnConstructionPlaced;
+        PlayerUIManager.OnBuildStopPlacing -= OnConstructionPlaced;
 
         touchInputActionMap.Disable();
 
@@ -226,7 +226,7 @@ public class PlayerController : MonoBehaviour
 
         currentCameraArmLength = -mainCamera.transform.localPosition.z;
 
-        if (SaveSystem.saveData == null) {
+        if (saveData == null) {
             cameraYawRotateAlpha = 0.5f; }
         else {
             cameraYawRotateAlpha = saveData.cameraYawRotation; }

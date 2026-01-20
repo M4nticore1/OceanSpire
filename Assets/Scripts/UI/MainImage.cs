@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.UI;
@@ -7,7 +9,7 @@ using UnityEditor.UI;
 
 public class MainImage : Image
 {
-    [SerializeField] private UIColor mainColor = null;
+    [SerializeField] private ColorHolder mainColor = null;
 
     protected override void Awake()
     {

@@ -5,6 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class SaveData
 {
+    // Main
+    public string worldName { get; private set; } = "new_world";
+
     // Player
     public float cameraYawRotation { get; private set; } = 0;
     public float cameraHeightPosition { get; private set; } = 0;
@@ -53,6 +56,9 @@ public class SaveData
             Debug.LogError("playerController is NULL");
             return;
         }
+
+        // Main
+        worldName = SaveManager.Instance.saveWorldName;
 
         // Player
         cameraYawRotation = playerController.cameraYawRotateAlpha;

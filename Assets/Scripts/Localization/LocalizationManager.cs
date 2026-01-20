@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class LocalizationManager
 {
-    private static LocalizationManager _instance;
-    public static LocalizationManager Instance => _instance ??= new LocalizationManager();
+    private static LocalizationManager instance;
+    public static LocalizationManager Instance => instance ??= new LocalizationManager();
 
     public List<Dictionary<string, string>> localizations { get; private set; } = new List<Dictionary<string, string>>();
     private int currentLocalizationIndex = 0;
@@ -24,8 +24,14 @@ public class LocalizationManager
     {
         if (!isInitialized) return key;
 
-        if (localizations.Count > currentLocalizationIndex && localizations[currentLocalizationIndex] != null)
-            return localizations[currentLocalizationIndex][key];
+        if (localizations.Count > currentLocalizationIndex && localizations[currentLocalizationIndex] != null) {
+            if (localizations[currentLocalizationIndex].ContainsKey(key))
+                return localizations[currentLocalizationIndex][key];
+            else {
+                Debug.LogError($"localizations[currentLocalizationIndex] has no {key} key");
+                return "";
+            }
+        }
         else
             return key;
     }

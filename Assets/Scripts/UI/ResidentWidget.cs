@@ -16,7 +16,7 @@ public class ResidentWidget : MonoBehaviour
 {
     [HideInInspector] public Creature resident = null;
     [HideInInspector] public Building selectedBuilding = null;
-    private UIManager uiManager = null;
+    private PlayerUIManager uiManager = null;
 
     public int widgetIndex = 0;
     private ResidentWidgetState residentWidgetState = ResidentWidgetState.NonSelectedWorker;
@@ -39,7 +39,7 @@ public class ResidentWidget : MonoBehaviour
         residentWidgetButton.onClick.RemoveAllListeners();
     }
 
-    public void InitializeResidentWidget(Creature resident, Building selectedBuilding, UIManager uiManager)
+    public void InitializeResidentWidget(Creature resident, Building selectedBuilding, PlayerUIManager uiManager)
     {
         this.resident = resident;
         this.selectedBuilding = selectedBuilding;

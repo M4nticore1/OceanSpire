@@ -5,7 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class PlayerUIManager : MonoBehaviour
 {
     private PlayerController playerController;
 
@@ -48,22 +48,22 @@ public class UIManager : MonoBehaviour
     [Header("Menu Buttons")]
     [SerializeField] private Button buildingMenuButton = null;
     [SerializeField] private Button storageMenuButton = null;
-    [SerializeField] private MainButton buildingListsMenuButton = null;
-    [SerializeField] private MainButton storageListsMenuButton = null;
+    [SerializeField] private CustomSelectable buildingListsMenuButton = null;
+    [SerializeField] private CustomSelectable storageListsMenuButton = null;
     [SerializeField] private Button closeManagementMenuButton = null;
     [SerializeField] private Button stopPlacingBuildingButton = null;
 
     // Buildings
     [Header("Building Lists")]
     [SerializeField] private List<GridLayoutGroup> buildingLists = new List<GridLayoutGroup>();
-    [SerializeField] private List<MainButton> buildingListButtons = new List<MainButton>();
+    [SerializeField] private List<CustomSelectable> buildingListButtons = new List<CustomSelectable>();
     [SerializeField] private ScrollRect buildingListsScrollRect = null;
     [SerializeField] private ScrollRect storageListsScrollRect = null;
 
     // Storage List
     [Header("Storage Lists")]
     [SerializeField] private List<GridLayoutGroup> storageLists = new List<GridLayoutGroup>();
-    [SerializeField] private List<MainButton> storageListButtons = new List<MainButton>();
+    [SerializeField] private List<CustomSelectable> storageListButtons = new List<CustomSelectable>();
 
     private List<bool> itemsToUpdate = new List<bool>();
 
@@ -143,9 +143,9 @@ public class UIManager : MonoBehaviour
 
     // Colors
     [Header("Colors")]
-    [SerializeField] private UIColor blueColor;
-    [SerializeField] private UIColor lightBlueColor;
-    [SerializeField] private UIColor darkBlueColor;
+    [SerializeField] private ColorHolder blueColor;
+    [SerializeField] private ColorHolder lightBlueColor;
+    [SerializeField] private ColorHolder darkBlueColor;
 
     public static event Action OnBuildStopPlacing;
 
@@ -208,8 +208,8 @@ public class UIManager : MonoBehaviour
         buildingMenuButton.onClick.AddListener(OpenConstructionMenu);
         storageMenuButton.onClick.AddListener(OpenStorageMenu);
 
-        buildingListsMenuButton.onClick.AddListener(OpenConstructionListsMenu);
-        storageListsMenuButton.onClick.AddListener(OpenStorageListsMenu);
+        buildingListsMenuButton.onRelease += OpenConstructionListsMenu;
+        storageListsMenuButton.onRelease += OpenStorageListsMenu;
 
         closeManagementMenuButton.onClick.AddListener(CloseManagementMenu);
 
@@ -223,7 +223,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < buildingCategoriesEnum.Length; i++)
         {
             int index = i;
-            buildingListButtons[index].onClick.AddListener(() => OpenBuildingsListByCategory((BuildingCategory)buildingCategoriesEnum.GetValue(index)));
+            buildingListButtons[index].onRelease += () => OpenBuildingsListByCategory((BuildingCategory)buildingCategoriesEnum.GetValue(index));
         }
 
         // Storage List Buttons
@@ -231,7 +231,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < storageListButtons.Count; i++)
         {
             int index = i;
-            storageListButtons[index].onClick.AddListener(() => OpenStorageListByCategory((ItemCategory)itemCategoriesEnum.GetValue(index + 1)));
+            storageListButtons[index].onRelease += () => OpenStorageListByCategory((ItemCategory)itemCategoriesEnum.GetValue(index + 1));
         }
 
         closeBuildingResourcesMenuButton.onClick.AddListener(CloseBuildingActionMenu);
@@ -291,10 +291,10 @@ public class UIManager : MonoBehaviour
         OpenManagementMenu();
         OpenConstructionListsMenu();
 
-        buildingListsMenuButton.GetComponent<RectTransform>().localScale = new Vector3(MainButton.selectedButtonUpScaleValue, MainButton.selectedButtonUpScaleValue, 1f);
+        buildingListsMenuButton.GetComponent<RectTransform>().localScale = new Vector3(CustomSelectable.selectedButtonUpScaleValue, CustomSelectable.selectedButtonUpScaleValue, 1f);
         storageListsMenuButton.GetComponent<RectTransform>().localScale = Vector3.one;
 
-        buildingListButtons[(int)lastOpenedBuildingsListCategory].GetComponent<RectTransform>().localScale = new Vector3(MainButton.selectedButtonUpScaleValue, MainButton.selectedButtonUpScaleValue, 1f);
+        buildingListButtons[(int)lastOpenedBuildingsListCategory].GetComponent<RectTransform>().localScale = new Vector3(CustomSelectable.selectedButtonUpScaleValue, CustomSelectable.selectedButtonUpScaleValue, 1f);
 
         UpdateItemAmounts();
     }
@@ -315,7 +315,7 @@ public class UIManager : MonoBehaviour
 
     private void OpenBuildingsListByCategory(BuildingCategory buildingCategory)
     {
-        Button selectedButton = null;
+        CustomSelectable selectedButton = null;
 
         for (int i = 0; i < buildingListButtons.Count; i++)
         {
@@ -345,7 +345,7 @@ public class UIManager : MonoBehaviour
         OpenStorageListsMenu();
 
         buildingListsMenuButton.GetComponent<RectTransform>().localScale = Vector3.one;
-        storageListsMenuButton.GetComponent<RectTransform>().localScale = new Vector3(MainButton.selectedButtonUpScaleValue, MainButton.selectedButtonUpScaleValue, 1f);
+        storageListsMenuButton.GetComponent<RectTransform>().localScale = new Vector3(CustomSelectable.selectedButtonUpScaleValue, CustomSelectable.selectedButtonUpScaleValue, 1f);
     }
 
     private void OpenStorageListsMenu()
@@ -364,7 +364,7 @@ public class UIManager : MonoBehaviour
 
     private void OpenStorageListByCategory(ItemCategory itemCategory)
     {
-        Button selectedButton = null;
+        CustomSelectable selectedButton = null;
         int itemCategoryIndex = ((int)itemCategory) - 1;
 
         for (int i = 0; i < storageListButtons.Count; i++)

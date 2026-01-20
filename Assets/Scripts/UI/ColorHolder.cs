@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UIColor", menuName = "UI/UIColor")]
-public class UIColor : ScriptableObject
+public class ColorHolder : ScriptableObject
 {
     public Color color = new Color();
 }

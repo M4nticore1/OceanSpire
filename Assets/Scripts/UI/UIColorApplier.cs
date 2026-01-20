@@ -8,7 +8,7 @@ using UnityEditor;
 [System.Serializable]
 public class UIColorGroup
 {
-    public UIColor uiColor;
+    public ColorHolder uiColor;
 
     public Image[] images;
     public Button[] buttons;

@@ -8,15 +8,15 @@ using UnityEngine.UI;
 public class BuildingWidget : MonoBehaviour
 {
     private PlayerController playerController = null;
-    private UIManager UIManager = null;
+    private PlayerUIManager UIManager = null;
 
     private ConstructionComponent constructionComponent = null;
     [SerializeField] private BuildingResourceWidget buildingResourceWidget = null;
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
 
     [SerializeField] private Image buildingImage = null;
-    [SerializeField] private MainButton buildButton = null;
-    [SerializeField] private MainButton informationButton = null;
+    [SerializeField] private CustomSelectable buildButton = null;
+    [SerializeField] private CustomSelectable informationButton = null;
 
     [SerializeField] private TextMeshProUGUI buildingNameText = null;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup = null;
@@ -47,10 +47,10 @@ public class BuildingWidget : MonoBehaviour
         constructionComponent = construction;
 
         playerController = GetComponentInParent<PlayerController>();
-        UIManager = playerController.GetComponentInChildren<UIManager>();
+        UIManager = playerController.GetComponentInChildren<PlayerUIManager>();
 
-        buildButton.onClick.AddListener(StartPlacingBuilding);
-        informationButton.onClick.AddListener(OpenBuildingInformationMenu);
+        buildButton.onRelease += StartPlacingBuilding;
+        informationButton.onRelease += OpenBuildingInformationMenu;
 
         Building building = construction.GetComponentInChildren<Building>();
         if (building) {

@@ -4,6 +4,7 @@ public class Bootstrap : MonoBehaviour
 {
     private void Awake()
     {
+        SaveManager.Instance.Initialize();
         AwakeAsync();
     }
 

@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 public class ContextMenu : MonoBehaviour
 {
-    private UIManager uiManager = null;
+    private PlayerUIManager uiManager = null;
 
     [Header("Main")]
     [SerializeField] private TextMeshProUGUI nameText = null;
@@ -23,7 +23,7 @@ public class ContextMenu : MonoBehaviour
 
     private void Awake()
     {
-        uiManager = GetComponentInParent<UIManager>();
+        uiManager = GetComponentInParent<PlayerUIManager>();
         if (upgradeButton)
             upgradeButton.onClick.AddListener(uiManager.OpenUpgradeBuildingMenu);
         if (demolishButton)

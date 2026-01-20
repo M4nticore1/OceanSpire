@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         BuildingWidget.OnStartPlacingConstruction += OnStartPlacingConstruction;
-        UIManager.OnBuildStopPlacing += HideAllBuildigPlaces;
+        PlayerUIManager.OnBuildStopPlacing += HideAllBuildigPlaces;
 
         ConstructionComponent.onAnyConstructionStartConstructing += OnBuildingStartConstructing;
         ConstructionComponent.onAnyConstructionFinishConstructing += OnBuildingFinishConstructing;
@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         BuildingWidget.OnStartPlacingConstruction -= OnStartPlacingConstruction;
-        UIManager.OnBuildStopPlacing -= HideAllBuildigPlaces;
+        PlayerUIManager.OnBuildStopPlacing -= HideAllBuildigPlaces;
 
         ConstructionComponent.onAnyConstructionStartConstructing -= OnBuildingStartConstructing;
         ConstructionComponent.onAnyConstructionFinishConstructing -= OnBuildingFinishConstructing;
@@ -174,7 +174,8 @@ public class GameManager : MonoBehaviour
         windDirection = newWindDirection;
 
         new LootManager();
-        saveData = SaveSystem.LoadData();
+        string worldName = SaveManager.Instance.saveWorldName;
+        saveData = SaveSystem.GetSaveDataByWorldName(worldName);
 
         InitializeItems();
         LoadBuildings(saveData);
@@ -1025,7 +1026,7 @@ public class GameManager : MonoBehaviour
     {
         while (true) {
             yield return new WaitForSeconds(autoSaveFrequency);
-            SaveSystem.SaveData(playerController, this);
+            SaveSystem.SaveData(playerController);
         }
     }
 }
