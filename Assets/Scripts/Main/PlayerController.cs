@@ -17,17 +17,23 @@ public class PlayerController : MonoBehaviour
     public Vector3 cameraVerticalPosition { get; private set; } = Vector3.zero;
     public Vector3 cameraHorizontalPosition { get; private set; } = Vector3.zero;
 
-    private bool isCameraMoving = false;
-    private Vector2 cameraMoveVelocity = Vector2.zero;
-    private Vector2 keyboardCameraMove = Vector2.zero;
-    private Vector2 mouseCameraMove = Vector2.zero;
-    private Vector2 touchscreenCameraMove = Vector2.zero;
-    private const float cameraMoveMouseScale = 0.2f;
-    private const float cameraMoveTouchsreenScale = 0.05f;
+    private bool isCameraMoving => isKeyboardMoveButtonPressed || isMouseMoveButtonPressed || isTouchscreenMoveButtonPressed;
+    private Vector2 cameraMoveVelocity => keyboardCameraMove * keyboardCameraMoveSensitivity + mouseCameraMove * mouseCameraMoveSensitivity + touchscreenCameraMove * touchscreenCameraMoveSensitivity;
+    private Vector2 keyboardCameraMoveInput => cameraMoveKeyboardIA.ReadValue<Vector2>();
+    private Vector2 mouseCameraMoveInput => cameraMoveMouseIA.ReadValue<Vector2>();
+    private Vector2 touchscreenCameraMoveInput => cameraMoveTouchscreenIA.ReadValue<Vector2>();
 
-    private Vector2 keyboardCameraMoveSensitivity = new Vector2(50f, 50f);
-    private Vector2 mouseCameraMoveSensitivity = new Vector2(50f, 50f);
-    private Vector2 touchscreenCameraMoveSensitivity = new Vector2(150f, 50f);
+    private bool isKeyboardMoveButtonPressed => cameraMoveKeyboardButtonIA.IsPressed();
+    private bool isMouseMoveButtonPressed => cameraMoveMouseButtonIA.IsPressed();
+    private bool isTouchscreenMoveButtonPressed => cameraMoveTouchscreenButtonIA.IsPressed();
+
+    private Vector2 keyboardCameraMove;
+    private Vector2 mouseCameraMove;
+    private Vector2 touchscreenCameraMove;
+
+    private const float keyboardCameraMoveSensitivity = 100f;
+    private const float mouseCameraMoveSensitivity = 10f;
+    private const float touchscreenCameraMoveSensitivity = 3f;
     private const float cameraStopMoveSpeed = 6.0f;
 
     private const float cameraVerticalBoundaryPadding = 10.0f;
@@ -79,15 +85,18 @@ public class PlayerController : MonoBehaviour
     private InputAction secondaryInteractionPositionIA = null;
     private InputAction secondaryInteractionDeltaIA = null;
 
-    private InputAction cameraMoveButtonIA = null;
+    private InputAction cameraMoveKeyboardButtonIA = null;
+    private InputAction cameraMoveMouseButtonIA = null;
+    private InputAction cameraMoveTouchscreenButtonIA = null;
+
     private InputAction cameraMoveKeyboardIA = null;
     private InputAction cameraMoveMouseIA = null;
-    private InputAction cameraMoveTouchScreenIA = null;
+    private InputAction cameraMoveTouchscreenIA = null;
     private InputAction cameraZoomIA = null;
 
     private Vector2 primaryInteractionStartPosition = Vector2.zero;
     private Vector2 primaryInteractionPosition = Vector2.zero;
-    private Vector2 primaryInteractionDelta = Vector2.zero;
+    private Vector2 primaryInteractionDelta => primaryInteractionDeltaIA.ReadValue<Vector2>();
 
     private Vector2 secondaryInteractionStartPosition = Vector2.zero;
     private Vector2 secondaryInteractionPosition = Vector2.zero;
@@ -100,8 +109,6 @@ public class PlayerController : MonoBehaviour
     private float touchPitchVelocity = 0.0f;
     private const float touchPitchSensitivity = 0.1f;
     private const float pitchStopSpeed = 25.0f;
-
-    //private float farSensitivityMultiplier = 2f;
 
     // Building
     [HideInInspector] public Building buildingToPlace = null;
@@ -130,17 +137,9 @@ public class PlayerController : MonoBehaviour
 
         touchInputActionMap.Enable();
 
-        //mouseInteractionPositionIA.performed
-
         // Primary Interaction
         primaryInteractionPressIA.performed += OnPrimaryInteractionStarted;
         primaryInteractionPressIA.canceled += OnPrimaryInteractionEnded;
-
-        //primaryInteractionPositionIA.performed += OnPrimaryInteractionPosition;
-        //primaryInteractionPositionIA.canceled += OnPrimaryInteractionPosition;
-
-        primaryInteractionDeltaIA.performed += OnPrimaryInteractionDelta;
-        primaryInteractionDeltaIA.canceled += OnPrimaryInteractionDelta;
 
         // Secondary Interaction
         secondaryInteractionPressIA.performed += OnSecondaryTouchStarted;
@@ -153,8 +152,6 @@ public class PlayerController : MonoBehaviour
         secondaryInteractionDeltaIA.canceled += OnSecondaryInteractionDelta;
 
         // Camera
-        cameraMoveButtonIA.performed += StartCameraMoving;
-        cameraMoveButtonIA.canceled += StopCameraMoving;
         cameraZoomIA.performed += ZoomCamera;
     }
 
@@ -171,9 +168,6 @@ public class PlayerController : MonoBehaviour
         primaryInteractionPressIA.performed -= OnPrimaryInteractionStarted;
         primaryInteractionPressIA.canceled -= OnPrimaryInteractionEnded;
 
-        primaryInteractionDeltaIA.performed -= OnPrimaryInteractionDelta;
-        primaryInteractionDeltaIA.canceled -= OnPrimaryInteractionDelta;
-
         // Secondary Interaction
         secondaryInteractionPressIA.performed -= OnSecondaryTouchStarted;
         secondaryInteractionPressIA.canceled -= OnSecondaryTouchEnded;
@@ -185,8 +179,6 @@ public class PlayerController : MonoBehaviour
         secondaryInteractionDeltaIA.canceled -= OnSecondaryInteractionDelta;
 
         // Camera
-        cameraMoveButtonIA.performed -= StartCameraMoving;
-        cameraMoveButtonIA.canceled -= StopCameraMoving;
         cameraZoomIA.performed -= ZoomCamera;
     }
 
@@ -210,10 +202,12 @@ public class PlayerController : MonoBehaviour
 
                 cameraMoveKeyboardIA = touchInputActionMap.FindAction("CameraMoveKeyboard");
                 cameraMoveMouseIA = touchInputActionMap.FindAction("CameraMoveMouse");
-                cameraMoveTouchScreenIA = touchInputActionMap.FindAction("CameraMoveTouchScreen");
+                cameraMoveTouchscreenIA = touchInputActionMap.FindAction("CameraMoveTouchScreen");
                 cameraZoomIA = touchInputActionMap.FindAction("CameraZoom");
 
-                cameraMoveButtonIA = touchInputActionMap.FindAction("CameraMoveButton");
+                cameraMoveKeyboardButtonIA = touchInputActionMap.FindAction("CameraMoveKeyboardButton");
+                cameraMoveMouseButtonIA = touchInputActionMap.FindAction("CameraMoveMouseButton");
+                cameraMoveTouchscreenButtonIA = touchInputActionMap.FindAction("CameraMoveTouchscreenButton");
             }
             else
                 Debug.Log("void PlayerController : SetInputSystem() touchInputActionMap is NULL");
@@ -271,22 +265,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void FinishCameraMoving(InputAction.CallbackContext context)
-    {
-        isCameraMoving = false;
-        Vector2 direction = context.ReadValue<Vector2>();
-    }
-
-    private void StartCameraMoving(InputAction.CallbackContext context)
-    {
-        isCameraMoving = true;
-    }
-
-    private void StopCameraMoving(InputAction.CallbackContext context)
-    {
-        isCameraMoving = false;
-    }
-
     private void CameraMovement()
     {
         if (!cameraHolder) {
@@ -294,31 +272,27 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // Keybord Moving
-        if (isCameraMoving)
-            keyboardCameraMove = cameraMoveKeyboardIA.ReadValue<Vector2>();
-        else {
+        if (isKeyboardMoveButtonPressed)
+            keyboardCameraMove = keyboardCameraMoveInput;
+        else
             keyboardCameraMove = Vector2.Lerp(keyboardCameraMove, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+        if (isMouseMoveButtonPressed)
+            mouseCameraMove = mouseCameraMoveInput;
+        else
+            mouseCameraMove = Vector2.Lerp(mouseCameraMove, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+        if (isTouchscreenMoveButtonPressed)
+            touchscreenCameraMove = touchscreenCameraMoveInput;
+        else
+            touchscreenCameraMove = Vector2.Lerp(touchscreenCameraMove, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
 
+        // Keybord Moving
+        if (!isCameraMoving) {
             if (cameraHolder.transform.position.y > GameManager.Instance.cityHeight || cameraHolder.transform.position.y < 0.0f) {
                 Vector3 cameraPosition = cameraHolder.transform.position;
                 float targetHeight = cameraHolder.transform.position.y < 0f ? 0f : GameManager.Instance.cityHeight;
                 cameraHolder.transform.position = math.lerp(cameraHolder.transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
             }
         }
-
-        // Mouse & TouchScreen Moving
-        if (isPrimaryInteractionPressed) {
-            mouseCameraMove = cameraMoveMouseIA.ReadValue<Vector2>() * cameraMoveMouseScale;
-            touchscreenCameraMove = cameraMoveTouchScreenIA.ReadValue<Vector2>() * cameraMoveTouchsreenScale;
-        }
-        else {
-            mouseCameraMove = Vector2.Lerp(mouseCameraMove, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
-            touchscreenCameraMove = Vector2.Lerp(touchscreenCameraMove, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
-        }
-
-        // Sum Of Movings
-        cameraMoveVelocity = (keyboardCameraMove * keyboardCameraMoveSensitivity + mouseCameraMove * mouseCameraMoveSensitivity + touchscreenCameraMove * touchscreenCameraMoveSensitivity);
 
         // Return Vertical Position
         if (cameraHolder.transform.position.y > GameManager.Instance.cityHeight)
@@ -345,21 +319,6 @@ public class PlayerController : MonoBehaviour
         float alpha = 1f - cameraHolder.transform.eulerAngles.y / 360f + 0.125f;
         Vector2 pos = SquareLoop(alpha, 16f, 0.5f);
         cameraHolder.transform.position = new Vector3(pos.x, cameraHolder.transform.position.y, pos.y);
-    }
-
-    private void KeyboardCameraMoving()
-    {
-
-    }
-
-    private void MouseCameraMoving()
-    {
-
-    }
-
-    private void TouchscreenCameraMoving()
-    {
-
     }
 
     Vector2 SquareLoop(float t, float fullSize, float corner)
@@ -550,18 +509,6 @@ public class PlayerController : MonoBehaviour
         }
 
         isPrimaryInteractionPressed = false;
-    }
-
-    //private void OnPrimaryInteractionPosition(InputAction.CallbackContext context)
-    //{
-    //    Vector2 value = context.ReadValue<Vector2>();
-    //    //primaryInteractionPosition = value;
-    //}
-
-    private void OnPrimaryInteractionDelta(InputAction.CallbackContext context)
-    {
-        Vector2 value = context.ReadValue<Vector2>();
-        primaryInteractionDelta = value;
     }
 
     private void OnSecondaryTouchStarted(InputAction.CallbackContext context)

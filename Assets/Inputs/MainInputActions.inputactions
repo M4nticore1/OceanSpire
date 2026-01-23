@@ -88,9 +88,27 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "CameraMoveButton",
+                    "name": "CameraMoveKeyboardButton",
                     "type": "Button",
                     "id": "1bbfe673-fd94-48f8-ab44-ced645f63a99",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CameraMoveMouseButton",
+                    "type": "Button",
+                    "id": "e6043421-5cc5-4dc5-81f3-22fff9fec160",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CameraMoveTouchscreenButton",
+                    "type": "Button",
+                    "id": "7435c32e-0340-447f-81ae-eaba0b302f3d",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -501,23 +519,12 @@
                 },
                 {
                     "name": "",
-                    "id": "a8fa40e7-9355-4587-a344-37eac26cacbc",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CameraMoveButton",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "22b48428-f0ce-4fc2-8573-81426adc23d8",
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "CameraMoveButton",
+                    "action": "CameraMoveKeyboardButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -528,7 +535,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "CameraMoveButton",
+                    "action": "CameraMoveKeyboardButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -539,7 +546,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "CameraMoveButton",
+                    "action": "CameraMoveKeyboardButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -550,18 +557,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "CameraMoveButton",
+                    "action": "CameraMoveKeyboardButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "97a7cb5b-ff9b-4e5d-8b12-3c24ffe67330",
+                    "id": "73922ede-d3aa-461e-b442-e22db3d53035",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraMoveMouseButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b1f00beb-a9fa-4964-a260-f089a267355b",
                     "path": "<Touchscreen>/primaryTouch/press",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "CameraMoveButton",
+                    "action": "CameraMoveTouchscreenButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
