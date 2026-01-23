@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.95, g: 0.95, b: 0.95, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -164,46 +164,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 0.24718954, g: 0.43359476, b: 0.62, a: 1}
-    m_HighlightedColor: {r: 0.24718954, g: 0.43359476, b: 0.62, a: 1}
-    m_PressedColor: {r: 0.31764707, g: 0.56078434, b: 0.8, a: 1}
-    m_SelectedColor: {r: 0.24718954, g: 0.43359476, b: 0.62, a: 1}
-    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 5101683762470963106}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-  rectTransform: {fileID: 5856474467311547503}
+  targetGraphic: {fileID: 5101683762470963106}
+  contentGraphic: {fileID: 8377490230881606536}
+  scaleRoot: {fileID: 5856474467311547503}
+  isEnabled: 1
+  isInteractable: 1
   isSelectable: 0
   isScalable: 1
-  isNeededCorrectPosition: 0
-  correctPositionDirection: {x: 0, y: 0}
-  content: {fileID: 0}
-  normalColor: {fileID: 11400000, guid: 56cd69bc136b11243b7894fac81889bf, type: 2}
-  pressedColor: {fileID: 11400000, guid: 5967c4bf9493ca347a1811119eb1de4c, type: 2}
-  selectedColor: {fileID: 0}
-  contentNormalColor: {fileID: 0}
-  contentSelectedColor: {fileID: 0}
+  deselectOnOutsideClick: 1
+  selectableGroupIndex: -1
+  stateTransitionTime: 0.3
+  idleState:
+    backgroundColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+    backgroundColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1
+  hoveredState:
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1.02
+  pressedState:
+    backgroundColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
+    backgroundColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 0.98
+  selectedState:
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1.05
+  disabledState:
+    backgroundColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
+    backgroundColorHolder: {fileID: 0}
+    contentColor: {r: 0, g: 0, b: 0, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 0.95

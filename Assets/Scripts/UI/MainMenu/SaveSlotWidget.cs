@@ -14,7 +14,8 @@ public class SaveSlotWidget : MonoBehaviour
 {
     public SaveData worldSaveData { get; private set; } = null;
     [SerializeField] private int slotIndex = 0;
-    [field: SerializeField] public CustomSelectable button { get; private set; }
+    [SerializeField] private CustomSelectable button;
+    public CustomSelectable Button => button;
     [SerializeField] private GameObject createWorldMenu;
     [SerializeField] private GameObject loadWorldMenu;
     [SerializeField] private TextMeshProUGUI worldNameText;
@@ -29,27 +30,26 @@ public class SaveSlotWidget : MonoBehaviour
     //[SerializeField] Color desellectedColor;
     private bool isSelected = false;
 
-    public static event System.Action<SaveSlotWidget> OnSaveSlotClicked;
-
-    private void Awake()
-    {
-    }
+    public static event System.Action<SaveSlotWidget> OnSaveSlotSelected;
+    public static event System.Action<SaveSlotWidget> OnSaveSlotDeselected;
 
     private void OnEnable()
     {
-        button.onRelease += Click;
+        button.onSelected += () => OnSaveSlotSelected?.Invoke(this);
+        button.onDeselected += () => OnSaveSlotDeselected?.Invoke(this);
     }
 
     private void OnDisable()
     {
-        button.onRelease -= Click;
+        button.onSelected -= () => OnSaveSlotSelected?.Invoke(this);
+        button.onDeselected -= () => OnSaveSlotDeselected?.Invoke(this);
     }
 
     private void Start()
     {
         if (SaveManager.Instance.allSaveData.Length > slotIndex) {
-            Debug.Log(SaveManager.Instance.allSaveData.Length);
-            SaveData data = SaveManager.Instance.allSaveData[slotIndex];
+            SaveData[] datas = SaveManager.Instance.allSaveData;
+            SaveData data = datas.Length > slotIndex ? datas[slotIndex] : null;
             if (data != null) {
                 SetSaveData(data);
             }
@@ -74,10 +74,5 @@ public class SaveSlotWidget : MonoBehaviour
         worldSaveData = null;
         createWorldMenu.SetActive(true);
         loadWorldMenu.SetActive(false);
-    }
-
-    private void Click()
-    {
-        OnSaveSlotClicked?.Invoke(this);
     }
 }

@@ -19,13 +19,13 @@ public class PlayerUIManager : MonoBehaviour
 
     private List<List<BuildingWidget>> spawnedBuildingWidgets = new List<List<BuildingWidget>>();
     private List<ResourceWidget> spawnedBuildingActionResourceWidgets = new List<ResourceWidget>();
-    private List<BuildingCharacteristicWidget> spawnedBuildingCharacteristicWidgets = new List<BuildingCharacteristicWidget>();
 
     // Menus
     [Header("Menus")]
     [SerializeField] private GameObject managementMenu = null;
     [SerializeField] private GameObject buildingListsMenu = null;
     [SerializeField] private GameObject storageListsMenu = null;
+    [SerializeField] private BuildingInformationMenu buildingInformationMenu = null;
     private bool isManagementMenuOpened = false;
     private bool isBuildingListsMenuOpened = false;
     private bool isStorageListsMenuOpened = false;
@@ -34,24 +34,16 @@ public class PlayerUIManager : MonoBehaviour
     BuildingCategory lastOpenedBuildingsListCategory = BuildingCategory.Construction;
     ItemCategory lastOpenedStorageListCategory = ItemCategory.Building;
 
-    [Header("Building Information Menu")]
-    [SerializeField] private GameObject buildingInformationMenu = null;
-    [SerializeField] private TextMeshProUGUI buildingInformationMenuNameText = null;
-    [SerializeField] private TextMeshProUGUI buildingInformationMenuLevelNumberText = null;
-    [SerializeField] private TextMeshProUGUI buildingInformationMenuDescriptionText = null;
-    [SerializeField] private RectTransform buildingCharacteristics = null;
-    [SerializeField] private Button closeBuildingInformationMenuButton = null;
-    [SerializeField] private Button closeBuildingInformationMenuBackgroundButton = null;
-    private float buildingCharacteristicHeight = 0;
-
     // Menu Buttons
-    [Header("Menu Buttons")]
-    [SerializeField] private Button buildingMenuButton = null;
-    [SerializeField] private Button storageMenuButton = null;
+    [Header("Screen Buttons")]
+    [SerializeField] private CustomSelectable openConstructionMenuButton = null;
+    [SerializeField] private CustomSelectable openStorageMenuButton = null;
+    [SerializeField] private CustomSelectable closeManagementMenuButton = null;
+    [SerializeField] private CustomSelectable stopPlacingBuildingButton = null;
+
+    [Header("Management Buttons")]
     [SerializeField] private CustomSelectable buildingListsMenuButton = null;
     [SerializeField] private CustomSelectable storageListsMenuButton = null;
-    [SerializeField] private Button closeManagementMenuButton = null;
-    [SerializeField] private Button stopPlacingBuildingButton = null;
 
     // Buildings
     [Header("Building Lists")]
@@ -156,11 +148,13 @@ public class PlayerUIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        BuildingWidget.OnStartPlacingConstruction += OnConstructionStartPlacing;
         GameManager.OnConstructionPlaced += OnConstructionPlaced;
         GameManager.OnStorageCapacityUpdated += UpdateItemAmounts;
         GameManager.OnLootAdded += UpdateItemAmounts;
         GameManager.Instance.OnResidentAdded += AddResidentWidget;
+
+        BuildingWidget.OnStartPlacingConstruction += OnConstructionStartPlacing;
+        BuildingWidget.onBuildingWidgetClicked += OnBuildingWidgetClicked;
     }
 
     private void OnDisable()
@@ -170,6 +164,7 @@ public class PlayerUIManager : MonoBehaviour
         GameManager.Instance.OnResidentAdded -= AddResidentWidget;
 
         BuildingWidget.OnStartPlacingConstruction -= OnConstructionStartPlacing;
+        BuildingWidget.onBuildingWidgetClicked -= OnBuildingWidgetClicked;
     }
 
     private void Update()
@@ -205,25 +200,22 @@ public class PlayerUIManager : MonoBehaviour
         buildingStatsPanelOpenedPosition = buildingStatsPanel.anchoredPosition;
         buildingStatsPanel.anchoredPosition = Vector2.zero;
 
-        buildingMenuButton.onClick.AddListener(OpenConstructionMenu);
-        storageMenuButton.onClick.AddListener(OpenStorageMenu);
+        openConstructionMenuButton.onReleased += OpenConstructionMenu;
+        openStorageMenuButton.onReleased += OpenStorageMenu;
 
-        buildingListsMenuButton.onRelease += OpenConstructionListsMenu;
-        storageListsMenuButton.onRelease += OpenStorageListsMenu;
+        buildingListsMenuButton.onReleased += OpenConstructionListsMenu;
+        storageListsMenuButton.onReleased += OpenStorageListsMenu;
 
-        closeManagementMenuButton.onClick.AddListener(CloseManagementMenu);
+        closeManagementMenuButton.onReleased += CloseManagementMenu;
 
-        stopPlacingBuildingButton.onClick.AddListener(StopPlacingBuilding);
-
-        closeBuildingInformationMenuButton.onClick.AddListener(CloseBuildingInformationMenu);
-        closeBuildingInformationMenuBackgroundButton.onClick.AddListener(CloseBuildingInformationMenu);
+        stopPlacingBuildingButton.onReleased += StopPlacingBuilding;
 
         // Building List Buttons
         System.Array buildingCategoriesEnum = System.Enum.GetValues(typeof(BuildingCategory));
         for (int i = 0; i < buildingCategoriesEnum.Length; i++)
         {
             int index = i;
-            buildingListButtons[index].onRelease += () => OpenBuildingsListByCategory((BuildingCategory)buildingCategoriesEnum.GetValue(index));
+            buildingListButtons[index].onReleased += () => OpenBuildingsListByCategory((BuildingCategory)buildingCategoriesEnum.GetValue(index));
         }
 
         // Storage List Buttons
@@ -231,7 +223,7 @@ public class PlayerUIManager : MonoBehaviour
         for (int i = 0; i < storageListButtons.Count; i++)
         {
             int index = i;
-            storageListButtons[index].onRelease += () => OpenStorageListByCategory((ItemCategory)itemCategoriesEnum.GetValue(index + 1));
+            storageListButtons[index].onReleased += () => OpenStorageListByCategory((ItemCategory)itemCategoriesEnum.GetValue(index + 1));
         }
 
         closeBuildingResourcesMenuButton.onClick.AddListener(CloseBuildingActionMenu);
@@ -242,15 +234,12 @@ public class PlayerUIManager : MonoBehaviour
         demolishBuildingButton.onClick.AddListener(TryToDemolishBuilding);
         repairBuildingButton.onClick.AddListener(TryToUpgradeBuilding);
 
-        buildingCharacteristicHeight = buildingCharacteristicWidget.characteristicValueBox.sizeDelta.y;
-
         for (int i = 0; i < GameManager.Instance.lootList.loot.Count; i++)
             itemsToUpdate.Add(false);
 
         managementMenu.SetActive(false);
         buildingListsMenu.SetActive(false);
         selectBuildingWorkersMenu.gameObject.SetActive(false);
-        buildingInformationMenu.SetActive(false);
         stopPlacingBuildingButton.gameObject.SetActive(false);
     }
 
@@ -290,11 +279,6 @@ public class PlayerUIManager : MonoBehaviour
     {
         OpenManagementMenu();
         OpenConstructionListsMenu();
-
-        buildingListsMenuButton.GetComponent<RectTransform>().localScale = new Vector3(CustomSelectable.selectedButtonUpScaleValue, CustomSelectable.selectedButtonUpScaleValue, 1f);
-        storageListsMenuButton.GetComponent<RectTransform>().localScale = Vector3.one;
-
-        buildingListButtons[(int)lastOpenedBuildingsListCategory].GetComponent<RectTransform>().localScale = new Vector3(CustomSelectable.selectedButtonUpScaleValue, CustomSelectable.selectedButtonUpScaleValue, 1f);
 
         UpdateItemAmounts();
     }
@@ -343,9 +327,6 @@ public class PlayerUIManager : MonoBehaviour
     {
         OpenManagementMenu();
         OpenStorageListsMenu();
-
-        buildingListsMenuButton.GetComponent<RectTransform>().localScale = Vector3.one;
-        storageListsMenuButton.GetComponent<RectTransform>().localScale = new Vector3(CustomSelectable.selectedButtonUpScaleValue, CustomSelectable.selectedButtonUpScaleValue, 1f);
     }
 
     private void OpenStorageListsMenu()
@@ -476,78 +457,6 @@ public class PlayerUIManager : MonoBehaviour
                 spawnedBuildingWidgets[i][j].UpdateResourcesToBuild();
             }
         }
-    }
-
-    public void OpenBuildingInformationMenu(ConstructionComponent construction)
-    {
-        Building building = construction.ownedBuilding;
-
-        foreach (var widget in spawnedBuildingCharacteristicWidgets)
-        {
-            Destroy(widget.gameObject);
-        }
-        spawnedBuildingCharacteristicWidgets.Clear();
-
-        buildingInformationMenu.SetActive(true);
-
-        buildingInformationMenuNameText.SetText(building.BuildingData.BuildingName);
-        buildingInformationMenuLevelNumberText.SetText("Level " + (building.LevelIndex + 1).ToString());
-        //buildingInformationMenuDescriptionText.SetText(building.BuildingData.description);
-
-        ProductionBuilding productionBuilding = building.GetComponent<ProductionBuilding>();
-        StorageBuildingComponent storageBuilding = building.GetComponent<StorageBuildingComponent>();
-
-        int index = 0;
-
-        if (productionBuilding)
-        {
-            ProductionBuildingLevelData levelData = productionBuilding.ProductionLevelsData[0];
-            ItemInstance producedResource = levelData.producedResources[productionBuilding.currentProducedItemIndex].producedResource;
-            CreateBuildingCharacteristicWidget("Produces", producedResource.Amount, producedResource.ItemData.ItemIcon, ref index);
-            CreateBuildingCharacteristicWidget("Consumes", producedResource.Amount, producedResource.ItemData.ItemIcon, ref index);
-        }
-
-        if (storageBuilding)
-        {
-            StorageBuildingLevelData levelData = storageBuilding.StorageLevelsData[0];
-            CreateBuildingCharacteristicWidget("Storage capacity", levelData.storageItems[0].Amount, levelData.storageItems[0].ItemData.ItemIcon, ref index);
-        }
-    }
-
-    private void CreateBuildingCharacteristicWidget(string characteristicName, int characteristicValueText, ref int index)
-    {
-        BuildingCharacteristicWidget productionWidget = CreateBuildingCharacteristicWidget(characteristicName, ref index);
-        productionWidget.SetCharacteristicName(characteristicName);
-        productionWidget.SetCharacteristicValue(characteristicValueText);
-    }
-
-    private void CreateBuildingCharacteristicWidget(string characteristicName, Sprite characteristicValueSprite, ref int index)
-    {
-        BuildingCharacteristicWidget productionWidget = CreateBuildingCharacteristicWidget(characteristicName, ref index);
-        productionWidget.SetCharacteristicName(characteristicName);
-        productionWidget.SetCharacteristicValue(characteristicValueSprite);
-    }
-
-    private void CreateBuildingCharacteristicWidget(string characteristicName, int characteristicValueText, Sprite characteristicValueSprite, ref int index)
-    {
-        BuildingCharacteristicWidget productionWidget = CreateBuildingCharacteristicWidget(characteristicName, ref index);
-        productionWidget.SetCharacteristicName(characteristicName);
-        productionWidget.SetCharacteristicValue(characteristicValueText, characteristicValueSprite);
-    }
-
-    private BuildingCharacteristicWidget CreateBuildingCharacteristicWidget(string characteristicName, ref int index)
-    {
-        BuildingCharacteristicWidget productionWidget = Instantiate(buildingCharacteristicWidget, buildingCharacteristics.transform);
-        productionWidget.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -buildingCharacteristicHeight * index);
-        spawnedBuildingCharacteristicWidgets.Add(productionWidget);
-        index++;
-
-        return productionWidget;
-    }
-
-    public void CloseBuildingInformationMenu()
-    {
-        buildingInformationMenu.SetActive(false);
     }
 
     // Management Menus
@@ -932,6 +841,12 @@ public class PlayerUIManager : MonoBehaviour
             stopPlacingBuildingButton.gameObject.SetActive(false);
 
         OnBuildStopPlacing?.Invoke();
+    }
+
+    // Information Menu
+    private void OnBuildingWidgetClicked(ConstructionComponent constructionComponent)
+    {
+        buildingInformationMenu.Open(constructionComponent);
     }
 
     private void FPSCounter()

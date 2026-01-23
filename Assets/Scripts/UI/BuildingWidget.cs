@@ -23,23 +23,19 @@ public class BuildingWidget : MonoBehaviour
     //[SerializeField] private HorizontalLayoutGroup resourcesToBuildHorizontalLayoutGroupWidget = null;
 
     public static event Action<ConstructionComponent> OnStartPlacingConstruction;
-
+    public static event Action<ConstructionComponent> onBuildingWidgetClicked;
     int resourcesToBuildNumber = 0;
 
     private void OnEnable()
     {
-        //buildButton.onPress += () => OnPress?.Invoke();
-        //openInformationButton.onPress += () => OnPress?.Invoke();
-        //buildButton.onRelease += () => OnRelease?.Invoke();
-        //openInformationButton.onRelease += () => OnRelease?.Invoke();
+        buildButton.onReleased += StartPlacingBuilding;
+        informationButton.onReleased += OpenBuildingInformationMenu;
     }
 
     private void OnDisable()
     {
-        //buildButton.onPress -= () => OnPress?.Invoke();
-        //openInformationButton.onPress -= () => OnPress?.Invoke();
-        //buildButton.onRelease -= () => OnRelease?.Invoke();
-        //openInformationButton.onRelease -= () => OnRelease?.Invoke();
+        buildButton.onReleased -= StartPlacingBuilding;
+        informationButton.onReleased -= OpenBuildingInformationMenu;
     }
 
     public void InitializeBuildingWidget(ConstructionComponent construction)
@@ -48,9 +44,6 @@ public class BuildingWidget : MonoBehaviour
 
         playerController = GetComponentInParent<PlayerController>();
         UIManager = playerController.GetComponentInChildren<PlayerUIManager>();
-
-        buildButton.onRelease += StartPlacingBuilding;
-        informationButton.onRelease += OpenBuildingInformationMenu;
 
         Building building = construction.GetComponentInChildren<Building>();
         if (building) {
@@ -91,31 +84,12 @@ public class BuildingWidget : MonoBehaviour
 
     private void StartPlacingBuilding()
     {
-        //List<bool> haveResourcesToBuild = new List<bool>();
-
-        //for (int i = 0; i < resourcesToBuildNumber; i++)
-        //{
-        //    int id = building.ConstructionLevelsData[0].ResourcesToBuild[i].ItemData.ItemId;
-
-        //    if (cityManager.items[id].Amount >= building.ConstructionLevelsData[0].ResourcesToBuild[i].Amount)
-        //        haveResourcesToBuild.Add(true);
-        //    else
-        //        haveResourcesToBuild.Add(false);
-        //}
-
-        //if (!haveResourcesToBuild.Contains(false) || resourcesToBuildNumber == 0)
-        //{
-        //    playerController.StartPlacingBuilding(building.constructionComponent);
-
-        //    UIManager.CloseManagementMenu();
-        //}
-
         OnStartPlacingConstruction?.Invoke(constructionComponent);
     }
 
     private void OpenBuildingInformationMenu()
     {
-        UIManager.OpenBuildingInformationMenu(constructionComponent);
+        onBuildingWidgetClicked?.Invoke(constructionComponent);
     }
 
     public void UpdateResourcesToBuild()

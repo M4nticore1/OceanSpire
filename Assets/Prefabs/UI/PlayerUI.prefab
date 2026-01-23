@@ -2461,7 +2461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainImage
   m_Material: {fileID: 0}
-  m_Color: {r: 0.18, g: 0.18, b: 0.18, a: 0.9490196}
+  m_Color: {r: 0.5849056, g: 0.20140618, b: 0.20140618, a: 0.9490196}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3586,14 +3586,14 @@ MonoBehaviour:
   buildingInformationMenuLevelNumberText: {fileID: 4869653712974915742}
   buildingInformationMenuDescriptionText: {fileID: 8894242587112391811}
   buildingCharacteristics: {fileID: 4673612714309162833}
-  closeBuildingInformationMenuButton: {fileID: 3087662453168761277}
+  closeBuildingInformationMenuButton: {fileID: 0}
   closeBuildingInformationMenuBackgroundButton: {fileID: 7740256867459484090}
-  buildingMenuButton: {fileID: 567925452760405086}
-  storageMenuButton: {fileID: 3562197371029554298}
+  openConstructionMenuButton: {fileID: 567925452760405086}
+  openStorageMenuButton: {fileID: 3562197371029554298}
   buildingListsMenuButton: {fileID: 8971962629013174467}
   storageListsMenuButton: {fileID: 829117099251789281}
-  closeManagementMenuButton: {fileID: 296279116138426528}
-  stopPlacingBuildingButton: {fileID: 4794104698348618336}
+  closeManagementMenuButton: {fileID: 2071420755748283807}
+  stopPlacingBuildingButton: {fileID: 6497470128709080927}
   buildingLists:
   - {fileID: 8792590059360149303}
   - {fileID: 7261112553883055671}
@@ -3677,14 +3677,14 @@ MonoBehaviour:
     - {fileID: 4815333516497802125}
     - {fileID: 8384957861968577449}
     buttons:
-    - {fileID: 8971962629013174467}
     - {fileID: 0}
-    - {fileID: 5779216176605482771}
-    - {fileID: 6871546046007613085}
-    - {fileID: 6973101474423625992}
-    - {fileID: 7813554050961126349}
-    - {fileID: 8717705301990062439}
-    - {fileID: 7500782539957076814}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
     texts: []
 --- !u!1 &4532125467115577390
 GameObject:
@@ -6638,7 +6638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5059259372177201316}
   m_Layer: 5
-  m_Name: ScreenResources
+  m_Name: ScreenManagement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6937,6 +6937,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5059259372177201316}
     m_Modifications:
+    - target: {fileID: 287948044752142449, guid: 4c069ed7813208d49bd1d9bd098800e8, type: 3}
+      propertyPath: backgroundGraphic
+      value: 
+      objectReference: {fileID: 4815333516497802125}
+    - target: {fileID: 5101683762470963106, guid: 4c069ed7813208d49bd1d9bd098800e8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 5101683762470963106, guid: 4c069ed7813208d49bd1d9bd098800e8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 5101683762470963106, guid: 4c069ed7813208d49bd1d9bd098800e8, type: 3}
+      propertyPath: m_Color.r
+      value: 0.95
+      objectReference: {fileID: 0}
     - target: {fileID: 5856474467311547503, guid: 4c069ed7813208d49bd1d9bd098800e8, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -7019,7 +7035,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7307172932021827837, guid: 4c069ed7813208d49bd1d9bd098800e8, type: 3}
       propertyPath: m_Name
-      value: BuildingsMenuButton
+      value: OpenConstructionMenuButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8315,17 +8331,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
   m_PrefabInstance: {fileID: 3600045195108123553}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4794104698348618336 stripped
+--- !u!114 &6497470128709080927 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8322083480743461313, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7772729926661117182, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
   m_PrefabInstance: {fileID: 3600045195108123553}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
 --- !u!1001 &3643843769082856459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9714,17 +9730,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
---- !u!114 &3087662453168761277 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8322083480743461313, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
-  m_PrefabInstance: {fileID: 6459409197295675516}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &8516305705107106645 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
@@ -10514,17 +10519,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
---- !u!114 &296279116138426528 stripped
+--- !u!114 &2071420755748283807 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8322083480743461313, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7772729926661117182, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
   m_PrefabInstance: {fileID: 8602265185728622945}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
 --- !u!224 &6407199535175168584 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}

@@ -83,7 +83,7 @@ Material:
     - _RefractionStrength: 0.03
     - _SecondFlowSpeed: 0.4
     - _Smoothness: 1
-    - _Transparent: 0.95
+    - _Transparent: 0.93
     - _WaterSpeed: 0.5
     - _WavesHeight: 3.88
     m_Colors:

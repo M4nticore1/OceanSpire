@@ -3,12 +3,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public static class InputUtils
+public static class PointerUtils
 {
     public static Vector2 GetCurrentInputPosition()
     {
         Vector2 position = new Vector2();
-        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed) {
+        if (Touchscreen.current != null) {
             position = Touchscreen.current.primaryTouch.position.ReadValue();
         }
         else if (Mouse.current != null) {
@@ -33,4 +33,6 @@ public static class InputUtils
         }
         return new RaycastResult();
     }
+
+    public static bool IsGameObjectHovered(GameObject gameObjectToCheck) => GetCurrentRaycastResult().gameObject == gameObjectToCheck;
 }

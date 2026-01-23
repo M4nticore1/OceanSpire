@@ -11,7 +11,6 @@ public class SaveManager
 
     public void Initialize()
     {
-        Debug.Log("Initialize");
         FindSavesData();
     }
 

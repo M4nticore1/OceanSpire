@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] private TMP_InputField newWorldNameInputField = null;
-    [SerializeField] private Button createWorldButton = null;
-    [SerializeField] private Button loadSaveButton = null;
-    [SerializeField] private Button deleteSaveButton = null;
+    [SerializeField] private CustomSelectable createWorldButton = null;
+    [SerializeField] private CustomSelectable loadSaveButton = null;
+    [SerializeField] private CustomSelectable deleteSaveButton = null;
     [SerializeField] private TextMeshProUGUI worldNameAlreadyExistsTextBlock = null;
 
     public SaveSlotWidget selectedWorldSaveSlot;
@@ -16,20 +16,30 @@ public class MainMenuManager : MonoBehaviour
 
     private void Awake()
     {
-        createWorldButton.onClick.AddListener(CreateWorld);
-        loadSaveButton.onClick.AddListener(LoadSave);
-        deleteSaveButton.onClick.AddListener(DeleteSave);
-        newWorldNameInputField.onValueChanged.AddListener(OnWorldNameInputFieldChangeValue);
     }
 
     private void OnEnable()
     {
-        SaveSlotWidget.OnSaveSlotClicked += OnSlotClick;
+        SaveSlotWidget.OnSaveSlotSelected += OnSlotSelected;
+        SaveSlotWidget.OnSaveSlotDeselected += OnSlotDeselected;
+        createWorldSlidePanel.onOpened += OnCreateWorldMenuOpen;
+        createWorldSlidePanel.onClosed += OnCreateWorldMenuClose;
+        createWorldButton.onReleased += CreateWorld;
+        loadSaveButton.onReleased += LoadSave;
+        deleteSaveButton.onReleased += DeleteSave;
+        newWorldNameInputField.onValueChanged.AddListener(OnWorldNameInputFieldChangeValue);
     }
 
     private void OnDisable()
     {
-        SaveSlotWidget.OnSaveSlotClicked -= OnSlotClick;
+        SaveSlotWidget.OnSaveSlotSelected -= OnSlotSelected;
+        SaveSlotWidget.OnSaveSlotDeselected -= OnSlotDeselected;
+        createWorldSlidePanel.onOpened -= OnCreateWorldMenuOpen;
+        createWorldSlidePanel.onClosed -= OnCreateWorldMenuClose;
+        createWorldButton.onReleased -= CreateWorld;
+        loadSaveButton.onReleased -= LoadSave;
+        deleteSaveButton.onReleased -= DeleteSave;
+        newWorldNameInputField.onValueChanged.AddListener(OnWorldNameInputFieldChangeValue);
     }
 
     private void CreateWorld()
@@ -47,6 +57,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void LoadSave()
     {
+        Debug.Log("Load");
         SaveData data = selectedWorldSaveSlot.worldSaveData;
         SaveManager.Instance.SetSaveData(data);
         SceneManager.LoadScene(1);
@@ -59,24 +70,40 @@ public class MainMenuManager : MonoBehaviour
         SaveSystem.RemoveSave(worldName);
     }
 
-    private void OnSlotClick(SaveSlotWidget slot)
+    private void OnSlotSelected(SaveSlotWidget slot)
     {
-        OpenSaveSlotManagementMenu(slot);
+        selectedWorldSaveSlot = slot;
+        OpenSaveSlotManagementMenu(selectedWorldSaveSlot);
+    }
+
+    private void OnSlotDeselected(SaveSlotWidget slot)
+    {
+        if (slot != selectedWorldSaveSlot) return;
+
+        selectedWorldSaveSlot = null;
+        CloseSaveSlotManagementMenu(slot);
     }
 
     private void OpenSaveSlotManagementMenu(SaveSlotWidget slot)
     {
-        Debug.Log("OnSlotClick");
         selectedWorldSaveSlot = slot;
         if (slot.worldSaveData != null) {
             OpenLoadWorldMenu();
         }
         else {
             CloseLoadWorldMenu();
-            OpenCreateWorldMenu();
+            createWorldSlidePanel.OpenSlidePanel();
         }
     }
 
+    private void CloseSaveSlotManagementMenu(SaveSlotWidget slot)
+    {
+        if (slot.worldSaveData != null) {
+            CloseLoadWorldMenu();
+        }
+    }
+
+    // Load World Menu
     private void OpenLoadWorldMenu()
     {
         loadSaveButton.gameObject.SetActive(true);
@@ -89,13 +116,21 @@ public class MainMenuManager : MonoBehaviour
         deleteSaveButton.gameObject.SetActive(false);
     }
 
-    private void OpenCreateWorldMenu()
+    // Create World Menu
+    private void OnCreateWorldMenuOpen()
     {
-        createWorldSlidePanel.OpenSlidePanel();
         newWorldNameInputField.text = "";
         worldNameAlreadyExistsTextBlock.gameObject.SetActive(false);
         string name = newWorldNameInputField.text;
         CheckWorldName(name);
+
+        selectedWorldSaveSlot.Button.IsInteractable = false;
+    }
+
+    private void OnCreateWorldMenuClose()
+    {
+        selectedWorldSaveSlot.Button.IsInteractable = true;
+        selectedWorldSaveSlot.Button.OnRelease();
     }
 
     private void OnWorldNameInputFieldChangeValue(string value)
@@ -106,24 +141,24 @@ public class MainMenuManager : MonoBehaviour
     private void CheckWorldName(string name)
     {
         if (!IsWorldNameFit(name)) {
-            createWorldButton.interactable = false;
+            createWorldButton.SetState(CustomSelectableState.Disabled);
             return;
         }
 
         if (IsWorldNameExist(name)) {
             worldNameAlreadyExistsTextBlock.gameObject.SetActive(true);
-            createWorldButton.interactable = false;
+            createWorldButton.SetState(CustomSelectableState.Disabled);
             return;
         }
 
         worldNameAlreadyExistsTextBlock.gameObject.SetActive(false);
-        createWorldButton.interactable = true;
+        createWorldButton.SetState(CustomSelectableState.Idle);
     }
 
     private bool IsWorldNameExist(string name)
     {
         foreach (var data in SaveManager.Instance.allSaveData) {
-            if (data.worldName == name) {
+            if (data != null && data.worldName == name) {
                 return true;
             }
         }
@@ -136,5 +171,16 @@ public class MainMenuManager : MonoBehaviour
             return true;
         return
             false;
+    }
+
+    private void EnableSelectedSaveSlotInteractable()
+    {
+        //selectedWorldSaveSlot.Button.IsInteractable = true;
+        //selectedWorldSaveSlot.Button.OnRelease();
+    }
+
+    private void DisableSelectedSaveSlotInteractable()
+    {
+        //selectedWorldSaveSlot.Button.IsInteractable = false;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
@@ -28,13 +29,14 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     private Vector2 targetPosition = new Vector3();
     private Vector2 currentPosition = new Vector3();
 
-    private int openedFrame = -1;
+    private int openedFrame = 0;
+    public event Action onOpened;
+    public event Action onClosed;
 
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         FillContent();
-        CloseSlidePanel();
         currentPosition = targetPosition;
 
         if (background) {
@@ -47,6 +49,18 @@ public class SlidePanel : MonoBehaviour, IInputListenable
             openButton.onClick.AddListener(OpenSlidePanel);
         if (closeButton)
             closeButton.onClick.AddListener(CloseSlidePanel);
+    }
+
+    private void OnEnable()
+    {
+        InputListener.Instance.onPressed += OnPress;
+        InputListener.Instance.onReleased += OnRelease;
+    }
+
+    private void OnDisable()
+    {
+        InputListener.Instance.onPressed -= OnPress;
+        InputListener.Instance.onReleased -= OnRelease;
     }
 
     private void Update()
@@ -63,11 +77,16 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
     public void OnRelease()
     {
-        if (Time.frameCount == openedFrame)
-            return;
+        if (!isOpened) return;
+        if (Time.frameCount == openedFrame) return;
 
+        Close();
+    }
+
+    private void Close()
+    {
         List<RaycastResult> results = new List<RaycastResult>();
-        InputUtils.GetCurrentRaycastResults(results);
+        PointerUtils.GetCurrentRaycastResults(results);
         if (IsClickedOutsideMenu(results)) {
             CloseSlidePanel();
         }
@@ -89,6 +108,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         background.raycastTarget = true;
         content.Add(background.transform);
         isOpened = true;
+        onOpened?.Invoke();
     }
 
     public void CloseSlidePanel()
@@ -96,6 +116,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         targetPosition = closedPosition;
         background.raycastTarget = false;
         isOpened = false;
+        onClosed?.Invoke();
     }
 
     private void UpdatePosition()

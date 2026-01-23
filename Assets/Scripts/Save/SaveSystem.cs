@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -69,13 +70,15 @@ public class SaveSystem
     {
         if (Directory.Exists(worldSavesPath)) {
             string[] filePaths = Directory.GetFiles(worldSavesPath, $"*{saveFileExtension}");
-            SaveData[] datas = new SaveData[filePaths.Length];
-            for (int i = 0; i < datas.Length; i++) {
+            List<SaveData> datas = new List<SaveData>();
+            for (int i = 0; i < filePaths.Length; i++) {
                 string filePath = filePaths[i];
-                Debug.Log(filePath);
-                datas[i] = GetSaveDataByPath(filePath);
+                SaveData data = GetSaveDataByPath(filePath);
+                if (data != null)
+                    datas.Add(data);
             }
-            return datas;
+            Debug.Log(datas.Count);
+            return datas.ToArray();
         }
         else {
             Debug.Log("Save file not found in " + worldSavesPath);

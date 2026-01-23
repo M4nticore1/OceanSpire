@@ -18,8 +18,8 @@ public class UISystem
 
     public UISystem()
     {
-        InputListener.Instance.OnPressed += OnScreenInputPressed;
-        InputListener.Instance.OnReleased += OnScreenInputReleased;
+        InputListener.Instance.onPressed += OnScreenInputPressed;
+        InputListener.Instance.onReleased += OnScreenInputReleased;
     }
 
     private void OnScreenInputPressed()

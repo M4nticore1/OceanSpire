@@ -360,7 +360,7 @@ GameObject:
   - component: {fileID: 2253196743655311004}
   - component: {fileID: 177319543623297059}
   - component: {fileID: 4696869006643466086}
-  - component: {fileID: 1237301859318177742}
+  - component: {fileID: 7259844161047167963}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.77254903, g: 0.77254903, b: 0.77254903, a: 0.8}
+  m_Color: {r: 0.95, g: 0.95, b: 0.95, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -425,7 +425,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1237301859318177742
+--- !u!114 &7259844161047167963
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -436,54 +436,47 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MainButton
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 0.764151, g: 0.6093701, b: 0.50102353, a: 1}
-    m_HighlightedColor: {r: 0.7254902, g: 0.2588235, b: 0.2588235, a: 0.9843137}
-    m_PressedColor: {r: 1, g: 0.88933307, b: 0, a: 1}
-    m_SelectedColor: {r: 0, g: 0.69803923, b: 0.17450981, a: 1}
-    m_DisabledColor: {r: 0, g: 0, b: 0, a: 1}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 4696869006643466086}
+  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
+  targetGraphic: {fileID: 4696869006643466086}
+  contentGraphic: {fileID: 0}
+  scaleRoot: {fileID: 2253196743655311004}
+  isEnabled: 1
+  isInteractable: 1
   isSelectable: 1
-  isScalable: 0
-  scaleRoot: {fileID: 277249682003200902}
-  content: {fileID: 0}
-  normalColor: {r: 0.9433962, g: 0.39869162, b: 0.12014952, a: 0.85882354}
-  highlightedColor: {r: 0.7254902, g: 0.2588235, b: 0.2588235, a: 0.9843137}
-  pressedColor: {r: 1, g: 0.88933307, b: 0, a: 1}
-  selectedColor: {r: 0, g: 0.69803923, b: 0.17450981, a: 1}
-  disabledColor: {r: 0, g: 0, b: 0, a: 1}
-  normalColorHolder: {fileID: 11400000, guid: ee5f8ac4f00e4a14a9b2752ef227c82e, type: 2}
-  highlightedColorHolder: {fileID: 0}
-  pressedColorHolder: {fileID: 0}
-  selectedColorHolder: {fileID: 0}
-  disabledColorHolder: {fileID: 0}
-  contentNormalColor: {r: 0, g: 0, b: 0, a: 0}
-  contentSelectedColor: {r: 0, g: 0, b: 0, a: 0}
-  contentNormalColorHolder: {fileID: 0}
-  contentSelectedColorHolder: {fileID: 0}
+  isScalable: 1
+  deselectOnOutsideClick: 1
+  selectableGroupIndex: -1
+  stateTransitionTime: 0.3
+  idleState:
+    backgroundColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+    backgroundColorHolder: {fileID: 0}
+    contentColor: {r: 0, g: 0, b: 0, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1
+  hoveredState:
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundColorHolder: {fileID: 0}
+    contentColor: {r: 0, g: 0, b: 0, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1.02
+  pressedState:
+    backgroundColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
+    backgroundColorHolder: {fileID: 0}
+    contentColor: {r: 0, g: 0, b: 0, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 0.98
+  selectedState:
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundColorHolder: {fileID: 0}
+    contentColor: {r: 0, g: 0, b: 0, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1.05
+  disabledState:
+    backgroundColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
+    backgroundColorHolder: {fileID: 0}
+    contentColor: {r: 0, g: 0, b: 0, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 0.95
 --- !u!1 &3775479002592259001
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,8 +688,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 3439329279
-  m_fontColor: {r: 1, g: 1, b: 1, a: 0.8}
+    rgba: 3422552064
+  m_fontColor: {r: 0, g: 0, b: 0, a: 0.8}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1059,7 +1052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldSaveSlot
   slotIndex: 0
-  <button>k__BackingField: {fileID: 1237301859318177742}
+  button: {fileID: 7259844161047167963}
   createWorldMenu: {fileID: 3268859366891405461}
   loadWorldMenu: {fileID: 5857018434578971776}
   worldNameText: {fileID: 1855529261778208254}

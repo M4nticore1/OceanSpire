@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 keyboardCameraMove = Vector2.zero;
     private Vector2 mouseCameraMove = Vector2.zero;
     private Vector2 touchscreenCameraMove = Vector2.zero;
+    private const float cameraMoveMouseScale = 0.2f;
+    private const float cameraMoveTouchsreenScale = 0.05f;
 
     private Vector2 keyboardCameraMoveSensitivity = new Vector2(50f, 50f);
     private Vector2 mouseCameraMoveSensitivity = new Vector2(50f, 50f);
@@ -307,8 +309,8 @@ public class PlayerController : MonoBehaviour
 
         // Mouse & TouchScreen Moving
         if (isPrimaryInteractionPressed) {
-            mouseCameraMove = cameraMoveMouseIA.ReadValue<Vector2>();
-            touchscreenCameraMove = cameraMoveTouchScreenIA.ReadValue<Vector2>();
+            mouseCameraMove = cameraMoveMouseIA.ReadValue<Vector2>() * cameraMoveMouseScale;
+            touchscreenCameraMove = cameraMoveTouchScreenIA.ReadValue<Vector2>() * cameraMoveTouchsreenScale;
         }
         else {
             mouseCameraMove = Vector2.Lerp(mouseCameraMove, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
@@ -343,6 +345,21 @@ public class PlayerController : MonoBehaviour
         float alpha = 1f - cameraHolder.transform.eulerAngles.y / 360f + 0.125f;
         Vector2 pos = SquareLoop(alpha, 16f, 0.5f);
         cameraHolder.transform.position = new Vector3(pos.x, cameraHolder.transform.position.y, pos.y);
+    }
+
+    private void KeyboardCameraMoving()
+    {
+
+    }
+
+    private void MouseCameraMoving()
+    {
+
+    }
+
+    private void TouchscreenCameraMoving()
+    {
+
     }
 
     Vector2 SquareLoop(float t, float fullSize, float corner)

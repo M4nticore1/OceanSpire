@@ -1,17 +1,18 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class InputListener : MonoBehaviour
 {
     public static InputListener Instance { get; private set; }
-    public event Action OnPressed;
-    public event Action OnReleased;
+    public event Action onPressed;
+    public event Action onReleased;
 
     private void Awake()
     {
         if (Instance) {
-            Debug.LogWarning("Another InputListener is already on the scene");
+            Debug.LogWarning("Another InputListener is already in the scene!");
             Destroy(gameObject);
         }
         else {
@@ -54,11 +55,11 @@ public class InputListener : MonoBehaviour
 
     private void OnPress()
     {
-        OnPressed?.Invoke();
+        onPressed?.Invoke();
     }
 
     private void OnRelease()
     {
-        OnReleased?.Invoke();
+        onReleased?.Invoke();
     }
 }
