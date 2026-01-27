@@ -100,32 +100,32 @@ MonoBehaviour:
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
   idleState:
-    backgroundColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 1, g: 1, b: 1, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    backgroundColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.98
   selectedState:
-    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 1, g: 1, b: 1, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.05
   disabledState:
-    backgroundColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
@@ -196,8 +196,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Create
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8a89fa14b10d46a99122fd4f73fca9a2, type: 2}
-  m_sharedMaterial: {fileID: 2140474, guid: 8a89fa14b10d46a99122fd4f73fca9a2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

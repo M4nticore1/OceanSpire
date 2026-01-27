@@ -12,8 +12,8 @@ public struct ResourceToBuild
 public class ConstructionLevelData : ScriptableObject
 {
     [Header("Main")]
-    [SerializeField] private List<ItemInstance> resourcesToBuild = new List<ItemInstance>();
-    public List<ItemInstance> ResourcesToBuild => resourcesToBuild;
+    [SerializeField] private ItemInstance[] resourcesToBuild;
+    public ItemInstance[] ResourcesToBuild => resourcesToBuild;
     public int maxResidentsCount = 0;
 
     [Header("Constructions")]

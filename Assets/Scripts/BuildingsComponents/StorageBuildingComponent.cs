@@ -6,20 +6,20 @@ using UnityEngine;
 public class StorageBuildingComponent : BuildingComponent
 {
     public StorageBuildingLevelData[] StorageLevelsData => levelsData.OfType<StorageBuildingLevelData>().ToArray();
-    public StorageBuildingLevelData StorageLevelData => StorageLevelsData[levelIndex];
+    public StorageBuildingLevelData StorageLevelData => StorageLevelsData[LevelIndex];
     public Dictionary<int, ItemInstance> storedItems = new Dictionary<int, ItemInstance>();
 
     protected override void BuildComponent()
     {
         base.BuildComponent();
 
-        for (int i = 0; i < StorageLevelData.storageItems.Count; i++)
+        for (int i = 0; i < StorageLevelData.storageItems.Length; i++)
         {
             int id = StorageLevelData.storageItems[i].ItemData.ItemId;
             if (!storedItems.ContainsKey(id))
                 storedItems.Add(id, new ItemInstance(StorageLevelData.storageItems[i].ItemData, 0));
             else
-                Debug.LogError(ownedBuilding.BuildingData.BuildingName + $" has the same item by id {id}");
+                Debug.LogError(OwnedBuilding.BuildingData.BuildingName + $" has the same item by id {id}");
         }
     }
 

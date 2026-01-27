@@ -1,17 +1,22 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
 
 public class LocalizationManager
 {
-    private static LocalizationManager instance;
-    public static LocalizationManager Instance => instance ??= new LocalizationManager();
+    public static LocalizationManager Instance { get; private set; }
 
     public List<Dictionary<string, string>> localizations { get; private set; } = new List<Dictionary<string, string>>();
     private int currentLocalizationIndex = 0;
     public bool isInitialized { get; private set; } = false;
     public event System.Action OnLocalizationChanged;
+
+    public LocalizationManager()
+    {
+        if (Instance != null) return;
+
+        Instance = this;
+    }
 
     public async Task InitializeAsync()
     {
@@ -28,7 +33,7 @@ public class LocalizationManager
             if (localizations[currentLocalizationIndex].ContainsKey(key))
                 return localizations[currentLocalizationIndex][key];
             else {
-                Debug.LogError($"localizations[currentLocalizationIndex] has no {key} key");
+                Debug.LogWarning($"localizations[currentLocalizationIndex] has no {key} key");
                 return "";
             }
         }

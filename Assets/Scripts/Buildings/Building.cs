@@ -26,7 +26,7 @@ public abstract class Building : MonoBehaviour, ILevelable, ISelectable
     public BuildingData BuildingData => buildingData;
     [SerializeField] protected List<ConstructionLevelData> buildingLevelsData = new List<ConstructionLevelData>();
     public List<ConstructionLevelData> ConstructionLevelsData => buildingLevelsData;
-    public ConstructionLevelData currentLevelData => ConstructionLevelsData.Count > LevelIndex ? ConstructionLevelsData[LevelIndex] : null;
+    public ConstructionLevelData LevelData => ConstructionLevelsData.Count > LevelIndex ? ConstructionLevelsData[LevelIndex] : null;
 
     public BuildingPlace buildingPlace { get; protected set; } = null;
 
@@ -200,7 +200,7 @@ public abstract class Building : MonoBehaviour, ILevelable, ISelectable
 
     public Transform GetInteractionTransform()
     {
-        int index = workers.Count > 0 ? ((workers.Count - 1) % currentLevelData.maxResidentsCount) : 0;
+        int index = workers.Count > 0 ? ((workers.Count - 1) % LevelData.maxResidentsCount) : 0;
         BuildingAction[] actions = constructionComponent.SpawnedConstruction.BuildingInteractions;
         if (actions.Length > index) {
             Transform[] waypoints = actions[index].waypoints;

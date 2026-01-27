@@ -22,7 +22,7 @@ public class SaveSlotWidget : MonoBehaviour
     [SerializeField] private TextMeshProUGUI floorsCountText;
     [SerializeField] private TextMeshProUGUI residentsCountText;
     [SerializeField] private TextMeshProUGUI lastSaveDataText;
-    [SerializeField] private Image worldThumb;
+    [SerializeField] private Image worldThumbImage;
 
     //[Header("Background")]
     //[SerializeField] private Image background;
@@ -35,14 +35,14 @@ public class SaveSlotWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        button.onSelected += () => OnSaveSlotSelected?.Invoke(this);
-        button.onDeselected += () => OnSaveSlotDeselected?.Invoke(this);
+        button.onSelected += InvokeSelected;
+        button.onDeselected += InvokeDeselected;
     }
 
     private void OnDisable()
     {
-        button.onSelected -= () => OnSaveSlotSelected?.Invoke(this);
-        button.onDeselected -= () => OnSaveSlotDeselected?.Invoke(this);
+        button.onSelected -= InvokeSelected;
+        button.onDeselected -= InvokeDeselected;
     }
 
     private void Start()
@@ -67,6 +67,14 @@ public class SaveSlotWidget : MonoBehaviour
         floorsCountText.text += $"\n{data.builtFloorsCount.ToString()}";
         residentsCountText.text += $"\n{data.residentsCount.ToString()}";
         //lastSaveDataText.text += $"\n{data.lastSaveData.ToString()}";
+
+        Texture2D thumb = SaveSystem.GetSaveScreenshotByWorldName(data.worldName);
+        if (thumb) {
+            Sprite sprite = Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
+            worldThumbImage.sprite = sprite;
+        }
+        else
+            Debug.LogWarning("Save thumb is not found!");
     }
 
     public void RemoveSaveData()
@@ -74,5 +82,15 @@ public class SaveSlotWidget : MonoBehaviour
         worldSaveData = null;
         createWorldMenu.SetActive(true);
         loadWorldMenu.SetActive(false);
+    }
+
+    private void InvokeSelected()
+    {
+        OnSaveSlotSelected?.Invoke(this);
+    }
+
+    private void InvokeDeselected()
+    {
+        OnSaveSlotDeselected?.Invoke(this);
     }
 }

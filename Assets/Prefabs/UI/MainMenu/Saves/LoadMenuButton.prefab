@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1893318507699205151}
   - component: {fileID: 1966356278147589260}
   - component: {fileID: 5615703320463858756}
-  - component: {fileID: 8652464165523201306}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -68,15 +67,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Load
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -138,19 +137,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &8652464165523201306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593128001501435735}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: menu.load
 --- !u!1 &7352607609695236558
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,7 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+  m_Color: {r: 0.25518987, g: 0.44962013, b: 0.64, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -251,32 +237,32 @@ MonoBehaviour:
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
   idleState:
-    backgroundColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+    bodyColorHolder: {fileID: 11400000, guid: 56cd69bc136b11243b7894fac81889bf, type: 2}
     contentColor: {r: 0, g: 0, b: 0, a: 0}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 1, g: 1, b: 1, a: 1}
+    bodyColorHolder: {fileID: 11400000, guid: 5967c4bf9493ca347a1811119eb1de4c, type: 2}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    backgroundColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
+    bodyColorHolder: {fileID: 11400000, guid: ba7b88810f001fc4aa42ef698e40de3a, type: 2}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.98
   selectedState:
-    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 1, g: 1, b: 1, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.05
   disabledState:
-    backgroundColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95

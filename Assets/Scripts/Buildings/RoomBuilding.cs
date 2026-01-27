@@ -9,7 +9,7 @@ public class RoomBuilding : TowerBuilding
     {
         //RoomLevelData roomLevelData = buildingLevelsData[levelIndex] as RoomLevelData;
 
-        if (currentLevelData is RoomLevelData roomLevelData)
+        if (LevelData is RoomLevelData roomLevelData)
         {
             if (constructionComponent.isUnderConstruction)
             {

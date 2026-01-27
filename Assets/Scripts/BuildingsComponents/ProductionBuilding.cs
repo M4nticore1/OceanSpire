@@ -6,7 +6,7 @@ using UnityEngine;
 public class ProductionBuilding : BuildingComponent
 {
     public ProductionBuildingLevelData[] ProductionLevelsData => levelsData.OfType<ProductionBuildingLevelData>().ToArray();
-    public ProductionBuildingLevelData ProductionLevelData => ProductionLevelsData[levelIndex];
+    public ProductionBuildingLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
     public ProducedResource producingItem => ProductionLevelData ? (ProductionLevelData.producedResources.Count > currentProducedItemIndex ? ProductionLevelData.producedResources[currentProducedItemIndex] : null) : null;
 
     protected bool isProducting = false;
@@ -21,10 +21,9 @@ public class ProductionBuilding : BuildingComponent
     private const float produceFrequency = 1.0f;
     private float lastProduceTime = 0.0f;
 
-
     private void Update()
     {
-        if (!ownedBuilding.buildingPlace) return;
+        if (!OwnedBuilding.buildingPlace) return;
 
         if (isProducting)
             Production();
@@ -106,7 +105,7 @@ public class ProductionBuilding : BuildingComponent
 
     private void Production()
     {
-        if (!isProducting || ownedBuilding.constructionComponent.isUnderConstruction || producingItem == null || ownedBuilding.currentWorkers.Count == 0) return;
+        if (!isProducting || OwnedBuilding.constructionComponent.isUnderConstruction || producingItem == null || OwnedBuilding.currentWorkers.Count == 0) return;
 
         if (Time.time > lastProduceTime + produceFrequency) {
             AddProducedTime(produceFrequency);
@@ -123,10 +122,10 @@ public class ProductionBuilding : BuildingComponent
     {
         currentProductionTime = time;
 
-        ConstructionLevelData buildingLevelData = ownedBuilding.ConstructionLevelsData[ownedBuilding.LevelIndex];
-        ProductionBuildingLevelData productionBuildingLevelData = levelsData[ownedBuilding.LevelIndex] as ProductionBuildingLevelData;
+        ConstructionLevelData buildingLevelData = OwnedBuilding.ConstructionLevelsData[OwnedBuilding.LevelIndex];
+        ProductionBuildingLevelData productionBuildingLevelData = levelsData[OwnedBuilding.LevelIndex] as ProductionBuildingLevelData;
 
-        int currentPeopleCount = ownedBuilding.currentWorkers.Count;
+        int currentPeopleCount = OwnedBuilding.currentWorkers.Count;
         int maxPeopleCount = buildingLevelData.maxResidentsCount;
         float maxProductionTime = producingItem.produceTime * producingItem.maxAmount;
         float productionSpeed = currentPeopleCount / maxPeopleCount;

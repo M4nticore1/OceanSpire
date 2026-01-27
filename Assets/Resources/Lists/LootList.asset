@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a435f3b35e67ea242b0ce97e9f9150a0, type: 3}
   m_Name: LootList
   m_EditorClassIdentifier: Assembly-CSharp::LootList
-  <loot>k__BackingField:
+  items:
   - {fileID: 11400000, guid: 550b2a9af4e53db4990bef7a9fceb5fa, type: 2}
   - {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
   - {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}

@@ -110,9 +110,6 @@ public class PlayerController : MonoBehaviour
     private const float touchPitchSensitivity = 0.1f;
     private const float pitchStopSpeed = 25.0f;
 
-    // Building
-    [HideInInspector] public Building buildingToPlace = null;
-
     public ISelectable selectedObject = null;
 
     // Raycast
@@ -130,11 +127,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        // Gameplay Events
-        BuildingWidget.OnStartPlacingConstruction += OnBuildingStartPlacing;
-        GameManager.OnConstructionPlaced += OnConstructionPlaced;
-        PlayerUIManager.OnBuildStopPlacing += OnConstructionPlaced;
-
         touchInputActionMap.Enable();
 
         // Primary Interaction
@@ -157,11 +149,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
-
-        BuildingWidget.OnStartPlacingConstruction -= OnBuildingStartPlacing;
-        GameManager.OnConstructionPlaced -= OnConstructionPlaced;
-        PlayerUIManager.OnBuildStopPlacing -= OnConstructionPlaced;
-
         touchInputActionMap.Disable();
 
         // Primary Interaction
@@ -218,8 +205,6 @@ public class PlayerController : MonoBehaviour
 
     public void Load(SaveData saveData)
     {
-        uiManager.InitializeUIManager(this);
-
         currentCameraArmLength = -mainCamera.transform.localPosition.z;
 
         if (saveData == null) {
@@ -446,7 +431,7 @@ public class PlayerController : MonoBehaviour
                     if (Physics.Raycast(ray, out hit)) {
                         GameObject hitted = hit.collider.gameObject;
 
-                        if (buildingToPlace) {
+                        if (GameManager.Instance.buildingToPlace) {
                             BuildingPlace hittedBuildingPlace = hitted.GetComponent<BuildingPlace>();
 
                             if (hittedBuildingPlace && !hittedBuildingPlace.placedBuilding) {
@@ -542,80 +527,15 @@ public class PlayerController : MonoBehaviour
         secondaryInteractionDelta = value;
     }
 
-    //private void OnTouchPresing()
-    //{
-    //    if (isFirstTouchPressed || isSecondTouchPressed)
-    //    {
-    //        if (isFirstTouchPressed)
-    //        {
-    //            firstTouchCurrentPosition = primaryInteractionPositionIA.ReadValue<Vector2>();
-    //            firstTouchMoveInput = primaryInteractionDeltaIA.ReadValue<Vector2>();
-    //        }
-    //        else
-    //        {
-    //            firstTouchCurrentPosition = Vector3.zero;
-    //            firstTouchMoveInput = Vector3.zero;
-    //        }
-
-    //        if (isSecondTouchPressed)
-    //        {
-    //            secondTouchCurrentPosition = secondaryInteractionPositionIA.ReadValue<Vector2>();
-    //            secondTouchMoveInput = secondaryInteractionDeltaIA.ReadValue<Vector2>();
-    //        }
-    //        else
-    //        {
-    //            secondTouchCurrentPosition = Vector3.zero;
-    //            secondTouchMoveInput = Vector3.zero;
-    //        }
-
-    //        dragMoveVelocity.x = firstTouchMoveInput.x + secondTouchMoveInput.x;
-    //        dragMoveVelocity.y = firstTouchMoveInput.y + secondTouchMoveInput.y;
-
-    //        cameraMoveVelocity.x = dragMoveVelocity.x * cameraMoveSensitivity.x;
-    //        cameraMoveVelocity.y = dragMoveVelocity.y * cameraMoveSensitivity.y;
-    //    }
-    //    //else if (!isFirstTouchPressed && !isSecondTouchPressed)
-    //    //{
-    //    //    cameraMoveVelocity = Vector2.Lerp(cameraMoveVelocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
-    //    //}
-    //}
-
-    private void OnBuildingStartPlacing(ConstructionComponent construction)
-    {
-        Building building = construction.GetComponent<Building>();
-
-        //if (isBuildingToPlaceSelected)
-        //{
-        //    StopPlacingBuilding(buildingToPlace.constructionComponent);
-        //}
-
-        //isBuildingToPlaceSelected = true;
-        buildingToPlace = building;
-
-        //cityManager.ShowBuildingPlacesByType(building);
-        //uiManager.CloseBuildingManagementMenu();
-        //uiManager.OnBuildingPlacingStarted();
-    }
-
     private void PlaceConstruction(BuildingPlace buildingPlace)
     {
-        GameManager.Instance.PlaceBuilding(buildingToPlace, buildingPlace, 0, true);
-    }
-
-    public void OnConstructionPlaced()
-    {
-        if (buildingToPlace)
-        {
-            //cityManager.HideBuildingPlacesByType(buildingToPlace.BuildingData.BuildingType);
-
-            buildingToPlace = null;
-        }
+        EventBus.Instance.InvokeConstructionPlacePressed(buildingPlace);
     }
 
     private void CollectItems(ItemInstance item)
     {
         int id = item.ItemData.ItemId;
-        if (GameManager.Instance.items[id].Amount < GameManager.Instance.totalStorageCapacity[id].Amount) {
+        if (GameManager.Instance.items[id].Amount < GameManager.Instance.totalStorageCapacity[id]) {
             GameManager.Instance.AddItem(item);
         }
     }

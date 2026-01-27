@@ -75,7 +75,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  mainColor: {fileID: 11400000, guid: 56cd69bc136b11243b7894fac81889bf, type: 2}
+  colorHolder: {fileID: 0}
 --- !u!1 &51704861773699869
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,7 +130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d90de6b96e5994a9d15efc2017ca3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cityManager: {fileID: 0}
   buildingResourceWidget: {fileID: 2815948240187871119, guid: 9d3feffcad0e637408bef2ff4d7db94d, type: 3}
   buildingImage: {fileID: 5005537298302894448}
   buildButton: {fileID: 3753086174136718447}
@@ -480,8 +479,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 92f801b311ff9034fa32867602891b25, type: 2}
-  m_sharedMaterial: {fileID: 2607642251992563543, guid: 92f801b311ff9034fa32867602891b25, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -505,8 +504,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 64
+  m_fontSizeBase: 64
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -609,7 +608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.95, g: 0.95, b: 0.95, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -638,49 +637,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 0, g: 0, b: 0, a: 0}
-    m_HighlightedColor: {r: 0, g: 0, b: 0, a: 0}
-    m_PressedColor: {r: 0.77254903, g: 0.77254903, b: 0.77254903, a: 0.101960786}
-    m_SelectedColor: {r: 0, g: 0, b: 0, a: 0}
-    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 8287378216999079271}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-  rectTransform: {fileID: 2935036107710263794}
+  targetGraphic: {fileID: 8287378216999079271}
+  contentGraphic: {fileID: 0}
+  scaleRoot: {fileID: 0}
+  isEnabled: 1
+  isInteractable: 1
   isSelectable: 0
   isScalable: 0
-  isNeededCorrectPosition: 0
-  correctPositionDirection: {x: 0, y: 0}
-  content: {fileID: 0}
-  normalColor: {fileID: 11400000, guid: 946eea9e47a3a0844b10ee957b3eb7eb, type: 2}
-  pressedColor: {fileID: 11400000, guid: 46099d51a8d0d36469d3aed97b6a3e18, type: 2}
-  selectedColor: {fileID: 11400000, guid: 946eea9e47a3a0844b10ee957b3eb7eb, type: 2}
-  contentNormalColor: {fileID: 11400000, guid: 697cab64e0e585c4c9dc69aad0677e56, type: 2}
-  contentSelectedColor: {fileID: 11400000, guid: 697cab64e0e585c4c9dc69aad0677e56, type: 2}
+  deselectOnOutsideClick: 0
+  selectableGroupIndex: -1
+  stateTransitionTime: 0.3
+  idleState:
+    bodyColor: {r: 0.95, g: 0.95, b: 0.95, a: 0}
+    bodyColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1
+  hoveredState:
+    bodyColor: {r: 1, g: 1, b: 1, a: 0.050980393}
+    bodyColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1.02
+  pressedState:
+    bodyColor: {r: 1, g: 1, b: 1, a: 0.101960786}
+    bodyColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 0.98
+  selectedState:
+    bodyColor: {r: 1, g: 1, b: 1, a: 0.2}
+    bodyColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1.05
+  disabledState:
+    bodyColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
+    bodyColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 0.95
 --- !u!1 &7851105217921123813
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,46 +857,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_PressedColor: {r: 0.77254903, g: 0.77254903, b: 0.77254903, a: 0.8}
-    m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 8369071072566013778}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-  rectTransform: {fileID: 1603433769933191045}
+  targetGraphic: {fileID: 0}
+  contentGraphic: {fileID: 0}
+  scaleRoot: {fileID: 0}
+  isEnabled: 1
+  isInteractable: 1
   isSelectable: 0
   isScalable: 0
-  isNeededCorrectPosition: 0
-  correctPositionDirection: {x: 0, y: 0}
-  content: {fileID: 4427824139254346479}
-  normalColor: {fileID: 11400000, guid: 2c537556a9897754791c21e314ee9ddd, type: 2}
-  pressedColor: {fileID: 11400000, guid: 46099d51a8d0d36469d3aed97b6a3e18, type: 2}
-  selectedColor: {fileID: 11400000, guid: 2c537556a9897754791c21e314ee9ddd, type: 2}
-  contentNormalColor: {fileID: 11400000, guid: 697cab64e0e585c4c9dc69aad0677e56, type: 2}
-  contentSelectedColor: {fileID: 11400000, guid: 697cab64e0e585c4c9dc69aad0677e56, type: 2}
+  deselectOnOutsideClick: 1
+  selectableGroupIndex: -1
+  stateTransitionTime: 0.3
+  idleState:
+    bodyColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+    bodyColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1
+  hoveredState:
+    bodyColor: {r: 1, g: 1, b: 1, a: 1}
+    bodyColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1.02
+  pressedState:
+    bodyColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
+    bodyColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 0.98
+  selectedState:
+    bodyColor: {r: 1, g: 1, b: 1, a: 1}
+    bodyColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 1.05
+  disabledState:
+    bodyColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
+    bodyColorHolder: {fileID: 0}
+    contentColor: {r: 1, g: 1, b: 1, a: 1}
+    contentColorHolder: {fileID: 0}
+    scale: 0.95

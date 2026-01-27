@@ -10,7 +10,7 @@ public class BuildingWidget : MonoBehaviour
     private PlayerController playerController = null;
     private PlayerUIManager UIManager = null;
 
-    private ConstructionComponent constructionComponent = null;
+    public ConstructionComponent constructionComponent { get; private set; } = null;
     [SerializeField] private BuildingResourceWidget buildingResourceWidget = null;
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
 
@@ -22,20 +22,18 @@ public class BuildingWidget : MonoBehaviour
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup = null;
     //[SerializeField] private HorizontalLayoutGroup resourcesToBuildHorizontalLayoutGroupWidget = null;
 
-    public static event Action<ConstructionComponent> OnStartPlacingConstruction;
-    public static event Action<ConstructionComponent> onBuildingWidgetClicked;
     int resourcesToBuildNumber = 0;
 
     private void OnEnable()
     {
-        buildButton.onReleased += StartPlacingBuilding;
-        informationButton.onReleased += OpenBuildingInformationMenu;
+        buildButton.onReleased += OnBuildButtonCliked;
+        informationButton.onReleased += OnInformationButtonClicked;
     }
 
     private void OnDisable()
     {
-        buildButton.onReleased -= StartPlacingBuilding;
-        informationButton.onReleased -= OpenBuildingInformationMenu;
+        buildButton.onReleased -= OnBuildButtonCliked;
+        informationButton.onReleased -= OnInformationButtonClicked;
     }
 
     public void InitializeBuildingWidget(ConstructionComponent construction)
@@ -82,14 +80,14 @@ public class BuildingWidget : MonoBehaviour
         }
     }
 
-    private void StartPlacingBuilding()
+    private void OnBuildButtonCliked()
     {
-        OnStartPlacingConstruction?.Invoke(constructionComponent);
+        EventBus.Instance.InvokeBuildingWidgetBuildClicked(this);
     }
 
-    private void OpenBuildingInformationMenu()
+    private void OnInformationButtonClicked()
     {
-        onBuildingWidgetClicked?.Invoke(constructionComponent);
+        EventBus.Instance.InvokeBuildingWidgetInformationClicked(this);
     }
 
     public void UpdateResourcesToBuild()

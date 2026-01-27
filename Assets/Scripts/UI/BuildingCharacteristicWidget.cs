@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class BuildingCharacteristicWidget : MonoBehaviour
 {
-    [SerializeField] private ResourceWidget resourceWidget = null;
+    //[SerializeField] private ResourceWidget resourceWidget = null;
     public RectTransform characteristicValueBox = null;
     [SerializeField] private TextMeshProUGUI characteristicNameText = null;
     [SerializeField] private TextMeshProUGUI characteristicValueText = null;
@@ -24,14 +24,14 @@ public class BuildingCharacteristicWidget : MonoBehaviour
 
     public void SetCharacteristicValue(int characteristicValue, Sprite characteristicSprite)
     {
-        characteristicValueText.gameObject.SetActive(false);
-        characteristicValueImage.gameObject.SetActive(false);
+        //characteristicValueText.gameObject.SetActive(false);
+        //characteristicValueImage.gameObject.SetActive(false);
 
-        ResourceWidget spawnedResourceWidget = Instantiate(resourceWidget, characteristicValueBox.transform);
-        spawnedResourceWidget.GetComponent<RectTransform>().anchoredPosition = characteristicValueText.GetComponent<RectTransform>().anchoredPosition;
+        //ResourceWidget spawnedResourceWidget = Instantiate(resourceWidget, characteristicValueBox.transform);
+        //spawnedResourceWidget.GetComponent<RectTransform>().anchoredPosition = characteristicValueText.GetComponent<RectTransform>().anchoredPosition;
 
-        spawnedResourceWidget.SetWidgetResourceAmount(characteristicValue);
-        spawnedResourceWidget.SetWidgetResourceImage(characteristicSprite);
+        characteristicValueText.SetText(characteristicValue.ToString());
+        characteristicValueImage.sprite = characteristicSprite;
     }
 
     public void SetCharacteristicValue(Sprite characteristicValueSprite)

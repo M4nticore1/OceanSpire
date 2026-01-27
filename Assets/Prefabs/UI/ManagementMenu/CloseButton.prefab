@@ -34,11 +34,11 @@ RectTransform:
   - {fileID: 4326717541376259083}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -20, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 1, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7804947061151522760
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+  m_Color: {r: 0.9019608, g: 0.3156863, b: 0.3156863, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -90,42 +90,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
   targetGraphic: {fileID: 1256239440805894270}
-  contentGraphic: {fileID: 91273494429796577}
+  contentGraphic: {fileID: 0}
   scaleRoot: {fileID: 3425990940567372585}
   isEnabled: 1
   isInteractable: 1
   isSelectable: 0
   isScalable: 1
-  deselectOnOutsideClick: 1
+  deselectOnOutsideClick: 0
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
   idleState:
-    backgroundColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.9019608, g: 0.3156863, b: 0.3156863, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 1, g: 0.30165285, b: 0.30165285, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    backgroundColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 1, g: 0.39999998, b: 0.39999998, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.98
   selectedState:
-    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 1, g: 1, b: 1, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.05
   disabledState:
-    backgroundColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
@@ -188,7 +188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

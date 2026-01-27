@@ -1,16 +1,24 @@
-using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SaveManager
 {
-    private static SaveManager instance;
-    public static SaveManager Instance => instance ??= new SaveManager();
+    public static SaveManager Instance { get; private set; }
 
     public SaveData[] allSaveData { get; private set; }
     public SaveData saveData { get; private set; }
     public string saveWorldName { get; private set; }
 
+    public SaveManager()
+    {
+        if (Instance != null) return;
+
+        Instance = this;
+    }
+
     public void Initialize()
     {
+        EventBus.Instance.onCreateWorldButtonClicked += CreateWorld;
+        EventBus.Instance.onLoadWorldButtonClicked += LoadWorld;
         FindSavesData();
     }
 
@@ -28,5 +36,17 @@ public class SaveManager
     public void SetSaveWorldName(string name)
     {
         saveWorldName = name;
+    }
+
+    public void CreateWorld(string worldName)
+    {
+        SetSaveWorldName(worldName);
+        SceneManager.LoadScene(1);
+    }
+
+    public void LoadWorld(SaveData data)
+    {
+        SetSaveData(data);
+        SceneManager.LoadScene(1);
     }
 }

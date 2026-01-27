@@ -73,7 +73,7 @@ public class SaveData
         placedBuildingInteriorIds = new int[roomsCount];
         buildingProductionTimers = new float[roomsCount];
         elevatorPlatformHeights = new float[roomsCount];
-        resourcesAmount = new int[GameManager.Instance.items.Count];
+        resourcesAmount = new int[GameManager.Instance.items.Length];
 
         int placeIndex = 0;
         int lastElevatorGroupId = -1;
@@ -100,7 +100,7 @@ public class SaveData
             }
         }
 
-        for (int i = 0; i < GameManager.Instance.items.Count; i++) {
+        for (int i = 0; i < GameManager.Instance.items.Length; i++) {
             resourcesAmount[i] = GameManager.Instance.items[i].Amount;
         }
 

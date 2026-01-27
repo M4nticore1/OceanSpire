@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

@@ -13,7 +13,7 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
     public int startFloorIndex { get; private set; } = 0;
     public int nextFloorIndex { get; private set; } = 0;
 
-    private float moveSpeed => ((ElevatorLevelData)ownedBuilding.currentLevelData).ElevatorMoveSpeed;
+    private float moveSpeed => ((ElevatorLevelData)ownedBuilding.LevelData).ElevatorMoveSpeed;
     private Vector3 moveDirection = Vector3.zero;
 
     private TimerHandle startMovingTimerHandle = new TimerHandle();
@@ -85,7 +85,7 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
             riders.OnElevatorPlatformStopped(this);
         }
         foreach (Creature waiters in waitingPassengers.ToArray()) {
-            if (ridingPassengers.Count + goingToRidingPassengers.Count >= ownedBuilding.currentLevelData.maxResidentsCount)
+            if (ridingPassengers.Count + goingToRidingPassengers.Count >= ownedBuilding.LevelData.maxResidentsCount)
                 break;
             waiters.OnElevatorPlatformStopped(this);
         }
@@ -110,7 +110,7 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
                 }
             }
 
-            if (ridingPassengers.Count < ownedBuilding.currentLevelData.maxResidentsCount && waitingPassengers.Count > 0) {
+            if (ridingPassengers.Count < ownedBuilding.LevelData.maxResidentsCount && waitingPassengers.Count > 0) {
                 foreach (Creature waiter in waitingPassengers) {
                     if (nextFloorIndex < floorIndex && waiter.floorIndex < floorIndex) {
                         nextFloorIndex = math.max(nextFloorIndex, waiter.floorIndex);

@@ -38,9 +38,9 @@ public class InputListener : MonoBehaviour
         bool wasPressed = Mouse.current.leftButton.wasPressedThisFrame;
         bool wasReleased = Mouse.current.leftButton.wasReleasedThisFrame;
         if (wasPressed)
-            OnPress();
+            onPressed?.Invoke();
         if (wasReleased)
-            OnRelease();
+            onReleased?.Invoke();
     }
 
     private void ListenTouchscreenInput()
@@ -48,18 +48,8 @@ public class InputListener : MonoBehaviour
         bool wasPressed = Touchscreen.current.primaryTouch.press.wasPressedThisFrame;
         bool wasReleased = Touchscreen.current.primaryTouch.press.wasReleasedThisFrame;
         if (wasPressed)
-            OnPress();
+            onPressed?.Invoke();
         if (wasReleased)
-            OnRelease();
-    }
-
-    private void OnPress()
-    {
-        onPressed?.Invoke();
-    }
-
-    private void OnRelease()
-    {
-        onReleased?.Invoke();
+            onReleased?.Invoke();
     }
 }

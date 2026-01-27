@@ -411,7 +411,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
             }
             else {
                 int levelIndex = workBuilding.LevelIndex;
-                List<ItemInstance> resourcesToBuild = workBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
+                ItemInstance[] resourcesToBuild = workBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
                 List<ItemInstance> deliveredResources = workBuilding.constructionComponent.deliveredConstructionResources;
                 List<ItemInstance> incomingResources = workBuilding.constructionComponent.incomingConstructionResources;
                 bool isNeededToWork = false;
@@ -451,7 +451,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
                     if (distance < applyTargetPosition) {
                         currentActionTime += Time.deltaTime;
                         if (currentActionTime >= takeItemDuration) {
-                            for (int i = 0; i < resourcesToBuild.Count; i++) {
+                            for (int i = 0; i < resourcesToBuild.Length; i++) {
                                 if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount) {
                                     int itemId = resourcesToBuild[i].ItemData.ItemId;
                                     if (TargetBuilding.constructionComponent.incomingConstructionResourcesDict.ContainsKey(itemId))
@@ -782,7 +782,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
     {
         if (!carriedItemsDict.ContainsKey(itemId))
         {
-            ItemInstance item = new ItemInstance(GameManager.Instance.lootList.loot[itemId]); // The same item instance for list and dictionary.
+            ItemInstance item = new ItemInstance(GameManager.Instance.lootList.Items[itemId]); // The same item instance for list and dictionary.
             carriedItems.Add(item);
             carriedItemsDict.Add(itemId, item);
         }
@@ -824,8 +824,8 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
         if (building.constructionComponent.isUnderConstruction)
         {
             int levelIndex = building.LevelIndex;
-            List<ItemInstance> constructionResources = building.ConstructionLevelsData[levelIndex].ResourcesToBuild;
-            for (int j = 0; j < building.ConstructionLevelsData[levelIndex].ResourcesToBuild.Count; j++)
+            ItemInstance[] constructionResources = building.ConstructionLevelsData[levelIndex].ResourcesToBuild;
+            for (int j = 0; j < building.ConstructionLevelsData[levelIndex].ResourcesToBuild.Length; j++)
             {
                 if (item.ItemData.ItemId == building.ConstructionLevelsData [levelIndex].ResourcesToBuild[j].ItemData.ItemId)
                 {

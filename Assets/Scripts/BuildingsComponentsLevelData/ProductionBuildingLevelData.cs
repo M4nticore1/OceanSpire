@@ -11,7 +11,7 @@ public class ProducedResource
 }
 
 [CreateAssetMenu(fileName = "ProductionBuildingLevelData", menuName = "Scriptable Objects/ProductionBuildingLevelData")]
-public class ProductionBuildingLevelData : BuildingComponentLevelData
+public class ProductionBuildingLevelData : BuildingModuleLevelData
 {
     public List<ProducedResource> producedResources = new List<ProducedResource>();
 }

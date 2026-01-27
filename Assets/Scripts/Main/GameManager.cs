@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Content")]
     private const string listsFolder = "Lists";
-    public lootList lootList { get; private set; } = null;
+    public ItemsList lootList { get; private set; } = null;
     public buildingsList buildingsList { get; private set; } = null;
     public boatsList boatsList { get; private set; } = null;
     public LootContainersList lootContainersList { get; private set; } = null;
@@ -61,10 +61,12 @@ public class GameManager : MonoBehaviour
 
     public List<List<ElevatorBuilding>> elevatorGroups { get; private set; } = new List<List<ElevatorBuilding>>();
 
+    public Building buildingToPlace { get; private set; }
+
     // Items
     public List<ItemInstance> startResources = new List<ItemInstance>();
-    public List<ItemInstance> items = new List<ItemInstance>();
-    public List<ItemInstance> totalStorageCapacity = new List<ItemInstance>();
+    public ItemInstance[] items;
+    public int[] totalStorageCapacity;
 
     [Header("NPC")]
     public List<Creature> residents { get; private set; } = new List<Creature>();
@@ -78,7 +80,7 @@ public class GameManager : MonoBehaviour
     public static event Action OnConstructionStartPlaced;
     public static event Action OnConstructionPlaced;
     public static event Action OnConstructionDestroyed;
-    public static event Action OnLootAdded;
+    public static event Action<ItemInstance> OnLootAdded;
     public static event Action OnStorageCapacityUpdated;
     public event Action OnResidentsAdded;
     public event Action<Creature> OnResidentAdded;
@@ -119,12 +121,11 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         buildingsList = Resources.Load<buildingsList>($"{listsFolder}/buildingsList");
         creaturesList = Resources.Load<CreaturesList>($"{listsFolder}/CreaturesList");
-        boatsList = Resources.Load<boatsList>($"{listsFolder}/boatsList");
-        lootList = Resources.Load<lootList>($"{listsFolder}/lootList");
+        boatsList = Resources.Load<boatsList>($"{listsFolder}/BoatsList");
+        lootList = Resources.Load<ItemsList>($"{listsFolder}/LootList");
         lootContainersList = Resources.Load<LootContainersList>($"{listsFolder}/LootContainersList");
 
         playerController.Initialize();
@@ -137,7 +138,8 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        BuildingWidget.OnStartPlacingConstruction += OnStartPlacingConstruction;
+        EventBus.Instance.onConstructionPlacePressed += OnConstructionPlacePressed;
+        EventBus.Instance.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
         PlayerUIManager.OnBuildStopPlacing += HideAllBuildigPlaces;
 
         ConstructionComponent.onAnyConstructionStartConstructing += OnBuildingStartConstructing;
@@ -152,7 +154,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
-        BuildingWidget.OnStartPlacingConstruction -= OnStartPlacingConstruction;
+        EventBus.Instance.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
         PlayerUIManager.OnBuildStopPlacing -= HideAllBuildigPlaces;
 
         ConstructionComponent.onAnyConstructionStartConstructing -= OnBuildingStartConstructing;
@@ -395,11 +397,13 @@ public class GameManager : MonoBehaviour
 
     private void InitializeItems()
     {
-        for (int i = 0; i < lootList.loot.Count; i++) {
-            ItemData data = lootList.loot[i];
+        int length = lootList.Items.Length;
+        totalStorageCapacity = new int[length];
+        items = new ItemInstance[length];
+        for (int i = 0; i < length; i++) {
+            ItemData data = lootList.Items[i];
             int id = data.ItemId;
-            items.Add(new ItemInstance(data));
-            totalStorageCapacity.Add(new ItemInstance(data));
+            items[id] = new ItemInstance(data);
         }
     }
 
@@ -579,12 +583,20 @@ public class GameManager : MonoBehaviour
     }
 
     // Buildings
-    private void OnStartPlacingConstruction(ConstructionComponent construction)
+    private void OnConstructionPlacePressed(BuildingPlace place)
     {
+        PlaceBuilding(buildingToPlace, place, 0, true);
+    }
+
+    private void OnBuildingWidgetBuildClicked(BuildingWidget widget)
+    {
+        ConstructionComponent construction = widget.constructionComponent;
         Building building = construction.GetComponent<Building>();
         Boat boat = construction.GetComponent<Boat>();
-        if (building)
+        if (building) {
             ShowBuildingPlacesByType(building);
+            buildingToPlace = building;
+        }
         else if (boat)
             PlaceBoat(boat, true);
     }
@@ -716,9 +728,9 @@ public class GameManager : MonoBehaviour
 
             int index = 0;
             int amount = 0;
-            List<ItemInstance> resourcesToUpgrade = building.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
+            ItemInstance[] resourcesToUpgrade = building.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
 
-            for (int i = 0; i < resourcesToUpgrade.Count; i++) {
+            for (int i = 0; i < resourcesToUpgrade.Length; i++) {
                 index = resourcesToUpgrade[i].ItemData.ItemId;
                 amount = resourcesToUpgrade[i].Amount;
 
@@ -729,7 +741,7 @@ public class GameManager : MonoBehaviour
             }
 
             if (isResourcesToUpgradeEnough) {
-                for (int i = 0; i < resourcesToUpgrade.Count; i++) {
+                for (int i = 0; i < resourcesToUpgrade.Length; i++) {
                     //itemIndex = GameManager.GetItemIndexById(GameManager.itemsData, resourcesToUpgrade[i].ItemData.ItemId);
                     amount = resourcesToUpgrade[i].Amount;
                     SpendItem(resourcesToUpgrade[i].ItemData.ItemId, amount);
@@ -743,8 +755,8 @@ public class GameManager : MonoBehaviour
     private void OnConstructionDemolished(ConstructionComponent construction)
     {
         // Return the part of resources
-        List<ItemInstance> resourceToBuilds = construction.constructionLevelsData[construction.ownedBuilding.LevelIndex].ResourcesToBuild;
-        for (int i = 0; i < resourceToBuilds.Count; i++) {
+        ItemInstance[] resourceToBuilds = construction.constructionLevelsData[construction.ownedBuilding.LevelIndex].ResourcesToBuild;
+        for (int i = 0; i < resourceToBuilds.Length; i++) {
             int id = resourceToBuilds[i].ItemData.ItemId;
             int amount = (int)math.ceil(resourceToBuilds[i].Amount * GameManager.demolitionResourceRefundRate);
             AddItem(id, amount);
@@ -818,25 +830,25 @@ public class GameManager : MonoBehaviour
 
     private void ChangeStorageCapacity(StorageBuildingLevelData storageLevelData, bool isIncreasing, bool isNeededToUpdate)
     {
-        for (int i = 0; i < storageLevelData.storageItems.Count; i++) {
+        for (int i = 0; i < storageLevelData.storageItems.Length; i++) {
             int id = storageLevelData.storageItems[i].ItemData.ItemId;
             int changeValue = storageLevelData.storageItems[i].Amount;
 
             if (isIncreasing)
-                totalStorageCapacity[id].AddAmount(changeValue);
+                totalStorageCapacity[id] += changeValue;
             else
-                totalStorageCapacity[id].SubtractAmount(changeValue);
+                totalStorageCapacity[id] -= changeValue;
         }
 
-        for (int i = 0; i < storageLevelData.storageItemCategories.Count; i++) {
-            for (int j = 0; j < lootList.loot.Count; j++) {
+        for (int i = 0; i < storageLevelData.storageItemCategories.Length; i++) {
+            for (int j = 0; j < lootList.Items.Length; j++) {
                 if (items[j].ItemData.ItemCategory == storageLevelData.storageItemCategories[i].itemCategory) {
                     int changeValue = storageLevelData.storageItemCategories[i].amount;
 
                     if (isIncreasing)
-                        totalStorageCapacity[j].AddAmount(changeValue);
+                        totalStorageCapacity[j] += changeValue;
                     else
-                        totalStorageCapacity[j].SubtractAmount(changeValue);
+                        totalStorageCapacity[j] -= changeValue;
                 }
             }
         }
@@ -848,14 +860,12 @@ public class GameManager : MonoBehaviour
     public int AddItem(ItemInstance item)
     {
         int amountToReturn = AddItem_Internal(item.ItemData.ItemId, item.Amount);
-        OnLootAdded?.Invoke();
         return amountToReturn;
     }
 
     public int AddItem(int itemId, int amount)
     {
         int amountToReturn = AddItem_Internal(itemId, amount);
-        OnLootAdded?.Invoke();
         return amountToReturn;
     }
 
@@ -863,12 +873,14 @@ public class GameManager : MonoBehaviour
     {
         foreach (ItemInstance item in items)
             AddItem_Internal(item.ItemData.ItemId, item.Amount);
-        OnLootAdded?.Invoke();
     }
 
     private int AddItem_Internal(int itemId, int amount)
     {
-        return items[itemId].AddAmount(amount, totalStorageCapacity[itemId].Amount);
+        ItemInstance item = items[itemId];
+        item.AddAmount(amount, totalStorageCapacity[itemId]);
+        OnLootAdded?.Invoke(item);
+        return item.Amount;
     }
 
     public void SpendItem(int id, int amount)

@@ -4,6 +4,10 @@ public class Bootstrap : MonoBehaviour
 {
     private void Awake()
     {
+        new EventBus();
+        new SaveManager();
+        new LocalizationManager();
+
         SaveManager.Instance.Initialize();
         AwakeAsync();
     }

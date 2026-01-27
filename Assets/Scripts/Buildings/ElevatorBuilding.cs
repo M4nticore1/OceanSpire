@@ -92,7 +92,7 @@ public class ElevatorBuilding : RoomBuilding
 
     public bool IsPossibleToEnter()
     {
-        return !spawnedElevatorCabin.isMoving && spawnedElevatorCabin.ownedElevator.floorIndex == floorIndex && spawnedElevatorCabin.ridingPassengers.Count < currentLevelData.maxResidentsCount;
+        return !spawnedElevatorCabin.isMoving && spawnedElevatorCabin.ownedElevator.floorIndex == floorIndex && spawnedElevatorCabin.ridingPassengers.Count < LevelData.maxResidentsCount;
     }
 
     public bool IsPossibleToExit()

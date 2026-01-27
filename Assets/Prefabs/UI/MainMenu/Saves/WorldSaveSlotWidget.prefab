@@ -106,8 +106,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: floors
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -30
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -279,8 +279,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: world_name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+  m_Color: {r: 0.69803923, g: 0.6177647, b: 0.5584314, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -439,7 +439,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
   targetGraphic: {fileID: 4696869006643466086}
   contentGraphic: {fileID: 0}
-  scaleRoot: {fileID: 2253196743655311004}
+  scaleRoot: {fileID: 277249682003200902}
   isEnabled: 1
   isInteractable: 1
   isSelectable: 1
@@ -448,32 +448,32 @@ MonoBehaviour:
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
   idleState:
-    backgroundColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.69803923, g: 0.6177647, b: 0.5584314, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.7647059, g: 0.63519925, b: 0.5352941, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    backgroundColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.8509804, g: 0.6976471, b: 0.5803922, a: 0.75}
+    bodyColorHolder: {fileID: 11400000, guid: b73e090fdeaea0741a9838e94dcac55d, type: 2}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.98
   selectedState:
-    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.8509804, g: 0.6976471, b: 0.5803922, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.05
   disabledState:
-    backgroundColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
-    backgroundColorHolder: {fileID: 0}
+    bodyColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
@@ -544,8 +544,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: last_save
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -582,7 +582,7 @@ MonoBehaviour:
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -30
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -681,15 +681,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: New world
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 3422552064
-  m_fontColor: {r: 0, g: 0, b: 0, a: 0.8}
+    rgba: 2147483648
+  m_fontColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -706,8 +706,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 112
+  m_fontSizeBase: 112
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -818,8 +818,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: residents
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -856,7 +856,7 @@ MonoBehaviour:
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -30
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -937,7 +937,7 @@ GameObject:
   - component: {fileID: 6106476040640632930}
   - component: {fileID: 874455477940057454}
   m_Layer: 0
-  m_Name: WorldThumb
+  m_Name: WorldThumbImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1059,4 +1059,4 @@ MonoBehaviour:
   floorsCountText: {fileID: 8835835305497804678}
   residentsCountText: {fileID: 8619012107430237812}
   lastSaveDataText: {fileID: 5166786141181545429}
-  worldThumb: {fileID: 874455477940057454}
+  worldThumbImage: {fileID: 874455477940057454}

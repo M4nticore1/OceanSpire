@@ -2,12 +2,13 @@ using UnityEngine;
 
 public abstract class BuildingComponent : MonoBehaviour
 {
-    public Building ownedBuilding { get; protected set; } = null;
+    private Building ownedBuilding = null;
+    public Building OwnedBuilding { get { return ownedBuilding != null ? ownedBuilding : GetComponent<Building>(); } }
 
-    protected int levelIndex => ownedBuilding.LevelIndex;
-    [SerializeField] protected BuildingComponentLevelData[] levelsData = { };
-    public BuildingComponentLevelData[] LevelsData => levelsData;
-    public BuildingComponentLevelData LevelData => levelsData[ownedBuilding.LevelIndex];
+    protected int LevelIndex => OwnedBuilding.LevelIndex;
+    [SerializeField] protected BuildingModuleLevelData[] levelsData = { };
+    public BuildingModuleLevelData[] LevelsData => levelsData;
+    public BuildingModuleLevelData LevelData => levelsData[ownedBuilding.LevelIndex];
     protected BuildingConstruction BuildingConstruction => ownedBuilding.constructionComponent.SpawnedConstruction;
 
     protected void Awake()

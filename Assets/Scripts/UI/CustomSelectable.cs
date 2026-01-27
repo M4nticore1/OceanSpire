@@ -29,8 +29,8 @@ public enum CustomSelectableState
 [System.Serializable]
 public class CustomSelectableStateEntry
 {
-    public Color backgroundColor;
-    public ColorHolder backgroundColorHolder;
+    public Color bodyColor;
+    public ColorHolder bodyColorHolder;
     public Color contentColor;
     public ColorHolder contentColorHolder;
     public float scale;
@@ -62,41 +62,43 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     public bool IsPressed => state == CustomSelectableState.Pressed;
     public bool IsSelected => state == CustomSelectableState.Selected;
     public bool isAnimating { get; private set; } = false;
+    private bool isPointerHovered => PointerUtils.IsGameObjectHovered(gameObject);
 
     [SerializeField] private CustomSelectableStateEntry idleState = new CustomSelectableStateEntry()
     {
-        backgroundColor = new Color(0.95f, 0.95f, 0.95f, 1f),
+        bodyColor = new Color(0.95f, 0.95f, 0.95f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 1f,
     };
     [SerializeField] private CustomSelectableStateEntry hoveredState = new CustomSelectableStateEntry()
     {
-        backgroundColor = new Color(1f, 1f, 1f, 1f),
+        bodyColor = new Color(1f, 1f, 1f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 1.02f,
     };
     [SerializeField] private CustomSelectableStateEntry pressedState = new CustomSelectableStateEntry()
     {
-        backgroundColor = new Color(0.75f, 0.75f, 0.75f, 0.75f),
+        bodyColor = new Color(0.75f, 0.75f, 0.75f, 0.75f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 0.98f,
     };
     [SerializeField] private CustomSelectableStateEntry selectedState = new CustomSelectableStateEntry()
     {
-        backgroundColor = new Color(1f, 1f, 1f, 1f),
+        bodyColor = new Color(1f, 1f, 1f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 1.05f,
     };
     [SerializeField] private CustomSelectableStateEntry disabledState = new CustomSelectableStateEntry()
     {
-        backgroundColor = new Color(0.25f, 0.25f, 0.25f, 1f),
+        bodyColor = new Color(0.25f, 0.25f, 0.25f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 0.95f,
     };
     CustomSelectableStateEntry currentState;
 
+    private Color targetBodyColor;
     private Color targetContentColor;
-    public Color CurrentBackgroundColor { get { return targetGraphic ? targetGraphic.color : Color.black; } set { if (targetGraphic) targetGraphic.color = value; } }
+    public Color CurrentBodyColor { get { return targetGraphic ? targetGraphic.color : Color.black; } set { if (targetGraphic) targetGraphic.color = value; } }
     public Color CurrentContentColor { get { return targetGraphic ? targetGraphic.color : Color.black; } set { if (targetGraphic) targetGraphic.color = value; } }
     public Vector3 CurrentScale { get { return scaleRoot ? scaleRoot.localScale : Vector3.one; } set { if (scaleRoot) scaleRoot.localScale = value; } }
 
@@ -106,13 +108,7 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     public event Action onDeselected;
     public event Action onHovered;
     public event Action onUnhovered;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        SetState(CustomSelectableState.Idle);
-    }
+    public static event Action<CustomSelectable> onStateChanged;
 
     protected override void OnEnable()
     {
@@ -120,6 +116,11 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
 
         InputListener.Instance.onPressed += OnPress;
         InputListener.Instance.onReleased += OnRelease;
+        onStateChanged += OnStateChanged;
+
+        if (!IsSelectable || deselectOnOutsideClick)
+            SetState(CustomSelectableState.Idle);
+        SetStateTransitionAlpha(1f);
     }
 
     protected override void OnDisable()
@@ -130,6 +131,14 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
             InputListener.Instance.onPressed -= OnPress;
             InputListener.Instance.onReleased -= OnRelease;
         }
+        onStateChanged -= OnStateChanged;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        SetState(CustomSelectableState.Idle);
     }
 
     private void Update()
@@ -149,14 +158,14 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
 
         if (isEnabled) {
             if (targetGraphic) {
-                if (idleState.backgroundColorHolder)
-                    targetGraphic.color = idleState.backgroundColorHolder.color;
+                if (idleState.bodyColorHolder)
+                    targetGraphic.color = idleState.bodyColorHolder.color;
                 else
-                    targetGraphic.color = idleState.backgroundColor;
+                    targetGraphic.color = idleState.bodyColor;
             }
 
             if (contentGraphic) {
-                if (idleState.backgroundColorHolder)
+                if (idleState.contentColorHolder)
                     contentGraphic.color = idleState.contentColorHolder.color;
                 else
                     contentGraphic.color = idleState.contentColor;
@@ -164,14 +173,14 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
         }
         else {
             if (targetGraphic) {
-                if (disabledState.backgroundColorHolder)
-                    targetGraphic.color = disabledState.backgroundColorHolder.color;
+                if (disabledState.bodyColorHolder)
+                    targetGraphic.color = disabledState.bodyColorHolder.color;
                 else
-                    targetGraphic.color = disabledState.backgroundColor;
+                    targetGraphic.color = disabledState.bodyColor;
             }
 
             if (contentGraphic) {
-                if (disabledState.backgroundColorHolder)
+                if (disabledState.bodyColorHolder)
                     contentGraphic.color = disabledState.contentColorHolder.color;
                 else
                     contentGraphic.color = disabledState.contentColor;
@@ -203,15 +212,18 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void Disable()
     {
-        Debug.Log("Disable");
         isEnabled = false;
         currentState = disabledState;
+        targetBodyColor = GetBodyTargetColor(currentState);
+        targetContentColor = GetContentTargetColor(currentState);
     }
 
     // Idle
     private void Idle()
     {
         currentState = idleState;
+        targetBodyColor = GetBodyTargetColor(currentState);
+        targetContentColor = GetContentTargetColor(currentState);
     }
 
     // Hover
@@ -227,6 +239,8 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     protected void Hover()
     {
         currentState = hoveredState;
+        targetBodyColor = GetBodyTargetColor(currentState);
+        targetContentColor = GetContentTargetColor(currentState);
         onHovered?.Invoke();
     }
 
@@ -258,6 +272,8 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     protected void Press()
     {
         currentState = pressedState;
+        targetBodyColor = GetBodyTargetColor(currentState);
+        targetContentColor = GetContentTargetColor(currentState);
         onPressed?.Invoke();
     }
 
@@ -266,10 +282,9 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     {
         if (!isEnabled) return;
         if (!IsInteractable) return;
+        if (IsSelected && isPointerHovered) return;
 
-        Debug.Log("OnRelease");
         if (IsPressed) {
-            Debug.Log("IsPressed");
             if (IsSelectable) {
                 SetState(CustomSelectableState.Selected);
                 return;
@@ -281,7 +296,7 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
 
         GameObject go = PointerUtils.GetCurrentRaycastResult().gameObject;
         CustomSelectable selectable = go ? go.GetComponent<CustomSelectable>() : null;
-        if (selectable && (selectable.selectableGroupIndex == selectableGroupIndex || selectableGroupIndex < 0)) {
+        if (selectable && (selectable.selectableGroupIndex == selectableGroupIndex || selectableGroupIndex < 0) && !deselectOnOutsideClick) {
             SetState(CustomSelectableState.Idle);
             return;
         }
@@ -294,10 +309,7 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
 
     private void Release()
     {
-        Debug.Log("Release1");
         if (!PointerUtils.IsGameObjectHovered(gameObject)) return;
-
-        Debug.Log("Release2");
 
         onReleased?.Invoke();
     }
@@ -306,21 +318,20 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     public void Select()
     {
         currentState = selectedState;
+        targetBodyColor = GetBodyTargetColor(currentState);
+        targetContentColor = GetContentTargetColor(currentState);
         onSelected?.Invoke();
     }
 
-    // Deselect
     public void Deselect()
     {
         onDeselected?.Invoke();
     }
 
+    // Set State
     public void SetState(CustomSelectableState newState)
     {
-        Debug.Log(state);
-        if (newState == state) return;
         if (!IsInteractable) return;
-        Debug.Log(state);
 
         ExitState(state);
         state = newState;
@@ -370,46 +381,78 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     private void OnStateChange()
     {
         ResetInteractionAlpha();
+        onStateChanged?.Invoke(this);
     }
 
+    private void OnStateChanged(CustomSelectable selectable)
+    {
+        if (selectable == this) return;
+        if (selectable.selectableGroupIndex != selectableGroupIndex) return;
+
+        if (selectable.IsSelected)
+            SetState(CustomSelectableState.Idle);
+    }
+
+    // Interaction
     private void ApplyInteractionAlpha()
     {
         float duration = Mathf.Max(stateTransitionTime, 0.0001f);
-        stateTransitionAlpha += Time.deltaTime / duration;
-        if (stateTransitionAlpha >= 1f)         
+        SetStateTransitionAlpha(stateTransitionAlpha + Time.deltaTime / duration);
+        if (stateTransitionAlpha >= 1f)
             isAnimating = false;
     }
 
     private void ResetInteractionAlpha()
     {
-        stateTransitionAlpha = 0f;
+        SetStateTransitionAlpha(0f);
         isAnimating = true;
     }
 
     private void ApplyColor()
     {
-        CurrentBackgroundColor = Color.Lerp(CurrentBackgroundColor, currentState.backgroundColor, stateTransitionAlpha);
-        if (contentGraphic) {
+        if (targetGraphic)
+            targetGraphic.color = Color.Lerp(targetGraphic.color, targetBodyColor, stateTransitionAlpha);
+
+        if (contentGraphic)
             contentGraphic.color = targetContentColor;
-        }
     }
 
     private void ApplyScale()
     {
-        CurrentScale = math.lerp(CurrentScale, currentState.scale, stateTransitionAlpha);
+        float targetScale = currentState.scale;
+        CurrentScale = math.lerp(CurrentScale, new Vector3(targetScale, targetScale, targetScale), stateTransitionAlpha);
     }
 
     public void UpdateCurrentColorHolder()
     {
-        if (isEnabled && idleState.backgroundColorHolder) {
-            targetGraphic.color = idleState.backgroundColorHolder.color;
+        if (isEnabled && idleState.bodyColorHolder) {
+            targetGraphic.color = idleState.bodyColorHolder.color;
             return;
         }
 
-        if (!isEnabled && disabledState.backgroundColorHolder) {
-            targetGraphic.color = disabledState.backgroundColor;
+        if (!isEnabled && disabledState.bodyColorHolder) {
+            targetGraphic.color = disabledState.bodyColor;
             return;
         }
+    }
+
+    public void SetStateTransitionAlpha(float value)
+    {
+        stateTransitionAlpha = value;
+    }
+
+    private Color GetBodyTargetColor(CustomSelectableStateEntry targetState)
+    {
+        ColorHolder colorHolder = targetState.bodyColorHolder;
+        Color color = colorHolder ? colorHolder.color : targetState.bodyColor;
+        return color;
+    }
+
+    private Color GetContentTargetColor(CustomSelectableStateEntry targetState)
+    {
+        ColorHolder colorHolder = targetState.contentColorHolder;
+        Color color = colorHolder ? colorHolder.color : targetState.contentColor;
+        return color;
     }
 }
 
