@@ -7,9 +7,6 @@ using UnityEngine.UI;
 
 public class BuildingWidget : MonoBehaviour
 {
-    private PlayerController playerController = null;
-    private PlayerUIManager UIManager = null;
-
     public ConstructionComponent constructionComponent { get; private set; } = null;
     [SerializeField] private BuildingResourceWidget buildingResourceWidget = null;
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
@@ -20,7 +17,6 @@ public class BuildingWidget : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI buildingNameText = null;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup = null;
-    //[SerializeField] private HorizontalLayoutGroup resourcesToBuildHorizontalLayoutGroupWidget = null;
 
     int resourcesToBuildNumber = 0;
 
@@ -39,9 +35,6 @@ public class BuildingWidget : MonoBehaviour
     public void InitializeBuildingWidget(ConstructionComponent construction)
     {
         constructionComponent = construction;
-
-        playerController = GetComponentInParent<PlayerController>();
-        UIManager = playerController.GetComponentInChildren<PlayerUIManager>();
 
         Building building = construction.GetComponentInChildren<Building>();
         if (building) {
@@ -92,12 +85,24 @@ public class BuildingWidget : MonoBehaviour
 
     public void UpdateResourcesToBuild()
     {
+        bool enoughResources = true;
         Building building = constructionComponent.GetComponentInChildren<Building>();
-        for (int i = 0; i < resourcesToBuildNumber; i++)
-        {
-            int id = building.ConstructionLevelsData[0].ResourcesToBuild[i].ItemData.ItemId;
+        for (int i = 0; i < resourcesToBuildNumber; i++) {
+            ItemInstance resource = building.ConstructionLevelsData[0].ResourcesToBuild[i];
+            int amountToBuilding = resource.Amount;
+            int id = resource.ItemData.ItemId;
+            int currentAmount = CityManager.Instance.items[id].Amount;
+            spawnedBuildingResourceWidgets[i].SetResourceText(currentAmount, amountToBuilding);
 
-            spawnedBuildingResourceWidgets[i].SetResourceText(GameManager.Instance.items[id].Amount, building.ConstructionLevelsData[0].ResourcesToBuild[i].Amount);
+            if (enoughResources && currentAmount < amountToBuilding) {
+                enoughResources = false;
+            }
         }
+
+        if (enoughResources)
+            buildButton.SetState(CustomSelectableState.Idle);
+        else
+            buildButton.SetState(CustomSelectableState.Disabled);
+        buildButton.SetStateTransitionAlpha(1f);
     }
 }

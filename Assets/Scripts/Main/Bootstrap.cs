@@ -10,6 +10,9 @@ public class Bootstrap : MonoBehaviour
 
         SaveManager.Instance.Initialize();
         AwakeAsync();
+
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 120;
     }
 
     private async void AwakeAsync()

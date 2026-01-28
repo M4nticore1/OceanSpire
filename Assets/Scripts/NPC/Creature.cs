@@ -595,7 +595,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
 
         Building startBuilding = GetPathStartBuilding();
         BuildingPlace startBuildingPlace = startBuilding ? startBuilding.buildingPlace : null;
-        bool found = GameManager.Instance.TryGetPathToBuilding(startBuildingPlace, targetBuilding, ref pathBuildings);
+        bool found = CityManager.Instance.TryGetPathToBuilding(startBuildingPlace, targetBuilding, ref pathBuildings);
         if (found) {
             SortPath();
 
@@ -613,7 +613,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
     {
         Building startBuilding = GetPathStartBuilding();
         BuildingPlace startBuildingPlace = startBuilding ? startBuilding.buildingPlace : null;
-        bool found = GameManager.Instance.TryGetPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings);
+        bool found = CityManager.Instance.TryGetPathToBuilding(startBuildingPlace, targetBuildingCondition, ref pathBuildings);
         if (found) {
             if (IsRidingOnElevator) {
                 if (pathBuildings.Count == 1)
@@ -667,7 +667,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
 
     private IEnumerator OnBuildingStartConstructingCoroutine(ConstructionComponent construction)
     {
-        yield return GameManager.Instance.bakeNavMeshCoroutine;
+        yield return CityManager.Instance.bakeNavMeshCoroutine;
 
         if (!workBuilding) {
             Building building = construction.GetComponent<Building>();
@@ -738,7 +738,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
         if (workPier)
         {
             PierBuilding pier = workBuilding as PierBuilding;
-            Boat boat = GameManager.Instance.GetBoatByIndex(workerIndex);
+            Boat boat = CityManager.Instance.GetBoatByIndex(workerIndex);
             currentBoat = boat;
             currentBoat.EnterBoat(this);
 
@@ -782,7 +782,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
     {
         if (!carriedItemsDict.ContainsKey(itemId))
         {
-            ItemInstance item = new ItemInstance(GameManager.Instance.lootList.Items[itemId]); // The same item instance for list and dictionary.
+            ItemInstance item = new ItemInstance(CityManager.Instance.lootList.Items[itemId]); // The same item instance for list and dictionary.
             carriedItems.Add(item);
             carriedItemsDict.Add(itemId, item);
         }

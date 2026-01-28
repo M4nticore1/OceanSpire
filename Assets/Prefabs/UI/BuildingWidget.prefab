@@ -255,7 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -272,8 +272,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4279900698
+  m_fontColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -608,7 +608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.95, g: 0.95, b: 0.95, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -640,13 +640,13 @@ MonoBehaviour:
   targetGraphic: {fileID: 8287378216999079271}
   contentGraphic: {fileID: 0}
   scaleRoot: {fileID: 0}
-  isEnabled: 1
   isInteractable: 1
   isSelectable: 0
   isScalable: 0
   deselectOnOutsideClick: 0
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
+  state: 0
   idleState:
     bodyColor: {r: 0.95, g: 0.95, b: 0.95, a: 0}
     bodyColorHolder: {fileID: 0}
@@ -802,10 +802,10 @@ RectTransform:
   - {fileID: 709781028341091486}
   m_Father: {fileID: 1186100079346962137}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: -200, y: 100}
+  m_SizeDelta: {x: 400, y: 120}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &5911863147813292838
 CanvasRenderer:
@@ -828,7 +828,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7490196, g: 0.7237895, b: 0.68909806, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -857,30 +857,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetGraphic: {fileID: 0}
+  targetGraphic: {fileID: 8369071072566013778}
   contentGraphic: {fileID: 0}
-  scaleRoot: {fileID: 0}
-  isEnabled: 1
+  scaleRoot: {fileID: 1603433769933191045}
   isInteractable: 1
   isSelectable: 0
-  isScalable: 0
-  deselectOnOutsideClick: 1
+  isScalable: 1
+  deselectOnOutsideClick: 0
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
+  state: 0
   idleState:
-    bodyColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
+    bodyColor: {r: 0.7490196, g: 0.7237895, b: 0.68909806, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    bodyColor: {r: 1, g: 1, b: 1, a: 1}
+    bodyColor: {r: 0.8, g: 0.7712, b: 0.736, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    bodyColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
+    bodyColor: {r: 0.9019608, g: 0.87058824, b: 0.82980394, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}

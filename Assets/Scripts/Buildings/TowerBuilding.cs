@@ -91,16 +91,16 @@ public class TowerBuilding : Building
 
     protected TowerBuilding GetNeighborBuilding(Side side)
     {
-        int floorIndex = this.floorIndex < GameManager.firstBuildCityFloorIndex ? GameManager.firstBuildCityFloorIndex : this.floorIndex;
-        int placeIndex = this.floorIndex < GameManager.firstBuildCityFloorIndex && this.placeIndex < GameManager.firstBuildCityBuildingPlace ? GameManager.firstBuildCityBuildingPlace : this.placeIndex;
+        int floorIndex = this.floorIndex < CityManager.firstBuildCityFloorIndex ? CityManager.firstBuildCityFloorIndex : this.floorIndex;
+        int placeIndex = this.floorIndex < CityManager.firstBuildCityFloorIndex && this.placeIndex < CityManager.firstBuildCityBuildingPlace ? CityManager.firstBuildCityBuildingPlace : this.placeIndex;
 
         int horizontalIndexOffset = side == Side.Left ? 1 : side == Side.Right ? -1 : 0;
         int verticalIndexOffset = side == Side.Up ? 1 : side == Side.Down ? -1 : 0;
-        int sideIndex = (placeIndex + horizontalIndexOffset + GameManager.roomsCountPerFloor) % GameManager.roomsCountPerFloor;
+        int sideIndex = (placeIndex + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
         int verticalIndex = floorIndex + verticalIndexOffset;
 
-        if (verticalIndex < GameManager.Instance.builtFloors.Count && verticalIndex >= 0) {
-            Building building = GameManager.Instance.builtFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding;
+        if (verticalIndex < CityManager.Instance.builtFloors.Count && verticalIndex >= 0) {
+            Building building = CityManager.Instance.builtFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding;
             return building as TowerBuilding;
         }
         return null;

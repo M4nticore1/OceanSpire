@@ -8,17 +8,18 @@ using UnityEngine.UI;
 
 public class SlidePanel : MonoBehaviour, IInputListenable
 {
+    [SerializeField] private Canvas canvas;
     private RectTransform rectTransform;
 
     [Header("Slide")]
     [SerializeField] private float slideTransitionSpeed = 1f;
-    [SerializeField] private Vector2 openedPosition;
-    [SerializeField] private Vector2 closedPosition;
+    [SerializeField] private Vector2 openedPositionAlpha = new Vector2(0.5f, 0.5f);
+    [SerializeField] private Vector2 closedPositionAlpha = new Vector2(0.5f, 0.0f);
 
     [Header("Background")]
     [SerializeField] Image background;
-    [SerializeField] float openedBackgroundAlpha = 1f;
-    [SerializeField] float alphaTransitionSpeed = 1f;
+    [SerializeField] float openedBackgroundAlpha = 0.9f;
+    [SerializeField] float alphaTransitionSpeed = 10f;
 
     [Header("Buttons")]
     [SerializeField] private CustomSelectable openButton;
@@ -111,10 +112,12 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
     public void OpenSlidePanel()
     {
+        ApplyTagetPositionByAlpha(openedPositionAlpha);
+
         openedFrame = Time.frameCount;
         background.raycastTarget = true;
         content.Add(background.transform);
-        targetPosition = openedPosition;
+
         isOpened = true;
         isMoving = true;
         onOpened?.Invoke();
@@ -122,7 +125,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
     public void CloseSlidePanel()
     {
-        targetPosition = closedPosition;
+        ApplyTagetPositionByAlpha(closedPositionAlpha);
         background.raycastTarget = false;
         isOpened = false;
         isMoving = true;
@@ -172,5 +175,18 @@ public class SlidePanel : MonoBehaviour, IInputListenable
             }
         }
         return true;
+    }
+
+    private void ApplyTagetPositionByAlpha(Vector2 postionAlpha)
+    {
+        Vector2 resolution = new Vector2(Screen.width, Screen.height) / canvas.scaleFactor;
+        float positionX = math.lerp(0, resolution.x, postionAlpha.x);
+        float positionY = math.lerp(0, resolution.y, postionAlpha.y);
+
+        Vector2 size = rectTransform.rect.size;
+        float sizeCorrectionX = size.x * (0.5f - Mathf.Abs(postionAlpha.x - 0.5f));
+        float sizeCorrectionY = size.y * (0.5f - Mathf.Abs(postionAlpha.y - 0.5f));
+
+        targetPosition = new Vector2(positionX, positionY) + new Vector2(sizeCorrectionX, sizeCorrectionY);
     }
 }

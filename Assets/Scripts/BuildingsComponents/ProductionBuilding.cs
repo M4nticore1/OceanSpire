@@ -151,7 +151,7 @@ public class ProductionBuilding : BuildingComponent
             if (isReadyToCollect) return;
 
             isReadyToCollect = true;
-            float multiplier = alpha * GameManager.collectLootFlickingMultiplier;
+            float multiplier = alpha * CityManager.collectLootFlickingMultiplier;
             SetFlickingMultiplier(multiplier);
             Debug.Log(isReadyToCollect + " " + multiplier);
         }
@@ -173,7 +173,7 @@ public class ProductionBuilding : BuildingComponent
     public ItemInstance TakeProducedItem()
     {
         if (producedItem.Amount > 0) {
-            ItemInstance storageItemInstance = GameManager.Instance.items[producedItem.ItemData.ItemId];
+            ItemInstance storageItemInstance = CityManager.Instance.items[producedItem.ItemData.ItemId];
             int remainingStorageCapacity = producingItem.maxAmount - storageItemInstance.Amount;
 
             int amountToTake = 0;

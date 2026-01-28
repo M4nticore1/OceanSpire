@@ -28,7 +28,7 @@ public class LootManager
 
     private void SpawnLootContainer(LootContainer container, int index)
     {
-        if (container.FloorsCountToSpawn > GameManager.Instance.builtFloors.Count) return;
+        if (container.FloorsCountToSpawn > CityManager.Instance.builtFloors.Count) return;
 
         currentSpawnContainersTime[index] += lootContainerSpawnFrequency;
 
@@ -36,17 +36,17 @@ public class LootManager
 
         float rotationOffsetYaw = Random.Range(-spawnMaxOffsetYaw, spawnMaxOffsetYaw);
         Quaternion rotation = Quaternion.Euler(0, rotationOffsetYaw, 0);
-        Vector3 direction = rotation * new Vector3(GameManager.Instance.windDirection.x, 0, GameManager.Instance.windDirection.y);
+        Vector3 direction = rotation * new Vector3(CityManager.Instance.windDirection.x, 0, CityManager.Instance.windDirection.y);
         Vector2 normalizedDirection = new Vector2(direction.x, direction.z).normalized;
-        Vector2 windDorection = GameManager.Instance.windDirection.normalized;
+        Vector2 windDorection = CityManager.Instance.windDirection.normalized;
 
         // Spawn position
         Vector3 rangePosition = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f)).normalized;
-        int maxFloorNumber = container.maxSpawnFloorNumber > 0 ? container.maxSpawnFloorNumber : container.minSpawnFloorNumber > 0 ? (GameManager.Instance.builtFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
+        int maxFloorNumber = container.maxSpawnFloorNumber > 0 ? container.maxSpawnFloorNumber : container.minSpawnFloorNumber > 0 ? (CityManager.Instance.builtFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
         float spawnFloorNumber = Random.Range((float)container.minSpawnFloorNumber, maxFloorNumber);
-        float positionY = spawnFloorNumber * GameManager.floorHeight;
-        float positionX = (-windDorection.x * spawnDistance) - (normalizedDirection.x * spawnDistance) + (GameManager.Instance.windDirection.x * spawnDistance);
-        float positionZ = (-windDorection.x * spawnDistance) - (normalizedDirection.y * spawnDistance) + (GameManager.Instance.windDirection.y * spawnDistance);
+        float positionY = spawnFloorNumber * CityManager.floorHeight;
+        float positionX = (-windDorection.x * spawnDistance) - (normalizedDirection.x * spawnDistance) + (CityManager.Instance.windDirection.x * spawnDistance);
+        float positionZ = (-windDorection.x * spawnDistance) - (normalizedDirection.y * spawnDistance) + (CityManager.Instance.windDirection.y * spawnDistance);
         Vector3 spawnPosition = new Vector3(positionX, positionY, positionZ);
 
         // Spawn rotation
@@ -54,7 +54,7 @@ public class LootManager
         Quaternion spawnRotation = Quaternion.Euler(0, angle, 0);
 
         LootContainer lootContainer = Object.Instantiate(container, spawnPosition, spawnRotation);
-        lootContainer.InitializeContainer(GameManager.Instance, (int)spawnFloorNumber);
+        lootContainer.InitializeContainer(CityManager.Instance, (int)spawnFloorNumber);
         spawnedLootContainers.Add(lootContainer);
 
         currentTimeToSpawnContainers[index] = Random.Range(container.spawnMinTime, container.spawnMaxTime);
@@ -64,8 +64,8 @@ public class LootManager
     private async UniTask SpawningLootContainers()
     {
         while (true) {
-            for (int i = 0; i < GameManager.Instance.lootContainersList.lootContainers.Length; i++) {
-                SpawnLootContainer(GameManager.Instance.lootContainersList.lootContainers[i], i);
+            for (int i = 0; i < CityManager.Instance.lootContainersList.lootContainers.Length; i++) {
+                SpawnLootContainer(CityManager.Instance.lootContainersList.lootContainers[i], i);
             }
             await UniTask.Delay(System.TimeSpan.FromSeconds(lootContainerSpawnFrequency));
         }
@@ -97,7 +97,7 @@ public class LootManager
 
     private void CreateLootContainersSpawnTime()
     {
-        LootContainer[] lootContainer = GameManager.Instance.lootContainersList.lootContainers;
+        LootContainer[] lootContainer = CityManager.Instance.lootContainersList.lootContainers;
         for (int i = 0; i < lootContainer.Length; i++) {
             float spawnTime = Random.Range(lootContainer[i].spawnMinTime, lootContainer[i].spawnMaxTime);
             currentTimeToSpawnContainers.Add(spawnTime);

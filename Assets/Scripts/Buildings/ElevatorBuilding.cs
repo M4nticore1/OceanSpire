@@ -41,7 +41,7 @@ public class ElevatorBuilding : RoomBuilding
 
             spawnedElevatorCabin.Build(this);
 
-            elevatorGroupId = GameManager.Instance.elevatorGroups.Count;
+            elevatorGroupId = CityManager.Instance.elevatorGroups.Count;
         }
     }
 

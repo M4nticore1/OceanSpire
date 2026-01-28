@@ -26,9 +26,9 @@ public class BuildingPath
     public List<Building> paths = new List<Building>();
 }
 
-public class GameManager : MonoBehaviour
+public class CityManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; } = null;
+    public static CityManager Instance { get; private set; } = null;
 
     [SerializeField] private PlayerController playerController = null;
 
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.Instance.onConstructionPlacePressed += OnConstructionPlacePressed;
+        EventBus.Instance.onBuildingPlacePressed += OnBuildingPlacePressed;
         EventBus.Instance.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
         PlayerUIManager.OnBuildStopPlacing += HideAllBuildigPlaces;
 
@@ -187,9 +187,6 @@ public class GameManager : MonoBehaviour
         StartCoroutine(LoadCityAsync(saveData));
 
         playerController.Load(saveData);
-
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 120;
     }
 
     private void Update()
@@ -583,7 +580,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Buildings
-    private void OnConstructionPlacePressed(BuildingPlace place)
+    private void OnBuildingPlacePressed(BuildingPlace place)
     {
         PlaceBuilding(buildingToPlace, place, 0, true);
     }
@@ -758,7 +755,7 @@ public class GameManager : MonoBehaviour
         ItemInstance[] resourceToBuilds = construction.constructionLevelsData[construction.ownedBuilding.LevelIndex].ResourcesToBuild;
         for (int i = 0; i < resourceToBuilds.Length; i++) {
             int id = resourceToBuilds[i].ItemData.ItemId;
-            int amount = (int)math.ceil(resourceToBuilds[i].Amount * GameManager.demolitionResourceRefundRate);
+            int amount = (int)math.ceil(resourceToBuilds[i].Amount * CityManager.demolitionResourceRefundRate);
             AddItem(id, amount);
         }
     }

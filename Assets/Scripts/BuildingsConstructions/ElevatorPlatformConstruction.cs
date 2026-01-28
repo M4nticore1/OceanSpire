@@ -78,7 +78,7 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
         isMoving = false;
 
         // Correct position.
-        transform.position = new Vector3(transform.position.x, floorIndex * GameManager.floorHeight + GameManager.firstFloorHeight, transform.position.z);
+        transform.position = new Vector3(transform.position.x, floorIndex * CityManager.floorHeight + CityManager.firstFloorHeight, transform.position.z);
 
         // Stop entities riding.
         foreach (Creature riders in ridingPassengers.ToArray()) {
@@ -213,7 +213,7 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
     public void SetOwnedBuilding(int newFloorIndex)
     {
         if (newFloorIndex != floorIndex && newFloorIndex >= 0) {
-            ownedBuilding = GameManager.Instance.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
+            ownedBuilding = CityManager.Instance.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
             foreach (Creature npc in ridingPassengers) {
                 npc.OnElevatorCabinChangedFloor(this);
             }
@@ -225,12 +225,12 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
         int floorIndex = 0;
 
         if (nextFloorIndex >= this.floorIndex) {
-            floorIndex = (int)((transform.position.y - GameManager.firstFloorHeight) / GameManager.floorHeight);
+            floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight) / CityManager.floorHeight);
             if (floorIndex < startFloorIndex)
                 floorIndex = startFloorIndex;
         }
         else {
-            floorIndex = (int)((transform.position.y - GameManager.firstFloorHeight + GameManager.floorHeight) / GameManager.floorHeight);
+            floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight + CityManager.floorHeight) / CityManager.floorHeight);
             if (floorIndex > startFloorIndex)
                 floorIndex = startFloorIndex;
         }

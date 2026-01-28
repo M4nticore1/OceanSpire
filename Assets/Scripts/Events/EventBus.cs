@@ -6,7 +6,7 @@ public class EventBus
 
     public event Action<string> onCreateWorldButtonClicked;
     public event Action<SaveData> onLoadWorldButtonClicked;
-    public event Action<BuildingPlace> onConstructionPlacePressed;
+    public event Action<BuildingPlace> onBuildingPlacePressed;
     public event Action<BuildingWidget> onBuildingWidgetBuildClicked;
     public event Action<BuildingWidget> onBuildingWidgetInformationClicked;
 
@@ -15,9 +15,9 @@ public class EventBus
         Instance = this;
     }
 
-    public void InvokeConstructionPlacePressed(BuildingPlace place)
+    public void InvokeBuildingPlacePressed(BuildingPlace place)
     {
-        onConstructionPlacePressed?.Invoke(place);
+        onBuildingPlacePressed?.Invoke(place);
     }
 
     public void InvokeBuildingWidgetBuildClicked(BuildingWidget widget)

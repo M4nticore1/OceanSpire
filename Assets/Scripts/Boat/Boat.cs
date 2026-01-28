@@ -168,7 +168,7 @@ public class Boat : MonoBehaviour, IDamageable, ISelectable
 
                         int maxAmountToUnload = (int)(currentWeightToUnload / loot.ItemData.Weight);
                         int minAmountToUnload = math.min(maxAmountToUnload, loot.Amount);
-                        int amountToUnload = math.min(minAmountToUnload, GameManager.Instance.lootList.GetItem(lootId, storageLevelData.storageItems).Amount);
+                        int amountToUnload = math.min(minAmountToUnload, CityManager.Instance.lootList.GetItem(lootId, storageLevelData.storageItems).Amount);
                         int weightToUnload = amountToUnload * loot.ItemData.Weight;
 
                         storedLootDict[lootId].SubtractAmount(amountToUnload);

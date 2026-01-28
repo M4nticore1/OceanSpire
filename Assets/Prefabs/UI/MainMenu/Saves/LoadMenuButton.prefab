@@ -229,13 +229,13 @@ MonoBehaviour:
   targetGraphic: {fileID: 200313360122137738}
   contentGraphic: {fileID: 0}
   scaleRoot: {fileID: 1885940025941970757}
-  isEnabled: 1
   isInteractable: 1
   isSelectable: 0
   isScalable: 1
   deselectOnOutsideClick: 1
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
+  state: 0
   idleState:
     bodyColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
     bodyColorHolder: {fileID: 11400000, guid: 56cd69bc136b11243b7894fac81889bf, type: 2}

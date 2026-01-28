@@ -22,34 +22,21 @@ public class InputListener : MonoBehaviour
 
     private void Update()
     {
-        ListenInputs();
-    }
-
-    private void ListenInputs()
-    {
-        if (Touchscreen.current != null)
-            ListenTouchscreenInput();
-        if (Mouse.current != null)
-            ListenMouseInput();
-    }
-
-    private void ListenMouseInput()
-    {
-        bool wasPressed = Mouse.current.leftButton.wasPressedThisFrame;
-        bool wasReleased = Mouse.current.leftButton.wasReleasedThisFrame;
-        if (wasPressed)
-            onPressed?.Invoke();
-        if (wasReleased)
-            onReleased?.Invoke();
-    }
-
-    private void ListenTouchscreenInput()
-    {
-        bool wasPressed = Touchscreen.current.primaryTouch.press.wasPressedThisFrame;
-        bool wasReleased = Touchscreen.current.primaryTouch.press.wasReleasedThisFrame;
-        if (wasPressed)
-            onPressed?.Invoke();
-        if (wasReleased)
-            onReleased?.Invoke();
+        if (Touchscreen.current != null) {
+            bool wasPressed = Touchscreen.current.primaryTouch.press.wasPressedThisFrame;
+            bool wasReleased = Touchscreen.current.primaryTouch.press.wasReleasedThisFrame;
+            if (wasPressed)
+                onPressed?.Invoke();
+            if (wasReleased)
+                onReleased?.Invoke();
+        }
+        if (Mouse.current != null) {
+            bool wasPressed = Mouse.current.leftButton.wasPressedThisFrame;
+            bool wasReleased = Mouse.current.leftButton.wasReleasedThisFrame;
+            if (wasPressed)
+                onPressed?.Invoke();
+            if (wasReleased)
+                onReleased?.Invoke();
+        }
     }
 }

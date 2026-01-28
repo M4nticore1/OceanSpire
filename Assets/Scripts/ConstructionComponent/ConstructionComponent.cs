@@ -130,7 +130,7 @@ public class ConstructionComponent : MonoBehaviour
 
     private void AddIncomingConstructionResources_Internal(int lootId, int amount)
     {
-        ItemData data = GameManager.Instance.lootList.Items[lootId];
+        ItemData data = CityManager.Instance.lootList.Items[lootId];
         ItemInstance loot = new ItemInstance(data, amount);
         if (!incomingConstructionResourcesDict.ContainsKey(lootId))
         {
@@ -175,7 +175,7 @@ public class ConstructionComponent : MonoBehaviour
     {
         if (!deliveredConstructionResourcesDict.ContainsKey(lootId))
         {
-            ItemData data = GameManager.Instance.lootList.Items[lootId];
+            ItemData data = CityManager.Instance.lootList.Items[lootId];
             ItemInstance item = new ItemInstance(data); // The same item instance for list and dictionary.
             deliveredConstructionResources.Add(item);
             deliveredConstructionResourcesDict.Add(lootId, item);
@@ -187,7 +187,7 @@ public class ConstructionComponent : MonoBehaviour
 
         // Finish building
         ItemInstance[] resourcesToBuild = constructionLevelsData[levelIndex].ResourcesToBuild;
-        if (deliveredConstructionResourcesDict[lootId].Amount >= GameManager.Instance.lootList.GetItem(lootId, constructionLevelsData[levelIndex].ResourcesToBuild).Amount)
+        if (deliveredConstructionResourcesDict[lootId].Amount >= CityManager.Instance.lootList.GetItem(lootId, constructionLevelsData[levelIndex].ResourcesToBuild).Amount)
         {
             foreach (var item in resourcesToBuild)
                 if (item.Amount < 0)

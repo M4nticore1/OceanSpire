@@ -21,7 +21,7 @@ public enum TransportMethod
 public class LootContainer : MonoBehaviour
 {
     [field: SerializeField] public LootContainerData containerData { get; private set; } = null;
-    private GameManager gameManager = null;
+    private CityManager gameManager = null;
 
     [Header("Loot")]
     [SerializeField] private List<LootEntry> possibleLoot = new List<LootEntry>();
@@ -66,7 +66,7 @@ public class LootContainer : MonoBehaviour
     public static System.Action<LootContainer> OnLootEntered;
     public static System.Action<LootContainer> OnLootExited;
 
-    public void InitializeContainer(GameManager gameManager, int floorIndex)
+    public void InitializeContainer(CityManager gameManager, int floorIndex)
     {
         this.gameManager = gameManager;
         checkPositionTime = Time.time;
@@ -148,11 +148,11 @@ public class LootContainer : MonoBehaviour
         {
             float distance = Vector3.Distance(Vector3.zero, transform.position);
 
-            if (distance <= GameManager.triggerLootContainerRadius)
+            if (distance <= CityManager.triggerLootContainerRadius)
                 OnLootEntered?.Invoke(this);
             else if (distance > LootManager.spawnDistance + despawnDistance)
                 Destroy(this.gameObject);
-            else if (distance > GameManager.triggerLootContainerRadius)
+            else if (distance > CityManager.triggerLootContainerRadius)
                 OnLootExited?.Invoke(this);
 
             lastCheckPositionTime = Time.timeAsDouble;

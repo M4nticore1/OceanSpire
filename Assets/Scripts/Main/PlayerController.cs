@@ -214,7 +214,7 @@ public class PlayerController : MonoBehaviour
 
         cameraYawRotateAlpha = 0.52f;
 
-        moveStateValue = 1f / GameManager.roomsCountPerFloor;
+        moveStateValue = 1f / CityManager.roomsCountPerFloor;
 
         isInitialized = true;
     }
@@ -237,7 +237,7 @@ public class PlayerController : MonoBehaviour
             else
                 placeIndex = 13 - moveStateIndex;
 
-            Building buildingToShowStats = GameManager.Instance.GetBuildingByIndex(GameManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
+            Building buildingToShowStats = CityManager.Instance.GetBuildingByIndex(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
 
             if (currentCameraDistance <= cameraDistanceToShowBuildingStats) {
                 if (buildingToShowStats)
@@ -272,16 +272,16 @@ public class PlayerController : MonoBehaviour
 
         // Keybord Moving
         if (!isCameraMoving) {
-            if (cameraHolder.transform.position.y > GameManager.Instance.cityHeight || cameraHolder.transform.position.y < 0.0f) {
+            if (cameraHolder.transform.position.y > CityManager.Instance.cityHeight || cameraHolder.transform.position.y < 0.0f) {
                 Vector3 cameraPosition = cameraHolder.transform.position;
-                float targetHeight = cameraHolder.transform.position.y < 0f ? 0f : GameManager.Instance.cityHeight;
+                float targetHeight = cameraHolder.transform.position.y < 0f ? 0f : CityManager.Instance.cityHeight;
                 cameraHolder.transform.position = math.lerp(cameraHolder.transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
             }
         }
 
         // Return Vertical Position
-        if (cameraHolder.transform.position.y > GameManager.Instance.cityHeight)
-            cameraVerticalReturnMultiplier = cameraHolder.transform.position.y - GameManager.Instance.cityHeight /*math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f)*/;
+        if (cameraHolder.transform.position.y > CityManager.Instance.cityHeight)
+            cameraVerticalReturnMultiplier = cameraHolder.transform.position.y - CityManager.Instance.cityHeight /*math.pow(((cityManager.cityHeight - cameraHolder.transform.position.y) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding, 2.0f)*/;
         else if (cameraHolder.transform.position.y < 0.0f)
             cameraVerticalReturnMultiplier = -cameraHolder.transform.position.y /*((0 - math.abs(cameraHolder.transform.position.y)) + cameraHeightBoundaryPadding) / cameraHeightBoundaryPadding*/;
         else
@@ -290,8 +290,8 @@ public class PlayerController : MonoBehaviour
         // Add Move
         float multiplier = 1f;
         float cameraHeight = math.abs(cameraHolder.transform.position.y);
-        if (cameraHolder.transform.position.y > GameManager.Instance.cityHeight && cameraMoveVelocity.y > 0f)
-            multiplier = 1f - math.clamp((cameraHeight - GameManager.Instance.cityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
+        if (cameraHolder.transform.position.y > CityManager.Instance.cityHeight && cameraMoveVelocity.y > 0f)
+            multiplier = 1f - math.clamp((cameraHeight - CityManager.Instance.cityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
         else if (cameraHolder.transform.position.y < 0f && cameraMoveVelocity.y < 0f)
             multiplier = 1f - math.clamp(cameraHeight / cameraVerticalBoundaryPadding, 0f, 1f);
 
@@ -431,11 +431,11 @@ public class PlayerController : MonoBehaviour
                     if (Physics.Raycast(ray, out hit)) {
                         GameObject hitted = hit.collider.gameObject;
 
-                        if (GameManager.Instance.buildingToPlace) {
+                        if (CityManager.Instance.buildingToPlace) {
                             BuildingPlace hittedBuildingPlace = hitted.GetComponent<BuildingPlace>();
 
                             if (hittedBuildingPlace && !hittedBuildingPlace.placedBuilding) {
-                                PlaceConstruction(hittedBuildingPlace);
+                                PlaceBuilding(hittedBuildingPlace);
                             }
                         }
                         else {
@@ -527,22 +527,23 @@ public class PlayerController : MonoBehaviour
         secondaryInteractionDelta = value;
     }
 
-    private void PlaceConstruction(BuildingPlace buildingPlace)
+    // Place Building
+    private void PlaceBuilding(BuildingPlace buildingPlace)
     {
-        EventBus.Instance.InvokeConstructionPlacePressed(buildingPlace);
+        EventBus.Instance.InvokeBuildingPlacePressed(buildingPlace);
     }
 
     private void CollectItems(ItemInstance item)
     {
         int id = item.ItemData.ItemId;
-        if (GameManager.Instance.items[id].Amount < GameManager.Instance.totalStorageCapacity[id]) {
-            GameManager.Instance.AddItem(item);
+        if (CityManager.Instance.items[id].Amount < CityManager.Instance.totalStorageCapacity[id]) {
+            CityManager.Instance.AddItem(item);
         }
     }
 
     private void CollectItems(List<ItemInstance> items)
     {
-        GameManager.Instance.AddItems(items);
+        CityManager.Instance.AddItems(items);
     }
 
     private void Select(ISelectable selectComponent)

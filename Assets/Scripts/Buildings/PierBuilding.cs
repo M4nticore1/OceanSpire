@@ -38,11 +38,11 @@ public class PierBuilding : Building
         if (pierConstruction) {
             int docksCount = pierConstruction.BoatDockPositions.Count;
             for (int i = 0; i < docksCount; i++) {
-                if (GameManager.Instance.spawnedBoats.Count <= i) break;
+                if (CityManager.Instance.spawnedBoats.Count <= i) break;
 
-                if (GameManager.Instance.spawnedBoats[i] && !GameManager.Instance.spawnedBoats[i].isFloating) {
-                    GameManager.Instance.spawnedBoats[i].transform.position = pierConstruction.BoatDockPositions[i].position;
-                    GameManager.Instance.spawnedBoats[i].transform.rotation = pierConstruction.BoatDockPositions[i].rotation;
+                if (CityManager.Instance.spawnedBoats[i] && !CityManager.Instance.spawnedBoats[i].isFloating) {
+                    CityManager.Instance.spawnedBoats[i].transform.position = pierConstruction.BoatDockPositions[i].position;
+                    CityManager.Instance.spawnedBoats[i].transform.rotation = pierConstruction.BoatDockPositions[i].rotation;
                 }
             }
         }

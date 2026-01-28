@@ -17,7 +17,7 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] private ResourceWidget[] storageResourceWidgets = { };
     [SerializeField] private BuildingCharacteristicWidget buildingCharacteristicWidget = null;
 
-    private List<List<BuildingWidget>> spawnedBuildingWidgets = new List<List<BuildingWidget>>();
+    private List<BuildingWidget> spawnedBuildingWidgets = new List<BuildingWidget>();
     private List<ResourceWidget> spawnedBuildingActionResourceWidgets = new List<ResourceWidget>();
 
     // Menus
@@ -124,14 +124,8 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] private GridLayoutGroup unemployedResidentsList = null;
     [SerializeField] private GridLayoutGroup employedResidentsList = null;
 
-    [Header("FPS")]
-    [SerializeField] private TextMeshProUGUI fpsText = null;
-
     int maxBuildingWorkersCount = 0;
     int residentWidgetsColumnCount = 0;
-
-    int frames = 0;
-    double lastFPSCounterTime = 0d;
 
     // Colors
     [Header("Colors")]
@@ -156,17 +150,17 @@ public class PlayerUIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.OnConstructionPlaced += OnConstructionPlaced;
-        GameManager.OnLootAdded += OnLootAdded;
-        GameManager.OnStorageCapacityUpdated += OnStorageCapacityUpdated;
-        GameManager.Instance.OnResidentAdded += OnResidentAdded;
+        CityManager.OnConstructionPlaced += OnConstructionPlaced;
+        CityManager.OnLootAdded += OnLootAdded;
+        CityManager.OnStorageCapacityUpdated += OnStorageCapacityUpdated;
+        CityManager.Instance.OnResidentAdded += OnResidentAdded;
 
         EventBus.Instance.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
 
-        openConstructionMenuButton.onReleased += OnConstructionMenuButtonReleased;
+        openConstructionMenuButton.onReleased += OnBuildingsMenuButtonReleased;
         openStorageMenuButton.onReleased += OnStorageMenuButtonReleased;
 
-        buildingListsMenuButton.onReleased += OnConstructionListsButtonReleased;
+        buildingListsMenuButton.onReleased += OnBuildingListsButtonReleased;
         storageListsMenuButton.onReleased += OnStorageListsButtonReleased;
 
         closeManagementMenuButton.onReleased += CloseManagementMenu;
@@ -203,17 +197,17 @@ public class PlayerUIManager : MonoBehaviour
 
     private void OnDisable()
     {
-        GameManager.OnConstructionPlaced -= OnConstructionPlaced;
-        GameManager.OnLootAdded -= OnLootAdded;
-        GameManager.OnStorageCapacityUpdated -= OnStorageCapacityUpdated;
-        GameManager.Instance.OnResidentAdded -= OnResidentAdded;
+        CityManager.OnConstructionPlaced -= OnConstructionPlaced;
+        CityManager.OnLootAdded -= OnLootAdded;
+        CityManager.OnStorageCapacityUpdated -= OnStorageCapacityUpdated;
+        CityManager.Instance.OnResidentAdded -= OnResidentAdded;
 
         EventBus.Instance.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
 
-        openConstructionMenuButton.onReleased -= OnConstructionMenuButtonReleased;
+        openConstructionMenuButton.onReleased -= OnBuildingsMenuButtonReleased;
         openStorageMenuButton.onReleased -= OnStorageMenuButtonReleased;
 
-        buildingListsMenuButton.onReleased -= OnConstructionListsButtonReleased;
+        buildingListsMenuButton.onReleased -= OnBuildingListsButtonReleased;
         storageListsMenuButton.onReleased -= OnStorageListsButtonReleased;
 
         closeManagementMenuButton.onReleased -= CloseManagementMenu;
@@ -255,7 +249,7 @@ public class PlayerUIManager : MonoBehaviour
         buildingStatsPanelOpenedPosition = buildingStatsPanel.anchoredPosition;
         buildingStatsPanel.anchoredPosition = Vector2.zero;
 
-        for (int i = 0; i < GameManager.Instance.lootList.Items.Length; i++)
+        for (int i = 0; i < CityManager.Instance.lootList.Items.Length; i++)
             itemsToUpdate.Add(false);
 
         managementMenu.SetActive(false);
@@ -290,67 +284,59 @@ public class PlayerUIManager : MonoBehaviour
         buildingResourcesMenuPanel.anchoredPosition = buildingResourcesMenuCurrentPosition;
 
         UpdateBuildingStatsPanelPosition();
-        FPSCounter();
     }
 
     // Management Menu
-    private void CreateItemWidgets()
-    {
-        List<ResourceWidget> widgets = new();
-        int count = GameManager.Instance.lootList.Items.Length;
-        for (int i = 0; i < count; i++)
-        {
-            ItemData itemData = GameManager.Instance.lootList.Items[i];
-            if (itemData.ItemCategory == ItemCategory.Society) continue;
-
-            ItemCategory itemCategory = itemData.ItemCategory;
-
-            ResourceWidget storageResourceWidget = Instantiate(storageResourceWidgetPrefab, storageLists[(int)itemCategory - 1].transform);
-            widgets.Add(storageResourceWidget);
-
-            ItemInstance item = GameManager.Instance.items[i];
-            storageResourceWidget.SetItem(item);
-        }
-        storageResourceWidgets = widgets.ToArray(); 
-    }
-
     private void OpenManagementMenu()
     {
-        isManagementMenuOpened = true;
         managementMenu.SetActive(true);
+        isManagementMenuOpened = true;
     }
 
-    public void CloseManagementMenu()
+    private void CloseManagementMenu()
     {
-        isManagementMenuOpened = false;
         managementMenu.SetActive(false);
+        isManagementMenuOpened = false;
+
+        ResetLastOpenedListCategoried();
     }
 
-    private void OnConstructionMenuButtonReleased()
+    private void ResetLastOpenedListCategoried()
+    {
+        lastOpenedBuildingsListCategory = BuildingCategory.Construction;
+        lastOpenedStorageListCategory = ItemCategory.Building;
+    }
+
+    // Buildings Menu
+    private void OnBuildingsMenuButtonReleased()
     {
         OpenManagementMenu();
-        OnConstructionListsButtonReleased();
-        UpdateLootStorageMenu();
+        OpenBuildingsMenu();
+        CloseStorageMenu();
+        UpdateStorageMenuLootAmount();
         buildingListsMenuButton.SetState(CustomSelectableState.Selected);
-        buildingListsMenuButton.SetStateTransitionAlpha(1);
-        storageListsMenuButton.SetStateTransitionAlpha(0);
-        buildingListButtons[0].Select();
+        buildingListsMenuButton.SetStateTransitionAlpha(1f);
+        storageListsMenuButton.SetStateTransitionAlpha(1f);
     }
 
-    private void OnConstructionListsButtonReleased()
+    private void OnBuildingListsButtonReleased()
     {
-        UpdateBuildingWidgetsResourcesAmount();
+        OpenBuildingsMenu();
+        CloseStorageMenu();
+    }
 
-        isBuildingListsMenuOpened = true;
-        isStorageListsMenuOpened = false;
-
+    private void OpenBuildingsMenu()
+    {
         buildingListsMenu.SetActive(true);
-        storageListsMenu.SetActive(false);
+        buildingListButtons[(int)lastOpenedBuildingsListCategory].SetState(CustomSelectableState.Selected);
+        isBuildingListsMenuOpened = true;
+        UpdateBuildingsMenuResourcesAmount();
+    }
 
-        buildingListsMenuButton.Select();
-        storageListsMenuButton.Deselect();
-
-        OpenBuildingsListByCategory(lastOpenedBuildingsListCategory);
+    private void CloseBuildingsMenu()
+    {
+        isBuildingListsMenuOpened = false;
+        buildingListsMenu.SetActive(false);
     }
 
     private void OpenBuildingsListByCategory(BuildingCategory buildingCategory)
@@ -371,28 +357,75 @@ public class PlayerUIManager : MonoBehaviour
         buildingListButtons[index].transform.SetSiblingIndex(buildingListButtons.Length - index);
     }
 
+    private void CreateBuildingWidgets()
+    {
+        int categoriesCount = Enum.GetValues(typeof(BuildingCategory)).Length;
+
+        foreach (var building in CityManager.Instance.buildingsList.buildings) {
+            if (!building.BuildingData.IsDemolishable) continue;
+
+            BuildingCategory buildingCategory = building.BuildingData.BuildingCategory;
+            BuildingWidget spawnedBuildingWidget = null;
+            spawnedBuildingWidget = Instantiate(buildingWidgetPrefab, transform);
+
+            spawnedBuildingWidgets.Add(spawnedBuildingWidget);
+
+            ConstructionComponent construction = building.GetComponent<ConstructionComponent>();
+            spawnedBuildingWidget.InitializeBuildingWidget(construction);
+
+            spawnedBuildingWidget.transform.SetParent(buildingLists[(int)buildingCategory].transform);
+        }
+
+        for (int i = 0; i < categoriesCount; i++) {
+            RectTransform rectTransform = buildingLists[i].GetComponent<RectTransform>();
+            Vector2 initialSizeDelta = rectTransform.rect.size;
+            Vector2 size = buildingLists[i].transform.childCount * (buildingLists[i].cellSize + buildingLists[i].spacing) - buildingLists[i].spacing;
+
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+
+            if (rectTransform.sizeDelta.y < initialSizeDelta.y)
+                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, initialSizeDelta.y);
+        }
+    }
+
+    private void UpdateBuildingsMenuResourcesAmount()
+    {
+        foreach (var widget in spawnedBuildingWidgets) {
+            widget.UpdateResourcesToBuild();
+        }
+    }
+
+    // Storage Menu
     private void OnStorageMenuButtonReleased()
     {
         OpenManagementMenu();
-        OnStorageListsButtonReleased();
+        OpenStorageMenu();
+        CloseBuildingsMenu();
         storageListsMenuButton.SetState(CustomSelectableState.Selected);
-        storageListsMenuButton.SetStateTransitionAlpha(1);
-        buildingListsMenuButton.SetStateTransitionAlpha(0);
+        storageListsMenuButton.SetStateTransitionAlpha(1f);
+        buildingListsMenuButton.SetStateTransitionAlpha(1f);
 
     }
 
     private void OnStorageListsButtonReleased()
     {
-        isBuildingListsMenuOpened = false;
-        isStorageListsMenuOpened = true;
+        OpenStorageMenu();
+        CloseBuildingsMenu();
+    }
 
-        buildingListsMenu.SetActive(false);
+    private void OpenStorageMenu()
+    {
         storageListsMenu.SetActive(true);
+        //OpenStorageListByCategory(lastOpenedStorageListCategory);
+        storageListButtons[(int)lastOpenedStorageListCategory - 1].SetState(CustomSelectableState.Selected);
+        isStorageListsMenuOpened = true;
+        UpdateStorageMenuLootAmount();
+    }
 
-        buildingListsMenuButton.Deselect();
-        storageListsMenuButton.Select();
-
-        OpenStorageListByCategory(lastOpenedStorageListCategory);
+    private void CloseStorageMenu()
+    {
+        isStorageListsMenuOpened = false;
+        storageListsMenu.SetActive(false);
     }
 
     private void OpenStorageListByCategory(ItemCategory itemCategory)
@@ -413,91 +446,54 @@ public class PlayerUIManager : MonoBehaviour
         storageListButtons[index].transform.SetSiblingIndex(storageListButtons.Length - index);
     }
 
-    private void CreateBuildingWidgets()
+    private void CreateItemWidgets()
     {
+        List<ResourceWidget> widgets = new();
+        int count = CityManager.Instance.lootList.Items.Length;
+        for (int i = 0; i < count; i++) {
+            ItemData itemData = CityManager.Instance.lootList.Items[i];
+            if (itemData.ItemCategory == ItemCategory.Society) continue;
 
-        int length = Enum.GetValues(typeof(BuildingCategory)).Length;
-        for (int i = 0; i < length; i++) {
-            spawnedBuildingWidgets.Add(new List<BuildingWidget>());
+            ItemCategory itemCategory = itemData.ItemCategory;
+
+            ResourceWidget storageResourceWidget = Instantiate(storageResourceWidgetPrefab, storageLists[(int)itemCategory - 1].transform);
+            widgets.Add(storageResourceWidget);
+
+            ItemInstance item = CityManager.Instance.items[i];
+            storageResourceWidget.SetItem(item);
         }
-
-        foreach (var building in GameManager.Instance.buildingsList.buildings) {
-            if (!building.BuildingData.IsDemolishable) continue;
-
-            BuildingCategory buildingCategory = building.BuildingData.BuildingCategory;
-            BuildingWidget spawnedBuildingWidget = null;
-            spawnedBuildingWidget = Instantiate(buildingWidgetPrefab, transform);
-
-            int categoryIndex = (int)building.BuildingData.BuildingCategory;
-            spawnedBuildingWidgets[categoryIndex].Add(spawnedBuildingWidget);
-
-            ConstructionComponent construction = building.GetComponent<ConstructionComponent>();
-            spawnedBuildingWidget.InitializeBuildingWidget(construction);
-
-            spawnedBuildingWidget.transform.SetParent(buildingLists[(int)buildingCategory].transform);
-        }
-
-        for (int i = 0; i < length; i++) {
-            RectTransform rectTransform = buildingLists[i].GetComponent<RectTransform>();
-            Vector2 initialSizeDelta = rectTransform.rect.size;
-            Vector2 size = buildingLists[i].transform.childCount * (buildingLists[i].cellSize + buildingLists[i].spacing) - buildingLists[i].spacing;
-
-            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
-
-            if (rectTransform.sizeDelta.y < initialSizeDelta.y)
-                rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, initialSizeDelta.y);
-        }
+        storageResourceWidgets = widgets.ToArray();
     }
 
-    // Loot
-    private void OnLootAdded(ItemInstance item)
-    {
-        if (isStorageListsMenuOpened) {
-            int id = item.ItemData.ItemId;
-            int amount = item.Amount;
-            int maxAmount = GameManager.Instance.totalStorageCapacity[id];
-            storageResourceWidgets[id].SetAmountAndMaxAmount(amount, maxAmount);
-        }
-    }
-
-    private void OnStorageCapacityUpdated()
-    {
-        if (isStorageListsMenuOpened)
-            UpdateLootStorageMenu();
-    }
-
-    private void UpdateLootStorageMenu()
+    private void UpdateStorageMenuLootAmount()
     {
         // Update Storage Menu
         for (int i = 0; i < storageResourceWidgets.Length; i++) {
-            int amount = GameManager.Instance.items[i].Amount;
-            int maxAmount = GameManager.Instance.totalStorageCapacity[i];
+            int amount = CityManager.Instance.items[i].Amount;
+            int maxAmount = CityManager.Instance.totalStorageCapacity[i];
 
             if (storageResourceWidgets.Length > i)
                 storageResourceWidgets[i].SetAmountAndMaxAmount(amount, maxAmount);
             else
                 Debug.LogError("storageResourceWidgets.Count > indexes[i]");
         }
+    }
 
-        // Update Construction Menu
-        for (int i = 0; i < spawnedBuildingWidgets.Count; i++)
-        {
-            for (int j = 0; j < spawnedBuildingWidgets[i].Count; j++)
-            {
-                spawnedBuildingWidgets[i][j].UpdateResourcesToBuild();
-            }
+    // Loot
+    private void OnLootAdded(ItemInstance item)
+    {
+        if (isBuildingListsMenuOpened) {
+            UpdateBuildingsMenuResourcesAmount();
+        }
+        else if (isStorageListsMenuOpened) {
+            UpdateStorageMenuLootAmount();
         }
     }
 
-    public void UpdateBuildingWidgetsResourcesAmount()
+    private void OnStorageCapacityUpdated()
     {
-        for (int i = 0; i < spawnedBuildingWidgets.Count; i++)
-        {
-            for (int j = 0; j < spawnedBuildingWidgets[i].Count; j++)
-            {
-                spawnedBuildingWidgets[i][j].UpdateResourcesToBuild();
-            }
-        }
+        if (isStorageListsMenuOpened)
+            UpdateStorageMenuLootAmount();
     }
 
     // Context Menus
@@ -613,7 +609,7 @@ public class PlayerUIManager : MonoBehaviour
 
             int id = resourcesToUpgrade[i].ItemData.ItemId;
             int amount = resourcesToUpgrade[i].Amount;
-            int maxAmount = GameManager.Instance.totalStorageCapacity[id];
+            int maxAmount = CityManager.Instance.totalStorageCapacity[id];
             resourceWidget.SetAmountAndMaxAmount(amount, maxAmount);
         }
 
@@ -638,7 +634,7 @@ public class PlayerUIManager : MonoBehaviour
             ResourceWidget resourceWidget = Instantiate(buildingActionResourceWidgetPrefab, actionResourcesLayourGroup.transform);
             spawnedBuildingActionResourceWidgets.Add(resourceWidget);
 
-            int amount = (int)math.ceil(resourcesToUpgrade[i].Amount * GameManager.demolitionResourceRefundRate);
+            int amount = (int)math.ceil(resourcesToUpgrade[i].Amount * CityManager.demolitionResourceRefundRate);
             resourceWidget.SetAmount(amount);
         }
 
@@ -661,11 +657,11 @@ public class PlayerUIManager : MonoBehaviour
 
         // Set parents of resident widgets
         int buildingWorkerWidgetIndex = 0;
-        for (int i = 0; i < GameManager.Instance.residents.Count; i++) {
-            spawnedResidentWidgets[i].InitializeResidentWidget(GameManager.Instance.residents[i], building, this);
+        for (int i = 0; i < CityManager.Instance.residents.Count; i++) {
+            spawnedResidentWidgets[i].InitializeResidentWidget(CityManager.Instance.residents[i], building, this);
 
-            if (GameManager.Instance.residents[i].workBuilding) {
-                if (GameManager.Instance.residents[i].workBuilding == building)
+            if (CityManager.Instance.residents[i].workBuilding) {
+                if (CityManager.Instance.residents[i].workBuilding == building)
                 {
                     spawnedResidentWidgets[i].transform.SetParent(buildingWorkersList.transform);
                     spawnedResidentWidgets[i].transform.SetSiblingIndex(buildingWorkerWidgetIndex);
@@ -762,9 +758,9 @@ public class PlayerUIManager : MonoBehaviour
         // Building workers
         SetWorkerListSize(buildingWorkersMenu, buildingWorkersList, null, maxBuildingWorkersCount, residentWidgetsColumnCount);
         // Unemployed residents
-        SetWorkerListSize(unemployedResidentsMenu, unemployedResidentsList, haveNoUnemployedResidentsText, GameManager.Instance.unemployedResidentsCount, residentWidgetsColumnCount);
+        SetWorkerListSize(unemployedResidentsMenu, unemployedResidentsList, haveNoUnemployedResidentsText, CityManager.Instance.unemployedResidentsCount, residentWidgetsColumnCount);
         // Employed residents
-        SetWorkerListSize(employedResidentsMenu, employedResidentsList, haveNoEmployedResidentsText, GameManager.Instance.employedResidentCount - building.workers.Count, residentWidgetsColumnCount);
+        SetWorkerListSize(employedResidentsMenu, employedResidentsList, haveNoEmployedResidentsText, CityManager.Instance.employedResidentCount - building.workers.Count, residentWidgetsColumnCount);
     }
 
     public void SelectBuildingWorker(ResidentWidget residentWidget)
@@ -838,7 +834,7 @@ public class PlayerUIManager : MonoBehaviour
     // Upgrade Building Menu
     private void TryToUpgradeBuilding()
     {
-        GameManager.Instance.TryToUpgradeConstruction((playerController.selectedObject as MonoBehaviour).GetComponent<Building>());
+        CityManager.Instance.TryToUpgradeConstruction((playerController.selectedObject as MonoBehaviour).GetComponent<Building>());
     }
 
     private void TryToDemolishBuilding()
@@ -884,20 +880,5 @@ public class PlayerUIManager : MonoBehaviour
             stopPlacingBuildingButton.gameObject.SetActive(false);
 
         OnBuildStopPlacing?.Invoke();
-    }
-
-    private void FPSCounter()
-    {
-        frames++;
-        double time = Time.timeAsDouble;
-
-        if (time >= lastFPSCounterTime + 0.5)
-        {
-            double delta = time - lastFPSCounterTime;
-            float fps = frames / (float)delta;
-            fpsText.text = $"FPS: {(int)fps}";
-            frames = 0;
-            lastFPSCounterTime = time;
-        }
     }
 }

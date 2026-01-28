@@ -65,21 +65,21 @@ public class SaveData
         cameraHeightPosition = playerController.cameraVerticalPosition.y;
 
         // City
-        builtFloorsCount = GameManager.Instance.builtFloors.Count;
-        int roomsCount = builtFloorsCount * GameManager.roomsCountPerFloor;
+        builtFloorsCount = CityManager.Instance.builtFloors.Count;
+        int roomsCount = builtFloorsCount * CityManager.roomsCountPerFloor;
         placedBuildingIds = new int[roomsCount];
         placedBuildingLevels = new int[roomsCount];
         placedBuildingsUnderConstruction = new bool[roomsCount];
         placedBuildingInteriorIds = new int[roomsCount];
         buildingProductionTimers = new float[roomsCount];
         elevatorPlatformHeights = new float[roomsCount];
-        resourcesAmount = new int[GameManager.Instance.items.Length];
+        resourcesAmount = new int[CityManager.Instance.items.Length];
 
         int placeIndex = 0;
         int lastElevatorGroupId = -1;
         for (int i = 0; i < builtFloorsCount; i++) {
-            for (int j = 0; j < GameManager.roomsCountPerFloor; j++) {
-                Building placedBuilding = GameManager.Instance.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
+            for (int j = 0; j < CityManager.roomsCountPerFloor; j++) {
+                Building placedBuilding = CityManager.Instance.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
                 placedBuildingIds[placeIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingId : -1;
                 placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.LevelIndex : 0;
                 placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.isUnderConstruction : false;
@@ -100,12 +100,12 @@ public class SaveData
             }
         }
 
-        for (int i = 0; i < GameManager.Instance.items.Length; i++) {
-            resourcesAmount[i] = GameManager.Instance.items[i].Amount;
+        for (int i = 0; i < CityManager.Instance.items.Length; i++) {
+            resourcesAmount[i] = CityManager.Instance.items[i].Amount;
         }
 
         // Boats
-        List<Boat> spawnedBoats = GameManager.Instance.spawnedBoats.ToList();
+        List<Boat> spawnedBoats = CityManager.Instance.spawnedBoats.ToList();
         int boatsCount = spawnedBoats.Count;
         spawnedBoatIds = new int[boatsCount];
         spawnedBoatsAreUnderConstruction = new bool[boatsCount];
@@ -133,7 +133,7 @@ public class SaveData
         }
 
         // Residents
-        residentsCount = GameManager.Instance.residents.Count;
+        residentsCount = CityManager.Instance.residents.Count;
         residentsIsMoving = new bool[residentsCount];
         residentPositionsX = new float[residentsCount];
         residentPositionsY = new float[residentsCount];
@@ -148,7 +148,7 @@ public class SaveData
 
         for (int i = 0; i < residentsCount; i++)
         {
-            Creature resident = GameManager.Instance.residents[i];
+            Creature resident = CityManager.Instance.residents[i];
 
             residentsIsMoving[i] = resident.isMoving;
 
@@ -161,7 +161,7 @@ public class SaveData
             if (currentBuilding) {
                 TowerBuilding towerBuilding = (TowerBuilding)currentBuilding;
                 if (towerBuilding)
-                    residentCurrentBuildingIndexes[i] = towerBuilding.floorIndex * GameManager.roomsCountPerFloor + towerBuilding.placeIndex;
+                    residentCurrentBuildingIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
                 else
                     residentCurrentBuildingIndexes[i] = -1;
             }
@@ -172,7 +172,7 @@ public class SaveData
             if (targetBuilding) {
                 TowerBuilding towerBuilding = (TowerBuilding)targetBuilding;
                 if (towerBuilding)
-                    residentTargetBuildingIndexes[i] = towerBuilding.floorIndex * GameManager.roomsCountPerFloor + towerBuilding.placeIndex;
+                    residentTargetBuildingIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
                 else
                     residentTargetBuildingIndexes[i] = -1;
             }
@@ -183,7 +183,7 @@ public class SaveData
             if (workBuilding) {
                 TowerBuilding towerBuilding = (TowerBuilding)workBuilding;
                 if (towerBuilding)
-                    residentWorkBuildingIndexes[i] = towerBuilding.floorIndex * GameManager.roomsCountPerFloor + towerBuilding.placeIndex;
+                    residentWorkBuildingIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
                 else
                     residentWorkBuildingIndexes[i] = -1;
             }

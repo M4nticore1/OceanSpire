@@ -14,7 +14,7 @@ public class FloorBuilding : TowerBuilding
 
         floorBuildingPlace.InitializeBuildingPlace(floorIndex + 1);
         hallBuildingPlace.InitializeBuildingPlace(floorIndex);
-        for (int i = 0; i < GameManager.roomsCountPerFloor; i++)
+        for (int i = 0; i < CityManager.roomsCountPerFloor; i++)
             roomBuildingPlaces[i].InitializeBuildingPlace(floorIndex);
     }
 
@@ -47,7 +47,7 @@ public class FloorBuilding : TowerBuilding
                     {
                         for (int j = 1; j <= buildingData.BuildingFloors; j++)
                         {
-                            BuildingPlace currentBuildingPlace = GameManager.Instance.builtFloors[floorIndex - j].roomBuildingPlaces[i];
+                            BuildingPlace currentBuildingPlace = CityManager.Instance.builtFloors[floorIndex - j].roomBuildingPlaces[i];
 
                             if (currentBuildingPlace.emptyBuildingPlacesAbove == buildingData.BuildingFloors - 1)
                             {
@@ -60,7 +60,7 @@ public class FloorBuilding : TowerBuilding
         }
         else if (buildingData.BuildingType == BuildingType.Hall)
         {
-            if (!hallBuildingPlace.placedBuilding && GameManager.Instance.currentRoomsNumberOnFloor[floorIndex] == 0)
+            if (!hallBuildingPlace.placedBuilding && CityManager.Instance.currentRoomsNumberOnFloor[floorIndex] == 0)
             {
                 if(hallBuildingPlace.emptyBuildingPlacesAbove >= buildingHeight - 1)
                     hasPlaceAbove = true;
