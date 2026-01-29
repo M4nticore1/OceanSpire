@@ -3,12 +3,8 @@ using UnityEngine;
 [AddComponentMenu("Buildings/RoomBuilding")]
 public class RoomBuilding : TowerBuilding
 {
-    //protected BuildingPosition buildingPosition = BuildingPosition.Straight;
-
     public override void BuildConstruction(int levelIndex)
     {
-        //RoomLevelData roomLevelData = buildingLevelsData[levelIndex] as RoomLevelData;
-
         if (LevelData is RoomLevelData roomLevelData)
         {
             if (constructionComponent.isUnderConstruction)

@@ -7,9 +7,6 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    // Main
-    [SerializeField] private PlayerUIManager uiManager = null;
-
     // Camera Movement
     [SerializeField] private Camera mainCamera = null;
     [SerializeField] private GameObject cameraHolder = null;
@@ -57,8 +54,10 @@ public class PlayerController : MonoBehaviour
     private float currentCameraDistance = 0.0f;
 
     private const int cameraMovingDistance = 24;
-    private const int cameraDistanceToShowBuildingStats = 15;
     private const int cameraHeightOffsetToShowBuildingStats = 0;
+    private const int cameraDistanceToShowBuildingStats = 30;
+    private bool isCameraEnteredBuildingStatsDistance = false;
+    private Building buildingToShowStats = null;
 
     private float currentCameraZoomVelocity = 0f;
     private const float cameraZoomIntensity = 6f;
@@ -110,18 +109,14 @@ public class PlayerController : MonoBehaviour
     private const float touchPitchSensitivity = 0.1f;
     private const float pitchStopSpeed = 25.0f;
 
-    public ISelectable selectedObject = null;
-
     // Raycast
     private EventSystem eventSystem = null;
-    private GraphicRaycaster graphicRaycaster = null;
     [SerializeField] private LayerMask clickableLayers;
 
     public bool isInitialized { get; private set; } = false;
 
     public void Initialize()
     {
-        graphicRaycaster = uiManager.GetComponent<GraphicRaycaster>();
         SetInputSystem();
     }
 
@@ -231,22 +226,23 @@ public class PlayerController : MonoBehaviour
             mainCamera.transform.localPosition = new Vector3(localPosition.x, localPosition.y, -currentCameraArmLength);
             mainCamera.transform.localRotation = Quaternion.Euler(currentCameraShakeRotation);
 
-            int placeIndex;
-            if (moveStateIndex <= 5)
-                placeIndex = (5 - moveStateIndex) % 6;
-            else
-                placeIndex = 13 - moveStateIndex;
+            // Stats Menu
+            RaycastHit hit;
+            Vector3 direction = new Vector3(mainCamera.transform.forward.x, 0, mainCamera.transform.forward.z).normalized;
+            if (Physics.Raycast(mainCamera.transform.position, direction, out hit, cameraDistanceToShowBuildingStats)) {
+                Building building = hit.transform.parent?.GetComponent<Building>();
+                if (building != buildingToShowStats) {
+                    buildingToShowStats = building;
 
-            Building buildingToShowStats = CityManager.Instance.GetBuildingByIndex(CityManager.GetFloorIndexByHeight(cameraHolder.transform.position.y + cameraHeightOffsetToShowBuildingStats), placeIndex);
-
-            if (currentCameraDistance <= cameraDistanceToShowBuildingStats) {
-                if (buildingToShowStats)
-                    uiManager.OpenBuildingStatsPanel(buildingToShowStats);
-                else
-                    uiManager.CloseBuildingStatsPanel();
+                    EventBus.Instance.InvokeCameraEnteredStatsMenuDistance(buildingToShowStats);
+                    isCameraEnteredBuildingStatsDistance = true;
+                }
             }
-            else
-                uiManager.CloseBuildingStatsPanel();
+            else if (isCameraEnteredBuildingStatsDistance) {
+                EventBus.Instance.InvokeCameraExitedStatsMenuDistance();
+                buildingToShowStats = null;
+                isCameraEnteredBuildingStatsDistance = false;
+            }
         }
     }
 
@@ -421,13 +417,11 @@ public class PlayerController : MonoBehaviour
                 PointerEventData pointerEventData = new PointerEventData(eventSystem);
                 pointerEventData.position = primaryInteractionPosition;
                 List<RaycastResult> results = new List<RaycastResult>();
-                graphicRaycaster.Raycast(pointerEventData, results);
+                PointerUtils.GetCurrentRaycastResults(results);
 
                 if (results.Count == 0) {
                     Ray ray = mainCamera.ScreenPointToRay(primaryInteractionPosition);
-
                     RaycastHit hit;
-
                     if (Physics.Raycast(ray, out hit)) {
                         GameObject hitted = hit.collider.gameObject;
 
@@ -450,44 +444,37 @@ public class PlayerController : MonoBehaviour
                             if (!hittedBuilding && buildingConstruction)
                                 hittedBuilding = buildingConstruction.transform.parent.GetComponent<Building>();
 
-                            ISelectable selected = null;
+                            SelectComponent selected = null;
                             if (hittedBuilding) {
                                 ProductionBuilding hittedProductionBuilding = hittedBuilding.GetComponent<ProductionBuilding>();
 
                                 if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect) {
                                     CollectItems(hittedProductionBuilding.TakeProducedItem());
-                                    Deselect();
                                 }
                                 else {
-                                    selected = hittedBuilding.GetComponent<ISelectable>();
+                                    selected = hittedBuilding.GetComponent<SelectComponent>();
                                 }
                             }
                             else if (hittedResident) {
-                                selected = hittedResident.GetComponent<ISelectable>();
+                                selected = hittedResident.GetComponent<SelectComponent>();
                             }
                             else if (hittedBoat) {
-                                selected = hittedBoat.GetComponent<ISelectable>();
+                                selected = hittedBoat.GetComponent<SelectComponent>();
                             }
                             else if (hittedLootContainer) {
                                 List<ItemInstance> takedItems = hittedLootContainer.TakeItems();
                                 CollectItems(takedItems);
                             }
 
+                            SelectManager.Instance.selectedComponent?.Deselect();
                             if (selected != null) {
-                                if (selected == selectedObject) {
-                                    Deselect();
-                                }
-                                else {
-                                    if (selectedObject != null)
-                                        Deselect();
-                                    Select(selected);
-                                }
-                            }
-                            else {
-                                Deselect();
+                                selected.Select();
                             }
 
                         }
+                    }
+                    else {
+                        SelectManager.Instance.selectedComponent?.Deselect();
                     }
                 }
             }
@@ -544,28 +531,5 @@ public class PlayerController : MonoBehaviour
     private void CollectItems(List<ItemInstance> items)
     {
         CityManager.Instance.AddItems(items);
-    }
-
-    private void Select(ISelectable selectComponent)
-    {
-        selectedObject = selectComponent;
-        selectedObject.Select();
-        uiManager.OpenContextMenu(selectedObject);
-    }
-
-    public void Deselect()
-    {
-        if (selectedObject == null) return;
-
-        selectedObject.Deselect();
-
-        if (!uiManager.isBuildingResourcesMenuOpened) {
-            selectedObject = null;
-
-            uiManager.CloseContextMenu();
-        }
-        else {
-            uiManager.CloseBuildingActionMenu();
-        }
     }
 }

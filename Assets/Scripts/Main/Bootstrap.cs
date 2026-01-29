@@ -4,7 +4,7 @@ public class Bootstrap : MonoBehaviour
 {
     private void Awake()
     {
-        new EventBus();
+        SelectManager selectManager = SelectManager.Instance;
         new SaveManager();
         new LocalizationManager();
 

@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.25518987, g: 0.44962013, b: 0.64, a: 1}
+  m_Color: {r: 0.31764707, g: 0.56078434, b: 0.8, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -167,28 +167,28 @@ MonoBehaviour:
   targetGraphic: {fileID: 5101683762470963106}
   contentGraphic: {fileID: 8377490230881606536}
   scaleRoot: {fileID: 5856474467311547503}
-  isEnabled: 1
   isInteractable: 1
   isSelectable: 0
   isScalable: 1
   deselectOnOutsideClick: 1
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
+  state: 0
   idleState:
     bodyColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
-    bodyColorHolder: {fileID: 11400000, guid: 56cd69bc136b11243b7894fac81889bf, type: 2}
+    bodyColorHolder: {fileID: 11400000, guid: 5967c4bf9493ca347a1811119eb1de4c, type: 2}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
     bodyColor: {r: 1, g: 1, b: 1, a: 1}
-    bodyColorHolder: {fileID: 11400000, guid: 5967c4bf9493ca347a1811119eb1de4c, type: 2}
+    bodyColorHolder: {fileID: 11400000, guid: ba7b88810f001fc4aa42ef698e40de3a, type: 2}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
     bodyColor: {r: 0.75, g: 0.75, b: 0.75, a: 0.75}
-    bodyColorHolder: {fileID: 11400000, guid: ba7b88810f001fc4aa42ef698e40de3a, type: 2}
+    bodyColorHolder: {fileID: 11400000, guid: 53aa7d3af1e190f47a958fe16c126f6d, type: 2}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.98

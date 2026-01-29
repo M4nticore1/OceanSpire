@@ -77,19 +77,11 @@ public class CityManager : MonoBehaviour
     [Header("Boats")]
     public List<Boat> spawnedBoats { get; private set; } = new List<Boat>();
 
-    public static event Action OnConstructionStartPlaced;
-    public static event Action OnConstructionPlaced;
-    public static event Action OnConstructionDestroyed;
-    public static event Action<ItemInstance> OnLootAdded;
-    public static event Action OnStorageCapacityUpdated;
-    public event Action OnResidentsAdded;
-    public event Action<Creature> OnResidentAdded;
-    public event Action<Creature> OnResidentRemoved;
-
     public List<List<Building>> allPaths = new List<List<Building>>();
     public List<BuildingPath> allPaths2 = new List<BuildingPath>();
 
     public Coroutine bakeNavMeshCoroutine { get; private set; } = null;
+    private bool isNavMeshBuilt = false;
 
     [Header("NPC")]
     [field: SerializeField] public Transform entitySpawnPosition { get; private set; } = null;
@@ -140,6 +132,7 @@ public class CityManager : MonoBehaviour
     {
         EventBus.Instance.onBuildingPlacePressed += OnBuildingPlacePressed;
         EventBus.Instance.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
+
         PlayerUIManager.OnBuildStopPlacing += HideAllBuildigPlaces;
 
         ConstructionComponent.onAnyConstructionStartConstructing += OnBuildingStartConstructing;
@@ -154,7 +147,9 @@ public class CityManager : MonoBehaviour
 
     private void OnDisable()
     {
+        EventBus.Instance.onBuildingPlacePressed -= OnBuildingPlacePressed;
         EventBus.Instance.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
+
         PlayerUIManager.OnBuildStopPlacing -= HideAllBuildigPlaces;
 
         ConstructionComponent.onAnyConstructionStartConstructing -= OnBuildingStartConstructing;
@@ -182,8 +177,8 @@ public class CityManager : MonoBehaviour
         InitializeItems();
         LoadBuildings(saveData);
         LoadResources(saveData);
-        CreateEntities(saveData);
-        CreateLoads(saveData);
+        LoadCreatures(saveData);
+        CreateBoads(saveData);
         StartCoroutine(LoadCityAsync(saveData));
 
         playerController.Load(saveData);
@@ -202,8 +197,8 @@ public class CityManager : MonoBehaviour
         InitializeItems();
         LoadBuildings(data);
         LoadResources(data);
-        CreateEntities(data);
-        CreateLoads(data);
+        LoadCreatures(data);
+        CreateBoads(data);
         LoadCityAsync(data);
     }
 
@@ -301,7 +296,7 @@ public class CityManager : MonoBehaviour
             Debug.LogError("The count of builtFloors is 0");
     }
 
-    private void CreateEntities(SaveData data)
+    private void LoadCreatures(SaveData data)
     {
         Vector3 position = Vector3.zero;
         Quaternion rotation = Quaternion.identity;
@@ -310,29 +305,7 @@ public class CityManager : MonoBehaviour
             for (int i = 0; i < data.residentsCount; i++) {
                 position = new Vector3(data.residentPositionsX[i], data.residentPositionsY[i], data.residentPositionsZ[i]);
                 rotation = Quaternion.identity;
-                CreateResident(position, rotation);
-            }
-        }
-        else {
-            position = entitySpawnPosition.position;
-            rotation = entitySpawnPosition.rotation;
-            for (int i = 0; i < startResidentsCount; i++) {
-                float x = UnityEngine.Random.Range(position.x - maxSpawnRange, position.x + maxSpawnRange);
-                float y = position.y;
-                float z = UnityEngine.Random.Range(position.z - maxSpawnRange, position.z + maxSpawnRange);
-                Vector3 finalPosition = new Vector3(x, y, z);
-                CreateResident(finalPosition, rotation);
-            }
-        }
-
-        OnResidentsAdded?.Invoke();
-    }
-
-    private void LoadEntities(SaveData data)
-    {
-        if (data != null) {
-            for (int i = 0; i < residents.Count; i++) {
-                Creature resident = residents[i];
+                Creature resident = CreateResident(position, rotation);
 
                 // Set Current Building
                 if (data.residentCurrentBuildingIndexes != null && data.residentCurrentBuildingIndexes.Length > i && data.residentCurrentBuildingIndexes[i] >= 0) {
@@ -355,15 +328,19 @@ public class CityManager : MonoBehaviour
             }
         }
         else {
-            for (int i = 0; i < residents.Count; i++) {
-                Creature resident = residents[i];
-
-                resident.navMeshAgent.enabled = true;
+            position = entitySpawnPosition.position;
+            rotation = entitySpawnPosition.rotation;
+            for (int i = 0; i < startResidentsCount; i++) {
+                float x = UnityEngine.Random.Range(position.x - maxSpawnRange, position.x + maxSpawnRange);
+                float y = position.y;
+                float z = UnityEngine.Random.Range(position.z - maxSpawnRange, position.z + maxSpawnRange);
+                Vector3 finalPosition = new Vector3(x, y, z);
+                CreateResident(finalPosition, rotation);
             }
         }
     }
 
-    private void CreateLoads(SaveData data)
+    private void CreateBoads(SaveData data)
     {
         if (data != null) {
             if (data.spawnedBoatIds != null) {
@@ -427,31 +404,35 @@ public class CityManager : MonoBehaviour
             yield return null;
         }
 
-        LoadEntities(data);
+        isNavMeshBuilt = true;
+
+        foreach (var resident in residents) {
+            resident.navMeshAgent.enabled = true;
+        }
     }
 
-    private void CreateResident(Vector3 spawnPosition, Quaternion spawnRotation)
+    private Creature CreateResident(Vector3 spawnPosition, Quaternion spawnRotation)
     {
         Creature resident = Instantiate(creaturesList.resident, spawnPosition, spawnRotation);
         resident.Initialize();
         AddResident(resident);
-        resident.navMeshAgent.enabled = false;
+        if (!isNavMeshBuilt)
+            resident.navMeshAgent.enabled = false;
+        return resident;
     }
 
     private void AddResident(Creature resident)
     {
         residents.Add(resident);
         unemployedResidentsCount++;
-
-        OnResidentAdded?.Invoke(resident);
+        EventBus.Instance.InvokeResidentAdded(resident);
     }
 
     private void RemoveResident(Creature resident)
     {
-        OnResidentRemoved?.Invoke(resident);
-        //residents.Remove(residents[]);
-        Creature.Destroy(resident);
+        Destroy(resident);
         unemployedResidentsCount++;
+        EventBus.Instance.InvokeResidentRemoved(resident);
     }
 
     public void AddWorker()
@@ -625,7 +606,7 @@ public class CityManager : MonoBehaviour
             UpdateEmptyBuildingPlacesCount();
             HideAllBuildigPlaces();
 
-            OnConstructionPlaced?.Invoke();
+            EventBus.Instance.InvokeConstructionPlaced();
         }
 
         BakeNavMeshSurface();
@@ -851,7 +832,7 @@ public class CityManager : MonoBehaviour
         }
 
         if (isNeededToUpdate)
-            OnStorageCapacityUpdated?.Invoke();
+            EventBus.Instance.InvokeStorageCapacityUpdated();
     }
 
     public int AddItem(ItemInstance item)
@@ -876,7 +857,7 @@ public class CityManager : MonoBehaviour
     {
         ItemInstance item = items[itemId];
         item.AddAmount(amount, totalStorageCapacity[itemId]);
-        OnLootAdded?.Invoke(item);
+        EventBus.Instance.InvokeLootAdded(item);
         return item.Amount;
     }
 

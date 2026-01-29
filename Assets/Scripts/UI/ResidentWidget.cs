@@ -1,7 +1,5 @@
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public enum ResidentWidgetState
@@ -16,7 +14,6 @@ public class ResidentWidget : MonoBehaviour
 {
     [HideInInspector] public Creature resident = null;
     [HideInInspector] public Building selectedBuilding = null;
-    private PlayerUIManager uiManager = null;
 
     public int widgetIndex = 0;
     private ResidentWidgetState residentWidgetState = ResidentWidgetState.NonSelectedWorker;
@@ -25,9 +22,6 @@ public class ResidentWidget : MonoBehaviour
     [SerializeField] private GameObject nonSelectedResidentMenu = null;
     [SerializeField] private TextMeshProUGUI residentNameText = null;
     [SerializeField] private Button residentWidgetButton = null;
-
-    //public static event Action OnWorkerAdd;
-    //public static event Action OnWorkerRemove;
 
     private void OnEnable()
     {
@@ -39,36 +33,15 @@ public class ResidentWidget : MonoBehaviour
         residentWidgetButton.onClick.RemoveAllListeners();
     }
 
-    public void InitializeResidentWidget(Creature resident, Building selectedBuilding, PlayerUIManager uiManager)
+    public void InitializeResidentWidget(Creature resident, Building selectedBuilding)
     {
         this.resident = resident;
         this.selectedBuilding = selectedBuilding;
-        this.uiManager = uiManager;
-        //this.widgetIndex = widgetIndex;
 
-        if (resident)
-        {
+        if (resident) {
             ShowResidentMenu();
-
-            //if (resident.isWorker && resident.workBuilding == selectedBuilding)
-            //{
-            //    residentWidgetState = ResidentWidgetState.SelectedBuildingWorker;
-            //    ShowResidentMenu();
-            //}
-            //else if(resident.isWorker && resident.workBuilding != selectedBuilding)
-            //{
-            //    residentWidgetState = ResidentWidgetState.Worker;
-            //    ShowResidentMenu();
-            //}
-            //else
-            //{
-            //    residentWidgetState = ResidentWidgetState.UnemployedResident;
-            //    ShowResidentMenu();
-            //}
         }
-        else
-        {
-            //residentWidgetState = ResidentWidgetState.NonSelectedWorker;
+        else  {
             HideResidentMenu();
         }
     }
@@ -111,7 +84,6 @@ public class ResidentWidget : MonoBehaviour
                 resident.DecideAction();
             }
         }
-
-        uiManager.SelectBuildingWorker(this);
+        EventBus.Instance.InvokeResidentWidgetClicked(this);
     }
 }

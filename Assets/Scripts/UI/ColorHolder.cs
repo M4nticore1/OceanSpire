@@ -14,7 +14,7 @@ public class ColorHolder : ScriptableObject
 
     private void UpdateCustomSelectableColor()
     {
-        CustomSelectable[] selectables = FindObjectsByType<CustomSelectable>(FindObjectsSortMode.None);
+        CustomButton[] selectables = FindObjectsByType<CustomButton>(FindObjectsSortMode.None);
         foreach (var selectable in selectables) {
             selectable.UpdateCurrentColorHolder();
         }

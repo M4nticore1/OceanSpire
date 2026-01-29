@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [AddComponentMenu("BuildingComponents/ProductionBuilding")]
-public class ProductionBuilding : BuildingComponent
+public class ProductionBuilding : BuildingModule
 {
     public ProductionBuildingLevelData[] ProductionLevelsData => levelsData.OfType<ProductionBuildingLevelData>().ToArray();
     public ProductionBuildingLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];

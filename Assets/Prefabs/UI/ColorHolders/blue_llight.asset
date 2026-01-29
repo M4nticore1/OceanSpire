@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dc06abecbe086e47979b40330ffdfec, type: 3}
   m_Name: blue_llight
   m_EditorClassIdentifier: Assembly-CSharp::UIColor
-  color: {r: 0.4, g: 0.7019608, b: 1, a: 1}
+  color: {r: 0.35898876, g: 0.6320225, b: 0.9, a: 1}

@@ -600,9 +600,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 325414fd39671a6468089e7c89d80820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
+  canvas: {fileID: 0}
+  closeMethod: 1
   slideTransitionSpeed: 10
-  openedPositionAlpha: {x: 0, y: 0.5}
-  closedPositionAlpha: {x: 0, y: 0}
+  openedScreenPositionAlpha: {x: 0, y: 0.5}
+  closedScreenPositionAlpha: {x: 0, y: 0}
+  openedPanelPositionAlpha: {x: 0, y: 0.5}
+  closedPanelPositionAlpha: {x: 0, y: 0}
   background: {fileID: 2482005412573723531}
   openedBackgroundAlpha: 0.9
   alphaTransitionSpeed: 10

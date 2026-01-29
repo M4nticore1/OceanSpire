@@ -6,9 +6,9 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private RectTransform managementSaveMenu;
     [SerializeField] private SlidePanel createWorldMenuSlidePanel = null;
     [SerializeField] private TMP_InputField nameWorldInputField = null;
-    [SerializeField] private CustomSelectable createWorldButton = null;
-    [SerializeField] private CustomSelectable loadSaveButton = null;
-    [SerializeField] private CustomSelectable deleteSaveButton = null;
+    [SerializeField] private CustomButton createWorldButton = null;
+    [SerializeField] private CustomButton loadSaveButton = null;
+    [SerializeField] private CustomButton deleteSaveButton = null;
     [SerializeField] private TextMeshProUGUI worldNameAlreadyExistsTextBlock = null;
     [SerializeField] private SaveSlotWidget[] saveSlots = { };
 
@@ -60,7 +60,8 @@ public class MainMenuManager : MonoBehaviour
     private void OnDeleteWorldButtonClicked()
     {
         string worldName = selectedWorldSaveSlot.worldSaveData.worldName;
-        SaveSystem.RemoveSave(worldName);
+        SaveSystem.RemoveSaveByWorldName(worldName);
+        SaveManager.Instance.FindSavesData();
         selectedWorldSaveSlot.Button.SetState(CustomSelectableState.Idle);
         selectedWorldSaveSlot.RemoveSaveData();
     }

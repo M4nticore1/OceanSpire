@@ -6,7 +6,7 @@ public abstract class Building : MonoBehaviour, ILevelable, ISelectable
 {
     public ConstructionComponent constructionComponent { get; protected set; } = null;
     //public SelectComponent selectComponent { get; protected set; } = null;
-    public StorageBuildingComponent storageComponent { get; protected set; } = null;
+    public StorageBuildingModule storageComponent { get; protected set; } = null;
     public ProductionBuilding productionComponent { get; protected set; } = null;
 
     public bool isInitialized { get; protected set; } = false;
@@ -42,7 +42,7 @@ public abstract class Building : MonoBehaviour, ILevelable, ISelectable
     protected virtual void Awake()
     {
         constructionComponent = GetComponent<ConstructionComponent>();
-        storageComponent = GetComponent<StorageBuildingComponent>();
+        storageComponent = GetComponent<StorageBuildingModule>();
         productionComponent = GetComponent<ProductionBuilding>();
     }
 
@@ -69,7 +69,7 @@ public abstract class Building : MonoBehaviour, ILevelable, ISelectable
     public virtual void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
         constructionComponent = GetComponent<ConstructionComponent>();
-        storageComponent = GetComponent<StorageBuildingComponent>();
+        storageComponent = GetComponent<StorageBuildingModule>();
         productionComponent = GetComponent<ProductionBuilding>();
 
         this.buildingPlace = buildingPlace;

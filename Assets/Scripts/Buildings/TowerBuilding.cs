@@ -37,10 +37,10 @@ public class TowerBuilding : Building
     public int floorIndex => buildingPlace ? buildingPlace.floorIndex : 0;
     public int placeIndex => buildingPlace ? buildingPlace.BuildingPlaceIndex : 0;
 
-    public TowerBuilding leftNeighborBuilding = null;
-    public TowerBuilding rightNeighborBuilding = null;
-    public TowerBuilding upNeighborBuilding = null;
-    public TowerBuilding downNeighborBuilding = null;
+    public TowerBuilding leftNeighborBuilding { get; private set; } = null;
+    public TowerBuilding rightNeighborBuilding { get; private set; } = null;
+    public TowerBuilding upNeighborBuilding { get; private set; } = null;
+    public TowerBuilding downNeighborBuilding { get; private set; } = null;
 
     public TowerBuilding leftConnectedBuilding => CheckConnectionPossibility(leftNeighborBuilding, ConnectionType.Horizontal);
     public TowerBuilding rightConnectedBuilding => CheckConnectionPossibility(rightNeighborBuilding, ConnectionType.Horizontal);
@@ -65,7 +65,7 @@ public class TowerBuilding : Building
     public override void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
         constructionComponent = GetComponent<ConstructionComponent>();
-        storageComponent = GetComponent<StorageBuildingComponent>();
+        storageComponent = GetComponent<StorageBuildingModule>();
         productionComponent = GetComponent<ProductionBuilding>();
 
         this.buildingPlace = buildingPlace;

@@ -14,8 +14,8 @@ public class SaveSlotWidget : MonoBehaviour
 {
     public SaveData worldSaveData { get; private set; } = null;
     [SerializeField] private int slotIndex = 0;
-    [SerializeField] private CustomSelectable button;
-    public CustomSelectable Button => button;
+    [SerializeField] private CustomButton button;
+    public CustomButton Button => button;
     [SerializeField] private GameObject createWorldMenu;
     [SerializeField] private GameObject loadWorldMenu;
     [SerializeField] private TextMeshProUGUI worldNameText;

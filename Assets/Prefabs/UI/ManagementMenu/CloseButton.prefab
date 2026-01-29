@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7804947061151522760
 CanvasRenderer:
@@ -92,13 +92,13 @@ MonoBehaviour:
   targetGraphic: {fileID: 1256239440805894270}
   contentGraphic: {fileID: 0}
   scaleRoot: {fileID: 3425990940567372585}
-  isEnabled: 1
   isInteractable: 1
   isSelectable: 0
   isScalable: 1
   deselectOnOutsideClick: 0
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
+  state: 0
   idleState:
     bodyColor: {r: 0.9019608, g: 0.3156863, b: 0.3156863, a: 1}
     bodyColorHolder: {fileID: 0}

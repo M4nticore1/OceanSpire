@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("Buildings/ElevatorBuilding")]
+[AddComponentMenu("Buildings/Elevator Building")]
 public class ElevatorBuilding : RoomBuilding
 {
     public ElevatorPlatformConstruction spawnedElevatorCabin { get; private set; } = null;
-    public int elevatorGroupId = 0;
+    public int elevatorGroupId { get; private set; } = 0;
 
     public List<Creature> elevatorWaitingPassengers { get; private set; } = new List<Creature>();
     //public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();

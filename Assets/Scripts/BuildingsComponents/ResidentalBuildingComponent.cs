@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [AddComponentMenu("BuildingComponents/ResidentalBuildingComponent")]
-public class ResidentalBuildingComponent : BuildingComponent
+public class ResidentalBuildingComponent : BuildingModule
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

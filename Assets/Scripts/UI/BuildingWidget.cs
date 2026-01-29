@@ -12,8 +12,8 @@ public class BuildingWidget : MonoBehaviour
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
 
     [SerializeField] private Image buildingImage = null;
-    [SerializeField] private CustomSelectable buildButton = null;
-    [SerializeField] private CustomSelectable informationButton = null;
+    [SerializeField] private CustomButton buildButton = null;
+    [SerializeField] private CustomButton informationButton = null;
 
     [SerializeField] private TextMeshProUGUI buildingNameText = null;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup = null;

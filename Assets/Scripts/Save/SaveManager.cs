@@ -22,7 +22,7 @@ public class SaveManager
         FindSavesData();
     }
 
-    private void FindSavesData()
+    public void FindSavesData()
     {
         allSaveData = SaveSystem.GetAllSaveData();
     }

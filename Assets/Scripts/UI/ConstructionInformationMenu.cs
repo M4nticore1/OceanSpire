@@ -45,7 +45,7 @@ public class ConstructionInformationMenu : MonoBehaviour
         //buildingInformationMenuDescriptionText.SetText(building.BuildingData.description);
 
         ProductionBuilding productionBuilding = building.GetComponent<ProductionBuilding>();
-        StorageBuildingComponent storageBuilding = building.GetComponent<StorageBuildingComponent>();
+        StorageBuildingModule storageBuilding = building.GetComponent<StorageBuildingModule>();
 
         int maxResidentsCount = building.LevelData.maxResidentsCount;
         if (maxResidentsCount > 0)

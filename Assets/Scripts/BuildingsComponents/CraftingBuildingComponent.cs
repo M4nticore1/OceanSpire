@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CraftingBuildingComponent : BuildingComponent
+public class CraftingBuildingComponent : BuildingModule
 {
 
 }

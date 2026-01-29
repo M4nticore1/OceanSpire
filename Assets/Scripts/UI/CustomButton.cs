@@ -3,21 +3,6 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using NUnit.Framework.Constraints;
-using NUnit.Framework;
-using Newtonsoft.Json.Bson;
-using UnityEngine.Serialization;
-using System.Collections;
-
-
-
-
-
-
-#if UNITY_EDITOR
-using UnityEditor;
-using UnityEditor.UI;
-#endif
 
 public enum CustomSelectableState
 {
@@ -39,7 +24,7 @@ public class CustomSelectableStateEntry
 }
 
 [RequireComponent(typeof(Image))]
-public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitHandler/*, IInputListenable*/
+public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandler/*, IInputListenable*/
 {
     [SerializeField] public Graphic targetGraphic;
     [SerializeField] public Graphic contentGraphic = null;
@@ -51,7 +36,7 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     public bool IsSelectable { get { return isSelectable; } set { isSelectable = value; } }
     [SerializeField] private bool isScalable = false;
     public bool IsScalable { get { return isScalable; } set { isScalable = value; } }
-    [SerializeField] private bool deselectOnOutsideClick = true;
+    [SerializeField] private bool deselectOnOutsideClick = false;
 
     [SerializeField] private int selectableGroupIndex = -1;
     [SerializeField] private float stateTransitionTime = 0.3f;
@@ -107,13 +92,15 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     public Color CurrentContentColor { get { return targetGraphic ? targetGraphic.color : Color.black; } set { if (targetGraphic) targetGraphic.color = value; } }
     public Vector3 CurrentScale { get { return scaleRoot ? scaleRoot.localScale : Vector3.one; } set { if (scaleRoot) scaleRoot.localScale = value; } }
 
+    private Vector3 pressedButtonPosition;
+
     public event Action onPressed;
     public event Action onReleased;
     public event Action onSelected;
     public event Action onDeselected;
     public event Action onHovered;
     public event Action onUnhovered;
-    public static event Action<CustomSelectable> onStateChanged;
+    public static event Action<CustomButton> onStateChanged;
 
     protected override void Awake()
     {
@@ -132,7 +119,7 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
         InputListener.Instance.onReleased += OnRelease;
         onStateChanged += OnStateChanged;
 
-        if (!IsSelectable || deselectOnOutsideClick)
+        if (IsEnabled && (!IsSelectable || deselectOnOutsideClick))
             SetState(CustomSelectableState.Idle);
         SetStateTransitionAlpha(1f);
     }
@@ -152,6 +139,10 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     {
         if (isAnimating) {
             ApplyInteractionAlpha();
+        }
+
+        if (IsPressed && pressedButtonPosition != transform.position) {
+            SetState(CustomSelectableState.Idle);
         }
     }
 
@@ -247,6 +238,7 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
     {
         ApplyBodyTargetColor();
         ApplyContentTargetColor();
+        pressedButtonPosition = transform.position;
         onPressed?.Invoke();
     }
 
@@ -266,7 +258,7 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
         }
         else if (!IsIdle) {
             GameObject go = PointerUtils.GetCurrentRaycastResult().gameObject;
-            CustomSelectable selectable = go ? go.GetComponent<CustomSelectable>() : null;
+            CustomButton selectable = go ? go.GetComponent<CustomButton>() : null;
             if (selectable && (selectable.selectableGroupIndex == selectableGroupIndex || selectableGroupIndex < 0) && !deselectOnOutsideClick)
                 SetState(CustomSelectableState.Idle);
             else if (deselectOnOutsideClick && !selectable)
@@ -351,7 +343,7 @@ public class CustomSelectable : UIBehaviour, IPointerEnterHandler, IPointerExitH
         onStateChanged?.Invoke(this);
     }
 
-    private void OnStateChanged(CustomSelectable selectable)
+    private void OnStateChanged(CustomButton selectable)
     {
         if (selectable == this) return;
         if (selectable.selectableGroupIndex != selectableGroupIndex) return;

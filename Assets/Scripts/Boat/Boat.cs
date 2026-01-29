@@ -159,7 +159,7 @@ public class Boat : MonoBehaviour, IDamageable, ISelectable
                     if (currentWeight > 0)
                     {
                         currentWeightToUnload += BoatData.unloadLootSpeed * Time.deltaTime;
-                        StorageBuildingComponent storageComponent = ownedPier.storageComponent;
+                        StorageBuildingModule storageComponent = ownedPier.storageComponent;
                         StorageBuildingLevelData storageLevelData = storageComponent.StorageLevelData;
                         ItemInstance loot = storedLoot[0];
                         int lootId = loot.ItemData.ItemId;

@@ -6,15 +6,29 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public enum CloseMethod
+{
+    None,
+    Click,
+    OnePointClick
+}
+
 public class SlidePanel : MonoBehaviour, IInputListenable
 {
     [SerializeField] private Canvas canvas;
     private RectTransform rectTransform;
 
     [Header("Slide")]
-    [SerializeField] private float slideTransitionSpeed = 1f;
-    [SerializeField] private Vector2 openedPositionAlpha = new Vector2(0.5f, 0.5f);
-    [SerializeField] private Vector2 closedPositionAlpha = new Vector2(0.5f, 0.0f);
+    [SerializeField] private CloseMethod closeMethod = CloseMethod.Click;
+    [SerializeField] private float slideTransitionSpeed = 10f;
+
+    [Header("Screen Position")]
+    [SerializeField] private Vector2 openedScreenPositionAlpha = new Vector2(0f, 0.5f);
+    [SerializeField] private Vector2 closedScreenPositionAlpha = new Vector2(0f, 0.0f);
+
+    [Header("Panel Position")]
+    [SerializeField] private Vector2 openedPanelPositionAlpha = new Vector2(0f, 0.5f);
+    [SerializeField] private Vector2 closedPanelPositionAlpha = new Vector2(0f, 0.0f);
 
     [Header("Background")]
     [SerializeField] Image background;
@@ -22,14 +36,16 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     [SerializeField] float alphaTransitionSpeed = 10f;
 
     [Header("Buttons")]
-    [SerializeField] private CustomSelectable openButton;
-    [SerializeField] private CustomSelectable closeButton;
+    [SerializeField] private CustomButton openButton;
+    [SerializeField] private CustomButton closeButton;
 
     private bool isOpened = false;
     private bool isMoving = false;
     private List<Transform> content = new List<Transform>();
     private Vector2 targetPosition = new Vector3();
 
+    private Vector2 pressPossition;
+    private Vector2 releasePossition;
     private int openedFrame = 0;
     public event Action onOpened;
     public event Action onClosed;
@@ -81,13 +97,18 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
     public void OnPress()
     {
-
+        pressPossition = PointerUtils.GetCurrentInputPosition();
     }
 
     public void OnRelease()
     {
         if (!isOpened) return;
         if (Time.frameCount == openedFrame) return;
+
+        // Close Method
+        if (closeMethod == CloseMethod.None) return;
+        releasePossition = PointerUtils.GetCurrentInputPosition();
+        if (closeMethod == CloseMethod.OnePointClick && releasePossition != pressPossition) return;
 
         TryToClose();
     }
@@ -112,11 +133,14 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
     public void OpenSlidePanel()
     {
-        ApplyTagetPositionByAlpha(openedPositionAlpha);
+        ApplyTagetPositionByAlpha(openedScreenPositionAlpha, openedPanelPositionAlpha);
 
         openedFrame = Time.frameCount;
-        background.raycastTarget = true;
-        content.Add(background.transform);
+
+        if (background) {
+            background.raycastTarget = true;
+            content.Add(background.transform);
+        }
 
         isOpened = true;
         isMoving = true;
@@ -125,8 +149,12 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
     public void CloseSlidePanel()
     {
-        ApplyTagetPositionByAlpha(closedPositionAlpha);
-        background.raycastTarget = false;
+        ApplyTagetPositionByAlpha(closedScreenPositionAlpha, closedPanelPositionAlpha);
+
+        if (background) {
+            background.raycastTarget = false;
+        }
+
         isOpened = false;
         isMoving = true;
         onClosed?.Invoke();
@@ -149,7 +177,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         background.color = color;
     }
 
-    public void SetOpenButton(CustomSelectable button)
+    public void SetOpenButton(CustomButton button)
     {
         if (openButton) {
             content.Remove(openButton.transform);
@@ -158,7 +186,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         content.Add(openButton.transform);
     }
 
-    public void SetCloseButton(CustomSelectable button)
+    public void SetCloseButton(CustomButton button)
     {
         if (closeButton) {
             content.Remove(closeButton.transform);
@@ -177,15 +205,15 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         return true;
     }
 
-    private void ApplyTagetPositionByAlpha(Vector2 postionAlpha)
+    private void ApplyTagetPositionByAlpha(Vector2 screenPostionAlpha, Vector2 panelPostionAlpha)
     {
         Vector2 resolution = new Vector2(Screen.width, Screen.height) / canvas.scaleFactor;
-        float positionX = math.lerp(0, resolution.x, postionAlpha.x);
-        float positionY = math.lerp(0, resolution.y, postionAlpha.y);
+        float positionX = resolution.x * screenPostionAlpha.x;
+        float positionY = resolution.y * screenPostionAlpha.y;
 
         Vector2 size = rectTransform.rect.size;
-        float sizeCorrectionX = size.x * (0.5f - Mathf.Abs(postionAlpha.x - 0.5f));
-        float sizeCorrectionY = size.y * (0.5f - Mathf.Abs(postionAlpha.y - 0.5f));
+        float sizeCorrectionX = size.x * panelPostionAlpha.x;
+        float sizeCorrectionY = size.y * panelPostionAlpha.y;
 
         targetPosition = new Vector2(positionX, positionY) + new Vector2(sizeCorrectionX, sizeCorrectionY);
     }

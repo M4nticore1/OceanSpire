@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[AddComponentMenu("BuildingComponents/StorageBuildingComponent")]
-public class StorageBuildingComponent : BuildingComponent
+[AddComponentMenu("BuildingComponents/Storage Building Component")]
+public class StorageBuildingModule : BuildingModule
 {
     public StorageBuildingLevelData[] StorageLevelsData => levelsData.OfType<StorageBuildingLevelData>().ToArray();
     public StorageBuildingLevelData StorageLevelData => StorageLevelsData[LevelIndex];

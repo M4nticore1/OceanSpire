@@ -1,42 +1,54 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Unity.Mathematics;
+using UnityEngine.EventSystems;
 
-public class ContextMenu : MonoBehaviour
+public class ContextMenu : UIBehaviour
 {
-    private PlayerUIManager uiManager = null;
-
     [Header("Main")]
     [SerializeField] private TextMeshProUGUI nameText = null;
 
     [Header("Custom")]
     [SerializeField] private TextMeshProUGUI healthValueText = null;
     [SerializeField] private TextMeshProUGUI levelNumberText = null;
-    [SerializeField] private Button upgradeButton = null;
-    [SerializeField] private Button demolishButton = null;
-    [SerializeField] private Button workersButton = null;
-    [SerializeField] private Button storageButton = null;
+    [SerializeField] private CustomButton upgradeButton = null;
+    [SerializeField] private CustomButton demolishButton = null;
+    [SerializeField] private CustomButton workersButton = null;
+    [SerializeField] private CustomButton storageButton = null;
 
     [Header("Boat")]
     [SerializeField] private TextMeshProUGUI boatWeightValueText = null;
 
-    private void Awake()
+
+    protected override void OnEnable()
     {
-        uiManager = GetComponentInParent<PlayerUIManager>();
+        base.OnEnable();
+
         if (upgradeButton)
-            upgradeButton.onClick.AddListener(uiManager.OpenUpgradeBuildingMenu);
+            upgradeButton.onReleased += EventBus.Instance.InvokeContextMenuUpgradeButtonClicked;
         if (demolishButton)
-            demolishButton.onClick.AddListener(uiManager.OpenDemolishBuildingMenu);
+            demolishButton.onReleased += EventBus.Instance.InvokeContextMenuDemolishButtonClicked;
         if (workersButton)
-            workersButton.onClick.AddListener(uiManager.OpenBuildingWorkersMenu);
+            workersButton.onReleased += EventBus.Instance.InvokeContextMenuWorkersButtonClicked;
     }
 
-    public void Open(MonoBehaviour objectToShowDetails)
+    protected override void OnDisable()
     {
-        Building building = objectToShowDetails.GetComponent<Building>();
-        Creature entity = objectToShowDetails.GetComponent<Creature>();
-        Boat boat = objectToShowDetails.GetComponent<Boat>();
+        base.OnDisable();
+
+        if (upgradeButton)
+            upgradeButton.onReleased -= EventBus.Instance.InvokeContextMenuUpgradeButtonClicked;
+        if (demolishButton)
+            demolishButton.onReleased -= EventBus.Instance.InvokeContextMenuDemolishButtonClicked;
+        if (workersButton)
+            workersButton.onReleased -= EventBus.Instance.InvokeContextMenuWorkersButtonClicked;
+    }
+
+    public void Open(SelectComponent selectComponent)
+    {
+        Building building = selectComponent.GetComponent<Building>();
+        Creature entity = selectComponent.GetComponent<Creature>();
+        Boat boat = selectComponent.GetComponent<Boat>();
 
         if (building) {
             SetNameText(building.BuildingData.BuildingName);

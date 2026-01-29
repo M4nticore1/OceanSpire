@@ -74,15 +74,18 @@ public class SaveSystem
         return datas.ToArray();
     }
 
-    public static void RemoveSave(string worldName)
+    public static void RemoveSaveByWorldName(string worldName)
     {
-        string path = GetSaveFilePathByName(worldName);
-        if (!File.Exists(path)) {
+        string path = GetSaveFolderPathByName(worldName);
+        if (!Directory.Exists(path)) {
             Debug.Log("Файл сохранения не найден.");
             return;
         }
 
-        File.Delete(path);
+        foreach (var file in Directory.GetFiles(path)) {
+            File.Delete(file);
+        }
+        Directory.Delete(path);
         Debug.Log("Сохранение удалено!");
     }
 

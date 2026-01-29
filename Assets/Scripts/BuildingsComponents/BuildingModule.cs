@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class BuildingComponent : MonoBehaviour
+public abstract class BuildingModule : MonoBehaviour
 {
     private Building ownedBuilding = null;
     public Building OwnedBuilding { get { return ownedBuilding != null ? ownedBuilding : GetComponent<Building>(); } }
