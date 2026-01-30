@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CoalGenerator : ProductionBuilding
+public class CoalGenerator : ProductionBuildingModule
 {
     [Header("Coal Generator")]
     [SerializeField] private ParticleSystem smokePrefab = null;
@@ -10,9 +10,9 @@ public class CoalGenerator : ProductionBuilding
     CoalGenetatorConstruction CoalGenetatorConstruction => (CoalGenetatorConstruction)BuildingConstruction;
     TimerHandle stopProductingTimerHandle = new TimerHandle();
 
-    protected override void BuildComponent()
+    protected override void OnBuildingFinishConstructing()
     {
-        base.BuildComponent();
+        base.OnBuildingFinishConstructing();
         Transform smokeTransform = CoalGenetatorConstruction.SmokeSpawnTransform;
         spawnedSmoke = Instantiate(smokePrefab);
         spawnedSmoke.transform.position = smokeTransform.position;

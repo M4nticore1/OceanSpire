@@ -9,7 +9,7 @@ public abstract class BuildingModule : MonoBehaviour
     [SerializeField] protected BuildingModuleLevelData[] levelsData = { };
     public BuildingModuleLevelData[] LevelsData => levelsData;
     public BuildingModuleLevelData LevelData => levelsData[ownedBuilding.LevelIndex];
-    protected BuildingConstruction BuildingConstruction => ownedBuilding.constructionComponent.SpawnedConstruction;
+    protected BuildingConstruction BuildingConstruction => ownedBuilding.ConstructionComponent.SpawnedConstruction;
 
     protected void Awake()
     {
@@ -18,7 +18,7 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        ownedBuilding.onBuildingFinishConstructing += BuildComponent;
+        ownedBuilding.onBuildingFinishConstructing += OnBuildingFinishConstructing;
         ownedBuilding.onBuildingStartWorking += OnBuildingStartWorking;
         ownedBuilding.onBuildingStopWorking += OnBuildingStopWorking;
         ownedBuilding.onEnterBuilding += OnEnterBuilding;
@@ -37,53 +37,22 @@ public abstract class BuildingModule : MonoBehaviour
         ownedBuilding.onResidentStopWorking -= OnResidentStopWorking;
     }
 
-    public void Initialize()
-    {
+    protected abstract void OnBuildingFinishConstructing();
 
-    }
+    protected abstract void OnBuildingStartWorking();
 
-    protected virtual void BuildComponent()
-    {
+    protected abstract void OnBuildingStopWorking();
 
-    }
+    protected abstract void OnEnterBuilding();
 
-    protected virtual void OnBuildingStartWorking()
-    {
+    protected abstract void OnExitBuilding();
 
-    }
+    protected abstract void OnResidentStartWorking();
 
-    protected virtual void OnBuildingStopWorking()
-    {
+    protected abstract void OnResidentStopWorking();
 
-    }
-
-    protected virtual void OnEnterBuilding()
-    {
-
-    }
-
-    protected virtual void OnExitBuilding()
-    {
-
-    }
-
-    protected virtual void OnResidentStartWorking()
-    {
-
-    }
-
-    protected virtual void OnResidentStopWorking()
-    {
-
-    }
-
-    protected void SetFlickingMultiplier(float multiplier)
+    protected virtual void SetFlickingMultiplier(float multiplier)
     {
         BuildingConstruction.SetFlickingMultiplier(multiplier);
     }
-
-    //public virtual void UpdateLevel(int newLevel)
-    //{
-
-    //}
 }

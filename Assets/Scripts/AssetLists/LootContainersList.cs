@@ -1,7 +1,19 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "LootContainersList", menuName = "GameContent/LootContainersList")]
+[CreateAssetMenu(fileName = "Loot Containers List", menuName = "Game Content/Loot Containers List")]
 public class LootContainersList : ScriptableObject
 {
-    [field: SerializeField] public LootContainer[] lootContainers;
+    private static LootContainersList _instance;
+    public static LootContainersList Instance
+    {
+        get
+        {
+            if (_instance == null) {
+                _instance = Resources.Load<LootContainersList>("Lists/LootContainersList");
+            }
+            return _instance;
+        }
+    }
+
+    [SerializeField] public LootContainer[] lootContainers;
 }

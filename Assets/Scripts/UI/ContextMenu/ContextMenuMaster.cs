@@ -29,9 +29,9 @@ public class ContextMenuMaster : UIBehaviour
         Boat boat = selectedObject.GetComponent<Boat>();
 
         if (building) {
-            if (building.productionComponent)
+            if (building.GetComponent<ProductionBuildingModule>())
                 openedContextMenu = productionContextMenu;
-            else if (building.storageComponent)
+            else if (building.GetComponent<StorageBuildingModule>())
                 openedContextMenu = storageContextMenu;
             else
                 openedContextMenu = buildingContextMenu;

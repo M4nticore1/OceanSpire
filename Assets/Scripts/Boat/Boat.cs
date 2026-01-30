@@ -159,7 +159,7 @@ public class Boat : MonoBehaviour, IDamageable, ISelectable
                     if (currentWeight > 0)
                     {
                         currentWeightToUnload += BoatData.unloadLootSpeed * Time.deltaTime;
-                        StorageBuildingModule storageComponent = ownedPier.storageComponent;
+                        StorageBuildingModule storageComponent = ownedPier.GetComponent<StorageBuildingModule>();
                         StorageBuildingLevelData storageLevelData = storageComponent.StorageLevelData;
                         ItemInstance loot = storedLoot[0];
                         int lootId = loot.ItemData.ItemId;
@@ -168,7 +168,7 @@ public class Boat : MonoBehaviour, IDamageable, ISelectable
 
                         int maxAmountToUnload = (int)(currentWeightToUnload / loot.ItemData.Weight);
                         int minAmountToUnload = math.min(maxAmountToUnload, loot.Amount);
-                        int amountToUnload = math.min(minAmountToUnload, CityManager.Instance.lootList.GetItem(lootId, storageLevelData.storageItems).Amount);
+                        int amountToUnload = math.min(minAmountToUnload, ItemsList.Instance.GetItem(lootId, storageLevelData.storageItems).Amount);
                         int weightToUnload = amountToUnload * loot.ItemData.Weight;
 
                         storedLootDict[lootId].SubtractAmount(amountToUnload);
@@ -441,7 +441,7 @@ public class Boat : MonoBehaviour, IDamageable, ISelectable
 
     private Transform GetOwnedDockTransform()
     {
-        PierConstruction pierConstruction = ownedPier.constructionComponent.SpawnedConstruction.GetComponent<PierConstruction>();
+        PierConstruction pierConstruction = ownedPier.ConstructionComponent.SpawnedConstruction.GetComponent<PierConstruction>();
         return pierConstruction.BoatDockPositions[dockIndex];
     }
 }

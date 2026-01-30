@@ -34,7 +34,7 @@ public class PierBuilding : Building
     {
         base.FinishConstructing();
 
-        PierConstruction pierConstruction = constructionComponent.SpawnedConstruction as PierConstruction;
+        PierConstruction pierConstruction = ConstructionComponent.SpawnedConstruction as PierConstruction;
         if (pierConstruction) {
             int docksCount = pierConstruction.BoatDockPositions.Count;
             for (int i = 0; i < docksCount; i++) {

@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Building : MonoBehaviour, ILevelable, ISelectable
+public class Building : MonoBehaviour, ILevelable, ISelectable
 {
-    public ConstructionComponent constructionComponent { get; protected set; } = null;
+    protected ConstructionComponent constructionComponent = null;
+    public ConstructionComponent ConstructionComponent => constructionComponent ? constructionComponent : GetComponent<ConstructionComponent>();
     //public SelectComponent selectComponent { get; protected set; } = null;
-    public StorageBuildingModule storageComponent { get; protected set; } = null;
-    public ProductionBuilding productionComponent { get; protected set; } = null;
+    //protected StorageBuildingModule storageModule = null;
+    //public StorageBuildingModule StorageModule => storageModule ? storageModule : GetComponent<StorageBuildingModule>();
+    //protected ProductionBuildingModule productionModule = null;
+    //public ProductionBuildingModule ProductionModule => productionModule ? productionModule : GetComponent<ProductionBuildingModule>();
 
-    public bool isInitialized { get; protected set; } = false;
+    public bool isInitialized { get; private set; } = false;
     private int levelIndex = 0;
     public int LevelIndex { get { return levelIndex; } set { levelIndex = value; } }
     private bool isSelected = false;
@@ -42,22 +45,20 @@ public abstract class Building : MonoBehaviour, ILevelable, ISelectable
     protected virtual void Awake()
     {
         constructionComponent = GetComponent<ConstructionComponent>();
-        storageComponent = GetComponent<StorageBuildingModule>();
-        productionComponent = GetComponent<ProductionBuilding>();
     }
 
     protected virtual void OnEnable()
     {
-        //constructionComponent.onBuildingStartConstructing += StartConstructing;
-        //constructionComponent.onBuildingFinishConstructing += FinishConstructing;
-        //constructionComponent.onConstructionDemolished += Demolish;
+        constructionComponent.onBuildingStartConstructing += StartConstructing;
+        constructionComponent.onBuildingFinishConstructing += FinishConstructing;
+        constructionComponent.onConstructionDemolished += Demolish;
     }
 
     protected virtual void OnDisable()
     {
-        //constructionComponent.onBuildingStartConstructing -= StartConstructing;
-        //constructionComponent.onBuildingFinishConstructing -= FinishConstructing;
-        //constructionComponent.onConstructionDemolished -= Demolish;
+        constructionComponent.onBuildingStartConstructing -= StartConstructing;
+        constructionComponent.onBuildingFinishConstructing -= FinishConstructing;
+        constructionComponent.onConstructionDemolished -= Demolish;
     }
 
     protected virtual void Start()
@@ -66,23 +67,22 @@ public abstract class Building : MonoBehaviour, ILevelable, ISelectable
     }
 
     // Constructing
-    public virtual void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
+    public void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
+    {
+        if (isInitialized) return;
+
+        OnInitialize(buildingPlace, isUnderConstruction, levelIndex, interiorIndex = -1);
+        ConstructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
+        isInitialized = true;
+        EventBus.Instance.InvokeBuildingInitialized(this);
+    }
+
+    protected virtual void OnInitialize(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
         constructionComponent = GetComponent<ConstructionComponent>();
-        storageComponent = GetComponent<StorageBuildingModule>();
-        productionComponent = GetComponent<ProductionBuilding>();
 
         this.buildingPlace = buildingPlace;
         this.LevelIndex = levelIndex;
-
-        if (storageComponent)
-            storageComponent.Initialize();
-        if (productionComponent)
-            productionComponent.Initialize();
-
-        constructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
-
-        isInitialized = true;
     }
 
     protected virtual void Place(/*BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex*/)
@@ -93,7 +93,7 @@ public abstract class Building : MonoBehaviour, ILevelable, ISelectable
     protected IEnumerator PlaceCoroutine(bool isUnderConstruction, int levelIndex)
     {
         yield return new WaitForEndOfFrame();
-        constructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
+        ConstructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
     }
 
     protected void StartConstructing()
@@ -193,15 +193,15 @@ public abstract class Building : MonoBehaviour, ILevelable, ISelectable
     //    BuildConstruction(levelIndex);
     //}
 
-    public virtual void BuildConstruction(int levelIndex)
+    protected virtual void BuildConstruction(int levelIndex)
     {
-        constructionComponent.BuildConstruction(buildingLevelsData[levelIndex].ConstructionStraight);
+        ConstructionComponent.BuildConstruction(buildingLevelsData[levelIndex].ConstructionStraight);
     }
 
     public Transform GetInteractionTransform()
     {
         int index = workers.Count > 0 ? ((workers.Count - 1) % LevelData.maxResidentsCount) : 0;
-        BuildingAction[] actions = constructionComponent.SpawnedConstruction.BuildingInteractions;
+        BuildingAction[] actions = ConstructionComponent.SpawnedConstruction.BuildingInteractions;
         if (actions.Length > index) {
             Transform[] waypoints = actions[index].waypoints;
             if (waypoints.Length > 0) {

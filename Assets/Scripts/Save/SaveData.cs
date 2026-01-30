@@ -14,10 +14,10 @@ public class SaveData
 
     // City
     public int builtFloorsCount { get; private set; } = 0;
-    public int[] placedBuildingIds { get; private set; } = new int[0];
-    public int[] placedBuildingLevels { get; private set; } = new int[0];
-    public bool[] placedBuildingsUnderConstruction { get; private set; } = new bool[0];
-    public int[] placedBuildingInteriorIds { get; private set; } = new int[0];
+    public int[] placedRoomIds { get; private set; } = new int[0];
+    public int[] placedRoomLevels { get; private set; } = new int[0];
+    public bool[] placedRoomsUnderConstruction { get; private set; } = new bool[0];
+    public int[] placedRoomInteriorIds { get; private set; } = new int[0];
 
     public float[] elevatorPlatformHeights { get; private set; } = new float[0];
 
@@ -67,36 +67,46 @@ public class SaveData
         // City
         builtFloorsCount = CityManager.Instance.builtFloors.Count;
         int roomsCount = builtFloorsCount * CityManager.roomsCountPerFloor;
-        placedBuildingIds = new int[roomsCount];
-        placedBuildingLevels = new int[roomsCount];
-        placedBuildingsUnderConstruction = new bool[roomsCount];
-        placedBuildingInteriorIds = new int[roomsCount];
-        buildingProductionTimers = new float[roomsCount];
+        placedRoomIds = new int[roomsCount + builtFloorsCount];
+        placedRoomLevels = new int[roomsCount + builtFloorsCount];
+        placedRoomsUnderConstruction = new bool[roomsCount + builtFloorsCount];
+        placedRoomInteriorIds = new int[roomsCount + builtFloorsCount];
+        buildingProductionTimers = new float[roomsCount + builtFloorsCount];
+
         elevatorPlatformHeights = new float[roomsCount];
         resourcesAmount = new int[CityManager.Instance.items.Length];
 
-        int placeIndex = 0;
+        int buildingIndex = 0;
         int lastElevatorGroupId = -1;
-        for (int i = 0; i < builtFloorsCount; i++) {
-            for (int j = 0; j < CityManager.roomsCountPerFloor; j++) {
-                Building placedBuilding = CityManager.Instance.builtFloors[i].roomBuildingPlaces[j].placedBuilding;
-                placedBuildingIds[placeIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingId : -1;
-                placedBuildingLevels[placeIndex] = placedBuilding ? placedBuilding.LevelIndex : 0;
-                placedBuildingsUnderConstruction[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.isUnderConstruction : false;
-                placedBuildingInteriorIds[placeIndex] = placedBuilding ? placedBuilding.constructionComponent.interiorIndex : -1;
+        for (int floorIndex = 0; floorIndex < builtFloorsCount; floorIndex++) {
+            // Halls
+            BuildingPlace hallPlace = CityManager.Instance.builtFloors[floorIndex].hallBuildingPlace;
+            Building hall = hallPlace.placedBuilding;
+            placedRoomIds[buildingIndex] = hall ? hall.BuildingData.BuildingId : -1;
+            placedRoomLevels[buildingIndex] = hall ? hall.LevelIndex : -1;
+            placedRoomsUnderConstruction[buildingIndex] = hall ? hall.ConstructionComponent.isUnderConstruction : false;
+            buildingIndex++;
 
-                ProductionBuilding productionBuilding = placedBuilding ? placedBuilding.GetComponent<ProductionBuilding>() : null;
-                buildingProductionTimers[placeIndex] = productionBuilding ? productionBuilding.currentProductionTime : 0;
+            // Rooms
+            for (int placeIndex = 0; placeIndex < CityManager.roomsCountPerFloor; placeIndex++) {
+                Building placedBuilding = CityManager.Instance.builtFloors[floorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
+                placedRoomIds[buildingIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingId : -1;
+                placedRoomLevels[buildingIndex] = placedBuilding ? placedBuilding.LevelIndex : 0;
+                placedRoomsUnderConstruction[buildingIndex] = placedBuilding ? placedBuilding.ConstructionComponent.isUnderConstruction : false;
+                placedRoomInteriorIds[buildingIndex] = placedBuilding ? placedBuilding.ConstructionComponent.interiorIndex : -1;
+
+                ProductionBuildingModule productionBuilding = placedBuilding ? placedBuilding.GetComponent<ProductionBuildingModule>() : null;
+                buildingProductionTimers[buildingIndex] = productionBuilding ? productionBuilding.currentProductionTime : 0;
 
                 // Elevators
-               ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;
+                ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;
                 if (elevatorBuilding && elevatorBuilding.elevatorGroupId > lastElevatorGroupId) {
                     //lastElevatorGroupId = elevatorBuilding.elevatorGroupId;
                     //if (elevatorPlatformHeights.Length > lastElevatorGroupId)
                     //    elevatorPlatformHeights[lastElevatorGroupId] = elevatorBuilding.elevatorPlatform ? elevatorBuilding.elevatorPlatform.transform.position.y : elevatorBuilding.transform.position.y;
-                    elevatorPlatformHeights[placeIndex] = elevatorBuilding.spawnedElevatorCabin.transform.position.y;
+                    elevatorPlatformHeights[buildingIndex] = elevatorBuilding.spawnedElevatorCabin.transform.position.y;
                 }
-                placeIndex++;
+                buildingIndex++;
             }
         }
 

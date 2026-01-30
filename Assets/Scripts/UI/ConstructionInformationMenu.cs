@@ -44,7 +44,7 @@ public class ConstructionInformationMenu : MonoBehaviour
         levelNumberText.SetText("Level " + (building.LevelIndex + 1).ToString());
         //buildingInformationMenuDescriptionText.SetText(building.BuildingData.description);
 
-        ProductionBuilding productionBuilding = building.GetComponent<ProductionBuilding>();
+        ProductionBuildingModule productionBuilding = building.GetComponent<ProductionBuildingModule>();
         StorageBuildingModule storageBuilding = building.GetComponent<StorageBuildingModule>();
 
         int maxResidentsCount = building.LevelData.maxResidentsCount;

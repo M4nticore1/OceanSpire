@@ -1,8 +1,20 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "buildingPrefabsList", menuName = "GameContent/buildingPrefabsList")]
-public class buildingsList : ScriptableObject
+[CreateAssetMenu(fileName = "BuildingsList", menuName = "Game Content/building Prefabs List")]
+public class BuildingsList : ScriptableObject
 {
+    private static BuildingsList _instance;
+    public static BuildingsList Instance
+    {
+        get
+        {
+            if (_instance == null) {
+                _instance = Resources.Load<BuildingsList>("Lists/BuildingsList");
+            }
+            return _instance;
+        }
+    }
+
     [field: SerializeField] public Building[] buildings { get; private set; } = { };
     //public Dictionary<int, Building> buildingsById { get; private set; } = new Dictionary<int, Building>();
 

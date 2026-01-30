@@ -45,37 +45,10 @@ public class BuildingPlace : MonoBehaviour
         outlineMaterialPropertyBlock = new MaterialPropertyBlock();
     }
 
-    private void OnEnable()
-    {
-        if (placedBuilding)
-        {
-
-        }
-    }
-
-    private void OnDisable()
-    {
-        
-    }
-
     public void InitializeBuildingPlace(int newFloorindex)
     {
         floorIndex = newFloorindex;
     }
-
-    //public void DestroyBuilding()
-    //{
-    //    if (placedBuilding)
-    //    {
-    //        boxCollider.enabled = true;
-
-    //        //isBuildingPlaced = false;
-    //        placedBuilding = null;
-
-    //        if (buildingFrame)
-    //            buildingFrame.SetActive(true);
-    //    }
-    //}
 
     public void SetPlacedBuilding(TowerBuilding building)
     {

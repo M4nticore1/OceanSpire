@@ -2,9 +2,21 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "lootList", menuName = "GameContent/lootList")]
+[CreateAssetMenu(fileName = "Loot List", menuName = "Game Content/Loot List")]
 public class ItemsList : ScriptableObject
 {
+    private static ItemsList _instance;
+    public static ItemsList Instance
+    {
+        get
+        {
+            if (_instance == null) {
+                _instance = Resources.Load<ItemsList>("Lists/ItemsList");
+            }
+            return _instance;
+        }
+    }
+
     [SerializeField] private ItemData[] items;
     public ItemData[] Items => items;
 

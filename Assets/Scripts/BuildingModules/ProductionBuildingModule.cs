@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [AddComponentMenu("BuildingComponents/ProductionBuilding")]
-public class ProductionBuilding : BuildingModule
+public class ProductionBuildingModule : BuildingModule
 {
     public ProductionBuildingLevelData[] ProductionLevelsData => levelsData.OfType<ProductionBuildingLevelData>().ToArray();
     public ProductionBuildingLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
@@ -35,44 +35,40 @@ public class ProductionBuilding : BuildingModule
     }
 
     // Overrides
-    protected override void BuildComponent()
+    protected override void OnBuildingFinishConstructing()
     {
-        base.BuildComponent();
-
         if (producingItem is ProducedResource resource)
             producedItem = new ItemInstance(resource.producedResource.ItemData);
     }
 
     protected override void OnBuildingStartWorking()
     {
-        base.OnBuildingStartWorking();
         StartProducting();
     }
 
     protected override void OnBuildingStopWorking()
     {
-        base.OnBuildingStopWorking();
         StopProducting();
     }
 
     protected override void OnEnterBuilding()
     {
-        base.OnEnterBuilding();
+
     }
 
     protected override void OnExitBuilding()
     {
-        base.OnExitBuilding();
+
     }
 
     protected override void OnResidentStartWorking()
     {
-        base.OnResidentStartWorking();
+
     }
 
     protected override void OnResidentStopWorking()
     {
-        base.OnResidentStopWorking();
+
     }
 
     // Production
@@ -105,7 +101,7 @@ public class ProductionBuilding : BuildingModule
 
     private void Production()
     {
-        if (!isProducting || OwnedBuilding.constructionComponent.isUnderConstruction || producingItem == null || OwnedBuilding.currentWorkers.Count == 0) return;
+        if (!isProducting || OwnedBuilding.ConstructionComponent.isUnderConstruction || producingItem == null || OwnedBuilding.currentWorkers.Count == 0) return;
 
         if (Time.time > lastProduceTime + produceFrequency) {
             AddProducedTime(produceFrequency);

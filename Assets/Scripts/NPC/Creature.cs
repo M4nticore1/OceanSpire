@@ -106,7 +106,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
 
     private void OnEnable()
     {
-        ConstructionComponent.onAnyConstructionStartConstructing += OnBuildingStartConstructing;
+        EventBus.Instance.onConstructionPlaced += OnBuildingStartConstructing;
         Boat.onBoatDocked += OnBoatDocked;
         //ElevatorPlatformConstruction.onElevatorPlatformStopped += OnElevatorPlatformStopped;
         //ElevatorPlatformConstruction.onElevatorPlatformChangedFloor += OnElevatorPlatformChangedFloor;
@@ -114,10 +114,8 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
 
     private void OnDisable()
     {
-        ConstructionComponent.onAnyConstructionFinishConstructing -= OnBuildingStartConstructing;
+        EventBus.Instance.onConstructionPlaced -= OnBuildingStartConstructing;
         Boat.onBoatDocked -= OnBoatDocked;
-        ElevatorPlatformConstruction.onElevatorPlatformStopped -= OnElevatorPlatformStopped;
-        ElevatorPlatformConstruction.onElevatorPlatformChangedFloor -= OnElevatorCabinChangedFloor;
     }
 
     private void Update()
@@ -389,9 +387,9 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
     private void Working()
     {
         if (workBuilding) {
-            if (!workBuilding.constructionComponent.isUnderConstruction) {
-                if (workBuilding.constructionComponent.SpawnedConstruction.BuildingInteractions.Length > workerIndex) {
-                    BuildingAction buildingAction = workBuilding.constructionComponent.SpawnedConstruction.BuildingInteractions[workerIndex];
+            if (!workBuilding.ConstructionComponent.isUnderConstruction) {
+                if (workBuilding.ConstructionComponent.SpawnedConstruction.BuildingInteractions.Length > workerIndex) {
+                    BuildingAction buildingAction = workBuilding.ConstructionComponent.SpawnedConstruction.BuildingInteractions[workerIndex];
 
                     if (buildingAction.actionTimes[currentActionIndex] > 0) {
                         currentActionTime += Time.deltaTime;
@@ -412,8 +410,8 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
             else {
                 int levelIndex = workBuilding.LevelIndex;
                 ItemInstance[] resourcesToBuild = workBuilding.ConstructionLevelsData[levelIndex].ResourcesToBuild;
-                List<ItemInstance> deliveredResources = workBuilding.constructionComponent.deliveredConstructionResources;
-                List<ItemInstance> incomingResources = workBuilding.constructionComponent.incomingConstructionResources;
+                List<ItemInstance> deliveredResources = workBuilding.ConstructionComponent.deliveredConstructionResources;
+                List<ItemInstance> incomingResources = workBuilding.ConstructionComponent.incomingConstructionResources;
                 bool isNeededToWork = false;
 
                 if (CurrentBuilding == workBuilding) {
@@ -424,7 +422,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
                             for (int i = 0; i < carriedItems.Count; i++) {
                                 int itemId = carriedItems[i].ItemData.ItemId;
                                 int amountToAdd = carriedItems[i].Amount;
-                                int amountToSpend = CurrentBuilding.constructionComponent.AddConstructionResources(itemId, amountToAdd);
+                                int amountToSpend = CurrentBuilding.ConstructionComponent.AddConstructionResources(itemId, amountToAdd);
                                 SpendItem(itemId, amountToSpend);
 
                                 if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount)
@@ -434,11 +432,12 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
                             if (isNeededToWork)
                                 SetTargetBuilding(b =>
                                 {
-                                    if (!b.storageComponent || (((TowerBuilding)b).floorIndex == ((TowerBuilding)workBuilding).floorIndex && ((TowerBuilding)b).placeIndex == ((TowerBuilding)workBuilding).placeIndex)) return false;
+                                    StorageBuildingModule storage = b.GetComponent<StorageBuildingModule>();
+                                    if (!storage || (((TowerBuilding)b).floorIndex == ((TowerBuilding)workBuilding).floorIndex && ((TowerBuilding)b).placeIndex == ((TowerBuilding)workBuilding).placeIndex)) return false;
 
                                     int itemIndex = workBuilding.ConstructionLevelsData[workBuilding.LevelIndex].ResourcesToBuild[0].ItemData.ItemId;
 
-                                    return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
+                                    return storage.storedItems.ContainsKey(itemIndex) && storage.storedItems[itemIndex].Amount >= 0;
                                 });
                             //else
                             //SetWork(ResidentWork.None);
@@ -454,14 +453,14 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
                             for (int i = 0; i < resourcesToBuild.Length; i++) {
                                 if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount) {
                                     int itemId = resourcesToBuild[i].ItemData.ItemId;
-                                    if (TargetBuilding.constructionComponent.incomingConstructionResourcesDict.ContainsKey(itemId))
-                                        TargetBuilding.constructionComponent.incomingConstructionResourcesDict[itemId].SetAmount(0);
+                                    if (TargetBuilding.ConstructionComponent.incomingConstructionResourcesDict.ContainsKey(itemId))
+                                        TargetBuilding.ConstructionComponent.incomingConstructionResourcesDict[itemId].SetAmount(0);
 
                                     int remainedAmount = resourcesToBuild[i].Amount - (deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0);
-                                    int amountToTake = CurrentBuilding.storageComponent.SpendItem(itemId, math.min(currentMaxCarryWeight, remainedAmount));
+                                    int amountToTake = CurrentBuilding.GetComponent<StorageBuildingModule>().SpendItem(itemId, math.min(currentMaxCarryWeight, remainedAmount));
                                     TakeItem(itemId, amountToTake);
                                     int amountToIncoming = carriedItemsDict[itemId].Amount;
-                                    TargetBuilding.constructionComponent.AddIncomingConstructionResources(itemId, amountToIncoming);
+                                    TargetBuilding.ConstructionComponent.AddIncomingConstructionResources(itemId, amountToIncoming);
 
                                     if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount)
                                         isNeededToWork = true;
@@ -754,7 +753,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
 
     private void ExitBoat()
     {
-        transform.position = currentBoat.ownedPier.constructionComponent.GetInteractionPosition(workBuilding.workers.Count - 1);
+        transform.position = currentBoat.ownedPier.ConstructionComponent.GetInteractionPosition(workBuilding.workers.Count - 1);
         navMeshAgent.enabled = true;
         StopWorking();
     }
@@ -782,7 +781,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
     {
         if (!carriedItemsDict.ContainsKey(itemId))
         {
-            ItemInstance item = new ItemInstance(CityManager.Instance.lootList.Items[itemId]); // The same item instance for list and dictionary.
+            ItemInstance item = new ItemInstance(ItemsList.Instance.Items[itemId]); // The same item instance for list and dictionary.
             carriedItems.Add(item);
             carriedItemsDict.Add(itemId, item);
         }
@@ -821,7 +820,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
 
     private void DeliverItem_Internal(Building building, ItemInstance item)
     {
-        if (building.constructionComponent.isUnderConstruction)
+        if (building.ConstructionComponent.isUnderConstruction)
         {
             int levelIndex = building.LevelIndex;
             ItemInstance[] constructionResources = building.ConstructionLevelsData[levelIndex].ResourcesToBuild;
@@ -830,17 +829,18 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
                 if (item.ItemData.ItemId == building.ConstructionLevelsData [levelIndex].ResourcesToBuild[j].ItemData.ItemId)
                 {
                     int id = item.ItemData.ItemId;
-                    int amountToSpend = building.constructionComponent.AddConstructionResources(item);
+                    int amountToSpend = building.ConstructionComponent.AddConstructionResources(item);
                     SpendItem(id, amountToSpend);
                 }
             }
         }
-        else if (building.storageComponent)
+        else if (building.GetComponent<StorageBuildingModule>())
         {
-            if (building.storageComponent.storedItems.ContainsKey(item.ItemData.ItemId))
+            StorageBuildingModule storage = building.GetComponent<StorageBuildingModule>();
+            if (storage.storedItems.ContainsKey(item.ItemData.ItemId))
             {
                 int id = item.ItemData.ItemId;
-                int amountToSpend = building.storageComponent.AddItem(item);
+                int amountToSpend = storage.AddItem(item);
                 SpendItem(id, amountToSpend);
                 //building.storageComponent.AddItem(item.ItemData.ItemId, SpendItem(item));
             }

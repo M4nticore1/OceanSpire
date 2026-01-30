@@ -15,8 +15,10 @@ public class EventBus
     public event Action<BuildingWidget> onBuildingWidgetBuildClicked;
     public event Action<BuildingWidget> onBuildingWidgetInformationClicked;
     public event Action onConstructionStartPlacing;
-    public event Action onConstructionPlaced;
-    public event Action onConstructionDestroyed;
+    public event Action<Building> onBuildingInitialized;
+    public event Action<ConstructionComponent> onConstructionPlaced;
+    public event Action<ConstructionComponent> onConstructionBuilt;
+    public event Action<ConstructionComponent> onConstructionDemolished;
 
     // Residents
     public event Action<Creature> onResidentAdded;
@@ -27,7 +29,9 @@ public class EventBus
 
     // Loot
     public event Action<ItemInstance> onLootAdded;
-    public event Action onStorageCapacityUpdated;
+    public event Action<ItemInstance> onLootRemoved;
+    public event Action<ItemInstance> onLootStorageChanged;
+    public event Action onStorageCapacityChanged;
 
     // Context Menu
     public event Action onContextMenuUpgradeButtonClicked;
@@ -63,9 +67,24 @@ public class EventBus
         onBuildingWidgetInformationClicked?.Invoke(widget);
     }
 
-    public void InvokeConstructionPlaced()
+    public void InvokeBuildingInitialized(Building building)
     {
-        onConstructionPlaced?.Invoke();
+        onBuildingInitialized?.Invoke(building);
+    }
+
+    public void InvokeConstructionPlaced(ConstructionComponent constructionComponent)
+    {
+        onConstructionPlaced?.Invoke(constructionComponent);
+    }
+
+    public void InvokeConstructionBuilt(ConstructionComponent constructionComponent)
+    {
+        onConstructionBuilt?.Invoke(constructionComponent);
+    }
+
+    public void InvokeConstructionDemolished(ConstructionComponent constructionComponent)
+    {
+        onConstructionDemolished?.Invoke(constructionComponent);
     }
 
     // Residents
@@ -91,9 +110,9 @@ public class EventBus
         onLootAdded?.Invoke(itemInstance);
     }
 
-    public void InvokeStorageCapacityUpdated()
+    public void InvokeStorageCapacityChanged()
     {
-        onStorageCapacityUpdated?.Invoke();
+        onStorageCapacityChanged?.Invoke();
     }
 
     // Context Menu

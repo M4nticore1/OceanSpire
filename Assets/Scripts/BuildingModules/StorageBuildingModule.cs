@@ -9,10 +9,8 @@ public class StorageBuildingModule : BuildingModule
     public StorageBuildingLevelData StorageLevelData => StorageLevelsData[LevelIndex];
     public Dictionary<int, ItemInstance> storedItems = new Dictionary<int, ItemInstance>();
 
-    protected override void BuildComponent()
+    protected override void OnBuildingFinishConstructing()
     {
-        base.BuildComponent();
-
         for (int i = 0; i < StorageLevelData.storageItems.Length; i++)
         {
             int id = StorageLevelData.storageItems[i].ItemData.ItemId;
@@ -23,30 +21,35 @@ public class StorageBuildingModule : BuildingModule
         }
     }
 
-    //public override void UpdateLevel(int newLevel)
-    //{
-    //    base.UpdateLevel(newLevel);
+    protected override void OnBuildingStartWorking()
+    {
 
-    //    levelData = levelsData[ownedBuilding.levelIndex] as StorageBuildingLevelData;
+    }
 
-    //    //AddStorageCapacity(levelData);
-    //    //SubtractStorageCapacity(levelsData[ownedBuilding.levelIndex - 1] as StorageBuildingLevelData);
-    //}
+    protected override void OnBuildingStopWorking()
+    {
 
-    //private void Update()
-    //{
+    }
 
-    //}
+    protected override void OnEnterBuilding()
+    {
 
-    //  private void AddStorageCapacity(StorageBuildingLevelData levelData)
-    //  {
-    //cityManager.AddStorageCapacity(levelData);
-    //  }
+    }
 
-    //  private void SubtractStorageCapacity(StorageBuildingLevelData levelData)
-    //  {
-    //cityManager.SubtractStorageCapacity(levelData);
-    //  }
+    protected override void OnExitBuilding()
+    {
+
+    }
+
+    protected override void OnResidentStartWorking()
+    {
+
+    }
+
+    protected override void OnResidentStopWorking()
+    {
+
+    }
 
     public int AddItem(int itemId, int amount)
     {

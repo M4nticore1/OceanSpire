@@ -8,9 +8,9 @@ public class FloorBuilding : TowerBuilding
     public BuildingPlace hallBuildingPlace;
     public BuildingPlace floorBuildingPlace;
 
-    public override void InitializeBuilding(BuildingPlace buildingPlace, bool requiresConstruction, int levelIndex, int interiorIndex)
+    protected override void OnInitialize(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex)
     {
-        base.InitializeBuilding(buildingPlace, requiresConstruction, levelIndex, interiorIndex);
+        base.OnInitialize(buildingPlace, isUnderConstruction, levelIndex, interiorIndex);
 
         floorBuildingPlace.InitializeBuildingPlace(floorIndex + 1);
         hallBuildingPlace.InitializeBuildingPlace(floorIndex);

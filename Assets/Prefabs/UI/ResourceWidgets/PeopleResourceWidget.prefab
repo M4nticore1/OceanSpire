@@ -103,6 +103,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -186,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cbe901d618933c488cabc826610c8ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceData: {fileID: 0}
+  itemData: {fileID: 0}
   resourceImage: {fileID: 353891536657977764}
   resourceAmountText: {fileID: 848859100641501343}
   resourceAmountBar: {fileID: 0}

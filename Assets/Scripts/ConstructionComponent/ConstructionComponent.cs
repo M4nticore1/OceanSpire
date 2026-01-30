@@ -1,18 +1,14 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class ConstructionComponent : MonoBehaviour
 {
     public Building ownedBuilding { get; private set; } = null;
     private Boat ownedBoat = null;
-    //public LevelComponent levelComponent { get; private set; } = null;
 
     [Header("Main")]
     private int levelIndex => ownedBuilding ? ownedBuilding.LevelIndex : 0;
     public List<ConstructionLevelData> constructionLevelsData { get; private set; } = null;
-    //public List<ConstructionLevelData> ConstructionLevelsData => constructionLevelsData;
 
     [Header("Construction")]
     [SerializeField] private BuildingConstruction spawnedConstruction = null;
@@ -30,12 +26,8 @@ public class ConstructionComponent : MonoBehaviour
 
     private bool IsInitialized = false;
 
-    public static event System.Action<ConstructionComponent> onAnyConstructionStartConstructing;
     public event System.Action onBuildingStartConstructing;
-    public static event System.Action<ConstructionComponent> onAnyConstructionFinishConstructing;
     public event System.Action onBuildingFinishConstructing;
-
-    public static event System.Action<ConstructionComponent> onAnyConstructionDemolished;
     public event System.Action onConstructionDemolished;
 
     private void GetComponents()
@@ -62,16 +54,6 @@ public class ConstructionComponent : MonoBehaviour
         IsInitialized = true;
     }
 
-    //public void Place()
-    //{
-    //    if (isUnderConstruction)
-    //        StartConstructing();
-    //    else
-    //        FinishConstructing();
-
-    //    IsInitialized = true;
-    //}
-
     public void StartConstructing(int nextLevel = 0)
     {
         Debug.Log("StartConstructing");
@@ -81,8 +63,8 @@ public class ConstructionComponent : MonoBehaviour
                 ownedBuilding.SetLevel(nextLevel);
         }
 
-        onAnyConstructionStartConstructing?.Invoke(this);
         onBuildingStartConstructing?.Invoke();
+        EventBus.Instance.InvokeConstructionPlaced(this);
     }
 
     public void FinishConstructing(int nextLevel = 0)
@@ -101,8 +83,8 @@ public class ConstructionComponent : MonoBehaviour
             ownedBuilding.SetLevel(levelIndex);;
         }
 
-        onAnyConstructionFinishConstructing?.Invoke(this);
         onBuildingFinishConstructing?.Invoke();
+        EventBus.Instance.InvokeConstructionBuilt(this);
     }
 
     public void StartUpgrading()
@@ -111,9 +93,10 @@ public class ConstructionComponent : MonoBehaviour
         StartConstructing(level);
     }
 
-    public void StartDemolishing()
+    public void Demolish()
     {
-        onAnyConstructionDemolished?.Invoke(this);
+        onConstructionDemolished?.Invoke();
+        EventBus.Instance.InvokeConstructionDemolished(this);
         Destroy(gameObject);
     }
 
@@ -130,7 +113,7 @@ public class ConstructionComponent : MonoBehaviour
 
     private void AddIncomingConstructionResources_Internal(int lootId, int amount)
     {
-        ItemData data = CityManager.Instance.lootList.Items[lootId];
+        ItemData data = ItemsList.Instance.Items[lootId];
         ItemInstance loot = new ItemInstance(data, amount);
         if (!incomingConstructionResourcesDict.ContainsKey(lootId))
         {
@@ -175,7 +158,7 @@ public class ConstructionComponent : MonoBehaviour
     {
         if (!deliveredConstructionResourcesDict.ContainsKey(lootId))
         {
-            ItemData data = CityManager.Instance.lootList.Items[lootId];
+            ItemData data = ItemsList.Instance.Items[lootId];
             ItemInstance item = new ItemInstance(data); // The same item instance for list and dictionary.
             deliveredConstructionResources.Add(item);
             deliveredConstructionResourcesDict.Add(lootId, item);
@@ -187,7 +170,7 @@ public class ConstructionComponent : MonoBehaviour
 
         // Finish building
         ItemInstance[] resourcesToBuild = constructionLevelsData[levelIndex].ResourcesToBuild;
-        if (deliveredConstructionResourcesDict[lootId].Amount >= CityManager.Instance.lootList.GetItem(lootId, constructionLevelsData[levelIndex].ResourcesToBuild).Amount)
+        if (deliveredConstructionResourcesDict[lootId].Amount >= ItemsList.Instance.GetItem(lootId, constructionLevelsData[levelIndex].ResourcesToBuild).Amount)
         {
             foreach (var item in resourcesToBuild)
                 if (item.Amount < 0)

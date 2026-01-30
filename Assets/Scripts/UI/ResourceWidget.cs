@@ -4,14 +4,75 @@ using TMPro;
 
 public class ResourceWidget : MonoBehaviour
 {
-    private ItemInstance item;
+    [SerializeField] private ItemData itemData;
+    private ItemInstance itemInstance;
     [SerializeField] private Image resourceImage;
     [SerializeField] private TextMeshProUGUI resourceAmountText;
     [SerializeField] private Image resourceAmountBar;
 
+    private void OnEnable()
+    {
+        EventBus.Instance.onLootAdded += OnLootAdded;
+        EventBus.Instance.onLootAdded += OnLootRemoved;
+        EventBus.Instance.onLootStorageChanged += OnStorageCapacityChanged;
+
+        UpdateAmount();
+    }
+
+    private void OnDisable()
+    {
+        EventBus.Instance.onLootAdded -= OnLootAdded;
+        EventBus.Instance.onLootAdded -= OnLootRemoved;
+        EventBus.Instance.onLootStorageChanged -= OnStorageCapacityChanged;
+    }
+
+    private void Start()
+    {
+        if (itemInstance != null) return;
+
+        SetItem(itemData);
+        UpdateAmount();
+    }
+
+    private void OnLootAdded(ItemInstance item)
+    {
+        if (item.ItemData.ItemId != itemData.ItemId) return;
+
+        UpdateAmount();
+    }
+
+    private void OnLootRemoved(ItemInstance item)
+    {
+        if (item.ItemData.ItemId != itemData.ItemId) return;
+
+        UpdateAmount();
+    }
+
+    private void OnStorageCapacityChanged(ItemInstance item)
+    {
+        if (item.ItemData.ItemId != itemData.ItemId) return;
+
+        UpdateAmount();
+    }
+
+    public void SetItem(ItemData itemData)
+    {
+        int id = itemData.ItemId;
+        itemInstance = CityManager.Instance.items[id];
+        OnItemSet();
+    }
+
     public void SetItem(ItemInstance item)
     {
-        this.item = item;
+        itemInstance = item;
+        itemData = itemInstance.ItemData;
+        OnItemSet();
+    }
+
+    private void OnItemSet()
+    {
+        Sprite sprite = itemData.ItemIcon;
+        SetImage(sprite);
     }
 
     public void SetAmount(int amount)
@@ -19,20 +80,27 @@ public class ResourceWidget : MonoBehaviour
         resourceAmountText.SetText(amount.ToString());
     }
 
-    public void SetAmountAndMaxAmount(int amount, int maxAmount)
+    public void SetAmount(int amount, int maxAmount)
     {
         resourceAmountText.SetText(amount.ToString() + "/" + maxAmount.ToString());
-
-        if (resourceAmountBar)
-        {
+        if (resourceAmountBar)  {
             float alpha = 0;
             if (maxAmount > 0)
                 alpha = (float)amount / maxAmount;
             else
                 alpha = 0.0f;
-
             resourceAmountBar.fillAmount = alpha;
         }
+    }
+
+    private void UpdateAmount()
+    {
+        if (itemInstance == null) return;
+        if (CityManager.Instance.maxItemsAmount.Length <= itemInstance.ItemData.ItemId) return;
+
+        int amount = itemInstance.Amount;
+        int maxAmount = CityManager.Instance.maxItemsAmount[itemInstance.ItemData.ItemId];
+        SetAmount(amount, maxAmount);
     }
 
     public void SetImage(Sprite resourceSprite)

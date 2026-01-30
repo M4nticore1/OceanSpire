@@ -226,23 +226,28 @@ public class PlayerController : MonoBehaviour
             mainCamera.transform.localPosition = new Vector3(localPosition.x, localPosition.y, -currentCameraArmLength);
             mainCamera.transform.localRotation = Quaternion.Euler(currentCameraShakeRotation);
 
-            // Stats Menu
-            RaycastHit hit;
-            Vector3 direction = new Vector3(mainCamera.transform.forward.x, 0, mainCamera.transform.forward.z).normalized;
-            if (Physics.Raycast(mainCamera.transform.position, direction, out hit, cameraDistanceToShowBuildingStats)) {
-                Building building = hit.transform.parent?.GetComponent<Building>();
-                if (building != buildingToShowStats) {
-                    buildingToShowStats = building;
+            ShowStatsMenu();
+        }
+    }
 
-                    EventBus.Instance.InvokeCameraEnteredStatsMenuDistance(buildingToShowStats);
-                    isCameraEnteredBuildingStatsDistance = true;
-                }
+    private void ShowStatsMenu()
+    {
+        RaycastHit hit;
+        Vector3 direction = new Vector3(mainCamera.transform.forward.x, 0, mainCamera.transform.forward.z).normalized;
+        //Vector3 direction = Quaternion.AngleAxis(5, mainCamera.transform.right) * mainCamera.transform.forward;
+        if (Physics.Raycast(mainCamera.transform.position, direction, out hit, cameraDistanceToShowBuildingStats)) {
+            Building building = hit.transform.parent?.GetComponent<Building>();
+            if (building != buildingToShowStats) {
+                buildingToShowStats = building;
+
+                EventBus.Instance.InvokeCameraEnteredStatsMenuDistance(buildingToShowStats);
+                isCameraEnteredBuildingStatsDistance = true;
             }
-            else if (isCameraEnteredBuildingStatsDistance) {
-                EventBus.Instance.InvokeCameraExitedStatsMenuDistance();
-                buildingToShowStats = null;
-                isCameraEnteredBuildingStatsDistance = false;
-            }
+        }
+        else if (isCameraEnteredBuildingStatsDistance) {
+            EventBus.Instance.InvokeCameraExitedStatsMenuDistance();
+            buildingToShowStats = null;
+            isCameraEnteredBuildingStatsDistance = false;
         }
     }
 
@@ -446,7 +451,7 @@ public class PlayerController : MonoBehaviour
 
                             SelectComponent selected = null;
                             if (hittedBuilding) {
-                                ProductionBuilding hittedProductionBuilding = hittedBuilding.GetComponent<ProductionBuilding>();
+                                ProductionBuildingModule hittedProductionBuilding = hittedBuilding.GetComponent<ProductionBuildingModule>();
 
                                 if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect) {
                                     CollectItems(hittedProductionBuilding.TakeProducedItem());
@@ -466,9 +471,16 @@ public class PlayerController : MonoBehaviour
                                 CollectItems(takedItems);
                             }
 
-                            SelectManager.Instance.selectedComponent?.Deselect();
                             if (selected != null) {
-                                selected.Select();
+                                if (selected == SelectManager.Instance.selectedComponent)
+                                    selected.Deselect();
+                                else {
+                                    SelectManager.Instance.selectedComponent?.Deselect();
+                                    selected.Select();
+                                }
+                            }
+                            else {
+                                SelectManager.Instance.selectedComponent?.Deselect();
                             }
 
                         }
@@ -523,7 +535,7 @@ public class PlayerController : MonoBehaviour
     private void CollectItems(ItemInstance item)
     {
         int id = item.ItemData.ItemId;
-        if (CityManager.Instance.items[id].Amount < CityManager.Instance.totalStorageCapacity[id]) {
+        if (CityManager.Instance.items[id].Amount < CityManager.Instance.maxItemsAmount[id]) {
             CityManager.Instance.AddItem(item);
         }
     }

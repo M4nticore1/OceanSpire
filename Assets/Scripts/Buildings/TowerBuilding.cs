@@ -62,17 +62,9 @@ public class TowerBuilding : Building
             yield return downNeighborBuilding;
     }
 
-    public override void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
+    protected override void OnInitialize(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
-        constructionComponent = GetComponent<ConstructionComponent>();
-        storageComponent = GetComponent<StorageBuildingModule>();
-        productionComponent = GetComponent<ProductionBuilding>();
-
-        this.buildingPlace = buildingPlace;
-        this.LevelIndex = levelIndex;
-
-        if (storageComponent)
-            storageComponent.Initialize();
+        base.OnInitialize(buildingPlace, isUnderConstruction, levelIndex, interiorIndex);
 
         leftNeighborBuilding = GetNeighborBuilding(Side.Left);
         rightNeighborBuilding = GetNeighborBuilding(Side.Right);
@@ -83,10 +75,6 @@ public class TowerBuilding : Building
             buildingPosition = BuildingPosition.Corner;
         else
             buildingPosition = BuildingPosition.Straight;
-
-        constructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
-
-        isInitialized = true;
     }
 
     protected TowerBuilding GetNeighborBuilding(Side side)

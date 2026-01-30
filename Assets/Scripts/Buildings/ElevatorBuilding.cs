@@ -10,25 +10,26 @@ public class ElevatorBuilding : RoomBuilding
     public List<Creature> elevatorWaitingPassengers { get; private set; } = new List<Creature>();
     //public List<Entity> elevatorWalkingPassengers { get; private set; } = new List<Entity>();
 
-    public override void BuildConstruction(int levelIndex)
+    protected override void BuildConstruction(int levelIndex)
     {
         base.BuildConstruction(levelIndex);
 
+        Debug.Log("Elevator Build Construction");
         ElevatorBuilding belowElevatorBuilding = downNeighborBuilding as ElevatorBuilding;
         ElevatorBuilding aboveElevatorBuilding = upNeighborBuilding as ElevatorBuilding;
 
-        if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorCabin)
-        {
+        if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorCabin) {
+            Debug.Log("Elevator Build Construction 1");
             elevatorGroupId = belowElevatorBuilding.elevatorGroupId;
             spawnedElevatorCabin = belowElevatorBuilding.spawnedElevatorCabin;
         }
-        else if (aboveElevatorBuilding && aboveElevatorBuilding.spawnedElevatorCabin)
-        {
+        else if (aboveElevatorBuilding && aboveElevatorBuilding.spawnedElevatorCabin) {
+            Debug.Log("Elevator Build Construction 2");
             elevatorGroupId = aboveElevatorBuilding.elevatorGroupId;
             spawnedElevatorCabin = aboveElevatorBuilding.spawnedElevatorCabin;
         }
-        else
-        {
+        else {
+            Debug.Log("Elevator Build Construction 2");
             ElevatorLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorLevelData;
 
             if (buildingPosition == BuildingPosition.Straight)

@@ -3,91 +3,75 @@ using UnityEngine;
 [AddComponentMenu("Buildings/RoomBuilding")]
 public class RoomBuilding : TowerBuilding
 {
-    public override void BuildConstruction(int levelIndex)
+    protected override void BuildConstruction(int levelIndex)
     {
-        if (LevelData is RoomLevelData roomLevelData)
-        {
-            if (constructionComponent.isUnderConstruction)
-            {
-                if (buildingPosition == BuildingPosition.Straight)
-                {
+        if (LevelData is RoomLevelData roomLevelData) {
+            if (ConstructionComponent.isUnderConstruction) {
+                if (buildingPosition == BuildingPosition.Straight)  {
                     if (roomLevelData.ConstructionStraight)
-                        constructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
+                        ConstructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
                 }
-                else if (buildingPosition == BuildingPosition.Corner)
-                {
+                else if (buildingPosition == BuildingPosition.Corner) {
                     if (roomLevelData.ConstructionCorner)
-                        constructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
+                        ConstructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
                 }
             }
-            else
-            {
-                if (buildingData.ConnectionType == ConnectionType.None)
-                {
-                    if (buildingPosition == BuildingPosition.Straight)
-                    {
+            else {
+                if (buildingData.ConnectionType == ConnectionType.None) {
+                    if (buildingPosition == BuildingPosition.Straight) {
                         if (roomLevelData.ConstructionStraight)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
                     }
-                    else if (buildingPosition == BuildingPosition.Corner)
-                    {
+                    else if (buildingPosition == BuildingPosition.Corner) {
                         if (roomLevelData.ConstructionCorner)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
                     }
                 }
-                else if (buildingData.ConnectionType == ConnectionType.Horizontal)
-                {
-                    if (buildingPosition == BuildingPosition.Straight)
-                    {
+                else if (buildingData.ConnectionType == ConnectionType.Horizontal) {
+                    if (buildingPosition == BuildingPosition.Straight) {
                         if (leftNeighborBuilding && rightNeighborBuilding && roomLevelData.ConstructionStraightLeftRight)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightLeftRight);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionStraightLeftRight);
                         else if (leftNeighborBuilding && roomLevelData.ConstructionStraightLeft)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightLeft);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionStraightLeft);
                         else if (rightNeighborBuilding && roomLevelData.ConstructionStraightRight)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightRight);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionStraightRight);
                         else if (!leftNeighborBuilding && !rightNeighborBuilding && roomLevelData.ConstructionStraight)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
                     }
-                    else if (buildingPosition == BuildingPosition.Corner)
-                    {
+                    else if (buildingPosition == BuildingPosition.Corner) {
                         if (leftNeighborBuilding && rightNeighborBuilding && roomLevelData.ConstructionCornerLeftRight)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerLeftRight);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionCornerLeftRight);
                         else if (leftNeighborBuilding && roomLevelData.ConstructionCornerLeft)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerLeft);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionCornerLeft);
                         else if (rightNeighborBuilding && roomLevelData.ConstructionCornerRight)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerRight);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionCornerRight);
                         else if (!leftNeighborBuilding && !rightNeighborBuilding && roomLevelData.ConstructionCorner)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
                     }
                 }
-                else if (buildingData.ConnectionType == ConnectionType.Vertical)
-                {
-                    //Debug.Log(GetfloorIndex + " " + GetplaceIndex);
-                    if (buildingPosition == BuildingPosition.Straight)
-                    {
+                else if (buildingData.ConnectionType == ConnectionType.Vertical) {
+                    if (buildingPosition == BuildingPosition.Straight) {
                         if (upNeighborBuilding && downNeighborBuilding && roomLevelData.ConstructionStraightAboveBelow)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightAboveBelow);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionStraightAboveBelow);
                         else if (upNeighborBuilding && roomLevelData.ConstructionStraightAbove)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightAbove);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionStraightAbove);
                         else if (downNeighborBuilding && roomLevelData.ConstructionStraightBelow)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionStraightBelow);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionStraightBelow);
                         else if (!upNeighborBuilding && !downNeighborBuilding && roomLevelData.ConstructionStraight)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionStraight);
                     }
-                    else if (buildingPosition == BuildingPosition.Corner)
-                    {
+                    else if (buildingPosition == BuildingPosition.Corner) {
                         if (upNeighborBuilding && downNeighborBuilding && roomLevelData.ConstructionCornerAboveBelow)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerAboveBelow);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionCornerAboveBelow);
                         else if (upNeighborBuilding && roomLevelData.ConstructionCornerAbove)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerAbove);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionCornerAbove);
                         else if (downNeighborBuilding && roomLevelData.ConstructionCornerBelow)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionCornerBelow);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionCornerBelow);
                         else if (!upNeighborBuilding && !downNeighborBuilding && roomLevelData.ConstructionCorner)
-                            constructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
+                            ConstructionComponent.BuildConstruction(roomLevelData.ConstructionCorner);
                     }
                 }
             }
-
             if (IsSelected)
                 Select();
         }
@@ -100,6 +84,6 @@ public class RoomBuilding : TowerBuilding
 
     private bool GetPossibilityConnect(Building neightboorBuilding, int levelIndex)
     {
-        return neightboorBuilding && !neightboorBuilding.constructionComponent.isUnderConstruction && neightboorBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && neightboorBuilding.LevelIndex == levelIndex;
+        return neightboorBuilding && !neightboorBuilding.ConstructionComponent.isUnderConstruction && neightboorBuilding.BuildingData.BuildingIdName == buildingData.BuildingIdName && neightboorBuilding.LevelIndex == levelIndex;
     }
 }

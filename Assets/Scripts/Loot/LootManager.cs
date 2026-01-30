@@ -64,8 +64,8 @@ public class LootManager
     private async UniTask SpawningLootContainers()
     {
         while (true) {
-            for (int i = 0; i < CityManager.Instance.lootContainersList.lootContainers.Length; i++) {
-                SpawnLootContainer(CityManager.Instance.lootContainersList.lootContainers[i], i);
+            for (int i = 0; i < LootContainersList.Instance.lootContainers.Length; i++) {
+                SpawnLootContainer(LootContainersList.Instance.lootContainers[i], i);
             }
             await UniTask.Delay(System.TimeSpan.FromSeconds(lootContainerSpawnFrequency));
         }
@@ -97,7 +97,7 @@ public class LootManager
 
     private void CreateLootContainersSpawnTime()
     {
-        LootContainer[] lootContainer = CityManager.Instance.lootContainersList.lootContainers;
+        LootContainer[] lootContainer = LootContainersList.Instance.lootContainers;
         for (int i = 0; i < lootContainer.Length; i++) {
             float spawnTime = Random.Range(lootContainer[i].spawnMinTime, lootContainer[i].spawnMaxTime);
             currentTimeToSpawnContainers.Add(spawnTime);
