@@ -45,7 +45,6 @@ public class BuildingConstruction : MonoBehaviour
 
     public void SetFlickingMultiplier(float multiplier)
     {
-        Debug.Log("SetFlickingMultiplier " + multiplier);
         propertyBlock.SetFloat("_FlickingMultiplier", multiplier);
         foreach (MeshRenderer renderer in meshRendererers)
             renderer.SetPropertyBlock(propertyBlock);

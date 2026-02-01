@@ -126,6 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e0d796b84eb52947aa98b0998a584e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resident: {fileID: 0}
+  widgetIndex: 0
   selectedResidentMenu: {fileID: 5686957945929870805}
   nonSelectedResidentMenu: {fileID: 4496550723634835325}
   residentNameText: {fileID: 3155121427541410760}
@@ -381,7 +383,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1, g: 0.1, b: 0.1, a: 0.5019608}
+  m_Color: {r: 0.25882354, g: 0.45882353, b: 0.61960787, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -503,6 +505,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

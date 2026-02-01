@@ -268,7 +268,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private void Release()
     {
-        //if (!PointerUtils.IsGameObjectHovered(gameObject)) return;
+        if (!PointerUtils.IsGameObjectHovered(gameObject)) return;
 
         onReleased?.Invoke();
     }

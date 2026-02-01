@@ -37,10 +37,11 @@ public class TowerBuilding : Building
     public int floorIndex => buildingPlace ? buildingPlace.floorIndex : 0;
     public int placeIndex => buildingPlace ? buildingPlace.BuildingPlaceIndex : 0;
 
-    public TowerBuilding leftNeighborBuilding { get; private set; } = null;
-    public TowerBuilding rightNeighborBuilding { get; private set; } = null;
-    public TowerBuilding upNeighborBuilding { get; private set; } = null;
-    public TowerBuilding downNeighborBuilding { get; private set; } = null;
+
+    public TowerBuilding leftNeighborBuilding { get; private set; }
+    public TowerBuilding rightNeighborBuilding { get; private set; }
+    public TowerBuilding upNeighborBuilding { get; private set; }
+    public TowerBuilding downNeighborBuilding { get; private set; }
 
     public TowerBuilding leftConnectedBuilding => CheckConnectionPossibility(leftNeighborBuilding, ConnectionType.Horizontal);
     public TowerBuilding rightConnectedBuilding => CheckConnectionPossibility(rightNeighborBuilding, ConnectionType.Horizontal);
@@ -49,27 +50,37 @@ public class TowerBuilding : Building
 
     public IEnumerable NeighborBuildings(NeighborMask mask)
     {
-        if (mask.HasFlag(NeighborMask.Left))
+        if (mask.HasFlag(NeighborMask.Left)) {
             yield return leftNeighborBuilding;
-
-        if (mask.HasFlag(NeighborMask.Right))
+        }
+        if (mask.HasFlag(NeighborMask.Right)) {
             yield return rightNeighborBuilding;
-
-        if (mask.HasFlag(NeighborMask.Up))
+        }
+        if (mask.HasFlag(NeighborMask.Up)) {
             yield return upNeighborBuilding;
-
-        if (mask.HasFlag(NeighborMask.Down))
+        }
+        if (mask.HasFlag(NeighborMask.Down)) {
             yield return downNeighborBuilding;
+        }
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        EventBus.onConstructionPlaced += OnConstructionPlaced;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
     }
 
     protected override void OnInitialize(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
     {
         base.OnInitialize(buildingPlace, isUnderConstruction, levelIndex, interiorIndex);
 
-        leftNeighborBuilding = GetNeighborBuilding(Side.Left);
-        rightNeighborBuilding = GetNeighborBuilding(Side.Right);
-        upNeighborBuilding = GetNeighborBuilding(Side.Up);
-        downNeighborBuilding = GetNeighborBuilding(Side.Down);
+        GetAllNeighborBuildings();
 
         if (placeIndex % 2 == 0)
             buildingPosition = BuildingPosition.Corner;
@@ -77,7 +88,7 @@ public class TowerBuilding : Building
             buildingPosition = BuildingPosition.Straight;
     }
 
-    protected TowerBuilding GetNeighborBuilding(Side side)
+    private TowerBuilding GetNeighborBuilding(Side side)
     {
         int floorIndex = this.floorIndex < CityManager.firstBuildCityFloorIndex ? CityManager.firstBuildCityFloorIndex : this.floorIndex;
         int placeIndex = this.floorIndex < CityManager.firstBuildCityFloorIndex && this.placeIndex < CityManager.firstBuildCityBuildingPlace ? CityManager.firstBuildCityBuildingPlace : this.placeIndex;
@@ -94,7 +105,15 @@ public class TowerBuilding : Building
         return null;
     }
 
-    protected TowerBuilding CheckConnectionPossibility(TowerBuilding target, ConnectionType requiredConnection)
+    private void GetAllNeighborBuildings()
+    {
+        leftNeighborBuilding = GetNeighborBuilding(Side.Left);
+        rightNeighborBuilding = GetNeighborBuilding(Side.Right);
+        upNeighborBuilding = GetNeighborBuilding(Side.Up);
+        downNeighborBuilding = GetNeighborBuilding(Side.Down);
+    }
+
+    private TowerBuilding CheckConnectionPossibility(TowerBuilding target, ConnectionType requiredConnection)
     {
         if (!target) return null;
         if (buildingData.ConnectionType != requiredConnection) return null;
@@ -139,15 +158,8 @@ public class TowerBuilding : Building
         return false;
     }
 
-    //private TowerBuilding GetNeightboorBuilding(Side side)
-    //{
-    //    int horizontalIndexOffset = side == Side.Left ? 1 : side == Side.Right ? -1 : 0;
-    //    int verticalIndexOffset = side == Side.Up ? 1 : side == Side.Down ? -1 : 0;
-    //    int sideIndex = (GetplaceIndex + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
-    //    int verticalIndex = GetfloorIndex + verticalIndexOffset;
-    //    if (verticalIndex < cityManager.builtFloors.Count && verticalIndex >= 0)
-    //        return cityManager.builtFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding as TowerBuilding;
-
-    //    return null;
-    //}
+    private void OnConstructionPlaced(ConstructionComponent construction)
+    {
+        GetAllNeighborBuildings();
+    }
 }

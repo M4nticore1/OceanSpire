@@ -48,8 +48,8 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
 
     // Path
     public List<Building> pathBuildings = new List<Building>();
-    public Building CurrentBuilding = null;
-    public ElevatorBuilding CurrentElevator => CurrentBuilding as ElevatorBuilding;
+    public Building currentBuilding = null;
+    public ElevatorBuilding CurrentElevator => currentBuilding as ElevatorBuilding;
     public Building CurrentPathBuilding => pathBuildings.Count > 0 ? pathBuildings[pathIndex] : null;
     public ElevatorBuilding CurrentPathElevator => CurrentPathBuilding as ElevatorBuilding;
     public Building NextPathBuilding => pathBuildings.Count > pathIndex + 1 ? pathBuildings[pathIndex + 1] : null;
@@ -60,8 +60,8 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
     public int pathIndex = 0;
 
     // Positions
-    public int floorIndex => ((TowerBuilding)CurrentBuilding).floorIndex;
-    public int buildingIndex => ((TowerBuilding)CurrentBuilding).placeIndex;
+    public int floorIndex => ((TowerBuilding)currentBuilding).floorIndex;
+    public int buildingIndex => ((TowerBuilding)currentBuilding).placeIndex;
     public Vector3 targetPosition = Vector3.zero;
     private const float applyTargetPosition = 0.6f;
     private const float applyTargetMagnitude = 0.1f;
@@ -98,15 +98,10 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
     public static event Action OnWorkerRemove;
     public static event Action<Creature> OnEntityStopped;
 
-    public void Initialize()
-    {
-        selectComponent = GetComponent<SelectComponent>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
-    }
-
     private void OnEnable()
     {
-        EventBus.Instance.onConstructionPlaced += OnBuildingStartConstructing;
+        EventBus.onResidentWidgetClicked += OnResidentWidgetClicked;
+        EventBus.onConstructionPlaced += OnBuildingStartConstructing;
         Boat.onBoatDocked += OnBoatDocked;
         //ElevatorPlatformConstruction.onElevatorPlatformStopped += OnElevatorPlatformStopped;
         //ElevatorPlatformConstruction.onElevatorPlatformChangedFloor += OnElevatorPlatformChangedFloor;
@@ -114,7 +109,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
 
     private void OnDisable()
     {
-        EventBus.Instance.onConstructionPlaced -= OnBuildingStartConstructing;
+        EventBus.onConstructionPlaced -= OnBuildingStartConstructing;
         Boat.onBoatDocked -= OnBoatDocked;
     }
 
@@ -131,13 +126,18 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
         }
     }
 
-    // Brain
-    public void DecideAction()
+    public void Initialize()
     {
-        //Debug.Log("DecideAction");
+        selectComponent = GetComponent<SelectComponent>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+    }
+
+    // Brain
+    private void DecideAction()
+    {
         if (workBuilding) {
             // Start working
-            if (CurrentBuilding == workBuilding) {
+            if (currentBuilding == workBuilding) {
                 Debug.Log("Start working");
                 if (!isWorking) {
                     StartWorking();
@@ -158,7 +158,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
             }
 
             // Continue Path
-            if (CurrentBuilding == CurrentPathBuilding) {
+            if (currentBuilding == CurrentPathBuilding) {
                 Debug.Log("CurrentBuilding == CurrentPathBuilding");
                 ContinuePath();
                 return;
@@ -173,7 +173,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
             }
 
             // Pier
-            if (!CurrentBuilding) {
+            if (!currentBuilding) {
                 Debug.Log("!CurrentBuilding");
                 if (workBuilding as PierBuilding) {
                     StartEnteringBoat();
@@ -301,9 +301,31 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
     }
 
     // Work
+    private void OnResidentWidgetClicked(ResidentWidget widget)
+    {
+        Creature resident = widget.resident;
+        if (resident != this) return;
+
+        Building selectedBuilding = SelectManager.Instance.selectedComponent.GetComponent<Building>();
+        if (workBuilding) {
+            if (workBuilding == selectedBuilding) {
+                RemoveWork();
+            }
+            else {
+                if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
+                    SetWork(selectedBuilding);
+                }
+            }
+        }
+        else {
+            if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
+                SetWork(selectedBuilding);
+            }
+        }
+    }
+
     public void SetWork(Building building = null)
     {
-        Debug.Log("SetWork " + building);
         if (workBuilding) {
             RemoveWork();
         }
@@ -315,8 +337,8 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
         }
 
         //if (building) {
-        //    if (!workBuilding.constructionComponent.isUnderConstruction) {
-        //        this.workBuilding = workBuilding;
+        //    if (!workBuilding.ConstructionComponent.isUnderConstruction) {
+        //        workBuilding = building;
         //        workBuilding.AddWorker(this);
 
         //        if (currentBuilding == workBuilding)
@@ -340,7 +362,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
 
         //                    return b.storageComponent.storedItems.ContainsKey(itemIndex) && b.storageComponent.storedItems[itemIndex].Amount >= 0;
         //                })) {
-        //                    this.workBuilding = workBuilding;
+        //                    workBuilding = building;
         //                    StartWorking();
         //                }
         //                break;
@@ -349,17 +371,30 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
         //    }
         //}
 
+        OnWorkSet();
         OnWorkerAdd?.Invoke();
     }
 
-    public void RemoveWork()
+    private void OnWorkSet()
+    {
+        DecideAction();
+    }
+
+    private void RemoveWork()
     {
         if (workBuilding) {
             StopWorking();
             workBuilding.RemoveWorker(this);
             workBuilding = null;
         }
+
+        OnWorkRemove();
         OnWorkerRemove?.Invoke();
+    }
+
+    private void OnWorkRemove()
+    {
+        DecideAction();
     }
 
     public void SetWorkerIndex(int index)
@@ -414,7 +449,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
                 List<ItemInstance> incomingResources = workBuilding.ConstructionComponent.incomingConstructionResources;
                 bool isNeededToWork = false;
 
-                if (CurrentBuilding == workBuilding) {
+                if (currentBuilding == workBuilding) {
                     float distance = Vector3.Distance(transform.position, targetPosition);
                     if (distance < applyTargetPosition) {
                         currentActionTime += Time.deltaTime;
@@ -422,7 +457,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
                             for (int i = 0; i < carriedItems.Count; i++) {
                                 int itemId = carriedItems[i].ItemData.ItemId;
                                 int amountToAdd = carriedItems[i].Amount;
-                                int amountToSpend = CurrentBuilding.ConstructionComponent.AddConstructionResources(itemId, amountToAdd);
+                                int amountToSpend = currentBuilding.ConstructionComponent.AddConstructionResources(itemId, amountToAdd);
                                 SpendItem(itemId, amountToSpend);
 
                                 if ((deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0) < resourcesToBuild[i].Amount)
@@ -445,7 +480,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
                         }
                     }
                 }
-                else if (CurrentBuilding == TargetBuilding) {
+                else if (currentBuilding == TargetBuilding) {
                     float distance = Vector3.Distance(transform.position, targetPosition);
                     if (distance < applyTargetPosition) {
                         currentActionTime += Time.deltaTime;
@@ -457,7 +492,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
                                         TargetBuilding.ConstructionComponent.incomingConstructionResourcesDict[itemId].SetAmount(0);
 
                                     int remainedAmount = resourcesToBuild[i].Amount - (deliveredResources.Count > i ? deliveredResources[i].Amount : 0) + (incomingResources.Count > i ? incomingResources[i].Amount : 0);
-                                    int amountToTake = CurrentBuilding.GetComponent<StorageBuildingModule>().SpendItem(itemId, math.min(currentMaxCarryWeight, remainedAmount));
+                                    int amountToTake = currentBuilding.GetComponent<StorageBuildingModule>().SpendItem(itemId, math.min(currentMaxCarryWeight, remainedAmount));
                                     TakeItem(itemId, amountToTake);
                                     int amountToIncoming = carriedItemsDict[itemId].Amount;
                                     TargetBuilding.ConstructionComponent.AddIncomingConstructionResources(itemId, amountToIncoming);
@@ -537,14 +572,14 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
             return CurrentPathBuilding.GetInteractionTransform();
 
         if (CurrentElevator && !IsUsingElevator)
-            return CurrentBuilding.GetInteractionTransform();
+            return currentBuilding.GetInteractionTransform();
 
         return null;
     }
 
     private void TryUpdatePathProgress()
     {
-        if (CurrentPathBuilding && CurrentBuilding == CurrentPathBuilding) {
+        if (CurrentPathBuilding && currentBuilding == CurrentPathBuilding) {
             AddPathIndex();
         }
     }
@@ -574,13 +609,19 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
             Debug.LogWarning("building is NULL");
             return;
         }
-        if (building == CurrentBuilding) {
+        if (building == currentBuilding) {
             Debug.LogWarning("building is a currentBuilding already");
             return;
         }
 
-        CurrentBuilding = building;
+        currentBuilding = building;
         building.EnterBuilding(this);
+        OnEnterBuilding();
+    }
+
+    private void OnEnterBuilding()
+    {
+        DecideAction();
     }
 
     public virtual void ExitBuilding()
@@ -596,6 +637,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
         BuildingPlace startBuildingPlace = startBuilding ? startBuilding.buildingPlace : null;
         bool found = CityManager.Instance.TryGetPathToBuilding(startBuildingPlace, targetBuilding, ref pathBuildings);
         if (found) {
+            Debug.Log("Found");
             SortPath();
 
             //if (IsRidingOnElevator) {
@@ -634,7 +676,7 @@ public class Creature : MonoBehaviour, IDamageable, ILevelable, ISelectable
         //else {
         //    startBuilding = CurrentBuilding && CurrentBuilding.buildingPlace ? CurrentBuilding.buildingPlace.placedBuilding : null;
         //}
-        startBuilding = CurrentBuilding && CurrentBuilding.buildingPlace ? CurrentBuilding.buildingPlace.placedBuilding : null;
+        startBuilding = currentBuilding && currentBuilding.buildingPlace ? currentBuilding.buildingPlace.placedBuilding : null;
         return startBuilding;
     }
 

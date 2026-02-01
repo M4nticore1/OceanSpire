@@ -74,7 +74,7 @@ public class Building : MonoBehaviour, ILevelable, ISelectable
         OnInitialize(buildingPlace, isUnderConstruction, levelIndex, interiorIndex = -1);
         ConstructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
         isInitialized = true;
-        EventBus.Instance.InvokeBuildingInitialized(this);
+        EventBus.InvokeBuildingInitialized(this);
     }
 
     protected virtual void OnInitialize(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)

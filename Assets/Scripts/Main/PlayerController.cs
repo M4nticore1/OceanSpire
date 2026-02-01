@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
     private const int cameraMovingDistance = 24;
     private const int cameraHeightOffsetToShowBuildingStats = 0;
-    private const int cameraDistanceToShowBuildingStats = 30;
+    private const int cameraDistanceToShowBuildingStats = 25;
     private bool isCameraEnteredBuildingStatsDistance = false;
     private Building buildingToShowStats = null;
 
@@ -125,12 +125,12 @@ public class PlayerController : MonoBehaviour
         touchInputActionMap.Enable();
 
         // Primary Interaction
-        primaryInteractionPressIA.performed += OnPrimaryInteractionStarted;
-        primaryInteractionPressIA.canceled += OnPrimaryInteractionEnded;
+        primaryInteractionPressIA.performed += OnPrimaryInteractionPressed;
+        primaryInteractionPressIA.canceled += OnPrimaryInteractionReleased;
 
         // Secondary Interaction
-        secondaryInteractionPressIA.performed += OnSecondaryTouchStarted;
-        secondaryInteractionPressIA.canceled += OnSecondaryTouchEnded;
+        secondaryInteractionPressIA.performed += OnSecondaryTouchPressed;
+        secondaryInteractionPressIA.canceled += OnSecondaryTouchReleased;
 
         secondaryInteractionPositionIA.performed += OnSecondaryInteractionPosition;
         secondaryInteractionPositionIA.canceled += OnSecondaryInteractionPosition;
@@ -147,12 +147,12 @@ public class PlayerController : MonoBehaviour
         touchInputActionMap.Disable();
 
         // Primary Interaction
-        primaryInteractionPressIA.performed -= OnPrimaryInteractionStarted;
-        primaryInteractionPressIA.canceled -= OnPrimaryInteractionEnded;
+        primaryInteractionPressIA.performed -= OnPrimaryInteractionPressed;
+        primaryInteractionPressIA.canceled -= OnPrimaryInteractionReleased;
 
         // Secondary Interaction
-        secondaryInteractionPressIA.performed -= OnSecondaryTouchStarted;
-        secondaryInteractionPressIA.canceled -= OnSecondaryTouchEnded;
+        secondaryInteractionPressIA.performed -= OnSecondaryTouchPressed;
+        secondaryInteractionPressIA.canceled -= OnSecondaryTouchReleased;
 
         secondaryInteractionPositionIA.performed -= OnSecondaryInteractionPosition;
         secondaryInteractionPositionIA.canceled -= OnSecondaryInteractionPosition;
@@ -240,12 +240,12 @@ public class PlayerController : MonoBehaviour
             if (building != buildingToShowStats) {
                 buildingToShowStats = building;
 
-                EventBus.Instance.InvokeCameraEnteredStatsMenuDistance(buildingToShowStats);
+                EventBus.InvokeCameraEnteredStatsMenuDistance(buildingToShowStats);
                 isCameraEnteredBuildingStatsDistance = true;
             }
         }
         else if (isCameraEnteredBuildingStatsDistance) {
-            EventBus.Instance.InvokeCameraExitedStatsMenuDistance();
+            EventBus.InvokeCameraExitedStatsMenuDistance();
             buildingToShowStats = null;
             isCameraEnteredBuildingStatsDistance = false;
         }
@@ -395,7 +395,7 @@ public class PlayerController : MonoBehaviour
         currentCameraShakeRotation = math.lerp(currentCameraShakeRotation, currentCameraShakeForce, cameraShakeSpeed * Time.deltaTime);
     }
 
-    private void OnPrimaryInteractionStarted(InputAction.CallbackContext context)
+    private void OnPrimaryInteractionPressed(InputAction.CallbackContext context)
     {
         if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
             primaryInteractionStartPosition = primaryInteractionPositionIA.ReadValue<Vector2>();
@@ -406,7 +406,7 @@ public class PlayerController : MonoBehaviour
         isPrimaryInteractionPressed = true;
     }
 
-    private void OnPrimaryInteractionEnded(InputAction.CallbackContext context)
+    private void OnPrimaryInteractionReleased(InputAction.CallbackContext context)
     {
         if (!isSecondaryInteractionPressed) {
             // Get Pointer Position
@@ -454,7 +454,7 @@ public class PlayerController : MonoBehaviour
                                 ProductionBuildingModule hittedProductionBuilding = hittedBuilding.GetComponent<ProductionBuildingModule>();
 
                                 if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect) {
-                                    CollectItems(hittedProductionBuilding.TakeProducedItem());
+                                    CollectItems(hittedProductionBuilding);
                                 }
                                 else {
                                     selected = hittedBuilding.GetComponent<SelectComponent>();
@@ -495,14 +495,14 @@ public class PlayerController : MonoBehaviour
         isPrimaryInteractionPressed = false;
     }
 
-    private void OnSecondaryTouchStarted(InputAction.CallbackContext context)
+    private void OnSecondaryTouchPressed(InputAction.CallbackContext context)
     {
         secondaryInteractionStartPosition = secondaryInteractionPositionIA.ReadValue<Vector2>();
         startInteractionsPitch = Vector2.Distance(primaryInteractionPosition, secondaryInteractionStartPosition);
         isSecondaryInteractionPressed = true;
     }
 
-    private void OnSecondaryTouchEnded(InputAction.CallbackContext context)
+    private void OnSecondaryTouchReleased(InputAction.CallbackContext context)
     {
         secondaryInteractionPosition = Vector2.zero;
         secondaryInteractionDelta = Vector2.zero;
@@ -529,15 +529,12 @@ public class PlayerController : MonoBehaviour
     // Place Building
     private void PlaceBuilding(BuildingPlace buildingPlace)
     {
-        EventBus.Instance.InvokeBuildingPlacePressed(buildingPlace);
+        EventBus.InvokeBuildingPlacePressed(buildingPlace);
     }
 
-    private void CollectItems(ItemInstance item)
+    private void CollectItems(ProductionBuildingModule module)
     {
-        int id = item.ItemData.ItemId;
-        if (CityManager.Instance.items[id].Amount < CityManager.Instance.maxItemsAmount[id]) {
-            CityManager.Instance.AddItem(item);
-        }
+        EventBus.InvokeProductionModuleClicked(module);
     }
 
     private void CollectItems(List<ItemInstance> items)

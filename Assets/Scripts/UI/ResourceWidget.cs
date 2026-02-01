@@ -12,18 +12,18 @@ public class ResourceWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.Instance.onLootAdded += OnLootAdded;
-        EventBus.Instance.onLootAdded += OnLootRemoved;
-        EventBus.Instance.onLootStorageChanged += OnStorageCapacityChanged;
+        EventBus.onItemAdded += OnLootAdded;
+        EventBus.onItemRemoved += OnLootRemoved;
+        EventBus.onLootStorageChanged += OnStorageCapacityChanged;
 
         UpdateAmount();
     }
 
     private void OnDisable()
     {
-        EventBus.Instance.onLootAdded -= OnLootAdded;
-        EventBus.Instance.onLootAdded -= OnLootRemoved;
-        EventBus.Instance.onLootStorageChanged -= OnStorageCapacityChanged;
+        EventBus.onItemAdded -= OnLootAdded;
+        EventBus.onItemRemoved -= OnLootRemoved;
+        EventBus.onLootStorageChanged -= OnStorageCapacityChanged;
     }
 
     private void Start()
@@ -37,7 +37,7 @@ public class ResourceWidget : MonoBehaviour
     private void OnLootAdded(ItemInstance item)
     {
         if (item.ItemData.ItemId != itemData.ItemId) return;
-
+        Debug.Log(item.ItemData.ItemName);
         UpdateAmount();
     }
 
@@ -95,12 +95,15 @@ public class ResourceWidget : MonoBehaviour
 
     private void UpdateAmount()
     {
+        Debug.Log(1);
         if (itemInstance == null) return;
         if (CityManager.Instance.maxItemsAmount.Length <= itemInstance.ItemData.ItemId) return;
+        Debug.Log(2);
 
         int amount = itemInstance.Amount;
         int maxAmount = CityManager.Instance.maxItemsAmount[itemInstance.ItemData.ItemId];
         SetAmount(amount, maxAmount);
+        Debug.Log(amount);
     }
 
     public void SetImage(Sprite resourceSprite)

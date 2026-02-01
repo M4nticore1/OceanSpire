@@ -46,7 +46,8 @@ public class SaveData
 
     public int[] residentCurrentBuildingIndexes { get; private set; } = new int[0];
     public int[] residentTargetBuildingIndexes { get; private set; } = new int[0];
-    public int[] residentWorkBuildingIndexes { get; private set; } = new int[0];
+    public int[] residentTowerBuildingWorkIndexes { get; private set; } = new int[0];
+    public int[] residentBuildingWorkIndexes { get; private set; } = new int[0];
 
     public int[] npcElevatorPassengerStates { get; private set; } = new int[0];
 
@@ -152,7 +153,8 @@ public class SaveData
 
         residentCurrentBuildingIndexes = new int[residentsCount];
         residentTargetBuildingIndexes = new int[residentsCount];
-        residentWorkBuildingIndexes = new int[residentsCount];
+        residentTowerBuildingWorkIndexes = new int[residentsCount];
+        residentBuildingWorkIndexes = new int[residentsCount];
 
         npcElevatorPassengerStates = new int[residentsCount];
 
@@ -165,9 +167,9 @@ public class SaveData
             residentPositionsX[i] = resident.transform.position.x;
             residentPositionsY[i] = resident.transform.position.y;
             residentPositionsZ[i] = resident.transform.position.z;
-            residentFloorIndexes[i] = resident.CurrentBuilding ? ((TowerBuilding)resident.CurrentBuilding ? ((TowerBuilding)resident.CurrentBuilding).floorIndex : -1) : -1;
+            residentFloorIndexes[i] = resident.currentBuilding ? ((TowerBuilding)resident.currentBuilding ? ((TowerBuilding)resident.currentBuilding).floorIndex : -1) : -1;
 
-            Building currentBuilding = resident.CurrentBuilding;
+            Building currentBuilding = resident.currentBuilding;
             if (currentBuilding) {
                 TowerBuilding towerBuilding = (TowerBuilding)currentBuilding;
                 if (towerBuilding)
@@ -191,14 +193,18 @@ public class SaveData
 
             Building workBuilding = resident.workBuilding;
             if (workBuilding) {
-                TowerBuilding towerBuilding = (TowerBuilding)workBuilding;
-                if (towerBuilding)
-                    residentWorkBuildingIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
-                else
-                    residentWorkBuildingIndexes[i] = -1;
+                TowerBuilding towerBuilding = workBuilding as TowerBuilding;
+                if (towerBuilding) {
+                    residentTowerBuildingWorkIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
+                    residentBuildingWorkIndexes[i] = -1;
+                }
+                else {
+                    residentTowerBuildingWorkIndexes[i] = -1;
+                    //residentBuildingWorkIndexes[i] = workBuilding
+                }
             }
             else
-                residentWorkBuildingIndexes[i] = -1;
+                residentTowerBuildingWorkIndexes[i] = -1;
 
             npcElevatorPassengerStates[i] = (int)resident.elevatorPassengerState;
         }

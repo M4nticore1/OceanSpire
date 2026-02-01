@@ -64,7 +64,7 @@ public class ConstructionComponent : MonoBehaviour
         }
 
         onBuildingStartConstructing?.Invoke();
-        EventBus.Instance.InvokeConstructionPlaced(this);
+        EventBus.InvokeConstructionPlaced(this);
     }
 
     public void FinishConstructing(int nextLevel = 0)
@@ -84,7 +84,7 @@ public class ConstructionComponent : MonoBehaviour
         }
 
         onBuildingFinishConstructing?.Invoke();
-        EventBus.Instance.InvokeConstructionBuilt(this);
+        EventBus.InvokeConstructionBuilt(this);
     }
 
     public void StartUpgrading()
@@ -96,7 +96,7 @@ public class ConstructionComponent : MonoBehaviour
     public void Demolish()
     {
         onConstructionDemolished?.Invoke();
-        EventBus.Instance.InvokeConstructionDemolished(this);
+        EventBus.InvokeConstructionDemolished(this);
         Destroy(gameObject);
     }
 

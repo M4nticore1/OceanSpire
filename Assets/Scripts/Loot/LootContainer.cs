@@ -21,7 +21,6 @@ public enum TransportMethod
 public class LootContainer : MonoBehaviour
 {
     [field: SerializeField] public LootContainerData containerData { get; private set; } = null;
-    private CityManager gameManager = null;
 
     [Header("Loot")]
     [SerializeField] private List<LootEntry> possibleLoot = new List<LootEntry>();
@@ -31,7 +30,7 @@ public class LootContainer : MonoBehaviour
     [SerializeField] private bool isMovable = true;
     private bool isMoving = false;
     public TransportMethod currentTransportMethod = TransportMethod.Floating;
-    [SerializeField] private float moveSpeed = 0.0f;
+    private float moveSpeed = 0.5f;
     private float currentMoveSpeedMultiplier = 1f;
     private const float stopMovingSpeed = 1f;
 
@@ -66,9 +65,8 @@ public class LootContainer : MonoBehaviour
     public static System.Action<LootContainer> OnLootEntered;
     public static System.Action<LootContainer> OnLootExited;
 
-    public void InitializeContainer(CityManager gameManager, int floorIndex)
+    public void InitializeContainer(int floorIndex)
     {
-        this.gameManager = gameManager;
         checkPositionTime = Time.time;
         if (isMovable)
             isMoving = true;
@@ -82,14 +80,11 @@ public class LootContainer : MonoBehaviour
             }
         }
 
-        if (gameManager)
-            this.moveDirection = new Vector3(gameManager.windDirection.x, 0, gameManager.windDirection.y).normalized;
-        else {
-            this.moveDirection = -transform.position.normalized;
-            Debug.LogError("gameManager is NULL");
-        }
+        Vector3 direction = WindManager.Instance.windDirection;
+        moveDirection = new Vector3(direction.x, 0, direction.z);
+        startMoveDirection = moveDirection;
+        Debug.Log(moveDirection);
 
-        startMoveDirection = this.moveDirection;
         currentFloorIndex = floorIndex;
         if (floorIndex > 0)
             currentTransportMethod = TransportMethod.Flying;
@@ -107,39 +102,36 @@ public class LootContainer : MonoBehaviour
 
     private void Move(float deltaTime)
     {
-        if (isMovable)
-        {
-            if (isMoving)
-            {
-                Vector3 crossDirection = Vector3.Cross(moveDirection, new Vector3(-transform.position.x, 0, -transform.position.z).normalized);
+        if (!isMovable) return;
 
-                float distanceToIsland = transform.position.magnitude;
-                if (distanceToIsland <= maxDistanceToMoveAroundCity)
-                {
-                    float alpha = 1 - ((distanceToIsland - minDistanceToMoveAroundCity) / (maxDistanceToMoveAroundCity - minDistanceToMoveAroundCity));
-                    alpha = math.clamp(alpha, 0, 1);
+        if (isMoving) {
+            Vector3 crossDirection = Vector3.Cross(moveDirection, new Vector3(-transform.position.x, 0, -transform.position.z).normalized);
 
-                    float angleOffset = (crossDirection.y >= 0 ? 90 : -90) * alpha;
-                    Quaternion rotation = Quaternion.Euler(0, -angleOffset, 0);
+            float distanceToIsland = transform.position.magnitude;
+            if (distanceToIsland > maxDistanceToMoveAroundCity) {
+                Debug.Log(">");
+                Vector3 currentMoveDirection = -transform.position.normalized;
 
-                    moveDirection = rotation * startMoveDirection;
-                }
-                else
-                {
-                    Vector3 currentMoveDirection = -transform.position.normalized;
-
-                    float dot = Vector3.Dot(currentMoveDirection, startMoveDirection.normalized);
-                    if (dot < 0.9f)
-                        moveDirection = Vector3.Lerp(moveDirection, startMoveDirection, deltaTime * 10.5f);
-                }
+                //float dot = Vector3.Dot(currentMoveDirection, startMoveDirection.normalized);
+                //if (dot < 0.9f)
+                //    moveDirection = Vector3.Lerp(moveDirection, startMoveDirection, deltaTime * 10.5f);
             }
-            else
-            {
-                currentMoveSpeedMultiplier = math.lerp(currentMoveSpeedMultiplier, 0f, stopMovingSpeed);
-            }
+            else {
+                Debug.Log("<");
+                float alpha = 1 - ((distanceToIsland - minDistanceToMoveAroundCity) / (maxDistanceToMoveAroundCity - minDistanceToMoveAroundCity));
+                alpha = math.clamp(alpha, 0, 1);
 
-            transform.position += moveDirection * currentMoveSpeedMultiplier * deltaTime;
+                float angleOffset = (crossDirection.y >= 0 ? 90 : -90) * alpha;
+                Quaternion rotation = Quaternion.Euler(0, -angleOffset, 0);
+
+                moveDirection = rotation * startMoveDirection;
+            }
         }
+        else {
+            currentMoveSpeedMultiplier = math.lerp(currentMoveSpeedMultiplier, 0f, stopMovingSpeed);
+        }
+
+        transform.position += moveDirection * currentMoveSpeedMultiplier * moveSpeed * deltaTime;
     }
 
     private void CheckPosition()

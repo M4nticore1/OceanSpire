@@ -32,11 +32,9 @@ public class ItemInstance
     // Amount
     public int SetAmount(int amount, int maxAmount = 0)
     {
-        //Debug.Log("SetAmount amount = " + amount);
-        if (maxAmount == 0)
+        if (maxAmount == 0) {
             maxAmount = amount;
-        //Debug.Log("SetAmount maxAmount = " + maxAmount);
-
+        }
         int lastAmount = this.amount;
         this.amount = math.clamp(amount, 0, maxAmount);
         return math.abs(lastAmount - this.amount);

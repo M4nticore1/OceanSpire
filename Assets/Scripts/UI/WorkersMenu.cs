@@ -31,8 +31,8 @@ public class WorkersMenu : UIBehaviour
     {
         base.OnEnable();
 
-        EventBus.Instance.onResidentWidgetClicked += OnResidentWidgetClicked;
-        EventBus.Instance.onResidentAdded += OnResidentAdded;
+        EventBus.onResidentWidgetClicked += OnResidentWidgetClicked;
+        EventBus.onResidentAdded += OnResidentAdded;
         closeMenuButton.onReleased += CloseBuildingWorkersMenu;
     }
 
@@ -40,8 +40,8 @@ public class WorkersMenu : UIBehaviour
     {
         base.OnEnable();
 
-        EventBus.Instance.onResidentWidgetClicked -= OnResidentWidgetClicked;
-        EventBus.Instance.onResidentAdded -= OnResidentAdded;
+        EventBus.onResidentWidgetClicked -= OnResidentWidgetClicked;
+        EventBus.onResidentAdded -= OnResidentAdded;
         closeMenuButton.onReleased -= CloseBuildingWorkersMenu;
     }
 
@@ -51,13 +51,25 @@ public class WorkersMenu : UIBehaviour
         if (!building) return;
 
         maxBuildingWorkersCount = building.ConstructionLevelsData[building.LevelIndex].maxResidentsCount;
-
         residentWidgetsColumnCount = (int)(buildingWorkersList.GetComponent<RectTransform>().rect.width / buildingWorkersList.cellSize.x);
+        int residentsCount = CityManager.Instance.residents.Count;
+
+        // Create Widgets
+        while (spawnedResidentWidgets.Count < residentsCount) {
+            CreateResidentWidget();
+        }
+
+        // Delete Extra Widgets
+        while (spawnedResidentWidgets.Count > residentsCount) {
+            int lastIndex = spawnedResidentWidgets.Count - 1;
+            Destroy(spawnedResidentWidgets[lastIndex]);
+            spawnedResidentWidgets.RemoveAt(lastIndex);
+        }
 
         // Set parents of resident widgets
         int buildingWorkerWidgetIndex = 0;
         for (int i = 0; i < CityManager.Instance.residents.Count; i++) {
-            spawnedResidentWidgets[i].InitializeResidentWidget(CityManager.Instance.residents[i], building);
+            spawnedResidentWidgets[i].InitializeResidentWidget(CityManager.Instance.residents[i]);
 
             if (CityManager.Instance.residents[i].workBuilding) {
                 if (CityManager.Instance.residents[i].workBuilding == building) {
@@ -79,7 +91,7 @@ public class WorkersMenu : UIBehaviour
         if (emptyResidentWidgetsCount < maxBuildingWorkersCount) {
             for (int i = emptyResidentWidgetsCount; i < maxBuildingWorkersCount; i++) {
                 ResidentWidget emptyResidentWidget = Instantiate(residentWidgetPrefab);
-                emptyResidentWidget.InitializeResidentWidget(null, building);
+                emptyResidentWidget.InitializeResidentWidget(null);
                 spawnedBuildingWorkerEmptyWidgets.Add(emptyResidentWidget);
                 emptyResidentWidget.transform.SetParent(buildingWorkersList.transform);
                 emptyResidentWidget.transform.localScale = Vector3.one;
@@ -104,6 +116,11 @@ public class WorkersMenu : UIBehaviour
     }
 
     private void OnResidentAdded(Creature resident)
+    {
+        CreateResidentWidget();
+    }
+
+    private void CreateResidentWidget()
     {
         ResidentWidget residentWidget = Instantiate(residentWidgetPrefab, unemployedResidentsList.transform);
         residentWidget.transform.localScale = Vector3.one;

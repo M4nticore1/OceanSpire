@@ -16,7 +16,6 @@ public class BuildingTrigger : MonoBehaviour
         if (entity && building) {
             if (!entity.IsRidingOnElevator) {
                 entity.EnterBuilding(building);
-                entity.DecideAction();
             }
         }
         else {
@@ -31,7 +30,7 @@ public class BuildingTrigger : MonoBehaviour
         Creature entity = other.GetComponent<Creature>();
 
         if (entity) {
-            if (entity.CurrentBuilding == building)
+            if (entity.currentBuilding == building)
                 entity.ExitBuilding();
         }
     }

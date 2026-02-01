@@ -7,12 +7,12 @@ public class ProductionBuildingModule : BuildingModule
 {
     public ProductionBuildingLevelData[] ProductionLevelsData => levelsData.OfType<ProductionBuildingLevelData>().ToArray();
     public ProductionBuildingLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
-    public ProducedResource producingItem => ProductionLevelData ? (ProductionLevelData.producedResources.Count > currentProducedItemIndex ? ProductionLevelData.producedResources[currentProducedItemIndex] : null) : null;
+    public ProduceResource produceItem => ProductionLevelData ? (ProductionLevelData.producedResources.Count > currentProducedItemIndex ? ProductionLevelData.producedResources[currentProducedItemIndex] : null) : null;
 
     protected bool isProducting = false;
     protected ItemInstance producedItem = null;
     public float currentProductionTime { get; private set; } = 0.0f;
-    private bool IsStorageFull => producedItem.Amount == producingItem.maxAmount;
+    private bool IsStorageFull => producedItem.Amount >= produceItem.maxAmount;
 
     private const float storageReadyToCollectAlpha = 0.5f;
     public bool isReadyToCollect { get; private set; } = false;
@@ -21,28 +21,29 @@ public class ProductionBuildingModule : BuildingModule
     private const float produceFrequency = 1.0f;
     private float lastProduceTime = 0.0f;
 
-    private void Update()
-    {
-        if (!OwnedBuilding.buildingPlace) return;
-
-        if (isProducting)
-            Production();
-    }
-
     private void Start()
     {
         
     }
 
+    private void Update()
+    {
+        if (CanProduce()) {
+            Produce();
+        }
+    }
+
     // Overrides
     protected override void OnBuildingFinishConstructing()
     {
-        if (producingItem is ProducedResource resource)
-            producedItem = new ItemInstance(resource.producedResource.ItemData);
+        if (produceItem is ProduceResource resource)
+            producedItem = new ItemInstance(resource.produceItem.ItemData);
     }
 
     protected override void OnBuildingStartWorking()
     {
+        if (isProducting) return;
+
         StartProducting();
     }
 
@@ -74,8 +75,6 @@ public class ProductionBuildingModule : BuildingModule
     // Production
     private void StartProducting()
     {
-        if (isProducting) return;
-
         isProducting = true;
         lastProduceTime = Time.time + produceFrequency;
         OnStartProducting();
@@ -99,64 +98,76 @@ public class ProductionBuildingModule : BuildingModule
         Debug.Log("OnStopProduction");
     }
 
-    private void Production()
+    private bool CanProduce()
     {
-        if (!isProducting || OwnedBuilding.ConstructionComponent.isUnderConstruction || producingItem == null || OwnedBuilding.currentWorkers.Count == 0) return;
+        if (!isProducting) return false;
+        if (IsStorageFull) return false;
+        if (produceItem == null) return false;
+        if (OwnedBuilding.currentWorkers.Count == 0) return false;
+        return true;
+    }
 
+    private void Produce()
+    {
         if (Time.time > lastProduceTime + produceFrequency) {
             AddProducedTime(produceFrequency);
-            lastProduceTime = Time.time;
         }
     }
 
-    protected void OnLootProduct()
+    private void AddProducedTime(float time)
     {
-
+        SetProduceTime(currentProductionTime + time);
     }
 
-    public void SetProductionTime(float time)
+    public void SetProduceTime(float time)
     {
         currentProductionTime = time;
+        lastProduceTime = Time.time;
 
         ConstructionLevelData buildingLevelData = OwnedBuilding.ConstructionLevelsData[OwnedBuilding.LevelIndex];
         ProductionBuildingLevelData productionBuildingLevelData = levelsData[OwnedBuilding.LevelIndex] as ProductionBuildingLevelData;
 
         int currentPeopleCount = OwnedBuilding.currentWorkers.Count;
         int maxPeopleCount = buildingLevelData.maxResidentsCount;
-        float maxProductionTime = producingItem.produceTime * producingItem.maxAmount;
+        float maxProductionTime = produceItem.produceTime * produceItem.maxAmount;
         float productionSpeed = currentPeopleCount / maxPeopleCount;
 
-        int lootAmount = (int)math.lerp(0, producingItem.maxAmount, currentProductionTime / maxProductionTime);
-        if (lootAmount != producedItem.Amount) {
+        int lootAmount = (int)math.lerp(0, produceItem.maxAmount, currentProductionTime / maxProductionTime);
+        if (lootAmount > producedItem.Amount) {
             SetProduceLootAmount(lootAmount);
-            OnLootProduct();
         }
-    }
-
-    private void AddProducedTime(float time)
-    {
-        SetProductionTime(currentProductionTime + time);
     }
 
     private void SetProduceLootAmount(int amount)
     {
         producedItem.SetAmount(amount);
-        float alpha = (float)producedItem.Amount / producingItem.maxAmount;
 
-        if (producedItem.Amount > 0 && (float)producedItem.Amount / producingItem.maxAmount >= storageReadyToCollectAlpha) {
+        int newAmount = producedItem.Amount;
+        OnProduceItemAmountChange(newAmount);
+    }
+
+    private void OnProduceItemAmountChange(int amount)
+    {
+        // Producing Time
+        float remainder = currentProductionTime % produceItem.produceTime;
+        float time = producedItem.Amount * produceItem.produceTime + remainder;
+        SetProduceTime(time);
+
+        // Flicking
+        float alpha = (float)producedItem.Amount / produceItem.maxAmount;
+
+        if (producedItem.Amount > 0 && (float)producedItem.Amount / produceItem.maxAmount >= storageReadyToCollectAlpha) {
             if (isReadyToCollect) return;
 
             isReadyToCollect = true;
             float multiplier = alpha * CityManager.collectLootFlickingMultiplier;
             SetFlickingMultiplier(multiplier);
-            Debug.Log(isReadyToCollect + " " + multiplier);
         }
         else {
             if (!isReadyToCollect) return;
 
             isReadyToCollect = false;
             SetFlickingMultiplier(0);
-            Debug.Log("!isReadyToCollect");
         }
     }
 
@@ -166,23 +177,17 @@ public class ProductionBuildingModule : BuildingModule
         SetProduceLootAmount(newAmount);
     }
 
-    public ItemInstance TakeProducedItem()
+    public ItemInstance TakeProducedItem(int maxAmountToTake)
     {
-        if (producedItem.Amount > 0) {
-            ItemInstance storageItemInstance = CityManager.Instance.items[producedItem.ItemData.ItemId];
-            int remainingStorageCapacity = producingItem.maxAmount - storageItemInstance.Amount;
+        int producedAmount = producedItem.Amount;
+        if (producedAmount <= 0) return null;
 
-            int amountToTake = 0;
+        int amountToTake = math.min(maxAmountToTake, producedAmount);
+        SubtractProducedLootAmount(amountToTake);
 
-            if (remainingStorageCapacity >= producedItem.Amount)
-                amountToTake = producedItem.Amount;
-            else
-                amountToTake = producedItem.Amount - remainingStorageCapacity;
-
-            SubtractProducedLootAmount(amountToTake);
-            currentProductionTime -= amountToTake * producingItem.produceTime;
-        }
-
-        return producedItem;
+        ItemData producedItemData = producedItem.ItemData;
+        ItemInstance newItem = new ItemInstance(producedItemData);
+        newItem.SetAmount(amountToTake);
+        return newItem;
     }
 }

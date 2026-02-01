@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ProducedResource
+public class ProduceResource
 {
-    public ItemInstance producedResource;
+    public ItemInstance produceItem;
     public int maxAmount;
     public int produceTime;
     public List<ItemInstance> consumeResources;
@@ -13,5 +13,5 @@ public class ProducedResource
 [CreateAssetMenu(fileName = "ProductionBuildingLevelData", menuName = "Scriptable Objects/ProductionBuildingLevelData")]
 public class ProductionBuildingLevelData : BuildingModuleLevelData
 {
-    public List<ProducedResource> producedResources = new List<ProducedResource>();
+    public List<ProduceResource> producedResources = new List<ProduceResource>();
 }

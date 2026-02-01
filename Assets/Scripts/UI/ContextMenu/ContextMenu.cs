@@ -25,11 +25,11 @@ public class ContextMenu : UIBehaviour
         base.OnEnable();
 
         if (upgradeButton)
-            upgradeButton.onReleased += EventBus.Instance.InvokeContextMenuUpgradeButtonClicked;
+            upgradeButton.onReleased += EventBus.InvokeContextMenuUpgradeButtonClicked;
         if (demolishButton)
-            demolishButton.onReleased += EventBus.Instance.InvokeContextMenuDemolishButtonClicked;
+            demolishButton.onReleased += EventBus.InvokeContextMenuDemolishButtonClicked;
         if (workersButton)
-            workersButton.onReleased += EventBus.Instance.InvokeContextMenuWorkersButtonClicked;
+            workersButton.onReleased += EventBus.InvokeContextMenuWorkersButtonClicked;
     }
 
     protected override void OnDisable()
@@ -37,11 +37,11 @@ public class ContextMenu : UIBehaviour
         base.OnDisable();
 
         if (upgradeButton)
-            upgradeButton.onReleased -= EventBus.Instance.InvokeContextMenuUpgradeButtonClicked;
+            upgradeButton.onReleased -= EventBus.InvokeContextMenuUpgradeButtonClicked;
         if (demolishButton)
-            demolishButton.onReleased -= EventBus.Instance.InvokeContextMenuDemolishButtonClicked;
+            demolishButton.onReleased -= EventBus.InvokeContextMenuDemolishButtonClicked;
         if (workersButton)
-            workersButton.onReleased -= EventBus.Instance.InvokeContextMenuWorkersButtonClicked;
+            workersButton.onReleased -= EventBus.InvokeContextMenuWorkersButtonClicked;
     }
 
     public void Open(SelectComponent selectComponent)

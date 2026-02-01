@@ -7,8 +7,8 @@ public class SelectManager
 
     private SelectManager()
     {
-        EventBus.Instance.onObjectSelected += OnObjectSelected;
-        EventBus.Instance.onObjectDeselected += OnObjectDeselected;
+        EventBus.onObjectSelected += OnObjectSelected;
+        EventBus.onObjectDeselected += OnObjectDeselected;
     }
 
     public SelectComponent selectedComponent { get; private set; }

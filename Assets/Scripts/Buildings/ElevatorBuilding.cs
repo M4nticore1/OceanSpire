@@ -14,22 +14,18 @@ public class ElevatorBuilding : RoomBuilding
     {
         base.BuildConstruction(levelIndex);
 
-        Debug.Log("Elevator Build Construction");
         ElevatorBuilding belowElevatorBuilding = downNeighborBuilding as ElevatorBuilding;
         ElevatorBuilding aboveElevatorBuilding = upNeighborBuilding as ElevatorBuilding;
 
         if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorCabin) {
-            Debug.Log("Elevator Build Construction 1");
             elevatorGroupId = belowElevatorBuilding.elevatorGroupId;
             spawnedElevatorCabin = belowElevatorBuilding.spawnedElevatorCabin;
         }
         else if (aboveElevatorBuilding && aboveElevatorBuilding.spawnedElevatorCabin) {
-            Debug.Log("Elevator Build Construction 2");
             elevatorGroupId = aboveElevatorBuilding.elevatorGroupId;
             spawnedElevatorCabin = aboveElevatorBuilding.spawnedElevatorCabin;
         }
         else {
-            Debug.Log("Elevator Build Construction 2");
             ElevatorLevelData elevatorBuildingLevelData = buildingLevelsData[levelIndex] as ElevatorLevelData;
 
             if (buildingPosition == BuildingPosition.Straight)

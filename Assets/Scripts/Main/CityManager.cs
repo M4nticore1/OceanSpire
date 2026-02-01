@@ -1,11 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading.Tasks;
 using Unity.AI.Navigation;
-using Unity.Android.Gradle.Manifest;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -81,16 +78,6 @@ public class CityManager : MonoBehaviour
     [field: SerializeField] public Transform entitySpawnPosition { get; private set; } = null;
     public const float maxSpawnRange = 5f;
 
-    // Wind
-    public Vector2 windDirection { get; private set; } = Vector2.zero;
-    public float windRotation { get; private set; } = 0;
-    private Vector2 newWindDirection = Vector2.zero;
-
-    public const float windSpeed = 15.0f;
-    private const float windChangingSpeed = 0.05f;
-    private float windDirectionChangeRate = 300.0f;
-    private float windDirectionChangeTime = 0.0f;
-
     // Other
     public const float autoSaveFrequency = 1;
     public const float triggerLootContainerRadius = 150f;
@@ -118,11 +105,15 @@ public class CityManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.Instance.onBuildingPlacePressed += OnBuildingPlacePressed;
-        EventBus.Instance.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
-        EventBus.Instance.onBuildingInitialized += OnBuildingInitialized;
-        EventBus.Instance.onConstructionBuilt += OnConstructionBuilt;
-        EventBus.Instance.onConstructionDemolished += OnConstructionDemolished;
+        // Construction
+        EventBus.onBuildingPlacePressed += OnBuildingPlacePressed;
+        EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
+        EventBus.onBuildingInitialized += OnBuildingInitialized;
+        EventBus.onConstructionBuilt += OnConstructionBuilt;
+        EventBus.onConstructionDemolished += OnConstructionDemolished;
+
+        // Production Module
+        EventBus.onProductionModuleClicked += OnProductionModuleClicked;
 
         PlayerUIManager.OnBuildStopPlacing += HideAllBuildigPlaces;
 
@@ -134,11 +125,11 @@ public class CityManager : MonoBehaviour
 
     private void OnDisable()
     {
-        EventBus.Instance.onBuildingPlacePressed -= OnBuildingPlacePressed;
-        EventBus.Instance.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
-        EventBus.Instance.onBuildingInitialized -= OnBuildingInitialized;
-        EventBus.Instance.onConstructionBuilt -= OnConstructionBuilt;
-        EventBus.Instance.onConstructionDemolished -= OnConstructionDemolished;
+        EventBus.onBuildingPlacePressed -= OnBuildingPlacePressed;
+        EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
+        EventBus.onBuildingInitialized -= OnBuildingInitialized;
+        EventBus.onConstructionBuilt -= OnConstructionBuilt;
+        EventBus.onConstructionDemolished -= OnConstructionDemolished;
 
         PlayerUIManager.OnBuildStopPlacing -= HideAllBuildigPlaces;
 
@@ -153,17 +144,13 @@ public class CityManager : MonoBehaviour
         StartCoroutine(AutosaveCoroutine());
         TimerManager.Initialize();
 
-        ChangeWind();
-        windDirection = newWindDirection;
-
-        new LootManager();
         string worldName = SaveManager.Instance.saveWorldName;
         saveData = SaveSystem.GetSaveDataByWorldName(worldName);
 
         InitializeItems();
         LoadBuildings(saveData);
         LoadResources(saveData);
-        LoadCreatures(saveData);
+        CreateCreatures(saveData);
         CreateBoads(saveData);
         StartCoroutine(LoadCityAsync(saveData));
 
@@ -174,7 +161,6 @@ public class CityManager : MonoBehaviour
     {
         playerController.Tick();
 
-        ChangingWind();
         TimerManager.Tick();
     }
 
@@ -183,7 +169,7 @@ public class CityManager : MonoBehaviour
         InitializeItems();
         LoadBuildings(data);
         LoadResources(data);
-        LoadCreatures(data);
+        CreateCreatures(data);
         CreateBoads(data);
         LoadCityAsync(data);
     }
@@ -246,7 +232,6 @@ public class CityManager : MonoBehaviour
 
     private void LoadBuilding(SaveData data, int buildingIndex, int floorIndex, int placeIndex)
     {
-        Debug.Log(buildingIndex + " " + floorIndex + " " + placeIndex);
         int roomId = data.placedRoomIds[buildingIndex];
 
         if (roomId >= 0) {
@@ -264,7 +249,6 @@ public class CityManager : MonoBehaviour
                 buildingPlace = builtFloors[floorIndex].roomBuildingPlaces[placeIndex - 1];
             }
             Building building = PlaceBuilding(buildingToPlace as TowerBuilding, buildingPlace, buildingLevelIndex, buildingIsUnderConstruction);
-            Debug.Log(building);
 
             if (building) {
                 // Buildings
@@ -279,7 +263,7 @@ public class CityManager : MonoBehaviour
                 ProductionBuildingModule productionBuilding = building.GetComponent<ProductionBuildingModule>();
                 if (productionBuilding) {
                     float time = data.buildingProductionTimers != null && data.buildingProductionTimers.Length > buildingIndex ? data.buildingProductionTimers[buildingIndex] : 0;
-                    productionBuilding.SetProductionTime(time);
+                    productionBuilding.SetProduceTime(time);
                 }
             }
         }
@@ -290,35 +274,15 @@ public class CityManager : MonoBehaviour
         //}
     }
 
-    private void LoadCreatures(SaveData data)
+    private void CreateCreatures(SaveData data)
     {
         Vector3 position = Vector3.zero;
         Quaternion rotation = Quaternion.identity;
-
         if (data != null) {
             for (int i = 0; i < data.residentsCount; i++) {
                 position = new Vector3(data.residentPositionsX[i], data.residentPositionsY[i], data.residentPositionsZ[i]);
                 rotation = Quaternion.identity;
                 Creature resident = CreateResident(position, rotation);
-
-                // Set Current Building
-                if (data.residentCurrentBuildingIndexes != null && data.residentCurrentBuildingIndexes.Length > i && data.residentCurrentBuildingIndexes[i] >= 0) {
-                    Building building = builtFloors[(data.residentCurrentBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentCurrentBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
-                    if (building)
-                        resident.EnterBuilding(building);
-                }
-
-                // Set Work Building
-                if (data.residentWorkBuildingIndexes != null && data.residentWorkBuildingIndexes.Length > i && data.residentWorkBuildingIndexes[i] >= 0) {
-                    Building building = builtFloors[(data.residentWorkBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentWorkBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
-                    if (building)
-                        resident.SetWork(building);
-                }
-
-                if (data.npcElevatorPassengerStates != null && data.npcElevatorPassengerStates.Length > i && data.npcElevatorPassengerStates[i] >= 0) {
-                    ElevatorPassengerState state = (ElevatorPassengerState)data.npcElevatorPassengerStates[i];
-                    resident.SetElevatorPassengerState(state);
-                }
             }
         }
         else {
@@ -330,6 +294,38 @@ public class CityManager : MonoBehaviour
                 float z = UnityEngine.Random.Range(position.z - maxSpawnRange, position.z + maxSpawnRange);
                 Vector3 finalPosition = new Vector3(x, y, z);
                 CreateResident(finalPosition, rotation);
+            }
+        }
+    }
+
+    private void LoadCreatures(SaveData data)
+    {
+        for (int i = 0; i < residents.Count; i++) {
+            Creature resident = residents[i];
+
+            // Enable Nav Mesh
+            resident.navMeshAgent.enabled = true;
+
+            if (data != null) {
+
+                // Set Current Building
+                if (data.residentCurrentBuildingIndexes != null && data.residentCurrentBuildingIndexes.Length > i && data.residentCurrentBuildingIndexes[i] >= 0) {
+                    Building building = builtFloors[(data.residentCurrentBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentCurrentBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
+                    if (building)
+                        resident.EnterBuilding(building);
+                }
+
+                // Set Work Building
+                if (data.residentTowerBuildingWorkIndexes != null && data.residentTowerBuildingWorkIndexes.Length > i && data.residentTowerBuildingWorkIndexes[i] >= 0) {
+                    Building building = builtFloors[(data.residentTowerBuildingWorkIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentTowerBuildingWorkIndexes[i] % roomsCountPerFloor].placedBuilding;
+                    if (building)
+                        resident.SetWork(building);
+                }
+
+                if (data.npcElevatorPassengerStates != null && data.npcElevatorPassengerStates.Length > i && data.npcElevatorPassengerStates[i] >= 0) {
+                    ElevatorPassengerState state = (ElevatorPassengerState)data.npcElevatorPassengerStates[i];
+                    resident.SetElevatorPassengerState(state);
+                }
             }
         }
     }
@@ -400,9 +396,7 @@ public class CityManager : MonoBehaviour
 
         isNavMeshBuilt = true;
 
-        foreach (var resident in residents) {
-            resident.navMeshAgent.enabled = true;
-        }
+        LoadCreatures(data);
     }
 
     private Creature CreateResident(Vector3 spawnPosition, Quaternion spawnRotation)
@@ -419,14 +413,14 @@ public class CityManager : MonoBehaviour
     {
         residents.Add(resident);
         unemployedResidentsCount++;
-        EventBus.Instance.InvokeResidentAdded(resident);
+        EventBus.InvokeResidentAdded(resident);
     }
 
     private void RemoveResident(Creature resident)
     {
         Destroy(resident);
         unemployedResidentsCount++;
-        EventBus.Instance.InvokeResidentRemoved(resident);
+        EventBus.InvokeResidentRemoved(resident);
     }
 
     public void AddWorker()
@@ -576,9 +570,9 @@ public class CityManager : MonoBehaviour
             PlaceBoat(boat, true);
     }
 
-    public Building PlaceBuilding(TowerBuilding building, BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
+    public Building PlaceBuilding(TowerBuilding buildingToPlace, BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
     {
-        if (!building) {
+        if (!buildingToPlace) {
             Debug.LogError("building is NULL");
             return null;
         }
@@ -589,18 +583,17 @@ public class CityManager : MonoBehaviour
 
         TowerBuilding spawnedBuilding = buildingPlace.placedBuilding;
         if (spawnedBuilding && spawnedBuilding.isInitialized) {
-            buildingPlace.SetPlacedBuilding(building);
+            buildingPlace.SetPlacedBuilding(spawnedBuilding);
             return spawnedBuilding;
         }
 
         // Spawn
         if (!spawnedBuilding) {
-            spawnedBuilding = Instantiate(building, buildingPlace.transform);
+            spawnedBuilding = Instantiate(buildingToPlace, buildingPlace.transform);
         }
 
         // Initialize
         if (!spawnedBuilding.isInitialized) {
-            Debug.Log("Initialize");
             spawnedBuilding.InitializeBuilding(buildingPlace, isUnderConstruction, levelIndex);
         }
 
@@ -701,7 +694,7 @@ public class CityManager : MonoBehaviour
             else
                 Debug.LogError(building.BuildingData.BuildingName + $" has no StorageBuildingLevelData by level index {level}");
 
-            EventBus.Instance.InvokeStorageCapacityChanged();
+            EventBus.InvokeStorageCapacityChanged();
         }
     }
 
@@ -787,6 +780,18 @@ public class CityManager : MonoBehaviour
         return floorIndex;
     }
 
+    // Production Module
+    private void OnProductionModuleClicked(ProductionBuildingModule module)
+    {
+        int itemId = module.produceItem.produceItem.ItemData.ItemId;
+        int maxAmount = maxItemsAmount[itemId];
+        int remainedAmount = maxItemsAmount[itemId] - items[itemId].Amount;
+
+        ItemInstance itemToTake = module.TakeProducedItem(remainedAmount);
+        Debug.Log(itemToTake.Amount);
+        AddItem(itemToTake);
+    }
+
     // Boats
     private void OnBoatDestroyed(Boat boat)
     {
@@ -842,14 +847,12 @@ public class CityManager : MonoBehaviour
 
     public int AddItem(ItemInstance item)
     {
-        int amountToReturn = AddItem_Internal(item.ItemData.ItemId, item.Amount);
-        return amountToReturn;
+        return AddItem_Internal(item.ItemData.ItemId, item.Amount);
     }
 
     public int AddItem(int itemId, int amount)
     {
-        int amountToReturn = AddItem_Internal(itemId, amount);
-        return amountToReturn;
+        return AddItem_Internal(itemId, amount);
     }
 
     public void AddItems(List<ItemInstance> items)
@@ -861,8 +864,11 @@ public class CityManager : MonoBehaviour
     private int AddItem_Internal(int itemId, int amount)
     {
         ItemInstance item = items[itemId];
-        item.AddAmount(amount, maxItemsAmount[itemId]);
-        EventBus.Instance.InvokeLootAdded(item);
+        int maxAmount = maxItemsAmount[itemId];
+        item.AddAmount(amount, maxAmount);
+        Debug.Log(amount);
+        Debug.Log(item.Amount);
+        EventBus.InvokeItemAdded(item);
         return item.Amount;
     }
 
@@ -930,6 +936,9 @@ public class CityManager : MonoBehaviour
         if (!startPlace || startPlace.floorIndex < firstBuildCityFloorIndex)
             startPlace = builtFloors[firstBuildCityFloorIndex].roomBuildingPlaces[firstBuildCityBuildingPlace];
 
+        Debug.Log(startPlace.floorIndex + " " + startPlace.BuildingPlaceIndex);
+        Debug.Log(targetBuilding);
+
         // Main
         HashSet<Building> visitedBuildings = new HashSet<Building>();
         bool found = FindPath(startPlace, targetBuilding, allPaths, ref pathIndex, visitedBuildings);
@@ -970,19 +979,18 @@ public class CityManager : MonoBehaviour
         if (startBuilding == targetBuilding)
             return true;
 
-        TowerBuilding towerBuilding = startBuilding as TowerBuilding;
-        if (!towerBuilding) {
+        TowerBuilding startTowerBuilding = startBuilding as TowerBuilding;
+        if (!startTowerBuilding) {
             Debug.LogError("startTowerBuilding is NULL");
             return false;
         }
 
-        ElevatorBuilding startElevator = towerBuilding as ElevatorBuilding;
+        ElevatorBuilding startElevator = startTowerBuilding as ElevatorBuilding;
         int enterIndex = pathIndex;
         int currentPathLength = buildingPaths[enterPathIndex].Count;
-
         // Get new paths
         int buildingsCount = 0;
-        foreach (TowerBuilding direction in startElevator ? startElevator.NeighborBuildings(NeighborMask.All) : towerBuilding.NeighborBuildings(NeighborMask.Horizontal)) {
+        foreach (TowerBuilding direction in startElevator ? startElevator.NeighborBuildings(NeighborMask.All) : startTowerBuilding.NeighborBuildings(NeighborMask.Horizontal)) {
             if (!direction) continue;
             if (visitedBuildings.Contains(direction)) continue;
 
@@ -996,25 +1004,6 @@ public class CityManager : MonoBehaviour
             buildingsCount++;
         }
         return false;
-    }
-
-    private void ChangingWind()
-    {
-        if (Time.time > windDirectionChangeTime + windDirectionChangeRate)
-        {
-            ChangeWind();
-        }
-
-        windDirection = math.lerp(windDirection, newWindDirection, windChangingSpeed * Time.deltaTime);
-    }
-
-    private void ChangeWind()
-    {
-        float xAxis = UnityEngine.Random.Range(-1.0f, 1.0f);
-        float yAxis = UnityEngine.Random.Range(-1.0f, 1.0f);
-        newWindDirection = new Vector2(xAxis, yAxis).normalized;
-
-        windDirectionChangeTime = Time.time;
     }
 
     private IEnumerator AutosaveCoroutine()

@@ -17,8 +17,8 @@ public class SaveManager
 
     public void Initialize()
     {
-        EventBus.Instance.onCreateWorldButtonClicked += CreateWorld;
-        EventBus.Instance.onLoadWorldButtonClicked += LoadWorld;
+        EventBus.onCreateWorldButtonClicked += CreateWorld;
+        EventBus.onLoadWorldButtonClicked += LoadWorld;
         FindSavesData();
     }
 

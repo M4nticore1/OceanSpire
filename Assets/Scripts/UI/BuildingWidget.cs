@@ -75,12 +75,12 @@ public class BuildingWidget : MonoBehaviour
 
     private void OnBuildButtonCliked()
     {
-        EventBus.Instance.InvokeBuildingWidgetBuildClicked(this);
+        EventBus.InvokeBuildingWidgetBuildClicked(this);
     }
 
     private void OnInformationButtonClicked()
     {
-        EventBus.Instance.InvokeBuildingWidgetInformationClicked(this);
+        EventBus.InvokeBuildingWidgetInformationClicked(this);
     }
 
     public void UpdateResourcesToBuild()

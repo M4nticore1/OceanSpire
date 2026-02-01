@@ -10,7 +10,7 @@ public class SelectComponent : MonoBehaviour
         foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
             child.layer = LayerMask.NameToLayer("Outlined");
         }
-        EventBus.Instance.InvokeObjectSelected(this);
+        EventBus.InvokeObjectSelected(this);
     }
 
     public void Deselect()
@@ -19,6 +19,6 @@ public class SelectComponent : MonoBehaviour
         foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
             child.layer = LayerMask.NameToLayer("Default");
         }
-        EventBus.Instance.InvokeObjectDeselected();
+        EventBus.InvokeObjectDeselected();
     }
 }

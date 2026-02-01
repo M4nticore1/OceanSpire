@@ -15,12 +15,12 @@ public class ConstructionInformationMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.Instance.onBuildingWidgetInformationClicked += OnBuildingWidgetInformationClicked;
+        EventBus.onBuildingWidgetInformationClicked += OnBuildingWidgetInformationClicked;
     }
 
     private void OnDisable()
     {
-        EventBus.Instance.onBuildingWidgetInformationClicked -= OnBuildingWidgetInformationClicked;
+        EventBus.onBuildingWidgetInformationClicked -= OnBuildingWidgetInformationClicked;
     }
 
     private void OnBuildingWidgetInformationClicked(BuildingWidget widget)
@@ -53,7 +53,7 @@ public class ConstructionInformationMenu : MonoBehaviour
 
         if (productionBuilding) {
             ProductionBuildingLevelData levelData = productionBuilding.ProductionLevelData;
-            ItemInstance producedResource = levelData.producedResources[productionBuilding.currentProducedItemIndex].producedResource;
+            ItemInstance producedResource = levelData.producedResources[productionBuilding.currentProducedItemIndex].produceItem;
             CreateCharacteristicWidget("Produces", producedResource.Amount, producedResource.ItemData.ItemIcon);
             CreateCharacteristicWidget("Consumes", producedResource.Amount, producedResource.ItemData.ItemIcon);
         }

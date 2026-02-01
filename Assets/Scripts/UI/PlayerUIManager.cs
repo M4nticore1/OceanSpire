@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using TMPro;
 using Unity.Mathematics;
-using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class PlayerUIManager : MonoBehaviour
 {
@@ -88,25 +85,25 @@ public class PlayerUIManager : MonoBehaviour
         stopPlacingBuildingButton.onReleased += StopPlacingBuilding;
 
         // Constructing
-        EventBus.Instance.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
-        EventBus.Instance.onConstructionPlaced += OnConstructionPlaced;
-        //EventBus.Instance.onStorageCapacityChanged += OnStorageCapacityUpdated;
+        EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
+        EventBus.onConstructionPlaced += OnConstructionPlaced;
+        //EventBus.onStorageCapacityChanged += OnStorageCapacityUpdated;
 
         // Loot
-        //EventBus.Instance.onLootAdded += OnLootAdded;
+        //EventBus.onLootAdded += OnLootAdded;
 
         // Selecte
-        EventBus.Instance.onObjectSelected += OnObjectSelected;
-        EventBus.Instance.onObjectDeselected += OnObjectDeselected;
+        EventBus.onObjectSelected += OnObjectSelected;
+        EventBus.onObjectDeselected += OnObjectDeselected;
 
         // Context Menu
-        EventBus.Instance.onContextMenuUpgradeButtonClicked += OnContextMenuUpgradeButtonClicked;
-        EventBus.Instance.onContextMenuDemolishButtonClicked += OnContextMenuDemolishButtonClicked;
-        EventBus.Instance.onContextMenuWorkersButtonClicked += OnContextMenuWorkersButtonClicked;
+        EventBus.onContextMenuUpgradeButtonClicked += OnContextMenuUpgradeButtonClicked;
+        EventBus.onContextMenuDemolishButtonClicked += OnContextMenuDemolishButtonClicked;
+        EventBus.onContextMenuWorkersButtonClicked += OnContextMenuWorkersButtonClicked;
 
         // Stas Menu
-        EventBus.Instance.onCameraEnteredStatsMenuDistance += OnCameraEnteredStatsMenuDistance;
-        EventBus.Instance.onCameraExitedStatsMenuDistance += OnCameraExitedStatsMenuDistance;
+        EventBus.onCameraEnteredStatsMenuDistance += OnCameraEnteredStatsMenuDistance;
+        EventBus.onCameraExitedStatsMenuDistance += OnCameraExitedStatsMenuDistance;
 
         // Building List Buttons
         System.Array buildingCategoriesEnum = System.Enum.GetValues(typeof(BuildingCategory));
@@ -137,25 +134,25 @@ public class PlayerUIManager : MonoBehaviour
         stopPlacingBuildingButton.onReleased -= StopPlacingBuilding;
 
         // Constructing
-        EventBus.Instance.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
-        EventBus.Instance.onConstructionPlaced -= OnConstructionPlaced;
-        //EventBus.Instance.onStorageCapacityChanged -= OnStorageCapacityUpdated;
+        EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
+        EventBus.onConstructionPlaced -= OnConstructionPlaced;
+        //EventBus.onStorageCapacityChanged -= OnStorageCapacityUpdated;
 
         // Loot
-        //EventBus.Instance.onLootAdded -= OnLootAdded;
+        //EventBus.onLootAdded -= OnLootAdded;
 
         // Selecte
-        EventBus.Instance.onObjectSelected -= OnObjectSelected;
-        EventBus.Instance.onObjectDeselected -= OnObjectDeselected;
+        EventBus.onObjectSelected -= OnObjectSelected;
+        EventBus.onObjectDeselected -= OnObjectDeselected;
 
         // Context Menu
-        EventBus.Instance.onContextMenuUpgradeButtonClicked -= OnContextMenuUpgradeButtonClicked;
-        EventBus.Instance.onContextMenuDemolishButtonClicked -= OnContextMenuDemolishButtonClicked;
-        EventBus.Instance.onContextMenuWorkersButtonClicked -= OnContextMenuWorkersButtonClicked;
+        EventBus.onContextMenuUpgradeButtonClicked -= OnContextMenuUpgradeButtonClicked;
+        EventBus.onContextMenuDemolishButtonClicked -= OnContextMenuDemolishButtonClicked;
+        EventBus.onContextMenuWorkersButtonClicked -= OnContextMenuWorkersButtonClicked;
 
         // Stas Menu
-        EventBus.Instance.onCameraEnteredStatsMenuDistance -= OnCameraEnteredStatsMenuDistance;
-        EventBus.Instance.onCameraExitedStatsMenuDistance -= OnCameraExitedStatsMenuDistance;
+        EventBus.onCameraEnteredStatsMenuDistance -= OnCameraEnteredStatsMenuDistance;
+        EventBus.onCameraExitedStatsMenuDistance -= OnCameraExitedStatsMenuDistance;
 
         // Building List Buttons
         System.Array buildingCategoriesEnum = System.Enum.GetValues(typeof(BuildingCategory));

@@ -13,10 +13,8 @@ public enum ResidentWidgetState
 public class ResidentWidget : MonoBehaviour
 {
     [HideInInspector] public Creature resident = null;
-    [HideInInspector] public Building selectedBuilding = null;
 
     public int widgetIndex = 0;
-    private ResidentWidgetState residentWidgetState = ResidentWidgetState.NonSelectedWorker;
 
     [SerializeField] private GameObject selectedResidentMenu = null;
     [SerializeField] private GameObject nonSelectedResidentMenu = null;
@@ -30,14 +28,12 @@ public class ResidentWidget : MonoBehaviour
 
     private void OnDisable()
     {
-        residentWidgetButton.onClick.RemoveAllListeners();
+        residentWidgetButton.onClick.RemoveListener(ClickWidget);
     }
 
-    public void InitializeResidentWidget(Creature resident, Building selectedBuilding)
+    public void InitializeResidentWidget(Creature resident)
     {
         this.resident = resident;
-        this.selectedBuilding = selectedBuilding;
-
         if (resident) {
             ShowResidentMenu();
         }
@@ -66,24 +62,6 @@ public class ResidentWidget : MonoBehaviour
 
     private void ClickWidget()
     {
-        if (resident.workBuilding) {
-            if (resident.workBuilding == selectedBuilding) {
-                resident.RemoveWork();
-                resident.DecideAction();
-            }
-            else {
-                if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
-                    resident.SetWork(selectedBuilding);
-                    resident.DecideAction();
-                }
-            }
-        }
-        else {
-            if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
-                resident.SetWork(selectedBuilding);
-                resident.DecideAction();
-            }
-        }
-        EventBus.Instance.InvokeResidentWidgetClicked(this);
+        EventBus.InvokeResidentWidgetClicked(this);
     }
 }
