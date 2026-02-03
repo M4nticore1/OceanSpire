@@ -15,7 +15,7 @@ MonoBehaviour:
   buildingId: 0
   buildingIdName: floor_frame
   buildingName: Floor Frame
-  buildingType: 3
+  buildingType: 2
   buildingCategory: 0
   connectionType: 0
   detailsWindowVariant: 0
@@ -24,4 +24,3 @@ MonoBehaviour:
   buildingFloors: 1
   maxBuildingFloors: 1
   isDemolishable: 1
-  detailsMenuWidget: {fileID: 0}

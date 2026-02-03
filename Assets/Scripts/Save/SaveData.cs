@@ -13,25 +13,29 @@ public class SaveData
     public float cameraHeightPosition { get; private set; } = 0;
 
     // City
-    public int builtFloorsCount { get; private set; } = 0;
-    public int[] placedRoomIds { get; private set; } = new int[0];
-    public int[] placedRoomLevels { get; private set; } = new int[0];
-    public bool[] placedRoomsUnderConstruction { get; private set; } = new bool[0];
-    public int[] placedRoomInteriorIds { get; private set; } = new int[0];
+    //public int builtFloorsCount { get; private set; } = 0;
+    //public int[] placedRoomIds { get; private set; } = new int[0];
+    //public int[] placedRoomLevels { get; private set; } = new int[0];
+    //public bool[] placedRoomsUnderConstruction { get; private set; } = new bool[0];
+    //public int[] placedRoomInteriorIds { get; private set; } = new int[0];
 
-    public float[] elevatorPlatformHeights { get; private set; } = new float[0];
+    //public float[] elevatorPlatformHeights { get; private set; } = new float[0];
 
-    public float[] buildingProductionTimers { get; private set; } = new float[0];
+    //public float[] buildingProductionTimers { get; private set; } = new float[0];
 
     // Boats
-    public int[] spawnedBoatIds { get; private set; } = new int[0];
-    public bool[] spawnedBoatsAreUnderConstruction { get; private set; } = new bool[0];
-    public bool[] spawnedBoatsAreFloating { get; private set; } = new bool[0];
-    public bool[] spawnedBoatsAreReturning { get; private set; } = new bool[0];
-    public float[] spawnedBoatsHealth { get; private set; } = new float[0];
-    public float[] spawnedBoatPositionsX { get; private set; } = new float[0];
-    public float[] spawnedBoatPositionsZ { get; private set; } = new float[0];
-    public float[] spawnedBoatRotationsY { get; private set; } = new float[0];
+    public CityData cityData;
+    public GroundBuildingEntry[] groundBuildingsData;
+    public TowerBuildingEntry[] towerBuildingsData;
+    public BoatEntry[] boatsData;
+    //public int[] spawnedBoatIds { get; private set; } = new int[0];
+    //public bool[] spawnedBoatsAreUnderConstruction { get; private set; } = new bool[0];
+    //public bool[] spawnedBoatsAreFloating { get; private set; } = new bool[0];
+    //public bool[] spawnedBoatsAreReturning { get; private set; } = new bool[0];
+    //public float[] spawnedBoatsHealth { get; private set; } = new float[0];
+    //public float[] spawnedBoatPositionsX { get; private set; } = new float[0];
+    //public float[] spawnedBoatPositionsZ { get; private set; } = new float[0];
+    //public float[] spawnedBoatRotationsY { get; private set; } = new float[0];
 
     // Resources
     public int[] resourcesAmount { get; private set; } = new int[0];
@@ -66,82 +70,93 @@ public class SaveData
         cameraHeightPosition = playerController.cameraVerticalPosition.y;
 
         // City
-        builtFloorsCount = CityManager.Instance.builtFloors.Count;
-        int roomsCount = builtFloorsCount * CityManager.roomsCountPerFloor;
-        placedRoomIds = new int[roomsCount + builtFloorsCount];
-        placedRoomLevels = new int[roomsCount + builtFloorsCount];
-        placedRoomsUnderConstruction = new bool[roomsCount + builtFloorsCount];
-        placedRoomInteriorIds = new int[roomsCount + builtFloorsCount];
-        buildingProductionTimers = new float[roomsCount + builtFloorsCount];
+        //builtFloorsCount = CityManager.Instance.BuiltFloors.Count;
+        //int roomsCount = builtFloorsCount * CityManager.roomsCountPerFloor;
+        //placedRoomIds = new int[roomsCount + builtFloorsCount];
+        //placedRoomLevels = new int[roomsCount + builtFloorsCount];
+        //placedRoomsUnderConstruction = new bool[roomsCount + builtFloorsCount];
+        //placedRoomInteriorIds = new int[roomsCount + builtFloorsCount];
+        //buildingProductionTimers = new float[roomsCount + builtFloorsCount];
 
-        elevatorPlatformHeights = new float[roomsCount];
-        resourcesAmount = new int[CityManager.Instance.items.Length];
+        //elevatorPlatformHeights = new float[roomsCount];
+        //resourcesAmount = new int[CityManager.Instance.items.Length];
 
-        int buildingIndex = 0;
-        int lastElevatorGroupId = -1;
-        for (int floorIndex = 0; floorIndex < builtFloorsCount; floorIndex++) {
-            // Halls
-            BuildingPlace hallPlace = CityManager.Instance.builtFloors[floorIndex].hallBuildingPlace;
-            Building hall = hallPlace.placedBuilding;
-            placedRoomIds[buildingIndex] = hall ? hall.BuildingData.BuildingId : -1;
-            placedRoomLevels[buildingIndex] = hall ? hall.LevelIndex : -1;
-            placedRoomsUnderConstruction[buildingIndex] = hall ? hall.ConstructionComponent.isUnderConstruction : false;
-            buildingIndex++;
+        //int buildingIndex = 0;
+        //int lastElevatorGroupId = -1;
+        //for (int floorIndex = 0; floorIndex < builtFloorsCount; floorIndex++) {
+        //    // Halls
+        //    BuildingPlace hallPlace = CityManager.Instance.BuiltFloors[floorIndex].hallBuildingPlace;
+        //    Building hall = hallPlace.placedBuilding;
+        //    placedRoomIds[buildingIndex] = hall ? hall.BuildingData.BuildingId : -1;
+        //    placedRoomLevels[buildingIndex] = hall ? hall.LevelIndex : -1;
+        //    placedRoomsUnderConstruction[buildingIndex] = hall ? hall.ConstructionComponent.isUnderConstruction : false;
+        //    buildingIndex++;
 
-            // Rooms
-            for (int placeIndex = 0; placeIndex < CityManager.roomsCountPerFloor; placeIndex++) {
-                Building placedBuilding = CityManager.Instance.builtFloors[floorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
-                placedRoomIds[buildingIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingId : -1;
-                placedRoomLevels[buildingIndex] = placedBuilding ? placedBuilding.LevelIndex : 0;
-                placedRoomsUnderConstruction[buildingIndex] = placedBuilding ? placedBuilding.ConstructionComponent.isUnderConstruction : false;
-                placedRoomInteriorIds[buildingIndex] = placedBuilding ? placedBuilding.ConstructionComponent.interiorIndex : -1;
+        //    // Rooms
+        //    for (int placeIndex = 0; placeIndex < CityManager.roomsCountPerFloor; placeIndex++) {
+        //        Building placedBuilding = CityManager.Instance.BuiltFloors[floorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
+        //        placedRoomIds[buildingIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingId : -1;
+        //        placedRoomLevels[buildingIndex] = placedBuilding ? placedBuilding.LevelIndex : 0;
+        //        placedRoomsUnderConstruction[buildingIndex] = placedBuilding ? placedBuilding.ConstructionComponent.isUnderConstruction : false;
+        //        placedRoomInteriorIds[buildingIndex] = placedBuilding ? placedBuilding.ConstructionComponent.interiorIndex : -1;
 
-                ProductionBuildingModule productionBuilding = placedBuilding ? placedBuilding.GetComponent<ProductionBuildingModule>() : null;
-                buildingProductionTimers[buildingIndex] = productionBuilding ? productionBuilding.currentProductionTime : 0;
+        //        ProductionBuildingModule productionBuilding = placedBuilding ? placedBuilding.GetComponent<ProductionBuildingModule>() : null;
+        //        buildingProductionTimers[buildingIndex] = productionBuilding ? productionBuilding.currentProductionTime : 0;
 
-                // Elevators
-                ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;
-                if (elevatorBuilding && elevatorBuilding.elevatorGroupId > lastElevatorGroupId) {
-                    //lastElevatorGroupId = elevatorBuilding.elevatorGroupId;
-                    //if (elevatorPlatformHeights.Length > lastElevatorGroupId)
-                    //    elevatorPlatformHeights[lastElevatorGroupId] = elevatorBuilding.elevatorPlatform ? elevatorBuilding.elevatorPlatform.transform.position.y : elevatorBuilding.transform.position.y;
-                    elevatorPlatformHeights[buildingIndex] = elevatorBuilding.spawnedElevatorCabin.transform.position.y;
-                }
-                buildingIndex++;
-            }
-        }
+        //        // Elevators
+        //        ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;
+        //        if (elevatorBuilding && elevatorBuilding.elevatorGroupId > lastElevatorGroupId) {
+        //            elevatorPlatformHeights[buildingIndex] = elevatorBuilding.spawnedElevatorCabin.transform.position.y;
+        //        }
+        //        buildingIndex++;
+        //    }
+        //}
+
+        // Tower Buildings
+
 
         for (int i = 0; i < CityManager.Instance.items.Length; i++) {
             resourcesAmount[i] = CityManager.Instance.items[i].Amount;
         }
 
         // Boats
-        List<Boat> spawnedBoats = CityManager.Instance.spawnedBoats.ToList();
-        int boatsCount = spawnedBoats.Count;
-        spawnedBoatIds = new int[boatsCount];
-        spawnedBoatsAreUnderConstruction = new bool[boatsCount];
-        spawnedBoatsHealth = new float[boatsCount];
-        spawnedBoatsAreFloating = new bool[boatsCount];
-        spawnedBoatsAreReturning = new bool[boatsCount];
-        spawnedBoatPositionsX = new float[boatsCount];
-        spawnedBoatPositionsZ = new float[boatsCount];
-        spawnedBoatRotationsY = new float[boatsCount];
-        for (int i = 0; i < boatsCount; i++)
-        {
+        Boat[] spawnedBoats = CityManager.Instance.spawnedBoats.ToArray();
+        int length = spawnedBoats.Length;
+        boatsData = new BoatEntry[length];
+        for (int i = 0; i < length; i++) {
             Boat boat = spawnedBoats[i];
-            if (boat)
-            {
-                ConstructionComponent construction = boat.GetComponent<ConstructionComponent>();
-                spawnedBoatIds[i] = boat ? boat.BoatData.BoatId : -1;
-                spawnedBoatsAreUnderConstruction[i] = boat ? construction.isUnderConstruction : false;
-                spawnedBoatsAreFloating[i] = boat ? boat.isFloating : false;
-                spawnedBoatsAreReturning[i] = boat ? boat.isReturningToDock : false;
-                spawnedBoatsHealth[i] = boat ? boat.CurrentHealth : 0;
-                spawnedBoatPositionsX[i] = boat ? boat.transform.position.x : 0;
-                spawnedBoatPositionsZ[i] = boat ? boat.transform.position.z : 0;
-                spawnedBoatRotationsY[i] = boat ? boat.transform.rotation.eulerAngles.y : 0;
-            }
+            BoatEntry data = new BoatEntry();
+            boatsData[i] = data;
+
+            data.health = boat.healthComponent.CurrentHealth;
+            data.dockIndex = boat.dockIndex;
         }
+
+        //int boatsCount = spawnedBoats.Count;
+        //spawnedBoatIds = new int[boatsCount];
+        //spawnedBoatsAreUnderConstruction = new bool[boatsCount];
+        //spawnedBoatsHealth = new float[boatsCount];
+        //spawnedBoatsAreFloating = new bool[boatsCount];
+        //spawnedBoatsAreReturning = new bool[boatsCount];
+        //spawnedBoatPositionsX = new float[boatsCount];
+        //spawnedBoatPositionsZ = new float[boatsCount];
+        //spawnedBoatRotationsY = new float[boatsCount];
+        //for (int i = 0; i < boatsCount; i++)
+        //{
+        //    Boat boat = spawnedBoats[i];
+        //    if (boat)
+        //    {
+        //        ConstructionComponent construction = boat.GetComponent<ConstructionComponent>();
+        //        spawnedBoatIds[i] = boat ? boat.BoatData.BoatId : -1;
+        //        spawnedBoatsAreUnderConstruction[i] = boat ? construction.isUnderConstruction : false;
+        //        spawnedBoatsAreFloating[i] = boat ? boat.isFloating : false;
+        //        spawnedBoatsAreReturning[i] = boat ? boat.isReturningToDock : false;
+        //        spawnedBoatsHealth[i] = boat ? boat.CurrentHealth : 0;
+        //        spawnedBoatPositionsX[i] = boat ? boat.transform.position.x : 0;
+        //        spawnedBoatPositionsZ[i] = boat ? boat.transform.position.z : 0;
+        //        spawnedBoatRotationsY[i] = boat ? boat.transform.rotation.eulerAngles.y : 0;
+        //    }
+        //}
 
         // Residents
         residentsCount = CityManager.Instance.residents.Count;

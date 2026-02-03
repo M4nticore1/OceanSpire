@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68871d69a0d600f4db549ea34f879f9e, type: 3}
+  m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
   m_Name: LivingRoomsLevelData_01
   m_EditorClassIdentifier: 
   resourcesToBuild:
   - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 3500
-  maxResidentsCount: 2
+    amount: 500
+  maxResidentsCount: 4
   constructionStraight: {fileID: 5679400671839550813, guid: 059abcf459f2ab44c8fd009efe117149, type: 3}
   constructionCorner: {fileID: 5679400671839550813, guid: 3e04522e197a65e4f8bb1d329787ec5c, type: 3}
   constructionStraightLeft: {fileID: 5679400671839550813, guid: 42b8fae4b42c64446b0186360e5c9c05, type: 3}
@@ -24,9 +24,9 @@ MonoBehaviour:
   constructionCornerLeft: {fileID: 5679400671839550813, guid: 65e5e689aba237c4981f1002f1c1fc8d, type: 3}
   constructionCornerRight: {fileID: 5679400671839550813, guid: 7de0d9869b6da6d4285ed5ffb59b9ebd, type: 3}
   constructionCornerLeftRight: {fileID: 5679400671839550813, guid: c19994cd1bdef8d41b9c954c27da7672, type: 3}
-  constructionStraightAbove: {fileID: 0}
-  constructionStraightBelow: {fileID: 0}
-  constructionStraightAboveBelow: {fileID: 0}
-  constructionCornerAbove: {fileID: 0}
-  constructionCornerBelow: {fileID: 0}
-  constructionCornerAboveBelow: {fileID: 0}
+  constructionStraightUp: {fileID: 0}
+  constructionStraightDown: {fileID: 0}
+  constructionStraightUpDown: {fileID: 0}
+  constructionCornerUp: {fileID: 0}
+  constructionCornerDown: {fileID: 0}
+  constructionCornerUpDown: {fileID: 0}

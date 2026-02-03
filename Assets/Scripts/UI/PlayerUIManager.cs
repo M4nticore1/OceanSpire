@@ -62,8 +62,6 @@ public class PlayerUIManager : MonoBehaviour
     [Header("Building Action Menu")]
     [SerializeField] private GridLayoutGroup actionResourcesLayourGroup = null;
 
-    public static event Action OnBuildStopPlacing;
-
     private Action[] buildingsButtonSelectCallbacks;
     private Action[] storageButtonSelectCallbacks;
 
@@ -86,8 +84,7 @@ public class PlayerUIManager : MonoBehaviour
 
         // Constructing
         EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
-        EventBus.onConstructionPlaced += OnConstructionPlaced;
-        //EventBus.onStorageCapacityChanged += OnStorageCapacityUpdated;
+        EventBus.onBuildingPlaced += OnBuildingPlaced;
 
         // Loot
         //EventBus.onLootAdded += OnLootAdded;
@@ -135,7 +132,7 @@ public class PlayerUIManager : MonoBehaviour
 
         // Constructing
         EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
-        EventBus.onConstructionPlaced -= OnConstructionPlaced;
+        EventBus.onBuildingPlaced -= OnBuildingPlaced;
         //EventBus.onStorageCapacityChanged -= OnStorageCapacityUpdated;
 
         // Loot
@@ -263,19 +260,24 @@ public class PlayerUIManager : MonoBehaviour
     {
         int categoriesCount = Enum.GetValues(typeof(BuildingCategory)).Length;
 
-        foreach (var building in BuildingsList.Instance.buildings) {
+        foreach (var building in BuildingsList.Instance.Buildings) {
+            if (!building) {
+                Debug.LogError("building is NULL");
+                continue;
+            }
+            if (!building.BuildingData) {
+                Debug.LogError($"Building {building} does not have a Building Data");
+                continue;
+            }
             if (!building.BuildingData.IsDemolishable) continue;
 
             BuildingCategory buildingCategory = building.BuildingData.BuildingCategory;
             BuildingWidget spawnedBuildingWidget = null;
             spawnedBuildingWidget = Instantiate(buildingWidgetPrefab, transform);
 
-            spawnedBuildingWidgets.Add(spawnedBuildingWidget);
-
-            ConstructionComponent construction = building.GetComponent<ConstructionComponent>();
-            spawnedBuildingWidget.InitializeBuildingWidget(construction);
-
+            spawnedBuildingWidget.Init(building);
             spawnedBuildingWidget.transform.SetParent(buildingLists[(int)buildingCategory].transform);
+            spawnedBuildingWidgets.Add(spawnedBuildingWidget);
         }
 
         for (int i = 0; i < categoriesCount; i++) {
@@ -492,7 +494,7 @@ public class PlayerUIManager : MonoBehaviour
     // Upgrade Building Menu
     private void OnUpgradeButtonClicked()
     {
-        CityManager.Instance.TryToUpgradeConstruction(SelectManager.Instance.selectedComponent.GetComponent<Building>());
+        //CityManager.Instance.TryToUpgradeConstruction(SelectManager.Instance.selectedComponent.GetComponent<Building>());
     }
 
     private void CleanResourceToUpgradeWidgets()
@@ -522,7 +524,7 @@ public class PlayerUIManager : MonoBehaviour
         CloseManagementMenu();
     }
 
-    private void OnConstructionPlaced(ConstructionComponent component)
+    private void OnBuildingPlaced(Building building)
     {
         if (stopPlacingBuildingButton)
             stopPlacingBuildingButton.gameObject.SetActive(false);
@@ -532,7 +534,5 @@ public class PlayerUIManager : MonoBehaviour
     {
         if (stopPlacingBuildingButton)
             stopPlacingBuildingButton.gameObject.SetActive(false);
-
-        OnBuildStopPlacing?.Invoke();
     }
 }

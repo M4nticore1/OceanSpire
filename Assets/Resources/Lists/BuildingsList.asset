@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50dd9fcba643f3f48bc4ca0ce1aa947c, type: 3}
   m_Name: BuildingsList
   m_EditorClassIdentifier: 
-  <buildings>k__BackingField:
-  - {fileID: 2892744138841790576, guid: b502e72fb7c0d1c4ea2bca5ae9b69e09, type: 3}
-  - {fileID: -7379394397927831526, guid: fd5c8c3152fee9b4ca22169df5ca9d51, type: 3}
-  - {fileID: 8331393561667859132, guid: 0b6d32f3a8efa89429c4ae6f138b821f, type: 3}
-  - {fileID: -1917393463895517600, guid: 440b02943862e8a4b9a97002ceac8cd9, type: 3}
-  - {fileID: 7098873123747204009, guid: 6ff69cf136c10a847a2271a8288e80c5, type: 3}
-  - {fileID: 7098873123747204009, guid: a7b3f771ef6391645bbc32d0df5a7447, type: 3}
-  - {fileID: 2241001778374089610, guid: f3fb223c5ced85848b4d97f51c42eb7d, type: 3}
-  - {fileID: 2241001778374089610, guid: 1d4b6d91d77214c418442861ca8235ea, type: 3}
+  buildings:
+  - {fileID: 7195581991672318716, guid: 027e85367eebde44397c30b3608ccfdb, type: 3}
+  - {fileID: 4477617273102776781, guid: fd5c8c3152fee9b4ca22169df5ca9d51, type: 3}
+  - {fileID: 105109679734778071, guid: 0b6d32f3a8efa89429c4ae6f138b821f, type: 3}
+  - {fileID: -6531259352477346386, guid: 440b02943862e8a4b9a97002ceac8cd9, type: 3}
+  - {fileID: -6531259352477346386, guid: 33a1d5e9ea0613f4b9ddfc2f466eb0a8, type: 3}
+  - {fileID: -6531259352477346386, guid: 863d037b6dece34498588d92f3320382, type: 3}
+  - {fileID: 4940279212636065327, guid: f3fb223c5ced85848b4d97f51c42eb7d, type: 3}
+  - {fileID: 3320796776946038933, guid: 1d4b6d91d77214c418442861ca8235ea, type: 3}
   - {fileID: 7452491075021778987, guid: afedc523fc07a7c4fb612b9c7e79faad, type: 3}

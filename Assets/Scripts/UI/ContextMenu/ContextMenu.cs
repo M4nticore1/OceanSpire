@@ -59,7 +59,7 @@ public class ContextMenu : UIBehaviour
         }
         else if (boat) {
             SetNameText(boat.BoatData.BoatName);
-            SetHealthValue(boat.CurrentHealth, boat.BoatData.MaxHealth);
+            SetHealthValue(boat.healthComponent.CurrentHealth, boat.healthComponent.MaxHealth);
             SetBoatCurrentWeight(boat.currentWeight, boat.BoatData.MaxWeight);
         }
     }

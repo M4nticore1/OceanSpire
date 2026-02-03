@@ -64,7 +64,7 @@ public class SaveSlotWidget : MonoBehaviour
         loadWorldMenu.SetActive(true);
 
         worldNameText.text = data.worldName;
-        floorsCountText.text += $"\n{data.builtFloorsCount.ToString()}";
+        floorsCountText.text += $"\n{data.cityData?.floorsCount.ToString()}";
         residentsCountText.text += $"\n{data.residentsCount.ToString()}";
         //lastSaveDataText.text += $"\n{data.lastSaveData.ToString()}";
 

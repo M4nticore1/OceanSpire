@@ -58,6 +58,9 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
+      addedObject: {fileID: -6531259352477346386}
+    - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+      insertIndex: -1
       addedObject: {fileID: -1917393463895517600}
   m_SourcePrefab: {fileID: 100100000, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
 --- !u!1 &8673097211342416700 stripped
@@ -65,6 +68,22 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
   m_PrefabInstance: {fileID: 1775028883656775870}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &-6531259352477346386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673097211342416700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948dda070484eea44ac9c5089a182b2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerBuilding
+  buildingData: {fileID: 11400000, guid: 37514f549e594764a8ae2162a25ee80e, type: 2}
+  buildingLevelsData:
+  - {fileID: 11400000, guid: 62b2143ea6dd1154c9a0539b1b3ab4e0, type: 2}
+  isRuined: 0
 --- !u!114 &-1917393463895517600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,7 +96,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f08c10878c07134abcad1e3dedc07f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingData: {fileID: 11400000, guid: 37514f549e594764a8ae2162a25ee80e, type: 2}
-  buildingLevelsData:
-  - {fileID: 11400000, guid: 0c1371e5d17cbc04c8d54f3a8c4ad1e2, type: 2}
-  elevatorGroupId: 0
+  levelsData: []

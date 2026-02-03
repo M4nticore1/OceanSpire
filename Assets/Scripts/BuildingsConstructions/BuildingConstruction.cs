@@ -36,7 +36,7 @@ public class BuildingConstruction : MonoBehaviour
 
     }
 
-    public virtual void Build(Building ownedBuilding)
+    public virtual void Init(Building ownedBuilding)
     {
         this.ownedBuilding = ownedBuilding;
         meshRendererers = GetComponentsInChildren<MeshRenderer>();

@@ -24,9 +24,8 @@ public enum BuildingType
 {
     Room,
     Hall,
-    Elevator,
     FloorFrame,
-    Environment,
+    Environment
 };
 
 [Serializable]

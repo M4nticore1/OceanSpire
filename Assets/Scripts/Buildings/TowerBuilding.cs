@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,18 +31,23 @@ public enum NeighborMask
     All = Horizontal | Vertical
 }
 
-[AddComponentMenu("")]
+[Serializable]
+public class TowerBuildingEntry : BuildingEntry
+{
+    public int floorIndex = 0;
+    public int placeIndex = 0;
+}
+
 public class TowerBuilding : Building
 {
-    protected BuildingPosition buildingPosition { get; private set; } = BuildingPosition.Straight;
-    public int floorIndex => buildingPlace ? buildingPlace.floorIndex : 0;
-    public int placeIndex => buildingPlace ? buildingPlace.BuildingPlaceIndex : 0;
+    public BuildingPosition buildingPosition { get; private set; } = BuildingPosition.Straight;
+    public int floorIndex = 0;
+    public int placeIndex = 0;
 
-
-    public TowerBuilding leftNeighborBuilding { get; private set; }
-    public TowerBuilding rightNeighborBuilding { get; private set; }
-    public TowerBuilding upNeighborBuilding { get; private set; }
-    public TowerBuilding downNeighborBuilding { get; private set; }
+    public TowerBuilding leftNeighborBuilding;
+    public TowerBuilding rightNeighborBuilding;
+    public TowerBuilding upNeighborBuilding;
+    public TowerBuilding downNeighborBuilding;
 
     public TowerBuilding leftConnectedBuilding => CheckConnectionPossibility(leftNeighborBuilding, ConnectionType.Horizontal);
     public TowerBuilding rightConnectedBuilding => CheckConnectionPossibility(rightNeighborBuilding, ConnectionType.Horizontal);
@@ -68,17 +74,34 @@ public class TowerBuilding : Building
     {
         base.OnEnable();
 
-        EventBus.onConstructionPlaced += OnConstructionPlaced;
+        EventBus.onBuildingPlaced += OnConstructionPlaced;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+
+        EventBus.onBuildingPlaced -= OnConstructionPlaced;
     }
 
-    protected override void OnInitialize(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
+    protected override void Start()
     {
-        base.OnInitialize(buildingPlace, isUnderConstruction, levelIndex, interiorIndex);
+
+    }
+
+    protected override void OnInit(BuildingEntry data)
+    {
+        TowerBuildingEntry towerData = data as TowerBuildingEntry;
+        floorIndex = towerData.floorIndex;
+        placeIndex = towerData.placeIndex;
+
+        BuildingPlace place = null;
+        if (BuildingData.BuildingType == BuildingType.Room)
+            place = CityManager.Instance.BuiltFloors[towerData.floorIndex].roomBuildingPlaces[towerData.placeIndex];
+        if (BuildingData.BuildingType == BuildingType.Hall)
+            place = CityManager.Instance.BuiltFloors[towerData.floorIndex].hallBuildingPlace;
+        else if (BuildingData.BuildingType == BuildingType.FloorFrame)
+            place = CityManager.Instance.BuiltFloors[towerData.floorIndex].floorBuildingPlace;
 
         GetAllNeighborBuildings();
 
@@ -88,18 +111,81 @@ public class TowerBuilding : Building
             buildingPosition = BuildingPosition.Straight;
     }
 
+    protected override BuildingConstruction GetConstruction()
+    {
+        BuildingConstruction construction = null;
+        if (LevelData is TowerBuildingLevelData levelData) {
+            if (buildingData.ConnectionType == ConnectionType.None) {
+                if (buildingPosition == BuildingPosition.Straight) {
+                    if (levelData.ConstructionStraight)
+                        construction = levelData.ConstructionStraight;
+                }
+                else if (buildingPosition == BuildingPosition.Corner) {
+                    if (levelData.ConstructionCorner)
+                        construction = levelData.ConstructionCorner;
+                }
+            }
+            else if (buildingData.ConnectionType == ConnectionType.Horizontal) {
+                if (buildingPosition == BuildingPosition.Straight) {
+                    if (leftConnectedBuilding && rightConnectedBuilding && levelData.ConstructionStraightLeftRight)
+                        construction = levelData.ConstructionStraightLeftRight;
+                    else if (leftConnectedBuilding && levelData.ConstructionStraightLeft)
+                        construction = levelData.ConstructionStraightLeft;
+                    else if (rightConnectedBuilding && levelData.ConstructionStraightRight)
+                        construction = levelData.ConstructionStraightRight;
+                    else if (!leftConnectedBuilding && !rightConnectedBuilding && levelData.ConstructionStraight)
+                        construction = levelData.ConstructionStraight;
+                }
+                else if (buildingPosition == BuildingPosition.Corner) {
+                    if (leftConnectedBuilding && rightConnectedBuilding && levelData.ConstructionCornerLeftRight)
+                        construction = levelData.ConstructionCornerLeftRight;
+                    else if (leftConnectedBuilding && levelData.ConstructionCornerLeft)
+                        construction = levelData.ConstructionCornerLeft;
+                    else if (rightConnectedBuilding && levelData.ConstructionCornerRight)
+                        construction = levelData.ConstructionCornerRight;
+                    else if (!leftConnectedBuilding && !rightConnectedBuilding && levelData.ConstructionCorner)
+                        construction = levelData.ConstructionCorner;
+                }
+            }
+            else if (buildingData.ConnectionType == ConnectionType.Vertical) {
+                if (buildingPosition == BuildingPosition.Straight) {
+                    if (upConnectedBuilding && downConnectedBuilding && levelData.ConstructionStraightUpDown)
+                        construction = levelData.ConstructionStraightUpDown;
+                    else if (upConnectedBuilding && levelData.ConstructionStraightUp)
+                        construction = levelData.ConstructionStraightUp;
+                    else if (downConnectedBuilding && levelData.ConstructionStraightDown)
+                        construction = levelData.ConstructionStraightDown;
+                    else if (!upConnectedBuilding && !downConnectedBuilding && levelData.ConstructionStraight)
+                        construction = levelData.ConstructionStraight;
+                }
+                else if (buildingPosition == BuildingPosition.Corner) {
+                    if (upConnectedBuilding && downConnectedBuilding && levelData.ConstructionCornerUpDown)
+                        construction = levelData.ConstructionCornerUpDown;
+                    else if (upConnectedBuilding && levelData.ConstructionCornerUp)
+                        construction = levelData.ConstructionCornerUp;
+                    else if (downConnectedBuilding && levelData.ConstructionCornerDown)
+                        construction = levelData.ConstructionCornerDown;
+                    else if (!upConnectedBuilding && !downConnectedBuilding && levelData.ConstructionCorner)
+                        construction = levelData.ConstructionCorner;
+                }
+            }
+        }
+        else {
+            Debug.LogError("LevelData is not TowerBuildingLevelData");
+        }
+
+        return construction;
+    }
+
     private TowerBuilding GetNeighborBuilding(Side side)
     {
-        int floorIndex = this.floorIndex < CityManager.firstBuildCityFloorIndex ? CityManager.firstBuildCityFloorIndex : this.floorIndex;
-        int placeIndex = this.floorIndex < CityManager.firstBuildCityFloorIndex && this.placeIndex < CityManager.firstBuildCityBuildingPlace ? CityManager.firstBuildCityBuildingPlace : this.placeIndex;
-
         int horizontalIndexOffset = side == Side.Left ? 1 : side == Side.Right ? -1 : 0;
         int verticalIndexOffset = side == Side.Up ? 1 : side == Side.Down ? -1 : 0;
         int sideIndex = (placeIndex + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
         int verticalIndex = floorIndex + verticalIndexOffset;
 
-        if (verticalIndex < CityManager.Instance.builtFloors.Count && verticalIndex >= 0) {
-            Building building = CityManager.Instance.builtFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding;
+        if (verticalIndex < CityManager.Instance.BuiltFloors.Count && verticalIndex >= 0) {
+            Building building = CityManager.Instance.BuiltFloors[verticalIndex].roomBuildingPlaces[sideIndex].placedBuilding;
             return building as TowerBuilding;
         }
         return null;
@@ -116,8 +202,8 @@ public class TowerBuilding : Building
     private TowerBuilding CheckConnectionPossibility(TowerBuilding target, ConnectionType requiredConnection)
     {
         if (!target) return null;
-        if (buildingData.ConnectionType != requiredConnection) return null;
         if (target.buildingData.BuildingId != buildingData.BuildingId) return null;
+        if (buildingData.ConnectionType != requiredConnection) return null;
 
         return target;
     }
@@ -158,8 +244,10 @@ public class TowerBuilding : Building
         return false;
     }
 
-    private void OnConstructionPlaced(ConstructionComponent construction)
+    private void OnConstructionPlaced(Building building)
     {
+        if (building is not TowerBuilding) return;
+
         GetAllNeighborBuildings();
     }
 }

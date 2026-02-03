@@ -52,43 +52,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: CoalGenerator
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6251798308294712120, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2241001778374089610}
+      addedObject: {fileID: 1786585214154959172}
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1786585214154959172}
+      addedObject: {fileID: 3320796776946038933}
   m_SourcePrefab: {fileID: 100100000, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
 --- !u!1 &8673097211342416700 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
   m_PrefabInstance: {fileID: 1775028883656775870}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2241001778374089610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8673097211342416700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2665c07387d67614998ea718af530a4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buildingData: {fileID: 11400000, guid: 729d9660a6c906e4daee160193b3e157, type: 2}
-  buildingLevelsData:
-  - {fileID: 11400000, guid: 4bbb3a2a17e937e4ab3c5a716e539a8f, type: 2}
-  - {fileID: 11400000, guid: 687824843f2188141b52eb67883dae9d, type: 2}
-  - {fileID: 11400000, guid: aa09133ea6ebbae49be51d0b319c99bb, type: 2}
-  leftNeighborBuilding: {fileID: 0}
-  rightNeighborBuilding: {fileID: 0}
-  upNeighborBuilding: {fileID: 0}
-  downNeighborBuilding: {fileID: 0}
 --- !u!114 &1786585214154959172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,3 +84,19 @@ MonoBehaviour:
   levelsData:
   - {fileID: 11400000, guid: 2b61ec27db2b0eb4481a6d2149707dc7, type: 2}
   smokePrefab: {fileID: 932927189342864260, guid: 5b46cb6248341f54c8bc5c365bedb7df, type: 3}
+--- !u!114 &3320796776946038933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673097211342416700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948dda070484eea44ac9c5089a182b2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerBuilding
+  buildingData: {fileID: 11400000, guid: 729d9660a6c906e4daee160193b3e157, type: 2}
+  buildingLevelsData:
+  - {fileID: 11400000, guid: 4bbb3a2a17e937e4ab3c5a716e539a8f, type: 2}
+  isRuined: 0

@@ -52,7 +52,7 @@ public class LootManager : MonoBehaviour
 
     private void SpawnLootContainer(LootContainer container, int index)
     {
-        if (container.FloorsCountToSpawn > CityManager.Instance.builtFloors.Count) return;
+        if (container.FloorsCountToSpawn > CityManager.Instance.BuiltFloors.Count) return;
 
         currentSpawnContainersTime[index] += spawnFrequency;
 
@@ -65,7 +65,7 @@ public class LootManager : MonoBehaviour
         //Vector2 windDorection = CityManager.Instance.windDirection.normalized;
 
         // Spawn position
-        int maxFloorNumber = container.maxSpawnFloorNumber > 0 ? container.maxSpawnFloorNumber : container.minSpawnFloorNumber > 0 ? (CityManager.Instance.builtFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
+        int maxFloorNumber = container.maxSpawnFloorNumber > 0 ? container.maxSpawnFloorNumber : container.minSpawnFloorNumber > 0 ? (CityManager.Instance.BuiltFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
         float spawnFloorNumber = Random.Range((float)container.minSpawnFloorNumber, maxFloorNumber);
         float positionY = spawnFloorNumber * CityManager.floorHeight;
         Vector3 position = -direction * spawnDistance;

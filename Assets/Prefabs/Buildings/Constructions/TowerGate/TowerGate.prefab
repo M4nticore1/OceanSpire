@@ -58,7 +58,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -7379394397927831526}
+      addedObject: {fileID: 4477617273102776781}
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1063943449198097610}
@@ -68,7 +68,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
   m_PrefabInstance: {fileID: 1775028883656775870}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-7379394397927831526
+--- !u!114 &4477617273102776781
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,14 +77,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8673097211342416700}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0be744e4b3d220740ae1d6e00c8bb585, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a650ba6089666242a4633704ed5c893, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnvironmentBuilding
   buildingData: {fileID: 11400000, guid: d38b89b154bf42f48a18d9ad947a9839, type: 2}
   buildingLevelsData:
-  - {fileID: 11400000, guid: 49d1db9d10cc6f1469b7f92eaebac9bb, type: 2}
-  - {fileID: 11400000, guid: c7a746695d1e6c5489400e41050f3397, type: 2}
-  - {fileID: 11400000, guid: bd1bfc204edda4440958dbfb73cb6bc5, type: 2}
+  - {fileID: 11400000, guid: ad96702e37ed8b1488ee96be5a40d0c2, type: 2}
+  isRuined: 0
 --- !u!114 &1063943449198097610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,5 +98,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelsData:
   - {fileID: 11400000, guid: 3df92a01368400440822aef33eaa1485, type: 2}
-  - {fileID: 11400000, guid: b83e4cf62f4ade34d8ecd72b2a4a6fd8, type: 2}
-  - {fileID: 11400000, guid: b0c5078b3c219554eae031edd7ffa71a, type: 2}

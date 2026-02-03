@@ -6,7 +6,6 @@ public class Bootstrap : MonoBehaviour
     {
         _ = PlayerSettings.Instance;
         _ = SelectManager.Instance;
-        new SaveManager();
         new LocalizationManager();
 
         SaveManager.Instance.Initialize();

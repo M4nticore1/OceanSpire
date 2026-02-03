@@ -5,8 +5,8 @@ using UnityEngine;
 [AddComponentMenu("BuildingComponents/ProductionBuilding")]
 public class ProductionBuildingModule : BuildingModule
 {
-    public ProductionBuildingLevelData[] ProductionLevelsData => levelsData.OfType<ProductionBuildingLevelData>().ToArray();
-    public ProductionBuildingLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
+    public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
+    public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
     public ProduceResource produceItem => ProductionLevelData ? (ProductionLevelData.producedResources.Count > currentProducedItemIndex ? ProductionLevelData.producedResources[currentProducedItemIndex] : null) : null;
 
     protected bool isProducting = false;
@@ -34,7 +34,7 @@ public class ProductionBuildingModule : BuildingModule
     }
 
     // Overrides
-    protected override void OnBuildingFinishConstructing()
+    protected override void OnBuildingInited()
     {
         if (produceItem is ProduceResource resource)
             producedItem = new ItemInstance(resource.produceItem.ItemData);
@@ -124,8 +124,8 @@ public class ProductionBuildingModule : BuildingModule
         currentProductionTime = time;
         lastProduceTime = Time.time;
 
-        ConstructionLevelData buildingLevelData = OwnedBuilding.ConstructionLevelsData[OwnedBuilding.LevelIndex];
-        ProductionBuildingLevelData productionBuildingLevelData = levelsData[OwnedBuilding.LevelIndex] as ProductionBuildingLevelData;
+        BuildingLevelData buildingLevelData = OwnedBuilding.ConstructionLevelsData[OwnedBuilding.LevelIndex];
+        ProductionModuleLevelData productionBuildingLevelData = levelsData[OwnedBuilding.LevelIndex] as ProductionModuleLevelData;
 
         int currentPeopleCount = OwnedBuilding.currentWorkers.Count;
         int maxPeopleCount = buildingLevelData.maxResidentsCount;

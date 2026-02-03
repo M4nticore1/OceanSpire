@@ -13,13 +13,13 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
     public int startFloorIndex { get; private set; } = 0;
     public int nextFloorIndex { get; private set; } = 0;
 
-    private float moveSpeed => ((ElevatorLevelData)ownedBuilding.LevelData).ElevatorMoveSpeed;
+    private float moveSpeed => ((ownedBuilding.GetComponent<ElevatorBuildingModule>().LevelData) as ElevatorModuleLevelData).ElevatorMoveSpeed;
     private Vector3 moveDirection = Vector3.zero;
 
     private TimerHandle startMovingTimerHandle = new TimerHandle();
     private const float delayToStartMoving = 1f;
 
-    public ElevatorBuilding ownedElevator => ownedBuilding as ElevatorBuilding;
+    public ElevatorBuildingModule OwnedElevator => ownedBuilding.GetComponent<ElevatorBuildingModule>();
     public static event System.Action<ElevatorPlatformConstruction> onElevatorPlatformStopped;
     public static event System.Action<ElevatorPlatformConstruction> onElevatorPlatformChangedFloor;
 
@@ -35,11 +35,6 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
             if (floorIndex == nextFloorIndex)
                 StopMoving();
         }
-    }
-
-    public override void Build (Building ownedBuilding)
-    {
-        base.Build(ownedBuilding);
     }
 
     private void StartMovingToFloor(int targetFloorIndex)
@@ -202,7 +197,7 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
     {
         Debug.Log(entity.elevatorPassengerState);
 
-        if (entity.IsRidingOnElevator && entity.CurrentElevator == ownedElevator) {
+        if (entity.IsRidingOnElevator && entity.CurrentElevator == OwnedElevator) {
             
         }
         else if (entity.IsWaitingForElevator) {
@@ -213,7 +208,7 @@ public class ElevatorPlatformConstruction : TowerBuildingConstruction
     public void SetOwnedBuilding(int newFloorIndex)
     {
         if (newFloorIndex != floorIndex && newFloorIndex >= 0) {
-            ownedBuilding = CityManager.Instance.builtFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
+            ownedBuilding = CityManager.Instance.BuiltFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
             foreach (Creature npc in ridingPassengers) {
                 npc.OnElevatorCabinChangedFloor(this);
             }

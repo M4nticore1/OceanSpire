@@ -1,40 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
-public class Building : MonoBehaviour, ILevelable, ISelectable
+public abstract class BuildingEntry
 {
-    protected ConstructionComponent constructionComponent = null;
-    public ConstructionComponent ConstructionComponent => constructionComponent ? constructionComponent : GetComponent<ConstructionComponent>();
-    //public SelectComponent selectComponent { get; protected set; } = null;
-    //protected StorageBuildingModule storageModule = null;
-    //public StorageBuildingModule StorageModule => storageModule ? storageModule : GetComponent<StorageBuildingModule>();
-    //protected ProductionBuildingModule productionModule = null;
-    //public ProductionBuildingModule ProductionModule => productionModule ? productionModule : GetComponent<ProductionBuildingModule>();
+    public int id;
+    public int level;
+}
+
+public abstract class Building : MonoBehaviour
+{
+    protected LevelComponent levelComponent = null;
+    protected SelectComponent selectComponent = null;
 
     public bool isInitialized { get; private set; } = false;
-    private int levelIndex = 0;
-    public int LevelIndex { get { return levelIndex; } set { levelIndex = value; } }
-    private bool isSelected = false;
-    public bool IsSelected { get { return isSelected; } set { isSelected = value; } }
     private bool isWorking = false;
+    public int LevelIndex => levelComponent ? levelComponent.LevelIndex : GetComponent<LevelComponent>().LevelIndex;
 
     //[HideInInspector] public int levelIndex { get; private set; } = 0;
     public List<Creature> enteredEntities { get; private set; } = new List<Creature>();
     public List<Creature> workers { get; private set; } = new List<Creature>();
     public List<Creature> currentWorkers { get; private set; } = new List<Creature>();
 
+    public BuildingConstruction spawnedConstruction { get; private set; } = null;
+
     [Header("Data")]
     [SerializeField] protected BuildingData buildingData = null;
     public BuildingData BuildingData => buildingData;
-    [SerializeField] protected List<ConstructionLevelData> buildingLevelsData = new List<ConstructionLevelData>();
-    public List<ConstructionLevelData> ConstructionLevelsData => buildingLevelsData;
-    public ConstructionLevelData LevelData => ConstructionLevelsData.Count > LevelIndex ? ConstructionLevelsData[LevelIndex] : null;
+    [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
+    public List<BuildingLevelData> ConstructionLevelsData => buildingLevelsData;
+    public BuildingLevelData LevelData => ConstructionLevelsData.Count > LevelIndex ? ConstructionLevelsData[LevelIndex] : null;
+    [SerializeField] private bool isRuined = false;
+    public bool IsRuined => isRuined;
 
-    public BuildingPlace buildingPlace { get; protected set; } = null;
-
-    //public static event System.Action<Building> onAnyBuildingFinishConstructing;
-    public event System.Action onBuildingFinishConstructing;
+    public event System.Action onBuildingInited;
     public event System.Action onBuildingStartWorking;
     public event System.Action onBuildingStopWorking;
     public event System.Action onEnterBuilding;
@@ -44,79 +44,48 @@ public class Building : MonoBehaviour, ILevelable, ISelectable
 
     protected virtual void Awake()
     {
-        constructionComponent = GetComponent<ConstructionComponent>();
+
     }
 
     protected virtual void OnEnable()
     {
-        constructionComponent.onBuildingStartConstructing += StartConstructing;
-        constructionComponent.onBuildingFinishConstructing += FinishConstructing;
-        constructionComponent.onConstructionDemolished += Demolish;
+
     }
 
     protected virtual void OnDisable()
     {
-        constructionComponent.onBuildingStartConstructing -= StartConstructing;
-        constructionComponent.onBuildingFinishConstructing -= FinishConstructing;
-        constructionComponent.onConstructionDemolished -= Demolish;
+
     }
 
-    protected virtual void Start()
-    {
-        //Place();
-    }
+    protected abstract void Start();
 
     // Constructing
-    public void InitializeBuilding(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
+    public void Init(BuildingEntry data)
     {
         if (isInitialized) return;
 
-        OnInitialize(buildingPlace, isUnderConstruction, levelIndex, interiorIndex = -1);
-        ConstructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
+        GetComponents();
+        OnInit(data);
+        BuildConstruction();
+
         isInitialized = true;
+        onBuildingInited?.Invoke();
         EventBus.InvokeBuildingInitialized(this);
     }
 
-    protected virtual void OnInitialize(BuildingPlace buildingPlace, bool isUnderConstruction, int levelIndex, int interiorIndex = -1)
-    {
-        constructionComponent = GetComponent<ConstructionComponent>();
+    protected abstract void OnInit(BuildingEntry saveData);
 
-        this.buildingPlace = buildingPlace;
-        this.LevelIndex = levelIndex;
+    protected abstract BuildingConstruction GetConstruction();
+
+    private void GetComponents()
+    {
+        levelComponent = GetComponent<LevelComponent>();
+        selectComponent = GetComponent<SelectComponent>();
     }
 
-    protected virtual void Place(/*BuildingPlace buildingPlace, int levelIndex, bool requiresConstruction, int interiorIndex*/)
+    public void Demolish()
     {
 
-    }
-
-    protected IEnumerator PlaceCoroutine(bool isUnderConstruction, int levelIndex)
-    {
-        yield return new WaitForEndOfFrame();
-        ConstructionComponent.InitializeConstruction(isUnderConstruction, levelIndex);
-    }
-
-    protected void StartConstructing()
-    {
-        BuildConstruction(LevelIndex);
-    }
-
-    public virtual void FinishConstructing()
-    {
-        if (BuildingData.BuildingIdName == "floor_frame") return;
-
-        BuildConstruction(LevelIndex);
-        onBuildingFinishConstructing?.Invoke();
-    }
-
-    protected void Demolish()
-    {
-
-    }
-
-    public void SetLevel(int level)
-    {
-        LevelIndex = level;
     }
 
     // Working
@@ -188,20 +157,17 @@ public class Building : MonoBehaviour, ILevelable, ISelectable
             StopWorking();
     }
 
-    //protected virtual void UpdateBuildingConstruction(int levelIndex)
-    //{
-    //    BuildConstruction(levelIndex);
-    //}
-
-    protected virtual void BuildConstruction(int levelIndex)
+    private void BuildConstruction()
     {
-        ConstructionComponent.BuildConstruction(buildingLevelsData[levelIndex].ConstructionStraight);
+        BuildingConstruction constructionPrefab = GetConstruction();
+        if (constructionPrefab)
+            spawnedConstruction = Instantiate(constructionPrefab, transform);
     }
 
     public Transform GetInteractionTransform()
     {
         int index = workers.Count > 0 ? ((workers.Count - 1) % LevelData.maxResidentsCount) : 0;
-        BuildingAction[] actions = ConstructionComponent.SpawnedConstruction.BuildingInteractions;
+        BuildingAction[] actions = spawnedConstruction.BuildingInteractions;
         if (actions.Length > index) {
             Transform[] waypoints = actions[index].waypoints;
             if (waypoints.Length > 0) {
@@ -215,22 +181,6 @@ public class Building : MonoBehaviour, ILevelable, ISelectable
         else {
             Debug.LogError("actions.Length <= index");
             return transform;
-        }
-    }
-
-    public void Select()
-    {
-        IsSelected = true;
-        foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
-            child.layer = LayerMask.NameToLayer("Outlined");
-        }
-    }
-
-    public void Deselect()
-    {
-        IsSelected = false;
-        foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
-            child.layer = LayerMask.NameToLayer("Default");
         }
     }
 }

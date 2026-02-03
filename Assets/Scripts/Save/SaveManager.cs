@@ -2,18 +2,14 @@ using UnityEngine.SceneManagement;
 
 public class SaveManager
 {
-    public static SaveManager Instance { get; private set; }
+    private static SaveManager _instance;
+    public static SaveManager Instance => _instance ??= new SaveManager();
 
     public SaveData[] allSaveData { get; private set; }
     public SaveData saveData { get; private set; }
     public string saveWorldName { get; private set; }
 
-    public SaveManager()
-    {
-        if (Instance != null) return;
-
-        Instance = this;
-    }
+    private SaveManager() { }
 
     public void Initialize()
     {

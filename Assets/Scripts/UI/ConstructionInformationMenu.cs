@@ -25,11 +25,11 @@ public class ConstructionInformationMenu : MonoBehaviour
 
     private void OnBuildingWidgetInformationClicked(BuildingWidget widget)
     {
-        ConstructionComponent constructionComponent = widget.constructionComponent;
-        Open(constructionComponent);
+        Building building = widget.buildingPrefab;
+        Open(building);
     }
 
-    public void Open(ConstructionComponent construction)
+    public void Open(Building construction)
     {
         Building building = construction.GetComponent<Building>();
 
@@ -52,7 +52,7 @@ public class ConstructionInformationMenu : MonoBehaviour
             CreateCharacteristicWidget("Max residents", maxResidentsCount);
 
         if (productionBuilding) {
-            ProductionBuildingLevelData levelData = productionBuilding.ProductionLevelData;
+            ProductionModuleLevelData levelData = productionBuilding.ProductionLevelData;
             ItemInstance producedResource = levelData.producedResources[productionBuilding.currentProducedItemIndex].produceItem;
             CreateCharacteristicWidget("Produces", producedResource.Amount, producedResource.ItemData.ItemIcon);
             CreateCharacteristicWidget("Consumes", producedResource.Amount, producedResource.ItemData.ItemIcon);

@@ -11,11 +11,13 @@ public static class EventBus
     public static event Action<BuildingPlace> onBuildingPlacePressed;
     public static event Action<BuildingWidget> onBuildingWidgetBuildClicked;
     public static event Action<BuildingWidget> onBuildingWidgetInformationClicked;
-    public static event Action onConstructionStartPlacing;
+    public static event Action<Building> onBuildingStartPlacing;
+    public static event Action<Building> onBuildingFinishPlacing;
     public static event Action<Building> onBuildingInitialized;
-    public static event Action<ConstructionComponent> onConstructionPlaced;
-    public static event Action<ConstructionComponent> onConstructionBuilt;
-    public static event Action<ConstructionComponent> onConstructionDemolished;
+    public static event Action<Building> onBuildingPlaced;
+    //public static event Action<ConstructionComponent> onConstructionPlaced;
+    //public static event Action<ConstructionComponent> onConstructionBuilt;
+    //public static event Action<ConstructionComponent> onConstructionDemolished;
 
     // Production Module
     public static event Action<ProductionBuildingModule> onProductionModuleClicked;
@@ -51,7 +53,7 @@ public static class EventBus
     public static event Action<int> onGeneralVolumeSliderMoved;
     public static event Action<int> onMusicVolumeSliderMoved;
 
-    // Constructing
+    // Buildings
     public static void InvokeBuildingPlacePressed(BuildingPlace place)
     {
         onBuildingPlacePressed?.Invoke(place);
@@ -67,25 +69,40 @@ public static class EventBus
         onBuildingWidgetInformationClicked?.Invoke(widget);
     }
 
+    public static void InvokeOnBuildingStartPlacing(Building building)
+    {
+        onBuildingStartPlacing?.Invoke(building);
+    }
+
+    public static void InvokeOnBuildingFinishPlacing(Building building)
+    {
+        onBuildingFinishPlacing?.Invoke(building);
+    }
+
     public static void InvokeBuildingInitialized(Building building)
     {
         onBuildingInitialized?.Invoke(building);
     }
 
-    public static void InvokeConstructionPlaced(ConstructionComponent constructionComponent)
+    public static void InvokeOnBuildingPlaced(Building building)
     {
-        onConstructionPlaced?.Invoke(constructionComponent);
+        onBuildingPlaced?.Invoke(building);
     }
 
-    public static void InvokeConstructionBuilt(ConstructionComponent constructionComponent)
-    {
-        onConstructionBuilt?.Invoke(constructionComponent);
-    }
+    //public static void InvokeConstructionPlaced(ConstructionComponent constructionComponent)
+    //{
+    //    onConstructionPlaced?.Invoke(constructionComponent);
+    //}
 
-    public static void InvokeConstructionDemolished(ConstructionComponent constructionComponent)
-    {
-        onConstructionDemolished?.Invoke(constructionComponent);
-    }
+    //public static void InvokeConstructionBuilt(ConstructionComponent constructionComponent)
+    //{
+    //    onConstructionBuilt?.Invoke(constructionComponent);
+    //}
+
+    //public static void InvokeConstructionDemolished(ConstructionComponent constructionComponent)
+    //{
+    //    onConstructionDemolished?.Invoke(constructionComponent);
+    //}
 
     // Production Module
     public static void InvokeProductionModuleClicked(ProductionBuildingModule module)

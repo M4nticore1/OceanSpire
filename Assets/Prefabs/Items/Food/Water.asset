@@ -16,5 +16,5 @@ MonoBehaviour:
   itemIdName: water
   itemName: Water
   weight: 0
-  itemIcon: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: d7fc15f2244f81b4abc22692fa701efd, type: 3}
   itemCategory: 2

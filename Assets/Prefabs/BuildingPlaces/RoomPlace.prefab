@@ -152,10 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ebc355566091cc4cb24dc1896b950ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cityManager: {fileID: 0}
   buildingType: 0
-  floorIndex: 0
-  buildingPlaceIndex: 0
+  placeIndex: 0
   placedBuilding: {fileID: 0}
   buildingZone: {fileID: 3859439699844814488}
   buildingFrame: {fileID: 5285406799736987685}
@@ -303,6 +301,10 @@ PrefabInstance:
     - target: {fileID: 665527401993494788, guid: 49c27867525f29940985583fa63d50b2, type: 3}
       propertyPath: m_Name
       value: BuildingFrame
+      objectReference: {fileID: 0}
+    - target: {fileID: 665527401993494788, guid: 49c27867525f29940985583fa63d50b2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 665527401993494788, guid: 49c27867525f29940985583fa63d50b2, type: 3}
       propertyPath: m_StaticEditorFlags

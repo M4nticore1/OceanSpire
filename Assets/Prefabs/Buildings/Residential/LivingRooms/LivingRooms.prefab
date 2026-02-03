@@ -58,10 +58,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2241001778374089610}
-    - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -6816115466953320136}
+      addedObject: {fileID: 4940279212636065327}
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
       addedObject: {fileID: -5081235143444178232}
@@ -71,7 +68,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
   m_PrefabInstance: {fileID: 1775028883656775870}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2241001778374089610
+--- !u!114 &4940279212636065327
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -80,29 +77,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8673097211342416700}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2665c07387d67614998ea718af530a4e, type: 3}
+  m_Script: {fileID: 11500000, guid: 948dda070484eea44ac9c5089a182b2d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerBuilding
   buildingData: {fileID: 11400000, guid: 26e0e8f1af0bf15439c009989780e92c, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 9ddf731f81aabca4d85afc368dda3863, type: 2}
-  - {fileID: 11400000, guid: 3a20b8e9cab98ed4b9ebecbd695411cf, type: 2}
-  - {fileID: 11400000, guid: 651860c70a89fa7499edabcf11c546a6, type: 2}
-  buildingPlace: {fileID: 0}
---- !u!114 &-6816115466953320136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8673097211342416700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5a4097955a89604b9741f4a4375e6e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ownedBuilding: {fileID: 0}
-  levelsData: []
+  isRuined: 0
 --- !u!114 &-5081235143444178232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,9 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca4ab03ecbffe74d9a15a5f6bd30db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedBuilding: {fileID: 0}
   levelsData:
   - {fileID: 11400000, guid: dcb8f13e848ee6e468c985082f7bf736, type: 2}
   - {fileID: 11400000, guid: a02f84d729e85bf41897a5937ca6fd24, type: 2}
   - {fileID: 11400000, guid: f0916980bad56584e9eb36653d10d3ad, type: 2}
-  levelData: {fileID: 0}

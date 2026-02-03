@@ -83,7 +83,6 @@ public class LootContainer : MonoBehaviour
         Vector3 direction = WindManager.Instance.windDirection;
         moveDirection = new Vector3(direction.x, 0, direction.z);
         startMoveDirection = moveDirection;
-        Debug.Log(moveDirection);
 
         currentFloorIndex = floorIndex;
         if (floorIndex > 0)
@@ -109,7 +108,6 @@ public class LootContainer : MonoBehaviour
 
             float distanceToIsland = transform.position.magnitude;
             if (distanceToIsland > maxDistanceToMoveAroundCity) {
-                Debug.Log(">");
                 Vector3 currentMoveDirection = -transform.position.normalized;
 
                 //float dot = Vector3.Dot(currentMoveDirection, startMoveDirection.normalized);
@@ -117,7 +115,6 @@ public class LootContainer : MonoBehaviour
                 //    moveDirection = Vector3.Lerp(moveDirection, startMoveDirection, deltaTime * 10.5f);
             }
             else {
-                Debug.Log("<");
                 float alpha = 1 - ((distanceToIsland - minDistanceToMoveAroundCity) / (maxDistanceToMoveAroundCity - minDistanceToMoveAroundCity));
                 alpha = math.clamp(alpha, 0, 1);
 
@@ -143,7 +140,7 @@ public class LootContainer : MonoBehaviour
             if (distance <= CityManager.triggerLootContainerRadius)
                 OnLootEntered?.Invoke(this);
             else if (distance > LootManager.spawnDistance + despawnDistance)
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             else if (distance > CityManager.triggerLootContainerRadius)
                 OnLootExited?.Invoke(this);
 

@@ -363,8 +363,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: CoalGenerator_Level_01_Corner
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}

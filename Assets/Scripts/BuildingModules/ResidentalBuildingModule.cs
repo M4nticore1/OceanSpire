@@ -1,9 +1,8 @@
 using UnityEngine;
 
-[AddComponentMenu("BuildingComponents/ResidentalBuildingComponent")]
 public class ResidentalBuildingModule : BuildingModule
 {
-    protected override void OnBuildingFinishConstructing()
+    protected override void OnBuildingInited()
     {
 
     }

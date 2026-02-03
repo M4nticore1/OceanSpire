@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68871d69a0d600f4db549ea34f879f9e, type: 3}
+  m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
   m_Name: HeavyElevatorLevelData
   m_EditorClassIdentifier: 
   resourcesToBuild: []
@@ -22,9 +22,9 @@ MonoBehaviour:
   constructionCornerLeft: {fileID: 0}
   constructionCornerRight: {fileID: 0}
   constructionCornerLeftRight: {fileID: 0}
-  constructionStraightAbove: {fileID: 0}
-  constructionStraightBelow: {fileID: 0}
-  constructionStraightAboveBelow: {fileID: 0}
-  constructionCornerAbove: {fileID: 0}
-  constructionCornerBelow: {fileID: 0}
-  constructionCornerAboveBelow: {fileID: 0}
+  constructionStraightUp: {fileID: 0}
+  constructionStraightDown: {fileID: 0}
+  constructionStraightUpDown: {fileID: 0}
+  constructionCornerUp: {fileID: 0}
+  constructionCornerDown: {fileID: 0}
+  constructionCornerUpDown: {fileID: 0}

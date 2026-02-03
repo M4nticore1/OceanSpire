@@ -5,11 +5,11 @@ using UnityEngine;
 [AddComponentMenu("BuildingComponents/Storage Building Component")]
 public class StorageBuildingModule : BuildingModule
 {
-    public StorageBuildingLevelData[] StorageLevelsData => levelsData.OfType<StorageBuildingLevelData>().ToArray();
-    public StorageBuildingLevelData StorageLevelData => StorageLevelsData[LevelIndex];
+    public StorageModuleLevelData[] StorageLevelsData => levelsData.OfType<StorageModuleLevelData>().ToArray();
+    public StorageModuleLevelData StorageLevelData => StorageLevelsData[LevelIndex];
     public Dictionary<int, ItemInstance> storedItems = new Dictionary<int, ItemInstance>();
 
-    protected override void OnBuildingFinishConstructing()
+    protected override void OnBuildingInited()
     {
         for (int i = 0; i < StorageLevelData.storageItems.Length; i++)
         {

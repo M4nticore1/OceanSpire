@@ -15,7 +15,8 @@ public class BuildingsList : ScriptableObject
         }
     }
 
-    [field: SerializeField] public Building[] buildings { get; private set; } = { };
+    [SerializeField] private Building[] buildings = { };
+    public Building[] Buildings => buildings;
     //public Dictionary<int, Building> buildingsById { get; private set; } = new Dictionary<int, Building>();
 
     //public void Initialize()

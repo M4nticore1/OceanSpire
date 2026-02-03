@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CraftingBuildingComponent : BuildingModule
 {
-    protected override void OnBuildingFinishConstructing()
+    protected override void OnBuildingInited()
     {
 
     }

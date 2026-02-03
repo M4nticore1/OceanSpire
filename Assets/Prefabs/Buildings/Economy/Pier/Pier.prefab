@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2501287360220567352}
+  - component: {fileID: 105109679734778071}
   - component: {fileID: 8331393561667859132}
   - component: {fileID: 3221006765804929327}
-  - component: {fileID: 6551275059440649917}
   - component: {fileID: 4756132135421014059}
   - component: {fileID: 4262052173405425739}
   m_Layer: 0
@@ -37,6 +37,22 @@ Transform:
   - {fileID: 7759089002556087228}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &105109679734778071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5635628443317392028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a650ba6089666242a4633704ed5c893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnvironmentBuilding
+  buildingData: {fileID: 11400000, guid: ccb7e31f2afcb32489365485829535c1, type: 2}
+  buildingLevelsData:
+  - {fileID: 11400000, guid: 587424f546877bb4091690556a7c1c3b, type: 2}
+  isRuined: 0
 --- !u!114 &8331393561667859132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49,12 +65,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c2e3585ca3f15148879e7d41a740cab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingData: {fileID: 11400000, guid: ccb7e31f2afcb32489365485829535c1, type: 2}
-  buildingLevelsData:
+  levelsData:
   - {fileID: 11400000, guid: d7f0a759f61058d4f903fc26dc960d36, type: 2}
-  - {fileID: 11400000, guid: 245cd4840c9ee2445832a2d6ee727b8e, type: 2}
-  buildingPlace: {fileID: 0}
-  spawnedBoats: []
 --- !u!114 &3221006765804929327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,19 +79,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6551275059440649917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5635628443317392028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9490cdbf4ab773d40821031b260bb65d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnedConstruction: {fileID: 0}
 --- !u!114 &4756132135421014059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,10 +103,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca4ab03ecbffe74d9a15a5f6bd30db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedBuilding: {fileID: 0}
   levelsData:
   - {fileID: 11400000, guid: 8f2474055b74eb94899aae6c7b5bee25, type: 2}
-  levelData: {fileID: 0}
 --- !u!1001 &6939328380463155996
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -181,7 +178,10 @@ PrefabInstance:
       value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6909115168932332894, guid: badf20e085e5138479e28bd50ece45ae, type: 3}
+    - {fileID: 3580404450356704673, guid: badf20e085e5138479e28bd50ece45ae, type: 3}
+    - {fileID: 3616995315971694301, guid: badf20e085e5138479e28bd50ece45ae, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: badf20e085e5138479e28bd50ece45ae, type: 3}

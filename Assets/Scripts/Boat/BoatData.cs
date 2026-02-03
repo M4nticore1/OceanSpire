@@ -12,8 +12,8 @@ public class BoatData : ScriptableObject
     [SerializeField] private string boatName = "";
     public string BoatName => boatName;
 
-    [SerializeField] private int maxHealth = 0;
-    public int MaxHealth => maxHealth;
+    //[SerializeField] private int maxHealth = 0;
+    //public int MaxHealth => maxHealth;
 
     //[SerializeField] private int speed = 0;
     //public int Speed => speed;

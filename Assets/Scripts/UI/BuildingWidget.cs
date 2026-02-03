@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class BuildingWidget : MonoBehaviour
 {
-    public ConstructionComponent constructionComponent { get; private set; } = null;
+    public Building buildingPrefab { get; private set; } = null;
     [SerializeField] private BuildingResourceWidget buildingResourceWidget = null;
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
 
@@ -32,11 +32,11 @@ public class BuildingWidget : MonoBehaviour
         informationButton.onReleased -= OnInformationButtonClicked;
     }
 
-    public void InitializeBuildingWidget(ConstructionComponent construction)
+    public void Init(Building prefab)
     {
-        constructionComponent = construction;
+        buildingPrefab = prefab;
 
-        Building building = construction.GetComponentInChildren<Building>();
+        Building building = prefab.GetComponentInChildren<Building>();
         if (building) {
             buildingNameText.SetText(building.BuildingData.BuildingName);
 
@@ -53,23 +53,9 @@ public class BuildingWidget : MonoBehaviour
 
     private void DrawResourcesToBuild()
     {
-        Building building = constructionComponent.GetComponentInChildren<Building>();
-
-        for (int i = 0; i < resourcesToBuildNumber; i++)
-        {
-            if(!constructionComponent)
-                Debug.Log("building is NULL");
-            if (!buildingResourceWidget)
-                Debug.Log("buildingResourceWidget is NULL");
-            if (building && !building.ConstructionLevelsData[0])
-                Debug.Log("building.buildingLevelsData[0] is NULL");
-            //if (building.buildingLevelsData[0].ResourcesToBuild[i])
-                //Debug.Log("building.buildingLevelsData[0].ResourcesToBuild[i] is NULL");
-
+        for (int i = 0; i < resourcesToBuildNumber; i++) {
             BuildingResourceWidget spawnedBuildingResourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);
             spawnedBuildingResourceWidgets.Add(spawnedBuildingResourceWidget);
-
-            //spawnedBuildingResourceWidgets[i].Initialize(building.buildingLevelsData[0].resourcesToBuild[i].Amount, building.buildingLevelsData[0].resourcesToBuild[i].ItemData.itemIcon);
         }
     }
 
@@ -86,9 +72,8 @@ public class BuildingWidget : MonoBehaviour
     public void UpdateResourcesToBuild()
     {
         bool enoughResources = true;
-        Building building = constructionComponent.GetComponentInChildren<Building>();
         for (int i = 0; i < resourcesToBuildNumber; i++) {
-            ItemInstance resource = building.ConstructionLevelsData[0].ResourcesToBuild[i];
+            ItemInstance resource = buildingPrefab.ConstructionLevelsData[0].ResourcesToBuild[i];
             int amountToBuilding = resource.Amount;
             int id = resource.ItemData.ItemId;
             int currentAmount = CityManager.Instance.items[id].Amount;

@@ -9,7 +9,7 @@ public abstract class BuildingModule : MonoBehaviour
     [SerializeField] protected BuildingModuleLevelData[] levelsData = { };
     public BuildingModuleLevelData[] LevelsData => levelsData;
     public BuildingModuleLevelData LevelData => levelsData[ownedBuilding.LevelIndex];
-    protected BuildingConstruction BuildingConstruction => ownedBuilding.ConstructionComponent.SpawnedConstruction;
+    protected BuildingConstruction BuildingConstruction => ownedBuilding.spawnedConstruction;
 
     protected void Awake()
     {
@@ -18,7 +18,7 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        ownedBuilding.onBuildingFinishConstructing += OnBuildingFinishConstructing;
+        ownedBuilding.onBuildingInited += OnBuildingInited;
         ownedBuilding.onBuildingStartWorking += OnBuildingStartWorking;
         ownedBuilding.onBuildingStopWorking += OnBuildingStopWorking;
         ownedBuilding.onEnterBuilding += OnEnterBuilding;
@@ -29,6 +29,7 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected virtual void OnDisable()
     {
+        ownedBuilding.onBuildingInited -= OnBuildingInited;
         ownedBuilding.onBuildingStartWorking -= OnBuildingStartWorking;
         ownedBuilding.onBuildingStopWorking -= OnBuildingStopWorking;
         ownedBuilding.onEnterBuilding -= OnEnterBuilding;
@@ -37,7 +38,7 @@ public abstract class BuildingModule : MonoBehaviour
         ownedBuilding.onResidentStopWorking -= OnResidentStopWorking;
     }
 
-    protected abstract void OnBuildingFinishConstructing();
+    protected abstract void OnBuildingInited();
 
     protected abstract void OnBuildingStartWorking();
 

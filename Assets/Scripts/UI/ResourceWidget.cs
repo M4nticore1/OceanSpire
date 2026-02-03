@@ -95,15 +95,12 @@ public class ResourceWidget : MonoBehaviour
 
     private void UpdateAmount()
     {
-        Debug.Log(1);
         if (itemInstance == null) return;
         if (CityManager.Instance.maxItemsAmount.Length <= itemInstance.ItemData.ItemId) return;
-        Debug.Log(2);
 
         int amount = itemInstance.Amount;
         int maxAmount = CityManager.Instance.maxItemsAmount[itemInstance.ItemData.ItemId];
         SetAmount(amount, maxAmount);
-        Debug.Log(amount);
     }
 
     public void SetImage(Sprite resourceSprite)
