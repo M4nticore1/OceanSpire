@@ -3,7 +3,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using UnityEngine.EventSystems;
 
-public class ContextMenu : UIBehaviour
+public class ContextMenuUI : UIBehaviour
 {
     [Header("Main")]
     [SerializeField] private TextMeshProUGUI nameText = null;
@@ -47,7 +47,7 @@ public class ContextMenu : UIBehaviour
     public void Open(SelectComponent selectComponent)
     {
         Building building = selectComponent.GetComponent<Building>();
-        Creature entity = selectComponent.GetComponent<Creature>();
+        Human entity = selectComponent.GetComponent<Human>();
         Boat boat = selectComponent.GetComponent<Boat>();
 
         if (building) {

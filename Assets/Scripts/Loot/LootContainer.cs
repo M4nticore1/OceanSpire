@@ -62,8 +62,8 @@ public class LootContainer : MonoBehaviour
 
     private bool isInitialized = false;
 
-    public static System.Action<LootContainer> OnLootEntered;
-    public static System.Action<LootContainer> OnLootExited;
+    public static System.Action<LootContainer> onLootEnteredToArea;
+    public static System.Action<LootContainer> OnLootExitedFromArea;
 
     public void InitializeContainer(int floorIndex)
     {
@@ -138,11 +138,11 @@ public class LootContainer : MonoBehaviour
             float distance = Vector3.Distance(Vector3.zero, transform.position);
 
             if (distance <= CityManager.triggerLootContainerRadius)
-                OnLootEntered?.Invoke(this);
+                onLootEnteredToArea?.Invoke(this);
             else if (distance > LootManager.spawnDistance + despawnDistance)
                 Destroy(gameObject);
             else if (distance > CityManager.triggerLootContainerRadius)
-                OnLootExited?.Invoke(this);
+                OnLootExitedFromArea?.Invoke(this);
 
             lastCheckPositionTime = Time.timeAsDouble;
         }
@@ -178,7 +178,7 @@ public class LootContainer : MonoBehaviour
 
                 int amountToCollect = (int)math.min(containedAmount, remainingWeight.Value / data.Weight);
 
-                currentLoot.SubtractAmount(amountToCollect);
+                currentLoot.RemoveAmount(amountToCollect);
 
                 ItemInstance newLoot = new ItemInstance(data, amountToCollect);
                 loot.Add(newLoot);

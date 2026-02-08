@@ -21,6 +21,8 @@ public class ProductionBuildingModule : BuildingModule
     private const float produceFrequency = 1.0f;
     private float lastProduceTime = 0.0f;
 
+    public const float collectLootFlickingMultiplier = 0.35f;
+
     private void Start()
     {
         
@@ -34,7 +36,7 @@ public class ProductionBuildingModule : BuildingModule
     }
 
     // Overrides
-    protected override void OnBuildingInited()
+    protected override void OnInit()
     {
         if (produceItem is ProduceResource resource)
             producedItem = new ItemInstance(resource.produceItem.ItemData);
@@ -58,16 +60,6 @@ public class ProductionBuildingModule : BuildingModule
     }
 
     protected override void OnExitBuilding()
-    {
-
-    }
-
-    protected override void OnResidentStartWorking()
-    {
-
-    }
-
-    protected override void OnResidentStopWorking()
     {
 
     }
@@ -160,7 +152,7 @@ public class ProductionBuildingModule : BuildingModule
             if (isReadyToCollect) return;
 
             isReadyToCollect = true;
-            float multiplier = alpha * CityManager.collectLootFlickingMultiplier;
+            float multiplier = alpha * collectLootFlickingMultiplier;
             SetFlickingMultiplier(multiplier);
         }
         else {

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.AI.Navigation;
-using Unity.Android.Gradle.Manifest;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -26,8 +25,10 @@ public class BuildingPath
     public List<Building> paths = new List<Building>();
 }
 
+[Serializable]
 public class CityData
 {
+    public string cityName = "";
     public int floorsCount = 0;
 }
 
@@ -36,6 +37,9 @@ public class CityManager : MonoBehaviour
     public static CityManager Instance { get; private set; } = null;
 
     [SerializeField] private PlayerController playerController = null;
+
+    private Inventory inventory = null;
+    public Inventory Inventory => inventory;
 
     // Buildings
     [Header("Buildings")]
@@ -52,7 +56,7 @@ public class CityManager : MonoBehaviour
     public List<int> currentRoomsNumberOnFloor { get; private set; } = new List<int>();
 
     public const int floorHeight = 5;
-    public const int firstFloorHeight = 5;
+    public const int firstFloorHeight = 10;
 
     public const int roomsCountPerFloor = 8;
     public const int roomsCountPerSide = 3;
@@ -62,26 +66,22 @@ public class CityManager : MonoBehaviour
     public const int firstBuildCityBuildingPlace = 1;
     public float cityHeight { get; private set; } = 0;
 
-    public List<List<ElevatorBuildingModule>> elevatorGroups { get; private set; } = new List<List<ElevatorBuildingModule>>();
+    public List<List<ElevatorModule>> elevatorGroups { get; private set; } = new List<List<ElevatorModule>>();
 
     public Building buildingToPlace { get; private set; }
 
-    // Items
-    public List<ItemInstance> startResources = new List<ItemInstance>();
-    public ItemInstance[] items;
-    public int[] maxItemsAmount;
-
     [Header("NPC")]
-    public List<Creature> residents { get; private set; } = new List<Creature>();
+    public List<Human> residents { get; private set; } = new List<Human>();
     private const int startResidentsCount = 2;
     public int employedResidentCount { get; private set; } = 0;
     public int unemployedResidentsCount { get; private set; } = 0;
 
     [Header("Boats")]
-    public List<Boat> spawnedBoats { get; private set; } = new List<Boat>();
+    [SerializeField] private BoatIdEnum[] startBoatIds;
+    public List<Boat> citizenBoats { get; private set; } = new List<Boat>();
 
     public Coroutine bakeNavMeshCoroutine { get; private set; } = null;
-    private bool isNavMeshBuilt = false;
+    public bool isNavMeshBuilt { get; private set; } = false;
 
     [Header("NPC")]
     [field: SerializeField] public Transform entitySpawnPosition { get; private set; } = null;
@@ -92,8 +92,6 @@ public class CityManager : MonoBehaviour
     public const float triggerLootContainerRadius = 150f;
     public const float demolitionResourceRefundRate = 0.2f;
 
-    public const float collectLootFlickingMultiplier = 0.35f;
-
     IEnumerable<GroundBuilding> EnvironmentBuildings()
     {
         yield return towerGate;
@@ -102,6 +100,8 @@ public class CityManager : MonoBehaviour
 
     private void Awake()
     {
+        inventory = GetComponent<Inventory>();
+
         if (Instance != null) {
             Destroy(gameObject);
             return;
@@ -118,32 +118,48 @@ public class CityManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // Construction
+        // Buildings
         EventBus.onBuildingPlacePressed += OnBuildingPlacePressed;
         EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
         EventBus.onBuildingInitialized += OnBuildingInitialized;
-        EventBus.onBuildingPlaced += OnConstructionBuilt;
+        EventBus.onBuildingPlaced += OnBuildingPlaced;
+
+        // Modules
+        EventBus.onBuildingModuleInited += OnBuildingModuleInited;
+        EventBus.onBuildingModuleUpgraded += OnBuildingModuleUpgraded;
+        EventBus.onBuildingModuleDemolished += OnBuildingModuleDemolished;
 
         // Production Module
         EventBus.onProductionModuleClicked += OnProductionModuleClicked;
 
-        Creature.OnWorkerAdd += AddWorker;
-        Creature.OnWorkerRemove += RemoveWorker;
-
+        // Boats
         Boat.OnBoadDestroyed += OnBoatDestroyed;
+
+        // Inventory
+        inventory.onChangedItemAmount += OnItemAmountChanged;
     }
 
     private void OnDisable()
     {
+        // Buildings
         EventBus.onBuildingPlacePressed -= OnBuildingPlacePressed;
         EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
         EventBus.onBuildingInitialized -= OnBuildingInitialized;
-        EventBus.onBuildingPlaced -= OnConstructionBuilt;
+        EventBus.onBuildingPlaced -= OnBuildingPlaced;
 
-        Creature.OnWorkerAdd -= AddWorker;
-        Creature.OnWorkerRemove -= RemoveWorker;
+        // Modules
+        EventBus.onBuildingModuleInited -= OnBuildingModuleInited;
+        EventBus.onBuildingModuleUpgraded -= OnBuildingModuleUpgraded;
+        EventBus.onBuildingModuleDemolished -= OnBuildingModuleDemolished;
 
+        // Production Module
+        EventBus.onProductionModuleClicked -= OnProductionModuleClicked;
+
+        // Boats
         Boat.OnBoadDestroyed -= OnBoatDestroyed;
+
+        // Inventory
+        inventory.onChangedItemAmount -= OnItemAmountChanged;
     }
 
     private void Start()
@@ -152,11 +168,12 @@ public class CityManager : MonoBehaviour
 
         SaveData saveData = SaveManager.Instance.saveData;
 
-        LoadBuildings(saveData);
+        bakeNavMeshCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
         LoadItems(saveData);
-        CreateCreatures(saveData);
-        //CreateBoats(saveData);
-        StartCoroutine(LoadCityAsync(saveData));
+        LoadBuildings(saveData);
+        LoadBoats(saveData);
+        LoadCreatures(saveData);
+        StartCoroutine(LoadCityAsync());
 
         playerController.Load(saveData);
 
@@ -255,146 +272,88 @@ public class CityManager : MonoBehaviour
         }
     }
 
-    private void CreateCreatures(SaveData data)
+    private void LoadCreatures(SaveData saveData)
     {
         Vector3 position = Vector3.zero;
         Quaternion rotation = Quaternion.identity;
-        if (data != null) {
-            for (int i = 0; i < data.residentsCount; i++) {
-                position = new Vector3(data.residentPositionsX[i], data.residentPositionsY[i], data.residentPositionsZ[i]);
-                rotation = Quaternion.identity;
-                Creature resident = CreateResident(position, rotation);
-            }
+        if (saveData != null) {
+
         }
         else {
             position = entitySpawnPosition.position;
             rotation = entitySpawnPosition.rotation;
+
             for (int i = 0; i < startResidentsCount; i++) {
                 float x = UnityEngine.Random.Range(position.x - maxSpawnRange, position.x + maxSpawnRange);
                 float y = position.y;
                 float z = UnityEngine.Random.Range(position.z - maxSpawnRange, position.z + maxSpawnRange);
                 Vector3 finalPosition = new Vector3(x, y, z);
-                CreateResident(finalPosition, rotation);
+
+                HumanEntry data = new HumanEntry { position = finalPosition, rotation = rotation.eulerAngles };
+                Human resident = CreatureFactory.CreateCreature(0, data) as Human;
+                residents.Add(resident);
+                resident.SetNavAgentEnabled(false);
             }
         }
     }
 
-    private void LoadCreatures(SaveData data)
+    private void LoadBoats(SaveData saveData)
     {
-        for (int i = 0; i < residents.Count; i++) {
-            Creature resident = residents[i];
+        PierModule pier = PierBuilding.GetComponent<PierModule>();
 
-            // Enable Nav Mesh
-            resident.navMeshAgent.enabled = true;
+        if (saveData != null) {
 
-            if (data != null) {
-
-                // Set Current Building
-                if (data.residentCurrentBuildingIndexes != null && data.residentCurrentBuildingIndexes.Length > i && data.residentCurrentBuildingIndexes[i] >= 0) {
-                    Building building = builtFloors[(data.residentCurrentBuildingIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentCurrentBuildingIndexes[i] % roomsCountPerFloor].placedBuilding;
-                    if (building)
-                        resident.EnterBuilding(building);
-                }
-
-                // Set Work Building
-                if (data.residentTowerBuildingWorkIndexes != null && data.residentTowerBuildingWorkIndexes.Length > i && data.residentTowerBuildingWorkIndexes[i] >= 0) {
-                    Building building = builtFloors[(data.residentTowerBuildingWorkIndexes[i] / roomsCountPerFloor)].roomBuildingPlaces[data.residentTowerBuildingWorkIndexes[i] % roomsCountPerFloor].placedBuilding;
-                    if (building)
-                        resident.SetWork(building);
-                }
-
-                if (data.npcElevatorPassengerStates != null && data.npcElevatorPassengerStates.Length > i && data.npcElevatorPassengerStates[i] >= 0) {
-                    ElevatorPassengerState state = (ElevatorPassengerState)data.npcElevatorPassengerStates[i];
-                    resident.SetElevatorPassengerState(state);
-                }
-            }
-        }
-    }
-
-    //private void CreateBoats(SaveData data)
-    //{
-    //    if (data != null) {
-    //        if (data.spawnedBoatIds != null) {
-    //            for (int j = 0; j < data.spawnedBoatIds.Length; j++) {
-    //                int id = data.spawnedBoatIds[j];
-    //                bool isUnderConstruction = data.spawnedBoatsAreUnderConstruction[j];
-    //                bool isFloating = data.spawnedBoatsAreFloating[j];
-    //                bool isReturning = data.spawnedBoatsAreReturning[j];
-    //                float health = data.spawnedBoatsHealth[j];
-    //                float positionX = data.spawnedBoatPositionsX[j];
-    //                float positionZ = data.spawnedBoatPositionsZ[j];
-    //                float rotationY = data.spawnedBoatRotationsY[j];
-    //                PlaceBoat(BoatsList.Instance.boats[id], isUnderConstruction, j, isFloating, isReturning, health, positionX, positionZ, rotationY);
-    //            }
-    //        }
-    //    }
-    //    else {
-    //        for (int j = 0; j < spawnedBoats.Count; j++) {
-    //            if (spawnedBoats[j]) {
-    //                PierConstruction construction = pierBuilding.ConstructionComponent.SpawnedConstruction as PierConstruction;
-    //                spawnedBoats[j].Init(false, j);
-    //                spawnedBoats[j].transform.position = construction.BoatDockPositions[j].position;
-    //                spawnedBoats[j].transform.rotation = construction.BoatDockPositions[j].rotation;
-    //            }
-    //        }
-    //    }
-    //}
-
-    private void LoadItems(SaveData data)
-    {
-        int length = ItemsList.Instance.Items.Length;
-        maxItemsAmount = new int[length];
-        items = new ItemInstance[length];
-        for (int i = 0; i < length; i++) {
-            ItemData itemData = ItemsList.Instance.Items[i];
-            int id = itemData.ItemId;
-            items[id] = new ItemInstance(itemData);
-        }
-
-        if (data != null) {
-            if (data.resourcesAmount != null) {
-                for (int i = 0; i < data.resourcesAmount.Length; i++) {
-                    AddItem(i, data.resourcesAmount[i]);
-                }
-            }
         }
         else {
-            for (int i = 0; i < startResources.Count; i++) {
-                AddItem(startResources[i].ItemData.ItemId, startResources[i].Amount);
+            for (int i = 0; i < startBoatIds.Length; i++) {
+                Boat prefab = BoatsList.Instance.boats[(int)startBoatIds[i]];
+                BoatDockPoint spawnTransform = pier.PierConstruction.BoatDocks[i];
+                Vector3 spawnPosition = spawnTransform.DockTransform.position;
+                Vector3 spawnRotation = spawnTransform.DockTransform.rotation.eulerAngles;
+                BoatEntry data = new BoatEntry { position = spawnPosition, rotation = spawnRotation, health = prefab.BoatData.MaxHealth };
+                Boat boat = BoatFactory.CreateBoat((int)startBoatIds[i], data);
+                citizenBoats.Add(boat);
             }
         }
     }
 
-    private IEnumerator LoadCityAsync(SaveData data)
+    private void LoadItems(SaveData saveData)
     {
-        while (bakeNavMeshCoroutine != null) {
-            Debug.Log("bakeNavMeshCoroutine");
-            yield return null;
+        if (saveData != null) {
+
         }
-
-        isNavMeshBuilt = true;
-
-        LoadCreatures(data);
+        else {
+            foreach (ItemData data in ItemsList.Instance.Items) {
+                int id = data.ItemId;
+                inventory.AddItem(id);
+            }
+        }
     }
 
-    private Creature CreateResident(Vector3 spawnPosition, Quaternion spawnRotation)
+    private IEnumerator LoadCityAsync()
     {
-        Creature resident = Instantiate(CreaturesList.Instance.resident, spawnPosition, spawnRotation);
-        resident.Initialize();
-        AddResident(resident);
-        if (!isNavMeshBuilt)
-            resident.navMeshAgent.enabled = false;
-        return resident;
+        yield return new WaitForEndOfFrame();
+        foreach(var creature in residents)
+            creature.SetNavAgentEnabled(true);
     }
 
-    private void AddResident(Creature resident)
+    private IEnumerator BakeNavMeshSurfaceCoroutine()
+    {
+        if (bakeNavMeshCoroutine != null) yield break;
+
+        yield return new WaitForEndOfFrame();
+        towerNavMeshSurface.BuildNavMesh();
+        bakeNavMeshCoroutine = null;
+    }
+
+    private void AddResident(Human resident)
     {
         residents.Add(resident);
         unemployedResidentsCount++;
-        EventBus.InvokeResidentAdded(resident);
+        EventBus.InvokeCitizenAdded(resident);
     }
 
-    private void RemoveResident(Creature resident)
+    private void RemoveResident(Human resident)
     {
         Destroy(resident);
         unemployedResidentsCount++;
@@ -472,6 +431,7 @@ public class CityManager : MonoBehaviour
     {
         cityHeight = builtFloors[builtFloors.Count - 1].transform.position.y + floorHeight;
     }
+
     // Buildings
     private void OnBuildingPlacePressed(BuildingPlace place)
     {
@@ -488,7 +448,7 @@ public class CityManager : MonoBehaviour
 
     private void OnBuildingWidgetBuildClicked(BuildingWidget widget)
     {
-        EventBus.InvokeOnBuildingStartPlacing(buildingToPlace);
+        EventBus.InvokeOnBuildingStartPlacing(widget.buildingPrefab);
     }
 
     //public Building PlaceBuilding(TowerBuilding buildingToPlace, BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
@@ -580,70 +540,84 @@ public class CityManager : MonoBehaviour
     //    }
     //}
 
-    private void OnConstructionBuilt(Building building)
+    private void OnBuildingPlaced(Building building)
     {
         FloorFrameModule floorBuilding = building.GetComponent<FloorFrameModule>();
-        ElevatorBuildingModule elevatorBuilding = building.GetComponent<ElevatorBuildingModule>();
+        ElevatorModule elevatorBuilding = building.GetComponent<ElevatorModule>();
 
         if (elevatorBuilding) {
             if (elevatorGroups.Count <= elevatorBuilding.elevatorGroupId) {
-                List<ElevatorBuildingModule> elevatorGroup = new List<ElevatorBuildingModule>();
+                List<ElevatorModule> elevatorGroup = new List<ElevatorModule>();
                 elevatorGroups.Add(elevatorGroup);
             }
             elevatorGroups[elevatorBuilding.elevatorGroupId].Add(elevatorBuilding);
         }
+    }
 
-        if (building.BuildingData.BuildingType != BuildingType.Environment && building.GetComponent<StorageBuildingModule>()) {
-            StorageBuildingModule storage = building.GetComponent<StorageBuildingModule>();
-
-            int level = building.LevelIndex;
-            if (level > 1) {
-                StorageModuleLevelData previousLevelData = storage.LevelsData[level - 1] as StorageModuleLevelData;
-                SubtractStorageCapacity(previousLevelData);
-            }
-
-            StorageModuleLevelData currentLevelData = storage.LevelsData[level] as StorageModuleLevelData;
-            if (currentLevelData)
-                AddStorageCapacity(currentLevelData);
-            else
-                Debug.LogError(building.BuildingData.BuildingName + $" has no StorageBuildingLevelData by level index {level}");
-
-            EventBus.InvokeStorageCapacityChanged();
+    // Modules
+    private void OnBuildingModuleInited(BuildingModule module)
+    {
+        StorageBuildingModule storage = module as StorageBuildingModule;
+        if (storage) {
+            OnStorageModuleInited(storage);
         }
     }
 
-    //public void TryToUpgradeConstruction(Building building)
-    //{
-    //    int nextLevelIndex = building.LevelIndex + (building.IsRuined ? 0 : 1);
+    private void OnBuildingModuleUpgraded(BuildingModule module)
+    {
+        StorageBuildingModule storage = module as StorageBuildingModule;
+        if (storage) {
+            OnStorageModuleUpgraded(storage);
+        }
+    }
 
-    //    if (building.ConstructionLevelsData.Count() > nextLevelIndex) {
-    //        bool isResourcesToUpgradeEnough = true;
+    private void OnBuildingModuleDemolished(BuildingModule module)
+    {
+        StorageBuildingModule storage = module as StorageBuildingModule;
+        if (storage) {
+            OnStorageModuleDemolished(storage);
+        }
+    }
 
-    //        int index = 0;
-    //        int amount = 0;
-    //        ItemInstance[] resourcesToUpgrade = building.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
+    private void OnStorageModuleInited(StorageBuildingModule module)
+    {
+        StorageModuleLevelData levelData = module.LevelData as StorageModuleLevelData;
+        foreach (ItemInstance item in levelData.storageItems) {
+            int id = item.ItemData.ItemId;
+            int amount = item.Amount;
 
-    //        for (int i = 0; i < resourcesToUpgrade.Length; i++) {
-    //            index = resourcesToUpgrade[i].ItemData.ItemId;
-    //            amount = resourcesToUpgrade[i].Amount;
+            inventory.AddItemMaxAmount(id, amount);
+        }
 
-    //            if (items[index].Amount < amount) {
-    //                isResourcesToUpgradeEnough = false;
-    //                break;
-    //            }
-    //        }
+        EventBus.InvokeStorageCapacityChanged();
+    }
 
-    //        if (isResourcesToUpgradeEnough) {
-    //            for (int i = 0; i < resourcesToUpgrade.Length; i++) {
-    //                //itemIndex = GameManager.GetItemIndexById(GameManager.itemsData, resourcesToUpgrade[i].ItemData.ItemId);
-    //                amount = resourcesToUpgrade[i].Amount;
-    //                SpendItem(resourcesToUpgrade[i].ItemData.ItemId, amount);
-    //            }
+    private void OnStorageModuleUpgraded(StorageBuildingModule module)
+    {
+        StorageModuleLevelData currentLevelData = module.LevelData as StorageModuleLevelData;
+        StorageModuleLevelData lastLevelData = module.LevelData as StorageModuleLevelData;
+        foreach (ItemInstance item in currentLevelData.storageItems) {
+            int id = item.ItemData.ItemId;
+            int amount = item.Amount - currentLevelData.storageItems[id].Amount;
 
-    //            building.StartUpgrading();
-    //        }
-    //    }
-    //}
+            inventory.AddItemMaxAmount(id, amount);
+        }
+
+        EventBus.InvokeStorageCapacityChanged();
+    }
+
+    private void OnStorageModuleDemolished(StorageBuildingModule module)
+    {
+        StorageModuleLevelData levelData = module.LevelData as StorageModuleLevelData;
+        foreach (ItemInstance item in levelData.storageItems) {
+            int id = item.ItemData.ItemId;
+            int amount = item.Amount;
+
+            inventory.RemoveItemMaxAmount(id, amount);
+        }
+
+        EventBus.InvokeStorageCapacityChanged();
+    }
 
     private void OnBuildingDemolished(Building building)
     {
@@ -652,22 +626,14 @@ public class CityManager : MonoBehaviour
         for (int i = 0; i < resourceToBuilds.Length; i++) {
             int id = resourceToBuilds[i].ItemData.ItemId;
             int amount = (int)math.ceil(resourceToBuilds[i].Amount * demolitionResourceRefundRate);
-            AddItem(id, amount);
+            inventory.AddItemAmount(id, amount);
         }
     }
 
-    private void BakeNavMeshSurface()
+    // Inventory
+    private void OnItemAmountChanged(ItemInstance item)
     {
-        if (bakeNavMeshCoroutine != null)
-            StopCoroutine(bakeNavMeshCoroutine);
-        bakeNavMeshCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
-    }
-
-    private IEnumerator BakeNavMeshSurfaceCoroutine()
-    {
-        yield return new WaitForEndOfFrame();
-        towerNavMeshSurface.BuildNavMesh();
-        bakeNavMeshCoroutine = null;
+        EventBus.InvokeMainStorageAmountChanged(item);
     }
 
     // Get Buildings
@@ -698,105 +664,27 @@ public class CityManager : MonoBehaviour
     private void OnProductionModuleClicked(ProductionBuildingModule module)
     {
         int itemId = module.produceItem.produceItem.ItemData.ItemId;
-        int maxAmount = maxItemsAmount[itemId];
-        int remainedAmount = maxItemsAmount[itemId] - items[itemId].Amount;
+        int maxAmount = inventory.items[itemId].maxAmount;
+        int remainedAmount = maxAmount - inventory.items[itemId].item.Amount;
 
-        ItemInstance itemToTake = module.TakeProducedItem(remainedAmount);
-        Debug.Log(itemToTake.Amount);
-        AddItem(itemToTake);
+        ItemInstance item = module.TakeProducedItem(remainedAmount);
+        Inventory.AddItemAmount(item.ItemData.ItemId, item.Amount);
     }
 
     // Boats
     private void OnBoatDestroyed(Boat boat)
     {
-        spawnedBoats[boat.dockIndex] = null;
+
     }
 
     public Boat GetBoatByIndex(int index)
     {
-        for (int i = 0; i < spawnedBoats.Count; i++) {
-            if (spawnedBoats[i])
-                return spawnedBoats[i];
+        for (int i = 0; i < citizenBoats.Count; i++) {
+            if (citizenBoats[i])
+                return citizenBoats[i];
         }
 
         return null;
-    }
-
-    // Resources
-    public void AddStorageCapacity(StorageModuleLevelData storageLevelData)
-    {
-        ChangeStorageCapacity(storageLevelData, true);
-    }
-
-    public void SubtractStorageCapacity(StorageModuleLevelData storageLevelData)
-    {
-        ChangeStorageCapacity(storageLevelData, false);
-    }
-
-    private void ChangeStorageCapacity(StorageModuleLevelData storageLevelData, bool isIncreasing)
-    {
-        for (int i = 0; i < storageLevelData.storageItems.Length; i++) {
-            int id = storageLevelData.storageItems[i].ItemData.ItemId;
-            int changeValue = storageLevelData.storageItems[i].Amount;
-
-            if (isIncreasing)
-                maxItemsAmount[id] += changeValue;
-            else
-                maxItemsAmount[id] -= changeValue;
-        }
-
-        for (int i = 0; i < storageLevelData.storageItemCategories.Length; i++) {
-            for (int j = 0; j < ItemsList.Instance.Items.Length; j++) {
-                if (items[j].ItemData.ItemCategory == storageLevelData.storageItemCategories[i].itemCategory) {
-                    int changeValue = storageLevelData.storageItemCategories[i].amount;
-
-                    if (isIncreasing)
-                        maxItemsAmount[j] += changeValue;
-                    else
-                        maxItemsAmount[j] -= changeValue;
-                }
-            }
-        }
-    }
-
-    public int AddItem(ItemInstance item)
-    {
-        return AddItem_Internal(item.ItemData.ItemId, item.Amount);
-    }
-
-    public int AddItem(int itemId, int amount)
-    {
-        return AddItem_Internal(itemId, amount);
-    }
-
-    public void AddItems(List<ItemInstance> items)
-    {
-        foreach (ItemInstance item in items)
-            AddItem_Internal(item.ItemData.ItemId, item.Amount);
-    }
-
-    private int AddItem_Internal(int itemId, int amount)
-    {
-        ItemInstance item = items[itemId];
-        int maxAmount = maxItemsAmount[itemId];
-        item.AddAmount(amount, maxAmount);
-        EventBus.InvokeItemAdded(item);
-        return item.Amount;
-    }
-
-    public void SpendItem(int id, int amount)
-    {
-        items[id].SubtractAmount(amount);
-    }
-
-    public void SpendItems(List<ItemInstance> itemsToSpend)
-    {
-        for (int i = 0; i < itemsToSpend.Count; i++) {
-            int id = (int)itemsToSpend[i].ItemData.ItemId;
-            int amount = itemsToSpend[i].Amount;
-
-            SpendItem(id, amount);
-        }
     }
 
     private IEnumerator AutosaveCoroutine()

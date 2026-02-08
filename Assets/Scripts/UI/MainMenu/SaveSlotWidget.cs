@@ -56,19 +56,19 @@ public class SaveSlotWidget : MonoBehaviour
         }
     }
 
-    public void SetSaveData(SaveData data)
+    public void SetSaveData(SaveData saveData)
     {
-        worldSaveData = data;
+        worldSaveData = saveData;
 
         createWorldMenu.SetActive(false);
         loadWorldMenu.SetActive(true);
 
-        worldNameText.text = data.worldName;
-        floorsCountText.text += $"\n{data.cityData?.floorsCount.ToString()}";
-        residentsCountText.text += $"\n{data.residentsCount.ToString()}";
+        worldNameText.text = saveData.cityData.cityName;
+        floorsCountText.text += $"\n{saveData.cityData?.floorsCount.ToString()}";
+        residentsCountText.text += $"\n{saveData.residentsData.Length.ToString()}";
         //lastSaveDataText.text += $"\n{data.lastSaveData.ToString()}";
 
-        Texture2D thumb = SaveSystem.GetSaveScreenshotByWorldName(data.worldName);
+        Texture2D thumb = SaveSystem.GetSaveScreenshotByWorldName(saveData.cityData.cityName);
         if (thumb) {
             Sprite sprite = Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
             worldThumbImage.sprite = sprite;

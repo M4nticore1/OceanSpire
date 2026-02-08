@@ -42,13 +42,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 948506293721641794}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91f9bf2902fac7d42a89fbc67f2c8ab8, type: 3}
+  m_Script: {fileID: 11500000, guid: cbe0ebc6621fde54db89153b730e38ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   buildingInteriors: []
   buildingInteractions: []
   collectItemPoints: []
-  currentFloorIndex: 0
+  goingForWaitingPassengers: []
+  waitingPassengers: []
+  goingToRidingPassengers: []
+  ridingPassengers: []
 --- !u!1001 &5218942235033013255
 PrefabInstance:
   m_ObjectHideFlags: 0

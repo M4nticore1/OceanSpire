@@ -27,7 +27,7 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] private StatsMenu statsMenu;
     private Building buildingToShowStats = null;
     [SerializeField] private ContextMenuMaster contextMenuMaster = null;
-    private ContextMenu openedContextMenu = null;
+    private ContextMenuUI openedContextMenu = null;
     private bool isManagementMenuOpened = false;
     private bool isContextMenuOpened = false;
 
@@ -364,7 +364,7 @@ public class PlayerUIManager : MonoBehaviour
             ResourceWidget storageResourceWidget = Instantiate(storageResourceWidgetPrefab, storageLists[(int)itemCategory - 1].transform);
             widgets.Add(storageResourceWidget);
 
-            ItemInstance item = CityManager.Instance.items[i];
+            ItemInstance item = CityManager.Instance.Inventory.items[i].item;
             storageResourceWidget.SetItem(item);
         }
         //storageResourceWidgets = widgets.ToArray();
@@ -448,7 +448,7 @@ public class PlayerUIManager : MonoBehaviour
 
             int id = resourcesToUpgrade[i].ItemData.ItemId;
             int amount = resourcesToUpgrade[i].Amount;
-            int maxAmount = CityManager.Instance.maxItemsAmount[id];
+            int maxAmount = CityManager.Instance.Inventory.items[id].maxAmount;
             resourceWidget.SetAmount(amount, maxAmount);
         }
     }

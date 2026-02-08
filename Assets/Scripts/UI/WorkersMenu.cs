@@ -71,8 +71,9 @@ public class WorkersMenu : UIBehaviour
         for (int i = 0; i < CityManager.Instance.residents.Count; i++) {
             spawnedResidentWidgets[i].InitializeResidentWidget(CityManager.Instance.residents[i]);
 
-            if (CityManager.Instance.residents[i].workBuilding) {
-                if (CityManager.Instance.residents[i].workBuilding == building) {
+            Building interactBuilding = CityManager.Instance.residents[i].GetComponent<EntityInteractor>().InteractBuilding;
+            if (interactBuilding) {
+                if (interactBuilding == building) {
                     spawnedResidentWidgets[i].transform.SetParent(buildingWorkersList.transform);
                     spawnedResidentWidgets[i].transform.SetSiblingIndex(buildingWorkerWidgetIndex);
                     buildingWorkerWidgetIndex++;
@@ -115,7 +116,7 @@ public class WorkersMenu : UIBehaviour
         UpdateWorkerListsSize();
     }
 
-    private void OnResidentAdded(Creature resident)
+    private void OnResidentAdded(Human resident)
     {
         CreateResidentWidget();
     }
@@ -174,11 +175,12 @@ public class WorkersMenu : UIBehaviour
         Building building = SelectManager.Instance.selectedComponent.GetComponent<Building>();
         if (!building) return;
 
-        Creature resident = widget.resident;
+        Human resident = widget.resident;
         int workersCount = building.workers.Count;
 
-        if (resident.workBuilding) {
-            if (resident.workBuilding == building) {
+        Building interactBuilding = resident.GetComponent<EntityInteractor>().InteractBuilding;
+        if (interactBuilding) {
+            if (interactBuilding == building) {
                 widget.transform.SetParent(buildingWorkersList.transform);
                 widget.transform.SetSiblingIndex(workersCount - 1);
 

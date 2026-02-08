@@ -6,15 +6,15 @@ using UnityEngine.EventSystems;
 public class ContextMenuMaster : UIBehaviour
 {
     [SerializeField] private SlidePanel slidePanel = null;
-    private ContextMenu openedContextMenu = null;
+    private ContextMenuUI openedContextMenu = null;
 
     [Header("Buildings")]
-    [SerializeField] private ContextMenu buildingContextMenu = null;
-    [SerializeField] private ContextMenu productionContextMenu = null;
-    [SerializeField] private ContextMenu storageContextMenu = null;
+    [SerializeField] private ContextMenuUI buildingContextMenu = null;
+    [SerializeField] private ContextMenuUI productionContextMenu = null;
+    [SerializeField] private ContextMenuUI storageContextMenu = null;
 
     [Header("Boats")]
-    [SerializeField] private ContextMenu boatContextMenu = null;
+    [SerializeField] private ContextMenuUI boatContextMenu = null;
 
     public void OpenContextMenu(SelectComponent selectedObject)
     {
@@ -25,7 +25,7 @@ public class ContextMenuMaster : UIBehaviour
         }
 
         Building building = selectedObject.GetComponent<Building>();
-        Creature entity = selectedObject.GetComponent<Creature>();
+        Human entity = selectedObject.GetComponent<Human>();
         Boat boat = selectedObject.GetComponent<Boat>();
 
         if (building) {

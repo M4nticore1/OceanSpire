@@ -12,7 +12,7 @@ public enum ResidentWidgetState
 
 public class ResidentWidget : MonoBehaviour
 {
-    [HideInInspector] public Creature resident = null;
+    [HideInInspector] public Human resident = null;
 
     public int widgetIndex = 0;
 
@@ -31,7 +31,7 @@ public class ResidentWidget : MonoBehaviour
         residentWidgetButton.onClick.RemoveListener(ClickWidget);
     }
 
-    public void InitializeResidentWidget(Creature resident)
+    public void InitializeResidentWidget(Human resident)
     {
         this.resident = resident;
         if (resident) {

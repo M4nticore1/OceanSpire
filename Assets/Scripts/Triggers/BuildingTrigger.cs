@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BuildingTrigger : MonoBehaviour
 {
-    private Building building;
+    private Building building = null;
 
     private void Awake()
 {
@@ -11,27 +11,37 @@ public class BuildingTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Creature entity = other.GetComponent<Creature>();
+        EntityCityNavigator entity = other.GetComponent<EntityCityNavigator>();
 
-        if (entity && building) {
-            if (!entity.IsRidingOnElevator) {
-                entity.EnterBuilding(building);
-            }
+        if (entity) {
+            if (building)
+                entity.OnEnteredBuildingTrigger(building);
+            else
+                Debug.LogError("building is null.");
         }
-        else {
-            if (!building) {
-                Debug.LogError("BuildingTrigger: Building is NULL");
-            }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        EntityCityNavigator entity = other.GetComponent<EntityCityNavigator>();
+
+        if (entity) {
+            if (building)
+                entity.OnStayBuildingTrigger(building);
+            else
+                Debug.LogError("building is null.");
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        Creature entity = other.GetComponent<Creature>();
+        EntityCityNavigator entity = other.GetComponent<EntityCityNavigator>();
 
         if (entity) {
-            if (entity.currentBuilding == building)
-                entity.ExitBuilding();
+            if (building)
+                entity.OnExitedBuildingTrigger(building);
+            else
+                Debug.LogError("building is null.");
         }
     }
 }

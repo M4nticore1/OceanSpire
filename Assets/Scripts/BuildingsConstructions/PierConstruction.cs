@@ -3,6 +3,6 @@ using System.Collections.Generic;
 
 public class PierConstruction : BuildingConstruction
 {
-    [SerializeField] private List<Transform> boatDockPositions = new List<Transform>();
-    public List<Transform> BoatDockPositions { get { return new List<Transform>(boatDockPositions); } }
+    [SerializeField] private List<BoatDockPoint> boatDocks = new List<BoatDockPoint>();
+    public List<BoatDockPoint> BoatDocks { get { return new List<BoatDockPoint>(boatDocks); } }
 }

@@ -1,6 +1,4 @@
-using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -25,16 +23,6 @@ public class BuildingConstruction : MonoBehaviour
 
     private MeshRenderer[] meshRendererers = null;
     private MaterialPropertyBlock propertyBlock = null;
-
-    protected virtual void OnEnable()
-    {
-
-    }
-
-    protected virtual void OnDisable()
-    {
-
-    }
 
     public virtual void Init(Building ownedBuilding)
     {

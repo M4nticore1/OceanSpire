@@ -5,12 +5,12 @@ using UnityEngine;
 [System.Serializable]
 public class SaveData
 {
-    // Main
-    public string worldName { get; private set; } = "new_world";
+    //// Main
+    //public string worldName { get; private set; } = "new_world";
 
-    // Player
-    public float cameraYawRotation { get; private set; } = 0;
-    public float cameraHeightPosition { get; private set; } = 0;
+    //// Player
+    //public float cameraYawRotation { get; private set; } = 0;
+    //public float cameraHeightPosition { get; private set; } = 0;
 
     // City
     //public int builtFloorsCount { get; private set; } = 0;
@@ -25,9 +25,11 @@ public class SaveData
 
     // Boats
     public CityData cityData;
+    public PlayerEntry playerData;
     public GroundBuildingEntry[] groundBuildingsData;
     public TowerBuildingEntry[] towerBuildingsData;
     public BoatEntry[] boatsData;
+    public HumanEntry[] residentsData;
     //public int[] spawnedBoatIds { get; private set; } = new int[0];
     //public bool[] spawnedBoatsAreUnderConstruction { get; private set; } = new bool[0];
     //public bool[] spawnedBoatsAreFloating { get; private set; } = new bool[0];
@@ -37,23 +39,23 @@ public class SaveData
     //public float[] spawnedBoatPositionsZ { get; private set; } = new float[0];
     //public float[] spawnedBoatRotationsY { get; private set; } = new float[0];
 
-    // Resources
-    public int[] resourcesAmount { get; private set; } = new int[0];
+    //// Resources
+    //public int[] resourcesAmount { get; private set; } = new int[0];
 
-    // Residents
-    public int residentsCount { get; private set; } = 0;
-    public bool[] residentsIsMoving { get; private set; } = new bool[0];
-    public float[] residentPositionsX { get; private set; } = new float[0];
-    public float[] residentPositionsY { get; private set; } = new float[0];
-    public float[] residentPositionsZ { get; private set; } = new float[0];
-    public int[] residentFloorIndexes { get; private set; } = new int[0];
+    //// Residents
+    //public int residentsCount { get; private set; } = 0;
+    //public bool[] residentsIsMoving { get; private set; } = new bool[0];
+    //public float[] residentPositionsX { get; private set; } = new float[0];
+    //public float[] residentPositionsY { get; private set; } = new float[0];
+    //public float[] residentPositionsZ { get; private set; } = new float[0];
+    //public int[] residentFloorIndexes { get; private set; } = new int[0];
 
-    public int[] residentCurrentBuildingIndexes { get; private set; } = new int[0];
-    public int[] residentTargetBuildingIndexes { get; private set; } = new int[0];
-    public int[] residentTowerBuildingWorkIndexes { get; private set; } = new int[0];
-    public int[] residentBuildingWorkIndexes { get; private set; } = new int[0];
+    //public int[] residentCurrentBuildingIndexes { get; private set; } = new int[0];
+    //public int[] residentTargetBuildingIndexes { get; private set; } = new int[0];
+    //public int[] residentTowerBuildingWorkIndexes { get; private set; } = new int[0];
+    //public int[] residentBuildingWorkIndexes { get; private set; } = new int[0];
 
-    public int[] npcElevatorPassengerStates { get; private set; } = new int[0];
+    //public int[] npcElevatorPassengerStates { get; private set; } = new int[0];
 
     public SaveData(PlayerController playerController)
     {
@@ -62,14 +64,14 @@ public class SaveData
             return;
         }
 
-        // Main
-        worldName = SaveManager.Instance.saveWorldName;
+        //// Main
+        //worldName = SaveManager.Instance.saveWorldName;
 
-        // Player
-        cameraYawRotation = playerController.cameraYawRotateAlpha;
-        cameraHeightPosition = playerController.cameraVerticalPosition.y;
+        //// Player
+        //cameraYawRotation = playerController.cameraYawRotateAlpha;
+        //cameraHeightPosition = playerController.cameraVerticalPosition.y;
 
-        // City
+        //// City
         //builtFloorsCount = CityManager.Instance.BuiltFloors.Count;
         //int roomsCount = builtFloorsCount * CityManager.roomsCountPerFloor;
         //placedRoomIds = new int[roomsCount + builtFloorsCount];
@@ -115,12 +117,12 @@ public class SaveData
         // Tower Buildings
 
 
-        for (int i = 0; i < CityManager.Instance.items.Length; i++) {
-            resourcesAmount[i] = CityManager.Instance.items[i].Amount;
-        }
+        //for (int i = 0; i < CityManager.Instance.items.Length; i++) {
+        //    resourcesAmount[i] = CityManager.Instance.items[i].Amount;
+        //}
 
         // Boats
-        Boat[] spawnedBoats = CityManager.Instance.spawnedBoats.ToArray();
+        Boat[] spawnedBoats = CityManager.Instance.citizenBoats.ToArray();
         int length = spawnedBoats.Length;
         boatsData = new BoatEntry[length];
         for (int i = 0; i < length; i++) {
@@ -129,7 +131,6 @@ public class SaveData
             boatsData[i] = data;
 
             data.health = boat.healthComponent.CurrentHealth;
-            data.dockIndex = boat.dockIndex;
         }
 
         //int boatsCount = spawnedBoats.Count;
@@ -159,69 +160,69 @@ public class SaveData
         //}
 
         // Residents
-        residentsCount = CityManager.Instance.residents.Count;
-        residentsIsMoving = new bool[residentsCount];
-        residentPositionsX = new float[residentsCount];
-        residentPositionsY = new float[residentsCount];
-        residentPositionsZ = new float[residentsCount];
-        residentFloorIndexes = new int[residentsCount];
+        //residentsCount = CityManager.Instance.residents.Count;
+        //residentsIsMoving = new bool[residentsCount];
+        //residentPositionsX = new float[residentsCount];
+        //residentPositionsY = new float[residentsCount];
+        //residentPositionsZ = new float[residentsCount];
+        //residentFloorIndexes = new int[residentsCount];
 
-        residentCurrentBuildingIndexes = new int[residentsCount];
-        residentTargetBuildingIndexes = new int[residentsCount];
-        residentTowerBuildingWorkIndexes = new int[residentsCount];
-        residentBuildingWorkIndexes = new int[residentsCount];
+        //residentCurrentBuildingIndexes = new int[residentsCount];
+        //residentTargetBuildingIndexes = new int[residentsCount];
+        //residentTowerBuildingWorkIndexes = new int[residentsCount];
+        //residentBuildingWorkIndexes = new int[residentsCount];
 
-        npcElevatorPassengerStates = new int[residentsCount];
+        //npcElevatorPassengerStates = new int[residentsCount];
 
-        for (int i = 0; i < residentsCount; i++)
-        {
-            Creature resident = CityManager.Instance.residents[i];
+        //for (int i = 0; i < residentsCount; i++)
+        //{
+        //    Human resident = CityManager.Instance.residents[i];
 
-            residentsIsMoving[i] = resident.isMoving;
+        //    residentsIsMoving[i] = resident.isMoving;
 
-            residentPositionsX[i] = resident.transform.position.x;
-            residentPositionsY[i] = resident.transform.position.y;
-            residentPositionsZ[i] = resident.transform.position.z;
-            residentFloorIndexes[i] = resident.currentBuilding ? ((TowerBuilding)resident.currentBuilding ? ((TowerBuilding)resident.currentBuilding).floorIndex : -1) : -1;
+        //    residentPositionsX[i] = resident.transform.position.x;
+        //    residentPositionsY[i] = resident.transform.position.y;
+        //    residentPositionsZ[i] = resident.transform.position.z;
+        //    residentFloorIndexes[i] = resident.currentBuilding ? ((TowerBuilding)resident.currentBuilding ? ((TowerBuilding)resident.currentBuilding).floorIndex : -1) : -1;
 
-            Building currentBuilding = resident.currentBuilding;
-            if (currentBuilding) {
-                TowerBuilding towerBuilding = (TowerBuilding)currentBuilding;
-                if (towerBuilding)
-                    residentCurrentBuildingIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
-                else
-                    residentCurrentBuildingIndexes[i] = -1;
-            }
-            else
-                residentCurrentBuildingIndexes[i] = -1;
+        //    Building currentBuilding = resident.currentBuilding;
+        //    if (currentBuilding) {
+        //        TowerBuilding towerBuilding = (TowerBuilding)currentBuilding;
+        //        if (towerBuilding)
+        //            residentCurrentBuildingIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
+        //        else
+        //            residentCurrentBuildingIndexes[i] = -1;
+        //    }
+        //    else
+        //        residentCurrentBuildingIndexes[i] = -1;
 
-            Building targetBuilding = resident.TargetBuilding;
-            if (targetBuilding) {
-                TowerBuilding towerBuilding = (TowerBuilding)targetBuilding;
-                if (towerBuilding)
-                    residentTargetBuildingIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
-                else
-                    residentTargetBuildingIndexes[i] = -1;
-            }
-            else
-                residentTargetBuildingIndexes[i] = -1;
+        //    Building targetBuilding = resident.TargetBuilding;
+        //    if (targetBuilding) {
+        //        TowerBuilding towerBuilding = (TowerBuilding)targetBuilding;
+        //        if (towerBuilding)
+        //            residentTargetBuildingIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
+        //        else
+        //            residentTargetBuildingIndexes[i] = -1;
+        //    }
+        //    else
+        //        residentTargetBuildingIndexes[i] = -1;
 
-            Building workBuilding = resident.workBuilding;
-            if (workBuilding) {
-                TowerBuilding towerBuilding = workBuilding as TowerBuilding;
-                if (towerBuilding) {
-                    residentTowerBuildingWorkIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
-                    residentBuildingWorkIndexes[i] = -1;
-                }
-                else {
-                    residentTowerBuildingWorkIndexes[i] = -1;
-                    //residentBuildingWorkIndexes[i] = workBuilding
-                }
-            }
-            else
-                residentTowerBuildingWorkIndexes[i] = -1;
+        //    Building workBuilding = resident.workBuilding;
+        //    if (workBuilding) {
+        //        TowerBuilding towerBuilding = workBuilding as TowerBuilding;
+        //        if (towerBuilding) {
+        //            residentTowerBuildingWorkIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
+        //            residentBuildingWorkIndexes[i] = -1;
+        //        }
+        //        else {
+        //            residentTowerBuildingWorkIndexes[i] = -1;
+        //            //residentBuildingWorkIndexes[i] = workBuilding
+        //        }
+        //    }
+        //    else
+        //        residentTowerBuildingWorkIndexes[i] = -1;
 
-            npcElevatorPassengerStates[i] = (int)resident.elevatorPassengerState;
-        }
+        //    npcElevatorPassengerStates[i] = (int)resident.followingPathState;
+        //}
     }
 }

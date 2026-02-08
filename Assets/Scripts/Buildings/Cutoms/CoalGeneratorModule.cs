@@ -10,9 +10,9 @@ public class CoalGeneratorModule : ProductionBuildingModule
     CoalGenetatorConstructionModule CoalGenetatorConstructionModule => BuildingConstruction.GetComponent<CoalGenetatorConstructionModule>();
     TimerHandle stopProductingTimerHandle = new TimerHandle();
 
-    protected override void OnBuildingInited()
+    protected override void OnInit()
     {
-        base.OnBuildingInited();
+        base.OnInit();
         Transform smokeTransform = CoalGenetatorConstructionModule.SmokeSpawnTransform;
         spawnedSmoke = Instantiate(smokePrefab);
         spawnedSmoke.transform.position = smokeTransform.position;

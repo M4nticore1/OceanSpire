@@ -12,18 +12,18 @@ public class ResourceWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.onItemAdded += OnLootAdded;
+        EventBus.onMainStorageItemAmountChanged += OnLootAdded;
         EventBus.onItemRemoved += OnLootRemoved;
-        EventBus.onLootStorageChanged += OnStorageCapacityChanged;
+        EventBus.onStorageCapacityChanged += OnStorageCapacityChanged;
 
         UpdateAmount();
     }
 
     private void OnDisable()
     {
-        EventBus.onItemAdded -= OnLootAdded;
+        EventBus.onMainStorageItemAmountChanged -= OnLootAdded;
         EventBus.onItemRemoved -= OnLootRemoved;
-        EventBus.onLootStorageChanged -= OnStorageCapacityChanged;
+        EventBus.onStorageCapacityChanged -= OnStorageCapacityChanged;
     }
 
     private void Start()
@@ -48,17 +48,15 @@ public class ResourceWidget : MonoBehaviour
         UpdateAmount();
     }
 
-    private void OnStorageCapacityChanged(ItemInstance item)
+    private void OnStorageCapacityChanged()
     {
-        if (item.ItemData.ItemId != itemData.ItemId) return;
-
         UpdateAmount();
     }
 
     public void SetItem(ItemData itemData)
     {
         int id = itemData.ItemId;
-        itemInstance = CityManager.Instance.items[id];
+        itemInstance = CityManager.Instance.Inventory.items[id].item;
         OnItemSet();
     }
 
@@ -96,10 +94,10 @@ public class ResourceWidget : MonoBehaviour
     private void UpdateAmount()
     {
         if (itemInstance == null) return;
-        if (CityManager.Instance.maxItemsAmount.Length <= itemInstance.ItemData.ItemId) return;
+        if (CityManager.Instance.Inventory.items.Count <= itemInstance.ItemData.ItemId) return;
 
         int amount = itemInstance.Amount;
-        int maxAmount = CityManager.Instance.maxItemsAmount[itemInstance.ItemData.ItemId];
+        int maxAmount = CityManager.Instance.Inventory.items[itemInstance.ItemData.ItemId].maxAmount;
         SetAmount(amount, maxAmount);
     }
 

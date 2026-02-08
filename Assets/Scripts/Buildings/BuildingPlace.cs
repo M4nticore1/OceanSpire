@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public enum BuildingPlaceState
@@ -39,6 +40,27 @@ public class BuildingPlace : MonoBehaviour
 
     private bool hasSubscribes = false;
 
+    public BuildingPlace leftPlace { get; private set; }
+    public BuildingPlace rightPlace { get; private set; }
+    public BuildingPlace upPlace { get; private set; }
+    public BuildingPlace downPlace { get; private set; }
+
+    public IEnumerable NeighborPlaces(NeighborMask mask)
+    {
+        if (mask.HasFlag(NeighborMask.Left)) {
+            yield return leftPlace;
+        }
+        if (mask.HasFlag(NeighborMask.Right)) {
+            yield return rightPlace;
+        }
+        if (mask.HasFlag(NeighborMask.Up)) {
+            yield return upPlace;
+        }
+        if (mask.HasFlag(NeighborMask.Down)) {
+            yield return downPlace;
+        }
+    }
+
     private void Awake()
     {
         buildingZoneMeshRenderer = buildingZone.GetComponent<MeshRenderer>();
@@ -62,13 +84,30 @@ public class BuildingPlace : MonoBehaviour
     public void Init(int newFloorindex)
     {
         floorIndex = newFloorindex;
-        OnInit();
+        ApplyNeighborPlace();
+        HideBuildingPlace();
         Subscribe();
     }
 
-    private void OnInit()
+    private BuildingPlace GetNeighborPlace(Side side)
     {
-        HideBuildingPlace();
+        int horizontalIndexOffset = side == Side.Left ? 1 : side == Side.Right ? -1 : 0;
+        int verticalIndexOffset = side == Side.Up ? 1 : side == Side.Down ? -1 : 0;
+        int sideIndex = (placeIndex + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
+        int verticalIndex = floorIndex + verticalIndexOffset;
+
+        if (verticalIndex < CityManager.Instance.BuiltFloors.Count && verticalIndex >= 0) {
+            return CityManager.Instance.BuiltFloors[verticalIndex].roomBuildingPlaces[sideIndex];
+        }
+        return null;
+    }
+
+    private void ApplyNeighborPlace()
+    {
+        leftPlace = GetNeighborPlace(Side.Left);
+        rightPlace = GetNeighborPlace(Side.Right);
+        upPlace = GetNeighborPlace(Side.Up);
+        downPlace = GetNeighborPlace(Side.Down);
     }
 
     private void Subscribe()
@@ -89,6 +128,7 @@ public class BuildingPlace : MonoBehaviour
 
     private void OnBuildingStartPlacing(Building building)
     {
+        if (placedBuilding) return;
         if (building.BuildingData.BuildingType != buildingType) return;
 
         ShowBuildingPlace(BuildingPlaceState.Valid);
@@ -96,6 +136,7 @@ public class BuildingPlace : MonoBehaviour
 
     private void OnBuildingFinishPlacing(Building building)
     {
+        if (placedBuilding) return;
         if (building.BuildingData.BuildingType != buildingType) return;
 
         HideBuildingPlace();
@@ -130,34 +171,34 @@ public class BuildingPlace : MonoBehaviour
         if (boxCollider)
             boxCollider.enabled = true;
 
-        Color mainColor = Color.black;
-        Color outlineColor = Color.black;
+        //Color mainColor = Color.black;
+        //Color outlineColor = Color.black;
 
-        if (buildingPlaceState == BuildingPlaceState.Valid)
-        {
-            mainColor = buildingPlaceValidColor;
-            outlineColor = buildingPlaceValidOutlineColor;
-        }
-        else if (buildingPlaceState == BuildingPlaceState.Warning)
-        {
-            mainColor = buildingPlaceWarningColor;
-            outlineColor = buildingPlaceWarningOutlineColor;
-        }
-        else if (buildingPlaceState == BuildingPlaceState.Invalid)
-        {
-            mainColor = buildingPlaceInvalidColor;
-            outlineColor = buildingPlaceInvalidOutlineColor;
-        }
+        //if (buildingPlaceState == BuildingPlaceState.Valid)
+        //{
+        //    mainColor = buildingPlaceValidColor;
+        //    outlineColor = buildingPlaceValidOutlineColor;
+        //}
+        //else if (buildingPlaceState == BuildingPlaceState.Warning)
+        //{
+        //    mainColor = buildingPlaceWarningColor;
+        //    outlineColor = buildingPlaceWarningOutlineColor;
+        //}
+        //else if (buildingPlaceState == BuildingPlaceState.Invalid)
+        //{
+        //    mainColor = buildingPlaceInvalidColor;
+        //    outlineColor = buildingPlaceInvalidOutlineColor;
+        //}
 
-        if (materialPropertyBlock != null)
-            materialPropertyBlock.SetColor("_BaseColor", mainColor);
-        if (buildingZoneMeshRenderer)
-        buildingZoneMeshRenderer.SetPropertyBlock(materialPropertyBlock, 0);
+        //if (materialPropertyBlock != null)
+        //    materialPropertyBlock.SetColor("_BaseColor", mainColor);
+        //if (buildingZoneMeshRenderer)
+        //buildingZoneMeshRenderer.SetPropertyBlock(materialPropertyBlock, 0);
 
-        if (outlineMaterialPropertyBlock != null)
-            outlineMaterialPropertyBlock.SetColor("_OutlineColor", outlineColor);
-        if (buildingZoneMeshRenderer)
-            buildingZoneMeshRenderer.SetPropertyBlock(outlineMaterialPropertyBlock, 1);
+        //if (outlineMaterialPropertyBlock != null)
+        //    outlineMaterialPropertyBlock.SetColor("_OutlineColor", outlineColor);
+        //if (buildingZoneMeshRenderer)
+        //    buildingZoneMeshRenderer.SetPropertyBlock(outlineMaterialPropertyBlock, 1);
     }
 
     private void HideBuildingPlace()

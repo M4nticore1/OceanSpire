@@ -9,7 +9,7 @@ public class StorageBuildingModule : BuildingModule
     public StorageModuleLevelData StorageLevelData => StorageLevelsData[LevelIndex];
     public Dictionary<int, ItemInstance> storedItems = new Dictionary<int, ItemInstance>();
 
-    protected override void OnBuildingInited()
+    protected override void OnInit()
     {
         for (int i = 0; i < StorageLevelData.storageItems.Length; i++)
         {
@@ -37,16 +37,6 @@ public class StorageBuildingModule : BuildingModule
     }
 
     protected override void OnExitBuilding()
-    {
-
-    }
-
-    protected override void OnResidentStartWorking()
-    {
-
-    }
-
-    protected override void OnResidentStopWorking()
     {
 
     }
@@ -82,7 +72,7 @@ public class StorageBuildingModule : BuildingModule
 
     private int SpendItem_Internal(int itemId, int amount)
     {
-        int amountToSpend = storedItems[itemId].SubtractAmount(amount);
+        int amountToSpend = storedItems[itemId].RemoveAmount(amount);
         return amountToSpend;
     }
 }

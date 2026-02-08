@@ -26,7 +26,7 @@ public class SaveManager
     public void SetSaveData(SaveData data)
     {
         saveData = data;
-        SetSaveWorldName(saveData.worldName);
+        SetSaveWorldName(saveData.cityData.cityName);
     }
 
     public void SetSaveWorldName(string name)

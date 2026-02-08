@@ -28,7 +28,7 @@ public class ItemData : ScriptableObject
     [SerializeField] private ItemID itemId = ItemID.Population;
     public int ItemId => (int)itemId;
     [SerializeField] private string itemIdName = "";
-    public string ItemIdName => itemIdName;
+    public string itemKey => itemIdName;
     [SerializeField] private string itemName = "";
     public string ItemName => itemName;
     [SerializeField] private int weight = 0;

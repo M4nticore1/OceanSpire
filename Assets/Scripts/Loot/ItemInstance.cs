@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -45,7 +44,7 @@ public class ItemInstance
         return SetAmount(this.amount + amount, maxAmount);
     }
 
-    public int SubtractAmount(int amount, int maxAmount = 0)
+    public int RemoveAmount(int amount, int maxAmount = 0)
     {
         return SetAmount(this.amount - amount, maxAmount);
     }

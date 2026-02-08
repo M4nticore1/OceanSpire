@@ -8,8 +8,7 @@ public class HealthDisplay : MonoBehaviour
     [SerializeField] private GameObject content;
 
     private bool isDisplayed = false;
-    [SerializeField] private float toggleFloat = 1f;
-    [SerializeField] private float visibilityThreshold = 1f;
+    [SerializeField] private float minHealthVisibilityThreshold = 0.5f;
     [SerializeField] private float timeToHide = 10f;
     private float currentTimeToHide = 0f;
 
@@ -23,12 +22,22 @@ public class HealthDisplay : MonoBehaviour
         healthComponent.onHealthChanged += OnHealthChanged;
     }
 
+    private void Start()
+    {
+        float currentHealth = healthComponent.CurrentHealth;
+        float maxHealth = healthComponent.MaxHealth;
+        float alpha = currentHealth / maxHealth;
+        if (alpha <= minHealthVisibilityThreshold)
+            Display();
+        else
+            Hide();
+    }
+
     private void Update()
     {
-        if (isDisplayed) {
+        if (isDisplayed && timeToHide > 0) {
             if (currentTimeToHide < timeToHide) {
                 currentTimeToHide += Time.deltaTime;
-
                 if (currentTimeToHide >= timeToHide) {
                     Hide();
                     ResetTime();
@@ -41,8 +50,9 @@ public class HealthDisplay : MonoBehaviour
     {
         float currentHealth = healthComponent.CurrentHealth;
         float maxHealth = healthComponent.MaxHealth;
-        if (!isDisplayed && currentHealth / maxHealth <= visibilityThreshold) {
-            Display()
+        float alpha = currentHealth / maxHealth;
+        if (!isDisplayed && alpha <= minHealthVisibilityThreshold) {
+            Display();
             SetHealth(currentHealth, maxHealth);
         }
         else {
@@ -58,7 +68,7 @@ public class HealthDisplay : MonoBehaviour
 
     private void Hide()
     {
-        content.SetActive(true);
+        content.SetActive(false);
         isDisplayed = false;
     }
 

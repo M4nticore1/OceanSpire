@@ -8,7 +8,18 @@ public abstract class BuildingModule : MonoBehaviour
     protected int LevelIndex => OwnedBuilding.LevelIndex;
     [SerializeField] protected BuildingModuleLevelData[] levelsData = { };
     public BuildingModuleLevelData[] LevelsData => levelsData;
-    public BuildingModuleLevelData LevelData => levelsData[ownedBuilding.LevelIndex];
+    public BuildingModuleLevelData LevelData
+    {
+        get
+        {
+            if (LevelIndex < LevelsData.Length)
+                return LevelsData[LevelIndex];
+            else {
+                Debug.LogError(ownedBuilding.BuildingData.BuildingName + $" has no level data by index {LevelIndex}");
+                return null;
+            }
+        }
+    }
     protected BuildingConstruction BuildingConstruction => ownedBuilding.spawnedConstruction;
 
     protected void Awake()
@@ -21,10 +32,8 @@ public abstract class BuildingModule : MonoBehaviour
         ownedBuilding.onBuildingInited += OnBuildingInited;
         ownedBuilding.onBuildingStartWorking += OnBuildingStartWorking;
         ownedBuilding.onBuildingStopWorking += OnBuildingStopWorking;
-        ownedBuilding.onEnterBuilding += OnEnterBuilding;
-        ownedBuilding.onExitBuilding += OnExitBuilding;
-        ownedBuilding.onResidentStartWorking += OnResidentStartWorking;
-        ownedBuilding.onResidentStopWorking += OnResidentStopWorking;
+        ownedBuilding.onEntityEnterBuilding += OnEnterBuilding;
+        ownedBuilding.onEntityExitBuilding += OnExitBuilding;
     }
 
     protected virtual void OnDisable()
@@ -32,13 +41,17 @@ public abstract class BuildingModule : MonoBehaviour
         ownedBuilding.onBuildingInited -= OnBuildingInited;
         ownedBuilding.onBuildingStartWorking -= OnBuildingStartWorking;
         ownedBuilding.onBuildingStopWorking -= OnBuildingStopWorking;
-        ownedBuilding.onEnterBuilding -= OnEnterBuilding;
-        ownedBuilding.onExitBuilding -= OnExitBuilding;
-        ownedBuilding.onResidentStartWorking -= OnResidentStartWorking;
-        ownedBuilding.onResidentStopWorking -= OnResidentStopWorking;
+        ownedBuilding.onEntityEnterBuilding -= OnEnterBuilding;
+        ownedBuilding.onEntityExitBuilding -= OnExitBuilding;
     }
 
-    protected abstract void OnBuildingInited();
+    private void OnBuildingInited()
+    {
+        OnInit();
+        EventBus.InvokeBuildingModuleInited(this);
+    }
+
+    protected abstract void OnInit();
 
     protected abstract void OnBuildingStartWorking();
 
@@ -47,10 +60,6 @@ public abstract class BuildingModule : MonoBehaviour
     protected abstract void OnEnterBuilding();
 
     protected abstract void OnExitBuilding();
-
-    protected abstract void OnResidentStartWorking();
-
-    protected abstract void OnResidentStopWorking();
 
     protected virtual void SetFlickingMultiplier(float multiplier)
     {

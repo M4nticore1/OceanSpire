@@ -4,10 +4,10 @@ using UnityEngine;
 public class ElevatorModuleLevelData : BuildingModuleLevelData
 {
     [Header("Elevator Constructions")]
-    [SerializeField] private ElevatorPlatformConstruction elevatorPlatformStraight;
-    public ElevatorPlatformConstruction ElevatorPlatformStraight => elevatorPlatformStraight;
-    [SerializeField] private ElevatorPlatformConstruction elevatorPlatformCorner;
-    public ElevatorPlatformConstruction ElevatorPlatformCorner => elevatorPlatformCorner;
+    [SerializeField] private ElevatorCabinConstruction elevatorPlatformStraight;
+    public ElevatorCabinConstruction ElevatorPlatformStraight => elevatorPlatformStraight;
+    [SerializeField] private ElevatorCabinConstruction elevatorPlatformCorner;
+    public ElevatorCabinConstruction ElevatorPlatformCorner => elevatorPlatformCorner;
 
     [Header("Elevator")]
     [SerializeField] private float elevatorMoveSpeed = 0.0f;

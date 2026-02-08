@@ -84,6 +84,8 @@ MonoBehaviour:
   buildingLevelsData:
   - {fileID: 11400000, guid: 62b2143ea6dd1154c9a0539b1b3ab4e0, type: 2}
   isRuined: 0
+  floorIndex: 0
+  placeIndex: 0
 --- !u!114 &-1917393463895517600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,4 +98,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f08c10878c07134abcad1e3dedc07f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelsData: []
+  levelsData:
+  - {fileID: 11400000, guid: 7eb5c6fd20249014d998a0224d36e8c1, type: 2}

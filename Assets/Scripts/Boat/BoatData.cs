@@ -1,10 +1,15 @@
 using UnityEngine;
 
+public enum BoatIdEnum
+{
+    BasicBoat
+}
+
 [CreateAssetMenu(fileName = "BoatData", menuName = "Scriptable Objects/BoatData")]
 public class BoatData : ScriptableObject
 {
-    [SerializeField] private int boatId = 0;
-    public int BoatId => boatId;
+    [SerializeField] private BoatIdEnum boatId = BoatIdEnum.BasicBoat;
+    public int BoatId => (int)boatId;
 
     [SerializeField] private string boatIdName = "";
     public string BoatIdName => boatIdName;
@@ -18,6 +23,9 @@ public class BoatData : ScriptableObject
     //[SerializeField] private int speed = 0;
     //public int Speed => speed;
 
+    [SerializeField] private float maxHealth = 0;
+    public float MaxHealth => maxHealth;
+
     [SerializeField] private int maxWeight = 0;
     public int MaxWeight => maxWeight;
 
@@ -30,6 +38,6 @@ public class BoatData : ScriptableObject
     public const float correctDockRotationSpeed = 0.5f;
 
     [Header("UI")]
-    [SerializeField] private ContextMenu detailsMenuWidget = null;
-    public ContextMenu DetailsMenuWidget => detailsMenuWidget;
+    [SerializeField] private ContextMenuUI detailsMenuWidget = null;
+    public ContextMenuUI DetailsMenuWidget => detailsMenuWidget;
 }

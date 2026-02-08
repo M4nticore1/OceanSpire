@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
+
+public class PlayerEntry
+{
+    public Vector3 cameraRotation;
+}
 
 public class PlayerController : MonoBehaviour
 {
@@ -203,11 +209,9 @@ public class PlayerController : MonoBehaviour
         currentCameraArmLength = -mainCamera.transform.localPosition.z;
 
         if (saveData == null) {
-            cameraYawRotateAlpha = 0.5f; }
+            cameraYawRotateAlpha = 0.52f; }
         else {
-            cameraYawRotateAlpha = saveData.cameraYawRotation; }
-
-        cameraYawRotateAlpha = 0.52f;
+            cameraYawRotateAlpha = saveData.playerData.cameraRotation.y / 360; }
 
         moveStateValue = 1f / CityManager.roomsCountPerFloor;
 
@@ -454,7 +458,10 @@ public class PlayerController : MonoBehaviour
                                 ProductionBuildingModule hittedProductionBuilding = hittedBuilding.GetComponent<ProductionBuildingModule>();
 
                                 if (hittedProductionBuilding && hittedProductionBuilding.isReadyToCollect) {
-                                    CollectItems(hittedProductionBuilding);
+                                    int id = hittedProductionBuilding.produceItem.produceItem.ItemData.ItemId;
+                                    int maxAmountToTake = CityManager.Instance.Inventory.items[id].maxAmount;
+                                    ItemInstance item = hittedProductionBuilding.TakeProducedItem(maxAmountToTake);
+                                    CityManager.Instance.Inventory.AddItemAmount(item.ItemData.ItemId, item.Amount);
                                 }
                                 else {
                                     selected = hittedBuilding.GetComponent<SelectComponent>();
@@ -468,7 +475,9 @@ public class PlayerController : MonoBehaviour
                             }
                             else if (hittedLootContainer) {
                                 List<ItemInstance> takedItems = hittedLootContainer.TakeItems();
-                                CollectItems(takedItems);
+                                foreach (ItemInstance item in takedItems) {
+                                    CityManager.Instance.Inventory.AddItemAmount(item.ItemData.ItemId, item.Amount);
+                                }
                             }
 
                             if (selected != null) {
@@ -530,15 +539,5 @@ public class PlayerController : MonoBehaviour
     private void PlaceBuilding(BuildingPlace buildingPlace)
     {
         EventBus.InvokeBuildingPlacePressed(buildingPlace);
-    }
-
-    private void CollectItems(ProductionBuildingModule module)
-    {
-        EventBus.InvokeProductionModuleClicked(module);
-    }
-
-    private void CollectItems(List<ItemInstance> items)
-    {
-        CityManager.Instance.AddItems(items);
     }
 }

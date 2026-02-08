@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 public abstract class BuildingEntry
 {
@@ -19,9 +18,9 @@ public abstract class Building : MonoBehaviour
     public int LevelIndex => levelComponent ? levelComponent.LevelIndex : GetComponent<LevelComponent>().LevelIndex;
 
     //[HideInInspector] public int levelIndex { get; private set; } = 0;
-    public List<Creature> enteredEntities { get; private set; } = new List<Creature>();
-    public List<Creature> workers { get; private set; } = new List<Creature>();
-    public List<Creature> currentWorkers { get; private set; } = new List<Creature>();
+    public List<Human> enteredEntities { get; private set; } = new List<Human>();
+    public List<Human> workers { get; private set; } = new List<Human>();
+    public List<Human> currentWorkers { get; private set; } = new List<Human>();
 
     public BuildingConstruction spawnedConstruction { get; private set; } = null;
 
@@ -37,10 +36,8 @@ public abstract class Building : MonoBehaviour
     public event System.Action onBuildingInited;
     public event System.Action onBuildingStartWorking;
     public event System.Action onBuildingStopWorking;
-    public event System.Action onEnterBuilding;
-    public event System.Action onExitBuilding;
-    public event System.Action onResidentStartWorking;
-    public event System.Action onResidentStopWorking;
+    public event System.Action onEntityEnterBuilding;
+    public event System.Action onEntityExitBuilding;
 
     protected virtual void Awake()
     {
@@ -67,6 +64,7 @@ public abstract class Building : MonoBehaviour
         GetComponents();
         OnInit(data);
         BuildConstruction();
+        spawnedConstruction?.Init(this);
 
         isInitialized = true;
         onBuildingInited?.Invoke();
@@ -104,54 +102,42 @@ public abstract class Building : MonoBehaviour
     }
 
     // Residents Management
-    public virtual void EnterBuilding(Creature entity)
+    public virtual void EnterBuilding(Human entity)
     {
         enteredEntities.Add(entity);
-        Resident resident = entity as Resident;
-
-        if (resident) {
-            if (resident.isWorking) { // If constructing building
-
-            }
-            else if (resident.workBuilding == this) { // If resident is worker
-                StartWorking();
-            }
-        }
-
-        onEnterBuilding?.Invoke();
+        onEntityEnterBuilding?.Invoke();
     }
 
-    public virtual void ExitBuilding(Creature entity)
+    public virtual void ExitBuilding(Human entity)
     {
         enteredEntities.Remove(entity);
-        onExitBuilding?.Invoke();
+        onEntityExitBuilding?.Invoke();
     }
 
-    public void AddWorker(Creature worker)
+    public void AddWorker(Human interactor)
     {
-        workers.Add(worker);
+        workers.Add(interactor);
     }
 
-    public void RemoveWorker(Creature worker)
+    public void RemoveWorker(Human interactor)
     {
-        workers.Remove(worker);
+        workers.Remove(interactor);
+
+        if (currentWorkers.Count == 0)
+            StopWorking();
     }
 
-    public  void AddCurrentWorker(Creature worker)
+    public  void AddCurrentWorker(Human interactor)
     {
-        currentWorkers.Add(worker);
-        worker.SetWorkerIndex(currentWorkers.Count - 1);
-        onResidentStartWorking?.Invoke();
-        StartWorking();
+        currentWorkers.Add(interactor);
+
+        if (currentWorkers.Count == 1)
+            StartWorking();
     }
 
-    public void RemoveCurrentWorker(Creature worker)
+    public void RemoveCurrentWorker(Human interactor)
     {
-        Debug.Log("RemoveCurrentWorker");
-        currentWorkers.RemoveAt(worker.workerIndex);
-        for (int i = 0; i < currentWorkers.Count; i++)
-            currentWorkers[i].SetWorkerIndex(i);
-        onResidentStopWorking?.Invoke();
+        currentWorkers.Remove(interactor);
 
         if (currentWorkers.Count == 0)
             StopWorking();

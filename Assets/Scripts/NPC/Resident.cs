@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Resident : Creature
+public class Resident : Human
 {
 
 }

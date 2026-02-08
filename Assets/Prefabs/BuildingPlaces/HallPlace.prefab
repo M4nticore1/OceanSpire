@@ -66,8 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 006b276fbc83f0c4b92fd682164ae2d2, type: 2}
-  - {fileID: 2100000, guid: e90445b18be551f4d869db4cb34f7620, type: 2}
+  - {fileID: 2100000, guid: a57ca6e5e2ebc1f46a6f23959a3ed23e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -160,8 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingType: 1
-  floorIndex: 0
-  buildingPlaceIndex: 0
+  placeIndex: 0
   placedBuilding: {fileID: 0}
   buildingZone: {fileID: 3859439699844814488}
   buildingFrame: {fileID: 2987562058754367172}

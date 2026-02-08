@@ -59,7 +59,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnDeleteWorldButtonClicked()
     {
-        string worldName = selectedWorldSaveSlot.worldSaveData.worldName;
+        string worldName = selectedWorldSaveSlot.worldSaveData.cityData.cityName;
         SaveSystem.RemoveSaveByWorldName(worldName);
         SaveManager.Instance.FindSavesData();
         selectedWorldSaveSlot.Button.SetState(CustomSelectableState.Idle);
@@ -150,7 +150,7 @@ public class MainMenuManager : MonoBehaviour
     private bool IsWorldNameExist(string name)
     {
         foreach (var data in SaveManager.Instance.allSaveData) {
-            if (data != null && data.worldName == name) {
+            if (data != null && data.cityData.cityName == name) {
                 return true;
             }
         }

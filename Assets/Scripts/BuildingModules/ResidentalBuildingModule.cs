@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ResidentalBuildingModule : BuildingModule
 {
-    protected override void OnBuildingInited()
+    protected override void OnInit()
     {
 
     }
@@ -23,16 +23,6 @@ public class ResidentalBuildingModule : BuildingModule
     }
 
     protected override void OnExitBuilding()
-    {
-
-    }
-
-    protected override void OnResidentStartWorking()
-    {
-
-    }
-
-    protected override void OnResidentStopWorking()
     {
 
     }

@@ -5,15 +5,12 @@ using UnityEngine;
 
 public static class PathFinder
 {
-    //public List<List<Building>> allPaths = new List<List<Building>>();
-    //public List<BuildingPath> allPaths2 = new List<BuildingPath>();
-
-    public static bool TryGetPathToBuilding(CityManager city, Building startBuilding, Building targetBuilding, ref List<Building> buildingsPath)
+    public static bool TryGetPathToBuilding(CityManager city, BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
     {
-        return TryGetPathToBuilding_Internal(city, startBuilding, targetBuilding, ref buildingsPath);
+        return TryGetPathToBuilding_Internal(city, startPlace, targetBuilding, ref buildingsPath);
     }
 
-    public static bool TryGetPathToBuilding(CityManager city, Building startBuilding, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
+    public static bool TryGetPathToBuilding(CityManager city, BuildingPlace startPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
     {
         Building targetBuilding = null;
         for (int i = 0; i < city.BuiltFloors.Count; i++) {
@@ -35,79 +32,80 @@ public static class PathFinder
                 break;
         }
 
-        return TryGetPathToBuilding_Internal(city, startBuilding, targetBuilding, ref buildingsPath);
+        return TryGetPathToBuilding_Internal(city, startPlace, targetBuilding, ref buildingsPath);
     }
 
-    private static bool TryGetPathToBuilding_Internal(CityManager city, Building startBuilding, Building targetBuilding, ref List<Building> buildingsPath)
+    private static bool TryGetPathToBuilding_Internal(CityManager city, BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
     {
         // Preparing
         List<List<Building>> allPaths = new List<List<Building>>();
+        allPaths.Add(new List<Building>());
         buildingsPath.Clear();
 
-        int pathIndex = 0;
+        if (startPlace || targetBuilding as TowerBuilding) {
+            int pathIndex = 0;
 
-        allPaths.Add(new List<Building>());
+            if (!startPlace)
+                startPlace = city.BuiltFloors[0].roomBuildingPlaces[CityManager.firstBuildCityBuildingPlace];
 
-        List<bool> checkedBuildingPlaces = new List<bool>();
-        for (int i = 0; i < city.BuiltFloors.Count * CityManager.roomsCountPerFloor; i++)
-            checkedBuildingPlaces.Add(false);
+            // Main
+            HashSet<BuildingPlace> visitedBuildings = new HashSet<BuildingPlace>();
+            bool found = FindPath(city, startPlace, targetBuilding, allPaths, ref pathIndex, visitedBuildings);
 
-        TowerBuilding startTowerBuilding = startBuilding as TowerBuilding;
-        if (!startBuilding)
-            startBuilding = city.BuiltFloors[0].roomBuildingPlaces[CityManager.firstBuildCityBuildingPlace].placedBuilding;
+            if (found) {
+                buildingsPath = allPaths[allPaths.Count - 1].ToList();
+            }
 
-        // Main
-        HashSet<Building> visitedBuildings = new HashSet<Building>();
-        bool found = FindPath(city, startBuilding, targetBuilding, allPaths, ref pathIndex, visitedBuildings);
-
-        //for (int i = 0; i < allPaths.Count; i++) {
-        //    allPaths2.Add(new BuildingPath());
-        //    for (int j = 0; j < allPaths[i].Count; j++) {
-        //        allPaths2[i].paths.Add(allPaths[i][j]);
-        //    }
-        //}
-
-        if (found) {
-            buildingsPath = allPaths[allPaths.Count - 1].ToList();
+            return found;
         }
-
-        return found;
+        else {
+            buildingsPath.Add(targetBuilding);
+            return true;
+        }
     }
 
-    private static bool FindPath(CityManager city, Building startBuilding, Building targetBuilding, List<List<Building>> buildingPaths, ref int pathIndex, HashSet<Building> visitedBuildings, int enterPathIndex = 0, int pathLength = 0)
+    private static bool FindPath(CityManager city, BuildingPlace startPlace, Building targetBuilding, List<List<Building>> buildingPaths, ref int pathIndex, HashSet<BuildingPlace> visitedBuildings, int enterPathIndex = 0, int pathLength = 0)
     {
-        if (!startBuilding) {
-            Debug.LogError("startBuilding == NULL");
+        if (!startPlace) {
+            Debug.LogError("startBuilding is null");
             return false;
         }
 
-        if (!visitedBuildings.Add(startBuilding)) return false;
+        if (!visitedBuildings.Add(startPlace)) return false;
 
         // Connect path with parent path
         if (pathIndex > 0 && buildingPaths[pathIndex].Count == 0) {
             for (int i = 0; i < pathLength; i++) {
-                buildingPaths[pathIndex].Add(buildingPaths[enterPathIndex][i]);
+                List<Building> path = buildingPaths[enterPathIndex];
+                Building building = path[i];
+                buildingPaths[pathIndex].Add(building);
             }
         }
 
         // Add this building as new
-        buildingPaths[pathIndex].Add(startBuilding);
-        if (startBuilding == targetBuilding)
-            return true;
-
-        TowerBuilding startTowerBuilding = startBuilding as TowerBuilding;
-        if (!startTowerBuilding) {
-            Debug.LogError("startTowerBuilding is NULL");
-            return false;
+        if (startPlace.placedBuilding) {
+            buildingPaths[pathIndex].Add(startPlace.placedBuilding);
         }
 
-        bool hasStartElevator = startTowerBuilding.GetComponent<ElevatorBuildingModule>();
+        if (startPlace.placedBuilding == targetBuilding) {
+            return true;
+        }
+
+        bool hasStartElevator = startPlace.placedBuilding?.GetComponent<ElevatorModule>();
         int enterIndex = pathIndex;
         int currentPathLength = buildingPaths[enterPathIndex].Count;
-        // Get new paths
         int buildingsCount = 0;
-        foreach (TowerBuilding direction in hasStartElevator ? startTowerBuilding.NeighborBuildings(NeighborMask.All) : startTowerBuilding.NeighborBuildings(NeighborMask.Horizontal)) {
-            if (!direction) continue;
+
+        // Get new paths
+        foreach (BuildingPlace direction in hasStartElevator ? startPlace.NeighborPlaces(NeighborMask.All) : startPlace.NeighborPlaces(NeighborMask.Horizontal)) {
+            if (!direction?.placedBuilding) {
+                if (targetBuilding as GroundBuilding && direction.floorIndex == 0 && direction.PlaceIndex == CityManager.firstBuildCityBuildingPlace) {
+                    return true;
+                }
+
+                continue;
+            }
+
             if (visitedBuildings.Contains(direction)) continue;
 
             if (buildingsCount > 0) {
@@ -115,10 +113,12 @@ public static class PathFinder
                 buildingPaths.Add(new List<Building>());
             }
 
-            if (FindPath(city, city.BuiltFloors[direction.floorIndex].roomBuildingPlaces[direction.placeIndex].placedBuilding, targetBuilding, buildingPaths, ref pathIndex, visitedBuildings, enterIndex, currentPathLength))
+            if (FindPath(city, city.BuiltFloors[direction.floorIndex].roomBuildingPlaces[direction.PlaceIndex], targetBuilding, buildingPaths, ref pathIndex, visitedBuildings, enterIndex, currentPathLength))
                 return true;
+
             buildingsCount++;
         }
+
         return false;
     }
 }

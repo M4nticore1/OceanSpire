@@ -7,7 +7,7 @@ public static class EventBus
     public static event Action<string> onCreateWorldButtonClicked;
     public static event Action<SaveData> onLoadWorldButtonClicked;
 
-    // Constructing
+    // Buildings
     public static event Action<BuildingPlace> onBuildingPlacePressed;
     public static event Action<BuildingWidget> onBuildingWidgetBuildClicked;
     public static event Action<BuildingWidget> onBuildingWidgetInformationClicked;
@@ -15,22 +15,23 @@ public static class EventBus
     public static event Action<Building> onBuildingFinishPlacing;
     public static event Action<Building> onBuildingInitialized;
     public static event Action<Building> onBuildingPlaced;
-    //public static event Action<ConstructionComponent> onConstructionPlaced;
-    //public static event Action<ConstructionComponent> onConstructionBuilt;
-    //public static event Action<ConstructionComponent> onConstructionDemolished;
+
+    public static event Action<BuildingModule> onBuildingModuleInited;
+    public static event Action<BuildingModule> onBuildingModuleUpgraded;
+    public static event Action<BuildingModule> onBuildingModuleDemolished;
 
     // Production Module
     public static event Action<ProductionBuildingModule> onProductionModuleClicked;
 
     // Residents
-    public static event Action<Creature> onResidentAdded;
-    public static event Action<Creature> onResidentRemoved;
+    public static event Action<Human> onResidentAdded;
+    public static event Action<Human> onResidentRemoved;
 
     // Workers
     public static event Action<ResidentWidget> onResidentWidgetClicked;
 
     // Loot
-    public static event Action<ItemInstance> onItemAdded;
+    public static event Action<ItemInstance> onMainStorageItemAmountChanged;
     public static event Action<ItemInstance> onItemRemoved;
     public static event Action<ItemInstance> onLootStorageChanged;
     public static event Action onStorageCapacityChanged;
@@ -84,25 +85,26 @@ public static class EventBus
         onBuildingInitialized?.Invoke(building);
     }
 
-    public static void InvokeOnBuildingPlaced(Building building)
+    public static void InvokeBuildingPlaced(Building building)
     {
         onBuildingPlaced?.Invoke(building);
     }
 
-    //public static void InvokeConstructionPlaced(ConstructionComponent constructionComponent)
-    //{
-    //    onConstructionPlaced?.Invoke(constructionComponent);
-    //}
+    // Modules
+    public static void InvokeBuildingModuleInited(BuildingModule module)
+    {
+        onBuildingModuleInited?.Invoke(module);
+    }
 
-    //public static void InvokeConstructionBuilt(ConstructionComponent constructionComponent)
-    //{
-    //    onConstructionBuilt?.Invoke(constructionComponent);
-    //}
+    public static void InvokeBuildingModuleUpgraded(BuildingModule module)
+    {
+        onBuildingModuleUpgraded?.Invoke(module);
+    }
 
-    //public static void InvokeConstructionDemolished(ConstructionComponent constructionComponent)
-    //{
-    //    onConstructionDemolished?.Invoke(constructionComponent);
-    //}
+    public static void InvokeBuildingModuleDemolished(BuildingModule module)
+    {
+        onBuildingModuleDemolished?.Invoke(module);
+    }
 
     // Production Module
     public static void InvokeProductionModuleClicked(ProductionBuildingModule module)
@@ -111,12 +113,12 @@ public static class EventBus
     }
 
     // Residents
-    public static void InvokeResidentAdded(Creature resident)
+    public static void InvokeCitizenAdded(Human resident)
     {
         onResidentAdded?.Invoke(resident);
     }
 
-    public static void InvokeResidentRemoved(Creature resident)
+    public static void InvokeResidentRemoved(Human resident)
     {
         onResidentRemoved?.Invoke(resident);
     }
@@ -128,10 +130,9 @@ public static class EventBus
     }
 
     // Loot
-    public static void InvokeItemAdded(ItemInstance itemInstance)
+    public static void InvokeMainStorageAmountChanged(ItemInstance itemInstance)
     {
-        Debug.Log("InvokeItemAdded");
-        onItemAdded?.Invoke(itemInstance);
+        onMainStorageItemAmountChanged?.Invoke(itemInstance);
     }
 
     public static void InvokeStorageCapacityChanged()

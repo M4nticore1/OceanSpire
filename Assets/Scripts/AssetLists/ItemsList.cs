@@ -108,7 +108,7 @@ public class ItemsList : ScriptableObject
 
         for (int i = 0; i < itemsList.Length; i++)
         {
-            if (itemsList[i].ItemIdName == idName)
+            if (itemsList[i].itemKey == idName)
             {
                 id = i;
                 return i;

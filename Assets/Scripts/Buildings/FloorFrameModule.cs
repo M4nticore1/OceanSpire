@@ -8,7 +8,7 @@ public class FloorFrameModule : BuildingModule
     public BuildingPlace hallBuildingPlace;
     public BuildingPlace floorBuildingPlace;
 
-    protected override void OnBuildingInited()
+    protected override void OnInit()
     {
         int floorIndex = (OwnedBuilding as TowerBuilding).floorIndex;
         floorBuildingPlace.Init(floorIndex + 1);
@@ -33,16 +33,6 @@ public class FloorFrameModule : BuildingModule
     }
 
     protected override void OnExitBuilding()
-    {
-
-    }
-
-    protected override void OnResidentStartWorking()
-    {
-
-    }
-
-    protected override void OnResidentStopWorking()
     {
 
     }

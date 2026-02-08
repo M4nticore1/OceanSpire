@@ -11,17 +11,28 @@ public class HealthComponent : MonoBehaviour
 
     public event Action onHealthChanged;
 
+    public void Init(float maxHealth, float currentHealth)
+    {
+        SetMaxHealh(maxHealth);
+        SetCurrentHealth(currentHealth);
+    }
+
     public void AddHealth(float value)
     {
-        SetHealth(currentHealth + value);
+        SetCurrentHealth(currentHealth + value);
     }
 
     public void RemoveHealth(float value)
     {
-        SetHealth(currentHealth - value);
+        SetCurrentHealth(currentHealth - value);
     }
 
-    public void SetHealth(float value)
+    public void SetMaxHealh(float value)
+    {
+        maxHealth = value;
+    }
+
+    public void SetCurrentHealth(float value)
     {
         float newHealth = math.clamp(value, 0, MaxHealth - CurrentHealth);
         currentHealth = value;
