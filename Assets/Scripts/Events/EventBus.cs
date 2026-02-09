@@ -24,11 +24,13 @@ public static class EventBus
     public static event Action<ProductionBuildingModule> onProductionModuleClicked;
 
     // Residents
-    public static event Action<Human> onResidentAdded;
+    public static event Action<Human> onCitizenAdded;
     public static event Action<Human> onResidentRemoved;
 
     // Workers
-    public static event Action<ResidentWidget> onResidentWidgetClicked;
+    public static event Action<CitizenWidget> onCitizenWidgetClicked;
+    public static event Action onSetedInteractBuilding;
+    public static event Action onRemovedInteractBuilding;
 
     // Loot
     public static event Action<ItemInstance> onMainStorageItemAmountChanged;
@@ -115,7 +117,7 @@ public static class EventBus
     // Residents
     public static void InvokeCitizenAdded(Human resident)
     {
-        onResidentAdded?.Invoke(resident);
+        onCitizenAdded?.Invoke(resident);
     }
 
     public static void InvokeResidentRemoved(Human resident)
@@ -124,9 +126,19 @@ public static class EventBus
     }
 
     // Workers
-    public static void InvokeResidentWidgetClicked(ResidentWidget widget)
+    public static void InvokeCitizenWidgetClicked(CitizenWidget widget)
     {
-        onResidentWidgetClicked?.Invoke(widget);
+        onCitizenWidgetClicked?.Invoke(widget);
+    }
+
+    public static void InvokeSetedInteractBuilding()
+    {
+        onSetedInteractBuilding?.Invoke();
+    }
+
+    public static void InvokeRemovedInteractBuilding()
+    {
+        onRemovedInteractBuilding?.Invoke();
     }
 
     // Loot

@@ -15,6 +15,6 @@ public class CreaturesList : ScriptableObject
         }
     }
 
-    [SerializeField] private Creature[] creatures = null;
-    public Creature[] Creatures => creatures;
+    [SerializeField] private Entity[] creatures = null;
+    public Entity[] Creatures => creatures;
 }

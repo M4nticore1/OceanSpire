@@ -1,24 +1,42 @@
 {
-  "language.name": "English",
-  "language.code": "en",
-  "common.building": "Building",
-  "common.construction": "Construction",
-  "common.storage": "Storage",
-  "common.level": "Level",
-  "menu.load": "Load",
-  "menu.remove": "Remove",
-  "menu.exit": "",
-  "menu.close": "",
-  "building.livingRooms.name": "",
-  "building.livingRooms.description": "",
-  "building.woodGenerator.name": "",
-  "building.woodGenerator.description": "",
-  "building.stats.storageCapacity": "Capacity",
-  "stats.population": "Population",
-  "stats.food": "Food",
-  "stats.water": "Water",
-  "stats.electricity": "Electricity",
-  "item.stone": "Stone",
-  "item.metal": "Metal",
-  "item.plastic": "Plastic"
+  "content": {
+    "language.name": "English",
+    "language.code": "en",
+    "common.building": "Building",
+    "common.construction": "Construction",
+    "common.storage": "Storage",
+    "common.level": "Level",
+    "menu.load": "Load",
+    "menu.remove": "Remove",
+    "menu.exit": "",
+    "menu.close": "",
+    "building.livingRooms.name": "",
+    "building.livingRooms.description": "",
+    "building.woodGenerator.name": "",
+    "building.woodGenerator.description": "",
+    "building.stats.storageCapacity": "Capacity",
+    "stats.population": "Population",
+    "stats.food": "Food",
+    "stats.water": "Water",
+    "stats.electricity": "Electricity",
+    "item.stone": "Stone",
+    "item.metal": "Metal",
+    "item.plastic": "Plastic"
+  },
+
+  "male_first_names": [
+    "Jeffrie"
+  ],
+
+  "male_last_names": [
+    "Epstein"
+  ],
+
+  "female_first_names": [
+    "Jeffrie"
+  ],
+
+  "female_last_names": [
+    "Epstein"
+  ]
 }

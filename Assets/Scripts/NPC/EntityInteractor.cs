@@ -28,12 +28,12 @@ public class EntityInteractor : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.onResidentWidgetClicked += OnWorkerWidgetClicked;
+        EventBus.onCitizenWidgetClicked += OnWorkerWidgetClicked;
     }
 
     private void OnDisable()
     {
-        EventBus.onResidentWidgetClicked -= OnWorkerWidgetClicked;
+        EventBus.onCitizenWidgetClicked -= OnWorkerWidgetClicked;
     }
 
     private void Update()
@@ -44,9 +44,9 @@ public class EntityInteractor : MonoBehaviour
     }
 
     // Events
-    private void OnWorkerWidgetClicked(ResidentWidget widget)
+    private void OnWorkerWidgetClicked(CitizenWidget widget)
     {
-        Human resident = widget.resident;
+        Human resident = widget.citizen;
         if (resident != GetComponent<Human>()) return;
 
         Building selectedBuilding = SelectManager.Instance.selectedComponent.GetComponent<Building>();
@@ -77,14 +77,20 @@ public class EntityInteractor : MonoBehaviour
 
         interactBuilding = building;
         onSetedInteractBuilding?.Invoke(building);
+        EventBus.InvokeSetedInteractBuilding();
     }
 
     private void RemoveInteractBuilding()
     {
-        if (isInteracting)
+        if (isInteracting) {
             StopInteractingBuilding();
-        onRemovedInteractBuilding?.Invoke(interactBuilding);
+        }
+
+        Building lastBuilding = interactBuilding;
         interactBuilding = null;
+
+        onRemovedInteractBuilding?.Invoke(lastBuilding);
+        EventBus.InvokeRemovedInteractBuilding();
     }
 
     public void SetInteracterIndex(int index)

@@ -2,13 +2,12 @@ using UnityEngine;
 
 public class Bootstrap : MonoBehaviour
 {
-    private void Awake()
+    private void Start()
     {
         _ = PlayerSettings.Instance;
         _ = SelectManager.Instance;
-        new LocalizationManager();
 
-        SaveManager.Instance.Initialize();
+        SaveManager.Instance.Init();
         AwakeAsync();
 
         QualitySettings.vSyncCount = 0;
@@ -17,6 +16,6 @@ public class Bootstrap : MonoBehaviour
 
     private async void AwakeAsync()
     {
-        await LocalizationManager.Instance.InitializeAsync();
+        await LocalizationManager.Instance.InitAsync();
     }
 }

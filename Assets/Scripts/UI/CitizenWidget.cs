@@ -10,49 +10,52 @@ public enum ResidentWidgetState
     NonSelectedWorker,
 }
 
-public class ResidentWidget : MonoBehaviour
+public class CitizenWidget : MonoBehaviour
 {
-    [HideInInspector] public Human resident = null;
+    [HideInInspector] public Human citizen = null;
 
     public int widgetIndex = 0;
 
     [SerializeField] private GameObject selectedResidentMenu = null;
     [SerializeField] private GameObject nonSelectedResidentMenu = null;
-    [SerializeField] private TextMeshProUGUI residentNameText = null;
-    [SerializeField] private Button residentWidgetButton = null;
+    [SerializeField] private TextMeshProUGUI citizenNameText = null;
+    [SerializeField] private Button button = null;
 
     private void OnEnable()
     {
-        residentWidgetButton.onClick.AddListener(ClickWidget);
+        button.onClick.AddListener(ClickWidget);
     }
 
     private void OnDisable()
     {
-        residentWidgetButton.onClick.RemoveListener(ClickWidget);
+        button.onClick.RemoveListener(ClickWidget);
     }
 
-    public void InitializeResidentWidget(Human resident)
+    public void Init(Human citizen)
     {
-        this.resident = resident;
-        if (resident) {
-            ShowResidentMenu();
+        if (citizen) {
+            SetCitizen(citizen);
         }
-        else  {
+        else {
             HideResidentMenu();
         }
     }
 
-    public void SetResident(Resident resident)
+    public void SetCitizen(Human citizen)
     {
-        this.resident = resident;
-
+        this.citizen = citizen;
         ShowResidentMenu();
+    }
+
+    public void RemoveCitizen()
+    {
+        HideResidentMenu();
     }
 
     public void ShowResidentMenu()
     {
         selectedResidentMenu.SetActive(true);
-        residentNameText.SetText(resident.firstName + "\n" + resident.lastName);
+        citizenNameText.SetText(citizen.firstName + "\n" + citizen.lastName);
     }
 
     public void HideResidentMenu()
@@ -62,6 +65,6 @@ public class ResidentWidget : MonoBehaviour
 
     private void ClickWidget()
     {
-        EventBus.InvokeResidentWidgetClicked(this);
+        EventBus.InvokeCitizenWidgetClicked(this);
     }
 }

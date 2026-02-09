@@ -2,9 +2,9 @@ using UnityEngine;
 
 public static class CreatureFactory
 {
-    public static Creature CreateCreature(int id, CreatureEntry data)
+    public static Entity CreateCreature(int id, CreatureEntry data)
     {
-        Creature prefab = CreaturesList.Instance.Creatures[id];
+        Entity prefab = CreaturesList.Instance.Creatures[id];
         if (!prefab) {
             Debug.LogError($"No prefab found for Creature ID {id}");
             return null;

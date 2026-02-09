@@ -2,25 +2,39 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
+public class LocalizationData
+{
+    public Dictionary<string, string> content;
+    public string[] male_first_names;
+    public string[] male_last_names;
+    public string[] female_first_names;
+    public string[] female_last_names;
+}
+
 public class LocalizationManager
 {
-    public static LocalizationManager Instance { get; private set; }
+    private static LocalizationManager instance;
+    public static LocalizationManager Instance
+    {
+        get
+        {
+            if (instance == null)
+                instance = new LocalizationManager();
+            return instance;
+        }
+    }
 
-    public List<Dictionary<string, string>> localizations { get; private set; } = new List<Dictionary<string, string>>();
-    private int currentLocalizationIndex = 0;
+    public List<LocalizationData> localizations { get; private set; } = new List<LocalizationData>();
+    public LocalizationData currentLocalization = null;
+
     public bool isInitialized { get; private set; } = false;
     public event System.Action OnLocalizationChanged;
 
-    public LocalizationManager()
-    {
-        if (Instance != null) return;
+    private LocalizationManager() { }
 
-        Instance = this;
-    }
-
-    public async Task InitializeAsync()
+    public async Task InitAsync()
     {
-        localizations = await LocalizationSystem.LoadLocalizationsAsync();
+        localizations = await LocalizationSystem.GetLocalizationsAsync();
         Debug.Log("Loaded " + localizations.Count + " localizations");
         isInitialized = true;
     }
@@ -29,9 +43,10 @@ public class LocalizationManager
     {
         if (!isInitialized) return key;
 
-        if (localizations.Count > currentLocalizationIndex && localizations[currentLocalizationIndex] != null) {
-            if (localizations[currentLocalizationIndex].ContainsKey(key))
-                return localizations[currentLocalizationIndex][key];
+        if (currentLocalization != null) {
+            if (currentLocalization.content.ContainsKey(key)) {
+                return currentLocalization.content[key];
+            }
             else {
                 Debug.LogWarning($"localizations[currentLocalizationIndex] has no {key} key");
                 return "";
@@ -41,11 +56,44 @@ public class LocalizationManager
             return key;
     }
 
+    public string GetFirstName(bool isMale, int index)
+    {
+        if (isMale) {
+            return GetName(isMale, index, currentLocalization.male_first_names);
+        }
+        else {
+            return GetName(isMale, index, currentLocalization.female_first_names);
+        }
+    }
+
+    public string GetLastName(bool isMale, int index)
+    {
+        if (isMale) {
+            return GetName(isMale, index, currentLocalization.male_last_names);
+        }
+        else {
+            return GetName(isMale, index, currentLocalization.female_last_names);
+        }
+    }
+
+    private string GetName(bool isMale, int index, string[] names)
+    {
+        if (names == null) {
+            Debug.LogError("Array is not valid.");
+            return "";
+        }
+
+        int maxIndex = names.Length;
+        int finalIndex = index % maxIndex;
+
+        return names[index];
+    }
+
     public void SetLocalization(string languageKey)
     {
         for (int i = 0; i < localizations.Count; i++) {
-            if (localizations[i]["language.code"] == languageKey) {
-                currentLocalizationIndex = i;
+            if (localizations[i].content["language.code"] == languageKey) {
+                currentLocalization = localizations[i];
                 break;
             }
         }

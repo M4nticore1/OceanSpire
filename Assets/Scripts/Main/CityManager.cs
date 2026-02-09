@@ -71,10 +71,8 @@ public class CityManager : MonoBehaviour
     public Building buildingToPlace { get; private set; }
 
     [Header("NPC")]
-    public List<Human> residents { get; private set; } = new List<Human>();
+    public List<Human> citizens { get; private set; } = new List<Human>();
     private const int startResidentsCount = 2;
-    public int employedResidentCount { get; private set; } = 0;
-    public int unemployedResidentsCount { get; private set; } = 0;
 
     [Header("Boats")]
     [SerializeField] private BoatIdEnum[] startBoatIds;
@@ -113,7 +111,7 @@ public class CityManager : MonoBehaviour
 
     private async void AwakeAsync()
     {
-        await LocalizationManager.Instance.InitializeAsync();
+        await LocalizationManager.Instance.InitAsync();
     }
 
     private void OnEnable()
@@ -291,7 +289,7 @@ public class CityManager : MonoBehaviour
 
                 HumanEntry data = new HumanEntry { position = finalPosition, rotation = rotation.eulerAngles };
                 Human resident = CreatureFactory.CreateCreature(0, data) as Human;
-                residents.Add(resident);
+                AddResident(resident);
                 resident.SetNavAgentEnabled(false);
             }
         }
@@ -333,7 +331,7 @@ public class CityManager : MonoBehaviour
     private IEnumerator LoadCityAsync()
     {
         yield return new WaitForEndOfFrame();
-        foreach(var creature in residents)
+        foreach(var creature in citizens)
             creature.SetNavAgentEnabled(true);
     }
 
@@ -348,28 +346,14 @@ public class CityManager : MonoBehaviour
 
     private void AddResident(Human resident)
     {
-        residents.Add(resident);
-        unemployedResidentsCount++;
+        citizens.Add(resident);
         EventBus.InvokeCitizenAdded(resident);
     }
 
     private void RemoveResident(Human resident)
     {
         Destroy(resident);
-        unemployedResidentsCount++;
         EventBus.InvokeResidentRemoved(resident);
-    }
-
-    public void AddWorker()
-    {
-        employedResidentCount++;
-        unemployedResidentsCount--;
-    }
-
-    public void RemoveWorker()
-    {
-        employedResidentCount--;
-        unemployedResidentsCount++;
     }
 
     // Building Places

@@ -8,7 +8,7 @@ public abstract class CreatureEntry
     public Vector3 rotation;
 }
 
-public abstract class Creature : MonoBehaviour
+public abstract class Entity : MonoBehaviour
 {
     protected NavMeshAgent agent = null;
     protected EntityMovement movement = null;

@@ -3,8 +3,6 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class PlayerEntry
 {

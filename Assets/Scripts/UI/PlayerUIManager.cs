@@ -23,7 +23,7 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] private GameObject buildingListsMenu = null;
     [SerializeField] private GameObject storageListsMenu = null;
     [SerializeField] private ConstructionInformationMenu buildingInformationMenu = null;
-    [SerializeField] private WorkersMenu workersMenu = null;
+    [SerializeField] private WorkersMenuManager workersMenu = null;
     [SerializeField] private StatsMenu statsMenu;
     private Building buildingToShowStats = null;
     [SerializeField] private ContextMenuMaster contextMenuMaster = null;
@@ -173,7 +173,7 @@ public class PlayerUIManager : MonoBehaviour
 
         managementMenu.SetActive(false);
         buildingListsMenu.SetActive(false);
-        workersMenu.gameObject.SetActive(false);
+        workersMenu.CloseWorkersMenu();
         stopPlacingBuildingButton.gameObject.SetActive(false);
 
         foreach (GridLayoutGroup rect in buildingLists) {
@@ -401,7 +401,6 @@ public class PlayerUIManager : MonoBehaviour
     // Workers
     private void OnContextMenuWorkersButtonClicked()
     {
-        workersMenu.gameObject.SetActive(true);
         workersMenu.OpenWorkersMenu();
     }
 

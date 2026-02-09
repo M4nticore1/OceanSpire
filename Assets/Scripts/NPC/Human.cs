@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public enum HumanStatus
@@ -11,17 +12,25 @@ public enum HumanStatus
 [Serializable]
 public class HumanEntry : CreatureEntry
 {
-    HumanStatus creatureStatus = HumanStatus.Citizen;
-    Guid interactBuildingInstanceId;
+    public HumanStatus creatureStatus = HumanStatus.Citizen;
+    public Guid interactBuildingInstanceId = Guid.Empty;
+    public bool isMale = false;
+    public int firstNameIndex = 0;
+    public int lastNameIndex = 0;
 }
 
-public class Human : Creature
+public class Human : Entity
 {
-    private EntityCityNavigator cityNavigator = null;
-    private EntityInteractor interactor = null;
-    private BoatRider boatRider = null;
+    public EntityCityNavigator cityNavigator { get; private set; } = null;
+    public EntityInteractor interactor { get; private set; } = null;
+    public BoatRider boatRider { get; private set; } = null;
 
     public HumanStatus status { get; private set; } = HumanStatus.Citizen;
+
+    private bool isMale = false;
+
+    private int firstNameIndex = 0;
+    private int lastNameIndex = 0;
 
     public string firstName { get; private set; } = "";
     public string lastName { get; private set; } = "";
@@ -63,6 +72,10 @@ public class Human : Creature
     public override void Init(CreatureEntry data)
     {
         base.Init(data);
+
+        HumanEntry humanData = data as HumanEntry;
+        AssignGender(humanData);
+        AssignNameIndexes(humanData);
     }
 
     private void OnEnteredBuilding(Building building)
@@ -118,5 +131,42 @@ public class Human : Creature
     private void OnExitedBoat(Boat boat)
     {
         movement.SetAgentEnabled(true);
+    }
+
+    // Gender
+    private void AssignGender(HumanEntry data)
+    {
+        if (data != null) {
+            isMale = data.isMale;
+        }
+        else {
+            int index = UnityEngine.Random.Range(0, 1);
+            if (index == 0)
+                isMale = false;
+            else
+                isMale = true;
+        }
+    }
+
+    // Names
+    private void AssignNameIndexes(HumanEntry data)
+    {
+        if (data != null) {
+            firstNameIndex = data.firstNameIndex;
+            lastNameIndex = data.lastNameIndex;
+        }
+        else {
+            if (isMale) {
+                firstNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.male_first_names.Length);
+                lastNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.male_last_names.Length);
+            }
+            else {
+                firstNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.female_first_names.Length);
+                lastNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.female_last_names.Length);
+            }
+        }
+
+        firstName = LocalizationManager.Instance.GetFirstName(isMale, firstNameIndex);
+        lastName = LocalizationManager.Instance.GetLastName(isMale, lastNameIndex);
     }
 }

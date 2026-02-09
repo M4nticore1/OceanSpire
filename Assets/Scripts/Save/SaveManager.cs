@@ -11,7 +11,7 @@ public class SaveManager
 
     private SaveManager() { }
 
-    public void Initialize()
+    public void Init()
     {
         EventBus.onCreateWorldButtonClicked += CreateWorld;
         EventBus.onLoadWorldButtonClicked += LoadWorld;
