@@ -269,15 +269,16 @@ public class PlayerUIManager : MonoBehaviour
                 Debug.LogError($"Building {building} does not have a Building Data");
                 continue;
             }
+
             if (!building.BuildingData.IsDemolishable) continue;
 
             BuildingCategory buildingCategory = building.BuildingData.BuildingCategory;
             BuildingWidget spawnedBuildingWidget = null;
             spawnedBuildingWidget = Instantiate(buildingWidgetPrefab, transform);
-
-            spawnedBuildingWidget.Init(building);
             spawnedBuildingWidget.transform.SetParent(buildingLists[(int)buildingCategory].transform);
             spawnedBuildingWidgets.Add(spawnedBuildingWidget);
+
+            spawnedBuildingWidget.Init(building);
         }
 
         for (int i = 0; i < categoriesCount; i++) {
@@ -287,8 +288,9 @@ public class PlayerUIManager : MonoBehaviour
 
             rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
 
-            if (rectTransform.sizeDelta.y < initialSizeDelta.y)
+            if (rectTransform.sizeDelta.y < initialSizeDelta.y) {
                 rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, initialSizeDelta.y);
+            }
         }
     }
 

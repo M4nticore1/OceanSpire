@@ -14,8 +14,9 @@ public static class CreatureFactory
         obj.Init(data);
 
         Human human = obj as Human;
-        if (human)
+        if (human && human.status == HumanStatus.Citizen) {
             EventBus.InvokeCitizenAdded(human);
+        }
 
         return obj;
     }

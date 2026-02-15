@@ -131,10 +131,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingResourceWidget: {fileID: 2815948240187871119, guid: 9d3feffcad0e637408bef2ff4d7db94d, type: 3}
+  buildingNameTextLocalizer: {fileID: 9025228998122799740}
   buildingImage: {fileID: 5005537298302894448}
   buildButton: {fileID: 3753086174136718447}
   informationButton: {fileID: 42081283019150995}
-  buildingNameText: {fileID: 2869115394412868553}
   resourcesToBuildLayoutGroup: {fileID: 5228974229580240534}
 --- !u!1 &3306016871298986454
 GameObject:
@@ -207,6 +207,7 @@ GameObject:
   - component: {fileID: 709781028341091486}
   - component: {fileID: 367102599054315352}
   - component: {fileID: 2948914218958306724}
+  - component: {fileID: 1304325639114397127}
   m_Layer: 5
   m_Name: PlaceButtonText
   m_TagString: Untagged
@@ -335,6 +336,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1304325639114397127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4427824139254346479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  item: {fileID: 11400000, guid: 422ec4f8dc2dca34abd1b5dcf16c3603, type: 2}
 --- !u!1 &5980144702461266115
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,6 +435,7 @@ GameObject:
   - component: {fileID: 3867250660934868674}
   - component: {fileID: 2300282988481057649}
   - component: {fileID: 2869115394412868553}
+  - component: {fileID: 9025228998122799740}
   m_Layer: 5
   m_Name: BuildingNameText
   m_TagString: Untagged
@@ -549,6 +564,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &9025228998122799740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6352652561304178274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  item: {fileID: 0}
 --- !u!1 &7545732244426481678
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,7 +636,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0.95, g: 0.95, b: 0.95, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

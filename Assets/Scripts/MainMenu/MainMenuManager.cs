@@ -13,7 +13,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private SaveSlotWidget[] saveSlots = { };
 
     public SaveSlotWidget selectedWorldSaveSlot { get; private set; } = null;
-    private SaveData SelectedSaveData => selectedWorldSaveSlot ? selectedWorldSaveSlot.worldSaveData : null;
+    private WorldData SelectedSaveData => selectedWorldSaveSlot ? selectedWorldSaveSlot.worldSaveData : null;
 
     private void OnEnable()
     {
@@ -48,20 +48,20 @@ public class MainMenuManager : MonoBehaviour
     private void OnCreateWorldButtonClicked()
     {
         string worldName = nameWorldInputField.text;
-        SaveManager.Instance.CreateWorld(worldName);
+        WorldSaveManager.Instance.CreateWorld(worldName);
     }
 
     private void OnLoadWorldButtonClicked()
     {
-        SaveData data = SelectedSaveData;
-        SaveManager.Instance.LoadWorld(data);
+        WorldData data = SelectedSaveData;
+        WorldSaveManager.Instance.LoadWorld(data);
     }
 
     private void OnDeleteWorldButtonClicked()
     {
         string worldName = selectedWorldSaveSlot.worldSaveData.cityData.cityName;
-        SaveSystem.RemoveSaveByWorldName(worldName);
-        SaveManager.Instance.FindSavesData();
+        WorldSaveSystem.RemoveSaveByWorldName(worldName);
+        WorldSaveManager.Instance.FindSavesData();
         selectedWorldSaveSlot.Button.SetState(CustomSelectableState.Idle);
         selectedWorldSaveSlot.RemoveSaveData();
     }
@@ -149,7 +149,13 @@ public class MainMenuManager : MonoBehaviour
 
     private bool IsWorldNameExist(string name)
     {
-        foreach (var data in SaveManager.Instance.allSaveData) {
+        WorldData[] worldData = WorldSaveManager.Instance.allSaveData;
+        if (worldData == null) {
+            Debug.LogError("worldData is not valid.");
+            return false;
+        }
+
+        foreach (var data in worldData) {
             if (data != null && data.cityData.cityName == name) {
                 return true;
             }

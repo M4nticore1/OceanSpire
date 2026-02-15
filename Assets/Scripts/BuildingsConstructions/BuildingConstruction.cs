@@ -2,10 +2,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public struct BuildingAction
+public class BuildingAction
 {
-    public Transform[] waypoints;
-    public int[] actionTimes;
+    public BuildingActionWaypoint[] waypoints;
+}
+
+[System.Serializable]
+public class BuildingActionWaypoint
+{
+    public Transform transform;
+    public int actionTime;
 }
 
 public class BuildingConstruction : MonoBehaviour

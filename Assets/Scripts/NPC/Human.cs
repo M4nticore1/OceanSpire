@@ -1,5 +1,4 @@
 using System;
-using Unity.Mathematics;
 using UnityEngine;
 
 public enum HumanStatus
@@ -21,7 +20,7 @@ public class HumanEntry : CreatureEntry
 
 public class Human : Entity
 {
-    public EntityCityNavigator cityNavigator { get; private set; } = null;
+    public EntityCityNavigator navigator { get; private set; } = null;
     public EntityInteractor interactor { get; private set; } = null;
     public BoatRider boatRider { get; private set; } = null;
 
@@ -37,16 +36,21 @@ public class Human : Entity
 
     private void Awake()
     {
-        cityNavigator = GetComponent<EntityCityNavigator>();
+        movement = GetComponent<EntityMovement>();
+        navigator = GetComponent<EntityCityNavigator>();
         interactor = GetComponent<EntityInteractor>();
         boatRider = GetComponent<BoatRider>();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        cityNavigator.onEnteredBuilding += OnEnteredBuilding;
-        cityNavigator.onExitedBuilding += OnExitedBuilding;
-        cityNavigator.onReachedTarget += OnReachedTarget;
+        base.OnEnable();
+
+        movement.onStoppedMoving += OnStoppedMoving;
+
+        navigator.onEnteredBuilding += OnEnteredBuilding;
+        navigator.onExitedBuilding += OnExitedBuilding;
+        navigator.onReachedTarget += OnReachedTargetBuilding;
 
         interactor.onSetedInteractBuilding += OnSetedInteractBuilding;
         interactor.onRemovedInteractBuilding += OnRemovedInteractBuilding;
@@ -56,10 +60,12 @@ public class Human : Entity
         boatRider.onExitedBoat += OnExitedBoat;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
-        cityNavigator.onEnteredBuilding -= OnEnteredBuilding;
-        cityNavigator.onExitedBuilding -= OnExitedBuilding;
+        base.OnDisable();
+
+        navigator.onEnteredBuilding -= OnEnteredBuilding;
+        navigator.onExitedBuilding -= OnExitedBuilding;
 
         interactor.onSetedInteractBuilding -= OnSetedInteractBuilding;
         interactor.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
@@ -78,44 +84,41 @@ public class Human : Entity
         AssignNameIndexes(humanData);
     }
 
+    // Movement
+    private void OnStoppedMoving()
+    {
+        if (interactor.InteractBuilding && interactor.InteractBuilding == navigator.currentBuilding) {
+            interactor.OnStoppedMoving();
+        }
+    }
+
     private void OnEnteredBuilding(Building building)
     {
-        building.EnterBuilding(this);
+        building.EnterBuilding(navigator);
     }
 
     private void OnExitedBuilding(Building building)
     {
-        building.ExitBuilding(this);
+        building.ExitBuilding(navigator);
     }
 
     private void OnSetedInteractBuilding(Building building)
     {
-        building.AddWorker(this);
-        cityNavigator.OnSetedInteractBuilding(building);
+        navigator.OnSetedInteractBuilding(building);
     }
 
     private void OnRemovedInteractBuilding(Building building)
     {
-        building.RemoveWorker(this);
-        cityNavigator.OnRemovedInteractBuilding();
+        navigator.OnRemovedInteractBuilding();
     }
 
-    private void OnReachedTarget(Building building)
+    private void OnReachedTargetBuilding(Building building)
     {
-        interactor.StartInteractingBuilding();
-        building.AddCurrentWorker(this);
-
-        PierModule pier = building.GetComponent<PierModule>();
-        if (pier) {
-            boatRider.SetBoat(CityManager.Instance.citizenBoats[interactor.interacterIndex]);
-            boatRider.StartEnteringBoat();
-        }
+        //interactor.OnReachedTargetBuilding();
     }
 
     private void OnStopInteracting(Building building)
     {
-        building.RemoveCurrentWorker(this);
-
         PierModule pier = building.GetComponent<PierModule>();
         if (pier) {
             boatRider.SetBoat(null);
@@ -157,13 +160,15 @@ public class Human : Entity
         }
         else {
             if (isMale) {
-                firstNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.male_first_names.Length);
-                lastNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.male_last_names.Length);
+                //firstNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.male_first_names.Length);
+                //lastNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.male_last_names.Length);
             }
             else {
-                firstNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.female_first_names.Length);
-                lastNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.female_last_names.Length);
+                //firstNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.female_first_names.Length);
+                //lastNameIndex = UnityEngine.Random.Range(0, LocalizationManager.Instance.currentLocalization.female_last_names.Length);
             }
+            firstNameIndex = 0;
+            lastNameIndex = 0;
         }
 
         firstName = LocalizationManager.Instance.GetFirstName(isMale, firstNameIndex);

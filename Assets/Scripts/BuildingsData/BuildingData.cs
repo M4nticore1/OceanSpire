@@ -59,20 +59,31 @@ public class BuildingData : ScriptableObject
     [Header("Main")]
     [SerializeField] private BuildingIdEnum buildingId = BuildingIdEnum.TowerGate;
     public int BuildingId { get { return (int)buildingId; } }
-    [SerializeField] private string buildingIdName = "";
-    public string BuildingIdName => buildingIdName;
+
+    [SerializeField] private LocalizationItem localizationItem = null;
+    public LocalizationItem LocalizationItem => localizationItem;
+
     [SerializeField] private string buildingName = "";
     public string BuildingName => buildingName;
+
     [SerializeField] private BuildingType buildingType = BuildingType.Room;
     public BuildingType BuildingType => buildingType;
+
     [SerializeField] private BuildingCategory buildingCategory = BuildingCategory.Construction;
     public BuildingCategory BuildingCategory => buildingCategory;
+
     [SerializeField] private ConnectionType connectionType = ConnectionType.None;
     public ConnectionType ConnectionType => connectionType;
+
+    [SerializeField] private BuildingStrategyEnum buildingStrategy = BuildingStrategyEnum.WorkBuilding;
+    public BuildingStrategyEnum BuildingStrategy => buildingStrategy;
+
     [SerializeField] private DetailsWindowVariant detailsWindowVariant = DetailsWindowVariant.Building;
     public DetailsWindowVariant DetailsWindowVariant => detailsWindowVariant;
+
     [SerializeField] private bool instantConstruction = false;
     public bool InstantConstruction => instantConstruction;
+
     [SerializeField] private Sprite thumbImage = null;
     public Sprite ThumbImage => thumbImage;
 

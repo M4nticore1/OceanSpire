@@ -2,20 +2,18 @@ using UnityEngine;
 
 public class Bootstrap : MonoBehaviour
 {
-    private void Start()
+    private void Awake()
     {
         _ = PlayerSettings.Instance;
         _ = SelectManager.Instance;
 
-        SaveManager.Instance.Init();
-        AwakeAsync();
+        WorldSaveManager.Instance.Init();
+        SettingsSaveManager.Instance.Init();
+        SettingsData data = SettingsSaveManager.Instance.savedData;
+
+        LocalizationManager.Instance.Init(null);
 
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 120;
-    }
-
-    private async void AwakeAsync()
-    {
-        await LocalizationManager.Instance.InitAsync();
     }
 }

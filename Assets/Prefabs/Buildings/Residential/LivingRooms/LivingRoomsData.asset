@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LivingRoomsData
   m_EditorClassIdentifier: 
   buildingId: 6
-  buildingIdName: living_rooms
+  localizationItem: {fileID: 11400000, guid: 94c55751ce6192b43a4c61a2d688f13d, type: 2}
   buildingName: Living Rooms
   buildingType: 0
   buildingCategory: 1

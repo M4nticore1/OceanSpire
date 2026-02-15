@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: WoodStorage_BuildingData
   m_EditorClassIdentifier: 
   buildingId: 8
-  buildingIdName: wood_storage
+  localizationItem: {fileID: 11400000, guid: ca26a1b1d93ff7f478f1e1f510438950, type: 2}
   buildingName: Wood Storage
   buildingType: 0
   buildingCategory: 3
   connectionType: 0
+  detailsWindowVariant: 0
+  instantConstruction: 0
+  thumbImage: {fileID: 0}
   buildingFloors: 1
   maxBuildingFloors: 1
   isDemolishable: 1
-  buildingManagementMenuWidget: {fileID: 0}

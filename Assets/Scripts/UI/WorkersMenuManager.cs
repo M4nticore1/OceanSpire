@@ -34,6 +34,15 @@ public class WorkersMenuManager : UIBehaviour
         closeMenuButton.onReleased -= CloseWorkersMenu;
     }
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        buildingWorkersMenu.Init();
+        unemployedCitizensMenu.Init();
+        employedCitizensMenu.Init();
+    }
+
     // Open / Close
     public void OpenWorkersMenu()
     {

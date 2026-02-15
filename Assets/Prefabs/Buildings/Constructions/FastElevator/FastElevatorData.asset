@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: FastElevatorData
   m_EditorClassIdentifier: 
   buildingId: 4
-  buildingIdName: fast_elevator
+  localizationItem: {fileID: 11400000, guid: 6dc46e51aeded764d854221a7fd21bfc, type: 2}
   buildingName: Fast Elevator
   buildingType: 2
   buildingCategory: 0
   connectionType: 0
+  detailsWindowVariant: 0
+  instantConstruction: 0
+  thumbImage: {fileID: 0}
   buildingFloors: 1
   maxBuildingFloors: 1
   isDemolishable: 1
-  buildingManagementMenuWidget: {fileID: 0}

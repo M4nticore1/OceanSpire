@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3100839605564067757}
-  - component: {fileID: 1859215036312310174}
+  - component: {fileID: 5367906543175657419}
+  - component: {fileID: 863287215183021566}
   m_Layer: 0
   m_Name: CityManager
   m_TagString: Untagged
@@ -32,7 +33,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1859215036312310174
+--- !u!114 &5367906543175657419
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,30 +42,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 5127569501461543765}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02b87d0f526dfb74ab84ecf3ce16c525, type: 3}
+  m_Script: {fileID: 11500000, guid: 5ad56024aca1e4b4db659747187211f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerRoot: {fileID: 0}
-  builtFloors:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  currentRoomsNumberOnFloor: 
-  cityHeight: 0
-  startResources: []
-  items: []
-  residents: []
-  employedResidentCount: 0
-  unemployedResidentsCount: 0
-  entitySpawnPositions:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  allPaths2: []
+  playerController: {fileID: 0}
+  towerNavMeshSurface: {fileID: 0}
+  builtFloors: []
+  towerGate: {fileID: 0}
+  pierBuilding: {fileID: 0}
+  startBoatIds: 00000000
+  <entitySpawnPosition>k__BackingField: {fileID: 0}
+--- !u!114 &863287215183021566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5127569501461543765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27afc86b48e1cd4d987e182d36208aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Inventory
+  maxWeight: 0

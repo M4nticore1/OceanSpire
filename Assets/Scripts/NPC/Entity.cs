@@ -16,6 +16,16 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected CreatureData creatureData;
     public CreatureData CreatureData => creatureData;
 
+    protected virtual void OnEnable()
+    {
+        EventBus.onNavMeshBaked += OnNavMeshBaked;
+    }
+
+    protected virtual void OnDisable()
+    {
+        EventBus.onNavMeshBaked -= OnNavMeshBaked;
+    }
+
     public virtual void Init(CreatureEntry data)
     {
         agent = GetComponent<NavMeshAgent>();
@@ -23,10 +33,21 @@ public abstract class Entity : MonoBehaviour
 
         transform.position = data.position;
         transform.rotation = Quaternion.Euler(data.rotation);
+
+        if (CityManager.Instance.bakeNavMeshCoroutine != null) {
+            agent.enabled = false;
+        }
     }
 
     public void SetNavAgentEnabled(bool value)
     {
         agent.enabled = value;
+    }
+
+    private void OnNavMeshBaked()
+    {
+        if (agent.enabled == true) return;
+
+        agent.enabled = true;
     }
 }

@@ -720,7 +720,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5127569501461543765, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
       propertyPath: m_Name
-      value: GameManager
+      value: CityManager
       objectReference: {fileID: 0}
     - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
       propertyPath: towerGate

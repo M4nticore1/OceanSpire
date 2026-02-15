@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
 
     private const float keyboardCameraMoveSensitivity = 100f;
     private const float mouseCameraMoveSensitivity = 10f;
-    private const float touchscreenCameraMoveSensitivity = 3f;
+    private const float touchscreenCameraMoveSensitivity = 4f;
     private const float cameraStopMoveSpeed = 6.0f;
 
     private const float cameraVerticalBoundaryPadding = 10.0f;
@@ -202,7 +202,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("void PlayerController : SetInputSystem() inputActions is NULL");
     }
 
-    public void Load(SaveData saveData)
+    public void Load(WorldData saveData)
     {
         currentCameraArmLength = -mainCamera.transform.localPosition.z;
 

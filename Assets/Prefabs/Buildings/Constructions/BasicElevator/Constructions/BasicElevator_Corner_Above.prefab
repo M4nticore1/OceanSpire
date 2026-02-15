@@ -81,11 +81,11 @@ MonoBehaviour:
   buildingInteriors: []
   buildingInteractions:
   - waypoints:
-    - {fileID: 3671763248971529762}
-    actionTimes: 00000000
+    - transform: {fileID: 3671763248971529762}
+      actionTime: 0
   - waypoints:
-    - {fileID: 9016407332324009641}
-    actionTimes: 00000000
+    - transform: {fileID: 9016407332324009641}
+      actionTime: 0
   collectItemPoints: []
 --- !u!64 &8072831351402539829
 MeshCollider:

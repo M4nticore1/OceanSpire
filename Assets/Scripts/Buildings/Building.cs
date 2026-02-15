@@ -12,15 +12,16 @@ public abstract class Building : MonoBehaviour
 {
     protected LevelComponent levelComponent = null;
     protected SelectComponent selectComponent = null;
+    private BuildingStrategy strategy = null;
 
     public bool isInitialized { get; private set; } = false;
     private bool isWorking = false;
     public int LevelIndex => levelComponent ? levelComponent.LevelIndex : GetComponent<LevelComponent>().LevelIndex;
 
     //[HideInInspector] public int levelIndex { get; private set; } = 0;
-    public List<Human> enteredEntities { get; private set; } = new List<Human>();
-    public List<Human> workers { get; private set; } = new List<Human>();
-    public List<Human> currentWorkers { get; private set; } = new List<Human>();
+    public List<EntityCityNavigator> enteredEntities { get; private set; } = new List<EntityCityNavigator>();
+    public List<EntityInteractor> workers { get; private set; } = new List<EntityInteractor>();
+    public List<EntityInteractor> currentWorkers { get; private set; } = new List<EntityInteractor>();
 
     public BuildingConstruction spawnedConstruction { get; private set; } = null;
 
@@ -36,25 +37,8 @@ public abstract class Building : MonoBehaviour
     public event System.Action onBuildingInited;
     public event System.Action onBuildingStartWorking;
     public event System.Action onBuildingStopWorking;
-    public event System.Action onEntityEnterBuilding;
-    public event System.Action onEntityExitBuilding;
-
-    protected virtual void Awake()
-    {
-
-    }
-
-    protected virtual void OnEnable()
-    {
-
-    }
-
-    protected virtual void OnDisable()
-    {
-
-    }
-
-    protected abstract void Start();
+    public event System.Action<EntityCityNavigator> onEntityEnterBuilding;
+    public event System.Action<EntityCityNavigator> onEntityExitBuilding;
 
     // Constructing
     public void Init(BuildingEntry data)
@@ -62,6 +46,8 @@ public abstract class Building : MonoBehaviour
         if (isInitialized) return;
 
         GetComponents();
+        CreateStrategy();
+
         OnInit(data);
         BuildConstruction();
         spawnedConstruction?.Init(this);
@@ -102,45 +88,51 @@ public abstract class Building : MonoBehaviour
     }
 
     // Residents Management
-    public virtual void EnterBuilding(Human entity)
+    public void EnterBuilding(EntityCityNavigator navigator)
     {
-        enteredEntities.Add(entity);
-        onEntityEnterBuilding?.Invoke();
+        enteredEntities.Add(navigator);
+        onEntityEnterBuilding?.Invoke(navigator);
+        strategy.OnEnter(navigator);
     }
 
-    public virtual void ExitBuilding(Human entity)
+    public void ExitBuilding(EntityCityNavigator navigator)
     {
-        enteredEntities.Remove(entity);
-        onEntityExitBuilding?.Invoke();
+        enteredEntities.Remove(navigator);
+        onEntityExitBuilding?.Invoke(navigator);
+        strategy.OnExit(navigator);
     }
 
-    public void AddWorker(Human interactor)
+    public void AddWorker(EntityInteractor interactor)
     {
         workers.Add(interactor);
+        strategy.OnSetInteractBuilding(interactor);
     }
 
-    public void RemoveWorker(Human interactor)
+    public void RemoveWorker(EntityInteractor interactor)
     {
         workers.Remove(interactor);
 
-        if (currentWorkers.Count == 0)
-            StopWorking();
+        strategy.OnRemoveInteractBuilding(interactor);
     }
 
-    public  void AddCurrentWorker(Human interactor)
+    public void AddCurrentWorker(EntityInteractor interactor)
     {
         currentWorkers.Add(interactor);
 
         if (currentWorkers.Count == 1)
             StartWorking();
+
+        strategy.OnStartInteracting(interactor);
     }
 
-    public void RemoveCurrentWorker(Human interactor)
+    public void RemoveCurrentWorker(EntityInteractor interactor)
     {
         currentWorkers.Remove(interactor);
 
         if (currentWorkers.Count == 0)
             StopWorking();
+
+        strategy.OnStopInteracting(interactor);
     }
 
     private void BuildConstruction()
@@ -155,9 +147,9 @@ public abstract class Building : MonoBehaviour
         int index = workers.Count > 0 ? ((workers.Count - 1) % LevelData.maxResidentsCount) : 0;
         BuildingAction[] actions = spawnedConstruction.BuildingInteractions;
         if (actions.Length > index) {
-            Transform[] waypoints = actions[index].waypoints;
+            BuildingActionWaypoint[] waypoints = actions[index].waypoints;
             if (waypoints.Length > 0) {
-                return actions[index].waypoints[0];
+                return actions[index].waypoints[0].transform;
             }
             else {
                 Debug.LogError("waypoints.Length == 0");
@@ -167,6 +159,18 @@ public abstract class Building : MonoBehaviour
         else {
             Debug.LogError("actions.Length <= index");
             return transform;
+        }
+    }
+
+    private void CreateStrategy()
+    {
+        switch (buildingData.BuildingStrategy) {
+            case BuildingStrategyEnum.WorkBuilding:
+                strategy = new WorkBuildingStrategy();
+                break;
+            case BuildingStrategyEnum.Pier:
+                strategy = new PierBuildingStrategy();
+                break;
         }
     }
 }

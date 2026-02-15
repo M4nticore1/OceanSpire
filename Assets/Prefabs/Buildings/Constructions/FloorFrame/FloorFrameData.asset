@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FloorFrameData
   m_EditorClassIdentifier: 
   buildingId: 0
-  buildingIdName: floor_frame
+  localizationItem: {fileID: 11400000, guid: 39d875ff042ac144da1daa20578e0b30, type: 2}
   buildingName: Floor Frame
   buildingType: 2
   buildingCategory: 0

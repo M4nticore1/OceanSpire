@@ -1954,7 +1954,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1080, y: 2340}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -2920,10 +2920,10 @@ RectTransform:
   - {fileID: 3363934747835092081}
   m_Father: {fileID: 5028220504261582107}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -110}
-  m_SizeDelta: {x: 1000, y: 2040}
+  m_SizeDelta: {x: -80, y: -300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &9018369846826804311
 GameObject:
@@ -3597,6 +3597,10 @@ PrefabInstance:
       propertyPath: key
       value: common.storage
       objectReference: {fileID: 0}
+    - target: {fileID: 2644724989629075397, guid: 25720367859dd784da78e35bed4b6b18, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: b447027de85891e4ab72e9b75dd3e414, type: 2}
     - target: {fileID: 4456157408004065638, guid: 25720367859dd784da78e35bed4b6b18, type: 3}
       propertyPath: m_Name
       value: OpenStorageListsMenuButton
@@ -5336,6 +5340,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9054847388078206404, guid: d72cb929757c1a94e82576e295323bd4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9084159043372751941, guid: d72cb929757c1a94e82576e295323bd4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00048828125
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6410,7 +6422,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_AnchorMax.y
@@ -6418,7 +6430,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_AnchorMin.y
@@ -6462,7 +6474,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 470
+      value: -70
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -6593,13 +6605,13 @@ PrefabInstance:
       propertyPath: selectableGroupIndex
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2644724989629075397, guid: 25720367859dd784da78e35bed4b6b18, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: c0fe00ab4b5f6d6438eabc56c278714b, type: 2}
     - target: {fileID: 4456157408004065638, guid: 25720367859dd784da78e35bed4b6b18, type: 3}
       propertyPath: m_Name
       value: OpenBuildingListsMenuButton
-      objectReference: {fileID: 0}
-    - target: {fileID: 8098942685961320592, guid: 25720367859dd784da78e35bed4b6b18, type: 3}
-      propertyPath: m_text
-      value: Building
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

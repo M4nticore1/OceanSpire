@@ -17,12 +17,12 @@ public class ResidentalBuildingModule : BuildingModule
 
     }
 
-    protected override void OnEnterBuilding()
+    protected override void OnEnterBuilding(EntityCityNavigator navigator)
     {
 
     }
 
-    protected override void OnExitBuilding()
+    protected override void OnExitBuilding(EntityCityNavigator navigator)
     {
 
     }

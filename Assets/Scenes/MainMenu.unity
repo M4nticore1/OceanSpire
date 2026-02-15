@@ -601,63 +601,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!1001 &2202586716031171462
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2639318098426554058, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -14.503861
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639318098426554058, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 149.89287
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639318098426554058, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 6.717621
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639318098426554058, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639318098426554058, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639318098426554058, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639318098426554058, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639318098426554058, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639318098426554058, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639318098426554058, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5521064747017029093, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
-      propertyPath: m_Name
-      value: LocalizationManager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9bc91d203cfd8354e9ce6db3d2da46cc, type: 3}
 --- !u!1001 &6624092925259090882
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -746,6 +689,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1284224325063122657, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2645922506739028579, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -778,6 +725,10 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4925410492509476317, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6551392996051889378, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -794,6 +745,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7847633182026764260, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: 1acbfe1649dd8a64e98f40769e9f03ea, type: 2}
     - target: {fileID: 7876744521122227365, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -839,5 +794,4 @@ SceneRoots:
   - {fileID: 564957213}
   - {fileID: 242565850}
   - {fileID: 1595305477}
-  - {fileID: 2202586716031171462}
   - {fileID: 356349792}

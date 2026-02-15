@@ -1,15 +1,6 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
-
-public class LocalizationData
-{
-    public Dictionary<string, string> content;
-    public string[] male_first_names;
-    public string[] male_last_names;
-    public string[] female_first_names;
-    public string[] female_last_names;
-}
 
 public class LocalizationManager
 {
@@ -18,62 +9,88 @@ public class LocalizationManager
     {
         get
         {
-            if (instance == null)
+            if (instance == null) {
                 instance = new LocalizationManager();
+            }
+
             return instance;
         }
     }
 
-    public List<LocalizationData> localizations { get; private set; } = new List<LocalizationData>();
-    public LocalizationData currentLocalization = null;
+    private Dictionary<SystemLanguage, LocalizationTable> localizations = new Dictionary<SystemLanguage, LocalizationTable>();
+    public LocalizationTable currentLocalization { get; private set; } = null;
 
-    public bool isInitialized { get; private set; } = false;
+    public bool isInited { get; private set; } = false;
     public event System.Action OnLocalizationChanged;
 
     private LocalizationManager() { }
 
-    public async Task InitAsync()
+    public void Init(SettingsData data)
     {
-        localizations = await LocalizationSystem.GetLocalizationsAsync();
+        if (isInited) return;
+
+        foreach (var localization in LocalizationsList.Instance.Localizations) {
+            localizations.Add(localization.Language, localization);
+        }
         Debug.Log("Loaded " + localizations.Count + " localizations");
-        isInitialized = true;
-    }
 
-    public string GetLocalizationText(string key)
-    {
-        if (!isInitialized) return key;
+        if (data != null) {
+            SetLocalization(data.language);
+        }
+        else {
+            SystemLanguage systemLanguage = Application.systemLanguage;
 
-        if (currentLocalization != null) {
-            if (currentLocalization.content.ContainsKey(key)) {
-                return currentLocalization.content[key];
+            if (localizations.ContainsKey(systemLanguage)) {
+                SetLocalization(Application.systemLanguage);
             }
             else {
-                Debug.LogWarning($"localizations[currentLocalizationIndex] has no {key} key");
-                return "";
+                SetLocalization(SystemLanguage.English);
             }
         }
-        else
-            return key;
+
+        isInited = true;
+    }
+
+    public LocalizationEntry GetLocalizationEntry(LocalizationItem item)
+    {
+        if (!item) {
+            Debug.LogError("item is not valid.");
+            return null;
+        }
+
+        if (!currentLocalization) {
+            Debug.LogError("currentLocalization is not valid.");
+            return null;
+        }
+
+        if (!currentLocalization.itemsDict.ContainsKey(item)) {
+            Debug.LogError($"currentLocalizationIndex has no '{item.name}' key");
+            return null;
+        }
+
+        return currentLocalization.itemsDict[item];
     }
 
     public string GetFirstName(bool isMale, int index)
     {
         if (isMale) {
-            return GetName(isMale, index, currentLocalization.male_first_names);
+            //return GetName(isMale, index, currentLocalization.male_first_names);
         }
         else {
-            return GetName(isMale, index, currentLocalization.female_first_names);
+            //return GetName(isMale, index, currentLocalization.female_first_names);
         }
+        return "";
     }
 
     public string GetLastName(bool isMale, int index)
     {
         if (isMale) {
-            return GetName(isMale, index, currentLocalization.male_last_names);
+            //return GetName(isMale, index, currentLocalization.male_last_names);
         }
         else {
-            return GetName(isMale, index, currentLocalization.female_last_names);
+            //return GetName(isMale, index, currentLocalization.female_last_names);
         }
+        return "";
     }
 
     private string GetName(bool isMale, int index, string[] names)
@@ -89,14 +106,9 @@ public class LocalizationManager
         return names[index];
     }
 
-    public void SetLocalization(string languageKey)
+    public void SetLocalization(SystemLanguage language)
     {
-        for (int i = 0; i < localizations.Count; i++) {
-            if (localizations[i].content["language.code"] == languageKey) {
-                currentLocalization = localizations[i];
-                break;
-            }
-        }
+        currentLocalization = localizations[language];
         OnLocalizationChanged?.Invoke();
     }
 }

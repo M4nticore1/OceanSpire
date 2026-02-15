@@ -38,7 +38,7 @@ RectTransform:
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 30, y: 30}
   m_SizeDelta: {x: 350, y: 80}
-  m_Pivot: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1357631719524289745
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -92,13 +92,13 @@ MonoBehaviour:
   targetGraphic: {fileID: 1256683166846239721}
   contentGraphic: {fileID: 0}
   scaleRoot: {fileID: 4190100430879470837}
-  isEnabled: 1
   isInteractable: 1
   isSelectable: 0
   isScalable: 1
   deselectOnOutsideClick: 1
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
+  state: 0
   idleState:
     bodyColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
     bodyColorHolder: {fileID: 0}
@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 4356322179491049544}
   - component: {fileID: 2732650934310694181}
   - component: {fileID: 8127678773286077673}
+  - component: {fileID: 8856820390726048932}
   m_Layer: 0
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -266,3 +267,16 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8856820390726048932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6899296538988913584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  item: {fileID: 11400000, guid: 65d322290d96b8640a366f235a975a27, type: 2}

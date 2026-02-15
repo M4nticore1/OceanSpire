@@ -109,11 +109,6 @@ public class CityManager : MonoBehaviour
         playerController.Initialize();
     }
 
-    private async void AwakeAsync()
-    {
-        await LocalizationManager.Instance.InitAsync();
-    }
-
     private void OnEnable()
     {
         // Buildings
@@ -164,18 +159,15 @@ public class CityManager : MonoBehaviour
     {
         TimerManager.Initialize();
 
-        SaveData saveData = SaveManager.Instance.saveData;
+        WorldData saveData = WorldSaveManager.Instance.worldData;
 
         bakeNavMeshCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
         LoadItems(saveData);
         LoadBuildings(saveData);
         LoadBoats(saveData);
         LoadCreatures(saveData);
-        StartCoroutine(LoadCityAsync());
 
         playerController.Load(saveData);
-
-        //StartCoroutine(AutosaveCoroutine());
     }
 
     private void Update()
@@ -185,14 +177,14 @@ public class CityManager : MonoBehaviour
         TimerManager.Tick();
     }
 
-    private void LoadBuildings(SaveData data)
+    private void LoadBuildings(WorldData data)
     {
         LoadEnvironmentBuildings(data);
         LoadFloorFrames();
         LoadTowerBuildings(data);
     }
 
-    private void LoadEnvironmentBuildings(SaveData data)
+    private void LoadEnvironmentBuildings(WorldData data)
     {
         GroundBuildingEntry[] groundBuildingData;
         if (data != null)
@@ -221,7 +213,7 @@ public class CityManager : MonoBehaviour
         }
     }
 
-    private void LoadTowerBuildings(SaveData saveData)
+    private void LoadTowerBuildings(WorldData saveData)
     {
         if (saveData != null) {
             TowerBuildingEntry[] towerBuildingsData = saveData.towerBuildingsData;
@@ -270,12 +262,17 @@ public class CityManager : MonoBehaviour
         }
     }
 
-    private void LoadCreatures(SaveData saveData)
+    private void LoadCreatures(WorldData saveData)
     {
         Vector3 position = Vector3.zero;
         Quaternion rotation = Quaternion.identity;
         if (saveData != null) {
-
+            foreach (var data in saveData.citizensData) {
+                int entityId = data.id;
+                Human citizen = CreatureFactory.CreateCreature(entityId, data) as Human;
+                AddResident(citizen);
+                citizen.SetNavAgentEnabled(false);
+            }
         }
         else {
             position = entitySpawnPosition.position;
@@ -288,14 +285,14 @@ public class CityManager : MonoBehaviour
                 Vector3 finalPosition = new Vector3(x, y, z);
 
                 HumanEntry data = new HumanEntry { position = finalPosition, rotation = rotation.eulerAngles };
-                Human resident = CreatureFactory.CreateCreature(0, data) as Human;
-                AddResident(resident);
-                resident.SetNavAgentEnabled(false);
+                Human citizen = CreatureFactory.CreateCreature(0, data) as Human;
+                AddResident(citizen);
+                citizen.SetNavAgentEnabled(false);
             }
         }
     }
 
-    private void LoadBoats(SaveData saveData)
+    private void LoadBoats(WorldData saveData)
     {
         PierModule pier = PierBuilding.GetComponent<PierModule>();
 
@@ -315,7 +312,7 @@ public class CityManager : MonoBehaviour
         }
     }
 
-    private void LoadItems(SaveData saveData)
+    private void LoadItems(WorldData saveData)
     {
         if (saveData != null) {
 
@@ -328,13 +325,6 @@ public class CityManager : MonoBehaviour
         }
     }
 
-    private IEnumerator LoadCityAsync()
-    {
-        yield return new WaitForEndOfFrame();
-        foreach(var creature in citizens)
-            creature.SetNavAgentEnabled(true);
-    }
-
     private IEnumerator BakeNavMeshSurfaceCoroutine()
     {
         if (bakeNavMeshCoroutine != null) yield break;
@@ -342,6 +332,7 @@ public class CityManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         towerNavMeshSurface.BuildNavMesh();
         bakeNavMeshCoroutine = null;
+        EventBus.InvokNavMeshBaked();
     }
 
     private void AddResident(Human resident)
@@ -675,7 +666,7 @@ public class CityManager : MonoBehaviour
     {
         while (true) {
             yield return new WaitForSeconds(autoSaveFrequency);
-            SaveSystem.SaveData(playerController);
+            WorldSaveSystem.SaveData(playerController);
         }
     }
 }

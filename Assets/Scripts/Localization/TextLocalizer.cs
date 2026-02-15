@@ -3,9 +3,8 @@ using UnityEngine;
 
 public class TextLocalizer : MonoBehaviour
 {
-    //private LocalizationManager LocalizationManager => gameManager.localizationManager;
     private TextMeshProUGUI textBlock;
-    [SerializeField] private string key = "";
+    [SerializeField] private LocalizationItem item = null;
 
     private void Awake()
     {
@@ -15,7 +14,7 @@ public class TextLocalizer : MonoBehaviour
     private void OnEnable()
     {
         LocalizationManager.Instance.OnLocalizationChanged += ChangeLocalization;
-        if (LocalizationManager.Instance.isInitialized && textBlock.text != LocalizationManager.Instance.GetLocalizationText(key)) {
+        if (item && LocalizationManager.Instance.GetLocalizationEntry(item) != null) {
             ChangeLocalization();
         }
     }
@@ -25,14 +24,42 @@ public class TextLocalizer : MonoBehaviour
         LocalizationManager.Instance.OnLocalizationChanged -= ChangeLocalization;
     }
 
+    public void SetLocalizationItem(LocalizationItem item)
+    {
+        this.item = item;
+
+        ChangeLocalization();
+    }
+
     private void ChangeLocalization()
     {
-        string localize = LocalizationManager.Instance.GetLocalizationText(key);
-        string text;
-        if (localize != "")
-            text = localize;
-        else
-            text = key;
-        textBlock.SetText(text);
+        if (!item) {
+            Debug.LogError($"item is not valid in object {gameObject}.");
+            return;
+        }
+
+        LocalizationEntry localization = LocalizationManager.Instance.GetLocalizationEntry(item);
+
+        if (localization != null) {
+            textBlock.SetText(localization.Value);
+
+            int fontIndex = localization.FontIndex;
+            TMP_FontAsset[] fonts = LocalizationManager.Instance.currentLocalization.Fonts;
+            if (fonts != null) {
+                if (fonts.Length > fontIndex) {
+                    TMP_FontAsset font = fonts[localization.FontIndex];
+
+                    if (font != null) {
+                        textBlock.font = font;
+                    }
+                }
+                else {
+                    Debug.LogError($"The length of fonts array is less than font index of '{localization.Item.name}' item.");
+                }
+            }
+            else {
+                Debug.LogError($"The fonts array is not valid.");
+            }
+        }
     }
 }

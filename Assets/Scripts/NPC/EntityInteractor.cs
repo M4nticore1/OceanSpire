@@ -10,7 +10,7 @@ public class EntityInteractor : MonoBehaviour
     public Building InteractBuilding => interactBuilding;
 
     public bool isInteracting { get; private set; } = false;
-    public int interacterIndex { get; private set; } = 0;
+    public int interactorIndex { get; private set; } = 0;
 
     private double currentActionTime = 0.0f;
     private int currentActionIndex = 0;
@@ -68,6 +68,11 @@ public class EntityInteractor : MonoBehaviour
         }
     }
 
+    public void OnStoppedMoving()
+    {
+        StartInteracting();
+    }
+
     public void SetInteractBuilding(Building building)
     {
         if (!building) {
@@ -76,6 +81,9 @@ public class EntityInteractor : MonoBehaviour
         }
 
         interactBuilding = building;
+        AssignInteractorIndex();
+        building.AddWorker(this);
+        
         onSetedInteractBuilding?.Invoke(building);
         EventBus.InvokeSetedInteractBuilding();
     }
@@ -83,58 +91,42 @@ public class EntityInteractor : MonoBehaviour
     private void RemoveInteractBuilding()
     {
         if (isInteracting) {
-            StopInteractingBuilding();
+            StopInteracting();
         }
 
         Building lastBuilding = interactBuilding;
         interactBuilding = null;
+        AssignInteractorIndex();
+        lastBuilding.RemoveWorker(this);
 
         onRemovedInteractBuilding?.Invoke(lastBuilding);
         EventBus.InvokeRemovedInteractBuilding();
     }
 
-    public void SetInteracterIndex(int index)
+    private void AssignInteractorIndex()
     {
-        interacterIndex = index;
+        interactorIndex = interactBuilding ? interactBuilding.workers.Count : 0;
     }
 
-    public void StartInteractingBuilding()
+    private void StartInteracting()
     {
+        interactBuilding.AddCurrentWorker(this);
         isInteracting = true;
-        movement.MoveTo(InteractBuilding.GetInteractionTransform().position);
+        //movement.MoveTo(InteractBuilding.GetInteractionTransform().position);
         onStartedInteracting?.Invoke(interactBuilding);
     }
 
-    private void StopInteractingBuilding()
+    private void StopInteracting()
     {
         if (!isInteracting) return;
 
+        interactBuilding.RemoveCurrentWorker(this);
         isInteracting = false;
         onStoppedInteracting?.Invoke(interactBuilding);
     }
 
     private void Interacting()
     {
-        if (interactBuilding.GetComponent<PierModule>())
-            return;
 
-        if (interactBuilding.spawnedConstruction.BuildingInteractions.Length > interacterIndex) {
-            BuildingAction buildingAction = interactBuilding.spawnedConstruction.BuildingInteractions[interacterIndex];
-
-            if (buildingAction.actionTimes[currentActionIndex] > 0) {
-                currentActionTime += Time.deltaTime;
-                if (currentActionTime >= buildingAction.actionTimes[currentActionIndex]) {
-                    if (currentActionIndex < buildingAction.actionTimes.Length - 1)
-                        currentActionIndex++;
-                    else
-                        currentActionIndex = 0;
-
-                    currentActionTime = 0;
-
-                    Vector3 position = buildingAction.waypoints[currentActionIndex].position;
-                    movement.MoveTo(position);
-                }
-            }
-        }
     }
 }

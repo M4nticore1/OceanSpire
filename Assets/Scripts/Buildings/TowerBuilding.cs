@@ -72,23 +72,14 @@ public class TowerBuilding : Building
         }
     }
 
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
-
         EventBus.onBuildingPlaced += OnConstructionPlaced;
     }
 
-    protected override void OnDisable()
+    private void OnDisable()
     {
-        base.OnDisable();
-
         EventBus.onBuildingPlaced -= OnConstructionPlaced;
-    }
-
-    protected override void Start()
-    {
-
     }
 
     protected override void OnInit(BuildingEntry data)

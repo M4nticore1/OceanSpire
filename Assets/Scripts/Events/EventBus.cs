@@ -5,7 +5,10 @@ public static class EventBus
 {
     // Main Menu
     public static event Action<string> onCreateWorldButtonClicked;
-    public static event Action<SaveData> onLoadWorldButtonClicked;
+    public static event Action<WorldData> onLoadWorldButtonClicked;
+
+    // City
+    public static event Action onNavMeshBaked;
 
     // Buildings
     public static event Action<BuildingPlace> onBuildingPlacePressed;
@@ -55,6 +58,12 @@ public static class EventBus
     public static event Action onPostProcessingToggleChanged;
     public static event Action<int> onGeneralVolumeSliderMoved;
     public static event Action<int> onMusicVolumeSliderMoved;
+
+    // City
+    public static void InvokNavMeshBaked()
+    {
+        onNavMeshBaked?.Invoke();
+    }
 
     // Buildings
     public static void InvokeBuildingPlacePressed(BuildingPlace place)

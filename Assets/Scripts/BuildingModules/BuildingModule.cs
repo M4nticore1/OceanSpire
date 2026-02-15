@@ -57,9 +57,9 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected abstract void OnBuildingStopWorking();
 
-    protected abstract void OnEnterBuilding();
+    protected abstract void OnEnterBuilding(EntityCityNavigator navigator);
 
-    protected abstract void OnExitBuilding();
+    protected abstract void OnExitBuilding(EntityCityNavigator navigator);
 
     protected virtual void SetFlickingMultiplier(float multiplier)
     {

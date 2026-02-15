@@ -16,6 +16,11 @@ public class BoatRider : MonoBehaviour
         currentBoat = boat;
     }
 
+    public void RemoveBoat()
+    {
+        currentBoat = null;
+    }
+
     public void StartEnteringBoat()
     {
         TimerManager.StartTimer(enteringBoatTime, EnterBoat);

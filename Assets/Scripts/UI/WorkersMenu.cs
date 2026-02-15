@@ -17,17 +17,9 @@ public class WorkersMenu : UIBehaviour
 
     private Vector2 startSize;
 
-    protected override void Awake()
+    public void Init()
     {
-        base.Awake();
-
         rectTransform = GetComponent<RectTransform>();
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-
         startSize = rectTransform.sizeDelta;
     }
 
@@ -44,7 +36,6 @@ public class WorkersMenu : UIBehaviour
     {
         foreach (var widget in spawnedCitizenWidgets) {
             Destroy(widget.gameObject);
-            Debug.Log("destroy");
         }
 
         spawnedCitizenWidgets.Clear();
@@ -60,7 +51,7 @@ public class WorkersMenu : UIBehaviour
                 haveNoCitizensText.SetActive(true);
         }
         else {
-            int rowsCount = (int)math.ceil((float)widgetsCount / citizensLayoutGroup.constraintCount);
+            int rowsCount = Mathf.CeilToInt((float)widgetsCount / citizensLayoutGroup.constraintCount);
             float ySize = startSize.y + (rowsCount * citizensLayoutGroup.cellSize.y);
             rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, ySize);
 

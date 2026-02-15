@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: HeavyElevatorData
   m_EditorClassIdentifier: 
   buildingId: 5
-  buildingIdName: heavy_elevator
+  localizationItem: {fileID: 11400000, guid: de4d094094e8601459ebce26072bc037, type: 2}
   buildingName: Heavy Elevator
   buildingType: 2
   buildingCategory: 0
   connectionType: 0
+  detailsWindowVariant: 0
+  instantConstruction: 0
   thumbImage: {fileID: 0}
-  description: 
   buildingFloors: 1
   maxBuildingFloors: 1
   isDemolishable: 1
-  buildingManagementMenuWidget: {fileID: 0}

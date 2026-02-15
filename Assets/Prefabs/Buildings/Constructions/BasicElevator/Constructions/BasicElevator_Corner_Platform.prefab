@@ -80,7 +80,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingInteriors: []
-  buildingInteractions: []
+  buildingInteractions:
+  - waypoints:
+    - transform: {fileID: 1404891851385680521}
+      actionTime: 0
+  - waypoints:
+    - transform: {fileID: 1575235212413706076}
+      actionTime: 0
   collectItemPoints: []
   goingForWaitingPassengers: []
   waitingPassengers: []

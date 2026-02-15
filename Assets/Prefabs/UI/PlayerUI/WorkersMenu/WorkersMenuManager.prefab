@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2483708630049304759}
   - component: {fileID: 7976415270431692876}
   - component: {fileID: 659754131346565814}
+  - component: {fileID: 4966534438574311010}
   m_Layer: 5
   m_Name: SelectBuildingWorkerText
   m_TagString: Untagged
@@ -65,12 +66,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Select building workers
+  m_text: 'Select workers
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -139,6 +140,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4966534438574311010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53698829642866833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  item: {fileID: 11400000, guid: 9f26c4f24612b7d408f5266f79ffb0b1, type: 2}
 --- !u!1 &166850717295243282
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,6 +455,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UnemployedCitizensMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 4375430164125812989, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: 8051b74a130300141a8bd732d7966893, type: 2}
     - target: {fileID: 5096182534854453995, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -521,6 +539,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7370304593813135405, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: 21994cac7e7c8514a868def8cb84b1cd, type: 2}
     - target: {fileID: 8292959378464390378, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
       propertyPath: m_text
       value: There are no  unemployed citizens in the city.
@@ -882,6 +904,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7370304593813135405, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: a3a12a5087f8e334cbfc0e78b2291efc, type: 2}
     - target: {fileID: 8292959378464390378, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
       propertyPath: m_text
       value: There are no employed citizens in the city.

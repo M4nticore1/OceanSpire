@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: LighthouseData
   m_EditorClassIdentifier: 
   buildingId: 11
-  buildingIdName: lighthouse
+  localizationItem: {fileID: 11400000, guid: 8a4cb07a9ed718e4681ba61d02028d62, type: 2}
   buildingName: Lighthouse
   buildingType: 1
   buildingCategory: 4
   connectionType: 0
+  detailsWindowVariant: 0
+  instantConstruction: 0
+  thumbImage: {fileID: 0}
   buildingFloors: 2
   maxBuildingFloors: 2
   isDemolishable: 1
-  buildingManagementMenuWidget: {fileID: 0}

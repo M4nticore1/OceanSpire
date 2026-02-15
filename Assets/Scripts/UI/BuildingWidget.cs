@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -11,11 +10,10 @@ public class BuildingWidget : MonoBehaviour
     [SerializeField] private BuildingResourceWidget buildingResourceWidget = null;
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
 
+    [SerializeField] private TextLocalizer buildingNameTextLocalizer = null;
     [SerializeField] private Image buildingImage = null;
     [SerializeField] private CustomButton buildButton = null;
     [SerializeField] private CustomButton informationButton = null;
-
-    [SerializeField] private TextMeshProUGUI buildingNameText = null;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup = null;
 
     int resourcesToBuildNumber = 0;
@@ -38,7 +36,7 @@ public class BuildingWidget : MonoBehaviour
 
         Building building = prefab.GetComponentInChildren<Building>();
         if (building) {
-            buildingNameText.SetText(building.BuildingData.BuildingName);
+            buildingNameTextLocalizer.SetLocalizationItem(building.BuildingData.LocalizationItem);
 
             if (building.ConstructionLevelsData.Count >= 1 && building.ConstructionLevelsData[0])
                 resourcesToBuildNumber = building.ConstructionLevelsData[0].ResourcesToBuild.Count();
@@ -48,10 +46,11 @@ public class BuildingWidget : MonoBehaviour
             if (building.BuildingData.ThumbImage)
                 buildingImage.sprite = building.BuildingData.ThumbImage;
         }
-        DrawResourcesToBuild();
+
+        CreateResourcesToBuild();
     }
 
-    private void DrawResourcesToBuild()
+    private void CreateResourcesToBuild()
     {
         for (int i = 0; i < resourcesToBuildNumber; i++) {
             BuildingResourceWidget spawnedBuildingResourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);

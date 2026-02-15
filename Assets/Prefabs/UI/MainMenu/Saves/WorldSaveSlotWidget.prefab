@@ -440,13 +440,13 @@ MonoBehaviour:
   targetGraphic: {fileID: 4696869006643466086}
   contentGraphic: {fileID: 0}
   scaleRoot: {fileID: 277249682003200902}
-  isEnabled: 1
   isInteractable: 1
   isSelectable: 1
   isScalable: 1
   deselectOnOutsideClick: 1
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
+  state: 0
   idleState:
     bodyColor: {r: 0.69803923, g: 0.6177647, b: 0.5584314, a: 1}
     bodyColorHolder: {fileID: 0}
@@ -625,6 +625,7 @@ GameObject:
   - component: {fileID: 8441287612081736387}
   - component: {fileID: 1795543697051615382}
   - component: {fileID: 8060672856095429611}
+  - component: {fileID: 4438822548974090379}
   m_Layer: 0
   m_Name: NewWorldText
   m_TagString: Untagged
@@ -751,6 +752,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4438822548974090379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4052016488728522953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  item: {fileID: 11400000, guid: 1b74cb5581fa66c428e723025596e2d2, type: 2}
 --- !u!1 &4233939739454296436
 GameObject:
   m_ObjectHideFlags: 0
