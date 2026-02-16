@@ -392,7 +392,6 @@ public class EntityCityNavigator : MonoBehaviour
 
     public void EnterState(FollowingPathState state)
     {
-        Debug.Log(state);
         switch (state) {
             case FollowingPathState.None:
                 RemovePath();

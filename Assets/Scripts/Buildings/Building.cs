@@ -146,10 +146,20 @@ public abstract class Building : MonoBehaviour
     {
         int index = workers.Count > 0 ? ((workers.Count - 1) % LevelData.maxResidentsCount) : 0;
         BuildingAction[] actions = spawnedConstruction.BuildingInteractions;
+
         if (actions.Length > index) {
             BuildingActionWaypoint[] waypoints = actions[index].waypoints;
+
             if (waypoints.Length > 0) {
-                return actions[index].waypoints[0].transform;
+                Transform waypointTransform = actions[index].waypoints[0].transform;
+
+                if (waypointTransform) {
+                    return waypointTransform;
+                }
+                else {
+                    Debug.LogError("waypointTransform is not valid.");
+                    return transform;
+                }
             }
             else {
                 Debug.LogError("waypoints.Length == 0");

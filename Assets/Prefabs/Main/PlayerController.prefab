@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5151676920224931170}
   - component: {fileID: 1336856739594368326}
+  - component: {fileID: 4970948048436698858}
+  - component: {fileID: 6411632939769270001}
   m_Layer: 0
   m_Name: PlayerController
   m_TagString: Untagged
@@ -47,12 +49,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e65e83ab08dfc0e48a34c6c7e30aef28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 3364798657196465612}
-  cameraHolder: {fileID: 9020790906093603443}
-  mainInputActionsAsset: {fileID: -944628639613478452, guid: e3db4645d0ae36245a27082f5b603306, type: 3}
   clickableLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &4970948048436698858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5033852795091249114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 119838d5f1da7594f877b04e7e247b5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
+  mainInputActionsAsset: {fileID: -944628639613478452, guid: e3db4645d0ae36245a27082f5b603306, type: 3}
+--- !u!114 &6411632939769270001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5033852795091249114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b670a180d7f9754f8234f8ff1a79d75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionHandler
+  playerInputHandler: {fileID: 4970948048436698858}
 --- !u!1 &6429209848955281615
 GameObject:
   m_ObjectHideFlags: 0
@@ -65,6 +90,7 @@ GameObject:
   - component: {fileID: 3364798657196465612}
   - component: {fileID: 6727116038435362561}
   - component: {fileID: 1274961593945643399}
+  - component: {fileID: 9094374725413452296}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -190,6 +216,18 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &9094374725413452296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6429209848955281615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3494619af52dbc54db5c5c17edf6c37b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShakeHandler
 --- !u!1 &6578836305546048190
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,6 +316,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3002971926663341917}
+  - component: {fileID: 2411408065692301716}
   m_Layer: 0
   m_Name: CameraHolder
   m_TagString: Untagged
@@ -301,6 +340,19 @@ Transform:
   - {fileID: 5125265832778750589}
   m_Father: {fileID: 5151676920224931170}
   m_LocalEulerAnglesHint: {x: 20, y: 180, z: 0}
+--- !u!114 &2411408065692301716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020790906093603443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48ac4eccb0d23e24f9cf6614b6f5575e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraHolderMovement
+  playerInputHandler: {fileID: 4970948048436698858}
 --- !u!1001 &8513133735699425000
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -44,7 +44,7 @@ public class ContextMenuUI : UIBehaviour
             workersButton.onReleased -= EventBus.InvokeContextMenuWorkersButtonClicked;
     }
 
-    public void Open(SelectComponent selectComponent)
+    public void Init(SelectComponent selectComponent)
     {
         Building building = selectComponent.GetComponent<Building>();
         Human entity = selectComponent.GetComponent<Human>();

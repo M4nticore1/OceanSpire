@@ -51,13 +51,17 @@ public static class EventBus
     public static event Action onCameraExitedStatsMenuDistance;
 
     // Select Object
-    public static event Action<SelectComponent> onObjectSelected;
-    public static event Action onObjectDeselected;
+    public static event Action<SelectComponent> onSelectedComponent;
+    public static event Action<SelectComponent> onDeselectedComponent;
 
     // Settings
     public static event Action onPostProcessingToggleChanged;
     public static event Action<int> onGeneralVolumeSliderMoved;
     public static event Action<int> onMusicVolumeSliderMoved;
+
+    // IClickables
+    public static event Action<Building> onClickedOnBuilding;
+    public static event Action<LootContainer> onClickedOnLootContainer;
 
     // City
     public static void InvokNavMeshBaked()
@@ -189,13 +193,24 @@ public static class EventBus
     }
 
     // Select
-    public static void InvokeObjectSelected(SelectComponent selectComponent)
+    public static void InvokeSelectedObject(SelectComponent selectComponent)
     {
-        onObjectSelected?.Invoke(selectComponent);
+        onSelectedComponent?.Invoke(selectComponent);
     }
 
-    public static void InvokeObjectDeselected()
+    public static void InvokeDeselectedObject(SelectComponent selectComponent)
     {
-        onObjectDeselected?.Invoke();
+        onDeselectedComponent?.Invoke(selectComponent);
+    }
+
+    // IClickables
+    public static void InvokeClickedOnBuilding(Building building)
+    {
+        onClickedOnBuilding?.Invoke(building);
+    }
+
+    public static void InvokeClickedOnLootContainer(LootContainer loot)
+    {
+        onClickedOnLootContainer?.Invoke(loot);
     }
 }

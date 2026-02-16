@@ -7,19 +7,21 @@ public class SelectManager
 
     private SelectManager()
     {
-        EventBus.onObjectSelected += OnObjectSelected;
-        EventBus.onObjectDeselected += OnObjectDeselected;
+        EventBus.onSelectedComponent += OnSelectedComponent;
+        EventBus.onDeselectedComponent += OnDeselectedComponent;
     }
 
     public SelectComponent selectedComponent { get; private set; }
 
-    private void OnObjectSelected(SelectComponent selectComponent)
+    private void OnSelectedComponent(SelectComponent component)
     {
-        selectedComponent = selectComponent;
+        selectedComponent = component;
     }
 
-    private void OnObjectDeselected()
+    private void OnDeselectedComponent(SelectComponent component)
     {
+        if (component != selectedComponent) return;
+
         selectedComponent = null;
     }
 }

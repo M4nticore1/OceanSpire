@@ -89,10 +89,6 @@ public class PlayerUIManager : MonoBehaviour
         // Loot
         //EventBus.onLootAdded += OnLootAdded;
 
-        // Selecte
-        EventBus.onObjectSelected += OnObjectSelected;
-        EventBus.onObjectDeselected += OnObjectDeselected;
-
         // Context Menu
         EventBus.onContextMenuUpgradeButtonClicked += OnContextMenuUpgradeButtonClicked;
         EventBus.onContextMenuDemolishButtonClicked += OnContextMenuDemolishButtonClicked;
@@ -137,10 +133,6 @@ public class PlayerUIManager : MonoBehaviour
 
         // Loot
         //EventBus.onLootAdded -= OnLootAdded;
-
-        // Selecte
-        EventBus.onObjectSelected -= OnObjectSelected;
-        EventBus.onObjectDeselected -= OnObjectDeselected;
 
         // Context Menu
         EventBus.onContextMenuUpgradeButtonClicked -= OnContextMenuUpgradeButtonClicked;
@@ -370,34 +362,6 @@ public class PlayerUIManager : MonoBehaviour
             storageResourceWidget.SetItem(item);
         }
         //storageResourceWidgets = widgets.ToArray();
-    }
-
-    // Select Object
-    private void OnObjectSelected(SelectComponent selectComponent)
-    {
-        OpenContextMenu(selectComponent);
-    }
-
-    private void OnObjectDeselected()
-    {
-        CloseContextMenu();
-    }
-
-    private void OpenContextMenu(SelectComponent selectComponent)
-    {
-        isContextMenuOpened = true;
-        contextMenuMaster.OpenContextMenu(selectComponent);
-
-        CloseStatsMenu();
-    }
-
-    private void CloseContextMenu()
-    {
-        isContextMenuOpened = false;
-        contextMenuMaster.CloseContextMenu();
-
-        if (buildingToShowStats)
-            OpenStatsMenu(buildingToShowStats);
     }
 
     // Workers

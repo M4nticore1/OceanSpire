@@ -64,7 +64,7 @@ public class CityManager : MonoBehaviour
     public const int floorWidth = 24;
     //public const int firstBuildCityFloorIndex = 1;
     public const int firstBuildCityBuildingPlace = 1;
-    public float cityHeight { get; private set; } = 0;
+    public float currentCityHeight { get; private set; } = 0;
 
     public List<List<ElevatorModule>> elevatorGroups { get; private set; } = new List<List<ElevatorModule>>();
 
@@ -106,7 +106,7 @@ public class CityManager : MonoBehaviour
         }
         Instance = this;
 
-        playerController.Initialize();
+        playerController.Init();
     }
 
     private void OnEnable()
@@ -167,13 +167,11 @@ public class CityManager : MonoBehaviour
         LoadBoats(saveData);
         LoadCreatures(saveData);
 
-        playerController.Load(saveData);
+        playerController.Load(saveData?.playerData);
     }
 
     private void Update()
     {
-        playerController.Tick();
-
         TimerManager.Tick();
     }
 
@@ -404,7 +402,7 @@ public class CityManager : MonoBehaviour
 
     private void UpdateCityHeight()
     {
-        cityHeight = builtFloors[builtFloors.Count - 1].transform.position.y + floorHeight;
+        currentCityHeight = builtFloors[builtFloors.Count - 1].transform.position.y + floorHeight;
     }
 
     // Buildings
