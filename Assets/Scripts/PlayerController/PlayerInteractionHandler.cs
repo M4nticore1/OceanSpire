@@ -3,17 +3,14 @@ using UnityEngine;
 public class PlayerInteractionHandler : MonoBehaviour
 {
     [SerializeField] private PlayerInputHandler playerInputHandler = null;
-    private Vector2 pressedPosition;
 
     private void OnEnable()
     {
-        playerInputHandler.onPrimaryInteractionPressed += OnPrimaryInteractionPressed;
         playerInputHandler.onPrimaryInteractionReleased += OnPrimaryInteractionReleased;
     }
 
     private void OnDisable()
     {
-        playerInputHandler.onPrimaryInteractionPressed -= OnPrimaryInteractionPressed;
         playerInputHandler.onPrimaryInteractionReleased -= OnPrimaryInteractionReleased;
     }
 
@@ -36,15 +33,10 @@ public class PlayerInteractionHandler : MonoBehaviour
         }
     }
 
-    private void OnPrimaryInteractionPressed(Vector2 interactionPosition)
+    private void OnPrimaryInteractionReleased()
     {
-        pressedPosition = interactionPosition;
-    }
+        if (playerInputHandler.primaryInteractionPosition != playerInputHandler.primaryInteractionStartPosition) return;
 
-    private void OnPrimaryInteractionReleased(Vector2 interactionPosition)
-    {
-        if (interactionPosition != pressedPosition) return;
-
-        Interact(interactionPosition);
+        Interact(playerInputHandler.primaryInteractionPosition);
     }
 }

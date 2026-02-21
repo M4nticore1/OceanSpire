@@ -55,6 +55,7 @@ public class WorkersMenuManager : UIBehaviour
     {
         content.gameObject.SetActive(false);
         isOpened = false;
+        EventBus.InvokeWorkersMenuClosed();
     }
 
     private void UpdateWorkersMenu()

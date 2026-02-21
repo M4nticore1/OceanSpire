@@ -28,7 +28,9 @@ public class PlayerUIManager : MonoBehaviour
     private Building buildingToShowStats = null;
     [SerializeField] private ContextMenuMaster contextMenuMaster = null;
     private ContextMenuUI openedContextMenu = null;
-    private bool isManagementMenuOpened = false;
+
+    public bool isManagementMenuOpened { get; private set; } = false;
+    public bool isWorkersMenuOpened { get; private set; } = false;
     private bool isContextMenuOpened = false;
 
     BuildingCategory lastOpenedBuildingsListCategory = BuildingCategory.Construction;
@@ -113,6 +115,9 @@ public class PlayerUIManager : MonoBehaviour
             storageButtonSelectCallbacks[index] = () => OpenStorageListByCategory((ItemCategory)itemCategoriesEnum.GetValue(index + 1));
             storageListButtons[index].onSelected += storageButtonSelectCallbacks[index];
         }
+
+        // Workers Menu
+        EventBus.onWorkersMenuClosed += OnWorkersMenuClosed;
     }
 
     private void OnDisable()
@@ -156,6 +161,9 @@ public class PlayerUIManager : MonoBehaviour
             int index = i;
             storageListButtons[index].onReleased -= storageButtonSelectCallbacks[index];
         }
+
+        // Workers Menu
+        EventBus.onWorkersMenuClosed -= OnWorkersMenuClosed;
     }
 
     private void Start()
@@ -368,6 +376,12 @@ public class PlayerUIManager : MonoBehaviour
     private void OnContextMenuWorkersButtonClicked()
     {
         workersMenu.OpenWorkersMenu();
+        isWorkersMenuOpened = true;
+    }
+
+    private void OnWorkersMenuClosed()
+    {
+        isWorkersMenuOpened = false;
     }
 
     // Building Stats Menu

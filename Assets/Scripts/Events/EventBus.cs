@@ -63,6 +63,9 @@ public static class EventBus
     public static event Action<Building> onClickedOnBuilding;
     public static event Action<LootContainer> onClickedOnLootContainer;
 
+    // UI
+    public static event Action onWorkersMenuClosed;
+
     // City
     public static void InvokNavMeshBaked()
     {
@@ -212,5 +215,11 @@ public static class EventBus
     public static void InvokeClickedOnLootContainer(LootContainer loot)
     {
         onClickedOnLootContainer?.Invoke(loot);
+    }
+
+    // UI
+    public static void InvokeWorkersMenuClosed()
+    {
+        onWorkersMenuClosed?.Invoke();
     }
 }

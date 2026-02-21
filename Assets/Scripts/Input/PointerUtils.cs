@@ -7,14 +7,17 @@ public static class PointerUtils
 {
     public static Vector2 GetCurrentInputPosition()
     {
-        Vector2 position = new Vector2();
         if (Touchscreen.current != null) {
-            position = Touchscreen.current.primaryTouch.position.ReadValue();
+            if (Touchscreen.current.primaryTouch.press.wasPressedThisFrame || Touchscreen.current.primaryTouch.press.wasReleasedThisFrame) {
+                return Touchscreen.current.primaryTouch.position.ReadValue();
+            }
         }
-        else if (Mouse.current != null) {
-            position = Mouse.current.position.ReadValue();
+
+        if (Mouse.current != null) {
+            return Mouse.current.position.ReadValue();
         }
-        return position;
+
+        return Vector2.zero;
     }
 
     public static void GetCurrentRaycastResults(List<RaycastResult> results)

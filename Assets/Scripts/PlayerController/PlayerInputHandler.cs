@@ -4,53 +4,39 @@ using UnityEngine.InputSystem;
 
 public class PlayerInputHandler : MonoBehaviour
 {
-    private bool isPrimaryInteractionPressed = false;
-    private bool isSecondaryInteractionPressed = false;
-
     [SerializeField] private InputActionAsset mainInputActionsAsset = null;
     private InputActionMap touchInputActionMap = null;
 
-    private InputAction mousePositionIA = null;
+    public bool isPrimaryInteractionPressed { get; private set; } = false;
+    public bool isSecondaryInteractionPressed { get; private set; } = false;
 
-    private InputAction primaryInteractionPressIA = null;
-    private InputAction primaryInteractionPositionIA = null;
-    private InputAction primaryInteractionDeltaIA = null;
-    private InputAction secondaryInteractionPressIA = null;
-    private InputAction secondaryInteractionPositionIA = null;
-    private InputAction secondaryInteractionDeltaIA = null;
+    private InputAction primaryTouchPressIA = null;
+    private InputAction primaryTouchPositionIA = null;
+    private InputAction primaryTouchDeltaIA = null;
+    private InputAction secondaryTouchPressIA = null;
+    private InputAction secondaryTouchPositionIA = null;
+    private InputAction secondaryTouchDeltaIA = null;
 
-    public InputAction cameraMoveKeyboardButtonIA { get; private set; } = null;
-    public InputAction cameraMoveMouseButtonIA { get; private set; } = null;
-    public InputAction cameraMoveTouchscreenButtonIA { get; private set; } = null;
-
-    private InputAction cameraMoveKeyboardIA = null;
-    private InputAction cameraMoveMouseIA = null;
-    private InputAction cameraMoveTouchscreenIA = null;
+    public InputAction cameraMoveIA { get; private set; } = null;
     private InputAction cameraZoomIA = null;
 
-    public bool isKeyboardMoveButtonPressed => cameraMoveKeyboardButtonIA.IsPressed();
-    public bool isMouseMoveButtonPressed => cameraMoveMouseButtonIA.IsPressed();
-    public bool isTouchscreenMoveButtonPressed => cameraMoveTouchscreenButtonIA.IsPressed();
-
-    //private bool isMoving => isKeyboardMoveButtonPressed || isMouseMoveButtonPressed || isTouchscreenMoveButtonPressed;
-    public Vector2 keyboardCameraMoveInput => cameraMoveKeyboardIA.ReadValue<Vector2>();
-    public Vector2 mouseCameraMoveInput => cameraMoveMouseIA.ReadValue<Vector2>();
-    public Vector2 touchscreenCameraMoveInput => cameraMoveTouchscreenIA.ReadValue<Vector2>();
+    public Vector2 ñameraMoveInput => cameraMoveIA.ReadValue<Vector2>();
 
     // Primary Interaction Delta
-    private Vector2 primaryInteractionStartPosition = Vector2.zero;
-    private Vector2 primaryInteractionPosition = Vector2.zero;
-    private Vector2 primaryInteractionDelta => primaryInteractionDeltaIA.ReadValue<Vector2>();
+    public Vector2 primaryInteractionStartPosition { get; private set; } = Vector2.zero;
+    public Vector2 primaryInteractionPosition => primaryTouchPositionIA.ReadValue<Vector2>();
+    public Vector2 primaryInteractionDelta => primaryTouchDeltaIA.ReadValue<Vector2>();
 
     // Secondary Interaction Delta
-    private Vector2 secondaryInteractionStartPosition = Vector2.zero;
-    private Vector2 secondaryInteractionPosition = Vector2.zero;
-    private Vector2 secondaryInteractionDelta = Vector2.zero;
+    public Vector2 secondaryInteractionStartPosition { get; private set; } = Vector2.zero;
+    public Vector2 secondaryInteractionPosition => secondaryTouchPositionIA.ReadValue<Vector2>();
+    public Vector2 secondaryInteractionDelta => primaryTouchDeltaIA.ReadValue<Vector2>();
 
-    public event Action<Vector2> onPrimaryInteractionPressed; 
-    public event Action<Vector2> onPrimaryInteractionReleased; 
-    public event Action<Vector2> onSecondaryInteractionPressed; 
-    public event Action<Vector2> onSecondaryInteractionReleased;
+    public event Action onPrimaryInteractionPressed; 
+    public event Action onPrimaryInteractionReleased;
+    public event Action onCameraMovePerformed;
+    public event Action onSecondaryInteractionPressed; 
+    public event Action onSecondaryInteractionReleased;
     public event Action<float> onCameraZoomPerformed;
 
     private void Awake()
@@ -63,20 +49,15 @@ public class PlayerInputHandler : MonoBehaviour
         touchInputActionMap.Enable();
 
         // Primary Interaction
-        primaryInteractionPressIA.performed += OnPrimaryInteractionPressed;
-        primaryInteractionPressIA.canceled += OnPrimaryInteractionReleased;
+        primaryTouchPressIA.performed += OnPrimaryTouchPressed;
+        primaryTouchPressIA.canceled += OnPrimaryTouchReleased;
 
         // Secondary Interaction
-        secondaryInteractionPressIA.performed += OnSecondaryTouchPressed;
-        secondaryInteractionPressIA.canceled += OnSecondaryTouchReleased;
-
-        secondaryInteractionPositionIA.performed += OnSecondaryInteractionPosition;
-        secondaryInteractionPositionIA.canceled += OnSecondaryInteractionPosition;
-
-        secondaryInteractionDeltaIA.performed += OnSecondaryInteractionDelta;
-        secondaryInteractionDeltaIA.canceled += OnSecondaryInteractionDelta;
+        secondaryTouchPressIA.performed += OnSecondaryTouchPressed;
+        secondaryTouchPressIA.canceled += OnSecondaryTouchReleased;
 
         // Camera
+        cameraMoveIA.performed += OnCameraMovePerformed;
         cameraZoomIA.performed += OnCameraZoomPerformed;
     }
 
@@ -85,20 +66,15 @@ public class PlayerInputHandler : MonoBehaviour
         touchInputActionMap.Disable();
 
         // Primary Interaction
-        primaryInteractionPressIA.performed -= OnPrimaryInteractionPressed;
-        primaryInteractionPressIA.canceled -= OnPrimaryInteractionReleased;
+        primaryTouchPressIA.performed -= OnPrimaryTouchPressed;
+        primaryTouchPressIA.canceled -= OnPrimaryTouchReleased;
 
         // Secondary Interaction
-        secondaryInteractionPressIA.performed -= OnSecondaryTouchPressed;
-        secondaryInteractionPressIA.canceled -= OnSecondaryTouchReleased;
-
-        secondaryInteractionPositionIA.performed -= OnSecondaryInteractionPosition;
-        secondaryInteractionPositionIA.canceled -= OnSecondaryInteractionPosition;
-
-        secondaryInteractionDeltaIA.performed -= OnSecondaryInteractionDelta;
-        secondaryInteractionDeltaIA.canceled -= OnSecondaryInteractionDelta;
+        secondaryTouchPressIA.performed -= OnSecondaryTouchPressed;
+        secondaryTouchPressIA.canceled -= OnSecondaryTouchReleased;
 
         // Camera
+        cameraMoveIA.performed -= OnCameraMovePerformed;
         cameraZoomIA.performed -= OnCameraZoomPerformed;
     }
 
@@ -108,24 +84,16 @@ public class PlayerInputHandler : MonoBehaviour
             touchInputActionMap = mainInputActionsAsset.FindActionMap("Gameplay");
 
             if (touchInputActionMap != null) {
-                mousePositionIA = touchInputActionMap.FindAction("MousePosition");
+                primaryTouchPressIA = touchInputActionMap.FindAction("PrimaryInteractionPress");
+                primaryTouchPositionIA = touchInputActionMap.FindAction("PrimaryInteractionPosition");
+                primaryTouchDeltaIA = touchInputActionMap.FindAction("PrimaryInteractionDelta");
 
-                primaryInteractionPressIA = touchInputActionMap.FindAction("PrimaryInteractionPress");
-                primaryInteractionPositionIA = touchInputActionMap.FindAction("PrimaryInteractionPosition");
-                primaryInteractionDeltaIA = touchInputActionMap.FindAction("PrimaryInteractionDelta");
+                secondaryTouchPressIA = touchInputActionMap.FindAction("SecondaryInteractionPress");
+                secondaryTouchPositionIA = touchInputActionMap.FindAction("SecondaryInteractionPosition");
+                secondaryTouchDeltaIA = touchInputActionMap.FindAction("SecondaryInteractionDelta");
 
-                secondaryInteractionPressIA = touchInputActionMap.FindAction("SecondaryInteractionPress");
-                secondaryInteractionPositionIA = touchInputActionMap.FindAction("SecondaryInteractionPosition");
-                secondaryInteractionDeltaIA = touchInputActionMap.FindAction("SecondaryInteractionDelta");
-
-                cameraMoveKeyboardIA = touchInputActionMap.FindAction("CameraMoveKeyboard");
-                cameraMoveMouseIA = touchInputActionMap.FindAction("CameraMoveMouse");
-                cameraMoveTouchscreenIA = touchInputActionMap.FindAction("CameraMoveTouchScreen");
                 cameraZoomIA = touchInputActionMap.FindAction("CameraZoom");
-
-                cameraMoveKeyboardButtonIA = touchInputActionMap.FindAction("CameraMoveKeyboardButton");
-                cameraMoveMouseButtonIA = touchInputActionMap.FindAction("CameraMoveMouseButton");
-                cameraMoveTouchscreenButtonIA = touchInputActionMap.FindAction("CameraMoveTouchscreenButton");
+                cameraMoveIA = touchInputActionMap.FindAction("CameraMove");
             }
             else
                 Debug.Log("void PlayerController : SetInputSystem() touchInputActionMap is NULL");
@@ -134,49 +102,41 @@ public class PlayerInputHandler : MonoBehaviour
             Debug.Log("void PlayerController : SetInputSystem() inputActions is NULL");
     }
 
-    private void OnPrimaryInteractionPressed(InputAction.CallbackContext context)
+    // Primary Touch
+    private void OnPrimaryTouchPressed(InputAction.CallbackContext context)
     {
-        var device = context.control.device;
-        Vector2 position = device is Touchscreen ? primaryInteractionPositionIA.ReadValue<Vector2>() : mousePositionIA.ReadValue<Vector2>();
-
         isPrimaryInteractionPressed = true;
-        onPrimaryInteractionPressed?.Invoke(position);
+        primaryInteractionStartPosition = primaryTouchPositionIA.ReadValue<Vector2>();
+        onPrimaryInteractionPressed?.Invoke();
     }
 
-    private void OnPrimaryInteractionReleased(InputAction.CallbackContext context)
+    private void OnPrimaryTouchReleased(InputAction.CallbackContext context)
     {
-        var device = context.control.device;
-        Vector2 position = device is Touchscreen ? primaryInteractionPositionIA.ReadValue<Vector2>() : mousePositionIA.ReadValue<Vector2>();
-
         isPrimaryInteractionPressed = false;
-        onPrimaryInteractionReleased?.Invoke(position);
+        onPrimaryInteractionReleased?.Invoke();
     }
 
+    // Secondary Touch
     private void OnSecondaryTouchPressed(InputAction.CallbackContext context)
     {
-        secondaryInteractionStartPosition = secondaryInteractionPositionIA.ReadValue<Vector2>();
         isSecondaryInteractionPressed = true;
+        secondaryInteractionStartPosition = secondaryTouchPositionIA.ReadValue<Vector2>();
+        onSecondaryInteractionPressed?.Invoke();
     }
 
     private void OnSecondaryTouchReleased(InputAction.CallbackContext context)
     {
-        secondaryInteractionPosition = Vector2.zero;
-        secondaryInteractionDelta = Vector2.zero;
         isSecondaryInteractionPressed = false;
+        onSecondaryInteractionReleased?.Invoke();
     }
 
-    private void OnSecondaryInteractionPosition(InputAction.CallbackContext context)
+    // Camera Move
+    private void OnCameraMovePerformed(InputAction.CallbackContext context)
     {
-        Vector2 value = context.ReadValue<Vector2>();
-        secondaryInteractionPosition = value;
+        onCameraMovePerformed?.Invoke();
     }
 
-    private void OnSecondaryInteractionDelta(InputAction.CallbackContext context)
-    {
-        Vector2 value = context.ReadValue<Vector2>();
-        secondaryInteractionDelta = value;
-    }
-
+    // Camera Zoom
     private void OnCameraZoomPerformed(InputAction.CallbackContext context)
     {
         float value = context.ReadValue<float>();

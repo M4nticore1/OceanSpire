@@ -1,50 +1,31 @@
 ﻿using Unity.Mathematics;
 using UnityEngine;
 
-public class CameraHolderMovement : MonoBehaviour
+public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private PlayerInputHandler playerInputHandler;
 
-    // Move Velocity
-    private Vector2 cameraMoveVelocity => keyboardCameraMoveVelocity * keyboardCameraMoveSensitivity + mouseCameraMoveVelocity * mouseCameraMoveSensitivity + touchscreenCameraMoveVelocity * touchscreenCameraMoveSensitivity;
-    private Vector2 keyboardCameraMoveVelocity;
-    private Vector2 mouseCameraMoveVelocity;
-    private Vector2 touchscreenCameraMoveVelocity;
+    private Vector2 cameraMoveVelocity = Vector2.zero;
 
     // Return
     private const float cameraVerticalBoundaryPadding = 10.0f;
     private const float cameraVerticalReturnSpeed = 5.0f;
 
-    // Sensitivities
-    private const float keyboardCameraMoveSensitivity = 100f;
-    private const float mouseCameraMoveSensitivity = 10f;
-    private const float touchscreenCameraMoveSensitivity = 4f;
-
     // Stop Moving
     private const float cameraStopMoveSpeed = 6.0f;
 
-    private void Update()
+    public void Tick()
     {
-        ProcessCameraMove();
-    }
-
-    private void ProcessCameraMove()
-    {
-        // Apply Velocity
-        ApplyMoveVelocity(ref keyboardCameraMoveVelocity, playerInputHandler.isKeyboardMoveButtonPressed, playerInputHandler.keyboardCameraMoveInput);
-        ApplyMoveVelocity(ref mouseCameraMoveVelocity, playerInputHandler.isMouseMoveButtonPressed, playerInputHandler.mouseCameraMoveInput);
-        ApplyMoveVelocity(ref touchscreenCameraMoveVelocity, playerInputHandler.isTouchscreenMoveButtonPressed, playerInputHandler.touchscreenCameraMoveInput);
-
-        // Move
+        ApplyMoveVelocity();
         ReturnVerticalPosition();
         ApplyMove();
         ApplySquareMove();
     }
 
     // Apply Velocity
-    private void ApplyMoveVelocity(ref Vector2 velocity, bool isPressed, Vector2 input)
+    private void ApplyMoveVelocity()
     {
-        velocity = isPressed ? input : Vector2.Lerp(velocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+        cameraMoveVelocity = playerInputHandler.сameraMoveInput.sqrMagnitude > 0 ? playerInputHandler.сameraMoveInput : Vector2.Lerp(cameraMoveVelocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
     }
 
     // Vertical Move

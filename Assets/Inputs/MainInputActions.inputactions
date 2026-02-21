@@ -7,24 +7,6 @@
             "id": "7ae312ad-20ea-4d2f-841c-e323a9eecc28",
             "actions": [
                 {
-                    "name": "MousePosition",
-                    "type": "Value",
-                    "id": "e130026b-4457-404d-952c-af3a9eff2c39",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "MouseDelta",
-                    "type": "Value",
-                    "id": "132bda1c-65b9-442e-8b45-ca78ff8f3d60",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "PrimaryInteractionPress",
                     "type": "Button",
                     "id": "a39e9c99-ec81-4630-a87b-20cbcf2c854a",
@@ -83,7 +65,7 @@
                     "type": "Value",
                     "id": "30147813-9753-451f-ad30-b27d6cf26657",
                     "expectedControlType": "Axis",
-                    "processors": "",
+                    "processors": "Scale(factor=5)",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -115,27 +97,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "CameraMoveKeyboard",
+                    "name": "CameraMove",
                     "type": "Value",
                     "id": "48a33353-d903-4a58-a922-16311271c3bd",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "CameraMoveMouse",
-                    "type": "Value",
-                    "id": "92bb9574-3965-458d-8fcf-7192e13246b7",
-                    "expectedControlType": "Vector2",
-                    "processors": "InvertVector2(invertX=false)",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "CameraMoveTouchScreen",
-                    "type": "Value",
-                    "id": "73dafb7e-29f4-4016-b70c-9cbef633a346",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -143,6 +107,17 @@
                 }
             ],
             "bindings": [
+                {
+                    "name": "",
+                    "id": "db8b8e6a-69e3-4e36-a0b7-0fe03b3c8973",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrimaryInteractionDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
                 {
                     "name": "2D Vector",
                     "id": "bc9d6cef-14a7-4a03-8402-b122d861cdfe",
@@ -160,7 +135,7 @@
                     "path": "<Touchscreen>/primaryTouch/delta/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";TouchScreen",
+                    "groups": "Touchscreen",
                     "action": "PrimaryInteractionDelta",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -171,7 +146,7 @@
                     "path": "<Touchscreen>/primaryTouch/delta/down",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";TouchScreen",
+                    "groups": "Touchscreen",
                     "action": "PrimaryInteractionDelta",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -182,7 +157,7 @@
                     "path": "<Touchscreen>/primaryTouch/delta/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";TouchScreen",
+                    "groups": "Touchscreen",
                     "action": "PrimaryInteractionDelta",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -193,15 +168,15 @@
                     "path": "<Touchscreen>/primaryTouch/delta/right",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";TouchScreen",
+                    "groups": "Touchscreen",
                     "action": "PrimaryInteractionDelta",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "",
-                    "id": "2bde3a2e-a10e-40aa-a197-5d5ca4840ce8",
-                    "path": "<Touchscreen>/primaryTouch/position",
+                    "id": "1aba5f88-3a11-4358-a01a-d5d33165bb9b",
+                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -211,78 +186,12 @@
                 },
                 {
                     "name": "",
-                    "id": "9f32eac5-476d-4a8c-9781-6e1ada1bf515",
-                    "path": "<Mouse>/position",
+                    "id": "2bde3a2e-a10e-40aa-a197-5d5ca4840ce8",
+                    "path": "<Touchscreen>/primaryTouch/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MousePosition",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "2D Vector",
-                    "id": "4bc0be04-18e6-4a3e-8e83-85953aeab35d",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MouseDelta",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "94c0748e-7b2f-4f14-ad45-b7e0f1c554cf",
-                    "path": "<Mouse>/delta/up",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "MouseDelta",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "51a1c07f-a705-4928-bd0a-d1f77f88e568",
-                    "path": "<Mouse>/delta/down",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "MouseDelta",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "e5a3f0b9-be98-4bac-ae85-0e800ca556db",
-                    "path": "<Mouse>/delta/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "MouseDelta",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "6e959bd5-d70b-4e17-9005-e7f329edb87a",
-                    "path": "<Mouse>/delta/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "MouseDelta",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "21a296fc-b517-4fb5-a103-758c1b032c74",
-                    "path": "<Touchscreen>/primaryTouch/press",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PrimaryInteractionPress",
+                    "action": "PrimaryInteractionPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -299,11 +208,22 @@
                 },
                 {
                     "name": "",
+                    "id": "21a296fc-b517-4fb5-a103-758c1b032c74",
+                    "path": "<Touchscreen>/primaryTouch/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrimaryInteractionPress",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "f63ff30e-f9a0-4216-a8eb-49daf513027d",
                     "path": "<Touchscreen>/touch1/press",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";TouchScreen",
+                    "groups": "Touchscreen",
                     "action": "SecondaryInteractionPress",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -314,7 +234,7 @@
                     "path": "<Touchscreen>/touch1/position",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";TouchScreen",
+                    "groups": "Touchscreen",
                     "action": "SecondaryInteractionPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -325,7 +245,7 @@
                     "path": "<Touchscreen>/touch1/delta",
                     "interactions": "Hold",
                     "processors": "",
-                    "groups": ";TouchScreen",
+                    "groups": "Touchscreen",
                     "action": "SecondaryInteractionDelta",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -336,7 +256,7 @@
                     "path": "<Mouse>/scroll/up",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
+                    "groups": "Keyboard",
                     "action": "CameraZoom",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -347,7 +267,7 @@
                     "path": "<Mouse>/scroll/down",
                     "interactions": "",
                     "processors": "Scale(factor=-1)",
-                    "groups": ";Keyboard&Mouse",
+                    "groups": "Keyboard",
                     "action": "CameraZoom",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -355,165 +275,154 @@
                 {
                     "name": "2D Vector",
                     "id": "8ff2c7ea-3dd9-4447-b577-e4f4d5e712cb",
-                    "path": "2DVector(mode=2)",
+                    "path": "2DVector",
                     "interactions": "",
-                    "processors": "InvertVector2(invertY=false)",
+                    "processors": "InvertVector2(invertY=false),ScaleVector2(x=100,y=100)",
                     "groups": "",
-                    "action": "CameraMoveKeyboard",
+                    "action": "CameraMove",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
+                    "name": "Up",
                     "id": "c379de1f-785d-45c5-81fa-71914fdbf512",
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "CameraMoveKeyboard",
+                    "groups": "Keyboard",
+                    "action": "CameraMove",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "down",
+                    "name": "Down",
                     "id": "90814043-bfc1-4497-bdee-225019cf2b0f",
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "CameraMoveKeyboard",
+                    "groups": "Keyboard",
+                    "action": "CameraMove",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "left",
-                    "id": "9315bd3a-00e9-4afd-bc17-b3f07a8f9174",
+                    "name": "Left",
+                    "id": "56010795-9691-4258-95af-adcd20208668",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "CameraMoveKeyboard",
+                    "groups": "",
+                    "action": "CameraMove",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "right",
-                    "id": "1e7d4680-5b6b-4072-b508-1a49a349221a",
+                    "name": "Right",
+                    "id": "4251d761-88d9-48f5-af0c-7b7cce3dc9e6",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "CameraMoveKeyboard",
+                    "groups": "",
+                    "action": "CameraMove",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "2D Vector",
-                    "id": "9a5e505b-f838-4c1a-a8e4-45b3a600de35",
-                    "path": "2DVector(mode=2)",
+                    "name": "One Modifier",
+                    "id": "f79f6aec-40b2-4805-9602-5e63fd56330f",
+                    "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "CameraMoveMouse",
+                    "action": "CameraMove",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "e1e714b4-cd30-4492-9301-453ec58be5fc",
-                    "path": "<Mouse>/delta/up",
+                    "name": "Modifier",
+                    "id": "3656d9db-abc1-4ed2-84c1-66e9b901a7eb",
+                    "path": "<Touchscreen>/touch0/press",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "CameraMoveMouse",
+                    "groups": ";Touchscreen",
+                    "action": "CameraMove",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "down",
-                    "id": "94fef387-dda8-451e-8858-93e7cceae536",
-                    "path": "<Mouse>/delta/down",
+                    "name": "Binding",
+                    "id": "4493d390-0e0d-427f-b7e1-2ce78bb46381",
+                    "path": "<Touchscreen>/touch0/delta",
                     "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "CameraMoveMouse",
+                    "processors": "ScaleVector2(x=6,y=6),InvertVector2(invertX=false)",
+                    "groups": ";Touchscreen",
+                    "action": "CameraMove",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "left",
-                    "id": "da2648c6-f0b1-4d18-a096-07f26a43b4c2",
-                    "path": "<Mouse>/delta/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "CameraMoveMouse",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "90d7fcc0-2f11-47b7-b3fd-7a7d9e25f6a1",
-                    "path": "<Mouse>/delta/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "CameraMoveMouse",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "2D Vector",
-                    "id": "c4004186-eb3c-4533-918e-cbf00bdb7bf9",
-                    "path": "2DVector(mode=2)",
+                    "name": "One Modifier",
+                    "id": "23166e68-d4f0-4332-8920-d1660f0a8a42",
+                    "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "CameraMoveTouchScreen",
+                    "action": "CameraMove",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "68077b10-2fbe-40e8-a124-b78e295159a0",
-                    "path": "<Touchscreen>/delta/down",
+                    "name": "Modifier",
+                    "id": "a5443d8b-8a2d-4574-ab0f-cfdd01ad96ee",
+                    "path": "<Touchscreen>/touch1/press",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";TouchScreen",
-                    "action": "CameraMoveTouchScreen",
+                    "groups": ";Touchscreen",
+                    "action": "CameraMove",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "down",
-                    "id": "94a0f16c-4696-4eac-8d6f-c1c8c8a08232",
-                    "path": "<Touchscreen>/delta/up",
+                    "name": "Binding",
+                    "id": "af2be49f-b1b4-4f02-ae60-3bbd6c87f529",
+                    "path": "<Touchscreen>/touch1/delta",
                     "interactions": "",
-                    "processors": "",
-                    "groups": ";TouchScreen",
-                    "action": "CameraMoveTouchScreen",
+                    "processors": "ScaleVector2(x=6,y=6),InvertVector2(invertX=false)",
+                    "groups": ";Touchscreen",
+                    "action": "CameraMove",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "left",
-                    "id": "5c0406c3-64bc-4b52-807a-9ab25551ac6d",
-                    "path": "<Touchscreen>/delta/left",
+                    "name": "One Modifier",
+                    "id": "ff203f30-0a33-47a0-9f6b-b8387727ef1f",
+                    "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";TouchScreen",
-                    "action": "CameraMoveTouchScreen",
+                    "groups": "",
+                    "action": "CameraMove",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Modifier",
+                    "id": "466a8650-e020-4e29-91c1-703984697a33",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraMove",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "right",
-                    "id": "d552a1ce-b0ab-4018-b732-3218b29bca8a",
-                    "path": "<Touchscreen>/delta/right",
+                    "name": "Binding",
+                    "id": "454c4d9b-2d4b-485d-badb-ed1f2bf8e70f",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
-                    "processors": "",
-                    "groups": ";TouchScreen",
-                    "action": "CameraMoveTouchScreen",
+                    "processors": "ScaleVector2(x=10,y=10),InvertVector2(invertX=false)",
+                    "groups": "",
+                    "action": "CameraMove",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -588,8 +497,8 @@
     ],
     "controlSchemes": [
         {
-            "name": "TouchScreen",
-            "bindingGroup": "TouchScreen",
+            "name": "Touchscreen",
+            "bindingGroup": "Touchscreen",
             "devices": [
                 {
                     "devicePath": "<Touchscreen>",
@@ -599,20 +508,20 @@
             ]
         },
         {
-            "name": "Keyboard&Mouse",
-            "bindingGroup": "Keyboard&Mouse",
+            "name": "Keyboard",
+            "bindingGroup": "Keyboard",
             "devices": [
                 {
                     "devicePath": "<Keyboard>",
                     "isOptional": false,
                     "isOR": false
-                },
-                {
-                    "devicePath": "<Mouse>",
-                    "isOptional": false,
-                    "isOR": false
                 }
             ]
+        },
+        {
+            "name": "Mouse",
+            "bindingGroup": "Mouse",
+            "devices": []
         }
     ]
 }

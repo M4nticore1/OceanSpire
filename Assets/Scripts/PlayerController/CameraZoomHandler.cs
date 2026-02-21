@@ -1,72 +1,108 @@
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class CameraZoomHandler : MonoBehaviour
 {
-    [SerializeField] private PlayerInputHandler playerInputHandler;
+    [SerializeField] private PlayerInputHandler inputHandler;
 
-    private float currentCameraArmLength = 0.0f;
-    private const float minCameraArmLength = 25.0f;
-    private const float maxCameraArmLength = 100.0f;
+    private float currentArmLength = 0f;
+    private const float minCameraArmLength = 25f;
+    private const float maxCameraArmLength = 100f;
 
-    private const float nearCameraArmBoundaryPadding = 10.0f;
-    private const float farCameraArmBoundaryPadding = 20.0f;
-    private const float cameraArmReturnSpeed = 4.0f;
+    private const float nearArmBoundaryPadding = 10f;
+    private const float farArmBoundaryPadding = 20f;
+    private const float cameraArmReturnSpeed = 4f;
 
-    private float cameraArmMoveMultiplier = 1.0f;
+    private float cameraArmMoveMultiplier = 1f;
 
-    private float zoomVelocity = 0.0f;
+    private float zoomVelocity = 0f;
     private const float zoomSensitivity = 0.1f;
     private const float stopZoomingSpeed = 25.0f;
-    private float currentCameraZoomVelocity = 0f;
-    private const float zoomForce = 6f;
 
-    public void ProcessZoom()
+    private float lastPitch = 0;
+
+    private void Start()
     {
-        if (currentCameraArmLength > maxCameraArmLength && zoomVelocity < 0)
-            cameraArmMoveMultiplier = 1.0f - ((currentCameraArmLength - maxCameraArmLength) / farCameraArmBoundaryPadding);
-        else if (currentCameraArmLength < minCameraArmLength && zoomVelocity > 0)
-            cameraArmMoveMultiplier = 1.0f - (math.abs(minCameraArmLength - currentCameraArmLength) / nearCameraArmBoundaryPadding);
-        else
-            cameraArmMoveMultiplier = 1;
-
-        cameraArmMoveMultiplier = math.clamp(cameraArmMoveMultiplier, 0, 1);
-        currentCameraArmLength -= zoomVelocity * zoomSensitivity * cameraArmMoveMultiplier;
-        currentCameraArmLength = math.clamp(currentCameraArmLength, minCameraArmLength - nearCameraArmBoundaryPadding, maxCameraArmLength + farCameraArmBoundaryPadding);
+        currentArmLength = -transform.localPosition.z;
     }
 
-    public void ProcessStopZooming()
+    public void Tick()
     {
-        zoomVelocity = math.lerp(zoomVelocity, 0, stopZoomingSpeed * Time.deltaTime);
-        currentCameraArmLength -= zoomVelocity * zoomSensitivity * cameraArmMoveMultiplier;
-
-        float targetLength = currentCameraArmLength > maxCameraArmLength ? maxCameraArmLength : currentCameraArmLength < minCameraArmLength ? minCameraArmLength : currentCameraArmLength;
-        if (currentCameraArmLength != targetLength) {
-            currentCameraArmLength = math.lerp(currentCameraArmLength, targetLength, cameraArmReturnSpeed * Time.deltaTime);
+        if (inputHandler.isPrimaryInteractionPressed && inputHandler.isSecondaryInteractionPressed) {
+            ProcessTouchscreenZoom();
         }
+        else {
+            ResetPitch();
+            ProcessStopZooming();
+            ProcessPadding();
+        }
+
+        ApplyZoom();
     }
 
-    public void AddZoomVelocity(Vector3 value)
+    public void AddZoomVelocity(float value)
     {
         float multiplier = 1f;
 
-        if (currentCameraArmLength < minCameraArmLength && currentCameraZoomVelocity > 0)
-            multiplier = 1f - math.clamp((minCameraArmLength - currentCameraArmLength) / nearCameraArmBoundaryPadding, 0f, 1f);
-        else if (currentCameraArmLength > maxCameraArmLength && currentCameraZoomVelocity < 0)
-            multiplier = 1f - math.clamp((currentCameraArmLength - maxCameraArmLength) / farCameraArmBoundaryPadding, 0f, 1f);
+        if (currentArmLength <= minCameraArmLength + nearArmBoundaryPadding && value > 0) {
+            multiplier = math.clamp((currentArmLength - minCameraArmLength) / nearArmBoundaryPadding, 0f, 1f);
+        }
+        else if (currentArmLength >= maxCameraArmLength - farArmBoundaryPadding && value < 0) {
+            multiplier = math.clamp((maxCameraArmLength - currentArmLength) / farArmBoundaryPadding, 0f, 1f);
+        }
 
-        currentCameraArmLength -= zoomForce * currentCameraZoomVelocity * multiplier;
+        zoomVelocity = value * multiplier;
+    }
+
+    private void ProcessTouchscreenZoom()
+    {
+        if (Touchscreen.current == null) return;
+
+        TouchControl primaryTouch = Touchscreen.current.touches[0];
+        TouchControl secondaryTouch = Touchscreen.current.touches[1];
+
+        if (!primaryTouch.press.isPressed || !secondaryTouch.press.isPressed) {
+            ResetPitch();
+            return;
+        }
+
+        float currentDistance = Vector2.Distance(primaryTouch.position.ReadValue(), secondaryTouch.position.ReadValue());
+
+        if (lastPitch == 0) {
+            lastPitch = currentDistance;
+            return;
+        }
+
+        float delta = currentDistance - lastPitch;
+        AddZoomVelocity(delta * zoomSensitivity);
+        lastPitch = currentDistance;
+    }
+
+    private void ProcessStopZooming()
+    {
+        zoomVelocity = math.lerp(zoomVelocity, 0, stopZoomingSpeed * Time.deltaTime);
+    }
+
+    private void ProcessPadding()
+    {
+        if (currentArmLength > minCameraArmLength + nearArmBoundaryPadding && currentArmLength < maxCameraArmLength - farArmBoundaryPadding) return;
+
+        float targetArmLength = math.abs(minCameraArmLength - currentArmLength) < math.abs(maxCameraArmLength - currentArmLength) ? minCameraArmLength + nearArmBoundaryPadding : maxCameraArmLength - farArmBoundaryPadding;
+
+        currentArmLength = math.lerp(currentArmLength, targetArmLength, cameraArmReturnSpeed * Time.deltaTime);
     }
 
     private void ApplyZoom()
     {
-        Vector3 position = transform.localPosition + new Vector3(0, 0, currentCameraArmLength);
-        transform.localPosition = position;
+        currentArmLength -= zoomVelocity;
+        currentArmLength = math.clamp(currentArmLength, minCameraArmLength, maxCameraArmLength);
+        transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -currentArmLength);
     }
 
-    private void ResetZoom()
+    private void ResetPitch()
     {
-        Vector3 position = transform.localPosition - new Vector3(0, 0, currentCameraArmLength);
-        transform.localPosition = position;
+        lastPitch = 0;
     }
 }

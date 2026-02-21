@@ -105,8 +105,6 @@ public class CityManager : MonoBehaviour
             return;
         }
         Instance = this;
-
-        playerController.Init();
     }
 
     private void OnEnable()
@@ -166,8 +164,6 @@ public class CityManager : MonoBehaviour
         LoadBuildings(saveData);
         LoadBoats(saveData);
         LoadCreatures(saveData);
-
-        playerController.Load(saveData?.playerData);
     }
 
     private void Update()
