@@ -116,7 +116,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     private void TryToClose()
     {
         List<RaycastResult> results = new List<RaycastResult>();
-        PointerUtils.GetCurrentRaycastResults(results);
+        PointerUtils.GetRaycastUIResults(results);
         if (IsClickedOutsideMenu(results)) {
             CloseSlidePanel();
         }

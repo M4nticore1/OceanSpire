@@ -1,55 +1,111 @@
+using System.Collections;
 using UnityEngine;
 
 public class PierBuildingStrategy : BuildingStrategy
 {
-    public override void OnEnter(EntityCityNavigator navigator)
+    public PierBuildingStrategy(Building building) : base(building)
     {
 
     }
 
-    public override void OnExit(EntityCityNavigator navigator)
+    public override void OnEntityEnter(EntityCityNavigator navigator)
     {
 
     }
 
-    public override void OnSetInteractBuilding(EntityInteractor navigator)
+    public override void OnEntityExit(EntityCityNavigator navigator)
     {
-        Debug.Log("OnSetInteractBuilding");
-        Human human = navigator.GetComponent<Human>();
-        if (human) {
-            EntityInteractor interactor = human.interactor;
-            int interactorIndex = interactor.interactorIndex;
-            Boat boat = CityManager.Instance.citizenBoats[interactorIndex];
-            human.boatRider.SetBoat(boat);
+
+    }
+
+    public override void OnSetInteractBuilding(EntityInteractor interactor)
+    {
+        if (!BoatsManager.Instance) {
+            Debug.LogError("BoatManager is not on the scene.");
+            return;
+        }
+
+        if (!interactor) {
+            Debug.LogError("interactor is not valid.");
+            return;
+        }
+
+        BoatRider newBoatRider = TryGetBoatRider(interactor.gameObject);
+        Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(interactor.interactorIndex);
+        if (!boat) return;
+
+        if (newBoatRider.CurrentBoat) {
+            if (newBoatRider.CurrentBoat == boat) {
+                if (newBoatRider.isExitingBoat) {
+                    newBoatRider.StopExitingBoat();
+                }
+                 
+                if (boat.currentState != BoatStateEnum.UnloadingLoot && boat.Inventory.RemainingWeight != 0) {
+                    boat.SetState(BoatStateEnum.FindingLoot);
+                }
+            }
+            else {
+                boat.SetState(BoatStateEnum.ReturningToDock);
+            }
         }
     }
 
-    public override void OnRemoveInteractBuilding(EntityInteractor navigator)
+    public override void OnRemoveInteractBuilding(EntityInteractor interactor)
     {
-        Debug.Log("OnRemoveInteractBuilding");
-        Human human = navigator.GetComponent<Human>();
-        if (human) {
-            EntityInteractor interactor = human.interactor;
-            human.boatRider.RemoveBoat();
+        BoatRider boatRider = TryGetBoatRider(interactor?.gameObject);
+        if (!boatRider) return;
+
+        if (boatRider.isEnteringBoat) {
+            boatRider.StopEnteringBoat();
+        }
+
+        if (boatRider.isRidingOnBoat) {      
+            boatRider.CurrentBoat?.SetState(BoatStateEnum.ReturningToDock);
         }
     }
 
     public override void OnStartInteracting(EntityInteractor interactor)
     {
-        Debug.Log("OnStartInteracting");
-        Human human = interactor.GetComponent<Human>();
-        if (human) {
-            human.boatRider.StartEnteringBoat();
-        }
+        interactor.StartCoroutine(WaitForBoatAndEnter(interactor));
     }
 
     public override void OnStopInteracting(EntityInteractor interactor)
     {
-        
+
     }
 
     public override void OnInteracting(EntityInteractor interactor)
     {
         
+    }
+
+    private IEnumerator WaitForBoatAndEnter(EntityInteractor interactor)
+    {
+        BoatRider boatRider = TryGetBoatRider(interactor.gameObject);
+        if (!boatRider) yield break;
+
+        int index = interactor.interactorIndex;
+        Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(index);
+
+        while (boat != null && boat.currentState != BoatStateEnum.Idle) {
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        if (interactor.InteractBuilding != building) yield break;
+
+        if (boat != null && boatRider != null) {
+            boatRider.StartEnteringBoat(boat);
+        }
+    }
+
+    private BoatRider TryGetBoatRider(GameObject root)
+    {
+        if (root == null) return null;
+
+        BoatRider rider = root.GetComponent<BoatRider>();
+        if (rider == null) {
+            Debug.LogWarning($"BoatRider not found on {root.name}");
+        }
+        return rider;
     }
 }

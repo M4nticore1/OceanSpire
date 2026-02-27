@@ -52,7 +52,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     public bool IsSelected => state == CustomSelectableState.Selected;
     public bool IsEnabled => state != CustomSelectableState.Disabled;
     public bool isAnimating { get; private set; } = false;
-    private bool isPointerHovered => PointerUtils.IsGameObjectHovered(gameObject);
+    private bool isPointerHovered => PointerUtils.IsUIHovered(gameObject);
 
     [SerializeField] private CustomSelectableStateEntry idleState = new CustomSelectableStateEntry()
     {
@@ -257,7 +257,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
                 SetState(CustomSelectableState.Hovered);
         }
         else if (!IsIdle) {
-            GameObject go = PointerUtils.GetCurrentRaycastResult().gameObject;
+            GameObject go = PointerUtils.GetRaycastUIResult().gameObject;
             CustomButton selectable = go ? go.GetComponent<CustomButton>() : null;
             if (selectable && (selectable.selectableGroupIndex == selectableGroupIndex || selectableGroupIndex < 0) && !deselectOnOutsideClick)
                 SetState(CustomSelectableState.Idle);
@@ -268,7 +268,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private void Release()
     {
-        if (!PointerUtils.IsGameObjectHovered(gameObject)) return;
+        if (!PointerUtils.IsUIHovered(gameObject)) return;
 
         onReleased?.Invoke();
     }

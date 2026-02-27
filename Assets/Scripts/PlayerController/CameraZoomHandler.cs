@@ -9,7 +9,7 @@ public class CameraZoomHandler : MonoBehaviour
 
     private float currentArmLength = 0f;
     private const float minCameraArmLength = 25f;
-    private const float maxCameraArmLength = 100f;
+    private const float maxCameraArmLength = 140f;
 
     private const float nearArmBoundaryPadding = 10f;
     private const float farArmBoundaryPadding = 20f;

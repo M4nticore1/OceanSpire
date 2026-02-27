@@ -366,7 +366,7 @@ public class PlayerUIManager : MonoBehaviour
             ResourceWidget storageResourceWidget = Instantiate(storageResourceWidgetPrefab, storageLists[(int)itemCategory - 1].transform);
             widgets.Add(storageResourceWidget);
 
-            ItemInstance item = CityManager.Instance.Inventory.items[i].item;
+            ItemInstance item = CityManager.Instance.Inventory.itemsDict[i].item;
             storageResourceWidget.SetItem(item);
         }
         //storageResourceWidgets = widgets.ToArray();
@@ -427,7 +427,7 @@ public class PlayerUIManager : MonoBehaviour
 
             int id = resourcesToUpgrade[i].ItemData.ItemId;
             int amount = resourcesToUpgrade[i].Amount;
-            int maxAmount = CityManager.Instance.Inventory.items[id].maxAmount;
+            int maxAmount = CityManager.Instance.Inventory.itemsDict[id].maxAmount;
             resourceWidget.SetAmount(amount, maxAmount);
         }
     }

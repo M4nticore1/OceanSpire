@@ -14,7 +14,6 @@ public abstract class Building : MonoBehaviour
     protected SelectComponent selectComponent = null;
     private BuildingStrategy strategy = null;
 
-    public bool isInitialized { get; private set; } = false;
     private bool isWorking = false;
     public int LevelIndex => levelComponent ? levelComponent.LevelIndex : GetComponent<LevelComponent>().LevelIndex;
 
@@ -40,19 +39,33 @@ public abstract class Building : MonoBehaviour
     public event System.Action<EntityCityNavigator> onEntityEnterBuilding;
     public event System.Action<EntityCityNavigator> onEntityExitBuilding;
 
+    protected virtual void Awake()
+    {
+        AssignComponents();
+    }
+
+    protected virtual void OnEnable()
+    {
+        selectComponent.onSelected += OnSelected;
+        selectComponent.onDeselected += OnDeselected;
+    }
+
+    protected virtual void OnDisable()
+    {
+        selectComponent.onSelected += OnSelected;
+        selectComponent.onDeselected += OnDeselected;
+    }
+
     // Constructing
     public void Init(BuildingEntry data)
     {
-        if (isInitialized) return;
-
-        GetComponents();
+        AssignComponents();
         CreateStrategy();
 
         OnInit(data);
         BuildConstruction();
         spawnedConstruction?.Init(this);
 
-        isInitialized = true;
         onBuildingInited?.Invoke();
         EventBus.InvokeBuildingInitialized(this);
     }
@@ -61,10 +74,12 @@ public abstract class Building : MonoBehaviour
 
     protected abstract BuildingConstruction GetConstruction();
 
-    private void GetComponents()
+    private void AssignComponents()
     {
-        levelComponent = GetComponent<LevelComponent>();
-        selectComponent = GetComponent<SelectComponent>();
+        if (!levelComponent)
+            levelComponent = GetComponent<LevelComponent>();
+        if (!selectComponent)
+            selectComponent = GetComponent<SelectComponent>();
     }
 
     public void Demolish()
@@ -92,14 +107,14 @@ public abstract class Building : MonoBehaviour
     {
         enteredEntities.Add(navigator);
         onEntityEnterBuilding?.Invoke(navigator);
-        strategy.OnEnter(navigator);
+        strategy.OnEntityEnter(navigator);
     }
 
     public void ExitBuilding(EntityCityNavigator navigator)
     {
         enteredEntities.Remove(navigator);
         onEntityExitBuilding?.Invoke(navigator);
-        strategy.OnExit(navigator);
+        strategy.OnEntityExit(navigator);
     }
 
     public void AddWorker(EntityInteractor interactor)
@@ -176,11 +191,22 @@ public abstract class Building : MonoBehaviour
     {
         switch (buildingData.BuildingStrategy) {
             case BuildingStrategyEnum.WorkBuilding:
-                strategy = new WorkBuildingStrategy();
+                strategy = new WorkBuildingStrategy(this);
                 break;
             case BuildingStrategyEnum.Pier:
-                strategy = new PierBuildingStrategy();
+                strategy = new PierBuildingStrategy(this);
                 break;
         }
+    }
+
+    // Events
+    private void OnSelected()
+    {
+        EventBus.InvokeSelectedBuilding(this);
+    }
+
+    private void OnDeselected()
+    {
+        EventBus.InvokeDeselectedBuilding(this);
     }
 }

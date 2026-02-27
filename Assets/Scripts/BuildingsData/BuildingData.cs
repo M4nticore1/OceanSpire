@@ -87,11 +87,6 @@ public class BuildingData : ScriptableObject
     [SerializeField] private Sprite thumbImage = null;
     public Sprite ThumbImage => thumbImage;
 
-    [SerializeField] private int buildingFloors = 1;
-    public int BuildingFloors => buildingFloors;
-    [SerializeField] private int maxBuildingFloors = 1;
-    public int MaxBuildingFloors => maxBuildingFloors;
-
     [SerializeField] private bool isDemolishable = true;
     public bool IsDemolishable => isDemolishable;
 }

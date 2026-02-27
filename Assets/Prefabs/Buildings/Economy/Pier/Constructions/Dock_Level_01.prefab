@@ -132,8 +132,8 @@ MonoBehaviour:
   buildingInteriors: []
   buildingInteractions:
   - waypoints:
-    - {fileID: 3640894468142696217}
-    actionTimes: 
+    - transform: {fileID: 3640894468142696217}
+      actionTime: 0
   collectItemPoints: []
   boatDocks:
   - {fileID: 1540540025129336834}

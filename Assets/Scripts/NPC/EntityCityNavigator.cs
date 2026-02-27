@@ -148,7 +148,7 @@ public class EntityCityNavigator : MonoBehaviour
     private void HandleStopUsingElevator()
     {
         SetState(FollowingPathState.None);
-        movement.MoveTo(currentBuilding.GetInteractionTransform().position);
+        movement.TryMoveTo(currentBuilding.GetInteractionTransform().position);
         currentElevator.RemovePassenger(this);
     }
 
@@ -356,7 +356,7 @@ public class EntityCityNavigator : MonoBehaviour
     private void ExitElevatorAndMove()
     {
         SetState(FollowingPathState.None);
-        movement.MoveTo(currentBuilding.GetInteractionTransform().position);
+        movement.TryMoveTo(currentBuilding.GetInteractionTransform().position);
     }
 
     private void HandleElevatorStopWhileWaiting()
@@ -397,11 +397,11 @@ public class EntityCityNavigator : MonoBehaviour
                 RemovePath();
                 break;
             case FollowingPathState.FollowingPath:
-                movement.MoveTo(currentPathBuilding.GetInteractionTransform().position);
+                movement.TryMoveTo(currentPathBuilding.GetInteractionTransform().position);
                 break;
             case FollowingPathState.GoingToWaiting:
                 currentElevator.AddPassenger(this);
-                movement.MoveTo(currentElevator.OwnedBuilding.GetInteractionTransform().position);
+                movement.TryMoveTo(currentElevator.OwnedBuilding.GetInteractionTransform().position);
                 break;
             case FollowingPathState.Waiting:
                 currentElevator.AddPassenger(this);
@@ -409,7 +409,7 @@ public class EntityCityNavigator : MonoBehaviour
                 break;
             case FollowingPathState.GoingToRiding:
                 currentElevator.AddPassenger(this);
-                movement.MoveTo(currentElevator.GetCabinRidingTransform().position);
+                movement.TryMoveTo(currentElevator.GetCabinRidingTransform().position);
                 break;
             case FollowingPathState.Riding:
                 currentElevator.AddPassenger(this);

@@ -32,7 +32,7 @@ public class LootContainer : MonoBehaviour
     public TransportMethod currentTransportMethod = TransportMethod.Floating;
     private float moveSpeed = 0.5f;
     private float currentMoveSpeedMultiplier = 1f;
-    private const float stopMovingSpeed = 1f;
+    private const float stopMovingSpeed = 10f;
 
     [HideInInspector] public Vector3 moveDirection = Vector3.zero;
     private Vector3 startMoveDirection = Vector3.zero;
@@ -61,9 +61,6 @@ public class LootContainer : MonoBehaviour
     private double lastCheckPositionTime = 0d;
 
     private bool isInitialized = false;
-
-    public static System.Action<LootContainer> onLootEnteredToArea;
-    public static System.Action<LootContainer> OnLootExitedFromArea;
 
     public void InitializeContainer(int floorIndex)
     {
@@ -104,6 +101,10 @@ public class LootContainer : MonoBehaviour
         if (!isMovable) return;
 
         if (isMoving) {
+            if (currentMoveSpeedMultiplier < 1f) {
+                currentMoveSpeedMultiplier = math.lerp(currentMoveSpeedMultiplier, 1f, stopMovingSpeed * Time.deltaTime);
+            }
+
             Vector3 crossDirection = Vector3.Cross(moveDirection, new Vector3(-transform.position.x, 0, -transform.position.z).normalized);
 
             float distanceToIsland = transform.position.magnitude;
@@ -125,7 +126,7 @@ public class LootContainer : MonoBehaviour
             }
         }
         else {
-            currentMoveSpeedMultiplier = math.lerp(currentMoveSpeedMultiplier, 0f, stopMovingSpeed);
+            currentMoveSpeedMultiplier = math.lerp(currentMoveSpeedMultiplier, 0f, stopMovingSpeed * Time.deltaTime);
         }
 
         transform.position += moveDirection * currentMoveSpeedMultiplier * moveSpeed * deltaTime;
@@ -136,24 +137,20 @@ public class LootContainer : MonoBehaviour
         if (Time.timeAsDouble > lastCheckPositionTime + checkPositionFrequency)
         {
             float distance = Vector3.Distance(Vector3.zero, transform.position);
-
-            if (distance <= CityManager.triggerLootContainerRadius)
-                onLootEnteredToArea?.Invoke(this);
-            else if (distance > LootManager.spawnDistance + despawnDistance)
+            
+            if (distance > LootManager.spawnDistance + despawnDistance)
                 Destroy(gameObject);
-            else if (distance > CityManager.triggerLootContainerRadius)
-                OnLootExitedFromArea?.Invoke(this);
 
             lastCheckPositionTime = Time.timeAsDouble;
         }
     }
 
-    public void StartCollecting(float remainingWeight)
+    public void StartMoving()
     {
-        StopMoving();
+        isMoving = true;
     }
 
-    private void StopMoving()
+    public void StopMoving()
     {
         isMoving = false;
     }
@@ -164,13 +161,10 @@ public class LootContainer : MonoBehaviour
 
         if (remainingWeight != null)
         {
-            bool isNeededToDestroy = true;
             for (int i = 0; i < containedLoot.Count; i++)
             {
                 ItemInstance currentLoot = containedLoot[i];
-                if (remainingWeight.Value < currentLoot.ItemData.Weight) {
-                    isNeededToDestroy = false;
-                    continue; }
+                if (remainingWeight.Value < currentLoot.ItemData.Weight) continue;
 
                 ItemData data = currentLoot.ItemData;
                 int id = currentLoot.ItemData.ItemId;
@@ -183,15 +177,13 @@ public class LootContainer : MonoBehaviour
                 ItemInstance newLoot = new ItemInstance(data, amountToCollect);
                 loot.Add(newLoot);
             }
-
-            if (isNeededToDestroy)
-                Destroy(gameObject);
         }
         else
         {
             loot = containedLoot;
-            Destroy(gameObject);
         }
+
+        Destroy(gameObject);
         return loot;
     }
 

@@ -8,7 +8,7 @@ public enum BuildingPlaceState
     Invalid
 }
 
-public class BuildingPlace : MonoBehaviour
+public class BuildingPlace : MonoBehaviour, IClickable
 {
     [SerializeField] private BuildingType buildingType = BuildingType.Room;
     public BuildingType BuildingType => buildingType;
@@ -37,8 +37,6 @@ public class BuildingPlace : MonoBehaviour
     private Color buildingPlaceValidOutlineColor = new Color(0.035f, 1, 0, 1);
     private Color buildingPlaceWarningOutlineColor = new Color(1, 1, 0, 1);
     private Color buildingPlaceInvalidOutlineColor = new Color(1, 0, 0, 1);
-
-    private bool hasSubscribes = false;
 
     public BuildingPlace leftPlace { get; private set; }
     public BuildingPlace rightPlace { get; private set; }
@@ -69,24 +67,15 @@ public class BuildingPlace : MonoBehaviour
         outlineMaterialPropertyBlock = new MaterialPropertyBlock();
     }
 
-    private void OnEnable()
-    {
-        if (hasSubscribes)
-            Subscribe();
-    }
-
-    private void OnDisable()
-    {
-        if (hasSubscribes)
-            UnSubscribe();
-    }
-
     public void Init(int newFloorindex)
     {
         floorIndex = newFloorindex;
         ApplyNeighborPlace();
         HideBuildingPlace();
-        Subscribe();
+
+        EventBus.onBuildingStartedPlacing += OnBuildingStartPlacing;
+        EventBus.onBuildingFinishedPlacing += OnBuildingFinishPlacing;
+        EventBus.onBuildingInitialized += OnBuildingInitialized;
     }
 
     private BuildingPlace GetNeighborPlace(Side side)
@@ -108,22 +97,6 @@ public class BuildingPlace : MonoBehaviour
         rightPlace = GetNeighborPlace(Side.Right);
         upPlace = GetNeighborPlace(Side.Up);
         downPlace = GetNeighborPlace(Side.Down);
-    }
-
-    private void Subscribe()
-    {
-        EventBus.onBuildingStartPlacing += OnBuildingStartPlacing;
-        EventBus.onBuildingFinishPlacing += OnBuildingFinishPlacing;
-        EventBus.onBuildingInitialized += OnBuildingInitialized;
-        hasSubscribes = true;
-    }
-
-    private void UnSubscribe()
-    {
-        EventBus.onBuildingStartPlacing += OnBuildingStartPlacing;
-        EventBus.onBuildingFinishPlacing += OnBuildingFinishPlacing;
-        EventBus.onBuildingInitialized += OnBuildingInitialized;
-        hasSubscribes = false;
     }
 
     private void OnBuildingStartPlacing(Building building)
@@ -214,4 +187,31 @@ public class BuildingPlace : MonoBehaviour
     //    boxCollider.size = NewColliderSize;
     //    boxCollider.center = new Vector3(0, NewColliderSize.y / 2, 0);
     //}
+
+    // Events
+    public void Click()
+    {
+        TowerBuilding building = ConstructionManager.Instance.buildingToPlace as TowerBuilding;
+        int id = building.BuildingData.BuildingId;
+        TowerBuildingEntry data = new TowerBuildingEntry(floorIndex, placeIndex);
+
+        BuildingFactory.CreateBuilding(id, data);
+    }
+
+    public bool CanClick()
+    {
+        Building building = ConstructionManager.Instance.buildingToPlace;
+        if (!building) {
+            Debug.Log("building is not valid.");
+            return false;
+        }
+
+        TowerBuilding towerBuilding = building as TowerBuilding;
+        if (!towerBuilding) {
+            Debug.Log("buildingToPlace is not valid.");
+            return false;
+        }
+
+        return true;
+    }
 }

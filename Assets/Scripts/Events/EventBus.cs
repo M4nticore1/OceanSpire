@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using UnityEngine;
 
 public static class EventBus
@@ -11,11 +12,10 @@ public static class EventBus
     public static event Action onNavMeshBaked;
 
     // Buildings
-    public static event Action<BuildingPlace> onBuildingPlacePressed;
     public static event Action<BuildingWidget> onBuildingWidgetBuildClicked;
     public static event Action<BuildingWidget> onBuildingWidgetInformationClicked;
-    public static event Action<Building> onBuildingStartPlacing;
-    public static event Action<Building> onBuildingFinishPlacing;
+    public static event Action<Building> onBuildingStartedPlacing;
+    public static event Action<Building> onBuildingFinishedPlacing;
     public static event Action<Building> onBuildingInitialized;
     public static event Action<Building> onBuildingPlaced;
 
@@ -24,7 +24,12 @@ public static class EventBus
     public static event Action<BuildingModule> onBuildingModuleDemolished;
 
     // Production Module
-    public static event Action<ProductionBuildingModule> onProductionModuleClicked;
+    public static event Action<ProductionModule> onClickedProductionModule;
+
+    // Boats
+    public static event Action<Boat> onBoatCreated;
+    public static event Action<Boat> onBoatUnloaded;
+    public static event Action<int, int> onBoatUnloadedItem;
 
     // Residents
     public static event Action<Human> onCitizenAdded;
@@ -59,8 +64,12 @@ public static class EventBus
     public static event Action<int> onGeneralVolumeSliderMoved;
     public static event Action<int> onMusicVolumeSliderMoved;
 
-    // IClickables
-    public static event Action<Building> onClickedOnBuilding;
+    // Input Listener
+    public static event Action<GameObject> onPlayerClicked;
+
+    // Click
+    public static event Action<Building> onSelectedBuilding;
+    public static event Action<Building> onDeselectedBuilding;
     public static event Action<LootContainer> onClickedOnLootContainer;
 
     // UI
@@ -73,11 +82,6 @@ public static class EventBus
     }
 
     // Buildings
-    public static void InvokeBuildingPlacePressed(BuildingPlace place)
-    {
-        onBuildingPlacePressed?.Invoke(place);
-    }
-
     public static void InvokeBuildingWidgetBuildClicked(BuildingWidget widget)
     {
         onBuildingWidgetBuildClicked?.Invoke(widget);
@@ -90,12 +94,12 @@ public static class EventBus
 
     public static void InvokeOnBuildingStartPlacing(Building building)
     {
-        onBuildingStartPlacing?.Invoke(building);
+        onBuildingStartedPlacing?.Invoke(building);
     }
 
     public static void InvokeOnBuildingFinishPlacing(Building building)
     {
-        onBuildingFinishPlacing?.Invoke(building);
+        onBuildingFinishedPlacing?.Invoke(building);
     }
 
     public static void InvokeBuildingInitialized(Building building)
@@ -125,9 +129,25 @@ public static class EventBus
     }
 
     // Production Module
-    public static void InvokeProductionModuleClicked(ProductionBuildingModule module)
+    public static void InvokeClickedProductionModule(ProductionModule module)
     {
-        onProductionModuleClicked?.Invoke(module);
+        onClickedProductionModule?.Invoke(module);
+    }
+
+    // Boats
+    public static void InvokeBoatCreated(Boat boat)
+    {
+        onBoatCreated?.Invoke(boat);
+    }
+
+    public static void InvokeBoatExitedUnloadingState(Boat boat)
+    {
+        onBoatUnloaded?.Invoke(boat);
+    }
+
+    public static void InvokeBoatUnloadedItem(int id, int amount)
+    {
+        onBoatUnloadedItem?.Invoke(id, amount);
     }
 
     // Residents
@@ -206,10 +226,21 @@ public static class EventBus
         onDeselectedComponent?.Invoke(selectComponent);
     }
 
-    // IClickables
-    public static void InvokeClickedOnBuilding(Building building)
+    // Input Listener
+    public static void InvokeClicked(GameObject gameObject)
     {
-        onClickedOnBuilding?.Invoke(building);
+        onPlayerClicked?.Invoke(gameObject);
+    }
+
+    // Clicks
+    public static void InvokeSelectedBuilding(Building building)
+    {
+        onSelectedBuilding?.Invoke(building);
+    }
+
+    public static void InvokeDeselectedBuilding(Building building)
+    {
+        onDeselectedBuilding?.Invoke(building);
     }
 
     public static void InvokeClickedOnLootContainer(LootContainer loot)

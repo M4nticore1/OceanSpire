@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BoatsList
   m_EditorClassIdentifier: Assembly-CSharp::BoatPrefabsList
   <boats>k__BackingField:
-  - {fileID: 8520330495291878649, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+  - {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}

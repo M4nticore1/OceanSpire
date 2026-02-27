@@ -2,12 +2,17 @@ using UnityEngine;
 
 public class WorkBuildingStrategy : BuildingStrategy
 {
-    public override void OnEnter(EntityCityNavigator navigator)
+    public WorkBuildingStrategy(Building building) : base(building)
     {
 
     }
 
-    public override void OnExit(EntityCityNavigator navigator)
+    public override void OnEntityEnter(EntityCityNavigator navigator)
+    {
+
+    }
+
+    public override void OnEntityExit(EntityCityNavigator navigator)
     {
 
     }

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -19,74 +16,42 @@ public class ContextMenuMaster : UIBehaviour
     [Header("Boats")]
     [SerializeField] private ContextMenuUI boatContextMenu = null;
 
+    private bool isOpened = false;
+    private GameObject currentTargetObject = null;
+
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        EventBus.onSelectedComponent += OnSelectedComponent;
-        EventBus.onDeselectedComponent += OnDeselectedComponent;
+        EventBus.onPlayerClicked += OnPlayerClicked;
+        EventBus.onSelectedBuilding += OnSelectedBuilding;
+        EventBus.onDeselectedBuilding += OnDeselectedBuilding;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        EventBus.onSelectedComponent -= OnSelectedComponent;
-        EventBus.onDeselectedComponent -= OnDeselectedComponent;
+        EventBus.onPlayerClicked -= OnPlayerClicked;
+        EventBus.onSelectedBuilding -= OnSelectedBuilding;
+        EventBus.onDeselectedBuilding -= OnDeselectedBuilding;
     }
 
-    private void OpenContextMenu(SelectComponent selectComponent)
+    private void OpenContextMenu()
     {
         slidePanel.OpenSlidePanel();
-
-        if (currentContextMenu) {
-            DestroyCurrentContextMenu();
-        }
-
-        ContextMenuUI menuToCreate = CalculateContextMenu(selectComponent);
-        currentContextMenu = CreateContextMenu(menuToCreate, selectComponent);
+        isOpened = true;
     }
 
     private void CloseContextMenu()
     {
         slidePanel.CloseSlidePanel();
+        isOpened = false;
     }
 
-    private ContextMenuUI CalculateContextMenu(SelectComponent component)
+    private void CreateContextMenu(ContextMenuUI menuToSpawn)
     {
-        Building building = component.GetComponent<Building>();
-        Human entity = component.GetComponent<Human>();
-        Boat boat = component.GetComponent<Boat>();
-
-        if (building) {
-            if (building.GetComponent<ProductionBuildingModule>()) {
-                return productionBuildingContextMenu;
-            }
-            else if (building.GetComponent<StorageBuildingModule>()) {
-                return storageBuildingContextMenu;
-            }
-            else if (building.GetComponent<PierModule>()) {
-                return pierBuildingContextMenu;
-            }
-            else {
-                return buildingContextMenu;
-            }
-        }
-        else if (entity) {
-
-        }
-        else if (boat) {
-            return boatContextMenu;
-        }
-
-        return null;
-    }
-
-    private ContextMenuUI CreateContextMenu(ContextMenuUI menuToSpawn, SelectComponent selectComponent)
-    {
-        ContextMenuUI menu = Instantiate(menuToSpawn, contextMenuRoot.transform);
-        menu.Init(selectComponent);
-        return menu;
+        currentContextMenu = Instantiate(menuToSpawn, contextMenuRoot.transform);
     }
 
     private void DestroyCurrentContextMenu()
@@ -95,16 +60,52 @@ public class ContextMenuMaster : UIBehaviour
         currentContextMenu = null;
     }
 
-    private void OnSelectedComponent(SelectComponent component)
+    // Events
+    private void OnPlayerClicked(GameObject clicked)
     {
-        OpenContextMenu(component);
-    }
+        SelectComponent selectComponent = clicked?.GetComponent<SelectComponent>();
 
-    private void OnDeselectedComponent(SelectComponent component)
-    {
-        SelectComponent selectedComponent = SelectManager.Instance.selectedComponent;
-        if (selectedComponent && selectedComponent != component) return;
+        if (selectComponent && selectComponent.isSelected) return;
 
         CloseContextMenu();
+    }
+
+    private void OnSelectedBuilding(Building building)
+    {
+        if (currentContextMenu) {
+            DestroyCurrentContextMenu();
+        }
+
+        ContextMenuUI menuToSpawn = GetContextMenuForBuilding(building);
+
+        CreateContextMenu(menuToSpawn);
+        currentContextMenu.Init(building);
+        OpenContextMenu();
+
+        currentTargetObject = building.gameObject;
+    }
+
+    private void OnDeselectedBuilding(Building building)
+    {
+        if (building != currentTargetObject) return;
+
+        CloseContextMenu();
+        currentTargetObject = null;
+    }
+
+    private ContextMenuUI GetContextMenuForBuilding(Building building)
+    {
+        if (building.GetComponent<ProductionModule>()) {
+            return productionBuildingContextMenu;
+        }
+        else if (building.GetComponent<StorageBuildingModule>()) {
+            return storageBuildingContextMenu;
+        }
+        else if (building.GetComponent<PierModule>()) {
+            return pierBuildingContextMenu;
+        }
+        else {
+            return buildingContextMenu;
+        }
     }
 }

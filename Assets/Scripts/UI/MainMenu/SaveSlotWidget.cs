@@ -48,10 +48,7 @@ public class SaveSlotWidget : MonoBehaviour
     private void Start()
     {
         WorldData[] worldData = WorldSaveManager.Instance.allSaveData;
-        if (worldData == null) {
-            Debug.LogError("worldData array is not valid.");
-            return;
-        }
+        if (worldData == null) return;
 
         if (worldData.Length > slotIndex) {
             if (worldData.Length <= slotIndex) {

@@ -31,8 +31,8 @@ public class ItemData : ScriptableObject
     public string itemKey => itemIdName;
     [SerializeField] private string itemName = "";
     public string ItemName => itemName;
-    [SerializeField] private int weight = 0;
-    public int Weight => weight;
+    [SerializeField] private float weight = 0;
+    public float Weight => weight;
     [SerializeField] private Sprite itemIcon = null;
     public Sprite ItemIcon => itemIcon;
     [SerializeField] private ItemCategory itemCategory = ItemCategory.Society;

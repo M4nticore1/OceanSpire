@@ -6,7 +6,14 @@ public class BoatRider : MonoBehaviour
 {
     private Boat currentBoat;
     public Boat CurrentBoat => currentBoat;
-    private const float enteringBoatTime = 1;
+
+    public bool isRidingOnBoat { get; private set; } = false;
+
+    private const float useBoatTime = 1;
+    private TimerHandle useBoatTimerHandle = new TimerHandle();
+
+    public bool isEnteringBoat { get; private set; } = false;
+    public bool isExitingBoat { get; private set; } = false;
 
     public event Action<Boat> onEnteredBoat;
     public event Action<Boat> onExitedBoat;
@@ -21,37 +28,63 @@ public class BoatRider : MonoBehaviour
         currentBoat = null;
     }
 
-    public void StartEnteringBoat()
+    public void StartEnteringBoat(Boat boat)
     {
-        TimerManager.StartTimer(enteringBoatTime, EnterBoat);
+        TimerManager.StartTimer(useBoatTimerHandle, useBoatTime, () => EnterBoat(boat));
+        isEnteringBoat = true;
     }
 
-    private void EnterBoat()
+    public void StopEnteringBoat()
     {
-        currentBoat.EnterBoat();
-        onEnteredBoat?.Invoke(currentBoat);
+        TimerManager.RemoveTimer(useBoatTimerHandle);
+        isEnteringBoat = false;
+    }
+
+    public void HandleBoatSetedIdle()
+    {
+        StartExitingBoat();
+    }
+
+    private void EnterBoat(Boat boat)
+    {
+        currentBoat = boat;
+        currentBoat.EnterBoat(this);
         transform.position = currentBoat.SeatSlot.position;
         transform.rotation = currentBoat.SeatSlot.rotation;
         transform.parent = currentBoat.SeatSlot;
+
+        isRidingOnBoat = true;
+        isEnteringBoat = false;
+        onEnteredBoat?.Invoke(currentBoat);
     }
 
-    public void StartExitingBoat()
+    private void StartExitingBoat()
     {
-        TimerManager.StartTimer(enteringBoatTime, ExitBoat);
+        TimerManager.StartTimer(useBoatTimerHandle, useBoatTime, ExitBoat);
+        isExitingBoat = true;
+    }
+
+    public void StopExitingBoat()
+    {
+        TimerManager.RemoveTimer(useBoatTimerHandle);
+        isExitingBoat = false;
     }
 
     private void ExitBoat()
     {
         currentBoat.ExitBoat();
-        currentBoat = null;
-        transform.position = currentBoat.BoatDock.EntraceTransform.position;
-        transform.rotation = currentBoat.BoatDock.EntraceTransform.rotation;
+        transform.position = currentBoat.dockPoint.EntraceTransform.position;
+        transform.rotation = currentBoat.dockPoint.EntraceTransform.rotation;
         transform.parent = null;
-        onEnteredBoat?.Invoke(currentBoat);
+        currentBoat = null;
+
+        isRidingOnBoat = false;
+        isExitingBoat = false;
+        onExitedBoat?.Invoke(currentBoat);
     }
 
-    public void StartMovingToDock()
-    {
-        CurrentBoat.StartMovingToDock();
-    }
+    //public void StartMovingToDock()
+    //{
+    //    CurrentBoat.StartMovingToDock();
+    //}
 }

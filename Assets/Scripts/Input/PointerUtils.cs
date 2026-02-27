@@ -20,22 +20,36 @@ public static class PointerUtils
         return Vector2.zero;
     }
 
-    public static void GetCurrentRaycastResults(List<RaycastResult> results)
+    // Colliders
+    public static bool GetRaycastColliderHit(out RaycastHit hit)
+    {
+        Vector2 position = GetCurrentInputPosition();
+        Ray ray = Camera.main.ScreenPointToRay(position);
+
+        int layerMask = ~LayerMask.GetMask("Ignore Raycast", "Outlined");
+        return Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask);
+    }
+
+    // UI
+    public static void GetRaycastUIResults(List<RaycastResult> results)
     {
         PointerEventData data = new PointerEventData(EventSystem.current);
         data.position = GetCurrentInputPosition();
         EventSystem.current.RaycastAll(data, results);
     }
 
-    public static RaycastResult GetCurrentRaycastResult()
+    public static RaycastResult GetRaycastUIResult()
     {
         List<RaycastResult> results = new List<RaycastResult>();
-        GetCurrentRaycastResults(results);
+        GetRaycastUIResults(results);
+
         if (results.Count > 0) {
             return results[0];
         }
+
         return new RaycastResult();
     }
 
-    public static bool IsGameObjectHovered(GameObject gameObjectToCheck) => GetCurrentRaycastResult().gameObject == gameObjectToCheck;
+    // Conditions
+    public static bool IsUIHovered(GameObject gameObjectToCheck) => GetRaycastUIResult().gameObject == gameObjectToCheck;
 }

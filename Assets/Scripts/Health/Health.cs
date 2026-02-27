@@ -2,7 +2,7 @@ using System;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class HealthComponent : MonoBehaviour
+public class Health : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 100f;
     public float MaxHealth { get { return maxHealth; } }
@@ -11,7 +11,7 @@ public class HealthComponent : MonoBehaviour
 
     public event Action onHealthChanged;
 
-    public void Init(float maxHealth, float currentHealth)
+    public void Init(float currentHealth)
     {
         SetMaxHealh(maxHealth);
         SetCurrentHealth(currentHealth);

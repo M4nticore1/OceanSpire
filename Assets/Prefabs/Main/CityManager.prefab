@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3100839605564067757}
   - component: {fileID: 5367906543175657419}
+  - component: {fileID: 5586661760896762053}
+  - component: {fileID: 1882718915044785110}
   - component: {fileID: 863287215183021566}
   m_Layer: 0
   m_Name: CityManager
@@ -50,8 +52,32 @@ MonoBehaviour:
   builtFloors: []
   towerGate: {fileID: 0}
   pierBuilding: {fileID: 0}
-  startBoatIds: 00000000
   <entitySpawnPosition>k__BackingField: {fileID: 0}
+--- !u!114 &5586661760896762053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5127569501461543765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7a7483f4cd89c14c86d59262de97b38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoatsManager
+--- !u!114 &1882718915044785110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5127569501461543765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d12d59c714780e4ca7227a5cb36e99a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CityStorage
+  inventory: {fileID: 863287215183021566}
 --- !u!114 &863287215183021566
 MonoBehaviour:
   m_ObjectHideFlags: 0

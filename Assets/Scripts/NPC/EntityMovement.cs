@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class EntityMovement : MonoBehaviour
 {
@@ -28,8 +29,11 @@ public class EntityMovement : MonoBehaviour
         transform.position += direction * speed;
     }
 
-    public bool MoveTo(Vector3 position)
+    public bool TryMoveTo(Vector3 position)
     {
+        if (!CanMove()) return false;
+        
+        agent.isStopped = false;
         isMoving = true;
         return agent.SetDestination(position);
     }
@@ -41,9 +45,20 @@ public class EntityMovement : MonoBehaviour
             return;
         }
 
+        agent.isStopped = true;
         agent.ResetPath();
         isMoving = false;
         onStoppedMoving?.Invoke();
+    }
+
+    public void SetAgentEnabled(bool enabled)
+    {
+        agent.enabled = enabled;
+    }
+
+    private bool CanMove()
+    {
+        return agent.enabled;
     }
 
     private void OnReachedPath()
@@ -54,11 +69,9 @@ public class EntityMovement : MonoBehaviour
 
     private bool CheckDistancePathPosition()
     {
-        return isMoving && agent.enabled && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance && (!agent.hasPath || agent.velocity.sqrMagnitude == 0f);
-    }
+        if (!isMoving || !agent.enabled || agent.pathPending)
+            return false;
 
-    public void SetAgentEnabled(bool enabled)
-    {
-        agent.enabled = enabled;
+        return agent.remainingDistance <= agent.stoppingDistance;
     }
 }

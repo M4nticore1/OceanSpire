@@ -88,7 +88,7 @@ public class Human : Entity
     private void OnStoppedMoving()
     {
         if (interactor.InteractBuilding && interactor.InteractBuilding == navigator.currentBuilding) {
-            interactor.OnStoppedMoving();
+            interactor.HandleStoppedMoving();
         }
     }
 
@@ -119,11 +119,7 @@ public class Human : Entity
 
     private void OnStopInteracting(Building building)
     {
-        PierModule pier = building.GetComponent<PierModule>();
-        if (pier) {
-            boatRider.SetBoat(null);
-            boatRider.StartExitingBoat();
-        }
+
     }
 
     private void OnEnteredBoat(Boat boat)

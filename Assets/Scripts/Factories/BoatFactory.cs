@@ -17,6 +17,7 @@ public static class BoatFactory
     {
         var obj = Object.Instantiate(prefab);
         obj.Init(data);
+        EventBus.InvokeBoatCreated(obj);
         return obj;
     }
 }

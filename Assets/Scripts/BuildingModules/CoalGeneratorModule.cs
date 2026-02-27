@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CoalGeneratorModule : ProductionBuildingModule
+public class CoalGeneratorModule : ProductionModule
 {
     [Header("Coal Generator")]
     [SerializeField] private ParticleSystem smokePrefab = null;

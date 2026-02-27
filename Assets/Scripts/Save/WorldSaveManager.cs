@@ -16,7 +16,7 @@ public class WorldSaveManager
     }
 
     public WorldData[] allSaveData { get; private set; }
-    public WorldData worldData { get; private set; }
+    public WorldData currentSaveWorldData { get; private set; }
     public string saveWorldName { get; private set; }
 
     private WorldSaveManager() { }
@@ -36,8 +36,8 @@ public class WorldSaveManager
 
     public void SetWorldData(WorldData data)
     {
-        worldData = data;
-        SetSaveWorldName(worldData.cityData.cityName);
+        currentSaveWorldData = data;
+        SetSaveWorldName(currentSaveWorldData.cityData.cityName);
     }
 
     public void SetSaveWorldName(string name)

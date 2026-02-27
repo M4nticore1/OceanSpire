@@ -36,6 +36,12 @@ public class TowerBuildingEntry : BuildingEntry
 {
     public int floorIndex = 0;
     public int placeIndex = 0;
+
+    public TowerBuildingEntry(int floorIndex, int placeIndex) : base()
+    {
+        this.floorIndex = floorIndex;
+        this.placeIndex = placeIndex;
+    }
 }
 
 public class TowerBuilding : Building
@@ -72,13 +78,17 @@ public class TowerBuilding : Building
         }
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         EventBus.onBuildingPlaced += OnConstructionPlaced;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         EventBus.onBuildingPlaced -= OnConstructionPlaced;
     }
 
@@ -88,17 +98,26 @@ public class TowerBuilding : Building
         floorIndex = towerData.floorIndex;
         placeIndex = towerData.placeIndex;
 
-        if (BuildingData.BuildingType == BuildingType.Room)
+        if (BuildingData.BuildingType == BuildingType.Room) {
             buildingPlace = CityManager.Instance.BuiltFloors[towerData.floorIndex].roomBuildingPlaces[towerData.placeIndex];
-        if (BuildingData.BuildingType == BuildingType.Hall)
+        }
+        if (BuildingData.BuildingType == BuildingType.Hall) {
             buildingPlace = CityManager.Instance.BuiltFloors[towerData.floorIndex].hallBuildingPlace;
-        else if (BuildingData.BuildingType == BuildingType.FloorFrame)
+        }
+        else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
             buildingPlace = CityManager.Instance.BuiltFloors[towerData.floorIndex].floorBuildingPlace;
+        }
 
-        if (placeIndex % 2 == 0)
+        if (placeIndex % 2 == 0) {
             buildingPosition = BuildingPosition.Corner;
-        else
+        }
+        else {
             buildingPosition = BuildingPosition.Straight;
+        }
+
+        //transform.parent = buildingPlace.transform;
+        //transform.localPosition = Vector3.zero;
+        //transform.localRotation = Quaternion.identity;
     }
 
     protected override BuildingConstruction GetConstruction()

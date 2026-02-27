@@ -3,14 +3,14 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [AddComponentMenu("BuildingComponents/ProductionBuilding")]
-public class ProductionBuildingModule : BuildingModule
+public class ProductionModule : BuildingModule
 {
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
     public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
     public ProduceResource produceItem => ProductionLevelData ? (ProductionLevelData.producedResources.Count > currentProducedItemIndex ? ProductionLevelData.producedResources[currentProducedItemIndex] : null) : null;
 
     protected bool isProducting = false;
-    protected ItemInstance producedItem = null;
+    public ItemInstance producedItem { get; private set; } = null;
     public float currentProductionTime { get; private set; } = 0.0f;
     private bool IsStorageFull => producedItem.Amount >= produceItem.maxAmount;
 
@@ -23,6 +23,20 @@ public class ProductionBuildingModule : BuildingModule
 
     public const float collectLootFlickingMultiplier = 0.35f;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        EventBus.onPlayerClicked += OnPlayerClicked;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        EventBus.onPlayerClicked -= OnPlayerClicked;
+    }
+
     private void Start()
     {
         
@@ -30,16 +44,46 @@ public class ProductionBuildingModule : BuildingModule
 
     private void Update()
     {
-        if (CanProduce()) {
-            Produce();
+        if (!CanProduce()) return;
+
+        ProcessProduce();
+    }
+
+    public void SetProduceTime(float time)
+    {
+        currentProductionTime = time;
+        lastProduceTime = Time.time;
+
+        BuildingLevelData buildingLevelData = OwnedBuilding.ConstructionLevelsData[OwnedBuilding.LevelIndex];
+        ProductionModuleLevelData productionBuildingLevelData = levelsData[OwnedBuilding.LevelIndex] as ProductionModuleLevelData;
+
+        float maxProductionTime = produceItem.produceTime * produceItem.maxAmount;
+        float alpha = currentProductionTime / maxProductionTime;
+        int lootAmount = (int)math.lerp(0, produceItem.maxAmount, alpha);
+
+        if (lootAmount > producedItem.Amount) {
+            AddItemAmount(lootAmount);
         }
+    }
+
+    public void RemoveItemAmount(int amount)
+    {
+        producedItem.RemoveAmount(amount);
+        OnAmountChanged();
+    }
+
+    private void AddItemAmount(int amount)
+    {
+        producedItem.SetAmount(amount);
+        OnAmountChanged();
     }
 
     // Overrides
     protected override void OnInit()
     {
-        if (produceItem is ProduceResource resource)
+        if (produceItem is ProduceResource resource) {
             producedItem = new ItemInstance(resource.produceItem.ItemData);
+        }
     }
 
     protected override void OnBuildingStartWorking()
@@ -90,6 +134,13 @@ public class ProductionBuildingModule : BuildingModule
         Debug.Log("OnStopProduction");
     }
 
+    private void ProcessProduce()
+    {
+        if (Time.time < lastProduceTime + produceFrequency) return;
+
+        AddProducedTime(produceFrequency);
+    }
+
     private bool CanProduce()
     {
         if (!isProducting) return false;
@@ -99,46 +150,12 @@ public class ProductionBuildingModule : BuildingModule
         return true;
     }
 
-    private void Produce()
-    {
-        if (Time.time > lastProduceTime + produceFrequency) {
-            AddProducedTime(produceFrequency);
-        }
-    }
-
     private void AddProducedTime(float time)
     {
         SetProduceTime(currentProductionTime + time);
     }
 
-    public void SetProduceTime(float time)
-    {
-        currentProductionTime = time;
-        lastProduceTime = Time.time;
-
-        BuildingLevelData buildingLevelData = OwnedBuilding.ConstructionLevelsData[OwnedBuilding.LevelIndex];
-        ProductionModuleLevelData productionBuildingLevelData = levelsData[OwnedBuilding.LevelIndex] as ProductionModuleLevelData;
-
-        int currentPeopleCount = OwnedBuilding.currentWorkers.Count;
-        int maxPeopleCount = buildingLevelData.maxResidentsCount;
-        float maxProductionTime = produceItem.produceTime * produceItem.maxAmount;
-        float productionSpeed = currentPeopleCount / maxPeopleCount;
-
-        int lootAmount = (int)math.lerp(0, produceItem.maxAmount, currentProductionTime / maxProductionTime);
-        if (lootAmount > producedItem.Amount) {
-            SetProduceLootAmount(lootAmount);
-        }
-    }
-
-    private void SetProduceLootAmount(int amount)
-    {
-        producedItem.SetAmount(amount);
-
-        int newAmount = producedItem.Amount;
-        OnProduceItemAmountChange(newAmount);
-    }
-
-    private void OnProduceItemAmountChange(int amount)
+    private void OnAmountChanged()
     {
         // Producing Time
         float remainder = currentProductionTime % produceItem.produceTime;
@@ -163,23 +180,18 @@ public class ProductionBuildingModule : BuildingModule
         }
     }
 
-    private void SubtractProducedLootAmount(int amount)
+    // Take Resources
+    private bool CanTake()
     {
-        int newAmount = producedItem.Amount - amount;
-        SetProduceLootAmount(newAmount);
+        return producedItem.Amount > 0 && produceItem.maxAmount / producedItem.Amount > storageReadyToCollectAlpha;
     }
 
-    public ItemInstance TakeProducedItem(int maxAmountToTake)
+    // Events
+    private void OnPlayerClicked(GameObject clicked)
     {
-        int producedAmount = producedItem.Amount;
-        if (producedAmount <= 0) return null;
+        if (clicked != gameObject) return;
+        if (!CanTake()) return;
 
-        int amountToTake = math.min(maxAmountToTake, producedAmount);
-        SubtractProducedLootAmount(amountToTake);
-
-        ItemData producedItemData = producedItem.ItemData;
-        ItemInstance newItem = new ItemInstance(producedItemData);
-        newItem.SetAmount(amountToTake);
-        return newItem;
+        EventBus.InvokeClickedProductionModule(this);
     }
 }

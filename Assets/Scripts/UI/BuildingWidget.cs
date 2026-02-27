@@ -75,7 +75,7 @@ public class BuildingWidget : MonoBehaviour
             ItemInstance resource = buildingPrefab.ConstructionLevelsData[0].ResourcesToBuild[i];
             int amountToBuilding = resource.Amount;
             int id = resource.ItemData.ItemId;
-            int currentAmount = CityManager.Instance.Inventory.items[id].item.Amount;
+            int currentAmount = CityManager.Instance.Inventory.itemsDict[id].item.Amount;
             spawnedBuildingResourceWidgets[i].SetResourceText(currentAmount, amountToBuilding);
 
             if (enoughResources && currentAmount < amountToBuilding) {

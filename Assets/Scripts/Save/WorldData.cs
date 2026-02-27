@@ -122,7 +122,7 @@ public class WorldData
         //}
 
         // Boats
-        Boat[] spawnedBoats = CityManager.Instance.citizenBoats.ToArray();
+        Boat[] spawnedBoats = BoatsManager.Instance.citizenBoats.ToArray();
         int length = spawnedBoats.Length;
         boatsData = new BoatEntry[length];
         for (int i = 0; i < length; i++) {
@@ -130,7 +130,7 @@ public class WorldData
             BoatEntry data = new BoatEntry();
             boatsData[i] = data;
 
-            data.health = boat.healthComponent.CurrentHealth;
+            data.health = boat.CurrentHealth;
         }
 
         //int boatsCount = spawnedBoats.Count;

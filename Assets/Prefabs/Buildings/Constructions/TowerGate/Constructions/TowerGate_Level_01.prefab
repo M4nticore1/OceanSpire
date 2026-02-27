@@ -112,21 +112,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedBuilding: {fileID: 0}
   buildingInteriors: []
   buildingInteractions:
   - waypoints:
-    - {fileID: 6224386978513098779}
-    actionTimes: 00000000
+    - transform: {fileID: 0}
+      actionTime: 0
   - waypoints:
-    - {fileID: 6224386978513098779}
-    actionTimes: 00000000
+    - transform: {fileID: 0}
+      actionTime: 0
   - waypoints:
-    - {fileID: 6224386978513098779}
-    actionTimes: 00000000
+    - transform: {fileID: 0}
+      actionTime: 0
   - waypoints:
-    - {fileID: 6224386978513098779}
-    actionTimes: 00000000
+    - transform: {fileID: 0}
+      actionTime: 0
   collectItemPoints:
   - {fileID: 1547046230084987352}
 --- !u!64 &1600456539545249674

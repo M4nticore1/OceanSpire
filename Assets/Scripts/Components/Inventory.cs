@@ -8,10 +8,9 @@ public class StorageItem
     public ItemInstance item { get; private set; } = null;
     public int maxAmount { get; private set; } = 0;
 
-    public StorageItem(ItemInstance item, int maxAmount)
+    public StorageItem(ItemInstance item)
     {
         this.item = item;
-        this.maxAmount = maxAmount;
     }
 
     public void AddAmount(int amount)
@@ -31,18 +30,21 @@ public class StorageItem
 
     public void RemoveMaxAmount(int value)
     {
-        maxAmount += value;
-        maxAmount = math.max(maxAmount, 0);
+        maxAmount -= value;
+        maxAmount = math.max(0, maxAmount);
     }
 }
 
 public class Inventory : MonoBehaviour
 {
+    [SerializeField] private bool autoCleaning = false;
     [SerializeField] private float maxWeight = 0;
     public float MaxWeight => maxWeight;
     private float currentWeight = 0;
     public float CurrentWeight => currentWeight;
-    public Dictionary<int, StorageItem> items { get; private set; } = new Dictionary<int, StorageItem>();
+    public float RemainingWeight => MaxWeight - CurrentWeight;
+    public List<StorageItem> items { get; private set; } = new List<StorageItem>();
+    public Dictionary<int, StorageItem> itemsDict { get; private set; } = new Dictionary<int, StorageItem>();
 
     public event Action<ItemInstance> onChangedItemAmount;
     public event Action<StorageItem> onChangedItemMaxAmount;
@@ -50,87 +52,98 @@ public class Inventory : MonoBehaviour
     // Add Item
     public void AddItem(int id, int amount = 0, int maxAmount = 0)
     {
-        if (items.ContainsKey(id)) {
+        TryAddNewItem(id);
+
+        if (maxAmount > 0) {
             AddItemMaxAmount(id, maxAmount);
-            AddItemAmount(id, amount);
         }
-        else {
-            AddNewItem(id, amount, maxAmount);
+
+        if (amount > 0) {
+            AddItemAmount(id, amount);
         }
     }
 
-    public void AddItemAmount(int id, int amount)
+    private void TryAddNewItem(int id)
     {
-        if (!HasItem(id)) {
-            PrintHasNotItemError(id);
-            return;
-        }
+        if (itemsDict.ContainsKey(id)) return;
 
-        items[id].AddAmount(amount);
+        AddNewItem(id);
+    }
 
-        ItemInstance item = items[id].item;
-        OnChangeItemAmount(item);
+    private void AddItemAmount(int id, int amount)
+    {
+        itemsDict[id].AddAmount(amount);
+
+        AddWeigth(id, amount);
+
+        ItemInstance item = itemsDict[id].item;
         onChangedItemAmount?.Invoke(item);
     }
 
-    public void AddItemMaxAmount(int id, int amount)
+    private void AddItemMaxAmount(int id, int amount)
     {
-        if (!HasItem(id)) {
-            PrintHasNotItemError(id);
-            return;
-        }
-
-        items[id].AddMaxAmount(amount);
-        onChangedItemMaxAmount?.Invoke(items[id]);
+        itemsDict[id].AddMaxAmount(amount);
+        onChangedItemMaxAmount?.Invoke(itemsDict[id]);
     }
 
-    private void AddNewItem(int id, int amount = 0, int maxAmount = 0)
+    private void AddNewItem(int id)
     {
-        if (HasItem(id)) {
-            PrintHasItemError(id);
-            return;
-        }
-
         ItemData data = ItemsList.Instance.Items[id];
-        ItemInstance item = new ItemInstance(data, amount);
-        StorageItem storageItem = new StorageItem(item, maxAmount);
-        items.Add(id, storageItem);
+        ItemInstance item = new ItemInstance(data);
+        StorageItem storageItem = new StorageItem(item);
+        items.Add(storageItem);
+        itemsDict.Add(id, storageItem);
     }
 
-    // Remove Item
-    public void RemoveItem(int id)
+    private void RemoveItem(int id)
     {
-        if (!HasItem(id)) {
-            PrintHasNotItemError(id);
-            return;
-        }
+        itemsDict.Remove(id);
 
-        items.Remove(id);
+        for (int i = 0; i < items.Count; i++) {
+            StorageItem item = items[i];
+
+            if (item.item.ItemData.ItemId == id) {
+                items.RemoveAt(i);
+            }
+        }
     }
 
     public void RemoveItemAmount(int id, int amount)
     {
-        if (!HasItem(id)) {
+        if (!itemsDict.ContainsKey(id)) {
             PrintHasNotItemError(id);
             return;
         }
 
-        items[id].RemoveAmount(amount);
+        itemsDict[id].RemoveAmount(amount);
 
-        ItemInstance item = items[id].item;
-        OnChangeItemAmount(item);
+        ItemInstance item = itemsDict[id].item;
+
+        if (autoCleaning && item.Amount == 0) {
+            RemoveItem(id);
+        }
+
+        RemoveWeigth(id, amount);
+
         onChangedItemAmount?.Invoke(item);
     }
 
     public void RemoveItemMaxAmount(int id, int amount)
     {
-        if (!HasItem(id)) {
+        if (!itemsDict.ContainsKey(id)) {
             PrintHasNotItemError(id);
             return;
         }
 
-        items[id].RemoveMaxAmount(amount);
-        onChangedItemMaxAmount?.Invoke(items[id]);
+        itemsDict[id].RemoveMaxAmount(amount);
+
+        // Remove Amount
+        if (itemsDict[id].maxAmount < itemsDict[id].item.Amount) {
+            int amountToRemove = itemsDict[id].item.Amount - itemsDict[id].maxAmount;
+            RemoveItemAmount(id, amountToRemove);
+        }
+
+        onChangedItemMaxAmount?.Invoke(itemsDict[id]);
     }
 
     // On Change Item Amount
@@ -141,15 +154,19 @@ public class Inventory : MonoBehaviour
 
     private void ChangeCurrentWeight(ItemInstance item)
     {
-        int weight = item.ItemData.Weight;
+        float weight = item.ItemData.Weight;
         int amount = item.Amount;
         currentWeight = weight * amount;
     }
 
-    // Checks
-    private bool HasItem(int id)
+    private void AddWeigth(int id, int amount)
     {
-        return items.ContainsKey(id);
+        currentWeight += itemsDict[id].item.ItemData.Weight * amount;
+    }
+
+    private void RemoveWeigth(int id, int amount)
+    {
+        currentWeight -= itemsDict[id].item.ItemData.Weight * amount;
     }
 
     private void PrintHasItemError(int id)
@@ -159,7 +176,7 @@ public class Inventory : MonoBehaviour
 
     private void PrintHasNotItemError(int id)
     {
-        Debug.LogError($"Inventory has not an item by id {id}.");
+        Debug.LogError($"Inventory has no an item by id {id}.");
     }
 
     //// Items

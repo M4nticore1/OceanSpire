@@ -44,24 +44,22 @@ public class ContextMenuUI : UIBehaviour
             workersButton.onReleased -= EventBus.InvokeContextMenuWorkersButtonClicked;
     }
 
-    public void Init(SelectComponent selectComponent)
+    public void Init(Building building)
     {
-        Building building = selectComponent.GetComponent<Building>();
-        Human entity = selectComponent.GetComponent<Human>();
-        Boat boat = selectComponent.GetComponent<Boat>();
+        SetNameText(building.BuildingData.BuildingName);
+        SetLevelText(building.LevelIndex + 1);
+    }
 
-        if (building) {
-            SetNameText(building.BuildingData.BuildingName);
-            SetLevelText(building.LevelIndex + 1);
-        }
-        else if (entity) {
-            SetNameText(entity.firstName + " " + entity.lastName);
-        }
-        else if (boat) {
-            SetNameText(boat.BoatData.BoatName);
-            SetHealthValue(boat.healthComponent.CurrentHealth, boat.healthComponent.MaxHealth);
-            SetBoatCurrentWeight(boat.currentWeight, boat.BoatData.MaxWeight);
-        }
+    public void Init(Human human)
+    {
+        SetNameText(human.firstName + " " + human.lastName);
+    }
+
+    public void Init(Boat boat)
+    {
+        SetNameText(boat.BoatData.BoatName);
+        SetHealthValue(boat.CurrentHealth, boat.MaxHealth);
+        SetBoatCurrentWeight(boat.CurrentWeight, boat.MaxWeight);
     }
 
     private void SetNameText(string name)

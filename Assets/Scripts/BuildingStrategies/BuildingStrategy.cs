@@ -8,8 +8,15 @@ public enum BuildingStrategyEnum
 
 public abstract class BuildingStrategy
 {
-    public abstract void OnEnter(EntityCityNavigator navigator);
-    public abstract void OnExit(EntityCityNavigator navigator);
+    protected Building building = null;
+
+    public BuildingStrategy(Building building)
+    {
+        this.building = building;
+    }
+
+    public abstract void OnEntityEnter(EntityCityNavigator navigator);
+    public abstract void OnEntityExit(EntityCityNavigator navigator);
     public abstract void OnSetInteractBuilding(EntityInteractor navigator);
     public abstract void OnRemoveInteractBuilding(EntityInteractor navigator);
     public abstract void OnStartInteracting(EntityInteractor interactor);

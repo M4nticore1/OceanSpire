@@ -68,15 +68,9 @@ public class CityManager : MonoBehaviour
 
     public List<List<ElevatorModule>> elevatorGroups { get; private set; } = new List<List<ElevatorModule>>();
 
-    public Building buildingToPlace { get; private set; }
-
     [Header("NPC")]
     public List<Human> citizens { get; private set; } = new List<Human>();
     private const int startResidentsCount = 2;
-
-    [Header("Boats")]
-    [SerializeField] private BoatIdEnum[] startBoatIds;
-    public List<Boat> citizenBoats { get; private set; } = new List<Boat>();
 
     public Coroutine bakeNavMeshCoroutine { get; private set; } = null;
     public bool isNavMeshBuilt { get; private set; } = false;
@@ -110,7 +104,6 @@ public class CityManager : MonoBehaviour
     private void OnEnable()
     {
         // Buildings
-        EventBus.onBuildingPlacePressed += OnBuildingPlacePressed;
         EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
         EventBus.onBuildingInitialized += OnBuildingInitialized;
         EventBus.onBuildingPlaced += OnBuildingPlaced;
@@ -119,21 +112,11 @@ public class CityManager : MonoBehaviour
         EventBus.onBuildingModuleInited += OnBuildingModuleInited;
         EventBus.onBuildingModuleUpgraded += OnBuildingModuleUpgraded;
         EventBus.onBuildingModuleDemolished += OnBuildingModuleDemolished;
-
-        // Production Module
-        EventBus.onProductionModuleClicked += OnProductionModuleClicked;
-
-        // Boats
-        Boat.OnBoadDestroyed += OnBoatDestroyed;
-
-        // Inventory
-        inventory.onChangedItemAmount += OnItemAmountChanged;
     }
 
     private void OnDisable()
     {
         // Buildings
-        EventBus.onBuildingPlacePressed -= OnBuildingPlacePressed;
         EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
         EventBus.onBuildingInitialized -= OnBuildingInitialized;
         EventBus.onBuildingPlaced -= OnBuildingPlaced;
@@ -142,27 +125,15 @@ public class CityManager : MonoBehaviour
         EventBus.onBuildingModuleInited -= OnBuildingModuleInited;
         EventBus.onBuildingModuleUpgraded -= OnBuildingModuleUpgraded;
         EventBus.onBuildingModuleDemolished -= OnBuildingModuleDemolished;
-
-        // Production Module
-        EventBus.onProductionModuleClicked -= OnProductionModuleClicked;
-
-        // Boats
-        Boat.OnBoadDestroyed -= OnBoatDestroyed;
-
-        // Inventory
-        inventory.onChangedItemAmount -= OnItemAmountChanged;
     }
 
     private void Start()
     {
-        TimerManager.Initialize();
-
-        WorldData saveData = WorldSaveManager.Instance.worldData;
+        WorldData saveData = WorldSaveManager.Instance.currentSaveWorldData;
 
         bakeNavMeshCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
         LoadItems(saveData);
         LoadBuildings(saveData);
-        LoadBoats(saveData);
         LoadCreatures(saveData);
     }
 
@@ -201,7 +172,7 @@ public class CityManager : MonoBehaviour
     {
         int floorsCount = builtFloors.Count;
         for (int i = 0; i < floorsCount; i++) {
-            var data = new TowerBuildingEntry { floorIndex = i };
+            var data = new TowerBuildingEntry (i, 0);
             FloorFrameModule floor = builtFloors[i];
             floor.OwnedBuilding.Init(data);
         }
@@ -241,7 +212,7 @@ public class CityManager : MonoBehaviour
                 FloorFrameModule floor = builtFloors[i];
 
                 // Hall
-                var hallData = new TowerBuildingEntry { floorIndex = i, placeIndex = 0 };
+                var hallData = new TowerBuildingEntry (i, 0);
                 floor.hallBuildingPlace.placedBuilding?.Init(hallData);
 
                 // Rooms
@@ -249,7 +220,7 @@ public class CityManager : MonoBehaviour
                     TowerBuilding room = floor.roomBuildingPlaces[j].placedBuilding;
                     if (!room) continue;
 
-                    var roomData = new TowerBuildingEntry { floorIndex = i, placeIndex = j };
+                    var roomData = new TowerBuildingEntry (i, j);
                     room.Init(roomData);
                 }
             }
@@ -282,26 +253,6 @@ public class CityManager : MonoBehaviour
                 Human citizen = CreatureFactory.CreateCreature(0, data) as Human;
                 AddResident(citizen);
                 citizen.SetNavAgentEnabled(false);
-            }
-        }
-    }
-
-    private void LoadBoats(WorldData saveData)
-    {
-        PierModule pier = PierBuilding.GetComponent<PierModule>();
-
-        if (saveData != null) {
-
-        }
-        else {
-            for (int i = 0; i < startBoatIds.Length; i++) {
-                Boat prefab = BoatsList.Instance.boats[(int)startBoatIds[i]];
-                BoatDockPoint spawnTransform = pier.PierConstruction.BoatDocks[i];
-                Vector3 spawnPosition = spawnTransform.DockTransform.position;
-                Vector3 spawnRotation = spawnTransform.DockTransform.rotation.eulerAngles;
-                BoatEntry data = new BoatEntry { position = spawnPosition, rotation = spawnRotation, health = prefab.BoatData.MaxHealth };
-                Boat boat = BoatFactory.CreateBoat((int)startBoatIds[i], data);
-                citizenBoats.Add(boat);
             }
         }
     }
@@ -402,112 +353,10 @@ public class CityManager : MonoBehaviour
     }
 
     // Buildings
-    private void OnBuildingPlacePressed(BuildingPlace place)
-    {
-        if (buildingToPlace as TowerBuilding) {
-            TowerBuildingEntry towerData = new TowerBuildingEntry();
-            towerData.floorIndex = place.floorIndex;
-            towerData.placeIndex = place.PlaceIndex;
-            BuildingFactory.CreateBuilding(buildingToPlace as TowerBuilding, towerData);
-        }
-        else {
-            Debug.LogError("buildingToPlace is not TowerBuilding");
-        }
-    }
-
     private void OnBuildingWidgetBuildClicked(BuildingWidget widget)
     {
         EventBus.InvokeOnBuildingStartPlacing(widget.buildingPrefab);
     }
-
-    //public Building PlaceBuilding(TowerBuilding buildingToPlace, BuildingPlace buildingPlace, int levelIndex, bool isUnderConstruction)
-    //{
-    //    if (!buildingToPlace) {
-    //        Debug.LogError("building is NULL");
-    //        return null;
-    //    }
-    //    if (!buildingPlace) {
-    //        Debug.LogError("buildingPlace is NULL");
-    //        return null;
-    //    }
-
-    //    TowerBuilding spawnedBuilding = buildingPlace.placedBuilding;
-    //    if (spawnedBuilding && spawnedBuilding.isInitialized) {
-    //        buildingPlace.SetPlacedBuilding(spawnedBuilding);
-    //        return spawnedBuilding;
-    //    }
-
-    //    // Spawn
-    //    if (!spawnedBuilding) {
-    //        spawnedBuilding = Instantiate(buildingToPlace, buildingPlace.transform);
-    //    }
-
-    //    // Initialize
-    //    if (!spawnedBuilding.isInitialized) {
-    //        spawnedBuilding.Init(buildingPlace, isUnderConstruction, levelIndex);
-    //    }
-
-    //    // Set Building to Place
-    //    BuildingType type = spawnedBuilding.BuildingData.BuildingType;
-    //    if (type == BuildingType.Room) {
-    //        buildingPlace.SetPlacedBuilding(spawnedBuilding);
-    //        currentRoomsNumberOnFloor[buildingPlace.floorIndex]++;
-    //    }
-    //    else if (type == BuildingType.Hall) {
-    //        builtFloors[buildingPlace.floorIndex].hallBuildingPlace.SetPlacedBuilding(spawnedBuilding);
-    //        for (int i = 0; i < roomsCountPerFloor; i++) {
-    //            builtFloors[buildingPlace.floorIndex].roomBuildingPlaces[i].SetPlacedBuilding(spawnedBuilding);
-    //            currentRoomsNumberOnFloor[buildingPlace.floorIndex]++;
-    //        }
-    //    }
-
-    //    UpdateEmptyBuildingPlacesCount();
-    //    HideAllBuildigPlaces();
-    //    BakeNavMeshSurface();
-
-    //    return spawnedBuilding;
-    //}
-
-    //public void PlaceBoat(Boat boat, bool isUnderConstruction = false, int? dockIndex = null, bool isFloating = false, bool isReturningToDock = false, float? health = null, float? positionX = null, float? positionZ = null, float? rotationY = null)
-    //{
-    //    //pierBuilding.CreateBoat(boat, isUnderConstruction, dockIndex, isFloating, isReturningToDock, health, positionX, positionZ, rotationY);
-
-    //    PierConstruction pierConstruction = pierBuilding.ConstructionComponent.SpawnedConstruction as PierConstruction;
-    //    if (dockIndex == null) {
-    //        for (int i = 0; i < spawnedBoats.Count; i++) {
-    //            if (!spawnedBoats[i]) {
-    //                dockIndex = i;
-    //                break;
-    //            }
-    //        }
-    //    }
-
-    //    Vector3 position = Vector3.zero /*pierConstruction.BoatDockPositions[dockIndex.Value].position*/;
-    //    if (positionX != null) position.x = positionX.Value;
-    //    if (positionZ != null) position.z = positionZ.Value;
-
-    //    Quaternion rotation = Quaternion.identity;
-    //    if (rotationY != null) rotation = Quaternion.Euler(0, rotationY.Value, 0);
-    //    else rotation = pierConstruction.BoatDockPositions[dockIndex.Value].rotation;
-
-    //    if (spawnedBoats[dockIndex.Value])
-    //        spawnedBoats[dockIndex.Value].Demolish(false);
-
-    //    Boat spawnedBoat = Boat.Instantiate(boat, position, rotation);
-    //    spawnedBoat.Init(isUnderConstruction, dockIndex.Value, isFloating, isReturningToDock, health);
-    //    spawnedBoats[dockIndex.Value] = spawnedBoat;
-    //}
-
-    //private void OnBuildingStartConstructing(ConstructionComponent construction)
-    //{
-    //    int levelIndex = construction.ownedBuilding.LevelIndex;
-
-    //    Building building = construction.GetComponent<Building>();
-    //    if (building) {
-    //        OnBuildingFinishConstructing(construction);
-    //        //building.FinishConstructing();
-    //    }
-    //}
 
     private void OnBuildingPlaced(Building building)
     {
@@ -555,7 +404,7 @@ public class CityManager : MonoBehaviour
             int id = item.ItemData.ItemId;
             int amount = item.Amount;
 
-            inventory.AddItemMaxAmount(id, amount);
+            inventory.AddItem(id, 0, amount);
         }
 
         EventBus.InvokeStorageCapacityChanged();
@@ -569,7 +418,7 @@ public class CityManager : MonoBehaviour
             int id = item.ItemData.ItemId;
             int amount = item.Amount - currentLevelData.storageItems[id].Amount;
 
-            inventory.AddItemMaxAmount(id, amount);
+            inventory.AddItem(id, 0, amount);
         }
 
         EventBus.InvokeStorageCapacityChanged();
@@ -595,14 +444,8 @@ public class CityManager : MonoBehaviour
         for (int i = 0; i < resourceToBuilds.Length; i++) {
             int id = resourceToBuilds[i].ItemData.ItemId;
             int amount = (int)math.ceil(resourceToBuilds[i].Amount * demolitionResourceRefundRate);
-            inventory.AddItemAmount(id, amount);
+            inventory.AddItem(id, amount);
         }
-    }
-
-    // Inventory
-    private void OnItemAmountChanged(ItemInstance item)
-    {
-        EventBus.InvokeMainStorageAmountChanged(item);
     }
 
     // Get Buildings
@@ -627,33 +470,6 @@ public class CityManager : MonoBehaviour
         int floorIndex = (int)((height - firstFloorHeight) / floorHeight);
         if (floorIndex < 0) floorIndex = 0;
         return floorIndex;
-    }
-
-    // Production Module
-    private void OnProductionModuleClicked(ProductionBuildingModule module)
-    {
-        int itemId = module.produceItem.produceItem.ItemData.ItemId;
-        int maxAmount = inventory.items[itemId].maxAmount;
-        int remainedAmount = maxAmount - inventory.items[itemId].item.Amount;
-
-        ItemInstance item = module.TakeProducedItem(remainedAmount);
-        Inventory.AddItemAmount(item.ItemData.ItemId, item.Amount);
-    }
-
-    // Boats
-    private void OnBoatDestroyed(Boat boat)
-    {
-
-    }
-
-    public Boat GetBoatByIndex(int index)
-    {
-        for (int i = 0; i < citizenBoats.Count; i++) {
-            if (citizenBoats[i])
-                return citizenBoats[i];
-        }
-
-        return null;
     }
 
     private IEnumerator AutosaveCoroutine()

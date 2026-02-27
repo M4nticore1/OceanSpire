@@ -16,20 +16,22 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     private void Interact(Vector2 interactionPosition)
     {
-        if (PointerUtils.GetCurrentRaycastResult().gameObject) return;
+        if (PointerUtils.GetRaycastUIResult().gameObject) return;
 
-        Ray ray = Camera.main.ScreenPointToRay(interactionPosition);
-        RaycastHit hit;
+        if (PointerUtils.GetRaycastColliderHit(out var hit)) {
 
-        if (Physics.Raycast(ray, out hit)) {
-            GameObject hitted = hit.collider.gameObject;
+            IClickable[] clickables = hit.collider.GetComponents<IClickable>();
 
-            if (hit.collider.TryGetComponent<IClickable>(out var clickable)) {
+            foreach (IClickable clickable in clickables) {
+                if (!clickable.CanClick()) continue;
+
                 clickable.Click();
             }
-            else {
-                SelectManager.Instance.selectedComponent?.Click();
-            }
+
+            EventBus.InvokeClicked(hit.collider.gameObject);
+        }
+        else {
+            EventBus.InvokeClicked(null);
         }
     }
 

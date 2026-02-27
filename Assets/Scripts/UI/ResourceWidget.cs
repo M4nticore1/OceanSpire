@@ -37,7 +37,7 @@ public class ResourceWidget : MonoBehaviour
     private void OnLootAdded(ItemInstance item)
     {
         if (item.ItemData.ItemId != itemData.ItemId) return;
-        Debug.Log(item.ItemData.ItemName);
+
         UpdateAmount();
     }
 
@@ -56,7 +56,7 @@ public class ResourceWidget : MonoBehaviour
     public void SetItem(ItemData itemData)
     {
         int id = itemData.ItemId;
-        itemInstance = CityManager.Instance.Inventory.items[id].item;
+        itemInstance = CityManager.Instance.Inventory.itemsDict[id].item;
         OnItemSet();
     }
 
@@ -94,10 +94,10 @@ public class ResourceWidget : MonoBehaviour
     private void UpdateAmount()
     {
         if (itemInstance == null) return;
-        if (CityManager.Instance.Inventory.items.Count <= itemInstance.ItemData.ItemId) return;
+        if (CityManager.Instance.Inventory.itemsDict.Count <= itemInstance.ItemData.ItemId) return;
 
         int amount = itemInstance.Amount;
-        int maxAmount = CityManager.Instance.Inventory.items[itemInstance.ItemData.ItemId].maxAmount;
+        int maxAmount = CityManager.Instance.Inventory.itemsDict[itemInstance.ItemData.ItemId].maxAmount;
         SetAmount(amount, maxAmount);
     }
 
