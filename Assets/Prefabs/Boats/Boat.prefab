@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 4575534088428067244}
   - component: {fileID: 6306187827067608498}
   - component: {fileID: 2423519319514539946}
+  - component: {fileID: 9149124761615220950}
   m_Layer: 0
   m_Name: Boat
   m_TagString: Untagged
@@ -116,7 +117,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 9220349405578416699}
   - {fileID: 6205725706387135481}
   - {fileID: 5702815582301547331}
   m_Father: {fileID: 0}
@@ -139,6 +139,7 @@ MonoBehaviour:
   inventory: {fileID: 1147310907644242627}
   health: {fileID: 1718763975742808754}
   healthDrainer: {fileID: 5453205600493844167}
+  selectComponent: {fileID: 6306187827067608498}
   seatSlot: {fileID: 6338914725495003467}
 --- !u!114 &1558227740111410491
 MonoBehaviour:
@@ -189,6 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e27afc86b48e1cd4d987e182d36208aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
+  autoCleaning: 0
   maxWeight: 0
 --- !u!114 &1718763975742808754
 MonoBehaviour:
@@ -215,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3d76abc9fb7bfe4d8730f8b3f966752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthDrainer
-  drainHealthDuration: 1
+  damagePerSecond: 0.1
 --- !u!114 &4575534088428067244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +264,27 @@ NavMeshAgent:
   m_BaseOffset: -0.25
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!65 &9149124761615220950
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9194760719431650583}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 1, z: 6.5}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1001 &6510618667654508781
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -449,66 +472,4 @@ PrefabInstance:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4523488824367348099, guid: e6df01fb03d8bc64481039548fb87f1b, type: 3}
   m_PrefabInstance: {fileID: 8206351888023032512}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &8236584451945894262
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 959300913105641093}
-    m_Modifications:
-    - target: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8609880662699405998, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-      propertyPath: m_Name
-      value: BoatSelectCollision
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
---- !u!4 &9220349405578416699 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 989519807307170637, guid: 44f4362ae756d054f99a75d539cf1c76, type: 3}
-  m_PrefabInstance: {fileID: 8236584451945894262}
   m_PrefabAsset: {fileID: 0}

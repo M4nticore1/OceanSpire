@@ -92,3 +92,9 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: b1f184bc8e0dba94380716ecb8267cb3, type: 2}
     value: There are no employed citizens in the city
     fontIndex: 0
+  - item: {fileID: 11400000, guid: e09c905db7d8eae47a552fe9d1974f61, type: 2}
+    value: Health
+    fontIndex: 0
+  - item: {fileID: 11400000, guid: eb292f6ade6dd7f4daaffb3ee954725d, type: 2}
+    value: Weight
+    fontIndex: 0

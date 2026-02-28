@@ -55,9 +55,13 @@ public static class EventBus
     public static event Action<Building> onCameraEnteredStatsMenuDistance;
     public static event Action onCameraExitedStatsMenuDistance;
 
-    // Select Object
+    // Select
     public static event Action<SelectComponent> onSelectedComponent;
     public static event Action<SelectComponent> onDeselectedComponent;
+    public static event Action<Building> onSelectedBuilding;
+    public static event Action<Building> onDeselectedBuilding;
+    public static event Action<Boat> onSelectedBoat;
+    public static event Action<Boat> onDeselectedBoat;
 
     // Settings
     public static event Action onPostProcessingToggleChanged;
@@ -68,8 +72,6 @@ public static class EventBus
     public static event Action<GameObject> onPlayerClicked;
 
     // Click
-    public static event Action<Building> onSelectedBuilding;
-    public static event Action<Building> onDeselectedBuilding;
     public static event Action<LootContainer> onClickedOnLootContainer;
 
     // UI
@@ -226,13 +228,6 @@ public static class EventBus
         onDeselectedComponent?.Invoke(selectComponent);
     }
 
-    // Input Listener
-    public static void InvokeClicked(GameObject gameObject)
-    {
-        onPlayerClicked?.Invoke(gameObject);
-    }
-
-    // Clicks
     public static void InvokeSelectedBuilding(Building building)
     {
         onSelectedBuilding?.Invoke(building);
@@ -242,6 +237,24 @@ public static class EventBus
     {
         onDeselectedBuilding?.Invoke(building);
     }
+
+    public static void InvokeSelectedBoat(Boat boat)
+    {
+        onSelectedBoat?.Invoke(boat);
+    }
+
+    public static void InvokeDeselectedBoat(Boat boat)
+    {
+        onDeselectedBoat?.Invoke(boat);
+    }
+
+    // Input Listener
+    public static void InvokeClicked(GameObject gameObject)
+    {
+        onPlayerClicked?.Invoke(gameObject);
+    }
+
+    // Clicks
 
     public static void InvokeClickedOnLootContainer(LootContainer loot)
     {

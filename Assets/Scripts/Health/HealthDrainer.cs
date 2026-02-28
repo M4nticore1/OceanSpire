@@ -4,7 +4,8 @@ public class HealthDrainer : MonoBehaviour
 {
     Health healthComponent = null;
 
-    [SerializeField] private float drainHealthDuration = 1f;
+    [SerializeField] private float damagePerSecond = 1.0f;
+    private const float DRAIN_DURATION = 1f;
     private double lastDrainHealthTime = 0d;
 
     private void Awake()
@@ -14,14 +15,14 @@ public class HealthDrainer : MonoBehaviour
 
     public void ProcessDrainHealth()
     {
-        if (Time.timeAsDouble < lastDrainHealthTime + drainHealthDuration) return;
+        if (Time.timeAsDouble < lastDrainHealthTime + DRAIN_DURATION) return;
 
         DrainHealth();
     }
 
     private void DrainHealth()
     {
-        healthComponent.RemoveHealth(1f);
+        healthComponent.RemoveHealth(damagePerSecond);
         lastDrainHealthTime = Time.timeAsDouble;
     }
 }

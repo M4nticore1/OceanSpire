@@ -26,8 +26,8 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] private WorkersMenuManager workersMenu = null;
     [SerializeField] private StatsMenu statsMenu;
     private Building buildingToShowStats = null;
-    [SerializeField] private ContextMenuMaster contextMenuMaster = null;
-    private ContextMenuUI openedContextMenu = null;
+    [SerializeField] private ContextMenuManager contextMenuMaster = null;
+    private ContextMenuBase openedContextMenu = null;
 
     public bool isManagementMenuOpened { get; private set; } = false;
     public bool isWorkersMenuOpened { get; private set; } = false;

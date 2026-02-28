@@ -25,6 +25,6 @@ public class BoatData : ScriptableObject
     public const float correctDockRotationSpeed = 0.5f;
 
     [Header("UI")]
-    [SerializeField] private ContextMenuUI detailsMenuWidget = null;
-    public ContextMenuUI DetailsMenuWidget => detailsMenuWidget;
+    [SerializeField] private ContextMenuBase detailsMenuWidget = null;
+    public ContextMenuBase DetailsMenuWidget => detailsMenuWidget;
 }

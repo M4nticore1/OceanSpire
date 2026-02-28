@@ -18,7 +18,7 @@ public class BoatReturningState : BoatState
 
     public override void Process()
     {
-
+        boat.ProcessDrainHealth();
     }
 
     public override void HandleReachedPath()

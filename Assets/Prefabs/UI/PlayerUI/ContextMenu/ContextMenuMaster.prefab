@@ -52,11 +52,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ContextMenuMaster
   slidePanel: {fileID: 8176289903271446193}
   contextMenuRoot: {fileID: 5125527298814516783}
-  buildingContextMenu: {fileID: 7057132358487696859, guid: 7b4257f477bce9341aca15da9cba1648, type: 3}
-  productionBuildingContextMenu: {fileID: 2429449645737693798, guid: 66417ffe2690f6c4eabb9cb07a4ac468, type: 3}
-  storageBuildingContextMenu: {fileID: 6632101598869116472, guid: 840c4e44872410542be2295169c79dcc, type: 3}
-  pierBuildingContextMenu: {fileID: 6632101598869116472, guid: aa1e74945d1e40348b67cff57930ccb5, type: 3}
-  boatContextMenu: {fileID: 0}
+  buildingContextMenu: {fileID: 265913792992382129, guid: 7b4257f477bce9341aca15da9cba1648, type: 3}
+  productionBuildingContextMenu: {fileID: 3786198877056170919, guid: 66417ffe2690f6c4eabb9cb07a4ac468, type: 3}
+  storageBuildingContextMenu: {fileID: 5206499964075476132, guid: 840c4e44872410542be2295169c79dcc, type: 3}
+  pierBuildingContextMenu: {fileID: 5304155448308866958, guid: aa1e74945d1e40348b67cff57930ccb5, type: 3}
+  boatContextMenu: {fileID: 3594027615257554973, guid: 0f3c911bde22690478a852229167781f, type: 3}
 --- !u!114 &8176289903271446193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainImage
   m_Material: {fileID: 0}
   m_Color: {r: 0.24705882, g: 0.45882353, b: 0.54509807, a: 0.95686275}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

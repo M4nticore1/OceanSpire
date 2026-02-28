@@ -36,9 +36,12 @@ public class Health : MonoBehaviour
     {
         float newHealth = math.clamp(value, 0, MaxHealth - CurrentHealth);
         currentHealth = value;
+
         if (CurrentHealth <= 0) {
             Die();
         }
+
+        Debug.Log(value);
         onHealthChanged?.Invoke();
     }
 

@@ -27,6 +27,8 @@ public class BoatCollectingLootState : BoatState
 
     public override void Process()
     {
+        boat.ProcessDrainHealth();
+
         currentCollectingTime += Time.deltaTime;
 
         if (currentCollectingTime <= collectLootTime) return;

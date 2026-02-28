@@ -23,6 +23,8 @@ public class BoatUnloadingState : BoatState
 
     public override void Process()
     {
+        boat.ProcessDrainHealth();
+
         if (ShouldUnload()) {
             ProcessStoreResources();
         }

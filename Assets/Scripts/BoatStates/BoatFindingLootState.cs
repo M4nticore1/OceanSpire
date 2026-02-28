@@ -26,6 +26,8 @@ public class BoatFindingLootState : BoatState
 
     public override void Process()
     {
+        boat.ProcessDrainHealth();
+
         if (Time.timeAsDouble < lastUpdateDestinationTime + updateDestinationRate) return;
 
         UpdateDestination();

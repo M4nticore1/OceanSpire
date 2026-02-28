@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
@@ -34,6 +35,7 @@ public class Boat : MonoBehaviour
     private BoatState state = null;
     public BoatRider rider { get; private set; } = null;
 
+    // Components
     [SerializeField] private NavMeshAgent navAgent = null;
 
     [SerializeField] private EntityMovement movement = null;
@@ -43,7 +45,11 @@ public class Boat : MonoBehaviour
     public Inventory Inventory => inventory;
 
     [SerializeField] private Health health = null;
+    public Health Health => health;
+
     [SerializeField] private HealthDrainer healthDrainer = null;
+
+    [SerializeField] private SelectComponent selectComponent = null;
 
     // Dock
     public BoatDockPoint dockPoint { get; private set; } = null;
@@ -62,18 +68,21 @@ public class Boat : MonoBehaviour
 
     public bool isDemolished { get; private set; } = false;
 
-    public ContextMenuUI spawnedDetailsMenu { get; set; } = null;
+    public ContextMenuBase spawnedDetailsMenu { get; set; } = null;
 
     public static event Action<Boat> OnBoadDestroyed;
 
     private void OnEnable()
     {
         movement.onReachedPath += OnReachedPath;
+        selectComponent.onSelected += OnSelected;
+        selectComponent.onDeselected += OnDeselected;
     }
 
     private void OnDisable()
     {
         movement.onReachedPath -= OnReachedPath;
+        selectComponent.onDeselected -= OnDeselected;
     }
 
     private void Update()
@@ -131,6 +140,11 @@ public class Boat : MonoBehaviour
         return inventory.items[0].item;
     }
 
+    public void ProcessDrainHealth()
+    {
+        healthDrainer.ProcessDrainHealth();
+    }
+
     // Events
     private void OnReachedPath()
     {
@@ -172,5 +186,16 @@ public class Boat : MonoBehaviour
 
         this.state.Enter();
         currentState = state;
+    }
+
+    // Clickable
+    private void OnSelected()
+    {
+        EventBus.InvokeSelectedBoat(this);
+    }
+
+    private void OnDeselected()
+    {
+        EventBus.InvokeDeselectedBoat(this);
     }
 }
