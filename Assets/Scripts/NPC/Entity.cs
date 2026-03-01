@@ -46,6 +46,7 @@ public abstract class Entity : MonoBehaviour
 
     private void OnNavMeshBaked()
     {
+        if (!agent) return;
         if (agent.enabled == true) return;
 
         agent.enabled = true;

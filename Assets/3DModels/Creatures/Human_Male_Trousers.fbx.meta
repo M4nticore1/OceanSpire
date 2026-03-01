@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ae0190f14aedeb74cb1b1ed9b71e2f9c
+guid: df84cb96ce01ea5439ac7d0d38608340
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,18 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Hair_Orange
-    second: {fileID: 2100000, guid: 9d518f08dcd74b046b99c59148cfd618, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: Material
     second: {fileID: 2100000, guid: d8c1c545c9324484a96dfc9242dce52b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Skin
-    second: {fileID: 2100000, guid: 3a2b568917171c5408208b3e857222c5, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

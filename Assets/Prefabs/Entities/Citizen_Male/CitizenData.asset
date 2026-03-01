@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4a955a6deebe66408e3f6bbeee33ca9, type: 3}
-  m_Name: ResidentData
+  m_Name: CitizenData
   m_EditorClassIdentifier: Assembly-CSharp::CreatureData
   creatureId: 0
