@@ -23,11 +23,10 @@ public class CustomSelectableStateEntry
     public float scale;
 }
 
-[RequireComponent(typeof(Image))]
 public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandler/*, IInputListenable*/
 {
     [SerializeField] public Graphic targetGraphic;
-    [SerializeField] public Graphic contentGraphic = null;
+    [SerializeField] public Graphic[] contentGraphics = null;
     [SerializeField] public RectTransform scaleRoot = null;
 
     [SerializeField] private bool isInteractable = true;
@@ -165,10 +164,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
             Graphic background = GetComponent<Graphic>();
             targetGraphic = background;
             scaleRoot = background.rectTransform;
-        }
-        if (!contentGraphic) {
-            Graphic content = transform.childCount > 0 ? transform.GetChild(0).GetComponent<Graphic>() : null;
-            contentGraphic = content;
         }
     }
 #endif
@@ -353,6 +348,11 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
 
     // Interaction
+    public void FinishTransitionAnimation()
+    {
+        SetStateTransitionAlpha(1f);
+    }
+
     private void ApplyInteractionAlpha()
     {
         float duration = Mathf.Max(stateTransitionTime, 0.0001f);
@@ -367,7 +367,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         isAnimating = true;
     }
 
-    public void SetStateTransitionAlpha(float value)
+    private void SetStateTransitionAlpha(float value)
     {
         stateTransitionAlpha = value;
         ApplyColor();
@@ -380,8 +380,11 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (targetGraphic) {
             targetGraphic.color = Color.Lerp(targetGraphic.color, targetBodyColor, stateTransitionAlpha);
         }
-        if (contentGraphic) {
-            contentGraphic.color = targetContentColor;
+
+        foreach (var graphic in contentGraphics) {
+            if (!graphic) continue;
+
+            graphic.color = targetContentColor;
         }
     }
 

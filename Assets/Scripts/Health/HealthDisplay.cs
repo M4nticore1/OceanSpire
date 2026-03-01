@@ -75,8 +75,6 @@ public class HealthDisplay : MonoBehaviour
 
     private void OnHealthChanged()
     {
-        Debug.Log("OnHealthChanged");
-
         float currentHealth = healthComponent.CurrentHealth;
         float maxHealth = healthComponent.MaxHealth;
         float alpha = currentHealth / maxHealth;
@@ -113,8 +111,6 @@ public class HealthDisplay : MonoBehaviour
 
     private void SetHealth(float currentHealth, float maxHealth)
     {
-        Debug.Log("SetHealth");
-
         if (healthText) {
             AssignHealthText(currentHealth, maxHealth);
         }
@@ -126,7 +122,6 @@ public class HealthDisplay : MonoBehaviour
 
     private void AssignHealthText(float currentHealth, float maxHealth)
     {
-        Debug.Log("AssignHealthText" + currentHealth);
         string text = math.ceil(currentHealth).ToString() + "/" + maxHealth.ToString();
         healthText.SetText(text);
     }

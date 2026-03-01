@@ -30,6 +30,7 @@ public abstract class Building : MonoBehaviour
     [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
     public List<BuildingLevelData> ConstructionLevelsData => buildingLevelsData;
     public BuildingLevelData LevelData => ConstructionLevelsData.Count > LevelIndex ? ConstructionLevelsData[LevelIndex] : null;
+    public BuildingLevelData NextLevelData => ConstructionLevelsData.Count > LevelIndex + 1 ? ConstructionLevelsData[LevelIndex] : null;
     [SerializeField] private bool isRuined = false;
     public bool IsRuined => isRuined;
 

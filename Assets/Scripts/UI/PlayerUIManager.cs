@@ -213,8 +213,8 @@ public class PlayerUIManager : MonoBehaviour
         OpenBuildingsMenu();
         CloseStorageMenu();
         buildingListsMenuButton.SetState(CustomSelectableState.Selected);
-        buildingListsMenuButton.SetStateTransitionAlpha(1f);
-        storageListsMenuButton.SetStateTransitionAlpha(1f);
+        buildingListsMenuButton.FinishTransitionAnimation();
+        storageListsMenuButton.FinishTransitionAnimation();
     }
 
     private void OnBuildingListsButtonReleased()
@@ -308,8 +308,8 @@ public class PlayerUIManager : MonoBehaviour
         OpenStorageMenu();
         CloseBuildingsMenu();
         storageListsMenuButton.SetState(CustomSelectableState.Selected);
-        storageListsMenuButton.SetStateTransitionAlpha(1f);
-        buildingListsMenuButton.SetStateTransitionAlpha(1f);
+        storageListsMenuButton.FinishTransitionAnimation();
+        buildingListsMenuButton.FinishTransitionAnimation();
 
     }
 

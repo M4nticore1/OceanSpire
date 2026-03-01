@@ -71,6 +71,7 @@ public class BuildingWidget : MonoBehaviour
     public void UpdateResourcesToBuild()
     {
         bool enoughResources = true;
+
         for (int i = 0; i < resourcesToBuildNumber; i++) {
             ItemInstance resource = buildingPrefab.ConstructionLevelsData[0].ResourcesToBuild[i];
             int amountToBuilding = resource.Amount;
@@ -87,6 +88,7 @@ public class BuildingWidget : MonoBehaviour
             buildButton.SetState(CustomSelectableState.Idle);
         else
             buildButton.SetState(CustomSelectableState.Disabled);
-        buildButton.SetStateTransitionAlpha(1f);
+
+        buildButton.FinishTransitionAnimation();
     }
 }

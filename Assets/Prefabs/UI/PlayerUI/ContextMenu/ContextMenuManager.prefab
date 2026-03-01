@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6662979433990621393}
   - component: {fileID: 8176289903271446193}
   m_Layer: 5
-  m_Name: ContextMenuMaster
+  m_Name: ContextMenuManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

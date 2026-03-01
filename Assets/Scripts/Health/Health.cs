@@ -41,7 +41,6 @@ public class Health : MonoBehaviour
             Die();
         }
 
-        Debug.Log(value);
         onHealthChanged?.Invoke();
     }
 

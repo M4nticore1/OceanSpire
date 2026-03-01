@@ -154,8 +154,6 @@ public class Boat : MonoBehaviour
     // State
     public void SetState(BoatStateEnum state)
     {
-        Debug.Log(state);
-
         if (this.state != null) {
             this.state.Exit();
         }
