@@ -220,7 +220,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void SetOwnedBuilding(int newFloorIndex)
     {
         if (newFloorIndex != floorIndex && newFloorIndex >= 0) {
-            ownedBuilding = CityManager.Instance.BuiltFloors[newFloorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
+            ownedBuilding = CityManager.Instance.BuiltFloors[newFloorIndex].roomBuildingPlaces[placeIndex].PlacedBuilding;
             foreach (var npc in ridingPassengers.ToArray()) {
                 npc.OnCurrentElevatorChangedFloor();
             }

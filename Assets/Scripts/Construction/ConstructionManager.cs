@@ -13,17 +13,17 @@ public class ConstructionManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.onBuildingStartedPlacing += OnBuildingStartedPlacing;
-        EventBus.onBuildingFinishedPlacing += OnBuildingFinishedPlacing;
+        EventBus.onSelectedBuildingToPlace += OnSelectedBuildingToPlace;
+        EventBus.onBuildingPlaced += OnBuildingFinishedPlacing;
     }
 
     private void OnDisable()
     {
-        EventBus.onBuildingStartedPlacing -= OnBuildingStartedPlacing;
-        EventBus.onBuildingFinishedPlacing -= OnBuildingFinishedPlacing;
+        EventBus.onSelectedBuildingToPlace -= OnSelectedBuildingToPlace;
+        EventBus.onBuildingPlaced -= OnBuildingFinishedPlacing;
     }
 
-    private void OnBuildingStartedPlacing(Building building)
+    private void OnSelectedBuildingToPlace(Building building)
     {
         buildingToPlace = building;
     }

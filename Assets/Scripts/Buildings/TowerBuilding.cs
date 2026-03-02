@@ -46,16 +46,16 @@ public class TowerBuildingEntry : BuildingEntry
 
 public class TowerBuilding : Building
 {
-    public BuildingPlace buildingPlace { get; private set; }
+    public BuildingPlace buildingPlace { get; private set; } = null;
 
     public BuildingPosition buildingPosition { get; private set; } = BuildingPosition.Straight;
     public int floorIndex { get; private set; }
     public int placeIndex { get; private set; }
 
-    public TowerBuilding leftBuilding => buildingPlace.leftPlace.placedBuilding;
-    public TowerBuilding rightBuilding => buildingPlace.rightPlace.placedBuilding;
-    public TowerBuilding upBuilding => buildingPlace.upPlace?.placedBuilding;
-    public TowerBuilding downBuilding => buildingPlace.downPlace?.placedBuilding;
+    public TowerBuilding leftBuilding => buildingPlace.leftPlace.PlacedBuilding;
+    public TowerBuilding rightBuilding => buildingPlace.rightPlace.PlacedBuilding;
+    public TowerBuilding upBuilding => buildingPlace.upPlace?.PlacedBuilding;
+    public TowerBuilding downBuilding => buildingPlace.downPlace?.PlacedBuilding;
 
     public TowerBuilding leftConnectedBuilding => CheckConnectionPossibility(leftBuilding, ConnectionType.Horizontal);
     public TowerBuilding rightConnectedBuilding => CheckConnectionPossibility(rightBuilding, ConnectionType.Horizontal);
@@ -98,26 +98,50 @@ public class TowerBuilding : Building
         floorIndex = towerData.floorIndex;
         placeIndex = towerData.placeIndex;
 
+        List<FloorFrameModule> floors = CityManager.Instance.BuiltFloors;
+        BuildingPlace place = null;
+
         if (BuildingData.BuildingType == BuildingType.Room) {
-            buildingPlace = CityManager.Instance.BuiltFloors[towerData.floorIndex].roomBuildingPlaces[towerData.placeIndex];
+            place = floors[towerData.floorIndex].roomBuildingPlaces[towerData.placeIndex];
         }
-        if (BuildingData.BuildingType == BuildingType.Hall) {
-            buildingPlace = CityManager.Instance.BuiltFloors[towerData.floorIndex].hallBuildingPlace;
+        else if (BuildingData.BuildingType == BuildingType.Hall) {
+            place = floors[towerData.floorIndex].hallBuildingPlace;
         }
         else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
-            buildingPlace = CityManager.Instance.BuiltFloors[towerData.floorIndex].floorBuildingPlace;
+            int index = towerData.floorIndex - 1;
+            place = floors.Count > index && index >= 0 ? floors[index].floorBuildingPlace : null;
         }
+
+        SetBuildingPlace(place);
 
         if (placeIndex % 2 == 0) {
-            buildingPosition = BuildingPosition.Corner;
+            SetBuildingPosition(BuildingPosition.Corner);
         }
         else {
-            buildingPosition = BuildingPosition.Straight;
+            SetBuildingPosition(BuildingPosition.Straight);
         }
 
-        //transform.parent = buildingPlace.transform;
-        //transform.localPosition = Vector3.zero;
-        //transform.localRotation = Quaternion.identity;
+        ApplyTransform();
+    }
+
+    private void SetBuildingPlace(BuildingPlace place)
+    {
+        buildingPlace = place;
+    }
+
+    private void SetBuildingPosition(BuildingPosition position)
+    {
+        buildingPosition = position;
+    }
+
+    private void ApplyTransform()
+    {
+        if (!buildingPlace) return;
+        if (buildingData.BuildingType != BuildingType.Room && buildingData.BuildingType != BuildingType.Hall) return;
+
+        transform.SetParent(buildingPlace.transform);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
     }
 
     protected override BuildingConstruction GetConstruction()

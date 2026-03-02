@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum BuildingPlaceState
 {
@@ -19,24 +20,12 @@ public class BuildingPlace : MonoBehaviour, IClickable
     public int emptyBuildingPlacesAbove { get; set; } = 0;
     public int emptyBuildingPlacesBelow { get; set; } = 0;
 
-    //public bool isBuildingPlaced = false;
-    public TowerBuilding placedBuilding = null;
+    [SerializeField] private TowerBuilding placedBuilding = null;
+    public TowerBuilding PlacedBuilding => placedBuilding;
 
     [SerializeField] private GameObject buildingZone = null;
     [SerializeField] private GameObject buildingFrame = null;
-    [SerializeField] private MeshRenderer buildingZoneMeshRenderer = null;
     [SerializeField] private BoxCollider boxCollider = null;
-
-    private MaterialPropertyBlock materialPropertyBlock = null;
-    private MaterialPropertyBlock outlineMaterialPropertyBlock = null;
-
-    private Color buildingPlaceValidColor = new Color(0.2f, 1, 0.2f, 1);
-    private Color buildingPlaceWarningColor = new Color(1, 1, 0, 1);
-    private Color buildingPlaceInvalidColor = new Color(1, 0, 0, 1);
-
-    private Color buildingPlaceValidOutlineColor = new Color(0.035f, 1, 0, 1);
-    private Color buildingPlaceWarningOutlineColor = new Color(1, 1, 0, 1);
-    private Color buildingPlaceInvalidOutlineColor = new Color(1, 0, 0, 1);
 
     public BuildingPlace leftPlace { get; private set; }
     public BuildingPlace rightPlace { get; private set; }
@@ -59,22 +48,14 @@ public class BuildingPlace : MonoBehaviour, IClickable
         }
     }
 
-    private void Awake()
-    {
-        buildingZoneMeshRenderer = buildingZone.GetComponent<MeshRenderer>();
-
-        materialPropertyBlock = new MaterialPropertyBlock();
-        outlineMaterialPropertyBlock = new MaterialPropertyBlock();
-    }
-
     public void Init(int newFloorindex)
     {
         floorIndex = newFloorindex;
         ApplyNeighborPlace();
         HideBuildingPlace();
 
-        EventBus.onBuildingStartedPlacing += OnBuildingStartPlacing;
-        EventBus.onBuildingFinishedPlacing += OnBuildingFinishPlacing;
+        EventBus.onSelectedBuildingToPlace += OnBuildingStartPlacing;
+        EventBus.onBuildingPlaced += OnBuildingPlaced;
         EventBus.onBuildingInitialized += OnBuildingInitialized;
     }
 
@@ -107,9 +88,9 @@ public class BuildingPlace : MonoBehaviour, IClickable
         ShowBuildingPlace(BuildingPlaceState.Valid);
     }
 
-    private void OnBuildingFinishPlacing(Building building)
+    private void OnBuildingPlaced(Building building)
     {
-        if (placedBuilding) return;
+        if (placedBuilding && building != placedBuilding) return;
         if (building.BuildingData.BuildingType != buildingType) return;
 
         HideBuildingPlace();
@@ -126,15 +107,20 @@ public class BuildingPlace : MonoBehaviour, IClickable
     private void SetPlacedBuilding(TowerBuilding building)
     {
         placedBuilding = building;
-        if (buildingFrame)
-            buildingFrame.SetActive(false);
+        UpdateBuildingFrame();
     }
 
     private void RemoveBuildingPlaced()
     {
         placedBuilding = null;
-        if (buildingFrame)
-            buildingFrame.SetActive(true);
+        UpdateBuildingFrame();
+    }
+
+    private void UpdateBuildingFrame()
+    {
+        if (!buildingFrame) return;
+
+        buildingFrame.SetActive(placedBuilding == null);
     }
 
     private void ShowBuildingPlace(BuildingPlaceState buildingPlaceState)
@@ -181,12 +167,6 @@ public class BuildingPlace : MonoBehaviour, IClickable
         if (boxCollider)
             boxCollider.enabled = false;
     }
-
-    //public void SetColliderSize(Vector3 NewColliderSize)
-    //{
-    //    boxCollider.size = NewColliderSize;
-    //    boxCollider.center = new Vector3(0, NewColliderSize.y / 2, 0);
-    //}
 
     // Events
     public void Click()

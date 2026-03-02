@@ -14,14 +14,14 @@ public static class PathFinder
     {
         Building targetBuilding = null;
         for (int i = 0; i < city.BuiltFloors.Count; i++) {
-            Building hall = city.BuiltFloors[i].hallBuildingPlace.placedBuilding;
+            Building hall = city.BuiltFloors[i].hallBuildingPlace.PlacedBuilding;
             if (hall && targetBuildingCondition(hall)) {
                 targetBuilding = hall;
                 break;
             }
 
             for (int j = 0; j < CityManager.roomsCountPerFloor; j++) {
-                Building room = city.BuiltFloors[i].roomBuildingPlaces[j].placedBuilding;
+                Building room = city.BuiltFloors[i].roomBuildingPlaces[j].PlacedBuilding;
                 if (room && targetBuildingCondition(room)) {
                     targetBuilding = room;
                     break;
@@ -83,22 +83,22 @@ public static class PathFinder
         }
 
         // Add this building as new
-        if (startPlace.placedBuilding) {
-            buildingPaths[pathIndex].Add(startPlace.placedBuilding);
+        if (startPlace.PlacedBuilding) {
+            buildingPaths[pathIndex].Add(startPlace.PlacedBuilding);
         }
 
-        if (startPlace.placedBuilding == targetBuilding) {
+        if (startPlace.PlacedBuilding == targetBuilding) {
             return true;
         }
 
-        bool hasStartElevator = startPlace.placedBuilding?.GetComponent<ElevatorModule>();
+        bool hasStartElevator = startPlace.PlacedBuilding?.GetComponent<ElevatorModule>();
         int enterIndex = pathIndex;
         int currentPathLength = buildingPaths[enterPathIndex].Count;
         int buildingsCount = 0;
 
         // Get new paths
         foreach (BuildingPlace direction in hasStartElevator ? startPlace.NeighborPlaces(NeighborMask.All) : startPlace.NeighborPlaces(NeighborMask.Horizontal)) {
-            if (!direction?.placedBuilding) {
+            if (!direction?.PlacedBuilding) {
                 if (targetBuilding as GroundBuilding && direction.floorIndex == 0 && direction.PlaceIndex == CityManager.firstBuildCityBuildingPlace) {
                     return true;
                 }

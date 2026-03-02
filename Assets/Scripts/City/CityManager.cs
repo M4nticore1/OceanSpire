@@ -189,7 +189,7 @@ public class CityManager : MonoBehaviour
                 }
 
                 if (data.placeIndex == 0) {
-                    TowerBuilding placedBuilding = builtFloors[data.floorIndex].hallBuildingPlace.placedBuilding;
+                    TowerBuilding placedBuilding = builtFloors[data.floorIndex].hallBuildingPlace.PlacedBuilding;
                     if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.id)
                         placedBuilding.Demolish();
 
@@ -197,7 +197,7 @@ public class CityManager : MonoBehaviour
                         BuildingFactory.CreateBuilding(data.id, data);
                 }
                 else {
-                    TowerBuilding placedBuilding = builtFloors[data.floorIndex].roomBuildingPlaces[data.placeIndex].placedBuilding;
+                    TowerBuilding placedBuilding = builtFloors[data.floorIndex].roomBuildingPlaces[data.placeIndex].PlacedBuilding;
                     if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.id)
                         placedBuilding.Demolish();
 
@@ -213,11 +213,11 @@ public class CityManager : MonoBehaviour
 
                 // Hall
                 var hallData = new TowerBuildingEntry (i, 0);
-                floor.hallBuildingPlace.placedBuilding?.Init(hallData);
+                floor.hallBuildingPlace.PlacedBuilding?.Init(hallData);
 
                 // Rooms
                 for (int j = 0; j < roomsCountPerFloor; j++) {
-                    TowerBuilding room = floor.roomBuildingPlaces[j].placedBuilding;
+                    TowerBuilding room = floor.roomBuildingPlaces[j].PlacedBuilding;
                     if (!room) continue;
 
                     var roomData = new TowerBuildingEntry (i, j);
@@ -319,10 +319,10 @@ public class CityManager : MonoBehaviour
             // Set room heights
             bool isRoomPlacedOnFloor = false;
             for (int j = 0; j < roomsCountPerFloor; j++) {
-                if (builtFloors[i].roomBuildingPlaces[j].placedBuilding)
+                if (builtFloors[i].roomBuildingPlaces[j].PlacedBuilding)
                     isRoomPlacedOnFloor = true;
 
-                if (builtFloors[i].roomBuildingPlaces[j].placedBuilding)
+                if (builtFloors[i].roomBuildingPlaces[j].PlacedBuilding)
                     lastPlacedRoomsFloorIndex[j] = i;
 
                 for (int k = lastPlacedRoomsFloorIndex[j]; k <= i; k++) {
@@ -334,7 +334,7 @@ public class CityManager : MonoBehaviour
             }
 
             // Set hall heights
-            if (builtFloors[i].hallBuildingPlace.placedBuilding || isRoomPlacedOnFloor) {
+            if (builtFloors[i].hallBuildingPlace.PlacedBuilding || isRoomPlacedOnFloor) {
                 lastPlacedHallFloorIndex = i;
             }
 
@@ -459,7 +459,7 @@ public class CityManager : MonoBehaviour
         bool isBuildingPlaceIndexLessMax = buildingPlaceIndex < roomsCountPerFloor;
 
         if (isFloorIndexMoreMin && isFloorIndexLessMax && isBuildingPlaceIndexMoreMin && isBuildingPlaceIndexLessMax) {
-            building = builtFloors[floorIndex].roomBuildingPlaces[buildingPlaceIndex].placedBuilding;
+            building = builtFloors[floorIndex].roomBuildingPlaces[buildingPlaceIndex].PlacedBuilding;
         }
 
         return building;

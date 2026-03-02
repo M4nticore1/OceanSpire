@@ -14,8 +14,7 @@ public static class EventBus
     // Buildings
     public static event Action<BuildingWidget> onBuildingWidgetBuildClicked;
     public static event Action<BuildingWidget> onBuildingWidgetInformationClicked;
-    public static event Action<Building> onBuildingStartedPlacing;
-    public static event Action<Building> onBuildingFinishedPlacing;
+    public static event Action<Building> onSelectedBuildingToPlace;
     public static event Action<Building> onBuildingInitialized;
     public static event Action<Building> onBuildingPlaced;
 
@@ -96,12 +95,7 @@ public static class EventBus
 
     public static void InvokeOnBuildingStartPlacing(Building building)
     {
-        onBuildingStartedPlacing?.Invoke(building);
-    }
-
-    public static void InvokeOnBuildingFinishPlacing(Building building)
-    {
-        onBuildingFinishedPlacing?.Invoke(building);
+        onSelectedBuildingToPlace?.Invoke(building);
     }
 
     public static void InvokeBuildingInitialized(Building building)
