@@ -51,22 +51,26 @@ public class BoatFindingLootState : BoatState
 
     private LootContainer TryFindNearestTarget()
     {
-        int count = LootManager.Instance.spawnedLootContainers.Count;
+        var containers = LootManager.Instance.spawnedLootContainers;
 
-        if (count == 0) return null;
+        if (containers.Count == 0) return null;
 
         LootContainer nearestContainer = null;
+        float shortestDistance = float.MaxValue;
 
-        foreach (var container in LootManager.Instance.spawnedLootContainers) {
+        foreach (var container in containers) {
             if (!container || container.currentTransportMethod == TransportMethod.Flying) continue;
 
             Vector3 position = container.transform.position;
 
-            if (nearestContainer && position.magnitude >= nearestContainer.transform.position.magnitude) continue;
+            float distance = Vector3.Distance(boat.transform.position, position);
+
+            if (distance >= shortestDistance) continue;
 
             NavMeshPath path = new NavMeshPath();
 
             if (NavMesh.CalculatePath(boat.transform.position, position, NavMesh.AllAreas, path)) {
+                shortestDistance = distance;
                 nearestContainer = container;
             }
         }

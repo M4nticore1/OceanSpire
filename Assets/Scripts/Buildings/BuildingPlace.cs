@@ -54,9 +54,10 @@ public class BuildingPlace : MonoBehaviour, IClickable
         ApplyNeighborPlace();
         HideBuildingPlace();
 
-        EventBus.onSelectedBuildingToPlace += OnBuildingStartPlacing;
+        EventBus.onStartedPlacingBuilding += OnBuildingStartPlacing;
         EventBus.onBuildingPlaced += OnBuildingPlaced;
         EventBus.onBuildingInitialized += OnBuildingInitialized;
+        EventBus.onStopPlacingBuildingButtonClicked += OnStopPlacingBuildingButtonClicked;
     }
 
     private BuildingPlace GetNeighborPlace(Side side)
@@ -102,6 +103,11 @@ public class BuildingPlace : MonoBehaviour, IClickable
         if (towerBuilding.floorIndex != floorIndex || towerBuilding.placeIndex != placeIndex || towerBuilding.BuildingData.BuildingType != buildingType) return;
 
         SetPlacedBuilding(towerBuilding);
+    }
+
+    private void OnStopPlacingBuildingButtonClicked()
+    {
+        HideBuildingPlace();
     }
 
     private void SetPlacedBuilding(TowerBuilding building)

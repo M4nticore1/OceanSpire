@@ -11,6 +11,8 @@ public class Bootstrap : MonoBehaviour
         SettingsSaveManager.Instance.Init();
         SettingsData data = SettingsSaveManager.Instance.savedData;
 
+        BuildingsList.Instance.Init();
+
         LocalizationManager.Instance.Init(null);
 
         QualitySettings.vSyncCount = 0;

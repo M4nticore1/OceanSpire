@@ -4,7 +4,7 @@ public static class BuildingFactory
 {
     public static Building CreateBuilding(int id, TowerBuildingEntry data)
     {
-        TowerBuilding prefab = BuildingsList.Instance.Buildings[id] as TowerBuilding;
+        TowerBuilding prefab = BuildingsList.Instance.buildingsDict[id] as TowerBuilding;
         if (!prefab) {
             Debug.LogError($"No prefab found for Building ID {id}");
             return null;

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BuildingsList", menuName = "Game Content/building Prefabs List")]
@@ -11,12 +12,22 @@ public class BuildingsList : ScriptableObject
             if (_instance == null) {
                 _instance = Resources.Load<BuildingsList>("Lists/BuildingsList");
             }
+
             return _instance;
         }
     }
 
-    [SerializeField] private Building[] buildings = { };
+    [SerializeField] private Building[] buildings = null;
     public Building[] Buildings => buildings;
+
+    public Dictionary<int, Building> buildingsDict = new Dictionary<int, Building>();
+
+    public void Init()
+    {
+        foreach (Building building in buildings) {
+            buildingsDict.Add(building.BuildingData.BuildingId, building);
+        }
+    }
     //public Dictionary<int, Building> buildingsById { get; private set; } = new Dictionary<int, Building>();
 
     //public void Initialize()

@@ -33,6 +33,11 @@ public static class PointerUtils
     // UI
     public static void GetRaycastUIResults(List<RaycastResult> results)
     {
+        if (!EventSystem.current) {
+            Debug.LogWarning("EventSystem is not on the scene.");
+            return;
+        }
+
         PointerEventData data = new PointerEventData(EventSystem.current);
         data.position = GetCurrentInputPosition();
         EventSystem.current.RaycastAll(data, results);
@@ -51,5 +56,12 @@ public static class PointerUtils
     }
 
     // Conditions
-    public static bool IsUIHovered(GameObject gameObjectToCheck) => GetRaycastUIResult().gameObject == gameObjectToCheck;
+    public static bool IsUIHovered(GameObject gameObjectToCheck)
+    {
+        GameObject hovered = GetRaycastUIResult().gameObject;
+
+        if (!hovered) return false;
+
+        return GetRaycastUIResult().gameObject == gameObjectToCheck;
+    }
 }

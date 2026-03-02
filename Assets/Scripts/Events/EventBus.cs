@@ -14,13 +14,15 @@ public static class EventBus
     // Buildings
     public static event Action<BuildingWidget> onBuildingWidgetBuildClicked;
     public static event Action<BuildingWidget> onBuildingWidgetInformationClicked;
-    public static event Action<Building> onSelectedBuildingToPlace;
+    public static event Action<Building> onStartedPlacingBuilding;
     public static event Action<Building> onBuildingInitialized;
     public static event Action<Building> onBuildingPlaced;
 
     public static event Action<BuildingModule> onBuildingModuleInited;
     public static event Action<BuildingModule> onBuildingModuleUpgraded;
     public static event Action<BuildingModule> onBuildingModuleDemolished;
+
+    public static event Action onStopPlacingBuildingButtonClicked;
 
     // Production Module
     public static event Action<ProductionModule> onClickedProductionModule;
@@ -95,7 +97,7 @@ public static class EventBus
 
     public static void InvokeOnBuildingStartPlacing(Building building)
     {
-        onSelectedBuildingToPlace?.Invoke(building);
+        onStartedPlacingBuilding?.Invoke(building);
     }
 
     public static void InvokeBuildingInitialized(Building building)
@@ -106,6 +108,11 @@ public static class EventBus
     public static void InvokeBuildingPlaced(Building building)
     {
         onBuildingPlaced?.Invoke(building);
+    }
+
+    public static void InvokeStopPlacingBuildingButtonClicked()
+    {
+        onStopPlacingBuildingButtonClicked?.Invoke();
     }
 
     // Modules

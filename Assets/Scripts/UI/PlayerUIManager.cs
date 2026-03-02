@@ -41,7 +41,6 @@ public class PlayerUIManager : MonoBehaviour
     [SerializeField] private CustomButton openConstructionMenuButton = null;
     [SerializeField] private CustomButton openStorageMenuButton = null;
     [SerializeField] private CustomButton closeManagementMenuButton = null;
-    [SerializeField] private CustomButton stopPlacingBuildingButton = null;
 
     [Header("Management Buttons")]
     [SerializeField] private CustomButton buildingListsMenuButton = null;
@@ -82,14 +81,8 @@ public class PlayerUIManager : MonoBehaviour
         storageListsMenuButton.onReleased += OnStorageListsButtonReleased;
 
         closeManagementMenuButton.onReleased += CloseManagementMenu;
-        stopPlacingBuildingButton.onReleased += StopPlacingBuilding;
 
-        // Constructing
         EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
-        EventBus.onBuildingPlaced += OnBuildingPlaced;
-
-        // Loot
-        //EventBus.onLootAdded += OnLootAdded;
 
         // Context Menu
         EventBus.onContextMenuUpgradeButtonClicked += OnContextMenuUpgradeButtonClicked;
@@ -104,7 +97,7 @@ public class PlayerUIManager : MonoBehaviour
         System.Array buildingCategoriesEnum = System.Enum.GetValues(typeof(BuildingCategory));
         for (int i = 0; i < buildingCategoriesEnum.Length; i++) {
             int index = i;
-            buildingsButtonSelectCallbacks[index] = () => OpenBuildingsListByCategory((BuildingCategory)buildingCategoriesEnum.GetValue(index));
+            buildingsButtonSelectCallbacks[index] = () => OnBuildingsListButtonClicked((BuildingCategory)buildingCategoriesEnum.GetValue(index));
             buildingListButtons[index].onSelected += buildingsButtonSelectCallbacks[index];
         }
 
@@ -129,15 +122,8 @@ public class PlayerUIManager : MonoBehaviour
         storageListsMenuButton.onReleased -= OnStorageListsButtonReleased;
 
         closeManagementMenuButton.onReleased -= CloseManagementMenu;
-        stopPlacingBuildingButton.onReleased -= StopPlacingBuilding;
 
-        // Constructing
         EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
-        EventBus.onBuildingPlaced -= OnBuildingPlaced;
-        //EventBus.onStorageCapacityChanged -= OnStorageCapacityUpdated;
-
-        // Loot
-        //EventBus.onLootAdded -= OnLootAdded;
 
         // Context Menu
         EventBus.onContextMenuUpgradeButtonClicked -= OnContextMenuUpgradeButtonClicked;
@@ -174,7 +160,6 @@ public class PlayerUIManager : MonoBehaviour
         managementMenu.SetActive(false);
         buildingListsMenu.SetActive(false);
         workersMenu.CloseWorkersMenu();
-        stopPlacingBuildingButton.gameObject.SetActive(false);
 
         foreach (GridLayoutGroup rect in buildingLists) {
             rect.gameObject.SetActive(false);
@@ -197,7 +182,7 @@ public class PlayerUIManager : MonoBehaviour
         managementMenu.SetActive(false);
         isManagementMenuOpened = false;
 
-        ResetLastOpenedListCategoried();
+        //ResetLastOpenedListCategoried();
     }
 
     private void ResetLastOpenedListCategoried()
@@ -211,10 +196,17 @@ public class PlayerUIManager : MonoBehaviour
     {
         OpenManagementMenu();
         OpenBuildingsMenu();
+
+        CloseBuildingsListByCategory(lastOpenedBuildingsListCategory);
+        ResetLastOpenedListCategoried();
+        OpenBuildingsListByCategory(lastOpenedBuildingsListCategory);
+
         CloseStorageMenu();
         buildingListsMenuButton.SetState(CustomSelectableState.Selected);
         buildingListsMenuButton.FinishTransitionAnimation();
         storageListsMenuButton.FinishTransitionAnimation();
+
+        buildingListButtons[(int)lastOpenedBuildingsListCategory].SetState(CustomSelectableState.Selected);
     }
 
     private void OnBuildingListsButtonReleased()
@@ -226,7 +218,6 @@ public class PlayerUIManager : MonoBehaviour
     private void OpenBuildingsMenu()
     {
         buildingListsMenu.SetActive(true);
-        buildingListButtons[(int)lastOpenedBuildingsListCategory].SetState(CustomSelectableState.Selected);
         isBuildingListsMenuOpened = true;
         UpdateBuildingsMenuResourcesAmount();
     }
@@ -237,23 +228,29 @@ public class PlayerUIManager : MonoBehaviour
         buildingListsMenu.SetActive(false);
     }
 
-    private void OpenBuildingsListByCategory(BuildingCategory buildingCategory)
+    private void OnBuildingsListButtonClicked(BuildingCategory category)
     {
-        // Set initial sibling index to last Button
-        int lastIndex = (int)lastOpenedBuildingsListCategory;
-        buildingListButtons[lastIndex].transform.SetSiblingIndex(buildingListButtons.Length - lastIndex - 1);
+        CloseBuildingsListByCategory(lastOpenedBuildingsListCategory);
+        OpenBuildingsListByCategory(category);
 
-        // Hide last list
-        buildingLists[lastIndex].gameObject.SetActive(false);
-
-        // Set sibling index to selected button
-        int index = (int)buildingCategory;
-        buildingListButtons[index].transform.SetAsLastSibling();
-
-        // Show list
-        buildingLists[index].gameObject.SetActive(true);
+        int index = (int)category;
         buildingListsScrollRect.content = buildingLists[index].GetComponent<RectTransform>();
-        lastOpenedBuildingsListCategory = buildingCategory;
+        lastOpenedBuildingsListCategory = category;
+    }
+
+    private void OpenBuildingsListByCategory(BuildingCategory category)
+    {
+        int index = (int)category;
+        buildingListButtons[index].transform.SetAsLastSibling();
+        buildingLists[index].gameObject.SetActive(true);
+    }
+
+    private void CloseBuildingsListByCategory(BuildingCategory category)
+    {
+        int lastIndex = (int)category;
+
+        buildingListButtons[lastIndex].transform.SetSiblingIndex(buildingListButtons.Length - lastIndex - 1);
+        buildingLists[lastIndex].gameObject.SetActive(false);
     }
 
     private void CreateBuildingWidgets()
@@ -492,26 +489,9 @@ public class PlayerUIManager : MonoBehaviour
 
     }
 
-    // Placing Building
+    // Events
     private void OnBuildingWidgetBuildClicked(BuildingWidget widget)
     {
-        if (stopPlacingBuildingButton)
-            stopPlacingBuildingButton.gameObject.SetActive(true);
-        else
-            Debug.Log("stopPlacingBuildingButton is NULL");
-
         CloseManagementMenu();
-    }
-
-    private void OnBuildingPlaced(Building building)
-    {
-        if (stopPlacingBuildingButton)
-            stopPlacingBuildingButton.gameObject.SetActive(false);
-    }
-
-    private void StopPlacingBuilding()
-    {
-        if (stopPlacingBuildingButton)
-            stopPlacingBuildingButton.gameObject.SetActive(false);
     }
 }
