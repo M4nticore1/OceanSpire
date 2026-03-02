@@ -15,9 +15,9 @@ public class BuildingContextMenu : ContextMenuBase<Building>
     private CustomButton spawnedUpgradeButton = null;
     private CustomButton spawnedDemolishButton = null;
 
-    protected override void OnDisable()
+    protected override void OnDestroy()
     {
-        base.OnDisable();
+        base.OnDestroy();
 
         if (spawnedWorkersButton) {
             spawnedWorkersButton.onReleased -= EventBus.InvokeContextMenuWorkersButtonClicked;
@@ -35,7 +35,7 @@ public class BuildingContextMenu : ContextMenuBase<Building>
         SetNameText(building.BuildingData.BuildingName);
         SetLevelText(building.LevelIndex + 1);
 
-        if (building.GetComponent<ProductionModule>()) {
+        if (building.GetComponent<ProductionModule>() || building.GetComponent<PierModule>()) {
             CreateWorkersButton();
         }
 

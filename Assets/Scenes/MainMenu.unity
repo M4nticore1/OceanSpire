@@ -365,7 +365,7 @@ MonoBehaviour:
   managementSaveMenu: {fileID: 371888447}
   createWorldMenuSlidePanel: {fileID: 1699561457}
   nameWorldInputField: {fileID: 1264137646}
-  createWorldButton: {fileID: 719027482}
+  createWorldButton: {fileID: 1215549104}
   loadSaveButton: {fileID: 1633443547}
   deleteSaveButton: {fileID: 1365414147}
   worldNameAlreadyExistsTextBlock: {fileID: 1909775586}
@@ -388,9 +388,9 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &719027482 stripped
+--- !u!114 &1215549104 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8430319010878540654, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1445921117646697248, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
   m_PrefabInstance: {fileID: 6624092925259090882}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
