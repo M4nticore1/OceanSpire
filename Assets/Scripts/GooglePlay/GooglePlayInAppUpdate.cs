@@ -11,8 +11,10 @@ public class GooglePlayInAppUpdate : MonoBehaviour
 
     private void Start()
     {
+#if UNITY_ANDROID && !UNITY_EDITOR
         appUpdateManager = new AppUpdateManager();
-        //StartCoroutine(CheckForUpdate());
+        StartCoroutine(CheckForUpdate());
+#endif
     }
 
     private IEnumerator CheckForUpdate()
