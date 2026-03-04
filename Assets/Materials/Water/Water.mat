@@ -95,7 +95,7 @@ Material:
     - _WavesDensity: 0.8
     - _WavesHeight: 3.88
     - _WavesSpeed: 0.6
-    - _WavesStrength: 0.05
+    - _WavesStrength: 0.1
     m_Colors:
     - _CausticsColor: {r: 1, g: 1, b: 1, a: 0}
     - _CausticsDensity: {r: 1, g: 1, b: 1, a: 0}

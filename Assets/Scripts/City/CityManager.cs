@@ -38,13 +38,6 @@ public class CityManager : MonoBehaviour
 
     [SerializeField] private PlayerController playerController = null;
 
-    // Buildings
-    [Header("Buildings")]
-    [SerializeField] private NavMeshSurface towerNavMeshSurface = null;
-
-    public Coroutine bakeNavMeshCoroutine { get; private set; } = null;
-    public bool isNavMeshBuilt { get; private set; } = false;
-
     // Other
     public const float autoSaveFrequency = 1;
     public const float triggerLootContainerRadius = 150f;
@@ -58,26 +51,9 @@ public class CityManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
-    {
-        WorldData saveData = WorldSaveManager.Instance.currentSaveWorldData;
-
-        bakeNavMeshCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
-    }
-
     private void Update()
     {
         TimerManager.Tick();
-    }
-
-    private IEnumerator BakeNavMeshSurfaceCoroutine()
-    {
-        if (bakeNavMeshCoroutine != null) yield break;
-
-        yield return new WaitForEndOfFrame();
-        towerNavMeshSurface.BuildNavMesh();
-        bakeNavMeshCoroutine = null;
-        EventBus.InvokNavMeshBaked();
     }
 
     private IEnumerator AutosaveCoroutine()
