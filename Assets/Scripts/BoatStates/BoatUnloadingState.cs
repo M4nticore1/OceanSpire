@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BoatUnloadingState : BoatState
 {
-    public const float UNLOAD_SPEED = 20f;
+    public const float UnloadSpeed = 20f;
     private float currentWeightToUnload = 0f;
 
     public BoatUnloadingState(Boat boat) : base(boat)
@@ -23,9 +23,11 @@ public class BoatUnloadingState : BoatState
 
     public override void Process()
     {
+        Debug.Log("BoatUnloadingState");
         boat.ProcessDrainHealth();
 
         if (ShouldUnload()) {
+            Debug.Log("ShouldUnload");
             ProcessStoreResources();
         }
         else {
@@ -50,6 +52,8 @@ public class BoatUnloadingState : BoatState
             return;
         }
 
+        Debug.Log("ProcessStoreResources");
+
         // Item
         ItemInstance loot = boat.GetItemToUnload();
         ItemData data = loot.ItemData;
@@ -57,7 +61,7 @@ public class BoatUnloadingState : BoatState
         float lootWeight = data.Weight;
 
         // Weight
-        float weightToUnload = UNLOAD_SPEED * Time.deltaTime;
+        float weightToUnload = UnloadSpeed * Time.deltaTime;
         currentWeightToUnload += weightToUnload;
         int amountToUnload = math.min((int)(currentWeightToUnload / lootWeight), loot.Amount);
 

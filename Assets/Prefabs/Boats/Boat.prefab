@@ -135,6 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boatData: {fileID: 11400000, guid: 21496443aa3fd6c42b41a50f08781f1a, type: 2}
   navAgent: {fileID: 2423519319514539946}
+  lootHandler: {fileID: 3202602922045262551}
   movement: {fileID: 1275618266238498596}
   inventory: {fileID: 1147310907644242627}
   health: {fileID: 1718763975742808754}
@@ -165,6 +166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e90a54985aec11439e2d46e5a10d3c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatLootCollector
+  movement: {fileID: 1275618266238498596}
+  inventory: {fileID: 1147310907644242627}
   collectLootTime: 0
 --- !u!114 &1275618266238498596
 MonoBehaviour:
@@ -191,7 +194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
   autoCleaning: 0
-  maxWeight: 0
+  isUnlimitedAmount: 1
+  maxWeight: 100
 --- !u!114 &1718763975742808754
 MonoBehaviour:
   m_ObjectHideFlags: 0

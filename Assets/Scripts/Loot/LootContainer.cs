@@ -30,13 +30,12 @@ public class LootContainer : MonoBehaviour
     [SerializeField] private bool isMovable = true;
     private bool isMoving = false;
     public TransportMethod currentTransportMethod = TransportMethod.Floating;
-    private float moveSpeed = 0.5f;
+    private const float MoveSpeed = 0.3f;
     private float currentMoveSpeedMultiplier = 1f;
     private const float stopMovingSpeed = 10f;
 
     [HideInInspector] public Vector3 moveDirection = Vector3.zero;
     private Vector3 startMoveDirection = Vector3.zero;
-    private float windSpeed = 0;
 
     [Header("Spawn")]
     [SerializeField] private int floorsCountToSpawn = 0;
@@ -46,9 +45,6 @@ public class LootContainer : MonoBehaviour
     public int currentFloorIndex { get; private set; } = 0;
     public float spawnMinTime = 0;
     public float spawnMaxTime = 0;
-
-    private float checkPositionTime = 0.0f;
-    private const float checkPositionRate = 3.0f;
 
     private const float despawnDistance = 100.0f;
 
@@ -60,13 +56,11 @@ public class LootContainer : MonoBehaviour
     private const float checkPositionFrequency = 1.0f;
     private double lastCheckPositionTime = 0d;
 
-    private bool isInitialized = false;
-
-    public void InitializeContainer(int floorIndex)
+    public void Init(int floorIndex)
     {
-        checkPositionTime = Time.time;
-        if (isMovable)
+        if (isMovable) {
             isMoving = true;
+        }
 
         for (int i = 0; i < possibleLoot.Count; i++) {
             int chance = UnityEngine.Random.Range(0, 100);
@@ -80,14 +74,14 @@ public class LootContainer : MonoBehaviour
         Vector3 direction = WindManager.Instance.windDirection;
         moveDirection = new Vector3(direction.x, 0, direction.z);
         startMoveDirection = moveDirection;
-
         currentFloorIndex = floorIndex;
-        if (floorIndex > 0)
-            currentTransportMethod = TransportMethod.Flying;
-        else
-            currentTransportMethod = TransportMethod.Floating;
 
-        isInitialized = true;
+        if (floorIndex > 0) {
+            currentTransportMethod = TransportMethod.Flying;
+        }
+        else {
+            currentTransportMethod = TransportMethod.Floating;
+        }
     }
 
     public void Tick(float deltaTime)
@@ -110,10 +104,6 @@ public class LootContainer : MonoBehaviour
             float distanceToIsland = transform.position.magnitude;
             if (distanceToIsland > maxDistanceToMoveAroundCity) {
                 Vector3 currentMoveDirection = -transform.position.normalized;
-
-                //float dot = Vector3.Dot(currentMoveDirection, startMoveDirection.normalized);
-                //if (dot < 0.9f)
-                //    moveDirection = Vector3.Lerp(moveDirection, startMoveDirection, deltaTime * 10.5f);
             }
             else {
                 float alpha = 1 - ((distanceToIsland - minDistanceToMoveAroundCity) / (maxDistanceToMoveAroundCity - minDistanceToMoveAroundCity));
@@ -129,7 +119,7 @@ public class LootContainer : MonoBehaviour
             currentMoveSpeedMultiplier = math.lerp(currentMoveSpeedMultiplier, 0f, stopMovingSpeed * Time.deltaTime);
         }
 
-        transform.position += moveDirection * currentMoveSpeedMultiplier * moveSpeed * deltaTime;
+        transform.position += moveDirection * currentMoveSpeedMultiplier * MoveSpeed * deltaTime;
     }
 
     private void CheckPosition()

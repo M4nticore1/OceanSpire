@@ -22,6 +22,11 @@ public class StorageItem
 
     public void AddAmount(int amount)
     {
+        item.AddAmount(amount);
+    }
+
+    public void AddAmount(int amount, int maxAmount)
+    {
         item.AddAmount(amount, maxAmount);
     }
 

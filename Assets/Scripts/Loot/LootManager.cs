@@ -71,7 +71,7 @@ public class LootManager : MonoBehaviour
         Quaternion spawnRotation = Quaternion.Euler(0, rotationAngle, 0);
 
         LootContainer lootContainer = Object.Instantiate(container, spawnPosition, spawnRotation);
-        lootContainer.InitializeContainer((int)spawnFloorNumber);
+        lootContainer.Init((int)spawnFloorNumber);
         spawnedLootContainers.Add(lootContainer);
 
         currentTimeToSpawnContainers[index] = Random.Range(container.spawnMinTime, container.spawnMaxTime);

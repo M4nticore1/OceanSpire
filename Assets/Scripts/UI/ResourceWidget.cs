@@ -86,6 +86,8 @@ public class ResourceWidget : MonoBehaviour
         int populationId = (int)ItemID.Population;
 
         if (itemData.ItemId == populationId) {
+            if (!cityStorage.Inventory.itemsDict.ContainsKey(populationId)) return;
+
             int id = populationId;
             int amount = entitiesManager.citizens.Count;
             int maxAmount = cityStorage.Inventory.itemsDict[id].maxAmount;
@@ -94,8 +96,9 @@ public class ResourceWidget : MonoBehaviour
         else {
             if (itemInstance == null) return;
 
+            int id = itemInstance.ItemData.ItemId;
             int amount = itemInstance.Amount;
-            int maxAmount = cityStorage.Inventory.itemsDict[itemInstance.ItemData.ItemId].maxAmount;
+            int maxAmount = cityStorage.Inventory.itemsDict[id].maxAmount;
             SetAmount(amount, maxAmount);
         }
     }
