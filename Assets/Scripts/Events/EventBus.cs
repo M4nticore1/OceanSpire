@@ -15,7 +15,7 @@ public static class EventBus
     public static event Action<BuildingWidget> onBuildingWidgetBuildClicked;
     public static event Action<BuildingWidget> onBuildingWidgetInformationClicked;
     public static event Action<Building> onStartedPlacingBuilding;
-    public static event Action<Building> onBuildingInitialized;
+    public static event Action<Building> onBuildingInited;
     public static event Action<Building> onBuildingPlaced;
 
     public static event Action<BuildingModule> onBuildingModuleInited;
@@ -33,8 +33,8 @@ public static class EventBus
     public static event Action<int, int> onBoatUnloadedItem;
 
     // Residents
-    public static event Action<Human> onCitizenAdded;
-    public static event Action<Human> onResidentRemoved;
+    public static event Action<Human> onCitizenInited;
+    public static event Action<Human> onCitizenDeleted;
 
     // Workers
     public static event Action<CitizenWidget> onCitizenWidgetClicked;
@@ -102,7 +102,7 @@ public static class EventBus
 
     public static void InvokeBuildingInitialized(Building building)
     {
-        onBuildingInitialized?.Invoke(building);
+        onBuildingInited?.Invoke(building);
     }
 
     public static void InvokeBuildingPlaced(Building building)
@@ -154,14 +154,14 @@ public static class EventBus
     }
 
     // Residents
-    public static void InvokeCitizenAdded(Human resident)
+    public static void InvokeCitizenInited(Human resident)
     {
-        onCitizenAdded?.Invoke(resident);
+        onCitizenInited?.Invoke(resident);
     }
 
-    public static void InvokeResidentRemoved(Human resident)
+    public static void InvokeCitizenDeleted(Human resident)
     {
-        onResidentRemoved?.Invoke(resident);
+        onCitizenDeleted?.Invoke(resident);
     }
 
     // Workers

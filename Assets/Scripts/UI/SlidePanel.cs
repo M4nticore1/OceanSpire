@@ -42,7 +42,10 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     private bool isOpened = false;
     private bool isMoving = false;
     private List<Transform> content = new List<Transform>();
-    private Vector2 targetPosition = new Vector3();
+
+    private Vector2 openedPosition;
+    private Vector2 closedPosition;
+    private Vector2 targetPosition;
 
     private Vector2 pressPossition;
     private Vector2 releasePossition;
@@ -77,10 +80,13 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
     private void Update()
     {
-        if (isMoving)
+        if (isMoving) {
             UpdatePosition();
-        if (background)
+        }
+
+        if (background) {
             UpdateBackground();
+        }
     }
 
     private void Start()
@@ -133,7 +139,8 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
     public void OpenSlidePanel()
     {
-        ApplyTagetPositionByAlpha(openedScreenPositionAlpha, openedPanelPositionAlpha);
+        openedPosition = CalculateOpenedPosition();
+        targetPosition = openedPosition;
 
         openedFrame = Time.frameCount;
 
@@ -149,7 +156,8 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
     public void CloseSlidePanel()
     {
-        ApplyTagetPositionByAlpha(closedScreenPositionAlpha, closedPanelPositionAlpha);
+        closedPosition = CalculateClosedPosition();
+        targetPosition = closedPosition;
 
         if (background) {
             background.raycastTarget = false;
@@ -163,8 +171,11 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     private void UpdatePosition()
     {
         rectTransform.anchoredPosition = math.lerp(rectTransform.anchoredPosition, targetPosition, slideTransitionSpeed * Time.deltaTime);
-        if (rectTransform.anchoredPosition == targetPosition)
+        rectTransform.anchoredPosition = math.clamp(rectTransform.anchoredPosition, closedPosition, openedPosition);
+
+        if (rectTransform.anchoredPosition == targetPosition) {
             isMoving = false;
+        }
     }
 
     private void UpdateBackground()
@@ -205,7 +216,17 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         return true;
     }
 
-    private void ApplyTagetPositionByAlpha(Vector2 screenPostionAlpha, Vector2 panelPostionAlpha)
+    private Vector2 CalculateOpenedPosition()
+    {
+        return CalculatePositionByAlpha(openedScreenPositionAlpha, openedPanelPositionAlpha);
+    }
+
+    private Vector2 CalculateClosedPosition()
+    {
+        return CalculatePositionByAlpha(closedScreenPositionAlpha, closedPanelPositionAlpha);
+    }
+
+    private Vector2 CalculatePositionByAlpha(Vector2 screenPostionAlpha, Vector2 panelPostionAlpha)
     {
         Vector2 resolution = new Vector2(Screen.width, Screen.height) / canvas.scaleFactor;
         float positionX = resolution.x * screenPostionAlpha.x;
@@ -215,6 +236,6 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         float sizeCorrectionX = size.x * panelPostionAlpha.x;
         float sizeCorrectionY = size.y * panelPostionAlpha.y;
 
-        targetPosition = new Vector2(positionX, positionY) + new Vector2(sizeCorrectionX, sizeCorrectionY);
+        return new Vector2(positionX, positionY) + new Vector2(sizeCorrectionX, sizeCorrectionY);
     }
 }

@@ -38,10 +38,10 @@ public class LocalizationManager
             SetLocalization(data.language);
         }
         else {
-            SystemLanguage systemLanguage = Application.systemLanguage;
+            SystemLanguage systemLanguage = SystemLanguage.Russian /*Application.systemLanguage*/;
 
             if (localizations.ContainsKey(systemLanguage)) {
-                SetLocalization(Application.systemLanguage);
+                SetLocalization(systemLanguage);
             }
             else {
                 SetLocalization(SystemLanguage.English);

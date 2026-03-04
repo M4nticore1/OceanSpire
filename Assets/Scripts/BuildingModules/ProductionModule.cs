@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [AddComponentMenu("BuildingComponents/ProductionBuilding")]
-public class ProductionModule : BuildingModule
+public class ProductionModule : BuildingModule, IElectricible
 {
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
     public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
@@ -22,6 +22,9 @@ public class ProductionModule : BuildingModule
     private float lastProduceTime = 0.0f;
 
     public const float collectLootFlickingMultiplier = 0.35f;
+
+    [SerializeField] private float electricityConsumption = 0f;
+    public float ElectricityConsumption => electricityConsumption;
 
     protected override void OnEnable()
     {
@@ -106,6 +109,16 @@ public class ProductionModule : BuildingModule
     protected override void OnExitBuilding(EntityCityNavigator navigator)
     {
 
+    }
+
+    public float GetElectricityConsumption()
+    {
+        return ElectricityConsumption;
+    }
+
+    public bool CanSpendElectricity()
+    {
+        return isProducting;
     }
 
     // Production

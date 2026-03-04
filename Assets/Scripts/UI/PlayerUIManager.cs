@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class PlayerUIManager : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
+    [SerializeField] private CityStorage cityStorage;
 
     // Widgets
     [Header("Widgets")]
@@ -354,6 +355,7 @@ public class PlayerUIManager : MonoBehaviour
     {
         List<ResourceWidget> widgets = new();
         int count = ItemsList.Instance.Items.Length;
+
         for (int i = 0; i < count; i++) {
             ItemData itemData = ItemsList.Instance.Items[i];
             if (itemData.ItemCategory == ItemCategory.Society) continue;
@@ -363,8 +365,8 @@ public class PlayerUIManager : MonoBehaviour
             ResourceWidget storageResourceWidget = Instantiate(storageResourceWidgetPrefab, storageLists[(int)itemCategory - 1].transform);
             widgets.Add(storageResourceWidget);
 
-            ItemInstance item = CityManager.Instance.Inventory.itemsDict[i].item;
-            storageResourceWidget.SetItem(item);
+            ItemInstance item = cityStorage.Inventory.itemsDict[i].item;
+            storageResourceWidget.Init(itemData);
         }
         //storageResourceWidgets = widgets.ToArray();
     }
@@ -424,7 +426,7 @@ public class PlayerUIManager : MonoBehaviour
 
             int id = resourcesToUpgrade[i].ItemData.ItemId;
             int amount = resourcesToUpgrade[i].Amount;
-            int maxAmount = CityManager.Instance.Inventory.itemsDict[id].maxAmount;
+            int maxAmount = cityStorage.Inventory.itemsDict[id].maxAmount;
             resourceWidget.SetAmount(amount, maxAmount);
         }
     }
@@ -444,7 +446,7 @@ public class PlayerUIManager : MonoBehaviour
             ResourceWidget resourceWidget = Instantiate(buildingActionResourceWidgetPrefab, actionResourcesLayourGroup.transform);
             spawnedBuildingActionResourceWidgets.Add(resourceWidget);
 
-            int amount = (int)math.ceil(resourcesToUpgrade[i].Amount * CityManager.demolitionResourceRefundRate);
+            int amount = (int)math.ceil(resourcesToUpgrade[i].Amount * BuildingsManager.demolitionResourceRefundRate);
             resourceWidget.SetAmount(amount);
         }
     }

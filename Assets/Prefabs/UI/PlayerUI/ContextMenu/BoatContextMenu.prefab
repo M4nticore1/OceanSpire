@@ -173,10 +173,6 @@ PrefabInstance:
       propertyPath: demolishButton
       value: 
       objectReference: {fileID: 3457099999420442856}
-    - target: {fileID: 1241803172831404628, guid: a7923f54b2255ef43987dcfc4f32cfc8, type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1963749821639896536, guid: a7923f54b2255ef43987dcfc4f32cfc8, type: 3}
       propertyPath: m_text
       value: 100/100
@@ -329,6 +325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatContextMenu
   nameText: {fileID: 727766870218773142}
+  layoutGroup: {fileID: 0}
   healthText: {fileID: 850652808420368485}
   weightText: {fileID: 0}
   healthDisplay: {fileID: 3687120527834751662}

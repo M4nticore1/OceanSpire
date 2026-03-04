@@ -16,6 +16,8 @@ public class BuildingActionWaypoint
 
 public class BuildingConstruction : MonoBehaviour
 {
+    protected BuildingsManager buildingsManager;
+
     protected Building ownedBuilding = null;
 
     [SerializeField] private GameObject[] buildingInteriors;
@@ -32,6 +34,8 @@ public class BuildingConstruction : MonoBehaviour
 
     public virtual void Init(Building ownedBuilding)
     {
+        buildingsManager = FindAnyObjectByType<BuildingsManager>();
+
         this.ownedBuilding = ownedBuilding;
         meshRendererers = GetComponentsInChildren<MeshRenderer>();
         propertyBlock = new MaterialPropertyBlock();

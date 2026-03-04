@@ -6,8 +6,10 @@ using UnityEngine.AI;
 
 public class BoatLootHandler : MonoBehaviour
 {
-    private EntityMovement movement = null;
-    private Inventory inventory = null;
+    private LootManager lootManager;
+
+    [SerializeField] private EntityMovement movement = null;
+    [SerializeField] private Inventory inventory = null;
 
     [SerializeField] private int collectLootTime = 0;
     public const float unloadLootSpeed = 20.0f;
@@ -22,10 +24,9 @@ public class BoatLootHandler : MonoBehaviour
 
     public event Action onCollectedLoot;
 
-    private void Awake()
+    public void Init()
     {
-        movement = GetComponent<EntityMovement>();
-        inventory = GetComponent<Inventory>();
+        lootManager = FindAnyObjectByType<LootManager>();
     }
 
     public void HandleCollectingLoot()
@@ -80,7 +81,7 @@ public class BoatLootHandler : MonoBehaviour
             int id = loot.ItemData.ItemId;
             int amountToTake = math.min(loot.Amount, (int)(inventory.RemainingWeight / loot.ItemData.Weight));
 
-            inventory.AddItem(id, amountToTake, amountToTake);
+            inventory.AddItemAmount(id, amountToTake);
         }
 
         isCollectingLoot = false;
@@ -89,13 +90,13 @@ public class BoatLootHandler : MonoBehaviour
 
     private LootContainer TryFindNearestTarget()
     {
-        int count = LootManager.Instance.spawnedLootContainers.Count;
+        int count = lootManager.spawnedLootContainers.Count;
 
         if (count == 0) return null;
 
         LootContainer nearestContainer = null;
 
-        foreach (var container in LootManager.Instance.spawnedLootContainers) {
+        foreach (var container in lootManager.spawnedLootContainers) {
             if (!container || container.currentTransportMethod == TransportMethod.Flying) continue;
 
             Vector3 position = container.transform.position;

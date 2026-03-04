@@ -65,7 +65,7 @@
                     "type": "Value",
                     "id": "30147813-9753-451f-ad30-b27d6cf26657",
                     "expectedControlType": "Axis",
-                    "processors": "Scale(factor=5)",
+                    "processors": "Scale(factor=150)",
                     "interactions": "",
                     "initialStateCheck": true
                 },
@@ -266,7 +266,7 @@
                     "id": "a4d64948-7f48-4354-adaf-214ea16f81d2",
                     "path": "<Mouse>/scroll/down",
                     "interactions": "",
-                    "processors": "Scale(factor=-1)",
+                    "processors": "Invert",
                     "groups": "Keyboard",
                     "action": "CameraZoom",
                     "isComposite": false,

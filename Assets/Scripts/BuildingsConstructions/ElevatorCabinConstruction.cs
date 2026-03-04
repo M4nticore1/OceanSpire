@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ElevatorCabinConstruction : BuildingConstruction
 {
-    public int floorIndex => ((TowerBuilding)ownedBuilding).floorIndex;
-    public int placeIndex => ((TowerBuilding)ownedBuilding).placeIndex;
+    public int FloorIndex => ((TowerBuilding)ownedBuilding).floorIndex;
+    public int PlaceIndex => ((TowerBuilding)ownedBuilding).placeIndex;
 
     public List<EntityCityNavigator> goingForWaitingPassengers = new List<EntityCityNavigator>();
     public List<EntityCityNavigator> waitingPassengers = new List<EntityCityNavigator>();
@@ -44,21 +44,21 @@ public class ElevatorCabinConstruction : BuildingConstruction
             Move(moveDirection, speed);
             SetOwnedBuilding(GetFloorIndexByPosition());
 
-            if (floorIndex == nextFloorIndex)
+            if (FloorIndex == nextFloorIndex)
                 StopMoving();
         }
     }
 
     private void StartMovingToFloor(int targetFloorIndex)
     {
-        if (targetFloorIndex == floorIndex) return;
+        if (targetFloorIndex == FloorIndex) return;
 
         isMoving = true;
-        startFloorIndex = floorIndex;
+        startFloorIndex = FloorIndex;
 
-        if (targetFloorIndex > floorIndex)
+        if (targetFloorIndex > FloorIndex)
             moveDirection = Vector3.up;
-        else if (targetFloorIndex < floorIndex)
+        else if (targetFloorIndex < FloorIndex)
             moveDirection = Vector3.down;
     }
 
@@ -77,7 +77,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
         isMoving = false;
 
         // Correct position.
-        transform.position = new Vector3(transform.position.x, CityManager.Instance.BuiltFloors[floorIndex].transform.position.y, transform.position.z);
+        transform.position = new Vector3(transform.position.x, buildingsManager.BuiltFloors[FloorIndex].transform.position.y, transform.position.z);
 
         // Stop entities riding.
         foreach (var rider in ridingPassengers.ToArray()) {
@@ -98,7 +98,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private int GetNextFloor()
     {
         if (goingToRidingPassengers.Count > 0) {
-            return floorIndex;
+            return FloorIndex;
         }
 
         if (ridingPassengers.Count > 0) {
@@ -111,10 +111,10 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
             if (ridingPassengers.Count < ownedBuilding.LevelData.maxResidentsCount && waitingPassengers.Count > 0) {
                 foreach (var waiter in waitingPassengers) {
-                    if (nextFloorIndex < floorIndex && waiter.floorIndex < floorIndex) {
+                    if (nextFloorIndex < FloorIndex && waiter.floorIndex < FloorIndex) {
                         nextFloorIndex = math.max(nextFloorIndex, waiter.floorIndex);
                     }
-                    else if (nextFloorIndex > floorIndex && waiter.floorIndex > floorIndex) {
+                    else if (nextFloorIndex > FloorIndex && waiter.floorIndex > FloorIndex) {
                         nextFloorIndex = math.min(nextFloorIndex, waiter.floorIndex);
                     }
                 }
@@ -122,10 +122,10 @@ public class ElevatorCabinConstruction : BuildingConstruction
             else {
                 foreach (var rider in ridingPassengers) {
                     int pathFloor = ((TowerBuilding)rider.currentPathBuilding).floorIndex;
-                    if (nextFloorIndex < floorIndex && pathFloor < floorIndex) {
+                    if (nextFloorIndex < FloorIndex && pathFloor < FloorIndex) {
                         nextFloorIndex = math.max(nextFloorIndex, pathFloor);
                     }
-                    else if (nextFloorIndex > floorIndex && pathFloor > floorIndex) {
+                    else if (nextFloorIndex > FloorIndex && pathFloor > FloorIndex) {
                         nextFloorIndex = math.min(nextFloorIndex, pathFloor);
                     }
                 }
@@ -135,7 +135,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
             nextFloorIndex = waitingPassengers[0].floorIndex;
         }
         else {
-            nextFloorIndex = floorIndex;
+            nextFloorIndex = FloorIndex;
         }
 
         return nextFloorIndex;
@@ -219,8 +219,8 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     public void SetOwnedBuilding(int newFloorIndex)
     {
-        if (newFloorIndex != floorIndex && newFloorIndex >= 0) {
-            ownedBuilding = CityManager.Instance.BuiltFloors[newFloorIndex].roomBuildingPlaces[placeIndex].PlacedBuilding;
+        if (newFloorIndex != FloorIndex && newFloorIndex >= 0) {
+            ownedBuilding = buildingsManager.BuiltFloors[newFloorIndex].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
             foreach (var npc in ridingPassengers.ToArray()) {
                 npc.OnCurrentElevatorChangedFloor();
             }
@@ -231,13 +231,13 @@ public class ElevatorCabinConstruction : BuildingConstruction
     {
         int floorIndex = 0;
 
-        if (nextFloorIndex >= this.floorIndex) {
-            floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight) / CityManager.floorHeight);
+        if (nextFloorIndex >= this.FloorIndex) {
+            floorIndex = (int)((transform.position.y - BuildingsManager.FirstFloorHeight) / BuildingsManager.FloorHeight);
             if (floorIndex < startFloorIndex)
                 floorIndex = startFloorIndex;
         }
         else {
-            floorIndex = (int)((transform.position.y - CityManager.firstFloorHeight + CityManager.floorHeight) / CityManager.floorHeight);
+            floorIndex = (int)((transform.position.y - BuildingsManager.FirstFloorHeight + BuildingsManager.FloorHeight) / BuildingsManager.FloorHeight);
             if (floorIndex > startFloorIndex)
                 floorIndex = startFloorIndex;
         }

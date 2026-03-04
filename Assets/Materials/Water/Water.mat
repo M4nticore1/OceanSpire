@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Water
-  m_Shader: {fileID: -6465566751694194690, guid: ef9fd44b62fc9c345a152aadbf991a7a, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: be32a473e791bbc44a1ab1f791ba0c67, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -53,9 +53,13 @@ Material:
     m_Floats:
     - _BlendPower: 0
     - _CausticsAngleOffset: 5
-    - _CausticsDensity: 0.5
+    - _CausticsDensity: 0.12
+    - _CausticsDirection: 270
     - _CausticsHighStep: -0.97
     - _CausticsLowStep: 0.28
+    - _CausticsPower: 2
+    - _CausticsRadius: 42
+    - _CausticsRadiusSoftness: 20
     - _CausticsSharpness: 4
     - _CausticsSpeed: 0.1
     - _CausticsTiling: 0.16
@@ -67,8 +71,10 @@ Material:
     - _EdgeFoamFade: 0.8
     - _EdgeFoamScale: 3
     - _EdgeFoamSpeed: 0.01
-    - _FirstFlowSpeed: 0.8
-    - _FlowDirection: 0
+    - _FirstFlowDirection: 45
+    - _FirstFlowSpeed: 0.1
+    - _FlowDirection: 45
+    - _FlowSpeed: 0.1
     - _FoamStartValue: 0.9
     - _NoiseScale: 1
     - _NoiseSharpness: 2
@@ -81,14 +87,19 @@ Material:
     - _RefractionScale: 59.15
     - _RefractionSpeed: 66.14
     - _RefractionStrength: 0.03
-    - _SecondFlowSpeed: 0.4
+    - _SecondFlowDirection: 270
+    - _SecondFlowSpeed: 0.1
     - _Smoothness: 1
     - _Transparent: 0.93
     - _WaterSpeed: 0.5
+    - _WavesDensity: 0.8
     - _WavesHeight: 3.88
+    - _WavesSpeed: 0.6
+    - _WavesStrength: 0.05
     m_Colors:
     - _CausticsColor: {r: 1, g: 1, b: 1, a: 0}
     - _CausticsDensity: {r: 1, g: 1, b: 1, a: 0}
+    - _Color: {r: 0.34, g: 0.5366265, b: 0.68, a: 1}
     - _ColorDeep: {r: 0, g: 0.2803233, b: 0.49056602, a: 0}
     - _ColorDepp: {r: 0.19339621, g: 0.38634863, b: 1, a: 0}
     - _ColorShallow: {r: 0.25882354, g: 0.84705883, b: 1, a: 0}

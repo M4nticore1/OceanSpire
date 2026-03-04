@@ -4,6 +4,7 @@ using UnityEngine;
 public class CityStorage : MonoBehaviour
 {
     [SerializeField] private Inventory inventory = null;
+    public Inventory Inventory => GetInventory();
 
     private void OnEnable()
     {
@@ -31,12 +32,17 @@ public class CityStorage : MonoBehaviour
         int amount = module.producedItem.Amount;
         int amountToTake = math.min(amount, inventory.itemsDict[id].maxAmount);
 
-        inventory.AddItem(id, amountToTake);
+        inventory.AddItemAmount(id, amountToTake);
         module.RemoveItemAmount(amountToTake);
     }
 
     private void OnBoatUnloadedItem(int id, int amount)
     {
-        inventory.AddItem(id, amount);
+        inventory.AddItemAmount(id, amount);
+    }
+
+    private Inventory GetInventory()
+    {
+        return inventory;
     }
 }

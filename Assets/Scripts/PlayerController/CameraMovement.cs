@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    [SerializeField] private BuildingsManager buildingsManager;
     [SerializeField] private PlayerInputHandler playerInputHandler;
 
     private Vector2 cameraMoveVelocity = Vector2.zero;
@@ -33,8 +34,8 @@ public class CameraMovement : MonoBehaviour
     {
         float multiplier = 1f;
         float cameraHeight = math.abs(transform.position.y);
-        if (transform.position.y > CityManager.Instance.currentCityHeight && cameraMoveVelocity.y > 0f)
-            multiplier = 1f - math.clamp((cameraHeight - CityManager.Instance.currentCityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
+        if (transform.position.y > buildingsManager.currentCityHeight && cameraMoveVelocity.y > 0f)
+            multiplier = 1f - math.clamp((cameraHeight - buildingsManager.currentCityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
         else if (transform.position.y < 0f && cameraMoveVelocity.y < 0f)
             multiplier = 1f - math.clamp(cameraHeight / cameraVerticalBoundaryPadding, 0f, 1f);
 
@@ -45,7 +46,7 @@ public class CameraMovement : MonoBehaviour
     private void ReturnVerticalPosition()
     {
         Vector3 cameraPosition = transform.position;
-        float targetHeight = transform.position.y > CityManager.Instance.currentCityHeight ? CityManager.Instance.currentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
+        float targetHeight = transform.position.y > buildingsManager.currentCityHeight ? buildingsManager.currentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
 
         transform.position = math.lerp(transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
     }

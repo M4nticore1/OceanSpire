@@ -395,6 +395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c23ecb36f9aa00247b789d9f8b987a26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkersMenu
+  entitiesManager: {fileID: 0}
   content: {fileID: 767585143533478389}
   buildingWorkersMenu: {fileID: 4118422047218923514}
   unemployedCitizensMenu: {fileID: 767716911988164672}

@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca5236beaf193d409c22c0521d47fb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <containerData>k__BackingField: {fileID: 0}
   possibleLoot:
   - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     dropChance: 100
@@ -54,14 +55,12 @@ MonoBehaviour:
     maxAmount: 50
   isMovable: 1
   currentTransportMethod: 0
-  moveSpeed: 4
   moveDirection: {x: 0, y: 0, z: 0}
   floorsCountToSpawn: 0
   minSpawnFloorNumber: 0
   maxSpawnFloorNumber: 0
   spawnMinTime: 2
   spawnMaxTime: 15
-  spawnTime: 4.932081
 --- !u!65 &3113521155065601208
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -90,10 +89,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9146781335153162853}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -124,7 +123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8a8031b2fe3c3654f9cc8311b7f352c8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8a8031b2fe3c3654f9cc8311b7f352c8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -160,6 +159,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 8a8031b2fe3c3654f9cc8311b7f352c8, type: 3}
       propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 8a8031b2fe3c3654f9cc8311b7f352c8, type: 3}
+      propertyPath: m_LightProbeUsage
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8a8031b2fe3c3654f9cc8311b7f352c8, type: 3}

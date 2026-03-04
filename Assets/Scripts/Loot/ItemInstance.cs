@@ -28,24 +28,36 @@ public class ItemInstance
         this.amount = amount;
     }
 
-    // Amount
-    public int SetAmount(int amount, int maxAmount = 0)
+    // Set Amount
+    public int SetAmount(int amount, int maxAmount)
     {
-        if (maxAmount == 0) {
-            maxAmount = amount;
-        }
-        int lastAmount = this.amount;
-        this.amount = math.clamp(amount, 0, maxAmount);
-        return math.abs(lastAmount - this.amount);
+        return this.amount = math.clamp(amount, 0, maxAmount);
     }
 
-    public int AddAmount(int amount, int maxAmount = 0)
+    public int SetAmount(int amount)
+    {
+        return this.amount = math.clamp(amount, 0, amount);
+    }
+
+    // Add Amount
+    public int AddAmount(int amount, int maxAmount)
     {
         return SetAmount(this.amount + amount, maxAmount);
     }
 
-    public int RemoveAmount(int amount, int maxAmount = 0)
+    public int AddAmount(int amount)
+    {
+        return SetAmount(this.amount + amount);
+    }
+
+    // Remove Amount
+    public int RemoveAmount(int amount, int maxAmount)
     {
         return SetAmount(this.amount - amount, maxAmount);
+    }
+
+    public int RemoveAmount(int amount)
+    {
+        return SetAmount(this.amount - amount);
     }
 }

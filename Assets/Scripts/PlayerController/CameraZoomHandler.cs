@@ -18,8 +18,8 @@ public class CameraZoomHandler : MonoBehaviour
     private float cameraArmMoveMultiplier = 1f;
 
     private float zoomVelocity = 0f;
-    private const float zoomSensitivity = 0.1f;
-    private const float stopZoomingSpeed = 25.0f;
+    private const float pitchSensitivity = 4f;
+    private const float stopZoomingSpeed = 12f;
 
     private float lastPitch = 0;
 
@@ -76,13 +76,14 @@ public class CameraZoomHandler : MonoBehaviour
         }
 
         float delta = currentDistance - lastPitch;
-        AddZoomVelocity(delta * zoomSensitivity);
+        AddZoomVelocity(delta * pitchSensitivity);
         lastPitch = currentDistance;
     }
 
     private void ProcessStopZooming()
     {
         zoomVelocity = math.lerp(zoomVelocity, 0, stopZoomingSpeed * Time.deltaTime);
+        //zoomVelocity = math.clamp(zoomVelocity, 0, zoomVelocity);
     }
 
     private void ProcessPadding()
@@ -96,7 +97,7 @@ public class CameraZoomHandler : MonoBehaviour
 
     private void ApplyZoom()
     {
-        currentArmLength -= zoomVelocity;
+        currentArmLength -= zoomVelocity * Time.deltaTime;
         currentArmLength = math.clamp(currentArmLength, minCameraArmLength, maxCameraArmLength);
         transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -currentArmLength);
     }

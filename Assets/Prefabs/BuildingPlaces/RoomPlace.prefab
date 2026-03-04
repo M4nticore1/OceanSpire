@@ -41,7 +41,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3859439699844814488}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15d511cb8398f1b43b37bcc206dccbfe, type: 3}
   m_Name: 
@@ -156,7 +156,6 @@ MonoBehaviour:
   placedBuilding: {fileID: 0}
   buildingZone: {fileID: 3859439699844814488}
   buildingFrame: {fileID: 5285406799736987685}
-  buildingZoneMeshRenderer: {fileID: 0}
   boxCollider: {fileID: 6712917767030698179}
 --- !u!65 &6712917767030698179
 BoxCollider:

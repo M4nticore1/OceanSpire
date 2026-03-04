@@ -694,6 +694,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 126
       objectReference: {fileID: 0}
+    - target: {fileID: 6800332618568042191, guid: 763e3a0b94d94e94ab687f7f6584a801, type: 3}
+      propertyPath: buildingType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7072113992813098010, guid: 763e3a0b94d94e94ab687f7f6584a801, type: 3}
       propertyPath: m_Name
       value: FloorFramePlace

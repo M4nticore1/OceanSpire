@@ -4,6 +4,8 @@ using UnityEngine.EventSystems;
 
 public class WorkersMenuManager : UIBehaviour
 {
+    [SerializeField] private EntitiesManager entitiesManager;
+
     private bool isOpened = false;
 
     [SerializeField] private RectTransform content = null;
@@ -18,7 +20,7 @@ public class WorkersMenuManager : UIBehaviour
     {
         base.OnEnable();
 
-        EventBus.onCitizenAdded += OnCitizenAdded;
+        EventBus.onCitizenInited += OnCitizenAdded;
         EventBus.onSetedInteractBuilding += OnSetedCitizenWork;
         EventBus.onRemovedInteractBuilding += OnRemovedCitizenWork;
         closeMenuButton.onReleased += CloseWorkersMenu;
@@ -28,7 +30,7 @@ public class WorkersMenuManager : UIBehaviour
     {
         base.OnEnable();
 
-        EventBus.onCitizenAdded -= OnCitizenAdded;
+        EventBus.onCitizenInited -= OnCitizenAdded;
         EventBus.onSetedInteractBuilding -= OnSetedCitizenWork;
         EventBus.onRemovedInteractBuilding -= OnRemovedCitizenWork;
         closeMenuButton.onReleased -= CloseWorkersMenu;
@@ -61,7 +63,7 @@ public class WorkersMenuManager : UIBehaviour
     private void UpdateWorkersMenu()
     {
         Building selectedBuilding = SelectManager.Instance.selectedComponent.GetComponent<Building>();
-        List<Human> citizens = CityManager.Instance.citizens;
+        List<Human> citizens = entitiesManager.citizens;
         int maxWorkersCount = selectedBuilding.LevelData.maxResidentsCount;
 
         buildingWorkersMenu.ClearWidgets();

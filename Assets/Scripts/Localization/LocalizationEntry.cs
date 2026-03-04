@@ -11,6 +11,9 @@ public class LocalizationEntry
     [SerializeField] private string value = "";
     public string Value => value;
 
+    [SerializeField] private int fontSize = 0;
+    public int FontSize => fontSize;
+
     [SerializeField] private int fontIndex = 0;
     public int FontIndex => fontIndex;
 }

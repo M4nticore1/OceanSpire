@@ -1,10 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ElevatorModule : BuildingModule
+public class ElevatorModule : BuildingModule, IElectricible
 {
+    [SerializeField] private float electricityConsumption = 0f;
+    public float ElectricityConsumption => electricityConsumption;
+
     public ElevatorCabinConstruction spawnedElevatorCabin { get; private set; } = null;
     public int elevatorGroupId { get; private set; } = 0;
+
+    private bool IsMoving => spawnedElevatorCabin.isMoving;
 
     protected override void OnInit()
     {
@@ -66,7 +71,7 @@ public class ElevatorModule : BuildingModule
 
         spawnedElevatorCabin.Init(OwnedBuilding);
 
-        elevatorGroupId = CityManager.Instance.elevatorGroups.Count;
+        elevatorGroupId = buildingsManager.elevatorGroups.Count;
     }
 
     public void AddPassenger(EntityCityNavigator passenger)
@@ -102,5 +107,15 @@ public class ElevatorModule : BuildingModule
         else {
             return transform;
         }
+    }
+
+    public float GetElectricityConsumption()
+    {
+        return electricityConsumption;
+    }
+
+    public bool CanSpendElectricity()
+    {
+        return IsMoving && spawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).floorIndex;
     }
 }

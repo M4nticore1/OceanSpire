@@ -60,7 +60,7 @@ public class BoatCollectingLootState : BoatState
             int id = loot.ItemData.ItemId;
             int amountToTake = math.min(loot.Amount, (int)(boat.Inventory.RemainingWeight / loot.ItemData.Weight));
 
-            boat.Inventory.AddItem(id, amountToTake, amountToTake);
+            boat.Inventory.AddItemAmount(id, amountToTake);
         }
     }
 }

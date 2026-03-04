@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LootManager : MonoBehaviour
 {
-    public static LootManager Instance;
+    [SerializeField] private BuildingsManager buildingsManager;
 
     public List<LootContainer> spawnedLootContainers { get; private set; } = new List<LootContainer>();
     private float[] currentSpawnContainersTime;
@@ -20,11 +20,6 @@ public class LootManager : MonoBehaviour
 
     // Spawn Position
     private const float spawnMaxOffsetYaw = 30.0f;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     private void Start()
     {
@@ -52,7 +47,7 @@ public class LootManager : MonoBehaviour
 
     private void SpawnLootContainer(LootContainer container, int index)
     {
-        if (container.FloorsCountToSpawn > CityManager.Instance.BuiltFloors.Count) return;
+        if (container.FloorsCountToSpawn > buildingsManager.BuiltFloors.Count) return;
 
         currentSpawnContainersTime[index] += spawnFrequency;
 
@@ -65,9 +60,9 @@ public class LootManager : MonoBehaviour
         //Vector2 windDorection = CityManager.Instance.windDirection.normalized;
 
         // Spawn position
-        int maxFloorNumber = container.maxSpawnFloorNumber > 0 ? container.maxSpawnFloorNumber : container.minSpawnFloorNumber > 0 ? (CityManager.Instance.BuiltFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
+        int maxFloorNumber = container.maxSpawnFloorNumber > 0 ? container.maxSpawnFloorNumber : container.minSpawnFloorNumber > 0 ? (buildingsManager.BuiltFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
         float spawnFloorNumber = Random.Range((float)container.minSpawnFloorNumber, maxFloorNumber);
-        float positionY = spawnFloorNumber * CityManager.floorHeight;
+        float positionY = spawnFloorNumber * BuildingsManager.FloorHeight;
         Vector3 position = -direction * spawnDistance;
         Vector3 spawnPosition = new Vector3(position.x, positionY, position.z);
 

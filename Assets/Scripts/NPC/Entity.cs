@@ -1,11 +1,18 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class CreatureEntry
+public abstract class EntityEntry
 {
     public int id = 0;
     public Vector3 position;
     public Vector3 rotation;
+
+    public EntityEntry(int id, Vector3 position, Vector3 rotation)
+    {
+        this.id = id;
+        this.position = position;
+        this.rotation = rotation;
+    }
 }
 
 public abstract class Entity : MonoBehaviour
@@ -26,7 +33,7 @@ public abstract class Entity : MonoBehaviour
         EventBus.onNavMeshBaked -= OnNavMeshBaked;
     }
 
-    public virtual void Init(CreatureEntry data)
+    public virtual void Init(EntityEntry data)
     {
         agent = GetComponent<NavMeshAgent>();
         movement = GetComponent<EntityMovement>();
@@ -35,7 +42,7 @@ public abstract class Entity : MonoBehaviour
         transform.rotation = Quaternion.Euler(data.rotation);
 
         if (CityManager.Instance.bakeNavMeshCoroutine != null) {
-            agent.enabled = false;
+            SetNavAgentEnabled(false);
         }
     }
 
@@ -49,6 +56,6 @@ public abstract class Entity : MonoBehaviour
         if (!agent) return;
         if (agent.enabled == true) return;
 
-        agent.enabled = true;
+        SetNavAgentEnabled(true);
     }
 }

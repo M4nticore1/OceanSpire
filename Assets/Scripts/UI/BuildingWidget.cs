@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class BuildingWidget : MonoBehaviour
 {
+    private CityStorage cityStorage;
     public Building buildingPrefab { get; private set; } = null;
     [SerializeField] private BuildingResourceWidget buildingResourceWidget = null;
     private List<BuildingResourceWidget> spawnedBuildingResourceWidgets = new List<BuildingResourceWidget>();
@@ -32,6 +33,8 @@ public class BuildingWidget : MonoBehaviour
 
     public void Init(Building prefab)
     {
+        cityStorage = FindAnyObjectByType<CityStorage>();
+
         buildingPrefab = prefab;
 
         Building building = prefab.GetComponentInChildren<Building>();
@@ -76,7 +79,7 @@ public class BuildingWidget : MonoBehaviour
             ItemInstance resource = buildingPrefab.ConstructionLevelsData[0].ResourcesToBuild[i];
             int amountToBuilding = resource.Amount;
             int id = resource.ItemData.ItemId;
-            int currentAmount = CityManager.Instance.Inventory.itemsDict[id].item.Amount;
+            int currentAmount = cityStorage.Inventory.itemsDict[id].item.Amount;
             spawnedBuildingResourceWidgets[i].SetResourceText(currentAmount, amountToBuilding);
 
             if (enoughResources && currentAmount < amountToBuilding) {

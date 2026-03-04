@@ -28,32 +28,35 @@ public enum BoatStateEnum
 
 public class Boat : MonoBehaviour
 {
-    [SerializeField] private BoatData boatData = null;
+    private BuildingsManager buildingsManager;
+
+    [SerializeField] private BoatData boatData;
     public BoatData BoatData => boatData;
 
     public BoatStateEnum currentState { get; private set; } = BoatStateEnum.Idle;
-    private BoatState state = null;
-    public BoatRider rider { get; private set; } = null;
+    private BoatState state;
+    public BoatRider rider { get; private set; }
 
     // Components
-    [SerializeField] private NavMeshAgent navAgent = null;
+    [SerializeField] private NavMeshAgent navAgent;
+    [SerializeField] private BoatLootHandler lootHandler;
 
-    [SerializeField] private EntityMovement movement = null;
+    [SerializeField] private EntityMovement movement;
     public EntityMovement Movement => movement;
 
-    [SerializeField] private Inventory inventory = null;
+    [SerializeField] private Inventory inventory;
     public Inventory Inventory => inventory;
 
-    [SerializeField] private Health health = null;
+    [SerializeField] private Health health;
     public Health Health => health;
 
-    [SerializeField] private HealthDrainer healthDrainer = null;
+    [SerializeField] private HealthDrainer healthDrainer;
 
-    [SerializeField] private SelectComponent selectComponent = null;
+    [SerializeField] private SelectComponent selectComponent;
 
     // Dock
-    public BoatDockPoint dockPoint { get; private set; } = null;
-    public LootContainer targetLootContainer { get; private set; } = null;
+    public BoatDockPoint dockPoint { get; private set; }
+    public LootContainer targetLootContainer { get; private set; }
 
     // Health
     public float CurrentHealth => health.CurrentHealth;
@@ -63,12 +66,12 @@ public class Boat : MonoBehaviour
     public float CurrentWeight => inventory.CurrentWeight;
     public float MaxWeight => inventory.MaxWeight;
 
-    [SerializeField] private Transform seatSlot = null;
+    [SerializeField] private Transform seatSlot;
     public Transform SeatSlot => seatSlot;
 
     public bool isDemolished { get; private set; } = false;
 
-    public ContextMenuBase spawnedDetailsMenu { get; set; } = null;
+    public ContextMenuBase spawnedDetailsMenu { get; set; }
 
     public static event Action<Boat> OnBoadDestroyed;
 
@@ -92,11 +95,16 @@ public class Boat : MonoBehaviour
 
     public void Init(BoatEntry data)
     {
+        buildingsManager = FindAnyObjectByType<BuildingsManager>();
+        lootHandler = GetComponent<BoatLootHandler>();
+
+        lootHandler.Init();
+
         transform.position = data.position;
         transform.rotation = Quaternion.Euler(data.rotation);
 
         health.Init(data.health);
-        PierConstruction pierConstruction = CityManager.Instance.PierBuilding.spawnedConstruction as PierConstruction;
+        PierConstruction pierConstruction = buildingsManager.PierBuilding.spawnedConstruction as PierConstruction;
         SetDockPoint(pierConstruction.BoatDocks[data.dockIndex]);
 
         SetState(currentState);

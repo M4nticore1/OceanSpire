@@ -23,20 +23,20 @@ public class GooglePlayInAppUpdate : MonoBehaviour
 
         yield return appUpdateInfoOperation;
 
-        var appUpdateInforResult = appUpdateInfoOperation.GetResult();
-
         if (appUpdateInfoOperation.IsSuccessful) {
+            var appUpdateInforResult = appUpdateInfoOperation.GetResult();
+
             if (appUpdateInforResult.UpdateAvailability == UpdateAvailability.UpdateAvailable) {
                 inAppStatus.SetText(UpdateAvailability.UpdateAvailable.ToString());
             }
             else {
                 inAppStatus.SetText("No Update Avaliable");
             }
+
+            var appUpdateOptions = AppUpdateOptions.ImmediateAppUpdateOptions();
+
+            StartCoroutine(StartImmediateUpdate(appUpdateInforResult, appUpdateOptions));
         }
-
-        var appUpdateOptions = AppUpdateOptions.ImmediateAppUpdateOptions();
-
-        StartCoroutine(StartImmediateUpdate(appUpdateInforResult, appUpdateOptions));
     }
 
     private IEnumerator StartImmediateUpdate(AppUpdateInfo appUpdateInfo, AppUpdateOptions appUpdateOptions)

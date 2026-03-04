@@ -98,18 +98,18 @@ public class TowerBuilding : Building
         floorIndex = towerData.floorIndex;
         placeIndex = towerData.placeIndex;
 
-        List<FloorFrameModule> floors = CityManager.Instance.BuiltFloors;
+        List<FloorFrameModule> floors = buildingsManager.BuiltFloors;
         BuildingPlace place = null;
 
         if (BuildingData.BuildingType == BuildingType.Room) {
-            place = floors[towerData.floorIndex].roomBuildingPlaces[towerData.placeIndex];
+            place = floors[towerData.floorIndex].RoomBuildingPlaces[towerData.placeIndex];
         }
         else if (BuildingData.BuildingType == BuildingType.Hall) {
-            place = floors[towerData.floorIndex].hallBuildingPlace;
+            place = floors[towerData.floorIndex].HallBuildingPlace;
         }
         else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
             int index = towerData.floorIndex - 1;
-            place = floors.Count > index && index >= 0 ? floors[index].floorBuildingPlace : null;
+            place = floors.Count > index && index >= 0 ? floors[index].FloorBuildingPlace : null;
         }
 
         SetBuildingPlace(place);
@@ -137,7 +137,6 @@ public class TowerBuilding : Building
     private void ApplyTransform()
     {
         if (!buildingPlace) return;
-        if (buildingData.BuildingType != BuildingType.Room && buildingData.BuildingType != BuildingType.Hall) return;
 
         transform.SetParent(buildingPlace.transform);
         transform.localPosition = Vector3.zero;

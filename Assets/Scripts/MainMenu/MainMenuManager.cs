@@ -150,10 +150,7 @@ public class MainMenuManager : MonoBehaviour
     private bool IsWorldNameExist(string name)
     {
         WorldData[] worldData = WorldSaveManager.Instance.allSaveData;
-        if (worldData == null) {
-            Debug.LogError("worldData is not valid.");
-            return false;
-        }
+        if (worldData == null) return false;
 
         foreach (var data in worldData) {
             if (data != null && data.cityData.cityName == name) {
@@ -165,9 +162,9 @@ public class MainMenuManager : MonoBehaviour
 
     private bool IsWorldNameFit(string name)
     {
-        if (name.Length > 0)
+        if (name.Length > 0) {
             return true;
-        return
-            false;
+        }
+        return false;
     }
 }

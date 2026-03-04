@@ -4,17 +4,24 @@ using UnityEngine;
 public class FloorFrameModule : BuildingModule
 {
     // Building Places
-    public List<BuildingPlace> roomBuildingPlaces;
-    public BuildingPlace hallBuildingPlace;
-    public BuildingPlace floorBuildingPlace;
+    [SerializeField] private List<BuildingPlace> roomBuildingPlaces;
+    public List<BuildingPlace> RoomBuildingPlaces => roomBuildingPlaces;
+
+    [SerializeField] private BuildingPlace hallBuildingPlace;
+    public BuildingPlace HallBuildingPlace => hallBuildingPlace;
+
+    [SerializeField] private BuildingPlace floorBuildingPlace;
+    public BuildingPlace FloorBuildingPlace => floorBuildingPlace;
 
     protected override void OnInit()
     {
         int floorIndex = (OwnedBuilding as TowerBuilding).floorIndex;
         floorBuildingPlace.Init(floorIndex + 1);
         hallBuildingPlace.Init(floorIndex);
-        for (int i = 0; i < CityManager.roomsCountPerFloor; i++)
+
+        for (int i = 0; i < BuildingsManager.RoomsCountPerFloor; i++) {
             roomBuildingPlaces[i].Init(floorIndex);
+        }
     }
 
     protected override void OnBuildingStartWorking()

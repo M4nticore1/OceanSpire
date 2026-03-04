@@ -32,6 +32,11 @@ public class BuildingContextMenu : ContextMenuBase<Building>
 
     public override void Init(Building building)
     {
+        if (!building) {
+            Debug.LogWarning("building is not on the scene.");
+            return;
+        }
+
         SetNameText(building.BuildingData.BuildingName);
         SetLevelText(building.LevelIndex + 1);
 

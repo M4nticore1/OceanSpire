@@ -15,7 +15,8 @@ public enum FollowingPathState
 [RequireComponent(typeof(EntityMovement))]
 public class EntityCityNavigator : MonoBehaviour
 {
-    private EntityMovement movement = null;
+    private BuildingsManager buildingsManager;
+    private EntityMovement movement;
 
     // Path
     [SerializeField] private List<Building> pathBuildings = new List<Building>();
@@ -45,7 +46,8 @@ public class EntityCityNavigator : MonoBehaviour
 
     private void Awake()
     {
-         movement = GetComponent<EntityMovement>();
+        buildingsManager = FindAnyObjectByType<BuildingsManager>();
+        movement = GetComponent<EntityMovement>();
     }
 
     private void OnEnable()
@@ -96,7 +98,7 @@ public class EntityCityNavigator : MonoBehaviour
     {
         BuildingPlace startPlace = (currentBuilding as TowerBuilding)?.buildingPlace;
 
-        if (!PathFinder.TryGetPathToBuilding(CityManager.Instance, startPlace, targetBuilding, ref pathBuildings)) return;
+        if (!PathFinder.TryGetPathToBuilding(buildingsManager, startPlace, targetBuilding, ref pathBuildings)) return;
 
         SortPath();
         UpdatePathBuildings();

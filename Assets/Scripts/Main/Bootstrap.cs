@@ -16,6 +16,6 @@ public class Bootstrap : MonoBehaviour
         LocalizationManager.Instance.Init(null);
 
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 120;
+        Application.targetFrameRate = 30;
     }
 }

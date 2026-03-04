@@ -2,6 +2,8 @@ using UnityEngine;
 
 public abstract class BuildingModule : MonoBehaviour
 {
+    protected BuildingsManager buildingsManager;
+
     private Building ownedBuilding = null;
     public Building OwnedBuilding { get { return ownedBuilding != null ? ownedBuilding : GetComponent<Building>(); } }
 
@@ -47,6 +49,8 @@ public abstract class BuildingModule : MonoBehaviour
 
     private void OnBuildingInited()
     {
+        buildingsManager = FindAnyObjectByType<BuildingsManager>();
+
         OnInit();
         EventBus.InvokeBuildingModuleInited(this);
     }

@@ -3,6 +3,8 @@ using UnityEngine.AI;
 
 public class BoatFindingLootState : BoatState
 {
+    private LootManager lootManager;
+
     private const double updateDestinationRate = 0.5f;
     private double lastUpdateDestinationTime = 0;
 
@@ -11,7 +13,7 @@ public class BoatFindingLootState : BoatState
 
     public BoatFindingLootState(Boat boat) : base(boat)
     {
-
+        lootManager = Object.FindAnyObjectByType<LootManager>();
     }
 
     public override void Enter()
@@ -51,7 +53,7 @@ public class BoatFindingLootState : BoatState
 
     private LootContainer TryFindNearestTarget()
     {
-        var containers = LootManager.Instance.spawnedLootContainers;
+        var containers = lootManager.spawnedLootContainers;
 
         if (containers.Count == 0) return null;
 

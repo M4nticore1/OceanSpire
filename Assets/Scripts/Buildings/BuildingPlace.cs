@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum BuildingPlaceState
 {
@@ -11,6 +10,8 @@ public enum BuildingPlaceState
 
 public class BuildingPlace : MonoBehaviour, IClickable
 {
+    private BuildingsManager buildingsManager;
+
     [SerializeField] private BuildingType buildingType = BuildingType.Room;
     public BuildingType BuildingType => buildingType;
 
@@ -50,13 +51,15 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     public void Init(int newFloorindex)
     {
+        buildingsManager = FindAnyObjectByType<BuildingsManager>();
+
         floorIndex = newFloorindex;
         ApplyNeighborPlace();
         HideBuildingPlace();
 
         EventBus.onStartedPlacingBuilding += OnBuildingStartPlacing;
         EventBus.onBuildingPlaced += OnBuildingPlaced;
-        EventBus.onBuildingInitialized += OnBuildingInitialized;
+        EventBus.onBuildingInited += OnBuildingInitialized;
         EventBus.onStopPlacingBuildingButtonClicked += OnStopPlacingBuildingButtonClicked;
     }
 
@@ -64,11 +67,11 @@ public class BuildingPlace : MonoBehaviour, IClickable
     {
         int horizontalIndexOffset = side == Side.Left ? 1 : side == Side.Right ? -1 : 0;
         int verticalIndexOffset = side == Side.Up ? 1 : side == Side.Down ? -1 : 0;
-        int sideIndex = (placeIndex + horizontalIndexOffset + CityManager.roomsCountPerFloor) % CityManager.roomsCountPerFloor;
+        int sideIndex = (placeIndex + horizontalIndexOffset + BuildingsManager.RoomsCountPerFloor) % BuildingsManager.RoomsCountPerFloor;
         int verticalIndex = floorIndex + verticalIndexOffset;
 
-        if (verticalIndex < CityManager.Instance.BuiltFloors.Count && verticalIndex >= 0) {
-            return CityManager.Instance.BuiltFloors[verticalIndex].roomBuildingPlaces[sideIndex];
+        if (verticalIndex < buildingsManager.BuiltFloors.Count && verticalIndex >= 0) {
+            return buildingsManager.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
         }
         return null;
     }

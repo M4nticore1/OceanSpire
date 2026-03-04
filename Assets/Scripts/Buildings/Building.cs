@@ -10,6 +10,8 @@ public abstract class BuildingEntry
 
 public abstract class Building : MonoBehaviour
 {
+    protected BuildingsManager buildingsManager;
+
     protected LevelComponent levelComponent = null;
     protected SelectComponent selectComponent = null;
     private BuildingStrategy strategy = null;
@@ -60,6 +62,8 @@ public abstract class Building : MonoBehaviour
     // Constructing
     public void Init(BuildingEntry data)
     {
+        buildingsManager = FindAnyObjectByType<BuildingsManager>();
+
         AssignComponents();
         CreateStrategy();
 
@@ -198,6 +202,15 @@ public abstract class Building : MonoBehaviour
                 strategy = new PierBuildingStrategy(this);
                 break;
         }
+    }
+
+    // Modules
+    public BuildingModule[] GetModules()
+    {
+        BuildingModule[] modules;
+        modules = GetComponents<BuildingModule>();
+
+        return modules;
     }
 
     // Events

@@ -96,9 +96,9 @@ MonoBehaviour:
   m_fontSize: 42
   m_fontSizeBase: 42
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 42
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: common.construction
+  item: {fileID: 0}
 --- !u!1 &4456157408004065638
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,15 +241,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetGraphic: {fileID: 8246682934993444558}
-  contentGraphic: {fileID: 8098942685961320592}
+  contentGraphics: []
   scaleRoot: {fileID: 174535721177765673}
-  isEnabled: 1
   isInteractable: 1
   isSelectable: 1
   isScalable: 1
   deselectOnOutsideClick: 0
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
+  state: 0
   idleState:
     bodyColor: {r: 0.95, g: 0.95, b: 0.95, a: 1}
     bodyColorHolder: {fileID: 11400000, guid: 56cd69bc136b11243b7894fac81889bf, type: 2}

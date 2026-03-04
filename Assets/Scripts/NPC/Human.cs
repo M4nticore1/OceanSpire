@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum HumanStatus
 {
@@ -9,8 +10,13 @@ public enum HumanStatus
 }
 
 [Serializable]
-public class HumanEntry : CreatureEntry
+public class HumanEntry : EntityEntry
 {
+    public HumanEntry(int id, Vector3 position, Vector3 rotation) : base(id, position, rotation)
+    {
+
+    }
+
     public HumanStatus creatureStatus = HumanStatus.Citizen;
     public Guid interactBuildingInstanceId = Guid.Empty;
     public bool isMale = false;
@@ -75,13 +81,15 @@ public class Human : Entity
         boatRider.onExitedBoat -= OnExitedBoat;
     }
 
-    public override void Init(CreatureEntry data)
+    public override void Init(EntityEntry data)
     {
         base.Init(data);
 
         HumanEntry humanData = data as HumanEntry;
         AssignGender(humanData);
         AssignNameIndexes(humanData);
+
+        EventBus.InvokeCitizenInited(this);
     }
 
     // Movement
