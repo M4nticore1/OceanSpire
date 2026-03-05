@@ -40,8 +40,8 @@ public class ElevatorModule : BuildingModule, IElectricible
     private bool TryApplyCabin()
     {
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
-        ElevatorModule belowElevatorBuilding = ownedTowerBuilding.downBuilding?.GetComponent<ElevatorModule>();
-        ElevatorModule aboveElevatorBuilding = ownedTowerBuilding.upBuilding?.GetComponent<ElevatorModule>();
+        ElevatorModule belowElevatorBuilding = ownedTowerBuilding.DownBuilding?.GetComponent<ElevatorModule>();
+        ElevatorModule aboveElevatorBuilding = ownedTowerBuilding.UpBuilding?.GetComponent<ElevatorModule>();
 
         if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorCabin) {
             elevatorGroupId = belowElevatorBuilding.elevatorGroupId;

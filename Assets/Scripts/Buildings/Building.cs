@@ -11,7 +11,6 @@ public abstract class BuildingEntry
 public abstract class Building : MonoBehaviour
 {
     protected BuildingsManager buildingsManager;
-
     protected LevelComponent levelComponent = null;
     protected SelectComponent selectComponent = null;
     private BuildingStrategy strategy = null;
@@ -67,7 +66,7 @@ public abstract class Building : MonoBehaviour
         AssignComponents();
         CreateStrategy();
         OnInit(data);
-        BuildConstruction();
+        UpdateConstruction();
         spawnedConstruction?.Init(this);
         onBuildingInited?.Invoke();
         EventBus.InvokeBuildingInitialized(this);
@@ -88,30 +87,14 @@ public abstract class Building : MonoBehaviour
 
     private void AssignComponents()
     {
-        if (!levelComponent)
-            levelComponent = GetComponent<LevelComponent>();
-        if (!selectComponent)
-            selectComponent = GetComponent<SelectComponent>();
+        buildingsManager = FindAnyObjectByType<BuildingsManager>();
+        levelComponent = GetComponent<LevelComponent>();
+        selectComponent = GetComponent<SelectComponent>();
     }
 
     public void Demolish()
     {
 
-    }
-
-    // Working
-    private void StartWorking()
-    {
-        if (isWorking) return;
-        isWorking = true;
-        onBuildingStartWorking?.Invoke();
-    }
-
-    private void StopWorking()
-    {
-        if (!isWorking) return;
-        isWorking = false;
-        onBuildingStopWorking?.Invoke();
     }
 
     // Residents Management
@@ -162,15 +145,6 @@ public abstract class Building : MonoBehaviour
         strategy.OnStopInteracting(interactor);
     }
 
-    private void BuildConstruction()
-    {
-        BuildingConstruction constructionPrefab = GetConstruction();
-
-        if (constructionPrefab) {
-            spawnedConstruction = Instantiate(constructionPrefab, transform);
-        }
-    }
-
     public Transform GetInteractionTransform()
     {
         int index = workers.Count > 0 ? ((workers.Count - 1) % LevelData.maxResidentsCount) : 0;
@@ -198,6 +172,35 @@ public abstract class Building : MonoBehaviour
         else {
             Debug.LogError("actions.Length <= index");
             return transform;
+        }
+    }
+
+    // Working
+    private void StartWorking()
+    {
+        if (isWorking) return;
+        isWorking = true;
+        onBuildingStartWorking?.Invoke();
+    }
+
+    private void StopWorking()
+    {
+        if (!isWorking) return;
+        isWorking = false;
+        onBuildingStopWorking?.Invoke();
+    }
+
+    // Construction
+    protected void UpdateConstruction()
+    {
+        if (spawnedConstruction) {
+            Destroy(spawnedConstruction.gameObject);
+        }
+
+        BuildingConstruction construction = GetConstruction();
+
+        if (construction) {
+            spawnedConstruction = Instantiate(construction, transform);
         }
     }
 

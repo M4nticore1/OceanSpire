@@ -28,10 +28,10 @@ public class BuildingPlace : MonoBehaviour, IClickable
     [SerializeField] private GameObject buildingFrame = null;
     [SerializeField] private BoxCollider boxCollider = null;
 
-    public BuildingPlace leftPlace;
-    public BuildingPlace rightPlace;
-    public BuildingPlace upPlace;
-    public BuildingPlace downPlace;
+    public BuildingPlace leftPlace { get; private set; }
+    public BuildingPlace rightPlace { get; private set; }
+    public BuildingPlace upPlace { get; private set; }
+    public BuildingPlace downPlace { get; private set; }
 
     private bool isShowed = false;
 
@@ -61,8 +61,12 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
         EventBus.onStartedPlacingBuilding += OnBuildingStartPlacing;
         EventBus.onBuildingPlaced += OnBuildingPlaced;
-        EventBus.onBuildingInited += OnBuildingInitialized;
         EventBus.onStopPlacingBuildingButtonClicked += OnStopPlacingBuildingButtonClicked;
+    }
+
+    public void HandleBuildingInited(TowerBuilding building)
+    {
+        SetPlacedBuilding(building);
     }
 
     private void AssignNeighborPlaces()
@@ -109,14 +113,6 @@ public class BuildingPlace : MonoBehaviour, IClickable
         HideBuildingPlace();
     }
 
-    private void OnBuildingInitialized(Building building)
-    {
-        TowerBuilding towerBuilding = building as TowerBuilding;
-        if (towerBuilding.floorIndex != floorIndex || towerBuilding.placeIndex != placeIndex || towerBuilding.BuildingData.BuildingType != buildingType) return;
-
-        SetPlacedBuilding(towerBuilding);
-    }
-
     private void OnStopPlacingBuildingButtonClicked()
     {
         HideBuildingPlace();
@@ -128,7 +124,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         UpdateBuildingFrame();
     }
 
-    private void RemoveBuildingPlaced()
+    private void RemovePlacedBuilding()
     {
         placedBuilding = null;
         UpdateBuildingFrame();
@@ -203,7 +199,8 @@ public class BuildingPlace : MonoBehaviour, IClickable
         int id = building.BuildingData.BuildingId;
         TowerBuildingEntry data = new TowerBuildingEntry(floorIndex, placeIndex);
 
-        BuildingFactory.CreateBuilding(id, data);
+        TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(id, data);
+        SetPlacedBuilding(spawnedBuilding);
     }
 
     public bool CanClick()

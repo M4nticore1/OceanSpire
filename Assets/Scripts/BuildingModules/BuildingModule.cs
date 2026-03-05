@@ -5,7 +5,7 @@ public abstract class BuildingModule : MonoBehaviour
     protected BuildingsManager buildingsManager;
 
     private Building ownedBuilding = null;
-    public Building OwnedBuilding { get { return ownedBuilding != null ? ownedBuilding : GetComponent<Building>(); } }
+    public Building OwnedBuilding => ownedBuilding != null ? ownedBuilding : GetComponent<Building>();
 
     protected int LevelIndex => OwnedBuilding.LevelIndex;
     [SerializeField] protected BuildingModuleLevelData[] levelsData = { };

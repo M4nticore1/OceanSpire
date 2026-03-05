@@ -52,44 +52,72 @@ public class TowerBuilding : Building
     public int floorIndex { get; private set; }
     public int placeIndex { get; private set; }
 
-    public TowerBuilding leftBuilding => buildingPlace.leftPlace.PlacedBuilding;
-    public TowerBuilding rightBuilding => buildingPlace.rightPlace.PlacedBuilding;
-    public TowerBuilding upBuilding => buildingPlace.upPlace?.PlacedBuilding;
-    public TowerBuilding downBuilding => buildingPlace.downPlace?.PlacedBuilding;
+    public TowerBuilding LeftBuilding => buildingPlace?.leftPlace?.PlacedBuilding;
+    public TowerBuilding RightBuilding => buildingPlace?.rightPlace?.PlacedBuilding;
+    public TowerBuilding UpBuilding => buildingPlace?.upPlace?.PlacedBuilding;
+    public TowerBuilding DownBuilding => buildingPlace?.downPlace?.PlacedBuilding;
 
-    public TowerBuilding leftConnectedBuilding => CheckConnectionPossibility(leftBuilding, ConnectionType.Horizontal);
-    public TowerBuilding rightConnectedBuilding => CheckConnectionPossibility(rightBuilding, ConnectionType.Horizontal);
-    public TowerBuilding upConnectedBuilding => CheckConnectionPossibility(upBuilding, ConnectionType.Vertical);
-    public TowerBuilding downConnectedBuilding => CheckConnectionPossibility(downBuilding, ConnectionType.Vertical);
+    public TowerBuilding LeftConnectedBuilding => CheckConnectionPossibility(LeftBuilding, ConnectionType.Horizontal);
+    public TowerBuilding RightConnectedBuilding => CheckConnectionPossibility(RightBuilding, ConnectionType.Horizontal);
+    public TowerBuilding UpConnectedBuilding => CheckConnectionPossibility(UpBuilding, ConnectionType.Vertical);
+    public TowerBuilding DownConnectedBuilding => CheckConnectionPossibility(DownBuilding, ConnectionType.Vertical);
 
     public IEnumerable NeighborBuildings(NeighborMask mask)
     {
         if (mask.HasFlag(NeighborMask.Left)) {
-            yield return leftBuilding;
+            yield return LeftBuilding;
         }
         if (mask.HasFlag(NeighborMask.Right)) {
-            yield return rightBuilding;
+            yield return RightBuilding;
         }
         if (mask.HasFlag(NeighborMask.Up)) {
-            yield return upBuilding;
+            yield return UpBuilding;
         }
         if (mask.HasFlag(NeighborMask.Down)) {
-            yield return downBuilding;
+            yield return DownBuilding;
         }
     }
 
-    protected override void OnEnable()
+    public void HandleConnectedBuildingPlaced(Building building)
     {
-        base.OnEnable();
-
-        EventBus.onBuildingPlaced += OnConstructionPlaced;
+        Debug.Log(floorIndex + " " + placeIndex);
+        UpdateConstruction();
     }
 
-    protected override void OnDisable()
+    public bool ConnectedWith(TowerBuilding target)
     {
-        base.OnDisable();
+        if (!target) {
+            Debug.Log("buildingToCheck == NULL");
+            return false;
+        }
 
-        EventBus.onBuildingPlaced -= OnConstructionPlaced;
+        TowerBuilding start = this;
+        TowerBuilding current = start;
+        var visited = new HashSet<TowerBuilding>();
+        visited.Add(current);
+        if (buildingData.ConnectionType == ConnectionType.Horizontal) {
+            TowerBuilding[] directions = { LeftBuilding, RightBuilding };
+            foreach (var direction in directions) {
+                current = direction;
+                while (current && current.BuildingData.BuildingId == buildingData.BuildingId) {
+                    if (!visited.Add(current)) return false;
+                    if (current == target) return true;
+                    current = (direction == LeftBuilding) ? current.LeftBuilding : current.RightBuilding;
+                }
+            }
+        }
+        else if (buildingData.ConnectionType == ConnectionType.Vertical) {
+            TowerBuilding[] directions = { UpBuilding, DownBuilding };
+            foreach (var direction in directions) {
+                current = direction;
+                while (current && current.buildingData.BuildingId == buildingData.BuildingId) {
+                    if (!visited.Add(current)) return false;
+                    if (current == target) return true;
+                    current = (direction == UpBuilding) ? current.UpBuilding : current.DownBuilding;
+                }
+            }
+        }
+        return false;
     }
 
     protected override void OnInit(BuildingEntry data)
@@ -112,7 +140,9 @@ public class TowerBuilding : Building
             place = floors.Count > index && index >= 0 ? floors[index].FloorBuildingPlace : null;
         }
 
-        SetBuildingPlace(place);
+        if (place) {
+            SetBuildingPlace(place);
+        }
 
         if (placeIndex % 2 == 0) {
             SetBuildingPosition(BuildingPosition.Corner);
@@ -122,11 +152,13 @@ public class TowerBuilding : Building
         }
 
         ApplyTransform();
+        InvokeBuildingPlaced();
     }
 
     private void SetBuildingPlace(BuildingPlace place)
     {
         buildingPlace = place;
+        buildingPlace.HandleBuildingInited(this);
     }
 
     private void SetBuildingPosition(BuildingPosition position)
@@ -141,6 +173,14 @@ public class TowerBuilding : Building
         transform.SetParent(buildingPlace.transform);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
+    }
+
+    private void InvokeBuildingPlaced()
+    {
+        LeftBuilding?.HandleConnectedBuildingPlaced(this);
+        RightBuilding?.HandleConnectedBuildingPlaced(this);
+        DownBuilding?.HandleConnectedBuildingPlaced(this);
+        UpBuilding?.HandleConnectedBuildingPlaced(this);
     }
 
     protected override BuildingConstruction GetConstruction()
@@ -159,45 +199,45 @@ public class TowerBuilding : Building
             }
             else if (buildingData.ConnectionType == ConnectionType.Horizontal) {
                 if (buildingPosition == BuildingPosition.Straight) {
-                    if (leftConnectedBuilding && rightConnectedBuilding && levelData.ConstructionStraightLeftRight)
+                    if (LeftConnectedBuilding && RightConnectedBuilding && levelData.ConstructionStraightLeftRight)
                         construction = levelData.ConstructionStraightLeftRight;
-                    else if (leftConnectedBuilding && levelData.ConstructionStraightLeft)
+                    else if (LeftConnectedBuilding && levelData.ConstructionStraightLeft)
                         construction = levelData.ConstructionStraightLeft;
-                    else if (rightConnectedBuilding && levelData.ConstructionStraightRight)
+                    else if (RightConnectedBuilding && levelData.ConstructionStraightRight)
                         construction = levelData.ConstructionStraightRight;
-                    else if (!leftConnectedBuilding && !rightConnectedBuilding && levelData.ConstructionStraight)
+                    else if (!LeftConnectedBuilding && !RightConnectedBuilding && levelData.ConstructionStraight)
                         construction = levelData.ConstructionStraight;
                 }
                 else if (buildingPosition == BuildingPosition.Corner) {
-                    if (leftConnectedBuilding && rightConnectedBuilding && levelData.ConstructionCornerLeftRight)
+                    if (LeftConnectedBuilding && RightConnectedBuilding && levelData.ConstructionCornerLeftRight)
                         construction = levelData.ConstructionCornerLeftRight;
-                    else if (leftConnectedBuilding && levelData.ConstructionCornerLeft)
+                    else if (LeftConnectedBuilding && levelData.ConstructionCornerLeft)
                         construction = levelData.ConstructionCornerLeft;
-                    else if (rightConnectedBuilding && levelData.ConstructionCornerRight)
+                    else if (RightConnectedBuilding && levelData.ConstructionCornerRight)
                         construction = levelData.ConstructionCornerRight;
-                    else if (!leftConnectedBuilding && !rightConnectedBuilding && levelData.ConstructionCorner)
+                    else if (!LeftConnectedBuilding && !RightConnectedBuilding && levelData.ConstructionCorner)
                         construction = levelData.ConstructionCorner;
                 }
             }
             else if (buildingData.ConnectionType == ConnectionType.Vertical) {
                 if (buildingPosition == BuildingPosition.Straight) {
-                    if (upConnectedBuilding && downConnectedBuilding && levelData.ConstructionStraightUpDown)
+                    if (UpConnectedBuilding && DownConnectedBuilding && levelData.ConstructionStraightUpDown)
                         construction = levelData.ConstructionStraightUpDown;
-                    else if (upConnectedBuilding && levelData.ConstructionStraightUp)
+                    else if (UpConnectedBuilding && levelData.ConstructionStraightUp)
                         construction = levelData.ConstructionStraightUp;
-                    else if (downConnectedBuilding && levelData.ConstructionStraightDown)
+                    else if (DownConnectedBuilding && levelData.ConstructionStraightDown)
                         construction = levelData.ConstructionStraightDown;
-                    else if (!upConnectedBuilding && !downConnectedBuilding && levelData.ConstructionStraight)
+                    else if (!UpConnectedBuilding && !DownConnectedBuilding && levelData.ConstructionStraight)
                         construction = levelData.ConstructionStraight;
                 }
                 else if (buildingPosition == BuildingPosition.Corner) {
-                    if (upConnectedBuilding && downConnectedBuilding && levelData.ConstructionCornerUpDown)
+                    if (UpConnectedBuilding && DownConnectedBuilding && levelData.ConstructionCornerUpDown)
                         construction = levelData.ConstructionCornerUpDown;
-                    else if (upConnectedBuilding && levelData.ConstructionCornerUp)
+                    else if (UpConnectedBuilding && levelData.ConstructionCornerUp)
                         construction = levelData.ConstructionCornerUp;
-                    else if (downConnectedBuilding && levelData.ConstructionCornerDown)
+                    else if (DownConnectedBuilding && levelData.ConstructionCornerDown)
                         construction = levelData.ConstructionCornerDown;
-                    else if (!upConnectedBuilding && !downConnectedBuilding && levelData.ConstructionCorner)
+                    else if (!UpConnectedBuilding && !DownConnectedBuilding && levelData.ConstructionCorner)
                         construction = levelData.ConstructionCorner;
                 }
             }
@@ -216,46 +256,5 @@ public class TowerBuilding : Building
         if (requiredConnection != buildingData.ConnectionType) return null;
 
         return target;
-    }
-
-    public bool ConnectedWith(TowerBuilding target)
-    {
-        if (!target) {
-            Debug.Log("buildingToCheck == NULL");
-            return false;
-        }
-
-        TowerBuilding start = this;
-        TowerBuilding current = start;
-        var visited = new HashSet<TowerBuilding>();
-        visited.Add(current);
-        if (buildingData.ConnectionType == ConnectionType.Horizontal) {
-            TowerBuilding[] directions = { leftBuilding, rightBuilding };
-            foreach (var direction in directions) {
-                current = direction;
-                while (current && current.BuildingData.BuildingId == buildingData.BuildingId) {
-                    if (!visited.Add(current)) return false;
-                    if (current == target) return true;
-                    current = (direction == leftBuilding) ? current.leftBuilding : current.rightBuilding;
-                }
-            }
-        }
-        else if (buildingData.ConnectionType == ConnectionType.Vertical) {
-            TowerBuilding[] directions = { upBuilding, downBuilding };
-            foreach (var direction in directions) {
-                current = direction;
-                while (current && current.buildingData.BuildingId == buildingData.BuildingId) {
-                    if (!visited.Add(current)) return false;
-                    if (current == target) return true;
-                    current = (direction == upBuilding) ? current.upBuilding : current.downBuilding;
-                }
-            }
-        }
-        return false;
-    }
-
-    private void OnConstructionPlaced(Building building)
-    {
-        if (building is not TowerBuilding) return;
     }
 }

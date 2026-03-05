@@ -41,10 +41,13 @@ public class BuildingsLoader : MonoBehaviour
     private void LoadFloorFrames()
     {
         int floorsCount = buildingsManager.BuiltFloors.Count;
+
         for (int i = 0; i < floorsCount; i++) {
             var data = new TowerBuildingEntry(i, 0);
             FloorFrameModule floor = buildingsManager.BuiltFloors[i];
-            floor.OwnedBuilding.Init(data);
+            TowerBuilding building = floor.OwnedBuilding as TowerBuilding;
+            building.Init(data);
+
         }
     }
 
@@ -52,6 +55,7 @@ public class BuildingsLoader : MonoBehaviour
     {
         if (saveData != null) {
             TowerBuildingEntry[] towerBuildingsData = saveData.towerBuildingsData;
+
             foreach (var data in towerBuildingsData) {
                 if (data == null) {
                     Debug.LogError($"entry was not found in towerBuildingsData");
@@ -60,34 +64,46 @@ public class BuildingsLoader : MonoBehaviour
 
                 if (data.placeIndex == 0) {
                     TowerBuilding placedBuilding = buildingsManager.BuiltFloors[data.floorIndex].HallBuildingPlace.PlacedBuilding;
-                    if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.id)
+                    if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.id) {
                         placedBuilding.Demolish();
+                    }
 
-                    if (data.id >= 0)
+                    if (data.id >= 0) {
                         BuildingFactory.CreateBuilding(data.id, data);
+                    }
                 }
                 else {
                     TowerBuilding placedBuilding = buildingsManager.BuiltFloors[data.floorIndex].RoomBuildingPlaces[data.placeIndex].PlacedBuilding;
-                    if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.id)
+                    if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.id) {
                         placedBuilding.Demolish();
+                    }
 
-                    if (data.id >= 0)
+                    if (data.id >= 0) {
                         BuildingFactory.CreateBuilding(data.id, data);
+                    }
                 }
             }
         }
         else {
             int floorsCount = buildingsManager.BuiltFloors.Count;
+
             for (int i = 0; i < floorsCount; i++) {
                 FloorFrameModule floor = buildingsManager.BuiltFloors[i];
 
                 // Hall
                 var hallData = new TowerBuildingEntry(i, 0);
-                floor.HallBuildingPlace.PlacedBuilding?.Init(hallData);
+                BuildingPlace hallPlace = floor.HallBuildingPlace;
+                TowerBuilding hall = hallPlace.PlacedBuilding;
+
+                if (hall) {
+                    hall.Init(hallData);
+                }
 
                 // Rooms
                 for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
-                    TowerBuilding room = floor.RoomBuildingPlaces[j].PlacedBuilding;
+                    BuildingPlace roomPlace = floor.RoomBuildingPlaces[j];
+                    TowerBuilding room = roomPlace.PlacedBuilding;
+
                     if (!room) continue;
 
                     var roomData = new TowerBuildingEntry(i, j);
