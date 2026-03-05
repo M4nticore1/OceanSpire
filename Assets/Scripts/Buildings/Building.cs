@@ -66,18 +66,25 @@ public abstract class Building : MonoBehaviour
 
         AssignComponents();
         CreateStrategy();
-
         OnInit(data);
         BuildConstruction();
         spawnedConstruction?.Init(this);
-
         onBuildingInited?.Invoke();
         EventBus.InvokeBuildingInitialized(this);
+
+        InitModules();
     }
 
     protected abstract void OnInit(BuildingEntry saveData);
 
     protected abstract BuildingConstruction GetConstruction();
+
+    private void InitModules()
+    {
+        foreach (var module in GetComponents<BuildingModule>()) {
+            module.Init();
+        }
+    }
 
     private void AssignComponents()
     {
@@ -158,8 +165,10 @@ public abstract class Building : MonoBehaviour
     private void BuildConstruction()
     {
         BuildingConstruction constructionPrefab = GetConstruction();
-        if (constructionPrefab)
+
+        if (constructionPrefab) {
             spawnedConstruction = Instantiate(constructionPrefab, transform);
+        }
     }
 
     public Transform GetInteractionTransform()

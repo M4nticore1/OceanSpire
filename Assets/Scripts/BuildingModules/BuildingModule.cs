@@ -31,7 +31,6 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        ownedBuilding.onBuildingInited += OnBuildingInited;
         ownedBuilding.onBuildingStartWorking += OnBuildingStartWorking;
         ownedBuilding.onBuildingStopWorking += OnBuildingStopWorking;
         ownedBuilding.onEntityEnterBuilding += OnEnterBuilding;
@@ -40,14 +39,13 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected virtual void OnDisable()
     {
-        ownedBuilding.onBuildingInited -= OnBuildingInited;
         ownedBuilding.onBuildingStartWorking -= OnBuildingStartWorking;
         ownedBuilding.onBuildingStopWorking -= OnBuildingStopWorking;
         ownedBuilding.onEntityEnterBuilding -= OnEnterBuilding;
         ownedBuilding.onEntityExitBuilding -= OnExitBuilding;
     }
 
-    private void OnBuildingInited()
+    public void Init()
     {
         buildingsManager = FindAnyObjectByType<BuildingsManager>();
 

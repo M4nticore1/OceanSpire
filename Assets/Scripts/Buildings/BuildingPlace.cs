@@ -28,10 +28,12 @@ public class BuildingPlace : MonoBehaviour, IClickable
     [SerializeField] private GameObject buildingFrame = null;
     [SerializeField] private BoxCollider boxCollider = null;
 
-    public BuildingPlace leftPlace { get; private set; }
-    public BuildingPlace rightPlace { get; private set; }
-    public BuildingPlace upPlace { get; private set; }
-    public BuildingPlace downPlace { get; private set; }
+    public BuildingPlace leftPlace;
+    public BuildingPlace rightPlace;
+    public BuildingPlace upPlace;
+    public BuildingPlace downPlace;
+
+    private bool isShowed = false;
 
     public IEnumerable NeighborPlaces(NeighborMask mask)
     {
@@ -54,13 +56,21 @@ public class BuildingPlace : MonoBehaviour, IClickable
         buildingsManager = FindAnyObjectByType<BuildingsManager>();
 
         floorIndex = newFloorindex;
-        ApplyNeighborPlace();
+        AssignNeighborPlaces();
         HideBuildingPlace();
 
         EventBus.onStartedPlacingBuilding += OnBuildingStartPlacing;
         EventBus.onBuildingPlaced += OnBuildingPlaced;
         EventBus.onBuildingInited += OnBuildingInitialized;
         EventBus.onStopPlacingBuildingButtonClicked += OnStopPlacingBuildingButtonClicked;
+    }
+
+    private void AssignNeighborPlaces()
+    {
+        leftPlace = GetNeighborPlace(Side.Left);
+        rightPlace = GetNeighborPlace(Side.Right);
+        upPlace = GetNeighborPlace(Side.Up);
+        downPlace = GetNeighborPlace(Side.Down);
     }
 
     private BuildingPlace GetNeighborPlace(Side side)
@@ -71,23 +81,22 @@ public class BuildingPlace : MonoBehaviour, IClickable
         int verticalIndex = floorIndex + verticalIndexOffset;
 
         if (verticalIndex < buildingsManager.BuiltFloors.Count && verticalIndex >= 0) {
-            return buildingsManager.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
+            BuildingPlace place = buildingsManager.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
+            return place;
         }
         return null;
-    }
-
-    private void ApplyNeighborPlace()
-    {
-        leftPlace = GetNeighborPlace(Side.Left);
-        rightPlace = GetNeighborPlace(Side.Right);
-        upPlace = GetNeighborPlace(Side.Up);
-        downPlace = GetNeighborPlace(Side.Down);
     }
 
     private void OnBuildingStartPlacing(Building building)
     {
         if (placedBuilding) return;
-        if (building.BuildingData.BuildingType != buildingType) return;
+
+        if (building.BuildingData.BuildingType != buildingType) {
+            if (isShowed) {
+                HideBuildingPlace();
+            }
+            return;
+        }
 
         ShowBuildingPlace(BuildingPlaceState.Valid);
     }
@@ -134,10 +143,15 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void ShowBuildingPlace(BuildingPlaceState buildingPlaceState)
     {
-        if (buildingZone)
+        if (buildingZone) {
             buildingZone.SetActive(true);
-        if (boxCollider)
+        }
+        
+        if (boxCollider) {
             boxCollider.enabled = true;
+        }
+
+        isShowed = true;
 
         //Color mainColor = Color.black;
         //Color outlineColor = Color.black;
@@ -171,10 +185,15 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void HideBuildingPlace()
     {
-        if (buildingZone)
+        if (buildingZone) {
             buildingZone.SetActive(false);
-        if (boxCollider)
+        }
+
+        if (boxCollider) {
             boxCollider.enabled = false;
+        }
+
+        isShowed = false;
     }
 
     // Events
