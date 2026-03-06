@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +7,8 @@ public class InputListener : MonoBehaviour
     public static InputListener Instance { get; private set; }
     public event Action onPressed;
     public event Action onReleased;
+
+    public GameObject startPressedObject { get; private set; }
 
     private void Awake()
     {
@@ -51,11 +52,13 @@ public class InputListener : MonoBehaviour
 
     private void HandlePress()
     {
+        startPressedObject = PointerUtils.GetRaycastUIResult().gameObject;
         onPressed?.Invoke();
     }
 
     private void HandleRelease()
     {
         onReleased?.Invoke();
+        startPressedObject = null;
     }
 }

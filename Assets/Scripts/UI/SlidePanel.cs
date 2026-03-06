@@ -113,8 +113,11 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
         // Close Method
         if (closeMethod == CloseMethod.None) return;
+
         releasePossition = PointerUtils.GetCurrentInputPosition();
+
         if (closeMethod == CloseMethod.OnePointClick && releasePossition != pressPossition) return;
+        if (InputListener.Instance.startPressedObject != PointerUtils.GetRaycastUIResult().gameObject) return;
 
         TryToClose();
     }

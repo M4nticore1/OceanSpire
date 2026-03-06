@@ -163,6 +163,7 @@ public class PlayerUIManager : MonoBehaviour
         workersMenu.CloseWorkersMenu();
 
         foreach (GridLayoutGroup rect in buildingLists) {
+            
             rect.gameObject.SetActive(false);
         }
 
