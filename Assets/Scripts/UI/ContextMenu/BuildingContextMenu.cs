@@ -20,13 +20,13 @@ public class BuildingContextMenu : ContextMenuBase<Building>
         base.OnDestroy();
 
         if (spawnedWorkersButton) {
-            spawnedWorkersButton.onReleased -= EventBus.InvokeContextMenuWorkersButtonClicked;
+            spawnedWorkersButton.onReleased -= EventBus.InvokeWorkersButtonClicked;
         }
         if (spawnedUpgradeButton) {
-            spawnedUpgradeButton.onReleased -= EventBus.InvokeContextMenuUpgradeButtonClicked;
+            spawnedUpgradeButton.onReleased -= EventBus.InvokeUpgradeButtonClicked;
         }
         if (spawnedDemolishButton) {
-            spawnedDemolishButton.onReleased -= EventBus.InvokeContextMenuDemolishButtonClicked;
+            spawnedDemolishButton.onReleased -= EventBus.InvokeDemolishButtonClicked;
         }
     }
 
@@ -36,6 +36,8 @@ public class BuildingContextMenu : ContextMenuBase<Building>
             Debug.LogWarning("building is not on the scene.");
             return;
         }
+
+        Debug.Log(building.NextLevelData);
 
         SetNameText(building.BuildingData.BuildingName);
         SetLevelText(building.LevelIndex + 1);
@@ -54,9 +56,9 @@ public class BuildingContextMenu : ContextMenuBase<Building>
             CreateDemolishButton();
         }
 
-        if (upgradeButton && !building.NextLevelData) {
-            upgradeButton.SetState(CustomSelectableState.Disabled);
-            upgradeButton.FinishTransitionAnimation();
+        if (spawnedUpgradeButton && !building.NextLevelData) {
+            spawnedUpgradeButton.SetState(CustomSelectableState.Disabled);
+            spawnedUpgradeButton.FinishTransitionAnimation();
         }
     }
 
@@ -68,7 +70,7 @@ public class BuildingContextMenu : ContextMenuBase<Building>
     private void CreateWorkersButton()
     {
         spawnedWorkersButton = CreateButton(workersButton);
-        spawnedWorkersButton.onReleased += EventBus.InvokeContextMenuWorkersButtonClicked;
+        spawnedWorkersButton.onReleased += EventBus.InvokeWorkersButtonClicked;
     }
 
     private void CreateStorageButton()
@@ -79,13 +81,13 @@ public class BuildingContextMenu : ContextMenuBase<Building>
     private void CreateUpgradeButton()
     {
         spawnedUpgradeButton = CreateButton(upgradeButton);
-        spawnedUpgradeButton.onReleased += EventBus.InvokeContextMenuUpgradeButtonClicked;
+        spawnedUpgradeButton.onReleased += EventBus.InvokeUpgradeButtonClicked;
     }
 
     private void CreateDemolishButton()
     {
         spawnedDemolishButton = CreateButton(demolishButton);
-        spawnedDemolishButton.onReleased += EventBus.InvokeContextMenuDemolishButtonClicked;
+        spawnedDemolishButton.onReleased += EventBus.InvokeDemolishButtonClicked;
     }
 
     private CustomButton CreateButton(CustomButton button)

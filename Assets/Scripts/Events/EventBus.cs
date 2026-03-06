@@ -192,17 +192,17 @@ public static class EventBus
     }
 
     // Context Menu
-    public static void InvokeContextMenuUpgradeButtonClicked()
+    public static void InvokeUpgradeButtonClicked()
     {
         onContextMenuUpgradeButtonClicked?.Invoke();
     }
 
-    public static void InvokeContextMenuDemolishButtonClicked()
+    public static void InvokeDemolishButtonClicked()
     {
         onContextMenuUpgradeButtonClicked?.Invoke();
     }
 
-    public static void InvokeContextMenuWorkersButtonClicked()
+    public static void InvokeWorkersButtonClicked()
     {
         onContextMenuWorkersButtonClicked?.Invoke();
     }
