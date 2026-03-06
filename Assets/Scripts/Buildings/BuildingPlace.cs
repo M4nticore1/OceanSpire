@@ -28,10 +28,10 @@ public class BuildingPlace : MonoBehaviour, IClickable
     [SerializeField] private GameObject buildingFrame = null;
     [SerializeField] private BoxCollider boxCollider = null;
 
-    public BuildingPlace leftPlace { get; private set; }
-    public BuildingPlace rightPlace { get; private set; }
-    public BuildingPlace upPlace { get; private set; }
-    public BuildingPlace downPlace { get; private set; }
+    public BuildingPlace leftPlace;
+    public BuildingPlace rightPlace;
+    public BuildingPlace upPlace;
+    public BuildingPlace downPlace;
 
     private bool isShowed = false;
 

@@ -93,8 +93,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b693703dd49e76143bd187d148c8ed45, type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 9159591924028586411}
+      insertIndex: -1
+      addedObject: {fileID: 6873194089826475566}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b693703dd49e76143bd187d148c8ed45, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1776094897381444617}
   m_SourcePrefab: {fileID: 100100000, guid: b693703dd49e76143bd187d148c8ed45, type: 3}
 --- !u!4 &178035576060543008 stripped
 Transform:
@@ -106,7 +109,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b693703dd49e76143bd187d148c8ed45, type: 3}
   m_PrefabInstance: {fileID: 428469874772535243}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9159591924028586411
+--- !u!114 &6873194089826475566
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,4 +120,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 15d511cb8398f1b43b37bcc206dccbfe, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::GPUInstancingEnabler
+--- !u!114 &1776094897381444617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662964577805851290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ddce6e8119cdbe4da85e6a3d1b0c9f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LightAnchorController

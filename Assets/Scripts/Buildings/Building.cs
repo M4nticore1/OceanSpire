@@ -201,6 +201,7 @@ public abstract class Building : MonoBehaviour
 
         if (construction) {
             spawnedConstruction = Instantiate(construction, transform);
+            spawnedConstruction.Init(this);
         }
     }
 

@@ -17,6 +17,7 @@ public class BuildingActionWaypoint
 public class BuildingConstruction : MonoBehaviour
 {
     protected BuildingsManager buildingsManager;
+    private LightProbeGroupManager lightProbeGroupManager;
 
     protected Building ownedBuilding = null;
 
@@ -35,16 +36,22 @@ public class BuildingConstruction : MonoBehaviour
     public virtual void Init(Building ownedBuilding)
     {
         buildingsManager = FindAnyObjectByType<BuildingsManager>();
+        lightProbeGroupManager = FindAnyObjectByType<LightProbeGroupManager>();
+        meshRendererers = GetComponentsInChildren<MeshRenderer>();
+
+        foreach (var renderer in meshRendererers) {
+            renderer.probeAnchor = lightProbeGroupManager.ProbeAnchor;
+        }
 
         this.ownedBuilding = ownedBuilding;
-        meshRendererers = GetComponentsInChildren<MeshRenderer>();
         propertyBlock = new MaterialPropertyBlock();
     }
 
     public void SetFlickingMultiplier(float multiplier)
     {
         propertyBlock.SetFloat("_FlickingMultiplier", multiplier);
-        foreach (MeshRenderer renderer in meshRendererers)
+        foreach (MeshRenderer renderer in meshRendererers) {
             renderer.SetPropertyBlock(propertyBlock);
+        }
     }
 }

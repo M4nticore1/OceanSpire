@@ -80,7 +80,6 @@ public class TowerBuilding : Building
 
     public void HandleConnectedBuildingPlaced(Building building)
     {
-        Debug.Log(floorIndex + " " + placeIndex);
         UpdateConstruction();
     }
 

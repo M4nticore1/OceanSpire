@@ -99,7 +99,7 @@ Material:
     m_Colors:
     - _CausticsColor: {r: 1, g: 1, b: 1, a: 0}
     - _CausticsDensity: {r: 1, g: 1, b: 1, a: 0}
-    - _Color: {r: 0.34, g: 0.5366265, b: 0.68, a: 1}
+    - _Color: {r: 0.195, g: 0.5650002, b: 0.75, a: 1}
     - _ColorDeep: {r: 0, g: 0.2803233, b: 0.49056602, a: 0}
     - _ColorDepp: {r: 0.19339621, g: 0.38634863, b: 1, a: 0}
     - _ColorShallow: {r: 0.25882354, g: 0.84705883, b: 1, a: 0}
