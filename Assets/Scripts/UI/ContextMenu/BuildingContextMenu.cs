@@ -37,8 +37,6 @@ public class BuildingContextMenu : ContextMenuBase<Building>
             return;
         }
 
-        Debug.Log(building.NextLevelData);
-
         SetNameText(building.BuildingData.BuildingName);
         SetLevelText(building.LevelIndex + 1);
 

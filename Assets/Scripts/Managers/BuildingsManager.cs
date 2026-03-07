@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BuildingsManager : MonoBehaviour
 {
@@ -40,7 +41,7 @@ public class BuildingsManager : MonoBehaviour
         // Buildings
         EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
         EventBus.onBuildingInited += OnBuildingInited;
-        EventBus.onBuildingPlaced += OnBuildingPlaced;
+        EventBus.onBuildingDemolished += OnBuildingDemolished;
 
         // Modules
         EventBus.onBuildingModuleInited += OnBuildingModuleInited;
@@ -53,7 +54,7 @@ public class BuildingsManager : MonoBehaviour
         // Buildings
         EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
         EventBus.onBuildingInited -= OnBuildingInited;
-        EventBus.onBuildingPlaced -= OnBuildingPlaced;
+        EventBus.onBuildingDemolished -= OnBuildingDemolished;
 
         // Modules
         EventBus.onBuildingModuleInited -= OnBuildingModuleInited;
@@ -64,19 +65,21 @@ public class BuildingsManager : MonoBehaviour
     // Buildings
     private void OnBuildingWidgetBuildClicked(BuildingWidget widget)
     {
-        EventBus.InvokeOnBuildingStartPlacing(widget.buildingPrefab);
+        EventBus.InvokeBuildingStartPlacing(widget.buildingPrefab);
     }
 
-    private void OnBuildingPlaced(Building building)
+    private void OnBuildingInited(Building building)
     {
-        ElevatorModule elevatorBuilding = building.GetComponent<ElevatorModule>();
+        var floorFrame = building.GetComponent<FloorFrameModule>();
 
-        if (elevatorBuilding) {
-            if (elevatorGroups.Count <= elevatorBuilding.elevatorGroupId) {
-                List<ElevatorModule> elevatorGroup = new List<ElevatorModule>();
-                elevatorGroups.Add(elevatorGroup);
+        if (floorFrame) {
+            if (builtFloors.Count == (floorFrame.OwnedBuilding as TowerBuilding).floorIndex) {
+                builtFloors.Add(floorFrame);
             }
-            elevatorGroups[elevatorBuilding.elevatorGroupId].Add(elevatorBuilding);
+
+            UpdateElevatorGroups(building);
+            UpdateEmptyBuildingPlacesCount();
+            UpdateCityHeight();
         }
     }
 
@@ -89,6 +92,10 @@ public class BuildingsManager : MonoBehaviour
             int amount = (int)math.ceil(resourceToBuilds[i].Amount * demolitionResourceRefundRate);
             cityStorage.Inventory.AddItemAmount(id, amount);
         }
+
+        UpdateElevatorGroups(building);
+        UpdateEmptyBuildingPlacesCount();
+        UpdateCityHeight();
     }
 
     // Modules
@@ -156,18 +163,17 @@ public class BuildingsManager : MonoBehaviour
         EventBus.InvokeStorageCapacityChanged();
     }
 
-    // Building Places
-    private void OnBuildingInited(Building building)
+    // Updates
+    private void UpdateElevatorGroups(Building building)
     {
-        var floorFrame = building.GetComponent<FloorFrameModule>();
+        ElevatorModule elevatorBuilding = building.GetComponent<ElevatorModule>();
 
-        if (floorFrame) {
-            if (builtFloors.Count == (floorFrame.OwnedBuilding as TowerBuilding).floorIndex) {
-                builtFloors.Add(floorFrame);
+        if (elevatorBuilding) {
+            if (elevatorGroups.Count <= elevatorBuilding.elevatorGroupId) {
+                List<ElevatorModule> elevatorGroup = new List<ElevatorModule>();
+                elevatorGroups.Add(elevatorGroup);
             }
-
-            UpdateEmptyBuildingPlacesCount();
-            UpdateCityHeight();
+            elevatorGroups[elevatorBuilding.elevatorGroupId].Add(elevatorBuilding);
         }
     }
 

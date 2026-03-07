@@ -16,7 +16,7 @@ public static class EventBus
     public static event Action<BuildingWidget> onBuildingWidgetInformationClicked;
     public static event Action<Building> onStartedPlacingBuilding;
     public static event Action<Building> onBuildingInited;
-    public static event Action<Building> onBuildingPlaced;
+    public static event Action<Building> onBuildingDemolished;
 
     public static event Action<BuildingModule> onBuildingModuleInited;
     public static event Action<BuildingModule> onBuildingModuleUpgraded;
@@ -48,9 +48,9 @@ public static class EventBus
     public static event Action onStorageCapacityChanged;
 
     // Context Menu
-    public static event Action onContextMenuUpgradeButtonClicked;
-    public static event Action onContextMenuDemolishButtonClicked;
-    public static event Action onContextMenuWorkersButtonClicked;
+    public static event Action onClickedContextUpgradeButton;
+    public static event Action onClickedContextDemolishButton;
+    public static event Action onClickedWorkersButton;
 
     // Building Stats Menu
     public static event Action<Building> onCameraEnteredStatsMenuDistance;
@@ -95,19 +95,19 @@ public static class EventBus
         onBuildingWidgetInformationClicked?.Invoke(widget);
     }
 
-    public static void InvokeOnBuildingStartPlacing(Building building)
+    public static void InvokeBuildingStartPlacing(Building building)
     {
         onStartedPlacingBuilding?.Invoke(building);
     }
 
-    public static void InvokeBuildingInitialized(Building building)
+    public static void InvokeBuildingInited(Building building)
     {
         onBuildingInited?.Invoke(building);
     }
 
-    public static void InvokeBuildingPlaced(Building building)
+    public static void InvokeBuildingDemolished(Building building)
     {
-        onBuildingPlaced?.Invoke(building);
+        onBuildingDemolished?.Invoke(building);
     }
 
     public static void InvokeStopPlacingBuildingButtonClicked()
@@ -194,17 +194,17 @@ public static class EventBus
     // Context Menu
     public static void InvokeUpgradeButtonClicked()
     {
-        onContextMenuUpgradeButtonClicked?.Invoke();
+        onClickedContextUpgradeButton?.Invoke();
     }
 
     public static void InvokeDemolishButtonClicked()
     {
-        onContextMenuUpgradeButtonClicked?.Invoke();
+        onClickedContextDemolishButton?.Invoke();
     }
 
     public static void InvokeWorkersButtonClicked()
     {
-        onContextMenuWorkersButtonClicked?.Invoke();
+        onClickedWorkersButton?.Invoke();
     }
 
     // Stats Menu

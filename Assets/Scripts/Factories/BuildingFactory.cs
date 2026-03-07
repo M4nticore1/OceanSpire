@@ -22,7 +22,6 @@ public static class BuildingFactory
     {
         var obj = Object.Instantiate(prefab);
         obj.Init(data);
-        EventBus.InvokeBuildingPlaced(obj);
         return obj;
     }
 }

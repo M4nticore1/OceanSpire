@@ -91,7 +91,7 @@ public class MainMenuManager : MonoBehaviour
         
         if (slot.worldSaveData == null) {
             managementSaveMenu.gameObject.SetActive(false);
-            createWorldMenuSlidePanel.OpenSlidePanel();
+            createWorldMenuSlidePanel.Open();
             return;
         }
     }

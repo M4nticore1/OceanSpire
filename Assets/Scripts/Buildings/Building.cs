@@ -48,12 +48,16 @@ public abstract class Building : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        EventBus.onClickedContextDemolishButton += OnDemolishClicked;
+        EventBus.onClickedContextUpgradeButton += OnUpgradeClicked;
         selectComponent.onSelected += OnSelected;
         selectComponent.onDeselected += OnDeselected;
     }
 
     protected virtual void OnDisable()
     {
+        EventBus.onClickedContextDemolishButton -= OnDemolishClicked;
+        EventBus.onClickedContextUpgradeButton -= OnUpgradeClicked;
         selectComponent.onSelected += OnSelected;
         selectComponent.onDeselected += OnDeselected;
     }
@@ -69,9 +73,14 @@ public abstract class Building : MonoBehaviour
         UpdateConstruction();
         spawnedConstruction?.Init(this);
         onBuildingInited?.Invoke();
-        EventBus.InvokeBuildingInitialized(this);
+        EventBus.InvokeBuildingInited(this);
 
         InitModules();
+    }
+
+    public virtual void Demolish()
+    {
+        Destroy(gameObject);
     }
 
     protected abstract void OnInit(BuildingEntry saveData);
@@ -90,11 +99,6 @@ public abstract class Building : MonoBehaviour
         buildingsManager = FindAnyObjectByType<BuildingsManager>();
         levelComponent = GetComponent<LevelComponent>();
         selectComponent = GetComponent<SelectComponent>();
-    }
-
-    public void Demolish()
-    {
-
     }
 
     // Residents Management
@@ -227,6 +231,16 @@ public abstract class Building : MonoBehaviour
     }
 
     // Events
+    private void OnDemolishClicked()
+    {
+        
+    }
+
+    private void OnUpgradeClicked()
+    {
+
+    }
+
     private void OnSelected()
     {
         EventBus.InvokeSelectedBuilding(this);

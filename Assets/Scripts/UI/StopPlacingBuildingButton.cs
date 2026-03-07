@@ -14,7 +14,7 @@ public class StopPlacingBuildingButton : MonoBehaviour
     {
         button.onReleased += OnButtonClicked;
         EventBus.onStartedPlacingBuilding += OnStartedPlacingBuilding;
-        EventBus.onBuildingPlaced += OnBuildingPlaced;
+        EventBus.onBuildingInited += OnBuildingInited;
     }
 
     private void OnDisable()
@@ -43,7 +43,7 @@ public class StopPlacingBuildingButton : MonoBehaviour
         Show();
     }
 
-    private void OnBuildingPlaced(Building building)
+    private void OnBuildingInited(Building building)
     {
         Hide();
     }

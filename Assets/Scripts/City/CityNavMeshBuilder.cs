@@ -11,12 +11,12 @@ public class CityNavMeshBuilder : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.onBuildingPlaced += OnBuildingPlaced;
+        EventBus.onBuildingInited += OnBuildingPlaced;
     }
 
     private void OnDisable()
     {
-        EventBus.onBuildingPlaced -= OnBuildingPlaced;
+        EventBus.onBuildingInited -= OnBuildingPlaced;
     }
 
     private void Start()

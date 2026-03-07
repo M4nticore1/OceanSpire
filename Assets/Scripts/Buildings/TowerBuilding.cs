@@ -46,7 +46,7 @@ public class TowerBuildingEntry : BuildingEntry
 
 public class TowerBuilding : Building
 {
-    public BuildingPlace buildingPlace { get; private set; } = null;
+    public BuildingPlace buildingPlace = null;
 
     public BuildingPosition buildingPosition { get; private set; } = BuildingPosition.Straight;
     public int floorIndex { get; private set; }
@@ -61,6 +61,49 @@ public class TowerBuilding : Building
     public TowerBuilding RightConnectedBuilding => CheckConnectionPossibility(RightBuilding, ConnectionType.Horizontal);
     public TowerBuilding UpConnectedBuilding => CheckConnectionPossibility(UpBuilding, ConnectionType.Vertical);
     public TowerBuilding DownConnectedBuilding => CheckConnectionPossibility(DownBuilding, ConnectionType.Vertical);
+
+    protected override void OnInit(BuildingEntry data)
+    {
+        TowerBuildingEntry towerData = data as TowerBuildingEntry;
+        floorIndex = towerData.floorIndex;
+        placeIndex = towerData.placeIndex;
+
+        List<FloorFrameModule> floors = buildingsManager.BuiltFloors;
+        BuildingPlace place = null;
+
+        if (BuildingData.BuildingType == BuildingType.Room) {
+            place = floors[towerData.floorIndex].RoomBuildingPlaces[towerData.placeIndex];
+        }
+        else if (BuildingData.BuildingType == BuildingType.Hall) {
+            place = floors[towerData.floorIndex].HallBuildingPlace;
+        }
+        else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
+            int index = towerData.floorIndex - 1;
+            place = floors.Count > index && index >= 0 ? floors[index].FloorBuildingPlace : null;
+        }
+
+        if (place) {
+            SetBuildingPlace(place);
+        }
+
+        if (placeIndex % 2 == 0) {
+            SetBuildingPosition(BuildingPosition.Corner);
+        }
+        else {
+            SetBuildingPosition(BuildingPosition.Straight);
+        }
+
+        ApplyTransform();
+        InvokeBuildingPlaced();
+    }
+
+    public override void Demolish()
+    {
+        base.Demolish();
+
+        buildingPlace.HandleBuildingDemolished();
+        InvokeBuildingDemolished();
+    }
 
     public IEnumerable NeighborBuildings(NeighborMask mask)
     {
@@ -79,6 +122,11 @@ public class TowerBuilding : Building
     }
 
     public void HandleConnectedBuildingPlaced(Building building)
+    {
+        UpdateConstruction();
+    }
+
+    public void HandleConnectedBuildingDemolished(Building building)
     {
         UpdateConstruction();
     }
@@ -119,41 +167,6 @@ public class TowerBuilding : Building
         return false;
     }
 
-    protected override void OnInit(BuildingEntry data)
-    {
-        TowerBuildingEntry towerData = data as TowerBuildingEntry;
-        floorIndex = towerData.floorIndex;
-        placeIndex = towerData.placeIndex;
-
-        List<FloorFrameModule> floors = buildingsManager.BuiltFloors;
-        BuildingPlace place = null;
-
-        if (BuildingData.BuildingType == BuildingType.Room) {
-            place = floors[towerData.floorIndex].RoomBuildingPlaces[towerData.placeIndex];
-        }
-        else if (BuildingData.BuildingType == BuildingType.Hall) {
-            place = floors[towerData.floorIndex].HallBuildingPlace;
-        }
-        else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
-            int index = towerData.floorIndex - 1;
-            place = floors.Count > index && index >= 0 ? floors[index].FloorBuildingPlace : null;
-        }
-
-        if (place) {
-            SetBuildingPlace(place);
-        }
-
-        if (placeIndex % 2 == 0) {
-            SetBuildingPosition(BuildingPosition.Corner);
-        }
-        else {
-            SetBuildingPosition(BuildingPosition.Straight);
-        }
-
-        ApplyTransform();
-        InvokeBuildingPlaced();
-    }
-
     private void SetBuildingPlace(BuildingPlace place)
     {
         buildingPlace = place;
@@ -169,17 +182,28 @@ public class TowerBuilding : Building
     {
         if (!buildingPlace) return;
 
-        transform.SetParent(buildingPlace.transform);
-        transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
+        if (GetComponent<FloorFrameModule>()) {
+            transform.SetParent(buildingPlace.transform);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+        }
+        else {
+            transform.position = buildingPlace.transform.position;
+        }
     }
 
     private void InvokeBuildingPlaced()
     {
-        LeftBuilding?.HandleConnectedBuildingPlaced(this);
-        RightBuilding?.HandleConnectedBuildingPlaced(this);
-        DownBuilding?.HandleConnectedBuildingPlaced(this);
-        UpBuilding?.HandleConnectedBuildingPlaced(this);
+        foreach (TowerBuilding building in NeighborBuildings(NeighborMask.All)) {
+            building?.HandleConnectedBuildingPlaced(this);
+        }
+    }
+
+    private void InvokeBuildingDemolished()
+    {
+        foreach (TowerBuilding building in NeighborBuildings(NeighborMask.All)) {
+            building?.HandleConnectedBuildingDemolished(this);
+        }
     }
 
     protected override BuildingConstruction GetConstruction()

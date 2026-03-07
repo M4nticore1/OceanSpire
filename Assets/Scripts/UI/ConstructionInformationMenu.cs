@@ -38,7 +38,7 @@ public class ConstructionInformationMenu : MonoBehaviour
         }
         spawnedBuildingCharacteristicWidgets.Clear();
 
-        slidePanel.OpenSlidePanel();
+        slidePanel.Open();
 
         nameText.SetText(building.BuildingData.BuildingName);
         levelNumberText.SetText("Level " + (building.LevelIndex + 1).ToString());
@@ -68,7 +68,7 @@ public class ConstructionInformationMenu : MonoBehaviour
 
     public void Close()
     {
-        slidePanel.CloseSlidePanel();
+        slidePanel.Close();
     }
 
     private void CreateCharacteristicWidget(string characteristicName, int characteristicValueText)

@@ -63,9 +63,9 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         InputListener.Instance.onPressed += OnPress;
         InputListener.Instance.onReleased += OnRelease;
         if (openButton)
-            openButton.onReleased += OpenSlidePanel;
+            openButton.onReleased += Open;
         if (closeButton)
-            closeButton.onReleased += CloseSlidePanel;
+            closeButton.onReleased += Close;
     }
 
     private void OnDisable()
@@ -73,9 +73,9 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         InputListener.Instance.onPressed -= OnPress;
         InputListener.Instance.onReleased -= OnRelease;
         if (openButton)
-            openButton.onReleased -= OpenSlidePanel;
+            openButton.onReleased -= Open;
         if (closeButton)
-            closeButton.onReleased -= CloseSlidePanel;
+            closeButton.onReleased -= Close;
     }
 
     private void Update()
@@ -127,7 +127,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         List<RaycastResult> results = new List<RaycastResult>();
         PointerUtils.GetRaycastUIResults(results);
         if (IsClickedOutsideMenu(results)) {
-            CloseSlidePanel();
+            Close();
         }
     }
 
@@ -140,7 +140,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable
             content.Add(closeButton.transform);
     }
 
-    public void OpenSlidePanel()
+    public void Open()
     {
         openedPosition = CalculateOpenedPosition();
         targetPosition = openedPosition;
@@ -157,7 +157,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         onOpened?.Invoke();
     }
 
-    public void CloseSlidePanel()
+    public void Close()
     {
         closedPosition = CalculateClosedPosition();
         targetPosition = closedPosition;

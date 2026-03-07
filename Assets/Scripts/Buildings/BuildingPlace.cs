@@ -60,13 +60,18 @@ public class BuildingPlace : MonoBehaviour, IClickable
         HideBuildingPlace();
 
         EventBus.onStartedPlacingBuilding += OnBuildingStartPlacing;
-        EventBus.onBuildingPlaced += OnBuildingPlaced;
+        EventBus.onBuildingInited += OnBuildingInited;
         EventBus.onStopPlacingBuildingButtonClicked += OnStopPlacingBuildingButtonClicked;
     }
 
     public void HandleBuildingInited(TowerBuilding building)
     {
         SetPlacedBuilding(building);
+    }
+
+    public void HandleBuildingDemolished()
+    {
+        RemovePlacedBuilding();
     }
 
     private void AssignNeighborPlaces()
@@ -105,7 +110,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         ShowBuildingPlace(BuildingPlaceState.Valid);
     }
 
-    private void OnBuildingPlaced(Building building)
+    private void OnBuildingInited(Building building)
     {
         if (placedBuilding && building != placedBuilding) return;
         if (building.BuildingData.BuildingType != buildingType) return;
@@ -197,6 +202,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     {
         TowerBuilding building = ConstructionManager.Instance.buildingToPlace as TowerBuilding;
         int id = building.BuildingData.BuildingId;
+        Debug.Log(floorIndex);
         TowerBuildingEntry data = new TowerBuildingEntry(floorIndex, placeIndex);
 
         TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(id, data);
@@ -205,15 +211,15 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     public bool CanClick()
     {
-        Building building = ConstructionManager.Instance.buildingToPlace;
-        if (!building) {
-            Debug.Log("building is not valid.");
+        Building buildingToPlace = ConstructionManager.Instance.buildingToPlace;
+        if (!buildingToPlace) {
+            Debug.Log("buildingToPlace is not valid.");
             return false;
         }
 
-        TowerBuilding towerBuilding = building as TowerBuilding;
+        TowerBuilding towerBuilding = buildingToPlace as TowerBuilding;
         if (!towerBuilding) {
-            Debug.Log("buildingToPlace is not valid.");
+            Debug.Log("buildingToPlace is not TowerBuilding.");
             return false;
         }
 

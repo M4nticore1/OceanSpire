@@ -85,11 +85,6 @@ public class PlayerUIManager : MonoBehaviour
 
         EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
 
-        // Context Menu
-        EventBus.onContextMenuUpgradeButtonClicked += OnContextMenuUpgradeButtonClicked;
-        EventBus.onContextMenuDemolishButtonClicked += OnContextMenuDemolishButtonClicked;
-        EventBus.onContextMenuWorkersButtonClicked += OnContextMenuWorkersButtonClicked;
-
         // Stas Menu
         EventBus.onCameraEnteredStatsMenuDistance += OnCameraEnteredStatsMenuDistance;
         EventBus.onCameraExitedStatsMenuDistance += OnCameraExitedStatsMenuDistance;
@@ -126,11 +121,6 @@ public class PlayerUIManager : MonoBehaviour
 
         EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
 
-        // Context Menu
-        EventBus.onContextMenuUpgradeButtonClicked -= OnContextMenuUpgradeButtonClicked;
-        EventBus.onContextMenuDemolishButtonClicked -= OnContextMenuDemolishButtonClicked;
-        EventBus.onContextMenuWorkersButtonClicked -= OnContextMenuWorkersButtonClicked;
-
         // Stas Menu
         EventBus.onCameraEnteredStatsMenuDistance -= OnCameraEnteredStatsMenuDistance;
         EventBus.onCameraExitedStatsMenuDistance -= OnCameraExitedStatsMenuDistance;
@@ -160,7 +150,6 @@ public class PlayerUIManager : MonoBehaviour
 
         managementMenu.SetActive(false);
         buildingListsMenu.SetActive(false);
-        workersMenu.CloseWorkersMenu();
 
         foreach (GridLayoutGroup rect in buildingLists) {
             
@@ -372,13 +361,6 @@ public class PlayerUIManager : MonoBehaviour
         //storageResourceWidgets = widgets.ToArray();
     }
 
-    // Workers
-    private void OnContextMenuWorkersButtonClicked()
-    {
-        workersMenu.OpenWorkersMenu();
-        isWorkersMenuOpened = true;
-    }
-
     private void OnWorkersMenuClosed()
     {
         isWorkersMenuOpened = false;
@@ -407,89 +389,6 @@ public class PlayerUIManager : MonoBehaviour
     private void CloseStatsMenu()
     {
         statsMenu.CloseStatsMenu();
-    }
-
-    // Building Action Menu
-    private void OnContextMenuUpgradeButtonClicked()
-    {
-        Building building = SelectManager.Instance.selectedComponent.GetComponent<Building>();
-        if (!building) return;
-
-        CleanResourceToUpgradeWidgets();
-
-        int nextLevelIndex = building.LevelIndex + 1;
-        ItemInstance[] resourcesToUpgrade = building.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
-
-        for (int i = 0; i < resourcesToUpgrade.Length; i++)
-        {
-            ResourceWidget resourceWidget = Instantiate(buildingActionResourceWidgetPrefab, actionResourcesLayourGroup.transform);
-            spawnedBuildingActionResourceWidgets.Add(resourceWidget);
-
-            int id = resourcesToUpgrade[i].ItemData.ItemId;
-            int amount = resourcesToUpgrade[i].Amount;
-            int maxAmount = cityStorage.Inventory.itemsDict[id].maxAmount;
-            resourceWidget.SetAmount(amount, maxAmount);
-        }
-    }
-
-    private void OnContextMenuDemolishButtonClicked()
-    {
-        Building building = SelectManager.Instance.selectedComponent.GetComponent<Building>();
-        if (!building) return;
-
-        CleanResourceToUpgradeWidgets();
-
-        int levelIndex = building.LevelIndex;
-        ItemInstance[] resourcesToUpgrade = building.ConstructionLevelsData[levelIndex].ResourcesToBuild;
-
-        for (int i = 0; i < resourcesToUpgrade.Length; i++)
-        {
-            ResourceWidget resourceWidget = Instantiate(buildingActionResourceWidgetPrefab, actionResourcesLayourGroup.transform);
-            spawnedBuildingActionResourceWidgets.Add(resourceWidget);
-
-            int amount = (int)math.ceil(resourcesToUpgrade[i].Amount * BuildingsManager.demolitionResourceRefundRate);
-            resourceWidget.SetAmount(amount);
-        }
-    }
-
-    // Repair Building Menu
-    public void OpenRepairBuildingMenu(Building building)
-    {
-        CleanResourceToUpgradeWidgets();
-
-        int nextLevelIndex = 0;
-        ItemInstance[] resourcesToUpgrade = building.ConstructionLevelsData[nextLevelIndex].ResourcesToBuild;
-
-        for (int i = 0; i < resourcesToUpgrade.Length; i++)
-        {
-            ResourceWidget resourceWidget = Instantiate(buildingActionResourceWidgetPrefab, actionResourcesLayourGroup.transform);
-            spawnedBuildingActionResourceWidgets.Add(resourceWidget);
-
-            int amount = resourcesToUpgrade[i].Amount;
-            resourceWidget.SetAmount(amount);
-        }
-    }
-
-    // Upgrade Building Menu
-    private void OnUpgradeButtonClicked()
-    {
-        //CityManager.Instance.TryToUpgradeConstruction(SelectManager.Instance.selectedComponent.GetComponent<Building>());
-    }
-
-    private void CleanResourceToUpgradeWidgets()
-    {
-        for (int i = 0; i < spawnedBuildingActionResourceWidgets.Count; i++)
-        {
-            Destroy(spawnedBuildingActionResourceWidgets[i].gameObject);
-        }
-
-        spawnedBuildingActionResourceWidgets.Clear();
-    }
-
-    // Demolish Building
-    private void OnDemolishButtonClicked()
-    {
-
     }
 
     // Events

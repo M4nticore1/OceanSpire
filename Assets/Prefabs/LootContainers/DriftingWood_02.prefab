@@ -59,7 +59,7 @@ MonoBehaviour:
   floorsCountToSpawn: 0
   minSpawnFloorNumber: 0
   maxSpawnFloorNumber: 0
-  spawnMinTime: 2
+  spawnMinTime: 3
   spawnMaxTime: 15
 --- !u!65 &3113521155065601208
 BoxCollider:
