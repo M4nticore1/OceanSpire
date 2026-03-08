@@ -13,6 +13,7 @@ public class CoalGeneratorModule : ProductionModule
     protected override void OnInit()
     {
         base.OnInit();
+
         Transform smokeTransform = CoalGenetatorConstructionModule.SmokeSpawnTransform;
         spawnedSmoke = Instantiate(smokePrefab);
         spawnedSmoke.transform.position = smokeTransform.position;
@@ -23,6 +24,7 @@ public class CoalGeneratorModule : ProductionModule
     protected override void OnStartProducting()
     {
         base.OnStartProducting();
+
         TimerManager.RemoveTimer(stopProductingTimerHandle);
         spawnedSmoke.gameObject.SetActive(true);
         spawnedSmoke.Play();

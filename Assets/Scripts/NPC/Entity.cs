@@ -17,7 +17,7 @@ public abstract class EntityEntry
 
 public abstract class Entity : MonoBehaviour
 {
-    private CityNavMeshBuilder cityNavMeshManager;
+    private IslandNavMeshBuilder cityNavMeshManager;
     protected NavMeshAgent agent = null;
     protected EntityMovement movement = null;
 
@@ -36,16 +36,16 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void Init(EntityEntry data)
     {
-        cityNavMeshManager = FindAnyObjectByType<CityNavMeshBuilder>();
+        cityNavMeshManager = FindAnyObjectByType<IslandNavMeshBuilder>();
         agent = GetComponent<NavMeshAgent>();
         movement = GetComponent<EntityMovement>();
 
         transform.position = data.position;
         transform.rotation = Quaternion.Euler(data.rotation);
 
-        if (cityNavMeshManager.bakeNavMeshCoroutine != null) {
-            SetNavAgentEnabled(false);
-        }
+        //if (cityNavMeshManager.bakeNavMeshCoroutine != null) {
+        //    SetNavAgentEnabled(false);
+        //}
     }
 
     public void SetNavAgentEnabled(bool value)

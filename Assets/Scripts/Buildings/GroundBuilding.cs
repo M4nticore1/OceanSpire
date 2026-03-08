@@ -14,7 +14,7 @@ public class GroundBuilding : Building
         
     }
 
-    protected override BuildingConstruction GetConstruction()
+    protected override BuildingConstruction GetConstructionToSpawn()
     {
         return (LevelData as GroundBuildingLevelData).Construction;
     }

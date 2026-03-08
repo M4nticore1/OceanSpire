@@ -21,17 +21,17 @@ public class BuildingPlace : MonoBehaviour, IClickable
     public int emptyBuildingPlacesAbove { get; set; } = 0;
     public int emptyBuildingPlacesBelow { get; set; } = 0;
 
-    [SerializeField] private TowerBuilding placedBuilding = null;
+    [SerializeField] private TowerBuilding placedBuilding;
     public TowerBuilding PlacedBuilding => placedBuilding;
 
-    [SerializeField] private GameObject buildingZone = null;
-    [SerializeField] private GameObject buildingFrame = null;
-    [SerializeField] private BoxCollider boxCollider = null;
+    [SerializeField] private GameObject buildingZone;
+    [SerializeField] private GameObject buildingFrame;
+    [SerializeField] private BoxCollider boxCollider;
 
-    public BuildingPlace leftPlace;
-    public BuildingPlace rightPlace;
-    public BuildingPlace upPlace;
-    public BuildingPlace downPlace;
+    public BuildingPlace leftPlace { get; private set; }
+    public BuildingPlace rightPlace { get; private set; }
+    public BuildingPlace upPlace { get; private set; }
+    public BuildingPlace downPlace { get; private set; }
 
     private bool isShowed = false;
 
@@ -202,7 +202,6 @@ public class BuildingPlace : MonoBehaviour, IClickable
     {
         TowerBuilding building = ConstructionManager.Instance.buildingToPlace as TowerBuilding;
         int id = building.BuildingData.BuildingId;
-        Debug.Log(floorIndex);
         TowerBuildingEntry data = new TowerBuildingEntry(floorIndex, placeIndex);
 
         TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(id, data);

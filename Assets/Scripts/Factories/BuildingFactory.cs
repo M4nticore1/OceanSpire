@@ -20,8 +20,9 @@ public static class BuildingFactory
 
     private static TowerBuilding CreateBuilding_Internal(TowerBuilding prefab, TowerBuildingEntry data)
     {
-        var obj = Object.Instantiate(prefab);
-        obj.Init(data);
-        return obj;
+        var spawnedGO = Object.Instantiate(prefab);
+        spawnedGO.Init(data);
+        EventBus.InvokeBuildingCreated(spawnedGO);
+        return spawnedGO;
     }
 }

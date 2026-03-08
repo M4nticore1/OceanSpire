@@ -68,7 +68,7 @@ public abstract class Building : MonoBehaviour
         buildingsManager = FindAnyObjectByType<BuildingsManager>();
 
         AssignComponents();
-        CreateStrategy();
+        AsssignStrategy();
         OnInit(data);
         UpdateConstruction();
         spawnedConstruction?.Init(this);
@@ -78,14 +78,29 @@ public abstract class Building : MonoBehaviour
         InitModules();
     }
 
-    public virtual void Demolish()
+    public void Demolish()
     {
         Destroy(gameObject);
+        InvokeBuildingDemolished();
     }
 
     protected abstract void OnInit(BuildingEntry saveData);
 
-    protected abstract BuildingConstruction GetConstruction();
+    protected abstract BuildingConstruction GetConstructionToSpawn();
+
+    protected virtual void InvokeBuildingInited()
+    {
+        foreach (var module in GetComponents<IOwnedBuildingListener>()) {
+            module.HandleOwnedBuildingInited();
+        }
+    }
+
+    protected virtual void InvokeBuildingDemolished()
+    {
+        foreach (var module in GetComponents<IOwnedBuildingListener>()) {
+            module.HandleOwnedBuildingDemolished();
+        }
+    }
 
     private void InitModules()
     {
@@ -201,15 +216,21 @@ public abstract class Building : MonoBehaviour
             Destroy(spawnedConstruction.gameObject);
         }
 
-        BuildingConstruction construction = GetConstruction();
+        BuildingConstruction constructionToSpawn = GetConstructionToSpawn();
+        if (!constructionToSpawn) return;
 
-        if (construction) {
-            spawnedConstruction = Instantiate(construction, transform);
-            spawnedConstruction.Init(this);
-        }
+        spawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, this);
+        OnChangedConstruction();
     }
 
-    private void CreateStrategy()
+    protected virtual void OnChangedConstruction()
+    {
+        //foreach (BuildingModule module in GetComponents<BuildingModule>()) {
+        //    module.HandleChangedConstruction();
+        //}
+    }
+
+    private void AsssignStrategy()
     {
         switch (buildingData.BuildingStrategy) {
             case BuildingStrategyEnum.WorkBuilding:

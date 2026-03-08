@@ -461,6 +461,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3416410043795393112}
+    - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4725732862480252269}
   m_SourcePrefab: {fileID: 100100000, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
 --- !u!4 &3728160677861581633 stripped
 Transform:
@@ -488,6 +491,10 @@ MonoBehaviour:
   buildingLevelsData:
   - {fileID: 11400000, guid: 900d1236c8a702a49b3effad3a42c5f0, type: 2}
   isRuined: 0
+  leftBuilding: {fileID: 0}
+  rightBuilding: {fileID: 0}
+  upBuilding: {fileID: 0}
+  downBuilding: {fileID: 0}
 --- !u!114 &3416410043795393112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -501,6 +508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FloorFrameModule
   levelsData: []
+  navMeshSurface: {fileID: 4725732862480252269}
   roomBuildingPlaces:
   - {fileID: 1831262355091184}
   - {fileID: 9116009855542245793}
@@ -512,6 +520,38 @@ MonoBehaviour:
   - {fileID: 199541107054320328}
   hallBuildingPlace: {fileID: 6072206917070734007}
   floorBuildingPlace: {fileID: 7356833093910527289}
+--- !u!114 &4725732862480252269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673097211342416700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 2
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 1
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 1
+  m_VoxelSize: 0.4
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 0}
+  m_BuildHeightMesh: 0
 --- !u!1001 &2044501229736173375
 PrefabInstance:
   m_ObjectHideFlags: 0
