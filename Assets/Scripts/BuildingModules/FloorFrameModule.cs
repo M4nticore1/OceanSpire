@@ -80,7 +80,6 @@ public class FloorFrameModule : BuildingModule
 
     private void StartBaking()
     {
-        Debug.Log("StartBaking");
         bakeNavMeshCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
     }
 

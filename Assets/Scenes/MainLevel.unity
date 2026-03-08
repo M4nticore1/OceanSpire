@@ -1238,6 +1238,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3416410043795393112, guid: 027e85367eebde44397c30b3608ccfdb, type: 3}
+      propertyPath: navMeshSurface
+      value: 
+      objectReference: {fileID: 1118607293}
     - target: {fileID: 3728160677861581633, guid: 027e85367eebde44397c30b3608ccfdb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1686,6 +1690,10 @@ PrefabInstance:
       propertyPath: m_VoxelSize
       value: 0.6666667
       objectReference: {fileID: 0}
+    - target: {fileID: 5931481894184394236, guid: 1092a5063de85a3498c739e7e0489f55, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 3ce6ab8f432b8f44aa574efb0dd394b4, type: 2}
     - target: {fileID: 7321460685986775217, guid: 1092a5063de85a3498c739e7e0489f55, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5086,9 +5094,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1343973832}
   - {fileID: 2064242588}
   - {fileID: 1118607292}
+  - {fileID: 1343973832}
   - {fileID: 1290994963}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

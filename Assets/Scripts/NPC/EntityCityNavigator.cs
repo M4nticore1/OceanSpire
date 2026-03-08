@@ -220,27 +220,37 @@ public class EntityCityNavigator : MonoBehaviour
     // Path
     private void SortPath()
     {
-        int startIndex = pathBuildings.Count - 1;
-        for (int i = startIndex; i >= 0; i--) {
+        SortBuildingInPath();
+        SortElevatorsInPath();
+    }
 
-            Building currentBuilding = pathBuildings[i];
-            ElevatorModule currentElevator = currentBuilding.GetComponent<ElevatorModule>();
-
-            if (currentElevator) {
-                Building afterNextBuilding = null;
-                ElevatorModule afterNextElevator = null;
-                if (i - 2 >= 0) {
-                    afterNextBuilding = pathBuildings[i - 2];
-                    afterNextElevator = afterNextBuilding.GetComponent<ElevatorModule>();
-                }
-
-                if (afterNextElevator && (afterNextElevator.OwnedBuilding as TowerBuilding).placeIndex == (currentElevator.OwnedBuilding as TowerBuilding).placeIndex) {
-                    pathBuildings.RemoveAt(i - 1);
-                }
+    private void SortBuildingInPath()
+    {
+        for (int i = pathBuildings.Count - 2; i >= 0; i--) {
+            if (!pathBuildings[i].GetComponent<ElevatorModule>()) {
+                pathBuildings.RemoveAt(i);
             }
-            else {
-                if (i == startIndex) continue;
+        }
+    }
 
+    private void SortElevatorsInPath()
+    {
+        for (int i = pathBuildings.Count - 2; i >= 0; i--) {
+            var current = pathBuildings[i] as TowerBuilding;
+            var prev = pathBuildings[i + 1] as TowerBuilding;
+            var next = i - 1 >= 0 ? pathBuildings[i - 1] as TowerBuilding : null;
+            var afterNext = i - 2 >= 0 ? pathBuildings[i - 2] as TowerBuilding : null;
+
+            if (afterNext && afterNext.placeIndex == current.placeIndex) {
+                pathBuildings.RemoveAt(i - 1);
+            }
+            else if (!afterNext && next && next.placeIndex == current.placeIndex && prev.placeIndex == current.placeIndex) {
+                pathBuildings.RemoveAt(i);
+            }
+            else if (next && next.placeIndex != current.placeIndex) {
+                pathBuildings.RemoveAt(i);
+            }
+            else if (!next && prev.placeIndex != current.placeIndex) {
                 pathBuildings.RemoveAt(i);
             }
         }
