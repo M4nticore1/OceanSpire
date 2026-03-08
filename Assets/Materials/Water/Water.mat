@@ -59,7 +59,7 @@ Material:
     - _CausticsLowStep: 0.28
     - _CausticsPower: 2
     - _CausticsRadius: 42
-    - _CausticsRadiusSoftness: 20
+    - _CausticsRadiusSoftness: 19
     - _CausticsSharpness: 4
     - _CausticsSpeed: 0.1
     - _CausticsTiling: 0.16
@@ -89,6 +89,8 @@ Material:
     - _RefractionStrength: 0.03
     - _SecondFlowDirection: 270
     - _SecondFlowSpeed: 0.1
+    - _ShoalRadius: 52
+    - _ShoalSmoothness: 25
     - _Smoothness: 1
     - _Transparent: 0.93
     - _WaterSpeed: 0.5
@@ -96,8 +98,9 @@ Material:
     - _WavesHeight: 3.88
     - _WavesSpeed: 0.6
     - _WavesStrength: 0.1
+    - _XRMotionVectorsPass: 1
     m_Colors:
-    - _CausticsColor: {r: 1, g: 1, b: 1, a: 0}
+    - _CausticsColor: {r: 0.82, g: 0.82, b: 0.82, a: 1}
     - _CausticsDensity: {r: 1, g: 1, b: 1, a: 0}
     - _Color: {r: 0.195, g: 0.5650002, b: 0.75, a: 1}
     - _ColorDeep: {r: 0, g: 0.2803233, b: 0.49056602, a: 0}
@@ -113,6 +116,7 @@ Material:
     - _SecondColor: {r: 1, g: 1, b: 1, a: 0}
     - _SecondFlowDirection: {r: 0.5, g: 1, b: 0, a: 0}
     - _ShallowColor: {r: 0.11, g: 0.4619999, b: 0.55, a: 0}
+    - _ShoalColor: {r: 0.22745095, g: 0.6509804, b: 0.61568624, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
     - _UVTiling: {r: 0.05, g: 0.05, b: 0, a: 0}
     - _WaterSpeed: {r: 0.3, g: 0, b: 0, a: 0}
