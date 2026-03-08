@@ -77,11 +77,7 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
 
     public void HandleConnectedBuildingDemolished(Building building)
     {
-        Debug.Log(building);
-
         spawnedElevatorCabin = TryGetConnectedElevatorCabin();
-        Debug.Log(spawnedElevatorCabin);
-
         if (spawnedElevatorCabin) return;
 
         CreateCabin();
