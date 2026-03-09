@@ -112,7 +112,7 @@ public class Human : Entity
 
     private void OnSetedInteractBuilding(Building building)
     {
-        navigator.OnSetedInteractBuilding(building);
+        navigator.HandleInteractBuildingSeted(building);
     }
 
     private void OnRemovedInteractBuilding(Building building)

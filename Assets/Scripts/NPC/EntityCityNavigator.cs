@@ -85,7 +85,7 @@ public class EntityCityNavigator : MonoBehaviour
     }
 
     // Target Building
-    public void OnSetedInteractBuilding(Building targetBuilding)
+    public void HandleInteractBuildingSeted(Building targetBuilding)
     {
         this.targetBuilding = targetBuilding;
 
@@ -96,7 +96,9 @@ public class EntityCityNavigator : MonoBehaviour
 
     private void FindPathToTargetBuilding()
     {
-        BuildingPlace startPlace = (currentBuilding as TowerBuilding)?.buildingPlace;
+        Debug.Log(currentBuilding);
+        TowerBuilding currentTowerBuilding = currentBuilding as TowerBuilding;
+        BuildingPlace startPlace = currentTowerBuilding ? currentTowerBuilding.buildingPlace : null;
 
         if (!PathFinder.TryGetPathToBuilding(buildingsManager, startPlace, targetBuilding, ref pathBuildings)) return;
 

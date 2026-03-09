@@ -83,6 +83,7 @@ public abstract class Building : MonoBehaviour
     {
         Destroy(gameObject);
         InvokeBuildingDemolished();
+        EventBus.InvokeBuildingDemolished(this);
     }
 
     protected abstract void OnInit(BuildingEntry saveData);

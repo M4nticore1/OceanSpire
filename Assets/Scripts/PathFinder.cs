@@ -37,26 +37,21 @@ public static class PathFinder
 
     private static bool TryGetPathToBuilding_Internal(BuildingsManager manager, BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
     {
-        // Preparing
-        List<List<Building>> allPaths = new List<List<Building>>();
-        allPaths.Add(new List<Building>());
         buildingsPath.Clear();
 
-        if (startPlace || targetBuilding as TowerBuilding) {
-            int pathIndex = 0;
-
-            if (!startPlace)
+        if (startPlace || targetBuilding is TowerBuilding) {
+            if (!startPlace) {
                 startPlace = manager.BuiltFloors[0].RoomBuildingPlaces[BuildingsManager.FirstBuildCityBuildingPlace];
-
-            // Main
-            HashSet<BuildingPlace> visitedBuildings = new HashSet<BuildingPlace>();
-            bool found = FindPath(manager, startPlace, targetBuilding, allPaths, ref pathIndex, visitedBuildings);
-
-            if (found) {
-                buildingsPath = allPaths[allPaths.Count - 1].ToList();
             }
 
-            return found;
+            // Find path
+            List<Building> path = FindPath(manager, startPlace, targetBuilding);
+
+            if (path != null) {
+                buildingsPath.AddRange(path);
+                return true;
+            }
+            return false;
         }
         else {
             buildingsPath.Add(targetBuilding);
@@ -64,61 +59,47 @@ public static class PathFinder
         }
     }
 
-    private static bool FindPath(BuildingsManager manager, BuildingPlace startPlace, Building targetBuilding, List<List<Building>> buildingPaths, ref int pathIndex, HashSet<BuildingPlace> visitedBuildings, int enterPathIndex = 0, int pathLength = 0)
+    private static List<Building> FindPath( BuildingsManager manager, BuildingPlace startPlace, Building targetBuilding)
     {
-        if (!startPlace) {
-            Debug.LogError("startBuilding is null");
-            return false;
+        if (startPlace == null) {
+            Debug.LogError("startPlace is null");
+            return null;
         }
 
-        if (!visitedBuildings.Add(startPlace)) return false;
+        Queue<(BuildingPlace place, List<Building> path)> queue = new();
+        HashSet<BuildingPlace> visited = new();
 
-        // Connect path with parent path
-        if (pathIndex > 0 && buildingPaths[pathIndex].Count == 0) {
-            for (int i = 0; i < pathLength; i++) {
-                List<Building> path = buildingPaths[enterPathIndex];
-                Building building = path[i];
-                buildingPaths[pathIndex].Add(building);
+        queue.Enqueue((startPlace, new List<Building>()));
+        visited.Add(startPlace);
+
+        while (queue.Count > 0) {
+            var (place, path) = queue.Dequeue();
+            List<Building> currentPath = new List<Building>(path);
+
+            if (place.PlacedBuilding != null) {
+                currentPath.Add(place.PlacedBuilding);
             }
-        }
 
-        // Add this building as new
-        if (startPlace.PlacedBuilding) {
-            buildingPaths[pathIndex].Add(startPlace.PlacedBuilding);
-        }
+            if (place.PlacedBuilding == targetBuilding) return currentPath;
 
-        if (startPlace.PlacedBuilding == targetBuilding) {
-            return true;
-        }
+            bool hasElevator = place.PlacedBuilding != null && place.PlacedBuilding.GetComponent<ElevatorModule>() != null;
+            NeighborMask mask = hasElevator ? NeighborMask.All : NeighborMask.Horizontal;
 
-        bool hasStartElevator = startPlace.PlacedBuilding?.GetComponent<ElevatorModule>();
-        int enterIndex = pathIndex;
-        int currentPathLength = buildingPaths[enterPathIndex].Count;
-        int buildingsCount = 0;
+            foreach (BuildingPlace neighbor in place.NeighborPlaces(mask)) {
+                if (neighbor == null) continue;
+                if (visited.Contains(neighbor)) continue;
 
-        // Get new paths
-        foreach (BuildingPlace direction in hasStartElevator ? startPlace.NeighborPlaces(NeighborMask.All) : startPlace.NeighborPlaces(NeighborMask.Horizontal)) {
-            if (!direction?.PlacedBuilding) {
-                if (targetBuilding as GroundBuilding && direction.floorIndex == 0 && direction.PlaceIndex == BuildingsManager.FirstBuildCityBuildingPlace) {
-                    return true;
+                if (neighbor.PlacedBuilding == null) {
+                    if (targetBuilding is GroundBuilding && neighbor.floorIndex == 0 && neighbor.PlaceIndex == BuildingsManager.FirstBuildCityBuildingPlace) {
+                        return currentPath;
+                    }
+                    continue;
                 }
 
-                continue;
+                visited.Add(neighbor);
+                queue.Enqueue((neighbor, currentPath));
             }
-
-            if (visitedBuildings.Contains(direction)) continue;
-
-            if (buildingsCount > 0) {
-                pathIndex++;
-                buildingPaths.Add(new List<Building>());
-            }
-
-            if (FindPath(manager, manager.BuiltFloors[direction.floorIndex].RoomBuildingPlaces[direction.PlaceIndex], targetBuilding, buildingPaths, ref pathIndex, visitedBuildings, enterIndex, currentPathLength))
-                return true;
-
-            buildingsCount++;
         }
-
-        return false;
+        return null;
     }
 }
