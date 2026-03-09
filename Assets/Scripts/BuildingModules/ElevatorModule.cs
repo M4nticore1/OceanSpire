@@ -9,7 +9,7 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
     [SerializeField] private float electricityConsumption = 0f;
     public float ElectricityConsumption => electricityConsumption;
 
-    public ElevatorCabinConstruction spawnedElevatorCabin = null;
+    public ElevatorCabinConstruction spawnedElevatorCabin { get; private set; }
     public int elevatorGroupId { get; private set; } = 0;
 
     private bool IsMoving => spawnedElevatorCabin.isMoving;
@@ -67,7 +67,9 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
         TowerBuilding initedTowerBuilding = building as TowerBuilding;
 
         if (initedTowerBuilding.floorIndex > ownedTowerBuilding.floorIndex) return;
+
         ElevatorModule initedElevator = initedTowerBuilding.GetComponent<ElevatorModule>();
+        if (initedElevator.spawnedElevatorCabin == spawnedElevatorCabin) return;
 
         if (spawnedElevatorCabin) {
             DestroyCabin();
@@ -77,6 +79,9 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
 
     public void HandleConnectedBuildingDemolished(Building building)
     {
+        TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
+        if (spawnedElevatorCabin.FloorIndex == ownedTowerBuilding.floorIndex) return;
+
         spawnedElevatorCabin = TryGetConnectedElevatorCabin();
         if (spawnedElevatorCabin) return;
 
@@ -154,6 +159,12 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
         spawnedElevatorCabin = ConstructionFactory.CreateConstruction(cabinToSpawn, OwnedBuilding);
     }
 
+    private void DestroyCabin()
+    {
+        Destroy(spawnedElevatorCabin.gameObject);
+        spawnedElevatorCabin = null;
+    }
+
     private ElevatorCabinConstruction GetCabinConstruction()
     {
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
@@ -165,12 +176,6 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
             return ElevatorLevelData.ElevatorPlatformCorner;
         }
 
-    }
-
-    private void DestroyCabin()
-    {
-        Destroy(spawnedElevatorCabin.gameObject);
-        spawnedElevatorCabin = null;
     }
 
     private ElevatorCabinConstruction TryGetConnectedElevatorCabin()

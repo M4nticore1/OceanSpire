@@ -27,8 +27,10 @@ public abstract class BuildingActionMenu : UIBehaviour
 
     private void Action()
     {
-        Building building = SelectManager.Instance.selectedComponent.GetComponent<Building>();
+        SelectComponent selected = SelectManager.Instance.selectedComponent;
+        if (!selected) return;
 
+        Building building = selected.GetComponent<Building>();
         if (!building) return;
 
         OnAction(building);
@@ -40,8 +42,10 @@ public abstract class BuildingActionMenu : UIBehaviour
     {
         slidePanel.Open();
 
-        Building building = SelectManager.Instance.selectedComponent.GetComponent<Building>();
+        SelectComponent selected = SelectManager.Instance.selectedComponent;
+        if (!selected) return;
 
+        Building building = selected.GetComponent<Building>();
         if (!building) return;
 
         OnOpen(building);

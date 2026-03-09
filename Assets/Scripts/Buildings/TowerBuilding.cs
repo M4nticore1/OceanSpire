@@ -56,10 +56,10 @@ public class TowerBuilding : Building, IConnectedBuildingsListener
     public int floorIndex { get; private set; }
     public int placeIndex { get; private set; }
 
-    public TowerBuilding leftBuilding;
-    public TowerBuilding rightBuilding;
-    public TowerBuilding upBuilding;
-    public TowerBuilding downBuilding;
+    public TowerBuilding leftBuilding { get; private set; }
+    public TowerBuilding rightBuilding { get; private set; }
+    public TowerBuilding upBuilding { get; private set; }
+    public TowerBuilding downBuilding { get; private set; }
 
     public TowerBuilding LeftConnectedBuilding => leftBuilding && ConnectedWith(leftBuilding) ? leftBuilding : null;
     public TowerBuilding RightConnectedBuilding => rightBuilding && ConnectedWith(rightBuilding) ? rightBuilding : null;
@@ -100,7 +100,7 @@ public class TowerBuilding : Building, IConnectedBuildingsListener
         }
 
         ApplyTransform();
-        InvokeBuildingInited();
+        //InvokeBuildingInited();
     }
 
     protected override BuildingConstruction GetConstructionToSpawn()

@@ -76,6 +76,7 @@ public abstract class Building : MonoBehaviour
         EventBus.InvokeBuildingInited(this);
 
         InitModules();
+        InvokeBuildingInited();
     }
 
     public void Demolish()
