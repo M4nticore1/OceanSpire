@@ -1,6 +1,5 @@
 using System.Collections;
 using Unity.AI.Navigation;
-using Unity.Android.Gradle;
 using UnityEngine;
 
 public class IslandNavMeshBuilder : MonoBehaviour

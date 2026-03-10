@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 public enum BuildingPosition
 {
@@ -48,7 +44,7 @@ public class TowerBuildingEntry : BuildingEntry
     }
 }
 
-public class TowerBuilding : Building, IConnectedBuildingsListener
+public class TowerBuilding : Building, INeighborBuildingsListener
 {
     public BuildingPlace buildingPlace { get; private set; }
 
@@ -186,8 +182,8 @@ public class TowerBuilding : Building, IConnectedBuildingsListener
     {
         base.InvokeBuildingInited();
 
-        foreach (var building in ConnectedBuildings()) {
-            building.HandleConnectedBuildingInited(this);
+        foreach (var building in NeighborBuildings(NeighborMask.All)) {
+            building.HandleNeighborBuildingInited(this);
         }
     }
 
@@ -198,7 +194,7 @@ public class TowerBuilding : Building, IConnectedBuildingsListener
         buildingPlace.HandleBuildingDemolished();
 
         foreach (var building in ConnectedBuildings()) {
-            building.HandleConnectedBuildingDemolished(this);
+            building.HandleNeighborBuildingDemolished(this);
         }
     }
 
@@ -228,27 +224,30 @@ public class TowerBuilding : Building, IConnectedBuildingsListener
         }
     }
 
-    public void HandleConnectedBuildingInited(Building building)
+    public void HandleNeighborBuildingInited(TowerBuilding building)
     {
         AssignNeighborBuildings();
-        UpdateConstruction();
 
-        foreach (var module in GetComponents<IConnectedBuildingsListener>()) {
+        if (CanConnectedWith(building)) {
+            UpdateConstruction();
+        }
+
+        foreach (var module in GetComponents<INeighborBuildingsListener>()) {
             if ((Component)module == this) continue;
 
-            module.HandleConnectedBuildingInited(building);
+            module.HandleNeighborBuildingInited(building);
         }
     }
 
-    public void HandleConnectedBuildingDemolished(Building building)
+    public void HandleNeighborBuildingDemolished(TowerBuilding building)
     {
         AssignNeighborBuildings();
         UpdateConstruction();
 
-        foreach (var module in GetComponents<IConnectedBuildingsListener>()) {
+        foreach (var module in GetComponents<INeighborBuildingsListener>()) {
             if ((Component)module == this) continue;
 
-            module.HandleConnectedBuildingDemolished(building);
+            module.HandleNeighborBuildingDemolished(building);
         }
     }
 

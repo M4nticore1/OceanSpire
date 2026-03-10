@@ -75,21 +75,21 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private void StopMoving()
     {
         isMoving = false;
-
-        // Correct position.
         transform.position = new Vector3(transform.position.x, buildingsManager.BuiltFloors[FloorIndex].transform.position.y, transform.position.z);
+        OnStopMoving();
+    }
 
-        // Stop entities riding.
+    private void OnStopMoving()
+    {
+        // Stop entities riding
         foreach (var rider in ridingPassengers.ToArray()) {
             rider.OnCurrentElevatorStoppedMoving();
         }
         foreach (var waiter in waitingPassengers.ToArray()) {
-            //if (ridingPassengers.Count + goingToRidingPassengers.Count >= ownedBuilding.LevelData.maxResidentsCount)
-            //    break;
             waiter.OnCurrentElevatorStoppedMoving();
         }
 
-        // Continue riding to next floor.
+        // Continue riding to next floor
         if (ridingPassengers.Count > 0 || waitingPassengers.Count > 0) {
             StartMovingToFloorTimer();
         }
@@ -209,7 +209,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     private void OnEntityStopped(EntityCityNavigator entity)
     {
-        if (entity.IsRidingOnElevator && entity.currentElevator == OwnedElevator) {
+        if (entity.IsRidingOnElevator && entity.CurrentElevator == OwnedElevator) {
             
         }
         else if (entity.IsWaitingForElevator) {

@@ -87,7 +87,6 @@ public class ConstructionInformationMenu : MonoBehaviour
 
     private void CreateCharacteristicWidget(string characteristicName, int characteristicValueText, Sprite characteristicValueSprite)
     {
-        Debug.Log("CreateCharacteristicWidget");
         BuildingCharacteristicWidget productionWidget = CreateCharacteristicWidget(characteristicName);
         productionWidget.SetCharacteristicName(characteristicName);
         productionWidget.SetCharacteristicValue(characteristicValueText, characteristicValueSprite);

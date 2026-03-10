@@ -117,7 +117,7 @@ public class Human : Entity
 
     private void OnRemovedInteractBuilding(Building building)
     {
-        navigator.OnRemovedInteractBuilding();
+        navigator.HandleInteractBuildingRemoved();
     }
 
     private void OnReachedTargetBuilding(Building building)

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public static class PathFinder
@@ -59,7 +58,7 @@ public static class PathFinder
         }
     }
 
-    private static List<Building> FindPath( BuildingsManager manager, BuildingPlace startPlace, Building targetBuilding)
+    private static List<Building> FindPath(BuildingsManager manager, BuildingPlace startPlace, Building targetBuilding)
     {
         if (startPlace == null) {
             Debug.LogError("startPlace is null");
@@ -75,31 +74,36 @@ public static class PathFinder
         while (queue.Count > 0) {
             var (place, path) = queue.Dequeue();
             List<Building> currentPath = new List<Building>(path);
+            Debug.Log(place.floorIndex + " " + place.PlaceIndex);
 
-            if (place.PlacedBuilding != null) {
+            if (place.PlacedBuilding)
                 currentPath.Add(place.PlacedBuilding);
-            }
 
-            if (place.PlacedBuilding == targetBuilding) return currentPath;
+            if (place.PlacedBuilding == targetBuilding)
+                return currentPath;
 
-            bool hasElevator = place.PlacedBuilding != null && place.PlacedBuilding.GetComponent<ElevatorModule>() != null;
+            bool hasElevator = place.PlacedBuilding && place.PlacedBuilding.GetComponent<ElevatorModule>();
             NeighborMask mask = hasElevator ? NeighborMask.All : NeighborMask.Horizontal;
 
             foreach (BuildingPlace neighbor in place.NeighborPlaces(mask)) {
-                if (neighbor == null) continue;
-                if (visited.Contains(neighbor)) continue;
-
-                if (neighbor.PlacedBuilding == null) {
-                    if (targetBuilding is GroundBuilding && neighbor.floorIndex == 0 && neighbor.PlaceIndex == BuildingsManager.FirstBuildCityBuildingPlace) {
-                        return currentPath;
-                    }
+                // Check place
+                if (!neighbor || visited.Contains(neighbor))
                     continue;
-                }
+
+                // Check an emptiness of place
+                bool isSpecialEmpty = neighbor.floorIndex == 0 && neighbor.PlaceIndex == BuildingsManager.FirstBuildCityBuildingPlace;
+                if (!neighbor.PlacedBuilding && !isSpecialEmpty)
+                    continue;
+
+                // Check non elevator vertical building
+                if (hasElevator && place.floorIndex != neighbor.floorIndex && !neighbor.PlacedBuilding.GetComponent<ElevatorModule>())
+                    continue;
 
                 visited.Add(neighbor);
                 queue.Enqueue((neighbor, currentPath));
             }
         }
+
         return null;
     }
 }

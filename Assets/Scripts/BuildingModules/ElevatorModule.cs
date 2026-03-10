@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListener, IConnectedBuildingsListener
+public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListener, INeighborBuildingsListener
 {
     private ElevatorModuleLevelData ElevatorLevelData => LevelData as ElevatorModuleLevelData;
 
     [SerializeField] private float electricityConsumption = 0f;
     public float ElectricityConsumption => electricityConsumption;
 
-    public ElevatorCabinConstruction spawnedElevatorCabin { get; private set; }
+    public ElevatorCabinConstruction spawnedElevatorCabin;
     public int elevatorGroupId { get; private set; } = 0;
 
     private bool IsMoving => spawnedElevatorCabin.isMoving;
@@ -61,14 +61,14 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
     }
 
     // IConnectedBuildingsListener
-    public void HandleConnectedBuildingInited(Building building)
+    public void HandleNeighborBuildingInited(TowerBuilding building)
     {
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
-        TowerBuilding initedTowerBuilding = building as TowerBuilding;
+        if (!building.ConnectedWith(ownedTowerBuilding)) return;
 
-        if (initedTowerBuilding.floorIndex > ownedTowerBuilding.floorIndex) return;
+        if (building.floorIndex > ownedTowerBuilding.floorIndex) return;
 
-        ElevatorModule initedElevator = initedTowerBuilding.GetComponent<ElevatorModule>();
+        ElevatorModule initedElevator = building.GetComponent<ElevatorModule>();
         if (initedElevator.spawnedElevatorCabin == spawnedElevatorCabin) return;
 
         if (spawnedElevatorCabin) {
@@ -77,7 +77,7 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
         spawnedElevatorCabin = initedElevator.TryGetConnectedElevatorCabin();
     }
 
-    public void HandleConnectedBuildingDemolished(Building building)
+    public void HandleNeighborBuildingDemolished(TowerBuilding building)
     {
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
         if (spawnedElevatorCabin.FloorIndex == ownedTowerBuilding.floorIndex) return;

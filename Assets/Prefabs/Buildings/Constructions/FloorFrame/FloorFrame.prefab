@@ -491,10 +491,6 @@ MonoBehaviour:
   buildingLevelsData:
   - {fileID: 11400000, guid: 900d1236c8a702a49b3effad3a42c5f0, type: 2}
   isRuined: 0
-  leftBuilding: {fileID: 0}
-  rightBuilding: {fileID: 0}
-  upBuilding: {fileID: 0}
-  downBuilding: {fileID: 0}
 --- !u!114 &3416410043795393112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,7 +544,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 1
-  m_VoxelSize: 0.4
+  m_VoxelSize: 0.2
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0

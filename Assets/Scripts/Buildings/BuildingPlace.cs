@@ -112,6 +112,11 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void OnBuildingInited(Building building)
     {
+        TowerBuilding towerBuilding = building as TowerBuilding;
+        if (towerBuilding && building.GetComponent<FloorFrameModule>() && floorIndex == towerBuilding.floorIndex - 1) {
+            AssignNeighborPlaces();
+        }
+
         if (placedBuilding && building != placedBuilding) return;
         if (building.BuildingData.BuildingType != buildingType) return;
 

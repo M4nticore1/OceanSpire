@@ -33,6 +33,6 @@ public class BoatMovingToLootState : BoatFindingLootState
 
     private void StartMovingToLoot()
     {
-        boat.Movement.TryMoveTo(boat.targetLootContainer.transform.position);
+        boat.Movement.MoveTo(boat.targetLootContainer.transform.position);
     }
 }

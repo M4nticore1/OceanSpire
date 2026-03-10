@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public enum FollowingPathState
 {
@@ -21,7 +22,8 @@ public class EntityCityNavigator : MonoBehaviour
     // Path
     [SerializeField] private List<Building> pathBuildings = new List<Building>();
     public Building currentBuilding { get; private set; } = null;
-    public ElevatorModule currentElevator { get; private set; } = null;
+    public ElevatorModule CurrentElevator { get; private set; } = null;
+
     public Building currentPathBuilding { get; private set; } = null;
     public ElevatorModule currentPathElevator { get; private set; } = null;
     public Building targetBuilding = null;
@@ -53,19 +55,27 @@ public class EntityCityNavigator : MonoBehaviour
     private void OnEnable()
     {
         movement.onStoppedMoving += OnStoppedMoving;
+        EventBus.onNavMeshBaked += OnNavMeshBaked;
     }
 
     private void OnDisable()
     {
         movement.onStoppedMoving -= OnStoppedMoving;
+        EventBus.onNavMeshBaked -= OnNavMeshBaked;
     }
 
     private void OnStoppedMoving()
     {
         switch (followingPathState) {
-            case FollowingPathState.FollowingPath: HandleStoppedFollowingPath(); break;
-            case FollowingPathState.GoingToWaiting: HandleStoppedGoingToWaiting(); break;
-            case FollowingPathState.GoingToRiding: HandleStoppedGoingToRiding(); break;
+            case FollowingPathState.FollowingPath:
+                HandleStoppedFollowingPath();
+                break;
+            case FollowingPathState.GoingToWaiting:
+                HandleStoppedGoingToWaiting();
+                break;
+            case FollowingPathState.GoingToRiding:
+                HandleStoppedGoingToRiding();
+                break;
         }
     }
 
@@ -90,17 +100,18 @@ public class EntityCityNavigator : MonoBehaviour
         this.targetBuilding = targetBuilding;
 
         if (IsRidingOnElevator) return;
-
-        FindPathToTargetBuilding();
+         
+        TryFindPathToTargetBuilding();
     }
 
-    private void FindPathToTargetBuilding()
+    private bool TryFindPathToTargetBuilding()
     {
-        Debug.Log(currentBuilding);
+        ResetPath();
+
         TowerBuilding currentTowerBuilding = currentBuilding as TowerBuilding;
         BuildingPlace startPlace = currentTowerBuilding ? currentTowerBuilding.buildingPlace : null;
 
-        if (!PathFinder.TryGetPathToBuilding(buildingsManager, startPlace, targetBuilding, ref pathBuildings)) return;
+        if (!PathFinder.TryGetPathToBuilding(buildingsManager, startPlace, targetBuilding, ref pathBuildings)) return false;
 
         SortPath();
         UpdatePathBuildings();
@@ -111,9 +122,10 @@ public class EntityCityNavigator : MonoBehaviour
         else {
             UpdateFollowingPathState();
         }
+        return true;
     }
 
-    public void OnRemovedInteractBuilding()
+    public void HandleInteractBuildingRemoved()
     {
         if (ShouldExitFromElevator()) {
             HandleExitFromElevator();
@@ -122,15 +134,14 @@ public class EntityCityNavigator : MonoBehaviour
             HandleStopUsingElevator();
         }
         else if (ShouldSimpleStopMoving()) {
-            HandleSimpleStopMoving();
+            SimpleStopMoving();
         }
-
         RemovePath();
     }
 
     private bool ShouldExitFromElevator()
     {
-        return IsRidingOnElevator && currentElevator.IsPossibleToExit();
+        return IsRidingOnElevator && CurrentElevator.IsPossibleToExit();
     }
 
     private bool ShouldStopUsingElevator()
@@ -152,11 +163,11 @@ public class EntityCityNavigator : MonoBehaviour
     private void HandleStopUsingElevator()
     {
         SetState(FollowingPathState.None);
-        movement.TryMoveTo(currentBuilding.GetInteractionTransform().position);
-        currentElevator.RemovePassenger(this);
+        movement.MoveTo(currentBuilding.GetInteractionTransform().position);
+        CurrentElevator.RemovePassenger(this);
     }
 
-    private void HandleSimpleStopMoving()
+    private void SimpleStopMoving()
     {
         SetState(FollowingPathState.None);
         movement.StopMoving();
@@ -198,7 +209,7 @@ public class EntityCityNavigator : MonoBehaviour
         }
 
         currentBuilding = building;
-        currentElevator = building.GetComponent<ElevatorModule>();
+        CurrentElevator = building.GetComponent<ElevatorModule>();
         onEnteredBuilding?.Invoke(currentBuilding);
         OnEnterBuilding();
     }
@@ -237,22 +248,15 @@ public class EntityCityNavigator : MonoBehaviour
 
     private void SortElevatorsInPath()
     {
-        for (int i = pathBuildings.Count - 2; i >= 0; i--) {
+        for (int i = pathBuildings.Count - 2; i > 0; i--) {
             var current = pathBuildings[i] as TowerBuilding;
             var prev = pathBuildings[i + 1] as TowerBuilding;
             var next = i - 1 >= 0 ? pathBuildings[i - 1] as TowerBuilding : null;
-            var afterNext = i - 2 >= 0 ? pathBuildings[i - 2] as TowerBuilding : null;
 
-            if (afterNext && afterNext.placeIndex == current.placeIndex) {
-                pathBuildings.RemoveAt(i - 1);
-            }
-            else if (!afterNext && next && next.placeIndex == current.placeIndex && prev.placeIndex == current.placeIndex) {
-                pathBuildings.RemoveAt(i);
-            }
-            else if (next && next.placeIndex != current.placeIndex) {
-                pathBuildings.RemoveAt(i);
-            }
-            else if (!next && prev.placeIndex != current.placeIndex) {
+            bool betweenVertical = next.placeIndex == current.placeIndex && prev.placeIndex == current.placeIndex;
+            bool betweenHorizontal = next.placeIndex != current.placeIndex && prev.placeIndex != current.placeIndex;
+
+            if (betweenVertical || betweenHorizontal) {
                 pathBuildings.RemoveAt(i);
             }
         }
@@ -267,16 +271,22 @@ public class EntityCityNavigator : MonoBehaviour
         pathIndex = 0;
     }
 
+    private void ResetPath()
+    {
+        pathBuildings.Clear();
+        pathIndex = 0;
+    }
+
     private void OnReachedPath()
     {
-        if (IsAtTargetBuilding()) {
+        if (currentBuilding == targetBuilding) {
             HandleReachedTarget();
+            UpdateFollowingPathState();
         }
         else {
-            UpdatePathIndex();
+            AddPathIndex();
             UpdatePathBuildings();
         }
-
         UpdateFollowingPathState();
     }
 
@@ -285,7 +295,7 @@ public class EntityCityNavigator : MonoBehaviour
         return currentBuilding && HasPath && currentBuilding == currentPathBuilding;
     }
 
-    private void UpdatePathIndex()
+    private void AddPathIndex()
     {
         pathIndex++;
     }
@@ -300,9 +310,10 @@ public class EntityCityNavigator : MonoBehaviour
     private void UpdateFollowingPathState()
     {
         if (ShouldUseElevator()) {
-            HandleElevatorPath();
+            FollowingPathState state = CurrentElevator.IsPossibleToEnter() ? FollowingPathState.GoingToRiding : FollowingPathState.GoingToWaiting;
+            SetState(state);
         }
-        else if (ShouldFollowPath()) {
+        else if (currentPathBuilding) {
             SetState(FollowingPathState.FollowingPath);
         }
         else {
@@ -310,9 +321,18 @@ public class EntityCityNavigator : MonoBehaviour
         }
     }
 
-    private bool IsAtTargetBuilding()
+    private bool ShouldUseElevator()
     {
-        return currentBuilding == targetBuilding;
+        if (!CurrentElevator || !currentPathElevator)
+            return false;
+
+        TowerBuilding currentTowerBuilding = CurrentElevator.GetComponent<TowerBuilding>();
+        TowerBuilding currentPathTowerBuilding = currentPathElevator.GetComponent<TowerBuilding>();
+
+        if (currentTowerBuilding.placeIndex == currentPathTowerBuilding.placeIndex)
+            return true;
+        else
+            return false;
     }
 
     private void HandleReachedTarget()
@@ -321,26 +341,11 @@ public class EntityCityNavigator : MonoBehaviour
         onReachedTarget?.Invoke(currentBuilding);
     }
 
-    private bool ShouldUseElevator()
-    {
-        return currentElevator != null && currentPathElevator != null;
-    }
-
-    private void HandleElevatorPath()
-    {
-        SetState(currentElevator.IsPossibleToEnter() ? FollowingPathState.GoingToRiding : FollowingPathState.GoingToWaiting);
-    }
-
-    private bool ShouldFollowPath()
-    {
-        return currentPathBuilding != null;
-    }
-
     // Elevators
     public void OnCurrentElevatorStoppedMoving()
     {
         if (ShouldFindPath()) {
-            FindPathToTargetBuilding();
+            TryFindPathToTargetBuilding();
         }
 
         if (IsRidingOnElevator) {
@@ -370,20 +375,20 @@ public class EntityCityNavigator : MonoBehaviour
     private void ExitElevatorAndMove()
     {
         SetState(FollowingPathState.None);
-        movement.TryMoveTo(currentBuilding.GetInteractionTransform().position);
+        movement.MoveTo(currentBuilding.GetInteractionTransform().position);
     }
 
     private void HandleElevatorStopWhileWaiting()
     {
         Debug.Log("HandleElevatorStopWhileWaiting");
-        if (currentElevator.IsPossibleToEnter()) {
+        if (CurrentElevator.IsPossibleToEnter()) {
             SetState(FollowingPathState.GoingToRiding);
         }
     }
 
     public void OnCurrentElevatorChangedFloor()
     {
-        EnterBuilding(currentElevator.spawnedElevatorCabin.OwnedElevator.OwnedBuilding);
+        EnterBuilding(CurrentElevator.spawnedElevatorCabin.OwnedElevator.OwnedBuilding);
     }
 
     public void OnElevatorMoving(Vector3 direction, float speed)
@@ -394,11 +399,7 @@ public class EntityCityNavigator : MonoBehaviour
     // State
     public void SetState(FollowingPathState state)
     {
-        if (state == followingPathState) {
-            Debug.LogWarning("Current state is already a new state.");
-            return;
-        }
-
+        Debug.Log(state);
         ExitState(followingPathState);
         followingPathState = state;
         EnterState(followingPathState);
@@ -408,25 +409,26 @@ public class EntityCityNavigator : MonoBehaviour
     {
         switch (state) {
             case FollowingPathState.None:
-                RemovePath();
+                ResetPath();
+                movement.StopMoving();
                 break;
             case FollowingPathState.FollowingPath:
-                movement.TryMoveTo(currentPathBuilding.GetInteractionTransform().position);
+                movement.MoveTo(currentPathBuilding.GetInteractionTransform().position);
                 break;
             case FollowingPathState.GoingToWaiting:
-                currentElevator.AddPassenger(this);
-                movement.TryMoveTo(currentElevator.OwnedBuilding.GetInteractionTransform().position);
+                CurrentElevator.AddPassenger(this);
+                movement.MoveTo(CurrentElevator.OwnedBuilding.GetInteractionTransform().position);
                 break;
             case FollowingPathState.Waiting:
-                currentElevator.AddPassenger(this);
+                CurrentElevator.AddPassenger(this);
                 movement.StopMoving();
                 break;
             case FollowingPathState.GoingToRiding:
-                currentElevator.AddPassenger(this);
-                movement.TryMoveTo(currentElevator.GetCabinRidingTransform().position);
+                CurrentElevator.AddPassenger(this);
+                movement.MoveTo(CurrentElevator.GetCabinRidingTransform().position);
                 break;
             case FollowingPathState.Riding:
-                currentElevator.AddPassenger(this);
+                CurrentElevator.AddPassenger(this);
                 movement.StopMoving();
                 movement.SetAgentEnabled(false);
                 break;
@@ -437,18 +439,35 @@ public class EntityCityNavigator : MonoBehaviour
     {
         switch (state) {
             case FollowingPathState.GoingToWaiting:
-                currentElevator.RemovePassenger(this);
+                CurrentElevator.RemovePassenger(this);
                 break;
             case FollowingPathState.Waiting:
-                currentElevator.RemovePassenger(this);
+                CurrentElevator.RemovePassenger(this);
                 break;
             case FollowingPathState.GoingToRiding:
-                currentElevator.RemovePassenger(this);
+                CurrentElevator.RemovePassenger(this);
                 break;
             case FollowingPathState.Riding:
-                currentElevator.RemovePassenger(this);
+                CurrentElevator.RemovePassenger(this);
                 movement.SetAgentEnabled(true);
                 break;
         }
     }
+
+    // Events
+    private void OnNavMeshBaked()
+    {
+        if (!targetBuilding) return;
+
+        if (!TryFindPathToTargetBuilding()) {
+            SetState(FollowingPathState.None);
+        }
+    }
+
+    //private void OnBuildingDemolished(Building building)
+    //{
+    //    if (building == targetBuilding) {
+    //        HandleInteractBuildingRemoved();
+    //    }
+    //}
 }
