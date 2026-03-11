@@ -21,7 +21,6 @@ public class ElectricityDrain : MonoBehaviour
 
             foreach (var buildingPlace in floorModule.RoomBuildingPlaces) {
                 var building = buildingPlace.PlacedBuilding;
-
                 if (!building) continue;
 
                 foreach (var electricible in building.GetComponents<IElectricible>()) {

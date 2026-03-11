@@ -219,7 +219,7 @@ public class TowerBuilding : Building, INeighborBuildingsListener
         NeighborMask mask = GetNeighborMaskByConnectionType(buildingData.ConnectionType);
         foreach (var building in NeighborBuildings(mask)) {
             if (!building) continue;
-            if (!CanConnectedWith(building)) continue;
+            if (!ConnectedWith(building)) continue;
             yield return building;
         }
     }
@@ -228,7 +228,7 @@ public class TowerBuilding : Building, INeighborBuildingsListener
     {
         AssignNeighborBuildings();
 
-        if (CanConnectedWith(building)) {
+        if (ConnectedWith(building)) {
             UpdateConstruction();
         }
 
@@ -253,57 +253,37 @@ public class TowerBuilding : Building, INeighborBuildingsListener
 
     public bool NeighborWith(TowerBuilding target)
     {
-        if (buildingData.ConnectionType == ConnectionType.Horizontal) {
-            if (math.abs(target.floorIndex - floorIndex) == 1) return true;
-        }
-        else if (buildingData.ConnectionType == ConnectionType.Vertical) {
-            if ((target.placeIndex - placeIndex) % BuildingsManager.RoomsCountPerFloor == 1) return true;
-        }
-        return false;
+        bool horizontal = math.abs(target.floorIndex - floorIndex) == 1;
+        bool vertical = (target.placeIndex - placeIndex) % BuildingsManager.RoomsCountPerFloor == 1;
+        return horizontal || vertical;
     }   
 
-    private bool CanConnectedWith(TowerBuilding building)
+    public bool ConnectedWith(TowerBuilding building)
     {
         if (building.buildingData.BuildingId != buildingData.BuildingId) return false;
         if (building.levelComponent.LevelIndex != levelComponent.LevelIndex) return false;
-        //if (!NeighborWith(building)) return false;
-        return true;
+        foreach (var neighborBuilding in NeighborBuildings(GetNeighborMaskByConnectionType(BuildingData.ConnectionType))) {
+            if (neighborBuilding == building)
+                return true;
+        }
+        return false;
     }
 
-    public bool ConnectedWith(TowerBuilding target)
+    public bool NetworkWith(TowerBuilding target, HashSet<TowerBuilding> visited = null)
     {
-        TowerBuilding start = this;
-        TowerBuilding current = start;
-        var visited = new HashSet<TowerBuilding>();
-        visited.Add(current);
+        if (this == target)
+            return true;
 
-        if (buildingData.ConnectionType == ConnectionType.Horizontal) {
-            TowerBuilding[] directions = { leftBuilding, rightBuilding };
-
-            foreach (var direction in directions) {
-                current = direction;
-
-                while (current && current.BuildingData.BuildingId == buildingData.BuildingId) {
-                    if (!visited.Add(current)) return false;
-                    if (current == target) return true;
-
-                    current = (direction == leftBuilding) ? current.leftBuilding : current.rightBuilding;
-                }
-            }
+        if (visited == null) {
+            visited = new HashSet<TowerBuilding>();
         }
-        else if (buildingData.ConnectionType == ConnectionType.Vertical) {
-            TowerBuilding[] directions = { upBuilding, downBuilding };
+        visited.Add(this);
 
-            foreach (var direction in directions) {
-                current = direction;
-
-                while (current && current.buildingData.BuildingId == buildingData.BuildingId) {
-                    if (!visited.Add(current)) return false;
-                    if (current == target) return true;
-
-                    current = (direction == upBuilding) ? current.upBuilding : current.downBuilding;
-                }
-            }
+        foreach (var direction in ConnectedBuildings()) {
+            if (!visited.Add(direction))
+                continue;
+            if (direction.NetworkWith(target, visited))
+                return true;
         }
         return false;
     }
