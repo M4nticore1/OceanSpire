@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +17,6 @@ public abstract class Building : MonoBehaviour
     private bool isWorking = false;
     public int LevelIndex => levelComponent ? levelComponent.LevelIndex : GetComponent<LevelComponent>().LevelIndex;
 
-    //[HideInInspector] public int levelIndex { get; private set; } = 0;
     public List<EntityCityNavigator> enteredEntities { get; private set; } = new List<EntityCityNavigator>();
     public List<EntityInteractor> workers { get; private set; } = new List<EntityInteractor>();
     public List<EntityInteractor> currentWorkers { get; private set; } = new List<EntityInteractor>();
@@ -142,7 +140,6 @@ public abstract class Building : MonoBehaviour
     public void RemoveWorker(EntityInteractor interactor)
     {
         workers.Remove(interactor);
-
         strategy.OnRemoveInteractBuilding(interactor);
     }
 
@@ -181,17 +178,17 @@ public abstract class Building : MonoBehaviour
                     return waypointTransform;
                 }
                 else {
-                    Debug.LogError("waypointTransform is not valid.");
+                    Debug.LogWarning("waypointTransform is not valid.");
                     return transform;
                 }
             }
             else {
-                Debug.LogError("waypoints.Length == 0");
+                Debug.LogWarning("waypoints.Length == 0");
                 return transform;
             }
         }
         else {
-            Debug.LogError("actions.Length <= index");
+            Debug.LogWarning("actions.Length <= index");
             return transform;
         }
     }

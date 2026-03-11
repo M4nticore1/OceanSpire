@@ -1,9 +1,10 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListener, INeighborBuildingsListener
 {
+    public TowerBuilding OwnedTowerBuilding => OwnedBuilding as TowerBuilding;
+
     private ElevatorModuleLevelData ElevatorLevelData => LevelData as ElevatorModuleLevelData;
 
     [SerializeField] private float electricityConsumption = 0f;
@@ -16,7 +17,7 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
 
     protected override void OnInit()
     {
-        ElevatorCabinConstruction cabin = TryGetConnectedElevatorCabin();
+        ElevatorCabinConstruction cabin = TryGetNetworkElevatorCabin();
 
         if (cabin) {
             spawnedElevatorCabin = cabin;
@@ -54,49 +55,86 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
 
     public void HandleOwnedBuildingDemolished()
     {
-        TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
-        if (spawnedElevatorCabin && spawnedElevatorCabin.FloorIndex == ownedTowerBuilding.floorIndex) {
+        if (OwnedTowerBuilding.ConnectedBuildings().Count() == 0) {
             DestroyCabin();
         }
     }
 
     // IConnectedBuildingsListener
-    public void HandleNeighborBuildingInited(TowerBuilding building)
+    public void HandleNeighborBuildingInited(TowerBuilding initedBuilding)
     {
-        TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
-        if (!building.ConnectedWith(ownedTowerBuilding)) return;
-
-        if (building.floorIndex > ownedTowerBuilding.floorIndex) return;
-
-        ElevatorModule initedElevator = building.GetComponent<ElevatorModule>();
+        ElevatorModule initedElevator = initedBuilding.GetComponent<ElevatorModule>();
+        if (!initedElevator) return;
+        if (!initedBuilding.ConnectedWith(OwnedTowerBuilding)) return;
         if (initedElevator.spawnedElevatorCabin == spawnedElevatorCabin) return;
 
         if (spawnedElevatorCabin) {
+            spawnedElevatorCabin.StopMoving();
+            spawnedElevatorCabin.UnloadRidingPassengers();
             DestroyCabin();
         }
-        spawnedElevatorCabin = initedElevator.TryGetConnectedElevatorCabin();
+        SetCabin(initedElevator.spawnedElevatorCabin);
     }
 
-    public void HandleNeighborBuildingDemolished(TowerBuilding building)
+    public void HandleNeighborBuildingDemolished(TowerBuilding demolishedBuilding)
     {
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
-        if (spawnedElevatorCabin.FloorIndex == ownedTowerBuilding.floorIndex) return;
+        if (!demolishedBuilding.ConnectedWith(ownedTowerBuilding))
+            return;
 
-        spawnedElevatorCabin = TryGetConnectedElevatorCabin();
-        if (spawnedElevatorCabin) return;
+        ElevatorModule demolishedElevator = demolishedBuilding.GetComponent<ElevatorModule>();
+        ElevatorCabinConstruction cabin = demolishedElevator.spawnedElevatorCabin;
+        TowerBuilding cabinOwnedBuilding = spawnedElevatorCabin.OwnedElevator.OwnedTowerBuilding;
 
-        CreateCabin();
+        if (demolishedElevator && cabin.ownedBuilding == demolishedBuilding) {
+            cabin.SetOwnedBuilding(OwnedBuilding);
+        }
+        else if (!ownedTowerBuilding.NetworkWith(cabinOwnedBuilding)) {
+            CreateCabin();
+        }
+
+        cabin.UpdateWaitingPassengers();
+
+        if (cabin.isMoving && !cabin.TryMoveToFloor(cabin.nextFloor)) {
+            cabin.StopMoving();
+        }
     }
 
     // Passengers
     public void AddPassenger(EntityCityNavigator passenger)
     {
-        spawnedElevatorCabin.AddPassenger(passenger);
+        switch (passenger.followingPathState) {
+            case FollowingPathState.GoingToWaiting:
+                spawnedElevatorCabin.AddGoingToWaitingPassenger(passenger);
+                break;
+            case FollowingPathState.Waiting:
+                spawnedElevatorCabin.AddWaitingPassenger(passenger);
+                break;
+            case FollowingPathState.GoingToRiding:
+                spawnedElevatorCabin.AddGoingToRidingPassenger(passenger);
+                break;
+            case FollowingPathState.Riding:
+                spawnedElevatorCabin.AddRidingPassenger(passenger);
+                break;
+        }
     }
 
     public void RemovePassenger(EntityCityNavigator passenger)
     {
-        spawnedElevatorCabin.RemovePassenger(passenger);
+        switch (passenger.followingPathState) {
+            case FollowingPathState.GoingToWaiting:
+                spawnedElevatorCabin.RemoveGoingToWaitingPassenger(passenger);
+                break;
+            case FollowingPathState.Waiting:
+                spawnedElevatorCabin.RemoveWaitingPassenger(passenger);
+                break;
+            case FollowingPathState.GoingToRiding:
+                spawnedElevatorCabin.RemoveGoingToRidingPassenger(passenger);
+                break;
+            case FollowingPathState.Riding:
+                spawnedElevatorCabin.RemoveRidingPassenger(passenger);
+                break;
+        }
     }
 
     public bool IsPossibleToEnter()
@@ -134,6 +172,29 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
         return IsMoving && spawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).floorIndex;
     }
 
+    private void HandleConnectedElevatorCabinChanged(ElevatorModule connectedElevator)
+    {
+        ElevatorCabinConstruction changedCabin = connectedElevator.spawnedElevatorCabin;
+        if (spawnedElevatorCabin == changedCabin)
+            return;
+
+        SetCabin(changedCabin);
+    }
+
+    private void InvokeCabinChanged()
+    {
+        foreach (var building in OwnedTowerBuilding.ConnectedBuildings()) {
+            ElevatorModule elevator = building.GetComponent<ElevatorModule>();
+            elevator.HandleConnectedElevatorCabinChanged(this);
+        }
+    }
+
+    private void SetCabin(ElevatorCabinConstruction cabin)
+    {
+        spawnedElevatorCabin = cabin;
+        InvokeCabinChanged();
+    }
+
     private bool TryApplyCabin()
     {
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
@@ -156,7 +217,8 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
     private void CreateCabin()
     {
         ElevatorCabinConstruction cabinToSpawn = GetCabinConstruction();
-        spawnedElevatorCabin = ConstructionFactory.CreateConstruction(cabinToSpawn, OwnedBuilding);
+        ElevatorCabinConstruction cabin = ConstructionFactory.CreateConstruction(cabinToSpawn, OwnedBuilding);
+        SetCabin(cabin);
     }
 
     private void DestroyCabin()
@@ -178,10 +240,10 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
 
     }
 
-    private ElevatorCabinConstruction TryGetConnectedElevatorCabin()
+    private ElevatorCabinConstruction TryGetNetworkElevatorCabin()
     {
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
-        TowerBuilding[] connectedElevators = ownedTowerBuilding.ConnectedBuildings().ToArray();
+        TowerBuilding[] connectedElevators = ownedTowerBuilding.GetNetworkBuildings().ToArray();
 
         for (int i = connectedElevators.Count() - 1; i >= 0; i--) {
             TowerBuilding towerBuilding = connectedElevators[i];
@@ -190,7 +252,6 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
 
             ElevatorCabinConstruction cabin = elevator.spawnedElevatorCabin;
             if (!cabin) continue;
-            if (!cabin.OwnedElevator.spawnedElevatorCabin) continue;
 
             return cabin;
         }

@@ -19,16 +19,13 @@ public class BuildingConstruction : MonoBehaviour
     protected BuildingsManager buildingsManager;
     private LightProbeGroupManager lightProbeGroupManager;
 
-    protected Building ownedBuilding = null;
+    public Building ownedBuilding { get; private set; } = null;
 
     [SerializeField] private GameObject[] buildingInteriors;
     public GameObject[] BuildingInteriors => buildingInteriors;
 
     [SerializeField] private BuildingAction[] buildingInteractions;
     public BuildingAction[] BuildingInteractions => buildingInteractions;
-
-    [Header("Storage")]
-    public List<Transform> collectItemPoints = new List<Transform>();
 
     private MeshRenderer[] meshRendererers = null;
     private MaterialPropertyBlock propertyBlock = null;
@@ -45,6 +42,23 @@ public class BuildingConstruction : MonoBehaviour
 
         this.ownedBuilding = ownedBuilding;
         propertyBlock = new MaterialPropertyBlock();
+    }
+
+    public virtual void SetOwnedBuilding(Building building)
+    {
+        if (building == ownedBuilding)
+            return;
+
+        ownedBuilding = building;
+        if (!ownedBuilding)
+            return;
+
+        ApplyOwnedBuildingPosition();
+    }
+
+    public void ApplyOwnedBuildingPosition()
+    {
+        transform.position = ownedBuilding.transform.position;
     }
 
     public void SetFlickingMultiplier(float multiplier)
