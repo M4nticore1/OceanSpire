@@ -74,7 +74,6 @@ public static class PathFinder
         while (queue.Count > 0) {
             var (place, path) = queue.Dequeue();
             List<Building> currentPath = new List<Building>(path);
-            Debug.Log(place.floorIndex + " " + place.PlaceIndex);
 
             if (place.PlacedBuilding)
                 currentPath.Add(place.PlacedBuilding);

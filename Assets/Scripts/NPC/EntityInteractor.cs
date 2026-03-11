@@ -39,6 +39,10 @@ public class EntityInteractor : MonoBehaviour
             return;
         }
 
+        if (interactBuilding) {
+            interactBuilding.RemoveWorker(this);
+        }
+
         interactBuilding = building;
         AssignInteractorIndex();
         building.AddWorker(this);

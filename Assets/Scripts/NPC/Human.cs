@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum HumanStatus
 {
@@ -26,7 +25,6 @@ public class HumanEntry : EntityEntry
 
 public class Human : Entity
 {
-    public EntityCityNavigator navigator { get; private set; } = null;
     public EntityInteractor interactor { get; private set; } = null;
     public BoatRider boatRider { get; private set; } = null;
 
@@ -40,10 +38,10 @@ public class Human : Entity
     public string firstName { get; private set; } = "";
     public string lastName { get; private set; } = "";
 
-    private void Awake()
+    protected override void Awake()
     {
-        movement = GetComponent<EntityMovement>();
-        navigator = GetComponent<EntityCityNavigator>();
+        base.Awake();
+
         interactor = GetComponent<EntityInteractor>();
         boatRider = GetComponent<BoatRider>();
     }
@@ -54,9 +52,9 @@ public class Human : Entity
 
         movement.onStoppedMoving += OnStoppedMoving;
 
-        navigator.onEnteredBuilding += OnEnteredBuilding;
-        navigator.onExitedBuilding += OnExitedBuilding;
-        navigator.onReachedTarget += OnReachedTargetBuilding;
+        cityNavigator.onEnteredBuilding += OnEnteredBuilding;
+        cityNavigator.onExitedBuilding += OnExitedBuilding;
+        cityNavigator.onReachedTarget += OnReachedTargetBuilding;
 
         interactor.onSetedInteractBuilding += OnSetedInteractBuilding;
         interactor.onRemovedInteractBuilding += OnRemovedInteractBuilding;
@@ -70,8 +68,8 @@ public class Human : Entity
     {
         base.OnDisable();
 
-        navigator.onEnteredBuilding -= OnEnteredBuilding;
-        navigator.onExitedBuilding -= OnExitedBuilding;
+        cityNavigator.onEnteredBuilding -= OnEnteredBuilding;
+        cityNavigator.onExitedBuilding -= OnExitedBuilding;
 
         interactor.onSetedInteractBuilding -= OnSetedInteractBuilding;
         interactor.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
@@ -95,29 +93,29 @@ public class Human : Entity
     // Movement
     private void OnStoppedMoving()
     {
-        if (interactor.InteractBuilding && interactor.InteractBuilding == navigator.currentBuilding) {
+        if (interactor.InteractBuilding && interactor.InteractBuilding == cityNavigator.currentBuilding) {
             interactor.HandleStoppedMoving();
         }
     }
 
     private void OnEnteredBuilding(Building building)
     {
-        building.EnterBuilding(navigator);
+        building.EnterBuilding(cityNavigator);
     }
 
     private void OnExitedBuilding(Building building)
     {
-        building.ExitBuilding(navigator);
+        building.ExitBuilding(cityNavigator);
     }
 
     private void OnSetedInteractBuilding(Building building)
     {
-        navigator.HandleInteractBuildingSeted(building);
+        cityNavigator.HandleInteractBuildingSeted(building);
     }
 
     private void OnRemovedInteractBuilding(Building building)
     {
-        navigator.HandleInteractBuildingRemoved();
+        cityNavigator.HandleInteractBuildingRemoved();
     }
 
     private void OnReachedTargetBuilding(Building building)

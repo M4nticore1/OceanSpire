@@ -144,7 +144,7 @@ public class ProductionModule : BuildingModule, IElectricible
 
     protected virtual void OnStopProducting()
     {
-        Debug.Log("OnStopProduction");
+
     }
 
     private void ProcessProduce()

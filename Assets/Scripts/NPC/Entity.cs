@@ -20,9 +20,18 @@ public abstract class Entity : MonoBehaviour
     private IslandNavMeshBuilder cityNavMeshManager;
     protected NavMeshAgent agent = null;
     protected EntityMovement movement = null;
+    protected EntityCityNavigator cityNavigator = null;
 
     [SerializeField] protected CreatureData creatureData;
     public CreatureData CreatureData => creatureData;
+
+    protected virtual void Awake()
+    {
+        cityNavMeshManager = FindAnyObjectByType<IslandNavMeshBuilder>();
+        agent = GetComponent<NavMeshAgent>();
+        movement = GetComponent<EntityMovement>();
+        cityNavigator = GetComponent<EntityCityNavigator>();
+    }
 
     protected virtual void OnEnable()
     {
@@ -36,10 +45,6 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void Init(EntityEntry data)
     {
-        cityNavMeshManager = FindAnyObjectByType<IslandNavMeshBuilder>();
-        agent = GetComponent<NavMeshAgent>();
-        movement = GetComponent<EntityMovement>();
-
         transform.position = data.position;
         transform.rotation = Quaternion.Euler(data.rotation);
 
@@ -48,16 +53,10 @@ public abstract class Entity : MonoBehaviour
         //}
     }
 
-    public void SetNavAgentEnabled(bool value)
-    {
-        agent.enabled = value;
-    }
-
     private void OnNavMeshBaked()
     {
-        if (!agent) return;
-        if (agent.enabled == true) return;
+        if (cityNavigator.IsRidingOnElevator) return;
 
-        SetNavAgentEnabled(true);
+        movement.SetAgentEnabled(true);
     }
 }
