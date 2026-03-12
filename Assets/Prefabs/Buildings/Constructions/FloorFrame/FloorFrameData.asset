@@ -18,9 +18,8 @@ MonoBehaviour:
   buildingType: 2
   buildingCategory: 0
   connectionType: 0
+  buildingStrategy: 0
   detailsWindowVariant: 0
   instantConstruction: 0
-  thumbImage: {fileID: 0}
-  buildingFloors: 1
-  maxBuildingFloors: 1
+  thumbImage: {fileID: 21300000, guid: b413064dcdf1c3f4f9110c82066f1101, type: 3}
   isDemolishable: 1

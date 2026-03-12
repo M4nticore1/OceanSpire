@@ -1686,6 +1686,10 @@ PrefabInstance:
       propertyPath: m_ApplyToChildren
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5931481894184394236, guid: 1092a5063de85a3498c739e7e0489f55, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 23800000, guid: 6e7e0d61c6fe41b4b94baf1b72016147, type: 2}
     - target: {fileID: 7321460685986775217, guid: 1092a5063de85a3498c739e7e0489f55, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

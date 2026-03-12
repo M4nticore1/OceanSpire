@@ -287,6 +287,9 @@ public class EntityCityNavigator : MonoBehaviour
     // Follow Path
     public void UpdateFollowingPathState()
     {
+        if (!HasPath)
+            return;
+
         if (currentElevator) {
             if (currentPathElevator) {
                 if (currentPathElevator.OwnedTowerBuilding.NetworkWith(currentElevator.OwnedTowerBuilding)) {
