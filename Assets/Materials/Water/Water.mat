@@ -57,7 +57,7 @@ Material:
     - _CausticsDirection: 270
     - _CausticsHighStep: -0.97
     - _CausticsLowStep: 0.28
-    - _CausticsPower: 2
+    - _CausticsPower: 1.7
     - _CausticsRadius: 48
     - _CausticsRadiusSoftness: 38
     - _CausticsSharpness: 4
@@ -100,7 +100,7 @@ Material:
     - _WavesStrength: 0.1
     - _XRMotionVectorsPass: 1
     m_Colors:
-    - _CausticsColor: {r: 0.6528, g: 0.78720003, b: 0.816, a: 1}
+    - _CausticsColor: {r: 1, g: 1, b: 1, a: 1}
     - _CausticsDensity: {r: 1, g: 1, b: 1, a: 0}
     - _Color: {r: 0.195, g: 0.5650002, b: 0.75, a: 1}
     - _ColorDeep: {r: 0, g: 0.2803233, b: 0.49056602, a: 0}

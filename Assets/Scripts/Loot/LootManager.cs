@@ -16,10 +16,10 @@ public class LootManager : MonoBehaviour
     // Update Time
     private float lastUpdateFrequency = 0f;
     private const float updateFrequency = 0.05f;
-    public const float spawnDistance = 250.0f;
+    public const float spawnDistance = 200.0f;
 
     // Spawn Position
-    private const float spawnMaxOffsetYaw = 30.0f;
+    private const float spawnMaxOffsetYaw = 60.0f;
 
     private void Start()
     {
@@ -47,22 +47,24 @@ public class LootManager : MonoBehaviour
 
     private void SpawnLootContainer(LootContainer container, int index)
     {
-        if (container.FloorsCountToSpawn > buildingsManager.BuiltFloors.Count) return;
+        if (container.FloorsCountToSpawn > buildingsManager.BuiltFloors.Count)
+            return;
 
         currentSpawnContainersTime[index] += spawnFrequency;
+        if (currentSpawnContainersTime[index] < currentTimeToSpawnContainers[index])
+            return;
 
-        if (currentSpawnContainersTime[index] < currentTimeToSpawnContainers[index]) return;
+        Vector3 baseDir = WindManager.Instance.windDirection.normalized;
 
-        float rotationOffsetYaw = Random.Range(-spawnMaxOffsetYaw, spawnMaxOffsetYaw);
+        float rotationOffsetYaw = Random.Range(-spawnMaxOffsetYaw / 2, spawnMaxOffsetYaw / 2);
         Quaternion rotation = Quaternion.Euler(0, rotationOffsetYaw, 0);
-        Vector3 direction = rotation * WindManager.Instance.windDirection;
-        //Vector2 normalizedDirection = new Vector2(direction.x, direction.z).normalized;
-        //Vector2 windDorection = CityManager.Instance.windDirection.normalized;
 
         // Spawn position
         int maxFloorNumber = container.maxSpawnFloorNumber > 0 ? container.maxSpawnFloorNumber : container.minSpawnFloorNumber > 0 ? (buildingsManager.BuiltFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
         float spawnFloorNumber = Random.Range((float)container.minSpawnFloorNumber, maxFloorNumber);
         float positionY = spawnFloorNumber * BuildingsManager.FloorHeight;
+
+        Vector3 direction = (rotation * baseDir).normalized;
         Vector3 position = -direction * spawnDistance;
         Vector3 spawnPosition = new Vector3(position.x, positionY, position.z);
 
@@ -80,7 +82,8 @@ public class LootManager : MonoBehaviour
 
     private void SpawningLootContainers()
     {
-        if (Time.time < lastSpawnTime + spawnFrequency) return;
+        if (Time.time < lastSpawnTime + spawnFrequency)
+            return;
 
         for (int i = 0; i < LootContainersList.Instance.lootContainers.Length; i++) {
             SpawnLootContainer(LootContainersList.Instance.lootContainers[i], i);
@@ -90,7 +93,8 @@ public class LootManager : MonoBehaviour
 
     private void UpdateLootContainers()
     {
-        if (Time.time < lastUpdateFrequency + updateFrequency) return;
+        if (Time.time < lastUpdateFrequency + updateFrequency)
+            return;
 
         for (int i = spawnedLootContainers.Count - 1; i >= 0; i--) {
             var container = spawnedLootContainers[i];
