@@ -110,7 +110,12 @@ public class Human : Entity
 
     private void OnSetedInteractBuilding(Building building)
     {
-        cityNavigator.HandleInteractBuildingSeted(building);
+        cityNavigator.SetTargetBuilding(building);
+
+        if (boatRider.isRidingOnBoat)
+            return;
+
+        cityNavigator.TryFindPathToTargetBuilding();
     }
 
     private void OnRemovedInteractBuilding(Building building)
@@ -136,6 +141,11 @@ public class Human : Entity
     private void OnExitedBoat(Boat boat)
     {
         movement.SetAgentEnabled(true);
+
+        if (!interactor.InteractBuilding)
+            return;
+
+        cityNavigator.TryFindPathToTargetBuilding();
     }
 
     // Gender

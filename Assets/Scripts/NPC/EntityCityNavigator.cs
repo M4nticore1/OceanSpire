@@ -82,13 +82,26 @@ public class EntityCityNavigator : MonoBehaviour
     }
 
     // Target Building
-    public void HandleInteractBuildingSeted(Building targetBuilding)
+    public void SetTargetBuilding(Building target)
     {
-        this.targetBuilding = targetBuilding;  
-        TryFindPathToTargetBuilding();
+        targetBuilding = target;
     }
 
-    private bool TryFindPathToTargetBuilding()
+    public void HandleInteractBuildingRemoved()
+    {
+        if (ShouldExitFromElevator()) {
+            HandleExitFromElevator();
+        }
+        else if (ShouldStopUsingElevator()) {
+            HandleStopUsingElevator();
+        }
+        else if (ShouldSimpleStopMoving()) {
+            SimpleStopMoving();
+        }
+        RemovePath();
+    }
+
+    public bool TryFindPathToTargetBuilding()
     {
         ResetPath();
 
@@ -108,20 +121,6 @@ public class EntityCityNavigator : MonoBehaviour
         }
 
         return true;
-    }
-
-    public void HandleInteractBuildingRemoved()
-    {
-        if (ShouldExitFromElevator()) {
-            HandleExitFromElevator();
-        }
-        else if (ShouldStopUsingElevator()) {
-            HandleStopUsingElevator();
-        }
-        else if (ShouldSimpleStopMoving()) {
-            SimpleStopMoving();
-        }
-        RemovePath();
     }
 
     private bool ShouldExitFromElevator()
