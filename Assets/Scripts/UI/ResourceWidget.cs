@@ -15,6 +15,10 @@ public class ResourceWidget : MonoBehaviour
     [SerializeField] private TextMeshProUGUI resourceAmountText;
     [SerializeField] private Image resourceAmountBar;
 
+    [SerializeField] private bool useAmountColors = false;
+    [SerializeField] private Color enoughAmountColor = Color.green;
+    [SerializeField] private Color notEnoughAmountColor = Color.red;
+
     private void Awake()
     {
         cityStorage = FindAnyObjectByType<CityStorage>();
@@ -23,8 +27,8 @@ public class ResourceWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.onMainStorageItemAmountChanged += OnLootAdded;
-        EventBus.onItemRemoved += OnLootRemoved;
+        EventBus.onMainStorageItemAmountChanged += OnMainStorageItemAmountChanged;
+        EventBus.onMainStorageItemMaxAmountChanged += OnMainStorageItemMaxAmountChanged;
 
         if (itemData && itemData.ItemId == (int)ItemID.Population) {
             EventBus.onCitizenInited += OnCitizenInited;
@@ -36,8 +40,8 @@ public class ResourceWidget : MonoBehaviour
 
     private void OnDisable()
     {
-        EventBus.onMainStorageItemAmountChanged -= OnLootAdded;
-        EventBus.onItemRemoved -= OnLootRemoved;
+        EventBus.onMainStorageItemAmountChanged -= OnMainStorageItemAmountChanged;
+        EventBus.onMainStorageItemMaxAmountChanged -= OnMainStorageItemMaxAmountChanged;
 
         if (itemData.ItemId == (int)ItemID.Population) {
             EventBus.onCitizenInited -= OnCitizenInited;
@@ -65,6 +69,36 @@ public class ResourceWidget : MonoBehaviour
         cityStorage = FindAnyObjectByType<CityStorage>();
 
         SetItem(amountItem);
+    }
+
+    public void SetAmount(int amount)
+    {
+        resourceAmountText.SetText(amount.ToString());
+    }
+
+    public void SetAmount(int amount, int maxAmount)
+    {
+        resourceAmountText.SetText(amount.ToString() + "/" + maxAmount.ToString());
+        if (resourceAmountBar) {
+            float alpha = 0;
+            if (maxAmount > 0)
+                alpha = (float)amount / maxAmount;
+            else
+                alpha = 0.0f;
+            resourceAmountBar.fillAmount = alpha;
+        }
+
+        UpdateAmountColor();
+    }
+
+    public void SetImage(Sprite resourceSprite)
+    {
+        resourceImage.sprite = resourceSprite;
+    }
+
+    private void SetColor(Color color)
+    {
+        resourceAmountText.color = color;
     }
 
     private bool TryToAssignItem()
@@ -105,13 +139,13 @@ public class ResourceWidget : MonoBehaviour
 
     private void UpdateAmount()
     {
-        if (!itemData)
-            return;
+        if (!itemData) return;
 
         int populationId = (int)ItemID.Population;
 
         if (itemData.ItemId == populationId) {
-            if (!cityStorage.Inventory.itemsDict.ContainsKey(populationId)) return;
+            if (!cityStorage.Inventory.itemsDict.ContainsKey(populationId))
+                return;
 
             int id = populationId;
             int amount = entitiesManager.citizens.Count;
@@ -119,7 +153,8 @@ public class ResourceWidget : MonoBehaviour
             SetAmount(amount, maxAmount);
         }
         else {
-            if (amountItem == null) return;
+            if (amountItem == null)
+                return;
 
             int id = amountItem.ItemData.ItemId;
             int amount = amountItem.Amount;
@@ -128,45 +163,29 @@ public class ResourceWidget : MonoBehaviour
         }
     }
 
-    public void SetAmount(int amount)
+    private void UpdateAmountColor()
     {
-        resourceAmountText.SetText(amount.ToString());
-    }
+        if (!useAmountColors) return;
 
-    public void SetAmount(int amount, int maxAmount)
-    {
-        resourceAmountText.SetText(amount.ToString() + "/" + maxAmount.ToString());
-        if (resourceAmountBar) {
-            float alpha = 0;
-            if (maxAmount > 0)
-                alpha = (float)amount / maxAmount;
-            else
-                alpha = 0.0f;
-            resourceAmountBar.fillAmount = alpha;
+        if (amountItem.Amount >= maxAmountItem.Amount) {
+            SetColor(enoughAmountColor);
+        }
+        else {
+            SetColor(notEnoughAmountColor);
         }
     }
 
-    public void SetImage(Sprite resourceSprite)
-    {
-        resourceImage.sprite = resourceSprite;
-    }
-
-    private void OnLootAdded(ItemInstance item)
+    private void OnMainStorageItemAmountChanged(ItemInstance item)
     {
         if (item.ItemData.ItemId != itemData.ItemId) return;
 
         UpdateAmount();
     }
 
-    private void OnLootRemoved(ItemInstance item)
+    private void OnMainStorageItemMaxAmountChanged(StorageItem item)
     {
-        if (item.ItemData.ItemId != itemData.ItemId) return;
+        if (item.item.ItemData.ItemId != itemData.ItemId) return;
 
-        UpdateAmount();
-    }
-
-    private void OnStorageCapacityChanged()
-    {
         UpdateAmount();
     }
 
