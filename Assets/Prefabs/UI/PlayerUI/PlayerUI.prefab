@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 6944659137615683980}
   - component: {fileID: 3263457830695101117}
   m_Layer: 5
-  m_Name: BuildingListsMenuBackground
+  m_Name: ConstructionListsMenuBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -380,7 +380,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1936669235073802324}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -388,12 +388,12 @@ RectTransform:
   - {fileID: 8831185858441535518}
   - {fileID: 976684486033831228}
   - {fileID: 6407199535175168584}
-  m_Father: {fileID: 5028220504261582107}
+  m_Father: {fileID: 1193120450388008432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -100}
-  m_SizeDelta: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: 1020}
+  m_SizeDelta: {x: 980, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &2242393694114418779
 GameObject:
@@ -781,12 +781,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5028220504261582107}
+  m_Father: {fileID: 1193120450388008432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 980, y: 2240}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5333360323392798303
 CanvasRenderer:
@@ -1167,6 +1167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3363934747835092081}
+  - component: {fileID: 8789586615203628284}
   m_Layer: 5
   m_Name: StorageListsMenu
   m_TagString: Untagged
@@ -1195,6 +1196,30 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8789586615203628284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4060582437428972689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aa126a949e321343a8757885fb05b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StorageMenu
+  lists:
+  - {fileID: 769815335464853196}
+  - {fileID: 2300615809500845714}
+  - {fileID: 7027503297295174442}
+  listButtons:
+  - {fileID: 1229520922462672101}
+  - {fileID: 9081027054475010438}
+  - {fileID: 4136931990971204310}
+  includedCategoies: 000000000100000002000000
+  listsScrollRect: {fileID: 3039151529985723148}
+  cityStorage: {fileID: 0}
+  storageResourceWidgetPrefab: {fileID: 3414861423065995257, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
 --- !u!1 &4284649203857945394
 GameObject:
   m_ObjectHideFlags: 0
@@ -1204,8 +1229,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4284061819060450504}
+  - component: {fileID: 6154011867650042819}
   m_Layer: 5
-  m_Name: BuildingListsMenu
+  m_Name: ConstructionListsMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1232,6 +1258,35 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6154011867650042819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4284649203857945394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6183f18586bc164480f05404cf5fee0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConstructionMenu
+  lists:
+  - {fileID: 8792590059360149303}
+  - {fileID: 7261112553883055671}
+  - {fileID: 4092950409629013099}
+  - {fileID: 2611550739270641435}
+  - {fileID: 5039795489829045560}
+  - {fileID: 6013783335617741852}
+  listButtons:
+  - {fileID: 5779216176605482771}
+  - {fileID: 6871546046007613085}
+  - {fileID: 6973101474423625992}
+  - {fileID: 7813554050961126349}
+  - {fileID: 8717705301990062439}
+  - {fileID: 7500782539957076814}
+  includedCategoies: 000000000100000002000000030000000400000005000000
+  listsScrollRect: {fileID: 6647646497964301144}
+  buildingWidgetPrefab: {fileID: 4936279183464857374, guid: fed55f7ae730fde45ae18812d6a1b8f5, type: 3}
 --- !u!1 &4405103202460231820
 GameObject:
   m_ObjectHideFlags: 0
@@ -1358,45 +1413,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerController: {fileID: 0}
   cityStorage: {fileID: 0}
-  buildingWidgetPrefab: {fileID: 4936279183464857374, guid: fed55f7ae730fde45ae18812d6a1b8f5, type: 3}
-  storageResourceWidgetPrefab: {fileID: 3414861423065995257, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
   buildingActionResourceWidgetPrefab: {fileID: 3414861423065995257, guid: 182cd47f78642304fb945011b714a68e, type: 3}
-  managementMenu: {fileID: 5147959992463781598}
-  buildingListsMenu: {fileID: 4284649203857945394}
-  storageListsMenu: {fileID: 4060582437428972689}
   buildingInformationMenu: {fileID: 3353810478589228769}
   workersMenu: {fileID: 2941818818452301855}
   statsMenu: {fileID: 6519395463221355690}
   contextMenuMaster: {fileID: 8849376194193722390}
-  openConstructionMenuButton: {fileID: 567925452760405086}
-  openStorageMenuButton: {fileID: 3562197371029554298}
-  closeManagementMenuButton: {fileID: 2071420755748283807}
   buildingListsMenuButton: {fileID: 8971962629013174467}
   storageListsMenuButton: {fileID: 829117099251789281}
-  buildingLists:
-  - {fileID: 8792590059360149303}
-  - {fileID: 7261112553883055671}
-  - {fileID: 4092950409629013099}
-  - {fileID: 2611550739270641435}
-  - {fileID: 5039795489829045560}
-  - {fileID: 6013783335617741852}
-  buildingListButtons:
-  - {fileID: 5779216176605482771}
-  - {fileID: 6871546046007613085}
-  - {fileID: 6973101474423625992}
-  - {fileID: 7813554050961126349}
-  - {fileID: 8717705301990062439}
-  - {fileID: 7500782539957076814}
-  buildingListsScrollRect: {fileID: 6647646497964301144}
-  storageListsScrollRect: {fileID: 3039151529985723148}
-  storageLists:
-  - {fileID: 769815335464853196}
-  - {fileID: 2300615809500845714}
-  - {fileID: 7027503297295174442}
-  storageListButtons:
-  - {fileID: 1229520922462672101}
-  - {fileID: 9081027054475010438}
-  - {fileID: 4136931990971204310}
   actionResourcesLayourGroup: {fileID: 0}
 --- !u!114 &227430077283372662
 MonoBehaviour:
@@ -1591,13 +1614,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5028220504261582107}
+  - component: {fileID: 4828803567736613692}
   m_Layer: 5
   m_Name: ManagementMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5028220504261582107
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1610,9 +1634,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4779655735411188496}
-  - {fileID: 400960689693374561}
-  - {fileID: 7138737397560326570}
+  - {fileID: 1193120450388008432}
   m_Father: {fileID: 2117843957883114285}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1620,6 +1642,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4828803567736613692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5147959992463781598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e89d03252e04cc4db2a43ff45de0c6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ManagementMenuMaster
+  constructionMenu: {fileID: 6154011867650042819}
+  storageMenu: {fileID: 8789586615203628284}
+  openConstructionMenuButton: {fileID: 567925452760405086}
+  openStorageMenuButton: {fileID: 3562197371029554298}
+  constructionListsMenuButton: {fileID: 8971962629013174467}
+  storageListsMenuButton: {fileID: 829117099251789281}
+  closeManagementMenuButton: {fileID: 2071420755748283807}
+  content: {fileID: 8291545848489941317}
 --- !u!1 &6201798660599786974
 GameObject:
   m_ObjectHideFlags: 0
@@ -2010,7 +2052,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7230051256009557238}
   m_Layer: 5
-  m_Name: BuildingListButtons
+  m_Name: ConstructionListButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2041,6 +2083,44 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 100}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!1 &8291545848489941317
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1193120450388008432}
+  m_Layer: 5
+  m_Name: Content
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1193120450388008432
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8291545848489941317}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4779655735411188496}
+  - {fileID: 400960689693374561}
+  - {fileID: 7138737397560326570}
+  m_Father: {fileID: 5028220504261582107}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8367980756147789237
 GameObject:
   m_ObjectHideFlags: 0
@@ -2226,7 +2306,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7138737397560326570}
   m_Layer: 0
-  m_Name: ListMenues
+  m_Name: ListMenus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2246,12 +2326,12 @@ RectTransform:
   m_Children:
   - {fileID: 4284061819060450504}
   - {fileID: 3363934747835092081}
-  m_Father: {fileID: 5028220504261582107}
+  m_Father: {fileID: 1193120450388008432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -110}
-  m_SizeDelta: {x: -80, y: -300}
+  m_SizeDelta: {x: 900, y: 1940}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &9018369846826804311
 GameObject:
@@ -6001,7 +6081,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: c0fe00ab4b5f6d6438eabc56c278714b, type: 2}
     - target: {fileID: 4456157408004065638, guid: 25720367859dd784da78e35bed4b6b18, type: 3}
       propertyPath: m_Name
-      value: OpenBuildingListsMenuButton
+      value: OpenConstructionListsMenuButton
       objectReference: {fileID: 0}
     - target: {fileID: 8098942685961320592, guid: 25720367859dd784da78e35bed4b6b18, type: 3}
       propertyPath: m_text

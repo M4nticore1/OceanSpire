@@ -65,8 +65,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 119838d5f1da7594f877b04e7e247b5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputHandler
-  isPrimaryInteractionPressed: 0
-  isSecondaryInteractionPressed: 0
   mainInputActionsAsset: {fileID: -944628639613478452, guid: e3db4645d0ae36245a27082f5b603306, type: 3}
 --- !u!114 &6411632939769270001
 MonoBehaviour:
@@ -369,6 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ac4eccb0d23e24f9cf6614b6f5575e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraHolderMovement
+  buildingsManager: {fileID: 0}
   playerInputHandler: {fileID: 4970948048436698858}
 --- !u!1001 &8513133735699425000
 PrefabInstance:
@@ -565,10 +564,6 @@ PrefabInstance:
     - target: {fileID: 4405103202460231820, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
       propertyPath: m_Name
       value: PlayerUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 5147959992463781598, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5323392907551205864, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
       propertyPath: m_AnchorMax.y

@@ -27,7 +27,7 @@ public class ResourceWidget : MonoBehaviour
         EventBus.onItemRemoved += OnLootRemoved;
         EventBus.onStorageCapacityChanged += OnStorageCapacityChanged;
 
-        if (itemData.ItemId == (int)ItemID.Population) {
+        if (itemData && itemData.ItemId == (int)ItemID.Population) {
             EventBus.onCitizenInited += OnCitizenInited;
             EventBus.onCitizenDeleted += OnCitizenDeleted;
         }
@@ -49,8 +49,9 @@ public class ResourceWidget : MonoBehaviour
 
     private void Start()
     {
-        if (!TryToAssignItem()) return;
+        //if (!TryToAssignItem()) return;
 
+        TryToAssignItem();
         UpdateAmount();
     }
 
@@ -106,6 +107,9 @@ public class ResourceWidget : MonoBehaviour
 
     private void UpdateAmount()
     {
+        if (!itemData)
+            return;
+
         int populationId = (int)ItemID.Population;
 
         if (itemData.ItemId == populationId) {

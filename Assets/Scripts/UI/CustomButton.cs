@@ -3,6 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public enum CustomSelectableState
 {
@@ -43,7 +44,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     [Header("States")]
     [SerializeField] private CustomSelectableState state;
-    private CustomSelectableState lastState;
+    //private CustomSelectableState lastState;
 
     public bool IsIdle => state == CustomSelectableState.Idle;
     public bool IsHovered => state == CustomSelectableState.Hovered;
@@ -104,34 +105,45 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     protected override void Awake()
     {
         base.Awake();
+
         ApplyBodyTargetColor();
         ApplyContentTargetColor();
         ApplyColor();
         ApplyScale();
+
+        InputListener.Instance.onPressed += OnPress;
+        InputListener.Instance.onReleased += OnRelease;
+        onStateChanged += OnStateChanged;
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        InputListener.Instance.onPressed += OnPress;
-        InputListener.Instance.onReleased += OnRelease;
-        onStateChanged += OnStateChanged;
+        //InputListener.Instance.onPressed += OnPress;
+        //InputListener.Instance.onReleased += OnRelease;
+        //onStateChanged += OnStateChanged;
 
-        if (IsEnabled && (!IsSelectable || deselectOnOutsideClick))
+        //if (IsEnabled && (!IsSelectable || deselectOnOutsideClick))
+        //    SetState(CustomSelectableState.Idle);
+        //SetStateTransitionAlpha(1f);
+
+        if (IsEnabled && (!IsSelectable || deselectOnOutsideClick)) {
             SetState(CustomSelectableState.Idle);
-        SetStateTransitionAlpha(1f);
+        }
+
+        FinishTransitionAnimation();
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        if (InputListener.Instance) {
-            InputListener.Instance.onPressed -= OnPress;
-            InputListener.Instance.onReleased -= OnRelease;
-        }
-        onStateChanged -= OnStateChanged;
+        //if (InputListener.Instance) {
+        //    InputListener.Instance.onPressed -= OnPress;
+        //    InputListener.Instance.onReleased -= OnRelease;
+        //}
+        //onStateChanged -= OnStateChanged;
     }
 
     private void Update()
@@ -284,11 +296,11 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     // Set State
     public void SetState(CustomSelectableState newState)
     {
-        if (newState == lastState) return;
+        if (newState == state) return;
         if (!IsInteractable) return;
-        ExitState(lastState);
+
+        ExitState(state);
         state = newState;
-        lastState = state;
         EnterState(state);
         OnStateChange();
     }
@@ -364,15 +376,24 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     private void ResetInteractionAlpha()
     {
         SetStateTransitionAlpha(0f);
-        isAnimating = true;
     }
 
     private void SetStateTransitionAlpha(float value)
     {
         stateTransitionAlpha = value;
+        stateTransitionAlpha = math.clamp(stateTransitionAlpha, 0, 1);
+
+        if (stateTransitionAlpha >= 1) {
+            isAnimating = false;
+        }
+        else {
+            isAnimating = true;
+        }
+
         ApplyColor();
-        if (isScalable && scaleRoot)
+        if (isScalable && scaleRoot) {
             ApplyScale();
+        }
     }
 
     private void ApplyColor()
