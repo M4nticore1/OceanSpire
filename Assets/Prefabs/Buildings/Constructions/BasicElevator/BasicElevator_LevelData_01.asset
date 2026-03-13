@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
   m_Name: BasicElevator_LevelData_01
   m_EditorClassIdentifier: Assembly-CSharp::TowerBuildingLevelData
-  resourcesToBuild: []
+  resourcesToBuild:
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 1000
+  - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    amount: 100
   maxResidentsCount: 2
   constructionStraight: {fileID: 3845205293008637488, guid: 961c060a5cf64374492b029dd70644e6, type: 3}
   constructionCorner: {fileID: 7008323806768352302, guid: dd21a2352ae8be74c81e203c1fc9bc45, type: 3}

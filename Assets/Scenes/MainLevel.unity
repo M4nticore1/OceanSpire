@@ -754,17 +754,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
---- !u!114 &125435661 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1882718915044785110, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-  m_PrefabInstance: {fileID: 125435660}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d12d59c714780e4ca7227a5cb36e99a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CityStorage
 --- !u!1 &128358826
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,7 +798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac63c26435142b940b21b075b10ba575, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemsLoader
-  cityStorage: {fileID: 125435661}
+  cityStorage: {fileID: 1388613268}
 --- !u!1 &142442282
 GameObject:
   m_ObjectHideFlags: 0
@@ -976,7 +965,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ElectricityDrain
   buildingsManager: {fileID: 455753200}
-  cityStorage: {fileID: 125435661}
+  cityStorage: {fileID: 1388613268}
 --- !u!4 &246610204 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: 91569d626b646a446a179ace24aa35e8, type: 3}
@@ -1519,7 +1508,7 @@ PrefabInstance:
     - target: {fileID: 1412979276657768449, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: cityStorage
       value: 
-      objectReference: {fileID: 125435661}
+      objectReference: {fileID: 1388613268}
     - target: {fileID: 2411408065692301716, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: buildingsManager
       value: 
@@ -1851,7 +1840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c8380aed673b2c4c8fc4adca16419ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingsManager
-  cityStorage: {fileID: 125435661}
+  cityStorage: {fileID: 1388613268}
   builtFloors:
   - {fileID: 1218081186}
   - {fileID: 1853408846}
@@ -2437,7 +2426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodDrain
   entitiesManager: {fileID: 220072952}
-  cityStorage: {fileID: 125435661}
+  cityStorage: {fileID: 1388613268}
 --- !u!1001 &731686007
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3195,6 +3184,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 367708166}
+  - {fileID: 1388613266}
+  - {fileID: 1934078804}
   - {fileID: 538103143}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3640,12 +3631,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009b016c9e26c4c408d8e623b9ada0a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartItems
-  cityStorage: {fileID: 125435661}
+  cityStorage: {fileID: 1388613268}
   startItems:
   - itemData: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
     amount: 100
   - itemData: {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
     amount: 100
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 10000
+  - itemData: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+    amount: 5000
+  - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    amount: 1000
+  - itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+    amount: 500
 --- !u!4 &1130765590 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: 30c442c818ea2e942a614aec33f638da, type: 3}
@@ -4128,6 +4127,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6165b2d0b718b064d888d656eb7ec4a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FloorFrameModule
+--- !u!1 &1388613265
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1388613266}
+  - component: {fileID: 1388613268}
+  - component: {fileID: 1388613267}
+  m_Layer: 0
+  m_Name: CityStorage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1388613266
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388613265}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 879926669}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1388613267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388613265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27afc86b48e1cd4d987e182d36208aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Inventory
+  autoCleaning: 0
+  isUnlimitedAmount: 0
+  isUnlimitedWeight: 1
+  maxWeight: 0
+--- !u!114 &1388613268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388613265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d12d59c714780e4ca7227a5cb36e99a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CityStorage
+  inventory: {fileID: 1388613267}
 --- !u!4 &1394277905 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2501287360220567352, guid: 0b6d32f3a8efa89429c4ae6f138b821f, type: 3}
@@ -5019,6 +5080,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1317929167}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1934078803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1934078804}
+  - component: {fileID: 1934078805}
+  m_Layer: 0
+  m_Name: BoatsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1934078804
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934078803}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 879926669}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1934078805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934078803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7a7483f4cd89c14c86d59262de97b38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoatsManager
 --- !u!4 &1946431605 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3728160677861581633, guid: 440b02943862e8a4b9a97002ceac8cd9, type: 3}

@@ -41,38 +41,37 @@ public class StorageBuildingModule : BuildingModule
 
     }
 
-    public int AddItem(int itemId, int amount)
-    {
-        return AddItem_Internal(itemId, amount);
-    }
+    //public int AddItem(int itemId, int amount)
+    //{
+    //    return AddItem_Internal(itemId, amount);
+    //}
 
-    public int AddItem(ItemInstance item)
-    {
-        return AddItem_Internal(item.ItemData.ItemId, item.Amount);
-    }
+    //public int AddItem(ItemInstance item)
+    //{
+    //    return AddItem_Internal(item.ItemData.ItemId, item.Amount);
+    //}
 
-    private int AddItem_Internal(int itemId, int amount)
-    {
-        Debug.Log("ADD");
-        if (storedItems.ContainsKey(itemId))
-            return storedItems[itemId].AddAmount(amount, StorageLevelData.storageItems[itemId].Amount);
-        else
-            return 0;
-    }
+    //private int AddItem_Internal(int itemId, int amount)
+    //{
+    //    if (storedItems.ContainsKey(itemId))
+    //        return storedItems[itemId].AddAmount(amount, StorageLevelData.storageItems[itemId].Amount);
+    //    else
+    //        return 0;
+    //}
 
-    public int SpendItem(int itemId, int amount)
-    {
-        return SpendItem_Internal(itemId, amount);
-    }
+    //public int SpendItem(int itemId, int amount)
+    //{
+    //    return SpendItem_Internal(itemId, amount);
+    //}
 
-    public int SpendItem(ItemInstance item)
-    {
-        return SpendItem_Internal(item.ItemData.ItemId, item.Amount);
-    }
+    //public int SpendItem(ItemInstance item)
+    //{
+    //    return SpendItem_Internal(item.ItemData.ItemId, item.Amount);
+    //}
 
-    private int SpendItem_Internal(int itemId, int amount)
-    {
-        int amountToSpend = storedItems[itemId].RemoveAmount(amount);
-        return amountToSpend;
-    }
+    //private int SpendItem_Internal(int itemId, int amount)
+    //{
+    //    int amountToSpend = storedItems[itemId].RemoveAmount(amount);
+    //    return amountToSpend;
+    //}
 }

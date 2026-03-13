@@ -3,55 +3,14 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class StorageItem
-{
-    public ItemInstance item { get; private set; } = null;
-
-    public int maxAmount { get; private set; } = 0;
-
-    public StorageItem(ItemInstance item, int maxAmount)
-    {
-        this.item = item;
-        this.maxAmount = maxAmount;
-    }
-
-    public StorageItem(ItemInstance item)
-    {
-        this.item = item;
-    }
-
-    public void AddAmount(int amount)
-    {
-        item.AddAmount(amount);
-    }
-
-    public void AddAmount(int amount, int maxAmount)
-    {
-        item.AddAmount(amount, maxAmount);
-    }
-
-    public void RemoveAmount(int amount)
-    {
-        item.RemoveAmount(amount);
-    }
-
-    public void AddMaxAmount(int value)
-    {
-        maxAmount += value;
-    }
-
-    public void RemoveMaxAmount(int value)
-    {
-        maxAmount -= value;
-        maxAmount = math.max(0, maxAmount);
-    }
-}
-
 public class Inventory : MonoBehaviour
 {
     [SerializeField] private bool autoCleaning = false;
     [SerializeField] private bool isUnlimitedAmount = false;
     public bool IsUnlimitedAmount => isUnlimitedAmount;
+
+    [SerializeField] private bool isUnlimitedWeight = false;
+    public bool IsUnlimitedWeight => isUnlimitedWeight;
 
     [SerializeField] private float maxWeight = 0;
     public float MaxWeight => maxWeight;
@@ -72,6 +31,15 @@ public class Inventory : MonoBehaviour
     {
         TryAddNewItem(id);
 
+        if (isUnlimitedAmount) {
+            AddItemMaxAmount(id, amount);
+        }
+
+        if (!isUnlimitedWeight) {
+            ItemData data = ItemsList.Instance.Items[id];
+            amount = math.clamp(amount, 0, (int)(RemainingWeight / data.Weight));
+        }
+
         itemsDict[id].AddAmount(amount);
         AddWeigth(id, amount);
 
@@ -89,7 +57,8 @@ public class Inventory : MonoBehaviour
 
     public void TryAddNewItem(int id)
     {
-        if (itemsDict.ContainsKey(id)) return;
+        if (itemsDict.ContainsKey(id))
+            return;
 
         AddNewItem(id);
     }

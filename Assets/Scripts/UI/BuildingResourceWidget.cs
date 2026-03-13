@@ -10,7 +10,7 @@ public class BuildingResourceWidget : MonoBehaviour
     Color EnoughColor = new Color(0, 1.0f, 0);
     Color NotEnoughColor = new Color(1.0f, 0, 0);
 
-    public void Initialize(int resourceAmount, Sprite resourceIcon)
+    public void Init(int resourceAmount, Sprite resourceIcon)
     {
         resourceAmountText.text = resourceAmount.ToString();
 

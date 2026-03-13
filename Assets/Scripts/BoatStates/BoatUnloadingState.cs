@@ -23,11 +23,9 @@ public class BoatUnloadingState : BoatState
 
     public override void Process()
     {
-        Debug.Log("BoatUnloadingState");
         boat.ProcessDrainHealth();
 
         if (ShouldUnload()) {
-            Debug.Log("ShouldUnload");
             ProcessStoreResources();
         }
         else {
@@ -51,8 +49,6 @@ public class BoatUnloadingState : BoatState
             Debug.LogError("items count is 0.");
             return;
         }
-
-        Debug.Log("ProcessStoreResources");
 
         // Item
         ItemInstance loot = boat.GetItemToUnload();

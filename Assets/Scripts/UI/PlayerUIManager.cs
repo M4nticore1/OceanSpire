@@ -210,7 +210,6 @@ public class PlayerUIManager : MonoBehaviour
     {
         buildingListsMenu.SetActive(true);
         isBuildingListsMenuOpened = true;
-        UpdateBuildingsMenuResourcesAmount();
     }
 
     private void CloseBuildingsMenu()
@@ -282,13 +281,6 @@ public class PlayerUIManager : MonoBehaviour
         }
     }
 
-    private void UpdateBuildingsMenuResourcesAmount()
-    {
-        foreach (var widget in spawnedBuildingWidgets) {
-            widget.UpdateResourcesToBuild();
-        }
-    }
-
     // Storage Menu
     private void OnStorageMenuButtonReleased()
     {
@@ -347,18 +339,19 @@ public class PlayerUIManager : MonoBehaviour
         int count = ItemsList.Instance.Items.Length;
 
         for (int i = 0; i < count; i++) {
-            ItemData itemData = ItemsList.Instance.Items[i];
-            if (itemData.ItemCategory == ItemCategory.Society) continue;
+            ItemInstance item = cityStorage.Inventory.items[i].item;
+            ItemData itemData = item.ItemData;
+
+            if (itemData.ItemCategory == ItemCategory.Society)
+                continue;
 
             ItemCategory itemCategory = itemData.ItemCategory;
 
             ResourceWidget storageResourceWidget = Instantiate(storageResourceWidgetPrefab, storageLists[(int)itemCategory - 1].transform);
             widgets.Add(storageResourceWidget);
 
-            ItemInstance item = cityStorage.Inventory.itemsDict[i].item;
-            storageResourceWidget.Init(itemData);
+            storageResourceWidget.Init(item);
         }
-        //storageResourceWidgets = widgets.ToArray();
     }
 
     private void OnWorkersMenuClosed()

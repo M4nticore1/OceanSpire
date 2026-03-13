@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d90de6b96e5994a9d15efc2017ca3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingResourceWidget: {fileID: 2815948240187871119, guid: 9d3feffcad0e637408bef2ff4d7db94d, type: 3}
+  buildingResourceWidget: {fileID: 5555003485712965333, guid: 9d3feffcad0e637408bef2ff4d7db94d, type: 3}
   buildingNameTextLocalizer: {fileID: 9025228998122799740}
   buildingImage: {fileID: 5005537298302894448}
   buildButton: {fileID: 3753086174136718447}
@@ -192,8 +192,8 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 350, y: 100}
-  m_Spacing: {x: 0, y: 0}
+  m_CellSize: {x: 250, y: 100}
+  m_Spacing: {x: 50, y: 50}
   m_Constraint: 1
   m_ConstraintCount: 2
 --- !u!1 &4427824139254346479
@@ -488,7 +488,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u0418\u0433\u0448\u0434"
+  m_text: BuildingName
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}

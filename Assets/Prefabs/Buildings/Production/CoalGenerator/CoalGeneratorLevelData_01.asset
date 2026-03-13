@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
   m_Name: CoalGeneratorLevelData_01
   m_EditorClassIdentifier: 
-  resourcesToBuild: []
+  resourcesToBuild:
+  - itemData: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+    amount: 600
+  - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    amount: 400
   maxResidentsCount: 1
   constructionStraight: {fileID: 3395891878762895499, guid: e3789740ea7ffcc4e851b4fd4d8ef80c, type: 3}
   constructionCorner: {fileID: 3395891878762895499, guid: 9ca647aeb76c6064382689744d563fbb, type: 3}

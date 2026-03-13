@@ -8,7 +8,9 @@ public class ResourceWidget : MonoBehaviour
     private EntitiesManager entitiesManager;
 
     [SerializeField] private ItemData itemData;
-    private ItemInstance itemInstance;
+    private ItemInstance amountItem;
+    private ItemInstance maxAmountItem;
+
     [SerializeField] private Image resourceImage;
     [SerializeField] private TextMeshProUGUI resourceAmountText;
     [SerializeField] private Image resourceAmountBar;
@@ -27,7 +29,7 @@ public class ResourceWidget : MonoBehaviour
 
         if (itemData.ItemId == (int)ItemID.Population) {
             EventBus.onCitizenInited += OnCitizenInited;
-            EventBus.onCitizenDeleted -= OnCitizenDeleted;
+            EventBus.onCitizenDeleted += OnCitizenDeleted;
         }
 
         UpdateAmount();
@@ -52,31 +54,52 @@ public class ResourceWidget : MonoBehaviour
         UpdateAmount();
     }
 
-    public void Init(ItemData itemData)
+    public void Init(ItemInstance amountItem, ItemInstance maxAmountItem)
     {
         cityStorage = FindAnyObjectByType<CityStorage>();
 
-        SetItem(itemData);
+        SetItem(amountItem, maxAmountItem);
+    }
+
+    public void Init(ItemInstance amountItem)
+    {
+        cityStorage = FindAnyObjectByType<CityStorage>();
+
+        SetItem(amountItem);
     }
 
     private bool TryToAssignItem()
     {
-        if (itemInstance != null) return false;
+        if (amountItem != null)
+            return false;
 
         SetItem(itemData);
         return true;
     }
 
+    private void SetItem(ItemInstance amountItem, ItemInstance maxAmountItem)
+    {
+        this.amountItem = amountItem;
+        this.maxAmountItem = maxAmountItem;
+        OnItemSet();
+    }
+
+    private void SetItem(ItemInstance amountItem)
+    {
+        this.amountItem = amountItem;
+        OnItemSet();
+    }
+
     private void SetItem(ItemData itemData)
     {
         int id = itemData.ItemId;
-        this.itemData = itemData;
-        itemInstance = cityStorage.Inventory.itemsDict[id].item;
+        amountItem = cityStorage.Inventory.itemsDict[id].item;
         OnItemSet();
     }
 
     private void OnItemSet()
     {
+        itemData = amountItem.ItemData;
         Sprite sprite = itemData.ItemIcon;
         SetImage(sprite);
     }
@@ -94,11 +117,11 @@ public class ResourceWidget : MonoBehaviour
             SetAmount(amount, maxAmount);
         }
         else {
-            if (itemInstance == null) return;
+            if (amountItem == null) return;
 
-            int id = itemInstance.ItemData.ItemId;
-            int amount = itemInstance.Amount;
-            int maxAmount = cityStorage.Inventory.itemsDict[id].maxAmount;
+            int id = amountItem.ItemData.ItemId;
+            int amount = amountItem.Amount;
+            int maxAmount = maxAmountItem != null ? maxAmountItem.Amount : cityStorage.Inventory.itemsDict[id].maxAmount;
             SetAmount(amount, maxAmount);
         }
     }

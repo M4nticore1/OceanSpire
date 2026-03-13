@@ -40,22 +40,12 @@ public class ItemInstance
     }
 
     // Add Amount
-    public int AddAmount(int amount, int maxAmount)
-    {
-        return SetAmount(this.amount + amount, maxAmount);
-    }
-
     public int AddAmount(int amount)
     {
         return SetAmount(this.amount + amount);
     }
 
     // Remove Amount
-    public int RemoveAmount(int amount, int maxAmount)
-    {
-        return SetAmount(this.amount - amount, maxAmount);
-    }
-
     public int RemoveAmount(int amount)
     {
         return SetAmount(this.amount - amount);

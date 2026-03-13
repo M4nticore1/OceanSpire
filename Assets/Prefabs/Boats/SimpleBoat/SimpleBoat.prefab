@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: maxWeight
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 1147310907644242627, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: autoCleaning
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1718763975742808754, guid: 679b2165b2bee36439352713bb868b16, type: 3}
       propertyPath: maxHealth
       value: 300
