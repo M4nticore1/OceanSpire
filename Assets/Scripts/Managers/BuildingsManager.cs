@@ -28,8 +28,6 @@ public class BuildingsManager : MonoBehaviour
 
     public List<List<ElevatorModule>> elevatorGroups { get; private set; } = new List<List<ElevatorModule>>();
 
-    public const float demolitionResourceRefundRate = 0.2f;
-
     public IEnumerable<GroundBuilding> EnvironmentBuildings()
     {
         yield return towerGate;
@@ -85,14 +83,6 @@ public class BuildingsManager : MonoBehaviour
 
     private void OnBuildingDemolished(Building building)
     {
-        // Return the part of resources
-        ItemInstance[] resourceToBuilds = building.ConstructionLevelsData[building.LevelIndex].ResourcesToBuild;
-        for (int i = 0; i < resourceToBuilds.Length; i++) {
-            int id = resourceToBuilds[i].ItemData.ItemId;
-            int amount = (int)math.ceil(resourceToBuilds[i].Amount * demolitionResourceRefundRate);
-            cityStorage.Inventory.AddItemAmount(id, amount);
-        }
-
         UpdateElevatorGroups(building);
         UpdateEmptyBuildingPlacesCount();
         UpdateCityHeight();

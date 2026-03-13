@@ -33,6 +33,8 @@ public abstract class Building : MonoBehaviour
     [SerializeField] private bool isRuined = false;
     public bool IsRuined => isRuined;
 
+    public const float DemolishionResourcesRefundPercent = 0.2f;
+
     public event System.Action onBuildingInited;
     public event System.Action onBuildingStartWorking;
     public event System.Action onBuildingStopWorking;
@@ -248,6 +250,20 @@ public abstract class Building : MonoBehaviour
         modules = GetComponents<BuildingModule>();
 
         return modules;
+    }
+
+    public List<ItemInstance> GetDemolishionResources()
+    {
+        var resources = new List<ItemInstance>();
+
+        foreach (var resource in LevelData.ResourcesToBuild) {
+            ItemData data = resource.ItemData;
+            int amount = (int)(resource.Amount * DemolishionResourcesRefundPercent);
+            ItemInstance instance = new ItemInstance(data, amount);
+            resources.Add(instance);
+        }
+
+        return resources;
     }
 
     // Events
