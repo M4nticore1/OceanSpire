@@ -21,10 +21,16 @@ public class DemolishActionMenu : BuildingActionMenu
         building.Demolish();
     }
 
-    protected override void OnOpen(Building building)
+    protected override void CreateWidgets(Building building)
     {
-        foreach (var item in building.LevelData.ResourcesToBuild) {
+        ItemInstance[] resourcesToBuild = building.GetResourcesToBuild();
+        int resourcesCount = resourcesToBuild.Length;
+        spawnedResourceWidgets = new ResourceWidget[resourcesCount];
 
+        for (int i = 0; i < resourcesCount; i++) {
+            ItemInstance resource = resourcesToBuild[i];
+            spawnedResourceWidgets[i] = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
+            spawnedResourceWidgets[i].Init(resource);
         }
     }
 }

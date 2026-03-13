@@ -66,6 +66,18 @@ MonoBehaviour:
     value: "\u041F\u043E\u0441\u0442\u0440\u043E\u0438\u0442\u044C"
     fontSize: 64
     fontIndex: 0
+  - item: {fileID: 11400000, guid: 151e0861518157d4396b08553890b9cc, type: 2}
+    value: "\u0420\u0430\u0437\u0440\u0443\u0448\u0438\u0442\u044C"
+    fontSize: 64
+    fontIndex: 1
+  - item: {fileID: 11400000, guid: b71a51156eb44994ebfd613117eff026, type: 2}
+    value: "\u0423\u043B\u0443\u0447\u0448\u0438\u0442\u044C"
+    fontSize: 64
+    fontIndex: 1
+  - item: {fileID: 11400000, guid: 830aa7bb7a58bf548b10d89aa9512795, type: 2}
+    value: "\u0420\u0430\u0431\u043E\u0447\u0438\u0435"
+    fontSize: 64
+    fontIndex: 1
   - item: {fileID: 11400000, guid: 9f26c4f24612b7d408f5266f79ffb0b1, type: 2}
     value: "\u0412\u044B\u0431\u043E\u0440 \u0440\u0430\u0431\u043E\u0447\u0438\u0445"
     fontSize: 48
@@ -136,3 +148,8 @@ MonoBehaviour:
     value: "\u0412\u0440\u0430\u0442\u0430 \u0432 \u0431\u0430\u0448\u043D\u044E"
     fontSize: 64
     fontIndex: 1
+  - item: {fileID: 11400000, guid: d380acd8d4e5e1946af7cb5186e1c7af, type: 2}
+    value: "\u0412\u043E\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u043C\u044B\u0435
+      \u0440\u0435\u0441\u0443\u0440\u0441\u044B"
+    fontSize: 64
+    fontIndex: 0

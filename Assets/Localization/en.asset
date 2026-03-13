@@ -65,6 +65,18 @@ MonoBehaviour:
     value: Build
     fontSize: 80
     fontIndex: 1
+  - item: {fileID: 11400000, guid: 151e0861518157d4396b08553890b9cc, type: 2}
+    value: "\u0420\u0430\u0437\u0440\u0443\u0448\u0438\u0442\u044C"
+    fontSize: 0
+    fontIndex: 0
+  - item: {fileID: 11400000, guid: eb292f6ade6dd7f4daaffb3ee954725d, type: 2}
+    value: Weight
+    fontSize: 0
+    fontIndex: 0
+  - item: {fileID: 11400000, guid: 830aa7bb7a58bf548b10d89aa9512795, type: 2}
+    value: Workers
+    fontSize: 0
+    fontIndex: 0
   - item: {fileID: 11400000, guid: 9f26c4f24612b7d408f5266f79ffb0b1, type: 2}
     value: Select workers
     fontSize: 48
@@ -117,11 +129,7 @@ MonoBehaviour:
     value: Wood storage
     fontSize: 64
     fontIndex: 1
-  - item: {fileID: 11400000, guid: e09c905db7d8eae47a552fe9d1974f61, type: 2}
-    value: Health
-    fontSize: 0
-    fontIndex: 0
-  - item: {fileID: 11400000, guid: eb292f6ade6dd7f4daaffb3ee954725d, type: 2}
-    value: Weight
+  - item: {fileID: 11400000, guid: d380acd8d4e5e1946af7cb5186e1c7af, type: 2}
+    value: Refund resources
     fontSize: 0
     fontIndex: 0

@@ -17,7 +17,7 @@ public class UpgradeActionMenu : BuildingActionMenu
 
     }
 
-    protected override void OnOpen(Building building)
+    protected override void CreateWidgets(Building building)
     {
         foreach (var item in building.NextLevelData.ResourcesToBuild) {
 

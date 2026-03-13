@@ -15,6 +15,8 @@ public class BuildingWidget : MonoBehaviour
     [SerializeField] private CustomButton informationButton = null;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup = null;
 
+    private bool isInited = false;
+
     private void OnEnable()
     {
         buildButton.onReleased += OnBuildButtonCliked;
@@ -45,6 +47,7 @@ public class BuildingWidget : MonoBehaviour
         }
 
         CreateResourcesToBuild();
+        isInited = true;
     }
 
     private void CreateResourcesToBuild()
@@ -74,6 +77,8 @@ public class BuildingWidget : MonoBehaviour
 
     private void UpdateResourcesToBuild()
     {
+        if (!isInited) return;
+
         bool enoughResources = true;
 
         foreach (var resource in buildingPrefab.GetResourcesToBuild()) {

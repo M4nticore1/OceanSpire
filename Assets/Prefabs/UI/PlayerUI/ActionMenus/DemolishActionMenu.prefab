@@ -10,11 +10,35 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1542583379259078016, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
       propertyPath: m_text
-      value: Resources to be refound
+      value: 'Refund resources
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1542583379259078016, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
+      propertyPath: m_fontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 1542583379259078016, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 1819448164406779124, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -110
       objectReference: {fileID: 0}
     - target: {fileID: 2982886189403526349, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
       propertyPath: m_Name
       value: DemolishActionMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 5500019265225679286, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: d380acd8d4e5e1946af7cb5186e1c7af, type: 2}
+    - target: {fileID: 6792626791010262302, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
+      propertyPath: m_text
+      value: 'Demolish
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 6792626791010262302, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
       propertyPath: m_fontColor32.rgba

@@ -1,13 +1,19 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public abstract class BuildingActionMenu : UIBehaviour
 {
+    [SerializeField] protected ResourceWidget resourceWidgetPrefab;
+
+    [SerializeField] protected TextLocalizer buildingNameTextLocalizer;
     [SerializeField] protected CustomButton actionButton;
     [SerializeField] private CustomButton closeButton;
     [SerializeField] private SlidePanel slidePanel;
-    [SerializeField] protected LayoutGroup layourGroup;
+    [SerializeField] protected LayoutGroup layoutGroup;
+
+    protected ResourceWidget[] spawnedResourceWidgets;
 
     protected override void OnEnable()
     {
@@ -48,10 +54,23 @@ public abstract class BuildingActionMenu : UIBehaviour
         Building building = selected.GetComponent<Building>();
         if (!building) return;
 
-        OnOpen(building);
+        LocalizationItem localization = building.BuildingData.LocalizationItem;
+        buildingNameTextLocalizer.SetLocalizationItem(localization);
+
+        CleanWidgets();
+        CreateWidgets(building);
     }
 
-    protected abstract void OnOpen(Building building);
+    protected abstract void CreateWidgets(Building building);
+
+    protected void CleanWidgets()
+    {
+        if (spawnedResourceWidgets == null) return;
+
+        foreach (var widget in spawnedResourceWidgets) {
+            Destroy(widget);
+        }
+    }
 
     private void Close()
     {
