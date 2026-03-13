@@ -25,7 +25,6 @@ public class ResourceWidget : MonoBehaviour
     {
         EventBus.onMainStorageItemAmountChanged += OnLootAdded;
         EventBus.onItemRemoved += OnLootRemoved;
-        EventBus.onStorageCapacityChanged += OnStorageCapacityChanged;
 
         if (itemData && itemData.ItemId == (int)ItemID.Population) {
             EventBus.onCitizenInited += OnCitizenInited;
@@ -39,7 +38,6 @@ public class ResourceWidget : MonoBehaviour
     {
         EventBus.onMainStorageItemAmountChanged -= OnLootAdded;
         EventBus.onItemRemoved -= OnLootRemoved;
-        EventBus.onStorageCapacityChanged -= OnStorageCapacityChanged;
 
         if (itemData.ItemId == (int)ItemID.Population) {
             EventBus.onCitizenInited -= OnCitizenInited;

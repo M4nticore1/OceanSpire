@@ -19,6 +19,7 @@ public static class EventBus
     public static event Action<Building> onBuildingInited;
     public static event Action<Building> onBuildingDemolished;
 
+    // Building Module
     public static event Action<BuildingModule> onBuildingModuleInited;
     public static event Action<BuildingModule> onBuildingModuleUpgraded;
     public static event Action<BuildingModule> onBuildingModuleDemolished;
@@ -44,9 +45,10 @@ public static class EventBus
 
     // Loot
     public static event Action<ItemInstance> onMainStorageItemAmountChanged;
+    public static event Action<StorageItem> onMainStorageItemMaxAmountChanged;
+
     public static event Action<ItemInstance> onItemRemoved;
     public static event Action<ItemInstance> onLootStorageChanged;
-    public static event Action onStorageCapacityChanged;
 
     // Context Menu
     public static event Action onClickedContextUpgradeButton;
@@ -192,9 +194,9 @@ public static class EventBus
         onMainStorageItemAmountChanged?.Invoke(itemInstance);
     }
 
-    public static void InvokeStorageCapacityChanged()
+    public static void InvokeMainStorageMaxAmountChanged(StorageItem itemInstance)
     {
-        onStorageCapacityChanged?.Invoke();
+        onMainStorageItemMaxAmountChanged?.Invoke(itemInstance);
     }
 
     // Context Menu

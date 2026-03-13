@@ -10,9 +10,10 @@ public abstract class BuildingEntry
 public abstract class Building : MonoBehaviour
 {
     protected BuildingsManager buildingsManager;
-    protected LevelComponent levelComponent = null;
-    protected SelectComponent selectComponent = null;
-    private BuildingStrategy strategy = null;
+    protected LevelComponent levelComponent;
+    protected SelectComponent selectComponent;
+    private CityStorage cityStorage;
+    private BuildingStrategy strategy;
 
     private bool isWorking = false;
     public int LevelIndex => levelComponent ? levelComponent.LevelIndex : GetComponent<LevelComponent>().LevelIndex;
@@ -67,23 +68,23 @@ public abstract class Building : MonoBehaviour
     {
         buildingsManager = FindAnyObjectByType<BuildingsManager>();
 
-        AssignComponents();
         AsssignStrategy();
         OnInit(data);
         UpdateConstruction();
+
         spawnedConstruction?.Init(this);
         onBuildingInited?.Invoke();
         EventBus.InvokeBuildingInited(this);
 
-        InitModules();
         InvokeBuildingInited();
     }
 
     public void Demolish()
     {
         Destroy(gameObject);
-        InvokeBuildingDemolished();
         EventBus.InvokeBuildingDemolished(this);
+
+        InvokeBuildingDemolished();
     }
 
     protected abstract void OnInit(BuildingEntry saveData);
@@ -104,16 +105,10 @@ public abstract class Building : MonoBehaviour
         }
     }
 
-    private void InitModules()
-    {
-        foreach (var module in GetComponents<BuildingModule>()) {
-            module.Init();
-        }
-    }
-
     private void AssignComponents()
     {
         buildingsManager = FindAnyObjectByType<BuildingsManager>();
+        cityStorage = FindAnyObjectByType<CityStorage>();
         levelComponent = GetComponent<LevelComponent>();
         selectComponent = GetComponent<SelectComponent>();
     }
@@ -252,15 +247,23 @@ public abstract class Building : MonoBehaviour
         return modules;
     }
 
-    public List<ItemInstance> GetDemolishionResources()
+    // Cost
+    public ItemInstance[] GetResourcesToBuild()
     {
-        var resources = new List<ItemInstance>();
+        return LevelData.ResourcesToBuild;
+    }
 
-        foreach (var resource in LevelData.ResourcesToBuild) {
-            ItemData data = resource.ItemData;
+    public ItemInstance[] GetResourcesToRefund()
+    {
+        int count = LevelData.ResourcesToBuild.Length;
+        var resources = new ItemInstance[count];
+
+        for (int i = 0; i < count; i++) {
+            var resource = LevelData.ResourcesToBuild[i];
+            var data = resource.ItemData;
             int amount = (int)(resource.Amount * DemolishionResourcesRefundPercent);
-            ItemInstance instance = new ItemInstance(data, amount);
-            resources.Add(instance);
+            var instance = new ItemInstance(data, amount);
+            resources[i] = instance;
         }
 
         return resources;

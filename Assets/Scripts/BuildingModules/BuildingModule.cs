@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class BuildingModule : MonoBehaviour
+public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
 {
     protected BuildingsManager buildingsManager;
 
@@ -45,15 +45,9 @@ public abstract class BuildingModule : MonoBehaviour
         ownedBuilding.onEntityExitBuilding -= OnExitBuilding;
     }
 
-    public void Init()
-    {
-        buildingsManager = FindAnyObjectByType<BuildingsManager>();
-
-        OnInit();
-        EventBus.InvokeBuildingModuleInited(this);
-    }
-
     protected abstract void OnInit();
+
+    protected abstract void OnDemolish();
 
     protected abstract void OnBuildingStartWorking();
 
@@ -66,5 +60,19 @@ public abstract class BuildingModule : MonoBehaviour
     protected virtual void SetFlickingMultiplier(float multiplier)
     {
         BuildingConstruction.SetFlickingMultiplier(multiplier);
+    }
+
+    public void HandleOwnedBuildingInited()
+    {
+        buildingsManager = FindAnyObjectByType<BuildingsManager>();
+
+        OnInit();
+        EventBus.InvokeBuildingModuleInited(this);
+    }
+
+    public void HandleOwnedBuildingDemolished()
+    {
+        OnDemolish();
+        EventBus.InvokeBuildingModuleDemolished(this);
     }
 }

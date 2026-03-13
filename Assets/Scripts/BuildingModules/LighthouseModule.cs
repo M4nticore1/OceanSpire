@@ -7,6 +7,11 @@ public class LighthouseModule : BuildingModule
 
     }
 
+    protected override void OnDemolish()
+    {
+
+    }
+
     protected override void OnBuildingStartWorking()
     {
 

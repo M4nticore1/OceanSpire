@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListener, INeighborBuildingsListener
+public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsListener
 {
     public TowerBuilding OwnedTowerBuilding => OwnedBuilding as TowerBuilding;
 
@@ -27,6 +27,13 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
         }
     }
 
+    protected override void OnDemolish()
+    {
+        if (OwnedTowerBuilding.ConnectedBuildings().Count() == 0) {
+            DestroyCabin();
+        }
+    }
+
     protected override void OnBuildingStartWorking()
     {
 
@@ -45,19 +52,6 @@ public class ElevatorModule : BuildingModule, IElectricible, IOwnedBuildingListe
     protected override void OnExitBuilding(EntityCityNavigator navigator)
     {
 
-    }
-
-    // IOwnedBuildingListener
-    public void HandleOwnedBuildingInited()
-    {
-
-    }
-
-    public void HandleOwnedBuildingDemolished()
-    {
-        if (OwnedTowerBuilding.ConnectedBuildings().Count() == 0) {
-            DestroyCabin();
-        }
     }
 
     // IConnectedBuildingsListener

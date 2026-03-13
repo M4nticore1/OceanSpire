@@ -19,12 +19,15 @@ public class BuildingWidget : MonoBehaviour
     {
         buildButton.onReleased += OnBuildButtonCliked;
         informationButton.onReleased += OnInformationButtonClicked;
+        EventBus.onMainStorageItemAmountChanged += OnMainStorageItemAmountChanged;
+        UpdateResourcesToBuild();
     }
 
     private void OnDisable()
     {
         buildButton.onReleased -= OnBuildButtonCliked;
         informationButton.onReleased -= OnInformationButtonClicked;
+        EventBus.onMainStorageItemAmountChanged -= OnMainStorageItemAmountChanged;
     }
 
     public void Init(Building prefab)
@@ -69,27 +72,31 @@ public class BuildingWidget : MonoBehaviour
         EventBus.InvokeBuildingWidgetInformationClicked(this);
     }
 
-    //public void UpdateResourcesToBuild()
-    //{
-    //    bool enoughResources = true;
+    private void UpdateResourcesToBuild()
+    {
+        bool enoughResources = true;
 
-    //    for (int i = 0; i < resourcesToBuildNumber; i++) {
-    //        ItemInstance resource = buildingPrefab.ConstructionLevelsData[0].ResourcesToBuild[i];
-    //        int amountToBuilding = resource.Amount;
-    //        int id = resource.ItemData.ItemId;
-    //        int currentAmount = cityStorage.Inventory.itemsDict[id].item.Amount;
-    //        spawnedBuildingResourceWidgets[i].SetAmount(currentAmount, amountToBuilding);
+        foreach (var resource in buildingPrefab.GetResourcesToBuild()) {
+            int amountToBuilding = resource.Amount;
+            int resourceId = resource.ItemData.ItemId;
+            int currentAmount = cityStorage.Inventory.itemsDict[resourceId].item.Amount;
 
-    //        if (enoughResources && currentAmount < amountToBuilding) {
-    //            enoughResources = false;
-    //        }
-    //    }
+            if (enoughResources && currentAmount < amountToBuilding) {
+                enoughResources = false;
+                break;
+            }
+        }
 
-    //    if (enoughResources)
-    //        buildButton.SetState(CustomSelectableState.Idle);
-    //    else
-    //        buildButton.SetState(CustomSelectableState.Disabled);
+        if (enoughResources)
+            buildButton.SetState(CustomSelectableState.Idle);
+        else
+            buildButton.SetState(CustomSelectableState.Disabled);
 
-    //    buildButton.FinishTransitionAnimation();
-    //}
+        buildButton.FinishTransitionAnimation();
+    }
+
+    private void OnMainStorageItemAmountChanged(ItemInstance item)
+    {
+        UpdateResourcesToBuild();
+    }
 }

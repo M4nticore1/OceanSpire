@@ -9,6 +9,7 @@ public class CityStorage : MonoBehaviour
     private void OnEnable()
     {
         inventory.onChangedItemAmount += OnItemAmountChanged;
+        inventory.onChangedItemMaxAmount += OnItemMaxAmountChanged;
         EventBus.onClickedProductionModule += OnClickedProductionModule;
         EventBus.onBoatUnloadedItem += OnBoatUnloadedItem;
     }
@@ -24,6 +25,11 @@ public class CityStorage : MonoBehaviour
     private void OnItemAmountChanged(ItemInstance item)
     {
         EventBus.InvokeMainStorageAmountChanged(item);
+    }
+
+    private void OnItemMaxAmountChanged(StorageItem item)
+    {
+        EventBus.InvokeMainStorageMaxAmountChanged(item);
     }
 
     private void OnClickedProductionModule(ProductionModule module)

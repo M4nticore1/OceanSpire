@@ -52,6 +52,41 @@ public class ProductionModule : BuildingModule, IElectricible
         ProcessProduce();
     }
 
+    // Overrides
+    protected override void OnInit()
+    {
+        if (produceItem is ProduceResource resource) {
+            producedItem = new ItemInstance(resource.produceItem.ItemData);
+        }
+    }
+
+    protected override void OnDemolish()
+    {
+
+    }
+
+    protected override void OnBuildingStartWorking()
+    {
+        if (isProducting) return;
+
+        StartProducting();
+    }
+
+    protected override void OnBuildingStopWorking()
+    {
+        StopProducting();
+    }
+
+    protected override void OnEnterBuilding(EntityCityNavigator navigator)
+    {
+
+    }
+
+    protected override void OnExitBuilding(EntityCityNavigator navigator)
+    {
+
+    }
+
     public void SetProduceTime(float time)
     {
         currentProductionTime = time;
@@ -79,36 +114,6 @@ public class ProductionModule : BuildingModule, IElectricible
     {
         producedItem.SetAmount(amount);
         OnAmountChanged();
-    }
-
-    // Overrides
-    protected override void OnInit()
-    {
-        if (produceItem is ProduceResource resource) {
-            producedItem = new ItemInstance(resource.produceItem.ItemData);
-        }
-    }
-
-    protected override void OnBuildingStartWorking()
-    {
-        if (isProducting) return;
-
-        StartProducting();
-    }
-
-    protected override void OnBuildingStopWorking()
-    {
-        StopProducting();
-    }
-
-    protected override void OnEnterBuilding(EntityCityNavigator navigator)
-    {
-
-    }
-
-    protected override void OnExitBuilding(EntityCityNavigator navigator)
-    {
-
     }
 
     public float GetElectricityConsumption()

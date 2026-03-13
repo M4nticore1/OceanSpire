@@ -40,11 +40,6 @@ public class BuildingsManager : MonoBehaviour
         EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
         EventBus.onBuildingInited += OnBuildingInited;
         EventBus.onBuildingDemolished += OnBuildingDemolished;
-
-        // Modules
-        EventBus.onBuildingModuleInited += OnBuildingModuleInited;
-        EventBus.onBuildingModuleUpgraded += OnBuildingModuleUpgraded;
-        EventBus.onBuildingModuleDemolished += OnBuildingModuleDemolished;
     }
 
     private void OnDisable()
@@ -53,11 +48,6 @@ public class BuildingsManager : MonoBehaviour
         EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
         EventBus.onBuildingInited -= OnBuildingInited;
         EventBus.onBuildingDemolished -= OnBuildingDemolished;
-
-        // Modules
-        EventBus.onBuildingModuleInited -= OnBuildingModuleInited;
-        EventBus.onBuildingModuleUpgraded -= OnBuildingModuleUpgraded;
-        EventBus.onBuildingModuleDemolished -= OnBuildingModuleDemolished;
     }
 
     // Buildings
@@ -86,71 +76,6 @@ public class BuildingsManager : MonoBehaviour
         UpdateElevatorGroups(building);
         UpdateEmptyBuildingPlacesCount();
         UpdateCityHeight();
-    }
-
-    // Modules
-    private void OnBuildingModuleInited(BuildingModule module)
-    {
-        StorageBuildingModule storage = module as StorageBuildingModule;
-        if (storage) {
-            OnStorageModuleInited(storage);
-        }
-    }
-
-    private void OnBuildingModuleUpgraded(BuildingModule module)
-    {
-        StorageBuildingModule storage = module as StorageBuildingModule;
-        if (storage) {
-            OnStorageModuleUpgraded(storage);
-        }
-    }
-
-    private void OnBuildingModuleDemolished(BuildingModule module)
-    {
-        StorageBuildingModule storage = module as StorageBuildingModule;
-        if (storage) {
-            OnStorageModuleDemolished(storage);
-        }
-    }
-
-    private void OnStorageModuleInited(StorageBuildingModule module)
-    {
-        StorageModuleLevelData levelData = module.LevelData as StorageModuleLevelData;
-        foreach (ItemInstance item in levelData.storageItems) {
-            int id = item.ItemData.ItemId;
-            int amount = item.Amount;
-
-            cityStorage.Inventory.AddItemMaxAmount(id, amount);
-        }
-
-        EventBus.InvokeStorageCapacityChanged();
-    }
-
-    private void OnStorageModuleUpgraded(StorageBuildingModule module)
-    {
-        StorageModuleLevelData currentLevelData = module.LevelData as StorageModuleLevelData;
-        StorageModuleLevelData lastLevelData = module.LevelData as StorageModuleLevelData;
-        foreach (ItemInstance item in currentLevelData.storageItems) {
-            int id = item.ItemData.ItemId;
-            int amount = item.Amount - currentLevelData.storageItems[id].Amount;
-
-            cityStorage.Inventory.AddItemMaxAmount(id, amount);
-        }
-
-        EventBus.InvokeStorageCapacityChanged();
-    }
-
-    private void OnStorageModuleDemolished(StorageBuildingModule module)
-    {
-        StorageModuleLevelData levelData = module.LevelData as StorageModuleLevelData;
-        foreach (ItemInstance item in levelData.storageItems) {
-            int id = item.ItemData.ItemId;
-            int amount = item.Amount;
-
-            cityStorage.Inventory.RemoveItemMaxAmount(id, amount);
-        }
-
-        EventBus.InvokeStorageCapacityChanged();
     }
 
     // Updates

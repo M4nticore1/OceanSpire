@@ -46,6 +46,11 @@ public class FloorFrameModule : BuildingModule
         }
     }
 
+    protected override void OnDemolish()
+    {
+
+    }
+
     protected override void OnBuildingStartWorking()
     {
 

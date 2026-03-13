@@ -7,6 +7,11 @@ public class ResidentalBuildingModule : BuildingModule
 
     }
 
+    protected override void OnDemolish()
+    {
+
+    }
+
     protected override void OnBuildingStartWorking()
     {
 
