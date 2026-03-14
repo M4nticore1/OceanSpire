@@ -16,7 +16,7 @@ public class LootManager : MonoBehaviour
     // Update Time
     private float lastUpdateFrequency = 0f;
     private const float updateFrequency = 0.05f;
-    public const float spawnDistance = 150.0f;
+    public const float spawnDistance = 160.0f;
 
     // Spawn Position
     private const float spawnMaxOffsetYaw = 60.0f;

@@ -197,11 +197,15 @@ public class Boat : MonoBehaviour
     // Clickable
     private void OnSelected()
     {
-        EventBus.InvokeSelectedBoat(this);
+        /// Return it for the context menu
+
+        //EventBus.InvokeSelectedBoat(this);
     }
 
     private void OnDeselected()
     {
-        EventBus.InvokeDeselectedBoat(this);
+        /// Return it for the context menu
+
+        //EventBus.InvokeDeselectedBoat(this);
     }
 }
