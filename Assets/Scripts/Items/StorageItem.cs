@@ -23,7 +23,7 @@ public class StorageItem
     public void AddAmount(int value)
     {
         int amount = value;
-        amount = math.clamp(amount, 0, maxAmount);
+        amount = math.clamp(amount, 0, maxAmount - item.Amount);
         item.AddAmount(amount);
     }
 
