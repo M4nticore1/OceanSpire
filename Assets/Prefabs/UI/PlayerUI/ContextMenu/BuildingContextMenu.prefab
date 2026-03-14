@@ -291,7 +291,7 @@ MonoBehaviour:
   nameTextLocalizer: {fileID: 6880800254914059509}
   layoutGroup: {fileID: 1700612523725060565}
   levelNumberText: {fileID: 1689519342068361122}
-  workersButton: {fileID: 3266328411199804070, guid: 088f930cbd93e204cbcccd5fd976bbd4, type: 3}
-  storageButton: {fileID: 4441541976379722308, guid: cbdf501b2071c0a479ed9164dfe71151, type: 3}
-  upgradeButton: {fileID: 4014331918257748295, guid: 5c613c603f999de43a057ec0540efb2f, type: 3}
-  demolishButton: {fileID: 9153355176284198516, guid: 979d8202d469ee74a9f1828782190613, type: 3}
+  workersButton: {fileID: 7371361145333042753, guid: a1d598385c398534698c91436ec15ef6, type: 3}
+  storageButton: {fileID: 7371361145333042753, guid: 099c180f7d8d03e4ca630b9ddc1ef12c, type: 3}
+  upgradeButton: {fileID: 7371361145333042753, guid: 7021207ad81c2ee4482b9d5b68a3d3fd, type: 3}
+  demolishButton: {fileID: 7371361145333042753, guid: d3e1df81f773d014e934c447533c695e, type: 3}
