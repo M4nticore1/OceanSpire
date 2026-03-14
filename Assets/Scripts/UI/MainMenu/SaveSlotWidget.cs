@@ -35,14 +35,14 @@ public class SaveSlotWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        button.onSelected += InvokeSelected;
-        button.onDeselected += InvokeDeselected;
+        button.onSelected += OnSelected;
+        button.onDeselected += OnDeselected;
     }
 
     private void OnDisable()
     {
-        button.onSelected -= InvokeSelected;
-        button.onDeselected -= InvokeDeselected;
+        button.onSelected -= OnSelected;
+        button.onDeselected -= OnDeselected;
     }
 
     private void Start()
@@ -91,12 +91,16 @@ public class SaveSlotWidget : MonoBehaviour
         loadWorldMenu.SetActive(false);
     }
 
-    private void InvokeSelected()
+    private void OnSelected()
     {
+        if (worldSaveData == null) {
+            button.IsInteractable = false;
+        }
+
         OnSaveSlotSelected?.Invoke(this);
     }
 
-    private void InvokeDeselected()
+    private void OnDeselected()
     {
         OnSaveSlotDeselected?.Invoke(this);
     }
