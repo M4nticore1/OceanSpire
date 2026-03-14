@@ -64,10 +64,10 @@ MonoBehaviour:
   contentGraphics:
   - {fileID: 9002625106314974428}
   - {fileID: 6505568468667692236}
-  scaleRoot: {fileID: 0}
+  scaleRoot: {fileID: 6686591089564819408}
   isInteractable: 1
   isSelectable: 0
-  isScalable: 0
+  isScalable: 1
   deselectOnOutsideClick: 0
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
@@ -101,7 +101,7 @@ MonoBehaviour:
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 0.4}
     contentColorHolder: {fileID: 0}
-    scale: 0.95
+    scale: 1
 --- !u!114 &5252278899149896188
 MonoBehaviour:
   m_ObjectHideFlags: 0

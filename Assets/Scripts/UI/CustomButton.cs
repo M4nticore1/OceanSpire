@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.Rendering.DebugUI;
 
-public enum CustomSelectableState
+public enum CustomButtonState
 {
     Idle,
     Hovered,
@@ -43,14 +43,14 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     private float stateTransitionAlpha = 1f;
 
     [Header("States")]
-    [SerializeField] private CustomSelectableState state;
+    [SerializeField] private CustomButtonState state;
     //private CustomSelectableState lastState;
 
-    public bool IsIdle => state == CustomSelectableState.Idle;
-    public bool IsHovered => state == CustomSelectableState.Hovered;
-    public bool IsPressed => state == CustomSelectableState.Pressed;
-    public bool IsSelected => state == CustomSelectableState.Selected;
-    public bool IsEnabled => state != CustomSelectableState.Disabled;
+    public bool IsIdle => state == CustomButtonState.Idle;
+    public bool IsHovered => state == CustomButtonState.Hovered;
+    public bool IsPressed => state == CustomButtonState.Pressed;
+    public bool IsSelected => state == CustomButtonState.Selected;
+    public bool IsEnabled => state != CustomButtonState.Disabled;
     public bool isAnimating { get; private set; } = false;
     private bool isPointerHovered => PointerUtils.IsUIHovered(gameObject);
 
@@ -129,7 +129,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         //SetStateTransitionAlpha(1f);
 
         if (IsEnabled && (!IsSelectable || deselectOnOutsideClick)) {
-            SetState(CustomSelectableState.Idle);
+            SetState(CustomButtonState.Idle);
         }
 
         FinishTransitionAnimation();
@@ -153,7 +153,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
 
         if (IsPressed && pressedButtonPosition != transform.position) {
-            SetState(CustomSelectableState.Idle);
+            SetState(CustomButtonState.Idle);
         }
     }
 
@@ -205,7 +205,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!IsInteractable) return;
 
         if (!IsSelected)
-            SetState(CustomSelectableState.Hovered);
+            SetState(CustomButtonState.Hovered);
     }
 
     private void Hover()
@@ -222,7 +222,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!IsInteractable) return;
 
         if (!IsSelected)
-            SetState(CustomSelectableState.Idle);
+            SetState(CustomButtonState.Idle);
     }
 
     private void Unhover()
@@ -238,7 +238,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (IsPressed) return;
         if (!IsHovered) return;
 
-        SetState(CustomSelectableState.Pressed);
+        SetState(CustomButtonState.Pressed);
     }
 
     private void Press()
@@ -259,9 +259,9 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         if (IsPressed) {
             if (IsSelectable)
-                SetState(CustomSelectableState.Selected);
+                SetState(CustomButtonState.Selected);
             else
-                SetState(CustomSelectableState.Hovered);
+                SetState(CustomButtonState.Hovered);
 
             Release();
         }
@@ -269,9 +269,9 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
             GameObject go = PointerUtils.GetRaycastUIResult().gameObject;
             CustomButton selectable = go ? go.GetComponent<CustomButton>() : null;
             if (selectable && (selectable.selectableGroupIndex == selectableGroupIndex || selectableGroupIndex < 0) && !deselectOnOutsideClick)
-                SetState(CustomSelectableState.Idle);
+                SetState(CustomButtonState.Idle);
             else if (deselectOnOutsideClick && !selectable)
-                SetState(CustomSelectableState.Idle);
+                SetState(CustomButtonState.Idle);
         }
     }
 
@@ -296,7 +296,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
 
     // Set State
-    public void SetState(CustomSelectableState newState)
+    public void SetState(CustomButtonState newState)
     {
         if (newState == state) return;
         if (!IsInteractable) return;
@@ -307,37 +307,37 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         OnStateChange();
     }
 
-    private void ExitState(CustomSelectableState state)
+    private void ExitState(CustomButtonState state)
     {
         switch (state) {
-            case CustomSelectableState.Hovered:
+            case CustomButtonState.Hovered:
                 Unhover();
                 break;
-            case CustomSelectableState.Selected:
+            case CustomButtonState.Selected:
                 Deselect();
                 break;
-            case CustomSelectableState.Disabled:
+            case CustomButtonState.Disabled:
                 Enable();
                 break;
         }
     }
 
-    private void EnterState(CustomSelectableState state)
+    private void EnterState(CustomButtonState state)
     {
         switch (state) {
-            case CustomSelectableState.Idle:
+            case CustomButtonState.Idle:
                 Idle();
                 break;
-            case CustomSelectableState.Hovered:
+            case CustomButtonState.Hovered:
                 Hover();
                 break;
-            case CustomSelectableState.Pressed:
+            case CustomButtonState.Pressed:
                 Press();
                 break;
-            case CustomSelectableState.Selected:
+            case CustomButtonState.Selected:
                 Select();
                 break;
-            case CustomSelectableState.Disabled:
+            case CustomButtonState.Disabled:
                 Disable();
                 break;
         }
@@ -355,7 +355,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (selectable.selectableGroupIndex != selectableGroupIndex) return;
 
         if (selectable.IsSelected && !IsIdle)
-            SetState(CustomSelectableState.Idle);
+            SetState(CustomButtonState.Idle);
     }
 
     // Interaction

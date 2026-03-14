@@ -55,6 +55,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c8ece6258c6b964ab2d09c56e7af0c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DemolishActionMenu
+  inputStateManager: {fileID: 0}
   resourceWidgetPrefab: {fileID: 5555003485712965333, guid: 9d3feffcad0e637408bef2ff4d7db94d, type: 3}
   buildingNameTextLocalizer: {fileID: 8783513543197835488}
   actionButton: {fileID: 7227468484343476130}

@@ -54,7 +54,7 @@ public class ManagementMenuMaster : MonoBehaviour
         constructionMenu.ResetOpenedList();
         storageMenu.ResetOpenedList();
 
-        constructionListsMenuButton.SetState(CustomSelectableState.Selected);
+        constructionListsMenuButton.SetState(CustomButtonState.Selected);
         constructionListsMenuButton.FinishTransitionAnimation();
         storageListsMenuButton.FinishTransitionAnimation();
     }
@@ -67,7 +67,7 @@ public class ManagementMenuMaster : MonoBehaviour
         constructionMenu.ResetOpenedList();
         storageMenu.ResetOpenedList();
 
-        storageListsMenuButton.SetState(CustomSelectableState.Selected);
+        storageListsMenuButton.SetState(CustomButtonState.Selected);
         storageListsMenuButton.FinishTransitionAnimation();
         constructionListsMenuButton.FinishTransitionAnimation();
 

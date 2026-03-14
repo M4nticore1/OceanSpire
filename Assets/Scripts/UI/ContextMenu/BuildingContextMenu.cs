@@ -55,7 +55,7 @@ public class BuildingContextMenu : ContextMenu<Building>
         }
 
         if (spawnedUpgradeButton && !building.NextLevelData) {
-            spawnedUpgradeButton.SetState(CustomSelectableState.Disabled);
+            spawnedUpgradeButton.SetState(CustomButtonState.Disabled);
             spawnedUpgradeButton.FinishTransitionAnimation();
         }
     }

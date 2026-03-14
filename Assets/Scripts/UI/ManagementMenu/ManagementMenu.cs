@@ -55,7 +55,7 @@ public abstract class ManagementMenu : MonoBehaviour
         OpenListByCategory(lastOpenedBuildingsListCategory);
 
         CustomButton newButton = listButtons[lastOpenedBuildingsListCategory];
-        newButton.SetState(CustomSelectableState.Selected);
+        newButton.SetState(CustomButtonState.Selected);
 
         lastButton.FinishTransitionAnimation();
         newButton.FinishTransitionAnimation();

@@ -93,9 +93,9 @@ public class BuildingWidget : MonoBehaviour
         }
 
         if (enoughResources)
-            buildButton.SetState(CustomSelectableState.Idle);
+            buildButton.SetState(CustomButtonState.Idle);
         else
-            buildButton.SetState(CustomSelectableState.Disabled);
+            buildButton.SetState(CustomButtonState.Disabled);
 
         buildButton.FinishTransitionAnimation();
     }

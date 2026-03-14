@@ -12,6 +12,8 @@ public class WorldEntry
 
 public class SaveSlotWidget : MonoBehaviour
 {
+    [SerializeField] private CreateNewWorldMenu createNewWorldMenu;
+
     public WorldData worldSaveData { get; private set; } = null;
     [SerializeField] private int slotIndex = 0;
     [SerializeField] private CustomButton button;
@@ -24,25 +26,19 @@ public class SaveSlotWidget : MonoBehaviour
     [SerializeField] private TextMeshProUGUI lastSaveDataText;
     [SerializeField] private Image worldThumbImage;
 
-    //[Header("Background")]
-    //[SerializeField] private Image background;
-    //[SerializeField] Color selectedColor;
-    //[SerializeField] Color desellectedColor;
-    private bool isSelected = false;
-
-    public static event System.Action<SaveSlotWidget> OnSaveSlotSelected;
+    public static event System.Action<SaveSlotWidget> onSaveSlotSelected;
     public static event System.Action<SaveSlotWidget> OnSaveSlotDeselected;
 
     private void OnEnable()
     {
-        button.onSelected += OnSelected;
-        button.onDeselected += OnDeselected;
+        button.onReleased += OnReleased;
+        createNewWorldMenu.onClosed += OnCreateMenuClosed;
     }
 
     private void OnDisable()
     {
-        button.onSelected -= OnSelected;
-        button.onDeselected -= OnDeselected;
+        button.onReleased -= OnReleased;
+        createNewWorldMenu.onClosed -= OnCreateMenuClosed;
     }
 
     private void Start()
@@ -91,17 +87,20 @@ public class SaveSlotWidget : MonoBehaviour
         loadWorldMenu.SetActive(false);
     }
 
-    private void OnSelected()
+    private void OnReleased()
     {
         if (worldSaveData == null) {
             button.IsInteractable = false;
         }
 
-        OnSaveSlotSelected?.Invoke(this);
+        createNewWorldMenu.Open();
+
+        onSaveSlotSelected?.Invoke(this);
     }
 
-    private void OnDeselected()
+    private void OnCreateMenuClosed()
     {
-        OnSaveSlotDeselected?.Invoke(this);
+        button.IsInteractable = true;
+        button.SetState(CustomButtonState.Idle);
     }
 }

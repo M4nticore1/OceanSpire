@@ -44,10 +44,6 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 4281479730
       objectReference: {fileID: 0}
-    - target: {fileID: 7227468484343476130, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
-      propertyPath: isScalable
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8550449342099335763, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
       propertyPath: m_text
       value: Demolish building
