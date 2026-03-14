@@ -20,7 +20,7 @@ public class PlayerInputHandler : MonoBehaviour
     public InputAction cameraMoveIA { get; private set; } = null;
     private InputAction cameraZoomIA = null;
 
-    public Vector2 ñameraMoveInput => cameraMoveIA.ReadValue<Vector2>();
+    public Vector2 CameraMoveInput => cameraMoveIA.ReadValue<Vector2>();
 
     // Primary Interaction Delta
     public Vector2 primaryInteractionStartPosition { get; private set; } = Vector2.zero;

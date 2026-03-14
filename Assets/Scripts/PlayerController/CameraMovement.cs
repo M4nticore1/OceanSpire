@@ -26,7 +26,7 @@ public class CameraMovement : MonoBehaviour
     // Apply Velocity
     private void ApplyMoveVelocity()
     {
-        cameraMoveVelocity = playerInputHandler.сameraMoveInput.sqrMagnitude > 0 ? playerInputHandler.сameraMoveInput : Vector2.Lerp(cameraMoveVelocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+        cameraMoveVelocity = playerInputHandler.CameraMoveInput.sqrMagnitude > 0 ? playerInputHandler.CameraMoveInput : Vector2.Lerp(cameraMoveVelocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
     }
 
     // Vertical Move
@@ -45,6 +45,8 @@ public class CameraMovement : MonoBehaviour
     // Return Vertical Position
     private void ReturnVerticalPosition()
     {
+        if (playerInputHandler.cameraMoveIA.IsPressed()) return;
+
         Vector3 cameraPosition = transform.position;
         float targetHeight = transform.position.y > buildingsManager.currentCityHeight ? buildingsManager.currentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
 
@@ -54,6 +56,8 @@ public class CameraMovement : MonoBehaviour
     private void ApplyMove()
     {
         transform.position += new Vector3(0, cameraMoveVelocity.y, 0) * GetVerticalMoveMultiplier() * Time.deltaTime;
+        transform.position = new Vector3(transform.position.x, math.clamp(transform.position.y, -cameraVerticalBoundaryPadding, buildingsManager.currentCityHeight + cameraVerticalBoundaryPadding), transform.position.z);
+
         Vector3 eulers = transform.eulerAngles;
         eulers.y += cameraMoveVelocity.x * Time.deltaTime;
         transform.eulerAngles = eulers;
