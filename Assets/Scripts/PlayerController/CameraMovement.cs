@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    [SerializeField] private InputStateManager inputStateManager;
     [SerializeField] private BuildingsManager buildingsManager;
     [SerializeField] private PlayerInputHandler playerInputHandler;
 
@@ -17,19 +18,28 @@ public class CameraMovement : MonoBehaviour
 
     public void Tick()
     {
-        ApplyMoveVelocity();
+        if (playerInputHandler.CameraMoveInput.sqrMagnitude > 0 && !inputStateManager.isGameplayInputBlocked) {
+            ApplyVelocity();
+        }
+        else {
+            ReturnVelocity();
+        }
         ReturnVerticalPosition();
         ApplyMove();
         ApplySquareMove();
     }
 
-    // Apply Velocity
-    private void ApplyMoveVelocity()
+    // Velocity
+    private void ApplyVelocity()
     {
-        cameraMoveVelocity = playerInputHandler.CameraMoveInput.sqrMagnitude > 0 ? playerInputHandler.CameraMoveInput : Vector2.Lerp(cameraMoveVelocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+        cameraMoveVelocity = playerInputHandler.CameraMoveInput * GetVerticalMoveMultiplier();
     }
 
-    // Vertical Move
+    private void ReturnVelocity()
+    {
+        cameraMoveVelocity = Vector2.Lerp(cameraMoveVelocity, Vector2.zero, cameraStopMoveSpeed * Time.deltaTime);
+    }
+
     private float GetVerticalMoveMultiplier()
     {
         float multiplier = 1f;
@@ -55,7 +65,7 @@ public class CameraMovement : MonoBehaviour
 
     private void ApplyMove()
     {
-        transform.position += new Vector3(0, cameraMoveVelocity.y, 0) * GetVerticalMoveMultiplier() * Time.deltaTime;
+        transform.position += new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime;
         transform.position = new Vector3(transform.position.x, math.clamp(transform.position.y, -cameraVerticalBoundaryPadding, buildingsManager.currentCityHeight + cameraVerticalBoundaryPadding), transform.position.z);
 
         Vector3 eulers = transform.eulerAngles;

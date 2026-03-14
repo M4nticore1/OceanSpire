@@ -1191,6 +1191,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 40920799}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &319148579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 319148580}
+  - component: {fileID: 319148581}
+  m_Layer: 0
+  m_Name: InputStateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &319148580
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319148579}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &319148581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319148579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb7c5815aa4f0574192380e81d4f6f12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputState
 --- !u!1001 &320546682
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1518,9 +1562,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1388613268}
     - target: {fileID: 2411408065692301716, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: inputState
+      value: 
+      objectReference: {fileID: 319148581}
+    - target: {fileID: 2411408065692301716, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: buildingsManager
       value: 
       objectReference: {fileID: 455753200}
+    - target: {fileID: 2411408065692301716, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: inputStateManager
+      value: 
+      objectReference: {fileID: 319148581}
     - target: {fileID: 3364798657196465612, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_BackGroundColor.a
       value: 1
@@ -1537,6 +1589,14 @@ PrefabInstance:
       propertyPath: m_BackGroundColor.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3830277698611465684, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: inputState
+      value: 
+      objectReference: {fileID: 319148581}
+    - target: {fileID: 3830277698611465684, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: inputStateManager
+      value: 
+      objectReference: {fileID: 319148581}
     - target: {fileID: 5033852795091249114, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_Name
       value: PlayerController
@@ -4113,6 +4173,7 @@ Transform:
   - {fileID: 1428861524}
   - {fileID: 954540109}
   - {fileID: 1591262575}
+  - {fileID: 319148580}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1326211553 stripped
