@@ -24,7 +24,7 @@ public class CustomSelectableStateEntry
     public float scale;
 }
 
-public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandler/*, IInputListenable*/
+public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] public Graphic targetGraphic;
     [SerializeField] public Graphic[] contentGraphics = null;
@@ -37,6 +37,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private bool isScalable = false;
     public bool IsScalable { get { return isScalable; } set { isScalable = value; } }
     [SerializeField] private bool deselectOnOutsideClick = false;
+    [SerializeField] private bool cancelPressWhenMoving = false;
 
     [SerializeField] private int selectableGroupIndex = -1;
     [SerializeField] private float stateTransitionTime = 0.3f;
@@ -44,7 +45,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     [Header("States")]
     [SerializeField] private CustomButtonState state;
-    //private CustomSelectableState lastState;
 
     public bool IsIdle => state == CustomButtonState.Idle;
     public bool IsHovered => state == CustomButtonState.Hovered;
@@ -152,7 +152,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
             ApplyInteractionAlpha();
         }
 
-        if (IsPressed && pressedButtonPosition != transform.position) {
+        if (cancelPressWhenMoving && IsPressed && pressedButtonPosition != transform.position) {
             SetState(CustomButtonState.Idle);
         }
     }

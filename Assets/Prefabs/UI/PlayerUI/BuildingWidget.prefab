@@ -668,6 +668,7 @@ MonoBehaviour:
   isSelectable: 0
   isScalable: 0
   deselectOnOutsideClick: 0
+  cancelPressWhenMoving: 0
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
   state: 0
@@ -888,6 +889,7 @@ MonoBehaviour:
   isSelectable: 0
   isScalable: 1
   deselectOnOutsideClick: 0
+  cancelPressWhenMoving: 1
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
   state: 0
