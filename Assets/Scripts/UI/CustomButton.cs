@@ -40,7 +40,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private bool cancelPressWhenMoving = false;
 
     [SerializeField] private int selectableGroupIndex = -1;
-    [SerializeField] private float stateTransitionTime = 0.3f;
+    [SerializeField] private float stateTransitionTime = 0.2f;
     private float stateTransitionAlpha = 1f;
 
     [Header("States")]
