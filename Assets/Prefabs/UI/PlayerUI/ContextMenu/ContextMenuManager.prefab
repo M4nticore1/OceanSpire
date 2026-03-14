@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3378704894391531109}
-  - component: {fileID: 6662979433990621393}
+  - component: {fileID: 2782842027470913245}
   - component: {fileID: 8176289903271446193}
   m_Layer: 5
   m_Name: ContextMenuManager
@@ -38,7 +38,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1080, y: 650}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &6662979433990621393
+--- !u!114 &2782842027470913245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,15 +47,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1458124863228298568}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ff70926e8352c442b88dbb0f731e877, type: 3}
+  m_Script: {fileID: 11500000, guid: 94a937834bb490e499efe68b1a0fbd18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ContextMenuMaster
   slidePanel: {fileID: 8176289903271446193}
   contextMenuRoot: {fileID: 5125527298814516783}
   buildingContextMenu: {fileID: 265913792992382129, guid: 7b4257f477bce9341aca15da9cba1648, type: 3}
-  productionBuildingContextMenu: {fileID: 3786198877056170919, guid: 66417ffe2690f6c4eabb9cb07a4ac468, type: 3}
-  storageBuildingContextMenu: {fileID: 5206499964075476132, guid: 840c4e44872410542be2295169c79dcc, type: 3}
-  pierBuildingContextMenu: {fileID: 5304155448308866958, guid: aa1e74945d1e40348b67cff57930ccb5, type: 3}
   boatContextMenu: {fileID: 3594027615257554973, guid: 0f3c911bde22690478a852229167781f, type: 3}
 --- !u!114 &8176289903271446193
 MonoBehaviour:

@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ContextMenuManager : UIBehaviour
+public class ContextMenuMaster : UIBehaviour
 {
     [SerializeField] private SlidePanel slidePanel = null;
     [SerializeField] private Transform contextMenuRoot = null;
-    private ContextMenuBase currentContextMenu = null;
+    private ContextMenu spawnedContextMenu = null;
 
     [SerializeField] private BuildingContextMenu buildingContextMenu = null;
     [SerializeField] private BoatContextMenu boatContextMenu = null;
@@ -55,7 +55,8 @@ public class ContextMenuManager : UIBehaviour
     {
         SelectComponent selectComponent = clicked?.GetComponent<SelectComponent>();
 
-        if (selectComponent && selectComponent.isSelected) return;
+        if (selectComponent && selectComponent.isSelected)
+            return;
 
         Close();
     }
@@ -63,10 +64,12 @@ public class ContextMenuManager : UIBehaviour
     protected void OnBuildingDemolished(Building building)
     {
         SelectComponent selectComponent = SelectManager.Instance.selectedComponent;
-        if (!selectComponent) return;
+        if (!selectComponent)
+            return;
 
         Building selectedBuilding = selectComponent.GetComponent<Building>();
-        if (selectedBuilding != building) return;
+        if (selectedBuilding != building)
+            return;
 
         Close();
     }
@@ -79,11 +82,11 @@ public class ContextMenuManager : UIBehaviour
             return;
         }
 
-        if (currentContextMenu) {
+        if (spawnedContextMenu) {
             DestroyCurrentContextMenu();
         }
 
-        currentContextMenu = ContextMenuFactory.CreateContextMenu(buildingContextMenu, building, contextMenuRoot);
+        spawnedContextMenu = ContextMenuFactory.CreateContextMenu(buildingContextMenu, building, contextMenuRoot);
         Open();
 
         currentSelectedObject = building.gameObject;
@@ -91,7 +94,8 @@ public class ContextMenuManager : UIBehaviour
 
     private void OnDeselectedBuilding(Building building)
     {
-        if (building.gameObject != currentSelectedObject) return;
+        if (building.gameObject != currentSelectedObject)
+            return;
 
         Close();
         currentSelectedObject = null;
@@ -105,11 +109,11 @@ public class ContextMenuManager : UIBehaviour
             return;
         }
 
-        if (currentContextMenu) {
+        if (spawnedContextMenu) {
             DestroyCurrentContextMenu();
         }
 
-        currentContextMenu = ContextMenuFactory.CreateContextMenu(boatContextMenu, boat, contextMenuRoot);
+        spawnedContextMenu = ContextMenuFactory.CreateContextMenu(boatContextMenu, boat, contextMenuRoot);
         Open();
 
         currentSelectedObject = boat.gameObject;
@@ -117,7 +121,8 @@ public class ContextMenuManager : UIBehaviour
 
     private void OnDeselectedBoat(Boat boat)
     {
-        if (boat.gameObject != currentSelectedObject) return;
+        if (boat.gameObject != currentSelectedObject)
+            return;
 
         Close();
         currentSelectedObject = null;
@@ -126,9 +131,10 @@ public class ContextMenuManager : UIBehaviour
     // Utins
     private void DestroyCurrentContextMenu()
     {
-        if (!currentContextMenu) return;
+        if (!spawnedContextMenu)
+            return;
 
-        Destroy(currentContextMenu.gameObject);
-        currentContextMenu = null;
+        Destroy(spawnedContextMenu.gameObject);
+        spawnedContextMenu = null;
     }
 }

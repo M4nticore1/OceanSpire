@@ -591,7 +591,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2935036107710263794
 RectTransform:
   m_ObjectHideFlags: 0
@@ -852,7 +852,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.72156864, g: 0.64705884, b: 0.5176471, a: 1}
+  m_Color: {r: 0.82, g: 0.73558825, b: 0.58686274, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -892,19 +892,19 @@ MonoBehaviour:
   stateTransitionTime: 0.3
   state: 0
   idleState:
-    bodyColor: {r: 0.72156864, g: 0.64705884, b: 0.5176471, a: 1}
+    bodyColor: {r: 0.82, g: 0.73558825, b: 0.58686274, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    bodyColor: {r: 0.8, g: 0.7712, b: 0.736, a: 1}
+    bodyColor: {r: 0.87, g: 0.78068, b: 0.6264, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    bodyColor: {r: 0.9019608, g: 0.87058824, b: 0.82980394, a: 1}
+    bodyColor: {r: 0.95, g: 0.85246664, b: 0.684, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}

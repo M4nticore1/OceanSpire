@@ -286,17 +286,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 3594027615257554973}
   m_SourcePrefab: {fileID: 100100000, guid: a7923f54b2255ef43987dcfc4f32cfc8, type: 3}
---- !u!114 &727766870218773142 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1241803172831404628, guid: a7923f54b2255ef43987dcfc4f32cfc8, type: 3}
-  m_PrefabInstance: {fileID: 1955205954406559938}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!224 &4159291711147796747 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2493460042369554889, guid: a7923f54b2255ef43987dcfc4f32cfc8, type: 3}
@@ -324,11 +313,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2f865776dfc3304ca140f89880f2f21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatContextMenu
-  nameText: {fileID: 727766870218773142}
+  nameTextLocalizer: {fileID: 7105429351602581270}
   layoutGroup: {fileID: 0}
   healthText: {fileID: 850652808420368485}
   weightText: {fileID: 0}
   healthDisplay: {fileID: 3687120527834751662}
+--- !u!114 &7105429351602581270 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8771260747679686612, guid: a7923f54b2255ef43987dcfc4f32cfc8, type: 3}
+  m_PrefabInstance: {fileID: 1955205954406559938}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
 --- !u!1001 &2796008133813320915
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -520,7 +520,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6977945387405094826, guid: 979d8202d469ee74a9f1828782190613, type: 3}
       propertyPath: m_fontSize
-      value: 40
+      value: 36.05
       objectReference: {fileID: 0}
     - target: {fileID: 6977945387405094826, guid: 979d8202d469ee74a9f1828782190613, type: 3}
       propertyPath: m_fontSizeBase

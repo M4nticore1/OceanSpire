@@ -3,14 +3,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class ContextMenuBase : UIBehaviour
+public abstract class ContextMenu : UIBehaviour
 {
-    [SerializeField] private TextMeshProUGUI nameText = null;
+    [SerializeField] private TextLocalizer nameTextLocalizer = null;
     [SerializeField] private LayoutGroup layoutGroup = null;
 
-    protected void SetNameText(string name)
+    protected void SetNameLocalization(LocalizationItem localization)
     {
-        nameText.SetText(name);
+        nameTextLocalizer.SetLocalizationItem(localization);
     }
 
     protected GameObject CreatePanel(GameObject panel)
@@ -21,7 +21,7 @@ public abstract class ContextMenuBase : UIBehaviour
     }
 }
 
-public abstract class ContextMenuBase<TData> : ContextMenuBase
+public abstract class ContextMenu<TData> : ContextMenu
 {
     public abstract void Init(TData data);
 }

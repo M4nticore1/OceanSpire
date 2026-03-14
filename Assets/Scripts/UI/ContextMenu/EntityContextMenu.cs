@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EntityContextMenu : ContextMenuBase<Entity>
+public class EntityContextMenu : ContextMenu<Entity>
 {
     public override void Init(Entity entity)
     {

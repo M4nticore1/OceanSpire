@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DemolishActionMenu : BuildingActionMenu
+public class DemolishActionMenu : ActionMenu
 {
     protected override void OnEnable()
     {
@@ -23,7 +23,7 @@ public class DemolishActionMenu : BuildingActionMenu
 
     protected override void CreateWidgets(Building building)
     {
-        ItemInstance[] resourcesToBuild = building.GetResourcesToBuild();
+        ItemInstance[] resourcesToBuild = building.GetResourcesToRefund();
         int resourcesCount = resourcesToBuild.Length;
         spawnedResourceWidgets = new ResourceWidget[resourcesCount];
 

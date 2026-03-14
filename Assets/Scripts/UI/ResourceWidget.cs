@@ -11,6 +11,8 @@ public class ResourceWidget : MonoBehaviour
     private ItemInstance amountItem;
     private ItemInstance maxAmountItem;
 
+    [SerializeField] private bool useCityStorage = false;
+
     [SerializeField] private Image resourceImage;
     [SerializeField] private TextMeshProUGUI resourceAmountText;
     [SerializeField] private Image resourceAmountBar;
@@ -103,8 +105,8 @@ public class ResourceWidget : MonoBehaviour
 
     private bool TryToAssignItem()
     {
-        if (amountItem != null)
-            return false;
+        if (amountItem != null) return false;
+        if (maxAmountItem != null) return false;
 
         SetItem(itemData);
         return true;
@@ -133,6 +135,12 @@ public class ResourceWidget : MonoBehaviour
     private void OnItemSet()
     {
         itemData = amountItem.ItemData;
+
+        if (useCityStorage && maxAmountItem == null) {
+            int id = itemData.ItemId;
+            maxAmountItem = cityStorage.Inventory.itemsDict[id].maxAmountItem;
+        }
+
         Sprite sprite = itemData.ItemIcon;
         SetImage(sprite);
     }
@@ -158,8 +166,13 @@ public class ResourceWidget : MonoBehaviour
 
             int id = amountItem.ItemData.ItemId;
             int amount = amountItem.Amount;
-            int maxAmount = maxAmountItem != null ? maxAmountItem.Amount : cityStorage.Inventory.itemsDict[id].maxAmount;
-            SetAmount(amount, maxAmount);
+            if (maxAmountItem != null){
+                int maxAmount = maxAmountItem != null ? maxAmountItem.Amount : cityStorage.Inventory.itemsDict[id].maxAmount;
+                SetAmount(amount, maxAmount);
+            }
+            else {
+                SetAmount(amount);
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class BuildingContextMenu : ContextMenuBase<Building>
+public class BuildingContextMenu : ContextMenu<Building>
 {
     [SerializeField] private TextMeshProUGUI levelNumberText = null;
 
@@ -37,7 +37,7 @@ public class BuildingContextMenu : ContextMenuBase<Building>
             return;
         }
 
-        SetNameText(building.BuildingData.BuildingName);
+        SetNameLocalization(building.BuildingData.LocalizationItem);
         SetLevelText(building.LevelIndex + 1);
 
         if (building.GetComponent<ProductionModule>() || building.GetComponent<PierModule>()) {

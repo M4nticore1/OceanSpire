@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UpgradeActionMenu : BuildingActionMenu
+public class UpgradeActionMenu : ActionMenu
 {
     protected override void OnEnable()
     {

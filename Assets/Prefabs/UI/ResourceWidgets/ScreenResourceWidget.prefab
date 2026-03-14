@@ -417,9 +417,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 0}
+  useCityStorage: 1
   resourceImage: {fileID: 353891536657977764}
   resourceAmountText: {fileID: 848859100641501343}
   resourceAmountBar: {fileID: 1011011194214973529}
+  useAmountColors: 0
+  enoughAmountColor: {r: 0, g: 1, b: 0, a: 1}
+  notEnoughAmountColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &6915717411578733297
 GameObject:
   m_ObjectHideFlags: 0

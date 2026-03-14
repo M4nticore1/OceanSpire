@@ -71,7 +71,7 @@ public class Boat : MonoBehaviour
 
     public bool isDemolished { get; private set; } = false;
 
-    public ContextMenuBase spawnedDetailsMenu { get; set; }
+    public ContextMenu spawnedDetailsMenu { get; set; }
 
     public static event Action<Boat> OnBoadDestroyed;
 

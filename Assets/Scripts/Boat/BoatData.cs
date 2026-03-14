@@ -14,8 +14,8 @@ public class BoatData : ScriptableObject
     [SerializeField] private string boatIdName = "";
     public string BoatIdName => boatIdName;
 
-    [SerializeField] private string boatName = "";
-    public string BoatName => boatName;
+    [SerializeField] private LocalizationItem nameLocalization;
+    public LocalizationItem NameLocalization => nameLocalization;
 
     //[SerializeField] private int speed = 0;
     //public int Speed => speed;
@@ -25,6 +25,6 @@ public class BoatData : ScriptableObject
     public const float correctDockRotationSpeed = 0.5f;
 
     [Header("UI")]
-    [SerializeField] private ContextMenuBase detailsMenuWidget = null;
-    public ContextMenuBase DetailsMenuWidget => detailsMenuWidget;
+    [SerializeField] private ContextMenu detailsMenuWidget = null;
+    public ContextMenu DetailsMenuWidget => detailsMenuWidget;
 }

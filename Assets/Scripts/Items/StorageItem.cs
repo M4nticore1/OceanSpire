@@ -3,19 +3,21 @@ using UnityEngine;
 
 public class StorageItem
 {
-    public ItemInstance item { get; private set; } = null;
-
-    public int maxAmount { get; private set; } = 0;
+    public ItemInstance item { get; private set; }
+    public int maxAmount { get; private set; }
+    public ItemInstance maxAmountItem { get; private set; }
 
     public StorageItem(ItemInstance item, int maxAmount)
     {
         this.item = item;
         this.maxAmount = maxAmount;
+        maxAmountItem = new ItemInstance(item.ItemData, maxAmount);
     }
 
     public StorageItem(ItemInstance item)
     {
         this.item = item;
+        maxAmountItem = new ItemInstance(item.ItemData);
     }
 
     public void AddAmount(int value)
@@ -33,11 +35,13 @@ public class StorageItem
     public void AddMaxAmount(int value)
     {
         maxAmount += value;
+        maxAmountItem.SetAmount(maxAmount);
     }
 
     public void RemoveMaxAmount(int value)
     {
         maxAmount -= value;
         maxAmount = math.max(0, maxAmount);
+        maxAmountItem.SetAmount(maxAmount);
     }
 }

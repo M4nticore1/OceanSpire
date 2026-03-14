@@ -255,17 +255,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
---- !u!114 &4035085790161019253 stripped
+--- !u!114 &6880800254914059509 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1241803172831404628, guid: a7923f54b2255ef43987dcfc4f32cfc8, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8771260747679686612, guid: a7923f54b2255ef43987dcfc4f32cfc8, type: 3}
   m_PrefabInstance: {fileID: 2793432769556349729}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
 --- !u!224 &8129499126110260072 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6203018197964228681, guid: a7923f54b2255ef43987dcfc4f32cfc8, type: 3}
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacab573082eeae44848d7b5739d751c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingContextMenu
-  nameText: {fileID: 4035085790161019253}
+  nameTextLocalizer: {fileID: 6880800254914059509}
   layoutGroup: {fileID: 1700612523725060565}
   levelNumberText: {fileID: 1689519342068361122}
   workersButton: {fileID: 3266328411199804070, guid: 088f930cbd93e204cbcccd5fd976bbd4, type: 3}

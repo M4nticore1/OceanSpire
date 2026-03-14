@@ -2,7 +2,7 @@ using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class BoatContextMenu : ContextMenuBase<Boat>
+public class BoatContextMenu : ContextMenu<Boat>
 {
     [SerializeField] private TextMeshProUGUI healthText = null;
     [SerializeField] private TextMeshProUGUI weightText = null;
@@ -10,7 +10,7 @@ public class BoatContextMenu : ContextMenuBase<Boat>
 
     public override void Init(Boat boat)
     {
-        SetNameText(boat.BoatData.BoatName);
+        SetNameLocalization(boat.BoatData.NameLocalization);
         SetHealthValue(boat.CurrentHealth, boat.MaxHealth);
         //SetWeight(boat.CurrentWeight, boat.MaxWeight);
 

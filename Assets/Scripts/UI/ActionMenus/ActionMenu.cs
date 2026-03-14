@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class BuildingActionMenu : UIBehaviour
+public abstract class ActionMenu : UIBehaviour
 {
     [SerializeField] protected ResourceWidget resourceWidgetPrefab;
 
@@ -44,6 +44,7 @@ public abstract class BuildingActionMenu : UIBehaviour
 
     protected abstract void OnAction(Building building);
 
+    protected abstract void CreateWidgets(Building building);
     private void Open()
     {
         slidePanel.Open();
@@ -61,20 +62,19 @@ public abstract class BuildingActionMenu : UIBehaviour
         CreateWidgets(building);
     }
 
-    protected abstract void CreateWidgets(Building building);
-
-    protected void CleanWidgets()
-    {
-        if (spawnedResourceWidgets == null) return;
-
-        foreach (var widget in spawnedResourceWidgets) {
-            Destroy(widget);
-        }
-    }
-
     private void Close()
     {
         slidePanel.Close();
+    }
+
+    protected void CleanWidgets()
+    {
+        if (spawnedResourceWidgets == null)
+            return;
+
+        foreach (var widget in spawnedResourceWidgets) {
+            Destroy(widget.gameObject);
+        }
     }
 
     protected void OnContextClickedButton()
