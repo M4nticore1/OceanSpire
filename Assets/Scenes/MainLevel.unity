@@ -1517,10 +1517,18 @@ PrefabInstance:
       propertyPath: cityStorage
       value: 
       objectReference: {fileID: 1388613268}
+    - target: {fileID: 2118399132170861430, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: inputStateManager
+      value: 
+      objectReference: {fileID: 2136275761}
     - target: {fileID: 2411408065692301716, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: buildingsManager
       value: 
       objectReference: {fileID: 455753200}
+    - target: {fileID: 2411408065692301716, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: inputStateManager
+      value: 
+      objectReference: {fileID: 2136275761}
     - target: {fileID: 3364798657196465612, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_BackGroundColor.a
       value: 1
@@ -1537,6 +1545,10 @@ PrefabInstance:
       propertyPath: m_BackGroundColor.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3830277698611465684, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: inputStateManager
+      value: 
+      objectReference: {fileID: 2136275761}
     - target: {fileID: 5033852795091249114, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_Name
       value: PlayerController
@@ -1593,6 +1605,10 @@ PrefabInstance:
       propertyPath: entitiesManager
       value: 
       objectReference: {fileID: 220072952}
+    - target: {fileID: 7649570969502536118, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: inputStateManager
+      value: 
+      objectReference: {fileID: 2136275761}
     - target: {fileID: 8940168967239699050, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_LocalPosition.z
       value: -60
@@ -4113,6 +4129,7 @@ Transform:
   - {fileID: 1428861524}
   - {fileID: 954540109}
   - {fileID: 1591262575}
+  - {fileID: 2136275760}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1326211553 stripped
@@ -5675,6 +5692,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948dda070484eea44ac9c5089a182b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerBuilding
+--- !u!1 &2136275759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2136275760}
+  - component: {fileID: 2136275761}
+  m_Layer: 0
+  m_Name: InputStateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2136275760
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136275759}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2136275761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136275759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cbf83b37b7ae6745ac69cc093b3eca3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputStateManager
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

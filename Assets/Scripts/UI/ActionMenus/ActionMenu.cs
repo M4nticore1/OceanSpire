@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public abstract class ActionMenu : UIBehaviour
 {
+    [SerializeField] private InputStateManager inputStateManager;
     [SerializeField] protected ResourceWidget resourceWidgetPrefab;
 
     [SerializeField] protected TextLocalizer buildingNameTextLocalizer;
@@ -21,6 +22,7 @@ public abstract class ActionMenu : UIBehaviour
 
         actionButton.onReleased += OnClickedActionButton;
         closeButton.onReleased += OnClickedCloseButton;
+        slidePanel.onClosed += OnClose;
     }
 
     protected override void OnDisable()
@@ -29,6 +31,7 @@ public abstract class ActionMenu : UIBehaviour
 
         actionButton.onReleased -= OnClickedActionButton;
         closeButton.onReleased -= OnClickedCloseButton;
+        slidePanel.onClosed -= OnClose;
     }
 
     private void Action()
@@ -45,6 +48,7 @@ public abstract class ActionMenu : UIBehaviour
     protected abstract void OnAction(Building building);
 
     protected abstract void CreateWidgets(Building building);
+
     private void Open()
     {
         slidePanel.Open();
@@ -60,11 +64,19 @@ public abstract class ActionMenu : UIBehaviour
 
         CleanWidgets();
         CreateWidgets(building);
+
+        inputStateManager.SetGameplayInputBlocked(true);
     }
 
     private void Close()
     {
         slidePanel.Close();
+        OnClose();
+    }
+
+    private void OnClose()
+    {
+        inputStateManager.SetGameplayInputBlocked(false);
     }
 
     protected void CleanWidgets()

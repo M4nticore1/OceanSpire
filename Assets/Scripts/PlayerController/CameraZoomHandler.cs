@@ -5,6 +5,7 @@ using UnityEngine.InputSystem.Controls;
 
 public class CameraZoomHandler : MonoBehaviour
 {
+    [SerializeField] private InputStateManager inputStateManager;
     [SerializeField] private PlayerInputHandler inputHandler;
 
     private float currentArmLength = 0f;
@@ -30,7 +31,7 @@ public class CameraZoomHandler : MonoBehaviour
 
     public void Tick()
     {
-        if (inputHandler.isPrimaryInteractionPressed && inputHandler.isSecondaryInteractionPressed) {
+        if (inputHandler.isPrimaryInteractionPressed && inputHandler.isSecondaryInteractionPressed && !inputStateManager.isGameplayInputBlocked) {
             ProcessTouchscreenZoom();
         }
         else {
@@ -44,6 +45,8 @@ public class CameraZoomHandler : MonoBehaviour
 
     public void AddZoomVelocity(float value)
     {
+        if (inputStateManager.isGameplayInputBlocked) return;
+
         float multiplier = 1f;
 
         if (currentArmLength <= minCameraArmLength + nearArmBoundaryPadding && value > 0) {
