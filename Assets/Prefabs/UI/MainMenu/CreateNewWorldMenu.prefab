@@ -343,6 +343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CreateNewWorldMenu
   slidePanel: {fileID: 4906044632388165925}
   inputField: {fileID: 8741177782738639505}
+  keyboardOffsetUI: {fileID: 3060599765947082064}
   createWorldButton: {fileID: 733242751195489888}
   worldNameAlreadyExistsText: {fileID: 6725530704907186964}
 --- !u!1 &3353098327050202022
@@ -1163,6 +1164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KeyboardOffset
   openedPositionOffsetPercent: 0.35
   toggleSpeed: 3
+  isClosable: 0
 --- !u!1001 &1204888665408561245
 PrefabInstance:
   m_ObjectHideFlags: 0

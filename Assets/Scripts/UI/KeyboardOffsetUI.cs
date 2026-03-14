@@ -7,6 +7,7 @@ public class KeyboardOffsetUI : MonoBehaviour
     private RectTransform panel;
     [SerializeField] private float openedPositionOffsetPercent;
     [SerializeField] private float toggleSpeed = 1f;
+    [SerializeField] private bool isClosable = false;
 
     private float moveAlpha = 0f;
     private float startHeight = 0;
@@ -31,8 +32,10 @@ public class KeyboardOffsetUI : MonoBehaviour
                 moveAlpha += toggleSpeed * Time.deltaTime;
                 moveAlpha = math.clamp(moveAlpha, 0f, 1f);
             }
+
+            MoveTo(targetHeight);
         }
-        else {
+        else if (isClosable) {
             if (isOpened) {
                 HandleKeyboardClosed();
             }
@@ -41,9 +44,14 @@ public class KeyboardOffsetUI : MonoBehaviour
                 moveAlpha -= toggleSpeed * Time.deltaTime;
                 moveAlpha = math.clamp(moveAlpha, 0f, 1f);
             }
-        }
 
-        MoveTo(targetHeight);
+            MoveTo(targetHeight);
+        }
+    }
+
+    public void SetClosable(bool value)
+    {
+        isClosable = value;
     }
 
     private void MoveTo(float targetHeight)

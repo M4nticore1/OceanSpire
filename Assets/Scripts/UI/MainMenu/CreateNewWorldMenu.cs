@@ -6,6 +6,7 @@ public class CreateNewWorldMenu : MonoBehaviour
 {
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private TMP_InputField inputField = null;
+    [SerializeField] private KeyboardOffsetUI keyboardOffsetUI = null;
     [SerializeField] private CustomButton createWorldButton = null;
     [SerializeField] private TextMeshProUGUI worldNameAlreadyExistsText = null;
 
@@ -32,6 +33,7 @@ public class CreateNewWorldMenu : MonoBehaviour
 
     public void Open()
     {
+        keyboardOffsetUI.SetClosable(false);
         slidePanel.Open();
 
         inputField.text = "";
@@ -48,6 +50,7 @@ public class CreateNewWorldMenu : MonoBehaviour
 
     private void OnClosed()
     {
+        keyboardOffsetUI.SetClosable(true);
         onClosed?.Invoke();
     }
 
