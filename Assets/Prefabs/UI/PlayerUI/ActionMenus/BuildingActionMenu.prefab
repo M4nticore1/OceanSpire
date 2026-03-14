@@ -899,7 +899,7 @@ MonoBehaviour:
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    bodyColor: {r: 0.9019608, g: 0.81928104, b: 0.6764706, a: 1}
+    bodyColor: {r: 0.95, g: 0.86326087, b: 0.7104348, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}

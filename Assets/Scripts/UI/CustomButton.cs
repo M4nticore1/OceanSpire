@@ -111,8 +111,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         ApplyColor();
         ApplyScale();
 
-        InputListener.Instance.onPressed += OnPress;
-        InputListener.Instance.onReleased += OnRelease;
+        InputListener.Instance.onPressed += OnPointerPressed;
+        InputListener.Instance.onReleased += OnPointerReleased;
         onStateChanged += OnStateChanged;
     }
 
@@ -231,7 +231,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
 
     // Press
-    private void OnPress()
+    private void OnPointerPressed()
     {
         if (!IsEnabled) return;
         if (!IsInteractable) return;
@@ -250,7 +250,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
 
     // Release
-    private void OnRelease()
+    private void OnPointerReleased()
     {
         if (!IsEnabled) return;
         if (!IsInteractable) return;
@@ -262,6 +262,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
                 SetState(CustomSelectableState.Selected);
             else
                 SetState(CustomSelectableState.Hovered);
+
+            Release();
         }
         else if (!IsIdle) {
             GameObject go = PointerUtils.GetRaycastUIResult().gameObject;
@@ -310,9 +312,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         switch (state) {
             case CustomSelectableState.Hovered:
                 Unhover();
-                break;
-            case CustomSelectableState.Pressed:
-                Release();
                 break;
             case CustomSelectableState.Selected:
                 Deselect();
