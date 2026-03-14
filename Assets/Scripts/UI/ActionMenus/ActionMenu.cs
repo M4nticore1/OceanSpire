@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public abstract class ActionMenu : UIBehaviour
 {
-    [SerializeField] private InputStateManager inputStateManager;
     [SerializeField] protected ResourceWidget resourceWidgetPrefab;
 
     [SerializeField] protected TextLocalizer buildingNameTextLocalizer;
@@ -46,7 +45,6 @@ public abstract class ActionMenu : UIBehaviour
     protected abstract void OnAction(Building building);
 
     protected abstract void CreateWidgets(Building building);
-
     private void Open()
     {
         slidePanel.Open();
@@ -62,14 +60,11 @@ public abstract class ActionMenu : UIBehaviour
 
         CleanWidgets();
         CreateWidgets(building);
-
-        inputStateManager.SetGamePlayInputBlocked(true);
     }
 
     private void Close()
     {
         slidePanel.Close();
-        inputStateManager.SetGamePlayInputBlocked(false);
     }
 
     protected void CleanWidgets()

@@ -4,7 +4,6 @@ public class ManagementMenuMaster : MonoBehaviour
 {
     [SerializeField] private ConstructionMenu constructionMenu;
     [SerializeField] private StorageMenu storageMenu;
-    [SerializeField] private InputStateManager inputStateManager;
 
     [SerializeField] private CustomButton openConstructionMenuButton;
     [SerializeField] private CustomButton openStorageMenuButton;
@@ -98,13 +97,11 @@ public class ManagementMenuMaster : MonoBehaviour
     private void Open()
     {
         content.SetActive(true);
-        inputStateManager.SetGamePlayInputBlocked(true);
     }
 
     private void Close()
     {
         content.SetActive(false);
-        inputStateManager.SetGamePlayInputBlocked(false);
     }
 
     // Events
