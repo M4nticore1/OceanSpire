@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public enum CloseMethod
 {
@@ -21,6 +22,8 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     [Header("Slide")]
     [SerializeField] private CloseMethod closeMethod = CloseMethod.Click;
     [SerializeField] private float slideTransitionSpeed = 10f;
+    [SerializeField] RectTransform contentRoot;
+    [SerializeField] private bool hideWhenClosed = false;
 
     [Header("Screen Position")]
     [SerializeField] private Vector2 openedScreenPositionAlpha = new Vector2(0f, 0.5f);
@@ -78,17 +81,6 @@ public class SlidePanel : MonoBehaviour, IInputListenable
             closeButton.onReleased -= Close;
     }
 
-    private void Update()
-    {
-        if (isMoving) {
-            UpdatePosition();
-        }
-
-        if (background) {
-            UpdateBackground();
-        }
-    }
-
     private void Start()
     {
         FillContent();
@@ -98,6 +90,19 @@ public class SlidePanel : MonoBehaviour, IInputListenable
             color.a = 0f;
             background.color = color;
             background.raycastTarget = false;
+        }
+
+        AssignContentRootEnabled();
+    }
+
+    private void Update()
+    {
+        if (isMoving) {
+            ProcessMoving();
+        }
+
+        if (background) {
+            UpdateBackground();
         }
     }
 
@@ -152,6 +157,10 @@ public class SlidePanel : MonoBehaviour, IInputListenable
             content.Add(background.transform);
         }
 
+        if (hideWhenClosed) {
+            SetContentRootEnabled(true);
+        }
+
         isOpened = true;
         isMoving = true;
         onOpened?.Invoke();
@@ -171,13 +180,19 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         onClosed?.Invoke();
     }
 
-    private void UpdatePosition()
+    private void SetMoving(bool value)
+    {
+        isMoving = value;
+        AssignContentRootEnabled();
+    }
+
+    private void ProcessMoving()
     {
         rectTransform.anchoredPosition = math.lerp(rectTransform.anchoredPosition, targetPosition, slideTransitionSpeed * Time.deltaTime);
         rectTransform.anchoredPosition = math.clamp(rectTransform.anchoredPosition, closedPosition, openedPosition);
 
         if (rectTransform.anchoredPosition == targetPosition) {
-            isMoving = false;
+            SetMoving(false);
         }
     }
 
@@ -189,6 +204,21 @@ public class SlidePanel : MonoBehaviour, IInputListenable
         else
             color.a = math.lerp(color.a, 0f, alphaTransitionSpeed * Time.deltaTime);
         background.color = color;
+    }
+
+    private void AssignContentRootEnabled()
+    {
+        if (!isMoving && hideWhenClosed) {
+            SetContentRootEnabled(false);
+        }
+        else {
+            SetContentRootEnabled(true);
+        }
+    }
+
+    private void SetContentRootEnabled(bool value)
+    {
+        contentRoot.gameObject.SetActive(value);
     }
 
     public void SetOpenButton(CustomButton button)

@@ -8,10 +8,10 @@ public abstract class ActionMenu : UIBehaviour
     [SerializeField] private InputStateManager inputStateManager;
     [SerializeField] protected ResourceWidget resourceWidgetPrefab;
 
+    [SerializeField] private SlidePanel slidePanel;
     [SerializeField] protected TextLocalizer buildingNameTextLocalizer;
     [SerializeField] protected CustomButton actionButton;
     [SerializeField] private CustomButton closeButton;
-    [SerializeField] private SlidePanel slidePanel;
     [SerializeField] protected LayoutGroup layoutGroup;
 
     protected ResourceWidget[] spawnedResourceWidgets;

@@ -569,6 +569,8 @@ MonoBehaviour:
   canvas: {fileID: 0}
   closeMethod: 0
   slideTransitionSpeed: 10
+  contentRoot: {fileID: 7448125677151499368}
+  hideWhenClosed: 1
   openedScreenPositionAlpha: {x: 0, y: 0}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: 0, y: 1}

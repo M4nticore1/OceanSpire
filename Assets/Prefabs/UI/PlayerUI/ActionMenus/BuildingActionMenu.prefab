@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9062818367146241980}
   - component: {fileID: 1808260974732220008}
-  - component: {fileID: 1192094551826720665}
   m_Layer: 5
   m_Name: BuildingActionMenu
   m_TagString: Untagged
@@ -60,32 +59,8 @@ MonoBehaviour:
   buildingNameTextLocalizer: {fileID: 8783513543197835488}
   actionButton: {fileID: 7227468484343476130}
   closeButton: {fileID: 82549531270995785}
-  slidePanel: {fileID: 1192094551826720665}
+  slidePanel: {fileID: 0}
   layoutGroup: {fileID: 8444937986197115325}
---- !u!114 &1192094551826720665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2982886189403526349}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 325414fd39671a6468089e7c89d80820, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
-  canvas: {fileID: 0}
-  closeMethod: 1
-  slideTransitionSpeed: 10
-  openedScreenPositionAlpha: {x: 0, y: 0.5}
-  closedScreenPositionAlpha: {x: 0, y: 0}
-  openedPanelPositionAlpha: {x: 0, y: 0.5}
-  closedPanelPositionAlpha: {x: 0, y: 0}
-  background: {fileID: 0}
-  openedBackgroundAlpha: 0.9
-  alphaTransitionSpeed: 10
-  openButton: {fileID: 0}
-  closeButton: {fileID: 0}
 --- !u!1 &3635294919045852486
 GameObject:
   m_ObjectHideFlags: 0
@@ -884,6 +859,7 @@ MonoBehaviour:
   isSelectable: 0
   isScalable: 1
   deselectOnOutsideClick: 0
+  cancelPressWhenMoving: 0
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
   state: 0

@@ -69,6 +69,8 @@ MonoBehaviour:
   canvas: {fileID: 0}
   closeMethod: 2
   slideTransitionSpeed: 10
+  contentRoot: {fileID: 5125527298814516783}
+  hideWhenClosed: 1
   openedScreenPositionAlpha: {x: 0, y: 0}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: 0, y: 1}
@@ -164,7 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5125527298814516783}
   m_Layer: 5
-  m_Name: ContextMenuesPanel
+  m_Name: ContextMenusPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
