@@ -242,6 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ab87e87971add4587eb52d36bef452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraZoomHandler
+  inputStateManager: {fileID: 0}
   inputHandler: {fileID: 4970948048436698858}
 --- !u!1 &6578836305546048190
 GameObject:
@@ -367,6 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ac4eccb0d23e24f9cf6614b6f5575e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraHolderMovement
+  inputStateManager: {fileID: 0}
   buildingsManager: {fileID: 0}
   playerInputHandler: {fileID: 4970948048436698858}
 --- !u!1001 &8513133735699425000

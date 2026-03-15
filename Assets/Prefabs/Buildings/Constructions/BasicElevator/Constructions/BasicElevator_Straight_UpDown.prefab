@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2576698104072742168}
   - component: {fileID: -6582305650955945222}
   - component: {fileID: 5115901355997311680}
+  - component: {fileID: 967416136021405110}
   m_Layer: 0
   m_Name: BasicElevator_Straight_UpDown
   m_TagString: Untagged
@@ -48,7 +49,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingInteriors: []
   buildingInteractions: []
-  collectItemPoints: []
 --- !u!64 &5115901355997311680
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -71,6 +71,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -693322757280474607, guid: 6a4417257066f08469c56e71187d1701, type: 3}
+--- !u!114 &967416136021405110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948506293721641794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d511cb8398f1b43b37bcc206dccbfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GPUInstancingEnabler
 --- !u!1001 &3836061435463042157
 PrefabInstance:
   m_ObjectHideFlags: 0

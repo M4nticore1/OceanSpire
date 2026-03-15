@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2576698104072742168}
   - component: {fileID: 9121983844208753504}
+  - component: {fileID: 1898812389501480598}
   m_Layer: 0
   m_Name: BasicElevator_Straight_Cabin
   m_TagString: Untagged
@@ -48,11 +49,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingInteriors: []
   buildingInteractions: []
-  collectItemPoints: []
   goingForWaitingPassengers: []
   waitingPassengers: []
   goingToRidingPassengers: []
   ridingPassengers: []
+--- !u!114 &1898812389501480598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948506293721641794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d511cb8398f1b43b37bcc206dccbfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GPUInstancingEnabler
 --- !u!1 &2684884930954807891
 GameObject:
   m_ObjectHideFlags: 0

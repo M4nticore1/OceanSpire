@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2576698104072742168}
   - component: {fileID: 5195973711087995694}
   - component: {fileID: 5053653703461319834}
+  - component: {fileID: -3203137257064698915}
   m_Layer: 0
   m_Name: BasicElevator_Corner_UpDown
   m_TagString: Untagged
@@ -55,7 +56,6 @@ MonoBehaviour:
   - waypoints:
     - transform: {fileID: 5258934545114267088}
       actionTime: 0
-  collectItemPoints: []
 --- !u!64 &5053653703461319834
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -78,6 +78,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1814040084447423840, guid: 63facf2b6948dbd40b9ede585769a774, type: 3}
+--- !u!114 &-3203137257064698915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948506293721641794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d511cb8398f1b43b37bcc206dccbfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GPUInstancingEnabler
 --- !u!1 &2341488845650062798
 GameObject:
   m_ObjectHideFlags: 0

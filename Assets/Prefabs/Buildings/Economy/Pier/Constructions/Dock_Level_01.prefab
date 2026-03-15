@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 855860074276835488}
   - component: {fileID: 1914733326926101518}
   - component: {fileID: 5404784124484414360}
+  - component: {fileID: 882474327006222619}
   m_Layer: 0
   m_Name: Dock_Level_01
   m_TagString: Untagged
@@ -131,7 +132,6 @@ MonoBehaviour:
   - waypoints:
     - transform: {fileID: 3640894468142696217}
       actionTime: 0
-  collectItemPoints: []
   boatDocks:
   - {fileID: 1540540025129336834}
 --- !u!64 &5404784124484414360
@@ -156,6 +156,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8686542714077158728, guid: ac96f6580f535ff47968a04636e83d83, type: 3}
+--- !u!114 &882474327006222619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7744920326237737537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d511cb8398f1b43b37bcc206dccbfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GPUInstancingEnabler
 --- !u!1001 &5232664665122665410
 PrefabInstance:
   m_ObjectHideFlags: 0

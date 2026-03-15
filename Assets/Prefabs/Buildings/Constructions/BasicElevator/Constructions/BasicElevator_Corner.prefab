@@ -48,7 +48,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingInteriors: []
   buildingInteractions: []
-  collectItemPoints: []
 --- !u!64 &5091475841039188524
 MeshCollider:
   m_ObjectHideFlags: 0

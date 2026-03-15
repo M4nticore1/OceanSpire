@@ -6,10 +6,13 @@ public class GPUInstancingEnabler : MonoBehaviour
     {
         MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
         MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
-        if (!meshRenderer)
-            meshRenderer = GetComponentInChildren<MeshRenderer>();
 
-        if (meshRenderer)
+        if (!meshRenderer) {
+            meshRenderer = GetComponentInChildren<MeshRenderer>();
+        }
+
+        if (meshRenderer) {
             meshRenderer.SetPropertyBlock(propertyBlock);
+        }
     }
 }
