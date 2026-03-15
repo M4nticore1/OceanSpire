@@ -4787,6 +4787,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DemolishActionMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 3801725821900173409, guid: 4be5837a1f3a7f643be9d352349a77b7, type: 3}
+      propertyPath: slidePanel
+      value: 
+      objectReference: {fileID: 8338478918496471150}
     - target: {fileID: 4418419454188765584, guid: 4be5837a1f3a7f643be9d352349a77b7, type: 3}
       propertyPath: canvas
       value: 
