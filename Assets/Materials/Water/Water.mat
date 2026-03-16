@@ -37,6 +37,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _SampleTexture2D_24432df4d8ba45c3a624f3f7af1b505c_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 576ec6a007392d4438fe9c829cd4d7e3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_5190de62e57c494783bb733761734aa1_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 576ec6a007392d4438fe9c829cd4d7e3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -53,13 +61,13 @@ Material:
     m_Floats:
     - _BlendPower: 0
     - _CausticsAngleOffset: 5
-    - _CausticsDensity: 0.12
+    - _CausticsDensity: 0.05
     - _CausticsDirection: 270
     - _CausticsHighStep: -0.97
     - _CausticsLowStep: 0.28
     - _CausticsPower: 1.7
-    - _CausticsRadius: 48
-    - _CausticsRadiusSoftness: 38
+    - _CausticsRadius: 50
+    - _CausticsRadiusSoftness: 28
     - _CausticsSharpness: 4
     - _CausticsSpeed: 0.1
     - _CausticsTiling: 0.16
@@ -109,12 +117,12 @@ Material:
     - _DeepColor: {r: 0.26039216, g: 0.5962251, b: 0.6509804, a: 1}
     - _EdgeFoamColor: {r: 0.6, g: 0.7, b: 0.8, a: 1}
     - _FirstColor: {r: 0, g: 0.33720446, b: 1, a: 0}
-    - _FirstFlowDirection: {r: 1, g: 0.1, b: 0, a: 0}
+    - _FirstFlowDirection: {r: 1, g: 0, b: 0, a: 0}
     - _ObjectColorValue: {r: 0, g: 0, b: 0, a: 0}
     - _RefractionScale: {r: 100, g: 100, b: 0, a: 0}
     - _RipplesColor: {r: 0.30901957, g: 0.5656161, b: 0.77254903, a: 1}
     - _SecondColor: {r: 1, g: 1, b: 1, a: 0}
-    - _SecondFlowDirection: {r: 0.5, g: 1, b: 0, a: 0}
+    - _SecondFlowDirection: {r: 0, g: 1, b: 0, a: 0}
     - _ShallowColor: {r: 0.11, g: 0.4619999, b: 0.55, a: 0}
     - _ShoalColor: {r: 0, g: 0.6431373, b: 0.6431373, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}

@@ -208,7 +208,9 @@ public class SlidePanel : MonoBehaviour, IInputListenable
 
     private void AssignContentRootEnabled()
     {
-        if (!isMoving && hideWhenClosed) {
+        if (!hideWhenClosed) return;
+
+        if (!isMoving) {
             SetContentRootEnabled(false);
         }
         else {

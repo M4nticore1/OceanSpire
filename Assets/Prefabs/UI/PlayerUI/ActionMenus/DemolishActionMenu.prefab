@@ -22,10 +22,6 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 40
       objectReference: {fileID: 0}
-    - target: {fileID: 1819448164406779124, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -120
-      objectReference: {fileID: 0}
     - target: {fileID: 2982886189403526349, guid: bf6b1c3ab4dbf1641ad8af747045d225, type: 3}
       propertyPath: m_Name
       value: DemolishActionMenu

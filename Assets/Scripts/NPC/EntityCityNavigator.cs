@@ -286,43 +286,62 @@ public class EntityCityNavigator : MonoBehaviour
     // Follow Path
     public void UpdateFollowingPathState()
     {
-        if (!HasPath)
-            return;
+        FollowingPathState state = FollowingPathState.GoingToWaiting;
 
-        if (currentElevator) {
-            if (currentPathElevator) {
-                if (currentPathElevator.OwnedTowerBuilding.NetworkWith(currentElevator.OwnedTowerBuilding)) {
-                    if (IsRidingOnElevator && !currentElevator.spawnedElevatorCabin.CanMoveToFloor((currentPathBuilding as TowerBuilding).floorIndex)) {
-                        SetState(FollowingPathState.GoingToWaiting);
-                    }
-                    else if (!IsRidingOnElevator) {
-                        if (currentElevator.IsPossibleToEnter()) {
-                            SetState(FollowingPathState.GoingToRiding);
-                        }
-                        else {
-                            SetState(FollowingPathState.GoingToWaiting);
-                        }
-                    }
-                }
-                else {
-                    if (currentPathElevator.OwnedTowerBuilding.floorIndex == currentElevator.OwnedTowerBuilding.floorIndex) {
-                        SetState(FollowingPathState.FollowingPath);
-                    }
-                    else {
-                        SetState(FollowingPathState.GoingToWaiting);
-                    }
-                }
-            }
-            else if (currentPathBuilding) {
-                SetState(FollowingPathState.FollowingPath);
-            }
-            else {
-                SetState(FollowingPathState.GoingToWaiting);
-            }
-        }
-        else if (currentPathBuilding) {
+        if (!HasPath) return;
+
+        if (ShouldFollowPath()) {
             SetState(FollowingPathState.FollowingPath);
         }
+        else if (ShouldGoToWaiting()) {
+
+        }
+
+        //if (currentElevator) {
+        //    if (currentPathElevator) {
+        //        if (currentPathElevator.OwnedTowerBuilding.NetworkWith(currentElevator.OwnedTowerBuilding)) {
+        //            if (IsRidingOnElevator &&
+        //                !currentElevator.spawnedElevatorCabin.CanMoveToFloor((currentPathBuilding as TowerBuilding).floorIndex)) {
+        //                state = FollowingPathState.GoingToWaiting;
+        //            }
+        //            else if (!IsRidingOnElevator) {
+        //                if (currentElevator.IsPossibleToEnter())
+        //                    state = FollowingPathState.GoingToRiding;
+        //                else
+        //                    state = FollowingPathState.GoingToWaiting;
+        //            }
+        //        }
+        //        else {
+        //            if (currentPathElevator.OwnedTowerBuilding.floorIndex ==
+        //                currentElevator.OwnedTowerBuilding.floorIndex) {
+        //                state = FollowingPathState.FollowingPath;
+        //            }
+        //            else {
+        //                state = FollowingPathState.GoingToWaiting;
+        //            }
+        //        }
+        //    }
+        //    else if (currentPathBuilding) {
+        //        state = FollowingPathState.FollowingPath;
+        //    }
+        //}
+        //else if (currentPathBuilding) {
+        //    state = FollowingPathState.FollowingPath;
+        //}
+
+        //SetState(state);
+    }
+
+    private bool ShouldFollowPath()
+    {
+        if (currentElevator && (currentPathBuilding as TowerBuilding).NetworkWith(currentElevator.OwnedTowerBuilding)) return false;
+
+        return true;
+    }
+
+    private bool ShouldGoToWaiting()
+    {
+        return true;
     }
 
     // Elevators

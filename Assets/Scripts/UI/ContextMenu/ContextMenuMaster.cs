@@ -86,8 +86,8 @@ public class ContextMenuMaster : UIBehaviour
             DestroyCurrentContextMenu();
         }
 
-        spawnedContextMenu = ContextMenuFactory.CreateContextMenu(buildingContextMenu, building, contextMenuRoot);
         Open();
+        spawnedContextMenu = ContextMenuFactory.CreateContextMenu(buildingContextMenu, building, contextMenuRoot);
 
         currentSelectedObject = building.gameObject;
     }
