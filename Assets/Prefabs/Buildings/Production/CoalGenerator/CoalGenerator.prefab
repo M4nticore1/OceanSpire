@@ -83,7 +83,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CoalGenerator
   levelsData:
   - {fileID: 11400000, guid: 2b61ec27db2b0eb4481a6d2149707dc7, type: 2}
-  electricityConsumption: 0.1
+  electricityConsumption: 0
   smokePrefab: {fileID: 932927189342864260, guid: 5b46cb6248341f54c8bc5c365bedb7df, type: 3}
 --- !u!114 &3320796776946038933
 MonoBehaviour:

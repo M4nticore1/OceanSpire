@@ -21,14 +21,4 @@ public class TowerGateModule : BuildingModule
     {
 
     }
-
-    protected override void OnEnterBuilding(EntityCityNavigator navigator)
-    {
-
-    }
-
-    protected override void OnExitBuilding(EntityCityNavigator navigator)
-    {
-
-    }
 }

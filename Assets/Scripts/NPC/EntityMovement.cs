@@ -28,9 +28,9 @@ public class EntityMovement : MonoBehaviour
         transform.position += direction * speed;
     }
 
-    public bool MoveTo(Vector3 position)
+    public bool TryMoveTo(Vector3 position)
     {
-        //if (!CanMove()) return false;
+        if (!CanMove()) return false;
 
         agent.isStopped = false;
         isMoving = true;

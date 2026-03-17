@@ -85,14 +85,14 @@ public class EntityInteractor : MonoBehaviour
                 RemoveInteractBuilding();
             }
             else {
-                if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
+                if (selectedBuilding.workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
                     RemoveInteractBuilding();
                     SetInteractBuilding(selectedBuilding);
                 }
             }
         }
         else {
-            if (selectedBuilding.workers.Count < selectedBuilding.ConstructionLevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
+            if (selectedBuilding.workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
                 SetInteractBuilding(selectedBuilding);
             }
         }

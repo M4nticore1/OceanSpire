@@ -39,14 +39,4 @@ public class StorageBuildingModule : BuildingModule
     {
 
     }
-
-    protected override void OnEnterBuilding(EntityCityNavigator navigator)
-    {
-
-    }
-
-    protected override void OnExitBuilding(EntityCityNavigator navigator)
-    {
-
-    }
 }

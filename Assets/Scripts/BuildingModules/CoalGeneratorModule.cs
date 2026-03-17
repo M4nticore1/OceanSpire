@@ -21,26 +21,25 @@ public class CoalGeneratorModule : ProductionModule
         spawnedSmoke.gameObject.SetActive(false);
     }
 
-    protected override void OnStartProducting()
+    protected override void OnBuildingStartWorking()
     {
-        base.OnStartProducting();
+        base.OnBuildingStartWorking();
 
-        TimerManager.RemoveTimer(stopProductingTimerHandle);
-        spawnedSmoke.gameObject.SetActive(true);
-        spawnedSmoke.Play();
-        //SetSmokeColor();
+        StartPlayingSmoke();
     }
 
-    protected override void OnStopProducting()
+    protected override void OnBuildingStopWorking()
     {
-        base.OnStopProducting();
+        base.OnBuildingStartWorking();
+
         StopPlayingSmoke();
     }
 
-    private void SetSmokeColor()
+    private void StartPlayingSmoke()
     {
-        //var main = spawnedSmoke.main;
-        //main.startColor = smokeGradient.Evaluate(producedItem.Amount / producingItem.maxResourceAmount);
+        TimerManager.RemoveTimer(stopProductingTimerHandle);
+        spawnedSmoke.gameObject.SetActive(true);
+        spawnedSmoke.Play();
     }
 
     private void StopPlayingSmoke()

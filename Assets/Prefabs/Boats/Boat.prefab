@@ -195,7 +195,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
   autoCleaning: 0
   isUnlimitedAmount: 1
-  maxWeight: 100
+  isUnlimitedWeight: 0
+  maxWeight: 200
 --- !u!114 &1718763975742808754
 MonoBehaviour:
   m_ObjectHideFlags: 0

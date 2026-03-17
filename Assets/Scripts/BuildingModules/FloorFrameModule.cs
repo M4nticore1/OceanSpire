@@ -19,18 +19,14 @@ public class FloorFrameModule : BuildingModule
 
     public Coroutine bakeNavMeshCoroutine { get; private set; } = null;
 
-    protected override void OnEnable()
+    protected void OnEnable()
     {
-        base.OnEnable();
-
         EventBus.onBuildingInited += OnBuildingInited;
         EventBus.onBuildingDemolished += OnBuildingDemolished;
     }
 
-    protected override void OnDisable()
+    protected void OnDisable()
     {
-        base.OnDisable();
-
         EventBus.onBuildingInited -= OnBuildingInited;
         EventBus.onBuildingDemolished -= OnBuildingDemolished;
     }
@@ -57,16 +53,6 @@ public class FloorFrameModule : BuildingModule
     }
 
     protected override void OnBuildingStopWorking()
-    {
-
-    }
-
-    protected override void OnEnterBuilding(EntityCityNavigator navigator)
-    {
-
-    }
-
-    protected override void OnExitBuilding(EntityCityNavigator navigator)
     {
 
     }

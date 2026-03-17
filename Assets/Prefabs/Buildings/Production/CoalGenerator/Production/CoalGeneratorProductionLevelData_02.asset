@@ -12,9 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ada3316b484b749b58ea57c530f988, type: 3}
   m_Name: CoalGeneratorProductionLevelData_02
   m_EditorClassIdentifier: 
-  produceResource: {fileID: 0}
-  produceResourceAmount: 0
-  consumeResource: {fileID: 0}
-  consumeResourceAmount: 0
-  maxResourceAmount: 0
-  produceTime: 0
+  producedResources: []

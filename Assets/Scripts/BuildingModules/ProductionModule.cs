@@ -1,10 +1,13 @@
 using System.Linq;
 using Unity.Mathematics;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [AddComponentMenu("BuildingComponents/ProductionBuilding")]
-public class ProductionModule : BuildingModule, IElectricible
+public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClickable, IElectricible
 {
+    private CityStorage cityStorage;
+
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
     public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
     public ProduceResource produceItem => ProductionLevelData ? (ProductionLevelData.producedResources.Count > currentProducedItemIndex ? ProductionLevelData.producedResources[currentProducedItemIndex] : null) : null;
@@ -12,33 +15,14 @@ public class ProductionModule : BuildingModule, IElectricible
     protected bool isProducting = false;
     public ItemInstance producedItem { get; private set; } = null;
     public float currentProductionTime { get; private set; } = 0.0f;
-    private bool IsStorageFull => producedItem.Amount >= produceItem.maxAmount;
+    private bool isBuildingStorageFull = false;
 
-    private const float storageReadyToCollectAlpha = 0.5f;
     public bool isReadyToCollect { get; private set; } = false;
 
     public int currentProducedItemIndex { get; private set; } = 0;
-    private const float produceFrequency = 1.0f;
-    private float lastProduceTime = 0.0f;
-
-    public const float collectLootFlickingMultiplier = 0.35f;
 
     [SerializeField] private float electricityConsumption = 0f;
     public float ElectricityConsumption => electricityConsumption;
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        EventBus.onPlayerClicked += OnPlayerClicked;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-
-        EventBus.onPlayerClicked -= OnPlayerClicked;
-    }
 
     private void Start()
     {
@@ -47,14 +31,81 @@ public class ProductionModule : BuildingModule, IElectricible
 
     private void Update()
     {
-        if (!CanProduce()) return;
+        if (!isWorking) return;
 
         ProcessProduce();
+    }
+
+    public void SetProduceTime(float time)
+    {
+        currentProductionTime = time;
+        TryProduceItem();
+    }
+
+    public void CollectItem()
+    {
+        producedItem.SetAmount(0);
+
+        int id = produceItem.produceItem.ItemData.ItemId;
+        int amount = produceItem.produceItem.Amount;
+        cityStorage.Inventory.AddItemAmount(id, amount);
+
+        isBuildingStorageFull = false;
+        ResetProducedTime();
+
+        if (ShouldStartWorking()) {
+            SetWorking(true);
+            SetProducting(true);
+        }
+
+        SetCollectable(false);
+    }
+
+    private void TryProduceItem()
+    {
+        if (currentProductionTime < produceItem.produceTime) return;
+        
+        ProduceItem();
+    }
+
+    private void ProduceItem()
+    {
+        int amount = produceItem.produceItem.Amount;
+        producedItem.SetAmount(amount);
+
+        SetWorking(false);
+        SetCollectable(true);
+        isBuildingStorageFull = true;
+        SetProducting(false);
+    }
+
+    // IClickable
+    public void Click()
+    {
+        CollectItem();
+    }
+
+    public bool CanClick()
+    {
+        return isReadyToCollect;
+    }
+
+    // IElectricible
+    public float GetElectricityConsumption()
+    {
+        return ElectricityConsumption;
+    }
+
+    public bool CanSpendElectricity()
+    {
+        return isWorking;
     }
 
     // Overrides
     protected override void OnInit()
     {
+        cityStorage = FindAnyObjectByType<CityStorage>();
+
         if (produceItem is ProduceResource resource) {
             producedItem = new ItemInstance(resource.produceItem.ItemData);
         }
@@ -67,149 +118,95 @@ public class ProductionModule : BuildingModule, IElectricible
 
     protected override void OnBuildingStartWorking()
     {
-        if (isProducting) return;
+        int id = producedItem.ItemData.ItemId;
+        int amount = producedItem.Amount;
+        cityStorage.Inventory.RemoveItemAmount(id, amount);
 
-        StartProducting();
+        SetProducting(true);
     }
 
     protected override void OnBuildingStopWorking()
     {
-        StopProducting();
-    }
-
-    protected override void OnEnterBuilding(EntityCityNavigator navigator)
-    {
 
     }
 
-    protected override void OnExitBuilding(EntityCityNavigator navigator)
+    public void OnCurrentWorkerAdded(EntityInteractor interactor)
     {
+        if (!ShouldStartWorking()) return;
 
+        SetWorking(true);
     }
 
-    public void SetProduceTime(float time)
+    public void OnCurrentWorkerRemoved(EntityInteractor interactor)
     {
-        currentProductionTime = time;
-        lastProduceTime = Time.time;
+        if (ShouldStartWorking()) return;
 
-        BuildingLevelData buildingLevelData = OwnedBuilding.ConstructionLevelsData[OwnedBuilding.LevelIndex];
-        ProductionModuleLevelData productionBuildingLevelData = levelsData[OwnedBuilding.LevelIndex] as ProductionModuleLevelData;
-
-        float maxProductionTime = produceItem.produceTime * produceItem.maxAmount;
-        float alpha = currentProductionTime / maxProductionTime;
-        int lootAmount = (int)math.lerp(0, produceItem.maxAmount, alpha);
-
-        if (lootAmount > producedItem.Amount) {
-            AddItemAmount(lootAmount);
-        }
-    }
-
-    public void RemoveItemAmount(int amount)
-    {
-        producedItem.RemoveAmount(amount);
-        OnAmountChanged();
-    }
-
-    private void AddItemAmount(int amount)
-    {
-        producedItem.SetAmount(amount);
-        OnAmountChanged();
-    }
-
-    public float GetElectricityConsumption()
-    {
-        return ElectricityConsumption;
-    }
-
-    public bool CanSpendElectricity()
-    {
-        return isProducting;
+        SetWorking(false);
     }
 
     // Production
-    private void StartProducting()
+    private void SetProducting(bool value)
     {
-        isProducting = true;
-        lastProduceTime = Time.time + produceFrequency;
-        OnStartProducting();
+        if (value == isProducting) return;
+
+        isProducting = value;
+        
+        if (isProducting) {
+            SpendConsumeResources();
+        }
     }
 
-    private void StopProducting()
+    private void SpendConsumeResources()
     {
-        if (!isProducting) return;
-
-        isProducting = false;
-        OnStopProducting();
-    }
-
-    protected virtual void OnStartProducting()
-    {
-
-    }
-
-    protected virtual void OnStopProducting()
-    {
-
+        foreach (var resource in produceItem.consumeResources) {
+            int id = resource.ItemData.ItemId;
+            int amount = resource.Amount;
+            cityStorage.Inventory.RemoveItemAmount(id, amount);
+        }
     }
 
     private void ProcessProduce()
     {
-        if (Time.time < lastProduceTime + produceFrequency) return;
-
-        AddProducedTime(produceFrequency);
+        AddProducedTime();
     }
 
-    private bool CanProduce()
+    private void AddProducedTime()
     {
-        if (!isProducting) return false;
-        if (IsStorageFull) return false;
-        if (produceItem == null) return false;
-        if (OwnedBuilding.currentWorkers.Count == 0) return false;
-        return true;
+        SetProduceTime(currentProductionTime += Time.deltaTime);
     }
 
-    private void AddProducedTime(float time)
+    private void ResetProducedTime()
     {
-        SetProduceTime(currentProductionTime + time);
+        SetProduceTime(0f);
     }
 
-    private void OnAmountChanged()
+    private void SetCollectable(bool value)
     {
-        // Producing Time
-        float remainder = currentProductionTime % produceItem.produceTime;
-        float time = producedItem.Amount * produceItem.produceTime + remainder;
-        SetProduceTime(time);
+        isReadyToCollect = value;
+        AssignFlicking();
+    }
 
-        // Flicking
-        float alpha = (float)producedItem.Amount / produceItem.maxAmount;
-
-        if (producedItem.Amount > 0 && (float)producedItem.Amount / produceItem.maxAmount >= storageReadyToCollectAlpha) {
-            if (isReadyToCollect) return;
-
-            isReadyToCollect = true;
-            float multiplier = alpha * collectLootFlickingMultiplier;
-            SetFlickingMultiplier(multiplier);
+    private void AssignFlicking()
+    {
+        if (isReadyToCollect) {
+            SetFlickingPower(1f);
         }
         else {
-            if (!isReadyToCollect) return;
-
-            isReadyToCollect = false;
-            SetFlickingMultiplier(0);
+            SetFlickingPower(0);
         }
     }
 
-    // Take Resources
-    private bool CanTake()
+    private bool ShouldStartWorking()
     {
-        return producedItem.Amount > 0 && produceItem.maxAmount / producedItem.Amount > storageReadyToCollectAlpha;
-    }
+        if (isBuildingStorageFull) return false;
+        if (OwnedBuilding.currentWorkers.Count == 0) return false;
 
-    // Events
-    private void OnPlayerClicked(GameObject clicked)
-    {
-        if (clicked != gameObject) return;
-        if (!CanTake()) return;
+        foreach (var resource in produceItem.consumeResources) {
+            int id = resource.ItemData.ItemId;
+            int amount = resource.Amount;
+            if (cityStorage.Inventory.itemsDict[id].item.Amount < amount) return false;
+        }
 
-        EventBus.InvokeClickedProductionModule(this);
+        return true;
     }
 }

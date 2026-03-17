@@ -12,7 +12,6 @@ public abstract class Building : MonoBehaviour
     protected BuildingsManager buildingsManager;
     protected LevelComponent levelComponent;
     protected SelectComponent selectComponent;
-    private CityStorage cityStorage;
     private BuildingStrategy strategy;
 
     private bool isWorking = false;
@@ -28,9 +27,9 @@ public abstract class Building : MonoBehaviour
     [SerializeField] protected BuildingData buildingData = null;
     public BuildingData BuildingData => buildingData;
     [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
-    public List<BuildingLevelData> ConstructionLevelsData => buildingLevelsData;
-    public BuildingLevelData LevelData => ConstructionLevelsData.Count > LevelIndex ? ConstructionLevelsData[LevelIndex] : null;
-    public BuildingLevelData NextLevelData => ConstructionLevelsData.Count > LevelIndex + 1 ? ConstructionLevelsData[LevelIndex] : null;
+    public List<BuildingLevelData> LevelsData => buildingLevelsData;
+    public BuildingLevelData LevelData => LevelsData.Count > LevelIndex ? LevelsData[LevelIndex] : null;
+    public BuildingLevelData NextLevelData => LevelsData.Count > LevelIndex + 1 ? LevelsData[LevelIndex] : null;
     [SerializeField] private bool isRuined = false;
     public bool IsRuined => isRuined;
 
@@ -108,7 +107,6 @@ public abstract class Building : MonoBehaviour
     private void AssignComponents()
     {
         buildingsManager = FindAnyObjectByType<BuildingsManager>();
-        cityStorage = FindAnyObjectByType<CityStorage>();
         levelComponent = GetComponent<LevelComponent>();
         selectComponent = GetComponent<SelectComponent>();
     }
@@ -119,6 +117,7 @@ public abstract class Building : MonoBehaviour
         enteredEntities.Add(navigator);
         onEntityEnterBuilding?.Invoke(navigator);
         strategy.OnEntityEnter(navigator);
+        InvokeEnterBuilding(navigator);
     }
 
     public void ExitBuilding(EntityCityNavigator navigator)
@@ -126,6 +125,7 @@ public abstract class Building : MonoBehaviour
         enteredEntities.Remove(navigator);
         onEntityExitBuilding?.Invoke(navigator);
         strategy.OnEntityExit(navigator);
+        InvokeExitBuilding(navigator);
     }
 
     public void AddWorker(EntityInteractor interactor)
@@ -148,6 +148,7 @@ public abstract class Building : MonoBehaviour
             StartWorking();
 
         strategy.OnStartInteracting(interactor);
+        InvokeCurrentWorkerAdded(interactor);
     }
 
     public void RemoveCurrentWorker(EntityInteractor interactor)
@@ -158,6 +159,7 @@ public abstract class Building : MonoBehaviour
             StopWorking();
 
         strategy.OnStopInteracting(interactor);
+        InvokeCurrentWorkerRemoved(interactor);
     }
 
     public Transform GetInteractionTransform()
@@ -190,10 +192,39 @@ public abstract class Building : MonoBehaviour
         }
     }
 
+    private void InvokeEnterBuilding(EntityCityNavigator navigator)
+    {
+        foreach (var listener in GetComponentsInChildren<IEnterExitListener>()) {
+            listener.OnEnterBuilding(navigator);
+        }
+    }
+
+    private void InvokeExitBuilding(EntityCityNavigator navigator)
+    {
+        foreach (var listener in GetComponentsInChildren<IEnterExitListener>()) {
+            listener.OnExitBuilding(navigator);
+        }
+    }
+
+    private void InvokeCurrentWorkerAdded(EntityInteractor interactor)
+    {
+        foreach (var listener in GetComponentsInChildren<ICurrentWorkersListener>()) {
+            listener.OnCurrentWorkerAdded(interactor);
+        }
+    }
+
+    private void InvokeCurrentWorkerRemoved(EntityInteractor interactor)
+    {
+        foreach (var listener in GetComponentsInChildren<ICurrentWorkersListener>()) {
+            listener.OnCurrentWorkerRemoved(interactor);
+        }
+    }
+
     // Working
     private void StartWorking()
     {
         if (isWorking) return;
+
         isWorking = true;
         onBuildingStartWorking?.Invoke();
     }
@@ -201,6 +232,7 @@ public abstract class Building : MonoBehaviour
     private void StopWorking()
     {
         if (!isWorking) return;
+
         isWorking = false;
         onBuildingStopWorking?.Invoke();
     }

@@ -44,16 +44,6 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
 
     }
 
-    protected override void OnEnterBuilding(EntityCityNavigator navigator)
-    {
-
-    }
-
-    protected override void OnExitBuilding(EntityCityNavigator navigator)
-    {
-
-    }
-
     // IConnectedBuildingsListener
     public void HandleNeighborBuildingInited(TowerBuilding initedBuilding)
     {

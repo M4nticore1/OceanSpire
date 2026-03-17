@@ -132,7 +132,7 @@ public class BoatLootHandler : MonoBehaviour
 
     private void SetTarget(LootContainer target)
     {
-        if (!movement.MoveTo(target.transform.position)) return;
+        if (!movement.TryMoveTo(target.transform.position)) return;
 
         currentTarget = target;
     }

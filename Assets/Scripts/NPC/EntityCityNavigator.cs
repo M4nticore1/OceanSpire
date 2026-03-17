@@ -350,11 +350,11 @@ public class EntityCityNavigator : MonoBehaviour
                 movement.StopMoving();
                 break;
             case FollowingPathState.FollowingPath:
-                movement.MoveTo(currentPathBuilding.GetInteractionTransform().position);
+                movement.TryMoveTo(currentPathBuilding.GetInteractionTransform().position);
                 break;
             case FollowingPathState.GoingToWaiting:
                 currentElevator.AddPassenger(this);
-                movement.MoveTo(currentElevator.OwnedBuilding.GetInteractionTransform().position);
+                movement.TryMoveTo(currentElevator.OwnedBuilding.GetInteractionTransform().position);
                 break;
             case FollowingPathState.Waiting:
                 currentElevator.AddPassenger(this);
@@ -362,7 +362,7 @@ public class EntityCityNavigator : MonoBehaviour
                 break;
             case FollowingPathState.GoingToRiding:
                 currentElevator.AddPassenger(this);
-                movement.MoveTo(currentElevator.GetCabinRidingTransform().position);
+                movement.TryMoveTo(currentElevator.GetCabinRidingTransform().position);
                 break;
             case FollowingPathState.Riding:
                 currentElevator.AddPassenger(this);
@@ -371,7 +371,7 @@ public class EntityCityNavigator : MonoBehaviour
                 transform.SetParent(currentElevator.spawnedElevatorCabin.transform);
                 break;
             case FollowingPathState.ExitingElevator:
-                movement.MoveTo(currentElevator.OwnedBuilding.GetInteractionTransform().position);
+                movement.TryMoveTo(currentElevator.OwnedBuilding.GetInteractionTransform().position);
                 break;
         }
     }

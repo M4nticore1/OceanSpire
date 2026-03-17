@@ -5,9 +5,8 @@ using UnityEngine;
 public class ProduceResource
 {
     public ItemInstance produceItem;
-    public int maxAmount;
-    public int produceTime;
     public List<ItemInstance> consumeResources;
+    public int produceTime;
 }
 
 [CreateAssetMenu(fileName = "ProductionBuildingLevelData", menuName = "Scriptable Objects/ProductionBuildingLevelData")]

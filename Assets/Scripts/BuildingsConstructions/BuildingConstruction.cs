@@ -61,9 +61,9 @@ public class BuildingConstruction : MonoBehaviour
         transform.position = ownedBuilding.transform.position;
     }
 
-    public void SetFlickingMultiplier(float multiplier)
+    public void SetFlickingPower(float power)
     {
-        propertyBlock.SetFloat("_FlickingMultiplier", multiplier);
+        propertyBlock.SetFloat("_FlickingPower", power);
         foreach (MeshRenderer renderer in meshRendererers) {
             renderer.SetPropertyBlock(propertyBlock);
         }

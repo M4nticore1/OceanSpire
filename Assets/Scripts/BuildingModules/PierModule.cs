@@ -23,14 +23,4 @@ public class PierModule : BuildingModule
     {
         
     }
-
-    protected override void OnEnterBuilding(EntityCityNavigator navigator)
-    {
-        
-    }
-
-    protected override void OnExitBuilding(EntityCityNavigator navigator)
-    {
-        
-    }
 }
