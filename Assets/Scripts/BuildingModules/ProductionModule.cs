@@ -7,6 +7,7 @@ using UnityEngine;
 public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClickable, IElectricible
 {
     private CityStorage cityStorage;
+    [SerializeField] private SelectComponent selectComponent;
 
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
     public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
@@ -59,6 +60,8 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         }
 
         SetCollectable(false);
+
+        selectComponent.SetSelected(false);
     }
 
     private void TryProduceItem()

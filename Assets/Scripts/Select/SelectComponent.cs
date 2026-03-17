@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectComponent : MonoBehaviour
+public class SelectComponent : MonoBehaviour, IClickable
 {
     public bool isSelected { get; private set; } = false;
     private Dictionary<GameObject, int> layers = new Dictionary<GameObject, int>();
+
+    [SerializeField] private bool isClickable = true;
+    public bool IsClickable => isClickable;
 
     public event Action onSelected;
     public event Action onDeselected;
@@ -22,29 +25,42 @@ public class SelectComponent : MonoBehaviour
 
     private void OnClicked(GameObject clicked)
     {
-        if (clicked == gameObject && !isSelected) {
-            Select();
-        }
-        else if (isSelected) {
-            Deselect();
+        if (!isClickable) return;
+
+        if (clicked != gameObject && isSelected) {
+            SetSelected(false);
         }
     }
 
-    private void Select()
+    public void SetSelected(bool value)
+    {
+        if (value == isSelected) return;
+
+        isSelected = value;
+        if (isSelected) {
+            OnSelected();
+        }
+        else {
+            OnDeselected();
+        }
+    }
+
+    private void OnSelected()
     {
         layers.Clear();
 
         foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
+            if (child.GetComponent<ParticleSystem>()) continue;
+
             layers.Add(child, child.layer);
             child.layer = LayerMask.NameToLayer("Outlined");
         }
 
-        isSelected = true;
         onSelected?.Invoke();
         EventBus.InvokeSelectedObject(this);
     }
 
-    private void Deselect()
+    private void OnDeselected()
     {
         foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
             if (!layers.ContainsKey(child)) continue;
@@ -52,9 +68,19 @@ public class SelectComponent : MonoBehaviour
             child.layer = layers[child];
         }
 
-        isSelected = false;
         onDeselected?.Invoke();
         EventBus.InvokeDeselectedObject(this);
+    }
+
+    // IClickable
+    public void Click()
+    {
+        SetSelected(!isSelected);
+    }
+
+    public bool CanClick()
+    {
+        return isClickable;
     }
 
     //private void OnSelectedComponent(SelectComponent component)
