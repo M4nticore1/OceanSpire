@@ -1,10 +1,19 @@
+using System;
 using TMPro;
 using UnityEngine;
+
+[Serializable]
+public enum TextRole
+{
+    Default,
+    Title
+}
 
 public class TextLocalizer : MonoBehaviour
 {
     private TextMeshProUGUI textBlock;
-    [SerializeField] private LocalizationItem item = null;
+    [SerializeField] private LocalizationItem item;
+    [SerializeField] private TextRole textRole = TextRole.Default;
 
     private void Awake()
     {
@@ -13,53 +22,44 @@ public class TextLocalizer : MonoBehaviour
 
     private void OnEnable()
     {
-        LocalizationManager.Instance.OnLocalizationChanged += ChangeLocalization;
-        if (item && LocalizationManager.Instance.GetLocalizationEntry(item) != null) {
-            ChangeLocalization();
-        }
+        LocalizationManager.Instance.OnLocalizationChanged += OnLocalizationChanged;
+        AssignLocalization();
     }
 
     private void OnDisable()
     {
-        LocalizationManager.Instance.OnLocalizationChanged -= ChangeLocalization;
+        LocalizationManager.Instance.OnLocalizationChanged -= OnLocalizationChanged;
     }
 
     public void SetLocalizationItem(LocalizationItem item)
     {
         this.item = item;
-
-        ChangeLocalization();
+        AssignLocalization();
     }
 
-    private void ChangeLocalization()
+    private void AssignLocalization()
     {
-        if (!item) {
-            Debug.LogError($"item is not valid in object {gameObject}.");
-            return;
-        }
+        if (!item) return;
 
-        LocalizationEntry localization = LocalizationManager.Instance.GetLocalizationEntry(item);
+        string text = LocalizationManager.Instance.GetText(item);
+        SetText(text);
 
-        if (localization != null) {
-            textBlock.SetText(localization.Value);
+        TMP_FontAsset font = LocalizationManager.Instance.GetFont(textRole);
+        SetFont(font);
+    }
 
-            int fontIndex = localization.FontIndex;
-            TMP_FontAsset[] fonts = LocalizationManager.Instance.currentLocalization.Fonts;
-            if (fonts != null) {
-                if (fonts.Length > fontIndex) {
-                    TMP_FontAsset font = fonts[localization.FontIndex];
+    private void SetText(string text)
+    {
+        textBlock.SetText(text);
+    }
 
-                    if (font != null) {
-                        textBlock.font = font;
-                    }
-                }
-                else {
-                    Debug.LogError($"The length of fonts array is less than font index of '{localization.Item.name}' item.");
-                }
-            }
-            else {
-                Debug.LogError($"The fonts array is not valid.");
-            }
-        }
+    private void SetFont(TMP_FontAsset font)
+    {
+        textBlock.font = font;
+    }
+
+    private void OnLocalizationChanged()
+    {
+        AssignLocalization();
     }
 }

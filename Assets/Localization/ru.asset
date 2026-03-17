@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ru
   m_EditorClassIdentifier: Assembly-CSharp::LocalizationDictionary
   language: 30
+  localizationAsset: {fileID: 4900000, guid: a7b726bc1d568824c959e8f371042f58, type: 3}
   fonts:
   - {fileID: 11400000, guid: 7949e6f1656a05a4dbc52431e339f0db, type: 2}
   - {fileID: 11400000, guid: 45e9a87402ef85e4e881a12d0325e218, type: 2}

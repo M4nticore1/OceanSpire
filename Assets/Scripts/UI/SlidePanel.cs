@@ -99,6 +99,11 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     {
         if (isMoving) {
             ProcessMoving();
+
+            if (rectTransform.anchoredPosition == targetPosition) {
+                AssignContentRootEnabled();
+                SetMoving(false);
+            }
         }
 
         if (background) {
@@ -183,17 +188,12 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     private void SetMoving(bool value)
     {
         isMoving = value;
-        AssignContentRootEnabled();
     }
 
     private void ProcessMoving()
     {
         rectTransform.anchoredPosition = math.lerp(rectTransform.anchoredPosition, targetPosition, slideTransitionSpeed * Time.deltaTime);
         rectTransform.anchoredPosition = math.clamp(rectTransform.anchoredPosition, closedPosition, openedPosition);
-
-        if (rectTransform.anchoredPosition == targetPosition) {
-            SetMoving(false);
-        }
     }
 
     private void UpdateBackground()

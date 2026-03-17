@@ -438,12 +438,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
   targetGraphic: {fileID: 4696869006643466086}
-  contentGraphic: {fileID: 0}
+  contentGraphics: []
   scaleRoot: {fileID: 277249682003200902}
   isInteractable: 1
   isSelectable: 1
   isScalable: 1
   deselectOnOutsideClick: 1
+  cancelPressWhenMoving: 0
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
   state: 0
@@ -689,8 +690,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 2147483648
-  m_fontColor: {r: 0, g: 0, b: 0, a: 0.5019608}
+    rgba: 1493172224
+  m_fontColor: {r: 0, g: 0, b: 0, a: 0.34901962}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -765,6 +766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
   item: {fileID: 11400000, guid: 1b74cb5581fa66c428e723025596e2d2, type: 2}
+  textRole: 0
 --- !u!1 &4233939739454296436
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,6 +1067,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15ee2926fc46c294d95763a61a0a6c5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldSaveSlot
+  createNewWorldMenu: {fileID: 0}
   slotIndex: 0
   button: {fileID: 7259844161047167963}
   createWorldMenu: {fileID: 3268859366891405461}

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -18,9 +19,9 @@ public class LocalizationManager
     }
 
     private Dictionary<SystemLanguage, LocalizationTable> localizations = new Dictionary<SystemLanguage, LocalizationTable>();
-    public LocalizationTable currentLocalization { get; private set; } = null;
+    private LocalizationTable currentLocalization = null;
 
-    public bool isInited { get; private set; } = false;
+    private bool isInited = false;
     public event System.Action OnLocalizationChanged;
 
     private LocalizationManager() { }
@@ -51,25 +52,46 @@ public class LocalizationManager
         isInited = true;
     }
 
-    public LocalizationEntry GetLocalizationEntry(LocalizationItem item)
+    public void SetLocalization(SystemLanguage language)
     {
-        if (!item) {
-            Debug.LogError("item is not valid.");
-            return null;
-        }
-
-        if (!currentLocalization) {
-            Debug.LogError("currentLocalization is not valid.");
-            return null;
-        }
-
-        if (!currentLocalization.itemsDict.ContainsKey(item)) {
-            Debug.LogError($"currentLocalizationIndex has no '{item.name}' key");
-            return null;
-        }
-
-        return currentLocalization.itemsDict[item];
+        currentLocalization = localizations[language];
+        OnLocalizationChanged?.Invoke();
     }
+
+    public string GetText(LocalizationItem item)
+    {
+        Dictionary<string, string> localiations = JsonConvert.DeserializeObject<Dictionary<string, string>>(currentLocalization.LocalizationAsset.text);
+        string key = item.name;
+        string text = localiations[key];
+        return text;
+    }
+
+    public TMP_FontAsset GetFont(TextRole role)
+    {
+        int fontIndex = (int)role;
+        TMP_FontAsset font = currentLocalization.Fonts[fontIndex];
+        return font;
+    }
+
+    //public LocalizationEntry GetLocalizationEntry(LocalizationItem item)
+    //{
+    //    if (!item) {
+    //        Debug.LogError("item is not valid.");
+    //        return null;
+    //    }
+
+    //    if (!currentLocalization) {
+    //        Debug.LogError("currentLocalization is not valid.");
+    //        return null;
+    //    }
+
+    //    if (!currentLocalization.itemsDict.ContainsKey(item)) {
+    //        Debug.LogError($"currentLocalizationIndex has no '{item.name}' key");
+    //        return null;
+    //    }
+
+    //    return currentLocalization.itemsDict[item];
+    //}
 
     public string GetFirstName(bool isMale, int index)
     {
@@ -104,11 +126,5 @@ public class LocalizationManager
         int finalIndex = index % maxIndex;
 
         return names[index];
-    }
-
-    public void SetLocalization(SystemLanguage language)
-    {
-        currentLocalization = localizations[language];
-        OnLocalizationChanged?.Invoke();
     }
 }

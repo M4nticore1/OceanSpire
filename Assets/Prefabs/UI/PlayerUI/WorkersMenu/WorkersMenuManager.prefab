@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
   item: {fileID: 11400000, guid: 9f26c4f24612b7d408f5266f79ffb0b1, type: 2}
+  textRole: 1
 --- !u!1 &166850717295243282
 GameObject:
   m_ObjectHideFlags: 0

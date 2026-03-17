@@ -929,6 +929,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
   item: {fileID: 11400000, guid: 453849d3874822449957b9541f51f4ae, type: 2}
+  textRole: 1
 --- !u!1 &4491086013743770887
 GameObject:
   m_ObjectHideFlags: 0
@@ -1362,7 +1363,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1509163410198435274, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
       propertyPath: m_fontSize
-      value: 57.1
+      value: 58
       objectReference: {fileID: 0}
     - target: {fileID: 1902519272327053480, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
       propertyPath: m_Name
@@ -1470,7 +1471,7 @@ PrefabInstance:
       objectReference: {fileID: 9056521604277982165}
     - target: {fileID: 6725672708935826457, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
       propertyPath: m_fontSize
-      value: 57.1
+      value: 58
       objectReference: {fileID: 0}
     - target: {fileID: 7149858509467155835, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1715,7 +1716,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5615703320463858756, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_fontSize
-      value: 68
+      value: 58
       objectReference: {fileID: 0}
     - target: {fileID: 7352607609695236558, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_Name
@@ -2095,7 +2096,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5615703320463858756, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_fontSize
-      value: 68
+      value: 58
       objectReference: {fileID: 0}
     - target: {fileID: 7352607609695236558, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_Name
