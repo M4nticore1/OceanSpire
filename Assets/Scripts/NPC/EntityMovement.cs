@@ -68,9 +68,16 @@ public class EntityMovement : MonoBehaviour
 
     private bool CheckDistancePathPosition()
     {
-        if (!isMoving || !agent.enabled || agent.pathPending)
+        if (!isMoving) return false;
+        if (!agent.enabled) return false;
+        if (agent.pathPending) return false;
+
+        if (agent.pathStatus != NavMeshPathStatus.PathComplete)
             return false;
 
-        return agent.remainingDistance <= agent.stoppingDistance;
+        if (agent.remainingDistance > agent.stoppingDistance)
+            return false;
+
+        return true;
     }
 }

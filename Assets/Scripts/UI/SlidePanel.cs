@@ -209,6 +209,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     private void AssignContentRootEnabled()
     {
         if (!hideWhenClosed) return;
+        if (rectTransform.anchoredPosition != targetPosition) return;
 
         if (!isMoving) {
             SetContentRootEnabled(false);

@@ -237,7 +237,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
         if (ridingPassengers.Count > 0) {
             foreach (var rider in ridingPassengers) {
                 if (rider.currentPathBuilding) {
-                    targetFloor = ((TowerBuilding)rider.currentPathBuilding).floorIndex;
+                    targetFloor = rider.currentPathTowerBuilding ? rider.currentPathTowerBuilding.floorIndex : FloorIndex;
                     break;
                 }
             }
@@ -254,7 +254,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
             }
             else {
                 foreach (var rider in ridingPassengers) {
-                    TowerBuilding pathTowerBuilding = (TowerBuilding)rider.currentPathBuilding;
+                    TowerBuilding pathTowerBuilding = rider.currentPathTowerBuilding;
                     if (!pathTowerBuilding)
                         continue;
 

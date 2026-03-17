@@ -91,8 +91,13 @@ public static class PathFinder
 
                 // Check an emptiness of place
                 bool isSpecialEmpty = neighbor.floorIndex == 0 && neighbor.PlaceIndex == BuildingsManager.FirstBuildCityBuildingPlace;
-                if (!neighbor.PlacedBuilding && !isSpecialEmpty)
+                if (!neighbor.PlacedBuilding && !isSpecialEmpty) {
                     continue;
+                }
+                else if (isSpecialEmpty && targetBuilding as GroundBuilding) {
+                    currentPath.Add(targetBuilding);
+                    return currentPath;
+                }
 
                 // Check non elevator vertical building
                 if (hasElevator && place.floorIndex != neighbor.floorIndex && !neighbor.PlacedBuilding.GetComponent<ElevatorModule>())
