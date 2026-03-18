@@ -16,7 +16,7 @@ public class PlayerUIManager : MonoBehaviour
     // Menus
     [Header("Menus")]
     [SerializeField] private ConstructionInformationMenu buildingInformationMenu = null;
-    [SerializeField] private WorkersMenuManager workersMenu = null;
+    [SerializeField] private WorkersControlMenu workersMenu = null;
     [SerializeField] private StatsMenu statsMenu;
     private Building buildingToShowStats = null;
     [SerializeField] private ContextMenuMaster contextMenuMaster = null;

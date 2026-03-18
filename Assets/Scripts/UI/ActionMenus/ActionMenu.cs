@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class ActionMenu : UIBehaviour
+public abstract class ActionMenu : UIBehaviour, IOpenable
 {
     [SerializeField] private InputStateManager inputStateManager;
     [SerializeField] protected ResourceWidget resourceWidgetPrefab;
@@ -22,7 +22,7 @@ public abstract class ActionMenu : UIBehaviour
 
         actionButton.onReleased += OnClickedActionButton;
         closeButton.onReleased += OnClickedCloseButton;
-        slidePanel.onClosed += OnClose;
+        slidePanel.onClosed += OnClosed;
     }
 
     protected override void OnDisable()
@@ -31,7 +31,7 @@ public abstract class ActionMenu : UIBehaviour
 
         actionButton.onReleased -= OnClickedActionButton;
         closeButton.onReleased -= OnClickedCloseButton;
-        slidePanel.onClosed -= OnClose;
+        slidePanel.onClosed -= OnClosed;
     }
 
     private void Action()
@@ -49,7 +49,8 @@ public abstract class ActionMenu : UIBehaviour
 
     protected abstract void CreateWidgets(Building building);
 
-    private void Open()
+    // IOpenable
+    public void Open()
     {
         slidePanel.Open();
 
@@ -68,13 +69,13 @@ public abstract class ActionMenu : UIBehaviour
         inputStateManager.SetGameplayInputBlocked(true);
     }
 
-    private void Close()
+    public void Close()
     {
         slidePanel.Close();
-        OnClose();
+        OnClosed();
     }
 
-    private void OnClose()
+    private void OnClosed()
     {
         inputStateManager.SetGameplayInputBlocked(false);
     }

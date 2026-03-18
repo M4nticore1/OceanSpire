@@ -19,9 +19,6 @@ public class BuildingContextMenu : ContextMenu<Building>
     {
         base.OnDestroy();
 
-        if (spawnedWorkersButton) {
-            spawnedWorkersButton.onReleased -= EventBus.InvokeWorkersButtonClicked;
-        }
         if (spawnedUpgradeButton) {
             spawnedUpgradeButton.onReleased -= EventBus.InvokeUpgradeButtonClicked;
         }
@@ -68,7 +65,6 @@ public class BuildingContextMenu : ContextMenu<Building>
     private void CreateWorkersButton()
     {
         spawnedWorkersButton = CreateButton(workersButton);
-        spawnedWorkersButton.onReleased += EventBus.InvokeWorkersButtonClicked;
     }
 
     private void CreateStorageButton()
@@ -79,13 +75,13 @@ public class BuildingContextMenu : ContextMenu<Building>
     private void CreateUpgradeButton()
     {
         spawnedUpgradeButton = CreateButton(upgradeButton);
-        spawnedUpgradeButton.onReleased += EventBus.InvokeUpgradeButtonClicked;
+        //spawnedUpgradeButton.onReleased += EventBus.InvokeUpgradeButtonClicked;
     }
 
     private void CreateDemolishButton()
     {
         spawnedDemolishButton = CreateButton(demolishButton);
-        spawnedDemolishButton.onReleased += EventBus.InvokeDemolishButtonClicked;
+        //spawnedDemolishButton.onReleased += EventBus.InvokeDemolishButtonClicked;
     }
 
     private CustomButton CreateButton(CustomButton button)

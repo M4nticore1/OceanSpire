@@ -4,12 +4,12 @@ public class UpgradeActionMenu : ActionMenu
 {
     protected override void OnEnable()
     {
-        EventBus.onClickedContextUpgradeButton += OnContextClickedButton;
+        EventBus.onClickedUpgradeButton += OnContextClickedButton;
     }
 
     protected override void OnDisable()
     {
-        EventBus.onClickedContextUpgradeButton -= OnContextClickedButton;
+        EventBus.onClickedUpgradeButton -= OnContextClickedButton;
     }
 
     protected override void OnAction(Building building)

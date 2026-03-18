@@ -11,7 +11,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
 
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
     public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
-    public ProduceResource produceItem => ProductionLevelData ? (ProductionLevelData.producedResources.Count > currentProducedItemIndex ? ProductionLevelData.producedResources[currentProducedItemIndex] : null) : null;
+    public ProduceResource produceItem => ProductionLevelData ? (ProductionLevelData.producedResources.Length > currentProducedItemIndex ? ProductionLevelData.producedResources[currentProducedItemIndex] : null) : null;
 
     protected bool isProducting = false;
     public ItemInstance producedItem { get; private set; } = null;

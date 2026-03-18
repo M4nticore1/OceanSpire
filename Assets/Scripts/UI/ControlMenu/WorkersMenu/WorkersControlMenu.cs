@@ -1,20 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class WorkersMenuManager : UIBehaviour
+public class WorkersControlMenu : ControlMenu
 {
     [SerializeField] private EntitiesManager entitiesManager;
 
-    private bool isOpened = false;
-
-    [SerializeField] private RectTransform content = null;
-
-    [SerializeField] private WorkersMenu buildingWorkersMenu = null;
-    [SerializeField] private WorkersMenu unemployedCitizensMenu = null;
-    [SerializeField] private WorkersMenu employedCitizensMenu = null;
-
-    [SerializeField] private CustomButton closeMenuButton = null;
+    [SerializeField] private WorkersPanel buildingWorkersMenu;
+    [SerializeField] private WorkersPanel unemployedCitizensMenu;
+    [SerializeField] private WorkersPanel employedCitizensMenu;
 
     protected override void Awake()
     {
@@ -29,44 +22,35 @@ public class WorkersMenuManager : UIBehaviour
     {
         base.OnEnable();
 
-        EventBus.onClickedWorkersButton += OnClickedWorkersButton;
         EventBus.onCitizenInited += OnCitizenAdded;
         EventBus.onSetedInteractBuilding += OnSetedCitizenWork;
         EventBus.onRemovedInteractBuilding += OnRemovedCitizenWork;
-        closeMenuButton.onReleased += Close;
     }
 
     protected override void OnDisable()
     {
         base.OnEnable();
 
-        EventBus.onClickedWorkersButton -= OnClickedWorkersButton;
         EventBus.onCitizenInited -= OnCitizenAdded;
         EventBus.onSetedInteractBuilding -= OnSetedCitizenWork;
         EventBus.onRemovedInteractBuilding -= OnRemovedCitizenWork;
-        closeMenuButton.onReleased -= Close;
     }
 
     protected override void Start()
     {
         base.Start();
 
-        Close();
-    }
-
-    // Open / Close
-    private void Open()
-    {
-        content.gameObject.SetActive(true);
         UpdateWorkersMenu();
-        isOpened = true;
     }
 
-    private void Close()
+    protected override void OnOpen()
     {
-        content.gameObject.SetActive(false);
-        isOpened = false;
-        EventBus.InvokeWorkersMenuClosed();
+        
+    }
+
+    protected override void OnClose()
+    {
+
     }
 
     private void UpdateWorkersMenu()
