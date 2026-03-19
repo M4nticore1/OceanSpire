@@ -1,10 +1,5 @@
 using UnityEngine;
 
-<<<<<<< Updated upstream
-public class ProductionControlMenu : MonoBehaviour
-{
-    [SerializeField] private ProductionResourcePanel productionResourcePanelPrefab;
-=======
 public class ProductionControlMenu : ControlMenu
 {
     [SerializeField] private ProductionResourcePanel productionResourcePanelPrefab;
@@ -33,5 +28,4 @@ public class ProductionControlMenu : ControlMenu
     {
 
     }
->>>>>>> Stashed changes
 }

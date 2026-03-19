@@ -6,14 +6,14 @@ public class DemolishActionMenu : ActionMenu
     {
         base.OnEnable();
 
-        EventBus.onClickedDemolishButton += OnContextClickedButton;
+        EventBus.onClickedContextDemolishButton += OnContextClickedButton;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        EventBus.onClickedDemolishButton -= OnContextClickedButton;
+        EventBus.onClickedContextDemolishButton -= OnContextClickedButton;
     }
 
     protected override void OnAction(Building building)

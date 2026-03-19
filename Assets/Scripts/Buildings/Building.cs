@@ -48,16 +48,16 @@ public abstract class Building : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        EventBus.onClickedDemolishButton += OnDemolishClicked;
-        EventBus.onClickedUpgradeButton += OnUpgradeClicked;
+        EventBus.onClickedContextDemolishButton += OnDemolishClicked;
+        EventBus.onClickedContextUpgradeButton += OnUpgradeClicked;
         selectComponent.onSelected += OnSelected;
         selectComponent.onDeselected += OnDeselected;
     }
 
     protected virtual void OnDisable()
     {
-        EventBus.onClickedDemolishButton -= OnDemolishClicked;
-        EventBus.onClickedUpgradeButton -= OnUpgradeClicked;
+        EventBus.onClickedContextDemolishButton -= OnDemolishClicked;
+        EventBus.onClickedContextUpgradeButton -= OnUpgradeClicked;
         selectComponent.onSelected += OnSelected;
         selectComponent.onDeselected += OnDeselected;
     }

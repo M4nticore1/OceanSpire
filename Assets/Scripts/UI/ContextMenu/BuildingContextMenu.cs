@@ -21,15 +21,12 @@ public class BuildingContextMenu : ContextMenu<Building>
     {
         base.OnDestroy();
 
-<<<<<<< Updated upstream
-=======
         if (spawnedWorkersButton) {
             spawnedWorkersButton.onReleased -= EventBus.InvokeContextWorkersButtonClicked;
         }
         if (spawnedProductionButton) {
             spawnedProductionButton.onReleased -= EventBus.InvokeContextProductionButtonClicked;
         }
->>>>>>> Stashed changes
         if (spawnedUpgradeButton) {
             spawnedUpgradeButton.onReleased -= EventBus.InvokeContextUpgradeButtonClicked;
         }
@@ -80,8 +77,6 @@ public class BuildingContextMenu : ContextMenu<Building>
     private void CreateWorkersButton()
     {
         spawnedWorkersButton = CreateButton(workersButton);
-<<<<<<< Updated upstream
-=======
         spawnedWorkersButton.onReleased += EventBus.InvokeContextWorkersButtonClicked;
     }
 
@@ -89,7 +84,6 @@ public class BuildingContextMenu : ContextMenu<Building>
     {
         spawnedProductionButton = CreateButton(productionButton);
         spawnedProductionButton.onReleased += EventBus.InvokeContextProductionButtonClicked;
->>>>>>> Stashed changes
     }
 
     private void CreateStorageButton()
@@ -100,21 +94,13 @@ public class BuildingContextMenu : ContextMenu<Building>
     private void CreateUpgradeButton()
     {
         spawnedUpgradeButton = CreateButton(upgradeButton);
-<<<<<<< Updated upstream
-        //spawnedUpgradeButton.onReleased += EventBus.InvokeUpgradeButtonClicked;
-=======
         spawnedUpgradeButton.onReleased += EventBus.InvokeContextUpgradeButtonClicked;
->>>>>>> Stashed changes
     }
 
     private void CreateDemolishButton()
     {
         spawnedDemolishButton = CreateButton(demolishButton);
-<<<<<<< Updated upstream
-        //spawnedDemolishButton.onReleased += EventBus.InvokeDemolishButtonClicked;
-=======
         spawnedDemolishButton.onReleased += EventBus.InvokeContextDemolishButtonClicked;
->>>>>>> Stashed changes
     }
 
     private CustomButton CreateButton(CustomButton button)
