@@ -51,8 +51,15 @@ public static class EventBus
     public static event Action<ItemInstance> onLootStorageChanged;
 
     // Context Menu
+<<<<<<< Updated upstream
     public static event Action onClickedUpgradeButton;
     public static event Action onClickedDemolishButton;
+=======
+    public static event Action onClickedContextWorkersButton;
+    public static event Action onClickedContextProductionButton;
+    public static event Action onClickedContextUpgradeButton;
+    public static event Action onClickedContextDemolishButton;
+>>>>>>> Stashed changes
 
     // Building Stats Menu
     public static event Action<Building> onCameraEnteredStatsMenuDistance;
@@ -199,14 +206,32 @@ public static class EventBus
     }
 
     // Action Menu
+<<<<<<< Updated upstream
     public static void InvokeUpgradeButtonClicked()
+=======
+    public static void InvokeContextWorkersButtonClicked()
+    {
+        onClickedContextWorkersButton?.Invoke();
+    }
+
+    public static void InvokeContextProductionButtonClicked()
+    {
+        onClickedContextProductionButton?.Invoke();
+    }
+
+    public static void InvokeContextUpgradeButtonClicked()
+>>>>>>> Stashed changes
     {
         onClickedUpgradeButton?.Invoke();
     }
 
-    public static void InvokeDemolishButtonClicked()
+    public static void InvokeContextDemolishButtonClicked()
     {
+<<<<<<< Updated upstream
         onClickedDemolishButton?.Invoke();
+=======
+        onClickedContextDemolishButton?.Invoke();
+>>>>>>> Stashed changes
     }
 
     // Stats Menu

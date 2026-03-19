@@ -5,7 +5,6 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public enum CloseMethod
 {
@@ -14,7 +13,7 @@ public enum CloseMethod
     OnePointClick
 }
 
-public class SlidePanel : MonoBehaviour, IInputListenable
+public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 {
     [SerializeField] private Canvas canvas;
     private RectTransform rectTransform;
@@ -37,10 +36,6 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     [SerializeField] Image background;
     [SerializeField] float openedBackgroundAlpha = 0.9f;
     [SerializeField] float alphaTransitionSpeed = 10f;
-
-    [Header("Buttons")]
-    [SerializeField] private CustomButton openButton;
-    [SerializeField] private CustomButton closeButton;
 
     private bool isOpened = false;
     private bool isMoving = false;
@@ -65,20 +60,12 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     {
         InputListener.Instance.onPressed += OnPress;
         InputListener.Instance.onReleased += OnRelease;
-        if (openButton)
-            openButton.onReleased += Open;
-        if (closeButton)
-            closeButton.onReleased += Close;
     }
 
     private void OnDisable()
     {
         InputListener.Instance.onPressed -= OnPress;
         InputListener.Instance.onReleased -= OnRelease;
-        if (openButton)
-            openButton.onReleased -= Open;
-        if (closeButton)
-            closeButton.onReleased -= Close;
     }
 
     private void Start()
@@ -144,10 +131,6 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     private void FillContent()
     {
         content = GetComponentsInChildren<Transform>(true).ToList();
-        if (openButton)
-            content.Add(openButton.transform);
-        if (closeButton)
-            content.Add(closeButton.transform);
     }
 
     public void Open()
@@ -222,24 +205,6 @@ public class SlidePanel : MonoBehaviour, IInputListenable
     private void SetContentRootEnabled(bool value)
     {
         contentRoot.gameObject.SetActive(value);
-    }
-
-    public void SetOpenButton(CustomButton button)
-    {
-        if (openButton) {
-            content.Remove(openButton.transform);
-        }
-        openButton = button;
-        content.Add(openButton.transform);
-    }
-
-    public void SetCloseButton(CustomButton button)
-    {
-        if (closeButton) {
-            content.Remove(closeButton.transform);
-        }
-        closeButton = button;
-        content.Add(closeButton.transform);
     }
 
     private bool IsClickedOutsideMenu(List<RaycastResult> results)

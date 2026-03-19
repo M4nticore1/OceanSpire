@@ -16,6 +16,7 @@
   "level": "Уровень {level}",
   "weight": "Вес",
   "workers": "Рабочие",
+  "production": "Производство",
   "select_workers": "Выбор рабочих",
   "current_workers": "Текущие рабочие",
   "unemployed_citizens": "Безработные жители",

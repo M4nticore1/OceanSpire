@@ -1,10 +1,18 @@
 using UnityEngine;
+<<<<<<< Updated upstream
+=======
+using UnityEngine.UI;
+>>>>>>> Stashed changes
 
 public class ProductionResourcePanel : MonoBehaviour
 {
     [SerializeField] private ResourceWidget resourceWidgetPrefab;
     [SerializeField] private Transform producedResourceSlot;
+<<<<<<< Updated upstream
     [SerializeField] private GridLayout consumedResourcesSlot;
+=======
+    [SerializeField] private LayoutGroup consumedResourcesSlot;
+>>>>>>> Stashed changes
 
     private ItemInstance producedResource;
     private ItemInstance[] consumedResources;

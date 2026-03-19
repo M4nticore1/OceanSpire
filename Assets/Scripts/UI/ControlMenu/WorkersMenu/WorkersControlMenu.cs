@@ -22,6 +22,10 @@ public class WorkersControlMenu : ControlMenu
     {
         base.OnEnable();
 
+<<<<<<< Updated upstream
+=======
+        EventBus.onClickedContextWorkersButton += Open;
+>>>>>>> Stashed changes
         EventBus.onCitizenInited += OnCitizenAdded;
         EventBus.onSetedInteractBuilding += OnSetedCitizenWork;
         EventBus.onRemovedInteractBuilding += OnRemovedCitizenWork;
@@ -31,13 +35,18 @@ public class WorkersControlMenu : ControlMenu
     {
         base.OnEnable();
 
+<<<<<<< Updated upstream
+=======
+        EventBus.onClickedContextWorkersButton -= Open;
+>>>>>>> Stashed changes
         EventBus.onCitizenInited -= OnCitizenAdded;
         EventBus.onSetedInteractBuilding -= OnSetedCitizenWork;
         EventBus.onRemovedInteractBuilding -= OnRemovedCitizenWork;
     }
 
-    protected override void Start()
+    protected override void OnOpen()
     {
+<<<<<<< Updated upstream
         base.Start();
 
         UpdateWorkersMenu();
@@ -50,6 +59,16 @@ public class WorkersControlMenu : ControlMenu
 
     protected override void OnClose()
     {
+=======
+        UpdateWorkersMenu();
+
+        LocalizationItem localizedName = SelectManager.Instance.selectedComponent.GetComponent<Building>().BuildingData.LocalizationItem;
+        selectedNameText.SetLocalizationItem(localizedName);
+    }
+
+    protected override void OnClose()
+    {
+>>>>>>> Stashed changes
 
     }
 

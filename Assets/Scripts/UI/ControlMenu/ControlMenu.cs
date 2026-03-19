@@ -6,6 +6,7 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
     protected bool isOpened = false;
 
     [SerializeField] private RectTransform content = null;
+<<<<<<< Updated upstream
     [SerializeField] private CustomButton closeMenuButton = null;
 
     protected override void OnEnable()
@@ -21,6 +22,9 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
 
         closeMenuButton.onReleased += Close;
     }
+=======
+    [SerializeField] protected TextLocalizer selectedNameText = null;
+>>>>>>> Stashed changes
 
     protected override void Start()
     {
@@ -47,4 +51,8 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
 
     protected abstract void OnOpen();
     protected abstract void OnClose();
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 }

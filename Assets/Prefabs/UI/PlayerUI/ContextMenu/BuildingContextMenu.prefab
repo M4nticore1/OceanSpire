@@ -292,6 +292,7 @@ MonoBehaviour:
   layoutGroup: {fileID: 1700612523725060565}
   levelNumberText: {fileID: 1689519342068361122}
   workersButton: {fileID: 7371361145333042753, guid: a1d598385c398534698c91436ec15ef6, type: 3}
+  productionButton: {fileID: 7371361145333042753, guid: f2bc264b149190d4f9aba08ca85e3436, type: 3}
   storageButton: {fileID: 7371361145333042753, guid: 099c180f7d8d03e4ca630b9ddc1ef12c, type: 3}
   upgradeButton: {fileID: 7371361145333042753, guid: 7021207ad81c2ee4482b9d5b68a3d3fd, type: 3}
   demolishButton: {fileID: 7371361145333042753, guid: d3e1df81f773d014e934c447533c695e, type: 3}

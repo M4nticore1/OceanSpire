@@ -1602,6 +1602,10 @@ PrefabInstance:
       propertyPath: cityStorage
       value: 
       objectReference: {fileID: 1388613268}
+    - target: {fileID: 1518922377036755254, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: productionResourcePanelPrefab
+      value: 
+      objectReference: {fileID: 5968302294432705402, guid: 29184d8a9adf1db45b7c71598dce4862, type: 3}
     - target: {fileID: 2118399132170861430, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: inputStateManager
       value: 
@@ -1686,6 +1690,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6570371576780054930, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: entitiesManager
+      value: 
+      objectReference: {fileID: 220072952}
     - target: {fileID: 6843160973976178423, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: entitiesManager
       value: 
