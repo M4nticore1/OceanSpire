@@ -4,14 +4,27 @@ using UnityEngine.UI;
 public class ProducedResourcePanel : MonoBehaviour
 {
     [SerializeField] private ResourceWidget resourceWidgetPrefab;
+    [SerializeField] private CustomButton button;
     [SerializeField] private Transform producedResourceSlot;
     [SerializeField] private LayoutGroup consumedResourcesSlot;
+    private ProductionModule productionModule;
 
     private ItemInstance producedResource;
     private ItemInstance[] consumedResources;
 
-    public void Init(ProduceResource produceResource)
+    private void OnEnable()
     {
+        button.onReleased += OnClicked;
+    }
+
+    private void OnDisable()
+    {
+        button.onReleased -= OnClicked;
+    }
+
+    public void Init(ProductionModule productionModule, ProduceResource produceResource)
+    {
+        this.productionModule = productionModule;
         producedResource = produceResource.produceItem;
         consumedResources = produceResource.consumeResources;
 
@@ -31,5 +44,10 @@ public class ProducedResourcePanel : MonoBehaviour
             ResourceWidget widget = Instantiate(resourceWidgetPrefab, consumedResourcesSlot.transform);
             widget.Init(resource);
         }
+    }
+
+    private void OnClicked()
+    {
+        //productionModule.set
     }
 }
