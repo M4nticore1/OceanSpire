@@ -40,9 +40,7 @@ public class WorkersControlMenu : ControlMenu
 
     protected override void OnOpen()
     {
-        UpdateWorkersMenu();
-        LocalizationItem localizedName = SelectManager.Instance.selectedComponent.GetComponent<Building>().BuildingData.LocalizationItem;
-        selectedNameText.SetLocalizationItem(localizedName);
+       
     }
 
     protected override void OnClose()
@@ -50,7 +48,7 @@ public class WorkersControlMenu : ControlMenu
 
     }
 
-    private void UpdateWorkersMenu()
+    protected override void UpdateMenu()
     {
         Building selectedBuilding = SelectManager.Instance.selectedComponent.GetComponent<Building>();
         List<Human> citizens = entitiesManager.citizens;
@@ -79,6 +77,12 @@ public class WorkersControlMenu : ControlMenu
         }
     }
 
+    protected override void UpdateName()
+    {
+        LocalizationItem localizedName = SelectManager.Instance.selectedComponent.GetComponent<Building>().BuildingData.LocalizationItem;
+        selectedNameText.SetLocalizationItem(localizedName);
+    }
+
     // Events
     private void OnClickedWorkersButton()
     {
@@ -89,20 +93,20 @@ public class WorkersControlMenu : ControlMenu
     {
         if (!isOpened) return;
 
-        UpdateWorkersMenu();
+        UpdateMenu();
     }
 
     private void OnRemovedCitizenWork()
     {
         if (!isOpened) return;
 
-        UpdateWorkersMenu();
+        UpdateMenu();
     }
 
     private void OnCitizenAdded(Human resident)
     {
         if (!isOpened) return;
 
-        UpdateWorkersMenu();
+        UpdateMenu();
     }
 }

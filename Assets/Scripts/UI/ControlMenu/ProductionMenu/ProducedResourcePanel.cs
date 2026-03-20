@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-public class ProductionResourcePanel : MonoBehaviour
+public class ProducedResourcePanel : MonoBehaviour
 {
     [SerializeField] private ResourceWidget resourceWidgetPrefab;
     [SerializeField] private Transform producedResourceSlot;
+    [SerializeField] private LayoutGroup consumedResourcesSlot;
 
     private ItemInstance producedResource;
     private ItemInstance[] consumedResources;
@@ -19,14 +21,14 @@ public class ProductionResourcePanel : MonoBehaviour
 
     private void CreateProducedResource()
     {
-        ResourceWidget widget = Instantiate(resourceWidgetPrefab);
+        ResourceWidget widget = Instantiate(resourceWidgetPrefab, producedResourceSlot.transform);
         widget.Init(producedResource);
     }
 
     private void CreateConsumedResources()
     {
         foreach (var resource in consumedResources) {
-            ResourceWidget widget = Instantiate(resourceWidgetPrefab);
+            ResourceWidget widget = Instantiate(resourceWidgetPrefab, consumedResourcesSlot.transform);
             widget.Init(resource);
         }
     }

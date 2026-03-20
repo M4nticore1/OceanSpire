@@ -1,8 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ProductionControlMenu : ControlMenu
 {
-    [SerializeField] private ProductionResourcePanel productionResourcePanelPrefab;
+    [SerializeField] private ProducedResourcePanel producedResourcePanelPrefab;
+    private ProducedResourcePanel[] spawnedProducedResourcePanels;
+
+    [SerializeField] private LayoutGroup layoutGroup;
 
     protected override void OnEnable()
     {
@@ -20,12 +24,48 @@ public class ProductionControlMenu : ControlMenu
 
     protected override void OnOpen()
     {
-        LocalizationItem localizedName = SelectManager.Instance.selectedComponent.GetComponent<Building>().BuildingData.LocalizationItem;
-        selectedNameText.SetLocalizationItem(localizedName);
+
     }
 
     protected override void OnClose()
     {
 
+    }
+
+    protected override void UpdateMenu()
+    {
+        ClearPanels();
+        CreatePanels();
+    }
+
+    private void CreatePanels()
+    {
+        ProductionModule module = SelectManager.Instance.selectedComponent.GetComponent<ProductionModule>();
+        ProduceResource[] resources = module.ProductionLevelData.producedResources;
+        int length = resources.Length;
+        spawnedProducedResourcePanels = new ProducedResourcePanel[length];
+
+        for (int i = 0; i < length; i++) {
+            ProduceResource resource = resources[i];
+            ProducedResourcePanel spawned = Instantiate(producedResourcePanelPrefab, layoutGroup.transform);
+            spawned.Init(resource);
+            spawnedProducedResourcePanels[i] = spawned;
+        }
+    }
+
+    private void ClearPanels()
+    {
+        if (spawnedProducedResourcePanels == null) return;
+
+        foreach (var panel in spawnedProducedResourcePanels) {
+            Destroy(panel.gameObject);
+        }
+        spawnedProducedResourcePanels = null;
+    }
+
+    protected override void UpdateName()
+    {
+        LocalizationItem localizedName = SelectManager.Instance.selectedComponent.GetComponent<Building>().BuildingData.LocalizationItem;
+        selectedNameText.SetLocalizationItem(localizedName);
     }
 }

@@ -130,7 +130,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 300, y: 100}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 2312938978772802384}
   - component: {fileID: 5968302294432705402}
   m_Layer: 5
-  m_Name: ProductionResourcePanel
+  m_Name: ProducedResourcePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -218,7 +218,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8680255338575443992}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 982f221e739db2c42bc48134023456ca, type: 3}
+  m_Script: {fileID: 11500000, guid: adde59f8ddec6f34e82a7368e4eae833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProductionResourcePanel
   resourceWidgetPrefab: {fileID: 5555003485712965333, guid: 9d3feffcad0e637408bef2ff4d7db94d, type: 3}

@@ -19,6 +19,9 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
     public void Open()
     {
         content.gameObject.SetActive(true);
+        UpdateMenu();
+        UpdateName();
+
         isOpened = true;
         OnOpen();
     }
@@ -33,4 +36,6 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
 
     protected abstract void OnOpen();
     protected abstract void OnClose();
+    protected abstract void UpdateMenu();
+    protected abstract void UpdateName();
 }
