@@ -11,24 +11,16 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
 
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
     public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
-    public ProduceResource produceItem => ProductionLevelData ? (ProductionLevelData.producedResources.Length > currentProducedItemIndex ? ProductionLevelData.producedResources[currentProducedItemIndex] : null) : null;
 
-    protected bool isProducting = false;
-    public ItemInstance producedItem { get; private set; } = null;
-    public float currentProductionTime { get; private set; } = 0.0f;
-    private bool isBuildingStorageFull = false;
+    public ProducedItem currentProductingItem { get; private set; }
+    public int currentProductingItemIndex { get; private set; }
+    public float currentProductionTime { get; private set; }
 
+    public bool isProducting { get; private set; } = false;
     public bool isReadyToCollect { get; private set; } = false;
-
-    public int currentProducedItemIndex { get; private set; } = 0;
 
     [SerializeField] private float electricityConsumption = 0f;
     public float ElectricityConsumption => electricityConsumption;
-
-    private void Start()
-    {
-        
-    }
 
     private void Update()
     {
@@ -43,43 +35,10 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         TryProduceItem();
     }
 
-    public void CollectItem()
+    public void SetProducedItemIndex(int index)
     {
-        producedItem.SetAmount(0);
-
-        int id = produceItem.produceItem.ItemData.ItemId;
-        int amount = produceItem.produceItem.Amount;
-        cityStorage.Inventory.AddItemAmount(id, amount);
-
-        isBuildingStorageFull = false;
-        ResetProducedTime();
-
-        if (ShouldStartWorking()) {
-            SetWorking(true);
-            SetProducting(true);
-        }
-
-        SetCollectable(false);
-
-        selectComponent.SetSelected(false);
-    }
-
-    private void TryProduceItem()
-    {
-        if (currentProductionTime < produceItem.produceTime) return;
-        
-        ProduceItem();
-    }
-
-    private void ProduceItem()
-    {
-        int amount = produceItem.produceItem.Amount;
-        producedItem.SetAmount(amount);
-
-        SetWorking(false);
-        SetCollectable(true);
-        isBuildingStorageFull = true;
-        SetProducting(false);
+        currentProductingItemIndex = index;
+        SetProducedItemByIndex(currentProductingItemIndex);
     }
 
     // IClickable
@@ -109,9 +68,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
     {
         cityStorage = FindAnyObjectByType<CityStorage>();
 
-        if (produceItem is ProduceResource resource) {
-            producedItem = new ItemInstance(resource.produceItem.ItemData);
-        }
+        SetProducedItemByIndex(currentProductingItemIndex);
     }
 
     protected override void OnDemolish()
@@ -121,10 +78,6 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
 
     protected override void OnBuildingStartWorking()
     {
-        int id = producedItem.ItemData.ItemId;
-        int amount = producedItem.Amount;
-        cityStorage.Inventory.RemoveItemAmount(id, amount);
-
         SetProducting(true);
     }
 
@@ -148,23 +101,71 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
     }
 
     // Production
+    private void TryCollectItem()
+    {
+        if (!isReadyToCollect) return;
+
+        CollectItem();
+    }
+
+    private void CollectItem()
+    {
+        int id = currentProductingItem.ProductionItem.ItemData.ItemId;
+        int amount = currentProductingItem.ProductionItem.Amount;
+        cityStorage.Inventory.AddItemAmount(id, amount);
+
+        isReadyToCollect = false;
+        ResetProducedTime();
+
+        if (ShouldStartWorking()) {
+            SetWorking(true);
+            SetProducting(true);
+        }
+
+        SetCollectable(false);
+    }
+
+    private void TryProduceItem()
+    {
+        if (currentProductionTime < currentProductingItem.ProduceTime) return;
+
+        ProduceItem();
+    }
+
+    private void ProduceItem()
+    {
+        SetWorking(false);
+        SetCollectable(true);
+        isReadyToCollect = true;
+        SetProducting(false);
+    }
+
     private void SetProducting(bool value)
     {
         if (value == isProducting) return;
 
         isProducting = value;
-        
+
         if (isProducting) {
-            SpendConsumeResources();
+            ConsumeResources();
         }
     }
 
-    private void SpendConsumeResources()
+    private void ConsumeResources()
     {
-        foreach (var resource in produceItem.consumeResources) {
+        foreach (var resource in currentProductingItem.ConsumeResources) {
             int id = resource.ItemData.ItemId;
             int amount = resource.Amount;
             cityStorage.Inventory.RemoveItemAmount(id, amount);
+        }
+    }
+
+    private void RefundResources()
+    {
+        foreach (var resource in currentProductingItem.ConsumeResources) {
+            int id = resource.ItemData.ItemId;
+            int amount = resource.Amount;
+            cityStorage.Inventory.AddItemAmount(id, amount);
         }
     }
 
@@ -199,12 +200,27 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         }
     }
 
+    private void SetProducedItemByIndex(int index)
+    {
+        if (isProducting && !isReadyToCollect && currentProductingItem != null) {
+            RefundResources();
+            TryCollectItem();
+            ResetProducedTime();
+        }
+
+        currentProductingItem = ProductionLevelData.producedResources[index];
+
+        if (isProducting) {
+            ConsumeResources();
+        }
+    }
+
     private bool ShouldStartWorking()
     {
-        if (isBuildingStorageFull) return false;
+        if (isReadyToCollect) return false;
         if (OwnedBuilding.currentWorkers.Count == 0) return false;
 
-        foreach (var resource in produceItem.consumeResources) {
+        foreach (var resource in currentProductingItem.ConsumeResources) {
             int id = resource.ItemData.ItemId;
             int amount = resource.Amount;
             if (cityStorage.Inventory.itemsDict[id].item.Amount < amount) return false;

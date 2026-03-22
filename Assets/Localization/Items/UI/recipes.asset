@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6ada3316b484b749b58ea57c530f988, type: 3}
-  m_Name: Farm_Production_Level_01
-  m_EditorClassIdentifier: 
-  producedResources: []
+  m_Script: {fileID: 11500000, guid: 1b08574c7d3f7fc4691054c0a840d9f1, type: 3}
+  m_Name: recipes
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizationItem

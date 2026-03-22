@@ -142,8 +142,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -338,9 +338,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 0}
+  useCityStorage: 0
   resourceImage: {fileID: 353891536657977764}
   resourceAmountText: {fileID: 848859100641501343}
   resourceAmountBar: {fileID: 1011011194214973529}
+  useAmountColors: 0
+  enoughAmountColor: {r: 0, g: 1, b: 0, a: 1}
+  notEnoughAmountColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &2170407839882713218
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b08574c7d3f7fc4691054c0a840d9f1, type: 3}
-  m_Name: products
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationItem
+  m_Script: {fileID: 11500000, guid: fc8039db3c8dae249b72a3acea657e28, type: 3}
+  m_Name: seed_potato
+  m_EditorClassIdentifier: 
+  itemId: 8
+  itemIdName: potato
+  itemName: Potato
+  weight: 0
+  itemIcon: {fileID: 0}
+  itemCategory: 2

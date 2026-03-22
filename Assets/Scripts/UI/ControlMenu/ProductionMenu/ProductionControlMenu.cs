@@ -41,15 +41,19 @@ public class ProductionControlMenu : ControlMenu
     private void CreatePanels()
     {
         ProductionModule module = SelectManager.Instance.selectedComponent.GetComponent<ProductionModule>();
-        ProduceResource[] resources = module.ProductionLevelData.producedResources;
+        ProducedItem[] resources = module.ProductionLevelData.producedResources;
         int length = resources.Length;
         spawnedProducedResourcePanels = new ProducedResourcePanel[length];
 
         for (int i = 0; i < length; i++) {
-            ProduceResource resource = resources[i];
+            ProducedItem resource = resources[i];
             ProducedResourcePanel spawned = Instantiate(producedResourcePanelPrefab, layoutGroup.transform);
-            spawned.Init(resource);
+            spawned.Init(module, resource, i);
             spawnedProducedResourcePanels[i] = spawned;
+
+            if (i != module.currentProductingItemIndex) continue;
+
+            spawned.Select();
         }
     }
 

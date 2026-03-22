@@ -31,8 +31,6 @@ public class ConstructionInformationMenu : MonoBehaviour
 
     public void Open(Building construction)
     {
-        Building building = construction.GetComponent<Building>();
-
         foreach (var widget in spawnedBuildingCharacteristicWidgets) {
             Destroy(widget.gameObject);
         }
@@ -40,30 +38,32 @@ public class ConstructionInformationMenu : MonoBehaviour
 
         slidePanel.Open();
 
-        nameText.SetText(building.BuildingData.BuildingName);
-        levelNumberText.SetText("Level " + (building.LevelIndex + 1).ToString());
-        //buildingInformationMenuDescriptionText.SetText(building.BuildingData.description);
+        //Building building = construction.GetComponent<Building>();
 
-        ProductionModule productionBuilding = building.GetComponent<ProductionModule>();
-        StorageBuildingModule storageBuilding = building.GetComponent<StorageBuildingModule>();
+        //nameText.SetText(building.BuildingData.BuildingName);
+        //levelNumberText.SetText("Level " + (building.LevelIndex + 1).ToString());
+        ////buildingInformationMenuDescriptionText.SetText(building.BuildingData.description);
 
-        int maxResidentsCount = building.LevelData.maxResidentsCount;
-        if (maxResidentsCount > 0)
-            CreateCharacteristicWidget("Max residents", maxResidentsCount);
+        //ProductionModule productionBuilding = building.GetComponent<ProductionModule>();
+        //StorageBuildingModule storageBuilding = building.GetComponent<StorageBuildingModule>();
 
-        if (productionBuilding) {
-            ProductionModuleLevelData levelData = productionBuilding.ProductionLevelData;
-            ItemInstance producedResource = levelData.producedResources[productionBuilding.currentProducedItemIndex].produceItem;
-            CreateCharacteristicWidget("Produces", producedResource.Amount, producedResource.ItemData.ItemIcon);
-            CreateCharacteristicWidget("Consumes", producedResource.Amount, producedResource.ItemData.ItemIcon);
-        }
+        //int maxResidentsCount = building.LevelData.maxResidentsCount;
+        //if (maxResidentsCount > 0)
+        //    CreateCharacteristicWidget("Max residents", maxResidentsCount);
 
-        if (storageBuilding) {
-            ItemInstance[] items = storageBuilding.StorageLevelsData[0].storageItems;
-            foreach (ItemInstance item in items) {
-                CreateCharacteristicWidget("Storage capacity", item.Amount, item.ItemData.ItemIcon);
-            }
-        }
+        //if (productionBuilding) {
+        //    ProductionModuleLevelData levelData = productionBuilding.ProductionLevelData;
+        //    ItemInstance producedResource = levelData.producedResources[productionBuilding.currentProducedItemIndex].produceItem;
+        //    CreateCharacteristicWidget("Produces", producedResource.Amount, producedResource.ItemData.ItemIcon);
+        //    CreateCharacteristicWidget("Consumes", producedResource.Amount, producedResource.ItemData.ItemIcon);
+        //}
+
+        //if (storageBuilding) {
+        //    ItemInstance[] items = storageBuilding.StorageLevelsData[0].storageItems;
+        //    foreach (ItemInstance item in items) {
+        //        CreateCharacteristicWidget("Storage capacity", item.Amount, item.ItemData.ItemIcon);
+        //    }
+        //}
     }
 
     public void Close()

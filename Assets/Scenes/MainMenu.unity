@@ -305,28 +305,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6836357081438930290, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
   m_PrefabInstance: {fileID: 6624092925259090882}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &480438136 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7403370430736154375, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-  m_PrefabInstance: {fileID: 6624092925259090882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15ee2926fc46c294d95763a61a0a6c5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorldSaveSlot
---- !u!114 &549769132 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5844236896362936128, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-  m_PrefabInstance: {fileID: 6624092925259090882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15ee2926fc46c294d95763a61a0a6c5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorldSaveSlot
 --- !u!1 &564957211
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,16 +335,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   managementSaveMenu: {fileID: 371888447}
-  createWorldMenuSlidePanel: {fileID: 1699561457}
-  nameWorldInputField: {fileID: 1264137646}
-  createWorldButton: {fileID: 1215549104}
   loadSaveButton: {fileID: 1633443547}
   deleteSaveButton: {fileID: 1365414147}
-  worldNameAlreadyExistsTextBlock: {fileID: 1909775586}
-  saveSlots:
-  - {fileID: 549769132}
-  - {fileID: 480438136}
-  - {fileID: 1537496462}
 --- !u!4 &564957213
 Transform:
   m_ObjectHideFlags: 0
@@ -414,28 +384,6 @@ Transform:
   - {fileID: 1546888464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1215549104 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1445921117646697248, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-  m_PrefabInstance: {fileID: 6624092925259090882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
---- !u!114 &1264137646 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7454327220394151889, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-  m_PrefabInstance: {fileID: 6624092925259090882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TMP_InputField
 --- !u!1001 &1305123311
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -504,17 +452,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
---- !u!114 &1537496462 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1796095772600238470, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-  m_PrefabInstance: {fileID: 6624092925259090882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15ee2926fc46c294d95763a61a0a6c5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorldSaveSlot
 --- !u!1 &1546888462
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,28 +586,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
---- !u!114 &1699561457 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6496500067724653669, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-  m_PrefabInstance: {fileID: 6624092925259090882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 325414fd39671a6468089e7c89d80820, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
---- !u!114 &1909775586 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4857153600583607892, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-  m_PrefabInstance: {fileID: 6624092925259090882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &6624092925259090882
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -765,7 +680,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 778086849105559690, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
-      value: 57.1
+      value: 58
       objectReference: {fileID: 0}
     - target: {fileID: 1284224325063122657, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_hasFontAssetChanged
@@ -801,7 +716,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3367302558773861489, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
-      value: 68
+      value: 58
       objectReference: {fileID: 0}
     - target: {fileID: 3567081077546253689, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_Pivot.y
@@ -845,7 +760,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4858137478602336601, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
-      value: 57.1
+      value: 58
+      objectReference: {fileID: 0}
+    - target: {fileID: 4925410492509476317, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294948940
       objectReference: {fileID: 0}
     - target: {fileID: 4925410492509476317, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_hasFontAssetChanged
@@ -869,7 +788,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7071742386713176888, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
-      value: 68
+      value: 58
       objectReference: {fileID: 0}
     - target: {fileID: 7454327220394151889, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_Enabled
