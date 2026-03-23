@@ -7,9 +7,22 @@ public class FPSCounter : MonoBehaviour
     private int frames = 0;
     private double lastFPSCounterTime = 0d;
     private float elapsedTime = 0.5f;
+    private bool isCounting = true;
+
+    private void OnEnable()
+    {
+        FPSCounterSystem.onCountingEnabledChanged += OnCountingEnabledChanged;
+    }
+
+    private void OnDisable()
+    {
+        FPSCounterSystem.onCountingEnabledChanged -= OnCountingEnabledChanged;
+    }
 
     private void Update()
     {
+        if (!isCounting) return;
+
         frames++;
         double time = Time.timeAsDouble;
 
@@ -20,5 +33,11 @@ public class FPSCounter : MonoBehaviour
             frames = 0;
             lastFPSCounterTime = time;
         }
+    }
+
+    private void OnCountingEnabledChanged(bool value)
+    {
+        isCounting = value;
+        fpsText.gameObject.SetActive(isCounting);
     }
 }
