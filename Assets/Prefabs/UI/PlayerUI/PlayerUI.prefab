@@ -3650,17 +3650,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1679691449546804637}
     m_Modifications:
-    - target: {fileID: 3981495559670711209, guid: 65540f39ef445e8489b827fd6a6aa7ff, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.00048828125
-      objectReference: {fileID: 0}
-    - target: {fileID: 8246289435958774333, guid: 65540f39ef445e8489b827fd6a6aa7ff, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5547891556668468624, guid: 9e699ae624ec0234aa06128f6828b648, type: 3}
       propertyPath: m_Name
       value: WorkersMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 8246289435958774333, guid: 9e699ae624ec0234aa06128f6828b648, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9127926916265679695, guid: 9e699ae624ec0234aa06128f6828b648, type: 3}
       propertyPath: m_Pivot.x
@@ -3740,6 +3736,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9127926916265679695, guid: 9e699ae624ec0234aa06128f6828b648, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3981495559670711209, guid: 65540f39ef445e8489b827fd6a6aa7ff, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00048828125
+      objectReference: {fileID: 0}
+    - target: {fileID: 8246289435958774333, guid: 65540f39ef445e8489b827fd6a6aa7ff, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

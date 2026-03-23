@@ -12,4 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ada3316b484b749b58ea57c530f988, type: 3}
   m_Name: Farm_Production_Level_01
   m_EditorClassIdentifier: 
-  producedResources: []
+  producedResources:
+  - produceItem:
+      itemData: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
+      amount: 5
+    consumeResources:
+    - itemData: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
+      amount: 1
+    - itemData: {fileID: 11400000, guid: f33c31b27ce6c2146aa59651f2d07c05, type: 2}
+      amount: 5
+    produceTime: 900

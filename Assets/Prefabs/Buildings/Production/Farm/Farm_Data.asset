@@ -17,10 +17,9 @@ MonoBehaviour:
   buildingName: Farm
   buildingType: 0
   buildingCategory: 2
-  connectionType: 2
+  connectionType: 1
+  buildingStrategy: 0
   detailsWindowVariant: 0
   instantConstruction: 0
   thumbImage: {fileID: 21300000, guid: 198ac3d9d3301d44bbd04ca385d822f9, type: 3}
-  buildingFloors: 1
-  maxBuildingFloors: 3
   isDemolishable: 1

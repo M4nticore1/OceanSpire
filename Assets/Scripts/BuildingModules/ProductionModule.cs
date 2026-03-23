@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-[AddComponentMenu("BuildingComponents/ProductionBuilding")]
+[AddComponentMenu("Building Modules/Production Building")]
 public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClickable, IElectricible
 {
     private CityStorage cityStorage;

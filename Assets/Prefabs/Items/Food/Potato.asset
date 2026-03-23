@@ -15,6 +15,6 @@ MonoBehaviour:
   itemId: 8
   itemIdName: potato
   itemName: Potato
-  weight: 0
+  weight: 1
   itemIcon: {fileID: 0}
   itemCategory: 2
