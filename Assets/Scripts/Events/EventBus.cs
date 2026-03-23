@@ -51,7 +51,7 @@ public static class EventBus
     public static event Action<ItemInstance> onLootStorageChanged;
 
     // Context Menu
-    public static event Action onClickedContextWorkersButton;
+    public static event Action onContextWorkersButtonClicked;
     public static event Action onClickedContextProductionButton;
     public static event Action onClickedContextUpgradeButton;
     public static event Action onClickedContextDemolishButton;
@@ -203,7 +203,7 @@ public static class EventBus
     // Action Menu
     public static void InvokeContextWorkersButtonClicked()
     {
-        onClickedContextWorkersButton?.Invoke();
+        onContextWorkersButtonClicked?.Invoke();
     }
 
     public static void InvokeContextProductionButtonClicked()

@@ -12,14 +12,14 @@ public class ProductionControlMenu : ControlMenu
     {
         base.OnEnable();
 
-        EventBus.onClickedContextProductionButton += Open;
+        EventBus.onClickedContextProductionButton += OnContextProductionButtonClicked;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        EventBus.onClickedContextProductionButton -= Open;
+        EventBus.onClickedContextProductionButton -= OnContextProductionButtonClicked;
     }
 
     protected override void OnOpen()
@@ -71,5 +71,10 @@ public class ProductionControlMenu : ControlMenu
     {
         LocalizationItem localizedName = SelectManager.Instance.selectedComponent.GetComponent<Building>().BuildingData.LocalizationItem;
         selectedNameText.SetLocalizationItem(localizedName);
+    }
+
+    private void OnContextProductionButtonClicked()
+    {
+        Open();
     }
 }
