@@ -6,12 +6,11 @@ public enum ToggleButtonType
     Close
 }
 
-public class OpenCloseButton : MonoBehaviour
+public class ToggleButton : MonoBehaviour
 {
+    [SerializeField] private ToggleButtonType buttonType;
     [SerializeField] private MonoBehaviour targetOpenable;
     private IOpenable TargetOpenable => targetOpenable as IOpenable;
-
-    [SerializeField] private ToggleButtonType buttonType;
     [SerializeField] private CustomButton button;
 
     private void OnEnable()
