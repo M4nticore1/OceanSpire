@@ -9,6 +9,8 @@ public class InputListener : MonoBehaviour
     public event Action onReleased;
 
     public GameObject startPressedObject { get; private set; }
+    public Vector2 startPosition { get; private set; }
+    public Vector2 lastPosition { get; private set; }
 
     private void Awake()
     {
@@ -53,12 +55,14 @@ public class InputListener : MonoBehaviour
     private void HandlePress()
     {
         startPressedObject = PointerUtils.GetRaycastUIResult().gameObject;
+        startPosition = PointerUtils.GetCurrentInputPosition();
         onPressed?.Invoke();
     }
 
     private void HandleRelease()
     {
         onReleased?.Invoke();
+        lastPosition = PointerUtils.GetCurrentInputPosition();
         startPressedObject = null;
     }
 }

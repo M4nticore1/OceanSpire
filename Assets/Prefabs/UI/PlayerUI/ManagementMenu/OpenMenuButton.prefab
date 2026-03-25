@@ -165,12 +165,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetGraphic: {fileID: 5101683762470963106}
-  contentGraphic: {fileID: 8377490230881606536}
+  contentGraphics: []
   scaleRoot: {fileID: 5856474467311547503}
   isInteractable: 1
   isSelectable: 0
   isScalable: 1
   deselectOnOutsideClick: 1
+  cancelPressWhenMoving: 0
   selectableGroupIndex: -1
   stateTransitionTime: 0.3
   state: 0
