@@ -12,6 +12,7 @@ public class ItemsList : ScriptableObject
         {
             if (_instance == null) {
                 _instance = Resources.Load<ItemsList>("Lists/ItemsList");
+                _instance.Init();
             }
             return _instance;
         }
@@ -19,6 +20,15 @@ public class ItemsList : ScriptableObject
 
     [SerializeField] private ItemData[] items;
     public ItemData[] Items => items;
+    public Dictionary<string, ItemData> itemsDict = new();
+
+    private void Init()
+    {
+        foreach (var item in items) {
+            string key = item.itemKey;
+            itemsDict.Add(key, item);
+        }
+    }
 
     public ItemData GetItemData(int id, ItemData[] itemsList = null)
     {
@@ -103,7 +113,6 @@ public class ItemsList : ScriptableObject
     public int GetItemIndex(string idName, ItemData[] itemsList = null)
     {
         itemsList ??= items;
-
         int id = 0;
 
         for (int i = 0; i < itemsList.Length; i++)
