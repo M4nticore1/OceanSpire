@@ -1,5 +1,33 @@
 {
   "dependencies": {
+    "com.applovin.mediation.adapters.mintegral.android": {
+      "version": "17011100.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unity.packages.applovin.com"
+    },
+    "com.applovin.mediation.adapters.mintegral.ios": {
+      "version": "800090000.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unity.packages.applovin.com"
+    },
+    "com.applovin.mediation.adapters.yandex.android": {
+      "version": "7180400.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unity.packages.applovin.com"
+    },
+    "com.applovin.mediation.adapters.yandex.ios": {
+      "version": "7180400.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unity.packages.applovin.com"
+    },
     "com.applovin.mediation.ads": {
       "version": "8.6.1",
       "depth": 0,

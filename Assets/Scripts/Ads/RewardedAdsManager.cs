@@ -42,7 +42,7 @@ public class RewardedAdsManager : MonoBehaviour
     {
         if (currentReward == null) return;
 
-        currentReward.GrantReward();
+        currentReward.RecieveReward();
         HideAdButton();
         SetReward(null);
     }

@@ -46,7 +46,11 @@
         "com.unity.modules.vr": "1.0.0",
         "com.unity.modules.wind": "1.0.0",
         "com.unity.modules.xr": "1.0.0",
-        "com.applovin.mediation.ads": "8.6.1"
+        "com.applovin.mediation.ads": "8.6.1",
+        "com.applovin.mediation.adapters.yandex.ios": "7180400.0.0",
+        "com.applovin.mediation.adapters.yandex.android": "7180400.0.0",
+        "com.applovin.mediation.adapters.mintegral.ios": "800090000.0.0",
+        "com.applovin.mediation.adapters.mintegral.android": "17011100.0.0"
     },
     "scopedRegistries": [
         {

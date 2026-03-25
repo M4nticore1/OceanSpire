@@ -4,18 +4,19 @@ public class AppLovinMaxAdsManager : MonoBehaviour
 {
     [SerializeField] private RewardedAdsManager rewardedAdsManager;
 
-    private string rewardedId = "test_rewarded_id";
+    private string rewardedId = "«Android-ad-unit-ID»";
 
     int retryAttempt;
 
     void Start()
     {
+        MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "«your-IDFA»", "«your-GAID»" });
+        MaxSdk.InitializeSdk();
+
         MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdk.SdkConfiguration sdkConfiguration) => {
             // AppLovin SDK is initialized, start loading ads
             InitializeRewardedAds();
         };
-
-        MaxSdk.InitializeSdk();
     }
 
     public void ShowRewardedAd()

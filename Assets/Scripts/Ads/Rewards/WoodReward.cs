@@ -5,7 +5,7 @@ public class WoodReward : AdReward
 {
     private CityStorage cityStorage;
 
-    public override void GrantReward()
+    protected override void OnRewardRecieved()
     {
         cityStorage = FindAnyObjectByType<CityStorage>();
 
