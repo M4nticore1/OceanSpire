@@ -1,30 +1,26 @@
+using Unity.Mathematics;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class CustomDropdown : UIBehaviour
 {
-    private RectTransform rectTransform = null;
-    [SerializeField] private CustomButton button = null;
-    [SerializeField] private LayoutGroup dropdownLayoutGroup = null;
-    [SerializeField] private float transitionSpeed = 10f;
+    [SerializeField] private CustomButton button;
+    [SerializeField] private LayoutGroup layoutGroup;
+    [SerializeField] private RectTransform viewport;
+    [SerializeField] private float transitionSpeed = 1f;
     private float transitionAlpha = 0;
     private Vector3 targetScale;
     private bool isOpened = false;
     private bool isAnimating = false;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        rectTransform = GetComponent<RectTransform>();
-    }
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
         button.onReleased += OnButtonClicked;
+        InputListener.Instance.onReleased += OnPointerReleased;
     }
 
     protected override void OnDisable()
@@ -32,32 +28,42 @@ public class CustomDropdown : UIBehaviour
         base.OnDisable();
 
         button.onReleased -= OnButtonClicked;
+        InputListener.Instance.onReleased -= OnPointerReleased;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        SetTransitionAlpha(1f);
     }
 
     private void Update()
     {
-        if (isAnimating) {
-            MoveDropdown();
-        }
+        if (!isAnimating) return;
+
+        MoveDropdown();
     }
 
     private void OnButtonClicked()
     {
         if (isOpened)
-            CloseDropdown();
+            Close();
         else
-            OpenDropdown();
+            Open();
     }
 
-    private void OpenDropdown()
+    private void Open()
     {
+        SetTransitionAlpha(0f);
         targetScale = Vector3.one;
         isOpened = true;
         OnStateShanged();
     }
 
-    private void CloseDropdown()
+    private void Close()
     {
+        SetTransitionAlpha(0f);
         targetScale = Vector3.zero;
         isOpened = false;
         OnStateShanged();
@@ -70,11 +76,29 @@ public class CustomDropdown : UIBehaviour
 
     private void MoveDropdown()
     {
-        transitionAlpha += Time.deltaTime;
-        rectTransform.localScale = Vector3.Lerp(rectTransform.localScale, targetScale, transitionAlpha);
+        transitionAlpha = math.lerp(transitionAlpha, 1f, transitionSpeed * Time.deltaTime);
+        SetTransitionAlpha(transitionAlpha);
+    }
+
+    private void SetTransitionAlpha(float value)
+    {
+        transitionAlpha = value;
+
+        Vector3 scale = viewport.localScale;
+        scale.y = math.lerp(scale.y, targetScale.y, transitionAlpha);
+        viewport.localScale = scale;
+
         if (transitionAlpha >= 1f) {
             isAnimating = false;
-            transitionAlpha = 0f;
         }
+    }
+
+    private void OnPointerReleased()
+    {
+        if (!isOpened) return;
+        //if (InputListener.Instance.startPosition != InputListener.Instance.lastPosition) return;
+        if (PointerUtils.GetRaycastUIResult().gameObject == button.gameObject) return;
+
+        Close();
     }
 }

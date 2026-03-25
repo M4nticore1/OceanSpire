@@ -1,7 +1,9 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class LocalizationManager
 {
@@ -18,8 +20,9 @@ public class LocalizationManager
         }
     }
 
-    private Dictionary<SystemLanguage, LocalizationTable> localizations = new Dictionary<SystemLanguage, LocalizationTable>();
-    private LocalizationTable currentLocalization = null;
+    public Dictionary<SystemLanguage, LocalizationTable> localizations { get; private set; } = new Dictionary<SystemLanguage, LocalizationTable>();
+    public LocalizationTable currentLocalization { get; private set; }
+    private Dictionary<string, string> deserializedLocalization;
 
     private bool isInited = false;
     public event System.Action OnLocalizationChanged;
@@ -52,17 +55,24 @@ public class LocalizationManager
         isInited = true;
     }
 
+    public void SetLocalization(int value)
+    {
+        SystemLanguage language = localizations.Values.ToArray()[value].Language;
+        SetLocalization(language);
+    }
+
     public void SetLocalization(SystemLanguage language)
     {
         currentLocalization = localizations[language];
+        deserializedLocalization = JsonConvert.DeserializeObject<Dictionary<string, string>>(currentLocalization.LocalizationAsset.text);
+
         OnLocalizationChanged?.Invoke();
     }
 
     public string GetText(LocalizationItem item)
     {
-        Dictionary<string, string> localiations = JsonConvert.DeserializeObject<Dictionary<string, string>>(currentLocalization.LocalizationAsset.text);
         string key = item.name;
-        string text = localiations[key];
+        string text = deserializedLocalization[key];
         return text;
     }
 
@@ -71,6 +81,14 @@ public class LocalizationManager
         int fontIndex = (int)role;
         TMP_FontAsset font = currentLocalization.Fonts[fontIndex];
         return font;
+    }
+
+    public string GetLanguageNameByLocalization(SystemLanguage language)
+    {
+        TextAsset textAsset = localizations[language].LocalizationAsset;
+        Dictionary<string, string> localiations = JsonConvert.DeserializeObject<Dictionary<string, string>>(textAsset.text);
+        string text = localiations["language_name"];
+        return text;
     }
 
     //public LocalizationEntry GetLocalizationEntry(LocalizationItem item)

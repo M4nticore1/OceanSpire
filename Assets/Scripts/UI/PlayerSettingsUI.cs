@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,13 +10,16 @@ public class PlayerSettingsUI : MonoBehaviour, IOpenable
     [SerializeField] private Slider soundSlider;
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Toggle vSyncToggle;
+    [SerializeField] private Toggle fpsLimitToggle;
     [SerializeField] private Toggle fpsCounterToggle;
 
     private void OnEnable()
     {
         soundSlider.onValueChanged.AddListener(OnGlobalVolumeChanged);
         musicSlider.onValueChanged.AddListener(OnMusicVolumeChanged);
+        languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
         vSyncToggle.onValueChanged.AddListener(OnVSyncChanged);
+        fpsLimitToggle.onValueChanged.AddListener(OnFPSLimitChanged);
         fpsCounterToggle.onValueChanged.AddListener(OnFpsCounterValueChanged);
     }
 
@@ -37,6 +41,10 @@ public class PlayerSettingsUI : MonoBehaviour, IOpenable
     public void Open()
     {
         contentRoot.SetActive(true);
+
+        SystemLanguage language = LocalizationManager.Instance.currentLocalization.Language;
+        int value = LocalizationManager.Instance.localizations.Keys.ToList().IndexOf(language);
+        languageDropdown.value = value;
     }
 
     public void Close()
@@ -47,8 +55,10 @@ public class PlayerSettingsUI : MonoBehaviour, IOpenable
     private void CreateLanguages()
     {
         foreach (var localization in LocalizationsList.Instance.Localizations) {
+            string name = LocalizationManager.Instance.GetLanguageNameByLocalization(localization.Language);
+
             TMP_Dropdown.OptionData data = new TMP_Dropdown.OptionData() {
-                text = localization.Language.ToString(),
+                text = name,
             };
 
             languageDropdown.options.Add(data);
@@ -67,9 +77,20 @@ public class PlayerSettingsUI : MonoBehaviour, IOpenable
 
     }
 
+    private void OnLanguageChanged(int value)
+    {
+        LocalizationManager.Instance.SetLocalization(value);
+    }
+
     private void OnVSyncChanged(bool value)
     {
         QualitySettings.vSyncCount = value ? 2 : 0;
+    }
+
+    private void OnFPSLimitChanged(bool value)
+    {
+        int limit = value ? 60 : 30;
+        Application.targetFrameRate = limit;
     }
 
     private void OnFpsCounterValueChanged(bool value)
