@@ -1,11 +1,27 @@
 {
   "dependencies": {
+    "com.applovin.mediation.ads": {
+      "version": "8.6.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.google.external-dependency-manager": "1.2.182"
+      },
+      "url": "https://unity.packages.applovin.com"
+    },
     "com.cysharp.unitask": {
       "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
       "depth": 0,
       "source": "git",
       "dependencies": {},
       "hash": "73a63b7f672b88f7e9992f6917eb458a8cbb6fa9"
+    },
+    "com.google.external-dependency-manager": {
+      "version": "1.2.182",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
     },
     "com.unity.2d.common": {
       "version": "12.0.2",

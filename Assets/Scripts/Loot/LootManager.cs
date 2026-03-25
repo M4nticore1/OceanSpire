@@ -34,7 +34,7 @@ public class LootManager : MonoBehaviour
 
     private void Initialize()
     {
-        LootContainer[] lootContainer = LootContainersList.Instance.lootContainers;
+        LootContainer[] lootContainer = LootContainersList.Instance.LootContainers;
         int count = lootContainer.Length;
         currentTimeToSpawnContainers = new float[count];
         currentSpawnContainersTime = new float[count];
@@ -91,8 +91,8 @@ public class LootManager : MonoBehaviour
         if (Time.time < lastSpawnTime + spawnFrequency)
             return;
 
-        for (int i = 0; i < LootContainersList.Instance.lootContainers.Length; i++) {
-            SpawnLootContainer(LootContainersList.Instance.lootContainers[i], i);
+        for (int i = 0; i < LootContainersList.Instance.LootContainers.Length; i++) {
+            SpawnLootContainer(LootContainersList.Instance.LootContainers[i], i);
         }
         lastSpawnTime = Time.time;
     }

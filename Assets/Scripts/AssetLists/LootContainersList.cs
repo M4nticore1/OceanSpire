@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Loot Containers List", menuName = "Game Content/Loot Containers List")]
+[CreateAssetMenu(fileName = "Loot Containers List", menuName = "Lists/Loot Containers List")]
 public class LootContainersList : ScriptableObject
 {
     private static LootContainersList _instance;
@@ -15,5 +15,6 @@ public class LootContainersList : ScriptableObject
         }
     }
 
-    [SerializeField] public LootContainer[] lootContainers;
+    [SerializeField] private LootContainer[] lootContainers;
+    public LootContainer[] LootContainers => lootContainers;
 }
