@@ -10,6 +10,7 @@ public class AdRewardsList : ScriptableObject
         {
             if (_instance == null) {
                 _instance = Resources.Load<AdRewardsList>("Lists/AdRewardsList");
+                _instance.Init();
             }
             return _instance;
         }
@@ -17,4 +18,11 @@ public class AdRewardsList : ScriptableObject
 
     [SerializeField] private AdReward[] adRewards;
     public AdReward[] AdRewards => adRewards;
+
+    private void Init()
+    {
+        foreach (var reward in adRewards) {
+            reward.Init();
+        }
+    }
 }
