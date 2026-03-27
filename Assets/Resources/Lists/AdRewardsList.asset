@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AdRewardsList
   adRewards:
   - {fileID: 11400000, guid: 7bbed7269176f1841be2b8992603de35, type: 2}
+  - {fileID: 11400000, guid: 1cc78348a8deb3e4ba608ed1c62b9eab, type: 2}
+  - {fileID: 11400000, guid: 1b01fc69604228044a23146234e7407e, type: 2}
+  - {fileID: 11400000, guid: f0d90872e5b844945936a1a67baa7537, type: 2}

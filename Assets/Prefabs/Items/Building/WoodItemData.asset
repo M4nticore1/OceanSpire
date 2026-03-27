@@ -16,5 +16,6 @@ MonoBehaviour:
   itemIdName: wood
   itemName: Wood
   weight: 2
-  itemIcon: {fileID: 21300000, guid: e843054e53a3f3a4caa4d88a03e02e29, type: 3}
   itemCategory: 1
+  localizationItem: {fileID: 11400000, guid: 05cb771be4d5d0342b20cd09c020b70b, type: 2}
+  itemIcon: {fileID: 21300000, guid: e843054e53a3f3a4caa4d88a03e02e29, type: 3}

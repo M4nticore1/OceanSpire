@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public abstract class ActionMenu : UIBehaviour, IOpenable
 {
-    [SerializeField] private InputStateManager inputStateManager;
     [SerializeField] protected ResourceWidget resourceWidgetPrefab;
 
     [SerializeField] private SlidePanel slidePanel;
@@ -66,7 +65,7 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
         CleanWidgets();
         CreateWidgets(building);
 
-        inputStateManager.SetGameplayInputBlocked(true);
+        InputStateManager.instance.SetGameplayInputBlocked(true);
     }
 
     public void Close()
@@ -77,7 +76,7 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
 
     private void OnClosed()
     {
-        inputStateManager.SetGameplayInputBlocked(false);
+        InputStateManager.instance.SetGameplayInputBlocked(false);
     }
 
     protected void CleanWidgets()

@@ -22,6 +22,8 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
         UpdateMenu();
         UpdateName();
 
+        InputStateManager.instance.SetGameplayInputBlocked(true);
+
         isOpened = true;
         OnOpen();
     }
@@ -29,9 +31,12 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
     public void Close()
     {
         content.gameObject.SetActive(false);
+
+        EventBus.InvokeWorkersMenuClosed();
+        InputStateManager.instance.SetGameplayInputBlocked(false);
+
         isOpened = false;
         OnClose();
-        EventBus.InvokeWorkersMenuClosed();
     }
 
     protected abstract void OnOpen();

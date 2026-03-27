@@ -25,7 +25,7 @@ public class TextLocalizer : MonoBehaviour
     private void OnEnable()
     {
         LocalizationManager.Instance.OnLocalizationChanged += OnLocalizationChanged;
-        AssignLocalization();
+        UpdateText();
     }
 
     private void OnDisable()
@@ -33,19 +33,7 @@ public class TextLocalizer : MonoBehaviour
         LocalizationManager.Instance.OnLocalizationChanged -= OnLocalizationChanged;
     }
 
-    public void SetLocalizationItem(LocalizationItem item)
-    {
-        this.item = item;
-        AssignLocalization();
-    }
-
-    public void SetPlaceHolderLocalization(ILocalizable placeHolders)
-    {
-        placeHoldersLocalization = placeHolders;
-        AssignLocalization();
-    }
-
-    private void AssignLocalization()
+    public void UpdateText()
     {
         if (!item) return;
 
@@ -56,7 +44,7 @@ public class TextLocalizer : MonoBehaviour
                 string holder = "{" + key + "}";
                 string value = placeHoldersLocalization.Localization[key];
 
-                text.Replace(holder, value);
+                text = text.Replace(holder, value);
             }
         }
 
@@ -64,6 +52,16 @@ public class TextLocalizer : MonoBehaviour
 
         TMP_FontAsset font = LocalizationManager.Instance.GetFont(textRole);
         SetFont(font);
+    }
+
+    public void SetLocalizationItem(LocalizationItem item)
+    {
+        this.item = item;
+    }
+
+    public void SetPlaceHolderLocalization(ILocalizable placeHolders)
+    {
+        placeHoldersLocalization = placeHolders;
     }
 
     private void SetText(string text)
@@ -78,6 +76,6 @@ public class TextLocalizer : MonoBehaviour
 
     private void OnLocalizationChanged()
     {
-        AssignLocalization();
+        UpdateText();
     }
 }

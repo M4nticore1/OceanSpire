@@ -1,5 +1,5 @@
 {
-  "language_name":  "Русский",
+  "language_name": "Русский",
   "your_worlds": "Ваши миры",
   "new_world": "Новый мир",
   "name_your_world": "Назовите ваш мир",
@@ -25,7 +25,11 @@
   "unemployed_citizens": "Безработные жители",
   "no_unemployed_citizens": "В городе нет безработных жителей",
   "employed_citizens": "Рабочие жители",
-  "no_employed_citizens": "В городе нет рабочих жителей",
+  "no_employed_citizens": "В городе нет работающих жителей",
+  "item_wood": "Дерево",
+  "item_stone": "Камень",
+  "item_metal": "Металл",
+  "item_plastic": "Пластик",
   "floor_frame": "Каркас этажа",
   "tower_gate": "Врата в башню",
   "pier": "Пирс",
@@ -34,5 +38,9 @@
   "coal_generator": "Угольный генератор",
   "farm": "Ферма",
   "wood_storage": "Хранилище дерева",
-  "refund_resources": "Возвращаемые ресурсы"
+  "refund_resources": "Возвращаемые ресурсы",
+  "ad_reward": "Награда",
+  "ad_reward_item": "Вы получите предмет '{itemName}' в количестве {amount} за просмотр",
+  "ad_reward_boost_boats": "Вы можете увеличить скорость всех ваших лодок в 2 раза за просмотр",
+  "ad_reward_received_item": "Вы поличили предмет '{itemName}' в количестве {amount}!"
 }

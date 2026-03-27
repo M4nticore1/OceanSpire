@@ -86,7 +86,7 @@ public class AppLovinMaxAdsManager : MonoBehaviour
     private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdk.AdInfo adInfo)
     {
         // The rewarded ad displayed and the user should receive the reward.
-        rewardedAdsManager.HandleRewardedAdReceivedReward();
+        rewardedAdsManager.ReceiveReward();
     }
 
     private void OnRewardedAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo)

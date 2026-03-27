@@ -176,7 +176,11 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
     private void ProcessMoving()
     {
         rectTransform.anchoredPosition = math.lerp(rectTransform.anchoredPosition, targetPosition, slideTransitionSpeed * Time.deltaTime);
-        rectTransform.anchoredPosition = math.clamp(rectTransform.anchoredPosition, closedPosition, openedPosition);
+
+        Vector2 min = math.min(openedPosition, closedPosition);
+        Vector2 max = math.max(openedPosition, closedPosition);
+
+        rectTransform.anchoredPosition = math.clamp(rectTransform.anchoredPosition, min, max);
     }
 
     private void UpdateBackground()
