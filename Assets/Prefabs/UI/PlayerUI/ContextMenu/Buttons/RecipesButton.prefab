@@ -9,12 +9,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 300
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -22,11 +38,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Name
-      value: ProductionButton
+      value: RecipesButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252278899149896188, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252278899149896188, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 5252278899149896188, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252278899149896188, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5829413
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252278899149896188, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_Color.r
+      value: 0.31764707
       objectReference: {fileID: 0}
     - target: {fileID: 6505568468667692236, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_text
@@ -119,7 +155,7 @@ PrefabInstance:
     - target: {fileID: 9002625106314974428, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 4e54145a68e6da14e913103424856b0c, type: 3}
+      objectReference: {fileID: 21300000, guid: bddaedb9f0d79ca4cb743a3139f1cef3, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

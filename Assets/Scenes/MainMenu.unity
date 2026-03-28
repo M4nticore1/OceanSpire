@@ -463,7 +463,7 @@ GameObject:
   - component: {fileID: 1546888464}
   - component: {fileID: 1546888463}
   m_Layer: 0
-  m_Name: GooglePlayInUppUpdate
+  m_Name: GooglePlayInAppUpdate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

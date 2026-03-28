@@ -8,9 +8,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -20
+      objectReference: {fileID: 0}
     - target: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Name
-      value: DemolishContextMenuButton
+      value: DemolishButton
       objectReference: {fileID: 0}
     - target: {fileID: 6686591089564819408, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Pivot.x

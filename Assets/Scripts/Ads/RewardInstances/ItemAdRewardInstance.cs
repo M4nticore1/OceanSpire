@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ItemAdRewardInstance : AdRewardInstance
 {
@@ -12,7 +13,7 @@ public class ItemAdRewardInstance : AdRewardInstance
         cityStorage = Object.FindAnyObjectByType<CityStorage>();
 
         GenerateAmount();
-        AssignPlaceHoldersLocalization();
+        GetPlaceHoldersLocalization();
     }
 
     protected override void OnRewardRecieved()
@@ -21,10 +22,13 @@ public class ItemAdRewardInstance : AdRewardInstance
         cityStorage.Inventory.AddItemAmount(woodId, amount);
     }
 
-    protected override void AssignPlaceHoldersLocalization()
+    protected override Dictionary<string, string> GetPlaceHoldersLocalization()
     {
-        localization.Add("itemName", LocalizationManager.Instance.GetText(itemRewardData.ItemData.LocalizationItem));
-        localization.Add("amount", amount.ToString());
+        return new Dictionary<string, string>()
+        {
+            { "itemName", LocalizationManager.Instance.GetText(itemRewardData.ItemData.LocalizationItem).ToLower() },
+            { "amount", amount.ToString()},
+        };
     }
 
     private void GenerateAmount()

@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class AdRewardInstance : ILocalizable
 {
@@ -8,8 +8,7 @@ public abstract class AdRewardInstance : ILocalizable
     public float limitTime { get; private set; } = 0f;
     public float remainingTime { get; private set; } = 0f;
 
-    protected Dictionary<string, string> localization = new Dictionary<string, string>();
-    public Dictionary<string, string> Localization => localization;
+    public Dictionary<string, string> Localization => GetPlaceHoldersLocalization();
 
     public AdRewardInstance(AdRewardData data)
     {
@@ -17,7 +16,7 @@ public abstract class AdRewardInstance : ILocalizable
     }
 
     protected abstract void OnRewardRecieved();
-    protected abstract void AssignPlaceHoldersLocalization();
+    protected abstract Dictionary<string, string> GetPlaceHoldersLocalization();
 
     public void RecieveReward()
     {
