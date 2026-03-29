@@ -20,12 +20,12 @@ MonoBehaviour:
   maxResidentsCount: 1
   constructionStraight: {fileID: 566882254515453963, guid: 39ebc51f67994314a84ea65d901dd5aa, type: 3}
   constructionCorner: {fileID: 566882254515453963, guid: 39ebc51f67994314a84ea65d901dd5aa, type: 3}
-  constructionStraightLeft: {fileID: 566882254515453963, guid: 39ebc51f67994314a84ea65d901dd5aa, type: 3}
-  constructionStraightRight: {fileID: 0}
-  constructionStraightLeftRight: {fileID: 0}
-  constructionCornerLeft: {fileID: 0}
-  constructionCornerRight: {fileID: 0}
-  constructionCornerLeftRight: {fileID: 0}
+  constructionStraightLeft: {fileID: 566882254515453963, guid: 9c6c26aec22a23149b456717f96e8ad6, type: 3}
+  constructionStraightRight: {fileID: 566882254515453963, guid: 080516e6908c2284fbe6993952a360d4, type: 3}
+  constructionStraightLeftRight: {fileID: 566882254515453963, guid: 23b055b60b185494791395ee8a758143, type: 3}
+  constructionCornerLeft: {fileID: 566882254515453963, guid: 9c6c26aec22a23149b456717f96e8ad6, type: 3}
+  constructionCornerRight: {fileID: 566882254515453963, guid: 080516e6908c2284fbe6993952a360d4, type: 3}
+  constructionCornerLeftRight: {fileID: 566882254515453963, guid: 23b055b60b185494791395ee8a758143, type: 3}
   constructionStraightUp: {fileID: 0}
   constructionStraightDown: {fileID: 0}
   constructionStraightUpDown: {fileID: 0}
