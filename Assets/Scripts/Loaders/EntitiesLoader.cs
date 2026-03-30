@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class EntitiesLoader : MonoBehaviour
 {
-    [SerializeField] protected EntitiesManager entitiesManager;
     private const int startResidentsCount = 2;
 
     [SerializeField] private Transform entitySpawnPosition = null;
@@ -21,8 +20,7 @@ public class EntitiesLoader : MonoBehaviour
 
         if (saveData != null) {
             foreach (var data in saveData.citizensData) {
-                Human citizen = EntityFactory.CreateCitizen(data) as Human;
-                entitiesManager.Register(citizen);
+                Human citizen = EntityFactory.CreateHuman(data);
             }
         }
         else {
@@ -35,9 +33,8 @@ public class EntitiesLoader : MonoBehaviour
                 float z = Random.Range(position.z - maxSpawnRange, position.z + maxSpawnRange);
                 Vector3 finalPosition = new Vector3(x, y, z);
 
-                HumanEntry data = new HumanEntry((int)CreatureIdEnum.Citizen, finalPosition, rotation.eulerAngles);
-                Human citizen = EntityFactory.CreateCitizen(data) as Human;
-                entitiesManager.Register(citizen);
+                HumanEntry data = new HumanEntry((int)CreatureIdEnum.Human, HumanStatus.Citizen, finalPosition, rotation.eulerAngles);
+                Human citizen = EntityFactory.CreateHuman(data);
             }
         }
     }

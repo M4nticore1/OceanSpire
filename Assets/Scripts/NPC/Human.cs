@@ -5,30 +5,30 @@ public enum HumanStatus
 {
     Citizen,
     Wanderer,
-    Attacker
+    Enemy
 }
 
 [Serializable]
-public class HumanEntry : EntityEntry
+public class HumanEntry : CreatureEntry
 {
-    public HumanEntry(int id, Vector3 position, Vector3 rotation) : base(id, position, rotation)
+    public HumanEntry(int id, HumanStatus status, Vector3 position, Vector3 rotation) : base(id, position, rotation)
     {
-
+        this.status = status;
     }
 
-    public HumanStatus creatureStatus = HumanStatus.Citizen;
-    public Guid interactBuildingInstanceId = Guid.Empty;
-    public bool isMale = false;
-    public int firstNameIndex = 0;
-    public int lastNameIndex = 0;
+    public HumanStatus status { get; private set; } = HumanStatus.Citizen;
+    public Guid interactBuildingInstanceId { get; private set; } = Guid.Empty;
+    public bool isMale { get; private set; } = false;
+    public int firstNameIndex { get; private set; } = 0;
+    public int lastNameIndex { get; private set; } = 0;
 }
 
-public class Human : Entity
+public class Human : Creature
 {
     public EntityInteractor interactor { get; private set; } = null;
     public BoatRider boatRider { get; private set; } = null;
 
-    public HumanStatus status { get; private set; } = HumanStatus.Citizen;
+    public HumanStatus currentStatus { get; private set; } = HumanStatus.Citizen;
 
     private bool isMale = false;
 
@@ -79,12 +79,13 @@ public class Human : Entity
         boatRider.onExitedBoat -= OnExitedBoat;
     }
 
-    public override void Init(EntityEntry data)
+    public override void Init(CreatureEntry data)
     {
         base.Init(data);
 
         HumanEntry humanData = data as HumanEntry;
-        AssignGender(humanData);
+        SetStatus(humanData.status);
+        isMale = humanData.isMale;
         AssignNameIndexes(humanData);
 
         EventBus.InvokeCitizenInited(this);
@@ -136,6 +137,13 @@ public class Human : Entity
     private void OnEnteredBoat(Boat boat)
     {
         movement.SetAgentEnabled(false);
+
+        if (currentStatus == HumanStatus.Citizen) {
+            boat.SetState(BoatStateEnum.FindingLoot);
+        }
+        else if (currentStatus == HumanStatus.Wanderer) {
+            boat.SetState(BoatStateEnum.ReturningToDock);
+        }
     }
 
     private void OnExitedBoat(Boat boat)
@@ -146,21 +154,6 @@ public class Human : Entity
             return;
 
         cityNavigator.TryFindPathToTargetBuilding();
-    }
-
-    // Gender
-    private void AssignGender(HumanEntry data)
-    {
-        if (data != null) {
-            isMale = data.isMale;
-        }
-        else {
-            int index = UnityEngine.Random.Range(0, 1);
-            if (index == 0)
-                isMale = false;
-            else
-                isMale = true;
-        }
     }
 
     // Names
@@ -185,5 +178,43 @@ public class Human : Entity
 
         firstName = LocalizationManager.Instance.GetFirstName(isMale, firstNameIndex);
         lastName = LocalizationManager.Instance.GetLastName(isMale, lastNameIndex);
+    }
+
+    // Status
+    public void SetStatus(HumanStatus status)
+    {
+        ExitStatus(currentStatus);
+        currentStatus = status;
+        EnterStatus(currentStatus);
+    }
+
+    private void EnterStatus(HumanStatus status)
+    {
+        switch (status) {
+            case HumanStatus.Citizen:
+                EntitiesManager.instance.RegisterCitizen(this);
+                break;
+            case HumanStatus.Wanderer:
+                EntitiesManager.instance.RegisterWanderer(this);
+                break;
+            case HumanStatus.Enemy:
+                EntitiesManager.instance.RegisterEnemy(this);
+                break;
+        }
+    }
+
+    private void ExitStatus(HumanStatus status)
+    {
+        switch (status) {
+            case HumanStatus.Citizen:
+                EntitiesManager.instance.UnregisterCitizen(this);
+                break;
+            case HumanStatus.Wanderer:
+                EntitiesManager.instance.UnregisterWanderer(this);
+                break;
+            case HumanStatus.Enemy:
+                EntitiesManager.instance.UnregisterEnemy(this);
+                break;
+        }
     }
 }

@@ -121,17 +121,17 @@ public class WorldData
         //    resourcesAmount[i] = CityManager.Instance.items[i].Amount;
         //}
 
-        // Boats
-        Boat[] spawnedBoats = BoatsManager.Instance.citizenBoats.ToArray();
-        int length = spawnedBoats.Length;
-        boatsData = new BoatEntry[length];
-        for (int i = 0; i < length; i++) {
-            Boat boat = spawnedBoats[i];
-            BoatEntry data = new BoatEntry();
-            boatsData[i] = data;
+        //// Boats
+        //Boat[] spawnedBoats = BoatsManager.Instance.citizenBoats.ToArray();
+        //int length = spawnedBoats.Length;
+        //boatsData = new BoatEntry[length];
+        //for (int i = 0; i < length; i++) {
+        //    Boat boat = spawnedBoats[i];
+        //    BoatEntry data = new BoatEntry();
+        //    boatsData[i] = data;
 
-            data.health = boat.CurrentHealth;
-        }
+        //    data.health = boat.CurrentHealth;
+        //}
 
         //int boatsCount = spawnedBoats.Count;
         //spawnedBoatIds = new int[boatsCount];

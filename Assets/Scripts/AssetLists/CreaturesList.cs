@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CreaturesList", menuName = "GameContent/Creatures List")]
@@ -15,6 +16,7 @@ public class CreaturesList : ScriptableObject
         }
     }
 
-    [SerializeField] private Entity[] creatures = null;
-    public Entity[] Creatures => creatures;
+    [SerializeField] private Creature[] creatures = null;
+    public Creature[] Creatures => creatures;
+
 }

@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class EntityEntry
+public abstract class CreatureEntry
 {
     public int id = 0;
     public Vector3 position;
     public Vector3 rotation;
 
-    public EntityEntry(int id, Vector3 position, Vector3 rotation)
+    public CreatureEntry(int id, Vector3 position, Vector3 rotation)
     {
         this.id = id;
         this.position = position;
@@ -15,7 +15,7 @@ public abstract class EntityEntry
     }
 }
 
-public abstract class Entity : MonoBehaviour
+public abstract class Creature : MonoBehaviour
 {
     private IslandNavMeshBuilder cityNavMeshManager;
     protected NavMeshAgent agent = null;
@@ -43,7 +43,7 @@ public abstract class Entity : MonoBehaviour
         EventBus.onNavMeshBaked -= OnNavMeshBaked;
     }
 
-    public virtual void Init(EntityEntry data)
+    public virtual void Init(CreatureEntry data)
     {
         transform.position = data.position;
         transform.rotation = Quaternion.Euler(data.rotation);

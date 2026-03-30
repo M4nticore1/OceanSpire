@@ -18,16 +18,6 @@ public class BoatRider : MonoBehaviour
     public event Action<Boat> onEnteredBoat;
     public event Action<Boat> onExitedBoat;
 
-    public void SetBoat(Boat boat)
-    {
-        currentBoat = boat;
-    }
-
-    public void RemoveBoat()
-    {
-        currentBoat = null;
-    }
-
     public void StartEnteringBoat(Boat boat)
     {
         TimerManager.StartTimer(useBoatTimerHandle, useBoatTime, () => EnterBoat(boat));
@@ -40,14 +30,23 @@ public class BoatRider : MonoBehaviour
         isEnteringBoat = false;
     }
 
+    public void StopExitingBoat()
+    {
+        TimerManager.RemoveTimer(useBoatTimerHandle);
+        isExitingBoat = false;
+    }
+
     public void HandleBoatSetedIdle()
     {
+        Human human = GetComponent<Human>();
+        if (human.currentStatus == HumanStatus.Wanderer) return;
+
         StartExitingBoat();
     }
 
-    private void EnterBoat(Boat boat)
+    public void EnterBoat(Boat boat)
     {
-        currentBoat = boat;
+        SetCurrentBoat(boat);
         currentBoat.EnterBoat(this);
         transform.position = currentBoat.SeatSlot.position;
         transform.rotation = currentBoat.SeatSlot.rotation;
@@ -58,16 +57,15 @@ public class BoatRider : MonoBehaviour
         onEnteredBoat?.Invoke(currentBoat);
     }
 
+    private void SetCurrentBoat(Boat boat)
+    {
+        currentBoat = boat;
+    }
+
     private void StartExitingBoat()
     {
         TimerManager.StartTimer(useBoatTimerHandle, useBoatTime, ExitBoat);
         isExitingBoat = true;
-    }
-
-    public void StopExitingBoat()
-    {
-        TimerManager.RemoveTimer(useBoatTimerHandle);
-        isExitingBoat = false;
     }
 
     private void ExitBoat()
@@ -80,6 +78,8 @@ public class BoatRider : MonoBehaviour
 
         isRidingOnBoat = false;
         isExitingBoat = false;
+        SetCurrentBoat(null);
+
         onExitedBoat?.Invoke(currentBoat);
     }
 

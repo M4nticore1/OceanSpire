@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 2423519319514539946}
   - component: {fileID: 9149124761615220950}
   m_Layer: 0
-  m_Name: Boat
+  m_Name: BoatParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

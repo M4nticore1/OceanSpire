@@ -20,13 +20,15 @@ public class BoatsLoader : MonoBehaviour
             BoatIdEnum[] boatIds = startBoatIds;
 
             for (int i = 0; i < boatIds.Length; i++) {
-                Boat prefab = BoatsList.Instance.boats[(int)boatIds[i]];
+                int id = (int)boatIds[i];
+                Boat prefab = BoatsList.Instance.boats[id];
                 BoatDockPoint spawnTransform = pier.PierConstruction.BoatDocks[i];
-                Vector3 spawnPosition = spawnTransform.DockTransform.position;
-                Vector3 spawnRotation = spawnTransform.DockTransform.rotation.eulerAngles;
+                Vector3 position = spawnTransform.DockTransform.position;
+                Vector3 rotation = spawnTransform.DockTransform.rotation.eulerAngles;
+                float health = prefab.Health.MaxHealth;
 
-                BoatEntry data = new BoatEntry { position = spawnPosition, rotation = spawnRotation, health = prefab.MaxHealth };
-                Boat boat = BoatFactory.CreateBoat((int)boatIds[i], data);
+                BoatEntry data = new BoatEntry (id, position, rotation, health);
+                Boat boat = BoatFactory.CreateBoat(data);
             }
         }
     }

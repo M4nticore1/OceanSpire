@@ -1,18 +1,23 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
 [Serializable]
 public class BoatEntry
 {
-    public int dockIndex = 0;
-    public float health = 0;
-    public Vector3 position;
-    public Vector3 rotation;
+    public BoatEntry (int id, Vector3 position, Vector3 rotation, float health)
+    {
+        this.id = id;
+        this.position = position;
+        this.rotation = rotation;
+        this.health = health;
+    }
+
+    public int id { get; private set; } = 0;
+    public Vector3 position { get; private set; } = Vector3.zero;
+    public Vector3 rotation { get; private set; } = Vector3.zero;
+    public int dockIndex { get; private set; } = 0;
+    public float health { get; private set; } = 0;
 }
 
 public enum BoatStateEnum
@@ -124,7 +129,6 @@ public class Boat : MonoBehaviour
     public void EnterBoat(BoatRider rider)
     {
         this.rider = rider;
-        SetState(BoatStateEnum.FindingLoot);
     }
 
     public void ExitBoat()

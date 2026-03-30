@@ -19,13 +19,13 @@ MonoBehaviour:
     amount: 200
   maxResidentsCount: 1
   constructionStraight: {fileID: 566882254515453963, guid: 39ebc51f67994314a84ea65d901dd5aa, type: 3}
-  constructionCorner: {fileID: 566882254515453963, guid: 39ebc51f67994314a84ea65d901dd5aa, type: 3}
+  constructionCorner: {fileID: 566882254515453963, guid: d725f87958e6e3343b20364923ce3e07, type: 3}
   constructionStraightLeft: {fileID: 566882254515453963, guid: 9c6c26aec22a23149b456717f96e8ad6, type: 3}
   constructionStraightRight: {fileID: 566882254515453963, guid: 080516e6908c2284fbe6993952a360d4, type: 3}
   constructionStraightLeftRight: {fileID: 566882254515453963, guid: 23b055b60b185494791395ee8a758143, type: 3}
-  constructionCornerLeft: {fileID: 566882254515453963, guid: 9c6c26aec22a23149b456717f96e8ad6, type: 3}
-  constructionCornerRight: {fileID: 566882254515453963, guid: 080516e6908c2284fbe6993952a360d4, type: 3}
-  constructionCornerLeftRight: {fileID: 566882254515453963, guid: 23b055b60b185494791395ee8a758143, type: 3}
+  constructionCornerLeft: {fileID: 566882254515453963, guid: ac977cabe44acd64195bee3bc4aebada, type: 3}
+  constructionCornerRight: {fileID: 566882254515453963, guid: 247c2075ca5341d448e6dc2251d491c7, type: 3}
+  constructionCornerLeftRight: {fileID: 566882254515453963, guid: 3b6e272b3b84d4943ac008d77e0c53e9, type: 3}
   constructionStraightUp: {fileID: 0}
   constructionStraightDown: {fileID: 0}
   constructionStraightUpDown: {fileID: 0}

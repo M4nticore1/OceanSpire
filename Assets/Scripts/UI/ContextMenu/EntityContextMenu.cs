@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class EntityContextMenu : ContextMenu<Entity>
+public class EntityContextMenu : ContextMenu<Creature>
 {
-    public override void Init(Entity entity)
+    public override void Init(Creature entity)
     {
         //SetNameText(human.firstName + " " + human.lastName);
     }
