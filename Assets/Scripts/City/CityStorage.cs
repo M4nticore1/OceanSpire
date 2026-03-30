@@ -1,10 +1,16 @@
-using Unity.Mathematics;
 using UnityEngine;
 
 public class CityStorage : MonoBehaviour
 {
+    public static CityStorage instance { get; private set; }
+
     [SerializeField] private Inventory inventory = null;
     public Inventory Inventory => GetInventory();
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     private void OnEnable()
     {

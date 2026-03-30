@@ -25,8 +25,14 @@ public class HumanEntry : CreatureEntry
 
 public class Human : Creature
 {
-    public EntityInteractor interactor { get; private set; } = null;
-    public BoatRider boatRider { get; private set; } = null;
+    [SerializeField] private EntityInteractor interactor;
+    public EntityInteractor Interactor => interactor;
+
+    [SerializeField] private BoatRider boatRider;
+    public BoatRider BoatRider => boatRider;
+
+    [SerializeField] private SelectComponent selectComponent;
+    public SelectComponent SelectComponent => selectComponent;
 
     public HumanStatus currentStatus { get; private set; } = HumanStatus.Citizen;
 
@@ -35,16 +41,13 @@ public class Human : Creature
     private int firstNameIndex = 0;
     private int lastNameIndex = 0;
 
-    public string firstName { get; private set; } = "";
-    public string lastName { get; private set; } = "";
+    public string firstName { get; private set; }
+    public string lastName { get; private set; }
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        interactor = GetComponent<EntityInteractor>();
-        boatRider = GetComponent<BoatRider>();
-    }
+    public static event Action<Human> onWandererAccepted;
+    public static event Action<Human> onWandererRejected;
+    public static event Action<Human> onHumanSelected;
+    public static event Action<Human> onHumanDeselected;
 
     protected override void OnEnable()
     {
@@ -62,6 +65,9 @@ public class Human : Creature
 
         boatRider.onEnteredBoat += OnEnteredBoat;
         boatRider.onExitedBoat += OnExitedBoat;
+
+        selectComponent.onSelected += OnSelected;
+        selectComponent.onDeselected += OnDeselected;
     }
 
     protected override void OnDisable()
@@ -77,6 +83,9 @@ public class Human : Creature
 
         boatRider.onEnteredBoat -= OnEnteredBoat;
         boatRider.onExitedBoat -= OnExitedBoat;
+
+        selectComponent.onSelected -= OnSelected;
+        selectComponent.onDeselected -= OnDeselected;
     }
 
     public override void Init(CreatureEntry data)
@@ -89,6 +98,24 @@ public class Human : Creature
         AssignNameIndexes(humanData);
 
         EventBus.InvokeCitizenInited(this);
+    }
+
+    // Wanderer
+    public void AcceptWanderer()
+    {
+        SetStatus(HumanStatus.Citizen);
+        selectComponent.SetClickable(true);
+        selectComponent.SetSelected(false);
+        Destroy(boatRider.currentBoat.gameObject);
+        boatRider.ExitBoat();
+        onWandererAccepted?.Invoke(this);
+    }
+
+    public void RejectWanderer()
+    {
+        boatRider.currentBoat.SetState(BoatStateEnum.FloatingAway);
+        CreaturesManager.instance.UnregisterWanderer(this);
+        onWandererRejected?.Invoke(this);
     }
 
     // Movement
@@ -192,13 +219,14 @@ public class Human : Creature
     {
         switch (status) {
             case HumanStatus.Citizen:
-                EntitiesManager.instance.RegisterCitizen(this);
+                CreaturesManager.instance.RegisterCitizen(this);
                 break;
             case HumanStatus.Wanderer:
-                EntitiesManager.instance.RegisterWanderer(this);
+                CreaturesManager.instance.RegisterWanderer(this);
+                selectComponent.SetClickable(false);
                 break;
             case HumanStatus.Enemy:
-                EntitiesManager.instance.RegisterEnemy(this);
+                CreaturesManager.instance.RegisterEnemy(this);
                 break;
         }
     }
@@ -207,14 +235,40 @@ public class Human : Creature
     {
         switch (status) {
             case HumanStatus.Citizen:
-                EntitiesManager.instance.UnregisterCitizen(this);
+                CreaturesManager.instance.UnregisterCitizen(this);
                 break;
             case HumanStatus.Wanderer:
-                EntitiesManager.instance.UnregisterWanderer(this);
+                CreaturesManager.instance.UnregisterWanderer(this);
+                selectComponent.SetClickable(true);
                 break;
             case HumanStatus.Enemy:
-                EntitiesManager.instance.UnregisterEnemy(this);
+                CreaturesManager.instance.UnregisterEnemy(this);
                 break;
+        }
+    }
+
+    private void OnSelected()
+    {
+        if (currentStatus == HumanStatus.Wanderer) {
+            selectComponent.SetSelected(false);
+            SelectComponent boatSelectComponent = boatRider.currentBoat.SelectComponent;
+            boatSelectComponent.SetSelected(true);
+            boatSelectComponent.SetClickable(false);
+        }
+        else {
+            onHumanSelected?.Invoke(this);
+        }
+    }
+
+    private void OnDeselected()
+    {
+        if (currentStatus == HumanStatus.Wanderer) {
+            SelectComponent boatSelectComponent = boatRider.currentBoat.SelectComponent;
+            boatSelectComponent.SetClickable(true);
+            boatSelectComponent.SetSelected(false);
+        }
+        else {
+            onHumanDeselected?.Invoke(this);
         }
     }
 }

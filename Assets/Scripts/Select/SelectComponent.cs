@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectComponent : MonoBehaviour, IClickable
 {
     public bool isSelected { get; private set; } = false;
     private Dictionary<GameObject, int> layers = new Dictionary<GameObject, int>();
 
-    [SerializeField] private bool isClickable = true;
-    public bool IsClickable => isClickable;
+    private bool isClickable = true;
 
     public event Action onSelected;
     public event Action onDeselected;
@@ -34,9 +34,8 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     public void SetSelected(bool value)
     {
-        if (value == isSelected) return;
-
         isSelected = value;
+
         if (isSelected) {
             OnSelected();
         }
@@ -49,7 +48,11 @@ public class SelectComponent : MonoBehaviour, IClickable
     {
         layers.Clear();
 
-        foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
+        List<GameObject> objects = GameUtils.GetAllChildren(transform);
+        objects.Add(gameObject);
+
+        foreach (GameObject child in objects) {
+            if (child.GetComponent<UIBehaviour>()) continue;
             if (child.GetComponent<ParticleSystem>()) continue;
 
             layers.Add(child, child.layer);
@@ -62,10 +65,18 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     private void OnDeselected()
     {
-        foreach (GameObject child in GameUtils.GetAllChildren(transform)) {
-            if (!layers.ContainsKey(child)) continue;
+        List<GameObject> objects = GameUtils.GetAllChildren(transform);
+        objects.Add(gameObject);
 
-            child.layer = layers[child];
+        foreach (GameObject child in objects) {
+            if (child.GetComponent<UIBehaviour>()) continue;
+
+            if (layers.ContainsKey(child)) {
+                child.layer = layers[child];
+            }
+            else {
+                child.layer = LayerMask.NameToLayer("Default");
+            }
         }
 
         onDeselected?.Invoke();
@@ -83,11 +94,8 @@ public class SelectComponent : MonoBehaviour, IClickable
         return isClickable;
     }
 
-    //private void OnSelectedComponent(SelectComponent component)
-    //{
-    //    if (!isSelected) return;
-    //    if (component == this) return;
-
-    //    Deselect();
-    //}
+    public void SetClickable(bool value)
+    {
+        isClickable = value;
+    }
 }

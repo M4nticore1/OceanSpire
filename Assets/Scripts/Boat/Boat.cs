@@ -28,6 +28,7 @@ public enum BoatStateEnum
     CollectingLoot,
     ReturningToDock,
     UnloadingLoot,
+    FloatingAway,
     Demolished
 }
 
@@ -58,6 +59,7 @@ public class Boat : MonoBehaviour
     [SerializeField] private HealthDrainer healthDrainer;
 
     [SerializeField] private SelectComponent selectComponent;
+    public SelectComponent SelectComponent => selectComponent;
 
     // Dock
     public BoatDockPoint dockPoint { get; private set; }
@@ -78,7 +80,9 @@ public class Boat : MonoBehaviour
 
     public ContextMenu spawnedDetailsMenu { get; set; }
 
-    public static event Action<Boat> OnBoadDestroyed;
+    public static event Action<Boat> onBoatSelected;
+    public static event Action<Boat> onBoatDeselected;
+    public static event Action<Boat> onBoatDestroyed;
 
     private void OnEnable()
     {
@@ -90,6 +94,7 @@ public class Boat : MonoBehaviour
     private void OnDisable()
     {
         movement.onReachedPath -= OnReachedPath;
+        selectComponent.onSelected -= OnSelected;
         selectComponent.onDeselected -= OnDeselected;
     }
 
@@ -129,6 +134,11 @@ public class Boat : MonoBehaviour
     public void EnterBoat(BoatRider rider)
     {
         this.rider = rider;
+
+        Human human = rider.GetComponent<Human>();
+        if (human.currentStatus == HumanStatus.Wanderer) {
+            selectComponent.SetClickable(false);
+        }
     }
 
     public void ExitBoat()
@@ -189,6 +199,9 @@ public class Boat : MonoBehaviour
             case BoatStateEnum.UnloadingLoot:
                 this.state = new BoatUnloadingState(this);
                 break;
+            case BoatStateEnum.FloatingAway:
+                this.state = new BoatFloatingAway(this);
+                break;
             case BoatStateEnum.Demolished:
                 this.state = new BoatDemolishState(this);
                 break;
@@ -201,15 +214,11 @@ public class Boat : MonoBehaviour
     // Clickable
     private void OnSelected()
     {
-        /// Return it for the context menu
-
-        //EventBus.InvokeSelectedBoat(this);
+        onBoatSelected?.Invoke(this);
     }
 
     private void OnDeselected()
     {
-        /// Return it for the context menu
-
-        //EventBus.InvokeDeselectedBoat(this);
+        onBoatDeselected?.Invoke(this);
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class WorkersControlMenu : ControlMenu
 {
-    [SerializeField] private EntitiesManager entitiesManager;
+    [SerializeField] private CreaturesManager entitiesManager;
 
     [SerializeField] private WorkersPanel buildingWorkersMenu;
     [SerializeField] private WorkersPanel unemployedCitizensMenu;
@@ -61,10 +61,10 @@ public class WorkersControlMenu : ControlMenu
         for (int i = 0; i < citizens.Count; i++) {
             Human citizen = citizens[i];
 
-            if (citizen.interactor.InteractBuilding == selectedBuilding) {
+            if (citizen.Interactor.InteractBuilding == selectedBuilding) {
                 buildingWorkersMenu.CreateWidget(citizen);
             }
-            else if (citizen.interactor.InteractBuilding) {
+            else if (citizen.Interactor.InteractBuilding) {
                 employedCitizensMenu.CreateWidget(citizen);
             }
             else {

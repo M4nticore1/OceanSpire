@@ -19,7 +19,6 @@ public class PlayerInteractionHandler : MonoBehaviour
         if (PointerUtils.GetRaycastUIResult().gameObject) return;
 
         if (PointerUtils.GetRaycastColliderHit(out var hit)) {
-
             IClickable[] clickables = hit.collider.GetComponents<IClickable>();
 
             foreach (IClickable clickable in clickables) {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class FoodDrain : MonoBehaviour
 {
-    [SerializeField] private EntitiesManager entitiesManager;
+    [SerializeField] private CreaturesManager entitiesManager;
     [SerializeField] private CityStorage cityStorage;
 
     private float currentAmountToDrain = 0;

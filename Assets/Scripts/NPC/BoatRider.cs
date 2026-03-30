@@ -4,8 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(EntityMovement))]
 public class BoatRider : MonoBehaviour
 {
-    private Boat currentBoat;
-    public Boat CurrentBoat => currentBoat;
+    public Boat currentBoat { get; private set; }
 
     public bool isRidingOnBoat { get; private set; } = false;
 
@@ -22,6 +21,12 @@ public class BoatRider : MonoBehaviour
     {
         TimerManager.StartTimer(useBoatTimerHandle, useBoatTime, () => EnterBoat(boat));
         isEnteringBoat = true;
+    }
+
+    public void StartExitingBoat()
+    {
+        TimerManager.StartTimer(useBoatTimerHandle, useBoatTime, ExitBoat);
+        isExitingBoat = true;
     }
 
     public void StopEnteringBoat()
@@ -57,18 +62,7 @@ public class BoatRider : MonoBehaviour
         onEnteredBoat?.Invoke(currentBoat);
     }
 
-    private void SetCurrentBoat(Boat boat)
-    {
-        currentBoat = boat;
-    }
-
-    private void StartExitingBoat()
-    {
-        TimerManager.StartTimer(useBoatTimerHandle, useBoatTime, ExitBoat);
-        isExitingBoat = true;
-    }
-
-    private void ExitBoat()
+    public void ExitBoat()
     {
         currentBoat.ExitBoat();
         transform.position = currentBoat.dockPoint.EntraceTransform.position;
@@ -83,8 +77,8 @@ public class BoatRider : MonoBehaviour
         onExitedBoat?.Invoke(currentBoat);
     }
 
-    //public void StartMovingToDock()
-    //{
-    //    CurrentBoat.StartMovingToDock();
-    //}
+    private void SetCurrentBoat(Boat boat)
+    {
+        currentBoat = boat;
+    }
 }

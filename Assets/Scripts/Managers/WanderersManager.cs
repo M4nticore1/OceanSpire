@@ -25,7 +25,24 @@ public class WanderersManager : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null && instance != this) {
+            Destroy(gameObject);
+            return;
+        }
+
         instance = this;
+    }
+
+    private void OnEnable()
+    {
+        Human.onWandererAccepted += OnWandererAccepted;
+        Human.onWandererRejected += OnWandererRejected;
+    }
+
+    private void OnDisable()
+    {
+        Human.onWandererAccepted -= OnWandererAccepted;
+        Human.onWandererRejected -= OnWandererRejected;
     }
 
     private void Start()
@@ -43,6 +60,14 @@ public class WanderersManager : MonoBehaviour
         SpawnWanderer();
         ResetTimeToSpawn();
         ApplyRandomCooldown();
+    }
+
+    public Vector3 GetRandomBorderPosition()
+    {
+        Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
+        dir.Normalize();
+        Vector3 position = dir * spawnDistance;
+        return position;
     }
 
     private void SpawnWanderer()
@@ -65,7 +90,7 @@ public class WanderersManager : MonoBehaviour
         boat.SetDockPoint(waitingDockPoints[spawnedBoats.Count]);
         spawnedBoats.Add(boat);
 
-        human.boatRider.EnterBoat(boat);
+        human.BoatRider.EnterBoat(boat);
     }
 
     private void ResetTimeToSpawn()
@@ -76,6 +101,42 @@ public class WanderersManager : MonoBehaviour
     private void ApplyRandomCooldown()
     {
         currentCooldownToSpawnWanderer = GetRandomCooldown();
+    }
+
+    private void OnWandererAccepted(Human human)
+    {
+        RemoveWanderer(human);
+        AdjustWandererPositions();
+    }
+
+    private void OnWandererRejected(Human human)
+    {
+        RemoveWanderer(human);
+        AdjustWandererPositions();
+    }
+
+    private void RemoveWanderer(Human human)
+    {
+        int index = 0;
+        foreach (Human wanderer in spawnedWanderers) {
+            if (wanderer == human) {
+                spawnedWanderers.RemoveAt(index);
+                spawnedBoats.RemoveAt(index);
+                break;
+            }
+            index++;
+        }
+    }
+
+    private void AdjustWandererPositions()
+    {
+        for (int i = 0; i < spawnedWanderers.Count; i++) {
+            Human wanderer = spawnedWanderers[i];
+
+            Boat boat = wanderer.BoatRider.currentBoat;
+            boat.SetDockPoint(waitingDockPoints[i]);
+            boat.SetState(BoatStateEnum.ReturningToDock);
+        }
     }
 
     private bool CanSpawn()
@@ -89,13 +150,5 @@ public class WanderersManager : MonoBehaviour
     {
         float cooldown = Random.Range(minCooldownToSpawnWanderer, maxCooldownToSpawnWanderer);
         return cooldown;
-    }
-
-    private Vector3 GetRandomBorderPosition()
-    {
-        Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
-        dir.Normalize();
-        Vector3 position = dir * spawnDistance;
-        return position;
     }
 }

@@ -4,9 +4,6 @@ using TMPro;
 
 public class ResourceWidget : MonoBehaviour
 {
-    private CityStorage cityStorage;
-    private EntitiesManager entitiesManager;
-
     [SerializeField] private ItemData itemData;
     private ItemInstance amountItem;
     private ItemInstance maxAmountItem;
@@ -21,20 +18,14 @@ public class ResourceWidget : MonoBehaviour
     [SerializeField] private Color enoughAmountColor = Color.green;
     [SerializeField] private Color notEnoughAmountColor = Color.red;
 
-    private void Awake()
-    {
-        cityStorage = FindAnyObjectByType<CityStorage>();
-        entitiesManager = FindAnyObjectByType<EntitiesManager>();
-    }
-
     private void OnEnable()
     {
         EventBus.onMainStorageItemAmountChanged += OnMainStorageItemAmountChanged;
         EventBus.onMainStorageItemMaxAmountChanged += OnMainStorageItemMaxAmountChanged;
 
         if (itemData && itemData.ItemId == (int)ItemID.Population) {
-            EventBus.onCitizenInited += OnCitizenInited;
-            EventBus.onCitizenDeleted += OnCitizenDeleted;
+            CreaturesManager.onCitizenAdded += OnCitizenAdded;
+            CreaturesManager.onCitizenRemoved += OnCitizenRemoved;
         }
 
         UpdateAmount();
@@ -46,8 +37,8 @@ public class ResourceWidget : MonoBehaviour
         EventBus.onMainStorageItemMaxAmountChanged -= OnMainStorageItemMaxAmountChanged;
 
         if (itemData.ItemId == (int)ItemID.Population) {
-            EventBus.onCitizenInited -= OnCitizenInited;
-            EventBus.onCitizenDeleted -= OnCitizenDeleted;
+            CreaturesManager.onCitizenAdded -= OnCitizenAdded;
+            CreaturesManager.onCitizenRemoved -= OnCitizenRemoved;
         }
     }
 
@@ -61,15 +52,11 @@ public class ResourceWidget : MonoBehaviour
 
     public void Init(ItemInstance amountItem, ItemInstance maxAmountItem)
     {
-        cityStorage = FindAnyObjectByType<CityStorage>();
-
         SetItem(amountItem, maxAmountItem);
     }
 
     public void Init(ItemInstance amountItem)
     {
-        cityStorage = FindAnyObjectByType<CityStorage>();
-
         SetItem(amountItem);
     }
 
@@ -128,7 +115,7 @@ public class ResourceWidget : MonoBehaviour
     private void SetItem(ItemData itemData)
     {
         int id = itemData.ItemId;
-        amountItem = cityStorage.Inventory.itemsDict[id].item;
+        amountItem = CityStorage.instance.Inventory.itemsDict[id].item;
         OnItemSet();
     }
 
@@ -138,7 +125,7 @@ public class ResourceWidget : MonoBehaviour
 
         if (useCityStorage && maxAmountItem == null) {
             int id = itemData.ItemId;
-            maxAmountItem = cityStorage.Inventory.itemsDict[id].maxAmountItem;
+            maxAmountItem = CityStorage.instance.Inventory.itemsDict[id].maxAmountItem;
         }
 
         Sprite sprite = itemData.ItemIcon;
@@ -152,12 +139,12 @@ public class ResourceWidget : MonoBehaviour
         int populationId = (int)ItemID.Population;
 
         if (itemData.ItemId == populationId) {
-            if (!cityStorage.Inventory.itemsDict.ContainsKey(populationId))
+            if (!CityStorage.instance.Inventory.itemsDict.ContainsKey(populationId))
                 return;
 
             int id = populationId;
-            int amount = entitiesManager.citizens.Count;
-            int maxAmount = cityStorage.Inventory.itemsDict[id].maxAmount;
+            int amount = CreaturesManager.instance.citizens.Count;
+            int maxAmount = CityStorage.instance.Inventory.itemsDict[id].maxAmount;
             SetAmount(amount, maxAmount);
         }
         else {
@@ -167,7 +154,7 @@ public class ResourceWidget : MonoBehaviour
             int id = amountItem.ItemData.ItemId;
             int amount = amountItem.Amount;
             if (maxAmountItem != null){
-                int maxAmount = maxAmountItem != null ? maxAmountItem.Amount : cityStorage.Inventory.itemsDict[id].maxAmount;
+                int maxAmount = maxAmountItem != null ? maxAmountItem.Amount : CityStorage.instance.Inventory.itemsDict[id].maxAmount;
                 SetAmount(amount, maxAmount);
             }
             else {
@@ -202,12 +189,12 @@ public class ResourceWidget : MonoBehaviour
         UpdateAmount();
     }
 
-    private void OnCitizenInited(Human citizen)
+    private void OnCitizenAdded(Human citizen)
     {
         UpdateAmount();
     }
 
-    private void OnCitizenDeleted(Human citizen)
+    private void OnCitizenRemoved(Human citizen)
     {
         UpdateAmount();
     }

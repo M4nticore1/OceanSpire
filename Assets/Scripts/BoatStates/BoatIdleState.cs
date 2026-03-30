@@ -12,6 +12,12 @@ public class BoatIdleState : BoatState
         if (!boat.rider) return;
 
         boat.rider.HandleBoatSetedIdle();
+
+        Human human = boat.rider.GetComponent<Human>();
+        if (human.currentStatus == HumanStatus.Wanderer) {
+            boat.SelectComponent.SetClickable(true);
+            human.SelectComponent.SetClickable(true);
+        }
     }
 
     public override void Exit()

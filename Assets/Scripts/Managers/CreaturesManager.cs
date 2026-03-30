@@ -1,13 +1,17 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EntitiesManager : MonoBehaviour
+public class CreaturesManager : MonoBehaviour
 {
-    public static EntitiesManager instance;
+    public static CreaturesManager instance { get; private set; }
 
     public List<Human> citizens { get; private set; } = new List<Human>();
     public List<Human> wanderers { get; private set; } = new List<Human>();
     public List<Human> enemies { get; private set; } = new List<Human>();
+
+    public static event Action<Human> onCitizenAdded;
+    public static event Action<Human> onCitizenRemoved;
 
     private void Awake()
     {
@@ -18,11 +22,13 @@ public class EntitiesManager : MonoBehaviour
     public void RegisterCitizen(Human human)
     {
         citizens.Add(human);
+        onCitizenAdded?.Invoke(human);
     }
 
     public void UnregisterCitizen(Human human)
     {
         citizens.Remove(human);
+        onCitizenRemoved?.Invoke(human);
     }
 
     // Wanderer
