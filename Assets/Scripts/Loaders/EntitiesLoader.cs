@@ -20,7 +20,7 @@ public class EntitiesLoader : MonoBehaviour
 
         if (saveData != null) {
             foreach (var data in saveData.citizensData) {
-                Human citizen = EntityFactory.CreateHuman(data);
+                Human citizen = CreatureFactory.CreateHuman(data);
             }
         }
         else {
@@ -34,7 +34,7 @@ public class EntitiesLoader : MonoBehaviour
                 Vector3 finalPosition = new Vector3(x, y, z);
 
                 HumanEntry data = new HumanEntry((int)CreatureIdEnum.Human, HumanStatus.Citizen, finalPosition, rotation.eulerAngles);
-                Human citizen = EntityFactory.CreateHuman(data);
+                Human citizen = CreatureFactory.CreateHuman(data);
             }
         }
     }

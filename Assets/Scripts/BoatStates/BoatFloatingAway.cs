@@ -9,7 +9,7 @@ public class BoatFloatingAway : BoatState
 
     public override void Enter()
     {
-        Vector3 position = WanderersManager.instance.GetRandomBorderPosition();
+        Vector3 position = WorldUtils.GetRandomBorderPosition();
         boat.Movement.TryMoveTo(position);
     }
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class EntityFactory
+public static class CreatureFactory
 {
     public static Human CreateHuman(HumanEntry data)
     {

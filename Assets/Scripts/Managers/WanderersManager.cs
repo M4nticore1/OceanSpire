@@ -5,27 +5,25 @@ public class WanderersManager : MonoBehaviour
 {
     public static WanderersManager instance;
 
-    // Prefabs
+    [Header("Prefabs")]
     [SerializeField] private Human humanPrefab;
     [SerializeField] private Boat boatPrefab;
 
-    // Time
-    [SerializeField] private float minCooldownToSpawnWanderer = 10;
-    [SerializeField] private float maxCooldownToSpawnWanderer = 10;
-    private float currentCooldownToSpawnWanderer = 0;
-    private float currentTimeToSpawnWanderer = 0;
+    [Header("Cooldown")]
+    [SerializeField] private float minWandererSpawnCooldown = 10;
+    [SerializeField] private float maxWandererSpawnCooldown = 10;
+    private float currentWandererSpawnCooldown = 0;
+    private float currentWandererSpawnTime = 0;
 
-    // Positions
+    [Header("Positions")]
     [SerializeField] private BoatDockPoint[] waitingDockPoints;
-    [SerializeField] private float spawnDistance = 200f;
 
-    // Spawned
     private List<Human> spawnedWanderers = new List<Human>();
     private List<Boat> spawnedBoats = new List<Boat>();
 
     private void Awake()
     {
-        if (instance != null && instance != this) {
+        if (instance) {
             Destroy(gameObject);
             return;
         }
@@ -54,32 +52,24 @@ public class WanderersManager : MonoBehaviour
     {
         if (!CanSpawn()) return;
 
-        currentTimeToSpawnWanderer += Time.deltaTime;
-        if (currentTimeToSpawnWanderer <= currentCooldownToSpawnWanderer)return;
+        currentWandererSpawnTime += Time.deltaTime;
+        if (currentWandererSpawnTime <= currentWandererSpawnCooldown)return;
 
         SpawnWanderer();
         ResetTimeToSpawn();
         ApplyRandomCooldown();
     }
 
-    public Vector3 GetRandomBorderPosition()
-    {
-        Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
-        dir.Normalize();
-        Vector3 position = dir * spawnDistance;
-        return position;
-    }
-
     private void SpawnWanderer()
     {
-        Vector3 position = GetRandomBorderPosition();
+        Vector3 position = WorldUtils.GetRandomBorderPosition();
         Vector3 rotation = Quaternion.LookRotation(-position.normalized).eulerAngles;
 
         // Human
         int creatureId = (int)CreatureIdEnum.Human;
         HumanStatus status = HumanStatus.Wanderer;
         HumanEntry humanData = new HumanEntry(creatureId, status, position, rotation);
-        Human human = EntityFactory.CreateHuman(humanData);
+        Human human = CreatureFactory.CreateHuman(humanData);
         spawnedWanderers.Add(human);
 
         // Boat
@@ -95,12 +85,12 @@ public class WanderersManager : MonoBehaviour
 
     private void ResetTimeToSpawn()
     {
-        currentTimeToSpawnWanderer = 0f;
+        currentWandererSpawnTime = 0f;
     }
 
     private void ApplyRandomCooldown()
     {
-        currentCooldownToSpawnWanderer = GetRandomCooldown();
+        currentWandererSpawnCooldown = GetRandomCooldown();
     }
 
     private void OnWandererAccepted(Human human)
@@ -148,7 +138,7 @@ public class WanderersManager : MonoBehaviour
 
     private float GetRandomCooldown()
     {
-        float cooldown = Random.Range(minCooldownToSpawnWanderer, maxCooldownToSpawnWanderer);
+        float cooldown = Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown);
         return cooldown;
     }
 }

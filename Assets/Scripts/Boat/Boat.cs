@@ -150,6 +150,7 @@ public class Boat : MonoBehaviour
     public void SetDockPoint(BoatDockPoint dockPoint)
     {
         this.dockPoint = dockPoint;
+        dockPoint.SetBoat(this);
     }
 
     public void SetTargetLoot(LootContainer lootContainer)

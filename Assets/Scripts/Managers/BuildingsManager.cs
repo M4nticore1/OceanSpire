@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class BuildingsManager : MonoBehaviour
 {
-    [SerializeField] CityStorage cityStorage;
+    public static BuildingsManager instance;
 
     [SerializeField] private List<FloorFrameModule> builtFloors = new List<FloorFrameModule>();
     public List<FloorFrameModule> BuiltFloors => builtFloors;
@@ -32,6 +32,16 @@ public class BuildingsManager : MonoBehaviour
     {
         yield return towerGate;
         yield return pierBuilding;
+    }
+
+    private void Awake()
+    {
+        if (instance) {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
     }
 
     private void OnEnable()
