@@ -97,3 +97,9 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+Assets/Fonts/Montserrat-Bold SDF.asset
+Assets/Fonts/Montserrat-SemiBold SDF.asset
+Assets/Fonts/Poppins-Bold SDF.asset
+Assets/Fonts/Poppins-Medium SDF.asset
+Assets/TextMesh Pro/Examples & Extras/Resources/Fonts & Materials/Anton SDF.asset
+Assets/TextMesh Pro/Examples & Extras/Resources/Fonts & Materials/Roboto-Bold SDF.asset
