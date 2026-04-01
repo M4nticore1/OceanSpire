@@ -61,7 +61,7 @@ public class BoatFindingLootState : BoatState
         float shortestDistance = float.MaxValue;
 
         foreach (var container in containers) {
-            if (!container || container.currentTransportMethod == TransportMethod.Flying) continue;
+            if (!container || container.IsFlying) continue;
 
             Vector3 position = container.transform.position;
 

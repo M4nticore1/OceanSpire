@@ -169,7 +169,7 @@ public class Human : Creature
             boat.SetState(BoatStateEnum.FindingLoot);
         }
         else if (currentStatus == HumanStatus.Wanderer) {
-            boat.SetState(BoatStateEnum.ReturningToDock);
+            boat.SetState(BoatStateEnum.MovingToDock);
         }
     }
 

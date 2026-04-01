@@ -1123,6 +1123,9 @@ Transform:
   - {fileID: 1635530770}
   - {fileID: 932695336}
   - {fileID: 1276318086}
+  - {fileID: 1952671540}
+  - {fileID: 507609708}
+  - {fileID: 1830341274}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &220072951
@@ -1850,6 +1853,10 @@ PrefabInstance:
       propertyPath: m_BackGroundColor.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3488570702039749144, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -45
+      objectReference: {fileID: 0}
     - target: {fileID: 3830277698611465684, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: inputStateManager
       value: 
@@ -2276,7 +2283,7 @@ GameObject:
   m_Component:
   - component: {fileID: 507609708}
   m_Layer: 0
-  m_Name: Entrance
+  m_Name: RaideerEntrance_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2290,12 +2297,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 507609707}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.87583274, z: -0, w: 0.48261485}
+  m_LocalPosition: {x: -20.91, y: 1, z: 14.36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 932695336}
+  m_Father: {fileID: 178192283}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &538103142
 GameObject:
@@ -3841,8 +3848,7 @@ Transform:
   m_LocalPosition: {x: -28, y: 0, z: 17.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 507609708}
+  m_Children: []
   m_Father: {fileID: 178192283}
   m_LocalEulerAnglesHint: {x: 0, y: 122.287, z: 0}
 --- !u!114 &932695337
@@ -4594,8 +4600,7 @@ Transform:
   m_LocalPosition: {x: -31.8, y: 0, z: 10.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1830341274}
+  m_Children: []
   m_Father: {fileID: 178192283}
   m_LocalEulerAnglesHint: {x: 0, y: 108.299, z: 0}
 --- !u!1 &1290994961
@@ -5457,8 +5462,7 @@ Transform:
   m_LocalPosition: {x: -22, y: 0, z: 26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1952671540}
+  m_Children: []
   m_Father: {fileID: 178192283}
   m_LocalEulerAnglesHint: {x: 0, y: 150, z: 0}
 --- !u!114 &1635530771
@@ -5719,7 +5723,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1830341274}
   m_Layer: 0
-  m_Name: Entrance
+  m_Name: RaideerEntrance_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5733,12 +5737,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1830341273}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.81054986, z: -0, w: 0.5856697}
+  m_LocalPosition: {x: -23.42, y: 1, z: 7.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1276318086}
+  m_Father: {fileID: 178192283}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1853408846 stripped
 MonoBehaviour:
@@ -6068,7 +6072,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1952671540}
   m_Layer: 0
-  m_Name: Entrance
+  m_Name: RaideerEntrance_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6082,12 +6086,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1952671539}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.9659258, z: -0, w: 0.2588191}
+  m_LocalPosition: {x: -16.78, y: 1, z: 21.36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1635530770}
+  m_Father: {fileID: 178192283}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1984541324
 PrefabInstance:

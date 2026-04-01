@@ -46,8 +46,6 @@ public class RaidManager : MonoBehaviour
 
     private void StartRaid()
     {
-        Debug.Log("StartRaid");
-
         int raidersAmount = GetRandomRaidersAmount();
         Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         dir.Normalize();
@@ -63,6 +61,7 @@ public class RaidManager : MonoBehaviour
             CreateRaider(boat, position, rotation);
 
             boat.SetDockPoint(GetNearestDockPoint(boat));
+            boat.SetState(BoatStateEnum.MovingToDock);
         }
 
         isUnderRaid = true;
@@ -105,6 +104,8 @@ public class RaidManager : MonoBehaviour
         float distance = Vector3.Distance(boat.transform.position, dockPoint.transform.position);
 
         for (int i = 1; i < dockPoints.Length; i++) {
+            if (dockPoints[i].boat != null) continue;
+
             float currentDistance = Vector3.Distance(boat.transform.position, dockPoints[i].transform.position);
             if (currentDistance >= distance) continue;
 

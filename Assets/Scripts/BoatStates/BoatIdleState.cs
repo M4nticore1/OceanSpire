@@ -12,6 +12,7 @@ public class BoatIdleState : BoatState
         if (!boat.rider) return;
 
         boat.rider.HandleBoatSetedIdle();
+        boat.Movement.SetAgentEnabled(false);
 
         Human human = boat.rider.GetComponent<Human>();
         if (human.currentStatus == HumanStatus.Wanderer) {
@@ -22,7 +23,7 @@ public class BoatIdleState : BoatState
 
     public override void Exit()
     {
-
+        boat.Movement.SetAgentEnabled(true);
     }
 
     public override void Process()

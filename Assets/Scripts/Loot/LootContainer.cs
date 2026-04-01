@@ -18,33 +18,58 @@ public enum TransportMethod
     Flying
 }
 
-public class LootContainer : MonoBehaviour
+public class LootContainer : MonoBehaviour, IClickable
 {
-    [field: SerializeField] public LootContainerData containerData { get; private set; } = null;
+    [SerializeField] private BoxCollider boxCollider;
+    [SerializeField] private Rigidbody rigidBody;
 
     [Header("Loot")]
     [SerializeField] private List<LootEntry> possibleLoot = new List<LootEntry>();
+    [SerializeField] private GameObject[] meshes;
     private List<ItemInstance> containedLoot = new List<ItemInstance>();
 
     [Header("Moving")]
     [SerializeField] private bool isMovable = true;
+
     private bool isMoving = false;
-    public TransportMethod currentTransportMethod = TransportMethod.Floating;
     private const float MoveSpeed = 0.3f;
     private float currentMoveSpeedMultiplier = 1f;
     private const float stopMovingSpeed = 10f;
 
-    [HideInInspector] public Vector3 moveDirection = Vector3.zero;
+    public Vector3 moveDirection { get; private set; } = Vector3.zero;
     private Vector3 startMoveDirection = Vector3.zero;
 
-    [Header("Spawn")]
+    [Header("Flying")]
+    [SerializeField] private bool isFlying = false;
+    public bool IsFlying => isFlying;
+
+    [SerializeField] private GameObject balloons;
+    [SerializeField] private LootContainer[] demolishPossibleContainers;
+    [SerializeField] private ParticleSystem demolishParticlesPrefab;
+    [SerializeField] private float fallingSpeedForce = 100f;
+    [SerializeField] private float fallingDemolishHeightOffset = 0;
+
+    private bool isFalling = false;
+    private float targetFallingDemolishHeight = 0f;
+
+    [Header("Spawn Time")]
+    [SerializeField] private float spawnMinTime = 0;
+    public float SpawnMinTime => spawnMinTime;
+
+    [SerializeField] private float spawnMaxTime = 0;
+    public float SpawnMaxTime => spawnMaxTime;
+
+    [Header("Spawn Floor")]
     [SerializeField] private int floorsCountToSpawn = 0;
     public int FloorsCountToSpawn => floorsCountToSpawn;
-    public int minSpawnFloorNumber = 0;
-    public int maxSpawnFloorNumber = 0;
-    public int currentFloorIndex { get; private set; } = 0;
-    public float spawnMinTime = 0;
-    public float spawnMaxTime = 0;
+
+    [SerializeField] private int minSpawnFloorNumber = 0;
+    public int MinSpawnFloorNumber => minSpawnFloorNumber;
+
+    [SerializeField] private int maxSpawnFloorNumber = 0;
+    public int MaxSpawnFloorNumber => maxSpawnFloorNumber;
+
+    public int spawnFloorIndex { get; private set; } = 0;
 
     private const float despawnDistance = 100.0f;
 
@@ -74,20 +99,52 @@ public class LootContainer : MonoBehaviour
         Vector3 direction = WindManager.Instance.windDirection;
         moveDirection = new Vector3(direction.x, 0, direction.z);
         startMoveDirection = moveDirection;
-        currentFloorIndex = floorIndex;
+        spawnFloorIndex = floorIndex;
 
-        if (floorIndex > 0) {
-            currentTransportMethod = TransportMethod.Flying;
+        if (isFlying) {
+            targetFallingDemolishHeight = boxCollider.size.y / 2 - boxCollider.center.y - fallingDemolishHeightOffset;
         }
-        else {
-            currentTransportMethod = TransportMethod.Floating;
-        }
+
+        CreateMesh();
     }
 
     public void Tick(float deltaTime)
     {
         Move(deltaTime);
         CheckPosition();
+
+        if (isFalling) {
+            rigidBody.AddForce(Vector3.down * fallingSpeedForce, ForceMode.Acceleration);
+
+            if (transform.position.y <= targetFallingDemolishHeight) {
+                DemolishFlyingContainer();
+            }
+        }
+    }
+
+    public void StartMoving()
+    {
+        isMoving = true;
+    }
+
+    public void StopMoving()
+    {
+        isMoving = false;
+    }
+
+    public void Click()
+    {
+        boxCollider.enabled = false;
+        rigidBody.isKinematic = false;
+
+        Destroy(balloons.gameObject);
+
+        isFalling = true;
+    }
+
+    public bool CanClick()
+    {
+        return isFlying;
     }
 
     private void Move(float deltaTime)
@@ -100,8 +157,8 @@ public class LootContainer : MonoBehaviour
             }
 
             Vector3 crossDirection = Vector3.Cross(moveDirection, new Vector3(-transform.position.x, 0, -transform.position.z).normalized);
+            float distanceToIsland = new Vector3(transform.position.x, 0, transform.position.z).magnitude;
 
-            float distanceToIsland = transform.position.magnitude;
             if (distanceToIsland > maxDistanceToMoveAroundCity) {
                 Vector3 currentMoveDirection = -transform.position.normalized;
             }
@@ -135,14 +192,25 @@ public class LootContainer : MonoBehaviour
         }
     }
 
-    public void StartMoving()
+    private void CreateMesh()
     {
-        isMoving = true;
+        int index = UnityEngine.Random.Range(0, meshes.Length);
+        Instantiate(meshes[index], transform);
     }
 
-    public void StopMoving()
+    private void DemolishFlyingContainer()
     {
-        isMoving = false;
+        int index = UnityEngine.Random.Range(0, demolishPossibleContainers.Length);
+
+        Vector3 position = new Vector3(transform.position.x, 0, transform.position.z);
+        Quaternion rotation = transform.rotation;
+        LootContainer container = Instantiate(demolishPossibleContainers[index], position, rotation);
+        container.Init(0);
+
+        Instantiate(demolishParticlesPrefab, position, rotation);
+
+        LootManager.instance.RegisterLootContainer(container);
+        Destroy(gameObject);
     }
 
     public List<ItemInstance> TakeItems(float? remainingWeight = null)

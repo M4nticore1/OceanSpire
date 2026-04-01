@@ -14,4 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LootContainersList
   lootContainers:
   - {fileID: 1163065957676753421, guid: af311279b2bbd5340b546e8435ae6bf8, type: 3}
-  - {fileID: 1163065957676753421, guid: 2a682736948bcc843bdaea7b612fa403, type: 3}
+  - {fileID: 1163065957676753421, guid: 9a1dc9cae3951114cba41d1f2a898b7d, type: 3}
+  - {fileID: 1163065957676753421, guid: 741b068e3b6d9de439351107ac211331, type: 3}
+  - {fileID: 1163065957676753421, guid: f74424f31751a5e4c98638168918b451, type: 3}
+  - {fileID: 1163065957676753421, guid: d52c0956ac66b5743be91ed6cf43e15c, type: 3}
+  - {fileID: 1163065957676753421, guid: b441e98c27058704694aa7ff7dcec351, type: 3}

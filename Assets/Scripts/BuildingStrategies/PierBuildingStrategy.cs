@@ -45,7 +45,7 @@ public class PierBuildingStrategy : BuildingStrategy
                 }
             }
             else {
-                boat.SetState(BoatStateEnum.ReturningToDock);
+                boat.SetState(BoatStateEnum.MovingToDock);
             }
         }
     }
@@ -60,7 +60,7 @@ public class PierBuildingStrategy : BuildingStrategy
         }
 
         if (boatRider.isRidingOnBoat) {      
-            boatRider.currentBoat?.SetState(BoatStateEnum.ReturningToDock);
+            boatRider.currentBoat?.SetState(BoatStateEnum.MovingToDock);
         }
     }
 

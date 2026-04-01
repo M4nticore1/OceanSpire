@@ -97,7 +97,7 @@ public class BoatLootHandler : MonoBehaviour
         LootContainer nearestContainer = null;
 
         foreach (var container in lootManager.spawnedLootContainers) {
-            if (!container || container.currentTransportMethod == TransportMethod.Flying) continue;
+            if (!container || container.IsFlying) continue;
 
             Vector3 position = container.transform.position;
 

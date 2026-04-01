@@ -39,7 +39,7 @@ public class BoatCollectingLootState : BoatState
             boat.SetState(BoatStateEnum.FindingLoot);
         }
         else {
-            boat.SetState(BoatStateEnum.ReturningToDock);
+            boat.SetState(BoatStateEnum.MovingToDock);
         }
     }
 

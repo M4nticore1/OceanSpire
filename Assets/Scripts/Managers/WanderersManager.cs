@@ -125,7 +125,7 @@ public class WanderersManager : MonoBehaviour
 
             Boat boat = wanderer.BoatRider.currentBoat;
             boat.SetDockPoint(waitingDockPoints[i]);
-            boat.SetState(BoatStateEnum.ReturningToDock);
+            boat.SetState(BoatStateEnum.MovingToDock);
         }
     }
 

@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class LootManager : MonoBehaviour
 {
+    public static LootManager instance;
+
     [SerializeField] private BuildingsManager buildingsManager;
 
     public List<LootContainer> spawnedLootContainers { get; private set; } = new List<LootContainer>();
@@ -21,6 +23,16 @@ public class LootManager : MonoBehaviour
     // Spawn Position
     private const float spawnMaxOffsetYaw = 60.0f;
 
+    private void Awake()
+    {
+        if (instance) {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+    }
+
     private void Start()
     {
         Initialize();
@@ -32,6 +44,11 @@ public class LootManager : MonoBehaviour
         UpdateLootContainers();
     }
 
+    public void RegisterLootContainer(LootContainer container)
+    {
+        spawnedLootContainers.Add(container);
+    }
+
     private void Initialize()
     {
         LootContainer[] lootContainer = LootContainersList.Instance.LootContainers;
@@ -40,7 +57,7 @@ public class LootManager : MonoBehaviour
         currentSpawnContainersTime = new float[count];
 
         for (int i = 0; i < lootContainer.Length; i++) {
-            float spawnTime = Random.Range(lootContainer[i].spawnMinTime, lootContainer[i].spawnMaxTime);
+            float spawnTime = Random.Range(lootContainer[i].SpawnMinTime, lootContainer[i].SpawnMaxTime);
             currentTimeToSpawnContainers[i] = spawnTime;
         }
     }
@@ -64,16 +81,14 @@ public class LootManager : MonoBehaviour
             baseDir.x * Mathf.Sin(radians) + baseDir.y * Mathf.Cos(radians)
         );
 
-        int maxFloorNumber = container.maxSpawnFloorNumber > 0 ? container.maxSpawnFloorNumber : container.minSpawnFloorNumber > 0 ? (buildingsManager.BuiltFloors.Count + LootContainer.limitSpawnFloorsCount) : 0;
+        int minFloorNumber = container.MinSpawnFloorNumber;
+        int maxFloorNumber = Mathf.Max(minFloorNumber, container.MaxSpawnFloorNumber > 0 ? container.MaxSpawnFloorNumber : container.MinSpawnFloorNumber > 0 ? buildingsManager.BuiltFloors.Count : 0);
 
-        float spawnFloorNumber = Random.Range((float)container.minSpawnFloorNumber, maxFloorNumber);
-        float positionY = spawnFloorNumber * BuildingsManager.FloorHeight;
+        float spawnFloorNumber = Random.Range((float)minFloorNumber, maxFloorNumber);
+        float firstFloorHeight = container.IsFlying ? BuildingsManager.FirstFloorHeight : 0;
+        float positionY = spawnFloorNumber * BuildingsManager.FloorHeight + firstFloorHeight;
 
-        Vector3 spawnPosition = new Vector3(
-            -rotatedDir.x * spawnDistance,
-            positionY,
-            -rotatedDir.y * spawnDistance
-        );
+        Vector3 spawnPosition = new Vector3( -rotatedDir.x * spawnDistance, positionY, -rotatedDir.y * spawnDistance);
 
         float rotationAngle = Random.Range(0f, 360f);
         Quaternion spawnRotation = Quaternion.Euler(0f, rotationAngle, 0f);
@@ -82,7 +97,7 @@ public class LootManager : MonoBehaviour
         lootContainer.Init((int)spawnFloorNumber);
         spawnedLootContainers.Add(lootContainer);
 
-        currentTimeToSpawnContainers[index] = Random.Range(container.spawnMinTime, container.spawnMaxTime);
+        currentTimeToSpawnContainers[index] = Random.Range(container.SpawnMinTime, container.SpawnMaxTime);
         currentSpawnContainersTime[index] = 0f;
     }
 

@@ -26,7 +26,7 @@ public enum BoatStateEnum
     FindingLoot,
     MovingToLoot,
     CollectingLoot,
-    ReturningToDock,
+    MovingToDock,
     UnloadingLoot,
     FloatingAway,
     Demolished
@@ -194,7 +194,7 @@ public class Boat : MonoBehaviour
             case BoatStateEnum.CollectingLoot:
                 this.state = new BoatCollectingLootState(this);
                 break;
-            case BoatStateEnum.ReturningToDock:
+            case BoatStateEnum.MovingToDock:
                 this.state = new BoatReturningState(this);
                 break;
             case BoatStateEnum.UnloadingLoot:
