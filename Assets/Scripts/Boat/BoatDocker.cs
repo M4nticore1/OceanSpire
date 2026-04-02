@@ -57,7 +57,6 @@ public class BoatDocker : MonoBehaviour
 
     private void StartMovingToDock()
     {
-        Debug.Log("StartMovingToDock");
         movement.TryMoveTo(dockPoint.DockTransform.position);
         isReturningToDock = true;
     }

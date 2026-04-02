@@ -67,7 +67,7 @@ public class WanderersManager : MonoBehaviour
 
         // Human
         int creatureId = (int)CreatureIdEnum.Human;
-        HumanStatus status = HumanStatus.Wanderer;
+        HumanStateEnum status = HumanStateEnum.Wanderer;
         HumanEntry humanData = new HumanEntry(creatureId, status, position, rotation);
         Human human = CreatureFactory.CreateHuman(humanData);
         spawnedWanderers.Add(human);

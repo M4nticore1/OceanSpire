@@ -8,22 +8,13 @@ public class EntityInteractor : MonoBehaviour
     public Building InteractBuilding => interactBuilding;
 
     public bool isInteracting { get; private set; } = false;
-    public int interactorIndex { get; private set; } = 0;
+    public int workerIndex { get; private set; } = 0;
+    public int raiderIndex { get; private set; } = 0;
 
     public event Action<Building> onSetedInteractBuilding;
     public event Action<Building> onRemovedInteractBuilding;
     public event Action<Building> onStartedInteracting;
     public event Action<Building> onStoppedInteracting;
-
-    private void OnEnable()
-    {
-        EventBus.onCitizenWidgetClicked += OnWorkerWidgetClicked;
-    }
-
-    private void OnDisable()
-    {
-        EventBus.onCitizenWidgetClicked -= OnWorkerWidgetClicked;
-    }
 
     private void Update()
     {
@@ -34,49 +25,29 @@ public class EntityInteractor : MonoBehaviour
 
     public void SetInteractBuilding(Building building)
     {
-        if (!building) {
-            Debug.LogError("building is null.");
-            return;
-        }
-
-        if (interactBuilding) {
-            interactBuilding.RemoveWorker(this);
-        }
-
         interactBuilding = building;
-        AssignInteractorIndex();
-        building.AddWorker(this);
-
-        onSetedInteractBuilding?.Invoke(building);
-        EventBus.InvokeSetedInteractBuilding();
     }
 
-    private void RemoveInteractBuilding()
+    public void RemoveInteractBuilding()
     {
         if (isInteracting) {
             StopInteracting();
         }
 
-        Building lastBuilding = interactBuilding;
         interactBuilding = null;
-        AssignInteractorIndex();
-        lastBuilding.RemoveWorker(this);
-
-        onRemovedInteractBuilding?.Invoke(lastBuilding);
-        EventBus.InvokeRemovedInteractBuilding();
     }
 
-    public void HandleStoppedMoving()
+    public void StartInteracting()
     {
-        if (!interactBuilding) return;
-
-        StartInteracting();
+        interactBuilding.AddCurrentWorker(this);
+        isInteracting = true;
+        onStartedInteracting?.Invoke(interactBuilding);
     }
 
     // Events
     private void OnWorkerWidgetClicked(CitizenWidget widget)
     {
-        Human resident = widget.citizen;
+        Human resident = widget.human;
         if (resident != GetComponent<Human>()) return;
 
         Building selectedBuilding = SelectManager.Instance.selectedComponent.GetComponent<Building>();
@@ -98,16 +69,14 @@ public class EntityInteractor : MonoBehaviour
         }
     }
 
-    private void AssignInteractorIndex()
+    public void AssignWorkerIndex()
     {
-        interactorIndex = interactBuilding ? interactBuilding.workers.Count : -1;
+        workerIndex = interactBuilding ? interactBuilding.workers.Count : -1;
     }
 
-    private void StartInteracting()
+    public void AssignRaiderIndex()
     {
-        interactBuilding.AddCurrentWorker(this);
-        isInteracting = true;
-        onStartedInteracting?.Invoke(interactBuilding);
+        raiderIndex = interactBuilding ? interactBuilding.workers.Count : -1;
     }
 
     private void StopInteracting()

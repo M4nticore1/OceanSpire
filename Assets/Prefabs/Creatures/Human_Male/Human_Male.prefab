@@ -57,6 +57,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Human
   creatureData: {fileID: 11400000, guid: 84ce6b77893601742bd80f0644c2bc89, type: 2}
+  cityNavigator: {fileID: 2185582854232776361}
   interactor: {fileID: 6316746746762001490}
   boatRider: {fileID: 6497944028369977301}
   selectComponent: {fileID: 8364959695361298754}

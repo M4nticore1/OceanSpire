@@ -12,14 +12,13 @@ public enum ResidentWidgetState
 
 public class CitizenWidget : MonoBehaviour
 {
-    [HideInInspector] public Human citizen = null;
-
+    public Human human { get; private set; }
     public int widgetIndex = 0;
 
-    [SerializeField] private GameObject selectedResidentMenu = null;
-    [SerializeField] private GameObject nonSelectedResidentMenu = null;
-    [SerializeField] private TextMeshProUGUI citizenNameText = null;
-    [SerializeField] private Button button = null;
+    [SerializeField] private GameObject selectedResidentMenu;
+    [SerializeField] private GameObject nonSelectedResidentMenu;
+    [SerializeField] private TextMeshProUGUI citizenNameText;
+    [SerializeField] private Button button;
 
     private void OnEnable()
     {
@@ -43,7 +42,7 @@ public class CitizenWidget : MonoBehaviour
 
     public void SetCitizen(Human citizen)
     {
-        this.citizen = citizen;
+        this.human = citizen;
         ShowResidentMenu();
     }
 
@@ -55,7 +54,7 @@ public class CitizenWidget : MonoBehaviour
     public void ShowResidentMenu()
     {
         selectedResidentMenu.SetActive(true);
-        citizenNameText.SetText(citizen.firstName + "\n" + citizen.lastName);
+        citizenNameText.SetText(human.firstName + "\n" + human.lastName);
     }
 
     public void HideResidentMenu()
@@ -65,6 +64,7 @@ public class CitizenWidget : MonoBehaviour
 
     private void ClickWidget()
     {
+        human.HandleClickedWorkerWidget();
         EventBus.InvokeCitizenWidgetClicked(this);
     }
 }

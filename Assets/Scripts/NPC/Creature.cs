@@ -20,7 +20,6 @@ public abstract class Creature : MonoBehaviour
     private IslandNavMeshBuilder cityNavMeshManager;
     protected NavMeshAgent agent = null;
     protected EntityMovement movement = null;
-    protected EntityCityNavigator cityNavigator = null;
 
     [SerializeField] protected CreatureData creatureData;
     public CreatureData CreatureData => creatureData;
@@ -30,17 +29,6 @@ public abstract class Creature : MonoBehaviour
         cityNavMeshManager = FindAnyObjectByType<IslandNavMeshBuilder>();
         agent = GetComponent<NavMeshAgent>();
         movement = GetComponent<EntityMovement>();
-        cityNavigator = GetComponent<EntityCityNavigator>();
-    }
-
-    protected virtual void OnEnable()
-    {
-        EventBus.onNavMeshBaked += OnNavMeshBaked;
-    }
-
-    protected virtual void OnDisable()
-    {
-        EventBus.onNavMeshBaked -= OnNavMeshBaked;
     }
 
     public virtual void Init(CreatureEntry data)
@@ -51,12 +39,5 @@ public abstract class Creature : MonoBehaviour
         //if (cityNavMeshManager.bakeNavMeshCoroutine != null) {
         //    SetNavAgentEnabled(false);
         //}
-    }
-
-    private void OnNavMeshBaked()
-    {
-        if (cityNavigator.IsRidingOnElevator) return;
-
-        movement.SetAgentEnabled(true);
     }
 }

@@ -58,10 +58,11 @@ public class RaidManager : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(-position.normalized);
 
             Boat boat = CreateBoat(position, rotation);
-            CreateRaider(boat, position, rotation);
-
             boat.SetDockPoint(GetNearestDockPoint(boat));
-            boat.SetState(BoatStateEnum.MovingToDock);
+
+            Human raider = CreateRaider(position, rotation);
+            raider.BoatRider.EnterBoat(boat);
+            raider.SetInteractBuilding(GetRandomRaidBuilding());
         }
 
         isUnderRaid = true;
@@ -78,12 +79,11 @@ public class RaidManager : MonoBehaviour
         currentRaidTime = 0;
     }
 
-    private Human CreateRaider(Boat boat, Vector3 position, Quaternion rotation)
+    private Human CreateRaider(Vector3 position, Quaternion rotation)
     {
         int id = (int)CreatureIdEnum.Human;
-        HumanEntry data = new HumanEntry(id, HumanStatus.Enemy, position, rotation.eulerAngles);
+        HumanEntry data = new HumanEntry(id, HumanStateEnum.Raider, position, rotation.eulerAngles);
         Human human = CreatureFactory.CreateHuman(data);
-        human.BoatRider.EnterBoat(boat);
         spawnedRaiders.Add(human);
         return human;
     }
@@ -96,6 +96,19 @@ public class RaidManager : MonoBehaviour
         Boat boat = BoatFactory.CreateBoat(data);
         spawnedBoats.Add(boat);
         return boat;
+    }
+
+    private TowerBuilding GetRandomRaidBuilding()
+    {
+        TowerBuilding building = null;
+
+        while (!building || building.GetComponent<ElevatorModule>()) {
+            int floorIndex = Random.Range(0, BuildingsManager.instance.BuiltFloors.Count);
+            int placeIndex = Random.Range(0, BuildingsManager.RoomsCountPerFloor);
+            building = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
+        }
+
+        return building;
     }
 
     private BoatDockPoint GetNearestDockPoint(Boat boat)

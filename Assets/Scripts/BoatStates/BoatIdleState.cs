@@ -15,7 +15,7 @@ public class BoatIdleState : BoatState
         boat.Movement.SetAgentEnabled(false);
 
         Human human = boat.rider.GetComponent<Human>();
-        if (human.currentStatus == HumanStatus.Wanderer) {
+        if (human.currentStateEnum == HumanStateEnum.Wanderer) {
             boat.SelectComponent.SetClickable(true);
             human.SelectComponent.SetClickable(true);
         }

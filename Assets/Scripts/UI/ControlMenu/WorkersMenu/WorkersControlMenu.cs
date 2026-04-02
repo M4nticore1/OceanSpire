@@ -24,8 +24,8 @@ public class WorkersControlMenu : ControlMenu
 
         EventBus.onContextWorkersButtonClicked += OnContextWorkersButtonClicked;
         EventBus.onCitizenInited += OnCitizenAdded;
-        EventBus.onSetedInteractBuilding += OnSetedCitizenWork;
-        EventBus.onRemovedInteractBuilding += OnRemovedCitizenWork;
+        EventBus.onSetedWorkBuilding += OnSetedCitizenWork;
+        EventBus.onRemovedWorkBuilding += OnRemovedCitizenWork;
     }
 
     protected override void OnDisable()
@@ -34,8 +34,8 @@ public class WorkersControlMenu : ControlMenu
 
         EventBus.onContextWorkersButtonClicked -= OnContextWorkersButtonClicked;
         EventBus.onCitizenInited -= OnCitizenAdded;
-        EventBus.onSetedInteractBuilding -= OnSetedCitizenWork;
-        EventBus.onRemovedInteractBuilding -= OnRemovedCitizenWork;
+        EventBus.onSetedWorkBuilding -= OnSetedCitizenWork;
+        EventBus.onRemovedWorkBuilding -= OnRemovedCitizenWork;
     }
 
     protected override void OnOpen()

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 public enum FollowingPathState
 {
@@ -89,6 +91,11 @@ public class EntityCityNavigator : MonoBehaviour
     public void SetTargetBuilding(Building target)
     {
         targetBuilding = target;
+    }
+
+    public void RemoveTargetBuilding()
+    {
+        targetBuilding = null;
     }
 
     public void HandleInteractBuildingRemoved()

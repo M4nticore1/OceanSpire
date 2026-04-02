@@ -40,8 +40,8 @@ public static class EventBus
 
     // Workers
     public static event Action<CitizenWidget> onCitizenWidgetClicked;
-    public static event Action onSetedInteractBuilding;
-    public static event Action onRemovedInteractBuilding;
+    public static event Action onSetedWorkBuilding;
+    public static event Action onRemovedWorkBuilding;
 
     // Loot
     public static event Action<ItemInstance> onMainStorageItemAmountChanged;
@@ -182,14 +182,14 @@ public static class EventBus
         onCitizenWidgetClicked?.Invoke(widget);
     }
 
-    public static void InvokeSetedInteractBuilding()
+    public static void InvokeSetedWorkBuilding()
     {
-        onSetedInteractBuilding?.Invoke();
+        onSetedWorkBuilding?.Invoke();
     }
 
-    public static void InvokeRemovedInteractBuilding()
+    public static void InvokeRemovedWorkBuilding()
     {
-        onRemovedInteractBuilding?.Invoke();
+        onRemovedWorkBuilding?.Invoke();
     }
 
     // Loot

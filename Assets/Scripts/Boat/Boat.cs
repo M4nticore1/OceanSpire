@@ -136,7 +136,7 @@ public class Boat : MonoBehaviour
         this.rider = rider;
 
         Human human = rider.GetComponent<Human>();
-        if (human.currentStatus == HumanStatus.Wanderer) {
+        if (human.currentStateEnum == HumanStateEnum.Wanderer) {
             selectComponent.SetClickable(false);
         }
     }

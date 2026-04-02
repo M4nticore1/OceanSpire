@@ -31,7 +31,7 @@ public class PierBuildingStrategy : BuildingStrategy
         }
 
         BoatRider newBoatRider = TryGetBoatRider(interactor.gameObject);
-        Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(interactor.interactorIndex);
+        Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(interactor.workerIndex);
         if (!boat) return;
 
         if (newBoatRider.currentBoat) {
@@ -84,7 +84,7 @@ public class PierBuildingStrategy : BuildingStrategy
         BoatRider boatRider = TryGetBoatRider(interactor.gameObject);
         if (!boatRider) yield break;
 
-        int index = interactor.interactorIndex;
+        int index = interactor.workerIndex;
         Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(index);
 
         while (boat != null && boat.currentState != BoatStateEnum.Idle) {

@@ -26,7 +26,7 @@ public static class PointerUtils
         Vector2 position = GetCurrentInputPosition();
         Ray ray = Camera.main.ScreenPointToRay(position);
 
-        int layerMask = ~LayerMask.GetMask("Ignore Raycast", "Outlined");
+        int layerMask = ~LayerMask.GetMask("Ignore Raycast");
         return Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask);
     }
 
