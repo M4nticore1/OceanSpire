@@ -6,6 +6,11 @@ public class CitizenState : HumanState
 
     }
 
+    public override void Tick()
+    {
+
+    }
+
     public override void OnSetedInteractBuilding(Building building)
     {
         human.Interactor.AssignWorkerIndex();
@@ -36,5 +41,10 @@ public class CitizenState : HumanState
         if (human.Interactor.InteractBuilding != human.CityNavigator.currentBuilding) return;
 
         human.Interactor.StartInteracting();
+    }
+
+    public override void OnEnteredBuilding(Building building)
+    {
+
     }
 }

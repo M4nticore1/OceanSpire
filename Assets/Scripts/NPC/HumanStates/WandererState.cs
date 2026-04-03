@@ -7,6 +7,11 @@ public class WandererState : HumanState
 
     }
 
+    public override void Tick()
+    {
+
+    }
+
     public override void OnSetedInteractBuilding(Building building)
     {
         
@@ -20,5 +25,10 @@ public class WandererState : HumanState
     public override void OnStoppedMoving()
     {
         
+    }
+
+    public override void OnEnteredBuilding(Building building)
+    {
+
     }
 }

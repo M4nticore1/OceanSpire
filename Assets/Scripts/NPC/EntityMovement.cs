@@ -9,7 +9,7 @@ public class EntityMovement : MonoBehaviour
     private bool isMoving = false;
 
     public event Action onReachedPath;
-    public event Action onStoppedMoving;
+    public event Action onStopped;
 
     private void Awake()
     {
@@ -47,7 +47,7 @@ public class EntityMovement : MonoBehaviour
         agent.isStopped = true;
         agent.ResetPath();
         isMoving = false;
-        onStoppedMoving?.Invoke();
+        onStopped?.Invoke();
     }
 
     public void SetAgentEnabled(bool enabled)

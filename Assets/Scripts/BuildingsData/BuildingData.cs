@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-[Serializable]
 public enum BuildingIdEnum
 {
     FloorFrame,
@@ -19,7 +18,6 @@ public enum BuildingIdEnum
     Farm,
 };
 
-[Serializable]
 public enum BuildingType
 {
     Room,
@@ -28,7 +26,6 @@ public enum BuildingType
     Environment
 };
 
-[Serializable]
 public enum BuildingCategory
 {
     Construction,
@@ -56,16 +53,17 @@ public enum DetailsWindowVariant
 [CreateAssetMenu(fileName = "BuildingData", menuName = "Scriptable Objects/BuildingData")]
 public class BuildingData : ScriptableObject
 {
-    [Header("Main")]
+    [Header("Id")]
     [SerializeField] private BuildingIdEnum buildingId = BuildingIdEnum.TowerGate;
     public int BuildingId { get { return (int)buildingId; } }
-
-    [SerializeField] private LocalizationItem localizationItem = null;
-    public LocalizationItem LocalizationItem => localizationItem;
 
     [SerializeField] private string buildingName = "";
     public string BuildingName => buildingName;
 
+    [SerializeField] private LocalizationItem localizationItem = null;
+    public LocalizationItem LocalizationItem => localizationItem;
+
+    [Header("Enums")]
     [SerializeField] private BuildingType buildingType = BuildingType.Room;
     public BuildingType BuildingType => buildingType;
 
@@ -81,6 +79,7 @@ public class BuildingData : ScriptableObject
     [SerializeField] private DetailsWindowVariant detailsWindowVariant = DetailsWindowVariant.Building;
     public DetailsWindowVariant DetailsWindowVariant => detailsWindowVariant;
 
+    [Header("Other")]
     [SerializeField] private bool instantConstruction = false;
     public bool InstantConstruction => instantConstruction;
 
@@ -89,4 +88,7 @@ public class BuildingData : ScriptableObject
 
     [SerializeField] private bool isDemolishable = true;
     public bool IsDemolishable => isDemolishable;
+
+    [SerializeField] private bool isRaidable = false;
+    public bool IsRaidable => isRaidable;
 }

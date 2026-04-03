@@ -57,7 +57,7 @@ public class Human : Creature
 
     protected void OnEnable()
     {
-        movement.onStoppedMoving += OnStoppedMoving;
+        movement.onStopped += OnStoppedMoving;
 
         cityNavigator.onEnteredBuilding += OnEnteredBuilding;
         cityNavigator.onExitedBuilding += OnExitedBuilding;
@@ -168,6 +168,7 @@ public class Human : Creature
     private void OnEnteredBuilding(Building building)
     {
         building.EnterBuilding(cityNavigator);
+        currentState.OnEnteredBuilding(building);
     }
 
     private void OnExitedBuilding(Building building)

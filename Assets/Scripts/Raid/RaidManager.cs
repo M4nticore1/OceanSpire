@@ -138,14 +138,22 @@ public class RaidManager : MonoBehaviour
         return boat;
     }
 
-    private TowerBuilding GetRandomRaidBuilding()
+    private Building GetRandomRaidBuilding()
     {
-        TowerBuilding building = null;
+        Building building = null;
+        int floorIndex = Random.Range(-1, BuildingsManager.instance.BuiltFloors.Count);
 
-        while (!building || building.GetComponent<ElevatorModule>()) {
-            int floorIndex = Random.Range(0, BuildingsManager.instance.BuiltFloors.Count);
-            int placeIndex = Random.Range(0, BuildingsManager.RoomsCountPerFloor);
-            building = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
+        if (floorIndex == -1) {
+            building = BuildingsManager.instance.TowerGate;
+        }
+        else {
+            int placeIndex = 0;
+
+            while (!building || !building.BuildingData.IsRaidable) {
+                floorIndex = Random.Range(0, BuildingsManager.instance.BuiltFloors.Count);
+                placeIndex = Random.Range(0, BuildingsManager.RoomsCountPerFloor);
+                building = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
+            }
         }
 
         return building;

@@ -54,13 +54,13 @@ public class EntityCityNavigator : MonoBehaviour
 
     private void OnEnable()
     {
-        movement.onStoppedMoving += OnStoppedMoving;
+        movement.onStopped += OnStoppedMoving;
         EventBus.onNavMeshBaked += OnNavMeshBaked;
     }
 
     private void OnDisable()
     {
-        movement.onStoppedMoving -= OnStoppedMoving;
+        movement.onStopped -= OnStoppedMoving;
         EventBus.onNavMeshBaked -= OnNavMeshBaked;
     }
 

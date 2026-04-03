@@ -21,6 +21,13 @@ public class RaidMenu : UIBehaviour
         RaidManager.onRaidFinished -= OnRaidFinished;
     }
 
+    protected override void Start()
+    {
+        base.Start();
+
+        Hide();
+    }
+
     private void Show()
     {
         contentRoot.gameObject.SetActive(true);
