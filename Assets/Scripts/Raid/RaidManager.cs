@@ -26,6 +26,17 @@ public class RaidManager : MonoBehaviour
     private bool isUnderRaid = false;
 
     public static event System.Action onRaidStarted;
+    public static event System.Action onRaidFinished;
+
+    private void OnEnable()
+    {
+        Creature.onCreatureDeath += OnCreatureDeath;
+    }
+
+    private void OnDisable()
+    {
+        Creature.onCreatureDeath -= OnCreatureDeath;
+    }
 
     private void Start()
     {
@@ -69,6 +80,14 @@ public class RaidManager : MonoBehaviour
         onRaidStarted?.Invoke();
     }
 
+    private void FinishRaid()
+    {
+        DestroyBoats();
+
+        isUnderRaid = false;
+        onRaidFinished?.Invoke();
+    }
+
     private void ApplyRandomCooldown()
     {
         currentRaidCooldown = GetRandomCooldown();
@@ -77,6 +96,27 @@ public class RaidManager : MonoBehaviour
     private void ResetCurrentRaidTime()
     {
         currentRaidTime = 0;
+    }
+
+    private void DestroyBoats()
+    {
+        foreach (var boat in spawnedBoats) {
+            Destroy(boat.gameObject);
+        }
+    }
+
+    private void OnCreatureDeath(Creature creature)
+    {
+        Human human = creature as Human;
+        if (human) return;
+
+        if (!spawnedRaiders.Contains(human)) return;
+
+        spawnedRaiders.Remove(human);
+
+        if (spawnedRaiders.Count == 0) {
+            FinishRaid();
+        }
     }
 
     private Human CreateRaider(Vector3 position, Quaternion rotation)

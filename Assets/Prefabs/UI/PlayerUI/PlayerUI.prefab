@@ -870,6 +870,7 @@ RectTransform:
   - {fileID: 3696478299053724344}
   - {fileID: 2018074594964655828}
   - {fileID: 1759127215849909371}
+  - {fileID: 5268074832578338352}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2056,6 +2057,52 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7366884794984293205, guid: 1fcc63cf914a1be42a39e9d18ed16f29, type: 3}
   m_PrefabInstance: {fileID: 334458972430375861}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &725826047306912172
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2117843957883114285}
+    m_Modifications:
+    - target: {fileID: 4830480963177123740, guid: 63fe73303ae3a8648bb6811219869945, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4830480963177123740, guid: 63fe73303ae3a8648bb6811219869945, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4830480963177123740, guid: 63fe73303ae3a8648bb6811219869945, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4830480963177123740, guid: 63fe73303ae3a8648bb6811219869945, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4830480963177123740, guid: 63fe73303ae3a8648bb6811219869945, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4830480963177123740, guid: 63fe73303ae3a8648bb6811219869945, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7075471449728544549, guid: 63fe73303ae3a8648bb6811219869945, type: 3}
+      propertyPath: m_Name
+      value: RaidAlarmMenu
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 63fe73303ae3a8648bb6811219869945, type: 3}
+--- !u!224 &5268074832578338352 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4830480963177123740, guid: 63fe73303ae3a8648bb6811219869945, type: 3}
+  m_PrefabInstance: {fileID: 725826047306912172}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &849905373621207611
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2481,18 +2528,6 @@ PrefabInstance:
     - target: {fileID: 4492395498956872227, guid: c1d6dfe86e6399643b9ef34770b71a3e, type: 3}
       propertyPath: m_Name
       value: ReceivedAdReward
-      objectReference: {fileID: 0}
-    - target: {fileID: 5313188187559071214, guid: c1d6dfe86e6399643b9ef34770b71a3e, type: 3}
-      propertyPath: m_text
-      value: You got {itemName} {amount}
-      objectReference: {fileID: 0}
-    - target: {fileID: 5313188187559071214, guid: c1d6dfe86e6399643b9ef34770b71a3e, type: 3}
-      propertyPath: m_fontSize
-      value: 42
-      objectReference: {fileID: 0}
-    - target: {fileID: 5313188187559071214, guid: c1d6dfe86e6399643b9ef34770b71a3e, type: 3}
-      propertyPath: m_enableAutoSizing
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5313188187559071214, guid: c1d6dfe86e6399643b9ef34770b71a3e, type: 3}
       propertyPath: m_wordWrappingRatios

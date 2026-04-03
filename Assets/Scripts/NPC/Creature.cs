@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,16 +18,32 @@ public abstract class CreatureEntry
 
 public abstract class Creature : MonoBehaviour
 {
-    private IslandNavMeshBuilder cityNavMeshManager;
+    [SerializeField] private Health health;
+
     protected NavMeshAgent agent = null;
     protected EntityMovement movement = null;
 
     [SerializeField] protected CreatureData creatureData;
     public CreatureData CreatureData => creatureData;
 
+    public static event Action<Creature> onCreatureDeath;
+
+    private void OnEnable()
+    {
+        if (health) {
+            health.onDeath += Die;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (health) {
+            health.onDeath -= Die;
+        }
+    }
+
     protected virtual void Awake()
     {
-        cityNavMeshManager = FindAnyObjectByType<IslandNavMeshBuilder>();
         agent = GetComponent<NavMeshAgent>();
         movement = GetComponent<EntityMovement>();
     }
@@ -39,5 +56,10 @@ public abstract class Creature : MonoBehaviour
         //if (cityNavMeshManager.bakeNavMeshCoroutine != null) {
         //    SetNavAgentEnabled(false);
         //}
+    }
+
+    private void Die()
+    {
+        onCreatureDeath?.Invoke(this);
     }
 }

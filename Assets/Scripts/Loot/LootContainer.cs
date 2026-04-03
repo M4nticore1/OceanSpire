@@ -32,7 +32,7 @@ public class LootContainer : MonoBehaviour, IClickable
     [SerializeField] private bool isMovable = true;
 
     private bool isMoving = false;
-    private const float MoveSpeed = 0.3f;
+    private const float MoveSpeed = 0.4f;
     private float currentMoveSpeedMultiplier = 1f;
     private const float stopMovingSpeed = 10f;
 

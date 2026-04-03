@@ -10,6 +10,7 @@ public class Health : MonoBehaviour
     public float CurrentHealth { get { return currentHealth; } }
 
     public event Action onHealthChanged;
+    public event Action onDeath;
 
     public void Init(float currentHealth)
     {
@@ -38,14 +39,9 @@ public class Health : MonoBehaviour
         currentHealth = value;
 
         if (CurrentHealth <= 0) {
-            Die();
+            onDeath?.Invoke();
         }
 
         onHealthChanged?.Invoke();
-    }
-
-    private void Die()
-    {
-
     }
 }

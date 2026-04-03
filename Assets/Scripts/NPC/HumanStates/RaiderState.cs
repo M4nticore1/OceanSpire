@@ -9,7 +9,12 @@ public class RaiderState : HumanState
 
     public override void OnSetedInteractBuilding(Building building)
     {
-
+        if (human.BoatRider.isRidingOnBoat) {
+            human.BoatRider.currentBoat.SetState(BoatStateEnum.MovingToDock);
+        }
+        else {
+            human.CityNavigator.TryFindPathToTargetBuilding();
+        }
     }
 
     public override void OnRemovedInteractBuilding()

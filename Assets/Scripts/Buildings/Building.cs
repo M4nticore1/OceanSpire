@@ -128,6 +128,7 @@ public abstract class Building : MonoBehaviour
         InvokeExitBuilding(navigator);
     }
 
+    // Workers
     public void AddWorker(EntityInteractor interactor)
     {
         workers.Add(interactor);
@@ -162,6 +163,7 @@ public abstract class Building : MonoBehaviour
         InvokeCurrentWorkerRemoved(interactor);
     }
 
+    // Interaction
     public Transform GetInteractionTransform()
     {
         int index = workers.Count > 0 ? ((workers.Count - 1) % LevelData.maxResidentsCount) : 0;
@@ -192,6 +194,7 @@ public abstract class Building : MonoBehaviour
         }
     }
 
+    // Events
     private void InvokeEnterBuilding(EntityCityNavigator navigator)
     {
         foreach (var listener in GetComponentsInChildren<IEnterExitListener>()) {

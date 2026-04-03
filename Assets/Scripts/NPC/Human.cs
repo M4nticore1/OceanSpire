@@ -111,27 +111,20 @@ public class Human : Creature
         }
 
         interactor.SetInteractBuilding(building);
-        currentState.OnSetedInteractBuilding(building);
         cityNavigator.SetTargetBuilding(building);
-
-        if (boatRider.isRidingOnBoat) {
-            BoatRider.currentBoat.SetState(BoatStateEnum.MovingToDock);
-        }
-        else {
-            cityNavigator.TryFindPathToTargetBuilding();
-        }
+        currentState.OnSetedInteractBuilding(building);
     }
 
     public void RemoveInteractBuilding()
     {
-        currentState.OnRemovedInteractBuilding();
         cityNavigator.RemoveTargetBuilding();
+        currentState.OnRemovedInteractBuilding();
 
         if (boatRider.isRidingOnBoat) {
             BoatRider.currentBoat.SetState(BoatStateEnum.MovingToDock);
         }
         else {
-            movement.StopMoving();
+            cityNavigator.UpdateFollowingPathState();
         }
     }
 
@@ -142,6 +135,8 @@ public class Human : Creature
         }
         else {
             Building building = SelectManager.Instance.selectedComponent.GetComponent<Building>();
+            if (building.workers.Count >= building.LevelData.maxResidentsCount) return;
+
             SetInteractBuilding(building);
         }
     }

@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
 public enum FollowingPathState
 {
@@ -19,7 +16,6 @@ public enum FollowingPathState
 [RequireComponent(typeof(EntityMovement))]
 public class EntityCityNavigator : MonoBehaviour
 {
-    private BuildingsManager buildingsManager;
     private EntityMovement movement;
 
     // Path
@@ -53,7 +49,6 @@ public class EntityCityNavigator : MonoBehaviour
 
     private void Awake()
     {
-        buildingsManager = FindAnyObjectByType<BuildingsManager>();
         movement = GetComponent<EntityMovement>();
     }
 
@@ -96,6 +91,7 @@ public class EntityCityNavigator : MonoBehaviour
     public void RemoveTargetBuilding()
     {
         targetBuilding = null;
+        ResetPath();
     }
 
     public void HandleInteractBuildingRemoved()
@@ -112,7 +108,7 @@ public class EntityCityNavigator : MonoBehaviour
         BuildingPlace startPlace;
         if (IsRidingOnElevator && currentElevator.spawnedElevatorCabin.isMoving) {
             int nextFloor = currentElevator.spawnedElevatorCabin.nextFloor;
-            startTowerBuilding = buildingsManager.BuiltFloors[nextFloor].RoomBuildingPlaces[placeIndex].PlacedBuilding;
+            startTowerBuilding = BuildingsManager.instance.BuiltFloors[nextFloor].RoomBuildingPlaces[placeIndex].PlacedBuilding;
             startPlace = startTowerBuilding ? startTowerBuilding.buildingPlace : null;
         }
         else {
@@ -120,7 +116,7 @@ public class EntityCityNavigator : MonoBehaviour
             startPlace = startTowerBuilding ? startTowerBuilding.buildingPlace : null;
         }
 
-        if (!PathFinder.TryGetPathToBuilding(buildingsManager, startPlace, targetBuilding, ref pathBuildings)) return false;
+        if (!PathFinder.TryGetPathToBuilding(BuildingsManager.instance, startPlace, targetBuilding, ref pathBuildings)) return false;
 
         SortPath();
         AssignPathBuildings();

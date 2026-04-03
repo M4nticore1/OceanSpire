@@ -16,11 +16,11 @@ public class LootManager : MonoBehaviour
     private const float spawnFrequency = 0.5f;
 
     // Update Time
-    private float lastUpdateFrequency = 0f;
-    private const float updateFrequency = 0.05f;
-    public const float spawnDistance = 160.0f;
+    [SerializeField] private float updatePositionFrequency = 0.05f;
+    private float currentUpdatePositionTime = 0f;
 
     // Spawn Position
+    public const float spawnDistance = 160.0f;
     private const float spawnMaxOffsetYaw = 60.0f;
 
     private void Awake()
@@ -114,17 +114,20 @@ public class LootManager : MonoBehaviour
 
     private void UpdateLootContainers()
     {
-        if (Time.time < lastUpdateFrequency + updateFrequency)
-            return;
+        currentUpdatePositionTime += Time.deltaTime;
 
-        for (int i = spawnedLootContainers.Count - 1; i >= 0; i--) {
-            var container = spawnedLootContainers[i];
-            if (container)
-                container.Tick(Time.deltaTime / updateFrequency);
-            else
-                spawnedLootContainers.RemoveAt(i);
+        while (currentUpdatePositionTime >= updatePositionFrequency) {
+            for (int i = spawnedLootContainers.Count - 1; i >= 0; i--) {
+                var container = spawnedLootContainers[i];
+
+                if (container)
+                    container.Tick(Time.deltaTime / updatePositionFrequency);
+                else
+                    spawnedLootContainers.RemoveAt(i);
+            }
+
+            currentUpdatePositionTime -= updatePositionFrequency;
         }
-        lastUpdateFrequency = Time.time;
     }
 
     //private void SpawnInitialLoot()

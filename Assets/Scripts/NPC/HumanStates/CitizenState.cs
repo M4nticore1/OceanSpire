@@ -11,6 +11,13 @@ public class CitizenState : HumanState
         human.Interactor.AssignWorkerIndex();
         building.AddWorker(human.Interactor);
 
+        if (human.BoatRider.isRidingOnBoat) {
+            human.BoatRider.currentBoat.SetState(BoatStateEnum.FindingLoot);
+        }
+        else {
+            human.CityNavigator.TryFindPathToTargetBuilding();
+        }
+
         EventBus.InvokeSetedWorkBuilding();
     }
 
