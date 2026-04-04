@@ -5,19 +5,24 @@ using UnityEngine.AI;
 [Serializable]
 public class BoatEntry
 {
-    public BoatEntry (int id, Vector3 position, Vector3 rotation, float health)
+    public int id { get; private set; } = 0;
+    public int instanceId { get; private set; } = 0;
+    public BoatStateEnum state { get; private set; } = BoatStateEnum.Idle;
+    public Vector3 position { get; private set; } = Vector3.zero;
+    public Vector3 rotation { get; private set; } = Vector3.zero;
+    public int dockInstanceId { get; private set; } = 0;
+    public float health { get; private set; } = 0;
+
+    public BoatEntry(int id, int instanceId, BoatStateEnum state, Vector3 position, Vector3 rotation, float health, int dockInstanceId)
     {
         this.id = id;
+        this.state = state;
+        this.instanceId = instanceId;
         this.position = position;
         this.rotation = rotation;
         this.health = health;
+        this.dockInstanceId = dockInstanceId;
     }
-
-    public int id { get; private set; } = 0;
-    public Vector3 position { get; private set; } = Vector3.zero;
-    public Vector3 rotation { get; private set; } = Vector3.zero;
-    public int dockIndex { get; private set; } = 0;
-    public float health { get; private set; } = 0;
 }
 
 public enum BoatStateEnum
@@ -41,10 +46,11 @@ public class Boat : MonoBehaviour
 
     public BoatStateEnum currentState { get; private set; } = BoatStateEnum.Idle;
     private BoatState state;
-    public BoatRider rider { get; private set; }
+    public BoatRider currentRider { get; private set; }
+
+    public int instanceId { get; private set; } = 0;
 
     // Components
-    [SerializeField] private NavMeshAgent navAgent;
     [SerializeField] private BoatLootHandler lootHandler;
 
     [SerializeField] private EntityMovement movement;
@@ -62,7 +68,7 @@ public class Boat : MonoBehaviour
     public SelectComponent SelectComponent => selectComponent;
 
     // Dock
-    public BoatDockPoint dockPoint { get; private set; }
+    public BoatDockPoint dockPoint;
     public LootContainer targetLootContainer { get; private set; }
 
     // Health
@@ -96,6 +102,8 @@ public class Boat : MonoBehaviour
         movement.onReachedPath -= OnReachedPath;
         selectComponent.onSelected -= OnSelected;
         selectComponent.onDeselected -= OnDeselected;
+
+        BoatsManager.Instance.UnregisterBoat(this);
     }
 
     private void Update()
@@ -110,14 +118,18 @@ public class Boat : MonoBehaviour
 
         lootHandler.Init();
 
+        instanceId = data.instanceId;
+
         transform.position = data.position;
         transform.rotation = Quaternion.Euler(data.rotation);
 
         health.Init(data.health);
-        PierConstruction pierConstruction = buildingsManager.PierBuilding.spawnedConstruction as PierConstruction;
-        SetDockPoint(pierConstruction.BoatDocks[data.dockIndex]);
 
-        SetState(currentState);
+        BoatDockPoint dockPoint = DockPointsManager.instance.DockPointsDict[data.dockInstanceId];
+        SetDockPoint(dockPoint);
+
+        SetState(data.state);
+        BoatsManager.Instance.RegisterBoat(this);
     }
 
     public void HandleReturnedToDock()
@@ -130,27 +142,41 @@ public class Boat : MonoBehaviour
         }
     }
 
-    // Enter / Exit
-    public void EnterBoat(BoatRider rider)
+    public void FloatAway(Vector3 position)
     {
-        this.rider = rider;
+        movement.TryMoveTo(position);
+        SetState(BoatStateEnum.FloatingAway);
+    }
+
+    // Enter / Exit
+    public void SetRider(BoatRider rider)
+    {
+        currentRider = rider;
 
         Human human = rider.GetComponent<Human>();
         if (human.currentStateEnum == HumanStateEnum.Wanderer) {
             selectComponent.SetClickable(false);
         }
+
+        movement.SetAgentEnabled(true);
     }
 
-    public void ExitBoat()
+    public void RemoveRider()
     {
-        rider = null;
+        currentRider = null;
     }
 
-    // Setters
+    // Dock Point
     public void SetDockPoint(BoatDockPoint dockPoint)
     {
         this.dockPoint = dockPoint;
         dockPoint.SetBoat(this);
+    }
+
+    public void RemoveDockPoint()
+    {
+        dockPoint.RemoveBoat();
+        dockPoint = null;
     }
 
     public void SetTargetLoot(LootContainer lootContainer)
@@ -195,7 +221,7 @@ public class Boat : MonoBehaviour
                 this.state = new BoatCollectingLootState(this);
                 break;
             case BoatStateEnum.MovingToDock:
-                this.state = new BoatReturningState(this);
+                this.state = new BoatMovingToDockState(this);
                 break;
             case BoatStateEnum.UnloadingLoot:
                 this.state = new BoatUnloadingState(this);

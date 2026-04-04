@@ -4,8 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(EntityMovement))]
 public class EntityInteractor : MonoBehaviour
 {
-    [SerializeField] private Building interactBuilding = null;
-    public Building InteractBuilding => interactBuilding;
+    public Building interactBuilding { get; private set; }
 
     public bool isInteracting { get; private set; } = false;
     public int workerIndex { get; private set; } = 0;

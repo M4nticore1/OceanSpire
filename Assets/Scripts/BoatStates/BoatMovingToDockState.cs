@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class BoatReturningState : BoatState
+public class BoatMovingToDockState : BoatState
 {
-    public BoatReturningState(Boat boat) : base(boat)
+    public BoatMovingToDockState(Boat boat) : base(boat)
     {
         
     }

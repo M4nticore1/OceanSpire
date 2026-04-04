@@ -10,14 +10,16 @@ GameObject:
   m_Component:
   - component: {fileID: 5552754147449274060}
   - component: {fileID: 9140235139351627301}
-  - component: {fileID: -7493649843608556168}
+  - component: {fileID: 4098557255172134659}
   - component: {fileID: 6316746746762001490}
   - component: {fileID: 2185582854232776361}
   - component: {fileID: 6497944028369977301}
+  - component: {fileID: 774651871998097940}
+  - component: {fileID: -7493649843608556168}
+  - component: {fileID: 8364959695361298754}
   - component: {fileID: 1338494420481879648}
   - component: {fileID: 2791892867924478363}
   - component: {fileID: 1784173792497504951}
-  - component: {fileID: 8364959695361298754}
   m_Layer: 7
   m_Name: Human_Male
   m_TagString: Untagged
@@ -56,12 +58,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a9c0911e75b5854cb6088ce4f6267e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Human
+  health: {fileID: 4098557255172134659}
   creatureData: {fileID: 11400000, guid: 84ce6b77893601742bd80f0644c2bc89, type: 2}
   cityNavigator: {fileID: 2185582854232776361}
   interactor: {fileID: 6316746746762001490}
   boatRider: {fileID: 6497944028369977301}
+  attack: {fileID: 774651871998097940}
   selectComponent: {fileID: 8364959695361298754}
---- !u!114 &-7493649843608556168
+--- !u!114 &4098557255172134659
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -70,9 +74,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6506537361480025273}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 912213559928a484a8491f74359e20b8, type: 3}
+  m_Script: {fileID: 11500000, guid: 28d0e2a60aaaab745affb91810c0fdf2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCMovement
+  m_EditorClassIdentifier: Assembly-CSharp::Health
+  maxHealth: 100
 --- !u!114 &6316746746762001490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,7 +90,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72b46fc7eafdb7f42bdf96505c6326cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCBuildingInteractor
-  interactBuilding: {fileID: 0}
 --- !u!114 &2185582854232776361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,8 +106,6 @@ MonoBehaviour:
   currentBuilding: {fileID: 0}
   currentTowerBuilding: {fileID: 0}
   pathIndex: 0
-  floorIndex: 0
-  placeIndex: 0
   followingPathState: 0
 --- !u!114 &6497944028369977301
 MonoBehaviour:
@@ -117,6 +119,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b0c4d83530020347a7953f4fc928c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatRider
+  movement: {fileID: -7493649843608556168}
+  selectedBoat: {fileID: 0}
+--- !u!114 &774651871998097940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd216d9cff4b16e47bbc88dc23d1f25a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Attack
+  movement: {fileID: -7493649843608556168}
+  damage: 10
+  attackFrequency: 1
+--- !u!114 &-7493649843608556168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 912213559928a484a8491f74359e20b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCMovement
+  navAgent: {fileID: 1338494420481879648}
+--- !u!114 &8364959695361298754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
 --- !u!195 &1338494420481879648
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -189,18 +233,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8364959695361298754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6506537361480025273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
 --- !u!1001 &585667398127166048
 PrefabInstance:
   m_ObjectHideFlags: 0

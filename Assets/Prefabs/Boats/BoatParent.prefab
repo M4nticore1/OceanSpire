@@ -141,6 +141,7 @@ MonoBehaviour:
   health: {fileID: 1718763975742808754}
   healthDrainer: {fileID: 5453205600493844167}
   selectComponent: {fileID: 6306187827067608498}
+  dockPoint: {fileID: 0}
   seatSlot: {fileID: 6338914725495003467}
 --- !u!114 &1558227740111410491
 MonoBehaviour:
@@ -181,6 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 912213559928a484a8491f74359e20b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityMovement
+  navAgent: {fileID: 2423519319514539946}
 --- !u!114 &1147310907644242627
 MonoBehaviour:
   m_ObjectHideFlags: 0

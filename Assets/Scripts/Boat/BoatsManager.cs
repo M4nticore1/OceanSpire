@@ -5,33 +5,40 @@ public class BoatsManager : MonoBehaviour
 {
     public static BoatsManager Instance { get; private set; } = null;
 
-    public List<Boat> citizenBoats { get; private set; } = new List<Boat>();
-
-    private void OnEnable()
-    {
-        EventBus.onBoatCreated += OnBoatCreated;
-    }
-
-    private void OnDisable()
-    {
-        EventBus.onBoatCreated -= OnBoatCreated;
-    }
+    public List<Boat> boats { get; private set; } = new List<Boat>();
+    public Dictionary<int, Boat> boatsDict { get; private set; } = new Dictionary<int, Boat>();
 
     private void Awake()
     {
+        if (Instance) {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
+
+        foreach (Boat boat in boats) {
+            boatsDict.Add(boat.instanceId, boat);
+        }
+    }
+
+    public void RegisterBoat(Boat boat)
+    {
+        boats.Add(boat);
+        boatsDict.Add(boat.instanceId, boat);
+    }
+
+    public void UnregisterBoat(Boat boat)
+    {
+        boats.Remove(boat);
+        boatsDict.Remove(boat.instanceId);
     }
 
     public Boat GetBoatByInteractorIndex(int index)
     {
-        if (citizenBoats.Count <= index) return null;
+        if (boats.Count <= index) return null;
 
-        Boat boat = citizenBoats[index];
+        Boat boat = boats[index];
         return boat;
-    }
-
-    private void OnBoatCreated(Boat boat)
-    {
-        citizenBoats.Add(boat);
     }
 }

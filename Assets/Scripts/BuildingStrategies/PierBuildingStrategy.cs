@@ -34,8 +34,8 @@ public class PierBuildingStrategy : BuildingStrategy
         Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(interactor.workerIndex);
         if (!boat) return;
 
-        if (newBoatRider.currentBoat) {
-            if (newBoatRider.currentBoat == boat) {
+        if (newBoatRider.selectedBoat) {
+            if (newBoatRider.selectedBoat == boat) {
                 if (newBoatRider.isExitingBoat) {
                     newBoatRider.StopExitingBoat();
                 }
@@ -60,7 +60,7 @@ public class PierBuildingStrategy : BuildingStrategy
         }
 
         if (boatRider.isRidingOnBoat) {      
-            boatRider.currentBoat?.SetState(BoatStateEnum.MovingToDock);
+            boatRider.selectedBoat?.SetState(BoatStateEnum.MovingToDock);
         }
     }
 
@@ -86,15 +86,16 @@ public class PierBuildingStrategy : BuildingStrategy
 
         int index = interactor.workerIndex;
         Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(index);
+        boatRider.SetSelectedBoat(boat);
 
-        while (boat != null && boat.currentState != BoatStateEnum.Idle) {
+        while (boat && boat.currentState != BoatStateEnum.Idle) {
             yield return new WaitForSeconds(0.5f);
         }
 
-        if (interactor.InteractBuilding != building) yield break;
+        if (interactor.interactBuilding != building) yield break;
 
-        if (boat != null && boatRider != null) {
-            boatRider.StartEnteringBoat(boat);
+        if (boat && boatRider) {
+            boatRider.StartEnteringBoat();
         }
     }
 

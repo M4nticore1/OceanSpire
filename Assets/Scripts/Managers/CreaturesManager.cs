@@ -15,6 +15,11 @@ public class CreaturesManager : MonoBehaviour
 
     private void Awake()
     {
+        if (instance) {
+            Destroy(gameObject);
+            return;
+        }
+
         instance = this;
     }
 
@@ -43,12 +48,12 @@ public class CreaturesManager : MonoBehaviour
     }
 
     // Enemy
-    public void RegisterEnemy(Human human)
+    public void RegisterRaider(Human human)
     {
         enemies.Add(human);
     }
 
-    public void UnregisterEnemy(Human human)
+    public void UnregisterRaider(Human human)
     {
         enemies.Remove(human);
     }

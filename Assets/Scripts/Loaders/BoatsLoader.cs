@@ -8,12 +8,8 @@ public class BoatsLoader : MonoBehaviour
     private void Start()
     {
         WorldData data = WorldSaveManager.Instance.currentSaveWorldData;
-        LoadBoats(data);
-    }
 
-    private void LoadBoats(WorldData saveData)
-    {
-        if (saveData != null) {
+        if (data != null) {
 
         }
         else {
@@ -27,8 +23,13 @@ public class BoatsLoader : MonoBehaviour
                 Vector3 rotation = spawnTransform.DockTransform.rotation.eulerAngles;
                 float health = prefab.Health.MaxHealth;
 
-                BoatEntry data = new BoatEntry (id, position, rotation, health);
-                Boat boat = BoatFactory.CreateBoat(data);
+                int boatId = InstancesManager.instance.GetNextInstanceId();
+                InstancesManager.instance.AddInstanceId(boatId);
+
+                int dockId = DockPointsManager.instance.pierDockPoints[i].InstanceId.id;
+
+                BoatEntry boatData = new BoatEntry(id, boatId, BoatStateEnum.Idle, position, rotation, health, dockId);
+                Boat boat = BoatFactory.CreateBoat(boatData);
             }
         }
     }

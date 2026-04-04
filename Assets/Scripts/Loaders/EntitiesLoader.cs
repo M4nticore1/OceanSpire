@@ -31,9 +31,12 @@ public class EntitiesLoader : MonoBehaviour
                 float x = Random.Range(position.x - maxSpawnRange, position.x + maxSpawnRange);
                 float y = position.y;
                 float z = Random.Range(position.z - maxSpawnRange, position.z + maxSpawnRange);
-                Vector3 finalPosition = new Vector3(x, y, z);
 
-                HumanEntry data = new HumanEntry((int)CreatureIdEnum.Human, HumanStateEnum.Citizen, finalPosition, rotation.eulerAngles);
+                Vector3 finalPosition = new Vector3(x, y, z);
+                int instanceId = InstancesManager.instance.GetNextInstanceId();
+                InstancesManager.instance.AddInstanceId(instanceId);
+
+                HumanEntry data = new HumanEntry((int)CreatureIdEnum.Human, instanceId, HumanStateEnum.Citizen, finalPosition, rotation.eulerAngles, -1, false);
                 Human citizen = CreatureFactory.CreateHuman(data);
             }
         }

@@ -32,8 +32,8 @@ public class EntityCityNavigator : MonoBehaviour
     private bool HasPath => pathBuildings.Count > 0;
 
     // Positions
-    public int floorIndex = 0;
-    public int placeIndex = 0;
+    public int floorIndex { get; private set; } = 0;
+    public int placeIndex { get; private set; } = 0;
 
     // State
     public FollowingPathState followingPathState = FollowingPathState.None;
@@ -45,7 +45,7 @@ public class EntityCityNavigator : MonoBehaviour
 
     public event Action<Building> onEnteredBuilding;
     public event Action<Building> onExitedBuilding;
-    public event Action<Building> onReachedTarget;
+    public event Action onReachedTarget;
 
     private void Awake()
     {
@@ -183,12 +183,19 @@ public class EntityCityNavigator : MonoBehaviour
 
     private void EnterBuilding()
     {
+        Building lastTargetBuilding = targetBuilding;
+
         if (IsOnCurrentPathBuilding()) {
             OnReachedPath();
         }
         else {
             UpdateFollowingPathState();
         }
+
+        if (currentBuilding == lastTargetBuilding) {
+            onReachedTarget?.Invoke();
+        }
+
         onEnteredBuilding?.Invoke(currentBuilding);
     }
 

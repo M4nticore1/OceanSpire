@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum HumanStateEnum
 {
@@ -12,17 +11,30 @@ public enum HumanStateEnum
 [Serializable]
 public class HumanEntry : CreatureEntry
 {
-    public HumanEntry(int id, HumanStateEnum status, Vector3 position, Vector3 rotation) : base(id, position, rotation)
-    {
-        this.state = status;
-    }
-
-    public HumanStateEnum state { get; private set; } = HumanStateEnum.Citizen;
-
-    public Guid interactBuildingInstanceId { get; private set; } = Guid.Empty;
+    public HumanStateEnum status { get; private set; } = HumanStateEnum.Citizen;
+    public int interactBuildingInstanceId { get; private set; } = 0;
     public bool isMale { get; private set; } = false;
     public int firstNameIndex { get; private set; } = 0;
     public int lastNameIndex { get; private set; } = 0;
+    public int boatInstanceId { get; private set; } = 0;
+    public bool isRidingOnBoat { get; private set; } = false;
+
+    public HumanEntry(int id, int instanceId, HumanStateEnum status, Vector3 position, Vector3 rotation, int boatInstanceId, bool isRidingOnBoat) : base(id, instanceId, position, rotation)
+    {
+        this.status = status;
+        this.boatInstanceId = boatInstanceId;
+        this.isRidingOnBoat = isRidingOnBoat;
+    }
+}
+
+public class RaiderEntry : HumanEntry
+{
+    public bool isFinishedRaiding { get; private set; } = false;
+
+    public RaiderEntry(int id, int instanceId, HumanStateEnum status, Vector3 position, Vector3 rotation, int boatInstanceId, bool isFinishedRaiding, bool isRidingOnBoat) : base(id, instanceId, status, position, rotation, boatInstanceId, isRidingOnBoat)
+    {
+        this.isFinishedRaiding = isFinishedRaiding;
+    }
 }
 
 public class Human : Creature
@@ -35,6 +47,9 @@ public class Human : Creature
 
     [SerializeField] private BoatRider boatRider;
     public BoatRider BoatRider => boatRider;
+
+    [SerializeField] private Attack attack;
+    public Attack Attack => attack;
 
     [SerializeField] private SelectComponent selectComponent;
     public SelectComponent SelectComponent => selectComponent;
@@ -54,6 +69,8 @@ public class Human : Creature
     public static event Action<Human> onWandererRejected;
     public static event Action<Human> onHumanSelected;
     public static event Action<Human> onHumanDeselected;
+    public static event Action<Human> onEnteredBoat;
+    public static event Action<Human> onExitedBoat;
 
     protected void OnEnable()
     {
@@ -79,6 +96,7 @@ public class Human : Creature
     {
         cityNavigator.onEnteredBuilding -= OnEnteredBuilding;
         cityNavigator.onExitedBuilding -= OnExitedBuilding;
+        cityNavigator.onReachedTarget -= OnReachedTargetBuilding;
 
         interactor.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
         interactor.onStoppedInteracting -= OnStopInteracting;
@@ -92,21 +110,35 @@ public class Human : Creature
         EventBus.onNavMeshBaked += OnNavMeshBaked;
     }
 
+    private void Update()
+    {
+        currentState.Tick();
+    }
+
     public override void Init(CreatureEntry data)
     {
         base.Init(data);
 
         HumanEntry humanData = data as HumanEntry;
-        SetStatus(humanData.state);
+        
+        SetStatus(humanData.status);
         isMale = humanData.isMale;
         AssignNameIndexes(humanData);
+
+        if (humanData.boatInstanceId >= 0) {
+            boatRider.SetSelectedBoat(humanData.boatInstanceId);
+        }
+
+        if (humanData.isRidingOnBoat) {
+            boatRider.EnterBoat();
+        }
 
         EventBus.InvokeCitizenInited(this);
     }
 
     public void SetInteractBuilding(Building building)
     {
-        if (interactor.InteractBuilding) {
+        if (interactor.interactBuilding) {
             RemoveInteractBuilding();
         }
 
@@ -121,7 +153,7 @@ public class Human : Creature
         currentState.OnRemovedInteractBuilding();
 
         if (boatRider.isRidingOnBoat) {
-            BoatRider.currentBoat.SetState(BoatStateEnum.MovingToDock);
+            BoatRider.selectedBoat.SetState(BoatStateEnum.MovingToDock);
         }
         else {
             cityNavigator.UpdateFollowingPathState();
@@ -130,7 +162,7 @@ public class Human : Creature
 
     public void HandleClickedWorkerWidget()
     {
-        if (interactor.InteractBuilding) {
+        if (interactor.interactBuilding) {
             RemoveInteractBuilding();
         }
         else {
@@ -141,20 +173,32 @@ public class Human : Creature
         }
     }
 
+    // Boat
+    public void MoveToBoat()
+    {
+        if (cityNavigator.floorIndex > 0) {
+            Building building = BuildingsManager.instance.TowerGate;
+            cityNavigator.SetTargetBuilding(building);
+            cityNavigator.TryFindPathToTargetBuilding();
+        }
+        else {
+            boatRider.StartMovingToBoat();
+        }
+    }
+
     // Wanderer
     public void AcceptWanderer()
     {
         SetStatus(HumanStateEnum.Citizen);
         selectComponent.SetClickable(true);
         selectComponent.SetSelected(false);
-        Destroy(boatRider.currentBoat.gameObject);
+        Destroy(boatRider.selectedBoat.gameObject);
         boatRider.ExitBoat();
         onWandererAccepted?.Invoke(this);
     }
 
     public void RejectWanderer()
     {
-        boatRider.currentBoat.SetState(BoatStateEnum.FloatingAway);
         CreaturesManager.instance.UnregisterWanderer(this);
         onWandererRejected?.Invoke(this);
     }
@@ -181,9 +225,9 @@ public class Human : Creature
         cityNavigator.HandleInteractBuildingRemoved();
     }
 
-    private void OnReachedTargetBuilding(Building building)
+    private void OnReachedTargetBuilding()
     {
-        //interactor.OnReachedTargetBuilding();
+
     }
 
     private void OnStopInteracting(Building building)
@@ -194,23 +238,19 @@ public class Human : Creature
     private void OnEnteredBoat(Boat boat)
     {
         movement.SetAgentEnabled(false);
-
-        if (currentStateEnum == HumanStateEnum.Citizen) {
-            boat.SetState(BoatStateEnum.FindingLoot);
-        }
-        else if (currentStateEnum == HumanStateEnum.Wanderer) {
-            boat.SetState(BoatStateEnum.MovingToDock);
-        }
+        currentState.OnEnteredBoat(boat);
+        onEnteredBoat?.Invoke(this);
     }
 
     private void OnExitedBoat(Boat boat)
     {
         movement.SetAgentEnabled(true);
 
-        if (!interactor.InteractBuilding)
-            return;
+        if (interactor.interactBuilding) {
+            cityNavigator.TryFindPathToTargetBuilding();
+        }
 
-        cityNavigator.TryFindPathToTargetBuilding();
+        onExitedBoat?.Invoke(this);
     }
 
     // Names
@@ -259,7 +299,7 @@ public class Human : Creature
                 break;
             case HumanStateEnum.Raider:
                 currentState = new RaiderState(this);
-                CreaturesManager.instance.RegisterEnemy(this);
+                CreaturesManager.instance.RegisterRaider(this);
                 break;
         }
     }
@@ -275,7 +315,7 @@ public class Human : Creature
                 selectComponent.SetClickable(true);
                 break;
             case HumanStateEnum.Raider:
-                CreaturesManager.instance.UnregisterEnemy(this);
+                CreaturesManager.instance.UnregisterRaider(this);
                 break;
         }
     }
@@ -284,7 +324,7 @@ public class Human : Creature
     {
         if (currentStateEnum == HumanStateEnum.Wanderer) {
             selectComponent.SetSelected(false);
-            SelectComponent boatSelectComponent = boatRider.currentBoat.SelectComponent;
+            SelectComponent boatSelectComponent = boatRider.selectedBoat.SelectComponent;
             boatSelectComponent.SetSelected(true);
             boatSelectComponent.SetClickable(false);
         }
@@ -296,7 +336,7 @@ public class Human : Creature
     private void OnDeselected()
     {
         if (currentStateEnum == HumanStateEnum.Wanderer) {
-            SelectComponent boatSelectComponent = boatRider.currentBoat.SelectComponent;
+            SelectComponent boatSelectComponent = boatRider.selectedBoat.SelectComponent;
             boatSelectComponent.SetClickable(true);
             boatSelectComponent.SetSelected(false);
         }

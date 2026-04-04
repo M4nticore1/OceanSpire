@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class RaidManager : MonoBehaviour
 {
+    public static RaidManager instance;
+
     [Header("Prefabs")]
     [SerializeField] private Human attackerPrefab;
     [SerializeField] private Boat boatPrefab;
@@ -20,22 +22,34 @@ public class RaidManager : MonoBehaviour
 
     [Header("Positions")]
     [SerializeField] private BoatDockPoint[] dockPoints;
-    private List<Human> spawnedRaiders = new List<Human>();
-    private List<Boat> spawnedBoats = new List<Boat>();
+    private Dictionary<Boat, Vector3> spawnPositions;
 
-    private bool isUnderRaid = false;
+    private bool isUnedrRaid = false;
+    private int landedRaidersCount = 0;
 
     public static event System.Action onRaidStarted;
     public static event System.Action onRaidFinished;
 
+    private void Awake()
+    {
+        if (instance) {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+    }
+
     private void OnEnable()
     {
-        Creature.onCreatureDeath += OnCreatureDeath;
+        Human.onEnteredBoat += OnEnteredBoat;
+        Human.onExitedBoat += OnExitedBoat;
     }
 
     private void OnDisable()
     {
-        Creature.onCreatureDeath -= OnCreatureDeath;
+        Human.onEnteredBoat -= OnEnteredBoat;
+        Human.onExitedBoat -= OnExitedBoat;
     }
 
     private void Start()
@@ -45,21 +59,29 @@ public class RaidManager : MonoBehaviour
 
     private void Update()
     {
-        if (isUnderRaid) return;
+        if (isUnedrRaid) return;
 
         currentRaidTime += Time.deltaTime;
         if (currentRaidTime < currentRaidCooldown) return;
 
-        StartRaid();
+        CreateRaid();
         ResetCurrentRaidTime();
         ApplyRandomCooldown();
     }
 
-    private void StartRaid()
+    public Vector3 GetSpawnPosition(Boat boat)
+    {
+        return spawnPositions[boat];
+    }
+
+    private void CreateRaid()
     {
         int raidersAmount = GetRandomRaidersAmount();
+
         Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         dir.Normalize();
+
+        spawnPositions = new Dictionary<Boat, Vector3>();
 
         for (int i = 0; i < raidersAmount; i++) {
             float angle = Random.Range(minSpawnAngleOffset, maxSpawnAngleOffset);
@@ -69,22 +91,25 @@ public class RaidManager : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(-position.normalized);
 
             Boat boat = CreateBoat(position, rotation);
-            boat.SetDockPoint(GetNearestDockPoint(boat));
 
-            Human raider = CreateRaider(position, rotation);
-            raider.BoatRider.EnterBoat(boat);
+            Human raider = CreateRaider(position, rotation, boat.instanceId, true);
+            raider.BoatRider.EnterBoat();
             raider.SetInteractBuilding(GetRandomRaidBuilding());
+
+            spawnPositions.Add(boat, position);
         }
 
-        isUnderRaid = true;
+        isUnedrRaid = true;
+    }
+
+    private void StartRaid()
+    {
         onRaidStarted?.Invoke();
     }
 
-    private void FinishRaid()
+    private void StopRaid()
     {
-        DestroyBoats();
-
-        isUnderRaid = false;
+        isUnedrRaid = false;
         onRaidFinished?.Invoke();
     }
 
@@ -100,74 +125,103 @@ public class RaidManager : MonoBehaviour
 
     private void DestroyBoats()
     {
-        foreach (var boat in spawnedBoats) {
-            Destroy(boat.gameObject);
-        }
+        //foreach (var boat in spawnedBoats) {
+        //    Destroy(boat.gameObject);
+        //}
     }
 
-    private void OnCreatureDeath(Creature creature)
+    private void OnEnteredBoat(Human human)
     {
-        Human human = creature as Human;
-        if (human) return;
+        RaiderState raiderState = human.currentState as RaiderState;
+        if (raiderState == null) return;
 
-        if (!spawnedRaiders.Contains(human)) return;
+        if (!raiderState.isFinishedRaiding) return;
 
-        spawnedRaiders.Remove(human);
+        landedRaidersCount--;
 
-        if (spawnedRaiders.Count == 0) {
-            FinishRaid();
+        if (landedRaidersCount == 0) {
+            StopRaid();
         }
     }
 
-    private Human CreateRaider(Vector3 position, Quaternion rotation)
+    private void OnExitedBoat(Human human)
+    {
+        if (human.currentStateEnum != HumanStateEnum.Raider) return;
+
+        landedRaidersCount++;
+
+        if (landedRaidersCount == 1) {
+            StartRaid();
+        }
+    }
+
+    //private void OnCreatureDeath(Creature creature)
+    //{
+    //    Human human = creature as Human;
+    //    if (human) return;
+
+    //    if (!spawnedRaiders.Contains(human)) return;
+
+    //    spawnedRaiders.Remove(human);
+
+    //    if (spawnedRaiders.Count == 0) {
+    //        FinishRaid();
+    //    }
+    //}
+
+    private Human CreateRaider(Vector3 position, Quaternion rotation, int boatInstanceId, bool isRidingOnBoat)
     {
         int id = (int)CreatureIdEnum.Human;
-        HumanEntry data = new HumanEntry(id, HumanStateEnum.Raider, position, rotation.eulerAngles);
+
+        int instanceId = InstancesManager.instance.GetNextInstanceId();
+        InstancesManager.instance.AddInstanceId(instanceId);
+
+        HumanEntry data = new HumanEntry(id, instanceId, HumanStateEnum.Raider, position, rotation.eulerAngles, boatInstanceId, isRidingOnBoat);
         Human human = CreatureFactory.CreateHuman(data);
-        spawnedRaiders.Add(human);
+
         return human;
     }
 
     private Boat CreateBoat(Vector3 position, Quaternion rotation)
     {
         int id = boatPrefab.BoatData.BoatId;
+
+        int boatId = InstancesManager.instance.GetNextInstanceId();
+        InstancesManager.instance.AddInstanceId(boatId);
+
         float health = boatPrefab.Health.MaxHealth;
-        BoatEntry data = new BoatEntry(id, position, rotation.eulerAngles, health);
+        int dockInstanceId = GetNearestDockPoint(position).InstanceId.id;
+
+        BoatEntry data = new BoatEntry(id, boatId, BoatStateEnum.MovingToDock, position, rotation.eulerAngles, health, dockInstanceId);
         Boat boat = BoatFactory.CreateBoat(data);
-        spawnedBoats.Add(boat);
+
         return boat;
     }
 
     private Building GetRandomRaidBuilding()
     {
         Building building = null;
-        int floorIndex = Random.Range(-1, BuildingsManager.instance.BuiltFloors.Count);
+        int floorIndex = 0;
+        int placeIndex = 0;
 
-        if (floorIndex == -1) {
-            building = BuildingsManager.instance.TowerGate;
-        }
-        else {
-            int placeIndex = 0;
-
-            while (!building || !building.BuildingData.IsRaidable) {
-                floorIndex = Random.Range(0, BuildingsManager.instance.BuiltFloors.Count);
-                placeIndex = Random.Range(0, BuildingsManager.RoomsCountPerFloor);
-                building = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
-            }
+        while (!building || !building.BuildingData.IsRaidable) {
+            floorIndex = Random.Range(0, BuildingsManager.instance.BuiltFloors.Count);
+            placeIndex = Random.Range(0, BuildingsManager.RoomsCountPerFloor);
+            building = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
         }
 
         return building;
     }
 
-    private BoatDockPoint GetNearestDockPoint(Boat boat)
+    private BoatDockPoint GetNearestDockPoint(Vector3 position)
     {
         BoatDockPoint dockPoint = dockPoints[0];
-        float distance = Vector3.Distance(boat.transform.position, dockPoint.transform.position);
+        float distance = Vector3.Distance(position, dockPoint.transform.position);
 
         for (int i = 1; i < dockPoints.Length; i++) {
             if (dockPoints[i].boat != null) continue;
 
-            float currentDistance = Vector3.Distance(boat.transform.position, dockPoints[i].transform.position);
+            float currentDistance = Vector3.Distance(position, dockPoints[i].transform.position);
             if (currentDistance >= distance) continue;
 
             dockPoint = dockPoints[i];

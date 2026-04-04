@@ -14,4 +14,5 @@ public abstract class HumanState
     public abstract void OnRemovedInteractBuilding();
     public abstract void OnStoppedMoving();
     public abstract void OnEnteredBuilding(Building building);
+    public abstract void OnEnteredBoat(Boat boat);
 }

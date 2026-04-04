@@ -9,12 +9,12 @@ public class BoatIdleState : BoatState
 
     public override void Enter()
     {
-        if (!boat.rider) return;
+        if (!boat.currentRider) return;
 
-        boat.rider.HandleBoatSetedIdle();
+        boat.currentRider.HandleBoatSetedIdle();
         boat.Movement.SetAgentEnabled(false);
 
-        Human human = boat.rider.GetComponent<Human>();
+        Human human = boat.currentRider.GetComponent<Human>();
         if (human.currentStateEnum == HumanStateEnum.Wanderer) {
             boat.SelectComponent.SetClickable(true);
             human.SelectComponent.SetClickable(true);

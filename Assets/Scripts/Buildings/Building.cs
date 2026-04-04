@@ -71,7 +71,6 @@ public abstract class Building : MonoBehaviour
         OnInit(data);
         UpdateConstruction();
 
-        spawnedConstruction?.Init(this);
         onBuildingInited?.Invoke();
         EventBus.InvokeBuildingInited(this);
 

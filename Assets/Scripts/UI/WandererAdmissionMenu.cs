@@ -50,7 +50,7 @@ public class WandererAdmissionMenu : MonoBehaviour
         Human lastHuman = selectedHuman;
         selectedHuman = null;
         BoatRider rider = lastHuman.BoatRider;
-        Boat boat = rider.currentBoat;
+        Boat boat = rider.selectedBoat;
 
         if (boat) {
             boat.SelectComponent.SetClickable(true);
@@ -74,9 +74,9 @@ public class WandererAdmissionMenu : MonoBehaviour
 
     private void OnBoatSelected(Boat boat)
     {
-        if (!boat.rider) return;
+        if (!boat.currentRider) return;
 
-        Human human = boat.rider.GetComponent<Human>();
+        Human human = boat.currentRider.GetComponent<Human>();
         if (human.currentStateEnum != HumanStateEnum.Wanderer) return;
 
         Open(human);

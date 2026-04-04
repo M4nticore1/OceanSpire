@@ -31,4 +31,9 @@ public class WandererState : HumanState
     {
 
     }
+
+    public override void OnEnteredBoat(Boat boat)
+    {
+        boat.SetState(BoatStateEnum.MovingToDock);
+    }
 }

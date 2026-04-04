@@ -4,17 +4,13 @@ using UnityEngine.AI;
 
 public class EntityMovement : MonoBehaviour
 {
-    private NavMeshAgent agent = null;
+    [SerializeField] private NavMeshAgent navAgent;
+    public NavMeshAgent NavAgent => navAgent;
 
     private bool isMoving = false;
 
     public event Action onReachedPath;
     public event Action onStopped;
-
-    private void Awake()
-    {
-        agent = GetComponent<NavMeshAgent>();
-    }
 
     private void Update()
     {
@@ -32,9 +28,9 @@ public class EntityMovement : MonoBehaviour
     {
         if (!CanMove()) return false;
 
-        agent.isStopped = false;
+        navAgent.isStopped = false;
         isMoving = true;
-        return agent.SetDestination(position);
+        return navAgent.SetDestination(position);
     }
 
     public void StopMoving()
@@ -44,20 +40,20 @@ public class EntityMovement : MonoBehaviour
             return;
         }
 
-        agent.isStopped = true;
-        agent.ResetPath();
+        navAgent.isStopped = true;
+        navAgent.ResetPath();
         isMoving = false;
         onStopped?.Invoke();
     }
 
     public void SetAgentEnabled(bool enabled)
     {
-        agent.enabled = enabled;
+        navAgent.enabled = enabled;
     }
 
     private bool CanMove()
     {
-        return agent.enabled;
+        return navAgent.enabled;
     }
 
     private void OnReachedPath()
@@ -69,13 +65,13 @@ public class EntityMovement : MonoBehaviour
     private bool CheckDistancePathPosition()
     {
         if (!isMoving) return false;
-        if (!agent.enabled) return false;
-        if (agent.pathPending) return false;
+        if (!navAgent.enabled) return false;
+        if (navAgent.pathPending) return false;
 
-        if (agent.pathStatus != NavMeshPathStatus.PathComplete)
+        if (navAgent.pathStatus != NavMeshPathStatus.PathComplete)
             return false;
 
-        if (agent.remainingDistance > agent.stoppingDistance)
+        if (navAgent.remainingDistance > navAgent.stoppingDistance)
             return false;
 
         return true;
