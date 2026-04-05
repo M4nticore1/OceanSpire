@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
   m_Name: CoalGeneratorData
   m_EditorClassIdentifier: 
-  buildingId: 7
+  buildingId: 5
   buildingName: Coal Generator
   localizationItem: {fileID: 11400000, guid: 8a2e493ab10a1af4b90fb9b563cadacc, type: 2}
   buildingType: 0

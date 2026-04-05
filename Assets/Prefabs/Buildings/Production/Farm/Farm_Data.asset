@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
   m_Name: Farm_Data
   m_EditorClassIdentifier: 
-  buildingId: 12
+  buildingId: 6
   buildingName: Farm
   localizationItem: {fileID: 11400000, guid: 4b1ea2c3bdd680c45bac76df466ebe4c, type: 2}
   buildingType: 0

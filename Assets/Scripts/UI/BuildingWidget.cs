@@ -39,8 +39,10 @@ public class BuildingWidget : MonoBehaviour
         buildingPrefab = prefab;
 
         Building building = prefab.GetComponentInChildren<Building>();
+
         if (building) {
             buildingNameTextLocalizer.SetLocalizationItem(building.BuildingData.LocalizationItem);
+            buildingNameTextLocalizer.UpdateText();
 
             if (building.BuildingData.ThumbImage)
                 buildingImage.sprite = building.BuildingData.ThumbImage;

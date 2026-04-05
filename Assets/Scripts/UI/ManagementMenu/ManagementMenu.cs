@@ -7,7 +7,7 @@ public abstract class ManagementMenu : MonoBehaviour
     [SerializeField] protected GridLayoutGroup[] lists;
     [SerializeField] private CustomButton[] listButtons;
     [SerializeField] private int[] includedCategoies;
-    [SerializeField] private ScrollRect listsScrollRect;
+    [SerializeField] protected ScrollRect listsScrollRect;
 
     protected int lastOpenedBuildingsListCategory = 0;
     protected Action[] buttonCallbacks;
@@ -21,7 +21,7 @@ public abstract class ManagementMenu : MonoBehaviour
         }
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         CreateWidgets();
     }

@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class BoatFloatingAway : BoatState
+public class BoatFloatingAwayState : BoatState
 {
-    public BoatFloatingAway(Boat boat) : base(boat)
+    public BoatFloatingAwayState(Boat boat) : base(boat)
     {
 
     }

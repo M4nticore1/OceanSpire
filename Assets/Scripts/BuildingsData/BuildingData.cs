@@ -7,15 +7,10 @@ public enum BuildingIdEnum
     TowerGate,
     Dock,
     BasicElevator,
-    FastElevator,
-    HeavyElevator,
     LivingRooms,
     CoalGenerator,
-    WoodStorage,
-    MetalStorage,
-    PlasticStorage,
-    Lighthouse,
     Farm,
+    Kitchen,
 };
 
 public enum BuildingType

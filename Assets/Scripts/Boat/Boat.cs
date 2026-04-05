@@ -227,7 +227,7 @@ public class Boat : MonoBehaviour
                 this.state = new BoatUnloadingState(this);
                 break;
             case BoatStateEnum.FloatingAway:
-                this.state = new BoatFloatingAway(this);
+                this.state = new BoatFloatingAwayState(this);
                 break;
             case BoatStateEnum.Demolished:
                 this.state = new BoatDemolishState(this);
