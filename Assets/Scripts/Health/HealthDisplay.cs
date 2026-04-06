@@ -37,7 +37,7 @@ public class HealthDisplay : MonoBehaviour
 
     private void Start()
     {
-        float currentHealth = healthComponent.CurrentHealth;
+        float currentHealth = healthComponent.currentHealth;
         float maxHealth = healthComponent.MaxHealth;
         float alpha = currentHealth / maxHealth;
 
@@ -75,7 +75,7 @@ public class HealthDisplay : MonoBehaviour
 
     private void OnHealthChanged()
     {
-        float currentHealth = healthComponent.CurrentHealth;
+        float currentHealth = healthComponent.currentHealth;
         float maxHealth = healthComponent.MaxHealth;
         float alpha = currentHealth / maxHealth;
 

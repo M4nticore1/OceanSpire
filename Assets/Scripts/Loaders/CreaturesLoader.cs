@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EntitiesLoader : MonoBehaviour
+public class CreaturesLoader : MonoBehaviour
 {
     private const int startResidentsCount = 2;
 
@@ -36,7 +36,10 @@ public class EntitiesLoader : MonoBehaviour
                 int instanceId = InstancesManager.instance.GetNextInstanceId();
                 InstancesManager.instance.AddInstanceId(instanceId);
 
-                HumanEntry data = new HumanEntry((int)CreatureIdEnum.Human, instanceId, HumanStateEnum.Citizen, finalPosition, rotation.eulerAngles, -1, false);
+                int humanId = (int)CreatureIdEnum.Human;
+                float health = CreaturesList.Instance.Creatures[humanId].GetComponent<Health>().MaxHealth;
+
+                HumanEntry data = new HumanEntry(humanId, HumanStateEnum.Citizen, finalPosition, rotation.eulerAngles, health, -1, false);
                 Human citizen = CreatureFactory.CreateHuman(data);
             }
         }

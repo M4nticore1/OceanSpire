@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class RaiderState : HumanState
 {
@@ -33,16 +34,9 @@ public class RaiderState : HumanState
         FinishRaidingBuilding();
     }
 
-    private void StartRaidingBuilding()
+    public override void OnStoppedAttacking()
     {
-        isRaidingBuilding = true;
-    }
-
-    private void FinishRaidingBuilding()
-    {
-        human.MoveToBoat();
-        isRaidingBuilding = false;
-        isFinishedRaiding = true;
+        UpdateRaidAction();
     }
 
     public override void OnSetedInteractBuilding(Building building)
@@ -72,15 +66,8 @@ public class RaiderState : HumanState
                 human.MoveToBoat();
             }
         }
-        else if (building != human.Interactor.interactBuilding) {
-            if (building.currentWorkers.Count > 0) {
-                Health target = building.currentWorkers[0].GetComponent<Health>();
-                human.Attack.SetTarget(target);
-                human.Attack.MoveToTarget();
-            }
-            else {
-                StartRaidingBuilding();
-            }
+        else if (building = human.Interactor.interactBuilding) {
+            UpdateRaidAction();
         }
     }
 
@@ -90,5 +77,64 @@ public class RaiderState : HumanState
 
         Vector3 position = RaidManager.instance.GetSpawnPosition(human.BoatRider.selectedBoat);
         boat.FloatAway(position);
+    }
+
+    private void UpdateRaidAction()
+    {
+        if (ShouldAttackWorker()) {
+            StartAttackingWorker();
+        }
+        else if (ShouldRaidBuilding()) {
+            StartRaidingBuilding();
+        }
+    }
+
+    private void StartRaidingBuilding()
+    {
+        isRaidingBuilding = true;
+    }
+
+    private void StartAttackingWorker()
+    {
+        Building building = human.CityNavigator.currentBuilding;
+        Attack target = building.currentWorkers[0].GetComponent<Attack>();
+
+        human.Attack.SetTarget(target);
+        human.Attack.MoveToTarget();
+    }
+
+    private void FinishRaidingBuilding()
+    {
+        human.MoveToBoat();
+        isRaidingBuilding = false;
+        isFinishedRaiding = true;
+    }
+
+    private bool ShouldAttackWorker()
+    {
+        Building building = human.CityNavigator.currentBuilding;
+        if (building != human.Interactor.interactBuilding) return false;
+
+        if (building.currentWorkers.Count == 0) return false;
+
+        Human firstWorker = building.currentWorkers[0].GetComponent<Human>();
+        if (!firstWorker.Health.isAlive) return false;
+
+        Debug.Log("ShouldAttackWorker");
+        return building.currentWorkers.Count > 0;
+    }
+
+    private bool ShouldRaidBuilding()
+    {
+        Building building = human.CityNavigator.currentBuilding;
+        if (building != human.Interactor.interactBuilding) return false;
+
+        Debug.Log("ShouldRaidBuilding");
+        return true;
+    }
+
+    public override void OnDeath()
+    {
+
     }
 }

@@ -16,22 +16,18 @@ public class BoatsManager : MonoBehaviour
         }
 
         Instance = this;
-
-        foreach (Boat boat in boats) {
-            boatsDict.Add(boat.instanceId, boat);
-        }
     }
 
     public void RegisterBoat(Boat boat)
     {
         boats.Add(boat);
-        boatsDict.Add(boat.instanceId, boat);
+        boatsDict.Add(boat.InstanceId.id, boat);
     }
 
     public void UnregisterBoat(Boat boat)
     {
         boats.Remove(boat);
-        boatsDict.Remove(boat.instanceId);
+        boatsDict.Remove(boat.InstanceId.id);
     }
 
     public Boat GetBoatByInteractorIndex(int index)

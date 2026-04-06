@@ -11,6 +11,11 @@ public class CitizenState : HumanState
 
     }
 
+    public override void OnStoppedAttacking()
+    {
+
+    }
+
     public override void OnSetedInteractBuilding(Building building)
     {
         human.Interactor.AssignWorkerIndex();
@@ -51,5 +56,15 @@ public class CitizenState : HumanState
     public override void OnEnteredBoat(Boat boat)
     {
         human.BoatRider.selectedBoat.SetState(BoatStateEnum.FindingLoot);
+    }
+
+    public override void OnDeath()
+    {
+        EntityInteractor interactor = human.Interactor;
+        Building interactBuilding = interactor.interactBuilding;
+
+        if (interactor) {
+            interactor.RemoveInteractBuilding();
+        }
     }
 }

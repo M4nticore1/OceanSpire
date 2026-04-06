@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 774651871998097940}
   - component: {fileID: -7493649843608556168}
   - component: {fileID: 8364959695361298754}
+  - component: {fileID: 6196963818731621145}
   - component: {fileID: 1338494420481879648}
   - component: {fileID: 2791892867924478363}
   - component: {fileID: 1784173792497504951}
@@ -58,8 +59,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a9c0911e75b5854cb6088ce4f6267e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Human
-  health: {fileID: 4098557255172134659}
   creatureData: {fileID: 11400000, guid: 84ce6b77893601742bd80f0644c2bc89, type: 2}
+  instanceId: {fileID: 6196963818731621145}
+  health: {fileID: 4098557255172134659}
   cityNavigator: {fileID: 2185582854232776361}
   interactor: {fileID: 6316746746762001490}
   boatRider: {fileID: 6497944028369977301}
@@ -134,6 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Attack
   movement: {fileID: -7493649843608556168}
+  health: {fileID: 4098557255172134659}
   damage: 10
   attackFrequency: 1
 --- !u!114 &-7493649843608556168
@@ -161,6 +164,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
+--- !u!114 &6196963818731621145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InstanceId
 --- !u!195 &1338494420481879648
 NavMeshAgent:
   m_ObjectHideFlags: 0

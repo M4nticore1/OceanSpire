@@ -26,9 +26,14 @@ public class InstanceId : MonoBehaviour
             return;
         }
 
-        this.id = id;
-        InstancesManager.instance.AddInstanceId(this.id);
+        if (id >= 0) {
+            this.id = id;
+        }
+        else {
+            Init();
+        }
 
+        InstancesManager.instance.AddInstanceId(this.id);
         isRegistered = true;
     }
 }

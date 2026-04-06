@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BoatDockData
 {
-    public int instanceId { get; private set; } = 0;
+    public int instanceId { get; private set; } = -1;
 }
 
 public class BoatDockPoint : MonoBehaviour
@@ -18,9 +18,9 @@ public class BoatDockPoint : MonoBehaviour
     [SerializeField] private Transform entranceTransform;
     public Transform EntraceTransform => entranceTransform;
 
-    public void Init()
+    public void Init(BoatDockData data)
     {
-        instanceId.Init();
+        instanceId.Init(data.instanceId);
         DockPointsManager.instance.RegisterDockPoint(this);
     }
 

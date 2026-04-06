@@ -92,7 +92,7 @@ public class RaidManager : MonoBehaviour
 
             Boat boat = CreateBoat(position, rotation);
 
-            Human raider = CreateRaider(position, rotation, boat.instanceId, true);
+            Human raider = CreateRaider(position, rotation, boat.InstanceId.id, true);
             raider.BoatRider.EnterBoat();
             raider.SetInteractBuilding(GetRandomRaidBuilding());
 
@@ -172,11 +172,9 @@ public class RaidManager : MonoBehaviour
     private Human CreateRaider(Vector3 position, Quaternion rotation, int boatInstanceId, bool isRidingOnBoat)
     {
         int id = (int)CreatureIdEnum.Human;
+        float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
 
-        int instanceId = InstancesManager.instance.GetNextInstanceId();
-        InstancesManager.instance.AddInstanceId(instanceId);
-
-        HumanEntry data = new HumanEntry(id, instanceId, HumanStateEnum.Raider, position, rotation.eulerAngles, boatInstanceId, isRidingOnBoat);
+        HumanEntry data = new HumanEntry(id, HumanStateEnum.Raider, position, rotation.eulerAngles, health, boatInstanceId, isRidingOnBoat);
         Human human = CreatureFactory.CreateHuman(data);
 
         return human;
@@ -185,14 +183,10 @@ public class RaidManager : MonoBehaviour
     private Boat CreateBoat(Vector3 position, Quaternion rotation)
     {
         int id = boatPrefab.BoatData.BoatId;
-
-        int boatId = InstancesManager.instance.GetNextInstanceId();
-        InstancesManager.instance.AddInstanceId(boatId);
-
         float health = boatPrefab.Health.MaxHealth;
         int dockInstanceId = GetNearestDockPoint(position).InstanceId.id;
 
-        BoatEntry data = new BoatEntry(id, boatId, BoatStateEnum.MovingToDock, position, rotation.eulerAngles, health, dockInstanceId);
+        BoatEntry data = new BoatEntry(id, BoatStateEnum.MovingToDock, position, rotation.eulerAngles, health, dockInstanceId);
         Boat boat = BoatFactory.CreateBoat(data);
 
         return boat;

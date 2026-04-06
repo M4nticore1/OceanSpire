@@ -22,13 +22,9 @@ public class BoatsLoader : MonoBehaviour
                 Vector3 position = spawnTransform.DockTransform.position;
                 Vector3 rotation = spawnTransform.DockTransform.rotation.eulerAngles;
                 float health = prefab.Health.MaxHealth;
-
-                int boatId = InstancesManager.instance.GetNextInstanceId();
-                InstancesManager.instance.AddInstanceId(boatId);
-
                 int dockId = DockPointsManager.instance.pierDockPoints[i].InstanceId.id;
 
-                BoatEntry boatData = new BoatEntry(id, boatId, BoatStateEnum.Idle, position, rotation, health, dockId);
+                BoatEntry boatData = new BoatEntry(id, BoatStateEnum.Idle, position, rotation, health, dockId);
                 Boat boat = BoatFactory.CreateBoat(boatData);
             }
         }

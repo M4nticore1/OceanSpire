@@ -63,7 +63,7 @@ public class WanderersManager : MonoBehaviour
         Vector3 rotation = Quaternion.LookRotation(-position.normalized).eulerAngles;
 
         Boat boat = CreateBoat(position, rotation);
-        Human human = CreateWanderer(position, rotation, boat.instanceId, true);
+        Human human = CreateWanderer(position, rotation, boat.InstanceId.id, true);
 
         spawnPositions.Add(human, position);
     }
@@ -110,14 +110,11 @@ public class WanderersManager : MonoBehaviour
 
     private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId, bool isRidingOnBoat)
     {
-        int creatureId = (int)CreatureIdEnum.Human;
-
-        int instanceId = InstancesManager.instance.GetNextInstanceId();
-        InstancesManager.instance.AddInstanceId(instanceId);
-
+        int id = (int)CreatureIdEnum.Human;
         HumanStateEnum status = HumanStateEnum.Wanderer;
+        float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
 
-        HumanEntry humanData = new HumanEntry(creatureId, instanceId, status, position, rotation, boatId, isRidingOnBoat);
+        HumanEntry humanData = new HumanEntry(id, status, position, rotation, health, boatId, isRidingOnBoat);
         Human human = CreatureFactory.CreateHuman(humanData);
 
         return human;
@@ -125,14 +122,10 @@ public class WanderersManager : MonoBehaviour
 
     private Boat CreateBoat(Vector3 position, Vector3 rotation)
     {
-        int boatId = (int)BoatIdEnum.BasicBoat;
+        int id = (int)BoatIdEnum.BasicBoat;
+        float boatHealth = BoatsList.Instance.boats[id].Health.MaxHealth;
 
-        int instanceId = InstancesManager.instance.GetNextInstanceId();
-        InstancesManager.instance.AddInstanceId(instanceId);
-
-        float boatHealth = BoatsList.Instance.boats[boatId].Health.MaxHealth;
-
-        BoatEntry boatData = new BoatEntry(boatId, instanceId, BoatStateEnum.MovingToDock, position, rotation, boatHealth, GetDockPoint().InstanceId.id);
+        BoatEntry boatData = new BoatEntry(id, BoatStateEnum.MovingToDock, position, rotation, boatHealth, GetDockPoint().InstanceId.id);
         Boat boat = BoatFactory.CreateBoat(boatData);
 
         return boat;

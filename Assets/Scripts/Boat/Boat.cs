@@ -1,23 +1,21 @@
 using System;
 using UnityEngine;
-using UnityEngine.AI;
 
 [Serializable]
 public class BoatEntry
 {
     public int id { get; private set; } = 0;
-    public int instanceId { get; private set; } = 0;
+    public int instanceId { get; private set; } = -1;
     public BoatStateEnum state { get; private set; } = BoatStateEnum.Idle;
     public Vector3 position { get; private set; } = Vector3.zero;
     public Vector3 rotation { get; private set; } = Vector3.zero;
     public int dockInstanceId { get; private set; } = 0;
     public float health { get; private set; } = 0;
 
-    public BoatEntry(int id, int instanceId, BoatStateEnum state, Vector3 position, Vector3 rotation, float health, int dockInstanceId)
+    public BoatEntry(int id, BoatStateEnum state, Vector3 position, Vector3 rotation, float health, int dockInstanceId)
     {
         this.id = id;
         this.state = state;
-        this.instanceId = instanceId;
         this.position = position;
         this.rotation = rotation;
         this.health = health;
@@ -39,8 +37,6 @@ public enum BoatStateEnum
 
 public class Boat : MonoBehaviour
 {
-    private BuildingsManager buildingsManager;
-
     [SerializeField] private BoatData boatData;
     public BoatData BoatData => boatData;
 
@@ -48,7 +44,8 @@ public class Boat : MonoBehaviour
     private BoatState state;
     public BoatRider currentRider { get; private set; }
 
-    public int instanceId { get; private set; } = 0;
+    [SerializeField] private InstanceId instanceId;
+    public InstanceId InstanceId => instanceId;
 
     // Components
     [SerializeField] private BoatLootHandler lootHandler;
@@ -72,7 +69,7 @@ public class Boat : MonoBehaviour
     public LootContainer targetLootContainer { get; private set; }
 
     // Health
-    public float CurrentHealth => health.CurrentHealth;
+    public float CurrentHealth => health.currentHealth;
     public float MaxHealth => health.MaxHealth;
 
     // Weight
@@ -113,12 +110,10 @@ public class Boat : MonoBehaviour
 
     public void Init(BoatEntry data)
     {
-        buildingsManager = FindAnyObjectByType<BuildingsManager>();
         lootHandler = GetComponent<BoatLootHandler>();
-
         lootHandler.Init();
 
-        instanceId = data.instanceId;
+        instanceId.Init(data.instanceId);
 
         transform.position = data.position;
         transform.rotation = Quaternion.Euler(data.rotation);

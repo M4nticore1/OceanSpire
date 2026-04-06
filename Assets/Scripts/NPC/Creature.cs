@@ -4,15 +4,14 @@ using UnityEngine.AI;
 
 public abstract class CreatureEntry
 {
-    public int instanceId { get; private set; }
+    public int instanceId { get; private set; } = -1;
     public int id { get; private set; }
     public Vector3 position { get; private set; }
     public Vector3 rotation { get; private set; }
 
-    public CreatureEntry(int id, int instanceId, Vector3 position, Vector3 rotation)
+    public CreatureEntry(int id, Vector3 position, Vector3 rotation)
     {
         this.id = id;
-        this.instanceId = instanceId;
         this.position = position;
         this.rotation = rotation;
     }
@@ -20,31 +19,15 @@ public abstract class CreatureEntry
 
 public abstract class Creature : MonoBehaviour
 {
-    [SerializeField] private Health health;
-
     protected NavMeshAgent agent = null;
     protected EntityMovement movement = null;
 
     [SerializeField] protected CreatureData creatureData;
     public CreatureData CreatureData => creatureData;
 
-    public int instanceId { get; private set; } = 0;
+    [SerializeField] private InstanceId instanceId;
 
     public static event Action<Creature> onCreatureDeath;
-
-    private void OnEnable()
-    {
-        if (health) {
-            health.onDeath += Die;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (health) {
-            health.onDeath -= Die;
-        }
-    }
 
     protected virtual void Awake()
     {
@@ -54,13 +37,17 @@ public abstract class Creature : MonoBehaviour
 
     public virtual void Init(CreatureEntry data)
     {
-        instanceId = data.instanceId;
         transform.position = data.position;
         transform.rotation = Quaternion.Euler(data.rotation);
+
+        instanceId.Init(data.instanceId);
     }
 
-    private void Die()
+    protected void Death()
     {
+        OnDeath();
         onCreatureDeath?.Invoke(this);
     }
+
+    protected abstract void OnDeath();
 }

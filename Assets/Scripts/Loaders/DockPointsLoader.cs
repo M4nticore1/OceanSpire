@@ -10,16 +10,18 @@ public class DockPointsLoader : MonoBehaviour
 
         }
         else {
+            BoatDockData dockData = new BoatDockData();
+
             foreach (var dock in DockPointsManager.instance.pierDockPoints) {
-                dock.Init();
+                dock.Init(dockData);
             }
 
             foreach (var dock in DockPointsManager.instance.WandererDockPoints) {
-                dock.Init();
+                dock.Init(dockData);
             }
 
             foreach (var dock in DockPointsManager.instance.RaiderDockPoints) {
-                dock.Init();
+                dock.Init(dockData);
             }
         }
     }

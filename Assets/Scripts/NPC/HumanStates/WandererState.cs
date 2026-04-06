@@ -12,6 +12,11 @@ public class WandererState : HumanState
 
     }
 
+    public override void OnStoppedAttacking()
+    {
+
+    }
+
     public override void OnSetedInteractBuilding(Building building)
     {
         
@@ -35,5 +40,10 @@ public class WandererState : HumanState
     public override void OnEnteredBoat(Boat boat)
     {
         boat.SetState(BoatStateEnum.MovingToDock);
+    }
+
+    public override void OnDeath()
+    {
+
     }
 }

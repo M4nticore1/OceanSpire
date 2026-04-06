@@ -5,17 +5,23 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 100f;
-    public float MaxHealth { get { return maxHealth; } }
-    private float currentHealth = 0;
-    public float CurrentHealth { get { return currentHealth; } }
+    public float MaxHealth => maxHealth;
+
+    public float currentHealth { get; private set; } = 0;
+    public bool isAlive { get; private set; } = true;
 
     public event Action onHealthChanged;
+    public event Action onRevived;
     public event Action onDeath;
 
     public void Init(float currentHealth)
     {
-        SetMaxHealh(maxHealth);
         SetCurrentHealth(currentHealth);
+    }
+
+    public void SetMaxHealh(float value)
+    {
+        maxHealth = value;
     }
 
     public void AddHealth(float value)
@@ -28,20 +34,29 @@ public class Health : MonoBehaviour
         SetCurrentHealth(currentHealth - value);
     }
 
-    public void SetMaxHealh(float value)
-    {
-        maxHealth = value;
-    }
-
     public void SetCurrentHealth(float value)
     {
-        float newHealth = math.clamp(value, 0, MaxHealth - CurrentHealth);
         currentHealth = value;
 
-        if (CurrentHealth <= 0) {
-            onDeath?.Invoke();
+        if (currentHealth <= 0 && isAlive) {
+            Death();
+        }
+        else if (!isAlive) {
+            Revive();
         }
 
         onHealthChanged?.Invoke();
+    }
+
+    private void Revive()
+    {
+        isAlive = true;
+        onRevived?.Invoke();
+    }
+
+    private void Death()
+    {
+        isAlive = false;
+        onDeath?.Invoke();
     }
 }

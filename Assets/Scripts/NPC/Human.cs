@@ -12,6 +12,7 @@ public enum HumanStateEnum
 public class HumanEntry : CreatureEntry
 {
     public HumanStateEnum status { get; private set; } = HumanStateEnum.Citizen;
+    public float health { get; private set; } = 0f;
     public int interactBuildingInstanceId { get; private set; } = 0;
     public bool isMale { get; private set; } = false;
     public int firstNameIndex { get; private set; } = 0;
@@ -19,19 +20,37 @@ public class HumanEntry : CreatureEntry
     public int boatInstanceId { get; private set; } = 0;
     public bool isRidingOnBoat { get; private set; } = false;
 
-    public HumanEntry(int id, int instanceId, HumanStateEnum status, Vector3 position, Vector3 rotation, int boatInstanceId, bool isRidingOnBoat) : base(id, instanceId, position, rotation)
+    public HumanEntry(int id,
+        HumanStateEnum status,
+        Vector3 position,
+        Vector3 rotation,
+        float health,
+        int boatInstanceId,
+        bool isRidingOnBoat) :
+        base(id, position, rotation)
     {
         this.status = status;
+        this.health = health;
         this.boatInstanceId = boatInstanceId;
         this.isRidingOnBoat = isRidingOnBoat;
     }
 }
 
+[Serializable]
 public class RaiderEntry : HumanEntry
 {
     public bool isFinishedRaiding { get; private set; } = false;
 
-    public RaiderEntry(int id, int instanceId, HumanStateEnum status, Vector3 position, Vector3 rotation, int boatInstanceId, bool isFinishedRaiding, bool isRidingOnBoat) : base(id, instanceId, status, position, rotation, boatInstanceId, isRidingOnBoat)
+    public RaiderEntry(int id,
+        int instanceId,
+        HumanStateEnum status,
+        Vector3 position,
+        Vector3 rotation,
+        float health,
+        int boatInstanceId,
+        bool isFinishedRaiding,
+        bool isRidingOnBoat) :
+        base(id, status, position, rotation, health, boatInstanceId, isRidingOnBoat)
     {
         this.isFinishedRaiding = isFinishedRaiding;
     }
@@ -39,6 +58,9 @@ public class RaiderEntry : HumanEntry
 
 public class Human : Creature
 {
+    [SerializeField] private Health health;
+    public Health Health => health;
+
     [SerializeField] private EntityCityNavigator cityNavigator;
     public EntityCityNavigator CityNavigator => cityNavigator;
 
@@ -74,6 +96,8 @@ public class Human : Creature
 
     protected void OnEnable()
     {
+        health.onDeath += Death;
+        attack.onStoppedAttacking += OnStoppedAttacking;
         movement.onStopped += OnStoppedMoving;
 
         cityNavigator.onEnteredBuilding += OnEnteredBuilding;
@@ -94,6 +118,10 @@ public class Human : Creature
 
     protected void OnDisable()
     {
+        health.onDeath -= Death;
+        attack.onStoppedAttacking -= OnStoppedAttacking;
+        movement.onStopped -= OnStoppedMoving;
+
         cityNavigator.onEnteredBuilding -= OnEnteredBuilding;
         cityNavigator.onExitedBuilding -= OnExitedBuilding;
         cityNavigator.onReachedTarget -= OnReachedTargetBuilding;
@@ -107,7 +135,7 @@ public class Human : Creature
         selectComponent.onSelected -= OnSelected;
         selectComponent.onDeselected -= OnDeselected;
 
-        EventBus.onNavMeshBaked += OnNavMeshBaked;
+        EventBus.onNavMeshBaked -= OnNavMeshBaked;
     }
 
     private void Update()
@@ -124,6 +152,8 @@ public class Human : Creature
         SetStatus(humanData.status);
         isMale = humanData.isMale;
         AssignNameIndexes(humanData);
+
+        health.SetCurrentHealth(humanData.health);
 
         if (humanData.boatInstanceId >= 0) {
             boatRider.SetSelectedBoat(humanData.boatInstanceId);
@@ -203,12 +233,25 @@ public class Human : Creature
         onWandererRejected?.Invoke(this);
     }
 
+    protected override void OnDeath()
+    {
+        Debug.Log("OnDeath");
+        currentState.OnDeath();
+    }
+
     // Movement
     private void OnStoppedMoving()
     {
         currentState.OnStoppedMoving();
     }
 
+    // Attack
+    private void OnStoppedAttacking()
+    {
+        currentState.OnStoppedAttacking();
+    }
+
+    // Entrance
     private void OnEnteredBuilding(Building building)
     {
         building.EnterBuilding(cityNavigator);
@@ -220,14 +263,14 @@ public class Human : Creature
         building.ExitBuilding(cityNavigator);
     }
 
-    private void OnRemovedInteractBuilding(Building building)
-    {
-        cityNavigator.HandleInteractBuildingRemoved();
-    }
-
     private void OnReachedTargetBuilding()
     {
 
+    }
+
+    private void OnRemovedInteractBuilding(Building building)
+    {
+        cityNavigator.HandleInteractBuildingRemoved();
     }
 
     private void OnStopInteracting(Building building)
@@ -235,6 +278,7 @@ public class Human : Creature
 
     }
 
+    // Boat
     private void OnEnteredBoat(Boat boat)
     {
         movement.SetAgentEnabled(false);
