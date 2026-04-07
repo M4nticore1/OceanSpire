@@ -20,6 +20,8 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private float maxSpawnAngleOffset = 10f;
     [SerializeField] private float spawnDistance = 145f;
 
+    private int aliveRaidersCount = 0;
+
     [Header("Positions")]
     [SerializeField] private BoatDockPoint[] dockPoints;
     private Dictionary<Boat, Vector3> spawnPositions;
@@ -42,12 +44,14 @@ public class RaidManager : MonoBehaviour
 
     private void OnEnable()
     {
+        EventBus.onRaiderDied += OnRaiderDied;
         Human.onEnteredBoat += OnEnteredBoat;
         Human.onExitedBoat += OnExitedBoat;
     }
 
     private void OnDisable()
     {
+        EventBus.onRaiderDied -= OnRaiderDied;
         Human.onEnteredBoat -= OnEnteredBoat;
         Human.onExitedBoat -= OnExitedBoat;
     }
@@ -77,6 +81,7 @@ public class RaidManager : MonoBehaviour
     private void CreateRaid()
     {
         int raidersAmount = GetRandomRaidersAmount();
+        aliveRaidersCount = raidersAmount;
 
         Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         dir.Normalize();
@@ -155,19 +160,15 @@ public class RaidManager : MonoBehaviour
         }
     }
 
-    //private void OnCreatureDeath(Creature creature)
-    //{
-    //    Human human = creature as Human;
-    //    if (human) return;
+    private void OnRaiderDied(Human human)
+    {
+        aliveRaidersCount--;
+        Debug.Log("AliveRaiders: " + aliveRaidersCount);
 
-    //    if (!spawnedRaiders.Contains(human)) return;
-
-    //    spawnedRaiders.Remove(human);
-
-    //    if (spawnedRaiders.Count == 0) {
-    //        FinishRaid();
-    //    }
-    //}
+        if (aliveRaidersCount <= 0) {
+            StopRaid();
+        }
+    }
 
     private Human CreateRaider(Vector3 position, Quaternion rotation, int boatInstanceId, bool isRidingOnBoat)
     {

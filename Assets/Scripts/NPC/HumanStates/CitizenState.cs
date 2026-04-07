@@ -6,6 +6,16 @@ public class CitizenState : HumanState
 
     }
 
+    public override void Enter()
+    {
+        CreaturesManager.instance.RegisterCitizen(human);
+    }
+
+    public override void Exit()
+    {
+        CreaturesManager.instance.UnregisterCitizen(human);
+    }
+
     public override void Tick()
     {
 
@@ -58,7 +68,7 @@ public class CitizenState : HumanState
         human.BoatRider.selectedBoat.SetState(BoatStateEnum.FindingLoot);
     }
 
-    public override void OnDeath()
+    public override void OnDied()
     {
         EntityInteractor interactor = human.Interactor;
         Building interactBuilding = interactor.interactBuilding;
@@ -66,5 +76,7 @@ public class CitizenState : HumanState
         if (interactor) {
             interactor.RemoveInteractBuilding();
         }
+
+        EventBus.InvokeCitizenDied(human);
     }
 }

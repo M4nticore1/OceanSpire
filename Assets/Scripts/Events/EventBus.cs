@@ -34,6 +34,11 @@ public static class EventBus
     public static event Action<Boat> onBoatUnloaded;
     public static event Action<int, int> onBoatUnloadedItem;
 
+    // NPS
+    public static event Action<Human> onCitizenRevived;
+    public static event Action<Human> onCitizenDied;
+    public static event Action<Human> onRaiderDied;
+
     // Residents
     public static event Action<Human> onCitizenInited;
     public static event Action<Human> onCitizenDeleted;
@@ -163,6 +168,22 @@ public static class EventBus
     public static void InvokeBoatUnloadedItem(int id, int amount)
     {
         onBoatUnloadedItem?.Invoke(id, amount);
+    }
+
+    // NPC
+    public static void InvokeCitizenRevived(Human human)
+    {
+        onCitizenRevived?.Invoke(human);
+    }
+
+    public static void InvokeCitizenDied(Human human)
+    {
+        onCitizenDied?.Invoke(human);
+    }
+
+    public static void InvokeRaiderDied(Human human)
+    {
+        onRaiderDied?.Invoke(human);
     }
 
     // Residents

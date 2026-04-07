@@ -9,6 +9,8 @@ public abstract class HumanState
         this.human = human;
     }
 
+    public abstract void Enter();
+    public abstract void Exit();
     public abstract void Tick();
     public abstract void OnStoppedAttacking();
     public abstract void OnSetedInteractBuilding(Building building);
@@ -16,5 +18,5 @@ public abstract class HumanState
     public abstract void OnStoppedMoving();
     public abstract void OnEnteredBuilding(Building building);
     public abstract void OnEnteredBoat(Boat boat);
-    public abstract void OnDeath();
+    public abstract void OnDied();
 }

@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class RaiderState : HumanState
 {
@@ -11,6 +10,16 @@ public class RaiderState : HumanState
     public RaiderState(Human human) : base(human)
     {
 
+    }
+
+    public override void Enter()
+    {
+        CreaturesManager.instance.RegisterRaider(human);
+    }
+
+    public override void Exit()
+    {
+        CreaturesManager.instance.UnregisterRaider(human);
     }
 
     public override void Tick()
@@ -36,6 +45,8 @@ public class RaiderState : HumanState
 
     public override void OnStoppedAttacking()
     {
+        if (!human.Health.isAlive) return;
+
         UpdateRaidAction();
     }
 
@@ -133,8 +144,8 @@ public class RaiderState : HumanState
         return true;
     }
 
-    public override void OnDeath()
+    public override void OnDied()
     {
-
+        EventBus.InvokeRaiderDied(human);
     }
 }

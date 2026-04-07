@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CreaturesLoader : MonoBehaviour
+public class CitizensLoader : MonoBehaviour
 {
     private const int startResidentsCount = 2;
 
@@ -10,11 +10,7 @@ public class CreaturesLoader : MonoBehaviour
     private void Start()
     {
         WorldData saveData = WorldSaveManager.Instance.currentSaveWorldData;
-        LoadEntities(saveData);
-    }
 
-    private void LoadEntities(WorldData saveData)
-    {
         Vector3 position = Vector3.zero;
         Quaternion rotation = Quaternion.identity;
 

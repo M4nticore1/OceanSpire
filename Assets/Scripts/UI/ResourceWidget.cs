@@ -26,9 +26,11 @@ public class ResourceWidget : MonoBehaviour
         if (itemData && itemData.ItemId == (int)ItemID.Population) {
             CreaturesManager.onCitizenAdded += OnCitizenAdded;
             CreaturesManager.onCitizenRemoved += OnCitizenRemoved;
+            EventBus.onCitizenRevived += OnCitizenRevived;
+            EventBus.onCitizenDied += OnCitizenDied;
         }
 
-        UpdateAmount();
+        UpdateResourceAmount();
     }
 
     private void OnDisable()
@@ -37,17 +39,24 @@ public class ResourceWidget : MonoBehaviour
         EventBus.onMainStorageItemMaxAmountChanged -= OnMainStorageItemMaxAmountChanged;
 
         if (itemData.ItemId == (int)ItemID.Population) {
+
             CreaturesManager.onCitizenAdded -= OnCitizenAdded;
             CreaturesManager.onCitizenRemoved -= OnCitizenRemoved;
+            EventBus.onCitizenRevived -= OnCitizenRevived;
+            EventBus.onCitizenDied -= OnCitizenDied;
         }
     }
 
     private void Start()
     {
-        //if (!TryToAssignItem()) return;
-
         TryToAssignItem();
-        UpdateAmount();
+
+        if (HasPopulationItem()) {
+            UpdateCitizensAmount();
+        }
+        else {
+            UpdateResourceAmount();
+        }
     }
 
     public void Init(ItemInstance amountItem, ItemInstance maxAmountItem)
@@ -132,35 +141,38 @@ public class ResourceWidget : MonoBehaviour
         SetImage(sprite);
     }
 
-    private void UpdateAmount()
+    private void UpdateResourceAmount()
     {
         if (!itemData) return;
+        if (amountItem == null) return;
 
-        int populationId = (int)ItemID.Population;
-
-        if (itemData.ItemId == populationId) {
-            if (!CityStorage.instance.Inventory.itemsDict.ContainsKey(populationId))
-                return;
-
-            int id = populationId;
-            int amount = CreaturesManager.instance.citizens.Count;
-            int maxAmount = CityStorage.instance.Inventory.itemsDict[id].maxAmount;
+        int id = amountItem.ItemData.ItemId;
+        int amount = amountItem.Amount;
+        if (maxAmountItem != null) {
+            int maxAmount = maxAmountItem != null ? maxAmountItem.Amount : CityStorage.instance.Inventory.itemsDict[id].maxAmount;
             SetAmount(amount, maxAmount);
         }
         else {
-            if (amountItem == null)
-                return;
-
-            int id = amountItem.ItemData.ItemId;
-            int amount = amountItem.Amount;
-            if (maxAmountItem != null){
-                int maxAmount = maxAmountItem != null ? maxAmountItem.Amount : CityStorage.instance.Inventory.itemsDict[id].maxAmount;
-                SetAmount(amount, maxAmount);
-            }
-            else {
-                SetAmount(amount);
-            }
+            SetAmount(amount);
         }
+    }
+
+    private void UpdateCitizensAmount()
+    {
+        if (!itemData) return;
+        if (amountItem == null) return;
+
+        int id = (int)ItemID.Population;
+        int amount = 0;
+        int maxAmount = CityStorage.instance.Inventory.itemsDict[id].maxAmount;
+
+        foreach (var citizen in CreaturesManager.instance.citizens) {
+            if (!citizen.Health.isAlive) continue;
+
+            amount++;
+        }
+
+        SetAmount(amount, maxAmount);
     }
 
     private void UpdateAmountColor()
@@ -179,23 +191,39 @@ public class ResourceWidget : MonoBehaviour
     {
         if (item.ItemData.ItemId != itemData.ItemId) return;
 
-        UpdateAmount();
+        UpdateResourceAmount();
     }
 
     private void OnMainStorageItemMaxAmountChanged(StorageItem item)
     {
         if (item.item.ItemData.ItemId != itemData.ItemId) return;
 
-        UpdateAmount();
+        UpdateResourceAmount();
     }
 
     private void OnCitizenAdded(Human citizen)
     {
-        UpdateAmount();
+        UpdateCitizensAmount();
     }
 
     private void OnCitizenRemoved(Human citizen)
     {
-        UpdateAmount();
+        UpdateCitizensAmount();
+    }
+
+    private void OnCitizenDied(Human human)
+    {
+        UpdateCitizensAmount();
+    }
+
+    private void OnCitizenRevived(Human human)
+    {
+        UpdateCitizensAmount();
+    }
+
+    private bool HasPopulationItem()
+    {
+        int id = (int)ItemID.Population;
+        return itemData.ItemId == id;
     }
 }

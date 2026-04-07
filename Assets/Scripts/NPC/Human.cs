@@ -236,7 +236,7 @@ public class Human : Creature
     protected override void OnDeath()
     {
         Debug.Log("OnDeath");
-        currentState.OnDeath();
+        currentState.OnDied();
     }
 
     // Movement
@@ -334,34 +334,23 @@ public class Human : Creature
         switch (status) {
             case HumanStateEnum.Citizen:
                 currentState = new CitizenState(this);
-                CreaturesManager.instance.RegisterCitizen(this);
                 break;
             case HumanStateEnum.Wanderer:
                 currentState = new WandererState(this);
-                CreaturesManager.instance.RegisterWanderer(this);
-                selectComponent.SetClickable(false);
                 break;
             case HumanStateEnum.Raider:
                 currentState = new RaiderState(this);
-                CreaturesManager.instance.RegisterRaider(this);
                 break;
         }
+
+        currentState.Enter();
     }
 
     private void ExitStatus(HumanStateEnum status)
     {
-        switch (status) {
-            case HumanStateEnum.Citizen:
-                CreaturesManager.instance.UnregisterCitizen(this);
-                break;
-            case HumanStateEnum.Wanderer:
-                CreaturesManager.instance.UnregisterWanderer(this);
-                selectComponent.SetClickable(true);
-                break;
-            case HumanStateEnum.Raider:
-                CreaturesManager.instance.UnregisterRaider(this);
-                break;
-        }
+        if (currentState == null) return;
+
+        currentState.Exit();
     }
 
     private void OnSelected()

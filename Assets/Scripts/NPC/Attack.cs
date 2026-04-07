@@ -23,13 +23,13 @@ public class Attack : MonoBehaviour
     private void OnEnable()
     {
         movement.onStopped += OnStopped;
-        health.onDeath += OnDeath;
+        health.onDeath += OnDied;
     }
 
     private void OnDisable()
     {
         movement.onStopped -= OnStopped;
-        health.onDeath -= OnDeath;
+        health.onDeath -= OnDied;
     }
 
     private void Update()
@@ -52,7 +52,7 @@ public class Attack : MonoBehaviour
     public void RemoveTarget()
     {
         currentTarget = null;
-        HandleStopBeingTarget(this);
+        StopAtacking();
     }
 
     public void AddAttacker(Attack attacker)
@@ -96,7 +96,6 @@ public class Attack : MonoBehaviour
     public void HandleTargetDeath()
     {
         RemoveTarget();
-        StopAtacking();
     }
 
     private void StartAtacking()
@@ -119,8 +118,10 @@ public class Attack : MonoBehaviour
         StartAtacking();
     }
 
-    private void OnDeath()
+    private void OnDied()
     {
+        RemoveTarget();
+
         foreach (var attacker in currentAttackers) {
             attacker.HandleTargetDeath();
         }
