@@ -76,8 +76,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3107269609673161727}
   - component: {fileID: 3091725272005031583}
-  - component: {fileID: 6110829163415644659}
-  - component: {fileID: 1203207049741365582}
   - component: {fileID: 7640951862083927194}
   m_Layer: 0
   m_Name: Building
@@ -114,39 +112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelComponent
---- !u!114 &6110829163415644659
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6989354260929803138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
---- !u!65 &1203207049741365582
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6989354260929803138}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 8, y: 5, z: 8}
-  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!114 &7640951862083927194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,5 +130,5 @@ MonoBehaviour:
   m_OverrideGenerateLinks: 0
   m_GenerateLinks: 0
   m_IgnoreFromBuild: 1
-  m_ApplyToChildren: 0
+  m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff

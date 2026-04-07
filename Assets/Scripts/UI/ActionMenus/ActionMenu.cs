@@ -35,10 +35,7 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
 
     private void Action()
     {
-        SelectComponent selected = SelectManager.Instance.selectedComponent;
-        if (!selected) return;
-
-        Building building = selected.GetComponent<Building>();
+        Building building = SelectManager.Instance.GetSelectedBuilding();
         if (!building) return;
 
         OnAction(building);
@@ -53,10 +50,7 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
     {
         slidePanel.Open();
 
-        SelectComponent selected = SelectManager.Instance.selectedComponent;
-        if (!selected) return;
-
-        Building building = selected.GetComponent<Building>();
+        Building building = SelectManager.Instance.GetSelectedBuilding();
         if (!building) return;
 
         LocalizationItem localization = building.BuildingData.LocalizationItem;

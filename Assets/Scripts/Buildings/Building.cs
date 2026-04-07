@@ -9,9 +9,7 @@ public abstract class BuildingEntry
 
 public abstract class Building : MonoBehaviour
 {
-    protected BuildingsManager buildingsManager;
     protected LevelComponent levelComponent;
-    protected SelectComponent selectComponent;
     private BuildingStrategy strategy;
 
     private bool isWorking = false;
@@ -50,23 +48,17 @@ public abstract class Building : MonoBehaviour
     {
         EventBus.onClickedContextDemolishButton += OnDemolishClicked;
         EventBus.onClickedContextUpgradeButton += OnUpgradeClicked;
-        selectComponent.onSelected += OnSelected;
-        selectComponent.onDeselected += OnDeselected;
     }
 
     protected virtual void OnDisable()
     {
         EventBus.onClickedContextDemolishButton -= OnDemolishClicked;
         EventBus.onClickedContextUpgradeButton -= OnUpgradeClicked;
-        selectComponent.onSelected += OnSelected;
-        selectComponent.onDeselected += OnDeselected;
     }
 
     // Constructing
     public void Init(BuildingEntry data)
     {
-        buildingsManager = FindAnyObjectByType<BuildingsManager>();
-
         AsssignStrategy();
         OnInit(data);
         UpdateConstruction();
@@ -105,9 +97,7 @@ public abstract class Building : MonoBehaviour
 
     private void AssignComponents()
     {
-        buildingsManager = FindAnyObjectByType<BuildingsManager>();
         levelComponent = GetComponent<LevelComponent>();
-        selectComponent = GetComponent<SelectComponent>();
     }
 
     // Residents Management
@@ -312,15 +302,5 @@ public abstract class Building : MonoBehaviour
     private void OnUpgradeClicked()
     {
 
-    }
-
-    private void OnSelected()
-    {
-        EventBus.InvokeSelectedBuilding(this);
-    }
-
-    private void OnDeselected()
-    {
-        EventBus.InvokeDeselectedBuilding(this);
     }
 }

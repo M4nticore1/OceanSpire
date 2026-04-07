@@ -7,10 +7,10 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public int FloorIndex => ((TowerBuilding)ownedBuilding).floorIndex;
     public int PlaceIndex => ((TowerBuilding)ownedBuilding).placeIndex;
 
-    public List<EntityCityNavigator> goingForWaitingPassengers = new List<EntityCityNavigator>();
-    public List<EntityCityNavigator> waitingPassengers = new List<EntityCityNavigator>();
-    public List<EntityCityNavigator> goingToRidingPassengers = new List<EntityCityNavigator>();
-    public List<EntityCityNavigator> ridingPassengers = new List<EntityCityNavigator>();
+    public List<EntityCityNavigator> goingForWaitingPassengers { get; private set; } = new List<EntityCityNavigator>();
+    public List<EntityCityNavigator> waitingPassengers { get; private set; } = new List<EntityCityNavigator>();
+    public List<EntityCityNavigator> goingToRidingPassengers { get; private set; } = new List<EntityCityNavigator>();
+    public List<EntityCityNavigator> ridingPassengers { get; private set; } = new List<EntityCityNavigator>();
 
     public bool isMoving { get; private set; } = false;
     public int startFloorIndex { get; private set; } = 0;
@@ -174,7 +174,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     public bool CanMoveToFloor(int floor)
     {
-        TowerBuilding targetBuilding = buildingsManager.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
+        TowerBuilding targetBuilding = BuildingsManager.instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
         if (!targetBuilding)
             return false;
 
@@ -309,7 +309,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     private void ApplyOwnedBuildingByFloor(int floor)
     {
-        TowerBuilding building = buildingsManager.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
+        TowerBuilding building = BuildingsManager.instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
         if (building == ownedBuilding) return;
 
         SetOwnedBuilding(building);

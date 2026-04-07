@@ -40,7 +40,7 @@ public class ProductionControlMenu : ControlMenu
 
     private void CreatePanels()
     {
-        ProductionModule module = SelectManager.Instance.selectedComponent.GetComponent<ProductionModule>();
+        ProductionModule module = SelectManager.Instance.GetSelectedBuilding().GetComponent<ProductionModule>();
         ProducedItem[] resources = module.ProductionLevelData.producedResources;
         int length = resources.Length;
         spawnedProducedResourcePanels = new ProducedResourcePanel[length];
@@ -69,7 +69,7 @@ public class ProductionControlMenu : ControlMenu
 
     protected override void UpdateName()
     {
-        LocalizationItem localizedName = SelectManager.Instance.selectedComponent.GetComponent<Building>().BuildingData.LocalizationItem;
+        LocalizationItem localizedName = SelectManager.Instance.GetSelectedBuilding().BuildingData.LocalizationItem;
         selectedNameText.SetLocalizationItem(localizedName);
     }
 

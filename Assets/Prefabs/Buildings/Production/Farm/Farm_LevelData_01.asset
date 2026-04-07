@@ -20,14 +20,14 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
     amount: 200
   maxResidentsCount: 1
-  constructionStraight: {fileID: 566882254515453963, guid: 39ebc51f67994314a84ea65d901dd5aa, type: 3}
-  constructionCorner: {fileID: 566882254515453963, guid: d725f87958e6e3343b20364923ce3e07, type: 3}
-  constructionStraightLeft: {fileID: 566882254515453963, guid: 9c6c26aec22a23149b456717f96e8ad6, type: 3}
-  constructionStraightRight: {fileID: 566882254515453963, guid: 080516e6908c2284fbe6993952a360d4, type: 3}
-  constructionStraightLeftRight: {fileID: 566882254515453963, guid: 23b055b60b185494791395ee8a758143, type: 3}
-  constructionCornerLeft: {fileID: 566882254515453963, guid: ac977cabe44acd64195bee3bc4aebada, type: 3}
-  constructionCornerRight: {fileID: 566882254515453963, guid: 247c2075ca5341d448e6dc2251d491c7, type: 3}
-  constructionCornerLeftRight: {fileID: 566882254515453963, guid: 3b6e272b3b84d4943ac008d77e0c53e9, type: 3}
+  constructionStraight: {fileID: 3395891878762895499, guid: cf44c5fd46b1b354d80c0e5b85bbb8f2, type: 3}
+  constructionCorner: {fileID: 3395891878762895499, guid: c9155c794856b584182a1047a9ba6f05, type: 3}
+  constructionStraightLeft: {fileID: 3395891878762895499, guid: 5391fdf93cf4223489a8e5b4febb14f8, type: 3}
+  constructionStraightRight: {fileID: 3395891878762895499, guid: 254217945d1eece49b6dd3bc531d9703, type: 3}
+  constructionStraightLeftRight: {fileID: 3395891878762895499, guid: eb315ed222b36a946a5dd34bdbc9227c, type: 3}
+  constructionCornerLeft: {fileID: 3395891878762895499, guid: 53d6af202db32d043b2c6d53aecef238, type: 3}
+  constructionCornerRight: {fileID: 3395891878762895499, guid: 8207c4e097c95fa4fa17df828471907a, type: 3}
+  constructionCornerLeftRight: {fileID: 3395891878762895499, guid: 2738ac018e9dc4944ad426f3fbf4d34b, type: 3}
   constructionStraightUp: {fileID: 0}
   constructionStraightDown: {fileID: 0}
   constructionStraightUpDown: {fileID: 0}

@@ -318,7 +318,7 @@ PrefabInstance:
     - target: {fileID: -7796214933308666227, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 9196486350585339327, guid: 570f94a34e459ae46ba08bd6bb1068eb, type: 3}
+      objectReference: {fileID: -5022875130311407321, guid: cc844f0f60f4d514aae69bcd073fed6f, type: 3}
     - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -363,6 +363,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CoalGenerator_Level_01_Corner
       objectReference: {fileID: 0}
+    - target: {fileID: 8712712631989154949, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 9196486350585339327, guid: 570f94a34e459ae46ba08bd6bb1068eb, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

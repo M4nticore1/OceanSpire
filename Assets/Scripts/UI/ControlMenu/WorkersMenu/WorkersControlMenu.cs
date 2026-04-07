@@ -50,7 +50,7 @@ public class WorkersControlMenu : ControlMenu
 
     protected override void UpdateMenu()
     {
-        Building selectedBuilding = SelectManager.Instance.selectedComponent.GetComponent<Building>();
+        Building selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
         List<Human> citizens = entitiesManager.citizens;
         int maxWorkersCount = selectedBuilding.LevelData.maxResidentsCount;
 
@@ -79,7 +79,7 @@ public class WorkersControlMenu : ControlMenu
 
     protected override void UpdateName()
     {
-        LocalizationItem localizedName = SelectManager.Instance.selectedComponent.GetComponent<Building>().BuildingData.LocalizationItem;
+        LocalizationItem localizedName = SelectManager.Instance.GetSelectedBuilding().BuildingData.LocalizationItem;
         selectedNameText.SetLocalizationItem(localizedName);
     }
 

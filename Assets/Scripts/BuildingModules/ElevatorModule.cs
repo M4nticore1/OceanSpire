@@ -10,7 +10,7 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
     [SerializeField] private float electricityConsumption = 0f;
     public float ElectricityConsumption => electricityConsumption;
 
-    public ElevatorCabinConstruction spawnedElevatorCabin;
+    public ElevatorCabinConstruction spawnedElevatorCabin { get; private set; }
     public int elevatorGroupId { get; private set; } = 0;
 
     private bool IsMoving => spawnedElevatorCabin.isMoving;

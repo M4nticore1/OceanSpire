@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4484ef3731afa4da1a2eba5bcc6b2b, type: 3}
   m_Name: BasicElevator_LevelData_01
   m_EditorClassIdentifier: Assembly-CSharp::ElevatorModuleLevelData
-  elevatorPlatformStraight: {fileID: 9121983844208753504, guid: e10d6143f9cb8ff4e88a82028c416afb, type: 3}
-  elevatorPlatformCorner: {fileID: 6317132314724744191, guid: 7d90808e21dfe624d82b51156fd5f94e, type: 3}
+  elevatorPlatformStraight: {fileID: 542730101038537807, guid: 263883023236c8e468e92aa27c9b483a, type: 3}
+  elevatorPlatformCorner: {fileID: -3511474536858047956, guid: 1eb0adfdf8159f24d8d04af9452ded0b, type: 3}
   elevatorMoveSpeed: 1

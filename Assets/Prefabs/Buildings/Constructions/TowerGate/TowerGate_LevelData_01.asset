@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnvironmentBuildingLevelData
   resourcesToBuild: []
   maxResidentsCount: 4
-  construction: {fileID: 8449339325450574553, guid: aeda8b6737958b446b688db508113d9d, type: 3}
+  construction: {fileID: 3395891878762895499, guid: ddcfe4354a7b56a40b178211d23aae1f, type: 3}

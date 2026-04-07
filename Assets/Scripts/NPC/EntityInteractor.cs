@@ -49,7 +49,8 @@ public class EntityInteractor : MonoBehaviour
         Human resident = widget.human;
         if (resident != GetComponent<Human>()) return;
 
-        Building selectedBuilding = SelectManager.Instance.selectedComponent.GetComponent<Building>();
+        Building selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
+
         if (interactBuilding) {
             if (selectedBuilding == interactBuilding) {
                 RemoveInteractBuilding();

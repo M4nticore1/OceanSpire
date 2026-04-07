@@ -11,7 +11,17 @@ public class SelectManager
         EventBus.onDeselectedComponent += OnDeselectedComponent;
     }
 
-    public SelectComponent selectedComponent { get; private set; }
+    private SelectComponent selectedComponent;
+
+    public Building GetSelectedBuilding()
+    {
+        return selectedComponent.GetComponent<BuildingConstruction>().ownedBuilding;
+    }
+
+    public Human GetSelectedHuman()
+    {
+        return selectedComponent.GetComponent<Human>();
+    }
 
     private void OnSelectedComponent(SelectComponent component)
     {

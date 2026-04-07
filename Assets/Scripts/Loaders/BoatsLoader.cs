@@ -3,7 +3,6 @@ using UnityEngine;
 public class BoatsLoader : MonoBehaviour
 {
     [SerializeField] private BoatIdEnum[] startBoatIds;
-    [SerializeField] PierModule pier;
 
     private void Start()
     {
@@ -18,9 +17,11 @@ public class BoatsLoader : MonoBehaviour
             for (int i = 0; i < boatIds.Length; i++) {
                 int id = (int)boatIds[i];
                 Boat prefab = BoatsList.Instance.boats[id];
-                BoatDockPoint spawnTransform = pier.PierConstruction.BoatDocks[i];
+                BoatDockPoint spawnTransform = BuildingsManager.instance.PierBuilding.GetComponent<PierModule>().PierConstruction.BoatDocks[i];
+
                 Vector3 position = spawnTransform.DockTransform.position;
                 Vector3 rotation = spawnTransform.DockTransform.rotation.eulerAngles;
+
                 float health = prefab.Health.MaxHealth;
                 int dockId = DockPointsManager.instance.pierDockPoints[i].InstanceId.id;
 

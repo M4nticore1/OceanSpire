@@ -63,11 +63,7 @@ public class ContextMenuMaster : UIBehaviour
 
     protected void OnBuildingDemolished(Building building)
     {
-        SelectComponent selectComponent = SelectManager.Instance.selectedComponent;
-        if (!selectComponent)
-            return;
-
-        Building selectedBuilding = selectComponent.GetComponent<Building>();
+        Building selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
         if (selectedBuilding != building)
             return;
 

@@ -196,7 +196,7 @@ public class Human : Creature
             RemoveInteractBuilding();
         }
         else {
-            Building building = SelectManager.Instance.selectedComponent.GetComponent<Building>();
+            Building building = SelectManager.Instance.GetSelectedBuilding();
             if (building.workers.Count >= building.LevelData.maxResidentsCount) return;
 
             SetInteractBuilding(building);

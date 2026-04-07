@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &906466429577544110
+--- !u!1 &4236496321590486724
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,175 +8,71 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 792685047245874063}
-  m_Layer: 0
-  m_Name: Waypoints
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &792685047245874063
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 906466429577544110}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1404891851385680521}
-  - {fileID: 1575235212413706076}
-  m_Father: {fileID: 2576698104072742168}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &948506293721641794
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2576698104072742168}
-  - component: {fileID: 6317132314724744191}
-  - component: {fileID: 1878472931261789788}
-  m_Layer: 0
-  m_Name: BasicElevator_Corner_Cabin
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2576698104072742168
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948506293721641794}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5326586160016101695}
-  - {fileID: 792685047245874063}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6317132314724744191
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948506293721641794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbe0ebc6621fde54db89153b730e38ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buildingInteriors: []
-  buildingInteractions:
-  - waypoints:
-    - transform: {fileID: 1404891851385680521}
-      actionTime: 0
-  - waypoints:
-    - transform: {fileID: 1575235212413706076}
-      actionTime: 0
-  goingForWaitingPassengers: []
-  waitingPassengers: []
-  goingToRidingPassengers: []
-  ridingPassengers: []
---- !u!114 &1878472931261789788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948506293721641794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15d511cb8398f1b43b37bcc206dccbfe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GPUInstancingEnabler
---- !u!1 &7832400372558970541
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1404891851385680521}
-  m_Layer: 0
-  m_Name: Waypoint_01
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1404891851385680521
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7832400372558970541}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 0.5, z: -1.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 792685047245874063}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8923552803836980479
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1575235212413706076}
+  - component: {fileID: 3299158157585854142}
   m_Layer: 0
   m_Name: Waypoint_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
---- !u!4 &1575235212413706076
+--- !u!4 &3299158157585854142
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8923552803836980479}
+  m_GameObject: {fileID: 4236496321590486724}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.46, z: -1.5}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 1, y: 0, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 792685047245874063}
+  m_Father: {fileID: 5486632833755438258}
+  m_LocalEulerAnglesHint: {x: 0, y: 270, z: 0}
+--- !u!1 &9184919009061174324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2160192589345684502}
+  m_Layer: 0
+  m_Name: Waypoint_01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!4 &2160192589345684502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9184919009061174324}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.5, y: 0, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5486632833755438258}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &5647914813762369236
+--- !u!1001 &5221497569432942658
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 2576698104072742168}
+    m_TransformParent: {fileID: 5486632833755438258}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 798f7b485d141de4da1ed8500d971b90, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 798f7b485d141de4da1ed8500d971b90, type: 3}
       propertyPath: m_LocalPosition.y
@@ -220,15 +116,145 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 798f7b485d141de4da1ed8500d971b90, type: 3}
       propertyPath: m_Name
-      value: BasicElevator_Corner_Platform
+      value: BasicElevator_Corner_Cabin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 798f7b485d141de4da1ed8500d971b90, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 4289095701671910532}
   m_SourcePrefab: {fileID: 100100000, guid: 798f7b485d141de4da1ed8500d971b90, type: 3}
---- !u!4 &5326586160016101695 stripped
+--- !u!1 &4951450015107155219 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 798f7b485d141de4da1ed8500d971b90, type: 3}
+  m_PrefabInstance: {fileID: 5221497569432942658}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4289095701671910532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951450015107155219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d511cb8398f1b43b37bcc206dccbfe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &5763698375415357353 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 798f7b485d141de4da1ed8500d971b90, type: 3}
-  m_PrefabInstance: {fileID: 5647914813762369236}
+  m_PrefabInstance: {fileID: 5221497569432942658}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5227137252125454741
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -7796214933308666227, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -5022875130311407321, guid: cc844f0f60f4d514aae69bcd073fed6f, type: 3}
+    - target: {fileID: -7796214933308666227, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452299794892249143, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_Name
+      value: BasicElevator_Corner_Cabin
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: -7796214933308666227, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 1521390348430645779, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5763698375415357353}
+    - targetCorrespondingSourceObject: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2160192589345684502}
+    - targetCorrespondingSourceObject: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3299158157585854142}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5452299794892249143, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 542730101038537807}
+  m_SourcePrefab: {fileID: 100100000, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+--- !u!1 &225444294769174946 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5452299794892249143, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+  m_PrefabInstance: {fileID: 5227137252125454741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &542730101038537807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225444294769174946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbe0ebc6621fde54db89153b730e38ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElevatorCabinConstruction
+  selectComponent: {fileID: 0}
+  buildingInteriors: []
+  buildingInteractions:
+  - waypoints:
+    - transform: {fileID: 2160192589345684502}
+      actionTime: 0
+  - waypoints:
+    - transform: {fileID: 3299158157585854142}
+      actionTime: 0
+--- !u!4 &5486632833755438258 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+  m_PrefabInstance: {fileID: 5227137252125454741}
   m_PrefabAsset: {fileID: 0}

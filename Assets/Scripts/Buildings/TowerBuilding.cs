@@ -68,7 +68,7 @@ public class TowerBuilding : Building, INeighborBuildingsListener
         floorIndex = towerData.floorIndex;
         placeIndex = towerData.placeIndex;
 
-        List<FloorFrameModule> floors = buildingsManager.BuiltFloors;
+        List<FloorFrameModule> floors = BuildingsManager.instance.BuiltFloors;
         BuildingPlace place = null;
 
         if (BuildingData.BuildingType == BuildingType.Room) {
@@ -317,24 +317,26 @@ public class TowerBuilding : Building, INeighborBuildingsListener
         if (buildingData.BuildingType == BuildingType.Room) {
             int roomsCount = BuildingsManager.RoomsCountPerFloor;
             int leftIndex = (placeIndex + 1) % roomsCount;
-            leftBuilding = buildingsManager.BuiltFloors[floorIndex].RoomBuildingPlaces[leftIndex].PlacedBuilding;
+            leftBuilding = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[leftIndex].PlacedBuilding;
 
             int rightIndex = (roomsCount + placeIndex - 1) % roomsCount;
-            rightBuilding = buildingsManager.BuiltFloors[floorIndex].RoomBuildingPlaces[rightIndex].PlacedBuilding;
+            rightBuilding = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[rightIndex].PlacedBuilding;
         }
 
-        int floorCount = buildingsManager.BuiltFloors.Count;
+        int floorCount = BuildingsManager.instance.BuiltFloors.Count;
         int upIndex = floorIndex + 1;
+
         if (upIndex < floorCount) {
-            upBuilding = buildingsManager.BuiltFloors[upIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
+            upBuilding = BuildingsManager.instance.BuiltFloors[upIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
         }
         else {
             upBuilding = null;
         }
 
         int downIndex = floorIndex - 1;
+
         if (downIndex >= 0) {
-            downBuilding = buildingsManager.BuiltFloors[downIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
+            downBuilding = BuildingsManager.instance.BuiltFloors[downIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
         }
         else {
             downBuilding = null;

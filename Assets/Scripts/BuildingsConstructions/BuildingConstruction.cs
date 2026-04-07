@@ -16,7 +16,8 @@ public class BuildingActionWaypoint
 
 public class BuildingConstruction : MonoBehaviour
 {
-    protected BuildingsManager buildingsManager;
+    [SerializeField] private SelectComponent selectComponent;
+
     private LightProbeGroupManager lightProbeGroupManager;
 
     public Building ownedBuilding { get; private set; } = null;
@@ -30,9 +31,20 @@ public class BuildingConstruction : MonoBehaviour
     private MeshRenderer[] meshRendererers = null;
     private MaterialPropertyBlock propertyBlock = null;
 
+    protected virtual void OnEnable()
+    {
+        selectComponent.onSelected += OnSelected;
+        selectComponent.onDeselected += OnDeselected;
+    }
+
+    protected virtual void OnDisable()
+    {
+        selectComponent.onSelected -= OnSelected;
+        selectComponent.onDeselected -= OnDeselected;
+    }
+
     public virtual void Init(Building ownedBuilding)
     {
-        buildingsManager = FindAnyObjectByType<BuildingsManager>();
         lightProbeGroupManager = FindAnyObjectByType<LightProbeGroupManager>();
         meshRendererers = GetComponentsInChildren<MeshRenderer>();
 
@@ -67,5 +79,25 @@ public class BuildingConstruction : MonoBehaviour
         foreach (MeshRenderer renderer in meshRendererers) {
             renderer.SetPropertyBlock(propertyBlock);
         }
+    }
+
+    public void Click()
+    {
+
+    }
+
+    public bool CanClick()
+    {
+        return true;
+    }
+
+    private void OnSelected()
+    {
+        EventBus.InvokeSelectedBuilding(ownedBuilding);
+    }
+
+    private void OnDeselected()
+    {
+        EventBus.InvokeDeselectedBuilding(ownedBuilding);
     }
 }
