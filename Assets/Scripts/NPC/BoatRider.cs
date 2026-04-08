@@ -20,12 +20,12 @@ public class BoatRider : MonoBehaviour
 
     private void OnEnable()
     {
-        movement.onStopped += OnMovementStopped;
+        movement.onStoppedMoving += OnMovementStopped;
     }
 
     private void OnDisable()
     {
-        movement.onStopped -= OnMovementStopped;
+        movement.onStoppedMoving -= OnMovementStopped;
     }
 
     public void StartEnteringBoat()

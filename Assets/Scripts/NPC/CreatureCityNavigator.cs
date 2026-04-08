@@ -54,13 +54,13 @@ public class CreatureCityNavigator : MonoBehaviour
 
     private void OnEnable()
     {
-        movement.onStopped += OnStoppedMoving;
+        movement.onStoppedMoving += OnStoppedMoving;
         EventBus.onNavMeshBaked += OnNavMeshBaked;
     }
 
     private void OnDisable()
     {
-        movement.onStopped -= OnStoppedMoving;
+        movement.onStoppedMoving -= OnStoppedMoving;
         EventBus.onNavMeshBaked -= OnNavMeshBaked;
     }
 

@@ -104,7 +104,7 @@ public class Human : Creature
         health.onDied += OnDied;
 
         attack.onStoppedAttacking += OnStoppedAttacking;
-        movement.onStopped += OnStoppedMoving;
+        movement.onStoppedMoving += OnStoppedMoving;
 
         cityNavigator.onEnteredBuilding += OnEnteredBuilding;
         cityNavigator.onExitedBuilding += OnExitedBuilding;
@@ -130,7 +130,7 @@ public class Human : Creature
         health.onDied -= OnDied;
 
         attack.onStoppedAttacking -= OnStoppedAttacking;
-        movement.onStopped -= OnStoppedMoving;
+        movement.onStoppedMoving -= OnStoppedMoving;
 
         cityNavigator.onEnteredBuilding -= OnEnteredBuilding;
         cityNavigator.onExitedBuilding -= OnExitedBuilding;

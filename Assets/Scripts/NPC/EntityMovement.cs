@@ -9,8 +9,9 @@ public class EntityMovement : MonoBehaviour
 
     private bool isMoving = false;
 
+    public event Action onStartedMoving;
+    public event Action onStoppedMoving;
     public event Action onReachedPath;
-    public event Action onStopped;
 
     private void Update()
     {
@@ -29,8 +30,14 @@ public class EntityMovement : MonoBehaviour
         if (!CanMove()) return false;
 
         navAgent.isStopped = false;
-        isMoving = true;
-        return navAgent.SetDestination(position);
+
+        if (navAgent.SetDestination(position)) {
+            onStartedMoving?.Invoke();
+            isMoving = true;
+            return true;
+        }
+
+        return false;
     }
 
     public void StopMoving()
@@ -43,7 +50,7 @@ public class EntityMovement : MonoBehaviour
         navAgent.isStopped = true;
         navAgent.ResetPath();
         isMoving = false;
-        onStopped?.Invoke();
+        onStoppedMoving?.Invoke();
     }
 
     public void SetAgentEnabled(bool enabled)

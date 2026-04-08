@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,19 +18,15 @@ public abstract class CreatureEntry
 
 public abstract class Creature : MonoBehaviour
 {
-    protected NavMeshAgent agent = null;
-    protected EntityMovement movement = null;
+    [SerializeField] protected NavMeshAgent agent;
+
+    [SerializeField] protected EntityMovement movement;
+    public EntityMovement Movement => movement;
 
     [SerializeField] protected CreatureData creatureData;
     public CreatureData CreatureData => creatureData;
 
     [SerializeField] private InstanceId instanceId;
-
-    protected virtual void Awake()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        movement = GetComponent<EntityMovement>();
-    }
 
     public virtual void Init(CreatureEntry data)
     {
