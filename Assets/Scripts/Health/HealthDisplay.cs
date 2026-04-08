@@ -6,42 +6,40 @@ using UnityEngine.UI;
 public class HealthDisplay : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] private Health healthComponent;
+    [SerializeField] private Health health;
 
     [Header("Display")]
+    [SerializeField] private GameObject content;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private Image bar;
-    [SerializeField] private bool addHealthText;
-    [SerializeField] private GameObject content;
+    [SerializeField] private Gradient barGradient;
 
     [Header("Stats")]
     [SerializeField] private float minHealthVisibilityThreshold = 0.5f;
-    [SerializeField] private float timeToHide = 0f;
-    private float currentTimeToHide = 0f;
+    [SerializeField] private float visibilityTime = 0f;
+    private float currentVisibilityTime = 0f;
 
     private bool isDisplayed = false;
 
     private void OnEnable()
     {
-        if (healthComponent) {
-            healthComponent.onHealthChanged += OnHealthChanged;
-        }
+        health.onHealthChanged += OnHealthChanged;
+        health.onDied += OnDied;
     }
 
     private void OnDisable()
     {
-        if (healthComponent) {
-            healthComponent.onHealthChanged -= OnHealthChanged;
-        }
+        health.onHealthChanged -= OnHealthChanged;
+        health.onDied -= OnDied;
     }
 
     private void Start()
     {
-        float currentHealth = healthComponent.currentHealth;
-        float maxHealth = healthComponent.MaxHealth;
+        float currentHealth = health.currentHealth;
+        float maxHealth = health.MaxHealth;
         float alpha = currentHealth / maxHealth;
 
-        if (alpha <= minHealthVisibilityThreshold) {
+        if (alpha < minHealthVisibilityThreshold) {
             Display();
         }
         else {
@@ -51,84 +49,103 @@ public class HealthDisplay : MonoBehaviour
 
     private void Update()
     {
-        if (!isDisplayed) return;
-        if (timeToHide <= 0) return;
-        if (currentTimeToHide > timeToHide) return;
+        if (isDisplayed) {
+            currentVisibilityTime += Time.deltaTime;
 
-        currentTimeToHide += Time.deltaTime;
-
-        if (currentTimeToHide < timeToHide) return;
-
-        Hide();
-        ResetTime();
+            if (currentVisibilityTime > visibilityTime) {
+                Hide();
+            }
+        }
     }
 
     public void SetHealthComponent(Health health)
     {
-        if (healthComponent) {
-            healthComponent.onHealthChanged -= OnHealthChanged;
+        if (this.health) {
+            this.health.onHealthChanged -= OnHealthChanged;
         }
 
-        healthComponent = health;
-        healthComponent.onHealthChanged += OnHealthChanged;
+        this.health = health;
+        this.health.onHealthChanged += OnHealthChanged;
     }
 
     private void OnHealthChanged()
     {
-        float currentHealth = healthComponent.currentHealth;
-        float maxHealth = healthComponent.MaxHealth;
+        TryToDisplay();
+        TryAssignHealth();
+        ResetVisibilityTime();
+    }
+
+    private void OnDied()
+    {
+        Hide();
+    }
+
+    private bool TryToDisplay()
+    {
+        float currentHealth = health.currentHealth;
+        float maxHealth = health.MaxHealth;
         float alpha = currentHealth / maxHealth;
 
         if (!isDisplayed && alpha <= minHealthVisibilityThreshold) {
             Display();
+            return true;
         }
 
-        SetHealth(currentHealth, maxHealth);
+        return false;
     }
 
     private void Display()
     {
-        if (content) {
-            content.SetActive(true);
-        }
-        
+        content.SetActive(true);
         isDisplayed = true;
     }
 
     private void Hide()
     {
-        if (content) {
-            content.SetActive(false);
-        }
-
+        content.SetActive(false);
         isDisplayed = false;
     }
 
-    private void ResetTime()
+    private void ResetVisibilityTime()
     {
-        currentTimeToHide = 0;
+        currentVisibilityTime = 0;
     }
 
-    private void SetHealth(float currentHealth, float maxHealth)
+    private void TryAssignHealth()
+    {
+        if (!isDisplayed) return;
+
+        AssignHealth();
+    }
+
+    private void AssignHealth()
     {
         if (healthText) {
-            AssignHealthText(currentHealth, maxHealth);
+            AssignHealthText();
         }
 
         if (bar) {
-            AssignHealthBar(currentHealth, maxHealth);
+            AssignHealthBar();
         }
     }
 
-    private void AssignHealthText(float currentHealth, float maxHealth)
+    private void AssignHealthText()
     {
+        float currentHealth = health.currentHealth;
+        float maxHealth = health.MaxHealth;
+
         string text = math.ceil(currentHealth).ToString() + "/" + maxHealth.ToString();
         healthText.SetText(text);
     }
 
-    private void AssignHealthBar(float currentHealth, float maxHealth)
+    private void AssignHealthBar()
     {
-        float fillAmount = currentHealth > 0 ? maxHealth / currentHealth : 0f;
-        bar.fillAmount = fillAmount;
+        float currentHealth = health.currentHealth;
+        float maxHealth = health.MaxHealth;
+        float alpha = currentHealth > 0 ? currentHealth / maxHealth : 0f;
+        Color color = barGradient.Evaluate(alpha);
+
+        bar.fillAmount = alpha;
+        bar.color = color;
     }
 }

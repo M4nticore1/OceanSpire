@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
   maxHealth: 100
+  reviveHealthPercent: 0.1
 --- !u!114 &5453205600493844167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,6 +480,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7018073431531251187, guid: e6df01fb03d8bc64481039548fb87f1b, type: 3}
+      propertyPath: health
+      value: 
+      objectReference: {fileID: 1718763975742808754}
     - target: {fileID: 7018073431531251187, guid: e6df01fb03d8bc64481039548fb87f1b, type: 3}
       propertyPath: healthComponent
       value: 

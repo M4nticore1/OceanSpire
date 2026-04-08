@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class BonusRewardMenu : MonoBehaviour, IOpenable
 {
-    [Header("Managers")]
-    [SerializeField] private AppLovinMaxRewardedAdsManager appLovinMaxAdsManager;
-
     [Header("UI")]
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private Image rewardImage;
@@ -124,7 +121,7 @@ public class BonusRewardMenu : MonoBehaviour, IOpenable
 
     private void OnShowAdButtonClicked()
     {
-        appLovinMaxAdsManager.ShowAd();
+        RewardedAdsManager.instance.AdsManager.ShowAd();
         Close();
     }
 }

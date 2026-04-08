@@ -7,7 +7,6 @@ public class Attack : MonoBehaviour
     [SerializeField] private EntityMovement movement;
 
     [SerializeField] private Health health;
-    public Health Health => health;
 
     [SerializeField] private float damage = 10f;
     [SerializeField] private float attackFrequency = 1f;

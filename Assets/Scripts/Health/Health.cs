@@ -45,6 +45,7 @@ public class Health : MonoBehaviour
     public void SetCurrentHealth(float value)
     {
         currentHealth = value;
+        onHealthChanged?.Invoke();
 
         if (currentHealth <= 0 && isAlive) {
             OnDied();
@@ -52,8 +53,6 @@ public class Health : MonoBehaviour
         else if (!isAlive) {
             OnRevived();
         }
-
-        onHealthChanged?.Invoke();
     }
 
     private void OnRevived()
