@@ -85,7 +85,7 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
     }
 
     // Passengers
-    public void AddPassenger(EntityCityNavigator passenger)
+    public void AddPassenger(CreatureCityNavigator passenger)
     {
         switch (passenger.followingPathState) {
             case FollowingPathState.GoingToWaiting:
@@ -103,7 +103,7 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
         }
     }
 
-    public void RemovePassenger(EntityCityNavigator passenger)
+    public void RemovePassenger(CreatureCityNavigator passenger)
     {
         switch (passenger.followingPathState) {
             case FollowingPathState.GoingToWaiting:

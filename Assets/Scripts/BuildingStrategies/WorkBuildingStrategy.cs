@@ -7,37 +7,37 @@ public class WorkBuildingStrategy : BuildingStrategy
 
     }
 
-    public override void OnEntityEnter(EntityCityNavigator navigator)
+    public override void OnEntityEnter(CreatureCityNavigator navigator)
     {
 
     }
 
-    public override void OnEntityExit(EntityCityNavigator navigator)
+    public override void OnEntityExit(CreatureCityNavigator navigator)
     {
 
     }
 
-    public override void OnSetInteractBuilding(EntityInteractor navigator)
-    {
-        
-    }
-
-    public override void OnRemoveInteractBuilding(EntityInteractor navigator)
+    public override void OnSetInteractBuilding(CreatureInteractor navigator)
     {
         
     }
 
-    public override void OnStartInteracting(EntityInteractor interactor)
-    {
-
-    }
-
-    public override void OnStopInteracting(EntityInteractor interactor)
+    public override void OnRemoveInteractBuilding(CreatureInteractor navigator)
     {
         
     }
 
-    public override void OnInteracting(EntityInteractor interactor)
+    public override void OnStartInteracting(CreatureInteractor interactor)
+    {
+
+    }
+
+    public override void OnStopInteracting(CreatureInteractor interactor)
+    {
+        
+    }
+
+    public override void OnInteracting(CreatureInteractor interactor)
     {
         //if (interactBuilding.spawnedConstruction.BuildingInteractions.Length > interactorIndex) {
         //    BuildingAction buildingAction = interactBuilding.spawnedConstruction.BuildingInteractions[interactorIndex];

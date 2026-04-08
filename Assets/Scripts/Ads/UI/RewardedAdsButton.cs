@@ -6,12 +6,10 @@ public class RewardedAdsButton : UIBehaviour
 {
     [SerializeField] private RewardedAdsManager rewardedAdsManager;
     [SerializeField] private RewardedAdsButtonManager rewardedAdsButtonManager;
-    [SerializeField] private RewardedAdsMenu rewardedAdsMenu;
+    [SerializeField] private BonusRewardMenu rewardedAdsMenu;
     [SerializeField] private CustomButton button;
     [SerializeField] private Image itemImage;
     [SerializeField] private Image progressBar;
-
-    private bool isShowed = false;
 
     protected override void OnEnable()
     {
@@ -38,18 +36,17 @@ public class RewardedAdsButton : UIBehaviour
     {
         gameObject.SetActive(true);
         AssignImage();
-        isShowed = true;
     }
 
     public void Hide()
     {
         gameObject.SetActive(false);
-        isShowed = false;
     }
 
     private void AssignImage()
     {
-        itemImage.sprite = rewardedAdsButtonManager.currentReward.rewardData.RewardIcon;
+        ItemAdRewardInstance itemReward = rewardedAdsButtonManager.currentReward as ItemAdRewardInstance;
+        itemImage.sprite = itemReward.rewardData.RewardIcon;
     }
 
     private void AssignProgressBarFill()

@@ -15,11 +15,11 @@ public abstract class BuildingStrategy
         this.building = building;
     }
 
-    public abstract void OnEntityEnter(EntityCityNavigator navigator);
-    public abstract void OnEntityExit(EntityCityNavigator navigator);
-    public abstract void OnSetInteractBuilding(EntityInteractor navigator);
-    public abstract void OnRemoveInteractBuilding(EntityInteractor navigator);
-    public abstract void OnStartInteracting(EntityInteractor interactor);
-    public abstract void OnStopInteracting(EntityInteractor interactor);
-    public abstract void OnInteracting(EntityInteractor interactor);
+    public abstract void OnEntityEnter(CreatureCityNavigator navigator);
+    public abstract void OnEntityExit(CreatureCityNavigator navigator);
+    public abstract void OnSetInteractBuilding(CreatureInteractor navigator);
+    public abstract void OnRemoveInteractBuilding(CreatureInteractor navigator);
+    public abstract void OnStartInteracting(CreatureInteractor interactor);
+    public abstract void OnStopInteracting(CreatureInteractor interactor);
+    public abstract void OnInteracting(CreatureInteractor interactor);
 }

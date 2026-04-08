@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RecievedAdRewardMenu : MonoBehaviour
+public class RecievedAdItemRewardMenu : MonoBehaviour
 {
     [SerializeField] SlidePanel slidePanel;
     [SerializeField] Image rewardImage;
@@ -34,6 +34,8 @@ public class RecievedAdRewardMenu : MonoBehaviour
 
     private void OnAdRewardRecieved(AdRewardInstance reward)
     {
+        if (reward as ItemAdRewardInstance == null) return;
+
         Open();
         AssignImage(reward);
         AssignText(reward);
@@ -55,13 +57,15 @@ public class RecievedAdRewardMenu : MonoBehaviour
 
     private void AssignImage(AdRewardInstance reward)
     {
-        rewardImage.sprite = reward.rewardData.RewardIcon;
+        ItemAdRewardInstance itemReward = RewardedAdsManager.instance.currentReward as ItemAdRewardInstance;
+        rewardImage.sprite = itemReward.rewardData.RewardIcon;
     }
 
     private void AssignText(AdRewardInstance reward)
     {
-        receiveText.SetLocalizationItem(reward.rewardData.ReceievedRewardLocalization);
-        receiveText.SetPlaceHolderLocalization(reward);
+        ItemAdRewardInstance itemReward = RewardedAdsManager.instance.currentReward as ItemAdRewardInstance;
+        receiveText.SetLocalizationItem(itemReward.rewardData.ReceievedRewardLocalization);
+        receiveText.SetPlaceHolderLocalization(itemReward);
         receiveText.UpdateText();
     }
 }

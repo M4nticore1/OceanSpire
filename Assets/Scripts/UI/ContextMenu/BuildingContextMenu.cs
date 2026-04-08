@@ -42,8 +42,6 @@ public class BuildingContextMenu : ContextMenu<Building>
             return;
         }
 
-        Debug.Log("InitContextMenu");
-
         SetNameLocalization(building.BuildingData.LocalizationItem);
         SetLevelText(building.LevelIndex + 1);
 

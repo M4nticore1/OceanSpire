@@ -15,37 +15,17 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     private void OnEnable()
     {
-        EventBus.onPlayerClicked += OnClicked;
+        EventBus.onPlayerClicked += OnPlayerClicked;
     }
 
     private void OnDisable()
     {
-        EventBus.onPlayerClicked -= OnClicked;
+        EventBus.onPlayerClicked -= OnPlayerClicked;
     }
 
-    private void OnClicked(GameObject clicked)
+    public void Select()
     {
-        if (!isClickable) return;
-
-        if (clicked != gameObject && isSelected) {
-            SetSelected(false);
-        }
-    }
-
-    public void SetSelected(bool value)
-    {
-        isSelected = value;
-
-        if (isSelected) {
-            OnSelected();
-        }
-        else {
-            OnDeselected();
-        }
-    }
-
-    private void OnSelected()
-    {
+        isSelected = true;
         layers.Clear();
 
         List<GameObject> objects = GameUtils.GetAllChildren(transform);
@@ -63,8 +43,10 @@ public class SelectComponent : MonoBehaviour, IClickable
         EventBus.InvokeSelectedObject(this);
     }
 
-    private void OnDeselected()
+    public void Deselect()
     {
+        isSelected = false;
+
         List<GameObject> objects = GameUtils.GetAllChildren(transform);
         objects.Add(gameObject);
 
@@ -86,7 +68,12 @@ public class SelectComponent : MonoBehaviour, IClickable
     // IClickable
     public void Click()
     {
-        SetSelected(!isSelected);
+        if (isSelected) {
+            Deselect();
+        }
+        else {
+            Select();
+        }
     }
 
     public bool CanClick()
@@ -97,5 +84,14 @@ public class SelectComponent : MonoBehaviour, IClickable
     public void SetClickable(bool value)
     {
         isClickable = value;
+    }
+
+    private void OnPlayerClicked(GameObject clicked)
+    {
+        if (!isClickable) return;
+
+        if (clicked != gameObject && isSelected) {
+            Deselect();
+        }
     }
 }

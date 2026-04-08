@@ -2,11 +2,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RewardedAdsMenu : MonoBehaviour, IOpenable
+public class BonusRewardMenu : MonoBehaviour, IOpenable
 {
     [Header("Managers")]
-    [SerializeField] private RewardedAdsManager rewardedAdsManager;
-    [SerializeField] private AppLovinMaxAdsManager appLovinMaxAdsManager;
+    [SerializeField] private AppLovinMaxRewardedAdsManager appLovinMaxAdsManager;
 
     [Header("UI")]
     [SerializeField] private SlidePanel slidePanel;
@@ -37,7 +36,7 @@ public class RewardedAdsMenu : MonoBehaviour, IOpenable
 
     private void Update()
     {
-        if (rewardedAdsManager.currentReward == null) return;
+        if (RewardedAdsManager.instance.currentReward == null) return;
 
         AssignProgressBarFill();
         AssignRemainingTime();
@@ -69,20 +68,23 @@ public class RewardedAdsMenu : MonoBehaviour, IOpenable
 
     private void AssignImage()
     {
-        rewardImage.sprite = rewardedAdsManager.currentReward.rewardData.RewardIcon;
+        ItemAdRewardInstance itemReward = RewardedAdsManager.instance.currentReward as ItemAdRewardInstance;
+        rewardImage.sprite = itemReward.rewardData.RewardIcon;
     }
 
     private void AssignDescryption()
     {
-        rewardDescryption.SetLocalizationItem(rewardedAdsManager.currentReward.rewardData.RewardDescryptionLocalization);
-        rewardDescryption.SetPlaceHolderLocalization(rewardedAdsManager.currentReward);
+        ItemAdRewardInstance itemReward = RewardedAdsManager.instance.currentReward as ItemAdRewardInstance;
+        rewardDescryption.SetLocalizationItem(itemReward.rewardData.RewardDescryptionLocalization);
+        rewardDescryption.SetPlaceHolderLocalization(itemReward);
         rewardDescryption.UpdateText();
     }
 
     private void AssignProgressBarFill()
     {
-        float limitTime = rewardedAdsManager.currentReward.limitTime;
-        float remainingTime = rewardedAdsManager.currentReward.remainingTime;
+        ItemAdRewardInstance itemReward = RewardedAdsManager.instance.currentReward as ItemAdRewardInstance;
+        float limitTime = itemReward.limitTime;
+        float remainingTime = itemReward.remainingTime;
         float alpha = 1f - (remainingTime / limitTime);
 
         remainingTimeProgressBar.fillAmount = alpha;
@@ -90,13 +92,15 @@ public class RewardedAdsMenu : MonoBehaviour, IOpenable
 
     private void AssignRemainingTime()
     {
-        float remainingTime = rewardedAdsManager.currentReward.remainingTime;
+        ItemAdRewardInstance itemReward = RewardedAdsManager.instance.currentReward as ItemAdRewardInstance;
+        float remainingTime = itemReward.remainingTime;
         remainingTimeText.SetText(remainingTime.ToString("F1"));
     }
 
     private void AssignRemainingTimeColor()
     {
-        float remainingTime = rewardedAdsManager.currentReward.remainingTime;
+        ItemAdRewardInstance itemReward = RewardedAdsManager.instance.currentReward as ItemAdRewardInstance;
+        float remainingTime = itemReward.remainingTime;
 
         if (remainingTime <= lowTimeThreshold) {
             remainingTimeText.color = lowTimeColor;
@@ -110,7 +114,9 @@ public class RewardedAdsMenu : MonoBehaviour, IOpenable
     {
         if (!isOpened) return;
 
-        float remainingTime = rewardedAdsManager.currentReward.remainingTime;
+        ItemAdRewardInstance itemReward = RewardedAdsManager.instance.currentReward as ItemAdRewardInstance;
+        float remainingTime = itemReward.remainingTime;
+
         if (remainingTime > 0f) return;
 
         Close();
@@ -118,7 +124,7 @@ public class RewardedAdsMenu : MonoBehaviour, IOpenable
 
     private void OnShowAdButtonClicked()
     {
-        appLovinMaxAdsManager.ShowRewardedAd();
+        appLovinMaxAdsManager.ShowAd();
         Close();
     }
 }

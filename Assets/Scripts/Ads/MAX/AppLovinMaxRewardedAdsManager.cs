@@ -1,9 +1,7 @@
 using UnityEngine;
 
-public class AppLovinMaxAdsManager : MonoBehaviour
+public class AppLovinMaxRewardedAdsManager : AdsManager
 {
-    [SerializeField] private RewardedAdsManager rewardedAdsManager;
-
     private string rewardedId = "«Android-ad-unit-ID»";
 
     int retryAttempt;
@@ -14,14 +12,12 @@ public class AppLovinMaxAdsManager : MonoBehaviour
         MaxSdk.InitializeSdk();
 
         MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdk.SdkConfiguration sdkConfiguration) => {
-            // AppLovin SDK is initialized, start loading ads
             InitializeRewardedAds();
         };
     }
 
-    public void ShowRewardedAd()
+    public override void ShowAd()
     {
-        Debug.Log("Show");
         if (MaxSdk.IsRewardedAdReady(rewardedId)) {
             MaxSdk.ShowRewardedAd(rewardedId);
         }
@@ -73,20 +69,26 @@ public class AppLovinMaxAdsManager : MonoBehaviour
     {
         // Rewarded ad failed to display. AppLovin recommends that you load the next ad.
         LoadRewardedAd();
+        OnAdHidden();
     }
 
-    private void OnRewardedAdClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo) { }
+    private void OnRewardedAdClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
+    {
+    
+    }
 
     private void OnRewardedAdHiddenEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
         // Rewarded ad is hidden. Pre-load the next ad
         LoadRewardedAd();
+        OnAdHidden();
     }
 
     private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdk.AdInfo adInfo)
     {
         // The rewarded ad displayed and the user should receive the reward.
-        rewardedAdsManager.ReceiveReward();
+        RewardedAdsManager.instance.ReceiveReward();
+        OnAdDisplayed();
     }
 
     private void OnRewardedAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo)

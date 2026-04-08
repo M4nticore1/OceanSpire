@@ -61,11 +61,11 @@ public class Human : Creature
     [SerializeField] private Health health;
     public Health Health => health;
 
-    [SerializeField] private EntityCityNavigator cityNavigator;
-    public EntityCityNavigator CityNavigator => cityNavigator;
+    [SerializeField] private CreatureCityNavigator cityNavigator;
+    public CreatureCityNavigator CityNavigator => cityNavigator;
 
-    [SerializeField] private EntityInteractor interactor;
-    public EntityInteractor Interactor => interactor;
+    [SerializeField] private CreatureInteractor interactor;
+    public CreatureInteractor Interactor => interactor;
 
     [SerializeField] private BoatRider boatRider;
     public BoatRider BoatRider => boatRider;
@@ -75,6 +75,10 @@ public class Human : Creature
 
     [SerializeField] private SelectComponent selectComponent;
     public SelectComponent SelectComponent => selectComponent;
+
+    [SerializeField] private float maxTimeToRevive = 60f;
+    public float MaxDeadTime => maxTimeToRevive;
+    public float currentDeadTime { get; private set; } = 0f;
 
     public HumanStateEnum currentStateEnum { get; private set; } = HumanStateEnum.Citizen;
     public HumanState currentState { get; private set; }
@@ -96,7 +100,9 @@ public class Human : Creature
 
     protected void OnEnable()
     {
-        health.onDeath += Death;
+        health.onRevived += OnRevived;
+        health.onDied += OnDied;
+
         attack.onStoppedAttacking += OnStoppedAttacking;
         movement.onStopped += OnStoppedMoving;
 
@@ -118,7 +124,11 @@ public class Human : Creature
 
     protected void OnDisable()
     {
-        health.onDeath -= Death;
+        currentState.OnDisable();
+
+        health.onRevived -= OnRevived;
+        health.onDied -= OnDied;
+
         attack.onStoppedAttacking -= OnStoppedAttacking;
         movement.onStopped -= OnStoppedMoving;
 
@@ -141,6 +151,17 @@ public class Human : Creature
     private void Update()
     {
         currentState.Tick();
+
+        ReviveCitizenAdReward reviveReward = RewardedAdsManager.instance.currentReward as ReviveCitizenAdReward;
+        bool isAdDisplayed = RewardedAdsManager.instance.AdsManager.isAdDisplayed;
+
+        if (!health.isAlive && reviveReward == null && !isAdDisplayed) {
+            currentDeadTime += Time.deltaTime;
+
+            if (currentDeadTime >= maxTimeToRevive) {
+                Destroy(gameObject);
+            }
+        }
     }
 
     public override void Init(CreatureEntry data)
@@ -221,7 +242,7 @@ public class Human : Creature
     {
         SetStatus(HumanStateEnum.Citizen);
         selectComponent.SetClickable(true);
-        selectComponent.SetSelected(false);
+        selectComponent.Deselect();
         Destroy(boatRider.selectedBoat.gameObject);
         boatRider.ExitBoat();
         onWandererAccepted?.Invoke(this);
@@ -233,9 +254,14 @@ public class Human : Creature
         onWandererRejected?.Invoke(this);
     }
 
-    protected override void OnDeath()
+    private void OnRevived()
     {
-        Debug.Log("OnDeath");
+        currentDeadTime = 0f;
+        currentState.OnDied();
+    }
+
+    private void OnDied()
+    {
         currentState.OnDied();
     }
 
@@ -356,9 +382,9 @@ public class Human : Creature
     private void OnSelected()
     {
         if (currentStateEnum == HumanStateEnum.Wanderer) {
-            selectComponent.SetSelected(false);
+            selectComponent.Deselect();
             SelectComponent boatSelectComponent = boatRider.selectedBoat.SelectComponent;
-            boatSelectComponent.SetSelected(true);
+            boatSelectComponent.Select();
             boatSelectComponent.SetClickable(false);
         }
         else {
@@ -371,7 +397,7 @@ public class Human : Creature
         if (currentStateEnum == HumanStateEnum.Wanderer) {
             SelectComponent boatSelectComponent = boatRider.selectedBoat.SelectComponent;
             boatSelectComponent.SetClickable(true);
-            boatSelectComponent.SetSelected(false);
+            boatSelectComponent.Deselect();
         }
         else {
             onHumanDeselected?.Invoke(this);

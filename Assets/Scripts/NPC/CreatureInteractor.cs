@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(EntityMovement))]
-public class EntityInteractor : MonoBehaviour
+public class CreatureInteractor : MonoBehaviour
 {
     public Building interactBuilding { get; private set; }
 

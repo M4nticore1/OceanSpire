@@ -24,8 +24,8 @@ public class ResourceWidget : MonoBehaviour
         EventBus.onMainStorageItemMaxAmountChanged += OnMainStorageItemMaxAmountChanged;
 
         if (itemData && itemData.ItemId == (int)ItemID.Population) {
-            CreaturesManager.onCitizenAdded += OnCitizenAdded;
-            CreaturesManager.onCitizenRemoved += OnCitizenRemoved;
+            CreaturesManager.onCitizenRegistered += OnCitizenAdded;
+            CreaturesManager.onCitizenUnregistered += OnCitizenRemoved;
             EventBus.onCitizenRevived += OnCitizenRevived;
             EventBus.onCitizenDied += OnCitizenDied;
         }
@@ -40,8 +40,8 @@ public class ResourceWidget : MonoBehaviour
 
         if (itemData.ItemId == (int)ItemID.Population) {
 
-            CreaturesManager.onCitizenAdded -= OnCitizenAdded;
-            CreaturesManager.onCitizenRemoved -= OnCitizenRemoved;
+            CreaturesManager.onCitizenRegistered -= OnCitizenAdded;
+            CreaturesManager.onCitizenUnregistered -= OnCitizenRemoved;
             EventBus.onCitizenRevived -= OnCitizenRevived;
             EventBus.onCitizenDied -= OnCitizenDied;
         }

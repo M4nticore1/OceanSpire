@@ -54,8 +54,18 @@ public class WandererState : HumanState
         boat.SetState(BoatStateEnum.MovingToDock);
     }
 
+    public override void OnRevived()
+    {
+
+    }
+
     public override void OnDied()
     {
 
+    }
+
+    public override void OnDisable()
+    {
+        CreaturesManager.instance.UnregisterWanderer(human);
     }
 }

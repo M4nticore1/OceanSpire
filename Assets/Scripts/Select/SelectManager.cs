@@ -13,6 +13,11 @@ public class SelectManager
 
     private SelectComponent selectedComponent;
 
+    public void Deselect()
+    {
+        selectedComponent.Deselect();
+    }
+
     public Building GetSelectedBuilding()
     {
         return selectedComponent.GetComponent<BuildingConstruction>().ownedBuilding;

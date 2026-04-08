@@ -84,14 +84,14 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
 
     }
 
-    public void OnCurrentWorkerAdded(EntityInteractor interactor)
+    public void OnCurrentWorkerAdded(CreatureInteractor interactor)
     {
         if (!ShouldStartWorking()) return;
 
         SetWorking(true);
     }
 
-    public void OnCurrentWorkerRemoved(EntityInteractor interactor)
+    public void OnCurrentWorkerRemoved(CreatureInteractor interactor)
     {
         if (ShouldStartWorking()) return;
 

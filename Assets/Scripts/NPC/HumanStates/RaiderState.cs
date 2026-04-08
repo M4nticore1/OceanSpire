@@ -90,6 +90,21 @@ public class RaiderState : HumanState
         boat.FloatAway(position);
     }
 
+    public override void OnRevived()
+    {
+
+    }
+
+    public override void OnDied()
+    {
+        EventBus.InvokeRaiderDied(human);
+    }
+
+    public override void OnDisable()
+    {
+        CreaturesManager.instance.UnregisterRaider(human);
+    }
+
     private void UpdateRaidAction()
     {
         if (ShouldAttackWorker()) {
@@ -131,7 +146,6 @@ public class RaiderState : HumanState
         Human firstWorker = building.currentWorkers[0].GetComponent<Human>();
         if (!firstWorker.Health.isAlive) return false;
 
-        Debug.Log("ShouldAttackWorker");
         return building.currentWorkers.Count > 0;
     }
 
@@ -140,12 +154,6 @@ public class RaiderState : HumanState
         Building building = human.CityNavigator.currentBuilding;
         if (building != human.Interactor.interactBuilding) return false;
 
-        Debug.Log("ShouldRaidBuilding");
         return true;
-    }
-
-    public override void OnDied()
-    {
-        EventBus.InvokeRaiderDied(human);
     }
 }

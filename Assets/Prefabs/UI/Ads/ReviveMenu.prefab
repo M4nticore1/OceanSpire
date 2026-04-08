@@ -313,7 +313,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -647,10 +647,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5409ef2fa21a8547b9b694cbf73c395, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReviveMenu
+  adsManager: {fileID: 0}
   slidePanel: {fileID: 5107377767998415567}
   citizenName: {fileID: 5334731953037953476}
   progressBar: {fileID: 5083365519163905556}
-  resmainingTime: {fileID: 6800010695267824108}
+  remainingTime: {fileID: 6800010695267824108}
+  reviveButton: {fileID: 1786287185265816303}
 --- !u!1 &3311523408796802107
 GameObject:
   m_ObjectHideFlags: 0
@@ -945,7 +947,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

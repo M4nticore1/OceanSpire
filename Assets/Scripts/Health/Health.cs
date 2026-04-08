@@ -1,5 +1,4 @@
 using System;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class Health : MonoBehaviour
@@ -7,16 +6,25 @@ public class Health : MonoBehaviour
     [SerializeField] private float maxHealth = 100f;
     public float MaxHealth => maxHealth;
 
+    [SerializeField] private float reviveHealthPercent = 0.1f;
+
     public float currentHealth { get; private set; } = 0;
     public bool isAlive { get; private set; } = true;
 
     public event Action onHealthChanged;
     public event Action onRevived;
-    public event Action onDeath;
+    public event Action onDied;
 
     public void Init(float currentHealth)
     {
         SetCurrentHealth(currentHealth);
+    }
+
+    public void Revive()
+    {
+        float health = maxHealth * reviveHealthPercent;
+        SetCurrentHealth(health);
+        OnRevived();
     }
 
     public void SetMaxHealh(float value)
@@ -39,24 +47,24 @@ public class Health : MonoBehaviour
         currentHealth = value;
 
         if (currentHealth <= 0 && isAlive) {
-            Death();
+            OnDied();
         }
         else if (!isAlive) {
-            Revive();
+            OnRevived();
         }
 
         onHealthChanged?.Invoke();
     }
 
-    private void Revive()
+    private void OnRevived()
     {
         isAlive = true;
         onRevived?.Invoke();
     }
 
-    private void Death()
+    private void OnDied()
     {
         isAlive = false;
-        onDeath?.Invoke();
+        onDied?.Invoke();
     }
 }

@@ -54,7 +54,7 @@ public class WandererAdmissionMenu : MonoBehaviour
 
         if (boat) {
             boat.SelectComponent.SetClickable(true);
-            boat.SelectComponent.SetSelected(false);
+            boat.SelectComponent.Deselect();
         }
 
         isOpened = false;

@@ -11,7 +11,7 @@ public class BuildingTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        EntityCityNavigator entity = other.GetComponent<EntityCityNavigator>();
+        CreatureCityNavigator entity = other.GetComponent<CreatureCityNavigator>();
 
         if (entity) {
             if (building)
@@ -23,7 +23,7 @@ public class BuildingTrigger : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        EntityCityNavigator entity = other.GetComponent<EntityCityNavigator>();
+        CreatureCityNavigator entity = other.GetComponent<CreatureCityNavigator>();
 
         if (entity) {
             if (building)
@@ -35,7 +35,7 @@ public class BuildingTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        EntityCityNavigator entity = other.GetComponent<EntityCityNavigator>();
+        CreatureCityNavigator entity = other.GetComponent<CreatureCityNavigator>();
 
         if (entity) {
             if (building)

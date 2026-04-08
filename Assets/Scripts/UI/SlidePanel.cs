@@ -37,8 +37,8 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
     [SerializeField] float openedBackgroundAlpha = 0.9f;
     [SerializeField] float alphaTransitionSpeed = 10f;
 
-    private bool isOpened = false;
-    private bool isMoving = false;
+    public bool isOpened { get; private set; } = false;
+    public bool isMoving { get; private set; } = false;
     private List<Transform> content = new List<Transform>();
 
     private Vector2 openedPosition;

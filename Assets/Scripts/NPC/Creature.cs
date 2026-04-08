@@ -27,8 +27,6 @@ public abstract class Creature : MonoBehaviour
 
     [SerializeField] private InstanceId instanceId;
 
-    public static event Action<Creature> onCreatureDeath;
-
     protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -42,12 +40,4 @@ public abstract class Creature : MonoBehaviour
 
         instanceId.Init(data.instanceId);
     }
-
-    protected void Death()
-    {
-        OnDeath();
-        onCreatureDeath?.Invoke(this);
-    }
-
-    protected abstract void OnDeath();
 }

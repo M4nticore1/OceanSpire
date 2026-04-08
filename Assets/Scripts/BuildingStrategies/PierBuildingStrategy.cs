@@ -8,17 +8,17 @@ public class PierBuildingStrategy : BuildingStrategy
 
     }
 
-    public override void OnEntityEnter(EntityCityNavigator navigator)
+    public override void OnEntityEnter(CreatureCityNavigator navigator)
     {
 
     }
 
-    public override void OnEntityExit(EntityCityNavigator navigator)
+    public override void OnEntityExit(CreatureCityNavigator navigator)
     {
 
     }
 
-    public override void OnSetInteractBuilding(EntityInteractor interactor)
+    public override void OnSetInteractBuilding(CreatureInteractor interactor)
     {
         if (!BoatsManager.Instance) {
             Debug.LogError("BoatManager is not on the scene.");
@@ -50,7 +50,7 @@ public class PierBuildingStrategy : BuildingStrategy
         }
     }
 
-    public override void OnRemoveInteractBuilding(EntityInteractor interactor)
+    public override void OnRemoveInteractBuilding(CreatureInteractor interactor)
     {
         BoatRider boatRider = TryGetBoatRider(interactor?.gameObject);
         if (!boatRider) return;
@@ -64,22 +64,22 @@ public class PierBuildingStrategy : BuildingStrategy
         }
     }
 
-    public override void OnStartInteracting(EntityInteractor interactor)
+    public override void OnStartInteracting(CreatureInteractor interactor)
     {
         interactor.StartCoroutine(WaitForBoatAndEnter(interactor));
     }
 
-    public override void OnStopInteracting(EntityInteractor interactor)
+    public override void OnStopInteracting(CreatureInteractor interactor)
     {
 
     }
 
-    public override void OnInteracting(EntityInteractor interactor)
+    public override void OnInteracting(CreatureInteractor interactor)
     {
         
     }
 
-    private IEnumerator WaitForBoatAndEnter(EntityInteractor interactor)
+    private IEnumerator WaitForBoatAndEnter(CreatureInteractor interactor)
     {
         BoatRider boatRider = TryGetBoatRider(interactor.gameObject);
         if (!boatRider) yield break;

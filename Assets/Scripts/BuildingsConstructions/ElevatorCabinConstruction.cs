@@ -7,10 +7,10 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public int FloorIndex => ((TowerBuilding)ownedBuilding).floorIndex;
     public int PlaceIndex => ((TowerBuilding)ownedBuilding).placeIndex;
 
-    public List<EntityCityNavigator> goingForWaitingPassengers { get; private set; } = new List<EntityCityNavigator>();
-    public List<EntityCityNavigator> waitingPassengers { get; private set; } = new List<EntityCityNavigator>();
-    public List<EntityCityNavigator> goingToRidingPassengers { get; private set; } = new List<EntityCityNavigator>();
-    public List<EntityCityNavigator> ridingPassengers { get; private set; } = new List<EntityCityNavigator>();
+    public List<CreatureCityNavigator> goingForWaitingPassengers { get; private set; } = new List<CreatureCityNavigator>();
+    public List<CreatureCityNavigator> waitingPassengers { get; private set; } = new List<CreatureCityNavigator>();
+    public List<CreatureCityNavigator> goingToRidingPassengers { get; private set; } = new List<CreatureCityNavigator>();
+    public List<CreatureCityNavigator> ridingPassengers { get; private set; } = new List<CreatureCityNavigator>();
 
     public bool isMoving { get; private set; } = false;
     public int startFloorIndex { get; private set; } = 0;
@@ -97,12 +97,12 @@ public class ElevatorCabinConstruction : BuildingConstruction
         }
     }
 
-    public void AddGoingToWaitingPassenger(EntityCityNavigator passenger)
+    public void AddGoingToWaitingPassenger(CreatureCityNavigator passenger)
     {
         goingForWaitingPassengers.Add(passenger);
     }
 
-    public void AddWaitingPassenger(EntityCityNavigator passenger)
+    public void AddWaitingPassenger(CreatureCityNavigator passenger)
     {
         waitingPassengers.Add(passenger);
         if (isMoving) {
@@ -114,33 +114,33 @@ public class ElevatorCabinConstruction : BuildingConstruction
         }
     }
 
-    public void AddGoingToRidingPassenger(EntityCityNavigator passenger)
+    public void AddGoingToRidingPassenger(CreatureCityNavigator passenger)
     {
         goingToRidingPassengers.Add(passenger);
         RemoveMovingToFloorTimer();
     }
 
-    public void AddRidingPassenger(EntityCityNavigator passenger)
+    public void AddRidingPassenger(CreatureCityNavigator passenger)
     {
         OnAddedRider(passenger);
     }
 
-    public void RemoveGoingToWaitingPassenger(EntityCityNavigator passenger)
+    public void RemoveGoingToWaitingPassenger(CreatureCityNavigator passenger)
     {
         goingForWaitingPassengers.Remove(passenger);
     }
 
-    public void RemoveWaitingPassenger(EntityCityNavigator passenger)
+    public void RemoveWaitingPassenger(CreatureCityNavigator passenger)
     {
         waitingPassengers.Remove(passenger);
     }
 
-    public void RemoveGoingToRidingPassenger(EntityCityNavigator passenger)
+    public void RemoveGoingToRidingPassenger(CreatureCityNavigator passenger)
     {
         goingToRidingPassengers.Remove(passenger);
     }
 
-    public void RemoveRidingPassenger(EntityCityNavigator passenger)
+    public void RemoveRidingPassenger(CreatureCityNavigator passenger)
     {
         OnRemovedRider(passenger);
     }
@@ -148,7 +148,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void UpdateWaitingPassengers()
     {
         for (int i = waitingPassengers.Count - 1; i >= 0; i--) {
-            EntityCityNavigator navigator = waitingPassengers[i];
+            CreatureCityNavigator navigator = waitingPassengers[i];
             int floor = navigator.floorIndex;
             if (!CanMoveToFloor(floor))
                 RemoveWaitingPassenger(navigator);
@@ -158,7 +158,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void UnloadRidingPassengers()
     {
         for (int i = ridingPassengers.Count - 1; i >= 0; i--) {
-            EntityCityNavigator passenger = ridingPassengers[i];
+            CreatureCityNavigator passenger = ridingPassengers[i];
             passenger.SetState(FollowingPathState.GoingToWaiting);
         }
     }
@@ -184,13 +184,13 @@ public class ElevatorCabinConstruction : BuildingConstruction
         return true;
     }
 
-    private void OnAddedRider(EntityCityNavigator passenger)
+    private void OnAddedRider(CreatureCityNavigator passenger)
     {
         ridingPassengers.Add(passenger);
         StartMovingToFloorTimer();
     }
 
-    private void OnRemovedRider(EntityCityNavigator passenger)
+    private void OnRemovedRider(CreatureCityNavigator passenger)
     {
         ridingPassengers.Remove(passenger);
         if (ridingPassengers.Count > 0)

@@ -15,9 +15,9 @@ public abstract class Building : MonoBehaviour
     private bool isWorking = false;
     public int LevelIndex => levelComponent ? levelComponent.LevelIndex : GetComponent<LevelComponent>().LevelIndex;
 
-    public List<EntityCityNavigator> enteredEntities { get; private set; } = new List<EntityCityNavigator>();
-    public List<EntityInteractor> workers { get; private set; } = new List<EntityInteractor>();
-    public List<EntityInteractor> currentWorkers { get; private set; } = new List<EntityInteractor>();
+    public List<CreatureCityNavigator> enteredEntities { get; private set; } = new List<CreatureCityNavigator>();
+    public List<CreatureInteractor> workers { get; private set; } = new List<CreatureInteractor>();
+    public List<CreatureInteractor> currentWorkers { get; private set; } = new List<CreatureInteractor>();
 
     public BuildingConstruction spawnedConstruction { get; private set; } = null;
 
@@ -33,11 +33,11 @@ public abstract class Building : MonoBehaviour
 
     public const float DemolishionResourcesRefundPercent = 0.2f;
 
-    public event System.Action onBuildingInited;
-    public event System.Action onBuildingStartWorking;
-    public event System.Action onBuildingStopWorking;
-    public event System.Action<EntityCityNavigator> onEntityEnterBuilding;
-    public event System.Action<EntityCityNavigator> onEntityExitBuilding;
+    public event System.Action onInited;
+    public event System.Action onStartWorking;
+    public event System.Action onStopWorking;
+    public event System.Action<CreatureCityNavigator> onEnterBuilding;
+    public event System.Action<CreatureCityNavigator> onExitBuilding;
 
     protected virtual void Awake()
     {
@@ -63,7 +63,7 @@ public abstract class Building : MonoBehaviour
         OnInit(data);
         UpdateConstruction();
 
-        onBuildingInited?.Invoke();
+        onInited?.Invoke();
         EventBus.InvokeBuildingInited(this);
 
         InvokeBuildingInited();
@@ -101,36 +101,36 @@ public abstract class Building : MonoBehaviour
     }
 
     // Residents Management
-    public void EnterBuilding(EntityCityNavigator navigator)
+    public void EnterBuilding(CreatureCityNavigator navigator)
     {
         enteredEntities.Add(navigator);
-        onEntityEnterBuilding?.Invoke(navigator);
+        onEnterBuilding?.Invoke(navigator);
         strategy.OnEntityEnter(navigator);
         InvokeEnterBuilding(navigator);
     }
 
-    public void ExitBuilding(EntityCityNavigator navigator)
+    public void ExitBuilding(CreatureCityNavigator navigator)
     {
         enteredEntities.Remove(navigator);
-        onEntityExitBuilding?.Invoke(navigator);
+        onExitBuilding?.Invoke(navigator);
         strategy.OnEntityExit(navigator);
         InvokeExitBuilding(navigator);
     }
 
     // Workers
-    public void AddWorker(EntityInteractor interactor)
+    public void AddWorker(CreatureInteractor interactor)
     {
         workers.Add(interactor);
         strategy.OnSetInteractBuilding(interactor);
     }
 
-    public void RemoveWorker(EntityInteractor interactor)
+    public void RemoveWorker(CreatureInteractor interactor)
     {
         workers.Remove(interactor);
         strategy.OnRemoveInteractBuilding(interactor);
     }
 
-    public void AddCurrentWorker(EntityInteractor interactor)
+    public void AddCurrentWorker(CreatureInteractor interactor)
     {
         currentWorkers.Add(interactor);
 
@@ -141,7 +141,7 @@ public abstract class Building : MonoBehaviour
         InvokeCurrentWorkerAdded(interactor);
     }
 
-    public void RemoveCurrentWorker(EntityInteractor interactor)
+    public void RemoveCurrentWorker(CreatureInteractor interactor)
     {
         currentWorkers.Remove(interactor);
 
@@ -184,28 +184,28 @@ public abstract class Building : MonoBehaviour
     }
 
     // Events
-    private void InvokeEnterBuilding(EntityCityNavigator navigator)
+    private void InvokeEnterBuilding(CreatureCityNavigator navigator)
     {
         foreach (var listener in GetComponentsInChildren<IEnterExitListener>()) {
             listener.OnEnterBuilding(navigator);
         }
     }
 
-    private void InvokeExitBuilding(EntityCityNavigator navigator)
+    private void InvokeExitBuilding(CreatureCityNavigator navigator)
     {
         foreach (var listener in GetComponentsInChildren<IEnterExitListener>()) {
             listener.OnExitBuilding(navigator);
         }
     }
 
-    private void InvokeCurrentWorkerAdded(EntityInteractor interactor)
+    private void InvokeCurrentWorkerAdded(CreatureInteractor interactor)
     {
         foreach (var listener in GetComponentsInChildren<ICurrentWorkersListener>()) {
             listener.OnCurrentWorkerAdded(interactor);
         }
     }
 
-    private void InvokeCurrentWorkerRemoved(EntityInteractor interactor)
+    private void InvokeCurrentWorkerRemoved(CreatureInteractor interactor)
     {
         foreach (var listener in GetComponentsInChildren<ICurrentWorkersListener>()) {
             listener.OnCurrentWorkerRemoved(interactor);
@@ -218,15 +218,13 @@ public abstract class Building : MonoBehaviour
         if (isWorking) return;
 
         isWorking = true;
-        onBuildingStartWorking?.Invoke();
+        onStartWorking?.Invoke();
     }
 
     private void StopWorking()
     {
-        if (!isWorking) return;
-
         isWorking = false;
-        onBuildingStopWorking?.Invoke();
+        onStopWorking?.Invoke();
     }
 
     // Construction

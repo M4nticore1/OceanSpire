@@ -77,7 +77,7 @@ public class BoatUnloadingState : BoatState
 
     private bool ShouldExit()
     {
-        EntityInteractor interactor = boat.currentRider.GetComponent<EntityInteractor>();
+        CreatureInteractor interactor = boat.currentRider.GetComponent<CreatureInteractor>();
         return !interactor.interactBuilding || BoatsManager.Instance.GetBoatByInteractorIndex(interactor.workerIndex) != boat;
     }
 }

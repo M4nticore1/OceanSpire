@@ -23,13 +23,13 @@ public class Attack : MonoBehaviour
     private void OnEnable()
     {
         movement.onStopped += OnStopped;
-        health.onDeath += OnDied;
+        health.onDied += OnDied;
     }
 
     private void OnDisable()
     {
         movement.onStopped -= OnStopped;
-        health.onDeath -= OnDied;
+        health.onDied -= OnDied;
     }
 
     private void Update()
@@ -44,7 +44,6 @@ public class Attack : MonoBehaviour
 
     public void SetTarget(Attack target)
     {
-        Debug.Log("Set target");
         currentTarget = target;
         target.HandleBecomeTarget(this);
     }
@@ -76,7 +75,6 @@ public class Attack : MonoBehaviour
 
         health.RemoveHealth(damage);
         currentAttackTime = 0f;
-        Debug.Log(health.currentHealth);
     }
 
     public void HandleBecomeTarget(Attack target)
@@ -106,7 +104,6 @@ public class Attack : MonoBehaviour
 
     private void StopAtacking()
     {
-        Debug.Log("StopAttacking");
         isAtacking = false;
         onStoppedAttacking?.Invoke();
     }

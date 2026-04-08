@@ -68,15 +68,24 @@ public class CitizenState : HumanState
         human.BoatRider.selectedBoat.SetState(BoatStateEnum.FindingLoot);
     }
 
+    public override void OnRevived()
+    {
+        EventBus.InvokeCitizenRevived(human);
+    }
+
     public override void OnDied()
     {
-        EntityInteractor interactor = human.Interactor;
-        Building interactBuilding = interactor.interactBuilding;
+        CreatureInteractor interactor = human.Interactor;
 
         if (interactor) {
             interactor.RemoveInteractBuilding();
         }
 
         EventBus.InvokeCitizenDied(human);
+    }
+
+    public override void OnDisable()
+    {
+        CreaturesManager.instance.UnregisterCitizen(human);
     }
 }

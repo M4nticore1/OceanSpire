@@ -14,7 +14,7 @@ public enum FollowingPathState
 }
 
 [RequireComponent(typeof(EntityMovement))]
-public class EntityCityNavigator : MonoBehaviour
+public class CreatureCityNavigator : MonoBehaviour
 {
     private EntityMovement movement;
 
