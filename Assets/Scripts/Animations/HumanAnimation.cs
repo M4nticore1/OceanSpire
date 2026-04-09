@@ -7,8 +7,17 @@ public class HumanAnimation : MonoBehaviour
 
     private void OnEnable()
     {
+        human.onStartedIdle += OnStartedIdle;
+        human.onStoppedIdle += OnStoppedIdle;
+
         human.Movement.onStartedMoving += OnStartedMoving;
         human.Movement.onStoppedMoving += OnStoppedMoving;
+
+        human.BoatRider.selectedBoat.Movement.onStartedMoving += OnStartedFloating;
+        human.BoatRider.selectedBoat.Movement.onStartedMoving += OnStoppedFloating;
+
+        human.Interactor.onStartedInteracting += OnStartedWorking;
+        human.Interactor.onStoppedInteracting += OnStoppedWorking;
 
         human.Attack.onStartedAttacking += OnStartedAttacking;
         human.Attack.onStoppedAttacking += OnStoppedAttacking;
@@ -19,14 +28,33 @@ public class HumanAnimation : MonoBehaviour
 
     private void OnDisable()
     {
+        human.onStartedIdle -= OnStartedIdle;
+        human.onStoppedIdle -= OnStoppedIdle;
+
         human.Movement.onStartedMoving -= OnStartedMoving;
         human.Movement.onStoppedMoving -= OnStoppedMoving;
+
+        human.BoatRider.selectedBoat.Movement.onStartedMoving -= OnStartedFloating;
+        human.BoatRider.selectedBoat.Movement.onStartedMoving -= OnStoppedFloating;
+
+        human.Interactor.onStartedInteracting -= OnStartedWorking;
+        human.Interactor.onStoppedInteracting -= OnStoppedWorking;
 
         human.Attack.onStartedAttacking -= OnStartedAttacking;
         human.Attack.onStoppedAttacking -= OnStoppedAttacking;
 
         human.Health.onRevived -= OnRevived;
         human.Health.onDied -= OnDied;
+    }
+
+    private void OnStartedIdle()
+    {
+        animator.SetBool("isIdle", true);
+    }
+
+    private void OnStoppedIdle()
+    {
+        animator.SetBool("isIdle", false);
     }
 
     private void OnStartedMoving()
@@ -37,6 +65,26 @@ public class HumanAnimation : MonoBehaviour
     private void OnStoppedMoving()
     {
         animator.SetBool("isMoving", false);
+    }
+
+    private void OnStartedFloating()
+    {
+        animator.SetBool("isFloating", true);
+    }
+
+    private void OnStoppedFloating()
+    {
+        animator.SetBool("isFloating", false);
+    }
+
+    private void OnStartedWorking()
+    {
+        animator.SetBool("isWorking", true);
+    }
+
+    private void OnStoppedWorking()
+    {
+        animator.SetBool("isWorking", false);
     }
 
     private void OnStartedAttacking()

@@ -12,8 +12,8 @@ public class CreatureInteractor : MonoBehaviour
 
     public event Action<Building> onSetedInteractBuilding;
     public event Action<Building> onRemovedInteractBuilding;
-    public event Action<Building> onStartedInteracting;
-    public event Action<Building> onStoppedInteracting;
+    public event Action onStartedInteracting;
+    public event Action onStoppedInteracting;
 
     private void Update()
     {
@@ -40,7 +40,7 @@ public class CreatureInteractor : MonoBehaviour
     {
         interactBuilding.AddCurrentWorker(this);
         isInteracting = true;
-        onStartedInteracting?.Invoke(interactBuilding);
+        onStartedInteracting?.Invoke();
     }
 
     // Events
@@ -85,7 +85,7 @@ public class CreatureInteractor : MonoBehaviour
 
         interactBuilding.RemoveCurrentWorker(this);
         isInteracting = false;
-        onStoppedInteracting?.Invoke(interactBuilding);
+        onStoppedInteracting?.Invoke();
     }
 
     private void Interacting()

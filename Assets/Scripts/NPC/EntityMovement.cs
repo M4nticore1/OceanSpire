@@ -7,7 +7,7 @@ public class EntityMovement : MonoBehaviour
     [SerializeField] private NavMeshAgent navAgent;
     public NavMeshAgent NavAgent => navAgent;
 
-    private bool isMoving = false;
+    public bool isMoving { get; private set; } = false;
 
     public event Action onStartedMoving;
     public event Action onStoppedMoving;

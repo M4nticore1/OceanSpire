@@ -14,7 +14,7 @@ public class Attack : MonoBehaviour
 
     private Attack currentTarget;
     private List<Attack> currentAttackers = new List<Attack>();
-    private bool isAtacking = false;
+    public bool isAttacking { get; private set; } = false;
 
     public event Action onStartedAttacking;
     public event Action onStoppedAttacking;
@@ -33,7 +33,7 @@ public class Attack : MonoBehaviour
 
     private void Update()
     {
-        if (!isAtacking) return;
+        if (!isAttacking) return;
 
         currentAttackTime += Time.deltaTime;
         if (currentAttackTime < attackFrequency) return;
@@ -97,13 +97,13 @@ public class Attack : MonoBehaviour
 
     private void StartAtacking()
     {
-        isAtacking = true;
+        isAttacking = true;
         onStartedAttacking?.Invoke();
     }
 
     private void StopAtacking()
     {
-        isAtacking = false;
+        isAttacking = false;
         onStoppedAttacking?.Invoke();
     }
 

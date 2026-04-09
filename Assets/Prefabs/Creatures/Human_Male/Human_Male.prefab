@@ -18,9 +18,11 @@ GameObject:
   - component: {fileID: -7493649843608556168}
   - component: {fileID: 8364959695361298754}
   - component: {fileID: 6196963818731621145}
+  - component: {fileID: 3231092492673021181}
   - component: {fileID: 1338494420481879648}
   - component: {fileID: 2791892867924478363}
   - component: {fileID: 1784173792497504951}
+  - component: {fileID: 3695950352916414697}
   m_Layer: 0
   m_Name: Human_Male
   m_TagString: Untagged
@@ -60,6 +62,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a9c0911e75b5854cb6088ce4f6267e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Human
+  agent: {fileID: 1338494420481879648}
+  movement: {fileID: -7493649843608556168}
   creatureData: {fileID: 11400000, guid: 84ce6b77893601742bd80f0644c2bc89, type: 2}
   instanceId: {fileID: 6196963818731621145}
   health: {fileID: 4098557255172134659}
@@ -179,6 +183,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+--- !u!114 &3231092492673021181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 662d8f8f9635aa94896a442a6b11e31e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HumanAnimation
+  animator: {fileID: 3695950352916414697}
+  human: {fileID: 9140235139351627301}
 --- !u!195 &1338494420481879648
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -251,6 +269,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &3695950352916414697
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 44fa7cbc1c352b844a3aeec4cd544cb8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &585667398127166048
 PrefabInstance:
   m_ObjectHideFlags: 0

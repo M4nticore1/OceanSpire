@@ -111,7 +111,6 @@ public class Human : Creature
         cityNavigator.onReachedTarget += OnReachedTargetBuilding;
 
         interactor.onRemovedInteractBuilding += OnRemovedInteractBuilding;
-        interactor.onStoppedInteracting += OnStopInteracting;
 
         boatRider.onEnteredBoat += OnEnteredBoat;
         boatRider.onExitedBoat += OnExitedBoat;
@@ -137,7 +136,6 @@ public class Human : Creature
         cityNavigator.onReachedTarget -= OnReachedTargetBuilding;
 
         interactor.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
-        interactor.onStoppedInteracting -= OnStopInteracting;
 
         boatRider.onEnteredBoat -= OnEnteredBoat;
         boatRider.onExitedBoat -= OnExitedBoat;
@@ -164,10 +162,8 @@ public class Human : Creature
         }
     }
 
-    public override void Init(CreatureEntry data)
+    protected override void OnInit(CreatureEntry data)
     {
-        base.Init(data);
-
         HumanEntry humanData = data as HumanEntry;
         
         SetStatus(humanData.status);
@@ -254,6 +250,17 @@ public class Human : Creature
         onWandererRejected?.Invoke(this);
     }
 
+    protected override bool ShouldStartIdle()
+    {
+        if (movement.isMoving) return false;
+        if (interactor.isInteracting) return false;
+        if (attack.isAttacking) return false;
+        if (!health.isAlive) return false;
+
+        return true;
+    }
+
+    // Health
     private void OnRevived()
     {
         currentDeadTime = 0f;
@@ -297,11 +304,6 @@ public class Human : Creature
     private void OnRemovedInteractBuilding(Building building)
     {
         cityNavigator.HandleInteractBuildingRemoved();
-    }
-
-    private void OnStopInteracting(Building building)
-    {
-
     }
 
     // Boat
