@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
-    [SerializeField] private EntityMovement movement;
+    [SerializeField] private Movement movement;
 
     [SerializeField] private Health health;
 

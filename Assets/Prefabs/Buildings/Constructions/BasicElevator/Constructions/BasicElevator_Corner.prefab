@@ -204,6 +204,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicElevator_Corner
       objectReference: {fileID: 0}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.data[0].waypoints.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.data[1].waypoints.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.data[0].waypoints.Array.data[0].transform
+      value: 
+      objectReference: {fileID: 5722225723651089327}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.data[1].waypoints.Array.data[0].transform
+      value: 
+      objectReference: {fileID: 4789150118001354578}
     - target: {fileID: 8712712631989154949, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Mesh
       value: 

@@ -67,7 +67,7 @@ public class ReviveMenu : MonoBehaviour
 
     private void OnHumanSelected(Human human)
     {
-        if (human.currentStateEnum != HumanStateEnum.Citizen) return;
+        if (human.currentStatusEnum != HumanStatusEnum.Citizen) return;
         if (human.Health.isAlive) return;
 
         selectedHuman = human;

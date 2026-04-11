@@ -205,6 +205,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.data[0].waypoints.Array.data[0].transform
+      value: 
+      objectReference: {fileID: 449927898149514644}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.data[0].waypoints.Array.data[1].transform
+      value: 
+      objectReference: {fileID: 2712345805980772558}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: buildingInteractions.Array.data[0].waypoints.Array.data[0].actionTime
       value: 10
       objectReference: {fileID: 0}

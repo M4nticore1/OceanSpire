@@ -50,8 +50,8 @@ public class Boat : MonoBehaviour
     // Components
     [SerializeField] private BoatLootHandler lootHandler;
 
-    [SerializeField] private EntityMovement movement;
-    public EntityMovement Movement => movement;
+    [SerializeField] private Movement movement;
+    public Movement Movement => movement;
 
     [SerializeField] private Inventory inventory;
     public Inventory Inventory => inventory;
@@ -149,7 +149,7 @@ public class Boat : MonoBehaviour
         currentRider = rider;
 
         Human human = rider.GetComponent<Human>();
-        if (human.currentStateEnum == HumanStateEnum.Wanderer) {
+        if (human.currentStatusEnum == HumanStatusEnum.Wanderer) {
             selectComponent.SetClickable(false);
         }
 

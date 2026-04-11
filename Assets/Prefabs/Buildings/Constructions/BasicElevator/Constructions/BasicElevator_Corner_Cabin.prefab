@@ -208,8 +208,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicElevator_Corner_Cabin
       objectReference: {fileID: 0}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.data[0].waypoints.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.data[1].waypoints.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.data[0].waypoints.Array.data[0].transform
+      value: 
+      objectReference: {fileID: 2160192589345684502}
+    - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingInteractions.Array.data[1].waypoints.Array.data[0].transform
+      value: 
+      objectReference: {fileID: 3299158157585854142}
     m_RemovedComponents:
     - {fileID: -7796214933308666227, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+    - {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
     m_RemovedGameObjects:
     - {fileID: 1521390348430645779, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
     m_AddedGameObjects:
@@ -244,7 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbe0ebc6621fde54db89153b730e38ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ElevatorCabinConstruction
-  selectComponent: {fileID: 0}
+  selectComponent: {fileID: 8175279948602501505}
   buildingInteriors: []
   buildingInteractions:
   - waypoints:
@@ -258,3 +279,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
   m_PrefabInstance: {fileID: 5227137252125454741}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8175279948602501505 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4179033065990215700, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+  m_PrefabInstance: {fileID: 5227137252125454741}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225444294769174946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectComponent

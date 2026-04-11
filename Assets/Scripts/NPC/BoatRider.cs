@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class BoatRider : MonoBehaviour
 {
-    [SerializeField] private EntityMovement movement;
-
     public Boat selectedBoat;
 
     public bool isRidingOnBoat { get; private set; } = false;
@@ -17,16 +15,8 @@ public class BoatRider : MonoBehaviour
 
     public event Action<Boat> onEnteredBoat;
     public event Action<Boat> onExitedBoat;
-
-    private void OnEnable()
-    {
-        movement.onStoppedMoving += OnMovementStopped;
-    }
-
-    private void OnDisable()
-    {
-        movement.onStoppedMoving -= OnMovementStopped;
-    }
+    public event Action onStartedFloating;
+    public event Action onStoppedFloating;
 
     public void StartEnteringBoat()
     {
@@ -55,7 +45,7 @@ public class BoatRider : MonoBehaviour
     public void HandleBoatSetedIdle()
     {
         Human human = GetComponent<Human>();
-        if (human.currentStateEnum == HumanStateEnum.Wanderer) return;
+        if (human.currentStatusEnum == HumanStatusEnum.Wanderer) return;
 
         StartExitingBoat();
     }
@@ -103,21 +93,21 @@ public class BoatRider : MonoBehaviour
 
     public void StartMovingToBoat()
     {
-        Vector3 position = selectedBoat.dockPoint.EntraceTransform.position;
-        movement.TryMoveTo(position);
         isMovingToBoat = true;
     }
 
-    private void StopMovingToDock()
+    public void StopMovingToBoat()
     {
         isMovingToBoat = false;
     }
 
-    private void OnMovementStopped()
+    public void HandleBoatStartedMoving()
     {
-        if (!isMovingToBoat) return;
+        onStartedFloating?.Invoke();
+    }
 
-        StartEnteringBoat();
-        StopMovingToDock();
+    public void HandleBoatStoppedMoving()
+    {
+        onStoppedFloating?.Invoke();
     }
 }

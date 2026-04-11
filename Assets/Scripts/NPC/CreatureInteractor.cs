@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(EntityMovement))]
+[RequireComponent(typeof(Movement))]
 public class CreatureInteractor : MonoBehaviour
 {
     public Building interactBuilding { get; private set; }
@@ -10,8 +10,8 @@ public class CreatureInteractor : MonoBehaviour
     public int workerIndex { get; private set; } = 0;
     public int raiderIndex { get; private set; } = 0;
 
-    public event Action<Building> onSetedInteractBuilding;
-    public event Action<Building> onRemovedInteractBuilding;
+    public event Action onSetedInteractBuilding;
+    public event Action onRemovedInteractBuilding;
     public event Action onStartedInteracting;
     public event Action onStoppedInteracting;
 
@@ -25,6 +25,7 @@ public class CreatureInteractor : MonoBehaviour
     public void SetInteractBuilding(Building building)
     {
         interactBuilding = building;
+        onSetedInteractBuilding?.Invoke();
     }
 
     public void RemoveInteractBuilding()
@@ -34,6 +35,7 @@ public class CreatureInteractor : MonoBehaviour
         }
 
         interactBuilding = null;
+        onRemovedInteractBuilding?.Invoke();
     }
 
     public void StartInteracting()

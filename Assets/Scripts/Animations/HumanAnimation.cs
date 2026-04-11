@@ -13,11 +13,11 @@ public class HumanAnimation : MonoBehaviour
         human.Movement.onStartedMoving += OnStartedMoving;
         human.Movement.onStoppedMoving += OnStoppedMoving;
 
-        human.BoatRider.selectedBoat.Movement.onStartedMoving += OnStartedFloating;
-        human.BoatRider.selectedBoat.Movement.onStartedMoving += OnStoppedFloating;
+        human.BoatRider.onStartedFloating += OnStartedFloating;
+        human.BoatRider.onStoppedFloating += OnStoppedFloating;
 
-        human.Interactor.onStartedInteracting += OnStartedWorking;
-        human.Interactor.onStoppedInteracting += OnStoppedWorking;
+        human.Interactor.onStartedInteracting += OnStartedInteracting;
+        human.Interactor.onStoppedInteracting += OnStoppedInteracting;
 
         human.Attack.onStartedAttacking += OnStartedAttacking;
         human.Attack.onStoppedAttacking += OnStoppedAttacking;
@@ -34,11 +34,11 @@ public class HumanAnimation : MonoBehaviour
         human.Movement.onStartedMoving -= OnStartedMoving;
         human.Movement.onStoppedMoving -= OnStoppedMoving;
 
-        human.BoatRider.selectedBoat.Movement.onStartedMoving -= OnStartedFloating;
-        human.BoatRider.selectedBoat.Movement.onStartedMoving -= OnStoppedFloating;
+        human.Movement.onStartedMoving -= OnStartedMoving;
+        human.Movement.onStoppedMoving -= OnStoppedMoving;
 
-        human.Interactor.onStartedInteracting -= OnStartedWorking;
-        human.Interactor.onStoppedInteracting -= OnStoppedWorking;
+        human.Interactor.onStartedInteracting -= OnStartedInteracting;
+        human.Interactor.onStoppedInteracting -= OnStoppedInteracting;
 
         human.Attack.onStartedAttacking -= OnStartedAttacking;
         human.Attack.onStoppedAttacking -= OnStoppedAttacking;
@@ -59,12 +59,26 @@ public class HumanAnimation : MonoBehaviour
 
     private void OnStartedMoving()
     {
-        animator.SetBool("isMoving", true);
+        switch (human.Movement.currentMovementMethod) {
+            case MovementMethod.Walk:
+                animator.SetBool("isWalking", true);
+                break;
+            case MovementMethod.Run:
+                animator.SetBool("isRunning", true);
+                break;
+        }
     }
 
     private void OnStoppedMoving()
     {
-        animator.SetBool("isMoving", false);
+        switch (human.Movement.currentMovementMethod) {
+            case MovementMethod.Walk:
+                animator.SetBool("isWalking", false);
+                break;
+            case MovementMethod.Run:
+                animator.SetBool("isRunning", false);
+                break;
+        }
     }
 
     private void OnStartedFloating()
@@ -77,12 +91,19 @@ public class HumanAnimation : MonoBehaviour
         animator.SetBool("isFloating", false);
     }
 
-    private void OnStartedWorking()
+    private void OnStartedInteracting()
     {
-        animator.SetBool("isWorking", true);
+        switch (human.currentStatusEnum) {
+            case HumanStatusEnum.Citizen:
+                animator.SetBool("isWorking", true);
+                break;
+            case HumanStatusEnum.Raider:
+                animator.SetBool("isRaiding", true);
+                break;
+        }
     }
 
-    private void OnStoppedWorking()
+    private void OnStoppedInteracting()
     {
         animator.SetBool("isWorking", false);
     }

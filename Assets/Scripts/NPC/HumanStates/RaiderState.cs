@@ -15,6 +15,8 @@ public class RaiderState : HumanState
     public override void Enter()
     {
         CreaturesManager.instance.RegisterRaider(human);
+
+        human.Movement.SetMovementMethod(MovementMethod.Run);
     }
 
     public override void Exit()
@@ -72,12 +74,7 @@ public class RaiderState : HumanState
 
     public override void OnEnteredBuilding(Building building)
     {
-        if (isFinishedRaiding) {
-            if (building == human.CityNavigator.targetBuilding) {
-                human.MoveToBoat();
-            }
-        }
-        else if (building = human.Interactor.interactBuilding) {
+        if (!isFinishedRaiding && building == human.Interactor.interactBuilding) {
             UpdateRaidAction();
         }
     }

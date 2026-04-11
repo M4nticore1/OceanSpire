@@ -2,10 +2,22 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EntityMovement : MonoBehaviour
+public enum MovementMethod
+{
+    Walk,
+    Run
+}
+
+public class Movement : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent navAgent;
     public NavMeshAgent NavAgent => navAgent;
+
+    public MovementMethod currentMovementMethod { get; private set; }
+
+    [Header("Speed")]
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private float runSpeed;
 
     public bool isMoving { get; private set; } = false;
 
@@ -32,8 +44,11 @@ public class EntityMovement : MonoBehaviour
         navAgent.isStopped = false;
 
         if (navAgent.SetDestination(position)) {
-            onStartedMoving?.Invoke();
-            isMoving = true;
+            if (!isMoving) {
+                isMoving = true;
+                onStartedMoving?.Invoke();
+            }
+
             return true;
         }
 
@@ -53,20 +68,34 @@ public class EntityMovement : MonoBehaviour
         onStoppedMoving?.Invoke();
     }
 
+    public void SetMovementMethod(MovementMethod method)
+    {
+        currentMovementMethod = method;
+
+        switch (method) {
+            case MovementMethod.Walk:
+                navAgent.speed = walkSpeed;
+                break;
+            case MovementMethod.Run:
+                navAgent.speed = runSpeed;
+                break;
+        }
+    }
+
     public void SetAgentEnabled(bool enabled)
     {
         navAgent.enabled = enabled;
-    }
-
-    private bool CanMove()
-    {
-        return navAgent.enabled;
     }
 
     private void OnReachedPath()
     {
         StopMoving();
         onReachedPath?.Invoke();
+    }
+
+    private bool CanMove()
+    {
+        return navAgent.enabled;
     }
 
     private bool CheckDistancePathPosition()

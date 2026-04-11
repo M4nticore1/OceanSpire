@@ -9,6 +9,8 @@ public class CitizenState : HumanState
     public override void Enter()
     {
         CreaturesManager.instance.RegisterCitizen(human);
+
+        human.Movement.SetMovementMethod(MovementMethod.Walk);
     }
 
     public override void Exit()

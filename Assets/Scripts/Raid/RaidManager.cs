@@ -137,7 +137,7 @@ public class RaidManager : MonoBehaviour
 
     private void OnEnteredBoat(Human human)
     {
-        RaiderState raiderState = human.currentState as RaiderState;
+        RaiderState raiderState = human.currentStatus as RaiderState;
         if (raiderState == null) return;
 
         if (!raiderState.isFinishedRaiding) return;
@@ -151,7 +151,7 @@ public class RaidManager : MonoBehaviour
 
     private void OnExitedBoat(Human human)
     {
-        if (human.currentStateEnum != HumanStateEnum.Raider) return;
+        if (human.currentStatusEnum != HumanStatusEnum.Raider) return;
 
         landedRaidersCount++;
 
@@ -175,7 +175,7 @@ public class RaidManager : MonoBehaviour
         int id = (int)CreatureIdEnum.Human;
         float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
 
-        HumanEntry data = new HumanEntry(id, HumanStateEnum.Raider, position, rotation.eulerAngles, health, boatInstanceId, isRidingOnBoat);
+        HumanEntry data = new HumanEntry(id, HumanStatusEnum.Raider, position, rotation.eulerAngles, health, boatInstanceId, isRidingOnBoat);
         Human human = CreatureFactory.CreateHuman(data);
 
         return human;

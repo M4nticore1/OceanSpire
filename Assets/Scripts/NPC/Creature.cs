@@ -21,8 +21,8 @@ public abstract class Creature : MonoBehaviour
 {
     [SerializeField] protected NavMeshAgent agent;
 
-    [SerializeField] protected EntityMovement movement;
-    public EntityMovement Movement => movement;
+    [SerializeField] protected Movement movement;
+    public Movement Movement => movement;
 
     [SerializeField] protected CreatureData creatureData;
     public CreatureData CreatureData => creatureData;
@@ -33,6 +33,18 @@ public abstract class Creature : MonoBehaviour
 
     public event Action onStartedIdle;
     public event Action onStoppedIdle;
+
+    protected virtual void OnEnable()
+    {
+        movement.onStartedMoving += OnStartedMoving;
+        movement.onStoppedMoving += OnStoppedMoving;
+    }
+
+    protected virtual void OnDisable()
+    {
+        movement.onStartedMoving -= OnStartedMoving;
+        movement.onStoppedMoving -= OnStoppedMoving;
+    }
 
     public void Init(CreatureEntry data)
     {
@@ -49,7 +61,7 @@ public abstract class Creature : MonoBehaviour
     protected abstract bool ShouldStartIdle();
 
     // Idle
-    private void AssignIdle()
+    protected void AssignIdle()
     {
         if (ShouldStartIdle()) {
             StartIdle();
@@ -59,15 +71,26 @@ public abstract class Creature : MonoBehaviour
         }
     }
 
-    private void StartIdle()
+    protected void StartIdle()
     {
         isIdle = true;
         onStartedIdle?.Invoke();
     }
 
-    private void StopIdle()
+    protected void StopIdle()
     {
         isIdle = false;
         onStoppedIdle?.Invoke();
+    }
+
+    // Movement
+    protected virtual void OnStartedMoving()
+    {
+        StopIdle();
+    }
+
+    protected virtual void OnStoppedMoving()
+    {
+        AssignIdle();
     }
 }

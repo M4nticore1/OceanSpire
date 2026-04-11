@@ -8,7 +8,7 @@ public class BoatLootHandler : MonoBehaviour
 {
     private LootManager lootManager;
 
-    [SerializeField] private EntityMovement movement = null;
+    [SerializeField] private Movement movement = null;
     [SerializeField] private Inventory inventory = null;
 
     [SerializeField] private int collectLootTime = 0;

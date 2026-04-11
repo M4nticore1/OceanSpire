@@ -111,7 +111,7 @@ public class WanderersManager : MonoBehaviour
     private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId, bool isRidingOnBoat)
     {
         int id = (int)CreatureIdEnum.Human;
-        HumanStateEnum status = HumanStateEnum.Wanderer;
+        HumanStatusEnum status = HumanStatusEnum.Wanderer;
         float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
 
         HumanEntry humanData = new HumanEntry(id, status, position, rotation, health, boatId, isRidingOnBoat);

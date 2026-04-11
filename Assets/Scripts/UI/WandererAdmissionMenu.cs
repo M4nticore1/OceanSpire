@@ -77,7 +77,7 @@ public class WandererAdmissionMenu : MonoBehaviour
         if (!boat.currentRider) return;
 
         Human human = boat.currentRider.GetComponent<Human>();
-        if (human.currentStateEnum != HumanStateEnum.Wanderer) return;
+        if (human.currentStatusEnum != HumanStatusEnum.Wanderer) return;
 
         Open(human);
     }

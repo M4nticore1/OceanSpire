@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BoatDocker : MonoBehaviour
 {
-    EntityMovement movement = null;
+    Movement movement = null;
 
     public bool isDocked { get; private set; } = true;
     public bool isReturningToDock { get; private set; } = false;
@@ -14,7 +14,7 @@ public class BoatDocker : MonoBehaviour
 
     private void Awake()
     {
-        movement = GetComponent<EntityMovement>();
+        movement = GetComponent<Movement>();
     }
 
     public void OnEnteredBoat()
