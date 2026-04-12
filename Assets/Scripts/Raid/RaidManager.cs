@@ -5,6 +5,9 @@ public class RaidManager : MonoBehaviour
 {
     public static RaidManager instance;
 
+    [SerializeField] private Inventory inventory;
+    public Inventory Inventory => inventory;
+
     [Header("Prefabs")]
     [SerializeField] private Human attackerPrefab;
     [SerializeField] private Boat boatPrefab;
@@ -26,7 +29,7 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private BoatDockPoint[] dockPoints;
     private Dictionary<Boat, Vector3> spawnPositions;
 
-    private bool isUnedrRaid = false;
+    private bool isUnderRaid = false;
     private int landedRaidersCount = 0;
 
     public static event System.Action onRaidStarted;
@@ -63,7 +66,7 @@ public class RaidManager : MonoBehaviour
 
     private void Update()
     {
-        if (isUnedrRaid) return;
+        if (isUnderRaid) return;
 
         currentRaidTime += Time.deltaTime;
         if (currentRaidTime < currentRaidCooldown) return;
@@ -71,6 +74,13 @@ public class RaidManager : MonoBehaviour
         CreateRaid();
         ResetCurrentRaidTime();
         ApplyRandomCooldown();
+    }
+
+    public void AddLose(ItemInstance lose)
+    {
+        int id = lose.ItemData.ItemId;
+        int amount = lose.Amount;
+        inventory.AddItemAmount(id, amount);
     }
 
     public Vector3 GetSpawnPosition(Boat boat)
@@ -104,18 +114,44 @@ public class RaidManager : MonoBehaviour
             spawnPositions.Add(boat, position);
         }
 
-        isUnedrRaid = true;
+        isUnderRaid = true;
     }
 
     private void StartRaid()
     {
+        ClearLosses();
         onRaidStarted?.Invoke();
     }
 
     private void StopRaid()
     {
-        isUnedrRaid = false;
+        RemoveCityLoot();
+        isUnderRaid = false;
         onRaidFinished?.Invoke();
+    }
+
+    private void RemoveCityLoot()
+    {
+        for (int i = 0; i < inventory.items.Count; i++) {
+            ItemInstance item = inventory.items[i].item;
+
+            int id = item.ItemData.ItemId;
+            int amount = item.Amount;
+
+            CityStorage.instance.Inventory.RemoveItemAmount(id, amount);
+        }
+    }
+
+    private void ClearLosses()
+    {
+        for (int i = 0; i < inventory.items.Count; i++) {
+            ItemInstance item = inventory.items[i].item;
+
+            int id = item.ItemData.ItemId;
+            int amount = item.Amount;
+
+            inventory.RemoveItemAmount(id, amount);
+        }
     }
 
     private void ApplyRandomCooldown()

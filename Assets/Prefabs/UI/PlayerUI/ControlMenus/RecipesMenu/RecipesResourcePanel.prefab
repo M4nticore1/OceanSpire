@@ -567,7 +567,7 @@ GameObject:
   - component: {fileID: 2312938978772802384}
   - component: {fileID: 5968302294432705402}
   m_Layer: 5
-  m_Name: ProducedResourcePanel
+  m_Name: RecipesResourcePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,15 +1,22 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RaidEndedMenu : MonoBehaviour
 {
+    [SerializeField] private ResourceWidget resourceWidgetPrefab;
+
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private TextMeshProUGUI noLossesText;
+    [SerializeField] private LayoutGroup layoutGroup;
+    [SerializeField] private Color loseColor;
 
     [SerializeField] private float visibilityTime = 0f;
     private float currentVisibilityTime = 0f;
 
     private bool isOpened = false;
+    private List<ResourceWidget> spawnedResourceWidgets = new();
 
     private void OnEnable()
     {
@@ -35,7 +42,8 @@ public class RaidEndedMenu : MonoBehaviour
     {
         Open();
         currentVisibilityTime = 0f;
-        InitLosses();
+        RemoveLosses();
+        CreateLosses();
     }
 
     private void Open()
@@ -50,8 +58,30 @@ public class RaidEndedMenu : MonoBehaviour
         isOpened = false;
     }
 
-    private void InitLosses()
+    private void CreateLosses()
     {
+        int lossesAmount = RaidManager.instance.Inventory.items.Count;
 
+        if (lossesAmount == 0) {
+            noLossesText.gameObject.SetActive(true);
+        }
+        else {
+            noLossesText.gameObject.SetActive(false);
+
+            foreach (var lose in RaidManager.instance.Inventory.items) {
+                ResourceWidget widget = ResourceWidgetFactory.CreateResourceWidget(resourceWidgetPrefab, layoutGroup.transform);
+                widget.SetAmount(-lose.item.Amount);
+                widget.SetColor(loseColor);
+                spawnedResourceWidgets.Add(widget);
+            }
+        }
+    }
+
+    private void RemoveLosses()
+    {
+        for (int i = spawnedResourceWidgets.Count - 1; i >= 0; i--) {
+            Destroy(spawnedResourceWidgets[i].gameObject);
+            spawnedResourceWidgets.RemoveAt(i);
+        }
     }
 }

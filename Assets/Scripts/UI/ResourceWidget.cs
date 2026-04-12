@@ -38,7 +38,7 @@ public class ResourceWidget : MonoBehaviour
         EventBus.onMainStorageItemAmountChanged -= OnMainStorageItemAmountChanged;
         EventBus.onMainStorageItemMaxAmountChanged -= OnMainStorageItemMaxAmountChanged;
 
-        if (itemData.ItemId == (int)ItemID.Population) {
+        if (itemData && itemData.ItemId == (int)ItemID.Population) {
 
             CreaturesManager.onCitizenRegistered -= OnCitizenAdded;
             CreaturesManager.onCitizenUnregistered -= OnCitizenRemoved;
@@ -49,7 +49,7 @@ public class ResourceWidget : MonoBehaviour
 
     private void Start()
     {
-        TryToAssignItem();
+        if (!TryToAssignItem()) return;
 
         if (HasPopulationItem()) {
             UpdateCitizensAmount();
@@ -67,6 +67,7 @@ public class ResourceWidget : MonoBehaviour
     public void Init(ItemInstance amountItem)
     {
         SetItem(amountItem);
+        UpdateResourceAmount();
     }
 
     public void SetAmount(int amount)
@@ -77,6 +78,7 @@ public class ResourceWidget : MonoBehaviour
     public void SetAmount(int amount, int maxAmount)
     {
         resourceAmountText.SetText(amount.ToString() + "/" + maxAmount.ToString());
+
         if (resourceAmountBar) {
             float alpha = 0;
             if (maxAmount > 0)
@@ -94,13 +96,14 @@ public class ResourceWidget : MonoBehaviour
         resourceImage.sprite = resourceSprite;
     }
 
-    private void SetColor(Color color)
+    public void SetColor(Color color)
     {
         resourceAmountText.color = color;
     }
 
     private bool TryToAssignItem()
     {
+        if (!itemData) return false;
         if (amountItem != null) return false;
         if (maxAmountItem != null) return false;
 
@@ -189,6 +192,7 @@ public class ResourceWidget : MonoBehaviour
 
     private void OnMainStorageItemAmountChanged(ItemInstance item)
     {
+        if (!itemData) return;
         if (item.ItemData.ItemId != itemData.ItemId) return;
 
         UpdateResourceAmount();

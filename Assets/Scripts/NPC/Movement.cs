@@ -44,10 +44,8 @@ public class Movement : MonoBehaviour
         navAgent.isStopped = false;
 
         if (navAgent.SetDestination(position)) {
-            if (!isMoving) {
-                isMoving = true;
-                onStartedMoving?.Invoke();
-            }
+            isMoving = true;
+            onStartedMoving?.Invoke();
 
             return true;
         }
@@ -57,10 +55,7 @@ public class Movement : MonoBehaviour
 
     public void StopMoving()
     {
-        if (!isMoving) {
-            Debug.LogWarning("NPC is already not moving.");
-            return;
-        }
+        if (!isMoving) return;
 
         navAgent.isStopped = true;
         navAgent.ResetPath();

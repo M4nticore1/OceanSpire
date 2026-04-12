@@ -111,7 +111,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 800, y: 220}
+  m_SizeDelta: {x: 800, y: 500}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &2290709852615442700
 MonoBehaviour:
@@ -148,7 +148,7 @@ MonoBehaviour:
   hideWhenClosed: 1
   openedScreenPositionAlpha: {x: 0, y: 0}
   closedScreenPositionAlpha: {x: 0, y: 0}
-  openedPanelPositionAlpha: {x: 0, y: -2.2}
+  openedPanelPositionAlpha: {x: 0, y: -1}
   closedPanelPositionAlpha: {x: 0, y: 0}
   background: {fileID: 4254612829674453429}
   openedBackgroundAlpha: 0.9
@@ -262,10 +262,10 @@ RectTransform:
   - {fileID: 3185851501783143140}
   m_Father: {fileID: 8004864596915532551}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 110}
+  m_SizeDelta: {x: 800, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8197421645551569509
 GameObject:

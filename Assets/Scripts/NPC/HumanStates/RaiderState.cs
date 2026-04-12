@@ -1,3 +1,4 @@
+using System.Globalization;
 using UnityEngine;
 
 public class RaiderState : HumanState
@@ -129,8 +130,15 @@ public class RaiderState : HumanState
     private void FinishRaidingBuilding()
     {
         human.MoveToBoat();
+        AddLoot();
         isRaidingBuilding = false;
         isFinishedRaiding = true;
+    }
+
+    private void AddLoot()
+    {
+        ItemInstance instance = human.Interactor.interactBuilding.GetComponentInChildren<IRaidable>().GetRaidLoot();
+        RaidManager.instance.AddLose(instance);
     }
 
     private bool ShouldAttackWorker()

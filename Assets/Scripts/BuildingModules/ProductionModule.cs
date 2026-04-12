@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("Building Modules/Production Building")]
-public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClickable, IElectricible
+public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClickable, IElectricible, IRaidable
 {
     private CityStorage cityStorage;
     [SerializeField] private SelectComponent selectComponent;
@@ -25,6 +25,29 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         if (!isWorking) return;
 
         ProcessProduce();
+    }
+
+    // Overrides
+    protected override void OnInit()
+    {
+        cityStorage = FindAnyObjectByType<CityStorage>();
+
+        SetProducedItemByIndex(currentProductingItemIndex);
+    }
+
+    protected override void OnDemolish()
+    {
+
+    }
+
+    protected override void OnBuildingStartWorking()
+    {
+        SetProducting(true);
+    }
+
+    protected override void OnBuildingStopWorking()
+    {
+
     }
 
     public void SetProduceTime(float time)
@@ -61,29 +84,13 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         return isWorking;
     }
 
-    // Overrides
-    protected override void OnInit()
+    // IRaidable
+    public ItemInstance GetRaidLoot()
     {
-        cityStorage = FindAnyObjectByType<CityStorage>();
-
-        SetProducedItemByIndex(currentProductingItemIndex);
+        return currentProductingItem.ConsumeResources[0];
     }
 
-    protected override void OnDemolish()
-    {
-
-    }
-
-    protected override void OnBuildingStartWorking()
-    {
-        SetProducting(true);
-    }
-
-    protected override void OnBuildingStopWorking()
-    {
-
-    }
-
+    // Workers
     public void OnCurrentWorkerAdded(CreatureInteractor interactor)
     {
         if (!ShouldStartWorking()) return;

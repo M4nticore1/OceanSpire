@@ -193,7 +193,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 350, y: 80}
+  m_CellSize: {x: 200, y: 80}
   m_Spacing: {x: 30, y: 15}
   m_Constraint: 1
   m_ConstraintCount: 2
@@ -234,8 +234,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -125}
+  m_SizeDelta: {x: 0, y: -250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6729563237829451959
 GameObject:
@@ -295,7 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2965625, g: 0.5910937, b: 0.65, a: 0.9019608}
+  m_Color: {r: 0.2965625, g: 0.5910937, b: 0.65, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -345,10 +345,10 @@ RectTransform:
   - {fileID: 8022444507818656278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 800, y: 400}
+  m_SizeDelta: {x: 1000, y: 650}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &784325871491179762
 MonoBehaviour:
@@ -362,8 +362,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba7e98a158c91ce41b9246c952969632, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaidEndedMenu
+  resourceWidgetPrefab: {fileID: 5555003485712965333, guid: 9d3feffcad0e637408bef2ff4d7db94d, type: 3}
   slidePanel: {fileID: 55599211340225704}
   noLossesText: {fileID: 8759625595358339862}
+  layoutGroup: {fileID: 7051103166917226330}
+  loseColor: {r: 1, g: 0.39999998, b: 0.39999998, a: 1}
   visibilityTime: 5
 --- !u!114 &55599211340225704
 MonoBehaviour:
@@ -384,7 +387,7 @@ MonoBehaviour:
   hideWhenClosed: 1
   openedScreenPositionAlpha: {x: 0, y: 0}
   closedScreenPositionAlpha: {x: 0, y: 0}
-  openedPanelPositionAlpha: {x: 0, y: -1.2}
+  openedPanelPositionAlpha: {x: 0, y: -1}
   closedPanelPositionAlpha: {x: 0, y: 0}
   background: {fileID: 0}
   openedBackgroundAlpha: 0.9

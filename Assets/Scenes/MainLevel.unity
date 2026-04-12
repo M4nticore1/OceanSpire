@@ -6511,6 +6511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2047238979}
   - component: {fileID: 2047238980}
+  - component: {fileID: 2047238981}
   m_Layer: 0
   m_Name: RaidManager
   m_TagString: Untagged
@@ -6545,6 +6546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5d4f9c2695e6744e8083b3e2ac960c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaidManager
+  inventory: {fileID: 2047238981}
   attackerPrefab: {fileID: 9140235139351627301, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
   boatPrefab: {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
   minRaidCooldown: 10
@@ -6556,6 +6558,22 @@ MonoBehaviour:
   - {fileID: 1635530771}
   - {fileID: 932695337}
   - {fileID: 1276318085}
+--- !u!114 &2047238981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2047238978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27afc86b48e1cd4d987e182d36208aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Inventory
+  autoCleaning: 1
+  isUnlimitedAmount: 1
+  isUnlimitedWeight: 1
+  maxWeight: 0
 --- !u!4 &2058712708 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: 30c442c818ea2e942a614aec33f638da, type: 3}
