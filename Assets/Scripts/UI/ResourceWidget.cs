@@ -95,8 +95,6 @@ public class ResourceWidget : MonoBehaviour
     private bool TryToAssignItem()
     {
         if (!itemData) return false;
-        if (amountItem != null) return false;
-        if (maxAmountItem != null) return false;
 
         SetItem(itemData);
         return true;

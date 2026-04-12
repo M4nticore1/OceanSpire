@@ -116,8 +116,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CityPathFollower
   movement: {fileID: -7493649843608556168}
   pathBuildings: []
+  currentBuilding: {fileID: 0}
   pathIndex: 0
-  followingPathState: 0
 --- !u!114 &6497944028369977301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b0c4d83530020347a7953f4fc928c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatRider
-  movement: {fileID: -7493649843608556168}
   selectedBoat: {fileID: 0}
 --- !u!114 &774651871998097940
 MonoBehaviour:
@@ -198,7 +197,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.4
   m_Speed: 3
-  m_Acceleration: 10
+  m_Acceleration: 15
   avoidancePriority: 50
   m_AngularSpeed: 360
   m_StoppingDistance: 0.5
