@@ -2,6 +2,6 @@ using UnityEngine;
 
 public interface IOwnedBuildingListener
 {
-    public void HandleOwnedBuildingInited();
-    public void HandleOwnedBuildingDemolished();
+    public void OnOwnedBuildingInited();
+    public void OnOwnedBuildingDemolished();
 }

@@ -29,8 +29,6 @@ public class ResourceWidget : MonoBehaviour
             EventBus.onCitizenRevived += OnCitizenRevived;
             EventBus.onCitizenDied += OnCitizenDied;
         }
-
-        UpdateResourceAmount();
     }
 
     private void OnDisable()
@@ -49,14 +47,7 @@ public class ResourceWidget : MonoBehaviour
 
     private void Start()
     {
-        if (!TryToAssignItem()) return;
-
-        if (HasPopulationItem()) {
-            UpdateCitizensAmount();
-        }
-        else {
-            UpdateResourceAmount();
-        }
+        UpdateAmount();
     }
 
     public void Init(ItemInstance amountItem, ItemInstance maxAmountItem)
@@ -67,7 +58,7 @@ public class ResourceWidget : MonoBehaviour
     public void Init(ItemInstance amountItem)
     {
         SetItem(amountItem);
-        UpdateResourceAmount();
+        UpdateAmount();
     }
 
     public void SetAmount(int amount)
@@ -142,6 +133,18 @@ public class ResourceWidget : MonoBehaviour
 
         Sprite sprite = itemData.ItemIcon;
         SetImage(sprite);
+    }
+
+    private void UpdateAmount()
+    {
+        if (!TryToAssignItem()) return;
+
+        if (HasPopulationItem()) {
+            UpdateCitizensAmount();
+        }
+        else {
+            UpdateResourceAmount();
+        }
     }
 
     private void UpdateResourceAmount()

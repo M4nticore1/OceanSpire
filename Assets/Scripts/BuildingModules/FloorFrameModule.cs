@@ -21,13 +21,13 @@ public class FloorFrameModule : BuildingModule
 
     protected void OnEnable()
     {
-        EventBus.onBuildingInited += OnBuildingInited;
+        Building.onBuildingInited += OnBuildingInited;
         EventBus.onBuildingDemolished += OnBuildingDemolished;
     }
 
     protected void OnDisable()
     {
-        EventBus.onBuildingInited -= OnBuildingInited;
+        Building.onBuildingInited -= OnBuildingInited;
         EventBus.onBuildingDemolished -= OnBuildingDemolished;
     }
 

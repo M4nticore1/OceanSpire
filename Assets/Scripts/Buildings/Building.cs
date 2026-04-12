@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ public abstract class BuildingEntry
 
 public abstract class Building : MonoBehaviour
 {
-    protected LevelComponent levelComponent;
+    [SerializeField] protected LevelComponent levelComponent;
+
     private BuildingStrategy strategy;
 
     private bool isWorking = false;
@@ -33,16 +35,13 @@ public abstract class Building : MonoBehaviour
 
     public const float DemolishionResourcesRefundPercent = 0.2f;
 
-    public event System.Action onInited;
-    public event System.Action onStartWorking;
-    public event System.Action onStopWorking;
-    public event System.Action<CreatureCityNavigator> onEnterBuilding;
-    public event System.Action<CreatureCityNavigator> onExitBuilding;
+    public event Action onInited;
+    public event Action onStartWorking;
+    public event Action onStopWorking;
 
-    protected virtual void Awake()
-    {
-        AssignComponents();
-    }
+    public static event Action<Building> onBuildingInited;
+    public event Action<CreatureCityNavigator> onEnterBuilding;
+    public event Action<CreatureCityNavigator> onExitBuilding;
 
     protected virtual void OnEnable()
     {
@@ -64,7 +63,7 @@ public abstract class Building : MonoBehaviour
         UpdateConstruction();
 
         onInited?.Invoke();
-        EventBus.InvokeBuildingInited(this);
+        onBuildingInited?.Invoke(this);
 
         InvokeBuildingInited();
     }
@@ -84,20 +83,15 @@ public abstract class Building : MonoBehaviour
     protected virtual void InvokeBuildingInited()
     {
         foreach (var module in GetComponents<IOwnedBuildingListener>()) {
-            module.HandleOwnedBuildingInited();
+            module.OnOwnedBuildingInited();
         }
     }
 
     protected virtual void InvokeBuildingDemolished()
     {
         foreach (var module in GetComponents<IOwnedBuildingListener>()) {
-            module.HandleOwnedBuildingDemolished();
+            module.OnOwnedBuildingDemolished();
         }
-    }
-
-    private void AssignComponents()
-    {
-        levelComponent = GetComponent<LevelComponent>();
     }
 
     // Residents Management

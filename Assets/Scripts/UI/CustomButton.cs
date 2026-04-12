@@ -99,7 +99,10 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     public event Action onDeselected;
     public event Action onHovered;
     public event Action onUnhovered;
+
     public static event Action<CustomButton> onStateChanged;
+    public static event Action<CustomButton> onButtonPressed;
+    public static event Action<CustomButton> onButtonReleased;
 
     protected override void Awake()
     {
@@ -246,6 +249,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         ApplyContentTargetColor();
         pressedButtonPosition = transform.position;
         onPressed?.Invoke();
+        onButtonPressed?.Invoke(this);
     }
 
     // Release
@@ -279,6 +283,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!PointerUtils.IsUIHovered(gameObject)) return;
 
         onReleased?.Invoke();
+        onButtonReleased?.Invoke(this);
     }
 
     // Select

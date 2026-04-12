@@ -67,8 +67,8 @@ MonoBehaviour:
   demolishParticlesPrefab: {fileID: 1569574898052744210, guid: 1415b7b93ed0e694cbc21804bdb069fa, type: 3}
   fallingSpeedForce: 100
   fallingDemolishHeightOffset: 1
-  spawnMinTime: 10
-  spawnMaxTime: 60
+  spawnMinTime: 1
+  spawnMaxTime: 6
   floorsCountToSpawn: 0
   minSpawnFloorNumber: 4
   maxSpawnFloorNumber: 0

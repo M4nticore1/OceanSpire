@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -35,6 +36,8 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private bool isShowed = false;
 
+    public static event Action<Building> onClicked;
+
     public IEnumerable NeighborPlaces(NeighborMask mask)
     {
         if (mask.HasFlag(NeighborMask.Left)) {
@@ -60,7 +63,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         HideBuildingPlace();
 
         EventBus.onStartedPlacingBuilding += OnBuildingStartPlacing;
-        EventBus.onBuildingInited += OnBuildingInited;
+        Building.onBuildingInited += OnBuildingInited;
         EventBus.onStopPlacingBuildingButtonClicked += OnStopPlacingBuildingButtonClicked;
     }
 
@@ -131,16 +134,16 @@ public class BuildingPlace : MonoBehaviour, IClickable
     private void SetPlacedBuilding(TowerBuilding building)
     {
         placedBuilding = building;
-        UpdateBuildingFrame();
+        AssignFrameActivity();
     }
 
     private void RemovePlacedBuilding()
     {
         placedBuilding = null;
-        UpdateBuildingFrame();
+        AssignFrameActivity();
     }
 
-    private void UpdateBuildingFrame()
+    private void AssignFrameActivity()
     {
         if (!buildingFrame) return;
 
@@ -211,6 +214,8 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
         TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(id, data);
         SetPlacedBuilding(spawnedBuilding);
+
+        onClicked?.Invoke(spawnedBuilding);
     }
 
     public bool CanClick()

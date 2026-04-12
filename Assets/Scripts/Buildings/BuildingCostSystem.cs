@@ -6,13 +6,13 @@ public class BuildingCostSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.onBuildingInited += OnBuildingInited;
+        Building.onBuildingInited += OnBuildingInited;
         EventBus.onBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
-        EventBus.onBuildingInited -= OnBuildingInited;
+        Building.onBuildingInited -= OnBuildingInited;
         EventBus.onBuildingDemolished -= OnBuildingDemolished;
     }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -81,6 +82,10 @@ public class LootContainer : MonoBehaviour, IClickable
     private const float checkPositionFrequency = 1.0f;
     private double lastCheckPositionTime = 0d;
 
+    public static event Action<LootContainer> OnContainerTaken;
+    public static event Action<LootContainer> OnContainerStartedFalling;
+    public static event Action<LootContainer> onContainerLanded;
+
     public void Init(int floorIndex)
     {
         if (isMovable) {
@@ -138,8 +143,8 @@ public class LootContainer : MonoBehaviour, IClickable
         rigidBody.isKinematic = false;
 
         Destroy(balloons.gameObject);
-
         isFalling = true;
+        OnContainerStartedFalling?.Invoke(this);
     }
 
     public bool CanClick()
@@ -211,6 +216,7 @@ public class LootContainer : MonoBehaviour, IClickable
 
         LootManager.instance.RegisterLootContainer(container);
         Destroy(gameObject);
+        onContainerLanded?.Invoke(this);
     }
 
     public List<ItemInstance> TakeItems(float? remainingWeight = null)
@@ -242,6 +248,7 @@ public class LootContainer : MonoBehaviour, IClickable
         }
 
         Destroy(gameObject);
+        OnContainerTaken?.Invoke(this);
         return loot;
     }
 

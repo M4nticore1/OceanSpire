@@ -9,8 +9,8 @@ public class CameraZoomHandler : MonoBehaviour
     [SerializeField] private PlayerInputHandler inputHandler;
 
     private float currentArmLength = 0f;
-    private const float minCameraArmLength = 10f;
-    private const float maxCameraArmLength = 160f;
+    [SerializeField] private const float minCameraArmLength = 10f;
+    [SerializeField] private const float maxCameraArmLength = 160f;
 
     private const float nearArmBoundaryPadding = 10f;
     private const float farArmBoundaryPadding = 20f;

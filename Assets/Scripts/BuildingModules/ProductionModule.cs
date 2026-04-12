@@ -42,7 +42,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
 
     protected override void OnBuildingStartWorking()
     {
-        SetProducting(true);
+        StartProducting();
     }
 
     protected override void OnBuildingStopWorking()
@@ -95,14 +95,14 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
     {
         if (!ShouldStartWorking()) return;
 
-        SetWorking(true);
+        StartWorking();
     }
 
     public void OnCurrentWorkerRemoved(CreatureInteractor interactor)
     {
         if (ShouldStartWorking()) return;
 
-        SetWorking(false);
+        StopWorking();
     }
 
     // Production
@@ -123,8 +123,8 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         ResetProducedTime();
 
         if (ShouldStartWorking()) {
-            SetWorking(true);
-            SetProducting(true);
+            StartWorking();
+            StartProducting();
         }
 
         SetCollectable(false);
@@ -139,21 +139,25 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
 
     private void ProduceItem()
     {
-        SetWorking(false);
+        StopWorking();
         SetCollectable(true);
         isReadyToCollect = true;
-        SetProducting(false);
+        StopProducting();
     }
 
-    private void SetProducting(bool value)
+    private void StartProducting()
     {
-        if (value == isProducting) return;
+        if (isProducting) return;
 
-        isProducting = value;
+        ConsumeResources();
+        isProducting = true;
+    }
 
-        if (isProducting) {
-            ConsumeResources();
-        }
+    private void StopProducting()
+    {
+        if (!isProducting) return;
+
+        isProducting = false;
     }
 
     private void ConsumeResources()

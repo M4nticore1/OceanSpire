@@ -1,9 +1,8 @@
+using System;
 using UnityEngine;
 
 public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
 {
-    protected BuildingsManager buildingsManager;
-
     private Building ownedBuilding = null;
     public Building OwnedBuilding => ownedBuilding != null ? ownedBuilding : GetComponent<Building>();
 
@@ -26,23 +25,27 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
     }
     protected BuildingConstruction BuildingConstruction => ownedBuilding.spawnedConstruction;
 
+    public static event Action<BuildingModule> onBuildingModuleInited;
+    public static event Action<BuildingModule> onBuildingModuleUpgraded;
+    public static event Action<BuildingModule> onBuildingModuleDemolished;
+    public static event Action<BuildingModule> onBuildingModuleStartedWorking;
+    public static event Action<BuildingModule> onBuildingModuleStoppedWorking;
+
     protected void Awake()
     {
         ownedBuilding = GetComponent<Building>();
     }
 
-    public void HandleOwnedBuildingInited()
+    public void OnOwnedBuildingInited()
     {
-        buildingsManager = FindAnyObjectByType<BuildingsManager>();
-
         OnInit();
-        EventBus.InvokeBuildingModuleInited(this);
+        onBuildingModuleInited?.Invoke(this);
     }
 
-    public void HandleOwnedBuildingDemolished()
+    public void OnOwnedBuildingDemolished()
     {
         OnDemolish();
-        EventBus.InvokeBuildingModuleDemolished(this);
+        onBuildingModuleDemolished?.Invoke(this);
     }
 
     protected abstract void OnInit();
@@ -53,17 +56,24 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
 
     protected abstract void OnBuildingStopWorking();
 
-    protected void SetWorking(bool value)
+    protected void StartWorking()
     {
-        if (value == isWorking) return;
+        if (isWorking) return;
 
-        isWorking = value;
-        if (isWorking) {
-            OnBuildingStartWorking();
-        }
-        else {
-            OnBuildingStopWorking();
-        }
+        OnBuildingStartWorking();
+        isWorking = true;
+
+        onBuildingModuleStartedWorking?.Invoke(this);
+    }
+
+    protected void StopWorking()
+    {
+        if (!isWorking) return;
+
+        OnBuildingStopWorking();
+
+        isWorking = false;
+        onBuildingModuleStoppedWorking?.Invoke(this);
     }
 
     protected void SetFlickingPower(float multiplier)
