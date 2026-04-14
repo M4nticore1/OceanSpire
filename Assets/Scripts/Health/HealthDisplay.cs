@@ -20,21 +20,24 @@ public class HealthDisplay : MonoBehaviour
     private float currentVisibilityTime = 0f;
 
     private bool isDisplayed = false;
+    private bool isSubscribed = false;
 
     private void OnEnable()
     {
-        health.onHealthChanged += OnHealthChanged;
-        health.onDied += OnDied;
+        if (!ShouldSubscribe()) return;
+
+        Subscribe();
     }
 
     private void OnDisable()
     {
-        health.onHealthChanged -= OnHealthChanged;
-        health.onDied -= OnDied;
+        Unsubscribe();
     }
 
     private void Start()
     {
+        if (!content) return;
+
         float currentHealth = health.currentHealth;
         float maxHealth = health.MaxHealth;
         float alpha = currentHealth / maxHealth;
@@ -49,6 +52,8 @@ public class HealthDisplay : MonoBehaviour
 
     private void Update()
     {
+        if (!content) return;
+
         if (isDisplayed) {
             currentVisibilityTime += Time.deltaTime;
 
@@ -60,12 +65,11 @@ public class HealthDisplay : MonoBehaviour
 
     public void SetHealthComponent(Health health)
     {
-        if (this.health) {
-            this.health.onHealthChanged -= OnHealthChanged;
-        }
-
         this.health = health;
-        this.health.onHealthChanged += OnHealthChanged;
+
+        if (ShouldSubscribe()) {
+            Subscribe();
+        }
     }
 
     private void OnHealthChanged()
@@ -147,5 +151,27 @@ public class HealthDisplay : MonoBehaviour
 
         bar.fillAmount = alpha;
         bar.color = color;
+    }
+
+    private void Subscribe()
+    {
+        health.onHealthChanged += OnHealthChanged;
+        health.onDied += OnDied;
+        isSubscribed = true;
+    }
+
+    private void Unsubscribe()
+    {
+        health.onHealthChanged -= OnHealthChanged;
+        health.onDied -= OnDied;
+        isSubscribed = false;
+    }
+
+    private bool ShouldSubscribe()
+    {
+        if (isSubscribed) return false;
+        if (!health) return false;
+
+        return true;
     }
 }

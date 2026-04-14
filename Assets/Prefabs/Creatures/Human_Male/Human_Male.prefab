@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: -7493649843608556168}
   - component: {fileID: 8364959695361298754}
   - component: {fileID: 6196963818731621145}
+  - component: {fileID: 4701473922447632886}
   - component: {fileID: 1338494420481879648}
   - component: {fileID: 2791892867924478363}
   - component: {fileID: 1784173792497504951}
@@ -71,6 +72,7 @@ MonoBehaviour:
   interactor: {fileID: 6316746746762001490}
   boatRider: {fileID: 6497944028369977301}
   attack: {fileID: 774651871998097940}
+  skills: {fileID: 4701473922447632886}
   selectComponent: {fileID: 8364959695361298754}
   maxTimeToRevive: 60
   citizenClothes: {fileID: 8311081198017010982}
@@ -186,6 +188,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+--- !u!114 &4701473922447632886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab249bb4d0e980f40ba538f5019e4420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillComponent
+  maxSkillLevel: 10
 --- !u!195 &1338494420481879648
 NavMeshAgent:
   m_ObjectHideFlags: 0

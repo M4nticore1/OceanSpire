@@ -211,7 +211,9 @@ public class RaidManager : MonoBehaviour
         int id = (int)CreatureIdEnum.Human;
         float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
 
-        HumanEntry data = new HumanEntry(id, HumanStatusEnum.Raider, position, rotation.eulerAngles, health, boatInstanceId, isRidingOnBoat);
+        SkillsData skillsData = SkillsGenerator.GetRandomSkillData();
+
+        HumanEntry data = new HumanEntry(id, HumanStatusEnum.Raider, position, rotation.eulerAngles, health, skillsData, boatInstanceId, isRidingOnBoat);
         Human human = CreatureFactory.CreateHuman(data);
 
         return human;

@@ -21,6 +21,7 @@ public class HumanEntry : CreatureEntry
 {
     public HumanStatusEnum status { get; private set; } = HumanStatusEnum.Citizen;
     public float health { get; private set; } = 0f;
+    public SkillsData skills { get; private set; }
     public int interactBuildingInstanceId { get; private set; } = 0;
     public bool isMale { get; private set; } = false;
     public int firstNameIndex { get; private set; } = 0;
@@ -33,34 +34,16 @@ public class HumanEntry : CreatureEntry
         Vector3 position,
         Vector3 rotation,
         float health,
+        SkillsData skills,
         int boatInstanceId,
         bool isRidingOnBoat) :
         base(id, position, rotation)
     {
         this.status = status;
         this.health = health;
+        this.skills = skills;
         this.boatInstanceId = boatInstanceId;
         this.isRidingOnBoat = isRidingOnBoat;
-    }
-}
-
-[Serializable]
-public class RaiderEntry : HumanEntry
-{
-    public bool isFinishedRaiding { get; private set; } = false;
-
-    public RaiderEntry(int id,
-        int instanceId,
-        HumanStatusEnum status,
-        Vector3 position,
-        Vector3 rotation,
-        float health,
-        int boatInstanceId,
-        bool isFinishedRaiding,
-        bool isRidingOnBoat) :
-        base(id, status, position, rotation, health, boatInstanceId, isRidingOnBoat)
-    {
-        this.isFinishedRaiding = isFinishedRaiding;
     }
 }
 
@@ -80,6 +63,9 @@ public class Human : Creature
 
     [SerializeField] private Attack attack;
     public Attack Attack => attack;
+
+    [SerializeField] private SkillsComponent skills;
+    public SkillsComponent Skills => skills;
 
     [SerializeField] private SelectComponent selectComponent;
     public SelectComponent SelectComponent => selectComponent;
@@ -187,6 +173,7 @@ public class Human : Creature
         AssignNameIndexes(humanData);
 
         health.SetCurrentHealth(humanData.health);
+        skills.Init(humanData.skills);
 
         if (humanData.boatInstanceId >= 0) {
             boatRider.SetSelectedBoat(humanData.boatInstanceId);

@@ -4,6 +4,7 @@ public class WandererAdmissionMenu : MonoBehaviour
 {
     private Human selectedHuman;
     [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SkillsPanel skillPanel;
     [SerializeField] private CustomButton acceptButton;
     [SerializeField] private CustomButton rejectButton;
 
@@ -33,6 +34,9 @@ public class WandererAdmissionMenu : MonoBehaviour
     {
         selectedHuman = human;
         slidePanel.Open();
+
+        skillPanel.SetSkills(human.Skills);
+
         isOpened = true;
     }
 

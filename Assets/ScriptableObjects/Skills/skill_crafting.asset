@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f774e7fb366e6e47aa3b1e535887b26, type: 3}
+  m_Name: skill_crafting
+  m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
+  skillId: 3
+  bonusPerLevel: 0.1
+  xpGainRate: 0.1
+  localizeItem: {fileID: 11400000, guid: 208c29e9f04e8d64386b6c4c926959c0, type: 2}

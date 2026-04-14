@@ -35,7 +35,9 @@ public class CitizensLoader : MonoBehaviour
                 int humanId = (int)CreatureIdEnum.Human;
                 float health = CreaturesList.Instance.Creatures[humanId].GetComponent<Health>().MaxHealth;
 
-                HumanEntry data = new HumanEntry(humanId, HumanStatusEnum.Citizen, finalPosition, rotation.eulerAngles, health, -1, false);
+                SkillsData skillsData = SkillsGenerator.GetRandomSkillData();
+
+                HumanEntry data = new HumanEntry(humanId, HumanStatusEnum.Citizen, finalPosition, rotation.eulerAngles, health, skillsData, -1, false);
                 Human citizen = CreatureFactory.CreateHuman(data);
             }
         }
