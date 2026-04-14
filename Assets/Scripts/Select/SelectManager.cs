@@ -7,8 +7,8 @@ public class SelectManager
 
     private SelectManager()
     {
-        EventBus.onSelectedComponent += OnSelectedComponent;
-        EventBus.onDeselectedComponent += OnDeselectedComponent;
+        SelectComponent.onSelectedComponent += OnSelectedComponent;
+        SelectComponent.onDeselectedComponent += OnDeselectedComponent;
     }
 
     private SelectComponent selectedComponent;

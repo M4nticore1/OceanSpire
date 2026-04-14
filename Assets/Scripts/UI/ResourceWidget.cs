@@ -29,6 +29,8 @@ public class ResourceWidget : MonoBehaviour
             EventBus.onCitizenRevived += OnCitizenRevived;
             EventBus.onCitizenDied += OnCitizenDied;
         }
+
+        UpdateAmount();
     }
 
     private void OnDisable()

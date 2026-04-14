@@ -93,11 +93,11 @@ public class BuildingConstruction : MonoBehaviour
 
     private void OnSelected()
     {
-        EventBus.InvokeSelectedBuilding(ownedBuilding);
+        ownedBuilding.OnSelected();
     }
 
     private void OnDeselected()
     {
-        EventBus.InvokeDeselectedBuilding(ownedBuilding);
+        ownedBuilding.OnDeselected();
     }
 }

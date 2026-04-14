@@ -166,7 +166,7 @@ PrefabInstance:
     - target: {fileID: -7796214933308666227, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -8818462208458138444, guid: 9c941e649758cfc40b69dc54d7a165b9, type: 3}
+      objectReference: {fileID: 9060850566465211110, guid: 9c941e649758cfc40b69dc54d7a165b9, type: 3}
     - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -209,7 +209,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5452299794892249143, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Name
-      value: CoalGenerator_Level_01_StraightRight
+      value: Farm_Level_01_StraightRight
       objectReference: {fileID: 0}
     - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: buildingInteractions.Array.size

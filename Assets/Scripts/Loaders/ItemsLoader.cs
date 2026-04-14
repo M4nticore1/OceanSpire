@@ -2,9 +2,7 @@ using UnityEngine;
 
 public class ItemsLoader : MonoBehaviour
 {
-    [SerializeField] private CityStorage cityStorage;
-
-    private void Start()
+    private void Awake()
     {
         WorldData worldData = WorldSaveManager.Instance.currentSaveWorldData;
         LoadItems(worldData);
@@ -18,7 +16,7 @@ public class ItemsLoader : MonoBehaviour
         else {
             foreach (ItemData data in ItemsList.Instance.Items) {
                 int id = data.ItemId;
-                cityStorage.Inventory.TryAddNewItem(id);
+                CityStorage.instance.Inventory.TryAddNewItem(id);
             }
         }
     }

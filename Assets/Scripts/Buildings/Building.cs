@@ -12,6 +12,9 @@ public abstract class Building : MonoBehaviour
 {
     [SerializeField] protected LevelComponent levelComponent;
 
+    [Header("Audio")]
+    [SerializeField] protected AudioSource workAudioSource;
+
     private BuildingStrategy strategy;
 
     private bool isWorking = false;
@@ -40,8 +43,12 @@ public abstract class Building : MonoBehaviour
     public event Action onStopWorking;
 
     public static event Action<Building> onBuildingInited;
+    public static event Action<Building> onBuildingDemolished;
+
     public event Action<CreatureCityNavigator> onEnterBuilding;
     public event Action<CreatureCityNavigator> onExitBuilding;
+    public static event Action<Building> onBuildingSelected;
+    public static event Action<Building> onBuildingDeselected;
 
     protected virtual void OnEnable()
     {
@@ -71,7 +78,7 @@ public abstract class Building : MonoBehaviour
     public void Demolish()
     {
         Destroy(gameObject);
-        EventBus.InvokeBuildingDemolished(this);
+        onBuildingDemolished?.Invoke(this);
 
         InvokeBuildingDemolished();
     }
@@ -146,6 +153,37 @@ public abstract class Building : MonoBehaviour
         InvokeCurrentWorkerRemoved(interactor);
     }
 
+    // Modules
+    public BuildingModule[] GetModules()
+    {
+        BuildingModule[] modules;
+        modules = GetComponents<BuildingModule>();
+
+        return modules;
+    }
+
+    // Cost
+    public ItemInstance[] GetResourcesToBuild()
+    {
+        return LevelData.ResourcesToBuild;
+    }
+
+    public ItemInstance[] GetResourcesToRefund()
+    {
+        int count = LevelData.ResourcesToBuild.Length;
+        var resources = new ItemInstance[count];
+
+        for (int i = 0; i < count; i++) {
+            var resource = LevelData.ResourcesToBuild[i];
+            var data = resource.ItemData;
+            int amount = (int)(resource.Amount * DemolishionResourcesRefundPercent);
+            var instance = new ItemInstance(data, amount);
+            resources[i] = instance;
+        }
+
+        return resources;
+    }
+
     // Interaction
     public Transform GetInteractionTransform()
     {
@@ -175,6 +213,17 @@ public abstract class Building : MonoBehaviour
             Debug.LogWarning("actions.Length <= index");
             return transform;
         }
+    }
+
+    // Select
+    public void OnSelected()
+    {
+        onBuildingSelected?.Invoke(this);
+    }
+
+    public void OnDeselected()
+    {
+        onBuildingDeselected?.Invoke(this);
     }
 
     // Events
@@ -209,7 +258,12 @@ public abstract class Building : MonoBehaviour
     // Working
     private void StartWorking()
     {
-        if (isWorking) return;
+        if (isWorking) {
+            Debug.Log("Building is already working");
+            return;
+        }
+
+        PlayWorkSound();
 
         isWorking = true;
         onStartWorking?.Invoke();
@@ -217,6 +271,13 @@ public abstract class Building : MonoBehaviour
 
     private void StopWorking()
     {
+        if (!isWorking) {
+            Debug.Log("Building is already not working");
+            return;
+        }
+
+        StopWorkSound();
+
         isWorking = false;
         onStopWorking?.Invoke();
     }
@@ -254,35 +315,19 @@ public abstract class Building : MonoBehaviour
         }
     }
 
-    // Modules
-    public BuildingModule[] GetModules()
+    // Audio
+    private void PlayWorkSound()
     {
-        BuildingModule[] modules;
-        modules = GetComponents<BuildingModule>();
+        if (!workAudioSource) return;
 
-        return modules;
+        workAudioSource.Play();
     }
 
-    // Cost
-    public ItemInstance[] GetResourcesToBuild()
+    private void StopWorkSound()
     {
-        return LevelData.ResourcesToBuild;
-    }
+        if (!workAudioSource) return;
 
-    public ItemInstance[] GetResourcesToRefund()
-    {
-        int count = LevelData.ResourcesToBuild.Length;
-        var resources = new ItemInstance[count];
-
-        for (int i = 0; i < count; i++) {
-            var resource = LevelData.ResourcesToBuild[i];
-            var data = resource.ItemData;
-            int amount = (int)(resource.Amount * DemolishionResourcesRefundPercent);
-            var instance = new ItemInstance(data, amount);
-            resources[i] = instance;
-        }
-
-        return resources;
+        workAudioSource.Stop();
     }
 
     // Events

@@ -16,7 +16,6 @@ public static class EventBus
     public static event Action<BuildingWidget> onBuildingWidgetInformationClicked;
     public static event Action<Building> onStartedPlacingBuilding;
     public static event Action<Building> onBuildingCreated;
-    public static event Action<Building> onBuildingDemolished;
 
     public static event Action onStopPlacingBuildingButtonClicked;
 
@@ -58,14 +57,6 @@ public static class EventBus
     // Building Stats Menu
     public static event Action<Building> onCameraEnteredStatsMenuDistance;
     public static event Action onCameraExitedStatsMenuDistance;
-
-    // Select
-    public static event Action<SelectComponent> onSelectedComponent;
-    public static event Action<SelectComponent> onDeselectedComponent;
-    public static event Action<Building> onSelectedBuilding;
-    public static event Action<Building> onDeselectedBuilding;
-    public static event Action<Boat> onSelectedBoat;
-    public static event Action<Boat> onDeselectedBoat;
 
     // Settings
     public static event Action onPostProcessingToggleChanged;
@@ -109,11 +100,6 @@ public static class EventBus
     public static void InvokeBuildingCreated(Building building)
     {
         onBuildingCreated?.Invoke(building);
-    }
-
-    public static void InvokeBuildingDemolished(Building building)
-    {
-        onBuildingDemolished?.Invoke(building);
     }
 
     public static void InvokeStopPlacingBuildingButtonClicked()
@@ -227,37 +213,6 @@ public static class EventBus
     public static void InvokeCameraExitedStatsMenuDistance()
     {
         onCameraExitedStatsMenuDistance?.Invoke();
-    }
-
-    // Select
-    public static void InvokeSelectedObject(SelectComponent selectComponent)
-    {
-        onSelectedComponent?.Invoke(selectComponent);
-    }
-
-    public static void InvokeDeselectedObject(SelectComponent selectComponent)
-    {
-        onDeselectedComponent?.Invoke(selectComponent);
-    }
-
-    public static void InvokeSelectedBuilding(Building building)
-    {
-        onSelectedBuilding?.Invoke(building);
-    }
-
-    public static void InvokeDeselectedBuilding(Building building)
-    {
-        onDeselectedBuilding?.Invoke(building);
-    }
-
-    public static void InvokeSelectedBoat(Boat boat)
-    {
-        onSelectedBoat?.Invoke(boat);
-    }
-
-    public static void InvokeDeselectedBoat(Boat boat)
-    {
-        onDeselectedBoat?.Invoke(boat);
     }
 
     // Input Listener

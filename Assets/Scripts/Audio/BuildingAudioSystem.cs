@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BuildingAudioSystem : MonoBehaviour
 {
-    [SerializeField] private AudioClip buildingFinishedClip;
+    [SerializeField] private AudioClip[] buildingFinishedClips;
 
     [SerializeField] private float minDistance;
     [SerializeField] private float maxDistance;
@@ -19,6 +19,6 @@ public class BuildingAudioSystem : MonoBehaviour
 
     private void OnBuildingPlaceClicked(Building building)
     {
-        AudioUtils.PlaySFXAtPosition(buildingFinishedClip, building.transform.position, minDistance, maxDistance);
+        AudioUtils.PlaySFX(AudioUtils.GetRandomAudioClip(buildingFinishedClips));
     }
 }

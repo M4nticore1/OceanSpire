@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class ContextMenuMaster : UIBehaviour
 {
@@ -18,11 +19,11 @@ public class ContextMenuMaster : UIBehaviour
         base.OnEnable();
 
         EventBus.onPlayerClicked += OnPlayerClicked;
-        EventBus.onSelectedBuilding += OnSelectedBuilding;
-        EventBus.onDeselectedBuilding += OnDeselectedBuilding;
-        EventBus.onSelectedBoat += OnSelectedBoat;
-        EventBus.onDeselectedBoat += OnDeselectedBoat;
-        EventBus.onBuildingDemolished += OnBuildingDemolished;
+        Building.onBuildingSelected += OnBuildingSelected;
+        Building.onBuildingDeselected += OnDeselectedBuilding;
+        Building.onBuildingDemolished += OnBuildingDemolished;
+        Boat.onBoatSelected += OnSelectedBoat;
+        Boat.onBoatDeselected += OnDeselectedBoat;
     }
 
     protected override void OnDisable()
@@ -30,11 +31,11 @@ public class ContextMenuMaster : UIBehaviour
         base.OnDisable();
 
         EventBus.onPlayerClicked -= OnPlayerClicked;
-        EventBus.onSelectedBuilding -= OnSelectedBuilding;
-        EventBus.onDeselectedBuilding -= OnDeselectedBuilding;
-        EventBus.onSelectedBoat -= OnSelectedBoat;
-        EventBus.onDeselectedBoat -= OnDeselectedBoat;
-        EventBus.onBuildingDemolished -= OnBuildingDemolished;
+        Building.onBuildingSelected -= OnBuildingSelected;
+        Building.onBuildingDeselected -= OnDeselectedBuilding;
+        Building.onBuildingDemolished -= OnBuildingDemolished;
+        Boat.onBoatSelected -= OnSelectedBoat;
+        Boat.onBoatDeselected -= OnDeselectedBoat;
     }
 
     // Open/Close
@@ -71,7 +72,7 @@ public class ContextMenuMaster : UIBehaviour
     }
 
     // Building
-    private void OnSelectedBuilding(Building building)
+    private void OnBuildingSelected(Building building)
     {
         if (!building) {
             Debug.LogError("Building is not valid.");
@@ -90,8 +91,8 @@ public class ContextMenuMaster : UIBehaviour
 
     private void OnDeselectedBuilding(Building building)
     {
-        if (building.gameObject != currentSelectedObject)
-            return;
+        if (!building) return;
+        if (building.gameObject != currentSelectedObject) return;
 
         Close();
         currentSelectedObject = null;

@@ -49,7 +49,7 @@ public class BuildingsManager : MonoBehaviour
         // Buildings
         EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
         Building.onBuildingInited += OnBuildingInited;
-        EventBus.onBuildingDemolished += OnBuildingDemolished;
+        Building.onBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
@@ -57,7 +57,7 @@ public class BuildingsManager : MonoBehaviour
         // Buildings
         EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
         Building.onBuildingInited -= OnBuildingInited;
-        EventBus.onBuildingDemolished -= OnBuildingDemolished;
+        Building.onBuildingDemolished -= OnBuildingDemolished;
     }
 
     // Buildings

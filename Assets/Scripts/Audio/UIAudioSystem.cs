@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CustomButtonAudioSystem : MonoBehaviour
+public class UIAudioSystem : MonoBehaviour
 {
     [SerializeField] private AudioClip[] releaseClips;
 

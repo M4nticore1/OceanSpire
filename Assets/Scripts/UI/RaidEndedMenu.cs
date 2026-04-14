@@ -20,12 +20,12 @@ public class RaidEndedMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        RaidManager.onRaidFinished += OnRaidFinished;
+        RaidManager.onRaidEnded += OnRaidFinished;
     }
 
     private void OnDisable()
     {
-        RaidManager.onRaidFinished -= OnRaidFinished;
+        RaidManager.onRaidEnded -= OnRaidFinished;
     }
 
     private void Update()

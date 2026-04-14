@@ -33,7 +33,7 @@ public class RaidManager : MonoBehaviour
     private int landedRaidersCount = 0;
 
     public static event System.Action onRaidStarted;
-    public static event System.Action onRaidFinished;
+    public static event System.Action onRaidEnded;
 
     private void Awake()
     {
@@ -127,7 +127,7 @@ public class RaidManager : MonoBehaviour
     {
         RemoveCityLoot();
         isUnderRaid = false;
-        onRaidFinished?.Invoke();
+        onRaidEnded?.Invoke();
     }
 
     private void RemoveCityLoot()
