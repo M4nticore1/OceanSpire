@@ -4,7 +4,7 @@ using UnityEngine;
 public class SkillInstance
 {
     public SkillDefinition skillDefinition { get; private set; }
-    public int currentLevel { get; private set; } = 0;
+    public int currentLevel { get; private set; } = 1;
     public float currentXp { get; private set; } = 0f;
 
     public SkillInstance(SkillDefinition definition)
@@ -22,9 +22,14 @@ public class SkillInstance
         }
     }
 
+    public void LevelUp()
+    {
+        SetLevel(currentLevel + 1);
+    }
+
     public void SetLevel(int value)
     {
-        currentLevel = math.clamp(value, 0, SkillDefinition.maxSkillLevel);
+        currentLevel = math.clamp(value, 1, SkillDefinition.maxSkillLevel);
     }
 
     public void SetXp(float value)
@@ -34,13 +39,8 @@ public class SkillInstance
 
     public float GetBonus()
     {
-        float bunus = skillDefinition.BonusPerLevel * currentLevel;
-        return bunus;
-    }
-
-    private void LevelUp()
-    {
-        SetLevel(currentLevel + 1);
+        float bonus = skillDefinition.BonusPerLevel * (currentLevel - 1);
+        return bonus;
     }
 
     private void ResetCurrentExperience()

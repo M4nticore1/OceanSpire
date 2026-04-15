@@ -493,3 +493,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillWidget
   skillName: {fileID: 2743345686638551624}
   skillBonus: {fileID: 6433652982199504688}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  highlightedColor: {r: 0, g: 1, b: 0, a: 1}

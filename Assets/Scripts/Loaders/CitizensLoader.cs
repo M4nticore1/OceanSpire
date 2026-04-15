@@ -4,8 +4,8 @@ public class CitizensLoader : MonoBehaviour
 {
     private const int startResidentsCount = 2;
 
-    [SerializeField] private Transform entitySpawnPosition = null;
-    public const float maxSpawnRange = 5f;
+    [SerializeField] private Transform entitySpawnPosition;
+    [SerializeField] public float maxSpawnRange = 5f;
 
     private void Start()
     {
@@ -35,7 +35,7 @@ public class CitizensLoader : MonoBehaviour
                 int humanId = (int)CreatureIdEnum.Human;
                 float health = CreaturesList.Instance.Creatures[humanId].GetComponent<Health>().MaxHealth;
 
-                SkillsData skillsData = SkillsGenerator.GetRandomSkillData();
+                SkillsData skillsData = SkillsGenerator.GetRandomSkillsData(SkillsGenerator.GetLevelsCount());
 
                 HumanEntry data = new HumanEntry(humanId, HumanStatusEnum.Citizen, finalPosition, rotation.eulerAngles, health, skillsData, -1, false);
                 Human citizen = CreatureFactory.CreateHuman(data);

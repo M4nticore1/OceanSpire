@@ -1,24 +1,39 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class SkillsGenerator
 {
-    public static SkillsData GetRandomSkillData(int maxLevel = SkillDefinition.maxSkillLevel / 2, float maxLevelBias = 0.5f)
+    public static SkillsData GetRandomSkillsData(int levelsCount)
     {
-        List<SkillInstance> skills = new List<SkillInstance>();
+        Dictionary<int, SkillInstance> skills = new();
 
-        foreach (var def in SkillsList.Instance.SkillDefinitionsDict.Values) {
-            float t = Random.value;
-            float biased = Mathf.Lerp(t, 1f, maxLevelBias);
-            int level = Mathf.RoundToInt(biased * maxLevel);
-
+        foreach(var def in SkillsList.Instance.SkillDefinitionsDict.Values) {
             SkillInstance skill = new SkillInstance(def);
-            skill.SetLevel(level);
-
-            skills.Add(skill);
+            skills.Add((int)skill.skillDefinition.SkillId, skill);
         }
 
-        SkillsData data = new SkillsData(skills);
+        int randomCount = Random.Range(levelsCount / 2, levelsCount + 1);
+        randomCount = Mathf.Max(randomCount, 1);
+
+        for (int i = 0; i < randomCount; i++) {
+            int skillIndex = Random.Range(0, SkillsList.Instance.SkillDefinitionsDict.Count);
+            SkillDefinition def = SkillsList.Instance.SkillDefinitionsDict.Values.ToArray()[skillIndex];
+
+            skills[skillIndex].LevelUp();
+        }
+
+        SkillsData data = new SkillsData(skills.Values.ToList());
         return data;
+    }
+
+    public static int GetLevelsCount()
+    {
+        int skillsCount = SkillsList.Instance.SkillDefinitionsDict.Count;
+        int maxLevelsCount = skillsCount * SkillDefinition.maxSkillLevel;
+        int multiplier = BuildingsManager.instance.MaxFloorsCount / skillsCount;
+        int count = BuildingsManager.instance.BuiltFloors.Count * multiplier;
+
+        return multiplier;
     }
 }

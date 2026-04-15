@@ -16,6 +16,9 @@ public class BuildingsManager : MonoBehaviour
     [SerializeField] private GroundBuilding pierBuilding = null;
     public GroundBuilding PierBuilding => pierBuilding;
 
+    [SerializeField] private int maxFloorsCount = 25;
+    public int MaxFloorsCount => maxFloorsCount;
+
     public const int FloorHeight = 5;
     public const int FirstFloorHeight = 10;
 

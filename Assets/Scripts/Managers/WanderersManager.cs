@@ -114,7 +114,7 @@ public class WanderersManager : MonoBehaviour
         HumanStatusEnum status = HumanStatusEnum.Wanderer;
         float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
 
-        SkillsData skillsData = SkillsGenerator.GetRandomSkillData();
+        SkillsData skillsData = SkillsGenerator.GetRandomSkillsData(SkillsGenerator.GetLevelsCount());
 
         HumanEntry humanData = new HumanEntry(id, status, position, rotation, health, skillsData, boatId, isRidingOnBoat);
         Human human = CreatureFactory.CreateHuman(humanData);
