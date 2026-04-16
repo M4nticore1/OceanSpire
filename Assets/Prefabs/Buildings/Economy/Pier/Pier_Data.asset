@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Pier_Data
   m_EditorClassIdentifier: 
   buildingId: 2
-  localizationItem: {fileID: 11400000, guid: c6898d13d64429d4c9ba3cc5c393f4e3, type: 2}
   buildingName: Dock
+  localizationItem: {fileID: 11400000, guid: c6898d13d64429d4c9ba3cc5c393f4e3, type: 2}
   buildingType: 3
   buildingCategory: 2
   connectionType: 0
@@ -22,6 +22,6 @@ MonoBehaviour:
   detailsWindowVariant: 0
   instantConstruction: 0
   thumbImage: {fileID: 0}
-  buildingFloors: 1
-  maxBuildingFloors: 1
+  isWorkable: 1
   isDemolishable: 0
+  isRaidable: 0

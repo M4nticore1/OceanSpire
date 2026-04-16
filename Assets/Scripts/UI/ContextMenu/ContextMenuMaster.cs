@@ -1,63 +1,55 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 public class ContextMenuMaster : UIBehaviour
 {
-    [SerializeField] private SlidePanel slidePanel = null;
-    [SerializeField] private Transform contextMenuRoot = null;
-    private ContextMenu spawnedContextMenu = null;
-
-    [SerializeField] private BuildingContextMenu buildingContextMenu = null;
-    [SerializeField] private BoatContextMenu boatContextMenu = null;
-
-    private bool isOpened = false;
-    private GameObject currentSelectedObject = null;
+    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private Transform contextMenuRoot;
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
+        SelectManager.onComponentSelected += OnComponentSelected;
+        SelectManager.onComponentDeselected += OnComponentDeselected;
         EventBus.onPlayerClicked += OnPlayerClicked;
-        Building.onBuildingSelected += OnBuildingSelected;
-        Building.onBuildingDeselected += OnDeselectedBuilding;
-        Building.onBuildingDemolished += OnBuildingDemolished;
-        Boat.onBoatSelected += OnSelectedBoat;
-        Boat.onBoatDeselected += OnDeselectedBoat;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
+        SelectManager.onComponentSelected -= OnComponentSelected;
+        SelectManager.onComponentDeselected -= OnComponentDeselected;
         EventBus.onPlayerClicked -= OnPlayerClicked;
-        Building.onBuildingSelected -= OnBuildingSelected;
-        Building.onBuildingDeselected -= OnDeselectedBuilding;
-        Building.onBuildingDemolished -= OnBuildingDemolished;
-        Boat.onBoatSelected -= OnSelectedBoat;
-        Boat.onBoatDeselected -= OnDeselectedBoat;
     }
 
     // Open/Close
     private void Open()
     {
         slidePanel.Open();
-        isOpened = true;
     }
 
     private void Close()
     {
         slidePanel.Close();
-        isOpened = false;
     }
 
     // Events
+    private void OnComponentSelected(SelectComponent selected)
+    {
+        Open();
+    }
+
+    private void OnComponentDeselected(SelectComponent selected)
+    {
+        Close();
+    }
+
     private void OnPlayerClicked(GameObject clicked)
     {
         SelectComponent selectComponent = clicked?.GetComponent<SelectComponent>();
-
-        if (selectComponent && selectComponent.isSelected)
-            return;
+        if (selectComponent && selectComponent.isSelected) return;
 
         Close();
     }
@@ -65,73 +57,8 @@ public class ContextMenuMaster : UIBehaviour
     protected void OnBuildingDemolished(Building building)
     {
         Building selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
-        if (selectedBuilding != building)
-            return;
+        if (selectedBuilding != building) return;
 
         Close();
-    }
-
-    // Building
-    private void OnBuildingSelected(Building building)
-    {
-        if (!building) {
-            Debug.LogError("Building is not valid.");
-            return;
-        }
-
-        if (spawnedContextMenu) {
-            DestroyCurrentContextMenu();
-        }
-
-        Open();
-        spawnedContextMenu = ContextMenuFactory.CreateContextMenu(buildingContextMenu, building, contextMenuRoot);
-
-        currentSelectedObject = building.gameObject;
-    }
-
-    private void OnDeselectedBuilding(Building building)
-    {
-        if (!building) return;
-        if (building.gameObject != currentSelectedObject) return;
-
-        Close();
-        currentSelectedObject = null;
-    }
-
-    // Boat
-    private void OnSelectedBoat(Boat boat)
-    {
-        if (!boat) {
-            Debug.LogError("Boat is not valid.");
-            return;
-        }
-
-        if (spawnedContextMenu) {
-            DestroyCurrentContextMenu();
-        }
-
-        spawnedContextMenu = ContextMenuFactory.CreateContextMenu(boatContextMenu, boat, contextMenuRoot);
-        Open();
-
-        currentSelectedObject = boat.gameObject;
-    }
-
-    private void OnDeselectedBoat(Boat boat)
-    {
-        if (boat.gameObject != currentSelectedObject)
-            return;
-
-        Close();
-        currentSelectedObject = null;
-    }
-
-    // Utins
-    private void DestroyCurrentContextMenu()
-    {
-        if (!spawnedContextMenu)
-            return;
-
-        Destroy(spawnedContextMenu.gameObject);
-        spawnedContextMenu = null;
     }
 }

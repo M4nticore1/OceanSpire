@@ -8,9 +8,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -50
+      objectReference: {fileID: 0}
     - target: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Name
-      value: UpgradeContextMenuButton
+      value: WorkersButton
       objectReference: {fileID: 0}
     - target: {fileID: 6686591089564819408, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Pivot.x
@@ -95,13 +111,52 @@ PrefabInstance:
     - target: {fileID: 8394769679750841849, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: item
       value: 
-      objectReference: {fileID: 11400000, guid: b71a51156eb44994ebfd613117eff026, type: 2}
+      objectReference: {fileID: 11400000, guid: 830aa7bb7a58bf548b10d89aa9512795, type: 2}
     - target: {fileID: 9002625106314974428, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 31b0bffcc2d7ce84483c63c2c55c5cf8, type: 3}
+      objectReference: {fileID: 21300000, guid: 076befd39571e9847bac03429487f064, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1984684078191518841}
   m_SourcePrefab: {fileID: 100100000, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+--- !u!114 &2772769166129994013 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8611809006126050843, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+  m_PrefabInstance: {fileID: 5906911215454697222}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &8345193435831927673 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2461645195626525823, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+  m_PrefabInstance: {fileID: 5906911215454697222}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8503180665579953796 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+  m_PrefabInstance: {fileID: 5906911215454697222}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1984684078191518841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503180665579953796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0e39781c16acea4880405c86a90b235, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorkersContextElement
+  content: {fileID: 8345193435831927673}
+  button: {fileID: 2772769166129994013}
+  workersMenu: {fileID: 0}

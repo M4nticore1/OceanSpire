@@ -159,5 +159,44 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2935945504213945974}
   m_SourcePrefab: {fileID: 100100000, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+--- !u!114 &2772769166129994013 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8611809006126050843, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+  m_PrefabInstance: {fileID: 5906911215454697222}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &8345193435831927673 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2461645195626525823, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+  m_PrefabInstance: {fileID: 5906911215454697222}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8503180665579953796 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+  m_PrefabInstance: {fileID: 5906911215454697222}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2935945504213945974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503180665579953796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60d284f9238a7394891ba114abd79972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RecipesContextElement
+  content: {fileID: 8345193435831927673}
+  button: {fileID: 2772769166129994013}
+  recipesMenu: {fileID: 0}

@@ -81,6 +81,9 @@ public class BuildingData : ScriptableObject
     [SerializeField] private Sprite thumbImage = null;
     public Sprite ThumbImage => thumbImage;
 
+    [SerializeField] private bool isWorkable = false;
+    public bool IsWorkable => isWorkable;
+
     [SerializeField] private bool isDemolishable = true;
     public bool IsDemolishable => isDemolishable;
 

@@ -2513,6 +2513,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f39165b75a99da54fb64c345369b1fd3, type: 3}
+--- !u!114 &7147478542365284318 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8241380963706227787, guid: f39165b75a99da54fb64c345369b1fd3, type: 3}
+  m_PrefabInstance: {fileID: 1256422450687155093}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c791e0faf9df4df42bf10beaacba7fab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProductionControlMenu
 --- !u!224 &8053382421446820058 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9127926916265679695, guid: f39165b75a99da54fb64c345369b1fd3, type: 3}
@@ -2983,6 +2994,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ContextMenuMaster
       objectReference: {fileID: 0}
+    - target: {fileID: 2222477282769378387, guid: 20a17be85a1d76748911c70e19266abe, type: 3}
+      propertyPath: recipesMenu
+      value: 
+      objectReference: {fileID: 7147478542365284318}
     - target: {fileID: 3378704894391531109, guid: 20a17be85a1d76748911c70e19266abe, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -3063,6 +3078,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5524861032571194654, guid: 20a17be85a1d76748911c70e19266abe, type: 3}
+      propertyPath: demolishMenu
+      value: 
+      objectReference: {fileID: 7728927713406754206}
+    - target: {fileID: 7010496157047032170, guid: 20a17be85a1d76748911c70e19266abe, type: 3}
+      propertyPath: workersMenu
+      value: 
+      objectReference: {fileID: 3245437424390522746}
     - target: {fileID: 8176289903271446193, guid: 20a17be85a1d76748911c70e19266abe, type: 3}
       propertyPath: canvas
       value: 
@@ -4410,6 +4433,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e699ae624ec0234aa06128f6828b648, type: 3}
+--- !u!114 &3245437424390522746 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7792297035627027995, guid: 9e699ae624ec0234aa06128f6828b648, type: 3}
+  m_PrefabInstance: {fileID: 4695513859433077089}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c23ecb36f9aa00247b789d9f8b987a26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorkersControlMenu
 --- !u!224 &4577128166351471150 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9127926916265679695, guid: 9e699ae624ec0234aa06128f6828b648, type: 3}
@@ -5375,6 +5409,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5773566279394036149, guid: 4be5837a1f3a7f643be9d352349a77b7, type: 3}
   m_PrefabInstance: {fileID: 6881741781185211903}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7728927713406754206 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3801725821900173409, guid: 4be5837a1f3a7f643be9d352349a77b7, type: 3}
+  m_PrefabInstance: {fileID: 6881741781185211903}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c8ece6258c6b964ab2d09c56e7af0c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DemolishActionMenu
 --- !u!1001 &6996836191088785184
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -12,8 +12,8 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     public event Action onSelected;
     public event Action onDeselected;
-    public static event Action<SelectComponent> onSelectedComponent;
-    public static event Action<SelectComponent> onDeselectedComponent;
+    public static event Action<SelectComponent> onComponentSelected;
+    public static event Action<SelectComponent> onComponentDeselected;
 
     private void OnEnable()
     {
@@ -42,7 +42,7 @@ public class SelectComponent : MonoBehaviour, IClickable
         }
 
         onSelected?.Invoke();
-        onSelectedComponent?.Invoke(this);
+        onComponentSelected?.Invoke(this);
     }
 
     public void Deselect()
@@ -64,7 +64,7 @@ public class SelectComponent : MonoBehaviour, IClickable
         }
 
         onDeselected?.Invoke();
-        onDeselectedComponent?.Invoke(this);
+        onComponentDeselected?.Invoke(this);
     }
 
     // IClickable

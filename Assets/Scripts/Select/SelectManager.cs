@@ -1,22 +1,37 @@
+using System;
 using UnityEngine;
 
 public class SelectManager : MonoBehaviour
 {
-    private static SelectManager _instance;
-    public static SelectManager Instance => _instance ??= new SelectManager();
+    private static SelectManager instance;
+    public static SelectManager Instance => instance;
 
-    private SelectComponent selectedComponent;
+    public SelectComponent selectedComponent;
+
+    public static event Action<SelectComponent> onComponentSelected;
+    public static event Action<SelectComponent> onComponentDeselected;
+
+    private void Awake()
+    {
+        if (instance) {
+            Debug.Log("There is an extra SelectManager on the scene!");
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+    }
 
     private void OnEnable()
     {
-        SelectComponent.onSelectedComponent += OnSelectedComponent;
-        SelectComponent.onDeselectedComponent += OnDeselectedComponent;
+        SelectComponent.onComponentSelected += OnComponentSelected;
+        SelectComponent.onComponentDeselected += OnComponentDeselected;
     }
 
     private void OnDisable()
     {
-        SelectComponent.onSelectedComponent -= OnSelectedComponent;
-        SelectComponent.onDeselectedComponent -= OnDeselectedComponent;
+        SelectComponent.onComponentSelected -= OnComponentSelected;
+        SelectComponent.onComponentDeselected -= OnComponentDeselected;
     }
 
     public void Deselect()
@@ -26,23 +41,37 @@ public class SelectManager : MonoBehaviour
 
     public Building GetSelectedBuilding()
     {
-        return selectedComponent.GetComponent<BuildingConstruction>().ownedBuilding;
+        if (!selectedComponent) return null;
+
+        BuildingConstruction construction = selectedComponent.GetComponent<BuildingConstruction>();
+        if (!construction) return null;
+
+        return construction.ownedBuilding;
     }
 
     public Human GetSelectedHuman()
     {
+        if (!selectedComponent) return null;
+
         return selectedComponent.GetComponent<Human>();
     }
 
-    private void OnSelectedComponent(SelectComponent component)
+    private void OnComponentSelected(SelectComponent component)
     {
-        selectedComponent = component;
+        SetSelectedComponent(component);
+        onComponentSelected?.Invoke(selectedComponent);
     }
 
-    private void OnDeselectedComponent(SelectComponent component)
+    private void OnComponentDeselected(SelectComponent component)
     {
         if (component != selectedComponent) return;
 
-        selectedComponent = null;
+        SetSelectedComponent(null);;
+        onComponentDeselected?.Invoke(component);
+    }
+
+    private void SetSelectedComponent(SelectComponent selected)
+    {
+        selectedComponent = selected;
     }
 }
