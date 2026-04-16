@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 727593222174158496}
   - component: {fileID: 7313588908357942925}
   m_Layer: 5
-  m_Name: AdmissionText
+  m_Name: WandererText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -296,9 +296,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Admission
-
-'
+  m_text: Wanderer
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
@@ -382,7 +380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
-  item: {fileID: 11400000, guid: ba35e55e614a8794dbd5ab23e6d5eaf6, type: 2}
+  item: {fileID: 11400000, guid: 4760dca3e1d63e44e966d1910474a00c, type: 2}
   textRole: 1
 --- !u!1 &8930832137668496981
 GameObject:

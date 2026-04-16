@@ -1,17 +1,23 @@
 using UnityEngine;
 
-public class SelectManager
+public class SelectManager : MonoBehaviour
 {
     private static SelectManager _instance;
     public static SelectManager Instance => _instance ??= new SelectManager();
 
-    private SelectManager()
+    private SelectComponent selectedComponent;
+
+    private void OnEnable()
     {
         SelectComponent.onSelectedComponent += OnSelectedComponent;
         SelectComponent.onDeselectedComponent += OnDeselectedComponent;
     }
 
-    private SelectComponent selectedComponent;
+    private void OnDisable()
+    {
+        SelectComponent.onSelectedComponent -= OnSelectedComponent;
+        SelectComponent.onDeselectedComponent -= OnDeselectedComponent;
+    }
 
     public void Deselect()
     {

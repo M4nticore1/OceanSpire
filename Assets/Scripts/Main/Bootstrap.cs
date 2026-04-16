@@ -5,7 +5,6 @@ public class Bootstrap : MonoBehaviour
     private void Awake()
     {
         _ = PlayerSettings.Instance;
-        _ = SelectManager.Instance;
 
         WorldSaveManager.Instance.Init();
         SettingsSaveManager.Instance.Init();
