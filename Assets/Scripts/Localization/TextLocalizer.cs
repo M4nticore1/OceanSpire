@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -40,10 +41,11 @@ public class TextLocalizer : MonoBehaviour
         string text = LocalizationManager.Instance.GetText(item);
 
         if (placeHoldersLocalization != null) {
-            foreach (var key in placeHoldersLocalization.Localization.Keys.ToArray()) {
-                string holder = "{" + key + "}";
-                string value = placeHoldersLocalization.Localization[key];
+            Dictionary<string, string> dict = placeHoldersLocalization.GetLocalizations();
 
+            foreach (var key in dict.Keys.ToArray()) {
+                string holder = "{" + key + "}";
+                string value = dict[key];
                 text = text.Replace(holder, value);
             }
         }

@@ -7,7 +7,7 @@ public class ItemAdRewardInstance : AdRewardInstance, ILocalizable
     private CityStorage cityStorage;
     public int amount { get; private set; } = 0;
 
-    public Dictionary<string, string> Localization => GetPlaceHoldersLocalization();
+    public Dictionary<string, string> Localization;
 
     public ItemAdRewardInstance(ItemAdRewardData data)
     {
@@ -15,22 +15,21 @@ public class ItemAdRewardInstance : AdRewardInstance, ILocalizable
         cityStorage = Object.FindAnyObjectByType<CityStorage>();
 
         GenerateAmount();
-        GetPlaceHoldersLocalization();
     }
 
-    protected override void OnRewardRecieved()
-    {
-        int woodId = rewardData.ItemData.ItemId;
-        cityStorage.Inventory.AddItemAmount(woodId, amount);
-    }
-
-    protected Dictionary<string, string> GetPlaceHoldersLocalization()
+    public Dictionary<string, string> GetLocalizations()
     {
         return new Dictionary<string, string>()
         {
             { "itemName", LocalizationManager.Instance.GetText(rewardData.ItemData.LocalizationItem).ToLower() },
             { "amount", amount.ToString()},
         };
+    }
+
+    protected override void OnRewardRecieved()
+    {
+        int woodId = rewardData.ItemData.ItemId;
+        cityStorage.Inventory.AddItemAmount(woodId, amount);
     }
 
     private void GenerateAmount()

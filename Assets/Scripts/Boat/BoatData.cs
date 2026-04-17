@@ -23,8 +23,4 @@ public class BoatData : ScriptableObject
     public const float healthDrainInterval = 10f;
     public const float healthDisplayThreshold = 0.25f;
     public const float correctDockRotationSpeed = 0.5f;
-
-    [Header("UI")]
-    [SerializeField] private ContextMenu detailsMenuWidget = null;
-    public ContextMenu DetailsMenuWidget => detailsMenuWidget;
 }

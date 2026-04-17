@@ -8,7 +8,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
     [SerializeField] private SelectComponent selectComponent;
 
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
-    public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[LevelIndex];
+    public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[OwnedBuilding.LevelComponent.level - 1];
 
     public ProducedItem currentProductingItem { get; private set; }
     public int currentProductingItemIndex { get; private set; }

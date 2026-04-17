@@ -8,7 +8,7 @@ public class StorageBuildingModule : BuildingModule
     private CityStorage cityStorage;
 
     public StorageModuleLevelData[] StorageLevelsData => levelsData.OfType<StorageModuleLevelData>().ToArray();
-    public StorageModuleLevelData StorageLevelData => StorageLevelsData[LevelIndex];
+    public StorageModuleLevelData StorageLevelData => StorageLevelsData[OwnedBuilding.LevelComponent.level - 1];
 
     protected override void OnInit()
     {

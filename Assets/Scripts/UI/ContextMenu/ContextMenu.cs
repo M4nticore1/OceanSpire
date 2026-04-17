@@ -1,26 +1,83 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-public abstract class ContextMenu : UIBehaviour
+public class ContextMenu : UIBehaviour
 {
-    [SerializeField] private TextLocalizer nameTextLocalizer = null;
-    [SerializeField] private LayoutGroup layoutGroup = null;
+    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private Transform contextMenuRoot;
 
-    protected void SetNameLocalization(LocalizationItem localization)
+    [SerializeField] private TextLocalizer labelText;
+    [SerializeField] private TextLocalizer additionalText;
+
+    [SerializeField] private LocalizationItem levelLocalization;
+
+    protected override void OnEnable()
     {
-        nameTextLocalizer.SetLocalizationItem(localization);
+        base.OnEnable();
+
+        SelectManager.onComponentSelected += OnComponentSelected;
+        SelectManager.onComponentDeselected += OnComponentDeselected;
+        EventBus.onPlayerClicked += OnPlayerClicked;
     }
 
-    protected GameObject CreatePanel(GameObject panel)
+    protected override void OnDisable()
     {
-        GameObject spawned = Instantiate(panel, layoutGroup.transform);
-        spawned.transform.SetAsLastSibling();
-        return spawned;
-    }
-}
+        base.OnDisable();
 
-public abstract class ContextMenu<TData> : ContextMenu
-{
-    public abstract void Init(TData data);
+        SelectManager.onComponentSelected -= OnComponentSelected;
+        SelectManager.onComponentDeselected -= OnComponentDeselected;
+        EventBus.onPlayerClicked -= OnPlayerClicked;
+    }
+
+    // Open/Close
+    private void Open()
+    {
+        slidePanel.Open();
+    }
+
+    private void Close()
+    {
+        slidePanel.Close();
+    }
+
+    private void AssignText()
+    {
+        Building building = SelectManager.Instance.GetSelectedBuilding();
+        if (building) {
+            labelText.SetLocalizationItem(building.BuildingData.LocalizationItem);
+            labelText.UpdateText();
+
+            ILocalizable localizable = building.GetComponent<ILocalizable>();
+            additionalText.SetLocalizationItem(levelLocalization);
+            additionalText.SetPlaceHolderLocalization(localizable);
+            additionalText.UpdateText();
+
+            return;
+        }
+
+        Human human = SelectManager.Instance.GetSelectedHuman();
+        if (human) {
+            return;
+        }
+    }
+
+    // Events
+    private void OnComponentSelected(SelectComponent selected)
+    {
+        Open();
+        AssignText();
+    }
+
+    private void OnComponentDeselected(SelectComponent selected)
+    {
+        Close();
+    }
+
+    private void OnPlayerClicked(GameObject clicked)
+    {
+        SelectComponent selectComponent = clicked?.GetComponent<SelectComponent>();
+        if (selectComponent && selectComponent.isSelected) return;
+
+        Close();
+    }
 }

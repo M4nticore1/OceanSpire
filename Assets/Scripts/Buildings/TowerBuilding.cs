@@ -285,7 +285,7 @@ public class TowerBuilding : Building, INeighborBuildingsListener
     public bool ConnectedWith(TowerBuilding building)
     {
         if (building.buildingData.BuildingId != buildingData.BuildingId) return false;
-        if (building.levelComponent.LevelIndex != levelComponent.LevelIndex) return false;
+        if (building.levelComponent.level != levelComponent.level) return false;
         foreach (var neighborBuilding in NeighborBuildings(GetNeighborMaskByConnectionType(BuildingData.ConnectionType))) {
             if (neighborBuilding == building)
                 return true;

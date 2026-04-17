@@ -47,13 +47,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1458124863228298568}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94a937834bb490e499efe68b1a0fbd18, type: 3}
+  m_Script: {fileID: 11500000, guid: dced7976ba4a44145bc70523e59342e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ContextMenuMaster
   slidePanel: {fileID: 8176289903271446193}
   contextMenuRoot: {fileID: 5125527298814516783}
-  buildingContextMenu: {fileID: 265913792992382129, guid: 7b4257f477bce9341aca15da9cba1648, type: 3}
-  boatContextMenu: {fileID: 3594027615257554973, guid: 0f3c911bde22690478a852229167781f, type: 3}
+  labelText: {fileID: 8119099265921271466}
+  additionalText: {fileID: 8272070474954220761}
+  levelLocalization: {fileID: 11400000, guid: babfa891fdda2a940bd3637267626237, type: 2}
 --- !u!114 &8176289903271446193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,7 +168,7 @@ GameObject:
   - component: {fileID: 5364481163471399204}
   - component: {fileID: 8119099265921271466}
   m_Layer: 5
-  m_Name: NameText
+  m_Name: LabelText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

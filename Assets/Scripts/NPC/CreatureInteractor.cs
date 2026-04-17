@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Movement))]
 public class CreatureInteractor : MonoBehaviour
 {
     public Building interactBuilding { get; private set; }
@@ -58,14 +57,14 @@ public class CreatureInteractor : MonoBehaviour
                 RemoveInteractBuilding();
             }
             else {
-                if (selectedBuilding.workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
+                if (selectedBuilding.workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelComponent.level].maxResidentsCount) {
                     RemoveInteractBuilding();
                     SetInteractBuilding(selectedBuilding);
                 }
             }
         }
         else {
-            if (selectedBuilding.workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelIndex].maxResidentsCount) {
+            if (selectedBuilding.workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelComponent.level].maxResidentsCount) {
                 SetInteractBuilding(selectedBuilding);
             }
         }

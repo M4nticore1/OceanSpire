@@ -8,17 +8,19 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
 
     protected bool isWorking { get; private set; } = false;
 
-    protected int LevelIndex => OwnedBuilding.LevelIndex;
     [SerializeField] protected BuildingModuleLevelData[] levelsData = { };
     public BuildingModuleLevelData[] LevelsData => levelsData;
     public BuildingModuleLevelData LevelData
     {
         get
         {
-            if (LevelIndex < LevelsData.Length)
-                return LevelsData[LevelIndex];
+            int level = ownedBuilding.LevelComponent.level - 1;
+
+            if (level < LevelsData.Length) {
+                return LevelsData[level];
+            }
             else {
-                Debug.LogError(ownedBuilding.BuildingData.BuildingName + $" has no level data by index {LevelIndex}");
+                Debug.LogError(ownedBuilding.BuildingData.BuildingName + $" has no level data by index {level}");
                 return null;
             }
         }

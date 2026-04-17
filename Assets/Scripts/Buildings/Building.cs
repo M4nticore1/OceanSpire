@@ -8,9 +8,10 @@ public abstract class BuildingEntry
     public int level;
 }
 
-public abstract class Building : MonoBehaviour
+public abstract class Building : MonoBehaviour, ILocalizable
 {
     [SerializeField] protected LevelComponent levelComponent;
+    public LevelComponent LevelComponent => levelComponent;
 
     [Header("Audio")]
     [SerializeField] protected AudioSource workAudioSource;
@@ -18,7 +19,6 @@ public abstract class Building : MonoBehaviour
     private BuildingStrategy strategy;
 
     private bool isWorking = false;
-    public int LevelIndex => levelComponent ? levelComponent.LevelIndex : GetComponent<LevelComponent>().LevelIndex;
 
     public List<CreatureCityNavigator> enteredEntities { get; private set; } = new List<CreatureCityNavigator>();
     public List<CreatureInteractor> workers { get; private set; } = new List<CreatureInteractor>();
@@ -31,8 +31,8 @@ public abstract class Building : MonoBehaviour
     public BuildingData BuildingData => buildingData;
     [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
     public List<BuildingLevelData> LevelsData => buildingLevelsData;
-    public BuildingLevelData LevelData => LevelsData.Count > LevelIndex ? LevelsData[LevelIndex] : null;
-    public BuildingLevelData NextLevelData => LevelsData.Count > LevelIndex + 1 ? LevelsData[LevelIndex] : null;
+    public BuildingLevelData LevelData => LevelsData.Count > levelComponent.level - 1 ? LevelsData[levelComponent.level - 1] : null;
+    public BuildingLevelData NextLevelData => LevelsData.Count > levelComponent.level ? LevelsData[levelComponent.level] : null;
     [SerializeField] private bool isRuined = false;
     public bool IsRuined => isRuined;
 
@@ -224,6 +224,15 @@ public abstract class Building : MonoBehaviour
     public void OnDeselected()
     {
         onBuildingDeselected?.Invoke(this);
+    }
+
+    // ILocalizable
+    public Dictionary<string, string> GetLocalizations()
+    {
+        return new Dictionary<string, string>()
+        {
+            { "level", levelComponent.level.ToString() },
+        };
     }
 
     // Events

@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class LevelComponent : MonoBehaviour
 {
-    private int levelIndex = 0;
-    public int LevelIndex => levelIndex;
+    public int level { get; private set; } = 1;
 
-    public void SetLevelIndex(int value)
+    public void SetLevel(int value)
     {
-        levelIndex = value;
+        level = value;
     }
 }
