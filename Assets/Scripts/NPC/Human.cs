@@ -21,6 +21,7 @@ public class HumanEntry : CreatureEntry
 {
     public HumanStatusEnum status { get; private set; } = HumanStatusEnum.Citizen;
     public float health { get; private set; } = 0f;
+    public WeaponHandlerData weaponData { get; private set; }
     public SkillsData skills { get; private set; }
     public int interactBuildingInstanceId { get; private set; } = 0;
     public bool isMale { get; private set; } = false;
@@ -34,6 +35,7 @@ public class HumanEntry : CreatureEntry
         Vector3 position,
         Vector3 rotation,
         float health,
+        WeaponHandlerData weaponData,
         SkillsData skills,
         int boatInstanceId,
         bool isRidingOnBoat) :
@@ -41,6 +43,7 @@ public class HumanEntry : CreatureEntry
     {
         this.status = status;
         this.health = health;
+        this.weaponData = weaponData;
         this.skills = skills;
         this.boatInstanceId = boatInstanceId;
         this.isRidingOnBoat = isRidingOnBoat;
@@ -63,6 +66,9 @@ public class Human : Creature
 
     [SerializeField] private Attack attack;
     public Attack Attack => attack;
+
+    [SerializeField] private WeaponHandler weaponHandler;
+    public WeaponHandler WeaponHandler => WeaponHandler;
 
     [SerializeField] private SkillsComponent skills;
     public SkillsComponent Skills => skills;
@@ -173,6 +179,7 @@ public class Human : Creature
         AssignNameIndexes(humanData);
 
         health.SetCurrentHealth(humanData.health);
+        weaponHandler.Init(humanData.weaponData);
         skills.Init(humanData.skills);
 
         if (humanData.boatInstanceId >= 0) {

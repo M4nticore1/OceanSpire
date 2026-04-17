@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
+    [SerializeField] private WeaponHandler weaponHandler;
     [SerializeField] private Movement movement;
-
     [SerializeField] private Health health;
 
     [SerializeField] private float damage = 10f;
@@ -72,7 +72,7 @@ public class Attack : MonoBehaviour
     {
         Health health = currentTarget.health;
 
-        health.RemoveHealth(damage);
+        health.RemoveHealth(GetDamage());
         currentAttackTime = 0f;
     }
 
@@ -121,5 +121,10 @@ public class Attack : MonoBehaviour
         foreach (var attacker in currentAttackers) {
             attacker.HandleTargetDeath();
         }
+    }
+
+    private int GetDamage()
+    {
+        return weaponHandler.GetDamage();
     }
 }
