@@ -28,6 +28,7 @@
   "no_employed_citizens": "There are no employed citizens in the city",
   "ui_accept": "Accept",
   "ui_reject": "Reject",
+  "ui_evict": "Evict",
   "refund_resources": "Refund resources",
   "creature_citizen": "Citizen",
   "creature_wanderer": "Wanderer",

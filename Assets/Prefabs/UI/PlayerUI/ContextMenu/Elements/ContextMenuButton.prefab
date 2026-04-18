@@ -431,4 +431,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
   item: {fileID: 11400000, guid: b71a51156eb44994ebfd613117eff026, type: 2}
-  textRole: 0
+  textRole: 1

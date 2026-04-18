@@ -28,6 +28,7 @@
   "no_employed_citizens": "В городе нет работающих жителей",
   "ui_accept": "Принять",
   "ui_reject": "Отказать",
+  "ui_evict": "Выгнать",
   "refund_resources": "Возвращаемые ресурсы",
   "creature_citizen": "Житель",
   "creature_wanderer": "Странник",

@@ -77,12 +77,6 @@ public class WorkersControlMenu : ControlMenu
         }
     }
 
-    protected override void UpdateName()
-    {
-        LocalizationItem localizedName = SelectManager.Instance.GetSelectedBuilding().BuildingData.LocalizationItem;
-        selectedNameText.SetLocalizationItem(localizedName);
-    }
-
     // Events
     private void OnSetedCitizenWork()
     {

@@ -6,9 +6,6 @@ public class ContextMenu : UIBehaviour
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private Transform contextMenuRoot;
 
-    [SerializeField] private TextLocalizer labelText;
-    [SerializeField] private TextLocalizer additionalText;
-
     [SerializeField] private LocalizationItem levelLocalization;
 
     protected override void OnEnable()
@@ -40,32 +37,10 @@ public class ContextMenu : UIBehaviour
         slidePanel.Close();
     }
 
-    private void AssignText()
-    {
-        Building building = SelectManager.Instance.GetSelectedBuilding();
-        if (building) {
-            labelText.SetLocalizationItem(building.BuildingData.LocalizationItem);
-            labelText.UpdateText();
-
-            ILocalizable localizable = building.GetComponent<ILocalizable>();
-            additionalText.SetLocalizationItem(levelLocalization);
-            additionalText.SetPlaceHolderLocalization(localizable);
-            additionalText.UpdateText();
-
-            return;
-        }
-
-        Human human = SelectManager.Instance.GetSelectedHuman();
-        if (human) {
-            return;
-        }
-    }
-
     // Events
     private void OnComponentSelected(SelectComponent selected)
     {
         Open();
-        AssignText();
     }
 
     private void OnComponentDeselected(SelectComponent selected)

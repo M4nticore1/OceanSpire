@@ -6,7 +6,6 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
     protected bool isOpened = false;
 
     [SerializeField] private RectTransform content = null;
-    [SerializeField] protected TextLocalizer selectedNameText = null;
 
     protected override void Start()
     {
@@ -20,7 +19,6 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
     {
         content.gameObject.SetActive(true);
         UpdateMenu();
-        UpdateName();
 
         InputStateManager.instance.SetGameplayInputBlocked(true);
 
@@ -42,5 +40,4 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
     protected abstract void OnOpen();
     protected abstract void OnClose();
     protected abstract void UpdateMenu();
-    protected abstract void UpdateName();
 }

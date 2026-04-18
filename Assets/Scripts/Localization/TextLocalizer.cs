@@ -36,24 +36,27 @@ public class TextLocalizer : MonoBehaviour
 
     public void UpdateText()
     {
-        if (!item) return;
+        if (item) {
+            string text = LocalizationManager.Instance.GetText(item);
 
-        string text = LocalizationManager.Instance.GetText(item);
+            if (placeHoldersLocalization != null) {
+                Dictionary<string, string> dict = placeHoldersLocalization.GetLocalizations();
 
-        if (placeHoldersLocalization != null) {
-            Dictionary<string, string> dict = placeHoldersLocalization.GetLocalizations();
-
-            foreach (var key in dict.Keys.ToArray()) {
-                string holder = "{" + key + "}";
-                string value = dict[key];
-                text = text.Replace(holder, value);
+                foreach (var key in dict.Keys.ToArray()) {
+                    string holder = "{" + key + "}";
+                    string value = dict[key];
+                    text = text.Replace(holder, value);
+                }
             }
+
+            SetText(text);
+
+            TMP_FontAsset font = LocalizationManager.Instance.GetFont(textRole);
+            SetFont(font);
         }
-
-        SetText(text);
-
-        TMP_FontAsset font = LocalizationManager.Instance.GetFont(textRole);
-        SetFont(font);
+        else {
+            SetText(null);
+        }
     }
 
     public void SetLocalizationItem(LocalizationItem item)

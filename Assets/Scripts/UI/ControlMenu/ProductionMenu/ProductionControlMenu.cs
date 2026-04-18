@@ -67,12 +67,6 @@ public class ProductionControlMenu : ControlMenu
         spawnedProducedResourcePanels = null;
     }
 
-    protected override void UpdateName()
-    {
-        LocalizationItem localizedName = SelectManager.Instance.GetSelectedBuilding().BuildingData.LocalizationItem;
-        selectedNameText.SetLocalizationItem(localizedName);
-    }
-
     private void OnContextProductionButtonClicked()
     {
         Open();
