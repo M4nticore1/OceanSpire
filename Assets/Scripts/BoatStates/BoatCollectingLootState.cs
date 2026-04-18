@@ -43,7 +43,7 @@ public class BoatCollectingLootState : BoatState
         }
     }
 
-    public override void HandleReachedPath()
+    public override void OnReachedPath()
     {
 
     }

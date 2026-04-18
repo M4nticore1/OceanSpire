@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class CreatureFactory
 {
-    public static Human CreateHuman(HumanEntry data)
+    public static Human CreateHuman(HumanDataV1 data)
     {
         Human prefab = CreaturesList.Instance.Creatures[data.id] as Human;
         if (!prefab) {

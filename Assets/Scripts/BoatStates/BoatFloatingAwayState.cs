@@ -22,7 +22,7 @@ public class BoatFloatingAwayState : BoatState
 
     }
 
-    public override void HandleReachedPath()
+    public override void OnReachedPath()
     {
         Object.Destroy(boat.gameObject);
     }

@@ -50,13 +50,12 @@ public class TextLocalizer : MonoBehaviour
             }
 
             SetText(text);
-
-            TMP_FontAsset font = LocalizationManager.Instance.GetFont(textRole);
-            SetFont(font);
         }
         else {
             SetText(null);
         }
+
+        UpdateFont();
     }
 
     public void SetLocalizationItem(LocalizationItem item)
@@ -67,6 +66,12 @@ public class TextLocalizer : MonoBehaviour
     public void SetPlaceHolderLocalization(ILocalizable placeHolders)
     {
         placeHoldersLocalization = placeHolders;
+    }
+
+    private void UpdateFont()
+    {
+        TMP_FontAsset font = LocalizationManager.Instance.GetFont(textRole);
+        SetFont(font);
     }
 
     private void SetText(string text)

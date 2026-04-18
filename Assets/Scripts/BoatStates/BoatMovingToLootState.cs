@@ -24,9 +24,9 @@ public class BoatMovingToLootState : BoatFindingLootState
         base.Process();
     }
 
-    public override void HandleReachedPath()
+    public override void OnReachedPath()
     {
-        base.HandleReachedPath();
+        base.OnReachedPath();
 
         boat.SetState(BoatStateEnum.CollectingLoot);
     }

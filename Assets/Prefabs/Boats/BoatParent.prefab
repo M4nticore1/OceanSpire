@@ -87,7 +87,6 @@ GameObject:
   m_Component:
   - component: {fileID: 959300913105641093}
   - component: {fileID: 8520330495291878649}
-  - component: {fileID: 1558227740111410491}
   - component: {fileID: 3202602922045262551}
   - component: {fileID: 1275618266238498596}
   - component: {fileID: 1147310907644242627}
@@ -144,18 +143,6 @@ MonoBehaviour:
   selectComponent: {fileID: 6306187827067608498}
   dockPoint: {fileID: 0}
   seatSlot: {fileID: 6338914725495003467}
---- !u!114 &1558227740111410491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9194760719431650583}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92edbd1f4c6587e47a013acc8ba04f26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BoatDocker
 --- !u!114 &3202602922045262551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +171,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityMovement
   navAgent: {fileID: 2423519319514539946}
+  walkSpeed: 0
+  runSpeed: 0
 --- !u!114 &1147310907644242627
 MonoBehaviour:
   m_ObjectHideFlags: 0

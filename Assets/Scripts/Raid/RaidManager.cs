@@ -214,7 +214,6 @@ public class RaidManager : MonoBehaviour
     private void OnRaiderDied(Human human)
     {
         aliveRaidersCount--;
-        Debug.Log("AliveRaiders: " + aliveRaidersCount);
 
         if (aliveRaidersCount <= 0) {
             StopRaid();
@@ -223,15 +222,12 @@ public class RaidManager : MonoBehaviour
 
     private Human CreateRaider(Vector3 position, Vector3 rotation, int boatInstanceId)
     {
-        int id = (int)CreatureIdEnum.Human;
-        int instanceId = InstancesManager.instance.GetNextInstanceId();
-        HumanStatusEnum status = HumanStatusEnum.Raider;
-        float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
+        HumanDataV1 data = HumanDataFactory.CreateRandomRaiderData();
+        data.SetPosition(position);
+        data.SetRotation(rotation);
+        data.boatRider.SetBoatInstanceId(boatInstanceId);
+        data.boatRider.SetRiding(true);
 
-        WeaponHandlerData weaponsData = WeaponsDataGenerator.GetRandomDataGenerator(WeaponsDataGenerator.GetMinWeaponDamageId() + 1, WeaponsDataGenerator.GetMaxWeaponDamage());
-        SkillsData skillsData = SkillsGenerator.GetRandomSkillsData(SkillsGenerator.GetLevelsCount());
-
-        HumanEntry data = new HumanEntry(id, instanceId, position, rotation, status, health, -1, boatInstanceId, true, weaponsData, skillsData);
         Human human = CreatureFactory.CreateHuman(data);
 
         return human;

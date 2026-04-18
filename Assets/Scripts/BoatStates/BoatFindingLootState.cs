@@ -36,7 +36,7 @@ public class BoatFindingLootState : BoatState
         lastUpdateDestinationTime = Time.timeAsDouble;
     }
 
-    public override void HandleReachedPath()
+    public override void OnReachedPath()
     {
         
     }

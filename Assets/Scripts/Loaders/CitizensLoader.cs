@@ -12,7 +12,7 @@ public class CitizensLoader : MonoBehaviour
         WorldData saveData = WorldSaveManager.Instance.currentSaveWorldData;
 
         Vector3 position = Vector3.zero;
-        Quaternion rotation = Quaternion.identity;
+        Vector3 rotation = Vector3.zero;
 
         if (saveData != null) {
             foreach (var data in saveData.citizensData) {
@@ -21,7 +21,7 @@ public class CitizensLoader : MonoBehaviour
         }
         else {
             position = entitySpawnPosition.position;
-            rotation = entitySpawnPosition.rotation;
+            rotation = entitySpawnPosition.rotation.eulerAngles;
 
             for (int i = 0; i < startResidentsCount; i++) {
                 float x = Random.Range(position.x - maxSpawnRange, position.x + maxSpawnRange);
@@ -30,16 +30,10 @@ public class CitizensLoader : MonoBehaviour
 
                 Vector3 finalPosition = new Vector3(x, y, z);
 
-                int id = (int)CreatureIdEnum.Human;
-                int instanceId = InstancesManager.instance.GetNextInstanceId();
-                float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
+                HumanDataV1 data = HumanDataFactory.CreateRandomCitizenData();
+                data.SetPosition(finalPosition);
+                data.SetRotation(rotation);
 
-                int damage = WeaponsDataGenerator.GetMinWeaponDamageId();
-                WeaponHandlerData weaponsData = WeaponsDataGenerator.GetRandomDataGenerator(damage, damage);
-
-                SkillsData skillsData = SkillsGenerator.GetRandomSkillsData(SkillsGenerator.GetLevelsCount());
-
-                HumanEntry data = new HumanEntry(id, instanceId, finalPosition, rotation.eulerAngles, HumanStatusEnum.Citizen, health, -1, -1, false, weaponsData, skillsData);
                 Human citizen = CreatureFactory.CreateHuman(data);
             }
         }

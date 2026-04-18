@@ -30,9 +30,11 @@
   "ui_reject": "Отказать",
   "ui_evict": "Выгнать",
   "refund_resources": "Возвращаемые ресурсы",
+
   "creature_citizen": "Житель",
   "creature_wanderer": "Странник",
   "creature_raider": "Рейдер",
+
   "building_floor_frame": "Каркас этажа",
   "building_tower_gate": "Врата в башню",
   "building_pier": "Пирс",
@@ -42,10 +44,12 @@
   "building_farm": "Ферма",
   "building_kitchen": "Кухня",
   "building_wood_storage": "Хранилище дерева",
+
   "item_wood": "Дерево",
   "item_stone": "Камень",
   "item_metal": "Металл",
   "item_plastic": "Пластик",
+
   "item_potato": "Картошка",
   "skill_cooking": "Готовка",
   "skill_farming": "Фермерство",
@@ -55,11 +59,30 @@
   "skill_science": "Наука",
   "skill_combat": "Сражение",
   "skill_athletics": "Атлетика",
+
   "ad_reward": "Награда",
   "ad_bonus": "Бонус",
   "ad_bonus_ready": "Твой бонус готов!",
   "ad_get_bonus": "Забрать бонус",
   "ad_reward_item": "Вы получите {amount} {itemName} за просмотр",
   "ad_reward_boost_boats": "Вы увеличите скорость всех ваших лодок в 2 раза за просмотр",
-  "ad_reward_received_item": "Вы получили {amount} {itemName}!"
+  "ad_reward_received_item": "Вы получили {amount} {itemName}!",
+
+  "first_name_adam": "Адам",
+  "first_name_daniel": "Даниэль",
+  "first_name_david": "Дэвид",
+  "first_name_ethan": "Итан",
+  "first_name_lucas": "Лукас",
+  "first_name_michael": "Майкл",
+  "first_name_noah": "Ной",
+  "first_name_sam": "Сэм",
+
+  "last_name_anderson": "Андерсон",
+  "last_name_brown": "Браун",
+  "last_name_johnson": "Джонсон",
+  "last_name_miller": "Миллер",
+  "last_name_moore": "Мур",
+  "last_name_smith": "Смит",
+  "last_name_taylor": "Тэйлор",
+  "last_name_wilson": "Уилсон"
 }

@@ -64,7 +64,7 @@ public class BoatLootHandler : MonoBehaviour
     private void StartCollectingLoot()
     {
         currentTarget.StopMoving();
-        TimerManager.StartTimer(collectLootTimer, collectLootTime, CollectLoot);
+        TimerManager.Instance.StartTimer(collectLootTimer, collectLootTime, CollectLoot);
         isCollectingLoot = true;
     }
 

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class BoatIdleState : BoatState
 {
+    private const float correctDockRotationSpeed = 0.5f;
+
     public BoatIdleState(Boat boat) : base(boat)
     {
 
@@ -11,7 +13,7 @@ public class BoatIdleState : BoatState
     {
         if (!boat.currentRider) return;
 
-        boat.currentRider.HandleBoatSetedIdle();
+        boat.currentRider.OnBoatSetedIdle();
         boat.Movement.SetAgentEnabled(false);
 
         Human human = boat.currentRider.GetComponent<Human>();
@@ -30,10 +32,10 @@ public class BoatIdleState : BoatState
     {
         if (boat.transform.rotation == boat.dockPoint.DockTransform.rotation) return;
 
-        boat.transform.rotation = Quaternion.Lerp(boat.transform.rotation, boat.dockPoint.DockTransform.rotation, BoatData.correctDockRotationSpeed * Time.deltaTime);
+        boat.transform.rotation = Quaternion.Lerp(boat.transform.rotation, boat.dockPoint.DockTransform.rotation, correctDockRotationSpeed * Time.deltaTime);
     }
 
-    public override void HandleReachedPath()
+    public override void OnReachedPath()
     {
 
     }

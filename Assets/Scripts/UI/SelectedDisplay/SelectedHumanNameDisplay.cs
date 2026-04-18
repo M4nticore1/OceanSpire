@@ -7,16 +7,11 @@ public class SelectedHumanNameDisplay : SelectedDisplay
 
     protected override void Display()
     {
-        //Human human = SelectManager.Instance.GetSelectedHuman();
-        //if (!human) return;
+        Human human = SelectManager.Instance.GetSelectedHuman();
+        if (!human) return;
 
-        //LocalizationItem fistNameItem = human.;
+        string name = human.NameHandler.GetName();
 
-        //localizer.SetLocalizationItem(levelLocalization);
-        //localizer.UpdateText();
-
-        //string firstName = LocalizationManager.Instance.GetText();
-
-        //text.SetText();
+        text.SetText(name);
     }
 }

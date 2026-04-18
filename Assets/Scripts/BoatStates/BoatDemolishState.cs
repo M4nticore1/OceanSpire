@@ -22,7 +22,7 @@ public class BoatDemolishState : BoatState
 
     }
 
-    public override void HandleReachedPath()
+    public override void OnReachedPath()
     {
 
     }

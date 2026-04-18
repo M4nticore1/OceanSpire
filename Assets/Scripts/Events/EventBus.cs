@@ -33,7 +33,7 @@ public static class EventBus
     public static event Action<Human> onRaiderDied;
 
     // Residents
-    public static event Action<Human> onCitizenInited;
+    public static event Action<Human> onHumanInited;
     public static event Action<Human> onCitizenDeleted;
 
     // Workers
@@ -148,7 +148,7 @@ public static class EventBus
     // Residents
     public static void InvokeCitizenInited(Human resident)
     {
-        onCitizenInited?.Invoke(resident);
+        onHumanInited?.Invoke(resident);
     }
 
     public static void InvokeCitizenDeleted(Human resident)

@@ -38,7 +38,7 @@ public class BoatUnloadingState : BoatState
         }
     }
 
-    public override void HandleReachedPath()
+    public override void OnReachedPath()
     {
 
     }
@@ -77,7 +77,7 @@ public class BoatUnloadingState : BoatState
 
     private bool ShouldExit()
     {
-        CreatureInteractor interactor = boat.currentRider.GetComponent<CreatureInteractor>();
+        BuildingInteractHandler interactor = boat.currentRider.GetComponent<BuildingInteractHandler>();
         return !interactor.interactBuilding || BoatsManager.Instance.GetBoatByInteractorIndex(interactor.workerIndex) != boat;
     }
 }

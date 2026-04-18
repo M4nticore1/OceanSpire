@@ -38,8 +38,8 @@ public class BoatEntry
 
 public class Boat : MonoBehaviour
 {
-    [SerializeField] private BoatData boatData;
-    public BoatData BoatData => boatData;
+    [SerializeField] private BoatDefinition boatData;
+    public BoatDefinition BoatData => boatData;
 
     public BoatStateEnum currentState { get; private set; } = BoatStateEnum.Idle;
     private BoatState state;
@@ -126,7 +126,7 @@ public class Boat : MonoBehaviour
         BoatsManager.Instance.RegisterBoat(this);
     }
 
-    public void HandleReturnedToDock()
+    public void OnReturnedToDock()
     {
         if (Inventory.CurrentWeight > 0) {
             SetState(BoatStateEnum.UnloadingLoot);
@@ -191,7 +191,7 @@ public class Boat : MonoBehaviour
     // Events
     private void OnReachedPath()
     {
-        state.HandleReachedPath();
+        state.OnReachedPath();
     }
 
     // State

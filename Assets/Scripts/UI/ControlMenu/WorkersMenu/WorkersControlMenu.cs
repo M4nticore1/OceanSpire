@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class WorkersControlMenu : ControlMenu
 {
-    [SerializeField] private CreaturesManager entitiesManager;
-
     [SerializeField] private WorkersPanel buildingWorkersMenu;
     [SerializeField] private WorkersPanel unemployedCitizensMenu;
     [SerializeField] private WorkersPanel employedCitizensMenu;
@@ -23,7 +21,7 @@ public class WorkersControlMenu : ControlMenu
         base.OnEnable();
 
         EventBus.onContextWorkersButtonClicked += OnContextWorkersButtonClicked;
-        EventBus.onCitizenInited += OnCitizenAdded;
+        EventBus.onHumanInited += OnHumanInited;
         EventBus.onSetedWorkBuilding += OnSetedCitizenWork;
         EventBus.onRemovedWorkBuilding += OnRemovedCitizenWork;
     }
@@ -33,7 +31,7 @@ public class WorkersControlMenu : ControlMenu
         base.OnEnable();
 
         EventBus.onContextWorkersButtonClicked -= OnContextWorkersButtonClicked;
-        EventBus.onCitizenInited -= OnCitizenAdded;
+        EventBus.onHumanInited -= OnHumanInited;
         EventBus.onSetedWorkBuilding -= OnSetedCitizenWork;
         EventBus.onRemovedWorkBuilding -= OnRemovedCitizenWork;
     }
@@ -51,7 +49,7 @@ public class WorkersControlMenu : ControlMenu
     protected override void UpdateMenu()
     {
         Building selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
-        List<Human> citizens = entitiesManager.citizens;
+        List<Human> citizens = CreaturesManager.instance.citizens;
         int maxWorkersCount = selectedBuilding.LevelData.maxResidentsCount;
 
         buildingWorkersMenu.ClearWidgets();
@@ -92,7 +90,7 @@ public class WorkersControlMenu : ControlMenu
         UpdateMenu();
     }
 
-    private void OnCitizenAdded(Human resident)
+    private void OnHumanInited(Human resident)
     {
         if (!isOpened) return;
 

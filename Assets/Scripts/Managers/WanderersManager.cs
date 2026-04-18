@@ -63,7 +63,7 @@ public class WanderersManager : MonoBehaviour
         Vector3 rotation = Quaternion.LookRotation(-position.normalized).eulerAngles;
 
         Boat boat = CreateBoat(position, rotation);
-        Human human = CreateWanderer(position, rotation, boat.InstanceId.id, true);
+        Human human = CreateWanderer(position, rotation, boat.InstanceId.id);
 
         spawnPositions.Add(human, position);
     }
@@ -108,20 +108,15 @@ public class WanderersManager : MonoBehaviour
         }
     }
 
-    private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId, bool isRidingOnBoat)
+    private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId)
     {
-        int id = (int)CreatureIdEnum.Human;
-        int instanceId = InstancesManager.instance.GetNextInstanceId();
-        HumanStatusEnum status = HumanStatusEnum.Wanderer;
-        float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
+        HumanDataV1 data = HumanDataFactory.CreateRandomWandererData();
+        data.SetPosition(position);
+        data.SetRotation(rotation);
+        data.boatRider.SetBoatInstanceId(boatId);
+        data.boatRider.SetRiding(true);
 
-        int damage = WeaponsDataGenerator.GetMinWeaponDamageId();
-        WeaponHandlerData weaponsData = WeaponsDataGenerator.GetRandomDataGenerator(damage, damage);
-
-        SkillsData skillsData = SkillsGenerator.GetRandomSkillsData(SkillsGenerator.GetLevelsCount());
-
-        HumanEntry humanData = new HumanEntry(id, instanceId, position, rotation, status, health, -1, boatId, isRidingOnBoat, weaponsData, skillsData);
-        Human human = CreatureFactory.CreateHuman(humanData);
+        Human human = CreatureFactory.CreateHuman(data);
 
         return human;
     }

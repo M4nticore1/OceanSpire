@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5552754147449274060}
   - component: {fileID: 9140235139351627301}
+  - component: {fileID: 6264695886038843937}
   - component: {fileID: 4098557255172134659}
   - component: {fileID: 6316746746762001490}
   - component: {fileID: 2185582854232776361}
@@ -100,6 +101,7 @@ MonoBehaviour:
   movement: {fileID: -7493649843608556168}
   creatureData: {fileID: 11400000, guid: 84ce6b77893601742bd80f0644c2bc89, type: 2}
   instanceId: {fileID: 6196963818731621145}
+  nameHandler: {fileID: 6264695886038843937}
   health: {fileID: 4098557255172134659}
   cityNavigator: {fileID: 2185582854232776361}
   interactor: {fileID: 6316746746762001490}
@@ -112,6 +114,18 @@ MonoBehaviour:
   citizenClothes: {fileID: 7973490114622572982}
   wandererClothes: {fileID: 6389129458769497322}
   raiderClothes: {fileID: 8824345702923679192}
+--- !u!114 &6264695886038843937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caed12e63ca3c7c4699d81ccccb6e749, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NameHandler
 --- !u!114 &4098557255172134659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,7 +149,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6506537361480025273}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72b46fc7eafdb7f42bdf96505c6326cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 21cf396309e47dc4299e233a12c6a5a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCBuildingInteractor
 --- !u!114 &2185582854232776361

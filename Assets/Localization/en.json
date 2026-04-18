@@ -30,9 +30,11 @@
   "ui_reject": "Reject",
   "ui_evict": "Evict",
   "refund_resources": "Refund resources",
+
   "creature_citizen": "Citizen",
   "creature_wanderer": "Wanderer",
   "creature_raider": "Raider",
+
   "building_floor_frame": "Floor frame",
   "building_tower_gate": "Tower gate",
   "building_pier": "Pier",
@@ -42,11 +44,13 @@
   "building_farm": "Farm",
   "building_kitchen": "Kitchen",
   "building_wood_storage": "Wood storage",
+
   "item_wood": "Wood",
   "item_stone": "Stone",
   "item_metal": "Metal",
   "item_plastic": "Plastic",
   "item_potato": "Potato",
+
   "skill_cooking": "Cooking",
   "skill_farming": "Farming",
   "skill_electricity": "Electricity",
@@ -55,11 +59,30 @@
   "skill_science": "Science",
   "skill_combat": "Combat",
   "skill_athletics": "Athletics",
+
   "ad_reward": "Reward",
   "ad_bonus": "Bonus",
   "ad_bonus_ready": "Your bonus is ready!",
   "ad_get_bonus": "Give bonus",
   "ad_reward_item": "You will get {amount} {itemName} for watching",
   "ad_reward_boost_boats": "You will double the speed of your boats by watching.",
-  "ad_reward_received_item": "You got {amount} {itemName}!"
+  "ad_reward_received_item": "You got {amount} {itemName}!",
+
+  "first_name_adam": "Adam",
+  "first_name_daniel": "Daniel",
+  "first_name_david": "David",
+  "first_name_ethan": "Ethan",
+  "first_name_lucas": "Lucas",
+  "first_name_michael": "Michael",
+  "first_name_noah": "Noah",
+  "first_name_sam": "Sam",
+
+  "last_name_anderson": "Anderson",
+  "last_name_brown": "Brown",
+  "last_name_johnson": "Johnson",
+  "last_name_miller": "Miller",
+  "last_name_moore": "Moore",
+  "last_name_smith": "Smith",
+  "last_name_taylor": "Taylor",
+  "last_name_wilson": "Wilson"
 }

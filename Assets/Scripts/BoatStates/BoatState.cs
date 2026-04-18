@@ -12,5 +12,5 @@ public abstract class BoatState
     public abstract void Enter();
     public abstract void Exit();
     public abstract void Process();
-    public abstract void HandleReachedPath();
+    public abstract void OnReachedPath();
 }

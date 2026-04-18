@@ -35,7 +35,7 @@ public class SkillWidget : MonoBehaviour
 
     private void AssignHighlight()
     {
-        float alpha = (float)(skill.currentLevel - 1) / (SkillDefinition.maxSkillLevel / SkillsGenerator.GetLevelsCount());
+        float alpha = (float)(skill.currentLevel - 1) / (SkillDefinition.maxSkillLevel / SkillsFactory.GetLevelsCount());
 
         Color color = Color.Lerp(normalColor, highlightedColor, alpha);
         string hex = ColorUtility.ToHtmlStringRGBA(color);

@@ -24,12 +24,12 @@ public class WorldData
     //public float[] buildingProductionTimers { get; private set; } = new float[0];
 
     // Boats
-    public CityData cityData;
+    public CityDataV1 cityData;
     public PlayerEntry playerData;
     public GroundBuildingEntry[] groundBuildingsData;
     public TowerBuildingEntry[] towerBuildingsData;
     public BoatEntry[] boatsData;
-    public HumanEntry[] citizensData;
+    public HumanDataV1[] citizensData;
     //public int[] spawnedBoatIds { get; private set; } = new int[0];
     //public bool[] spawnedBoatsAreUnderConstruction { get; private set; } = new bool[0];
     //public bool[] spawnedBoatsAreFloating { get; private set; } = new bool[0];

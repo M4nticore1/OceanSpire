@@ -37,7 +37,7 @@ public class CoalGeneratorModule : ProductionModule
 
     private void StartPlayingSmoke()
     {
-        TimerManager.RemoveTimer(stopProductingTimerHandle);
+        TimerManager.Instance.RemoveTimer(stopProductingTimerHandle);
         spawnedSmoke.gameObject.SetActive(true);
         spawnedSmoke.Play();
     }
@@ -46,6 +46,6 @@ public class CoalGeneratorModule : ProductionModule
     {
         spawnedSmoke.Stop();
         float time = smokePrefab.main.startLifetime.constant;
-        TimerManager.StartTimer(stopProductingTimerHandle, time, () => spawnedSmoke.gameObject.SetActive(false));
+        TimerManager.Instance.StartTimer(stopProductingTimerHandle, time, () => spawnedSmoke.gameObject.SetActive(false));
     }
 }

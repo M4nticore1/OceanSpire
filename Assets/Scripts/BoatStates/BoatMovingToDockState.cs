@@ -21,9 +21,9 @@ public class BoatMovingToDockState : BoatState
         boat.ProcessDrainHealth();
     }
 
-    public override void HandleReachedPath()
+    public override void OnReachedPath()
     {
-        boat.HandleReturnedToDock();
+        boat.OnReturnedToDock();
     }
 
     private void StartMovingToDock()

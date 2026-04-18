@@ -140,9 +140,9 @@ public class ElevatorCabinConstruction : BuildingConstruction
         ridingPassengers.Remove(passenger);
 
         if (ridingPassengers.Count > 0)
-            TimerManager.ResetTimer(startMovingTimerHandle);
+            TimerManager.Instance.ResetTimer(startMovingTimerHandle);
         else
-            TimerManager.RemoveTimer(startMovingTimerHandle);
+            TimerManager.Instance.RemoveTimer(startMovingTimerHandle);
     }
 
     // Passengers
@@ -202,12 +202,12 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private void StartMovingToFloorTimer()
     {
         AssignTargetFloor();
-        TimerManager.StartTimer(startMovingTimerHandle, delayToStartMoving, () => StartMovingToFloor(targetFloor));
+        TimerManager.Instance.StartTimer(startMovingTimerHandle, delayToStartMoving, () => StartMovingToFloor(targetFloor));
     }
 
     private void RemoveMovingToFloorTimer()
     {
-        TimerManager.RemoveTimer(startMovingTimerHandle);
+        TimerManager.Instance.RemoveTimer(startMovingTimerHandle);
     }
 
     private void AssignTargetFloor()

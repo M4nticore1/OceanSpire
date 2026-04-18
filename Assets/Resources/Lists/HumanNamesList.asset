@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f420a60543cafe540a1f228f940c3f34, type: 3}
+  m_Name: HumanNamesList
+  m_EditorClassIdentifier: Assembly-CSharp::HumanNamesList
+  maleFirstNames:
+  - {fileID: 11400000, guid: 621fde47a72d95f4d91047e15b17b6e4, type: 2}
+  - {fileID: 11400000, guid: a6f962be9e26bb34aa32bbc2af704016, type: 2}
+  - {fileID: 11400000, guid: d0d844f64378b984590bc3ef14fb4275, type: 2}
+  - {fileID: 11400000, guid: 74489aad231110a46aa3405fce885d21, type: 2}
+  - {fileID: 11400000, guid: 7f54d436d8f6eb14c9ef81569f9b2b5d, type: 2}
+  - {fileID: 11400000, guid: f0934126086f37d499956b427f6d650d, type: 2}
+  - {fileID: 11400000, guid: a591bf7c06f07544185d06d83803a90d, type: 2}
+  - {fileID: 11400000, guid: 0be102a6fb41abe46919acdd4fbf4e57, type: 2}
+  maleLastNames:
+  - {fileID: 11400000, guid: 8c052596764815e4088658f4a8a3dd41, type: 2}
+  - {fileID: 11400000, guid: a319638e0636a8c419ef35af33e19e28, type: 2}
+  - {fileID: 11400000, guid: 71ed54ed70e80f349986db0830ba502a, type: 2}
+  - {fileID: 11400000, guid: 6c5545ac47cd36b4e834a2602d9696c3, type: 2}
+  - {fileID: 11400000, guid: d06de630bd7732844ba903ebe3a8fd37, type: 2}
+  - {fileID: 11400000, guid: 146787ee4b008f749aafe1c9be367394, type: 2}
+  - {fileID: 11400000, guid: f025af367a4735740b6e39119e122ec3, type: 2}
+  - {fileID: 11400000, guid: dc5374fa38a31c4468adc0d95799d1b0, type: 2}
+  femaleFirstNames: []
+  femaleLastNames: []

@@ -2,22 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class CreatureEntry
-{
-    public int instanceId { get; private set; } = -1;
-    public int id { get; private set; }
-    public Vector3 position { get; private set; }
-    public Vector3 rotation { get; private set; }
-
-    public CreatureEntry(int id, int instanceId, Vector3 position, Vector3 rotation)
-    {
-        this.id = id;
-        this.instanceId = instanceId;
-        this.position = position;
-        this.rotation = rotation;
-    }
-}
-
 public abstract class Creature : MonoBehaviour
 {
     [SerializeField] protected NavMeshAgent agent;
@@ -25,8 +9,8 @@ public abstract class Creature : MonoBehaviour
     [SerializeField] protected Movement movement;
     public Movement Movement => movement;
 
-    [SerializeField] protected CreatureData creatureData;
-    public CreatureData CreatureData => creatureData;
+    [SerializeField] protected CreatureDefinition creatureDefinition;
+    public CreatureDefinition CreatureDefinition => creatureDefinition;
 
     [SerializeField] private InstanceId instanceId;
 
@@ -47,7 +31,7 @@ public abstract class Creature : MonoBehaviour
         movement.onStoppedMoving -= OnStoppedMoving;
     }
 
-    public void Init(CreatureEntry data)
+    public void Init(CreatureDataV1 data)
     {
         transform.position = data.position;
         transform.rotation = Quaternion.Euler(data.rotation);
@@ -58,7 +42,7 @@ public abstract class Creature : MonoBehaviour
         AssignIdle();
     }
 
-    protected abstract void OnInit(CreatureEntry data);
+    protected abstract void OnInit(CreatureDataV1 data);
     protected abstract bool ShouldStartIdle();
 
     // Idle
