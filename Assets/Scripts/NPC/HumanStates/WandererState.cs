@@ -54,6 +54,11 @@ public class WandererState : HumanState
         boat.SetState(BoatStateEnum.MovingToDock);
     }
 
+    public override void OnExitedBoat(Boat boat)
+    {
+        
+    }
+
     public override void OnRevived()
     {
 

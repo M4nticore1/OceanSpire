@@ -1,23 +1,29 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("BuildingModules/Storage Building Module")]
 public class StorageBuildingModule : BuildingModule
 {
-    private CityStorage cityStorage;
-
     public StorageModuleLevelData[] StorageLevelsData => levelsData.OfType<StorageModuleLevelData>().ToArray();
     public StorageModuleLevelData StorageLevelData => StorageLevelsData[OwnedBuilding.LevelComponent.level - 1];
 
     protected override void OnInit()
     {
-        cityStorage = FindAnyObjectByType<CityStorage>();
+        foreach (var category in StorageLevelData.storageItemCategories) {
+            foreach (var itemDef in ItemsList.Instance.Items) {
+                if (itemDef.ItemCategory != category.ItemCategory) continue;
+                if (HasCategory(category.ItemCategory)) continue;
+
+                int id = itemDef.ItemId;
+                int amount = category.Amount;
+                CityStorage.instance.Inventory.AddItemMaxAmount(id, amount);
+            }
+        }
 
         foreach (ItemInstance item in StorageLevelData.storageItems) {
             int id = item.ItemData.ItemId;
             int amount = item.Amount;
-            cityStorage.Inventory.AddItemMaxAmount(id, amount);
+            CityStorage.instance.Inventory.AddItemMaxAmount(id, amount);
         }
     }
 
@@ -26,7 +32,7 @@ public class StorageBuildingModule : BuildingModule
         foreach (ItemInstance item in StorageLevelData.storageItems) {
             int id = item.ItemData.ItemId;
             int amount = item.Amount;
-            cityStorage.Inventory.RemoveItemMaxAmount(id, amount);
+            CityStorage.instance.Inventory.RemoveItemMaxAmount(id, amount);
         }
     }
 
@@ -38,5 +44,14 @@ public class StorageBuildingModule : BuildingModule
     protected override void OnBuildingStopWorking()
     {
 
+    }
+
+    private bool HasCategory(ItemCategory category)
+    {
+        foreach (var item in StorageLevelData.storageItems) {
+            if (item.ItemData.ItemCategory == category) return true;
+        }
+
+        return false;
     }
 }

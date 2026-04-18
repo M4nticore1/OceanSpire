@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc8039db3c8dae249b72a3acea657e28, type: 3}
-  m_Name: WoodItemData
+  m_Name: item_Stone
   m_EditorClassIdentifier: 
-  itemId: 4
-  itemIdName: wood
-  itemName: Wood
-  weight: 2
+  itemId: 5
+  itemIdName: stone
+  itemName: Stone
+  weight: 5
   itemCategory: 1
-  localizationItem: {fileID: 11400000, guid: 05cb771be4d5d0342b20cd09c020b70b, type: 2}
-  itemIcon: {fileID: 21300000, guid: e843054e53a3f3a4caa4d88a03e02e29, type: 3}
+  localizationItem: {fileID: 11400000, guid: 33b9e9077cd732b499baa90405e6a7e3, type: 2}
+  itemIcon: {fileID: 21300000, guid: 8d4ff37e3a437cf4e91026e8b0ceb96a, type: 3}

@@ -16,6 +16,7 @@ public class BoatsLoader : MonoBehaviour
 
             for (int i = 0; i < boatIds.Length; i++) {
                 int id = (int)boatIds[i];
+                int instanceId = InstancesManager.instance.GetNextInstanceId();
                 Boat prefab = BoatsList.Instance.boats[id];
                 BoatDockPoint spawnTransform = BuildingsManager.instance.PierBuilding.GetComponent<PierModule>().PierConstruction.BoatDocks[i];
 
@@ -25,8 +26,8 @@ public class BoatsLoader : MonoBehaviour
                 float health = prefab.Health.MaxHealth;
                 int dockId = DockPointsManager.instance.pierDockPoints[i].InstanceId.id;
 
-                BoatEntry boatData = new BoatEntry(id, BoatStateEnum.Idle, position, rotation, health, dockId);
-                Boat boat = BoatFactory.CreateBoat(boatData);
+                BoatEntry boatData = new BoatEntry(id, instanceId, BoatStateEnum.Idle, position, rotation, health, dockId);
+                Boat boat = BoatFactory.CreateBoat(prefab, boatData);
             }
         }
     }

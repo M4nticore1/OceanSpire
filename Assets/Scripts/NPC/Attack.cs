@@ -44,7 +44,7 @@ public class Attack : MonoBehaviour
     public void SetTarget(Attack target)
     {
         currentTarget = target;
-        target.HandleBecomeTarget(this);
+        target.OnBecomeTarget(this);
     }
 
     public void RemoveTarget()
@@ -76,7 +76,7 @@ public class Attack : MonoBehaviour
         currentAttackTime = 0f;
     }
 
-    public void HandleBecomeTarget(Attack target)
+    public void OnBecomeTarget(Attack target)
     {
         if (currentAttackers.Contains(target)) return;
 
@@ -85,12 +85,12 @@ public class Attack : MonoBehaviour
         MoveToTarget();
     }
 
-    public void HandleStopBeingTarget(Attack target)
+    public void OnStopBeingTarget(Attack target)
     {
         RemoveAttacker(target);
     }
 
-    public void HandleTargetDeath()
+    public void OnTargetDied()
     {
         RemoveTarget();
     }
@@ -119,7 +119,7 @@ public class Attack : MonoBehaviour
         RemoveTarget();
 
         foreach (var attacker in currentAttackers) {
-            attacker.HandleTargetDeath();
+            attacker.OnTargetDied();
         }
     }
 

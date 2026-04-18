@@ -1,4 +1,3 @@
-using System.Globalization;
 using UnityEngine;
 
 public class RaiderState : HumanState
@@ -55,11 +54,11 @@ public class RaiderState : HumanState
 
     public override void OnSetedInteractBuilding(Building building)
     {
-        if (human.BoatRider.isRidingOnBoat) {
-            human.BoatRider.selectedBoat.SetState(BoatStateEnum.MovingToDock);
+        if (building) {
+            human.CityNavigator.TryFindPathToTargetBuilding();
         }
         else {
-            human.CityNavigator.TryFindPathToTargetBuilding();
+            human.MoveToBoat();
         }
     }
 
@@ -82,10 +81,19 @@ public class RaiderState : HumanState
 
     public override void OnEnteredBoat(Boat boat)
     {
-        if (!isFinishedRaiding) return;
+        if (isFinishedRaiding) {
+            Vector3 position = RaidManager.instance.GetSpawnPosition(human.BoatRider.selectedBoat);
+            boat.FloatAway(position);
+        }
+        else {
+            human.BoatRider.selectedBoat.SetState(BoatStateEnum.MovingToDock);
+        }
+    }
 
-        Vector3 position = RaidManager.instance.GetSpawnPosition(human.BoatRider.selectedBoat);
-        boat.FloatAway(position);
+    public override void OnExitedBoat(Boat boat)
+    {
+        Building interactBuilding = RaidManager.GetRandomRaidBuilding();
+        human.SetInteractBuilding(interactBuilding);
     }
 
     public override void OnRevived()

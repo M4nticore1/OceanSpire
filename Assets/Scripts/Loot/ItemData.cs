@@ -2,15 +2,17 @@ using UnityEngine;
 
 public enum ItemID
 {
-    Population,
-    Electricity,
-    Food,
-    Water,
-    Wood,
-    Stone,
-    Metal,
-    Plastic,
-    Potato,
+    Population = 0,
+    Electricity = 1,
+    Food = 2,
+    Water = 3,
+    Wood = 4,
+    Stone = 5,
+    Metal = 6,
+    Plastic = 7,
+    Potato = 8,
+    Hands = 9,
+    BaseballBat = 10,
 }
 
 //[System.Serializable]
@@ -45,4 +47,7 @@ public class ItemData : ScriptableObject
 
     [SerializeField] private Sprite itemIcon = null;
     public Sprite ItemIcon => itemIcon;
+
+    [SerializeField] private bool showInStorage = true;
+    public bool ShowInStorage => showInStorage;
 }

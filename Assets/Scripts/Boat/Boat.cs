@@ -1,6 +1,18 @@
 using System;
 using UnityEngine;
 
+public enum BoatStateEnum
+{
+    Idle,
+    FindingLoot,
+    MovingToLoot,
+    CollectingLoot,
+    MovingToDock,
+    UnloadingLoot,
+    FloatingAway,
+    Demolished
+}
+
 [Serializable]
 public class BoatEntry
 {
@@ -12,27 +24,16 @@ public class BoatEntry
     public int dockInstanceId { get; private set; } = 0;
     public float health { get; private set; } = 0;
 
-    public BoatEntry(int id, BoatStateEnum state, Vector3 position, Vector3 rotation, float health, int dockInstanceId)
+    public BoatEntry(int id, int instanceId, BoatStateEnum state, Vector3 position, Vector3 rotation, float health, int dockInstanceId)
     {
         this.id = id;
+        this.instanceId = instanceId;
         this.state = state;
         this.position = position;
         this.rotation = rotation;
         this.health = health;
         this.dockInstanceId = dockInstanceId;
     }
-}
-
-public enum BoatStateEnum
-{
-    Idle,
-    FindingLoot,
-    MovingToLoot,
-    CollectingLoot,
-    MovingToDock,
-    UnloadingLoot,
-    FloatingAway,
-    Demolished
 }
 
 public class Boat : MonoBehaviour
@@ -118,7 +119,7 @@ public class Boat : MonoBehaviour
 
         health.Init(data.health);
 
-        BoatDockPoint dockPoint = DockPointsManager.instance.DockPointsDict[data.dockInstanceId];
+        BoatDockPoint dockPoint = InstancesManager.instance.GetInstance(data.dockInstanceId).GetComponent<BoatDockPoint>();
         SetDockPoint(dockPoint);
 
         SetState(data.state);

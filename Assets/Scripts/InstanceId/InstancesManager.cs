@@ -8,6 +8,8 @@ public class InstancesManager : MonoBehaviour
     private List<int> instanceIds = new List<int>();
     public IReadOnlyList<int> InstanceIds => instanceIds.AsReadOnly();
 
+    private Dictionary<int, InstanceId> instances = new();
+
     private void Awake()
     {
         if (instance) {
@@ -18,18 +20,38 @@ public class InstancesManager : MonoBehaviour
         instance = this;
     }
 
-    public void AddInstanceId(int id)
+    public void RegisterInstance(InstanceId instance)
     {
-        instanceIds.Add(id);
+        int id = GetNextInstanceId();
+        RegisterInstance(instance, id);
     }
 
-    public void RemoveInstanceId(int id)
+    public void RegisterInstance(InstanceId instance, int id)
     {
-        instanceIds.Remove(id);
+        instanceIds.Add(id);
+        instances.Add(id, instance);
+    }
+
+    public void UnregisterInstance(InstanceId instance)
+    {
+        instanceIds.Remove(instance.id);
+        instances.Remove(instance.id);
+    }
+
+    public bool TryGetInstance(int id, out InstanceId instanceId)
+    {
+        instanceId = GetInstance(id);
+
+        return instanceId;
+    }
+
+    public InstanceId GetInstance(int id)
+    {
+        return instances.GetValueOrDefault(id);
     }
 
     public int GetNextInstanceId()
-    {        
+    {
         return instanceIds.Count > 0 ? instanceIds.Max() + 1 : 0;
     }
 }

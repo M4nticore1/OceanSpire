@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum HumanStatusEnum
 {
@@ -21,32 +20,35 @@ public class HumanEntry : CreatureEntry
 {
     public HumanStatusEnum status { get; private set; } = HumanStatusEnum.Citizen;
     public float health { get; private set; } = 0f;
+    public int interactBuildingInstanceId { get; private set; } = 0;
+    public int boatInstanceId { get; private set; } = 0;
+    public bool isRidingOnBoat { get; private set; } = false;
     public WeaponHandlerData weaponData { get; private set; }
     public SkillsData skills { get; private set; }
-    public int interactBuildingInstanceId { get; private set; } = 0;
     public bool isMale { get; private set; } = false;
     public int firstNameIndex { get; private set; } = 0;
     public int lastNameIndex { get; private set; } = 0;
-    public int boatInstanceId { get; private set; } = 0;
-    public bool isRidingOnBoat { get; private set; } = false;
 
     public HumanEntry(int id,
-        HumanStatusEnum status,
+        int instanceId,
         Vector3 position,
         Vector3 rotation,
+        HumanStatusEnum status,
         float health,
-        WeaponHandlerData weaponData,
-        SkillsData skills,
+        int interactBuildingInstanceId,
         int boatInstanceId,
-        bool isRidingOnBoat) :
-        base(id, position, rotation)
+        bool isRidingOnBoat,
+        WeaponHandlerData weaponData,
+        SkillsData skills) :
+        base(id, instanceId, position, rotation)
     {
         this.status = status;
         this.health = health;
-        this.weaponData = weaponData;
-        this.skills = skills;
+        this.interactBuildingInstanceId = interactBuildingInstanceId;
         this.boatInstanceId = boatInstanceId;
         this.isRidingOnBoat = isRidingOnBoat;
+        this.weaponData = weaponData;
+        this.skills = skills;
     }
 }
 
@@ -174,11 +176,18 @@ public class Human : Creature
         HumanEntry humanData = data as HumanEntry;
 
         HideClothes();
-        SetStatus(humanData.status);
         isMale = humanData.isMale;
         AssignNameIndexes(humanData);
+        SetStatus(humanData.status);
 
         health.SetCurrentHealth(humanData.health);
+
+        if (InstancesManager.instance.TryGetInstance(humanData.interactBuildingInstanceId, out var obj)) {
+            if (obj.TryGetComponent<Building>(out var building)) {
+                interactor.SetInteractBuilding(building);
+            }
+        }
+
         weaponHandler.Init(humanData.weaponData);
         skills.Init(humanData.skills);
 
@@ -283,6 +292,8 @@ public class Human : Creature
     private void OnDied()
     {
         currentStatus.OnDied();
+
+        interactor.RemoveInteractBuilding();
     }
 
     // Movement
@@ -302,6 +313,7 @@ public class Human : Creature
     private void OnStoppedAttacking()
     {
         currentStatus.OnStoppedAttacking();
+        AssignIdle();
     }
 
     // Entrance
@@ -346,6 +358,7 @@ public class Human : Creature
             cityNavigator.TryFindPathToTargetBuilding();
         }
 
+        currentStatus.OnExitedBoat(boat);
         onExitedBoat?.Invoke(this);
     }
 

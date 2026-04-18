@@ -70,6 +70,11 @@ public class CitizenState : HumanState
         human.BoatRider.selectedBoat.SetState(BoatStateEnum.FindingLoot);
     }
 
+    public override void OnExitedBoat(Boat boat)
+    {
+        
+    }
+
     public override void OnRevived()
     {
         EventBus.InvokeCitizenRevived(human);

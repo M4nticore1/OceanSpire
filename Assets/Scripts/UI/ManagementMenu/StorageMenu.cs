@@ -15,16 +15,14 @@ public class StorageMenu : ManagementMenu
             ItemInstance amountItem = cityStorage.Inventory.items[i].item;
             ItemData amountItemData = amountItem.ItemData;
 
-            if (amountItemData.ItemCategory == ItemCategory.Society)
-                continue;
+            if (!amountItemData.ShowInStorage) continue;
 
             ItemInstance maxAmountItem = cityStorage.Inventory.items[i].maxAmountItem;
             ItemData maxAmountItemData = maxAmountItem.ItemData;
 
             ItemCategory itemCategory = amountItemData.ItemCategory;
 
-            ResourceWidget storageResourceWidget = Instantiate(storageResourceWidgetPrefab, lists[(int)itemCategory - 1].transform);
-            storageResourceWidget.Init(amountItem, maxAmountItem);
+            ResourceWidget storageResourceWidget = ResourceWidgetFactory.CreateResourceWidget(storageResourceWidgetPrefab, lists[(int)itemCategory - 1].transform, amountItem, maxAmountItem);
             spawnedWidgets.Add(storageResourceWidget);
         }
     }

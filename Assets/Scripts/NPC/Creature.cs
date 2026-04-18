@@ -9,9 +9,10 @@ public abstract class CreatureEntry
     public Vector3 position { get; private set; }
     public Vector3 rotation { get; private set; }
 
-    public CreatureEntry(int id, Vector3 position, Vector3 rotation)
+    public CreatureEntry(int id, int instanceId, Vector3 position, Vector3 rotation)
     {
         this.id = id;
+        this.instanceId = instanceId;
         this.position = position;
         this.rotation = rotation;
     }

@@ -18,6 +18,7 @@ public abstract class HumanState
     public abstract void OnStoppedMoving();
     public abstract void OnEnteredBuilding(Building building);
     public abstract void OnEnteredBoat(Boat boat);
+    public abstract void OnExitedBoat(Boat boat);
     public abstract void OnRevived();
     public abstract void OnDied();
     public abstract void OnDisable();

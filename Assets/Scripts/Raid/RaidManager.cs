@@ -88,6 +88,21 @@ public class RaidManager : MonoBehaviour
         return spawnPositions[boat];
     }
 
+    public static Building GetRandomRaidBuilding()
+    {
+        Building building = null;
+        int floorIndex = 0;
+        int placeIndex = 0;
+
+        while (!building || !building.BuildingData.IsRaidable) {
+            floorIndex = Random.Range(0, BuildingsManager.instance.BuiltFloors.Count);
+            placeIndex = Random.Range(0, BuildingsManager.RoomsCountPerFloor);
+            building = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
+        }
+
+        return building;
+    }
+
     private void CreateRaid()
     {
         int raidersAmount = GetRandomRaidersAmount();
@@ -107,9 +122,9 @@ public class RaidManager : MonoBehaviour
 
             Boat boat = CreateBoat(position, rotation);
 
-            Human raider = CreateRaider(position, rotation, boat.InstanceId.id, true);
-            raider.BoatRider.EnterBoat();
-            raider.SetInteractBuilding(GetRandomRaidBuilding());
+            Human raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.id);
+            //raider.BoatRider.EnterBoat();
+            //raider.SetInteractBuilding(GetRandomRaidBuilding());
 
             spawnPositions.Add(boat, position);
         }
@@ -206,15 +221,17 @@ public class RaidManager : MonoBehaviour
         }
     }
 
-    private Human CreateRaider(Vector3 position, Quaternion rotation, int boatInstanceId, bool isRidingOnBoat)
+    private Human CreateRaider(Vector3 position, Vector3 rotation, int boatInstanceId)
     {
         int id = (int)CreatureIdEnum.Human;
+        int instanceId = InstancesManager.instance.GetNextInstanceId();
+        HumanStatusEnum status = HumanStatusEnum.Raider;
         float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
 
-        WeaponHandlerData weaponsData = WeaponsDataGenerator.GetRandomDataGenerator(WeaponsDataGenerator.GetMaxWeaponDamage());
+        WeaponHandlerData weaponsData = WeaponsDataGenerator.GetRandomDataGenerator(WeaponsDataGenerator.GetMinWeaponDamageId() + 1, WeaponsDataGenerator.GetMaxWeaponDamage());
         SkillsData skillsData = SkillsGenerator.GetRandomSkillsData(SkillsGenerator.GetLevelsCount());
 
-        HumanEntry data = new HumanEntry(id, HumanStatusEnum.Raider, position, rotation.eulerAngles, health, weaponsData, skillsData, boatInstanceId, isRidingOnBoat);
+        HumanEntry data = new HumanEntry(id, instanceId, position, rotation, status, health, -1, boatInstanceId, true, weaponsData, skillsData);
         Human human = CreatureFactory.CreateHuman(data);
 
         return human;
@@ -223,28 +240,14 @@ public class RaidManager : MonoBehaviour
     private Boat CreateBoat(Vector3 position, Quaternion rotation)
     {
         int id = boatPrefab.BoatData.BoatId;
+        int instanceId = InstancesManager.instance.GetNextInstanceId();
         float health = boatPrefab.Health.MaxHealth;
         int dockInstanceId = GetNearestDockPoint(position).InstanceId.id;
 
-        BoatEntry data = new BoatEntry(id, BoatStateEnum.MovingToDock, position, rotation.eulerAngles, health, dockInstanceId);
-        Boat boat = BoatFactory.CreateBoat(data);
+        BoatEntry data = new BoatEntry(id, instanceId, BoatStateEnum.MovingToDock, position, rotation.eulerAngles, health, dockInstanceId);
+        Boat boat = BoatFactory.CreateBoat(boatPrefab, data);
 
         return boat;
-    }
-
-    private Building GetRandomRaidBuilding()
-    {
-        Building building = null;
-        int floorIndex = 0;
-        int placeIndex = 0;
-
-        while (!building || !building.BuildingData.IsRaidable) {
-            floorIndex = Random.Range(0, BuildingsManager.instance.BuiltFloors.Count);
-            placeIndex = Random.Range(0, BuildingsManager.RoomsCountPerFloor);
-            building = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
-        }
-
-        return building;
     }
 
     private BoatDockPoint GetNearestDockPoint(Vector3 position)

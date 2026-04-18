@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24daa3b8425c9f24693d261f838f1c7d, type: 3}
-  m_Name: weapon_club
+  m_Name: weapon_Hands
   m_EditorClassIdentifier: Assembly-CSharp::WeaponDefinition
-  itemId: 0
-  itemIdName: club
-  itemName: Club
+  itemId: 9
+  itemIdName: hands
+  itemName: Hands
   weight: 3
   itemCategory: 3
   localizationItem: {fileID: 0}
   itemIcon: {fileID: 0}
+  showInStorage: 0
   weaponPrefab: {fileID: 0}
-  damage: 6
+  damage: 3
   attackMethods: 0

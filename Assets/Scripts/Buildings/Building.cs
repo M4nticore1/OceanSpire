@@ -13,6 +13,9 @@ public abstract class Building : MonoBehaviour, ILocalizable
     [SerializeField] protected LevelComponent levelComponent;
     public LevelComponent LevelComponent => levelComponent;
 
+    [SerializeField] private InstanceId instanceId;
+    public InstanceId InstanceId => instanceId;
+
     [Header("Audio")]
     [SerializeField] protected AudioSource workAudioSource;
 

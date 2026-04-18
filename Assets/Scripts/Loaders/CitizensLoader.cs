@@ -29,16 +29,17 @@ public class CitizensLoader : MonoBehaviour
                 float z = Random.Range(position.z - maxSpawnRange, position.z + maxSpawnRange);
 
                 Vector3 finalPosition = new Vector3(x, y, z);
+
+                int id = (int)CreatureIdEnum.Human;
                 int instanceId = InstancesManager.instance.GetNextInstanceId();
-                InstancesManager.instance.AddInstanceId(instanceId);
+                float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
 
-                int humanId = (int)CreatureIdEnum.Human;
-                float health = CreaturesList.Instance.Creatures[humanId].GetComponent<Health>().MaxHealth;
+                int damage = WeaponsDataGenerator.GetMinWeaponDamageId();
+                WeaponHandlerData weaponsData = WeaponsDataGenerator.GetRandomDataGenerator(damage, damage);
 
-                WeaponHandlerData weaponsData = WeaponsDataGenerator.GetRandomDataGenerator(WeaponsDataGenerator.GetMaxWeaponDamage());
                 SkillsData skillsData = SkillsGenerator.GetRandomSkillsData(SkillsGenerator.GetLevelsCount());
 
-                HumanEntry data = new HumanEntry(humanId, HumanStatusEnum.Citizen, finalPosition, rotation.eulerAngles, health, weaponsData, skillsData, -1, false);
+                HumanEntry data = new HumanEntry(id, instanceId, finalPosition, rotation.eulerAngles, HumanStatusEnum.Citizen, health, -1, -1, false, weaponsData, skillsData);
                 Human citizen = CreatureFactory.CreateHuman(data);
             }
         }

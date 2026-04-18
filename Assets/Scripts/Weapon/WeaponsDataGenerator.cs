@@ -5,9 +5,9 @@ public static class WeaponsDataGenerator
 {
     public const int damagePerFloor = 2;
 
-    public static WeaponHandlerData GetRandomDataGenerator(int maxDamage)
+    public static WeaponHandlerData GetRandomDataGenerator(int minDamage, int maxDamage)
     {
-        int weaponId = GetRandomWeaponId(maxDamage);
+        int weaponId = GetRandomWeaponId(minDamage, maxDamage);
         WeaponHandlerData data = new WeaponHandlerData(weaponId);
 
         return data;
@@ -20,15 +20,40 @@ public static class WeaponsDataGenerator
         return maxDamage;
     }
 
-    private static int GetRandomWeaponId(int maxDamage)
+    public static int GetMinWeaponDamageId()
     {
-        maxDamage = Mathf.Max(damagePerFloor, maxDamage);
+        int id = 0;
+        int maxDamage = 0;
+        bool writed = false;
+
+        foreach (var item in ItemsList.Instance.Items) {
+            WeaponDefinition weapon = item as WeaponDefinition;
+            if (!weapon) continue;
+
+            if (!writed) {
+                maxDamage = weapon.Damage;
+                writed = true;
+            }
+
+            if (weapon.Damage >= maxDamage) continue;
+
+            maxDamage = weapon.Damage;
+            id = weapon.ItemId;
+        }
+
+        return maxDamage;
+    }
+
+    private static int GetRandomWeaponId(int minDamage, int maxDamage)
+    {
+        maxDamage = Mathf.Max(GetMinWeaponDamageId(), maxDamage);
         List<WeaponDefinition> weapons = new();
 
         foreach (var item in ItemsList.Instance.Items) {
             WeaponDefinition weapon = item as WeaponDefinition;
             if (!weapon) continue;
 
+            if (weapon.Damage < minDamage) continue;
             if (weapon.Damage > maxDamage) continue;
 
             weapons.Add(weapon);

@@ -2,16 +2,13 @@ using Unity.Mathematics;
 using UnityEngine;
 
 [System.Serializable]
-public class ItemCategoryEntry
+public class ItemCategoryData
 {
-    public ItemCategory itemCategory;
-    public int amount;
+    [SerializeField] private ItemCategory itemCategory;
+    public ItemCategory ItemCategory => itemCategory;
 
-    public ItemCategoryEntry(ItemCategory itemCategory, int amount = 0)
-    {
-        this.itemCategory = itemCategory;
-        this.amount = amount;
-    }
+    [SerializeField] private int amount;
+    public int Amount => amount;
 }
 
 [System.Serializable]

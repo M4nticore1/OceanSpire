@@ -111,13 +111,16 @@ public class WanderersManager : MonoBehaviour
     private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId, bool isRidingOnBoat)
     {
         int id = (int)CreatureIdEnum.Human;
+        int instanceId = InstancesManager.instance.GetNextInstanceId();
         HumanStatusEnum status = HumanStatusEnum.Wanderer;
         float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
 
-        WeaponHandlerData weaponsData = WeaponsDataGenerator.GetRandomDataGenerator(WeaponsDataGenerator.GetMaxWeaponDamage());
+        int damage = WeaponsDataGenerator.GetMinWeaponDamageId();
+        WeaponHandlerData weaponsData = WeaponsDataGenerator.GetRandomDataGenerator(damage, damage);
+
         SkillsData skillsData = SkillsGenerator.GetRandomSkillsData(SkillsGenerator.GetLevelsCount());
 
-        HumanEntry humanData = new HumanEntry(id, status, position, rotation, health, weaponsData, skillsData, boatId, isRidingOnBoat);
+        HumanEntry humanData = new HumanEntry(id, instanceId, position, rotation, status, health, -1, boatId, isRidingOnBoat, weaponsData, skillsData);
         Human human = CreatureFactory.CreateHuman(humanData);
 
         return human;
@@ -126,10 +129,13 @@ public class WanderersManager : MonoBehaviour
     private Boat CreateBoat(Vector3 position, Vector3 rotation)
     {
         int id = (int)BoatIdEnum.BasicBoat;
+        int instanceId = InstancesManager.instance.GetNextInstanceId();
         float boatHealth = BoatsList.Instance.boats[id].Health.MaxHealth;
 
-        BoatEntry boatData = new BoatEntry(id, BoatStateEnum.MovingToDock, position, rotation, boatHealth, GetDockPoint().InstanceId.id);
-        Boat boat = BoatFactory.CreateBoat(boatData);
+        BoatEntry boatData = new BoatEntry(id, instanceId, BoatStateEnum.MovingToDock, position, rotation, boatHealth, GetDockPoint().InstanceId.id);
+
+        Boat prefab = BoatsList.Instance.boats[id];
+        Boat boat = BoatFactory.CreateBoat(prefab, boatData);
 
         return boat;
     }

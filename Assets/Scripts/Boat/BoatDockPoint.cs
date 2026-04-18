@@ -3,6 +3,11 @@ using UnityEngine;
 public class BoatDockData
 {
     public int instanceId { get; private set; } = -1;
+
+    public BoatDockData(int instanceId)
+    {
+        this.instanceId = instanceId;
+    }
 }
 
 public class BoatDockPoint : MonoBehaviour
@@ -21,7 +26,6 @@ public class BoatDockPoint : MonoBehaviour
     public void Init(BoatDockData data)
     {
         instanceId.Init(data.instanceId);
-        DockPointsManager.instance.RegisterDockPoint(this);
     }
 
     public void SetBoat(Boat boat)

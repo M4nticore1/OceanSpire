@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc8039db3c8dae249b72a3acea657e28, type: 3}
-  m_Name: ElectricityItemData
+  m_Name: item_Food
   m_EditorClassIdentifier: 
-  itemId: 1
-  itemIdName: electricity
-  itemName: Electricity
+  itemId: 2
+  itemIdName: food
+  itemName: Food
   weight: 0
-  itemIcon: {fileID: 21300000, guid: 09b64a0887dac514ca8544a9a4fce084, type: 3}
   itemCategory: 0
+  localizationItem: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: a14efae1d95cb67479e314aade0c4fac, type: 3}
+  showInStorage: 0

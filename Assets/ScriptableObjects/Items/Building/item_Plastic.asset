@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc8039db3c8dae249b72a3acea657e28, type: 3}
-  m_Name: FoodItemData
+  m_Name: item_Plastic
   m_EditorClassIdentifier: 
-  itemId: 2
-  itemIdName: food
-  itemName: Food
-  weight: 0
-  itemIcon: {fileID: 21300000, guid: a14efae1d95cb67479e314aade0c4fac, type: 3}
-  itemCategory: 0
+  itemId: 7
+  itemIdName: plastic
+  itemName: Plastic
+  weight: 1
+  itemCategory: 1
+  localizationItem: {fileID: 11400000, guid: 3a33a26bd0c89ff44be3acf0990daf13, type: 2}
+  itemIcon: {fileID: 21300000, guid: 8e834bd7cd3f85e4fb51c5ba70a54e71, type: 3}

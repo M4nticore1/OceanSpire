@@ -5,5 +5,5 @@ using UnityEngine;
 public class StorageModuleLevelData : BuildingModuleLevelData
 {
     public ItemInstance[] storageItems;
-    public ItemCategoryEntry[] storageItemCategories;
+    public ItemCategoryData[] storageItemCategories;
 }

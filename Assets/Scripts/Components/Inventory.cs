@@ -65,7 +65,7 @@ public class Inventory : MonoBehaviour
 
     private void AddNewItem(int id)
     {
-        ItemData data = ItemsList.Instance.Items[id];
+        ItemData data = ItemsList.Instance.GetItemData(id);
         ItemInstance item = new ItemInstance(data);
         StorageItem storageItem = new StorageItem(item);
         items.Add(storageItem);
