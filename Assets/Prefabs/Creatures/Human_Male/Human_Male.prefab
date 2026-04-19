@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 9140235139351627301}
   - component: {fileID: 6264695886038843937}
   - component: {fileID: 4098557255172134659}
+  - component: {fileID: 2775210278879926879}
   - component: {fileID: 6316746746762001490}
   - component: {fileID: 2185582854232776361}
   - component: {fileID: 6497944028369977301}
@@ -99,10 +100,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Human
   agent: {fileID: 1338494420481879648}
   movement: {fileID: -7493649843608556168}
-  creatureData: {fileID: 11400000, guid: 84ce6b77893601742bd80f0644c2bc89, type: 2}
+  creatureDefinition: {fileID: 0}
   instanceId: {fileID: 6196963818731621145}
   nameHandler: {fileID: 6264695886038843937}
   health: {fileID: 4098557255172134659}
+  reviveHandler: {fileID: 2775210278879926879}
   cityNavigator: {fileID: 2185582854232776361}
   interactor: {fileID: 6316746746762001490}
   boatRider: {fileID: 6497944028369977301}
@@ -139,7 +141,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
+--- !u!114 &2775210278879926879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08dcc5ab293686847a6a2a96729ec47c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReviveHandler
+  health: {fileID: 4098557255172134659}
   reviveHealthPercent: 0.1
+  reviveLimitTime: 600
 --- !u!114 &6316746746762001490
 MonoBehaviour:
   m_ObjectHideFlags: 0

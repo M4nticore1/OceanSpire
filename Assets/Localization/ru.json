@@ -29,6 +29,8 @@
   "ui_accept": "Принять",
   "ui_reject": "Отказать",
   "ui_evict": "Выгнать",
+  "ui_revive": "Возродить",
+  "ui_revive_citizen": "Возроди жителя!",
   "refund_resources": "Возвращаемые ресурсы",
 
   "creature_citizen": "Житель",

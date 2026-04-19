@@ -33,8 +33,6 @@ public class RewardedAdsButtonManager : MonoBehaviour
         currentToggleTime += Time.deltaTime;
 
         if (isAdButtonShowed) {
-            ProcessReduceRewardRemainingTime();
-
             if (currentToggleTime >= adShowTime) {
                 currentReward = null;
 
@@ -45,7 +43,6 @@ public class RewardedAdsButtonManager : MonoBehaviour
         else {
             if (currentToggleTime >= adCooldownTime) {
                 currentReward = GetRandomAdReward();
-                currentReward.SetLimitTime(adShowTime);
 
                 ShowAdButton();
                 currentToggleTime = 0f;
@@ -65,11 +62,6 @@ public class RewardedAdsButtonManager : MonoBehaviour
         isAdButtonShowed = false;
     }
 
-    private void ProcessReduceRewardRemainingTime()
-    {
-        currentReward.ReduceRemainingTime(Time.deltaTime);
-    }
-
     private void OnAdRewardReceived(AdRewardInstance reward)
     {
         if (reward != currentReward) return;
@@ -84,8 +76,8 @@ public class RewardedAdsButtonManager : MonoBehaviour
         int length = AdRewardsList.Instance.AdRewards.Length;
         int index = Random.Range(0, length);
 
-        AdRewardData data = AdRewardsList.Instance.AdRewards[index];
+        AdRewardDefinition def = AdRewardsList.Instance.AdRewards[index];
 
-        return data.CreateInstance();
+        return def.CreateInstance(adShowTime);
     }
 }

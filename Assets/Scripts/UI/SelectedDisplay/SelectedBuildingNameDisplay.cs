@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SelectedBuildingNameDisplay : SelectedDisplay
 {
+    [SerializeField] protected TextLocalizer localizer;
+
     protected override void Display()
     {
         Building building = SelectManager.Instance.GetSelectedBuilding();
@@ -10,6 +12,12 @@ public class SelectedBuildingNameDisplay : SelectedDisplay
         LocalizationItem item = building.BuildingData.LocalizationItem;
 
         localizer.SetLocalizationItem(item);
+        localizer.UpdateText();
+    }
+
+    protected override void Hide()
+    {
+        localizer.SetLocalizationItem(null);
         localizer.UpdateText();
     }
 }

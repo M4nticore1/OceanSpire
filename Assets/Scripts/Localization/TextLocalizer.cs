@@ -38,6 +38,7 @@ public class TextLocalizer : MonoBehaviour
     {
         if (item) {
             string text = LocalizationManager.Instance.GetText(item);
+            if (text == "") return;
 
             if (placeHoldersLocalization != null) {
                 Dictionary<string, string> dict = placeHoldersLocalization.GetLocalizations();

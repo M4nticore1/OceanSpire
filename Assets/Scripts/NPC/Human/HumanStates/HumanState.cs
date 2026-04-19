@@ -12,6 +12,7 @@ public abstract class HumanState
     public abstract void Enter();
     public abstract void Exit();
     public abstract void Tick();
+    public abstract void OnStartedAttacking();
     public abstract void OnStoppedAttacking();
     public abstract void OnSetedInteractBuilding(Building building);
     public abstract void OnRemovedInteractBuilding();

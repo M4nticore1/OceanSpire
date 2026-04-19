@@ -6,8 +6,6 @@ public class Health : MonoBehaviour
     [SerializeField] private float maxHealth = 100f;
     public float MaxHealth => maxHealth;
 
-    [SerializeField] private float reviveHealthPercent = 0.1f;
-
     public float currentHealth { get; private set; } = 0;
     public bool isAlive { get; private set; } = true;
 
@@ -18,13 +16,6 @@ public class Health : MonoBehaviour
     public void Init(float currentHealth)
     {
         SetCurrentHealth(currentHealth);
-    }
-
-    public void Revive()
-    {
-        float health = maxHealth * reviveHealthPercent;
-        SetCurrentHealth(health);
-        OnRevived();
     }
 
     public void SetMaxHealh(float value)
@@ -50,12 +41,12 @@ public class Health : MonoBehaviour
         if (currentHealth <= 0 && isAlive) {
             OnDied();
         }
-        else if (!isAlive) {
+        else if (currentHealth > 0 && !isAlive) {
             OnRevived();
         }
     }
 
-    private void OnRevived()
+    public void OnRevived()
     {
         isAlive = true;
         onRevived?.Invoke();

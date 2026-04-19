@@ -46,13 +46,13 @@ public class RewardedAdsButton : UIBehaviour
     private void AssignImage()
     {
         ItemAdRewardInstance itemReward = rewardedAdsButtonManager.currentReward as ItemAdRewardInstance;
-        itemImage.sprite = itemReward.rewardData.RewardIcon;
+        itemImage.sprite = itemReward.itemRewardData.RewardIcon;
     }
 
     private void AssignProgressBarFill()
     {
-        float limitTime = rewardedAdsButtonManager.currentReward.limitTime;
-        float remainingTime = rewardedAdsButtonManager.currentReward.remainingTime;
+        float limitTime = rewardedAdsButtonManager.currentReward.GetLimitTime();
+        float remainingTime = rewardedAdsButtonManager.currentReward.GetRemainingTime();
         float alpha = 1f - (remainingTime / limitTime);
 
         progressBar.fillAmount = alpha;

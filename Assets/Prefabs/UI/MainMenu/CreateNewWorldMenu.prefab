@@ -104,6 +104,8 @@ MonoBehaviour:
   canvas: {fileID: 0}
   closeMethod: 1
   slideTransitionSpeed: 10
+  contentRoot: {fileID: 0}
+  hideWhenClosed: 0
   openedScreenPositionAlpha: {x: 0, y: 0.5}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: 0, y: 0.5}
@@ -111,8 +113,6 @@ MonoBehaviour:
   background: {fileID: 672675394538114261}
   openedBackgroundAlpha: 0.95
   alphaTransitionSpeed: 20
-  openButton: {fileID: 0}
-  closeButton: {fileID: 4866917801281884083}
 --- !u!1 &1409653588359450469
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,6 +648,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
   item: {fileID: 11400000, guid: b6632e421822725439b01be0a6192d4c, type: 2}
+  textRole: 0
 --- !u!1 &7052046382251183096
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,6 +800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
   item: {fileID: 11400000, guid: 97da75c006d2fe947ba13fedeaacc718, type: 2}
+  textRole: 0
 --- !u!1 &7437492761594093524
 GameObject:
   m_ObjectHideFlags: 0
@@ -971,6 +973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
   item: {fileID: 11400000, guid: b3e21ff506bc2c74cbd6ae8ea9a93d97, type: 2}
+  textRole: 0
 --- !u!1 &7903090835741144313
 GameObject:
   m_ObjectHideFlags: 0
@@ -1283,17 +1286,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
   m_PrefabInstance: {fileID: 1204888665408561245}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4866917801281884083 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5994955411856093166, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
-  m_PrefabInstance: {fileID: 1204888665408561245}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
 --- !u!1001 &6421953068713101710
 PrefabInstance:
   m_ObjectHideFlags: 0

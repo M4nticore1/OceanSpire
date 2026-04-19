@@ -29,6 +29,8 @@
   "ui_accept": "Accept",
   "ui_reject": "Reject",
   "ui_evict": "Evict",
+  "ui_revive": "Revive",
+  "ui_revive_citizen": "Revive the citizen!",
   "refund_resources": "Refund resources",
 
   "creature_citizen": "Citizen",

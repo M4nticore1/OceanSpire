@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2026acc1162617d46aa6d9634a0ad0b6, type: 3}
-  m_Name: reward_plastic
+  m_Script: {fileID: 11500000, guid: 928580ac963b1a74b9e31cdf9f461b61, type: 3}
+  m_Name: reward_metal
   m_EditorClassIdentifier: Assembly-CSharp::WoodReward
-  rewardIcon: {fileID: 21300000, guid: 8e834bd7cd3f85e4fb51c5ba70a54e71, type: 3}
+  rewardIcon: {fileID: 21300000, guid: 16849d617bcd421408b8cf667ac7daf7, type: 3}
   rewardDescryptionLocalization: {fileID: 11400000, guid: 8e63ee7b06cc6ed42a5bd00893c47751, type: 2}
   receievedRewardLocalization: {fileID: 11400000, guid: 46d6b941b4038ac4b80467e81a2b48ac, type: 2}
-  itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
-  minAmount: 50
-  maxAmount: 200
+  itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+  minAmount: 20
+  maxAmount: 50

@@ -45,6 +45,11 @@ public class RaiderState : HumanState
         FinishRaidingBuilding();
     }
 
+    public override void OnStartedAttacking()
+    {
+
+    }
+
     public override void OnStoppedAttacking()
     {
         if (!human.Health.isAlive) return;

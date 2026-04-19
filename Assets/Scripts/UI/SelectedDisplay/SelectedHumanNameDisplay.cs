@@ -14,4 +14,9 @@ public class SelectedHumanNameDisplay : SelectedDisplay
 
         text.SetText(name);
     }
+
+    protected override void Hide()
+    {
+        text.SetText("");
+    }
 }

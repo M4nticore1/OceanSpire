@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class SelectedBuildingLevelDisplay : SelectedDisplay
 {
+    [SerializeField] protected TextLocalizer localizer;
     [SerializeField] private LocalizationItem levelLocalization;
 
     protected override void Display()
@@ -14,6 +15,12 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
 
         localizer.SetLocalizationItem(levelLocalization);
         localizer.SetPlaceHolderLocalization(localizable);
+        localizer.UpdateText();
+    }
+
+    protected override void Hide()
+    {
+        localizer.SetLocalizationItem(null);
         localizer.UpdateText();
     }
 }

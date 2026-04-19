@@ -2,8 +2,6 @@ using UnityEngine;
 
 public abstract class SelectedDisplay : MonoBehaviour
 {
-    [SerializeField] protected TextLocalizer localizer;
-
     private bool isSubscribed = false;
 
     private void Awake()
@@ -24,12 +22,7 @@ public abstract class SelectedDisplay : MonoBehaviour
     }
 
     protected abstract void Display();
-
-    private void Hide()
-    {
-        localizer.SetLocalizationItem(null);
-        localizer.UpdateText();
-    }
+    protected abstract void Hide();
 
     private void Subscribe()
     {

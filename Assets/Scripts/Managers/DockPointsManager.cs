@@ -13,9 +13,6 @@ public class DockPointsManager : MonoBehaviour
     [SerializeField] private BoatDockPoint[] raiderDockPoints;
     public BoatDockPoint[] RaiderDockPoints => raiderDockPoints;
 
-    private Dictionary<int, BoatDockPoint> dockPointsDict = new Dictionary<int, BoatDockPoint>();
-    public Dictionary<int, BoatDockPoint> DockPointsDict => dockPointsDict;
-
     private void Awake()
     {
         if (instance) {
@@ -24,11 +21,6 @@ public class DockPointsManager : MonoBehaviour
         }
 
         instance = this;
-    }
-
-    public void RegisterDockPoint(BoatDockPoint dockPoint)
-    {
-        dockPointsDict.Add(dockPoint.InstanceId.id, dockPoint);
     }
 
     public void RegisterPierDockPoint(BoatDockPoint dockPoint)

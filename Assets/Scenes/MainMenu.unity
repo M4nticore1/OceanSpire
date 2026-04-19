@@ -812,18 +812,6 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 58
       objectReference: {fileID: 0}
-    - target: {fileID: 3567081077546253689, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3567081077546253689, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3567081077546253689, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3617058027276914375, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
       value: 64

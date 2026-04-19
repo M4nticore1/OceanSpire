@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class RewardedAdsManager : MonoBehaviour
@@ -8,6 +9,7 @@ public class RewardedAdsManager : MonoBehaviour
     public AdsManager AdsManager => adsManager;
 
     public AdRewardInstance currentReward { get; private set; }
+    public static event Action onRewardChanged;
 
     private void Awake()
     {
@@ -32,6 +34,7 @@ public class RewardedAdsManager : MonoBehaviour
     public void SetCurrentReward(AdRewardInstance reward)
     {
         currentReward = reward;
+        onRewardChanged?.Invoke();
     }
 
     public void RemoveCurrentReward()
@@ -42,7 +45,7 @@ public class RewardedAdsManager : MonoBehaviour
     public void ReceiveReward()
     {
         currentReward.RecieveReward();
-        SetCurrentReward(null);
+        currentReward = null;
     }
 
     private void OnAdHidden()

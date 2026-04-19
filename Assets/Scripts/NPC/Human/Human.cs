@@ -23,6 +23,9 @@ public class Human : Creature
     [SerializeField] private Health health;
     public Health Health => health;
 
+    [SerializeField] private ReviveHandler reviveHandler;
+    public ReviveHandler ReviveHandler => reviveHandler;
+
     [SerializeField] private CreatureCityNavigator cityNavigator;
     public CreatureCityNavigator CityNavigator => cityNavigator;
 
@@ -44,10 +47,6 @@ public class Human : Creature
     [SerializeField] private SelectComponent selectComponent;
     public SelectComponent SelectComponent => selectComponent;
 
-    [SerializeField] private float maxTimeToRevive = 60f;
-    public float MaxDeadTime => maxTimeToRevive;
-    public float currentDeadTime { get; private set; } = 0f;
-
     [Header("Status")]
     [SerializeField] private GameObject citizenClothes;
     [SerializeField] private GameObject wandererClothes;
@@ -58,12 +57,11 @@ public class Human : Creature
 
     private bool isMale = true;
 
-    private int firstNameId = 0;
-    private int lastNameIndex = 0;
-
     public string firstName { get; private set; }
     public string lastName { get; private set; }
 
+    public static event Action<Human> onHumanRevived;
+    public static event Action<Human> onHumanDied;
     public static event Action<Human> onWandererAccepted;
     public static event Action<Human> onWandererRejected;
     public static event Action<Human> onHumanSelected;
@@ -78,6 +76,7 @@ public class Human : Creature
         health.onRevived += OnRevived;
         health.onDied += OnDied;
 
+        attack.onStartedAttacking += OnStartedAttacking;
         attack.onStoppedAttacking += OnStoppedAttacking;
 
         cityNavigator.onEnteredBuilding += OnEnteredBuilding;
@@ -104,6 +103,7 @@ public class Human : Creature
         health.onRevived -= OnRevived;
         health.onDied -= OnDied;
 
+        attack.onStartedAttacking -= OnStartedAttacking;
         attack.onStoppedAttacking -= OnStoppedAttacking;
 
         cityNavigator.onEnteredBuilding -= OnEnteredBuilding;
@@ -125,16 +125,8 @@ public class Human : Creature
     {
         currentStatus.Tick();
 
-        ReviveCitizenAdReward reviveReward = RewardedAdsManager.instance.currentReward as ReviveCitizenAdReward;
+        ReviveAdRewardInstance reviveReward = RewardedAdsManager.instance.currentReward as ReviveAdRewardInstance;
         bool isAdDisplayed = RewardedAdsManager.instance.AdsManager.isAdDisplayed;
-
-        if (!health.isAlive && reviveReward == null && !isAdDisplayed) {
-            currentDeadTime += Time.deltaTime;
-
-            if (currentDeadTime >= maxTimeToRevive) {
-                Destroy(gameObject);
-            }
-        }
     }
 
     protected override void OnInit(CreatureDataV1 data)
@@ -251,15 +243,19 @@ public class Human : Creature
     // Health
     private void OnRevived()
     {
-        currentDeadTime = 0f;
         currentStatus.OnDied();
+        TryStartIdle();
+
+        onHumanRevived?.Invoke(this);
     }
 
     private void OnDied()
     {
         currentStatus.OnDied();
-
         interactor.RemoveInteractBuilding();
+        TryStopIdle();
+
+        onHumanDied?.Invoke(this);
     }
 
     // Movement
@@ -276,10 +272,16 @@ public class Human : Creature
     }
 
     // Attack
+    private void OnStartedAttacking()
+    {
+        currentStatus.OnStartedAttacking();
+        TryStopIdle();
+    }
+
     private void OnStoppedAttacking()
     {
         currentStatus.OnStoppedAttacking();
-        AssignIdle();
+        TryStartIdle();
     }
 
     // Entrance

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class AdRewardData : ScriptableObject
+public abstract class AdRewardDefinition : ScriptableObject
 {
     [SerializeField] protected Sprite rewardIcon;
     public Sprite RewardIcon => rewardIcon;
@@ -11,5 +11,5 @@ public abstract class AdRewardData : ScriptableObject
     [SerializeField] protected LocalizationItem receievedRewardLocalization;
     public LocalizationItem ReceievedRewardLocalization => receievedRewardLocalization;
 
-    public abstract AdRewardInstance CreateInstance();
+    public abstract AdRewardInstance CreateInstance(float limitTime);
 }

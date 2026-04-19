@@ -23,6 +23,11 @@ public class CitizenState : HumanState
 
     }
 
+    public override void OnStartedAttacking()
+    {
+
+    }
+
     public override void OnStoppedAttacking()
     {
 

@@ -1,41 +1,39 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class ItemAdRewardInstance : AdRewardInstance, ILocalizable
+public class ItemAdRewardInstance : AdRewardInstance
 {
-    public ItemAdRewardData rewardData { get; private set; }
-    private CityStorage cityStorage;
+    public ItemAdRewardDefinition itemRewardData { get; private set; }
     public int amount { get; private set; } = 0;
 
     public Dictionary<string, string> Localization;
 
-    public ItemAdRewardInstance(ItemAdRewardData data)
+    public ItemAdRewardInstance(ItemAdRewardDefinition data, float limitTime) : base(data, limitTime)
     {
-        rewardData = data;
-        cityStorage = Object.FindAnyObjectByType<CityStorage>();
+        itemRewardData = data;
 
         GenerateAmount();
     }
 
-    public Dictionary<string, string> GetLocalizations()
+    public override Dictionary<string, string> GetLocalizations()
     {
         return new Dictionary<string, string>()
         {
-            { "itemName", LocalizationManager.Instance.GetText(rewardData.ItemData.LocalizationItem).ToLower() },
+            { "itemName", LocalizationManager.Instance.GetText(itemRewardData.ItemData.LocalizationItem).ToLower() },
             { "amount", amount.ToString()},
         };
     }
 
     protected override void OnRewardRecieved()
     {
-        int woodId = rewardData.ItemData.ItemId;
-        cityStorage.Inventory.AddItemAmount(woodId, amount);
+        int woodId = itemRewardData.ItemData.ItemId;
+        CityStorage.instance.Inventory.AddItemAmount(woodId, amount);
     }
 
     private void GenerateAmount()
     {
-        int minAmount = rewardData.MinAmount;
-        int maxAmount = rewardData.MaxAmount;
+        int minAmount = itemRewardData.MinAmount;
+        int maxAmount = itemRewardData.MaxAmount;
         amount = Random.Range(minAmount, maxAmount);
     }
 }

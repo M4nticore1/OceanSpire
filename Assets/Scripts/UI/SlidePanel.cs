@@ -108,7 +108,6 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         if (!isOpened) return;
         if (Time.frameCount == openedFrame) return;
 
-        // Close Method
         if (closeMethod == CloseMethod.None) return;
 
         releasePossition = PointerUtils.GetCurrentInputPosition();
@@ -175,7 +174,8 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     private void ProcessMoving()
     {
-        rectTransform.anchoredPosition = math.lerp(rectTransform.anchoredPosition, targetPosition, slideTransitionSpeed * Time.deltaTime);
+        float t = math.clamp(slideTransitionSpeed * Time.deltaTime, 0f, 1f);
+        rectTransform.anchoredPosition = math.lerp(rectTransform.anchoredPosition, targetPosition, t);
 
         Vector2 min = math.min(openedPosition, closedPosition);
         Vector2 max = math.max(openedPosition, closedPosition);
@@ -186,10 +186,14 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
     private void UpdateBackground()
     {
         Color color = background.color;
-        if (isOpened)
+
+        if (isOpened) {
             color.a = math.lerp(color.a, openedBackgroundAlpha, alphaTransitionSpeed * Time.deltaTime);
-        else
+        }
+        else {
             color.a = math.lerp(color.a, 0f, alphaTransitionSpeed * Time.deltaTime);
+        }
+
         background.color = color;
     }
 
@@ -198,17 +202,12 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         if (!hideWhenClosed) return;
         if (rectTransform.anchoredPosition != targetPosition) return;
 
-        if (!isMoving) {
-            SetContentRootEnabled(false);
-        }
-        else {
-            SetContentRootEnabled(true);
-        }
+        SetContentRootEnabled(isMoving);
     }
 
     private void SetContentRootEnabled(bool value)
     {
-        contentRoot.gameObject.SetActive(value);
+        //contentRoot.gameObject.SetActive(value);
     }
 
     private bool IsClickedOutsideMenu(List<RaycastResult> results)
@@ -233,7 +232,12 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     private Vector2 CalculatePositionByAlpha(Vector2 screenPostionAlpha, Vector2 panelPostionAlpha)
     {
-        Vector2 resolution = new Vector2(Screen.width, Screen.height) / canvas.scaleFactor;
+        float scale = canvas.scaleFactor;
+        if (scale <= 0f) {
+            scale = 1f;
+        }
+
+        Vector2 resolution = new Vector2(Screen.width, Screen.height) / scale;
         float positionX = resolution.x * screenPostionAlpha.x;
         float positionY = resolution.y * screenPostionAlpha.y;
 

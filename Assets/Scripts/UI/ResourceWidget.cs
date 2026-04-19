@@ -218,12 +218,12 @@ public class ResourceWidget : MonoBehaviour
         UpdateCitizensAmount();
     }
 
-    private void OnCitizenDied(Human human)
+    private void OnCitizenRevived(Human human)
     {
         UpdateCitizensAmount();
     }
 
-    private void OnCitizenRevived(Human human)
+    private void OnCitizenDied(Human human)
     {
         UpdateCitizensAmount();
     }

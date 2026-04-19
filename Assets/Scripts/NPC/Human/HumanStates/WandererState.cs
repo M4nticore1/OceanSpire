@@ -24,6 +24,11 @@ public class WandererState : HumanState
 
     }
 
+    public override void OnStartedAttacking()
+    {
+
+    }
+
     public override void OnStoppedAttacking()
     {
 

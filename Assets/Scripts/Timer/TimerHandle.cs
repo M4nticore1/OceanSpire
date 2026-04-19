@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class TimerHandle
 {
-    private float currentTime = 0;
-    private float delay = 0;
-    private Action callback;
+    public float currentTime = 0;
+    public float delay = 0;
     public bool isRunning { get; private set; } = false;
     public static Action<TimerHandle> onTimerCreated = null;
     public float Alpha => delay > 0 ? math.clamp(currentTime / delay, 0f, 1f) : 0f;
+    private Action callback;
 
     public void StartTimer(float delay, Action callback)
     {

@@ -56,10 +56,24 @@ public abstract class Creature : MonoBehaviour
         }
     }
 
+    protected void TryStartIdle()
+    {
+        if (!ShouldStartIdle()) return;
+
+        StartIdle();
+    }
+
     protected void StartIdle()
     {
         isIdle = true;
         onStartedIdle?.Invoke();
+    }
+
+    protected void TryStopIdle()
+    {
+        if (ShouldStartIdle()) return;
+
+        StopIdle();
     }
 
     protected void StopIdle()

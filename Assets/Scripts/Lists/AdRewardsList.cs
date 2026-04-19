@@ -15,6 +15,6 @@ public class AdRewardsList : ScriptableObject
         }
     }
 
-    [SerializeField] private AdRewardData[] adRewards;
-    public AdRewardData[] AdRewards => adRewards;
+    [SerializeField] private AdRewardDefinition[] adRewards;
+    public AdRewardDefinition[] AdRewards => adRewards;
 }
