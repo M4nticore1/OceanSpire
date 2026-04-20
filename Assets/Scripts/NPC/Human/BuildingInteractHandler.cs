@@ -47,7 +47,7 @@ public class BuildingInteractHandler : MonoBehaviour
     // Events
     private void OnWorkerWidgetClicked(CitizenWidget widget)
     {
-        Human resident = widget.human;
+        Human resident = widget.Human;
         if (resident != GetComponent<Human>()) return;
 
         Building selectedBuilding = SelectManager.Instance.GetSelectedBuilding();

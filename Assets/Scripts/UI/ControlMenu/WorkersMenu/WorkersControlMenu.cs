@@ -6,6 +6,7 @@ public class WorkersControlMenu : ControlMenu
     [SerializeField] private WorkersPanel buildingWorkersMenu;
     [SerializeField] private WorkersPanel unemployedCitizensMenu;
     [SerializeField] private WorkersPanel employedCitizensMenu;
+    [SerializeField] private RectTransform scrollRectContent;
 
     protected override void Awake()
     {
@@ -73,6 +74,19 @@ public class WorkersControlMenu : ControlMenu
         while (buildingWorkersMenu.SpawnedCitizenWidgets.Count < maxWorkersCount) {
             buildingWorkersMenu.CreateWidget(null);
         }
+
+        UpdateScrollRect();
+    }
+
+    private void UpdateScrollRect()
+    {
+        var buildingWorkersRect = buildingWorkersMenu.GetComponent<RectTransform>();
+        var employedCitizensRect = employedCitizensMenu.GetComponent<RectTransform>();
+
+        float width = scrollRectContent.sizeDelta.x;
+        float height = employedCitizensRect.rect.position.y - buildingWorkersRect.rect.position.y + employedCitizensRect.rect.size.y;
+
+        scrollRectContent.sizeDelta = new Vector2(width, height);
     }
 
     // Events
@@ -81,6 +95,7 @@ public class WorkersControlMenu : ControlMenu
         if (!isOpened) return;
 
         UpdateMenu();
+        UpdateScrollRect();
     }
 
     private void OnRemovedCitizenWork()
@@ -88,13 +103,16 @@ public class WorkersControlMenu : ControlMenu
         if (!isOpened) return;
 
         UpdateMenu();
+        UpdateScrollRect();
     }
 
-    private void OnHumanInited(Human resident)
+    private void OnHumanInited(Human human)
     {
         if (!isOpened) return;
+        if (human.currentStatusEnum != HumanStatusEnum.Citizen) return;
 
         UpdateMenu();
+        UpdateScrollRect();
     }
 
     private void OnContextWorkersButtonClicked()

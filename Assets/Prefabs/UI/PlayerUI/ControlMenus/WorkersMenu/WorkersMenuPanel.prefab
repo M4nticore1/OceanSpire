@@ -56,7 +56,7 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 300, y: 400}
+  m_CellSize: {x: 450, y: 600}
   m_Spacing: {x: 50, y: 50}
   m_Constraint: 0
   m_ConstraintCount: 3
@@ -412,8 +412,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -437,8 +437,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
-  m_fontSizeBase: 48
+  m_fontSize: 52
+  m_fontSizeBase: 52
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

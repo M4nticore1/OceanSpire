@@ -12,12 +12,14 @@ public enum ResidentWidgetState
 
 public class CitizenWidget : MonoBehaviour
 {
-    public Human human { get; private set; }
-    public int widgetIndex = 0;
+    public Human Human { get; private set; }
+    public int WidgetIndex { get; private set; } = 0;
 
+    [SerializeField] private SkillWidget skillWidget;
     [SerializeField] private GameObject selectedResidentMenu;
     [SerializeField] private GameObject nonSelectedResidentMenu;
     [SerializeField] private TextMeshProUGUI citizenNameText;
+    [SerializeField] private LayoutGroup skillsLayoutGroup;
     [SerializeField] private Button button;
 
     private void OnEnable()
@@ -34,37 +36,45 @@ public class CitizenWidget : MonoBehaviour
     {
         if (citizen) {
             SetCitizen(citizen);
+            ShowResidentMenu();
+            UpdateName();
+            UpdateSkills();
         }
         else {
             HideResidentMenu();
         }
     }
 
-    public void SetCitizen(Human citizen)
+    private void SetCitizen(Human human)
     {
-        this.human = citizen;
-        ShowResidentMenu();
+        Human = human;
     }
 
-    public void RemoveCitizen()
-    {
-        HideResidentMenu();
-    }
-
-    public void ShowResidentMenu()
+    private void ShowResidentMenu()
     {
         selectedResidentMenu.SetActive(true);
-        citizenNameText.SetText(human.firstName + "\n" + human.lastName);
     }
 
-    public void HideResidentMenu()
+    private void HideResidentMenu()
     {
         selectedResidentMenu.SetActive(false);
     }
 
+    private void UpdateName()
+    {
+        citizenNameText.SetText(Human.NameHandler.GetName());
+    }
+
+    private void UpdateSkills()
+    {
+        foreach (var skill in Human.Skills.Skills.Values) {
+            SkillWidgetFactory.CreateSkillWidget(skillWidget, skillsLayoutGroup.transform, skill);
+        }
+    }
+
     private void ClickWidget()
     {
-        human.HandleClickedWorkerWidget();
+        Human.HandleClickedWorkerWidget();
         EventBus.InvokeCitizenWidgetClicked(this);
     }
 }

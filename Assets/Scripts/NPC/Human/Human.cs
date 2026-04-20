@@ -57,9 +57,6 @@ public class Human : Creature
 
     private bool isMale = true;
 
-    public string firstName { get; private set; }
-    public string lastName { get; private set; }
-
     public static event Action<Human> onHumanRevived;
     public static event Action<Human> onHumanDied;
     public static event Action<Human> onWandererAccepted;
