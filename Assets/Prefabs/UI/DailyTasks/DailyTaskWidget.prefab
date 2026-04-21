@@ -153,7 +153,6 @@ MonoBehaviour:
   textRole: 0
   item: {fileID: 0}
   localizationTarget: {fileID: 0}
-  updateTextEveryFrame: 0
 --- !u!1 &459269648824980012
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,7 +306,6 @@ MonoBehaviour:
   textRole: 1
   item: {fileID: 11400000, guid: bb39e6f7ba34fb94e95045fa682fc524, type: 2}
   localizationTarget: {fileID: 0}
-  updateTextEveryFrame: 0
 --- !u!1 &2866622317088237988
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,7 +501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.18, g: 0.39000002, b: 0.6, a: 1}
+  m_Color: {r: 0.21000002, g: 0.40317756, b: 0.6, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -610,7 +608,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8094269072781012750
 RectTransform:
   m_ObjectHideFlags: 0
@@ -861,7 +859,6 @@ MonoBehaviour:
   textRole: 0
   item: {fileID: 0}
   localizationTarget: {fileID: 0}
-  updateTextEveryFrame: 0
 --- !u!1001 &2319710702641701049
 PrefabInstance:
   m_ObjectHideFlags: 0

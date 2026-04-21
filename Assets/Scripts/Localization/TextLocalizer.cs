@@ -21,8 +21,6 @@ public class TextLocalizer : MonoBehaviour
     [SerializeField] private MonoBehaviour localizationTarget;
     private ILocalizable LocalizationTarget = null;
 
-    [SerializeField] private bool updateTextEveryFrame = false;
-
     private void Awake()
     {
         textBlock = GetComponent<TextMeshProUGUI>();
@@ -41,13 +39,6 @@ public class TextLocalizer : MonoBehaviour
     private void OnDisable()
     {
         LocalizationManager.Instance.OnLocalizationChanged -= OnLocalizationChanged;
-    }
-
-    private void Update()
-    {
-        if (!updateTextEveryFrame) return;
-
-        UpdateText();
     }
 
     public void UpdateText()

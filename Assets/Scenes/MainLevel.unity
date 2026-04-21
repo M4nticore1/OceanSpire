@@ -3947,6 +3947,50 @@ Transform:
   - {fileID: 538103143}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &893559305
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 893559306}
+  - component: {fileID: 893559307}
+  m_Layer: 0
+  m_Name: TimeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &893559306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893559305}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &893559307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893559305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 343e3c9b77827f54e9943865ca7d9c70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeManager
 --- !u!1 &916931148
 GameObject:
   m_ObjectHideFlags: 0
@@ -5088,6 +5132,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 893559306}
   - {fileID: 455753199}
   - {fileID: 220072953}
   - {fileID: 1928442170}
@@ -5171,24 +5216,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5da9b34dbe8018e4bbb1b4d93a8cda74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DailyTasksManager
-  easyTaskDefinitions:
-  - {fileID: 11400000, guid: e09bb30ed6403234abebb6ff8599f06f, type: 2}
-  - {fileID: 11400000, guid: c7de05605343e8d41a3c2afc96b10ab7, type: 2}
-  - {fileID: 11400000, guid: 77e0f548a40379f49a666f0bec1891ca, type: 2}
-  - {fileID: 11400000, guid: 5d2b713934d1c044ba7cbc003fcb79ed, type: 2}
-  - {fileID: 11400000, guid: 7a1f007b0214d9c42aeb7c95286fe0bc, type: 2}
-  mediumTaskDefinitions:
-  - {fileID: 11400000, guid: 20501fb73d7f8d54d9cab25e8d170612, type: 2}
-  - {fileID: 11400000, guid: 7957095502012ec41803fc2e0b4b6708, type: 2}
-  - {fileID: 11400000, guid: 4d9f36e416b714d43a743529c4416e7d, type: 2}
-  - {fileID: 11400000, guid: 946b55758a9c49848a7add8ffa7e1892, type: 2}
-  hardTaskDefinitions:
-  - {fileID: 11400000, guid: 9e90af97d12ac194fbaffe9078224b2f, type: 2}
-  - {fileID: 11400000, guid: b5f1e97f32a5e194aacfccfed63613bd, type: 2}
-  - {fileID: 11400000, guid: 7484903f42458c243b60bf0f6a0f88e7, type: 2}
-  - {fileID: 11400000, guid: cff517ac5fdbdf4478364307f5e6b21c, type: 2}
+  taskDefinitions:
+  - taskDefinitions:
+    - {fileID: 11400000, guid: e09bb30ed6403234abebb6ff8599f06f, type: 2}
+    - {fileID: 11400000, guid: c7de05605343e8d41a3c2afc96b10ab7, type: 2}
+    - {fileID: 11400000, guid: 77e0f548a40379f49a666f0bec1891ca, type: 2}
+    - {fileID: 11400000, guid: 5d2b713934d1c044ba7cbc003fcb79ed, type: 2}
+    - {fileID: 11400000, guid: 7a1f007b0214d9c42aeb7c95286fe0bc, type: 2}
+  - taskDefinitions:
+    - {fileID: 11400000, guid: 20501fb73d7f8d54d9cab25e8d170612, type: 2}
+    - {fileID: 11400000, guid: 7957095502012ec41803fc2e0b4b6708, type: 2}
+    - {fileID: 11400000, guid: 4d9f36e416b714d43a743529c4416e7d, type: 2}
+    - {fileID: 11400000, guid: 946b55758a9c49848a7add8ffa7e1892, type: 2}
+  - taskDefinitions:
+    - {fileID: 11400000, guid: 9e90af97d12ac194fbaffe9078224b2f, type: 2}
+    - {fileID: 11400000, guid: b5f1e97f32a5e194aacfccfed63613bd, type: 2}
+    - {fileID: 11400000, guid: 7484903f42458c243b60bf0f6a0f88e7, type: 2}
+    - {fileID: 11400000, guid: cff517ac5fdbdf4478364307f5e6b21c, type: 2}
   updateTasksCountPerDay: 1
-  updateTasksTimeHour: 0
+  updateTasksTimeHour: 1
 --- !u!1 &1371871030
 GameObject:
   m_ObjectHideFlags: 0
@@ -7073,7 +7119,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166521824b2b3c14f838c812990f7e1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingsLoader
-  buildingsManager: {fileID: 455753200}
 --- !u!1 &1918364869
 GameObject:
   m_ObjectHideFlags: 0

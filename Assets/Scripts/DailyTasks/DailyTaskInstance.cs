@@ -10,12 +10,19 @@ public class DailyTaskInstance : ILocalizable
     public bool IsCompleted { get; private set; } = false;
 
     public event Action onProgressChanged;
+    public event Action onTaskRemoved;
 
     public DailyTaskInstance(DailyTaskDefinition definition, int progress)
     {
         Definition = definition;
 
         DailyTaskCondition.onProgressChanged += OnProgressChanged;
+    }
+
+    public void RemoveTask()
+    {
+        DailyTaskCondition.onProgressChanged -= OnProgressChanged;
+        onTaskRemoved?.Invoke();
     }
 
     public Dictionary<string, string> GetLocalization()

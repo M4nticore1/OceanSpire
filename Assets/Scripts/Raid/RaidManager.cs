@@ -33,7 +33,7 @@ public class RaidManager : MonoBehaviour
 
     [Header("Positions")]
     [SerializeField] private BoatDockPoint[] dockPoints;
-    private Dictionary<Boat, Vector3> spawnPositions;
+    private Dictionary<Boat, Vector3> spawnPositions = new();
 
     private bool isUnderRaid = false;
     private int landedRaidersCount = 0;
@@ -116,8 +116,6 @@ public class RaidManager : MonoBehaviour
 
         Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         dir.Normalize();
-
-        spawnPositions = new Dictionary<Boat, Vector3>();
 
         for (int i = 0; i < raidersAmount; i++) {
             float angle = Random.Range(minSpawnAngleOffset, maxSpawnAngleOffset);

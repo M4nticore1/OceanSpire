@@ -6,6 +6,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private DailyTaskWidget dailyTaskWidgetPrefab;
     [SerializeField] private LayoutGroup tasksLayoutGroup;
+    [SerializeField] private TextLocalizer updateTasksText;
 
     private List<DailyTaskWidget> widgets = new();
 
@@ -20,6 +21,11 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
     private void OnDisable()
     {
         TryUnsubscribe();
+    }
+
+    private void Update()
+    {
+        updateTasksText.UpdateText();
     }
 
     public void Open()

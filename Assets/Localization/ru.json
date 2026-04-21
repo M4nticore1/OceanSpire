@@ -63,7 +63,7 @@
   "skill_athletics": "Атлетика",
 
   "tasks_daily_tasks": "Ежедневные задания",
-  "tasks_update_time": "Задания будует обновлены через {updateTime}",
+  "tasks_update_time": "Задания будут обновлены через {updateTime}",
   "tasks_completed": "Завершено!",
   "tasks_time": "Ты получишь {rewardAmount} {rewardName} за проведение {taskCondition} минут в игре!",
   "tasks_extraction": "Ты получишь {rewardAmount} {rewardName} за сбор {taskCondition} с помощью причала!",
