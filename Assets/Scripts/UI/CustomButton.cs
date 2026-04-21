@@ -405,10 +405,12 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
             targetGraphic.color = Color.Lerp(targetGraphic.color, targetBodyColor, stateTransitionAlpha);
         }
 
-        foreach (var graphic in contentGraphics) {
-            if (!graphic) continue;
+        if (contentGraphics != null) {
+            foreach (var graphic in contentGraphics) {
+                if (!graphic) continue;
 
-            graphic.color = targetContentColor;
+                graphic.color = targetContentColor;
+            }
         }
     }
 

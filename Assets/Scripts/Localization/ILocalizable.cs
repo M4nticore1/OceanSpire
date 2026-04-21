@@ -2,5 +2,5 @@ using System.Collections.Generic;
 
 public interface ILocalizable
 {
-    public Dictionary<string, string> GetLocalizations();
+    public Dictionary<string, string> GetLocalization();
 }

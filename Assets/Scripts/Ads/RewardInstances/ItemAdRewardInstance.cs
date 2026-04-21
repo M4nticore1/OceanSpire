@@ -15,7 +15,7 @@ public class ItemAdRewardInstance : AdRewardInstance
         GenerateAmount();
     }
 
-    public override Dictionary<string, string> GetLocalizations()
+    public override Dictionary<string, string> GetLocalization()
     {
         return new Dictionary<string, string>()
         {
@@ -27,7 +27,7 @@ public class ItemAdRewardInstance : AdRewardInstance
     protected override void OnRewardRecieved()
     {
         int woodId = itemRewardData.ItemData.ItemId;
-        CityStorage.instance.Inventory.AddItemAmount(woodId, amount);
+        CityStorage.Instance.Inventory.AddItemAmount(woodId, amount);
     }
 
     private void GenerateAmount()

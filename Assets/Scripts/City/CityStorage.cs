@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class CityStorage : MonoBehaviour
 {
-    public static CityStorage instance { get; private set; }
+    public static CityStorage Instance { get; private set; }
 
-    [SerializeField] private Inventory inventory = null;
-    public Inventory Inventory => GetInventory();
+    [SerializeField] private Inventory inventory;
+    public Inventory Inventory => inventory;
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 
     private void OnEnable()
@@ -40,10 +40,5 @@ public class CityStorage : MonoBehaviour
     private void OnBoatUnloadedItem(int id, int amount)
     {
         inventory.AddItemAmount(id, amount);
-    }
-
-    private Inventory GetInventory()
-    {
-        return inventory;
     }
 }

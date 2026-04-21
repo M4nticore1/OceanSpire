@@ -1,17 +1,26 @@
 using System.Linq;
 using UnityEngine;
 
-public class BuildingsLoader : MonoBehaviour
+public class BuildingsLoader : Loader
 {
-    [SerializeField] private BuildingsManager buildingsManager;
+    public static BuildingsLoader Instance { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
-        WorldData saveData = WorldSaveManager.Instance.currentSaveWorldData;
+        if (Instance) {
+            Debug.Log("Duplicate BuildingsLoader found in the scene.");
+            Destroy(gameObject);
+            return;
+        }
 
-        LoadEnvironmentBuildings(saveData);
+        Instance = this;
+    }
+
+    protected override void Load(WorldData data)
+    {
+        LoadEnvironmentBuildings(data);
         LoadFloorFrames();
-        LoadTowerBuildings(saveData);
+        LoadTowerBuildings(data);
     }
 
     private void LoadEnvironmentBuildings(WorldData data)
@@ -22,11 +31,11 @@ public class BuildingsLoader : MonoBehaviour
             groundBuildingData = data.groundBuildingsData;
         }
         else {
-            groundBuildingData = new GroundBuildingEntry[buildingsManager.EnvironmentBuildings().Count()];
+            groundBuildingData = new GroundBuildingEntry[BuildingsManager.instance.EnvironmentBuildings().Count()];
         }
 
         int i = 0;
-        foreach (var building in buildingsManager.EnvironmentBuildings()) {
+        foreach (var building in BuildingsManager.instance.EnvironmentBuildings()) {
             if (i >= groundBuildingData.Length) break;
 
             GroundBuildingEntry groundBuildingEntry = groundBuildingData[i];
@@ -40,11 +49,11 @@ public class BuildingsLoader : MonoBehaviour
 
     private void LoadFloorFrames()
     {
-        int floorsCount = buildingsManager.BuiltFloors.Count;
+        int floorsCount = BuildingsManager.instance.BuiltFloors.Count;
 
         for (int i = 0; i < floorsCount; i++) {
             var data = new TowerBuildingEntry(i, 0);
-            FloorFrameModule floor = buildingsManager.BuiltFloors[i];
+            FloorFrameModule floor = BuildingsManager.instance.BuiltFloors[i];
             TowerBuilding building = floor.OwnedBuilding as TowerBuilding;
             building.Init(data);
 
@@ -63,7 +72,7 @@ public class BuildingsLoader : MonoBehaviour
                 }
 
                 if (data.placeIndex == 0) {
-                    TowerBuilding placedBuilding = buildingsManager.BuiltFloors[data.floorIndex].HallBuildingPlace.PlacedBuilding;
+                    TowerBuilding placedBuilding = BuildingsManager.instance.BuiltFloors[data.floorIndex].HallBuildingPlace.PlacedBuilding;
                     if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.id) {
                         placedBuilding.Demolish();
                     }
@@ -73,7 +82,7 @@ public class BuildingsLoader : MonoBehaviour
                     }
                 }
                 else {
-                    TowerBuilding placedBuilding = buildingsManager.BuiltFloors[data.floorIndex].RoomBuildingPlaces[data.placeIndex].PlacedBuilding;
+                    TowerBuilding placedBuilding = BuildingsManager.instance.BuiltFloors[data.floorIndex].RoomBuildingPlaces[data.placeIndex].PlacedBuilding;
                     if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.id) {
                         placedBuilding.Demolish();
                     }
@@ -85,10 +94,10 @@ public class BuildingsLoader : MonoBehaviour
             }
         }
         else {
-            int floorsCount = buildingsManager.BuiltFloors.Count;
+            int floorsCount = BuildingsManager.instance.BuiltFloors.Count;
 
             for (int i = 0; i < floorsCount; i++) {
-                FloorFrameModule floor = buildingsManager.BuiltFloors[i];
+                FloorFrameModule floor = BuildingsManager.instance.BuiltFloors[i];
 
                 // Hall
                 var hallData = new TowerBuildingEntry(i, 0);

@@ -30,6 +30,9 @@ public class WorldData
     public TowerBuildingEntry[] towerBuildingsData;
     public BoatEntry[] boatsData;
     public HumanDataV1[] citizensData;
+
+    public DailyTasksDataV1 DailyTasksData { get; private set; }
+
     //public int[] spawnedBoatIds { get; private set; } = new int[0];
     //public bool[] spawnedBoatsAreUnderConstruction { get; private set; } = new bool[0];
     //public bool[] spawnedBoatsAreFloating { get; private set; } = new bool[0];

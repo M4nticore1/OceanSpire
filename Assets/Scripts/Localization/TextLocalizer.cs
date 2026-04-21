@@ -14,13 +14,22 @@ public enum TextRole
 public class TextLocalizer : MonoBehaviour
 {
     private TextMeshProUGUI textBlock;
-    [SerializeField] private LocalizationItem item;
+
     [SerializeField] private TextRole textRole = TextRole.Default;
-    private ILocalizable placeHoldersLocalization;
+    [SerializeField] private LocalizationItem item;
+
+    [SerializeField] private MonoBehaviour localizationTarget;
+    private ILocalizable LocalizationTarget = null;
+
+    [SerializeField] private bool updateTextEveryFrame = false;
 
     private void Awake()
     {
         textBlock = GetComponent<TextMeshProUGUI>();
+
+        if (localizationTarget) {
+            SetPlaceHolderLocalization(localizationTarget as ILocalizable);
+        }
     }
 
     private void OnEnable()
@@ -34,14 +43,21 @@ public class TextLocalizer : MonoBehaviour
         LocalizationManager.Instance.OnLocalizationChanged -= OnLocalizationChanged;
     }
 
+    private void Update()
+    {
+        if (!updateTextEveryFrame) return;
+
+        UpdateText();
+    }
+
     public void UpdateText()
     {
         if (item) {
             string text = LocalizationManager.Instance.GetText(item);
             if (text == "") return;
 
-            if (placeHoldersLocalization != null) {
-                Dictionary<string, string> dict = placeHoldersLocalization.GetLocalizations();
+            if (LocalizationTarget != null) {
+                Dictionary<string, string> dict = LocalizationTarget.GetLocalization();
 
                 foreach (var key in dict.Keys.ToArray()) {
                     string holder = "{" + key + "}";
@@ -66,7 +82,7 @@ public class TextLocalizer : MonoBehaviour
 
     public void SetPlaceHolderLocalization(ILocalizable placeHolders)
     {
-        placeHoldersLocalization = placeHolders;
+        LocalizationTarget = placeHolders;
     }
 
     private void UpdateFont()

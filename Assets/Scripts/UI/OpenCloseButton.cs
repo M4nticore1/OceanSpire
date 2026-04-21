@@ -9,13 +9,16 @@ public enum ToggleButtonType
 public class OpenCloseButton : MonoBehaviour
 {
     [SerializeField] private MonoBehaviour targetOpenable;
-    private IOpenable TargetOpenable => targetOpenable as IOpenable;
+    private IOpenable TargetOpenable => targetOpenable ? targetOpenable as IOpenable : null;
 
     [SerializeField] private ToggleButtonType buttonType;
     [SerializeField] private CustomButton button;
 
     private void OnEnable()
     {
+        if (!targetOpenable) return;
+        if (!button) return;
+
         if (buttonType == ToggleButtonType.Open)
             button.onReleased += TargetOpenable.Open;
         else
@@ -24,6 +27,9 @@ public class OpenCloseButton : MonoBehaviour
 
     private void OnDisable()
     {
+        if (!targetOpenable) return;
+        if (!button) return;
+
         if (buttonType == ToggleButtonType.Open)
             button.onReleased -= TargetOpenable.Open;
         else

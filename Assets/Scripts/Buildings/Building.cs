@@ -230,7 +230,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
     }
 
     // ILocalizable
-    public Dictionary<string, string> GetLocalizations()
+    public Dictionary<string, string> GetLocalization()
     {
         return new Dictionary<string, string>()
         {

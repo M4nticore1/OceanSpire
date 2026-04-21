@@ -9,7 +9,7 @@ public class ReviveAdRewardInstance : AdRewardInstance
         this.human = human;
     }
 
-    public override Dictionary<string, string> GetLocalizations()
+    public override Dictionary<string, string> GetLocalization()
     {
         return new Dictionary<string, string>()
         {

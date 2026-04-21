@@ -1,8 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct RaidEndedResult
+{
+    public bool isRepeled;
+}
+
 public class RaidManager : MonoBehaviour
 {
+
     public static RaidManager instance;
 
     [SerializeField] private Inventory inventory;
@@ -33,7 +39,7 @@ public class RaidManager : MonoBehaviour
     private int landedRaidersCount = 0;
 
     public static event System.Action onRaidStarted;
-    public static event System.Action onRaidEnded;
+    public static event System.Action<RaidEndedResult> onRaidEnded;
 
     private void Awake()
     {
@@ -128,21 +134,26 @@ public class RaidManager : MonoBehaviour
 
             spawnPositions.Add(boat, position);
         }
-
-        isUnderRaid = true;
     }
 
     private void StartRaid()
     {
         ClearLosses();
+        isUnderRaid = true;
         onRaidStarted?.Invoke();
     }
 
-    private void StopRaid()
+    private void StopRaid(bool isRepeled)
     {
         RemoveCityLoot();
         isUnderRaid = false;
-        onRaidEnded?.Invoke();
+
+        RaidEndedResult result = new RaidEndedResult()
+        {
+            isRepeled = isRepeled
+        };
+
+        onRaidEnded?.Invoke(result);
     }
 
     private void RemoveCityLoot()
@@ -153,7 +164,7 @@ public class RaidManager : MonoBehaviour
             int id = item.ItemData.ItemId;
             int amount = item.Amount;
 
-            CityStorage.instance.Inventory.RemoveItemAmount(id, amount);
+            CityStorage.Instance.Inventory.RemoveItemAmount(id, amount);
         }
     }
 
@@ -196,7 +207,7 @@ public class RaidManager : MonoBehaviour
         landedRaidersCount--;
 
         if (landedRaidersCount == 0) {
-            StopRaid();
+            StopRaid(false);
         }
     }
 
@@ -216,7 +227,7 @@ public class RaidManager : MonoBehaviour
         aliveRaidersCount--;
 
         if (aliveRaidersCount <= 0) {
-            StopRaid();
+            StopRaid(true);
         }
     }
 

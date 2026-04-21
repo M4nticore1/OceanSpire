@@ -20,12 +20,12 @@ public class RaidEndedMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        RaidManager.onRaidEnded += OnRaidFinished;
+        RaidManager.onRaidEnded += OnRaidEnded;
     }
 
     private void OnDisable()
     {
-        RaidManager.onRaidEnded -= OnRaidFinished;
+        RaidManager.onRaidEnded -= OnRaidEnded;
     }
 
     private void Update()
@@ -38,7 +38,7 @@ public class RaidEndedMenu : MonoBehaviour
         Close();
     }
 
-    private void OnRaidFinished()
+    private void OnRaidEnded(RaidEndedResult result)
     {
         Open();
         currentVisibilityTime = 0f;

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DailyTasksMenu : MonoBehaviour
+public class DailyTasksMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private DailyTaskWidget dailyTaskWidgetPrefab;
     [SerializeField] private LayoutGroup tasksLayoutGroup;
@@ -10,11 +10,7 @@ public class DailyTasksMenu : MonoBehaviour
     private List<DailyTaskWidget> widgets = new();
 
     private bool isSubscribed = false;
-
-    private void Awake()
-    {
-        TrySubscribe();
-    }
+    private bool areWidgetsSpawned = false;
 
     private void OnEnable()
     {
@@ -26,18 +22,63 @@ public class DailyTasksMenu : MonoBehaviour
         TryUnsubscribe();
     }
 
-    private void CreateTaskWidget()
+    public void Open()
     {
-        DailyTaskWidget widget = DailyTaskWidgetFactory.CreateWidget(dailyTaskWidgetPrefab, tasksLayoutGroup.transform);
+        gameObject.SetActive(true);
+
+        TryRemoveWidgets();
+        TryCreateWidgets();
+    }
+
+    public void Close()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void TryCreateWidgets()
+    {
+        if (areWidgetsSpawned) return;
+
+        CreateTaskWidgets();
+    }
+
+    private void CreateTaskWidgets()
+    {
+        for (int i = 0; i < DailyTasksManager.Instance.Tasks.Count; i++) {
+            CreateTaskWidget(DailyTasksManager.Instance.Tasks[i]);
+        }
+
+        areWidgetsSpawned = true;
+    }
+
+    private void CreateTaskWidget(DailyTaskInstance task)
+    {
+        DailyTaskWidget widget = DailyTaskWidgetFactory.CreateWidget(dailyTaskWidgetPrefab, tasksLayoutGroup.transform, task);
         widgets.Add(widget);
+    }
+
+    private void TryRemoveWidgets()
+    {
+        if (areWidgetsSpawned) return;
+
+        RemoveTaskWidgets();
+    }
+
+    private void RemoveTaskWidgets()
+    {
+        for (int i = widgets.Count - 1; i >= 0; i--) {
+            Destroy(widgets[i].gameObject);
+            widgets.RemoveAt(i);
+        }
+
+        areWidgetsSpawned = false;
     }
 
     private void TrySubscribe()
     {
         if (isSubscribed) return;
 
-        DailyTasksManager.onTasksInited += OnTasksInited;
-
+        DailyTasksManager.Instance.onTasksInited += OnTasksInited;
         isSubscribed = true;
     }
 
@@ -45,13 +86,13 @@ public class DailyTasksMenu : MonoBehaviour
     {
         if (!isSubscribed) return;
 
-        DailyTasksManager.onTasksInited -= OnTasksInited;
-
+        DailyTasksManager.Instance.onTasksInited -= OnTasksInited;
         isSubscribed = false;
     }
 
     private void OnTasksInited()
     {
-
+        RemoveTaskWidgets();
+        CreateTaskWidgets();
     }
 }

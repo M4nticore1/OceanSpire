@@ -16,14 +16,14 @@ public class StorageBuildingModule : BuildingModule
 
                 int id = itemDef.ItemId;
                 int amount = category.Amount;
-                CityStorage.instance.Inventory.AddItemMaxAmount(id, amount);
+                CityStorage.Instance.Inventory.AddItemMaxAmount(id, amount);
             }
         }
 
         foreach (ItemInstance item in StorageLevelData.storageItems) {
             int id = item.ItemData.ItemId;
             int amount = item.Amount;
-            CityStorage.instance.Inventory.AddItemMaxAmount(id, amount);
+            CityStorage.Instance.Inventory.AddItemMaxAmount(id, amount);
         }
     }
 
@@ -32,7 +32,7 @@ public class StorageBuildingModule : BuildingModule
         foreach (ItemInstance item in StorageLevelData.storageItems) {
             int id = item.ItemData.ItemId;
             int amount = item.Amount;
-            CityStorage.instance.Inventory.RemoveItemMaxAmount(id, amount);
+            CityStorage.Instance.Inventory.RemoveItemMaxAmount(id, amount);
         }
     }
 

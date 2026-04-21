@@ -1,22 +1,29 @@
 using UnityEngine;
 
-public class ItemsLoader : MonoBehaviour
+public class ItemsLoader : Loader
 {
+    public static ItemsLoader Instance { get; private set; }
+
     private void Awake()
     {
-        WorldData worldData = WorldSaveManager.Instance.currentSaveWorldData;
-        LoadItems(worldData);
+        if (Instance) {
+            Debug.Log("Duplicate ItemsLoader found in the scene.");
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
     }
 
-    private void LoadItems(WorldData saveData)
+    protected override void Load(WorldData data)
     {
-        if (saveData != null) {
+        if (data != null) {
 
         }
         else {
-            foreach (ItemData data in ItemsList.Instance.Items) {
-                int id = data.ItemId;
-                CityStorage.instance.Inventory.TryAddNewItem(id);
+            foreach (var itemData in ItemsList.Instance.Items) {
+                int id = itemData.ItemId;
+                CityStorage.Instance.Inventory.TryAddNewItem(id);
             }
         }
     }

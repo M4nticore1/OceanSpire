@@ -21,7 +21,7 @@ public class RaidAudioSystem : MonoBehaviour
         raidAlarmSource.Play();
     }
 
-    private void OnRaidEnded()
+    private void OnRaidEnded(RaidEndedResult result)
     {
         raidAlarmSource.Stop();
     }

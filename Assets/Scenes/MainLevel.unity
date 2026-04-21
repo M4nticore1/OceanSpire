@@ -1689,6 +1689,30 @@ PrefabInstance:
       propertyPath: productionResourcePanelPrefab
       value: 
       objectReference: {fileID: 5968302294432705402, guid: 29184d8a9adf1db45b7c71598dce4862, type: 3}
+    - target: {fileID: 1559633917804186945, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559633917804186945, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559633917804186945, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559633917804186945, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559633917804186945, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1559633917804186945, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1581699028323243660, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1953,6 +1977,10 @@ PrefabInstance:
       propertyPath: rewardedAdsButtonManager
       value: 
       objectReference: {fileID: 939943841}
+    - target: {fileID: 8923505795833260381, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: localizationTarget
+      value: 
+      objectReference: {fileID: 1366684462}
     - target: {fileID: 8940168967239699050, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_LocalPosition.z
       value: -60
@@ -3799,6 +3827,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightProbeGroupManager
   probeAnchor: {fileID: 1308857850}
+--- !u!1 &830799192
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 830799193}
+  m_Layer: 0
+  m_Name: DailyTasks
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &830799193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830799192}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1366684461}
+  - {fileID: 1847136807}
+  - {fileID: 1926240061}
+  - {fileID: 1549214499}
+  - {fileID: 2091013160}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -5063,6 +5127,68 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6165b2d0b718b064d888d656eb7ec4a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FloorFrameModule
+--- !u!1 &1366684460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1366684461}
+  - component: {fileID: 1366684462}
+  m_Layer: 0
+  m_Name: DailyTasksManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1366684461
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366684460}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1366684462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366684460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5da9b34dbe8018e4bbb1b4d93a8cda74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DailyTasksManager
+  easyTaskDefinitions:
+  - {fileID: 11400000, guid: e09bb30ed6403234abebb6ff8599f06f, type: 2}
+  - {fileID: 11400000, guid: c7de05605343e8d41a3c2afc96b10ab7, type: 2}
+  - {fileID: 11400000, guid: 77e0f548a40379f49a666f0bec1891ca, type: 2}
+  - {fileID: 11400000, guid: 5d2b713934d1c044ba7cbc003fcb79ed, type: 2}
+  - {fileID: 11400000, guid: 7a1f007b0214d9c42aeb7c95286fe0bc, type: 2}
+  mediumTaskDefinitions:
+  - {fileID: 11400000, guid: 20501fb73d7f8d54d9cab25e8d170612, type: 2}
+  - {fileID: 11400000, guid: 7957095502012ec41803fc2e0b4b6708, type: 2}
+  - {fileID: 11400000, guid: 4d9f36e416b714d43a743529c4416e7d, type: 2}
+  - {fileID: 11400000, guid: 946b55758a9c49848a7add8ffa7e1892, type: 2}
+  hardTaskDefinitions:
+  - {fileID: 11400000, guid: 9e90af97d12ac194fbaffe9078224b2f, type: 2}
+  - {fileID: 11400000, guid: b5f1e97f32a5e194aacfccfed63613bd, type: 2}
+  - {fileID: 11400000, guid: 7484903f42458c243b60bf0f6a0f88e7, type: 2}
+  - {fileID: 11400000, guid: cff517ac5fdbdf4478364307f5e6b21c, type: 2}
+  updateTasksCountPerDay: 1
+  updateTasksTimeHour: 0
 --- !u!1 &1371871030
 GameObject:
   m_ObjectHideFlags: 0
@@ -5728,6 +5854,55 @@ Transform:
   - {fileID: 1290994963}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1549214498
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1549214499}
+  - component: {fileID: 1549214500}
+  m_Layer: 0
+  m_Name: BuildingTaskCondition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1549214499
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549214498}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1549214500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549214498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 706b5488d07232c4d855f6f84ae8d037, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingDailyTaskCondition
+  definitions:
+  - {fileID: 11400000, guid: 20501fb73d7f8d54d9cab25e8d170612, type: 2}
+  - {fileID: 11400000, guid: 7957095502012ec41803fc2e0b4b6708, type: 2}
+  - {fileID: 11400000, guid: 4d9f36e416b714d43a743529c4416e7d, type: 2}
+  - {fileID: 11400000, guid: 946b55758a9c49848a7add8ffa7e1892, type: 2}
 --- !u!1 &1591262574
 GameObject:
   m_ObjectHideFlags: 0
@@ -6511,6 +6686,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 178192283}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1847136806
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1847136807}
+  - component: {fileID: 1847136808}
+  m_Layer: 0
+  m_Name: TimeTaskCondition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1847136807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847136806}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1847136808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847136806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b472f4d7b63a35f46bcbf113238f6dce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TimeDailyTaskCondition
+  definitions:
+  - {fileID: 11400000, guid: e09bb30ed6403234abebb6ff8599f06f, type: 2}
+  - {fileID: 11400000, guid: c7de05605343e8d41a3c2afc96b10ab7, type: 2}
+  - {fileID: 11400000, guid: 77e0f548a40379f49a666f0bec1891ca, type: 2}
+  - {fileID: 11400000, guid: 5d2b713934d1c044ba7cbc003fcb79ed, type: 2}
 --- !u!114 &1853408846 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3416410043795393112, guid: 027e85367eebde44397c30b3608ccfdb, type: 3}
@@ -6942,6 +7166,53 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RewardedAdsManager
   adsManager: {fileID: 815262698}
+--- !u!1 &1926240060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1926240061}
+  - component: {fileID: 1926240062}
+  m_Layer: 0
+  m_Name: ExtractWoodTaskCondition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1926240061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926240060}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1926240062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926240060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c162bc39ecd34f4b9eeae4765d27b04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExtractionDailyTaskCondition
+  definitions:
+  - {fileID: 11400000, guid: 7a1f007b0214d9c42aeb7c95286fe0bc, type: 2}
+  conditionItem: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
 --- !u!1 &1928442169
 GameObject:
   m_ObjectHideFlags: 0
@@ -7493,6 +7764,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: 693ccb3407afb664cbc92be0896a8efc, type: 3}
   m_PrefabInstance: {fileID: 2072819812}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2091013159
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2091013160}
+  - component: {fileID: 2091013161}
+  m_Layer: 0
+  m_Name: RaidTaskCondition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2091013160
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2091013159}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2091013161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2091013159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 061e3552e9b431f45830a6132e2a5b81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RaidDailyTaskCondition
+  definitions:
+  - {fileID: 11400000, guid: 9e90af97d12ac194fbaffe9078224b2f, type: 2}
+  - {fileID: 11400000, guid: b5f1e97f32a5e194aacfccfed63613bd, type: 2}
+  - {fileID: 11400000, guid: 7484903f42458c243b60bf0f6a0f88e7, type: 2}
+  - {fileID: 11400000, guid: cff517ac5fdbdf4478364307f5e6b21c, type: 2}
 --- !u!114 &2101691718 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -6531259352477346386, guid: 440b02943862e8a4b9a97002ceac8cd9, type: 3}
@@ -7796,12 +8116,13 @@ SceneRoots:
   m_Roots:
   - {fileID: 383697685}
   - {fileID: 879926669}
+  - {fileID: 1424373026}
   - {fileID: 1108351253}
   - {fileID: 1317929167}
   - {fileID: 575860145}
   - {fileID: 1013778940}
   - {fileID: 178192283}
-  - {fileID: 1424373026}
+  - {fileID: 830799193}
   - {fileID: 2717670}
   - {fileID: 1542763785}
   - {fileID: 40920799}

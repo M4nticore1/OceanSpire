@@ -99,7 +99,7 @@ public class ProducedResourcePanel : MonoBehaviour
         }
         else {
             int targetTime = productionModule.ProductionLevelData.producedResources[index].ProduceTime;
-            string text = TimeFormatter.SecondsToTime(targetTime);
+            string text = TimeFormatter.SecondsToMinuteTime(targetTime);
             timer.SetText(text);
         }
     }

@@ -18,7 +18,7 @@ public abstract class AdRewardInstance : ILocalizable
         TimerManager.Instance.StartTimer(timer, limitTime, RemoveReward);
     }
 
-    public abstract Dictionary<string, string> GetLocalizations();
+    public abstract Dictionary<string, string> GetLocalization();
     protected abstract void OnRewardRecieved();
 
     public void RecieveReward()

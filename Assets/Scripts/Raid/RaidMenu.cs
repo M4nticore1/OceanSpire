@@ -10,7 +10,7 @@ public class RaidMenu : UIBehaviour
         base.OnEnable();
 
         RaidManager.onRaidStarted += OnRaidStarted;
-        RaidManager.onRaidEnded += OnRaidFinished;
+        RaidManager.onRaidEnded += OnRaidEnded;
     }
 
     protected override void OnDisable()
@@ -18,7 +18,7 @@ public class RaidMenu : UIBehaviour
         base.OnDisable();
 
         RaidManager.onRaidStarted -= OnRaidStarted;
-        RaidManager.onRaidEnded -= OnRaidFinished;
+        RaidManager.onRaidEnded -= OnRaidEnded;
     }
 
     protected override void Start()
@@ -43,7 +43,7 @@ public class RaidMenu : UIBehaviour
         Show();
     }
 
-    private void OnRaidFinished()
+    private void OnRaidEnded(RaidEndedResult result)
     {
         Hide();
     }

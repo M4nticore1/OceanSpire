@@ -23,6 +23,12 @@ public class Inventory : MonoBehaviour
     public List<StorageItem> items { get; private set; } = new List<StorageItem>();
     public Dictionary<int, StorageItem> itemsDict { get; private set; } = new Dictionary<int, StorageItem>();
 
+    public event Action<ItemInstance> onAddedItemAmount;
+    public event Action<ItemInstance> onRemovedItemAmount;
+
+    public event Action<StorageItem> onAddedMaxItemAmount;
+    public event Action<StorageItem> onRemovedMaxItemAmount;
+
     public event Action<ItemInstance> onChangedItemAmount;
     public event Action<StorageItem> onChangedItemMaxAmount;
 
@@ -44,6 +50,8 @@ public class Inventory : MonoBehaviour
         AddWeigth(id, amount);
 
         ItemInstance item = itemsDict[id].item;
+
+        onAddedItemAmount?.Invoke(item);
         onChangedItemAmount?.Invoke(item);
     }
 
@@ -52,6 +60,8 @@ public class Inventory : MonoBehaviour
         TryAddNewItem(id);
 
         itemsDict[id].AddMaxAmount(amount);
+
+        onAddedMaxItemAmount?.Invoke(itemsDict[id]);
         onChangedItemMaxAmount?.Invoke(itemsDict[id]);
     }
 
@@ -101,6 +111,7 @@ public class Inventory : MonoBehaviour
             RemoveItem(id);
         }
 
+        onRemovedItemAmount?.Invoke(item);
         onChangedItemAmount?.Invoke(item);
     }
 
@@ -119,6 +130,7 @@ public class Inventory : MonoBehaviour
             RemoveItemAmount(id, amountToRemove);
         }
 
+        onRemovedMaxItemAmount?.Invoke(itemsDict[id]);
         onChangedItemMaxAmount?.Invoke(itemsDict[id]);
     }
 

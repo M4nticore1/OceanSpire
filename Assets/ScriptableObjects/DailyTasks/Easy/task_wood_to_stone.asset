@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a3d9466388ce944a37adb758a3e6f9, type: 3}
+  m_Name: task_wood_to_stone
+  m_EditorClassIdentifier: Assembly-CSharp::DailyTaskDefinition
+  conditionType: 1
+  conditionAmount: 1000
+  conditionImage: {fileID: 21300000, guid: e843054e53a3f3a4caa4d88a03e02e29, type: 3}
+  conditionLocalizationItem: {fileID: 11400000, guid: 05cb771be4d5d0342b20cd09c020b70b, type: 2}
+  reward:
+    itemData: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+    amount: 1000
+  descriptionLocalizationItem: {fileID: 11400000, guid: 9f9eb86d54a13544dafdad821cfb9f77, type: 2}

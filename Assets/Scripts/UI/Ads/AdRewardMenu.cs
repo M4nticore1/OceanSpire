@@ -118,7 +118,7 @@ public class AdRewardMenu : MonoBehaviour, IOpenable
     {
         AdRewardInstance itemReward = RewardedAdsManager.instance.currentReward;
         float remainingTime = itemReward.GetRemainingTime();
-        string time = TimeFormatter.SecondsToTime((int)remainingTime);
+        string time = TimeFormatter.SecondsToMinuteTime((int)remainingTime);
         remainingTimeText.SetText(time);
     }
 
