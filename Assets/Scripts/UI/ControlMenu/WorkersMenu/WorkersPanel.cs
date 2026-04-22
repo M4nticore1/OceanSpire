@@ -8,54 +8,52 @@ public class WorkersPanel : UIBehaviour
     [SerializeField] private CitizenWidget citizenWidgetPrefab;
 
     private RectTransform rectTransform;
-    private List<CitizenWidget> spawnedCitizenWidgets = new List<CitizenWidget>();
-    public List<CitizenWidget> SpawnedCitizenWidgets => spawnedCitizenWidgets;
+    private List<CitizenWidget> spawnedWidgets = new List<CitizenWidget>();
+    public List<CitizenWidget> SpawnedWidgets => spawnedWidgets;
 
-    [SerializeField] private GridLayoutGroup citizensLayoutGroup;
+    [SerializeField] private GridLayoutGroup layoutGroup;
     [SerializeField] private GameObject haveNoCitizensText;
 
     private Vector2 startSize;
 
-    public void Init()
+    protected override void Awake()
     {
+        base.Awake();
+
         rectTransform = GetComponent<RectTransform>();
         startSize = rectTransform.sizeDelta;
     }
 
     public void CreateWidget(Human citizen)
     {
-        CitizenWidget widget = Instantiate(citizenWidgetPrefab, citizensLayoutGroup.transform);
-        spawnedCitizenWidgets.Add(widget);
-        widget.Init(citizen);
-
-        UpdateMenuSize();
+        CitizenWidget widget = CitizenWidgetFactory.CreateWidget(citizenWidgetPrefab, layoutGroup.transform, citizen);
+        spawnedWidgets.Add(widget);
     }
 
     public void ClearWidgets()
     {
-        foreach (var widget in spawnedCitizenWidgets) {
-            Destroy(widget.gameObject);
+        for (int i = spawnedWidgets.Count - 1; i >= 0; i--) {
+            Destroy(spawnedWidgets[i].gameObject);
+            spawnedWidgets[i].gameObject.transform.parent = null;
+            spawnedWidgets.RemoveAt(i);
         }
-
-        spawnedCitizenWidgets.Clear();
     }
 
-    private void UpdateMenuSize()
+    public void UpdateMenu()
     {
-        int widgetsCount = spawnedCitizenWidgets.Count;
+        int widgetsCount = spawnedWidgets.Count;
 
         if (widgetsCount == 0) {
             rectTransform.sizeDelta = startSize;
-
-            if (haveNoCitizensText)
-                haveNoCitizensText.SetActive(true);
         }
         else {
-            float ySize = startSize.y + (LayoutGroupUtils.GetRowsCount(citizensLayoutGroup) * citizensLayoutGroup.cellSize.y);
+            layoutGroup.GetComponent<RectTransform>().ForceUpdateRectTransforms();
+            float ySize = startSize.y + (LayoutGroupUtils.GetRowsCount(layoutGroup) * layoutGroup.cellSize.y);
             rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, ySize);
+        }
 
-            if (haveNoCitizensText)
-                haveNoCitizensText.SetActive(false);
+        if (haveNoCitizensText) {
+            haveNoCitizensText.SetActive(widgetsCount == 0);
         }
     }
 }

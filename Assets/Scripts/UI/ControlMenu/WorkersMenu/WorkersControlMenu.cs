@@ -8,15 +8,6 @@ public class WorkersControlMenu : ControlMenu
     [SerializeField] private WorkersPanel employedCitizensMenu;
     [SerializeField] private RectTransform scrollRectContent;
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        buildingWorkersMenu.Init();
-        unemployedCitizensMenu.Init();
-        employedCitizensMenu.Init();
-    }
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -50,13 +41,15 @@ public class WorkersControlMenu : ControlMenu
     protected override void UpdateMenu()
     {
         Building selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
-        List<Human> citizens = CreaturesManager.instance.citizens;
+        if (!selectedBuilding) return;
+
         int maxWorkersCount = selectedBuilding.LevelData.maxResidentsCount;
 
         buildingWorkersMenu.ClearWidgets();
         employedCitizensMenu.ClearWidgets();
         unemployedCitizensMenu.ClearWidgets();
 
+        List<Human> citizens = CreaturesManager.instance.citizens;
         for (int i = 0; i < citizens.Count; i++) {
             Human citizen = citizens[i];
 
@@ -71,9 +64,13 @@ public class WorkersControlMenu : ControlMenu
             }
         }
 
-        while (buildingWorkersMenu.SpawnedCitizenWidgets.Count < maxWorkersCount) {
+        while (buildingWorkersMenu.SpawnedWidgets.Count < maxWorkersCount) {
             buildingWorkersMenu.CreateWidget(null);
         }
+
+        buildingWorkersMenu.UpdateMenu();
+        employedCitizensMenu.UpdateMenu();
+        unemployedCitizensMenu.UpdateMenu();
 
         UpdateScrollRect();
     }

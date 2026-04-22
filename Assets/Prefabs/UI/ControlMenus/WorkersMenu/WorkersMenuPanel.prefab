@@ -113,7 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkersMenu
   citizenWidgetPrefab: {fileID: 4805816691179792696, guid: b1a163b079b78b042a9dd451beb4d620, type: 3}
-  citizensLayoutGroup: {fileID: 3747797077880568880}
+  layoutGroup: {fileID: 3747797077880568880}
   haveNoCitizensText: {fileID: 5177592703943442077}
 --- !u!1 &3798309038442213724
 GameObject:
@@ -223,11 +223,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5096182534854453995}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -120}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 100}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &1980983882803784006
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -340,8 +340,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
-  item: {fileID: 11400000, guid: b1f184bc8e0dba94380716ecb8267cb3, type: 2}
   textRole: 0
+  item: {fileID: 11400000, guid: b1f184bc8e0dba94380716ecb8267cb3, type: 2}
+  localizationTarget: {fileID: 0}
 --- !u!1 &8064248741367761841
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,5 +495,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
-  item: {fileID: 11400000, guid: e7f9a84473b9e3d4ea18e7548188cd98, type: 2}
   textRole: 1
+  item: {fileID: 11400000, guid: e7f9a84473b9e3d4ea18e7548188cd98, type: 2}
+  localizationTarget: {fileID: 0}

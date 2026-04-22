@@ -41,7 +41,7 @@ public class LocalizationManager
             SetLocalization(data.language);
         }
         else {
-            SystemLanguage systemLanguage = SystemLanguage.Russian /*Application.systemLanguage*/;
+            SystemLanguage systemLanguage = SystemLanguage.Russian;
 
             if (localizations.ContainsKey(systemLanguage)) {
                 SetLocalization(systemLanguage);
@@ -71,9 +71,7 @@ public class LocalizationManager
     public string GetText(LocalizationItem item)
     {
         string key = item.name;
-        string text = "";
-
-        deserializedLocalization.TryGetValue(key, out text);
+        string text = deserializedLocalization[key];
 
         return text;
     }
@@ -91,60 +89,5 @@ public class LocalizationManager
         Dictionary<string, string> localiations = JsonConvert.DeserializeObject<Dictionary<string, string>>(textAsset.text);
         string text = localiations["language_name"];
         return text;
-    }
-
-    //public LocalizationEntry GetLocalizationEntry(LocalizationItem item)
-    //{
-    //    if (!item) {
-    //        Debug.LogError("item is not valid.");
-    //        return null;
-    //    }
-
-    //    if (!currentLocalization) {
-    //        Debug.LogError("currentLocalization is not valid.");
-    //        return null;
-    //    }
-
-    //    if (!currentLocalization.itemsDict.ContainsKey(item)) {
-    //        Debug.LogError($"currentLocalizationIndex has no '{item.name}' key");
-    //        return null;
-    //    }
-
-    //    return currentLocalization.itemsDict[item];
-    //}
-
-    public string GetFirstName(bool isMale, int index)
-    {
-        if (isMale) {
-            //return GetName(isMale, index, currentLocalization.male_first_names);
-        }
-        else {
-            //return GetName(isMale, index, currentLocalization.female_first_names);
-        }
-        return "";
-    }
-
-    public string GetLastName(bool isMale, int index)
-    {
-        if (isMale) {
-            //return GetName(isMale, index, currentLocalization.male_last_names);
-        }
-        else {
-            //return GetName(isMale, index, currentLocalization.female_last_names);
-        }
-        return "";
-    }
-
-    private string GetName(bool isMale, int index, string[] names)
-    {
-        if (names == null) {
-            Debug.LogError("Array is not valid.");
-            return "";
-        }
-
-        int maxIndex = names.Length;
-        int finalIndex = index % maxIndex;
-
-        return names[index];
     }
 }
