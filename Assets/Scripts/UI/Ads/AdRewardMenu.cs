@@ -6,7 +6,7 @@ public abstract class AdRewardMenu : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private SlidePanel slidePanel;
-    [SerializeField] private CustomButton watchButton;
+    [SerializeField] protected CustomButton watchButton;
     [SerializeField] private Image rewardImage;
     [SerializeField] private TextLocalizer rewardDescryption;
 

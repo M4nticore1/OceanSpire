@@ -19,6 +19,8 @@ public class ReviveManager : MonoBehaviour
 
     public int RemainingRevivesCount { get; private set; } = 0;
 
+    public event Action onRevivesCountChanged;
+
     private void OnEnable()
     {
         SelectManager.onComponentSelected += OnComponentSelected;
@@ -65,8 +67,10 @@ public class ReviveManager : MonoBehaviour
     private void SetRevivesCount(int value)
     {
         if (RemainingRevivesCount == value) return;
+        int lastCount = RemainingRevivesCount;
 
         RemainingRevivesCount = value;
+        onRevivesCountChanged?.Invoke();
     }
 
     private void AddReviveCount()

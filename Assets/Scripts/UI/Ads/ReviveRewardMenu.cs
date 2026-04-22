@@ -7,6 +7,20 @@ public class ReviveRewardMenu : AdRewardMenu
     [SerializeField] private TextMeshProUGUI remainingTimeText;
     [SerializeField] private TextMeshProUGUI remainingRevivesText;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        ReviveManager.Instance.onRevivesCountChanged += OnRemainingRevivesCountChanged;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        ReviveManager.Instance.onRevivesCountChanged -= OnRemainingRevivesCountChanged;
+    }
+
     private void Update()
     {
         if (!isOpened) return;
@@ -25,6 +39,7 @@ public class ReviveRewardMenu : AdRewardMenu
 
     protected override void OnOpen()
     {
+        AssignButtonEnabled();
         UpdateRemainingRevivesText();
     }
 
@@ -33,11 +48,22 @@ public class ReviveRewardMenu : AdRewardMenu
         
     }
 
+    private void AssignButtonEnabled()
+    {
+        bool enoughRevives = ReviveManager.Instance.RemainingRevivesCount > 0;
+        watchButton.SetState(enoughRevives ? CustomButtonState.Idle : CustomButtonState.Disabled);
+    }
+
     private void UpdateRemainingRevivesText()
     {
         int maxRevivesCount = ReviveManager.Instance.MaxRevivesCount;
         int remainingRevivesCount = ReviveManager.Instance.RemainingRevivesCount;
 
         remainingRevivesText.SetText(remainingRevivesCount + "/" + remainingRevivesCount);
+    }
+
+    private void OnRemainingRevivesCountChanged()
+    {
+        AssignButtonEnabled();
     }
 }
