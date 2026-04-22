@@ -12,17 +12,17 @@ public abstract class SelectedDisplay : MonoBehaviour
     private void OnEnable()
     {
         Subscribe();
-        Display();
+        TryDisplay();
     }
 
     private void OnDisable()
     {
         Unsubscribe();
-        Hide();
+        TryHide();
     }
 
-    protected abstract void Display();
-    protected abstract void Hide();
+    protected abstract void TryDisplay();
+    protected abstract void TryHide();
 
     private void Subscribe()
     {
@@ -46,12 +46,12 @@ public abstract class SelectedDisplay : MonoBehaviour
 
     private void OnComponentSelected(SelectComponent selected)
     {
-        Hide();
-        Display();
+        TryHide();
+        TryDisplay();
     }
 
     private void OnComponentDeselected(SelectComponent selected)
     {
-        Hide();
+        TryHide();
     }
 }

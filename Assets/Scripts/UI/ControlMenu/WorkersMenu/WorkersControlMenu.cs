@@ -60,10 +60,10 @@ public class WorkersControlMenu : ControlMenu
         for (int i = 0; i < citizens.Count; i++) {
             Human citizen = citizens[i];
 
-            if (citizen.Interactor.interactBuilding == selectedBuilding) {
+            if (citizen.InteractComponent.interactBuilding == selectedBuilding) {
                 buildingWorkersMenu.CreateWidget(citizen);
             }
-            else if (citizen.Interactor.interactBuilding) {
+            else if (citizen.InteractComponent.interactBuilding) {
                 employedCitizensMenu.CreateWidget(citizen);
             }
             else {

@@ -36,7 +36,7 @@ public class RaiderState : HumanState
         Building currentBuilding = human.CityNavigator.currentBuilding;
         if (!currentBuilding) return;
 
-        Building interactBuilding = human.Interactor.interactBuilding;
+        Building interactBuilding = human.InteractComponent.interactBuilding;
         if (currentBuilding != interactBuilding) return;
 
         currentRaidBuildingTime += Time.deltaTime;
@@ -52,7 +52,7 @@ public class RaiderState : HumanState
 
     public override void OnStoppedAttacking()
     {
-        if (!human.Health.isAlive) return;
+        if (!human.HealthComponent.isAlive) return;
 
         UpdateRaidAction();
     }
@@ -69,7 +69,7 @@ public class RaiderState : HumanState
 
     public override void OnRemovedInteractBuilding()
     {
-        human.Interactor.RemoveInteractBuilding();
+        human.InteractComponent.RemoveInteractBuilding();
     }
 
     public override void OnStoppedMoving()
@@ -79,7 +79,7 @@ public class RaiderState : HumanState
 
     public override void OnEnteredBuilding(Building building)
     {
-        if (!isFinishedRaiding && building == human.Interactor.interactBuilding) {
+        if (!isFinishedRaiding && building == human.InteractComponent.interactBuilding) {
             UpdateRaidAction();
         }
     }
@@ -134,10 +134,10 @@ public class RaiderState : HumanState
     private void StartAttackingWorker()
     {
         Building building = human.CityNavigator.currentBuilding;
-        Attack target = building.currentWorkers[0].GetComponent<Attack>();
+        AttackComponent target = building.currentWorkers[0].GetComponent<AttackComponent>();
 
-        human.Attack.SetTarget(target);
-        human.Attack.MoveToTarget();
+        human.AttackComponent.SetTarget(target);
+        human.AttackComponent.MoveToTarget();
     }
 
     private void FinishRaidingBuilding()
@@ -150,19 +150,19 @@ public class RaiderState : HumanState
 
     private void AddLoot()
     {
-        ItemInstance instance = human.Interactor.interactBuilding.GetComponentInChildren<IRaidable>().GetRaidLoot();
+        ItemInstance instance = human.InteractComponent.interactBuilding.GetComponentInChildren<IRaidable>().GetRaidLoot();
         RaidManager.instance.AddLose(instance);
     }
 
     private bool ShouldAttackWorker()
     {
         Building building = human.CityNavigator.currentBuilding;
-        if (building != human.Interactor.interactBuilding) return false;
+        if (building != human.InteractComponent.interactBuilding) return false;
 
         if (building.currentWorkers.Count == 0) return false;
 
         Human firstWorker = building.currentWorkers[0].GetComponent<Human>();
-        if (!firstWorker.Health.isAlive) return false;
+        if (!firstWorker.HealthComponent.isAlive) return false;
 
         return building.currentWorkers.Count > 0;
     }
@@ -170,7 +170,7 @@ public class RaiderState : HumanState
     private bool ShouldRaidBuilding()
     {
         Building building = human.CityNavigator.currentBuilding;
-        if (building != human.Interactor.interactBuilding) return false;
+        if (building != human.InteractComponent.interactBuilding) return false;
 
         return true;
     }

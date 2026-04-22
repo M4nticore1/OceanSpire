@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HealthDrainer : MonoBehaviour
 {
-    Health healthComponent = null;
+    HealthComponent healthComponent = null;
 
     [SerializeField] private float damagePerSecond = 1.0f;
     private const float DRAIN_DURATION = 1f;
@@ -10,7 +10,7 @@ public class HealthDrainer : MonoBehaviour
 
     private void Awake()
     {
-        healthComponent = GetComponent<Health>();
+        healthComponent = GetComponent<HealthComponent>();
     }
 
     public void ProcessDrainHealth()

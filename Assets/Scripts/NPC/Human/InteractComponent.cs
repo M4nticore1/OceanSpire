@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class BuildingInteractHandler : MonoBehaviour
+public class InteractComponent : MonoBehaviour
 {
     public Building interactBuilding { get; private set; }
 

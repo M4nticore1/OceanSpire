@@ -177,7 +177,7 @@ public class ResourceWidget : MonoBehaviour
         int maxAmount = CityStorage.Instance.Inventory.itemsDict[id].maxAmount;
 
         foreach (var citizen in CreaturesManager.instance.citizens) {
-            if (!citizen.Health.isAlive) continue;
+            if (!citizen.HealthComponent.isAlive) continue;
 
             amount++;
         }

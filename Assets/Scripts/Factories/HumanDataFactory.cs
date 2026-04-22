@@ -6,7 +6,7 @@ public static class HumanDataFactory
     {
         int id = (int)CreatureIdEnum.Human;
         int instanceId = InstancesManager.instance.GetNextInstanceId();
-        float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
+        float health = CreaturesList.Instance.Creatures[id].GetComponent<HealthComponent>().MaxHealth;
         HumanStatusEnum status = HumanStatusEnum.Citizen;
 
         int firstNameId = HumanNamesList.Instance.GetRandomMaleFirstNameId();
@@ -29,7 +29,7 @@ public static class HumanDataFactory
     {
         int id = (int)CreatureIdEnum.Human;
         int instanceId = InstancesManager.instance.GetNextInstanceId();
-        float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
+        float health = CreaturesList.Instance.Creatures[id].GetComponent<HealthComponent>().MaxHealth;
         HumanStatusEnum status = HumanStatusEnum.Wanderer;
 
         int firstNameId = HumanNamesList.Instance.GetRandomMaleFirstNameId();
@@ -52,7 +52,7 @@ public static class HumanDataFactory
     {
         int id = (int)CreatureIdEnum.Human;
         int instanceId = InstancesManager.instance.GetNextInstanceId();
-        float health = CreaturesList.Instance.Creatures[id].GetComponent<Health>().MaxHealth;
+        float health = CreaturesList.Instance.Creatures[id].GetComponent<HealthComponent>().MaxHealth;
         HumanStatusEnum status = HumanStatusEnum.Raider;
 
         int firstNameId = HumanNamesList.Instance.GetRandomMaleFirstNameId();

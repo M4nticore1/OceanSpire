@@ -4,7 +4,7 @@ public class SelectedBuildingNameDisplay : SelectedDisplay
 {
     [SerializeField] protected TextLocalizer localizer;
 
-    protected override void Display()
+    protected override void TryDisplay()
     {
         Building building = SelectManager.Instance.GetSelectedBuilding();
         if (!building) return;
@@ -15,9 +15,8 @@ public class SelectedBuildingNameDisplay : SelectedDisplay
         localizer.UpdateText();
     }
 
-    protected override void Hide()
+    protected override void TryHide()
     {
-        localizer.SetLocalizationItem(null);
-        localizer.UpdateText();
+        localizer.SetText("");
     }
 }

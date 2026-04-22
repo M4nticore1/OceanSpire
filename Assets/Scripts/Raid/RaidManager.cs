@@ -128,8 +128,6 @@ public class RaidManager : MonoBehaviour
             Boat boat = CreateBoat(position, rotation);
 
             Human raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.id);
-            //raider.BoatRider.EnterBoat();
-            //raider.SetInteractBuilding(GetRandomRaidBuilding());
 
             spawnPositions.Add(boat, position);
         }
@@ -148,6 +146,7 @@ public class RaidManager : MonoBehaviour
     {
         RemoveCityLoot();
         isUnderRaid = false;
+        isRaidCreated = false;
 
         RaidEndedResult result = new RaidEndedResult()
         {

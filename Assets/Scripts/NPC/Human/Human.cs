@@ -20,29 +20,29 @@ public class Human : Creature
     [SerializeField] private NameHandler nameHandler;
     public NameHandler NameHandler => nameHandler;
 
-    [SerializeField] private Health health;
-    public Health Health => health;
+    [SerializeField] private HealthComponent healthComponent;
+    public HealthComponent HealthComponent => healthComponent;
 
-    [SerializeField] private ReviveHandler reviveHandler;
-    public ReviveHandler ReviveHandler => reviveHandler;
+    [SerializeField] private ReviveComponent reviveComponent;
+    public ReviveComponent ReviveComponent => reviveComponent;
 
     [SerializeField] private CreatureCityNavigator cityNavigator;
     public CreatureCityNavigator CityNavigator => cityNavigator;
 
-    [SerializeField] private BuildingInteractHandler interactor;
-    public BuildingInteractHandler Interactor => interactor;
+    [SerializeField] private InteractComponent interactComponent;
+    public InteractComponent InteractComponent => interactComponent;
 
     [SerializeField] private BoatRider boatRider;
     public BoatRider BoatRider => boatRider;
 
-    [SerializeField] private Attack attack;
-    public Attack Attack => attack;
+    [SerializeField] private AttackComponent attackComponent;
+    public AttackComponent AttackComponent => attackComponent;
 
-    [SerializeField] private WeaponHandler weaponHandler;
-    public WeaponHandler WeaponHandler => WeaponHandler;
+    [SerializeField] private WeaponEquipment weaponEquipment;
+    public WeaponEquipment WeaponEquipment => weaponEquipment;
 
-    [SerializeField] private SkillsComponent skills;
-    public SkillsComponent Skills => skills;
+    [SerializeField] private SkillsComponent skillsComponent;
+    public SkillsComponent SkillsComponent => skillsComponent;
 
     [SerializeField] private SelectComponent selectComponent;
     public SelectComponent SelectComponent => selectComponent;
@@ -70,17 +70,17 @@ public class Human : Creature
     {
         base.OnEnable();
 
-        health.onRevived += OnRevived;
-        health.onDied += OnDied;
+        healthComponent.onRevived += OnRevived;
+        healthComponent.onDied += OnDied;
 
-        attack.onStartedAttacking += OnStartedAttacking;
-        attack.onStoppedAttacking += OnStoppedAttacking;
+        attackComponent.onStartedAttacking += OnStartedAttacking;
+        attackComponent.onStoppedAttacking += OnStoppedAttacking;
 
         cityNavigator.onEnteredBuilding += OnEnteredBuilding;
         cityNavigator.onReachedPath += OnReachedPathBuilding;
 
-        interactor.onSetedInteractBuilding += OnSetedInteractBuilding;
-        interactor.onRemovedInteractBuilding += OnRemovedInteractBuilding;
+        interactComponent.onSetedInteractBuilding += OnSetedInteractBuilding;
+        interactComponent.onRemovedInteractBuilding += OnRemovedInteractBuilding;
 
         boatRider.onEnteredBoat += OnEnteredBoat;
         boatRider.onExitedBoat += OnExitedBoat;
@@ -97,17 +97,17 @@ public class Human : Creature
 
         currentStatus.OnDisable();
 
-        health.onRevived -= OnRevived;
-        health.onDied -= OnDied;
+        healthComponent.onRevived -= OnRevived;
+        healthComponent.onDied -= OnDied;
 
-        attack.onStartedAttacking -= OnStartedAttacking;
-        attack.onStoppedAttacking -= OnStoppedAttacking;
+        attackComponent.onStartedAttacking -= OnStartedAttacking;
+        attackComponent.onStoppedAttacking -= OnStoppedAttacking;
 
         cityNavigator.onEnteredBuilding -= OnEnteredBuilding;
         cityNavigator.onReachedPath -= OnReachedPathBuilding;
 
-        interactor.onSetedInteractBuilding -= OnSetedInteractBuilding;
-        interactor.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
+        interactComponent.onSetedInteractBuilding -= OnSetedInteractBuilding;
+        interactComponent.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
 
         boatRider.onEnteredBoat -= OnEnteredBoat;
         boatRider.onExitedBoat -= OnExitedBoat;
@@ -121,9 +121,6 @@ public class Human : Creature
     private void Update()
     {
         currentStatus.Tick();
-
-        ReviveAdRewardInstance reviveReward = RewardedAdsManager.instance.currentReward as ReviveAdRewardInstance;
-        bool isAdDisplayed = RewardedAdsManager.instance.AdsManager.isAdDisplayed;
     }
 
     protected override void OnInit(CreatureDataV1 data)
@@ -134,17 +131,17 @@ public class Human : Creature
         isMale = humanData.isMale;
         SetStatus(humanData.status);
 
-        health.SetCurrentHealth(humanData.health);
+        healthComponent.SetCurrentHealth(humanData.health);
         nameHandler.Init(humanData.name, isMale);
 
         if (InstancesManager.instance.TryGetInstance(humanData.interactBuildingInstanceId, out var obj)) {
             if (obj.TryGetComponent<Building>(out var building)) {
-                interactor.SetInteractBuilding(building);
+                interactComponent.SetInteractBuilding(building);
             }
         }
 
-        weaponHandler.Init(humanData.weapon);
-        skills.Init(humanData.skills);
+        weaponEquipment.Init(humanData.weapon);
+        skillsComponent.Init(humanData.skills);
 
         if (humanData.boatRider.boatInstanceId >= 0) {
             boatRider.SetSelectedBoat(humanData.boatRider.boatInstanceId);
@@ -159,11 +156,11 @@ public class Human : Creature
 
     public void SetInteractBuilding(Building building)
     {
-        if (interactor.interactBuilding) {
+        if (interactComponent.interactBuilding) {
             RemoveInteractBuilding();
         }
 
-        interactor.SetInteractBuilding(building);
+        interactComponent.SetInteractBuilding(building);
         cityNavigator.SetTargetBuilding(building);
         currentStatus.OnSetedInteractBuilding(building);
     }
@@ -183,7 +180,7 @@ public class Human : Creature
 
     public void HandleClickedWorkerWidget()
     {
-        if (interactor.interactBuilding) {
+        if (interactComponent.interactBuilding) {
             RemoveInteractBuilding();
         }
         else {
@@ -230,9 +227,9 @@ public class Human : Creature
     protected override bool ShouldStartIdle()
     {
         if (movement.isMoving) return false;
-        if (interactor.isInteracting) return false;
-        if (attack.isAttacking) return false;
-        if (!health.isAlive) return false;
+        if (interactComponent.isInteracting) return false;
+        if (attackComponent.isAttacking) return false;
+        if (!healthComponent.isAlive) return false;
 
         return true;
     }
@@ -249,7 +246,7 @@ public class Human : Creature
     private void OnDied()
     {
         currentStatus.OnDied();
-        interactor.RemoveInteractBuilding();
+        interactComponent.RemoveInteractBuilding();
         TryStopIdle();
 
         onHumanDied?.Invoke(this);
@@ -319,7 +316,7 @@ public class Human : Creature
     {
         movement.SetAgentEnabled(true);
 
-        if (interactor.interactBuilding) {
+        if (interactComponent.interactBuilding) {
             cityNavigator.TryFindPathToTargetBuilding();
         }
 

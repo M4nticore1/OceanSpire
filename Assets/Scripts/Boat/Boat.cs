@@ -57,8 +57,8 @@ public class Boat : MonoBehaviour
     [SerializeField] private Inventory inventory;
     public Inventory Inventory => inventory;
 
-    [SerializeField] private Health health;
-    public Health Health => health;
+    [SerializeField] private HealthComponent health;
+    public HealthComponent Health => health;
 
     [SerializeField] private HealthDrainer healthDrainer;
 

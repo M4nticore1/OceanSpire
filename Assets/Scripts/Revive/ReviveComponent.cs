@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class ReviveHandler : MonoBehaviour
+public class ReviveComponent : MonoBehaviour
 {
-    [SerializeField] private Health health;
+    [SerializeField] private HealthComponent health;
     [SerializeField] private float reviveHealthPercent = 0.1f;
 
     [SerializeField] private float reviveLimitTime = 600f;
@@ -29,7 +29,6 @@ public class ReviveHandler : MonoBehaviour
 
     public void Revive()
     {
-        Debug.Log("Revive");
         health.SetCurrentHealth(GetReviveHealth());
     }
 

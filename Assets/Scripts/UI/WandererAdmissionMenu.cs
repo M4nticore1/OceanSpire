@@ -35,7 +35,7 @@ public class WandererAdmissionMenu : MonoBehaviour
         selectedHuman = human;
         slidePanel.Open();
 
-        skillPanel.SetSkills(human.Skills);
+        skillPanel.SetSkills(human.SkillsComponent);
 
         isOpened = true;
     }

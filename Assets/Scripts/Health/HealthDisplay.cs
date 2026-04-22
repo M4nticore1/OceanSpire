@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class HealthDisplay : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] private Health health;
+    [SerializeField] private HealthComponent health;
 
     [Header("Display")]
     [SerializeField] private GameObject content;
@@ -63,7 +63,7 @@ public class HealthDisplay : MonoBehaviour
         }
     }
 
-    public void SetHealthComponent(Health health)
+    public void SetHealthComponent(HealthComponent health)
     {
         this.health = health;
 

@@ -10,7 +10,7 @@ public class WeaponHandlerData
     }
 }
 
-public class WeaponHandler : MonoBehaviour
+public class WeaponEquipment : MonoBehaviour
 {
     [SerializeField] private Transform spawnPoint;
 

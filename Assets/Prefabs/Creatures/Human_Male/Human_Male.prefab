@@ -103,16 +103,15 @@ MonoBehaviour:
   creatureDefinition: {fileID: 0}
   instanceId: {fileID: 6196963818731621145}
   nameHandler: {fileID: 6264695886038843937}
-  health: {fileID: 4098557255172134659}
-  reviveHandler: {fileID: 2775210278879926879}
+  healthComponent: {fileID: 4098557255172134659}
+  reviveComponent: {fileID: 2775210278879926879}
   cityNavigator: {fileID: 2185582854232776361}
-  interactor: {fileID: 6316746746762001490}
+  interactComponent: {fileID: 6316746746762001490}
   boatRider: {fileID: 6497944028369977301}
-  attack: {fileID: 774651871998097940}
-  weaponHandler: {fileID: 8499683307490277393}
-  skills: {fileID: 4701473922447632886}
+  attackComponent: {fileID: 774651871998097940}
+  weaponEquipment: {fileID: 8499683307490277393}
+  skillsComponent: {fileID: 4701473922447632886}
   selectComponent: {fileID: 8364959695361298754}
-  maxTimeToRevive: 60
   citizenClothes: {fileID: 7973490114622572982}
   wandererClothes: {fileID: 6389129458769497322}
   raiderClothes: {fileID: 8824345702923679192}
@@ -150,7 +149,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6506537361480025273}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08dcc5ab293686847a6a2a96729ec47c, type: 3}
+  m_Script: {fileID: 11500000, guid: 7cc3cd9bfb9a09a4ab9f8bc56e55b5d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReviveHandler
   health: {fileID: 4098557255172134659}

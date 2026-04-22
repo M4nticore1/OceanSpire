@@ -9,6 +9,8 @@ public class ReviveManager : MonoBehaviour
     [SerializeField] private ReviveAdRewardDefinition reviveRewardDefinition;
     public ReviveAdRewardDefinition ReviveRewardDefinition => reviveRewardDefinition;
 
+    [SerializeField] private ReviveRewardMenu reviveRewardMenu;
+
     [SerializeField] private int maxRevivesCount = 3;
     public int MaxRevivesCount => maxRevivesCount;
 
@@ -17,19 +19,14 @@ public class ReviveManager : MonoBehaviour
 
     public int RemainingRevivesCount { get; private set; } = 0;
 
-    public static event Action onRewardCreated;
-    public static event Action onRevivesCountChanged;
-
     private void OnEnable()
     {
         SelectManager.onComponentSelected += OnComponentSelected;
-        Human.onHumanRevived += OnHumanRevived;
     }
 
     private void OnDisable()
     {
         SelectManager.onComponentSelected -= OnComponentSelected;
-        Human.onHumanRevived -= OnHumanRevived;
     }
 
     private void Awake()
@@ -60,22 +57,21 @@ public class ReviveManager : MonoBehaviour
         ResetRestoreReviveTime();
     }
 
+    public void RemoveReviveCount()
+    {
+        SetRevivesCount(RemainingRevivesCount - 1);
+    }
+
     private void SetRevivesCount(int value)
     {
         if (RemainingRevivesCount == value) return;
 
         RemainingRevivesCount = value;
-        onRevivesCountChanged?.Invoke();
     }
 
     private void AddReviveCount()
     {
-        SetRevivesCount(RemainingRevivesCount++);
-    }
-
-    private void RemoveReviveCount()
-    {
-        SetRevivesCount(RemainingRevivesCount--);
+        SetRevivesCount(RemainingRevivesCount + 1);
     }
 
     private void ResetRestoreReviveTime()
@@ -85,12 +81,11 @@ public class ReviveManager : MonoBehaviour
 
     private void CreateReward(Human human)
     {
-        float time = human.ReviveHandler.ReviveLimitTime - human.ReviveHandler.CurrentDiedTime;
-        ReviveAdRewardInstance reward = reviveRewardDefinition.CreateInstance(time) as ReviveAdRewardInstance;
+        float time = human.ReviveComponent.ReviveLimitTime - human.ReviveComponent.CurrentDiedTime;
+        ReviveAdRewardInstance reward = reviveRewardDefinition.CreateInstance() as ReviveAdRewardInstance;
         reward.SetHuman(human);
 
         RewardedAdsManager.instance.SetCurrentReward(reward);
-        onRewardCreated?.Invoke();
     }
 
     private void OnComponentSelected(SelectComponent component)
@@ -98,13 +93,9 @@ public class ReviveManager : MonoBehaviour
         Human human = SelectManager.Instance.GetSelectedHuman();
         if (!human) return;
 
-        if (human.Health.isAlive) return;
+        if (human.HealthComponent.isAlive) return;
 
         CreateReward(human);
-    }
-
-    private void OnHumanRevived(Human human)
-    {
-        RemoveReviveCount();
+        reviveRewardMenu.Open();
     }
 }

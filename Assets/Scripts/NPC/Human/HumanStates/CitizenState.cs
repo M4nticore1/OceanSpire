@@ -35,8 +35,8 @@ public class CitizenState : HumanState
 
     public override void OnSetedInteractBuilding(Building building)
     {
-        human.Interactor.AssignWorkerIndex();
-        building.AddWorker(human.Interactor);
+        human.InteractComponent.AssignWorkerIndex();
+        building.AddWorker(human.InteractComponent);
 
         if (human.BoatRider.isRidingOnBoat) {
             human.BoatRider.selectedBoat.SetState(BoatStateEnum.FindingLoot);
@@ -50,19 +50,19 @@ public class CitizenState : HumanState
 
     public override void OnRemovedInteractBuilding()
     {
-        human.Interactor.AssignWorkerIndex();
-        human.Interactor.interactBuilding.RemoveWorker(human.Interactor);
-        human.Interactor.RemoveInteractBuilding();
+        human.InteractComponent.AssignWorkerIndex();
+        human.InteractComponent.interactBuilding.RemoveWorker(human.InteractComponent);
+        human.InteractComponent.RemoveInteractBuilding();
 
         EventBus.InvokeRemovedWorkBuilding();
     }
 
     public override void OnStoppedMoving()
     {
-        if (!human.Interactor.interactBuilding) return;
-        if (human.Interactor.interactBuilding != human.CityNavigator.currentBuilding) return;
+        if (!human.InteractComponent.interactBuilding) return;
+        if (human.InteractComponent.interactBuilding != human.CityNavigator.currentBuilding) return;
 
-        human.Interactor.StartInteracting();
+        human.InteractComponent.StartInteracting();
     }
 
     public override void OnEnteredBuilding(Building building)
@@ -87,7 +87,7 @@ public class CitizenState : HumanState
 
     public override void OnDied()
     {
-        BuildingInteractHandler interactor = human.Interactor;
+        InteractComponent interactor = human.InteractComponent;
 
         if (interactor) {
             interactor.RemoveInteractBuilding();

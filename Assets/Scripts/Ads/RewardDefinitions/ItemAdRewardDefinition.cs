@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ItemRewardData", menuName = "Ads Reward/reward_item")]
+[CreateAssetMenu(fileName = "ItemRewardData", menuName = "Ads Reward Definitions/reward_item")]
 public class ItemAdRewardDefinition : AdRewardDefinition
 {
     [SerializeField] private ItemData itemData;
@@ -12,8 +12,8 @@ public class ItemAdRewardDefinition : AdRewardDefinition
     [SerializeField] private int maxAmount;
     public int MaxAmount => maxAmount;
 
-    public override AdRewardInstance CreateInstance(float limitTime)
+    public override AdRewardInstance CreateInstance()
     {
-        return new ItemAdRewardInstance(this, limitTime);
+        return new ItemAdRewardInstance(this);
     }
 }

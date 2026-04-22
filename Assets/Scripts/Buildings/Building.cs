@@ -24,8 +24,8 @@ public abstract class Building : MonoBehaviour, ILocalizable
     private bool isWorking = false;
 
     public List<CreatureCityNavigator> enteredEntities { get; private set; } = new List<CreatureCityNavigator>();
-    public List<BuildingInteractHandler> workers { get; private set; } = new List<BuildingInteractHandler>();
-    public List<BuildingInteractHandler> currentWorkers { get; private set; } = new List<BuildingInteractHandler>();
+    public List<InteractComponent> workers { get; private set; } = new List<InteractComponent>();
+    public List<InteractComponent> currentWorkers { get; private set; } = new List<InteractComponent>();
 
     public BuildingConstruction spawnedConstruction { get; private set; } = null;
 
@@ -122,19 +122,19 @@ public abstract class Building : MonoBehaviour, ILocalizable
     }
 
     // Workers
-    public void AddWorker(BuildingInteractHandler interactor)
+    public void AddWorker(InteractComponent interactor)
     {
         workers.Add(interactor);
         strategy.OnSetInteractBuilding(interactor);
     }
 
-    public void RemoveWorker(BuildingInteractHandler interactor)
+    public void RemoveWorker(InteractComponent interactor)
     {
         workers.Remove(interactor);
         strategy.OnRemoveInteractBuilding(interactor);
     }
 
-    public void AddCurrentWorker(BuildingInteractHandler interactor)
+    public void AddCurrentWorker(InteractComponent interactor)
     {
         currentWorkers.Add(interactor);
 
@@ -145,7 +145,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
         InvokeCurrentWorkerAdded(interactor);
     }
 
-    public void RemoveCurrentWorker(BuildingInteractHandler interactor)
+    public void RemoveCurrentWorker(InteractComponent interactor)
     {
         currentWorkers.Remove(interactor);
 
@@ -253,14 +253,14 @@ public abstract class Building : MonoBehaviour, ILocalizable
         }
     }
 
-    private void InvokeCurrentWorkerAdded(BuildingInteractHandler interactor)
+    private void InvokeCurrentWorkerAdded(InteractComponent interactor)
     {
         foreach (var listener in GetComponentsInChildren<ICurrentWorkersListener>()) {
             listener.OnCurrentWorkerAdded(interactor);
         }
     }
 
-    private void InvokeCurrentWorkerRemoved(BuildingInteractHandler interactor)
+    private void InvokeCurrentWorkerRemoved(InteractComponent interactor)
     {
         foreach (var listener in GetComponentsInChildren<ICurrentWorkersListener>()) {
             listener.OnCurrentWorkerRemoved(interactor);

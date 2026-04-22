@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AppLovinMaxRewardedAdsManager : AdsManager
+public class AppLovinMaxRewardedAdsSystem : AdsSystem
 {
     private string rewardedId = "«Android-ad-unit-ID»";
 
@@ -69,7 +69,7 @@ public class AppLovinMaxRewardedAdsManager : AdsManager
     {
         // Rewarded ad failed to display. AppLovin recommends that you load the next ad.
         LoadRewardedAd();
-        OnAdHidden();
+        OnAdCompleted();
     }
 
     private void OnRewardedAdClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
@@ -81,14 +81,14 @@ public class AppLovinMaxRewardedAdsManager : AdsManager
     {
         // Rewarded ad is hidden. Pre-load the next ad
         LoadRewardedAd();
-        OnAdHidden();
+        OnAdCompleted();
     }
 
     private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdk.AdInfo adInfo)
     {
         // The rewarded ad displayed and the user should receive the reward.
         RewardedAdsManager.instance.ReceiveReward();
-        OnAdDisplayed();
+        OnAdStarted();
     }
 
     private void OnRewardedAdRevenuePaidEvent(string adUnitId, MaxSdk.AdInfo adInfo)

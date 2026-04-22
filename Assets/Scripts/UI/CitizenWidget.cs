@@ -67,7 +67,7 @@ public class CitizenWidget : MonoBehaviour
 
     private void UpdateSkills()
     {
-        foreach (var skill in Human.Skills.Skills.Values) {
+        foreach (var skill in Human.SkillsComponent.Skills.Values) {
             SkillWidgetFactory.CreateSkillWidget(skillWidget, skillsLayoutGroup.transform, skill);
         }
     }

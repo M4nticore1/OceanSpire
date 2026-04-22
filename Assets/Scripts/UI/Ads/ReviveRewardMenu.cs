@@ -4,29 +4,33 @@ using UnityEngine;
 public class ReviveRewardMenu : AdRewardMenu
 {
     [Header("Revive Reward Menu")]
+    [SerializeField] private TextMeshProUGUI remainingTimeText;
     [SerializeField] private TextMeshProUGUI remainingRevivesText;
 
-    protected override void OnEnable()
+    private void Update()
     {
-        base.OnEnable();
+        if (!isOpened) return;
 
-        ReviveManager.onRewardCreated += OnRewardCreated;
-        ReviveManager.onRevivesCountChanged += OnRemaingRevivesCountChanged;
+        Human human = SelectManager.Instance.GetSelectedHuman();
+        if (!human) return;
+
+        float time = human.ReviveComponent.ReviveLimitTime - human.ReviveComponent.CurrentDiedTime;
+        remainingTimeText.SetText(TimeFormatter.SecondsToMinuteTime((int)time));
     }
 
-    protected override void OnDisable()
+    protected override void OnButtonClicked()
     {
-        base.OnDisable();
 
-        ReviveManager.onRewardCreated -= OnRewardCreated;
-        ReviveManager.onRevivesCountChanged -= OnRemaingRevivesCountChanged;
     }
 
-    protected override void OnOpened()
+    protected override void OnOpen()
     {
-        base.OnOpened();
-
         UpdateRemainingRevivesText();
+    }
+
+    protected override void OnClose()
+    {
+        
     }
 
     private void UpdateRemainingRevivesText()
@@ -35,15 +39,5 @@ public class ReviveRewardMenu : AdRewardMenu
         int remainingRevivesCount = ReviveManager.Instance.RemainingRevivesCount;
 
         remainingRevivesText.SetText(remainingRevivesCount + "/" + remainingRevivesCount);
-    }
-
-    private void OnRewardCreated()
-    {
-        Open();
-    }
-
-    private void OnRemaingRevivesCountChanged()
-    {
-        UpdateRemainingRevivesText();
     }
 }

@@ -8,7 +8,7 @@ public class ItemAdRewardInstance : AdRewardInstance
 
     public Dictionary<string, string> Localization;
 
-    public ItemAdRewardInstance(ItemAdRewardDefinition data, float limitTime) : base(data, limitTime)
+    public ItemAdRewardInstance(ItemAdRewardDefinition data) : base(data)
     {
         itemRewardData = data;
 

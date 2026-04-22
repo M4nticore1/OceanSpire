@@ -21,11 +21,13 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     private int nextUpdateTime = 0;
     private bool isUpdated = false;
+    private bool isAdUpdateUsed = false;
 
     private List<DailyTaskInstance> tasks = new();
     public IReadOnlyList<DailyTaskInstance> Tasks => tasks.AsReadOnly();
 
     public event Action onTasksInited;
+    public event Action<bool> onAdUpdateUsedSetTrue;
 
     private void Start()
     {
@@ -44,10 +46,13 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     private void Update()
     {
         if (TimeManager.GetCurrentSecond() >= nextUpdateTime) {
-            UpdateTasks();
+            if (TryUpdateTasks()) {
+                SetNextUpdateTime(CalculateNextUpdateSecond());
+                SetAdUpdateUsedSetTrue(false);
+            }
         }
         else {
-            isUpdated = false;
+            SetUpdated(false);
         }
     }
 
@@ -55,10 +60,27 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     {
         if (data != null) {
             CreateTasks(data.taskIds, data.taskProgresses);
+            SetNextUpdateTime(data.nextUpdateTime);
+            SetAdUpdateUsedSetTrue(data.adUpdateUsed);
+            
         }
         else {
             CreateTasks(GetRandomTaskIds(), GetEmptyTaskProgresses());
+            SetNextUpdateTime(CalculateNextUpdateSecond());
         }
+    }
+
+    public void UpdateTasks()
+    {
+        RemoveTasks();
+        CreateTasks(GetRandomTaskIds(), GetEmptyTaskProgresses());
+        SetUpdated(true);
+    }
+
+    public void SetAdUpdateUsedSetTrue(bool value)
+    {
+        isAdUpdateUsed = value;
+        onAdUpdateUsedSetTrue?.Invoke(value);
     }
 
     public DailyTasksDataV1 GetCurrentData()
@@ -72,7 +94,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
             taskProgresses[i] = task.Progress;
         }
 
-        DailyTasksDataV1 data = new DailyTasksDataV1(taskIds, taskProgresses);
+        DailyTasksDataV1 data = new DailyTasksDataV1(taskIds, taskProgresses, nextUpdateTime, isAdUpdateUsed);
 
         return data;
     }
@@ -85,6 +107,19 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         };
     }
 
+    private bool TryUpdateTasks()
+    {
+        if (isUpdated) return false;
+
+        UpdateTasks();
+        return true;
+    }
+
+    private void SetUpdated(bool value)
+    {
+        isUpdated = true;
+    }
+
     private void CreateTasks(int[] tasksId, int[] tasksProgress)
     {
         for (int i = 0; i < tasksId.Length; i++) {
@@ -94,7 +129,6 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
             CreateTask(definition, progress);
         }
 
-        AssignUpdateTime();
         onTasksInited?.Invoke();
     }
 
@@ -113,31 +147,21 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         }
     }
 
-    private void UpdateTasks()
+    private void SetNextUpdateTime(int seconds)
     {
-        if (isUpdated) return;
-
-        RemoveTasks();
-        CreateTasks(GetRandomTaskIds(), GetEmptyTaskProgresses());
-
-        isUpdated = true;
-    }
-
-    private void AssignUpdateTime()
-    {
-        nextUpdateTime = GetUpdateSecond();
+        nextUpdateTime = seconds;
     }
 
     private string GetUpdateTime()
     {
-        int remainingSeconds = GetUpdateSecond() - TimeManager.GetCurrentSecond();
+        int remainingSeconds = CalculateNextUpdateSecond() - TimeManager.GetCurrentSecond();
 
         string timer = TimeFormatter.SecondsToHourTime(remainingSeconds);
 
         return timer;
     }
 
-    private int GetUpdateSecond()
+    private int CalculateNextUpdateSecond()
     {
         int minTargetSecond = updateTasksTimeHour * 3600;
         int maxTargetSecond = (24 + updateTasksTimeHour) * 3600;

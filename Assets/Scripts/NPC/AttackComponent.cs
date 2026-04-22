@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attack : MonoBehaviour
+public class AttackComponent : MonoBehaviour
 {
-    [SerializeField] private WeaponHandler weaponHandler;
+    [SerializeField] private WeaponEquipment weaponHandler;
     [SerializeField] private Movement movement;
-    [SerializeField] private Health health;
+    [SerializeField] private HealthComponent health;
 
     [SerializeField] private float damage = 10f;
     [SerializeField] private float attackFrequency = 1f;
     private float currentAttackTime = 0f;
 
-    private Attack currentTarget;
-    private List<Attack> currentAttackers = new List<Attack>();
+    private AttackComponent currentTarget;
+    private List<AttackComponent> currentAttackers = new List<AttackComponent>();
     public bool isAttacking { get; private set; } = false;
 
     public event Action onStartedAttacking;
@@ -41,7 +41,7 @@ public class Attack : MonoBehaviour
         AttackTarget();
     }
 
-    public void SetTarget(Attack target)
+    public void SetTarget(AttackComponent target)
     {
         currentTarget = target;
         target.OnBecomeTarget(this);
@@ -53,12 +53,12 @@ public class Attack : MonoBehaviour
         StopAtacking();
     }
 
-    public void AddAttacker(Attack attacker)
+    public void AddAttacker(AttackComponent attacker)
     {
         currentAttackers.Add(attacker);
     }
 
-    public void RemoveAttacker(Attack attacker)
+    public void RemoveAttacker(AttackComponent attacker)
     {
         currentAttackers.Remove(attacker);
     }
@@ -70,13 +70,13 @@ public class Attack : MonoBehaviour
 
     public void AttackTarget()
     {
-        Health health = currentTarget.health;
+        HealthComponent health = currentTarget.health;
 
         health.RemoveHealth(GetDamage());
         currentAttackTime = 0f;
     }
 
-    public void OnBecomeTarget(Attack target)
+    public void OnBecomeTarget(AttackComponent target)
     {
         if (currentAttackers.Contains(target)) return;
 
@@ -85,7 +85,7 @@ public class Attack : MonoBehaviour
         MoveToTarget();
     }
 
-    public void OnStopBeingTarget(Attack target)
+    public void OnStopBeingTarget(AttackComponent target)
     {
         RemoveAttacker(target);
     }

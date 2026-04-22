@@ -5,7 +5,7 @@ public class SelectedHumanNameDisplay : SelectedDisplay
 {
     [SerializeField] private TextMeshProUGUI text;
 
-    protected override void Display()
+    protected override void TryDisplay()
     {
         Human human = SelectManager.Instance.GetSelectedHuman();
         if (!human) return;
@@ -15,7 +15,7 @@ public class SelectedHumanNameDisplay : SelectedDisplay
         text.SetText(name);
     }
 
-    protected override void Hide()
+    protected override void TryHide()
     {
         text.SetText("");
     }

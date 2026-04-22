@@ -22,7 +22,7 @@ public static class TimeFormatter
     {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
-        string time = $"{minutes}:{seconds:D2}";
+        string time = $"{minutes:D2}:{seconds:D2}";
         return time;
     }
 }

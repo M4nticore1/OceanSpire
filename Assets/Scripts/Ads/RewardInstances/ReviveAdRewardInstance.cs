@@ -4,7 +4,7 @@ public class ReviveAdRewardInstance : AdRewardInstance
 {
     private Human human;
 
-    public ReviveAdRewardInstance(ReviveAdRewardDefinition definition, float limitTime, Human human) : base(definition, limitTime)
+    public ReviveAdRewardInstance(ReviveAdRewardDefinition definition, Human human) : base(definition)
     {
         this.human = human;
     }
@@ -19,7 +19,8 @@ public class ReviveAdRewardInstance : AdRewardInstance
 
     protected override void OnRewardRecieved()
     {
-        human.ReviveHandler.Revive();
+        human.ReviveComponent.Revive();
+        ReviveManager.Instance.RemoveReviveCount();
     }
 
     public void SetHuman(Human human)

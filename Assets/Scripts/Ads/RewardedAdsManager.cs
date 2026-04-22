@@ -5,11 +5,13 @@ public class RewardedAdsManager : MonoBehaviour
 {
     public static RewardedAdsManager instance;
 
-    [SerializeField] private AdsManager adsManager;
-    public AdsManager AdsManager => adsManager;
+    [SerializeField] private AdsSystem adsSystem;
 
     public AdRewardInstance currentReward { get; private set; }
-    public static event Action onRewardChanged;
+
+    public static event Action<AdRewardInstance> onRewardSeted;
+    public static event Action<AdRewardInstance> onRewardRemoved;
+    public static event Action<AdRewardInstance> onRewardReceived;
 
     private void Awake()
     {
@@ -23,32 +25,56 @@ public class RewardedAdsManager : MonoBehaviour
 
     private void OnEnable()
     {
-        adsManager.onAdHidden += OnAdHidden;
+        adsSystem.onAdCompleted += OnAdCompleted;
     }
 
     private void OnDisable()
     {
-        adsManager.onAdHidden -= OnAdHidden;
+        adsSystem.onAdCompleted -= OnAdCompleted;
+    }
+
+    public void SetCurrentReward(AdRewardDefinition definition)
+    {
+        SetCurrentReward(definition.CreateInstance());
     }
 
     public void SetCurrentReward(AdRewardInstance reward)
     {
+        AdRewardInstance lastReward = currentReward;
         currentReward = reward;
-        onRewardChanged?.Invoke();
+
+        if (currentReward != null) {
+            onRewardSeted?.Invoke(currentReward);
+        }
+        else {
+            onRewardRemoved?.Invoke(lastReward);
+        }
     }
 
     public void RemoveCurrentReward()
     {
+        AdRewardInstance reward = currentReward;
+
         currentReward = null;
+        onRewardRemoved?.Invoke(reward);
     }
 
     public void ReceiveReward()
     {
+        AdRewardInstance reward = currentReward;
+
         currentReward.RecieveReward();
         currentReward = null;
+
+        onRewardReceived?.Invoke(reward);
     }
 
-    private void OnAdHidden()
+    public void ShowAd()
+    {
+        adsSystem.ShowAd();
+    }
+
+    private void OnAdCompleted()
     {
         RemoveCurrentReward();
     }

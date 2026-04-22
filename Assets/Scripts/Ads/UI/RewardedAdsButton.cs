@@ -6,7 +6,6 @@ public class RewardedAdsButton : UIBehaviour
 {
     [SerializeField] private RewardedAdsManager rewardedAdsManager;
     [SerializeField] private RewardedAdsButtonManager rewardedAdsButtonManager;
-    [SerializeField] private BonusRewardMenu rewardedAdsMenu;
     [SerializeField] private CustomButton button;
     [SerializeField] private Image itemImage;
     [SerializeField] private Image progressBar;
@@ -25,12 +24,12 @@ public class RewardedAdsButton : UIBehaviour
         button.onReleased -= OnButtonReleased;
     }
 
-    private void Update()
-    {
-        if (rewardedAdsButtonManager.currentReward == null) return;
+    //private void Update()
+    //{
+    //    if (rewardedAdsButtonManager.currentReward == null) return;
 
-        AssignProgressBarFill();
-    }
+    //    AssignProgressBarFill();
+    //}
 
     public void Show()
     {
@@ -49,18 +48,17 @@ public class RewardedAdsButton : UIBehaviour
         itemImage.sprite = itemReward.itemRewardData.RewardIcon;
     }
 
-    private void AssignProgressBarFill()
-    {
-        float limitTime = rewardedAdsButtonManager.currentReward.GetLimitTime();
-        float remainingTime = rewardedAdsButtonManager.currentReward.GetRemainingTime();
-        float alpha = 1f - (remainingTime / limitTime);
+    //private void AssignProgressBarFill()
+    //{
+    //    float limitTime = rewardedAdsButtonManager.currentReward.GetLimitTime();
+    //    float remainingTime = rewardedAdsButtonManager.currentReward.GetRemainingTime();
+    //    float alpha = 1f - (remainingTime / limitTime);
 
-        progressBar.fillAmount = alpha;
-    }
+    //    progressBar.fillAmount = alpha;
+    //}
 
     private void OnButtonReleased()
     {
         rewardedAdsManager.SetCurrentReward(rewardedAdsButtonManager.currentReward);
-        rewardedAdsMenu.Open();
     }
 }

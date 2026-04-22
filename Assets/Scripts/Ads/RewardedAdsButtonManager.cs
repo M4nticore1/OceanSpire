@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RewardedAdsButtonManager : MonoBehaviour
 {
-    [SerializeField] private AppLovinMaxRewardedAdsManager appLovinMaxAds;
+    [SerializeField] private AppLovinMaxRewardedAdsSystem appLovinMaxAds;
     [SerializeField] private RewardedAdsButton rewardedAdsButton;
 
     [SerializeField] private float adShowTime = 30f;
@@ -42,7 +42,7 @@ public class RewardedAdsButtonManager : MonoBehaviour
         }
         else {
             if (currentToggleTime >= adCooldownTime) {
-                currentReward = GetRandomAdReward();
+                currentReward = GetRandomAdReward().CreateInstance();
 
                 ShowAdButton();
                 currentToggleTime = 0f;
@@ -71,13 +71,13 @@ public class RewardedAdsButtonManager : MonoBehaviour
         currentReward = null;
     }
 
-    private AdRewardInstance GetRandomAdReward()
+    private AdRewardDefinition GetRandomAdReward()
     {
         int length = AdRewardsList.Instance.AdRewards.Length;
         int index = Random.Range(0, length);
 
         AdRewardDefinition def = AdRewardsList.Instance.AdRewards[index];
 
-        return def.CreateInstance(adShowTime);
+        return def;
     }
 }

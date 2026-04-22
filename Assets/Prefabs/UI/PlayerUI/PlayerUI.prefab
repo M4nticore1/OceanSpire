@@ -858,6 +858,7 @@ RectTransform:
   - {fileID: 5268074832578338352}
   - {fileID: 397356515366550761}
   - {fileID: 8654088165783763327}
+  - {fileID: 4907218398093086892}
   - {fileID: 8733872584027164100}
   - {fileID: 688940845444648340}
   - {fileID: 5059259372177201316}
@@ -870,11 +871,10 @@ RectTransform:
   - {fileID: 6662647340556842358}
   - {fileID: 3157604540618814660}
   - {fileID: 3696478299053724344}
-  - {fileID: 6667550228668763758}
-  - {fileID: 6716253054714219867}
   - {fileID: 1759127215849909371}
   - {fileID: 2764746097088807820}
-  - {fileID: 4907218398093086892}
+  - {fileID: 6667550228668763758}
+  - {fileID: 6716253054714219867}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2528,6 +2528,10 @@ PrefabInstance:
     - target: {fileID: 4492395498956872227, guid: c1d6dfe86e6399643b9ef34770b71a3e, type: 3}
       propertyPath: m_Name
       value: ReceivedAdReward
+      objectReference: {fileID: 0}
+    - target: {fileID: 4492395498956872227, guid: c1d6dfe86e6399643b9ef34770b71a3e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5313188187559071214, guid: c1d6dfe86e6399643b9ef34770b71a3e, type: 3}
       propertyPath: m_wordWrappingRatios
@@ -4964,7 +4968,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1122330825693311702, guid: e152eae9fdee97a449c02bcfed9b60bb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -650
+      value: -400
       objectReference: {fileID: 0}
     - target: {fileID: 1122330825693311702, guid: e152eae9fdee97a449c02bcfed9b60bb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5000,6 +5004,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2117843957883114285}
     m_Modifications:
+    - target: {fileID: 1526684510403864712, guid: 3ecbb0d89ed15b149b5e8cdb0b00706e, type: 3}
+      propertyPath: rewardMenu
+      value: 
+      objectReference: {fileID: 7583959492955261586}
     - target: {fileID: 4579722025366605427, guid: 3ecbb0d89ed15b149b5e8cdb0b00706e, type: 3}
       propertyPath: m_Name
       value: DailyTasksMenu
@@ -5836,6 +5844,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RewardedAdButton
       objectReference: {fileID: 0}
+    - target: {fileID: 2769176006283863983, guid: 5f3f483fa2c8f084c9873a496210da6a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7119118205602914221, guid: 5f3f483fa2c8f084c9873a496210da6a, type: 3}
       propertyPath: rewardedAdsMenu
       value: 
@@ -6244,6 +6256,10 @@ PrefabInstance:
     - target: {fileID: 5007595269965447005, guid: 4ffacfa2dffeeec4c99bb9212d2eec45, type: 3}
       propertyPath: m_Name
       value: BonusRewardMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 5007595269965447005, guid: 4ffacfa2dffeeec4c99bb9212d2eec45, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

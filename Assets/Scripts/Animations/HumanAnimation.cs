@@ -16,14 +16,14 @@ public class HumanAnimation : MonoBehaviour
         human.BoatRider.onStartedFloating += OnStartedFloating;
         human.BoatRider.onStoppedFloating += OnStoppedFloating;
 
-        human.Interactor.onStartedInteracting += OnStartedInteracting;
-        human.Interactor.onStoppedInteracting += OnStoppedInteracting;
+        human.InteractComponent.onStartedInteracting += OnStartedInteracting;
+        human.InteractComponent.onStoppedInteracting += OnStoppedInteracting;
 
-        human.Attack.onStartedAttacking += OnStartedAttacking;
-        human.Attack.onStoppedAttacking += OnStoppedAttacking;
+        human.AttackComponent.onStartedAttacking += OnStartedAttacking;
+        human.AttackComponent.onStoppedAttacking += OnStoppedAttacking;
 
-        human.Health.onRevived += OnRevived;
-        human.Health.onDied += OnDied;
+        human.HealthComponent.onRevived += OnRevived;
+        human.HealthComponent.onDied += OnDied;
     }
 
     private void OnDisable()
@@ -37,14 +37,14 @@ public class HumanAnimation : MonoBehaviour
         human.Movement.onStartedMoving -= OnStartedMoving;
         human.Movement.onStoppedMoving -= OnStoppedMoving;
 
-        human.Interactor.onStartedInteracting -= OnStartedInteracting;
-        human.Interactor.onStoppedInteracting -= OnStoppedInteracting;
+        human.InteractComponent.onStartedInteracting -= OnStartedInteracting;
+        human.InteractComponent.onStoppedInteracting -= OnStoppedInteracting;
 
-        human.Attack.onStartedAttacking -= OnStartedAttacking;
-        human.Attack.onStoppedAttacking -= OnStoppedAttacking;
+        human.AttackComponent.onStartedAttacking -= OnStartedAttacking;
+        human.AttackComponent.onStoppedAttacking -= OnStoppedAttacking;
 
-        human.Health.onRevived -= OnRevived;
-        human.Health.onDied -= OnDied;
+        human.HealthComponent.onRevived -= OnRevived;
+        human.HealthComponent.onDied -= OnDied;
     }
 
     private void OnStartedIdle()

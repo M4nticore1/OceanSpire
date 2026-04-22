@@ -2039,6 +2039,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+--- !u!114 &383697686 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9166915020847353468, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+  m_PrefabInstance: {fileID: 383697685}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5409ef2fa21a8547b9b694cbf73c395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReviveRewardMenu
 --- !u!1001 &388042473
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3780,7 +3791,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 815262696}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4357d32442602d42bbbf21413f2462c, type: 3}
+  m_Script: {fileID: 11500000, guid: 34a53848f2a527b40aa2ba8518f24382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AppLovinMaxAds
 --- !u!1 &821496964
@@ -4114,7 +4125,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &939943840
 Transform:
   m_ObjectHideFlags: 0
@@ -4672,7 +4683,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009b016c9e26c4c408d8e623b9ada0a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartItems
-  cityStorage: {fileID: 1388613268}
   startItems:
   - itemData: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
     amount: 100
@@ -7165,6 +7175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReviveCitizenManager
   reviveRewardDefinition: {fileID: 11400000, guid: d84e1fe9ea7efb24e882b9ca3c3355a8, type: 2}
+  reviveRewardMenu: {fileID: 383697686}
   maxRevivesCount: 3
   restoreReviveTime: 300
 --- !u!1 &1925740695
@@ -7211,7 +7222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3424590aa6b689409aa881dd42c59b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RewardedAdsManager
-  adsManager: {fileID: 815262698}
+  adsSystem: {fileID: 815262698}
 --- !u!1 &1926240060
 GameObject:
   m_ObjectHideFlags: 0
