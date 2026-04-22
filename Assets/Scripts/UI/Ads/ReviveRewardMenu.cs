@@ -7,18 +7,25 @@ public class ReviveRewardMenu : AdRewardMenu
     [SerializeField] private TextMeshProUGUI remainingTimeText;
     [SerializeField] private TextMeshProUGUI remainingRevivesText;
 
+    private bool isSubscribed = false;
+
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        ReviveManager.Instance.onRevivesCountChanged += OnRemainingRevivesCountChanged;
+        TrySubscribe();
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        ReviveManager.Instance.onRevivesCountChanged -= OnRemainingRevivesCountChanged;
+        TryUnsubscribe();
+    }
+
+    private void Start()
+    {
+        TrySubscribe();
     }
 
     private void Update()
@@ -65,5 +72,25 @@ public class ReviveRewardMenu : AdRewardMenu
     private void OnRemainingRevivesCountChanged()
     {
         AssignButtonEnabled();
+    }
+
+    private void TrySubscribe()
+    {
+        if (isSubscribed) return;
+        if (!ReviveManager.Instance) return;
+
+        ReviveManager.Instance.onRevivesCountChanged += OnRemainingRevivesCountChanged;
+
+        isSubscribed = true;
+    }
+
+    private void TryUnsubscribe()
+    {
+        if (!isSubscribed) return;
+        if (!ReviveManager.Instance) return;
+
+        ReviveManager.Instance.onRevivesCountChanged -= OnRemainingRevivesCountChanged;
+
+        isSubscribed = false;
     }
 }
