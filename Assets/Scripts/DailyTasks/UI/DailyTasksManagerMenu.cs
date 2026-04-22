@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DailyTasksMenu : MonoBehaviour, IOpenable
+public class DailyTasksManagerMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private DailyTaskWidget dailyTaskWidgetPrefab;
     [SerializeField] private LayoutGroup tasksLayoutGroup;

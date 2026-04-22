@@ -2,17 +2,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DailyTaskWidget : MonoBehaviour
+public class DailyTaskWidget : DailyTaskPanel
 {
-    [SerializeField] private Image conditionImage;
-    [SerializeField] private Image rewardImage;
-    [SerializeField] private TextMeshProUGUI conditionAmount;
-    [SerializeField] private TextMeshProUGUI rewardAmount;
-    [SerializeField] private TextMeshProUGUI progressText;
     [SerializeField] private TextLocalizer descriptionText;
-    [SerializeField] private GameObject completedPanel;
 
-    private DailyTaskInstance task;
     private bool isSubscribed = false;
 
     private void OnEnable()
@@ -28,15 +21,9 @@ public class DailyTaskWidget : MonoBehaviour
 
     public void Init(DailyTaskInstance task)
     {
-        conditionImage.sprite = task.Definition.ConditionImage;
-        rewardImage.sprite = task.Definition.Reward.ItemData.ItemIcon;
-
-        conditionAmount.SetText(task.Definition.ConditionAmount.ToString());
-        rewardAmount.SetText(task.Definition.Reward.Amount.ToString());
-
-        this.task = task;
-
+        SetTask(task);
         TrySubscribe();
+        UpdateTaskInfo();
         UpdateProgress();
         UpdateTaskDescription();
         UpdateCompleted();
@@ -47,7 +34,7 @@ public class DailyTaskWidget : MonoBehaviour
         string currentProgress = task.Progress.ToString();
         string targetProgress = task.Definition.ConditionAmount.ToString();
         string text = currentProgress + "/" + targetProgress;
-        progressText.SetText(text);
+        SetProgressText(text);
     }
 
     private void UpdateTaskDescription()
@@ -85,11 +72,6 @@ public class DailyTaskWidget : MonoBehaviour
     private void UpdateCompleted()
     {
         SetCompleted(ShouldComplete());
-    }
-
-    private void SetCompleted(bool value)
-    {
-        completedPanel.SetActive(value);
     }
 
     private bool ShouldComplete()

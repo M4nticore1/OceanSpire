@@ -3,6 +3,7 @@ using UnityEngine;
 public class ItemsLoader : Loader
 {
     public static ItemsLoader Instance { get; private set; }
+    [SerializeField] private StartItems startItems;
 
     private void Awake()
     {
@@ -21,10 +22,7 @@ public class ItemsLoader : Loader
 
         }
         else {
-            foreach (var itemData in ItemsList.Instance.Items) {
-                int id = itemData.ItemId;
-                CityStorage.Instance.Inventory.TryAddNewItem(id);
-            }
+            startItems.CollectItems();
         }
     }
 }

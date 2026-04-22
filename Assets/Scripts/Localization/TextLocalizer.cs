@@ -59,9 +59,6 @@ public class TextLocalizer : MonoBehaviour
 
             SetText(text);
         }
-        else {
-            SetText(null);
-        }
 
         UpdateFont();
     }
@@ -76,15 +73,15 @@ public class TextLocalizer : MonoBehaviour
         LocalizationTarget = placeHolders;
     }
 
+    public void SetText(string text)
+    {
+        textBlock.SetText(text);
+    }
+
     private void UpdateFont()
     {
         TMP_FontAsset font = LocalizationManager.Instance.GetFont(textRole);
         SetFont(font);
-    }
-
-    private void SetText(string text)
-    {
-        textBlock.SetText(text);
     }
 
     private void SetFont(TMP_FontAsset font)

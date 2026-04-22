@@ -840,6 +840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac63c26435142b940b21b075b10ba575, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemsLoader
+  startItems: {fileID: 1125254136}
 --- !u!1 &142442282
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,8 @@ public class DailyTaskInstance : ILocalizable
 
     public event Action onProgressChanged;
     public event Action onTaskRemoved;
+    public static event Action<DailyTaskInstance, int> onTaskProgressAdded;
+    public static event Action<DailyTaskInstance> onTaskCompleted;
 
     public DailyTaskInstance(DailyTaskDefinition definition, int progress)
     {
@@ -38,6 +40,7 @@ public class DailyTaskInstance : ILocalizable
     protected void AddProgress(int value)
     {
         Progress += value;
+        onTaskProgressAdded?.Invoke(this, value);
     }
 
     private void OnProgressChanged(DailyTaskCondition condition, int value)
@@ -65,6 +68,7 @@ public class DailyTaskInstance : ILocalizable
     private void Complete()
     {
         IsCompleted = true;
+        onTaskCompleted?.Invoke(this);
     }
 
     private void ReceiveReward()

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6a3d9466388ce944a37adb758a3e6f9, type: 3}
   m_Name: task_time_to_stone
   m_EditorClassIdentifier: Assembly-CSharp::DailyTaskDefinition
-  conditionAmount: 2
+  conditionAmount: 1
   conditionImage: {fileID: 21300000, guid: 4ed040dcefe674d42904db3a38e46697, type: 3}
   conditionLocalizationItem: {fileID: 0}
   reward:

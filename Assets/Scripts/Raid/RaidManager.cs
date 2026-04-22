@@ -22,7 +22,7 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private float minRaidCooldown = 10f;
     [SerializeField] private float maxRaidCooldown = 20f;
     private float currentRaidCooldown = 0f;
-    private float currentRaidTime = 0f;
+    private float currentRaidCooldownTime = 0f;
 
     [Header("Spawn")]
     [SerializeField] private float minSpawnAngleOffset = 5f;
@@ -35,6 +35,7 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private BoatDockPoint[] dockPoints;
     private Dictionary<Boat, Vector3> spawnPositions = new();
 
+    private bool isRaidCreated = false;
     private bool isUnderRaid = false;
     private int landedRaidersCount = 0;
 
@@ -72,10 +73,10 @@ public class RaidManager : MonoBehaviour
 
     private void Update()
     {
-        if (isUnderRaid) return;
+        if (isRaidCreated) return;
 
-        currentRaidTime += Time.deltaTime;
-        if (currentRaidTime < currentRaidCooldown) return;
+        currentRaidCooldownTime += Time.deltaTime;
+        if (currentRaidCooldownTime < currentRaidCooldown) return;
 
         CreateRaid();
         ResetCurrentRaidTime();
@@ -132,6 +133,8 @@ public class RaidManager : MonoBehaviour
 
             spawnPositions.Add(boat, position);
         }
+
+        isRaidCreated = true;
     }
 
     private void StartRaid()
@@ -185,7 +188,7 @@ public class RaidManager : MonoBehaviour
 
     private void ResetCurrentRaidTime()
     {
-        currentRaidTime = 0;
+        currentRaidCooldownTime = 0;
     }
 
     private void DestroyBoats()
