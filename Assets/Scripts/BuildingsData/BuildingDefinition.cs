@@ -46,7 +46,7 @@ public enum DetailsWindowVariant
 }
 
 [CreateAssetMenu(fileName = "BuildingData", menuName = "Scriptable Objects/BuildingData")]
-public class BuildingData : ScriptableObject
+public class BuildingDefinition : ScriptableObject
 {
     [Header("Id")]
     [SerializeField] private BuildingIdEnum buildingId = BuildingIdEnum.TowerGate;

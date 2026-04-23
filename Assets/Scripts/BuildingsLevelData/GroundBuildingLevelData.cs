@@ -5,4 +5,7 @@ public class GroundBuildingLevelData : BuildingLevelData
 {
     [SerializeField] private BuildingConstruction construction = null;
     public BuildingConstruction Construction => construction;
+
+    [SerializeField] private BuildingConstruction constructionFrame = null;
+    public BuildingConstruction ConstructionFrame => constructionFrame;
 }

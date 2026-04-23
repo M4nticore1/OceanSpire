@@ -32,15 +32,15 @@ public enum NeighborMask
 }
 
 [Serializable]
-public class TowerBuildingEntry : BuildingEntry
+public class TowerBuildingData : BuildingData
 {
-    public int floorIndex = 0;
-    public int placeIndex = 0;
+    public int FloorIndex { get; private set; }
+    public int PlaceIndex { get; private set; }
 
-    public TowerBuildingEntry(int floorIndex, int placeIndex) : base()
+    public TowerBuildingData(int id, int instanceId, int level, ConstructionData constructionData, int floorIndex, int placeIndex) : base(id, instanceId, level, constructionData)
     {
-        this.floorIndex = floorIndex;
-        this.placeIndex = placeIndex;
+        FloorIndex = floorIndex;
+        PlaceIndex = placeIndex;
     }
 }
 
@@ -62,23 +62,23 @@ public class TowerBuilding : Building, INeighborBuildingsListener
     public TowerBuilding UpConnectedBuilding => upBuilding && ConnectedWith(upBuilding) ? upBuilding : null;
     public TowerBuilding DownConnectedBuilding => downBuilding && ConnectedWith(downBuilding) ? downBuilding : null;
 
-    protected override void OnInit(BuildingEntry data)
+    protected override void OnInit(BuildingData data)
     {
-        TowerBuildingEntry towerData = data as TowerBuildingEntry;
-        floorIndex = towerData.floorIndex;
-        placeIndex = towerData.placeIndex;
+        TowerBuildingData towerData = data as TowerBuildingData;
+        floorIndex = towerData.FloorIndex;
+        placeIndex = towerData.PlaceIndex;
 
         List<FloorFrameModule> floors = BuildingsManager.instance.BuiltFloors;
         BuildingPlace place = null;
 
         if (BuildingData.BuildingType == BuildingType.Room) {
-            place = floors[towerData.floorIndex].RoomBuildingPlaces[towerData.placeIndex];
+            place = floors[towerData.FloorIndex].RoomBuildingPlaces[towerData.PlaceIndex];
         }
         else if (BuildingData.BuildingType == BuildingType.Hall) {
-            place = floors[towerData.floorIndex].HallBuildingPlace;
+            place = floors[towerData.FloorIndex].HallBuildingPlace;
         }
         else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
-            int index = towerData.floorIndex - 1;
+            int index = towerData.FloorIndex - 1;
             place = floors.Count > index && index >= 0 ? floors[index].FloorBuildingPlace : null;
         }
 
@@ -96,14 +96,22 @@ public class TowerBuilding : Building, INeighborBuildingsListener
         }
 
         ApplyTransform();
-        //InvokeBuildingInited();
     }
 
     protected override BuildingConstruction GetConstructionToSpawn()
     {
         BuildingConstruction construction = null;
+
         if (LevelData is TowerBuildingLevelData levelData) {
-            if (buildingData.ConnectionType == ConnectionType.None) {
+            if (ConstructionComponent.IsUnderConstruction) {
+                if (buildingPosition == BuildingPosition.Straight) {
+                    construction = levelData.ConstructionStraightFrame;
+                }
+                else if (buildingPosition == BuildingPosition.Corner) {
+                    construction = levelData.ConstructionCornerFrame;
+                }
+            }
+            else if (buildingData.ConnectionType == ConnectionType.None) {
                 if (buildingPosition == BuildingPosition.Straight) {
                     if (levelData.ConstructionStraight)
                         construction = levelData.ConstructionStraight;

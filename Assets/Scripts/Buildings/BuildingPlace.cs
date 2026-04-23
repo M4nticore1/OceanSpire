@@ -209,12 +209,9 @@ public class BuildingPlace : MonoBehaviour, IClickable
     public void Click()
     {
         TowerBuilding building = ConstructionManager.Instance.buildingToPlace as TowerBuilding;
-        int id = building.BuildingData.BuildingId;
-        TowerBuildingEntry data = new TowerBuildingEntry(floorIndex, placeIndex);
+        TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(BuildingDataFactory.CreateBuildingData(building, floorIndex, placeIndex));
 
-        TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(id, data);
         SetPlacedBuilding(spawnedBuilding);
-
         onClicked?.Invoke(spawnedBuilding);
     }
 

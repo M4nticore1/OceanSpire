@@ -20,6 +20,7 @@ public class RecipesContextElement : ContextMenuElement
         if (!building) return false;
 
         if (!building.GetComponent<ProductionModule>()) return false;
+        if (building.ConstructionComponent.IsUnderConstruction) return false;
 
         return true;
     }

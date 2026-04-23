@@ -7,24 +7,20 @@ public class CoalGeneratorModule : ProductionModule
     private ParticleSystem spawnedSmoke = null;
     //[SerializeField] private Gradient smokeGradient = null;
 
-    CoalGenetatorConstructionModule CoalGenetatorConstructionModule => BuildingConstruction.GetComponent<CoalGenetatorConstructionModule>();
+    CoalGenetatorConstructionModule CoalGenetatorConstructionModule => BuildingConstruction ? BuildingConstruction.GetComponent<CoalGenetatorConstructionModule>() : null;
     TimerHandle stopProductingTimerHandle = new TimerHandle();
 
     protected override void OnInit()
     {
         base.OnInit();
 
-        Transform smokeTransform = CoalGenetatorConstructionModule.SmokeSpawnTransform;
-        spawnedSmoke = Instantiate(smokePrefab);
-        spawnedSmoke.transform.position = smokeTransform.position;
-        spawnedSmoke.transform.SetParent(transform);
-        spawnedSmoke.gameObject.SetActive(false);
     }
 
     protected override void OnBuildingStartWorking()
     {
         base.OnBuildingStartWorking();
 
+        TrySpawnSmoke();
         StartPlayingSmoke();
     }
 
@@ -33,6 +29,17 @@ public class CoalGeneratorModule : ProductionModule
         base.OnBuildingStartWorking();
 
         StopPlayingSmoke();
+    }
+
+    private void TrySpawnSmoke()
+    {
+        if (spawnedSmoke) return;
+
+        Transform smokeTransform = CoalGenetatorConstructionModule.SmokeSpawnTransform;
+        spawnedSmoke = Instantiate(smokePrefab);
+        spawnedSmoke.transform.position = smokeTransform.position;
+        spawnedSmoke.transform.SetParent(transform);
+        spawnedSmoke.gameObject.SetActive(false);
     }
 
     private void StartPlayingSmoke()

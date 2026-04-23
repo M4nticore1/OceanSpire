@@ -18,32 +18,34 @@ public class BuildingsLoader : Loader
 
     protected override void Load(WorldData data)
     {
-        LoadEnvironmentBuildings(data);
+        LoadEnvironmentBuildings(data != null ? data.GroundBuildings : null);
         LoadFloorFrames();
-        LoadTowerBuildings(data);
+        LoadTowerBuildings(data != null ? data.towerBuildings : null);
     }
 
-    private void LoadEnvironmentBuildings(WorldData data)
+    private void LoadEnvironmentBuildings(BuildingData[] data)
     {
-        GroundBuildingEntry[] groundBuildingData;
+        int groundBuildingsCount = BuildingsManager.instance.GroundBuildings().Count();
 
-        if (data != null) {
-            groundBuildingData = data.groundBuildingsData;
-        }
-        else {
-            groundBuildingData = new GroundBuildingEntry[BuildingsManager.instance.EnvironmentBuildings().Count()];
+        if (data == null) {
+            data = new BuildingData[groundBuildingsCount];
         }
 
-        int i = 0;
-        foreach (var building in BuildingsManager.instance.EnvironmentBuildings()) {
-            if (i >= groundBuildingData.Length) break;
+        for (int i = 0; i < groundBuildingsCount; i++) {
+            if (i >= data.Length) break;
 
-            GroundBuildingEntry groundBuildingEntry = groundBuildingData[i];
-            i++;
+            GroundBuilding building = BuildingsManager.instance.GroundBuildings().ToArray()[i];
 
-            if (data != null && groundBuildingEntry.id != building.BuildingData.BuildingId) continue;
+            var buildingData = data[i];
 
-            building.Init(groundBuildingEntry);
+            if (buildingData == null) {
+                buildingData = BuildingDataFactory.CreateBuildingData(building);
+                buildingData.ConstructionData.SetUnderConstruction(false);
+            }
+
+            if (WorldSaveManager.Instance.currentSaveWorldData != null && buildingData.Id != building.BuildingData.BuildingId) continue;
+
+            building.Init(buildingData);
         }
     }
 
@@ -52,43 +54,39 @@ public class BuildingsLoader : Loader
         int floorsCount = BuildingsManager.instance.BuiltFloors.Count;
 
         for (int i = 0; i < floorsCount; i++) {
-            var data = new TowerBuildingEntry(i, 0);
             FloorFrameModule floor = BuildingsManager.instance.BuiltFloors[i];
             TowerBuilding building = floor.OwnedBuilding as TowerBuilding;
-            building.Init(data);
-
+            building.Init(BuildingDataFactory.CreateBuildingData(building, i, 0));
         }
     }
 
-    private void LoadTowerBuildings(WorldData saveData)
+    private void LoadTowerBuildings(TowerBuildingData[] saveData)
     {
         if (saveData != null) {
-            TowerBuildingEntry[] towerBuildingsData = saveData.towerBuildingsData;
-
-            foreach (var data in towerBuildingsData) {
+            foreach (var data in saveData) {
                 if (data == null) {
                     Debug.LogError($"entry was not found in towerBuildingsData");
                     continue;
                 }
 
-                if (data.placeIndex == 0) {
-                    TowerBuilding placedBuilding = BuildingsManager.instance.BuiltFloors[data.floorIndex].HallBuildingPlace.PlacedBuilding;
-                    if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.id) {
+                if (data.PlaceIndex == 0) {
+                    TowerBuilding placedBuilding = BuildingsManager.instance.BuiltFloors[data.FloorIndex].HallBuildingPlace.PlacedBuilding;
+                    if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.Id) {
                         placedBuilding.Demolish();
                     }
 
-                    if (data.id >= 0) {
-                        BuildingFactory.CreateBuilding(data.id, data);
+                    if (data.Id >= 0) {
+                        BuildingFactory.CreateBuilding(data);
                     }
                 }
                 else {
-                    TowerBuilding placedBuilding = BuildingsManager.instance.BuiltFloors[data.floorIndex].RoomBuildingPlaces[data.placeIndex].PlacedBuilding;
-                    if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.id) {
+                    TowerBuilding placedBuilding = BuildingsManager.instance.BuiltFloors[data.FloorIndex].RoomBuildingPlaces[data.PlaceIndex].PlacedBuilding;
+                    if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.Id) {
                         placedBuilding.Demolish();
                     }
 
-                    if (data.id >= 0) {
-                        BuildingFactory.CreateBuilding(data.id, data);
+                    if (data.Id >= 0) {
+                        BuildingFactory.CreateBuilding(data);
                     }
                 }
             }
@@ -100,12 +98,14 @@ public class BuildingsLoader : Loader
                 FloorFrameModule floor = BuildingsManager.instance.BuiltFloors[i];
 
                 // Hall
-                var hallData = new TowerBuildingEntry(i, 0);
                 BuildingPlace hallPlace = floor.HallBuildingPlace;
                 TowerBuilding hall = hallPlace.PlacedBuilding;
 
                 if (hall) {
-                    hall.Init(hallData);
+                    TowerBuildingData data = BuildingDataFactory.CreateBuildingData(hall, i, 0);
+                    data.ConstructionData.SetUnderConstruction(false);
+
+                    hall.Init(data);
                 }
 
                 // Rooms
@@ -115,8 +115,10 @@ public class BuildingsLoader : Loader
 
                     if (!room) continue;
 
-                    var roomData = new TowerBuildingEntry(i, j);
-                    room.Init(roomData);
+                    TowerBuildingData data = BuildingDataFactory.CreateBuildingData(room, i, j);
+                    data.ConstructionData.SetUnderConstruction(false);
+
+                    room.Init(data);
                 }
             }
         }

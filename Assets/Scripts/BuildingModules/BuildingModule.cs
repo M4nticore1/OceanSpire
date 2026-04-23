@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
 {
     private Building ownedBuilding = null;
-    public Building OwnedBuilding => ownedBuilding != null ? ownedBuilding : GetComponent<Building>();
+    public Building OwnedBuilding => ownedBuilding ? ownedBuilding : GetComponent<Building>();
 
     protected bool isWorking { get; private set; } = false;
 
@@ -27,6 +28,8 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
     }
     protected BuildingConstruction BuildingConstruction => ownedBuilding.spawnedConstruction;
 
+    private bool isSubscribed = false;
+
     public static event Action<BuildingModule> onBuildingModuleInited;
     public static event Action<BuildingModule> onBuildingModuleUpgraded;
     public static event Action<BuildingModule> onBuildingModuleDemolished;
@@ -36,6 +39,16 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
     protected void Awake()
     {
         ownedBuilding = GetComponent<Building>();
+    }
+
+    private void OnEnable()
+    {
+        TrySubscribe();
+    }
+
+    private void OnDisable()
+    {
+        TryUnsubscribe();
     }
 
     public void OnOwnedBuildingInited()
@@ -57,6 +70,16 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
     protected abstract void OnBuildingStartWorking();
 
     protected abstract void OnBuildingStopWorking();
+
+    protected virtual void Subscribe()
+    {
+
+    }
+
+    protected virtual void Unsubscribe()
+    {
+
+    }
 
     protected void StartWorking()
     {
@@ -81,5 +104,25 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
     protected void SetFlickingPower(float multiplier)
     {
         BuildingConstruction.SetFlickingPower(multiplier);
+    }
+
+    private void TrySubscribe()
+    {
+        if (isSubscribed) return;
+        if (!ownedBuilding) return;
+
+        Subscribe();
+
+        isSubscribed = true;
+    }
+
+    private void TryUnsubscribe()
+    {
+        if (!isSubscribed) return;
+        if (!ownedBuilding) return;
+
+        Unsubscribe();
+
+        isSubscribed = false;
     }
 }

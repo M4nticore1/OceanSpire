@@ -17,14 +17,24 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
 
     protected override void OnInit()
     {
-        ElevatorCabinConstruction cabin = TryGetNetworkElevatorCabin();
+        
+    }
 
-        if (cabin) {
-            spawnedElevatorCabin = cabin;
-        }
-        else {
-            CreateCabin();
-        }
+    // Subscribe
+    protected override void Subscribe()
+    {
+        base.Subscribe();
+
+        OwnedBuilding.onConstructionStarted += OnConstructionStarted;
+        OwnedBuilding.onConstructionFinished += OnConstructionFinished;
+    }
+
+    protected override void Unsubscribe()
+    {
+        base.Unsubscribe();
+
+        OwnedBuilding.onConstructionStarted -= OnConstructionStarted;
+        OwnedBuilding.onConstructionFinished -= OnConstructionFinished;
     }
 
     protected override void OnDemolish()
@@ -151,9 +161,27 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
         return electricityConsumption;
     }
 
-    public bool CanSpendElectricity()
+    public bool ShouldSpendElectricity()
     {
-        return IsMoving && spawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).floorIndex;
+        return IsMoving && spawnedElevatorCabin && spawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).floorIndex;
+    }
+
+    // Construction
+    private void OnConstructionStarted()
+    {
+
+    }
+
+    private void OnConstructionFinished()
+    {
+        ElevatorCabinConstruction cabin = TryGetNetworkElevatorCabin();
+
+        if (cabin) {
+            spawnedElevatorCabin = cabin;
+        }
+        else {
+            CreateCabin();
+        }
     }
 
     private void HandleConnectedElevatorCabinChanged(ElevatorModule connectedElevator)

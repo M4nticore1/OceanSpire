@@ -23,6 +23,8 @@ public class UpgradeContextElement : ContextMenuElement
         Building building = SelectManager.Instance.GetSelectedBuilding();
         if (!building) return false;
 
+        if (building.ConstructionComponent.IsUnderConstruction) return false;
+
         return true;
     }
 }

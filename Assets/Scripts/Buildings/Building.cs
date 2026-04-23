@@ -1,15 +1,29 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public abstract class BuildingEntry
+public class BuildingData
 {
-    public int id;
-    public int level;
+    public int Id { get; private set; }
+    public int InstanceId { get; private set; }
+    public int Level { get; private set; }
+    public ConstructionData ConstructionData { get; private set; }
+
+    public BuildingData(int id, int instanceId, int level, ConstructionData constructionData)
+    {
+        Id = id;
+        InstanceId = instanceId;
+        Level = level;
+        ConstructionData = constructionData;
+    }
 }
 
 public abstract class Building : MonoBehaviour, ILocalizable
 {
+    [SerializeField] protected ConstructionComponent constructionComponent;
+    public ConstructionComponent ConstructionComponent => constructionComponent;
+
     [SerializeField] protected LevelComponent levelComponent;
     public LevelComponent LevelComponent => levelComponent;
 
@@ -30,8 +44,8 @@ public abstract class Building : MonoBehaviour, ILocalizable
     public BuildingConstruction spawnedConstruction { get; private set; } = null;
 
     [Header("Data")]
-    [SerializeField] protected BuildingData buildingData = null;
-    public BuildingData BuildingData => buildingData;
+    [SerializeField] protected BuildingDefinition buildingData = null;
+    public BuildingDefinition BuildingData => buildingData;
     [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
     public List<BuildingLevelData> LevelsData => buildingLevelsData;
     public BuildingLevelData LevelData => LevelsData.Count > levelComponent.level - 1 ? LevelsData[levelComponent.level - 1] : null;
@@ -48,8 +62,12 @@ public abstract class Building : MonoBehaviour, ILocalizable
     public static event Action<Building> onBuildingInited;
     public static event Action<Building> onBuildingDemolished;
 
+    public event Action onConstructionStarted;
+    public event Action onConstructionFinished;
+
     public event Action<CreatureCityNavigator> onEnterBuilding;
     public event Action<CreatureCityNavigator> onExitBuilding;
+
     public static event Action<Building> onBuildingSelected;
     public static event Action<Building> onBuildingDeselected;
 
@@ -57,18 +75,26 @@ public abstract class Building : MonoBehaviour, ILocalizable
     {
         EventBus.onClickedContextDemolishButton += OnDemolishClicked;
         EventBus.onClickedContextUpgradeButton += OnUpgradeClicked;
+
+        constructionComponent.onConstructionStarted += OnConstructionStarted;
+        constructionComponent.onConstructionFinished += OnConstructionFinished;
     }
 
     protected virtual void OnDisable()
     {
         EventBus.onClickedContextDemolishButton -= OnDemolishClicked;
         EventBus.onClickedContextUpgradeButton -= OnUpgradeClicked;
+
+        constructionComponent.onConstructionStarted -= OnConstructionStarted;
+        constructionComponent.onConstructionFinished -= OnConstructionFinished;
     }
 
     // Constructing
-    public void Init(BuildingEntry data)
+    public void Init(BuildingData data)
     {
         AsssignStrategy();
+        constructionComponent.Init(data.ConstructionData);
+
         OnInit(data);
         UpdateConstruction();
 
@@ -86,7 +112,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
         InvokeBuildingDemolished();
     }
 
-    protected abstract void OnInit(BuildingEntry saveData);
+    protected abstract void OnInit(BuildingData saveData);
 
     protected abstract BuildingConstruction GetConstructionToSpawn();
 
@@ -340,6 +366,19 @@ public abstract class Building : MonoBehaviour, ILocalizable
         if (!workAudioSource) return;
 
         workAudioSource.Stop();
+    }
+
+    // Construction
+    private void OnConstructionStarted()
+    {
+        UpdateConstruction();
+        onConstructionStarted?.Invoke();
+    }
+
+    private void OnConstructionFinished()
+    {
+        UpdateConstruction();
+        onConstructionFinished?.Invoke();
     }
 
     // Events

@@ -7,13 +7,17 @@ public class ConstructionComponent : MonoBehaviour
     [SerializeField] private float constructionTime = 300f;
     private float currentConstructionTime = 0f;
 
-    private bool isUnderConstruction = false;
+    [SerializeField] private bool isConstructable = true;
+    public bool IsConstructable => isConstructable;
 
+    public bool IsUnderConstruction { get; private set; } = false;
+
+    public event Action onConstructionStarted;
     public event Action onConstructionFinished;
 
     private void Update()
     {
-        if (!isUnderConstruction) return;
+        if (!IsUnderConstruction) return;
 
         currentConstructionTime += Time.deltaTime;
         if (currentConstructionTime < constructionTime) return;
@@ -24,10 +28,10 @@ public class ConstructionComponent : MonoBehaviour
     public void Init(ConstructionData data)
     {
         if (data != null) {
-            constructionTime = data.ConstructionTime;
-            isUnderConstruction = data.UnderConstruction;
+            currentConstructionTime = data.ConstructionTime;
+            IsUnderConstruction = data.UnderConstruction;
 
-            if (isUnderConstruction) {
+            if (IsUnderConstruction) {
                 StartConstruction();
             }
         }
@@ -35,13 +39,15 @@ public class ConstructionComponent : MonoBehaviour
 
     public void StartConstruction()
     {
-        isUnderConstruction = true;
+        IsUnderConstruction = true;
+        onConstructionStarted?.Invoke();
     }
 
     public void FinishConstruction()
     {
         currentConstructionTime = 0f;
-        isUnderConstruction = false;
+        IsUnderConstruction = false;
         onConstructionFinished?.Invoke();
+        Debug.Log("Finish");
     }
 }

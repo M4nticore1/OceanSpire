@@ -10,4 +10,9 @@ public class ConstructionData
         ConstructionTime = constructionTime;
         UnderConstruction = underConstruction;
     }
+
+    public void SetUnderConstruction(bool value)
+    {
+        UnderConstruction = value;
+    }
 }

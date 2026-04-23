@@ -24,7 +24,7 @@ public class ElectricityDrain : MonoBehaviour
                 if (!building) continue;
 
                 foreach (var electricible in building.GetComponents<IElectricible>()) {
-                    if (electricible.CanSpendElectricity()) {
+                    if (electricible.ShouldSpendElectricity()) {
                         currentElectricityToDrain += electricible.GetElectricityConsumption();
                     }
                 }

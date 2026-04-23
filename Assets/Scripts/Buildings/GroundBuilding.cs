@@ -1,21 +1,16 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public class GroundBuildingEntry : BuildingEntry
-{
-
-}
-
 public class GroundBuilding : Building
 {
-    protected override void OnInit(BuildingEntry saveData)
+    protected override void OnInit(BuildingData saveData)
     {
         
     }
 
     protected override BuildingConstruction GetConstructionToSpawn()
     {
-        return (LevelData as GroundBuildingLevelData).Construction;
+        GroundBuildingLevelData levelData = LevelData as GroundBuildingLevelData;
+        return constructionComponent.IsUnderConstruction ? levelData.ConstructionFrame : levelData.Construction;
     }
 }

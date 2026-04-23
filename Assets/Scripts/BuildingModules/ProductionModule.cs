@@ -79,7 +79,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         return ElectricityConsumption;
     }
 
-    public bool CanSpendElectricity()
+    public bool ShouldSpendElectricity()
     {
         return isWorking;
     }

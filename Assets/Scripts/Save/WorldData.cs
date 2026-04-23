@@ -26,8 +26,8 @@ public class WorldData
     // Boats
     public CityDataV1 cityData;
     public PlayerEntry playerData;
-    public GroundBuildingEntry[] groundBuildingsData;
-    public TowerBuildingEntry[] towerBuildingsData;
+    public BuildingData[] GroundBuildings;
+    public TowerBuildingData[] towerBuildings;
     public BoatEntry[] boatsData;
     public HumanDataV1[] citizensData;
 

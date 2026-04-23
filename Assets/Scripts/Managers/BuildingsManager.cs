@@ -31,7 +31,7 @@ public class BuildingsManager : MonoBehaviour
 
     public List<List<ElevatorModule>> elevatorGroups { get; private set; } = new List<List<ElevatorModule>>();
 
-    public IEnumerable<GroundBuilding> EnvironmentBuildings()
+    public IEnumerable<GroundBuilding> GroundBuildings()
     {
         yield return towerGate;
         yield return pierBuilding;
