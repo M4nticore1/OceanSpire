@@ -147,7 +147,7 @@ public class LootContainer : MonoBehaviour, IClickable
         OnContainerStartedFalling?.Invoke(this);
     }
 
-    public bool CanClick()
+    public bool ShouldClick()
     {
         return isFlying;
     }

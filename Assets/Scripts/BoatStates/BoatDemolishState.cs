@@ -17,7 +17,7 @@ public class BoatDemolishState : BoatState
 
     }
 
-    public override void Process()
+    public override void Tick()
     {
 
     }

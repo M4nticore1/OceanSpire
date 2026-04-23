@@ -17,7 +17,7 @@ public class BoatFloatingAwayState : BoatState
 
     }
 
-    public override void Process()
+    public override void Tick()
     {
 
     }

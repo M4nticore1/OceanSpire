@@ -3,5 +3,5 @@ using UnityEngine;
 public interface IClickable
 {
     void Click();
-    bool CanClick();
+    bool ShouldClick();
 }

@@ -4,16 +4,32 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
 {
     [SerializeField] protected TextLocalizer localizer;
     [SerializeField] private LocalizationItem levelLocalization;
+    [SerializeField] private LocalizationItem constructionLocalization;
+
+    private Building building;
+
+    private void Update()
+    {
+        if (!building) return;
+        if (!building.ConstructionComponent.IsUnderConstruction) return;
+
+        localizer.UpdateText();
+    }
 
     protected override void TryDisplay()
     {
-        Building building = SelectManager.Instance.GetSelectedBuilding();
+        building = SelectManager.Instance.GetSelectedBuilding();
         if (!building) return;
 
         ILocalizable localizable = building.GetComponent<ILocalizable>();
-        LocalizationItem item = building.BuildingData.LocalizationItem;
 
-        localizer.SetLocalizationItem(levelLocalization);
+        if (building.ConstructionComponent.IsUnderConstruction) {
+            localizer.SetLocalizationItem(constructionLocalization);
+        }
+        else {
+            localizer.SetLocalizationItem(levelLocalization);
+        }
+
         localizer.SetPlaceHolderLocalization(localizable);
         localizer.UpdateText();
     }

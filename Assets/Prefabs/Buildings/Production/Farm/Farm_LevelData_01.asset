@@ -20,6 +20,8 @@ MonoBehaviour:
   - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
     amount: 200
   maxResidentsCount: 1
+  constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
+  constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}
   constructionStraight: {fileID: 3395891878762895499, guid: cf44c5fd46b1b354d80c0e5b85bbb8f2, type: 3}
   constructionCorner: {fileID: 3395891878762895499, guid: c9155c794856b584182a1047a9ba6f05, type: 3}
   constructionStraightLeft: {fileID: 3395891878762895499, guid: 5391fdf93cf4223489a8e5b4febb14f8, type: 3}

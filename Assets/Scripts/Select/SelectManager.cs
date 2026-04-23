@@ -6,7 +6,7 @@ public class SelectManager : MonoBehaviour
     private static SelectManager instance;
     public static SelectManager Instance => instance;
 
-    public SelectComponent selectedComponent;
+    public SelectComponent selectedComponent { get; private set; }
 
     public static event Action<SelectComponent> onComponentSelected;
     public static event Action<SelectComponent> onComponentDeselected;
@@ -43,10 +43,8 @@ public class SelectManager : MonoBehaviour
     {
         if (!selectedComponent) return null;
 
-        BuildingConstruction construction = selectedComponent.GetComponent<BuildingConstruction>();
-        if (!construction) return null;
-
-        return construction.ownedBuilding;
+        Building building = selectedComponent.GetComponent<Building>();
+        return building;
     }
 
     public Human GetSelectedHuman()

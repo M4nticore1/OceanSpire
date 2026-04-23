@@ -30,6 +30,8 @@ public abstract class Building : MonoBehaviour, ILocalizable
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
 
+    public SelectComponent SelectComponent { get; private set; }
+
     [Header("Audio")]
     [SerializeField] protected AudioSource workAudioSource;
 
@@ -71,6 +73,11 @@ public abstract class Building : MonoBehaviour, ILocalizable
     public static event Action<Building> onBuildingSelected;
     public static event Action<Building> onBuildingDeselected;
 
+    private void Awake()
+    {
+        SelectComponent = GetComponent<SelectComponent>();
+    }
+
     protected virtual void OnEnable()
     {
         EventBus.onClickedContextDemolishButton += OnDemolishClicked;
@@ -78,6 +85,9 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
         constructionComponent.onConstructionStarted += OnConstructionStarted;
         constructionComponent.onConstructionFinished += OnConstructionFinished;
+
+        SelectComponent.onSelected += OnSelected;
+        SelectComponent.onDeselected += OnDeselected;
     }
 
     protected virtual void OnDisable()
@@ -87,6 +97,9 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
         constructionComponent.onConstructionStarted -= OnConstructionStarted;
         constructionComponent.onConstructionFinished -= OnConstructionFinished;
+
+        SelectComponent.onSelected -= OnSelected;
+        SelectComponent.onDeselected -= OnDeselected;
     }
 
     // Constructing
@@ -244,24 +257,27 @@ public abstract class Building : MonoBehaviour, ILocalizable
         }
     }
 
-    // Select
-    public void OnSelected()
-    {
-        onBuildingSelected?.Invoke(this);
-    }
-
-    public void OnDeselected()
-    {
-        onBuildingDeselected?.Invoke(this);
-    }
-
     // ILocalizable
     public Dictionary<string, string> GetLocalization()
     {
         return new Dictionary<string, string>()
         {
             { "level", levelComponent.level.ToString() },
+            { "constructionTime", TimeFormatter.SecondsToMinuteTime((int)(constructionComponent.ConstructionTime - constructionComponent.CurrentConstructionTime)).ToString() },
         };
+    }
+
+    // Construction
+    protected void UpdateConstruction()
+    {
+        if (spawnedConstruction) {
+            Destroy(spawnedConstruction.gameObject);
+        }
+
+        BuildingConstruction constructionToSpawn = GetConstructionToSpawn();
+        if (!constructionToSpawn) return;
+
+        spawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, this);
     }
 
     // Events
@@ -320,27 +336,6 @@ public abstract class Building : MonoBehaviour, ILocalizable
         onStopWorking?.Invoke();
     }
 
-    // Construction
-    protected void UpdateConstruction()
-    {
-        if (spawnedConstruction) {
-            Destroy(spawnedConstruction.gameObject);
-        }
-
-        BuildingConstruction constructionToSpawn = GetConstructionToSpawn();
-        if (!constructionToSpawn) return;
-
-        spawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, this);
-        OnChangedConstruction();
-    }
-
-    protected virtual void OnChangedConstruction()
-    {
-        //foreach (BuildingModule module in GetComponents<BuildingModule>()) {
-        //    module.HandleChangedConstruction();
-        //}
-    }
-
     private void AsssignStrategy()
     {
         switch (buildingData.BuildingStrategy) {
@@ -378,6 +373,11 @@ public abstract class Building : MonoBehaviour, ILocalizable
     private void OnConstructionFinished()
     {
         UpdateConstruction();
+
+        if (SelectComponent.isSelected) {
+            SelectComponent.Select();
+        }
+
         onConstructionFinished?.Invoke();
     }
 
@@ -390,5 +390,16 @@ public abstract class Building : MonoBehaviour, ILocalizable
     private void OnUpgradeClicked()
     {
 
+    }
+
+    // Select
+    private void OnSelected()
+    {
+        onBuildingSelected?.Invoke(this);
+    }
+
+    private void OnDeselected()
+    {
+        onBuildingDeselected?.Invoke(this);
     }
 }

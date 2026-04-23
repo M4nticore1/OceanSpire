@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
+public abstract class BuildingModule : MonoBehaviour
 {
     private Building ownedBuilding = null;
     public Building OwnedBuilding => ownedBuilding ? ownedBuilding : GetComponent<Building>();
@@ -41,26 +41,24 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
         ownedBuilding = GetComponent<Building>();
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         TrySubscribe();
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         TryUnsubscribe();
     }
 
-    public void OnOwnedBuildingInited()
+    protected virtual void Subscribe()
     {
-        OnInit();
-        onBuildingModuleInited?.Invoke(this);
+        ownedBuilding.onInited += OnBuildingInited;
     }
 
-    public void OnOwnedBuildingDemolished()
+    protected virtual void Unsubscribe()
     {
-        OnDemolish();
-        onBuildingModuleDemolished?.Invoke(this);
+        ownedBuilding.onInited -= OnBuildingInited;
     }
 
     protected abstract void OnInit();
@@ -70,16 +68,6 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
     protected abstract void OnBuildingStartWorking();
 
     protected abstract void OnBuildingStopWorking();
-
-    protected virtual void Subscribe()
-    {
-
-    }
-
-    protected virtual void Unsubscribe()
-    {
-
-    }
 
     protected void StartWorking()
     {
@@ -109,7 +97,6 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
     private void TrySubscribe()
     {
         if (isSubscribed) return;
-        if (!ownedBuilding) return;
 
         Subscribe();
 
@@ -119,10 +106,21 @@ public abstract class BuildingModule : MonoBehaviour, IOwnedBuildingListener
     private void TryUnsubscribe()
     {
         if (!isSubscribed) return;
-        if (!ownedBuilding) return;
 
         Unsubscribe();
 
         isSubscribed = false;
+    }
+
+    private void OnBuildingInited()
+    {
+        OnInit();
+        onBuildingModuleInited?.Invoke(this);
+    }
+
+    private void OnBuildingDemolished()
+    {
+        OnDemolish();
+        onBuildingModuleDemolished?.Invoke(this);
     }
 }

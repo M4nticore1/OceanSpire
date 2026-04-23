@@ -127,7 +127,7 @@ public class WanderersManager : MonoBehaviour
         int instanceId = InstancesManager.instance.GetNextInstanceId();
         float boatHealth = BoatsList.Instance.boats[id].Health.MaxHealth;
 
-        BoatEntry boatData = new BoatEntry(id, instanceId, BoatStateEnum.MovingToDock, position, rotation, boatHealth, GetDockPoint().InstanceId.id);
+        BoatData boatData = new BoatData(id, instanceId, BoatStateEnum.MovingToDock, position, rotation, boatHealth, GetDockPoint().InstanceId.id);
 
         Boat prefab = BoatsList.Instance.boats[id];
         Boat boat = BoatFactory.CreateBoat(prefab, boatData);

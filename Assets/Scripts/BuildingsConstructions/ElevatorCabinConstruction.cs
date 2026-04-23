@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ElevatorCabinConstruction : BuildingConstruction
 {
-    public int FloorIndex => ((TowerBuilding)ownedBuilding).floorIndex;
-    public int PlaceIndex => ((TowerBuilding)ownedBuilding).placeIndex;
+    public int FloorIndex => ((TowerBuilding)ownedBuilding).FloorIndex;
+    public int PlaceIndex => ((TowerBuilding)ownedBuilding).PlaceIndex;
 
     public List<CreatureCityNavigator> goingForWaitingPassengers { get; private set; } = new List<CreatureCityNavigator>();
     public List<CreatureCityNavigator> waitingPassengers { get; private set; } = new List<CreatureCityNavigator>();
@@ -226,7 +226,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
         if (ridingPassengers.Count > 0) {
             foreach (var rider in ridingPassengers) {
                 if (rider.currentPathBuilding) {
-                    targetFloor = rider.currentPathTowerBuilding ? rider.currentPathTowerBuilding.floorIndex : FloorIndex;
+                    targetFloor = rider.currentPathTowerBuilding ? rider.currentPathTowerBuilding.FloorIndex : FloorIndex;
                     break;
                 }
             }
@@ -247,7 +247,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
                     if (!pathTowerBuilding)
                         continue;
 
-                    int pathFloor = pathTowerBuilding.floorIndex;
+                    int pathFloor = pathTowerBuilding.FloorIndex;
                     if (targetFloor < FloorIndex && pathFloor < FloorIndex) {
                         targetFloor = math.max(targetFloor, pathFloor);
                     }

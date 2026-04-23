@@ -251,7 +251,7 @@ public class RaidManager : MonoBehaviour
         float health = boatPrefab.Health.MaxHealth;
         int dockInstanceId = GetNearestDockPoint(position).InstanceId.id;
 
-        BoatEntry data = new BoatEntry(id, instanceId, BoatStateEnum.MovingToDock, position, rotation.eulerAngles, health, dockInstanceId);
+        BoatData data = new BoatData(id, instanceId, BoatStateEnum.MovingToDock, position, rotation.eulerAngles, health, dockInstanceId);
         Boat boat = BoatFactory.CreateBoat(boatPrefab, data);
 
         return boat;

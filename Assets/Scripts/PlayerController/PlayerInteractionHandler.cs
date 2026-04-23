@@ -22,7 +22,7 @@ public class PlayerInteractionHandler : MonoBehaviour
             IClickable[] clickables = hit.collider.GetComponents<IClickable>();
 
             foreach (IClickable clickable in clickables) {
-                if (!clickable.CanClick()) continue;
+                if (!clickable.ShouldClick()) continue;
 
                 clickable.Click();
             }

@@ -28,7 +28,7 @@ public class BoatIdleState : BoatState
         boat.Movement.SetAgentEnabled(true);
     }
 
-    public override void Process()
+    public override void Tick()
     {
         if (boat.transform.rotation == boat.dockPoint.DockTransform.rotation) return;
 

@@ -14,7 +14,7 @@ public enum BoatStateEnum
 }
 
 [Serializable]
-public class BoatEntry
+public class BoatData
 {
     public int id { get; private set; } = 0;
     public int instanceId { get; private set; } = -1;
@@ -24,7 +24,7 @@ public class BoatEntry
     public int dockInstanceId { get; private set; } = 0;
     public float health { get; private set; } = 0;
 
-    public BoatEntry(int id, int instanceId, BoatStateEnum state, Vector3 position, Vector3 rotation, float health, int dockInstanceId)
+    public BoatData(int id, int instanceId, BoatStateEnum state, Vector3 position, Vector3 rotation, float health, int dockInstanceId)
     {
         this.id = id;
         this.instanceId = instanceId;
@@ -104,10 +104,10 @@ public class Boat : MonoBehaviour
 
     private void Update()
     {
-        state.Process();
+        state.Tick();
     }
 
-    public void Init(BoatEntry data)
+    public void Init(BoatData data)
     {
         lootHandler = GetComponent<BoatLootHandler>();
         lootHandler.Init();

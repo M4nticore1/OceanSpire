@@ -28,7 +28,7 @@ public class WorldData
     public PlayerEntry playerData;
     public BuildingData[] GroundBuildings;
     public TowerBuildingData[] towerBuildings;
-    public BoatEntry[] boatsData;
+    public BoatData[] boatsData;
     public HumanDataV1[] citizensData;
 
     public DailyTasksDataV1 DailyTasksData { get; private set; }

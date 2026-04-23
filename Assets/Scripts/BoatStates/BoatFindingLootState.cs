@@ -26,7 +26,7 @@ public class BoatFindingLootState : BoatState
 
     }
 
-    public override void Process()
+    public override void Tick()
     {
         boat.ProcessDrainHealth();
 

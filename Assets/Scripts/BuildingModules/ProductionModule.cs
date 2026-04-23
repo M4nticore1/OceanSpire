@@ -68,7 +68,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         CollectItem();
     }
 
-    public bool CanClick()
+    public bool ShouldClick()
     {
         return isReadyToCollect;
     }

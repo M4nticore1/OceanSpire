@@ -109,11 +109,11 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
         if (IsRidingOnElevator && currentElevator.spawnedElevatorCabin.isMoving) {
             int nextFloor = currentElevator.spawnedElevatorCabin.nextFloor;
             startTowerBuilding = BuildingsManager.instance.BuiltFloors[nextFloor].RoomBuildingPlaces[placeIndex].PlacedBuilding;
-            startPlace = startTowerBuilding ? startTowerBuilding.buildingPlace : null;
+            startPlace = startTowerBuilding ? startTowerBuilding.BuildingPlace : null;
         }
         else {
             startTowerBuilding = currentBuilding as TowerBuilding;
-            startPlace = startTowerBuilding ? startTowerBuilding.buildingPlace : null;
+            startPlace = startTowerBuilding ? startTowerBuilding.BuildingPlace : null;
         }
 
         if (!PathFinder.TryGetPathToBuilding(BuildingsManager.instance, startPlace, targetBuilding, ref pathBuildings)) return false;
@@ -183,8 +183,8 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
 
     private void AssignTowerPlace()
     {
-        floorIndex = currentTowerBuilding ? currentTowerBuilding.floorIndex : 0;
-        placeIndex = currentTowerBuilding ? currentTowerBuilding.placeIndex : 0;
+        floorIndex = currentTowerBuilding ? currentTowerBuilding.FloorIndex : 0;
+        placeIndex = currentTowerBuilding ? currentTowerBuilding.PlaceIndex : 0;
     }
 
     private void EnterBuilding(Building building)
@@ -236,8 +236,8 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
 
             if (!next || !prev) continue;
 
-            bool betweenVertical = next.placeIndex == current.placeIndex && prev.placeIndex == current.placeIndex;
-            bool betweenHorizontal = next.placeIndex != current.placeIndex && prev.placeIndex != current.placeIndex;
+            bool betweenVertical = next.PlaceIndex == current.PlaceIndex && prev.PlaceIndex == current.PlaceIndex;
+            bool betweenHorizontal = next.PlaceIndex != current.PlaceIndex && prev.PlaceIndex != current.PlaceIndex;
 
             if (betweenVertical || betweenHorizontal) {
                 pathBuildings.RemoveAt(i);

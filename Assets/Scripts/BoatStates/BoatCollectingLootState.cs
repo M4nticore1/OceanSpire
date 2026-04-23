@@ -25,7 +25,7 @@ public class BoatCollectingLootState : BoatState
         container.StartMoving();
     }
 
-    public override void Process()
+    public override void Tick()
     {
         boat.ProcessDrainHealth();
 

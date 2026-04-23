@@ -16,7 +16,7 @@ public class BoatMovingToDockState : BoatState
     {
     }
 
-    public override void Process()
+    public override void Tick()
     {
         boat.ProcessDrainHealth();
     }

@@ -14,34 +14,17 @@ public class BuildingActionWaypoint
     public int actionTime;
 }
 
-public class BuildingConstruction : MonoBehaviour
+public class BuildingConstruction : MonoBehaviour, IClickable
 {
-    [SerializeField] private SelectComponent selectComponent;
-
     private LightProbeGroupManager lightProbeGroupManager;
 
-    public Building ownedBuilding { get; private set; } = null;
-
-    [SerializeField] private GameObject[] buildingInteriors;
-    public GameObject[] BuildingInteriors => buildingInteriors;
+    public Building ownedBuilding { get; private set; }
 
     [SerializeField] private BuildingAction[] buildingInteractions;
     public BuildingAction[] BuildingInteractions => buildingInteractions;
 
-    private MeshRenderer[] meshRendererers = null;
-    private MaterialPropertyBlock propertyBlock = null;
-
-    protected virtual void OnEnable()
-    {
-        selectComponent.onSelected += OnSelected;
-        selectComponent.onDeselected += OnDeselected;
-    }
-
-    protected virtual void OnDisable()
-    {
-        selectComponent.onSelected -= OnSelected;
-        selectComponent.onDeselected -= OnDeselected;
-    }
+    private MeshRenderer[] meshRendererers;
+    private MaterialPropertyBlock propertyBlock;
 
     public virtual void Init(Building ownedBuilding)
     {
@@ -81,23 +64,14 @@ public class BuildingConstruction : MonoBehaviour
         }
     }
 
+    // IClickable
     public void Click()
     {
-
+        ownedBuilding.SelectComponent.Click();
     }
 
-    public bool CanClick()
+    public bool ShouldClick()
     {
         return true;
-    }
-
-    private void OnSelected()
-    {
-        ownedBuilding.OnSelected();
-    }
-
-    private void OnDeselected()
-    {
-        ownedBuilding.OnDeselected();
     }
 }

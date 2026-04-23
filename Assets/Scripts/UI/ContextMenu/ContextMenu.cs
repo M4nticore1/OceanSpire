@@ -14,7 +14,6 @@ public class ContextMenu : UIBehaviour
 
         SelectManager.onComponentSelected += OnComponentSelected;
         SelectManager.onComponentDeselected += OnComponentDeselected;
-        EventBus.onPlayerClicked += OnPlayerClicked;
     }
 
     protected override void OnDisable()
@@ -23,7 +22,6 @@ public class ContextMenu : UIBehaviour
 
         SelectManager.onComponentSelected -= OnComponentSelected;
         SelectManager.onComponentDeselected -= OnComponentDeselected;
-        EventBus.onPlayerClicked -= OnPlayerClicked;
     }
 
     // Open/Close
@@ -45,14 +43,6 @@ public class ContextMenu : UIBehaviour
 
     private void OnComponentDeselected(SelectComponent selected)
     {
-        Close();
-    }
-
-    private void OnPlayerClicked(GameObject clicked)
-    {
-        SelectComponent selectComponent = clicked?.GetComponent<SelectComponent>();
-        if (selectComponent && selectComponent.isSelected) return;
-
         Close();
     }
 }

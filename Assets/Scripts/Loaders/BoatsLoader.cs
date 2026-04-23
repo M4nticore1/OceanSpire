@@ -28,7 +28,7 @@ public class BoatsLoader : MonoBehaviour
                 float health = prefab.Health.MaxHealth;
                 int dockId = DockPointsManager.instance.pierDockPoints[i].InstanceId.id;
 
-                BoatEntry boatData = new BoatEntry(id, instanceId, BoatStateEnum.Idle, position, rotation, health, dockId);
+                BoatData boatData = new BoatData(id, instanceId, BoatStateEnum.Idle, position, rotation, health, dockId);
                 Boat boat = BoatFactory.CreateBoat(prefab, boatData);
             }
         }

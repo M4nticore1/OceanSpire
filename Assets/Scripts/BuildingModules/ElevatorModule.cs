@@ -13,7 +13,7 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
     public ElevatorCabinConstruction spawnedElevatorCabin { get; private set; }
     public int elevatorGroupId { get; private set; } = 0;
 
-    private bool IsMoving => spawnedElevatorCabin.isMoving;
+    private bool IsMoving => spawnedElevatorCabin ? spawnedElevatorCabin.isMoving : false;
 
     protected override void OnInit()
     {
@@ -133,7 +133,7 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
 
     public bool IsPossibleToEnter()
     {
-        return !spawnedElevatorCabin.isMoving && (spawnedElevatorCabin.OwnedElevator.OwnedBuilding as TowerBuilding).floorIndex == (OwnedBuilding as TowerBuilding).floorIndex && spawnedElevatorCabin.ridingPassengers.Count < OwnedBuilding.LevelData.maxResidentsCount;
+        return !spawnedElevatorCabin.isMoving && (spawnedElevatorCabin.OwnedElevator.OwnedBuilding as TowerBuilding).FloorIndex == (OwnedBuilding as TowerBuilding).FloorIndex && spawnedElevatorCabin.ridingPassengers.Count < OwnedBuilding.LevelData.maxResidentsCount;
     }
 
     public bool IsPossibleToExit()
@@ -163,7 +163,7 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
 
     public bool ShouldSpendElectricity()
     {
-        return IsMoving && spawnedElevatorCabin && spawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).floorIndex;
+        return IsMoving && spawnedElevatorCabin && spawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).FloorIndex;
     }
 
     // Construction
@@ -210,8 +210,8 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
     private bool TryApplyCabin()
     {
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
-        ElevatorModule belowElevatorBuilding = ownedTowerBuilding.downBuilding?.GetComponent<ElevatorModule>();
-        ElevatorModule aboveElevatorBuilding = ownedTowerBuilding.upBuilding?.GetComponent<ElevatorModule>();
+        ElevatorModule belowElevatorBuilding = ownedTowerBuilding.DownBuilding?.GetComponent<ElevatorModule>();
+        ElevatorModule aboveElevatorBuilding = ownedTowerBuilding.UpBuilding?.GetComponent<ElevatorModule>();
 
         if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorCabin) {
             elevatorGroupId = belowElevatorBuilding.elevatorGroupId;
@@ -243,7 +243,7 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
     {
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
 
-        if (ownedTowerBuilding.buildingPosition == BuildingPosition.Straight) {
+        if (ownedTowerBuilding.BuildingPosition == BuildingPosition.Straight) {
             return ElevatorLevelData.ElevatorPlatformStraight;
         }
         else {

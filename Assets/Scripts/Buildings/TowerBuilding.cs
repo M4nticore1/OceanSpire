@@ -46,27 +46,27 @@ public class TowerBuildingData : BuildingData
 
 public class TowerBuilding : Building, INeighborBuildingsListener
 {
-    public BuildingPlace buildingPlace { get; private set; }
+    public BuildingPlace BuildingPlace { get; private set; }
 
-    public BuildingPosition buildingPosition { get; private set; }
-    public int floorIndex { get; private set; }
-    public int placeIndex { get; private set; }
+    public BuildingPosition BuildingPosition { get; private set; }
+    public int FloorIndex { get; private set; }
+    public int PlaceIndex { get; private set; }
 
-    public TowerBuilding leftBuilding { get; private set; }
-    public TowerBuilding rightBuilding { get; private set; }
-    public TowerBuilding upBuilding { get; private set; }
-    public TowerBuilding downBuilding { get; private set; }
+    public TowerBuilding LeftBuilding { get; private set; }
+    public TowerBuilding RightBuilding { get; private set; }
+    public TowerBuilding UpBuilding { get; private set; }
+    public TowerBuilding DownBuilding { get; private set; }
 
-    public TowerBuilding LeftConnectedBuilding => leftBuilding && ConnectedWith(leftBuilding) ? leftBuilding : null;
-    public TowerBuilding RightConnectedBuilding => rightBuilding && ConnectedWith(rightBuilding) ? rightBuilding : null;
-    public TowerBuilding UpConnectedBuilding => upBuilding && ConnectedWith(upBuilding) ? upBuilding : null;
-    public TowerBuilding DownConnectedBuilding => downBuilding && ConnectedWith(downBuilding) ? downBuilding : null;
+    public TowerBuilding LeftConnectedBuilding => LeftBuilding && ConnectedWith(LeftBuilding) ? LeftBuilding : null;
+    public TowerBuilding RightConnectedBuilding => RightBuilding && ConnectedWith(RightBuilding) ? RightBuilding : null;
+    public TowerBuilding UpConnectedBuilding => UpBuilding && ConnectedWith(UpBuilding) ? UpBuilding : null;
+    public TowerBuilding DownConnectedBuilding => DownBuilding && ConnectedWith(DownBuilding) ? DownBuilding : null;
 
     protected override void OnInit(BuildingData data)
     {
         TowerBuildingData towerData = data as TowerBuildingData;
-        floorIndex = towerData.FloorIndex;
-        placeIndex = towerData.PlaceIndex;
+        FloorIndex = towerData.FloorIndex;
+        PlaceIndex = towerData.PlaceIndex;
 
         List<FloorFrameModule> floors = BuildingsManager.instance.BuiltFloors;
         BuildingPlace place = null;
@@ -88,7 +88,7 @@ public class TowerBuilding : Building, INeighborBuildingsListener
 
         AssignNeighborBuildings();
 
-        if (placeIndex % 2 == 0) {
+        if (PlaceIndex % 2 == 0) {
             SetBuildingPosition(BuildingPosition.Corner);
         }
         else {
@@ -104,25 +104,25 @@ public class TowerBuilding : Building, INeighborBuildingsListener
 
         if (LevelData is TowerBuildingLevelData levelData) {
             if (ConstructionComponent.IsUnderConstruction) {
-                if (buildingPosition == BuildingPosition.Straight) {
+                if (BuildingPosition == BuildingPosition.Straight) {
                     construction = levelData.ConstructionStraightFrame;
                 }
-                else if (buildingPosition == BuildingPosition.Corner) {
+                else if (BuildingPosition == BuildingPosition.Corner) {
                     construction = levelData.ConstructionCornerFrame;
                 }
             }
             else if (buildingData.ConnectionType == ConnectionType.None) {
-                if (buildingPosition == BuildingPosition.Straight) {
+                if (BuildingPosition == BuildingPosition.Straight) {
                     if (levelData.ConstructionStraight)
                         construction = levelData.ConstructionStraight;
                 }
-                else if (buildingPosition == BuildingPosition.Corner) {
+                else if (BuildingPosition == BuildingPosition.Corner) {
                     if (levelData.ConstructionCorner)
                         construction = levelData.ConstructionCorner;
                 }
             }
             else if (buildingData.ConnectionType == ConnectionType.Horizontal) {
-                if (buildingPosition == BuildingPosition.Straight) {
+                if (BuildingPosition == BuildingPosition.Straight) {
                     if (LeftConnectedBuilding && RightConnectedBuilding && levelData.ConstructionStraightLeftRight)
                         construction = levelData.ConstructionStraightLeftRight;
                     else if (LeftConnectedBuilding && levelData.ConstructionStraightLeft)
@@ -132,7 +132,7 @@ public class TowerBuilding : Building, INeighborBuildingsListener
                     else if (!LeftConnectedBuilding && !RightConnectedBuilding && levelData.ConstructionStraight)
                         construction = levelData.ConstructionStraight;
                 }
-                else if (buildingPosition == BuildingPosition.Corner) {
+                else if (BuildingPosition == BuildingPosition.Corner) {
                     if (LeftConnectedBuilding && RightConnectedBuilding && levelData.ConstructionCornerLeftRight)
                         construction = levelData.ConstructionCornerLeftRight;
                     else if (LeftConnectedBuilding && levelData.ConstructionCornerLeft)
@@ -144,7 +144,7 @@ public class TowerBuilding : Building, INeighborBuildingsListener
                 }
             }
             else if (buildingData.ConnectionType == ConnectionType.Vertical) {
-                if (buildingPosition == BuildingPosition.Straight) {
+                if (BuildingPosition == BuildingPosition.Straight) {
                     if (UpConnectedBuilding && DownConnectedBuilding && levelData.ConstructionStraightUpDown)
                         construction = levelData.ConstructionStraightUpDown;
                     else if (UpConnectedBuilding && levelData.ConstructionStraightUp)
@@ -154,7 +154,7 @@ public class TowerBuilding : Building, INeighborBuildingsListener
                     else if (!UpConnectedBuilding && !DownConnectedBuilding && levelData.ConstructionStraight)
                         construction = levelData.ConstructionStraight;
                 }
-                else if (buildingPosition == BuildingPosition.Corner) {
+                else if (BuildingPosition == BuildingPosition.Corner) {
                     if (UpConnectedBuilding && DownConnectedBuilding && levelData.ConstructionCornerUpDown)
                         construction = levelData.ConstructionCornerUpDown;
                     else if (UpConnectedBuilding && levelData.ConstructionCornerUp)
@@ -173,19 +173,6 @@ public class TowerBuilding : Building, INeighborBuildingsListener
         return construction;
     }
 
-    protected override void OnChangedConstruction()
-    {
-        base.OnChangedConstruction();
-
-        //foreach (TowerBuilding towerBuilding in NeighborBuildings(NeighborMask.All)) {
-        //    if (!DirectlyConnectedWith(towerBuilding)) continue;
-
-        //    foreach (var module in towerBuilding.GetComponents<BuildingModule>()) {
-        //        module.HandleChangedConstruction();
-        //    }
-        //}
-    }
-
     protected override void InvokeBuildingInited()
     {
         base.InvokeBuildingInited();
@@ -199,7 +186,7 @@ public class TowerBuilding : Building, INeighborBuildingsListener
     {
         base.InvokeBuildingDemolished();
 
-        buildingPlace.HandleBuildingDemolished();
+        BuildingPlace.SetPlacedBuilding(null);
 
         foreach (var building in ConnectedBuildings()) {
             building.HandleNeighborBuildingDemolished(this);
@@ -208,17 +195,17 @@ public class TowerBuilding : Building, INeighborBuildingsListener
 
     public IEnumerable<TowerBuilding> NeighborBuildings(NeighborMask mask)
     {
-        if (mask.HasFlag(NeighborMask.Left) && leftBuilding) {
-            yield return leftBuilding;
+        if (mask.HasFlag(NeighborMask.Left) && LeftBuilding) {
+            yield return LeftBuilding;
         }
-        if (mask.HasFlag(NeighborMask.Right) && rightBuilding) {
-            yield return rightBuilding;
+        if (mask.HasFlag(NeighborMask.Right) && RightBuilding) {
+            yield return RightBuilding;
         }
-        if (mask.HasFlag(NeighborMask.Up) && upBuilding) {
-            yield return upBuilding;
+        if (mask.HasFlag(NeighborMask.Up) && UpBuilding) {
+            yield return UpBuilding;
         }
-        if (mask.HasFlag(NeighborMask.Down) && downBuilding) {
-            yield return downBuilding;
+        if (mask.HasFlag(NeighborMask.Down) && DownBuilding) {
+            yield return DownBuilding;
         }
     }
 
@@ -285,8 +272,8 @@ public class TowerBuilding : Building, INeighborBuildingsListener
 
     public bool NeighborWith(TowerBuilding target)
     {
-        bool horizontal = math.abs(target.floorIndex - floorIndex) == 1;
-        bool vertical = (target.placeIndex - placeIndex) % BuildingsManager.RoomsCountPerFloor == 1;
+        bool horizontal = math.abs(target.FloorIndex - FloorIndex) == 1;
+        bool vertical = (target.PlaceIndex - PlaceIndex) % BuildingsManager.RoomsCountPerFloor == 1;
         return horizontal || vertical;
     }   
 
@@ -324,53 +311,53 @@ public class TowerBuilding : Building, INeighborBuildingsListener
     {
         if (buildingData.BuildingType == BuildingType.Room) {
             int roomsCount = BuildingsManager.RoomsCountPerFloor;
-            int leftIndex = (placeIndex + 1) % roomsCount;
-            leftBuilding = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[leftIndex].PlacedBuilding;
+            int leftIndex = (PlaceIndex + 1) % roomsCount;
+            LeftBuilding = BuildingsManager.instance.BuiltFloors[FloorIndex].RoomBuildingPlaces[leftIndex].PlacedBuilding;
 
-            int rightIndex = (roomsCount + placeIndex - 1) % roomsCount;
-            rightBuilding = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[rightIndex].PlacedBuilding;
+            int rightIndex = (roomsCount + PlaceIndex - 1) % roomsCount;
+            RightBuilding = BuildingsManager.instance.BuiltFloors[FloorIndex].RoomBuildingPlaces[rightIndex].PlacedBuilding;
         }
 
         int floorCount = BuildingsManager.instance.BuiltFloors.Count;
-        int upIndex = floorIndex + 1;
+        int upIndex = FloorIndex + 1;
 
         if (upIndex < floorCount) {
-            upBuilding = BuildingsManager.instance.BuiltFloors[upIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
+            UpBuilding = BuildingsManager.instance.BuiltFloors[upIndex].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
         }
         else {
-            upBuilding = null;
+            UpBuilding = null;
         }
 
-        int downIndex = floorIndex - 1;
+        int downIndex = FloorIndex - 1;
 
         if (downIndex >= 0) {
-            downBuilding = BuildingsManager.instance.BuiltFloors[downIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
+            DownBuilding = BuildingsManager.instance.BuiltFloors[downIndex].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
         }
         else {
-            downBuilding = null;
+            DownBuilding = null;
         }
     }
 
     private void SetBuildingPlace(BuildingPlace place)
     {
-        buildingPlace = place;
-        buildingPlace.HandleBuildingInited(this);
+        BuildingPlace = place;
+        BuildingPlace.SetPlacedBuilding(this);
     }
 
     private void SetBuildingPosition(BuildingPosition position)
     {
-        buildingPosition = position;
+        BuildingPosition = position;
     }
 
     private void ApplyTransform()
     {
-        if (!buildingPlace) return;
+        if (!BuildingPlace) return;
 
         if (GetComponent<FloorFrameModule>()) {
-            transform.position = buildingPlace.transform.position;
+            transform.position = BuildingPlace.transform.position;
         }
         else {
-            transform.SetParent(buildingPlace.transform);
+            transform.SetParent(BuildingPlace.transform);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
         }

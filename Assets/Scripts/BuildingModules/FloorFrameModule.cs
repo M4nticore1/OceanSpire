@@ -19,21 +19,25 @@ public class FloorFrameModule : BuildingModule
 
     public Coroutine bakeNavMeshCoroutine { get; private set; } = null;
 
-    protected void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         Building.onBuildingInited += OnBuildingInited;
         Building.onBuildingDemolished += OnBuildingDemolished;
     }
 
-    protected void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         Building.onBuildingInited -= OnBuildingInited;
         Building.onBuildingDemolished -= OnBuildingDemolished;
     }
 
     protected override void OnInit()
     {
-        int floorIndex = (OwnedBuilding as TowerBuilding).floorIndex;
+        int floorIndex = (OwnedBuilding as TowerBuilding).FloorIndex;
         floorBuildingPlace.Init(floorIndex + 1);
         hallBuildingPlace.Init(floorIndex);
 
@@ -91,7 +95,7 @@ public class FloorFrameModule : BuildingModule
 
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
 
-        if (towerBuilding.floorIndex != ownedTowerBuilding.floorIndex) return false;
+        if (towerBuilding.FloorIndex != ownedTowerBuilding.FloorIndex) return false;
         return true;
     }
 }

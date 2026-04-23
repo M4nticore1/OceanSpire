@@ -11,12 +11,10 @@ public enum BuildingPlaceState
 
 public class BuildingPlace : MonoBehaviour, IClickable
 {
-    private BuildingsManager buildingsManager;
-
     [SerializeField] private BuildingType buildingType = BuildingType.Room;
     public BuildingType BuildingType => buildingType;
 
-    public int floorIndex { get; private set; } = 0;
+    public int floorIndex = 0;
     [SerializeField] private int placeIndex = 0;
     public int PlaceIndex => placeIndex;
     public int emptyBuildingPlacesAbove { get; set; } = 0;
@@ -54,27 +52,36 @@ public class BuildingPlace : MonoBehaviour, IClickable
         }
     }
 
-    public void Init(int newFloorindex)
+    private void OnEnable()
     {
-        buildingsManager = FindAnyObjectByType<BuildingsManager>();
-
-        floorIndex = newFloorindex;
-        AssignNeighborPlaces();
-        HideBuildingPlace();
-
         EventBus.onStartedPlacingBuilding += OnBuildingStartPlacing;
         Building.onBuildingInited += OnBuildingInited;
         EventBus.onStopPlacingBuildingButtonClicked += OnStopPlacingBuildingButtonClicked;
     }
 
-    public void HandleBuildingInited(TowerBuilding building)
+    private void OnDisable()
     {
-        SetPlacedBuilding(building);
+        EventBus.onStartedPlacingBuilding -= OnBuildingStartPlacing;
+        Building.onBuildingInited -= OnBuildingInited;
+        EventBus.onStopPlacingBuildingButtonClicked -= OnStopPlacingBuildingButtonClicked;
     }
 
-    public void HandleBuildingDemolished()
+    private void Start()
     {
-        RemovePlacedBuilding();
+        HideBuildingPlace();
+    }
+
+    public void Init(int newFloorindex)
+    {
+        floorIndex = newFloorindex;
+        AssignNeighborPlaces();
+        HideBuildingPlace();
+    }
+
+    public void SetPlacedBuilding(TowerBuilding building)
+    {
+        placedBuilding = building;
+        AssignFrameActivity();
     }
 
     private void AssignNeighborPlaces()
@@ -92,8 +99,8 @@ public class BuildingPlace : MonoBehaviour, IClickable
         int sideIndex = (placeIndex + horizontalIndexOffset + BuildingsManager.RoomsCountPerFloor) % BuildingsManager.RoomsCountPerFloor;
         int verticalIndex = floorIndex + verticalIndexOffset;
 
-        if (verticalIndex < buildingsManager.BuiltFloors.Count && verticalIndex >= 0) {
-            BuildingPlace place = buildingsManager.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
+        if (verticalIndex < BuildingsManager.instance.BuiltFloors.Count && verticalIndex >= 0) {
+            BuildingPlace place = BuildingsManager.instance.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
             return place;
         }
         return null;
@@ -116,7 +123,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     private void OnBuildingInited(Building building)
     {
         TowerBuilding towerBuilding = building as TowerBuilding;
-        if (towerBuilding && building.GetComponent<FloorFrameModule>() && floorIndex == towerBuilding.floorIndex - 1) {
+        if (towerBuilding && building.GetComponent<FloorFrameModule>() && floorIndex == towerBuilding.FloorIndex - 1) {
             AssignNeighborPlaces();
         }
 
@@ -129,18 +136,6 @@ public class BuildingPlace : MonoBehaviour, IClickable
     private void OnStopPlacingBuildingButtonClicked()
     {
         HideBuildingPlace();
-    }
-
-    private void SetPlacedBuilding(TowerBuilding building)
-    {
-        placedBuilding = building;
-        AssignFrameActivity();
-    }
-
-    private void RemovePlacedBuilding()
-    {
-        placedBuilding = null;
-        AssignFrameActivity();
     }
 
     private void AssignFrameActivity()
@@ -215,7 +210,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         onClicked?.Invoke(spawnedBuilding);
     }
 
-    public bool CanClick()
+    public bool ShouldClick()
     {
         Building buildingToPlace = ConstructionManager.Instance.buildingToPlace;
         if (!buildingToPlace) {

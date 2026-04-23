@@ -17,6 +17,7 @@
   "ui_demolish": "Разрушить",
   "ui_upgrade": "Улучшить",
   "ui_level": "Уровень {level}",
+  "ui_under_construction": "Идёт строительство {constructionTime}",
   "ui_weight": "Вес",
   "ui_workers": "Рабочие",
   "ui_recipes": "Рецепты",

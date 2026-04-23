@@ -86,7 +86,6 @@ GameObject:
   - component: {fileID: 337465256166747431}
   - component: {fileID: 7469822553162115358}
   - component: {fileID: 8565429626344292583}
-  - component: {fileID: 4179033065990215700}
   - component: {fileID: -7796214933308666227}
   m_Layer: 0
   m_Name: BuildingConstruction
@@ -123,8 +122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d553b2219de3be84092d9bdf376b77a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectComponent: {fileID: 4179033065990215700}
-  buildingInteriors: []
   buildingInteractions: []
 --- !u!114 &8565429626344292583
 MonoBehaviour:
@@ -138,18 +135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15d511cb8398f1b43b37bcc206dccbfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GPUInstancingEnabler
---- !u!114 &4179033065990215700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5452299794892249143}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
 --- !u!64 &-7796214933308666227
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -171,4 +156,4 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: -8818462208458138444, guid: 9c941e649758cfc40b69dc54d7a165b9, type: 3}
+  m_Mesh: {fileID: 9060850566465211110, guid: 9c941e649758cfc40b69dc54d7a165b9, type: 3}

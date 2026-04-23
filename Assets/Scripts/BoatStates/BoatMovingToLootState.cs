@@ -19,9 +19,9 @@ public class BoatMovingToLootState : BoatFindingLootState
         base.Exit();
     }
 
-    public override void Process()
+    public override void Tick()
     {
-        base.Process();
+        base.Tick();
     }
 
     public override void OnReachedPath()

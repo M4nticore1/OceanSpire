@@ -315,6 +315,7 @@ public class Human : Creature
     private void OnExitedBoat(Boat boat)
     {
         movement.SetAgentEnabled(true);
+        movement.NavAgent.Warp(transform.position);
 
         if (interactComponent.interactBuilding) {
             cityNavigator.TryFindPathToTargetBuilding();

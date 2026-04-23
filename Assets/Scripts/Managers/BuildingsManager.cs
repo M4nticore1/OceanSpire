@@ -74,7 +74,7 @@ public class BuildingsManager : MonoBehaviour
         var floorFrame = building.GetComponent<FloorFrameModule>();
 
         if (floorFrame) {
-            if (builtFloors.Count == (floorFrame.OwnedBuilding as TowerBuilding).floorIndex) {
+            if (builtFloors.Count == (floorFrame.OwnedBuilding as TowerBuilding).FloorIndex) {
                 builtFloors.Add(floorFrame);
             }
 

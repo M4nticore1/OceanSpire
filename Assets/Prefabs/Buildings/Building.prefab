@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6899792472419916034}
   - component: {fileID: 562888234851873099}
   - component: {fileID: 3905861539201214694}
+  - component: {fileID: 8412434306630100670}
   m_Layer: 2
   m_Name: RoomTrigger
   m_TagString: Untagged
@@ -66,6 +67,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57869c7c2f703d743bbe6d6ed3f13757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8412434306630100670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4291088814496081074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f07fbb11ab161e849bdddb96f07055ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IgnoreSelect
 --- !u!1 &5943104170456212345
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,6 +229,7 @@ GameObject:
   - component: {fileID: 3091725272005031583}
   - component: {fileID: 2391196798673474426}
   - component: {fileID: 6868078582365200528}
+  - component: {fileID: 3291799388632510304}
   - component: {fileID: 7640951862083927194}
   - component: {fileID: 8362959165140709296}
   m_Layer: 0
@@ -279,6 +293,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConstructionComponent
   constructionTime: 300
+  isConstructable: 1
+--- !u!114 &3291799388632510304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6989354260929803138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
+  isClickable: 0
 --- !u!114 &7640951862083927194
 MonoBehaviour:
   m_ObjectHideFlags: 0
