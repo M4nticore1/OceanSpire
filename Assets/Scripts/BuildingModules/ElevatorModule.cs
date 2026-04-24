@@ -11,13 +11,12 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
     public float ElectricityConsumption => electricityConsumption;
 
     public ElevatorCabinConstruction spawnedElevatorCabin { get; private set; }
-    public int elevatorGroupId { get; private set; } = 0;
 
     private bool IsMoving => spawnedElevatorCabin ? spawnedElevatorCabin.isMoving : false;
 
     protected override void OnInit()
     {
-        
+        TryCreateCabin();
     }
 
     // Subscribe
@@ -133,12 +132,18 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
 
     public bool IsPossibleToEnter()
     {
-        return !spawnedElevatorCabin.isMoving && (spawnedElevatorCabin.OwnedElevator.OwnedBuilding as TowerBuilding).FloorIndex == (OwnedBuilding as TowerBuilding).FloorIndex && spawnedElevatorCabin.ridingPassengers.Count < OwnedBuilding.LevelData.maxResidentsCount;
+        if (spawnedElevatorCabin.isMoving) return false;
+        if (spawnedElevatorCabin.OwnedElevator.OwnedTowerBuilding.FloorIndex != OwnedTowerBuilding.FloorIndex) return false;
+        if (spawnedElevatorCabin.ridingPassengers.Count + spawnedElevatorCabin.goingToRidingPassengers.Count >= OwnedBuilding.LevelData.maxResidentsCount) return false;
+
+        return true;
     }
 
     public bool IsPossibleToExit()
     {
-        return !spawnedElevatorCabin.isMoving;
+        if (spawnedElevatorCabin.isMoving) return false;
+
+        return true;
     }
 
     public Transform GetCabinRidingTransform()
@@ -174,10 +179,17 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
 
     private void OnConstructionFinished()
     {
+        TryCreateCabin();
+    }
+
+    private void TryCreateCabin()
+    {
+        if (OwnedBuilding.ConstructionComponent.IsUnderConstruction) return;
+
         ElevatorCabinConstruction cabin = TryGetNetworkElevatorCabin();
 
         if (cabin) {
-            spawnedElevatorCabin = cabin;
+            SetCabin(cabin);
         }
         else {
             CreateCabin();
@@ -205,25 +217,6 @@ public class ElevatorModule : BuildingModule, IElectricible, INeighborBuildingsL
     {
         spawnedElevatorCabin = cabin;
         InvokeCabinChanged();
-    }
-
-    private bool TryApplyCabin()
-    {
-        TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
-        ElevatorModule belowElevatorBuilding = ownedTowerBuilding.DownBuilding?.GetComponent<ElevatorModule>();
-        ElevatorModule aboveElevatorBuilding = ownedTowerBuilding.UpBuilding?.GetComponent<ElevatorModule>();
-
-        if (belowElevatorBuilding && belowElevatorBuilding.spawnedElevatorCabin) {
-            elevatorGroupId = belowElevatorBuilding.elevatorGroupId;
-            spawnedElevatorCabin = belowElevatorBuilding.spawnedElevatorCabin;
-            return true;
-        }
-        else if (aboveElevatorBuilding && aboveElevatorBuilding.spawnedElevatorCabin) {
-            elevatorGroupId = aboveElevatorBuilding.elevatorGroupId;
-            spawnedElevatorCabin = aboveElevatorBuilding.spawnedElevatorCabin;
-            return true;
-        }
-        return false;
     }
 
     private void CreateCabin()

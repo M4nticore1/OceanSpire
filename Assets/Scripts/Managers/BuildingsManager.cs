@@ -49,7 +49,6 @@ public class BuildingsManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // Buildings
         EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
         Building.onBuildingInited += OnBuildingInited;
         Building.onBuildingDemolished += OnBuildingDemolished;
@@ -57,13 +56,36 @@ public class BuildingsManager : MonoBehaviour
 
     private void OnDisable()
     {
-        // Buildings
         EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
         Building.onBuildingInited -= OnBuildingInited;
         Building.onBuildingDemolished -= OnBuildingDemolished;
     }
 
-    // Buildings
+    // Utils
+    public TowerBuilding GetBuildingByIndex(int floorIndex, int buildingPlaceIndex)
+    {
+        TowerBuilding building = null;
+
+        bool isFloorIndexMoreMin = floorIndex >= 0;
+        bool isFloorIndexLessMax = floorIndex < builtFloors.Count;
+        bool isBuildingPlaceIndexMoreMin = buildingPlaceIndex >= 0;
+        bool isBuildingPlaceIndexLessMax = buildingPlaceIndex < RoomsCountPerFloor;
+
+        if (isFloorIndexMoreMin && isFloorIndexLessMax && isBuildingPlaceIndexMoreMin && isBuildingPlaceIndexLessMax) {
+            building = builtFloors[floorIndex].RoomBuildingPlaces[buildingPlaceIndex].PlacedBuilding;
+        }
+
+        return building;
+    }
+
+    public static int GetFloorIndexByHeight(float height)
+    {
+        int floorIndex = (int)((height - FirstFloorHeight) / FloorHeight);
+        if (floorIndex < 0) floorIndex = 0;
+
+        return floorIndex;
+    }
+
     private void OnBuildingWidgetBuildClicked(BuildingWidget widget)
     {
         EventBus.InvokeBuildingStartPlacing(widget.buildingPrefab);
@@ -78,7 +100,6 @@ public class BuildingsManager : MonoBehaviour
                 builtFloors.Add(floorFrame);
             }
 
-            UpdateElevatorGroups(building);
             UpdateEmptyBuildingPlacesCount();
             UpdateCityHeight();
         }
@@ -86,23 +107,8 @@ public class BuildingsManager : MonoBehaviour
 
     private void OnBuildingDemolished(Building building)
     {
-        UpdateElevatorGroups(building);
         UpdateEmptyBuildingPlacesCount();
         UpdateCityHeight();
-    }
-
-    // Updates
-    private void UpdateElevatorGroups(Building building)
-    {
-        ElevatorModule elevatorBuilding = building.GetComponent<ElevatorModule>();
-
-        if (elevatorBuilding) {
-            if (elevatorGroups.Count <= elevatorBuilding.elevatorGroupId) {
-                List<ElevatorModule> elevatorGroup = new List<ElevatorModule>();
-                elevatorGroups.Add(elevatorGroup);
-            }
-            elevatorGroups[elevatorBuilding.elevatorGroupId].Add(elevatorBuilding);
-        }
     }
 
     private void UpdateEmptyBuildingPlacesCount()
@@ -148,29 +154,5 @@ public class BuildingsManager : MonoBehaviour
     private void UpdateCityHeight()
     {
         currentCityHeight = builtFloors[builtFloors.Count - 1].transform.position.y + FloorHeight;
-    }
-
-    // Utils
-    public TowerBuilding GetBuildingByIndex(int floorIndex, int buildingPlaceIndex)
-    {
-        TowerBuilding building = null;
-
-        bool isFloorIndexMoreMin = floorIndex >= 0;
-        bool isFloorIndexLessMax = floorIndex < builtFloors.Count;
-        bool isBuildingPlaceIndexMoreMin = buildingPlaceIndex >= 0;
-        bool isBuildingPlaceIndexLessMax = buildingPlaceIndex < RoomsCountPerFloor;
-
-        if (isFloorIndexMoreMin && isFloorIndexLessMax && isBuildingPlaceIndexMoreMin && isBuildingPlaceIndexLessMax) {
-            building = builtFloors[floorIndex].RoomBuildingPlaces[buildingPlaceIndex].PlacedBuilding;
-        }
-
-        return building;
-    }
-
-    public static int GetFloorIndexByHeight(float height)
-    {
-        int floorIndex = (int)((height - FirstFloorHeight) / FloorHeight);
-        if (floorIndex < 0) floorIndex = 0;
-        return floorIndex;
     }
 }

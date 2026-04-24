@@ -19,17 +19,17 @@ public class FloorFrameModule : BuildingModule
 
     public Coroutine bakeNavMeshCoroutine { get; private set; } = null;
 
-    protected override void OnEnable()
+    protected override void Subscribe()
     {
-        base.OnEnable();
+        base.Subscribe();
 
         Building.onBuildingInited += OnBuildingInited;
         Building.onBuildingDemolished += OnBuildingDemolished;
     }
 
-    protected override void OnDisable()
+    protected override void Unsubscribe()
     {
-        base.OnDisable();
+        base.Unsubscribe();
 
         Building.onBuildingInited -= OnBuildingInited;
         Building.onBuildingDemolished -= OnBuildingDemolished;
