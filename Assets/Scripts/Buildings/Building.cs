@@ -67,6 +67,9 @@ public abstract class Building : MonoBehaviour, ILocalizable
     public event Action onConstructionStarted;
     public event Action onConstructionFinished;
 
+    public static event Action<Building> onBuildingConstructionStarted;
+    public static event Action<Building> onBuildingConstructionFinished;
+
     public event Action<CreatureCityNavigator> onEnterBuilding;
     public event Action<CreatureCityNavigator> onExitBuilding;
 
@@ -263,7 +266,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
         return new Dictionary<string, string>()
         {
             { "level", levelComponent.level.ToString() },
-            { "constructionTime", TimeFormatter.SecondsToMinuteTime((int)(constructionComponent.ConstructionTime - constructionComponent.CurrentConstructionTime)).ToString() },
+            { "constructionTime", TimeFormatter.SecondsToMinuteTime((int)constructionComponent.CurrentConstructionTime).ToString() + "/" + TimeFormatter.SecondsToMinuteTime((int)constructionComponent.ConstructionTime).ToString() },
         };
     }
 
@@ -367,6 +370,8 @@ public abstract class Building : MonoBehaviour, ILocalizable
     private void OnConstructionStarted()
     {
         UpdateConstruction();
+
+        onBuildingConstructionStarted?.Invoke(this);
         onConstructionStarted?.Invoke();
     }
 
@@ -378,6 +383,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
             SelectComponent.Select();
         }
 
+        onBuildingConstructionFinished?.Invoke(this);
         onConstructionFinished?.Invoke();
     }
 

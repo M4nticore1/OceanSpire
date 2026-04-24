@@ -13,11 +13,10 @@
   "ui_update_now": "Обновить сейчас",
   "ui_construction": "Строительство",
   "ui_storage": "Хранилище",
-  "ui_build": "Построить",
-  "ui_demolish": "Разрушить",
   "ui_upgrade": "Улучшить",
+  "ui_complete": "Завершить",
+  "ui_speed_up": "Ускорить",
   "ui_level": "Уровень {level}",
-  "ui_under_construction": "Идёт строительство {constructionTime}",
   "ui_weight": "Вес",
   "ui_workers": "Рабочие",
   "ui_recipes": "Рецепты",
@@ -34,9 +33,15 @@
   "ui_revive_citizen": "Возроди жителя!",
   "ui_refund_resources": "Возвращаемые ресурсы",
 
-  "creature_citizen": "Житель",
-  "creature_wanderer": "Странник",
-  "creature_raider": "Рейдер",
+  "construction_build": "Построить",
+  "construction_demolish": "Разрушить",
+  "construction_under_construction": "Идёт строительство ({constructionTime})",
+  "construction_complete_instantly": "Ты можешь завершить строительство сейчас",
+
+  "settings": "Настройки",
+  "settings_fps_counter": "Счётчик FPS",
+  "settings_sound": "Звук",
+  "settings_music": "Музыка",
 
   "building_floor_frame": "Каркас этажа",
   "building_tower_gate": "Врата в башню",
@@ -47,6 +52,10 @@
   "building_farm": "Ферма",
   "building_kitchen": "Кухня",
   "building_wood_storage": "Хранилище дерева",
+
+  "creature_citizen": "Житель",
+  "creature_wanderer": "Странник",
+  "creature_raider": "Рейдер",
 
   "item_wood": "Дерево",
   "item_stone": "Камень",
@@ -78,11 +87,6 @@
   "ad_reward_item": "Вы получите {amount} {itemName} за просмотр",
   "ad_reward_boost_boats": "Вы увеличите скорость всех ваших лодок в 2 раза за просмотр",
   "ad_reward_received_item": "Вы получили {amount} {itemName}!",
-
-  "settings": "Настройки",
-  "settings_fps_counter": "Счётчик FPS",
-  "settings_sound": "Звук",
-  "settings_music": "Музыка",
 
   "first_name_adam": "Адам",
   "first_name_daniel": "Даниэль",

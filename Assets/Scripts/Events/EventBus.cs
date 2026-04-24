@@ -72,9 +72,6 @@ public static class EventBus
     // UI
     public static event Action onWorkersMenuClosed;
 
-    // Ads
-    public static event Action<AdRewardInstance> onAdRewardRecieved;
-
     // City
     public static void InvokNavMeshBaked()
     {
@@ -232,11 +229,5 @@ public static class EventBus
     public static void InvokeWorkersMenuClosed()
     {
         onWorkersMenuClosed?.Invoke();
-    }
-
-    // Ads
-    public static void InvokeAdRewardRecieved(AdRewardInstance reward)
-    {
-        onAdRewardRecieved?.Invoke(reward);
     }
 }

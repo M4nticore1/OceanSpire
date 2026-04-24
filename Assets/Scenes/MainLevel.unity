@@ -1918,6 +1918,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5802081599400832544, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: speedUpConstructionMenu
+      value: 
+      objectReference: {fileID: 383697687}
     - target: {fileID: 6429209848955281615, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -2050,6 +2054,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5409ef2fa21a8547b9b694cbf73c395, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReviveRewardMenu
+--- !u!114 &383697687 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1921971047925935194, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+  m_PrefabInstance: {fileID: 383697685}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cdb4c1a37a0fb34987c704bde8f8e31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpeedUpConstructionMenu
 --- !u!1001 &388042473
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2594,7 +2609,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1540495632460104bae99f65d80f06d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectManager
-  selectedComponent: {fileID: 0}
 --- !u!1001 &622901598
 PrefabInstance:
   m_ObjectHideFlags: 0

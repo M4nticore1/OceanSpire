@@ -5,7 +5,13 @@ public abstract class AdRewardInstance : ILocalizable
 {
     public AdRewardDefinition definition { get; private set; }
 
+    public static event Action<AdRewardInstance> onRewardReceived;
     public static event Action<AdRewardInstance> onRewardRemoved;
+
+    public AdRewardInstance()
+    {
+
+    }
 
     public AdRewardInstance(AdRewardDefinition definition)
     {
@@ -18,6 +24,6 @@ public abstract class AdRewardInstance : ILocalizable
     public void RecieveReward()
     {
         OnRewardRecieved();
-        EventBus.InvokeAdRewardRecieved(this);
+        onRewardReceived?.Invoke(this);
     }
 }

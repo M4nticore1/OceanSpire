@@ -99,9 +99,9 @@ public static class PathFinder
                     return currentPath;
                 }
 
-                // Check non elevator vertical building
-                if (hasElevator && place.floorIndex != neighbor.floorIndex && !neighbor.PlacedBuilding.GetComponent<ElevatorModule>())
-                    continue;
+                // Check elevator
+                if (hasElevator && place.floorIndex != neighbor.floorIndex && !neighbor.PlacedBuilding.GetComponent<ElevatorModule>()) continue;
+                if (hasElevator && neighbor.PlacedBuilding.ConstructionComponent.IsUnderConstruction) continue;
 
                 visited.Add(neighbor);
                 queue.Enqueue((neighbor, currentPath));

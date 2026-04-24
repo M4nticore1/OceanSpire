@@ -144,8 +144,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OpenCloseButton
   targetOpenable: {fileID: 0}
-  buttonType: 0
-  button: {fileID: 0}
+  buttonType: 1
+  button: {fileID: 7772729926661117182}
 --- !u!1 &4151105492405809274
 GameObject:
   m_ObjectHideFlags: 0

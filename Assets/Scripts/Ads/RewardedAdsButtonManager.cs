@@ -15,12 +15,12 @@ public class RewardedAdsButtonManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.onAdRewardRecieved += OnAdRewardReceived;
+        AdRewardInstance.onRewardReceived += OnAdRewardReceived;
     }
 
     private void OnDisable()
     {
-        EventBus.onAdRewardRecieved -= OnAdRewardReceived;
+        AdRewardInstance.onRewardReceived -= OnAdRewardReceived;
     }
 
     private void Start()

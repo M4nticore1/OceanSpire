@@ -13,11 +13,10 @@
   "ui_update_now": "Update now",
   "ui_construction": "Construction",
   "ui_storage": "Storage",
-  "ui_build": "Build",
-  "ui_demolish": "Demolish",
   "ui_upgrade": "Upgrade",
+  "ui_complete": "Complete",
+  "ui_speed_up": "Speed up",
   "ui_level": "Level {level}",
-  "ui_under_construction": "Under construction {constructionTime}",
   "ui_weight": "Weight",
   "ui_workers": "Workers",
   "ui_recipes": "Recipes",
@@ -34,9 +33,15 @@
   "ui_revive_citizen": "Revive the citizen!",
   "ui_refund_resources": "Refund resources",
 
-  "creature_citizen": "Citizen",
-  "creature_wanderer": "Wanderer",
-  "creature_raider": "Raider",
+  "construction_build": "Build",
+  "construction_demolish": "Demolish",
+  "construction_under_construction": "Under construction ({constructionTime})",
+  "construction_complete_instantly": "You can complete construction instantly",
+
+  "settings": "Settings",
+  "settings_fps_counter": "FPS counter",
+  "settings_sound": "Sound",
+  "settings_music": "Music",
 
   "building_floor_frame": "Floor frame",
   "building_tower_gate": "Tower gate",
@@ -47,6 +52,10 @@
   "building_farm": "Farm",
   "building_kitchen": "Kitchen",
   "building_wood_storage": "Wood storage",
+
+  "creature_citizen": "Citizen",
+  "creature_wanderer": "Wanderer",
+  "creature_raider": "Raider",
 
   "item_wood": "Wood",
   "item_stone": "Stone",
@@ -78,11 +87,6 @@
   "ad_reward_item": "You will get {amount} {itemName} for watching",
   "ad_reward_boost_boats": "You will double the speed of your boats by watching.",
   "ad_reward_received_item": "You got {amount} {itemName}!",
-
-  "settings": "Settings",
-  "settings_fps_counter": "FPS counter",
-  "settings_sound": "Sound",
-  "settings_music": "Music",
 
   "first_name_adam": "Adam",
   "first_name_daniel": "Daniel",

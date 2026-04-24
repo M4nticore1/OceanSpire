@@ -73,7 +73,6 @@ public class SelectComponent : MonoBehaviour, IClickable
     // IClickable
     public void Click()
     {
-        Debug.Log("Click");
         if (isSelected) {
             Deselect();
         }
