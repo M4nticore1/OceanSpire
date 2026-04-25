@@ -1,4 +1,5 @@
 ﻿using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
@@ -15,6 +16,7 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float cameraStopMoveSpeed = 6.0f;
 
     [SerializeField] private float movingThreshold = 0.01f;
+    private bool inDeadZone = false;
 
     private void OnEnable()
     {
@@ -126,11 +128,33 @@ public class CameraMovement : MonoBehaviour
     {
         if (InputStateManager.instance.isGameplayInputBlocked) return false;
         if (playerInputHandler.CameraMoveInput.sqrMagnitude <= 0) return false;
+        if (InDeadZone()) return false;
 
-        Vector2 resolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
-        float startScreenPercent = (startPressPosition / resolution).sqrMagnitude;
-        float currentScreenPercent = (playerInputHandler.primaryInteractionPosition / resolution).sqrMagnitude;
-        if (Mathf.Abs(startScreenPercent - currentScreenPercent) < movingThreshold) return false;
+        if (!inDeadZone) {
+            Vector2 resolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
+            float startScreenPercent = (startPressPosition / resolution).sqrMagnitude;
+            float currentScreenPercent = (playerInputHandler.primaryInteractionPosition / resolution).sqrMagnitude;
+
+            if (Mathf.Abs(startScreenPercent - currentScreenPercent) < movingThreshold) {
+                inDeadZone = true;
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private bool InDeadZone()
+    {
+        if (!inDeadZone) return false;
+
+        Vector2 delta = playerInputHandler.primaryInteractionPosition - startPressPosition;
+        Vector2 normalizedDelta = new Vector2(delta.x / Screen.width, delta.y / Screen.height);
+
+        if (normalizedDelta.sqrMagnitude >= movingThreshold) {
+            inDeadZone = false;
+            return false;
+        }
 
         return true;
     }
@@ -139,5 +163,6 @@ public class CameraMovement : MonoBehaviour
     private void OnPrimaryInteractionPressed()
     {
         startPressPosition = playerInputHandler.primaryInteractionPosition;
+        inDeadZone = true;
     }
 }
