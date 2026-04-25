@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc8039db3c8dae249b72a3acea657e28, type: 3}
-  m_Name: item_Potato
+  m_Name: item_potato
   m_EditorClassIdentifier: 
-  itemId: 8
+  itemId: 7
   itemIdName: potato
   itemName: Potato
   weight: 1
   itemCategory: 2
   localizationItem: {fileID: 11400000, guid: 4c995e7eb81a1f041a7584051380c68e, type: 2}
   itemIcon: {fileID: 21300000, guid: 0b8a87f9e02e61b41a7c9b70155a3373, type: 3}
+  showInStorage: 1

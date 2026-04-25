@@ -49,13 +49,13 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     public void Open()
     {
         Open(null);
-
-        InputStateManager.instance.SetGameplayInputBlocked(false);
     }
 
     public void Close()
     {
         gameObject.SetActive(false);
+
+        InputStateManager.instance.SetGameplayInputBlocked(false);
     }
 
     private void OnCompleteButtonReleased()

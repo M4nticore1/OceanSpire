@@ -11,9 +11,10 @@ public class BuildingsManager : MonoBehaviour
     public List<FloorFrameModule> BuiltFloors => builtFloors;
 
     [Header("Environment Buildings")]
-    [SerializeField] private GroundBuilding towerGate = null;
+    [SerializeField] private GroundBuilding towerGate;
     public GroundBuilding TowerGate => towerGate;
-    [SerializeField] private GroundBuilding pierBuilding = null;
+
+    [SerializeField] private GroundBuilding pierBuilding;
     public GroundBuilding PierBuilding => pierBuilding;
 
     [SerializeField] private int maxFloorsCount = 25;

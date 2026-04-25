@@ -5,14 +5,13 @@ public enum ItemID
     Population = 0,
     Electricity = 1,
     Food = 2,
-    Water = 3,
-    Wood = 4,
-    Stone = 5,
-    Metal = 6,
-    Plastic = 7,
-    Potato = 8,
-    Hands = 9,
-    BaseballBat = 10,
+    Wood = 3,
+    Stone = 4,
+    Scrap = 5,
+    Plastic = 6,
+    Potato = 7,
+    Hands = 8,
+    BaseballBat = 9,
 }
 
 //[System.Serializable]
