@@ -3,22 +3,32 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private InputStateManager inputStateManager;
-    [SerializeField] private BuildingsManager buildingsManager;
     [SerializeField] private PlayerInputHandler playerInputHandler;
 
+    private Vector2 startPressPosition = Vector2.zero;
     private Vector2 cameraMoveVelocity = Vector2.zero;
 
-    // Return
-    private const float cameraVerticalBoundaryPadding = 10.0f;
-    private const float cameraVerticalReturnSpeed = 5.0f;
+    [SerializeField] private float cameraVerticalBoundaryPadding = 10.0f;
+    [SerializeField] private float cameraVerticalReturnSpeed = 5.0f;
 
-    // Stop Moving
-    private const float cameraStopMoveSpeed = 6.0f;
+    [SerializeField] private float cameraMoveLerpSpeed = 10.0f;
+    [SerializeField] private float cameraStopMoveSpeed = 6.0f;
+
+    [SerializeField] private float movingThreshold = 0.01f;
+
+    private void OnEnable()
+    {
+        playerInputHandler.onPrimaryInteractionPressed += OnPrimaryInteractionPressed;
+    }
+
+    private void OnDisable()
+    {
+        playerInputHandler.onPrimaryInteractionPressed -= OnPrimaryInteractionPressed;
+    }
 
     public void Tick()
     {
-        if (playerInputHandler.CameraMoveInput.sqrMagnitude > 0 && !inputStateManager.isGameplayInputBlocked) {
+        if (ShouldMove()) {
             ApplyVelocity();
         }
         else {
@@ -33,7 +43,7 @@ public class CameraMovement : MonoBehaviour
     // Apply Velocity
     private void ApplyVelocity()
     {
-        cameraMoveVelocity = new Vector2(playerInputHandler.CameraMoveInput.x, playerInputHandler.CameraMoveInput.y * GetVerticalMoveMultiplier());
+        cameraMoveVelocity = Vector2.Lerp(cameraMoveVelocity, new Vector2(playerInputHandler.CameraMoveInput.x, playerInputHandler.CameraMoveInput.y * GetVerticalMoveMultiplier()), cameraMoveLerpSpeed * Time.deltaTime);
     }
 
     private void ReturnVelocity()
@@ -45,8 +55,8 @@ public class CameraMovement : MonoBehaviour
     {
         float multiplier = 1f;
         float cameraHeight = math.abs(transform.position.y);
-        if (transform.position.y > buildingsManager.currentCityHeight && cameraMoveVelocity.y > 0f)
-            multiplier = 1f - math.clamp((cameraHeight - buildingsManager.currentCityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
+        if (transform.position.y > BuildingsManager.instance.currentCityHeight && cameraMoveVelocity.y > 0f)
+            multiplier = 1f - math.clamp((cameraHeight - BuildingsManager.instance.currentCityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
         else if (transform.position.y < 0f && cameraMoveVelocity.y < 0f)
             multiplier = 1f - math.clamp(cameraHeight / cameraVerticalBoundaryPadding, 0f, 1f);
 
@@ -59,7 +69,7 @@ public class CameraMovement : MonoBehaviour
         if (playerInputHandler.cameraMoveIA.IsPressed()) return;
 
         Vector3 cameraPosition = transform.position;
-        float targetHeight = transform.position.y > buildingsManager.currentCityHeight ? buildingsManager.currentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
+        float targetHeight = transform.position.y > BuildingsManager.instance.currentCityHeight ? BuildingsManager.instance.currentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
 
         transform.position = math.lerp(transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
     }
@@ -67,7 +77,7 @@ public class CameraMovement : MonoBehaviour
     private void ApplyMove()
     {
         transform.position += new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime;
-        transform.position = new Vector3(transform.position.x, math.clamp(transform.position.y, -cameraVerticalBoundaryPadding, buildingsManager.currentCityHeight + cameraVerticalBoundaryPadding), transform.position.z);
+        transform.position = new Vector3(transform.position.x, math.clamp(transform.position.y, -cameraVerticalBoundaryPadding, BuildingsManager.instance.currentCityHeight + cameraVerticalBoundaryPadding), transform.position.z);
 
         Vector3 eulers = transform.eulerAngles;
         eulers.y += cameraMoveVelocity.x * Time.deltaTime;
@@ -110,5 +120,24 @@ public class CameraMovement : MonoBehaviour
     private float GetSquareSmooth(float x, float corner)
     {
         return Mathf.SmoothStep(0f, 1f, Mathf.Lerp(x, x * x * (3 - 2 * x), corner));
+    }
+
+    private bool ShouldMove()
+    {
+        if (InputStateManager.instance.isGameplayInputBlocked) return false;
+        if (playerInputHandler.CameraMoveInput.sqrMagnitude <= 0) return false;
+
+        Vector2 resolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
+        float startScreenPercent = (startPressPosition / resolution).sqrMagnitude;
+        float currentScreenPercent = (playerInputHandler.primaryInteractionPosition / resolution).sqrMagnitude;
+        if (Mathf.Abs(startScreenPercent - currentScreenPercent) < movingThreshold) return false;
+
+        return true;
+    }
+
+    // Events
+    private void OnPrimaryInteractionPressed()
+    {
+        startPressPosition = playerInputHandler.primaryInteractionPosition;
     }
 }

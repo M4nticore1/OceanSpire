@@ -369,9 +369,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ac4eccb0d23e24f9cf6614b6f5575e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraHolderMovement
-  inputStateManager: {fileID: 0}
-  buildingsManager: {fileID: 0}
   playerInputHandler: {fileID: 4970948048436698858}
+  cameraVerticalBoundaryPadding: 10
+  cameraVerticalReturnSpeed: 5
+  cameraMoveLerpSpeed: 12
+  cameraStopMoveSpeed: 6
+  movingThreshold: 0.01
 --- !u!82 &7934789100966676524
 AudioSource:
   m_ObjectHideFlags: 0

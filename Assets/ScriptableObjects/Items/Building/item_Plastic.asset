@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc8039db3c8dae249b72a3acea657e28, type: 3}
   m_Name: item_plastic
   m_EditorClassIdentifier: 
-  itemId: 7
+  itemId: 6
   itemIdName: plastic
   itemName: Plastic
   weight: 1
   itemCategory: 1
   localizationItem: {fileID: 11400000, guid: 3a33a26bd0c89ff44be3acf0990daf13, type: 2}
   itemIcon: {fileID: 21300000, guid: 8e834bd7cd3f85e4fb51c5ba70a54e71, type: 3}
+  showInStorage: 1

@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc8039db3c8dae249b72a3acea657e28, type: 3}
   m_Name: item_scrap
   m_EditorClassIdentifier: 
-  itemId: 6
-  itemIdName: metal
-  itemName: Metal
+  itemId: 5
+  itemIdName: scrap
+  itemName: Scrap
   weight: 10
   itemCategory: 1
   localizationItem: {fileID: 11400000, guid: 3f4f9c41043a75040a612a1799422dc1, type: 2}
   itemIcon: {fileID: 21300000, guid: 16849d617bcd421408b8cf667ac7daf7, type: 3}
+  showInStorage: 1
