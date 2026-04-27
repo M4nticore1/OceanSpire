@@ -21,7 +21,7 @@ public abstract class BuildingModule : MonoBehaviour
                 return LevelsData[level];
             }
             else {
-                Debug.LogError(ownedBuilding.BuildingData.BuildingName + $" has no level data by index {level}");
+                Debug.LogError(ownedBuilding.BuildingData.BuildingId.ToString() + $" has no level data by index {level}");
                 return null;
             }
         }

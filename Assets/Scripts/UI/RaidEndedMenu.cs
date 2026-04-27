@@ -69,8 +69,8 @@ public class RaidEndedMenu : MonoBehaviour
             noLossesText.gameObject.SetActive(false);
 
             foreach (var lose in RaidManager.instance.Inventory.items) {
-                ResourceWidget widget = ResourceWidgetFactory.CreateResourceWidget(resourceWidgetPrefab, layoutGroup.transform);
-                widget.SetAmount(-lose.item.Amount);
+                ResourceWidget widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
+                widget.SetAmountItem(lose.item);
                 widget.SetColor(loseColor);
                 spawnedResourceWidgets.Add(widget);
             }

@@ -62,7 +62,9 @@ public class BuildingWidget : MonoBehaviour
             ItemInstance amountItem = cityStorage.Inventory.itemsDict[id].item;
 
             ResourceWidget resourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);
-            resourceWidget.Init(amountItem, maxAmountItem);
+            resourceWidget.SetAmountItem(amountItem);
+            resourceWidget.SetMaxAmountItem(maxAmountItem);
+
             spawnedBuildingResourceWidgets.Add(resourceWidget);
         }
     }

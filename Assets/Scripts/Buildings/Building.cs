@@ -55,6 +55,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
     [SerializeField] private bool isRuined = false;
     public bool IsRuined => isRuined;
 
+    public bool IsDemolished { get; private set; } = false;
     public const float DemolishionResourcesRefundPercent = 0.2f;
 
     public event Action onInited;
@@ -83,9 +84,6 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
     protected virtual void OnEnable()
     {
-        EventBus.onClickedContextDemolishButton += OnDemolishClicked;
-        EventBus.onClickedContextUpgradeButton += OnUpgradeClicked;
-
         constructionComponent.onConstructionStarted += OnConstructionStarted;
         constructionComponent.onConstructionFinished += OnConstructionFinished;
 
@@ -95,9 +93,6 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
     protected virtual void OnDisable()
     {
-        EventBus.onClickedContextDemolishButton -= OnDemolishClicked;
-        EventBus.onClickedContextUpgradeButton -= OnUpgradeClicked;
-
         constructionComponent.onConstructionStarted -= OnConstructionStarted;
         constructionComponent.onConstructionFinished -= OnConstructionFinished;
 
@@ -122,24 +117,27 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
     public void Demolish()
     {
+        IsDemolished = true;
+        OnDestroyed();
+        InvokeBuildingDemolished();
         Destroy(gameObject);
         onBuildingDemolished?.Invoke(this);
-
-        InvokeBuildingDemolished();
     }
 
     protected abstract void OnInit(BuildingData saveData);
 
+    protected abstract void OnDestroyed();
+
     protected abstract BuildingConstruction GetConstructionToSpawn();
 
-    protected virtual void InvokeBuildingInited()
+    private void InvokeBuildingInited()
     {
         foreach (var module in GetComponents<IOwnedBuildingListener>()) {
             module.OnOwnedBuildingInited();
         }
     }
 
-    protected virtual void InvokeBuildingDemolished()
+    private void InvokeBuildingDemolished()
     {
         foreach (var module in GetComponents<IOwnedBuildingListener>()) {
             module.OnOwnedBuildingDemolished();
@@ -271,6 +269,16 @@ public abstract class Building : MonoBehaviour, ILocalizable
     }
 
     // Construction
+    protected virtual void OnConstructionStart()
+    {
+
+    }
+
+    protected virtual void OnConstructionFinish()
+    {
+
+    }
+
     protected void UpdateConstruction()
     {
         if (spawnedConstruction) {
@@ -351,6 +359,29 @@ public abstract class Building : MonoBehaviour, ILocalizable
         }
     }
 
+    // Construction
+    private void OnConstructionStarted()
+    {
+        OnConstructionStart();
+        UpdateConstruction();
+
+        onBuildingConstructionStarted?.Invoke(this);
+        onConstructionStarted?.Invoke();
+    }
+
+    private void OnConstructionFinished()
+    {
+        OnConstructionFinish();
+        UpdateConstruction();
+
+        if (SelectComponent.isSelected) {
+            SelectComponent.Select();
+        }
+
+        onBuildingConstructionFinished?.Invoke(this);
+        onConstructionFinished?.Invoke();
+    }
+
     // Audio
     private void PlayWorkSound()
     {
@@ -364,38 +395,6 @@ public abstract class Building : MonoBehaviour, ILocalizable
         if (!workAudioSource) return;
 
         workAudioSource.Stop();
-    }
-
-    // Construction
-    private void OnConstructionStarted()
-    {
-        UpdateConstruction();
-
-        onBuildingConstructionStarted?.Invoke(this);
-        onConstructionStarted?.Invoke();
-    }
-
-    private void OnConstructionFinished()
-    {
-        UpdateConstruction();
-
-        if (SelectComponent.isSelected) {
-            SelectComponent.Select();
-        }
-
-        onBuildingConstructionFinished?.Invoke(this);
-        onConstructionFinished?.Invoke();
-    }
-
-    // Events
-    private void OnDemolishClicked()
-    {
-        
-    }
-
-    private void OnUpgradeClicked()
-    {
-
     }
 
     // Select

@@ -146,6 +146,7 @@ public class CameraMovement : MonoBehaviour
 
     private bool InDeadZone()
     {
+        if (!playerInputHandler.isPrimaryInteractionPressed) return false;
         if (!inDeadZone) return false;
 
         Vector2 delta = playerInputHandler.primaryInteractionPosition - startPressPosition;

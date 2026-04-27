@@ -51,7 +51,7 @@
   "building_coal_generator": "Угольный генератор",
   "building_farm": "Ферма",
   "building_kitchen": "Кухня",
-  "building_wood_storage": "Хранилище дерева",
+  "building_resource_storage": "Хранилище ресурсов",
 
   "creature_citizen": "Житель",
   "creature_wanderer": "Странник",
@@ -59,7 +59,7 @@
 
   "item_wood": "Дерево",
   "item_stone": "Камень",
-  "item_metal": "Металл",
+  "item_scrap": "Металлолом",
   "item_plastic": "Пластик",
   "item_potato": "Картошка",
 

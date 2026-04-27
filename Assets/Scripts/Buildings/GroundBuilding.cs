@@ -8,6 +8,11 @@ public class GroundBuilding : Building
         
     }
 
+    protected override void OnDestroyed()
+    {
+        
+    }
+
     protected override BuildingConstruction GetConstructionToSpawn()
     {
         GroundBuildingLevelData levelData = LevelData as GroundBuildingLevelData;

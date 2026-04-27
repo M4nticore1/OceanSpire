@@ -11,6 +11,10 @@ public enum BuildingIdEnum
     CoalGenerator,
     Farm,
     Kitchen,
+    ResourceStorage,
+    FoodStorage,
+    ElectricityStorage,
+    WeaponStorage,
 };
 
 public enum BuildingType
@@ -38,22 +42,12 @@ public enum ConnectionType
     Vertical
 }
 
-public enum DetailsWindowVariant
-{
-    Building,
-    ProductionBuilding,
-    StorageBuilding
-}
-
 [CreateAssetMenu(fileName = "BuildingData", menuName = "Scriptable Objects/BuildingData")]
 public class BuildingDefinition : ScriptableObject
 {
     [Header("Id")]
     [SerializeField] private BuildingIdEnum buildingId = BuildingIdEnum.TowerGate;
     public int BuildingId { get { return (int)buildingId; } }
-
-    [SerializeField] private string buildingName = "";
-    public string BuildingName => buildingName;
 
     [SerializeField] private LocalizationItem localizationItem = null;
     public LocalizationItem LocalizationItem => localizationItem;
@@ -71,15 +65,12 @@ public class BuildingDefinition : ScriptableObject
     [SerializeField] private BuildingStrategyEnum buildingStrategy = BuildingStrategyEnum.WorkBuilding;
     public BuildingStrategyEnum BuildingStrategy => buildingStrategy;
 
-    [SerializeField] private DetailsWindowVariant detailsWindowVariant = DetailsWindowVariant.Building;
-    public DetailsWindowVariant DetailsWindowVariant => detailsWindowVariant;
-
     [Header("Other")]
-    [SerializeField] private bool instantConstruction = false;
-    public bool InstantConstruction => instantConstruction;
-
     [SerializeField] private Sprite thumbImage = null;
     public Sprite ThumbImage => thumbImage;
+
+    [SerializeField] private bool isConstructable = false;
+    public bool IsConstructable => isConstructable;
 
     [SerializeField] private bool isWorkable = false;
     public bool IsWorkable => isWorkable;

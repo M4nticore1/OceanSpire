@@ -51,7 +51,7 @@
   "building_coal_generator": "Coal generator",
   "building_farm": "Farm",
   "building_kitchen": "Kitchen",
-  "building_wood_storage": "Wood storage",
+  "building_resource_storage": "Resource storage",
 
   "creature_citizen": "Citizen",
   "creature_wanderer": "Wanderer",
@@ -59,7 +59,7 @@
 
   "item_wood": "Wood",
   "item_stone": "Stone",
-  "item_metal": "Metal",
+  "item_scrap": "Scrap",
   "item_plastic": "Plastic",
   "item_potato": "Potato",
 

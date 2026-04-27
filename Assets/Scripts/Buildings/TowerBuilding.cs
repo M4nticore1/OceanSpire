@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
+using System.Linq;
 using UnityEngine;
 
 public enum BuildingPosition
@@ -9,7 +9,7 @@ public enum BuildingPosition
     Corner
 }
 
-public enum Side
+public enum Direction
 {
     Left,
     Right,
@@ -44,7 +44,7 @@ public class TowerBuildingData : BuildingData
     }
 }
 
-public class TowerBuilding : Building, INeighborBuildingsListener
+public class TowerBuilding : Building
 {
     public BuildingPlace BuildingPlace { get; private set; }
 
@@ -52,15 +52,40 @@ public class TowerBuilding : Building, INeighborBuildingsListener
     public int FloorIndex { get; private set; }
     public int PlaceIndex { get; private set; }
 
-    public TowerBuilding LeftBuilding { get; private set; }
-    public TowerBuilding RightBuilding { get; private set; }
-    public TowerBuilding UpBuilding { get; private set; }
-    public TowerBuilding DownBuilding { get; private set; }
+    public Dictionary<Direction, TowerBuilding> NeighborBuildings { get; private set; } = new();
+    public Dictionary<Direction, TowerBuilding> ConnectedBuildings { get; private set; } = new();
 
-    public TowerBuilding LeftConnectedBuilding => LeftBuilding && ConnectedWith(LeftBuilding) ? LeftBuilding : null;
-    public TowerBuilding RightConnectedBuilding => RightBuilding && ConnectedWith(RightBuilding) ? RightBuilding : null;
-    public TowerBuilding UpConnectedBuilding => UpBuilding && ConnectedWith(UpBuilding) ? UpBuilding : null;
-    public TowerBuilding DownConnectedBuilding => DownBuilding && ConnectedWith(DownBuilding) ? DownBuilding : null;
+    public IEnumerable<TowerBuilding> NeighborBuildingsEnumerable(NeighborMask mask)
+    {
+        if (mask.HasFlag(NeighborMask.Left) && NeighborBuildings[Direction.Left]) {
+            yield return NeighborBuildings[Direction.Left];
+        }
+        if (mask.HasFlag(NeighborMask.Right) && NeighborBuildings[Direction.Right]) {
+            yield return NeighborBuildings[Direction.Right];
+        }
+        if (mask.HasFlag(NeighborMask.Up) && NeighborBuildings[Direction.Up]) {
+            yield return NeighborBuildings[Direction.Up];
+        }
+        if (mask.HasFlag(NeighborMask.Down) && NeighborBuildings[Direction.Down]) {
+            yield return NeighborBuildings[Direction.Down];
+        }
+    }
+
+    public IEnumerable<TowerBuilding> ConnectedBuildingsEnumerable()
+    {
+        if (ConnectedBuildings[Direction.Left]) {
+            yield return ConnectedBuildings[Direction.Left];
+        }
+        if (ConnectedBuildings[Direction.Right]) {
+            yield return ConnectedBuildings[Direction.Right];
+        }
+        if (ConnectedBuildings[Direction.Up]) {
+            yield return ConnectedBuildings[Direction.Up];
+        }
+        if (ConnectedBuildings[Direction.Down]) {
+            yield return ConnectedBuildings[Direction.Down];
+        }
+    }
 
     protected override void OnInit(BuildingData data)
     {
@@ -87,6 +112,7 @@ public class TowerBuilding : Building, INeighborBuildingsListener
         }
 
         AssignNeighborBuildings();
+        AssignConnectedBuildings();
 
         if (PlaceIndex % 2 == 0) {
             SetBuildingPosition(BuildingPosition.Corner);
@@ -96,6 +122,11 @@ public class TowerBuilding : Building, INeighborBuildingsListener
         }
 
         ApplyTransform();
+    }
+
+    protected override void OnDestroyed()
+    {
+        InvokeBuildingDemolished();
     }
 
     protected override BuildingConstruction GetConstructionToSpawn()
@@ -123,45 +154,45 @@ public class TowerBuilding : Building, INeighborBuildingsListener
             }
             else if (buildingData.ConnectionType == ConnectionType.Horizontal) {
                 if (BuildingPosition == BuildingPosition.Straight) {
-                    if (LeftConnectedBuilding && RightConnectedBuilding && levelData.ConstructionStraightLeftRight)
+                    if (GetConnectedBuilding(Direction.Left) && GetConnectedBuilding(Direction.Right) && levelData.ConstructionStraightLeftRight)
                         construction = levelData.ConstructionStraightLeftRight;
-                    else if (LeftConnectedBuilding && levelData.ConstructionStraightLeft)
+                    else if (GetConnectedBuilding(Direction.Left) && levelData.ConstructionStraightLeft)
                         construction = levelData.ConstructionStraightLeft;
-                    else if (RightConnectedBuilding && levelData.ConstructionStraightRight)
+                    else if (GetConnectedBuilding(Direction.Right) && levelData.ConstructionStraightRight)
                         construction = levelData.ConstructionStraightRight;
-                    else if (!LeftConnectedBuilding && !RightConnectedBuilding && levelData.ConstructionStraight)
+                    else if (!GetConnectedBuilding(Direction.Left) && !GetConnectedBuilding(Direction.Right) && levelData.ConstructionStraight)
                         construction = levelData.ConstructionStraight;
                 }
                 else if (BuildingPosition == BuildingPosition.Corner) {
-                    if (LeftConnectedBuilding && RightConnectedBuilding && levelData.ConstructionCornerLeftRight)
+                    if (GetConnectedBuilding(Direction.Left) && GetConnectedBuilding(Direction.Right) && levelData.ConstructionCornerLeftRight)
                         construction = levelData.ConstructionCornerLeftRight;
-                    else if (LeftConnectedBuilding && levelData.ConstructionCornerLeft)
+                    else if (GetConnectedBuilding(Direction.Left) && levelData.ConstructionCornerLeft)
                         construction = levelData.ConstructionCornerLeft;
-                    else if (RightConnectedBuilding && levelData.ConstructionCornerRight)
+                    else if (GetConnectedBuilding(Direction.Right) && levelData.ConstructionCornerRight)
                         construction = levelData.ConstructionCornerRight;
-                    else if (!LeftConnectedBuilding && !RightConnectedBuilding && levelData.ConstructionCorner)
+                    else if (!GetConnectedBuilding(Direction.Left) && !GetConnectedBuilding(Direction.Right) && levelData.ConstructionCorner)
                         construction = levelData.ConstructionCorner;
                 }
             }
             else if (buildingData.ConnectionType == ConnectionType.Vertical) {
                 if (BuildingPosition == BuildingPosition.Straight) {
-                    if (UpConnectedBuilding && DownConnectedBuilding && levelData.ConstructionStraightUpDown)
+                    if (GetConnectedBuilding(Direction.Up) && GetConnectedBuilding(Direction.Down) && levelData.ConstructionStraightUpDown)
                         construction = levelData.ConstructionStraightUpDown;
-                    else if (UpConnectedBuilding && levelData.ConstructionStraightUp)
+                    else if (GetConnectedBuilding(Direction.Up) && levelData.ConstructionStraightUp)
                         construction = levelData.ConstructionStraightUp;
-                    else if (DownConnectedBuilding && levelData.ConstructionStraightDown)
+                    else if (GetConnectedBuilding(Direction.Down) && levelData.ConstructionStraightDown)
                         construction = levelData.ConstructionStraightDown;
-                    else if (!UpConnectedBuilding && !DownConnectedBuilding && levelData.ConstructionStraight)
+                    else if (!GetConnectedBuilding(Direction.Up) && !GetConnectedBuilding(Direction.Down) && levelData.ConstructionStraight)
                         construction = levelData.ConstructionStraight;
                 }
                 else if (BuildingPosition == BuildingPosition.Corner) {
-                    if (UpConnectedBuilding && DownConnectedBuilding && levelData.ConstructionCornerUpDown)
+                    if (GetConnectedBuilding(Direction.Up) && GetConnectedBuilding(Direction.Down) && levelData.ConstructionCornerUpDown)
                         construction = levelData.ConstructionCornerUpDown;
-                    else if (UpConnectedBuilding && levelData.ConstructionCornerUp)
+                    else if (GetConnectedBuilding(Direction.Up) && levelData.ConstructionCornerUp)
                         construction = levelData.ConstructionCornerUp;
-                    else if (DownConnectedBuilding && levelData.ConstructionCornerDown)
+                    else if (GetConnectedBuilding(Direction.Down) && levelData.ConstructionCornerDown)
                         construction = levelData.ConstructionCornerDown;
-                    else if (!UpConnectedBuilding && !DownConnectedBuilding && levelData.ConstructionCorner)
+                    else if (!GetConnectedBuilding(Direction.Up) && !GetConnectedBuilding(Direction.Down) && levelData.ConstructionCorner)
                         construction = levelData.ConstructionCorner;
                 }
             }
@@ -171,79 +202,6 @@ public class TowerBuilding : Building, INeighborBuildingsListener
         }
 
         return construction;
-    }
-
-    protected override void InvokeBuildingInited()
-    {
-        base.InvokeBuildingInited();
-
-        foreach (var building in NeighborBuildings(NeighborMask.All)) {
-            building.HandleNeighborBuildingInited(this);
-        }
-    }
-
-    protected override void InvokeBuildingDemolished()
-    {
-        base.InvokeBuildingDemolished();
-
-        BuildingPlace.SetPlacedBuilding(null);
-
-        foreach (var building in ConnectedBuildings()) {
-            building.HandleNeighborBuildingDemolished(this);
-        }
-    }
-
-    public IEnumerable<TowerBuilding> NeighborBuildings(NeighborMask mask)
-    {
-        if (mask.HasFlag(NeighborMask.Left) && LeftBuilding) {
-            yield return LeftBuilding;
-        }
-        if (mask.HasFlag(NeighborMask.Right) && RightBuilding) {
-            yield return RightBuilding;
-        }
-        if (mask.HasFlag(NeighborMask.Up) && UpBuilding) {
-            yield return UpBuilding;
-        }
-        if (mask.HasFlag(NeighborMask.Down) && DownBuilding) {
-            yield return DownBuilding;
-        }
-    }
-
-    public IEnumerable<TowerBuilding> ConnectedBuildings()
-    {
-        NeighborMask mask = GetNeighborMaskByConnectionType(buildingData.ConnectionType);
-        foreach (var building in NeighborBuildings(mask)) {
-            if (!building) continue;
-            if (!ConnectedWith(building)) continue;
-            yield return building;
-        }
-    }
-
-    public void HandleNeighborBuildingInited(TowerBuilding building)
-    {
-        AssignNeighborBuildings();
-
-        if (ConnectedWith(building)) {
-            UpdateConstruction();
-        }
-
-        foreach (var module in GetComponents<INeighborBuildingsListener>()) {
-            if ((Component)module == this) continue;
-
-            module.HandleNeighborBuildingInited(building);
-        }
-    }
-
-    public void HandleNeighborBuildingDemolished(TowerBuilding building)
-    {
-        AssignNeighborBuildings();
-        UpdateConstruction();
-
-        foreach (var module in GetComponents<INeighborBuildingsListener>()) {
-            if ((Component)module == this) continue;
-
-            module.HandleNeighborBuildingDemolished(building);
-        }
     }
 
     public List<TowerBuilding> GetNetworkBuildings()
@@ -258,84 +216,75 @@ public class TowerBuilding : Building, INeighborBuildingsListener
         while (queue.Count > 0) {
             TowerBuilding building = queue.Dequeue();
 
-            foreach (var connected in building.ConnectedBuildings()) {
-                if (!visited.Contains(connected)) {
-                    visited.Add(connected);
-                    queue.Enqueue(connected);
-                    network.Add(connected);
-                }
+            foreach (var connected in building.ConnectedBuildings.Values) {
+                if (!connected) continue;
+                if (visited.Contains(connected)) continue;
+
+                visited.Add(connected);
+                queue.Enqueue(connected);
+                network.Add(connected);
             }
         }
 
         return network;
     }
 
-    public bool NeighborWith(TowerBuilding target)
+    protected override void OnConstructionFinish()
     {
-        bool horizontal = math.abs(target.FloorIndex - FloorIndex) == 1;
-        bool vertical = (target.PlaceIndex - PlaceIndex) % BuildingsManager.RoomsCountPerFloor == 1;
-        return horizontal || vertical;
-    }   
+        base.OnConstructionFinish();
 
-    public bool ConnectedWith(TowerBuilding building)
-    {
-        if (building.buildingData.BuildingId != buildingData.BuildingId) return false;
-        if (building.levelComponent.level != levelComponent.level) return false;
-        foreach (var neighborBuilding in NeighborBuildings(GetNeighborMaskByConnectionType(BuildingData.ConnectionType))) {
-            if (neighborBuilding == building)
-                return true;
-        }
-        return false;
-    }
-
-    public bool NetworkWith(TowerBuilding target, HashSet<TowerBuilding> visited = null)
-    {
-        if (this == target)
-            return true;
-
-        if (visited == null) {
-            visited = new HashSet<TowerBuilding>();
-        }
-        visited.Add(this);
-
-        foreach (var direction in ConnectedBuildings()) {
-            if (!visited.Add(direction))
-                continue;
-            if (direction.NetworkWith(target, visited))
-                return true;
-        }
-        return false;
+        AssignConnectedBuildings();
     }
 
     private void AssignNeighborBuildings()
     {
-        if (buildingData.BuildingType == BuildingType.Room) {
-            int roomsCount = BuildingsManager.RoomsCountPerFloor;
-            int leftIndex = (PlaceIndex + 1) % roomsCount;
-            LeftBuilding = BuildingsManager.instance.BuiltFloors[FloorIndex].RoomBuildingPlaces[leftIndex].PlacedBuilding;
+        NeighborBuildings.Clear();
 
-            int rightIndex = (roomsCount + PlaceIndex - 1) % roomsCount;
-            RightBuilding = BuildingsManager.instance.BuiltFloors[FloorIndex].RoomBuildingPlaces[rightIndex].PlacedBuilding;
-        }
+        foreach (Direction dir in Enum.GetValues(typeof(Direction))) {
+            var building = CalculateNeighbor(dir);
+            if (!building) continue;
 
-        int floorCount = BuildingsManager.instance.BuiltFloors.Count;
-        int upIndex = FloorIndex + 1;
+            TrySetNeighborWith(dir, building);
+            building.TrySetNeighborWith(GetInverseDirection(dir), this);
+        }
+    }
 
-        if (upIndex < floorCount) {
-            UpBuilding = BuildingsManager.instance.BuiltFloors[upIndex].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
-        }
-        else {
-            UpBuilding = null;
-        }
+    private void AssignConnectedBuildings()
+    {
+        if (constructionComponent.IsUnderConstruction) return;
 
-        int downIndex = FloorIndex - 1;
+        ConnectedBuildings.Clear();
 
-        if (downIndex >= 0) {
-            DownBuilding = BuildingsManager.instance.BuiltFloors[downIndex].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
+        foreach (Direction dir in Enum.GetValues(typeof(Direction))) {
+            var building = GetNeighborBuilding(dir);
+            if (!building) continue;
+
+            TryConnectTo(dir, building);
+            InvokeBuildingConnected();
+
+            building.TryConnectTo(GetInverseDirection(dir), this);
+            building.UpdateConstruction();
         }
-        else {
-            DownBuilding = null;
-        }
+    }
+
+    private void TrySetNeighborWith(Direction dir, TowerBuilding target)
+    {
+        if (!target) return;
+        if (!ShouldSetNeighborWith(target)) return;
+
+        NeighborBuildings[dir] = target;
+    }
+
+    private void TryConnectTo(Direction dir, TowerBuilding target)
+    {
+        if (!ShouldConnectTo(target)) return;
+
+        ConnectTo(dir, target);
+    }
+
+    private void ConnectTo(Direction dir, TowerBuilding target)
+    {
+        ConnectedBuildings[dir] = target;
     }
 
     private void SetBuildingPlace(BuildingPlace place)
@@ -361,6 +310,155 @@ public class TowerBuilding : Building, INeighborBuildingsListener
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
         }
+    }
+
+    private void InvokeBuildingConnected()
+    {
+        foreach (var module in GetComponents<IBuildingListener>()) {
+            module.OnBuildingConnected(this);
+        }
+    }
+
+    private void InvokeBuildingDemolished()
+    {
+        foreach (var building in NeighborBuildings.Values.ToArray()) {
+            if (!building) continue;
+
+            building.OnNeighborBuildingDemolished(this);
+        }
+
+        foreach (var building in ConnectedBuildings.Values.ToArray()) {
+            if (!building) continue;
+
+            building.OnConnectedBuildingDemolished(this);
+        }
+    }
+
+    private void OnNeighborBuildingConnected(TowerBuilding building)
+    {
+
+    }
+
+    private void OnNeighborBuildingDemolished(TowerBuilding building)
+    {
+        AssignNeighborBuildings();
+    }
+
+    private void OnConnectedBuildingDemolished(TowerBuilding building)
+    {
+        Debug.Log("Demolished " + building + " from " + this);
+        AssignConnectedBuildings();
+        UpdateConstruction();
+
+        foreach (var module in GetComponents<IBuildingListener>()) {
+            if ((Component)module == this) continue;
+
+            module.OnConnectedBuildingDemolished(building);
+        }
+    }
+
+    public bool NetworkWith(TowerBuilding target, HashSet<TowerBuilding> visited = null)
+    {
+        if (this == target)
+            return true;
+
+        if (visited == null) {
+            visited = new HashSet<TowerBuilding>();
+        }
+        visited.Add(this);
+
+        foreach (var direction in ConnectedBuildings.Values) {
+            if (!direction) continue;
+
+            if (!visited.Add(direction))
+                continue;
+            if (direction.NetworkWith(target, visited))
+                return true;
+        }
+        return false;
+    }
+
+    private bool ShouldSetNeighborWith(TowerBuilding target)
+    {
+        if (!target) return false;
+        if (target.IsDemolished) return false;
+
+        return true;
+    }
+
+    private bool ShouldConnectTo(TowerBuilding target)
+    {
+        if (!target) return false;
+        if (target.buildingData.BuildingId != buildingData.BuildingId) return false;
+        if (target.levelComponent.level != levelComponent.level) return false;
+        if (target.constructionComponent.IsUnderConstruction) return false;
+
+        return true;
+    }
+
+    private TowerBuilding CalculateNeighbor(Direction dir)
+    {
+        var floors = BuildingsManager.instance.BuiltFloors;
+
+        int floor = FloorIndex;
+        int place = PlaceIndex;
+
+        var (df, dp) = GetDelta(dir);
+
+        int newFloor = floor + df;
+        if (newFloor < 0 || newFloor >= floors.Count)
+            return null;
+
+        var floorData = floors[newFloor];
+
+        int roomsCount = BuildingsManager.RoomsCountPerFloor;
+        int newPlace = (place + dp + roomsCount) % roomsCount;
+
+        return floorData.RoomBuildingPlaces[newPlace].PlacedBuilding;
+    }
+
+    private (int floorDelta, int placeDelta) GetDelta(Direction dir)
+    {
+        return dir switch
+        {
+            Direction.Left => (0, +1),
+            Direction.Right => (0, -1),
+            Direction.Up => (+1, 0),
+            Direction.Down => (-1, 0),
+            _ => (0, 0)
+        };
+    }
+
+    private Direction GetInverseDirection(Direction dir)
+    {
+        switch (dir) {
+            case Direction.Left:
+                return Direction.Right;
+            case Direction.Right:
+                return Direction.Left;
+            case Direction.Up:
+                return Direction.Down;
+            case Direction.Down:
+                return Direction.Up;
+        }
+        
+        return Direction.Left;
+    }
+
+    private TowerBuilding GetNeighborBuilding(Direction value)
+    {
+        TowerBuilding building = null;
+        NeighborBuildings.TryGetValue(value, out building);
+
+        return building;
+    }
+
+    private TowerBuilding GetConnectedBuilding(Direction value)
+    {
+        TowerBuilding building = null;
+        ConnectedBuildings.TryGetValue(value, out building);
+
+        return building;
     }
 
     private NeighborMask GetNeighborMaskByConnectionType(ConnectionType connectionType)

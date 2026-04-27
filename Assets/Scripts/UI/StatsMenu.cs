@@ -4,18 +4,18 @@ using UnityEngine.EventSystems;
 
 public class StatsMenu : UIBehaviour
 {
-    [SerializeField] private TextMeshProUGUI buildingNameText;
-    [SerializeField] private TextMeshProUGUI interactorsCountText;
+    [SerializeField] private TextLocalizer buildingName;
+    [SerializeField] private TextMeshProUGUI interactorsCount;
     [SerializeField] private SlidePanel slidePanel;
 
     public void OpenStatsMenu(Building building)
     {
-        string buildingName = building.BuildingData.BuildingName;
-        buildingNameText.SetText(buildingName);
+        buildingName.SetLocalizationItem(building.BuildingData.LocalizationItem);
+        buildingName.UpdateText();
 
         string interactorsCountText = building.currentWorkers.Count.ToString();
         string maxInteractorsCountText = building.LevelData.maxResidentsCount.ToString();
-        this.interactorsCountText.SetText(interactorsCountText + "/" + maxInteractorsCountText);
+        interactorsCount.SetText(interactorsCountText + "/" + maxInteractorsCountText);
 
         slidePanel.Open();
     }

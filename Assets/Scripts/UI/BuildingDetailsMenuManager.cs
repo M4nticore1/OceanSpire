@@ -75,7 +75,7 @@
 //        {
 //            levelNumberText.gameObject.SetActive(true);
 
-//            SetNameText(building.BuildingData.BuildingName);
+//            SetNameText(building.BuildingData.BuildingNamB);
 //            SetLevelText(building.levelIndex + 1);
 
 //            ProductionBuilding productionBuilding = building.productionComponent;

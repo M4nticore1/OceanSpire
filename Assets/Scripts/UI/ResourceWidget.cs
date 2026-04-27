@@ -52,41 +52,16 @@ public class ResourceWidget : MonoBehaviour
         UpdateAmount();
     }
 
-    public void Init(ItemInstance amountItem, ItemInstance maxAmountItem)
+    public void SetAmountItem(ItemInstance item)
     {
-        SetItem(amountItem, maxAmountItem);
+        amountItem = item;
+        itemData = amountItem.ItemData;
+        resourceImage.sprite = itemData.ItemIcon;
     }
 
-    public void Init(ItemInstance amountItem)
+    public void SetMaxAmountItem(ItemInstance item)
     {
-        SetItem(amountItem);
-        UpdateAmount();
-    }
-
-    public void SetAmount(int amount)
-    {
-        resourceAmountText.SetText(amount.ToString());
-    }
-
-    public void SetAmount(int amount, int maxAmount)
-    {
-        resourceAmountText.SetText(amount.ToString() + "/" + maxAmount.ToString());
-
-        if (resourceAmountBar) {
-            float alpha = 0;
-            if (maxAmount > 0)
-                alpha = (float)amount / maxAmount;
-            else
-                alpha = 0.0f;
-            resourceAmountBar.fillAmount = alpha;
-        }
-
-        UpdateAmountColor();
-    }
-
-    public void SetImage(Sprite resourceSprite)
-    {
-        resourceImage.sprite = resourceSprite;
+        maxAmountItem = item;
     }
 
     public void SetColor(Color color)
@@ -94,54 +69,9 @@ public class ResourceWidget : MonoBehaviour
         resourceAmountText.color = color;
     }
 
-    private bool TryToAssignItem()
+    public void UpdateAmount()
     {
-        if (!itemData) return false;
-
-        SetItem(itemData);
-        return true;
-    }
-
-    private void SetItem(ItemInstance amountItem, ItemInstance maxAmountItem)
-    {
-        this.amountItem = amountItem;
-        this.maxAmountItem = maxAmountItem;
-        OnItemSet();
-    }
-
-    private void SetItem(ItemInstance amountItem)
-    {
-        this.amountItem = amountItem;
-        OnItemSet();
-    }
-
-    private void SetItem(ItemData itemData)
-    {
-        if (!CityStorage.Instance) return;
-
-        int id = itemData.ItemId;
-        if (!CityStorage.Instance.Inventory.itemsDict.ContainsKey(id)) return;
-
-        amountItem = CityStorage.Instance.Inventory.itemsDict[id].item;
-        OnItemSet();
-    }
-
-    private void OnItemSet()
-    {
-        itemData = amountItem.ItemData;
-
-        if (useCityStorage && maxAmountItem == null) {
-            int id = itemData.ItemId;
-            maxAmountItem = CityStorage.Instance.Inventory.itemsDict[id].maxAmountItem;
-        }
-
-        Sprite sprite = itemData.ItemIcon;
-        SetImage(sprite);
-    }
-
-    private void UpdateAmount()
-    {
-        if (!TryToAssignItem()) return;
+        TryApplyItemData();
 
         if (HasPopulationItem()) {
             UpdateCitizensAmount();
@@ -151,19 +81,60 @@ public class ResourceWidget : MonoBehaviour
         }
     }
 
-    private void UpdateResourceAmount()
+    private void SetAmountText(int amount)
     {
-        if (!itemData) return;
-        if (amountItem == null) return;
+        resourceAmountText.SetText(amount.ToString());
+    }
 
-        int id = amountItem.ItemData.ItemId;
-        int amount = amountItem.Amount;
-        if (maxAmountItem != null) {
-            int maxAmount = maxAmountItem != null ? maxAmountItem.Amount : CityStorage.Instance.Inventory.itemsDict[id].maxAmount;
-            SetAmount(amount, maxAmount);
+    private void SetAmountText(int amount, int maxAmount)
+    {
+        resourceAmountText.SetText(amount.ToString() + "/" + maxAmount.ToString());
+        ApplyResourceBar();
+        UpdateAmountColor();
+    }
+
+    private void ApplyResourceBar()
+    {
+        if (!resourceAmountBar) return;
+
+        float alpha = 0;
+
+        if (maxAmountItem.Amount > 0) {
+            alpha = (float)amountItem.Amount / maxAmountItem.Amount;
         }
         else {
-            SetAmount(amount);
+            alpha = 0.0f;
+        }
+
+        resourceAmountBar.fillAmount = alpha;
+    }
+
+    private bool TryApplyItemData()
+    {
+        if (amountItem != null) return false;
+        if (!itemData) return false;
+
+        int id = itemData.ItemId;
+        if (!CityStorage.Instance.Inventory.itemsDict.ContainsKey(id)) return false;
+
+        SetAmountItem(CityStorage.Instance.Inventory.itemsDict[id].item);
+        SetMaxAmountItem(CityStorage.Instance.Inventory.itemsDict[id].maxAmountItem);
+
+        return true;
+    }
+
+    private void UpdateResourceAmount()
+    {
+        if (amountItem == null) return;
+
+        int amount = amountItem.Amount;
+
+        if (maxAmountItem != null) {
+            int maxAmount = maxAmountItem.Amount;
+            SetAmountText(amount, maxAmount);
+        }
+        else {
+            SetAmountText(amount);
         }
     }
 
@@ -182,7 +153,7 @@ public class ResourceWidget : MonoBehaviour
             amount++;
         }
 
-        SetAmount(amount, maxAmount);
+        SetAmountText(amount, maxAmount);
     }
 
     private void UpdateAmountColor()
@@ -234,6 +205,8 @@ public class ResourceWidget : MonoBehaviour
 
     private bool HasPopulationItem()
     {
+        if (!itemData) return false;
+
         int id = (int)ItemID.Population;
         return itemData.ItemId == id;
     }

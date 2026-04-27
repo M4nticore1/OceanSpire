@@ -86,16 +86,16 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void AssignNeighborPlaces()
     {
-        leftPlace = GetNeighborPlace(Side.Left);
-        rightPlace = GetNeighborPlace(Side.Right);
-        upPlace = GetNeighborPlace(Side.Up);
-        downPlace = GetNeighborPlace(Side.Down);
+        leftPlace = GetNeighborPlace(Direction.Left);
+        rightPlace = GetNeighborPlace(Direction.Right);
+        upPlace = GetNeighborPlace(Direction.Up);
+        downPlace = GetNeighborPlace(Direction.Down);
     }
 
-    private BuildingPlace GetNeighborPlace(Side side)
+    private BuildingPlace GetNeighborPlace(Direction side)
     {
-        int horizontalIndexOffset = side == Side.Left ? 1 : side == Side.Right ? -1 : 0;
-        int verticalIndexOffset = side == Side.Up ? 1 : side == Side.Down ? -1 : 0;
+        int horizontalIndexOffset = side == Direction.Left ? 1 : side == Direction.Right ? -1 : 0;
+        int verticalIndexOffset = side == Direction.Up ? 1 : side == Direction.Down ? -1 : 0;
         int sideIndex = (placeIndex + horizontalIndexOffset + BuildingsManager.RoomsCountPerFloor) % BuildingsManager.RoomsCountPerFloor;
         int verticalIndex = floorIndex + verticalIndexOffset;
 
