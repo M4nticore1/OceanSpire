@@ -150,8 +150,13 @@ public class RaiderState : HumanState
 
     private void AddLoot()
     {
-        ItemInstance instance = human.InteractComponent.interactBuilding.GetComponentInChildren<IRaidable>().GetRaidLoot();
-        RaidManager.instance.AddLose(instance);
+        IRaidable[] raidables = human.InteractComponent.interactBuilding.GetComponents<IRaidable>();
+        if (raidables == null) return;
+
+        foreach (IRaidable raidable in raidables) {
+            ItemInstance instance = raidable.GetRaidLoot();
+            RaidManager.instance.AddLose(instance);
+        }
     }
 
     private bool ShouldAttackWorker()

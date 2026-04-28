@@ -17,17 +17,24 @@ public class ElevatorModule : BuildingModule, IElectricible, IBuildingListener
     // Subscribe
     protected override void Subscribe()
     {
+        OwnedBuilding.onInited += OnInited;
         OwnedBuilding.onConstructionFinished += OnConstructionFinished;
         OwnedBuilding.onDemolished += OnDemolished;
     }
 
     protected override void Unsubscribe()
     {
+        OwnedBuilding.onInited -= OnInited;
         OwnedBuilding.onConstructionFinished -= OnConstructionFinished;
         OwnedBuilding.onDemolished -= OnDemolished;
     }
 
-    protected void OnDemolished()
+    private void OnInited()
+    {
+        AssignCabin();
+    }
+
+    private void OnDemolished()
     {
         if (OwnedTowerBuilding.ConnectedBuildingsEnumerable().Count() == 0) {
             DestroyCabin();
