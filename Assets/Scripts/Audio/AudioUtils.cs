@@ -14,6 +14,11 @@ public static class AudioUtils
         Object.Destroy(src.gameObject, clip.length);
     }
 
+    public static void PlaySFX(AudioClip[] clips)
+    {
+        PlaySFX(GetRandomAudioClip(clips));
+    }
+
     public static void PlaySFXAtPosition(AudioClip clip, Vector3 pos, float minDist, float maxDist)
     {
         if (!clip) return;
@@ -31,7 +36,12 @@ public static class AudioUtils
         GameObject.Destroy(src.gameObject, clip.length);
     }
 
-    public static AudioClip GetRandomAudioClip(AudioClip[] clips)
+    public static void PlaySFXAtPosition(AudioClip[] clips, Vector3 pos, float minDist, float maxDist)
+    {
+        PlaySFXAtPosition(GetRandomAudioClip(clips), pos, minDist, maxDist);
+    }
+
+    private static AudioClip GetRandomAudioClip(AudioClip[] clips)
     {
         if (clips == null || clips.Length == 0) return null;
 

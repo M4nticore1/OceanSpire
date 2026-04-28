@@ -2,23 +2,47 @@ using UnityEngine;
 
 public class BuildingAudioSystem : MonoBehaviour
 {
+    [SerializeField] private AudioClip[] buildingStartedClips;
     [SerializeField] private AudioClip[] buildingFinishedClips;
-
-    [SerializeField] private float minDistance;
-    [SerializeField] private float maxDistance;
+    [SerializeField] private AudioClip[] buildingDemolishedClips;
 
     private void OnEnable()
     {
-        BuildingPlace.onClicked += OnBuildingPlaceClicked;
+        Building.onBuildingConstructionStarted += OnBuildingConstructionStarted;
+        Building.onBuildingConstructionFinished += OnBuildingConstructionFinished;
+        Building.onBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
-        BuildingPlace.onClicked -= OnBuildingPlaceClicked;
+        Building.onBuildingConstructionStarted -= OnBuildingConstructionStarted;
+        Building.onBuildingConstructionFinished -= OnBuildingConstructionFinished;
+        Building.onBuildingDemolished -= OnBuildingDemolished;
     }
 
-    private void OnBuildingPlaceClicked(Building building)
+    private void OnBuildingConstructionStarted(Building building)
     {
-        AudioUtils.PlaySFX(AudioUtils.GetRandomAudioClip(buildingFinishedClips));
+        if (!ShouldPlay()) return;
+
+        AudioUtils.PlaySFX(buildingStartedClips);
+    }
+
+    private void OnBuildingConstructionFinished(Building building)
+    {
+        if (!ShouldPlay()) return;
+
+        AudioUtils.PlaySFX(buildingFinishedClips);
+    }
+
+    private void OnBuildingDemolished(Building building)
+    {
+        if (!ShouldPlay()) return;
+
+        AudioUtils.PlaySFX(buildingDemolishedClips);
+    }
+
+    private bool ShouldPlay()
+    {
+        return BuildingsLoader.Instance.isLoaded;
     }
 }

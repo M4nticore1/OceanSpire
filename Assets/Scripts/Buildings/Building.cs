@@ -3,22 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BuildingData
-{
-    public int Id { get; private set; }
-    public int InstanceId { get; private set; }
-    public int Level { get; private set; }
-    public ConstructionData ConstructionData { get; private set; }
-
-    public BuildingData(int id, int instanceId, int level, ConstructionData constructionData)
-    {
-        Id = id;
-        InstanceId = instanceId;
-        Level = level;
-        ConstructionData = constructionData;
-    }
-}
-
 public abstract class Building : MonoBehaviour, ILocalizable
 {
     [SerializeField] protected ConstructionComponent constructionComponent;
@@ -118,7 +102,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
     public void Demolish()
     {
         IsDemolished = true;
-        OnDestroyed();
+        OnDemolish();
         InvokeBuildingDemolished();
         Destroy(gameObject);
         onBuildingDemolished?.Invoke(this);
@@ -126,7 +110,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
     protected abstract void OnInit(BuildingData saveData);
 
-    protected abstract void OnDestroyed();
+    protected abstract void OnDemolish();
 
     protected abstract BuildingConstruction GetConstructionToSpawn();
 

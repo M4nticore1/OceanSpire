@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.HID;
 
 public class SelectComponent : MonoBehaviour, IClickable
 {
@@ -17,6 +16,7 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     public static event Action<SelectComponent> onComponentSelected;
     public static event Action<SelectComponent> onComponentDeselected;
+    public static event Action<SelectComponent> onComponentDestroyed;
 
     private void OnEnable()
     {
@@ -26,6 +26,8 @@ public class SelectComponent : MonoBehaviour, IClickable
     private void OnDisable()
     {
         EventBus.onPlayerClicked -= OnPlayerClicked;
+
+        onComponentDestroyed?.Invoke(this);
     }
 
     public void Select()

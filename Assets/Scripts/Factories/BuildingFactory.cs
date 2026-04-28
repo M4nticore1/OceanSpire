@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class BuildingFactory
@@ -10,19 +11,14 @@ public static class BuildingFactory
             return null;
         }
 
-        return CreateBuilding_Internal(prefab, data);
+        return CreateBuilding(prefab, data);
     }
 
     public static TowerBuilding CreateBuilding(TowerBuilding prefab, TowerBuildingData data)
     {
-        return CreateBuilding_Internal(prefab, data);
-    }
+        var go = Object.Instantiate(prefab);
+        go.Init(data);
 
-    private static TowerBuilding CreateBuilding_Internal(TowerBuilding prefab, TowerBuildingData data)
-    {
-        var spawnedGO = Object.Instantiate(prefab);
-        spawnedGO.Init(data);
-        EventBus.InvokeBuildingCreated(spawnedGO);
-        return spawnedGO;
+        return go;
     }
 }

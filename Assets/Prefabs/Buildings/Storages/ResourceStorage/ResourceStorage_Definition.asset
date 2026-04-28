@@ -16,10 +16,10 @@ MonoBehaviour:
   localizationItem: {fileID: 11400000, guid: ca26a1b1d93ff7f478f1e1f510438950, type: 2}
   buildingType: 0
   buildingCategory: 3
-  connectionType: 0
+  connectionType: 1
   buildingStrategy: 0
-  isConstructable: 0
   thumbImage: {fileID: 21300000, guid: 538c05922f3413e409857d3ccb1ef3d3, type: 3}
+  isConstructable: 0
   isWorkable: 1
   isDemolishable: 1
   isRaidable: 1

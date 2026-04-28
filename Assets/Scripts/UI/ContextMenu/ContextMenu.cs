@@ -14,6 +14,7 @@ public class ContextMenu : UIBehaviour
 
         SelectManager.onComponentSelected += OnComponentSelected;
         SelectManager.onComponentDeselected += OnComponentDeselected;
+        SelectComponent.onComponentDestroyed += OnComponentDestroyed;
     }
 
     protected override void OnDisable()
@@ -22,6 +23,7 @@ public class ContextMenu : UIBehaviour
 
         SelectManager.onComponentSelected -= OnComponentSelected;
         SelectManager.onComponentDeselected -= OnComponentDeselected;
+        SelectComponent.onComponentDestroyed -= OnComponentDestroyed;
     }
 
     // Open/Close
@@ -42,6 +44,11 @@ public class ContextMenu : UIBehaviour
     }
 
     private void OnComponentDeselected(SelectComponent selected)
+    {
+        Close();
+    }
+
+    private void OnComponentDestroyed(SelectComponent selected)
     {
         Close();
     }

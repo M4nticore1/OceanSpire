@@ -25,16 +25,16 @@ public class LootContainerAudioSystem : MonoBehaviour
 
     private void OnContainerTaked(LootContainer container)
     {
-        AudioUtils.PlaySFXAtPosition(AudioUtils.GetRandomAudioClip(containerTakenClips), container.transform.position, minDistance, maxDistance);
+        AudioUtils.PlaySFXAtPosition(containerTakenClips, container.transform.position, minDistance, maxDistance);
     }
 
     private void OnContainerStartedFalling(LootContainer container)
     {
-        AudioUtils.PlaySFXAtPosition(AudioUtils.GetRandomAudioClip(containerFallStartClips), container.transform.position, minDistance, maxDistance);
+        AudioUtils.PlaySFXAtPosition(containerFallStartClips, container.transform.position, minDistance, maxDistance);
     }
 
     private void OnContainerFalled(LootContainer container)
     {
-        AudioUtils.PlaySFXAtPosition(AudioUtils.GetRandomAudioClip(containerLandedClips), container.transform.position, minDistance, maxDistance);
+        AudioUtils.PlaySFXAtPosition(containerLandedClips, container.transform.position, minDistance, maxDistance);
     }
 }

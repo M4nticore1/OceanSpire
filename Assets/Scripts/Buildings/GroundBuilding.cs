@@ -8,7 +8,7 @@ public class GroundBuilding : Building
         
     }
 
-    protected override void OnDestroyed()
+    protected override void OnDemolish()
     {
         
     }

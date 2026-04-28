@@ -20,16 +20,16 @@ public class SelectAudioSystem : MonoBehaviour
 
     private void OnBuildingSelected(Building building)
     {
-        AudioUtils.PlaySFX(AudioUtils.GetRandomAudioClip(selectAudioClips));
+        AudioUtils.PlaySFX(selectAudioClips);
     }
 
     private void OnBoatSelected(Boat boat)
     {
-        AudioUtils.PlaySFX(AudioUtils.GetRandomAudioClip(selectAudioClips));
+        AudioUtils.PlaySFX(selectAudioClips);
     }
 
     private void OnHumanSelected(Human human)
     {
-        AudioUtils.PlaySFX(AudioUtils.GetRandomAudioClip(selectAudioClips));
+        AudioUtils.PlaySFX(selectAudioClips);
     }
 }

@@ -16,6 +16,6 @@ public class UIAudioSystem : MonoBehaviour
 
     private void OnButtonReleased(CustomButton button)
     {
-        AudioUtils.PlaySFX(AudioUtils.GetRandomAudioClip(releaseClips));
+        AudioUtils.PlaySFX(releaseClips);
     }
 }

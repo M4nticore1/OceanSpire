@@ -142,7 +142,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     {
         if (!buildingFrame) return;
 
-        buildingFrame.SetActive(placedBuilding == null);
+        buildingFrame.SetActive(!placedBuilding);
     }
 
     private void ShowBuildingPlace(BuildingPlaceState buildingPlaceState)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 public enum BuildingPosition
 {
@@ -29,19 +30,6 @@ public enum NeighborMask
     Horizontal = Left | Right,
     Vertical = Up | Down,
     All = Horizontal | Vertical
-}
-
-[Serializable]
-public class TowerBuildingData : BuildingData
-{
-    public int FloorIndex { get; private set; }
-    public int PlaceIndex { get; private set; }
-
-    public TowerBuildingData(int id, int instanceId, int level, ConstructionData constructionData, int floorIndex, int placeIndex) : base(id, instanceId, level, constructionData)
-    {
-        FloorIndex = floorIndex;
-        PlaceIndex = placeIndex;
-    }
 }
 
 public class TowerBuilding : Building
@@ -93,39 +81,16 @@ public class TowerBuilding : Building
         FloorIndex = towerData.FloorIndex;
         PlaceIndex = towerData.PlaceIndex;
 
-        List<FloorFrameModule> floors = BuildingsManager.instance.BuiltFloors;
-        BuildingPlace place = null;
-
-        if (BuildingData.BuildingType == BuildingType.Room) {
-            place = floors[towerData.FloorIndex].RoomBuildingPlaces[towerData.PlaceIndex];
-        }
-        else if (BuildingData.BuildingType == BuildingType.Hall) {
-            place = floors[towerData.FloorIndex].HallBuildingPlace;
-        }
-        else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
-            int index = towerData.FloorIndex - 1;
-            place = floors.Count > index && index >= 0 ? floors[index].FloorBuildingPlace : null;
-        }
-
-        if (place) {
-            SetBuildingPlace(place);
-        }
-
+        AssignBuildingPlace();
         AssignNeighborBuildings();
         AssignConnectedBuildings();
-
-        if (PlaceIndex % 2 == 0) {
-            SetBuildingPosition(BuildingPosition.Corner);
-        }
-        else {
-            SetBuildingPosition(BuildingPosition.Straight);
-        }
-
+        AssignPosition();
         ApplyTransform();
     }
 
-    protected override void OnDestroyed()
+    protected override void OnDemolish()
     {
+        BuildingPlace.SetPlacedBuilding(null);
         InvokeBuildingDemolished();
     }
 
@@ -234,6 +199,37 @@ public class TowerBuilding : Building
         base.OnConstructionFinish();
 
         AssignConnectedBuildings();
+    }
+
+    private void AssignBuildingPlace()
+    {
+        List<FloorFrameModule> floors = BuildingsManager.instance.BuiltFloors;
+        BuildingPlace place = null;
+
+        if (BuildingData.BuildingType == BuildingType.Room) {
+            place = floors[FloorIndex].RoomBuildingPlaces[PlaceIndex];
+        }
+        else if (BuildingData.BuildingType == BuildingType.Hall) {
+            place = floors[FloorIndex].HallBuildingPlace;
+        }
+        else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
+            int index = FloorIndex - 1;
+            place = floors.Count > index && index >= 0 ? floors[index].FloorBuildingPlace : null;
+        }
+
+        if (place) {
+            SetBuildingPlace(place);
+        }
+    }
+
+    private void AssignPosition()
+    {
+        if (PlaceIndex % 2 == 0) {
+            SetBuildingPosition(BuildingPosition.Corner);
+        }
+        else {
+            SetBuildingPosition(BuildingPosition.Straight);
+        }
     }
 
     private void AssignNeighborBuildings()
@@ -346,7 +342,6 @@ public class TowerBuilding : Building
 
     private void OnConnectedBuildingDemolished(TowerBuilding building)
     {
-        Debug.Log("Demolished " + building + " from " + this);
         AssignConnectedBuildings();
         UpdateConstruction();
 
