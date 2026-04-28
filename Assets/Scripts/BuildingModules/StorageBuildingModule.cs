@@ -7,7 +7,44 @@ public class StorageBuildingModule : BuildingModule
     public StorageModuleLevelData[] StorageLevelsData => levelsData.OfType<StorageModuleLevelData>().ToArray();
     public StorageModuleLevelData StorageLevelData => StorageLevelsData[OwnedBuilding.LevelComponent.level - 1];
 
-    protected override void OnInit()
+    protected override void Subscribe()
+    {
+        OwnedBuilding.onInited += OnInited;
+        OwnedBuilding.onConstructionFinished += OnConstructionFinished;
+        OwnedBuilding.onDemolished += OnDemolished;
+    }
+
+    protected override void Unsubscribe()
+    {
+        OwnedBuilding.onInited -= OnInited;
+        OwnedBuilding.onConstructionFinished -= OnConstructionFinished;
+        OwnedBuilding.onDemolished -= OnDemolished;
+    }
+
+    private void OnInited()
+    {
+        if (OwnedBuilding.ConstructionComponent.IsUnderConstruction) return;
+
+        AddAmountByCategory();
+        AddAmountByItem();
+    }
+
+    private void OnConstructionFinished()
+    {
+        AddAmountByCategory();
+        AddAmountByItem();
+    }
+
+    private void OnDemolished()
+    {
+        foreach (ItemInstance item in StorageLevelData.storageItems) {
+            int id = item.ItemData.ItemId;
+            int amount = item.Amount;
+            CityStorage.Instance.Inventory.RemoveItemMaxAmount(id, amount);
+        }
+    }
+
+    private void AddAmountByCategory()
     {
         foreach (var category in StorageLevelData.storageItemCategories) {
             foreach (var itemDef in ItemsList.Instance.Items) {
@@ -19,31 +56,15 @@ public class StorageBuildingModule : BuildingModule
                 CityStorage.Instance.Inventory.AddItemMaxAmount(id, amount);
             }
         }
+    }
 
+    private void AddAmountByItem()
+    {
         foreach (ItemInstance item in StorageLevelData.storageItems) {
             int id = item.ItemData.ItemId;
             int amount = item.Amount;
             CityStorage.Instance.Inventory.AddItemMaxAmount(id, amount);
         }
-    }
-
-    protected override void OnDemolish()
-    {
-        foreach (ItemInstance item in StorageLevelData.storageItems) {
-            int id = item.ItemData.ItemId;
-            int amount = item.Amount;
-            CityStorage.Instance.Inventory.RemoveItemMaxAmount(id, amount);
-        }
-    }
-
-    protected override void OnBuildingStartWorking()
-    {
-
-    }
-
-    protected override void OnBuildingStopWorking()
-    {
-
     }
 
     private bool HasCategory(ItemCategory category)

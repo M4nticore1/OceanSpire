@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class BuildingCostSystem : MonoBehaviour
 {
-    [SerializeField] private CityStorage cityStorage;
-
     private void OnEnable()
     {
         Building.onBuildingInited += OnBuildingInited;
@@ -18,15 +16,24 @@ public class BuildingCostSystem : MonoBehaviour
 
     private void OnBuildingInited(Building building)
     {
+        if (!ShouldWork()) return;
+
         foreach (var resource in building.GetResourcesToBuild()) {
-            cityStorage.Inventory.RemoveItemAmount(resource.ItemData.ItemId, resource.Amount);
+            CityStorage.Instance.Inventory.RemoveItemAmount(resource.ItemData.ItemId, resource.Amount);
         }
     }
 
     private void OnBuildingDemolished(Building building)
     {
+        if (!ShouldWork()) return;
+
         foreach (var resource in building.GetResourcesToRefund()) {
-            cityStorage.Inventory.AddItemAmount(resource.ItemData.ItemId, resource.Amount);
+            CityStorage.Instance.Inventory.AddItemAmount(resource.ItemData.ItemId, resource.Amount);
         }
+    }
+
+    private bool ShouldWork()
+    {
+        return BuildingsLoader.Instance.isLoaded;
     }
 }

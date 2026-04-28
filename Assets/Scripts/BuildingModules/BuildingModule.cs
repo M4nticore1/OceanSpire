@@ -30,12 +30,6 @@ public abstract class BuildingModule : MonoBehaviour
 
     private bool isSubscribed = false;
 
-    public static event Action<BuildingModule> onBuildingModuleInited;
-    public static event Action<BuildingModule> onBuildingModuleUpgraded;
-    public static event Action<BuildingModule> onBuildingModuleDemolished;
-    public static event Action<BuildingModule> onBuildingModuleStartedWorking;
-    public static event Action<BuildingModule> onBuildingModuleStoppedWorking;
-
     protected void Awake()
     {
         ownedBuilding = GetComponent<Building>();
@@ -51,42 +45,22 @@ public abstract class BuildingModule : MonoBehaviour
         TryUnsubscribe();
     }
 
-    protected virtual void Subscribe()
-    {
-        ownedBuilding.onInited += OnBuildingInited;
-    }
+    protected abstract void Subscribe();
 
-    protected virtual void Unsubscribe()
-    {
-        ownedBuilding.onInited -= OnBuildingInited;
-    }
-
-    protected abstract void OnInit();
-
-    protected abstract void OnDemolish();
-
-    protected abstract void OnBuildingStartWorking();
-
-    protected abstract void OnBuildingStopWorking();
+    protected abstract void Unsubscribe();
 
     protected void StartWorking()
     {
         if (isWorking) return;
 
-        OnBuildingStartWorking();
         isWorking = true;
-
-        onBuildingModuleStartedWorking?.Invoke(this);
     }
 
     protected void StopWorking()
     {
         if (!isWorking) return;
 
-        OnBuildingStopWorking();
-
         isWorking = false;
-        onBuildingModuleStoppedWorking?.Invoke(this);
     }
 
     protected void SetFlickingPower(float multiplier)
@@ -110,17 +84,5 @@ public abstract class BuildingModule : MonoBehaviour
         Unsubscribe();
 
         isSubscribed = false;
-    }
-
-    private void OnBuildingInited()
-    {
-        OnInit();
-        onBuildingModuleInited?.Invoke(this);
-    }
-
-    private void OnBuildingDemolished()
-    {
-        OnDemolish();
-        onBuildingModuleDemolished?.Invoke(this);
     }
 }

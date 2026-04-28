@@ -21,21 +21,19 @@ public class FloorFrameModule : BuildingModule
 
     protected override void Subscribe()
     {
-        base.Subscribe();
-
+        OwnedBuilding.onInited += OnInited;
         Building.onBuildingInited += OnBuildingInited;
         Building.onBuildingDemolished += OnBuildingDemolished;
     }
 
     protected override void Unsubscribe()
     {
-        base.Unsubscribe();
-
+        OwnedBuilding.onInited -= OnInited;
         Building.onBuildingInited -= OnBuildingInited;
         Building.onBuildingDemolished -= OnBuildingDemolished;
     }
 
-    protected override void OnInit()
+    private void OnInited()
     {
         int floorIndex = (OwnedBuilding as TowerBuilding).FloorIndex;
         floorBuildingPlace.Init(floorIndex + 1);
@@ -44,21 +42,6 @@ public class FloorFrameModule : BuildingModule
         for (int i = 0; i < BuildingsManager.RoomsCountPerFloor; i++) {
             roomBuildingPlaces[i].Init(floorIndex);
         }
-    }
-
-    protected override void OnDemolish()
-    {
-
-    }
-
-    protected override void OnBuildingStartWorking()
-    {
-
-    }
-
-    protected override void OnBuildingStopWorking()
-    {
-
     }
 
     private void OnBuildingInited(Building building)

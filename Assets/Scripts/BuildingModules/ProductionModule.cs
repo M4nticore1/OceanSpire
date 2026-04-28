@@ -4,7 +4,6 @@ using UnityEngine;
 [AddComponentMenu("Building Modules/Production Building")]
 public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClickable, IElectricible, IRaidable
 {
-    private CityStorage cityStorage;
     [SerializeField] private SelectComponent selectComponent;
 
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
@@ -25,29 +24,6 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         if (!isWorking) return;
 
         ProcessProduce();
-    }
-
-    // Overrides
-    protected override void OnInit()
-    {
-        cityStorage = FindAnyObjectByType<CityStorage>();
-
-        SetProducedItemByIndex(currentProductingItemIndex);
-    }
-
-    protected override void OnDemolish()
-    {
-
-    }
-
-    protected override void OnBuildingStartWorking()
-    {
-        StartProducting();
-    }
-
-    protected override void OnBuildingStopWorking()
-    {
-
     }
 
     public void SetProduceTime(float time)
@@ -105,6 +81,28 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         StopWorking();
     }
 
+    protected override void Subscribe()
+    {
+        OwnedBuilding.onInited += OnInit;
+        OwnedBuilding.onWorkStarted += OnWorkStarted;
+    }
+
+    protected override void Unsubscribe()
+    {
+        OwnedBuilding.onInited -= OnInit;
+        OwnedBuilding.onWorkStarted -= OnWorkStarted;
+    }
+
+    private void OnInit()
+    {
+        SetProducedItemByIndex(currentProductingItemIndex);
+    }
+
+    private void OnWorkStarted()
+    {
+        StartProducting();
+    }
+
     // Production
     private void TryCollectItem()
     {
@@ -117,7 +115,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
     {
         int id = currentProductingItem.ProductionItem.ItemData.ItemId;
         int amount = currentProductingItem.ProductionItem.Amount;
-        cityStorage.Inventory.AddItemAmount(id, amount);
+        CityStorage.Instance.Inventory.AddItemAmount(id, amount);
 
         isReadyToCollect = false;
         ResetProducedTime();
@@ -165,7 +163,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         foreach (var resource in currentProductingItem.ConsumeResources) {
             int id = resource.ItemData.ItemId;
             int amount = resource.Amount;
-            cityStorage.Inventory.RemoveItemAmount(id, amount);
+            CityStorage.Instance.Inventory.RemoveItemAmount(id, amount);
         }
     }
 
@@ -174,7 +172,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         foreach (var resource in currentProductingItem.ConsumeResources) {
             int id = resource.ItemData.ItemId;
             int amount = resource.Amount;
-            cityStorage.Inventory.AddItemAmount(id, amount);
+            CityStorage.Instance.Inventory.AddItemAmount(id, amount);
         }
     }
 
@@ -232,7 +230,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         foreach (var resource in currentProductingItem.ConsumeResources) {
             int id = resource.ItemData.ItemId;
             int amount = resource.Amount;
-            if (cityStorage.Inventory.itemsDict[id].item.Amount < amount) return false;
+            if (CityStorage.Instance.Inventory.itemsDict[id].item.Amount < amount) return false;
         }
 
         return true;

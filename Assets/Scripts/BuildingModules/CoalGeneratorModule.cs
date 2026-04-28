@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CoalGeneratorModule : ProductionModule
+public class CoalGeneratorModule : BuildingModule
 {
     [Header("Coal Generator")]
     [SerializeField] private ParticleSystem smokePrefab = null;
@@ -10,25 +10,16 @@ public class CoalGeneratorModule : ProductionModule
     CoalGenetatorConstructionModule CoalGenetatorConstructionModule => BuildingConstruction ? BuildingConstruction.GetComponent<CoalGenetatorConstructionModule>() : null;
     TimerHandle stopProductingTimerHandle = new TimerHandle();
 
-    protected override void OnInit()
+    protected override void Subscribe()
     {
-        base.OnInit();
-
+        OwnedBuilding.onWorkStarted += OnWorkStarted;
+        OwnedBuilding.onWorkStopped += OnWorkStopped;
     }
 
-    protected override void OnBuildingStartWorking()
+    protected override void Unsubscribe()
     {
-        base.OnBuildingStartWorking();
-
-        TrySpawnSmoke();
-        StartPlayingSmoke();
-    }
-
-    protected override void OnBuildingStopWorking()
-    {
-        base.OnBuildingStartWorking();
-
-        StopPlayingSmoke();
+        OwnedBuilding.onWorkStarted -= OnWorkStarted;
+        OwnedBuilding.onWorkStopped -= OnWorkStopped;
     }
 
     private void TrySpawnSmoke()
@@ -54,5 +45,16 @@ public class CoalGeneratorModule : ProductionModule
         spawnedSmoke.Stop();
         float time = smokePrefab.main.startLifetime.constant;
         TimerManager.Instance.StartTimer(stopProductingTimerHandle, time, () => spawnedSmoke.gameObject.SetActive(false));
+    }
+
+    private void OnWorkStarted()
+    {
+        TrySpawnSmoke();
+        StartPlayingSmoke();
+    }
+
+    private void OnWorkStopped()
+    {
+        StopPlayingSmoke();
     }
 }

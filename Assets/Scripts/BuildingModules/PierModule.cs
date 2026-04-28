@@ -4,23 +4,13 @@ public class PierModule : BuildingModule
 {
     public PierConstruction PierConstruction => OwnedBuilding.spawnedConstruction as PierConstruction;
 
-    protected override void OnInit()
+    protected override void Subscribe()
     {
 
     }
 
-    protected override void OnDemolish()
-    {
-        
-    }
-
-    protected override void OnBuildingStartWorking()
+    protected override void Unsubscribe()
     {
 
-    }
-
-    protected override void OnBuildingStopWorking()
-    {
-        
     }
 }

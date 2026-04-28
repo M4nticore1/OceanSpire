@@ -43,14 +43,15 @@ public abstract class Building : MonoBehaviour, ILocalizable
     public const float DemolishionResourcesRefundPercent = 0.2f;
 
     public event Action onInited;
-    public event Action onStartWorking;
-    public event Action onStopWorking;
+    public event Action onWorkStarted;
+    public event Action onWorkStopped;
 
     public static event Action<Building> onBuildingInited;
     public static event Action<Building> onBuildingDemolished;
 
     public event Action onConstructionStarted;
     public event Action onConstructionFinished;
+    public event Action onDemolished;
 
     public static event Action<Building> onBuildingConstructionStarted;
     public static event Action<Building> onBuildingConstructionFinished;
@@ -105,6 +106,8 @@ public abstract class Building : MonoBehaviour, ILocalizable
         OnDemolish();
         InvokeBuildingDemolished();
         Destroy(gameObject);
+
+        onDemolished?.Invoke();
         onBuildingDemolished?.Invoke(this);
     }
 
@@ -315,7 +318,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
         PlayWorkSound();
 
         isWorking = true;
-        onStartWorking?.Invoke();
+        onWorkStarted?.Invoke();
     }
 
     private void StopWorking()
@@ -328,7 +331,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
         StopWorkSound();
 
         isWorking = false;
-        onStopWorking?.Invoke();
+        onWorkStopped?.Invoke();
     }
 
     private void AsssignStrategy()

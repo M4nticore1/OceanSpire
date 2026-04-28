@@ -14,41 +14,24 @@ public class ElevatorModule : BuildingModule, IElectricible, IBuildingListener
 
     private bool IsMoving => spawnedElevatorCabin ? spawnedElevatorCabin.isMoving : false;
 
-    protected override void OnInit()
-    {
-        AssignCabin();
-    }
-
     // Subscribe
     protected override void Subscribe()
     {
-        base.Subscribe();
-
         OwnedBuilding.onConstructionFinished += OnConstructionFinished;
+        OwnedBuilding.onDemolished += OnDemolished;
     }
 
     protected override void Unsubscribe()
     {
-        base.Unsubscribe();
-
         OwnedBuilding.onConstructionFinished -= OnConstructionFinished;
+        OwnedBuilding.onDemolished -= OnDemolished;
     }
 
-    protected override void OnDemolish()
+    protected void OnDemolished()
     {
         if (OwnedTowerBuilding.ConnectedBuildingsEnumerable().Count() == 0) {
             DestroyCabin();
         }
-    }
-
-    protected override void OnBuildingStartWorking()
-    {
-
-    }
-
-    protected override void OnBuildingStopWorking()
-    {
-
     }
 
     // IConnectedBuildingsListener

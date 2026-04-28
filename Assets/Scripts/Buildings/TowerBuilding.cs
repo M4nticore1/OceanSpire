@@ -45,33 +45,33 @@ public class TowerBuilding : Building
 
     public IEnumerable<TowerBuilding> NeighborBuildingsEnumerable(NeighborMask mask)
     {
-        if (mask.HasFlag(NeighborMask.Left) && NeighborBuildings[Direction.Left]) {
-            yield return NeighborBuildings[Direction.Left];
+        if (mask.HasFlag(NeighborMask.Left) && GetNeighborBuilding(Direction.Left)) {
+            yield return GetNeighborBuilding(Direction.Left);
         }
-        if (mask.HasFlag(NeighborMask.Right) && NeighborBuildings[Direction.Right]) {
-            yield return NeighborBuildings[Direction.Right];
+        if (mask.HasFlag(NeighborMask.Right) && GetNeighborBuilding(Direction.Right)) {
+            yield return GetNeighborBuilding(Direction.Right);
         }
-        if (mask.HasFlag(NeighborMask.Up) && NeighborBuildings[Direction.Up]) {
-            yield return NeighborBuildings[Direction.Up];
+        if (mask.HasFlag(NeighborMask.Up) && GetNeighborBuilding(Direction.Up)) {
+            yield return GetNeighborBuilding(Direction.Up);
         }
-        if (mask.HasFlag(NeighborMask.Down) && NeighborBuildings[Direction.Down]) {
-            yield return NeighborBuildings[Direction.Down];
+        if (mask.HasFlag(NeighborMask.Down) && GetNeighborBuilding(Direction.Down)) {
+            yield return GetNeighborBuilding(Direction.Down);
         }
     }
 
     public IEnumerable<TowerBuilding> ConnectedBuildingsEnumerable()
     {
-        if (ConnectedBuildings[Direction.Left]) {
-            yield return ConnectedBuildings[Direction.Left];
+        if (GetConnectedBuilding(Direction.Left)) {
+            yield return GetConnectedBuilding(Direction.Left);
         }
-        if (ConnectedBuildings[Direction.Right]) {
-            yield return ConnectedBuildings[Direction.Right];
+        if (GetConnectedBuilding(Direction.Right)) {
+            yield return GetConnectedBuilding(Direction.Right);
         }
-        if (ConnectedBuildings[Direction.Up]) {
-            yield return ConnectedBuildings[Direction.Up];
+        if (GetConnectedBuilding(Direction.Up)) {
+            yield return GetConnectedBuilding(Direction.Up);
         }
-        if (ConnectedBuildings[Direction.Down]) {
-            yield return ConnectedBuildings[Direction.Down];
+        if (GetConnectedBuilding(Direction.Down)) {
+            yield return GetConnectedBuilding(Direction.Down);
         }
     }
 
