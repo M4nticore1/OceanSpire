@@ -47,6 +47,9 @@ public class Human : Creature
     [SerializeField] private SelectComponent selectComponent;
     public SelectComponent SelectComponent => selectComponent;
 
+    [SerializeField] private ContextMenuTarget contextMenuTarget;
+    public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
+
     [Header("Status")]
     [SerializeField] private GameObject citizenClothes;
     [SerializeField] private GameObject wandererClothes;
@@ -237,8 +240,9 @@ public class Human : Creature
     // Health
     private void OnRevived()
     {
-        currentStatus.OnDied();
+        currentStatus.OnRevived();
         TryStartIdle();
+        contextMenuTarget.SetShowContextMenu(true);
 
         onHumanRevived?.Invoke(this);
     }
@@ -248,6 +252,7 @@ public class Human : Creature
         currentStatus.OnDied();
         interactComponent.RemoveInteractBuilding();
         TryStopIdle();
+        contextMenuTarget.SetShowContextMenu(false);
 
         onHumanDied?.Invoke(this);
     }

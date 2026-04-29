@@ -6,7 +6,9 @@ public class SelectManager : MonoBehaviour
     private static SelectManager instance;
     public static SelectManager Instance => instance;
 
-    public SelectComponent selectedComponent { get; private set; }
+    public SelectComponent SelectedComponent { get; private set; }
+
+    private bool isSubscribed = false;
 
     public static event Action<SelectComponent> onComponentSelected;
     public static event Action<SelectComponent> onComponentDeselected;
@@ -20,49 +22,48 @@ public class SelectManager : MonoBehaviour
         }
 
         instance = this;
+        TrySubscribe();
     }
 
     private void OnEnable()
     {
-        SelectComponent.onComponentSelected += OnComponentSelected;
-        SelectComponent.onComponentDeselected += OnComponentDeselected;
+        TrySubscribe();
     }
 
     private void OnDisable()
     {
-        SelectComponent.onComponentSelected -= OnComponentSelected;
-        SelectComponent.onComponentDeselected -= OnComponentDeselected;
+        TryUnsubscribe();
     }
 
     public void Deselect()
     {
-        selectedComponent.Deselect();
+        SelectedComponent.Deselect();
     }
 
     public Building GetSelectedBuilding()
     {
-        if (!selectedComponent) return null;
+        if (!SelectedComponent) return null;
 
-        Building building = selectedComponent.GetComponent<Building>();
+        Building building = SelectedComponent.GetComponent<Building>();
         return building;
     }
 
     public Human GetSelectedHuman()
     {
-        if (!selectedComponent) return null;
+        if (!SelectedComponent) return null;
 
-        return selectedComponent.GetComponent<Human>();
+        return SelectedComponent.GetComponent<Human>();
     }
 
     private void OnComponentSelected(SelectComponent component)
     {
         SetSelectedComponent(component);
-        onComponentSelected?.Invoke(selectedComponent);
+        onComponentSelected?.Invoke(SelectedComponent);
     }
 
     private void OnComponentDeselected(SelectComponent component)
     {
-        if (component != selectedComponent) return;
+        if (component != SelectedComponent) return;
 
         SetSelectedComponent(null);;
         onComponentDeselected?.Invoke(component);
@@ -70,6 +71,26 @@ public class SelectManager : MonoBehaviour
 
     private void SetSelectedComponent(SelectComponent selected)
     {
-        selectedComponent = selected;
+        SelectedComponent = selected;
+    }
+
+    private void TrySubscribe()
+    {
+        if (isSubscribed) return;
+
+        SelectComponent.onComponentSelected += OnComponentSelected;
+        SelectComponent.onComponentDeselected += OnComponentDeselected;
+
+        isSubscribed = true;
+    }
+
+    private void TryUnsubscribe()
+    {
+        if (!isSubscribed) return;
+
+        SelectComponent.onComponentSelected -= OnComponentSelected;
+        SelectComponent.onComponentDeselected -= OnComponentDeselected;
+
+        isSubscribed = false;
     }
 }

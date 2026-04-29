@@ -8,25 +8,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 300
-      objectReference: {fileID: 0}
-    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 300
-      objectReference: {fileID: 0}
-    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -50
-      objectReference: {fileID: 0}
     - target: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Name
-      value: EvictCitizenContext
+      value: UpgradeContextElement
       objectReference: {fileID: 0}
     - target: {fileID: 6686591089564819408, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Pivot.x
@@ -111,18 +95,18 @@ PrefabInstance:
     - target: {fileID: 8394769679750841849, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: item
       value: 
-      objectReference: {fileID: 11400000, guid: 1fad29b4959cbef478ad77716e089287, type: 2}
+      objectReference: {fileID: 11400000, guid: b71a51156eb44994ebfd613117eff026, type: 2}
     - target: {fileID: 9002625106314974428, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 076befd39571e9847bac03429487f064, type: 3}
+      objectReference: {fileID: 21300000, guid: 31b0bffcc2d7ce84483c63c2c55c5cf8, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1617045782836374856}
+      addedObject: {fileID: 5810089649415792070}
   m_SourcePrefab: {fileID: 100100000, guid: d8047c7188674a64091d30f2a0797166, type: 3}
 --- !u!114 &2772769166129994013 stripped
 MonoBehaviour:
@@ -145,7 +129,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
   m_PrefabInstance: {fileID: 5906911215454697222}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1617045782836374856
+--- !u!114 &5810089649415792070
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -154,8 +138,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8503180665579953796}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd0811c53d083b44ab994422997d44b2, type: 3}
+  m_Script: {fileID: 11500000, guid: bdfefbf25f54746468a24db54e992dba, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EvictCitizenContext
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeContextElement
   content: {fileID: 8345193435831927673}
   button: {fileID: 2772769166129994013}
+  upgradeMenu: {fileID: 0}

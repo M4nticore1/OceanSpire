@@ -8,9 +8,65 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -25
+      objectReference: {fileID: 0}
     - target: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Name
-      value: UpgradeButton
+      value: RecipesContextElement
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252278899149896188, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252278899149896188, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 5252278899149896188, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_Color.b
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252278899149896188, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5829413
+      objectReference: {fileID: 0}
+    - target: {fileID: 5252278899149896188, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_Color.r
+      value: 0.31764707
+      objectReference: {fileID: 0}
+    - target: {fileID: 6505568468667692236, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      propertyPath: m_text
+      value: Action
       objectReference: {fileID: 0}
     - target: {fileID: 6686591089564819408, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Pivot.x
@@ -95,18 +151,18 @@ PrefabInstance:
     - target: {fileID: 8394769679750841849, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: item
       value: 
-      objectReference: {fileID: 11400000, guid: b71a51156eb44994ebfd613117eff026, type: 2}
+      objectReference: {fileID: 11400000, guid: b816717e4b01a8f458105233e05f5e7b, type: 2}
     - target: {fileID: 9002625106314974428, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 31b0bffcc2d7ce84483c63c2c55c5cf8, type: 3}
+      objectReference: {fileID: 21300000, guid: bddaedb9f0d79ca4cb743a3139f1cef3, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5810089649415792070}
+      addedObject: {fileID: 2935945504213945974}
   m_SourcePrefab: {fileID: 100100000, guid: d8047c7188674a64091d30f2a0797166, type: 3}
 --- !u!114 &2772769166129994013 stripped
 MonoBehaviour:
@@ -129,7 +185,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
   m_PrefabInstance: {fileID: 5906911215454697222}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5810089649415792070
+--- !u!114 &2935945504213945974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,9 +194,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8503180665579953796}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdfefbf25f54746468a24db54e992dba, type: 3}
+  m_Script: {fileID: 11500000, guid: 60d284f9238a7394891ba114abd79972, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UpgradeContextElement
+  m_EditorClassIdentifier: Assembly-CSharp::RecipesContextElement
   content: {fileID: 8345193435831927673}
   button: {fileID: 2772769166129994013}
-  upgradeMenu: {fileID: 0}
+  recipesMenu: {fileID: 0}

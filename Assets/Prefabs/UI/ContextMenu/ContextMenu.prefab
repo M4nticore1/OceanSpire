@@ -236,7 +236,7 @@ MonoBehaviour:
   closeMethod: 2
   slideTransitionSpeed: 10
   contentRoot: {fileID: 5125527298814516783}
-  hideWhenClosed: 1
+  hideWhenClosed: 0
   openedScreenPositionAlpha: {x: 0, y: 0}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: 0, y: 1}
@@ -852,7 +852,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8503180665579953796, guid: 7021207ad81c2ee4482b9d5b68a3d3fd, type: 3}
       propertyPath: m_Name
-      value: UpgradeButton
+      value: UpgradeContextElement
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -958,7 +958,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8503180665579953796, guid: 113aad1e7714dae4da69dd45dde06875, type: 3}
       propertyPath: m_Name
-      value: EvictCitizenContext
+      value: EvictCitizenContextElement
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1060,7 +1060,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8503180665579953796, guid: f2bc264b149190d4f9aba08ca85e3436, type: 3}
       propertyPath: m_Name
-      value: RecipesButton
+      value: RecipesContextElement
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1162,7 +1162,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8503180665579953796, guid: d3e1df81f773d014e934c447533c695e, type: 3}
       propertyPath: m_Name
-      value: DemolishButton
+      value: DemolishContextElement
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1366,7 +1366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8503180665579953796, guid: a1d598385c398534698c91436ec15ef6, type: 3}
       propertyPath: m_Name
-      value: WorkersButton
+      value: WorkersContextElement
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 5453205600493844167}
   - component: {fileID: 4575534088428067244}
   - component: {fileID: 6306187827067608498}
+  - component: {fileID: 4463480740995804658}
   - component: {fileID: 8122635706453091689}
   - component: {fileID: 2423519319514539946}
   - component: {fileID: 9149124761615220950}
@@ -202,7 +203,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
   maxHealth: 100
-  reviveHealthPercent: 0.1
 --- !u!114 &5453205600493844167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,6 +240,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isClickable: 1
+--- !u!114 &4463480740995804658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9194760719431650583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d99a68852cd4906449f8260097b5b48d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ContextMenuTarget
+  selectComponent: {fileID: 6306187827067608498}
+  showContextMenu: 1
 --- !u!114 &8122635706453091689
 MonoBehaviour:
   m_ObjectHideFlags: 0

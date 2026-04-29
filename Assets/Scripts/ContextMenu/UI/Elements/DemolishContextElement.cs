@@ -14,9 +14,9 @@ public class DemolishContextElement : ContextMenuElement
         demolishMenu.Open();
     }
 
-    protected override bool ShouldShow()
+    protected override bool ShouldShow(ContextMenuTarget target)
     {
-        Building building = SelectManager.Instance.GetSelectedBuilding();
+        Building building = target.GetComponent<Building>();
         if (!building) return false;
 
         if (!building.BuildingData.IsDemolishable) return false;

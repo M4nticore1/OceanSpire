@@ -4,9 +4,10 @@ public class UpgradeContextElement : ContextMenuElement
 {
     [SerializeField] private UpgradeActionMenu upgradeMenu;
 
+    private Building building;
+
     protected override void OnShowed()
     {
-        Building building = SelectManager.Instance.GetSelectedBuilding();
         if (building.NextLevelData) return;
 
         button.SetState(CustomButtonState.Disabled);
@@ -18,9 +19,9 @@ public class UpgradeContextElement : ContextMenuElement
         upgradeMenu.Open();
     }
 
-    protected override bool ShouldShow()
+    protected override bool ShouldShow(ContextMenuTarget target)
     {
-        Building building = SelectManager.Instance.GetSelectedBuilding();
+        building = target.GetComponent<Building>();
         if (!building) return false;
 
         if (building.ConstructionComponent.IsUnderConstruction) return false;

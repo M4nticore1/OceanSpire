@@ -12,9 +12,9 @@ public class EvictContextElement : ContextMenuElement
 
     }
 
-    protected override bool ShouldShow()
+    protected override bool ShouldShow(ContextMenuTarget target)
     {
-        Human human = SelectManager.Instance.GetSelectedHuman();
+        Human human = target.GetComponent<Human>();
         if (!human) return false;
 
         if (human.currentStatusEnum != HumanStatusEnum.Citizen) return false;

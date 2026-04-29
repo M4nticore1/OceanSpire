@@ -17,6 +17,7 @@ public class RaiderState : HumanState
         CreaturesManager.instance.RegisterRaider(human);
 
         human.Movement.SetMovementMethod(MovementMethod.Run);
+        human.SelectComponent.SetClickable(false);
     }
 
     public override void Exit()

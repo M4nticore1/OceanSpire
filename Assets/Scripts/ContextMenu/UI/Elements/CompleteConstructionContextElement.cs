@@ -15,9 +15,9 @@ public class CompleteConstructionContextElement : ContextMenuElement
         speedUpConstructionMenu.Open(building);
     }
 
-    protected override bool ShouldShow()
+    protected override bool ShouldShow(ContextMenuTarget target)
     {
-        building = SelectManager.Instance.GetSelectedBuilding();
+        building = target.GetComponent<Building>();
         if (!building) return false;
 
         if (!building.ConstructionComponent.IsUnderConstruction) return false;
