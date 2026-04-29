@@ -30,5 +30,5 @@ MonoBehaviour:
   storageItemCategories:
   - itemCategory: 3
     amount: 10
-  - itemCategory: 1
-    amount: 100
+  - itemCategory: 2
+    amount: 50

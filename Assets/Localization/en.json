@@ -52,6 +52,7 @@
   "building_farm": "Farm",
   "building_kitchen": "Kitchen",
   "building_resource_storage": "Resource storage",
+  "building_food_storage": "Food storage",
 
   "creature_citizen": "Citizen",
   "creature_wanderer": "Wanderer",
