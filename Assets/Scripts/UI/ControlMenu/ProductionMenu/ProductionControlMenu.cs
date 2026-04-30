@@ -8,20 +8,6 @@ public class ProductionControlMenu : ControlMenu
 
     [SerializeField] private LayoutGroup layoutGroup;
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        EventBus.onClickedContextProductionButton += OnContextProductionButtonClicked;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
-
-        EventBus.onClickedContextProductionButton -= OnContextProductionButtonClicked;
-    }
-
     protected override void OnOpen()
     {
 
@@ -65,10 +51,5 @@ public class ProductionControlMenu : ControlMenu
             Destroy(panel.gameObject);
         }
         spawnedProducedResourcePanels = null;
-    }
-
-    private void OnContextProductionButtonClicked()
-    {
-        Open();
     }
 }

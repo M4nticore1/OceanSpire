@@ -4,14 +4,18 @@ public class RaidDailyTaskCondition : DailyTaskCondition
 {
     protected override bool Subscribe()
     {
-        RaidManager.onRaidEnded += OnRaidEnded;
+        if (!RaidManager.Instance) return false;
+
+        RaidManager.Instance.onRaidEnded += OnRaidEnded;
 
         return true;
     }
 
     protected override bool Unsubscribe()
     {
-        RaidManager.onRaidEnded -= OnRaidEnded;
+        if (!RaidManager.Instance) return false;
+
+        RaidManager.Instance.onRaidEnded -= OnRaidEnded;
 
         return true;
     }

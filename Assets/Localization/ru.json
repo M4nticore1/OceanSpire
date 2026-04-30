@@ -11,9 +11,7 @@
   "ui_delete": "Удалить",
   "ui_update": "Обновить",
   "ui_update_now": "Обновить сейчас",
-  "ui_construction": "Строительство",
   "ui_storage": "Хранилище",
-  "ui_upgrade": "Улучшить",
   "ui_complete": "Завершить",
   "ui_speed_up": "Ускорить",
   "ui_level": "Уровень {level}",
@@ -33,8 +31,11 @@
   "ui_revive_citizen": "Возроди жителя!",
   "ui_refund_resources": "Возвращаемые ресурсы",
 
+  "construction": "Строительство",
   "construction_build": "Построить",
+  "construction_upgrade": "Улучшить",
   "construction_demolish": "Разрушить",
+  "construction_demolish_building": "Разрушить здание",
   "construction_under_construction": "Идёт строительство ({constructionTime})",
   "construction_complete_instantly": "Ты можешь завершить строительство сейчас",
 

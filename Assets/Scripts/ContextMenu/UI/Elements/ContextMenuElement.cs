@@ -7,29 +7,48 @@ public abstract class ContextMenuElement : UIBehaviour
     [SerializeField] private GameObject content;
     [SerializeField] protected CustomButton button;
 
+    private bool isSubscribed = false;
+
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        button.onReleased += OnButtonClicked;
+        TrySubscribe();
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        button.onReleased -= OnButtonClicked;
+        TryUnsubscribe();
     }
 
     protected override void Start()
     {
         base.Start();
 
+        TrySubscribe();
         ContextMenuManager.Instance.onContextMenuTargetSelected += OnSelected;
     }
 
+    protected virtual bool Subscribe()
+    {
+        button.onReleased += OnButtonClicked;
+
+        return true;
+    }
+
+    protected virtual bool Unsubscribe()
+    {
+        button.onReleased -= OnButtonClicked;
+
+        return true;
+    }
+
     protected abstract void OnShowed();
+
     protected abstract void OnButtonClicked();
+
     protected abstract bool ShouldShow(ContextMenuTarget target);
 
     protected void Show()
@@ -53,5 +72,21 @@ public abstract class ContextMenuElement : UIBehaviour
         else {
             Hide();
         }
+    }
+
+    private void TrySubscribe()
+    {
+        if (isSubscribed) return;
+        if (!Subscribe()) return;
+
+        isSubscribed = true;
+    }
+
+    private void TryUnsubscribe()
+    {
+        if (!isSubscribed) return;
+        if (!Unsubscribe()) return;
+
+        isSubscribed = false;
     }
 }

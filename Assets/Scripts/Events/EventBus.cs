@@ -48,12 +48,6 @@ public static class EventBus
     public static event Action<ItemInstance> onItemRemoved;
     public static event Action<ItemInstance> onLootStorageChanged;
 
-    // Context Menu
-    public static event Action onContextWorkersButtonClicked;
-    public static event Action onClickedContextProductionButton;
-    public static event Action onClickedContextUpgradeButton;
-    public static event Action onClickedContextDemolishButton;
-
     // Building Stats Menu
     public static event Action<Building> onCameraEnteredStatsMenuDistance;
     public static event Action onCameraExitedStatsMenuDistance;
@@ -178,27 +172,6 @@ public static class EventBus
     public static void InvokeMainStorageMaxAmountChanged(StorageItem itemInstance)
     {
         onMainStorageItemMaxAmountChanged?.Invoke(itemInstance);
-    }
-
-    // Action Menu
-    public static void InvokeContextWorkersButtonClicked()
-    {
-        onContextWorkersButtonClicked?.Invoke();
-    }
-
-    public static void InvokeContextProductionButtonClicked()
-    {
-        onClickedContextProductionButton?.Invoke();
-    }
-
-    public static void InvokeContextUpgradeButtonClicked()
-    {
-        onClickedContextUpgradeButton?.Invoke();
-    }
-
-    public static void InvokeContextDemolishButtonClicked()
-    {
-        onClickedContextDemolishButton?.Invoke();
     }
 
     // Stats Menu

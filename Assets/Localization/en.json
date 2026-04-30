@@ -11,9 +11,7 @@
   "ui_delete": "Delete",
   "ui_update": "Update",
   "ui_update_now": "Update now",
-  "ui_construction": "Construction",
   "ui_storage": "Storage",
-  "ui_upgrade": "Upgrade",
   "ui_complete": "Complete",
   "ui_speed_up": "Speed up",
   "ui_level": "Level {level}",
@@ -33,8 +31,11 @@
   "ui_revive_citizen": "Revive the citizen!",
   "ui_refund_resources": "Refund resources",
 
+  "construction": "Construction",
   "construction_build": "Build",
+  "construction_upgrade": "Upgrade",
   "construction_demolish": "Demolish",
+  "construction_demolish_building": "Demolish building",
   "construction_under_construction": "Under construction ({constructionTime})",
   "construction_complete_instantly": "You can complete construction instantly",
 

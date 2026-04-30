@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,53 +7,84 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
     [SerializeField] protected ResourceWidget resourceWidgetPrefab;
 
     [SerializeField] private SlidePanel slidePanel;
-    [SerializeField] protected TextLocalizer buildingNameTextLocalizer;
+    [SerializeField] protected TextLocalizer actionTargetText;
     [SerializeField] protected CustomButton actionButton;
     [SerializeField] private CustomButton closeButton;
     [SerializeField] protected LayoutGroup layoutGroup;
 
     protected ResourceWidget[] spawnedResourceWidgets;
 
+    private bool isSubscribed = false;
+
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        actionButton.onReleased += OnClickedActionButton;
-        closeButton.onReleased += OnClickedCloseButton;
-        slidePanel.onClosed += OnClosed;
+        TrySubscribe();
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        actionButton.onReleased -= OnClickedActionButton;
-        closeButton.onReleased -= OnClickedCloseButton;
-        slidePanel.onClosed -= OnClosed;
+        TryUnsubscribe();
     }
 
-    private void Action()
+    protected override void Start()
     {
-        Building building = SelectManager.Instance.GetSelectedBuilding();
-        if (!building) return;
+        base.Start();
 
-        OnAction(building);
+        TrySubscribe();
     }
 
-    protected abstract void OnAction(Building building);
+    protected virtual bool Subscribe()
+    {
+        actionButton.onReleased += OnClickedActionButton;
+        closeButton.onReleased += OnClickedCloseButton;
+        slidePanel.onClosed += OnClosed;
 
-    protected abstract void CreateWidgets(Building building);
+        return true;
+    }
+
+    protected virtual bool Unsubscribe()
+    {
+        actionButton.onReleased += OnClickedActionButton;
+        closeButton.onReleased += OnClickedCloseButton;
+        slidePanel.onClosed += OnClosed;
+
+        return true;
+    }
+
+    private void TrySubscribe()
+    {
+        if (isSubscribed) return;
+        if (!Subscribe()) return;
+
+        isSubscribed = true;
+    }
+
+    private void TryUnsubscribe()
+    {
+        if (isSubscribed) return;
+        if (!Unsubscribe()) return;
+
+        isSubscribed = false;
+    }
+
+
 
     // IOpenable
     public void Open()
     {
         slidePanel.Open();
+        OnOpened();
 
         Building building = SelectManager.Instance.GetSelectedBuilding();
         if (!building) return;
 
         LocalizationItem localization = building.BuildingData.LocalizationItem;
-        buildingNameTextLocalizer.SetLocalizationItem(localization);
+        actionTargetText.SetLocalizationItem(localization);
+        actionTargetText.UpdateText();
 
         CleanWidgets();
         CreateWidgets(building);
@@ -67,6 +97,12 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
         slidePanel.Close();
         OnClosed();
     }
+
+    protected abstract void OnOpened();
+
+    protected abstract void OnAction(Building building);
+
+    protected abstract void CreateWidgets(Building building);
 
     private void OnClosed()
     {
@@ -86,6 +122,14 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
     protected void OnContextClickedButton()
     {
         Open();
+    }
+
+    private void Action()
+    {
+        Building building = SelectManager.Instance.GetSelectedBuilding();
+        if (!building) return;
+
+        OnAction(building);
     }
 
     private void OnClickedActionButton()

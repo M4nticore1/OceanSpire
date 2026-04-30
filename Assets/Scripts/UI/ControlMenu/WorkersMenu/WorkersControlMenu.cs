@@ -12,7 +12,6 @@ public class WorkersControlMenu : ControlMenu
     {
         base.OnEnable();
 
-        EventBus.onContextWorkersButtonClicked += OnContextWorkersButtonClicked;
         EventBus.onHumanInited += OnHumanInited;
         EventBus.onSetedWorkBuilding += OnSetedCitizenWork;
         EventBus.onRemovedWorkBuilding += OnRemovedCitizenWork;
@@ -22,7 +21,6 @@ public class WorkersControlMenu : ControlMenu
     {
         base.OnEnable();
 
-        EventBus.onContextWorkersButtonClicked -= OnContextWorkersButtonClicked;
         EventBus.onHumanInited -= OnHumanInited;
         EventBus.onSetedWorkBuilding -= OnSetedCitizenWork;
         EventBus.onRemovedWorkBuilding -= OnRemovedCitizenWork;
@@ -110,10 +108,5 @@ public class WorkersControlMenu : ControlMenu
 
         UpdateMenu();
         UpdateScrollRect();
-    }
-
-    private void OnContextWorkersButtonClicked()
-    {
-        Open();
     }
 }

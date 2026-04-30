@@ -2,14 +2,9 @@ using UnityEngine;
 
 public class UpgradeActionMenu : ActionMenu
 {
-    protected override void OnEnable()
+    protected override void OnOpened()
     {
-        EventBus.onClickedContextUpgradeButton += OnContextClickedButton;
-    }
 
-    protected override void OnDisable()
-    {
-        EventBus.onClickedContextUpgradeButton -= OnContextClickedButton;
     }
 
     protected override void OnAction(Building building)

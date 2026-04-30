@@ -5,26 +5,27 @@ public class RaidMenu : UIBehaviour
 {
     [SerializeField] private GameObject contentRoot;
 
+    private bool isSubscribed = false;
+
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        RaidManager.onRaidStarted += OnRaidStarted;
-        RaidManager.onRaidEnded += OnRaidEnded;
+        TrySubscribe();
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        RaidManager.onRaidStarted -= OnRaidStarted;
-        RaidManager.onRaidEnded -= OnRaidEnded;
+        TryUnsubscribe();
     }
 
     protected override void Start()
     {
         base.Start();
 
+        TrySubscribe();
         Hide();
     }
 
@@ -46,5 +47,27 @@ public class RaidMenu : UIBehaviour
     private void OnRaidEnded(RaidEndedResult result)
     {
         Hide();
+    }
+
+    private void TrySubscribe()
+    {
+        if (isSubscribed) return;
+        if (!RaidManager.Instance) return;
+
+        RaidManager.Instance.onRaidStarted += OnRaidStarted;
+        RaidManager.Instance.onRaidEnded += OnRaidEnded;
+
+        isSubscribed = true;
+    }
+
+    private void TryUnsubscribe()
+    {
+        if (!isSubscribed) return;
+        if (!RaidManager.Instance) return;
+
+        RaidManager.Instance.onRaidStarted -= OnRaidStarted;
+        RaidManager.Instance.onRaidEnded -= OnRaidEnded;
+
+        isSubscribed = false;
     }
 }

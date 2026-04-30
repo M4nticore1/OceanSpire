@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class RaidEndedMenu : MonoBehaviour
+public class RaidEndedMenu : UIBehaviour
 {
     [SerializeField] private ResourceWidget resourceWidgetPrefab;
 
@@ -18,24 +19,57 @@ public class RaidEndedMenu : MonoBehaviour
     private bool isOpened = false;
     private List<ResourceWidget> spawnedResourceWidgets = new();
 
-    private void OnEnable()
+    private bool isSubscribed = false;
+
+    protected override void OnEnable()
     {
-        RaidManager.onRaidEnded += OnRaidEnded;
+        base.OnEnable();
+
+        TrySubscribe();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
-        RaidManager.onRaidEnded -= OnRaidEnded;
+        base.OnDisable();
+
+        TryUnsubscribe();
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        TrySubscribe();
     }
 
     private void Update()
     {
         if (!isOpened) return;
+        if (!RaidManager.Instance) return;
 
         currentVisibilityTime += Time.deltaTime;
         if (currentVisibilityTime < visibilityTime) return;
 
         Close();
+    }
+
+    private void TrySubscribe()
+    {
+        if (isSubscribed) return;
+        if (!RaidManager.Instance) return;
+
+        RaidManager.Instance.onRaidEnded += OnRaidEnded;
+
+        isSubscribed = true;
+    }
+
+    private void TryUnsubscribe()
+    {
+        if (!isSubscribed) return;
+
+        RaidManager.Instance.onRaidEnded -= OnRaidEnded;
+
+        isSubscribed = false;
     }
 
     private void OnRaidEnded(RaidEndedResult result)

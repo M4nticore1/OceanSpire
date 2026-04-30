@@ -8,7 +8,6 @@ public struct RaidEndedResult
 
 public class RaidManager : MonoBehaviour
 {
-
     public static RaidManager Instance;
 
     [SerializeField] private Inventory inventory;
@@ -35,12 +34,12 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private BoatDockPoint[] dockPoints;
     private Dictionary<Boat, Vector3> spawnPositions = new();
 
-    private bool isRaidCreated = false;
-    private bool isUnderRaid = false;
-    private int landedRaidersCount = 0;
+    public bool IsRaidCreated { get; private set; } = false;
+    public bool IsUnderRaid { get; private set; } = false;
+    public int landedRaidersCount = 0;
 
-    public static event System.Action onRaidStarted;
-    public static event System.Action<RaidEndedResult> onRaidEnded;
+    public event System.Action onRaidStarted;
+    public event System.Action<RaidEndedResult> onRaidEnded;
 
     private void Awake()
     {
@@ -73,7 +72,7 @@ public class RaidManager : MonoBehaviour
 
     private void Update()
     {
-        if (isRaidCreated) return;
+        if (IsRaidCreated) return;
 
         if (currentRaidCooldownTime < currentRaidCooldown)
             currentRaidCooldownTime += Time.deltaTime;
@@ -138,21 +137,21 @@ public class RaidManager : MonoBehaviour
             spawnPositions.Add(boat, position);
         }
 
-        isRaidCreated = true;
+        IsRaidCreated = true;
     }
 
     private void StartRaid()
     {
         ClearLosses();
-        isUnderRaid = true;
+        IsUnderRaid = true;
         onRaidStarted?.Invoke();
     }
 
     private void StopRaid(bool isRepeled)
     {
         RemoveCityLoot();
-        isUnderRaid = false;
-        isRaidCreated = false;
+        IsUnderRaid = false;
+        IsRaidCreated = false;
 
         RaidEndedResult result = new RaidEndedResult()
         {

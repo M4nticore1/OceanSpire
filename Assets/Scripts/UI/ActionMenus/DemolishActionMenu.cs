@@ -2,18 +2,29 @@ using UnityEngine;
 
 public class DemolishActionMenu : ActionMenu
 {
-    protected override void OnEnable()
+    protected override bool Subscribe()
     {
-        base.OnEnable();
+        if (!base.Subscribe()) return false;
+        if (!RaidManager.Instance) return false;
 
-        EventBus.onClickedContextDemolishButton += OnContextClickedButton;
+        RaidManager.Instance.onRaidStarted += OnRaidStarted;
+
+        return true;
     }
 
-    protected override void OnDisable()
+    protected override bool Unsubscribe()
     {
-        base.OnDisable();
+        if (!base.Unsubscribe()) return false;
+        if (!RaidManager.Instance) return false;
 
-        EventBus.onClickedContextDemolishButton -= OnContextClickedButton;
+        RaidManager.Instance.onRaidStarted -= OnRaidStarted;
+
+        return true;
+    }
+
+    protected override void OnOpened()
+    {
+        actionButton.SetState(RaidManager.Instance.IsUnderRaid ? CustomButtonState.Disabled : CustomButtonState.Idle);
     }
 
     protected override void OnAction(Building building)
@@ -32,5 +43,10 @@ public class DemolishActionMenu : ActionMenu
             spawnedResourceWidgets[i] = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
             spawnedResourceWidgets[i].SetAmountItem(resource);
         }
+    }
+
+    private void OnRaidStarted()
+    {
+        actionButton.SetState(CustomButtonState.Disabled);
     }
 }
