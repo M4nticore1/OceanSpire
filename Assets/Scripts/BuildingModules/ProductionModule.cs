@@ -225,7 +225,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
     private bool ShouldStartWorking()
     {
         if (isReadyToCollect) return false;
-        if (OwnedBuilding.currentWorkers.Count == 0) return false;
+        if (OwnedBuilding.WorkComponent.EnteredWorkers.Count == 0) return false;
 
         foreach (var resource in currentProductingItem.ConsumeResources) {
             int id = resource.ItemData.ItemId;

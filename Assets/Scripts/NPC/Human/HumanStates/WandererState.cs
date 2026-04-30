@@ -44,6 +44,16 @@ public class WandererState : HumanState
 
     }
 
+    public override void OnStartedInteracting()
+    {
+
+    }
+
+    public override void OnStoppedInteracting()
+    {
+
+    }
+
     public override void OnStoppedMoving()
     {
         

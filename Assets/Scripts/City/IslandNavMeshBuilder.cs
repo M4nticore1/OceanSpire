@@ -12,28 +12,40 @@ public class IslandNavMeshBuilder : MonoBehaviour
     private void OnEnable()
     {
         Building.onBuildingInited += OnBuildingInited;
+        Building.onBuildingConstructionFinished += OnBuildingConstructionFinished;
         Building.onBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
         Building.onBuildingInited -= OnBuildingInited;
+        Building.onBuildingConstructionFinished -= OnBuildingConstructionFinished;
         Building.onBuildingDemolished -= OnBuildingDemolished;
     }
 
     private void OnBuildingInited(Building building)
     {
-        if (!ShouldBake(building)) return;
-        StartBaking();
+        TryBake(building);
+    }
+
+    private void OnBuildingConstructionFinished(Building building)
+    {
+        TryBake(building);
     }
 
     private void OnBuildingDemolished(Building building)
     {
-        if (!ShouldBake(building)) return;
-        StartBaking();
+        TryBake(building);
     }
 
-    private void StartBaking()
+    private void TryBake(Building building)
+    {
+        if (!ShouldBake(building)) return;
+
+        Bake();
+    }
+
+    private void Bake()
     {
         bakeNavMeshCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
     }

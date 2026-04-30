@@ -8,6 +8,9 @@ public abstract class Building : MonoBehaviour, ILocalizable
     [SerializeField] protected ConstructionComponent constructionComponent;
     public ConstructionComponent ConstructionComponent => constructionComponent;
 
+    public WorkComponent WorkComponent { get; private set; }
+    public RaidComponent RaidComponent { get; private set; }
+
     [SerializeField] protected LevelComponent levelComponent;
     public LevelComponent LevelComponent => levelComponent;
 
@@ -22,10 +25,6 @@ public abstract class Building : MonoBehaviour, ILocalizable
     private BuildingStrategy strategy;
 
     private bool isWorking = false;
-
-    public List<CreatureCityNavigator> enteredEntities { get; private set; } = new List<CreatureCityNavigator>();
-    public List<InteractComponent> workers { get; private set; } = new List<InteractComponent>();
-    public List<InteractComponent> currentWorkers { get; private set; } = new List<InteractComponent>();
 
     public BuildingConstruction spawnedConstruction { get; private set; } = null;
 
@@ -65,12 +64,19 @@ public abstract class Building : MonoBehaviour, ILocalizable
     private void Awake()
     {
         SelectComponent = GetComponent<SelectComponent>();
+        WorkComponent = GetComponent<WorkComponent>();
+        RaidComponent = GetComponent<RaidComponent>();
     }
 
     protected virtual void OnEnable()
     {
         constructionComponent.onConstructionStarted += OnConstructionStarted;
         constructionComponent.onConstructionFinished += OnConstructionFinished;
+
+        WorkComponent.onWorkerAdded += OnWorkerAdded;
+        WorkComponent.onWorkerRemoved += OnWorkerRemoved;
+        WorkComponent.onWorkerEntered += OnWorkerEntered;
+        WorkComponent.onWorkerExited += OnWorkerExited;
 
         SelectComponent.onSelected += OnSelected;
         SelectComponent.onDeselected += OnDeselected;
@@ -134,7 +140,6 @@ public abstract class Building : MonoBehaviour, ILocalizable
     // Residents Management
     public void EnterBuilding(CreatureCityNavigator navigator)
     {
-        enteredEntities.Add(navigator);
         onEnterBuilding?.Invoke(navigator);
         strategy.OnEntityEnter(navigator);
         InvokeEnterBuilding(navigator);
@@ -142,45 +147,9 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
     public void ExitBuilding(CreatureCityNavigator navigator)
     {
-        enteredEntities.Remove(navigator);
         onExitBuilding?.Invoke(navigator);
         strategy.OnEntityExit(navigator);
         InvokeExitBuilding(navigator);
-    }
-
-    // Workers
-    public void AddWorker(InteractComponent interactor)
-    {
-        workers.Add(interactor);
-        strategy.OnSetInteractBuilding(interactor);
-    }
-
-    public void RemoveWorker(InteractComponent interactor)
-    {
-        workers.Remove(interactor);
-        strategy.OnRemoveInteractBuilding(interactor);
-    }
-
-    public void AddCurrentWorker(InteractComponent interactor)
-    {
-        currentWorkers.Add(interactor);
-
-        if (currentWorkers.Count == 1)
-            StartWorking();
-
-        strategy.OnStartInteracting(interactor);
-        InvokeCurrentWorkerAdded(interactor);
-    }
-
-    public void RemoveCurrentWorker(InteractComponent interactor)
-    {
-        currentWorkers.Remove(interactor);
-
-        if (currentWorkers.Count == 0)
-            StopWorking();
-
-        strategy.OnStopInteracting(interactor);
-        InvokeCurrentWorkerRemoved(interactor);
     }
 
     // Modules
@@ -217,7 +186,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
     // Interaction
     public Transform GetInteractionTransform()
     {
-        int index = workers.Count > 0 ? ((workers.Count - 1) % LevelData.maxResidentsCount) : 0;
+        int index = WorkComponent.Workers.Count > 0 ? ((WorkComponent.Workers.Count - 1) % LevelData.maxResidentsCount) : 0;
         BuildingAction[] actions = spawnedConstruction.BuildingInteractions;
 
         if (actions.Length > index) {
@@ -276,6 +245,34 @@ public abstract class Building : MonoBehaviour, ILocalizable
         if (!constructionToSpawn) return;
 
         spawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, this);
+    }
+
+    private void OnWorkerAdded(InteractComponent interactor)
+    {
+        strategy.OnSetInteractBuilding(interactor);
+    }
+
+    private void OnWorkerRemoved(InteractComponent interactor)
+    {
+        strategy.OnRemoveInteractBuilding(interactor);
+    }
+
+    private void OnWorkerEntered(InteractComponent interactor)
+    {
+        if (WorkComponent.EnteredWorkers.Count == 1)
+            StartWorking();
+
+        strategy.OnStartedInteracting(interactor);
+        InvokeCurrentWorkerAdded(interactor);
+    }
+
+    private void OnWorkerExited(InteractComponent interactor)
+    {
+        if (WorkComponent.EnteredWorkers.Count == 0)
+            StopWorking();
+
+        strategy.OnStoppedInteracting(interactor);
+        InvokeCurrentWorkerRemoved(interactor);
     }
 
     // Events

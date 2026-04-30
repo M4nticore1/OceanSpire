@@ -9,7 +9,7 @@ public struct RaidEndedResult
 public class RaidManager : MonoBehaviour
 {
 
-    public static RaidManager instance;
+    public static RaidManager Instance;
 
     [SerializeField] private Inventory inventory;
     public Inventory Inventory => inventory;
@@ -44,12 +44,12 @@ public class RaidManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance) {
+        if (Instance) {
             Destroy(gameObject);
             return;
         }
 
-        instance = this;
+        Instance = this;
     }
 
     private void OnEnable()
@@ -75,12 +75,17 @@ public class RaidManager : MonoBehaviour
     {
         if (isRaidCreated) return;
 
-        currentRaidCooldownTime += Time.deltaTime;
+        if (currentRaidCooldownTime < currentRaidCooldown)
+            currentRaidCooldownTime += Time.deltaTime;
+
         if (currentRaidCooldownTime < currentRaidCooldown) return;
 
-        CreateRaid();
         ResetCurrentRaidTime();
         ApplyRandomCooldown();
+
+        if (!CalculateNextRaidBuilding()) return;
+
+        CreateRaid();
     }
 
     public void AddLose(ItemInstance lose)
@@ -95,16 +100,17 @@ public class RaidManager : MonoBehaviour
         return spawnPositions[boat];
     }
 
-    public static Building GetRandomRaidBuilding()
+    public Building CalculateNextRaidBuilding()
     {
         Building building = null;
-        int floorIndex = 0;
-        int placeIndex = 0;
+        List<Building> path = new();
 
-        while (!building || !building.BuildingData.IsRaidable) {
-            floorIndex = Random.Range(0, BuildingsManager.instance.BuiltFloors.Count);
-            placeIndex = Random.Range(0, BuildingsManager.RoomsCountPerFloor);
-            building = BuildingsManager.instance.BuiltFloors[floorIndex].RoomBuildingPlaces[placeIndex].PlacedBuilding;
+        if (PathFinder.TryGetPathToBuilding(null, b => b.BuildingData.IsRaidable && b.RaidComponent.Raiders.Count < b.LevelData.maxResidentsCount, ref path)) {
+            building = path[path.Count - 1];
+        }
+
+        if (!building && PathFinder.TryGetPathToBuilding(null, b => b.BuildingData.IsRaidable, ref path)) {
+            building = path[path.Count - 1];
         }
 
         return building;

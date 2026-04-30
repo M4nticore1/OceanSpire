@@ -27,12 +27,12 @@ public class WorkBuildingStrategy : BuildingStrategy
         
     }
 
-    public override void OnStartInteracting(InteractComponent interactor)
+    public override void OnStartedInteracting(InteractComponent interactor)
     {
 
     }
 
-    public override void OnStopInteracting(InteractComponent interactor)
+    public override void OnStoppedInteracting(InteractComponent interactor)
     {
         
     }

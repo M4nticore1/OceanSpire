@@ -39,9 +39,26 @@ public class InteractComponent : MonoBehaviour
 
     public void StartInteracting()
     {
-        interactBuilding.AddCurrentWorker(this);
         isInteracting = true;
         onStartedInteracting?.Invoke();
+    }
+
+    public void StopInteracting()
+    {
+        if (!isInteracting) return;
+        
+        isInteracting = false;
+        onStoppedInteracting?.Invoke();
+    }
+
+    public void AssignWorkerIndex()
+    {
+        workerIndex = interactBuilding ? interactBuilding.WorkComponent.Workers.Count : -1;
+    }
+
+    public void AssignRaiderIndex()
+    {
+        raiderIndex = interactBuilding ? interactBuilding.WorkComponent.Workers.Count : -1;
     }
 
     // Events
@@ -57,36 +74,17 @@ public class InteractComponent : MonoBehaviour
                 RemoveInteractBuilding();
             }
             else {
-                if (selectedBuilding.workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelComponent.level].maxResidentsCount) {
+                if (selectedBuilding.WorkComponent.Workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelComponent.level].maxResidentsCount) {
                     RemoveInteractBuilding();
                     SetInteractBuilding(selectedBuilding);
                 }
             }
         }
         else {
-            if (selectedBuilding.workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelComponent.level].maxResidentsCount) {
+            if (selectedBuilding.WorkComponent.Workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelComponent.level].maxResidentsCount) {
                 SetInteractBuilding(selectedBuilding);
             }
         }
-    }
-
-    public void AssignWorkerIndex()
-    {
-        workerIndex = interactBuilding ? interactBuilding.workers.Count : -1;
-    }
-
-    public void AssignRaiderIndex()
-    {
-        raiderIndex = interactBuilding ? interactBuilding.workers.Count : -1;
-    }
-
-    private void StopInteracting()
-    {
-        if (!isInteracting) return;
-
-        interactBuilding.RemoveCurrentWorker(this);
-        isInteracting = false;
-        onStoppedInteracting?.Invoke();
     }
 
     private void Interacting()

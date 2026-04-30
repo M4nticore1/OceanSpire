@@ -13,7 +13,7 @@ public class StatsMenu : UIBehaviour
         buildingName.SetLocalizationItem(building.BuildingData.LocalizationItem);
         buildingName.UpdateText();
 
-        string interactorsCountText = building.currentWorkers.Count.ToString();
+        string interactorsCountText = building.WorkComponent.EnteredWorkers.Count.ToString();
         string maxInteractorsCountText = building.LevelData.maxResidentsCount.ToString();
         interactorsCount.SetText(interactorsCountText + "/" + maxInteractorsCountText);
 

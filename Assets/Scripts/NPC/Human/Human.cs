@@ -84,6 +84,8 @@ public class Human : Creature
 
         interactComponent.onSetedInteractBuilding += OnSetedInteractBuilding;
         interactComponent.onRemovedInteractBuilding += OnRemovedInteractBuilding;
+        interactComponent.onStartedInteracting += OnStartedInteracting;
+        interactComponent.onStoppedInteracting += OnStoppedInteracting;
 
         boatRider.onEnteredBoat += OnEnteredBoat;
         boatRider.onExitedBoat += OnExitedBoat;
@@ -111,6 +113,9 @@ public class Human : Creature
 
         interactComponent.onSetedInteractBuilding -= OnSetedInteractBuilding;
         interactComponent.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
+        interactComponent.onStartedInteracting -= OnStartedInteracting;
+        interactComponent.onStoppedInteracting -= OnStoppedInteracting;
+
 
         boatRider.onEnteredBoat -= OnEnteredBoat;
         boatRider.onExitedBoat -= OnExitedBoat;
@@ -172,6 +177,7 @@ public class Human : Creature
     {
         cityNavigator.RemoveTargetBuilding();
         currentStatus.OnRemovedInteractBuilding();
+        interactComponent.RemoveInteractBuilding();
 
         if (boatRider.isRidingOnBoat) {
             BoatRider.selectedBoat.SetState(BoatStateEnum.MovingToDock);
@@ -188,7 +194,7 @@ public class Human : Creature
         }
         else {
             Building building = SelectManager.Instance.GetSelectedBuilding();
-            if (building.workers.Count >= building.LevelData.maxResidentsCount) return;
+            if (building.WorkComponent.Workers.Count >= building.LevelData.maxResidentsCount) return;
 
             SetInteractBuilding(building);
         }
@@ -307,6 +313,16 @@ public class Human : Creature
     private void OnRemovedInteractBuilding()
     {
         cityNavigator.HandleInteractBuildingRemoved();
+    }
+
+    private void OnStartedInteracting()
+    {
+        currentStatus.OnStartedInteracting();
+    }
+
+    private void OnStoppedInteracting()
+    {
+        currentStatus.OnStoppedInteracting();
     }
 
     // Boat

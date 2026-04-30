@@ -12,15 +12,24 @@ public abstract class HumanState
     public abstract void Enter();
     public abstract void Exit();
     public abstract void Tick();
+
     public abstract void OnStartedAttacking();
     public abstract void OnStoppedAttacking();
+
     public abstract void OnSetedInteractBuilding(Building building);
     public abstract void OnRemovedInteractBuilding();
+    public abstract void OnStartedInteracting();
+    public abstract void OnStoppedInteracting();
+
     public abstract void OnStoppedMoving();
+
     public abstract void OnEnteredBuilding(Building building);
+
     public abstract void OnEnteredBoat(Boat boat);
     public abstract void OnExitedBoat(Boat boat);
+
     public abstract void OnRevived();
     public abstract void OnDied();
+
     public abstract void OnDisable();
 }

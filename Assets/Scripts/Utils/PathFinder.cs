@@ -4,23 +4,24 @@ using UnityEngine;
 
 public static class PathFinder
 {
-    public static bool TryGetPathToBuilding(BuildingsManager manager, BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
+    public static bool TryGetPathToBuilding(BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
     {
-        return TryGetPathToBuilding_Internal(manager, startPlace, targetBuilding, ref buildingsPath);
+        return TryGetPathToBuilding_Internal(startPlace, targetBuilding, ref buildingsPath);
     }
 
-    public static bool TryGetPathToBuilding(BuildingsManager manager, BuildingPlace startPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
+    public static bool TryGetPathToBuilding(BuildingPlace startPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
     {
         Building targetBuilding = null;
-        for (int i = 0; i < manager.BuiltFloors.Count; i++) {
-            Building hall = manager.BuiltFloors[i].HallBuildingPlace.PlacedBuilding;
+
+        for (int i = 0; i < BuildingsManager.instance.BuiltFloors.Count; i++) {
+            Building hall = BuildingsManager.instance.BuiltFloors[i].HallBuildingPlace.PlacedBuilding;
             if (hall && targetBuildingCondition(hall)) {
                 targetBuilding = hall;
                 break;
             }
 
             for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
-                Building room = manager.BuiltFloors[i].RoomBuildingPlaces[j].PlacedBuilding;
+                Building room = BuildingsManager.instance.BuiltFloors[i].RoomBuildingPlaces[j].PlacedBuilding;
                 if (room && targetBuildingCondition(room)) {
                     targetBuilding = room;
                     break;
@@ -31,20 +32,20 @@ public static class PathFinder
                 break;
         }
 
-        return TryGetPathToBuilding_Internal(manager, startPlace, targetBuilding, ref buildingsPath);
+        return TryGetPathToBuilding_Internal(startPlace, targetBuilding, ref buildingsPath);
     }
 
-    private static bool TryGetPathToBuilding_Internal(BuildingsManager manager, BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
+    private static bool TryGetPathToBuilding_Internal(BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
     {
         buildingsPath.Clear();
 
         if (startPlace || targetBuilding is TowerBuilding) {
             if (!startPlace) {
-                startPlace = manager.BuiltFloors[0].RoomBuildingPlaces[BuildingsManager.FirstBuildCityBuildingPlace];
+                startPlace = BuildingsManager.instance.BuiltFloors[0].RoomBuildingPlaces[BuildingsManager.FirstBuildCityBuildingPlace];
             }
 
             // Find path
-            List<Building> path = FindPath(manager, startPlace, targetBuilding);
+            List<Building> path = FindPath(startPlace, targetBuilding);
 
             if (path != null) {
                 buildingsPath.AddRange(path);
@@ -58,7 +59,7 @@ public static class PathFinder
         }
     }
 
-    private static List<Building> FindPath(BuildingsManager manager, BuildingPlace startPlace, Building targetBuilding)
+    private static List<Building> FindPath(BuildingPlace startPlace, Building targetBuilding)
     {
         if (startPlace == null) {
             Debug.LogError("startPlace is null");
