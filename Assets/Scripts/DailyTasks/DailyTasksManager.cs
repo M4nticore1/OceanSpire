@@ -16,10 +16,9 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     [SerializeField] private TaskDefinitions[] taskDefinitions;
 
     [Header("Update Tasks")]
-    [SerializeField] private int updateTasksCountPerDay = 1;
     [SerializeField] private int updateTasksTimeHour = 0;
 
-    private int nextUpdateTime = 0;
+    private long nextUpdateTime = 0;
     private bool isUpdated = false;
     private bool isAdUpdateUsed = false;
 
@@ -59,9 +58,9 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     public void Init(DailyTasksDataV1 data)
     {
         if (data != null) {
-            CreateTasks(data.taskIds, data.taskProgresses);
-            SetNextUpdateTime(data.nextUpdateTime);
-            SetAdUpdateUsedSetTrue(data.adUpdateUsed);
+            CreateTasks(data.TaskIds, data.TaskProgresses);
+            SetNextUpdateTime(data.NextUpdateTime);
+            SetAdUpdateUsedSetTrue(data.AdUpdateUsed);
             
         }
         else {
@@ -147,25 +146,25 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         }
     }
 
-    private void SetNextUpdateTime(int seconds)
+    private void SetNextUpdateTime(long seconds)
     {
         nextUpdateTime = seconds;
     }
 
     private string GetUpdateTime()
     {
-        int remainingSeconds = CalculateNextUpdateSecond() - TimeManager.GetCurrentSecond();
+        int remainingSeconds = (int)(CalculateNextUpdateSecond() - TimeManager.GetCurrentSecond());
 
         string timer = TimeFormatter.SecondsToHourTime(remainingSeconds);
 
         return timer;
     }
 
-    private int CalculateNextUpdateSecond()
+    private long CalculateNextUpdateSecond()
     {
-        int minTargetSecond = updateTasksTimeHour * 3600;
-        int maxTargetSecond = (24 + updateTasksTimeHour) * 3600;
-        int targetSecond = minTargetSecond - TimeManager.GetCurrentSecond() >= 0 ? minTargetSecond : maxTargetSecond;
+        long minTargetSecond = updateTasksTimeHour * 3600;
+        long maxTargetSecond = (24 + updateTasksTimeHour) * 3600;
+        long targetSecond = minTargetSecond - TimeManager.GetCurrentSecond() >= 0 ? minTargetSecond : maxTargetSecond;
 
         return targetSecond;
     }

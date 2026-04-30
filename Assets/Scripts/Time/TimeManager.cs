@@ -30,7 +30,7 @@ public class TimeManager : MonoBehaviour
         Instance = this;
     }
 
-    public static int GetCurrentSecond()
+    public static long GetCurrentSecond()
     {
         return DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
     }
