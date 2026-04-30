@@ -124,14 +124,13 @@ public class WanderersManager : MonoBehaviour
 
     private Boat CreateBoat(Vector3 position, Vector3 rotation)
     {
-        int id = (int)BoatIdEnum.BasicBoat;
+        int id = boatPrefab.BoatData.BoatId;
         int instanceId = InstancesManager.instance.GetNextInstanceId();
-        float boatHealth = BoatsList.Instance.boats[id].Health.MaxHealth;
+        float boatHealth = boatPrefab.Health.MaxHealth;
 
         BoatData boatData = new BoatData(id, instanceId, BoatStateEnum.MovingToDock, position, rotation, boatHealth, GetDockPoint().InstanceId.id);
 
-        Boat prefab = BoatsList.Instance.boats[id];
-        Boat boat = BoatFactory.CreateBoat(prefab, boatData);
+        Boat boat = BoatFactory.CreateBoat(boatPrefab, boatData);
 
         return boat;
     }

@@ -11,16 +11,10 @@ public class BoatIdleState : BoatState
 
     public override void Enter()
     {
-        if (!boat.currentRider) return;
+        if (!boat.SelectedRider) return;
 
-        boat.currentRider.OnBoatSetedIdle();
+        boat.SelectedRider.OnBoatSetedIdle();
         boat.Movement.SetAgentEnabled(false);
-
-        Human human = boat.currentRider.GetComponent<Human>();
-        if (human.currentStatusEnum == HumanStatusEnum.Wanderer) {
-            boat.SelectComponent.SetClickable(true);
-            human.SelectComponent.SetClickable(true);
-        }
     }
 
     public override void Exit()

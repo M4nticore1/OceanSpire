@@ -17,7 +17,7 @@ public class BoatsLoader : MonoBehaviour
             for (int i = 0; i < boatIds.Length; i++) {
                 int id = (int)boatIds[i];
                 int instanceId = InstancesManager.instance.GetNextInstanceId();
-                Boat prefab = BoatsList.Instance.boats[id];
+                Boat prefab = BoatsList.Instance.GetBoat(id);
 
                 PierModule pier = BuildingsManager.instance.PierBuilding.GetComponent<PierModule>();
                 BoatDockPoint spawnTransform = pier.PierConstruction.BoatDocks[i];

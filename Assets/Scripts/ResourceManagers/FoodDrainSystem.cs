@@ -8,21 +8,32 @@ public class FoodDrainSystem : MonoBehaviour
     [SerializeField] private float drainFrequency = 10f;
     private float currentTime = 0f;
 
+    private float drainAmount = 0;
+
     private void Update()
     {
         currentTime += Time.deltaTime;
         if (currentTime < drainFrequency) return;
 
+        ApplyDrainAmount();
         DrainFood();
         ResetCurrentTime();
     }
 
+    private void ApplyDrainAmount()
+    {
+        drainAmount += (int)(drainPerSecond * drainFrequency * CreaturesManager.Instance.Citizens.Count);
+    }
+
     private void DrainFood()
     {
+        if (drainAmount < 1f) return;
+
         int id = (int)ItemID.Food;
-        int amount = (int)(drainPerSecond * drainFrequency * CreaturesManager.Instance.Citizens.Count);
+        int amount = (int)drainAmount;
 
         CityStorage.Instance.Inventory.RemoveItemAmount(id, amount);
+        drainAmount -= amount;
     }
 
     private void ResetCurrentTime()

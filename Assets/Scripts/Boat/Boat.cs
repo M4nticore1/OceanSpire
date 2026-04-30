@@ -43,7 +43,7 @@ public class Boat : MonoBehaviour
 
     public BoatStateEnum currentState { get; private set; } = BoatStateEnum.Idle;
     private BoatState state;
-    public BoatRider currentRider { get; private set; }
+    public BoatRider SelectedRider { get; private set; }
 
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
@@ -64,6 +64,9 @@ public class Boat : MonoBehaviour
 
     [SerializeField] private SelectComponent selectComponent;
     public SelectComponent SelectComponent => selectComponent;
+
+    [SerializeField] private ContextMenuTarget contextMenuTarget;
+    public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
     // Dock
     public BoatDockPoint dockPoint;
@@ -145,10 +148,13 @@ public class Boat : MonoBehaviour
     // Enter / Exit
     public void SetRider(BoatRider rider)
     {
-        currentRider = rider;
+        SelectedRider = rider;
 
         Human human = rider.GetComponent<Human>();
         if (human.currentStatusEnum == HumanStatusEnum.Wanderer) {
+            contextMenuTarget.SetShowContextMenu(false);
+        }
+        else if (human.currentStatusEnum == HumanStatusEnum.Raider) {
             selectComponent.SetClickable(false);
         }
 
@@ -157,7 +163,7 @@ public class Boat : MonoBehaviour
 
     public void RemoveRider()
     {
-        currentRider = null;
+        SelectedRider = null;
     }
 
     // Dock Point

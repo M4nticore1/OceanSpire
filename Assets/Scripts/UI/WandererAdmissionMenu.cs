@@ -30,12 +30,10 @@ public class WandererAdmissionMenu : MonoBehaviour
         Boat.onBoatDeselected -= OnBoatDeselected;
     }
 
-    public void Open(Human human)
+    public void Open()
     {
-        selectedHuman = human;
         slidePanel.Open();
-
-        skillPanel.SetSkills(human.SkillsComponent);
+        skillPanel.SetSkills(selectedHuman.SkillsComponent);
 
         isOpened = true;
     }
@@ -51,16 +49,7 @@ public class WandererAdmissionMenu : MonoBehaviour
     {
         if (!isOpened) return;
 
-        Human lastHuman = selectedHuman;
-        selectedHuman = null;
-        BoatRider rider = lastHuman.BoatRider;
-        Boat boat = rider.selectedBoat;
-
-        if (boat) {
-            boat.SelectComponent.SetClickable(true);
-            boat.SelectComponent.Deselect();
-        }
-
+        selectedHuman.BoatRider.selectedBoat.SelectComponent.Deselect();
         isOpened = false;
     }
 
@@ -78,17 +67,18 @@ public class WandererAdmissionMenu : MonoBehaviour
 
     private void OnBoatSelected(Boat boat)
     {
-        if (!boat.currentRider) return;
+        if (!boat.SelectedRider) return;
 
-        Human human = boat.currentRider.GetComponent<Human>();
+        Human human = boat.SelectedRider.GetComponent<Human>();
         if (human.currentStatusEnum != HumanStatusEnum.Wanderer) return;
 
-        Open(human);
+        selectedHuman = human;
+        Open();
     }
 
     private void OnBoatDeselected(Boat boat)
     {
-        if (!selectedHuman) return;
+        if (selectedHuman) return;
 
         Close();
     }

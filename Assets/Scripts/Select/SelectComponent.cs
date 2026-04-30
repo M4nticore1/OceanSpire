@@ -8,7 +8,6 @@ public class SelectComponent : MonoBehaviour, IClickable
     public bool isSelected { get; private set; } = false;
     private Dictionary<GameObject, int> layers = new Dictionary<GameObject, int>();
 
-    private int selectFrame = 0;
     [SerializeField] private bool isClickable = true;
 
     public event Action onSelected;
@@ -44,7 +43,6 @@ public class SelectComponent : MonoBehaviour, IClickable
             child.layer = LayerMask.NameToLayer("Outlined");
         }
 
-        selectFrame = Time.frameCount;
         isSelected = true;
         onSelected?.Invoke();
         onComponentSelected?.Invoke(this);
@@ -66,7 +64,6 @@ public class SelectComponent : MonoBehaviour, IClickable
             }
         }
 
-        selectFrame = Time.frameCount;
         isSelected = false;
         onDeselected?.Invoke();
         onComponentDeselected?.Invoke(this);

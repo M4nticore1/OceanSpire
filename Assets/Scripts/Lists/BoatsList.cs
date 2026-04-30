@@ -4,17 +4,35 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "boatPrefabsList", menuName = "GameContent/BoatList")]
 public class BoatsList : ScriptableObject
 {
-    private static BoatsList _instance;
+    private static BoatsList instance;
     public static BoatsList Instance
     {
         get
         {
-            if (_instance == null) {
-                _instance = Resources.Load<BoatsList>("Lists/BoatsList");
+            if (instance == null) {
+                instance = Resources.Load<BoatsList>("Lists/BoatsList");
+                instance.Init();
             }
-            return _instance;
+
+            return instance;
         }
     }
 
-    [field: SerializeField] public List<Boat> boats { get; private set; } = new List<Boat>();
+    [SerializeField] private List<Boat> boats = new();
+    private Dictionary<int, Boat> boatsDict = new();
+
+    private void Init()
+    {
+        foreach (var boat in boats) {
+            boatsDict.Add(boat.BoatData.BoatId, boat);
+        }
+    }
+
+    public Boat GetBoat(int id)
+    {
+        Boat boat = null;
+        boatsDict.TryGetValue(id, out boat);
+
+        return boat;
+    }
 }

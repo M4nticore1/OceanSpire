@@ -15,7 +15,7 @@ public enum HumanActivity
     Raiding
 }
 
-public class Human : Creature
+public class Human : Creature, IClickable
 {
     [SerializeField] private NameHandler nameHandler;
     public NameHandler NameHandler => nameHandler;
@@ -225,8 +225,6 @@ public class Human : Creature
     public void AcceptWanderer()
     {
         SetStatus(HumanStatusEnum.Citizen);
-        selectComponent.SetClickable(true);
-        selectComponent.Deselect();
         Destroy(boatRider.selectedBoat.gameObject);
         boatRider.ExitBoat();
         onWandererAccepted?.Invoke(this);
@@ -236,6 +234,17 @@ public class Human : Creature
     {
         CreaturesManager.Instance.UnregisterWanderer(this);
         onWandererRejected?.Invoke(this);
+    }
+
+    // IClickable
+    public void Click()
+    {
+        BoatRider.selectedBoat.SelectComponent.Select();
+    }
+
+    public bool ShouldClick()
+    {
+        return currentStatusEnum == HumanStatusEnum.Wanderer;
     }
 
     protected override bool ShouldStartIdle()
@@ -418,27 +427,12 @@ public class Human : Creature
 
     private void OnSelected()
     {
-        if (currentStatusEnum == HumanStatusEnum.Wanderer) {
-            selectComponent.Deselect();
-            SelectComponent boatSelectComponent = boatRider.selectedBoat.SelectComponent;
-            boatSelectComponent.Select();
-            boatSelectComponent.SetClickable(false);
-        }
-        else {
-            onHumanSelected?.Invoke(this);
-        }
+        onHumanSelected?.Invoke(this);
     }
 
     private void OnDeselected()
     {
-        if (currentStatusEnum == HumanStatusEnum.Wanderer) {
-            SelectComponent boatSelectComponent = boatRider.selectedBoat.SelectComponent;
-            boatSelectComponent.SetClickable(true);
-            boatSelectComponent.Deselect();
-        }
-        else {
-            onHumanDeselected?.Invoke(this);
-        }
+        onHumanDeselected?.Invoke(this);
     }
 
     private void OnNavMeshBaked()
