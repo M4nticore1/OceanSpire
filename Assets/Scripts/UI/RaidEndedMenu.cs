@@ -94,7 +94,7 @@ public class RaidEndedMenu : UIBehaviour
 
     private void CreateLosses()
     {
-        int lossesAmount = RaidManager.Instance.Inventory.items.Count;
+        int lossesAmount = RaidManager.Instance.Inventory.Items.Count;
 
         if (lossesAmount == 0) {
             noLossesText.gameObject.SetActive(true);
@@ -102,7 +102,7 @@ public class RaidEndedMenu : UIBehaviour
         else {
             noLossesText.gameObject.SetActive(false);
 
-            foreach (var lose in RaidManager.Instance.Inventory.items) {
+            foreach (var lose in RaidManager.Instance.Inventory.Items) {
                 ResourceWidget widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
                 widget.SetAmountItem(lose.item);
                 widget.SetColor(loseColor);

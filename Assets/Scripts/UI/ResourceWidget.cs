@@ -115,10 +115,12 @@ public class ResourceWidget : MonoBehaviour
         if (!itemData) return false;
 
         int id = itemData.ItemId;
-        if (!CityStorage.Instance.Inventory.itemsDict.ContainsKey(id)) return false;
 
-        SetAmountItem(CityStorage.Instance.Inventory.itemsDict[id].item);
-        SetMaxAmountItem(CityStorage.Instance.Inventory.itemsDict[id].maxAmountItem);
+        StorageItem storageItem = CityStorage.Instance.Inventory.GetItem(id);
+        if (storageItem == null) return false;
+
+        SetAmountItem(storageItem.item);
+        SetMaxAmountItem(storageItem.maxAmountItem);
 
         return true;
     }
@@ -145,9 +147,9 @@ public class ResourceWidget : MonoBehaviour
 
         int id = (int)ItemID.Population;
         int amount = 0;
-        int maxAmount = CityStorage.Instance.Inventory.itemsDict[id].maxAmount;
+        int maxAmount = CityStorage.Instance.Inventory.GetItem(id).maxAmount;
 
-        foreach (var citizen in CreaturesManager.instance.citizens) {
+        foreach (var citizen in CreaturesManager.Instance.Citizens) {
             if (!citizen.HealthComponent.isAlive) continue;
 
             amount++;

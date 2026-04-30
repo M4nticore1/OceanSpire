@@ -45,7 +45,7 @@ public class BoatUnloadingState : BoatState
 
     private void ProcessStoreResources()
     {
-        if (boat.Inventory.items.Count == 0) {
+        if (boat.Inventory.Items.Count == 0) {
             Debug.LogError("items count is 0.");
             return;
         }

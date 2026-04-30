@@ -93,6 +93,9 @@ public class Human : Creature
         selectComponent.onSelected += OnSelected;
         selectComponent.onDeselected += OnDeselected;
 
+        RaidManager.Instance.onRaidStarted += OnRaidStarted;
+        RaidManager.Instance.onRaidEnded += OnRaidEnded;
+
         EventBus.onNavMeshBaked += OnNavMeshBaked;
     }
 
@@ -100,7 +103,7 @@ public class Human : Creature
     {
         base.OnDisable();
 
-        currentStatus.OnDisable();
+        currentStatus.Exit();
 
         healthComponent.onRevived -= OnRevived;
         healthComponent.onDied -= OnDied;
@@ -116,12 +119,14 @@ public class Human : Creature
         interactComponent.onStartedInteracting -= OnStartedInteracting;
         interactComponent.onStoppedInteracting -= OnStoppedInteracting;
 
-
         boatRider.onEnteredBoat -= OnEnteredBoat;
         boatRider.onExitedBoat -= OnExitedBoat;
 
         selectComponent.onSelected -= OnSelected;
         selectComponent.onDeselected -= OnDeselected;
+
+        RaidManager.Instance.onRaidStarted += OnRaidStarted;
+        RaidManager.Instance.onRaidEnded += OnRaidEnded;
 
         EventBus.onNavMeshBaked -= OnNavMeshBaked;
     }
@@ -229,7 +234,7 @@ public class Human : Creature
 
     public void RejectWanderer()
     {
-        CreaturesManager.instance.UnregisterWanderer(this);
+        CreaturesManager.Instance.UnregisterWanderer(this);
         onWandererRejected?.Invoke(this);
     }
 
@@ -344,6 +349,17 @@ public class Human : Creature
 
         currentStatus.OnExitedBoat(boat);
         onExitedBoat?.Invoke(this);
+    }
+    
+    // Raid
+    private void OnRaidStarted()
+    {
+        movement.SetMovementMethod(MovementMethod.Run);
+    }
+
+    private void OnRaidEnded(RaidEndedResult result)
+    {
+        movement.SetMovementMethod(MovementMethod.Walk);
     }
 
     // Status

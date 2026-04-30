@@ -4,16 +4,17 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BuildingsList", menuName = "Game Content/building Prefabs List")]
 public class BuildingsList : ScriptableObject
 {
-    private static BuildingsList _instance;
+    private static BuildingsList instance;
     public static BuildingsList Instance
     {
         get
         {
-            if (_instance == null) {
-                _instance = Resources.Load<BuildingsList>("Lists/BuildingsList");
+            if (instance == null) {
+                instance = Resources.Load<BuildingsList>("Lists/BuildingsList");
+                instance.Init();
             }
 
-            return _instance;
+            return instance;
         }
     }
 
@@ -22,7 +23,7 @@ public class BuildingsList : ScriptableObject
 
     private Dictionary<int, Building> buildingsDict = new Dictionary<int, Building>();
 
-    public void Init()
+    private void Init()
     {
         foreach (Building building in buildings) {
             buildingsDict.Add(building.BuildingData.BuildingId, building);

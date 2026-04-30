@@ -13,6 +13,7 @@ public class LocalizationManager
         {
             if (instance == null) {
                 instance = new LocalizationManager();
+                instance.Init(null);
             }
 
             return instance;
@@ -28,7 +29,7 @@ public class LocalizationManager
 
     private LocalizationManager() { }
 
-    public void Init(SettingsData data)
+    private void Init(SettingsData data)
     {
         if (isInited) return;
 

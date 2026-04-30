@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WanderersManager : MonoBehaviour
@@ -96,7 +97,7 @@ public class WanderersManager : MonoBehaviour
 
     private void AssignDockPoints()
     {
-        List<Human> wanderers = CreaturesManager.instance.wanderers;
+        List<Human> wanderers = CreaturesManager.Instance.Wanderers.ToList();
 
         for (int i = 0; i < wanderers.Count; i++) {
             Human wanderer = wanderers[i];
@@ -149,7 +150,7 @@ public class WanderersManager : MonoBehaviour
 
     private bool CanSpawn()
     {
-        if (CreaturesManager.instance.wanderers.Count >= DockPointsManager.instance.WandererDockPoints.Length) return false;
+        if (CreaturesManager.Instance.Wanderers.Count >= DockPointsManager.instance.WandererDockPoints.Length) return false;
 
         return true;
     }

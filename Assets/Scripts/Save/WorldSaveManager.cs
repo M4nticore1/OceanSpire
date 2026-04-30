@@ -9,6 +9,7 @@ public class WorldSaveManager
         {
             if (instance == null) {
                 instance = new WorldSaveManager();
+                instance.Init();
             }
 
             return instance;
@@ -21,7 +22,7 @@ public class WorldSaveManager
 
     private WorldSaveManager() { }
 
-    public void Init()
+    private void Init()
     {
         EventBus.onCreateWorldButtonClicked += CreateWorld;
         EventBus.onLoadWorldButtonClicked += LoadWorld;

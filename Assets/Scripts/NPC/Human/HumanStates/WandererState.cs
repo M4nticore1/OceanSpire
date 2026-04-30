@@ -10,13 +10,13 @@ public class WandererState : HumanState
     public override void Enter()
     {
         human.SelectComponent.SetClickable(false);
-        CreaturesManager.instance.RegisterWanderer(human);
+        CreaturesManager.Instance.RegisterWanderer(human);
     }
 
     public override void Exit()
     {
         human.SelectComponent.SetClickable(true);
-        CreaturesManager.instance.UnregisterWanderer(human);
+        CreaturesManager.Instance.UnregisterWanderer(human);
     }
 
     public override void Tick()
@@ -82,10 +82,5 @@ public class WandererState : HumanState
     public override void OnDied()
     {
 
-    }
-
-    public override void OnDisable()
-    {
-        CreaturesManager.instance.UnregisterWanderer(human);
     }
 }

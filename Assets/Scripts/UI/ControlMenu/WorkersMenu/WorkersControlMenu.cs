@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WorkersControlMenu : ControlMenu
@@ -47,7 +48,7 @@ public class WorkersControlMenu : ControlMenu
         employedCitizensMenu.ClearWidgets();
         unemployedCitizensMenu.ClearWidgets();
 
-        List<Human> citizens = CreaturesManager.instance.citizens;
+        List<Human> citizens = CreaturesManager.Instance.Citizens.ToList();
         for (int i = 0; i < citizens.Count; i++) {
             Human citizen = citizens[i];
 

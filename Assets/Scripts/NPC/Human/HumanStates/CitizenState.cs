@@ -8,14 +8,14 @@ public class CitizenState : HumanState
 
     public override void Enter()
     {
-        CreaturesManager.instance.RegisterCitizen(human);
+        CreaturesManager.Instance.RegisterCitizen(human);
 
         human.Movement.SetMovementMethod(MovementMethod.Walk);
     }
 
     public override void Exit()
     {
-        CreaturesManager.instance.UnregisterCitizen(human);
+        CreaturesManager.Instance.UnregisterCitizen(human);
     }
 
     public override void Tick()
@@ -102,10 +102,5 @@ public class CitizenState : HumanState
         }
 
         EventBus.InvokeCitizenDied(human);
-    }
-
-    public override void OnDisable()
-    {
-        CreaturesManager.instance.UnregisterCitizen(human);
     }
 }

@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class CreaturesManager : MonoBehaviour
 {
-    public static CreaturesManager instance { get; private set; }
+    public static CreaturesManager Instance { get; private set; }
 
-    public List<Human> citizens { get; private set; } = new List<Human>();
-    public List<Human> wanderers { get; private set; } = new List<Human>();
-    public List<Human> enemies { get; private set; } = new List<Human>();
+    private List<Human> citizens = new();
+    public IReadOnlyList<Human> Citizens => citizens.AsReadOnly();
+
+    private List<Human> wanderers = new();
+    public IReadOnlyList<Human> Wanderers => wanderers.AsReadOnly();
+
+    private List<Human> raiders = new();
+    public IReadOnlyList<Human> Raiders => raiders.AsReadOnly();
 
     public static event Action<Human> onCitizenRegistered;
     public static event Action<Human> onCitizenUnregistered;
@@ -21,12 +26,12 @@ public class CreaturesManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance) {
+        if (Instance) {
             Destroy(gameObject);
             return;
         }
 
-        instance = this;
+        Instance = this;
     }
 
     // Citizen
@@ -58,13 +63,13 @@ public class CreaturesManager : MonoBehaviour
     // Enemy
     public void RegisterRaider(Human human)
     {
-        enemies.Add(human);
+        raiders.Add(human);
         onRaiderRegistered?.Invoke(human);
     }
 
     public void UnregisterRaider(Human human)
     {
-        enemies.Remove(human);
+        raiders.Remove(human);
         onRaiderUnregistered?.Invoke(human);
     }
 }

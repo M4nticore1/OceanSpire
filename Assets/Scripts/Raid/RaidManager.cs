@@ -163,8 +163,8 @@ public class RaidManager : MonoBehaviour
 
     private void RemoveCityLoot()
     {
-        for (int i = 0; i < inventory.items.Count; i++) {
-            ItemInstance item = inventory.items[i].item;
+        for (int i = 0; i < inventory.Items.Count; i++) {
+            ItemInstance item = inventory.Items[i].item;
 
             int id = item.ItemData.ItemId;
             int amount = item.Amount;
@@ -175,8 +175,8 @@ public class RaidManager : MonoBehaviour
 
     private void ClearLosses()
     {
-        for (int i = 0; i < inventory.items.Count; i++) {
-            ItemInstance item = inventory.items[i].item;
+        for (int i = 0; i < inventory.Items.Count; i++) {
+            ItemInstance item = inventory.Items[i].item;
 
             int id = item.ItemData.ItemId;
             int amount = item.Amount;

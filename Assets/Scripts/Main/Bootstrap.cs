@@ -6,13 +6,12 @@ public class Bootstrap : MonoBehaviour
     {
         _ = PlayerSettings.Instance;
 
-        WorldSaveManager.Instance.Init();
-        SettingsSaveManager.Instance.Init();
-        SettingsData data = SettingsSaveManager.Instance.savedData;
+        _ = WorldSaveManager.Instance;
+        _ = SettingsSaveManager.Instance;
 
-        BuildingsList.Instance.Init();
+        _ = BuildingsList.Instance;
 
-        LocalizationManager.Instance.Init(null);
+        _ = LocalizationManager.Instance;
 
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;

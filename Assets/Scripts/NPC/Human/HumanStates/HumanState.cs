@@ -30,6 +30,4 @@ public abstract class HumanState
 
     public abstract void OnRevived();
     public abstract void OnDied();
-
-    public abstract void OnDisable();
 }

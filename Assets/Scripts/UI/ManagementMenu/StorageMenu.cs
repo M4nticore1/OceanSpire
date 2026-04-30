@@ -8,15 +8,15 @@ public class StorageMenu : ManagementMenu
 
     protected override void CreateWidgets()
     {
-        int count = CityStorage.Instance.Inventory.items.Count;
+        int count = CityStorage.Instance.Inventory.Items.Count;
 
         for (int i = 0; i < count; i++) {
-            ItemInstance amountItem = CityStorage.Instance.Inventory.items[i].item;
+            ItemInstance amountItem = CityStorage.Instance.Inventory.Items[i].item;
             ItemData amountItemData = amountItem.ItemData;
 
             if (!amountItemData.ShowInStorage) continue;
 
-            ItemInstance maxAmountItem = CityStorage.Instance.Inventory.items[i].maxAmountItem;
+            ItemInstance maxAmountItem = CityStorage.Instance.Inventory.Items[i].maxAmountItem;
             ItemData maxAmountItemData = maxAmountItem.ItemData;
 
             ItemCategory itemCategory = amountItemData.ItemCategory;

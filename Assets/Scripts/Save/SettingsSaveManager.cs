@@ -9,6 +9,7 @@ public class SettingsSaveManager
         {
             if (instance == null) {
                 instance = new SettingsSaveManager();
+                instance.Init();
             }
 
             return instance;
@@ -18,7 +19,7 @@ public class SettingsSaveManager
     public SettingsData savedData { get; private set; } = null;
     private bool isInited = false;
 
-    public void Init()
+    private void Init()
     {
         if (isInited) return;
 

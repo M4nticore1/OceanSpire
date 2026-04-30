@@ -38,7 +38,7 @@ public class BoatLootHandler : MonoBehaviour
 
     public void HandleDocking()
     {
-        if (inventory.items.Count == 0) return;
+        if (inventory.Items.Count == 0) return;
 
         ProcessStoreResources();
     }
@@ -53,7 +53,7 @@ public class BoatLootHandler : MonoBehaviour
         if (inventory.RemainingWeight <= 0) return;
 
         float currentWeightToUnload = unloadLootSpeed * Time.deltaTime;
-        ItemInstance loot = inventory.items[0].item;
+        ItemInstance loot = inventory.Items[0].item;
         int lootId = loot.ItemData.ItemId;
         float lootWeight = loot.ItemData.Weight;
         int amountToUnload = math.min((int)(currentWeightToUnload / lootWeight), loot.Amount);

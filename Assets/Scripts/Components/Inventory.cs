@@ -20,8 +20,9 @@ public class Inventory : MonoBehaviour
 
     public float RemainingWeight => MaxWeight - CurrentWeight;
 
-    public List<StorageItem> items { get; private set; } = new List<StorageItem>();
-    public Dictionary<int, StorageItem> itemsDict { get; private set; } = new Dictionary<int, StorageItem>();
+    public List<StorageItem> Items { get; private set; } = new();
+    private Dictionary<int, StorageItem> itemsDictId = new();
+    private Dictionary<string, StorageItem> itemsDictKey = new();
 
     public event Action<ItemInstance> onAddedItemAmount;
     public event Action<ItemInstance> onRemovedItemAmount;
@@ -46,10 +47,10 @@ public class Inventory : MonoBehaviour
             amount = math.clamp(amount, 0, (int)(RemainingWeight / data.Weight));
         }
 
-        itemsDict[id].AddAmount(amount);
+        itemsDictId[id].AddAmount(amount);
         AddWeigth(id, amount);
 
-        ItemInstance item = itemsDict[id].item;
+        ItemInstance item = itemsDictId[id].item;
 
         onAddedItemAmount?.Invoke(item);
         onChangedItemAmount?.Invoke(item);
@@ -59,15 +60,15 @@ public class Inventory : MonoBehaviour
     {
         TryAddNewItem(id);
 
-        itemsDict[id].AddMaxAmount(amount);
+        itemsDictId[id].AddMaxAmount(amount);
 
-        onAddedMaxItemAmount?.Invoke(itemsDict[id]);
-        onChangedItemMaxAmount?.Invoke(itemsDict[id]);
+        onAddedMaxItemAmount?.Invoke(itemsDictId[id]);
+        onChangedItemMaxAmount?.Invoke(itemsDictId[id]);
     }
 
     public void TryAddNewItem(int id)
     {
-        if (itemsDict.ContainsKey(id))
+        if (itemsDictId.ContainsKey(id))
             return;
 
         AddNewItem(id);
@@ -78,33 +79,36 @@ public class Inventory : MonoBehaviour
         ItemData data = ItemsList.Instance.GetItemData(id);
         ItemInstance item = new ItemInstance(data);
         StorageItem storageItem = new StorageItem(item);
-        items.Add(storageItem);
-        itemsDict.Add(id, storageItem);
+
+        Items.Add(storageItem);
+        itemsDictId.Add(id, storageItem);
+        itemsDictKey.Add(data.itemKey, storageItem);
     }
 
     private void RemoveItem(int id)
     {
-        itemsDict.Remove(id);
+        itemsDictId.Remove(id);
 
-        for (int i = 0; i < items.Count; i++) {
-            StorageItem item = items[i];
+        for (int i = 0; i < Items.Count; i++) {
+            StorageItem item = Items[i];
 
             if (item.item.ItemData.ItemId == id) {
-                items.RemoveAt(i);
+                Items.RemoveAt(i);
+                itemsDictKey.Remove(item.item.ItemData.itemKey);
             }
         }
     }
 
     public void RemoveItemAmount(int id, int amount)
     {
-        if (!itemsDict.ContainsKey(id)) {
+        if (!itemsDictId.ContainsKey(id)) {
             PrintHasNotItemError(id);
             return;
         }
 
-        itemsDict[id].RemoveAmount(amount);
+        itemsDictId[id].RemoveAmount(amount);
 
-        ItemInstance item = itemsDict[id].item;
+        ItemInstance item = itemsDictId[id].item;
         RemoveWeigth(id, amount);
 
         if (autoCleaning && item.Amount == 0) {
@@ -117,21 +121,37 @@ public class Inventory : MonoBehaviour
 
     public void RemoveItemMaxAmount(int id, int amount)
     {
-        if (!itemsDict.ContainsKey(id)) {
+        if (!itemsDictId.ContainsKey(id)) {
             PrintHasNotItemError(id);
             return;
         }
 
-        itemsDict[id].RemoveMaxAmount(amount);
+        itemsDictId[id].RemoveMaxAmount(amount);
 
         // Remove Amount
-        if (itemsDict[id].maxAmount < itemsDict[id].item.Amount) {
-            int amountToRemove = itemsDict[id].item.Amount - itemsDict[id].maxAmount;
+        if (itemsDictId[id].maxAmount < itemsDictId[id].item.Amount) {
+            int amountToRemove = itemsDictId[id].item.Amount - itemsDictId[id].maxAmount;
             RemoveItemAmount(id, amountToRemove);
         }
 
-        onRemovedMaxItemAmount?.Invoke(itemsDict[id]);
-        onChangedItemMaxAmount?.Invoke(itemsDict[id]);
+        onRemovedMaxItemAmount?.Invoke(itemsDictId[id]);
+        onChangedItemMaxAmount?.Invoke(itemsDictId[id]);
+    }
+
+    public StorageItem GetItem(int id)
+    {
+        StorageItem item;
+        itemsDictId.TryGetValue(id, out item);
+
+        return item;
+    }
+
+    public StorageItem GetItem(string key)
+    {
+        StorageItem item;
+        itemsDictKey.TryGetValue(key, out item);
+
+        return item;
     }
 
     // On Change Item Amount
@@ -149,12 +169,12 @@ public class Inventory : MonoBehaviour
 
     private void AddWeigth(int id, int amount)
     {
-        currentWeight += itemsDict[id].item.ItemData.Weight * amount;
+        currentWeight += itemsDictId[id].item.ItemData.Weight * amount;
     }
 
     private void RemoveWeigth(int id, int amount)
     {
-        currentWeight -= itemsDict[id].item.ItemData.Weight * amount;
+        currentWeight -= itemsDictId[id].item.ItemData.Weight * amount;
     }
 
     private void PrintHasItemError(int id)

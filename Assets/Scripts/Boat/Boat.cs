@@ -180,7 +180,7 @@ public class Boat : MonoBehaviour
 
     public ItemInstance GetItemToUnload()
     {
-        return inventory.items[0].item;
+        return inventory.Items[0].item;
     }
 
     public void ProcessDrainHealth()

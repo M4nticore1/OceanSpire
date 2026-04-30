@@ -59,7 +59,7 @@ public class BuildingWidget : MonoBehaviour
             ItemInstance maxAmountItem = resourcesToBuild[i];
             int id = maxAmountItem.ItemData.ItemId;
 
-            ItemInstance amountItem = cityStorage.Inventory.itemsDict[id].item;
+            ItemInstance amountItem = cityStorage.Inventory.GetItem(id).item;
 
             ResourceWidget resourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);
             resourceWidget.SetAmountItem(amountItem);
@@ -88,7 +88,7 @@ public class BuildingWidget : MonoBehaviour
         foreach (var resource in buildingPrefab.GetResourcesToBuild()) {
             int amountToBuilding = resource.Amount;
             int resourceId = resource.ItemData.ItemId;
-            int currentAmount = cityStorage.Inventory.itemsDict[resourceId].item.Amount;
+            int currentAmount = cityStorage.Inventory.GetItem(resourceId).item.Amount;
 
             if (enoughResources && currentAmount < amountToBuilding) {
                 enoughResources = false;

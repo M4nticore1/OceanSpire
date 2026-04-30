@@ -25,11 +25,15 @@ public class HealthComponent : MonoBehaviour
 
     public void AddHealth(float value)
     {
+        if (currentHealth >= maxHealth) return;
+
         SetCurrentHealth(currentHealth + value);
     }
 
     public void RemoveHealth(float value)
     {
+        if (currentHealth < 0f) return;
+
         SetCurrentHealth(currentHealth - value);
     }
 

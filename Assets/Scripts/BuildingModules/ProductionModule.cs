@@ -230,7 +230,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         foreach (var resource in currentProductingItem.ConsumeResources) {
             int id = resource.ItemData.ItemId;
             int amount = resource.Amount;
-            if (CityStorage.Instance.Inventory.itemsDict[id].item.Amount < amount) return false;
+            if (CityStorage.Instance.Inventory.GetItem(id).item.Amount < amount) return false;
         }
 
         return true;

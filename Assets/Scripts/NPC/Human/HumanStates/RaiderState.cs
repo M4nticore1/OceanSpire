@@ -14,7 +14,7 @@ public class RaiderState : HumanState
 
     public override void Enter()
     {
-        CreaturesManager.instance.RegisterRaider(human);
+        CreaturesManager.Instance.RegisterRaider(human);
 
         human.Movement.SetMovementMethod(MovementMethod.Run);
         human.SelectComponent.SetClickable(false);
@@ -22,7 +22,7 @@ public class RaiderState : HumanState
 
     public override void Exit()
     {
-        CreaturesManager.instance.UnregisterRaider(human);
+        CreaturesManager.Instance.UnregisterRaider(human);
     }
 
     public override void Tick()
@@ -127,11 +127,6 @@ public class RaiderState : HumanState
     public override void OnDied()
     {
         EventBus.InvokeRaiderDied(human);
-    }
-
-    public override void OnDisable()
-    {
-        CreaturesManager.instance.UnregisterRaider(human);
     }
 
     private void UpdateRaidAction()
