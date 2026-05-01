@@ -52,7 +52,7 @@ public abstract class AdRewardMenu : MonoBehaviour
         AssignImage();
         AssignDescryption();
 
-        InputStateManager.instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
         isOpened = true;
     }
 
@@ -61,7 +61,7 @@ public abstract class AdRewardMenu : MonoBehaviour
         OnClose();
         slidePanel.Close();
 
-        InputStateManager.instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
         isOpened = false;
     }
 

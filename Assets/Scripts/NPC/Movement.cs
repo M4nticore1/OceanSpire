@@ -65,6 +65,8 @@ public class Movement : MonoBehaviour
 
     public void SetMovementMethod(MovementMethod method)
     {
+        if (!navAgent) return;
+
         currentMovementMethod = method;
 
         switch (method) {

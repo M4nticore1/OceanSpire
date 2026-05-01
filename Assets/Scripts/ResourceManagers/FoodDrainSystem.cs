@@ -16,16 +16,16 @@ public class FoodDrainSystem : MonoBehaviour
         if (currentTime < drainFrequency) return;
 
         ApplyDrainAmount();
-        DrainFood();
+        TryDrainFood();
         ResetCurrentTime();
     }
 
     private void ApplyDrainAmount()
     {
-        drainAmount += (int)(drainPerSecond * drainFrequency * CreaturesManager.Instance.Citizens.Count);
+        drainAmount += drainPerSecond * drainFrequency * CreaturesManager.Instance.Citizens.Count;
     }
 
-    private void DrainFood()
+    private void TryDrainFood()
     {
         if (drainAmount < 1f) return;
 

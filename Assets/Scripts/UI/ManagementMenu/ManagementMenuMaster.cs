@@ -97,13 +97,13 @@ public class ManagementMenuMaster : MonoBehaviour
     private void Open()
     {
         content.SetActive(true);
-        InputStateManager.instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     private void Close()
     {
         content.SetActive(false);
-        InputStateManager.instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     // Events

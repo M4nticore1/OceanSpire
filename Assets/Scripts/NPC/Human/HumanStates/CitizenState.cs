@@ -25,12 +25,16 @@ public class CitizenState : HumanState
 
     public override void OnStartedAttacking()
     {
-
+        Debug.Log("OnStartedAttacking");
+        human.InteractComponent.StopInteracting();
     }
 
     public override void OnStoppedAttacking()
     {
+        Building interactBuilding = human.InteractComponent.interactBuilding;
+        if (!interactBuilding) return;
 
+        human.CityNavigator.TryFindPathToTargetBuilding();
     }
 
     public override void OnSetedInteractBuilding(Building building)

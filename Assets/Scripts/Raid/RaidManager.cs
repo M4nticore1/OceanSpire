@@ -147,7 +147,7 @@ public class RaidManager : MonoBehaviour
         onRaidStarted?.Invoke();
     }
 
-    private void StopRaid(bool isRepeled)
+    private void EndRaid(bool isRepeled)
     {
         RemoveCityLoot();
         IsUnderRaid = false;
@@ -195,13 +195,6 @@ public class RaidManager : MonoBehaviour
         currentRaidCooldownTime = 0;
     }
 
-    private void DestroyBoats()
-    {
-        //foreach (var boat in spawnedBoats) {
-        //    Destroy(boat.gameObject);
-        //}
-    }
-
     private void OnEnteredBoat(Human human)
     {
         RaiderState raiderState = human.currentStatus as RaiderState;
@@ -212,7 +205,7 @@ public class RaidManager : MonoBehaviour
         landedRaidersCount--;
 
         if (landedRaidersCount == 0) {
-            StopRaid(false);
+            EndRaid(false);
         }
     }
 
@@ -232,7 +225,7 @@ public class RaidManager : MonoBehaviour
         aliveRaidersCount--;
 
         if (aliveRaidersCount <= 0) {
-            StopRaid(true);
+            EndRaid(true);
         }
     }
 

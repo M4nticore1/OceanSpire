@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InputStateManager : MonoBehaviour
 {
-    public static InputStateManager instance;
+    public static InputStateManager Instance;
 
     public bool isGameplayInputBlocked { get; private set; } = false;
 
@@ -13,6 +13,6 @@ public class InputStateManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
 }

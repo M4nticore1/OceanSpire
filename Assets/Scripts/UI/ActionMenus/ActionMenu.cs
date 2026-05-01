@@ -89,7 +89,7 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
         CleanWidgets();
         CreateWidgets(building);
 
-        InputStateManager.instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     public void Close()
@@ -106,7 +106,7 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
 
     private void OnClosed()
     {
-        InputStateManager.instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     protected void CleanWidgets()

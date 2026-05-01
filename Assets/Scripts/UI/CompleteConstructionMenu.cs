@@ -43,7 +43,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         buildingImage.sprite = building.BuildingData.ThumbImage;
         this.building = building;
 
-        InputStateManager.instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     public void Open()
@@ -55,7 +55,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     {
         gameObject.SetActive(false);
 
-        InputStateManager.instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     private void OnCompleteButtonReleased()

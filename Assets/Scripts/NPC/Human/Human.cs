@@ -76,6 +76,8 @@ public class Human : Creature, IClickable
         healthComponent.onRevived += OnRevived;
         healthComponent.onDied += OnDied;
 
+        reviveComponent.onLimitTimeOvered += OnReviveLimitTimeOvered;
+
         attackComponent.onStartedAttacking += OnStartedAttacking;
         attackComponent.onStoppedAttacking += OnStoppedAttacking;
 
@@ -275,6 +277,12 @@ public class Human : Creature, IClickable
         contextMenuTarget.SetShowContextMenu(false);
 
         onHumanDied?.Invoke(this);
+    }
+
+    // Revive
+    private void OnReviveLimitTimeOvered()
+    {
+        Destroy(gameObject);
     }
 
     // Movement

@@ -3110,7 +3110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodDrain
   entitiesManager: {fileID: 220072952}
-  drainPerSecond: 0.1
+  drainPerSecond: 0.025
   drainFrequency: 10
 --- !u!1001 &731686007
 PrefabInstance:

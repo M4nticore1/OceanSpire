@@ -20,7 +20,7 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
         content.gameObject.SetActive(true);
         UpdateMenu();
 
-        InputStateManager.instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
 
         isOpened = true;
         OnOpen();
@@ -31,7 +31,7 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
         content.gameObject.SetActive(false);
 
         EventBus.InvokeWorkersMenuClosed();
-        InputStateManager.instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
 
         isOpened = false;
         OnClose();

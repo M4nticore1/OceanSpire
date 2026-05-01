@@ -31,12 +31,14 @@ public class WorkComponent : MonoBehaviour
 
     public void EnterWorker(InteractComponent interactor)
     {
+        Debug.Log("EnterWorker");
         enteredWorkers.Add(interactor);
         onWorkerEntered?.Invoke(interactor);
     }
 
     public void ExitWorker(InteractComponent interactor)
     {
+        Debug.Log("ExitWorker");
         enteredWorkers.Remove(interactor);
         onWorkerExited?.Invoke(interactor);
     }

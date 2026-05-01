@@ -410,36 +410,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReviveRewardMenu
   slidePanel: {fileID: 1303680501560314107}
-  watchButton: {fileID: 6983401014482516234}
-  rewardImage: {fileID: 5143677277580058156}
-  rewardDescryption: {fileID: 5444696356602730815}
-  lowTimeThreshold: 10
-  enoughTimeColor: {r: 1, g: 1, b: 1, a: 1}
-  lowTimeColor: {r: 1, g: 1, b: 1, a: 1}
   remainingTimeText: {fileID: 6353437842786533338}
   remainingRevivesText: {fileID: 2389228191825434136}
---- !u!114 &5143677277580058156 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 568652600536456854, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
-  m_PrefabInstance: {fileID: 4649475948381175994}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
---- !u!114 &5444696356602730815 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 795223711145843077, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
-  m_PrefabInstance: {fileID: 4649475948381175994}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  button: {fileID: 6983401014482516234}
 --- !u!114 &6983401014482516234 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2336320941890386352, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}

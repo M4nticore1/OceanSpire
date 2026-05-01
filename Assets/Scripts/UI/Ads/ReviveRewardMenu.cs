@@ -1,12 +1,15 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class ReviveRewardMenu : AdRewardMenu
+public class ReviveRewardMenu : UIBehaviour
 {
-    [Header("Revive Reward Menu")]
+    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private CustomButton button;
     [SerializeField] private TextMeshProUGUI remainingTimeText;
     [SerializeField] private TextMeshProUGUI remainingRevivesText;
 
+    private bool isOpened = false;
     private bool isSubscribed = false;
 
     protected override void OnEnable()
@@ -23,8 +26,10 @@ public class ReviveRewardMenu : AdRewardMenu
         TryUnsubscribe();
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         TrySubscribe();
     }
 
@@ -39,26 +44,35 @@ public class ReviveRewardMenu : AdRewardMenu
         remainingTimeText.SetText(TimeFormatter.SecondsToMinuteTime((int)time));
     }
 
-    protected override void OnButtonClicked()
+    private void OnButtonClicked()
     {
 
     }
 
-    protected override void OnOpen()
+    public void Open()
     {
+        slidePanel.Open();
+        isOpened = true;
+    }
+
+    public void Close()
+    {
+        slidePanel.Close();
         AssignButtonEnabled();
         UpdateRemainingRevivesText();
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
-    protected override void OnClose()
+    private void OnClosed()
     {
-        
+        isOpened = false;
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     private void AssignButtonEnabled()
     {
         bool enoughRevives = ReviveManager.Instance.RemainingRevivesCount > 0;
-        watchButton.SetState(enoughRevives ? CustomButtonState.Idle : CustomButtonState.Disabled);
+        button.SetState(enoughRevives ? CustomButtonState.Idle : CustomButtonState.Disabled);
     }
 
     private void UpdateRemainingRevivesText()
@@ -72,6 +86,7 @@ public class ReviveRewardMenu : AdRewardMenu
     private void OnRemainingRevivesCountChanged()
     {
         AssignButtonEnabled();
+        UpdateRemainingRevivesText();
     }
 
     private void TrySubscribe()
@@ -79,6 +94,8 @@ public class ReviveRewardMenu : AdRewardMenu
         if (isSubscribed) return;
         if (!ReviveManager.Instance) return;
 
+        button.onReleased += OnButtonClicked;
+        slidePanel.onClosed += OnClosed;
         ReviveManager.Instance.onRevivesCountChanged += OnRemainingRevivesCountChanged;
 
         isSubscribed = true;
@@ -89,6 +106,8 @@ public class ReviveRewardMenu : AdRewardMenu
         if (!isSubscribed) return;
         if (!ReviveManager.Instance) return;
 
+        button.onReleased -= OnButtonClicked;
+        slidePanel.onClosed -= OnClosed;
         ReviveManager.Instance.onRevivesCountChanged -= OnRemainingRevivesCountChanged;
 
         isSubscribed = false;

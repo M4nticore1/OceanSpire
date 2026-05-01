@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ReviveComponent : MonoBehaviour
@@ -9,6 +10,8 @@ public class ReviveComponent : MonoBehaviour
     public float ReviveLimitTime => reviveLimitTime;
 
     public float CurrentDiedTime { get; private set; }
+
+    public event Action onLimitTimeOvered;
 
     private void OnEnable()
     {
@@ -25,6 +28,10 @@ public class ReviveComponent : MonoBehaviour
         if (health.isAlive) return;
 
         CurrentDiedTime += Time.deltaTime;
+
+        if (CurrentDiedTime >= reviveLimitTime) {
+            OnLimitTimeUp();
+        }
     }
 
     public void Revive()
@@ -40,6 +47,11 @@ public class ReviveComponent : MonoBehaviour
     private void OnDied()
     {
         ResetDiedTime();
+    }
+
+    private void OnLimitTimeUp()
+    {
+        onLimitTimeOvered?.Invoke();
     }
 
     private float GetReviveHealth()
