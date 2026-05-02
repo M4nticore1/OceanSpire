@@ -1,8 +1,8 @@
 using System.Linq;
 using UnityEngine;
 
-[AddComponentMenu("Building Modules/Production Building")]
-public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClickable, IElectricible, IRaidable
+[AddComponentMenu("Building Modules/Production Module")]
+public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectricible, IRaidable
 {
     [SerializeField] private SelectComponent selectComponent;
 
@@ -38,17 +38,6 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         SetProducedItemByIndex(currentProductingItemIndex);
     }
 
-    // IClickable
-    public void Click()
-    {
-        CollectItem();
-    }
-
-    public bool ShouldClick()
-    {
-        return isReadyToCollect;
-    }
-
     // IElectricible
     public float GetElectricityConsumption()
     {
@@ -81,16 +70,26 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
         StopWorking();
     }
 
+    // Click
+    public void OnBuildingClicked()
+    {
+        if (!TryCollectItem()) return;
+
+        SelectManager.Instance.SelectedComponent.Click();
+    }
+
     protected override void Subscribe()
     {
         OwnedBuilding.onInited += OnInit;
         OwnedBuilding.onWorkStarted += OnWorkStarted;
+        OwnedBuilding.onClicked += OnBuildingClicked;
     }
 
     protected override void Unsubscribe()
     {
         OwnedBuilding.onInited -= OnInit;
         OwnedBuilding.onWorkStarted -= OnWorkStarted;
+        OwnedBuilding.onClicked -= OnBuildingClicked;
     }
 
     private void OnInit()
@@ -104,11 +103,12 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IClicka
     }
 
     // Production
-    private void TryCollectItem()
+    private bool TryCollectItem()
     {
-        if (!isReadyToCollect) return;
+        if (!isReadyToCollect) return false;
 
         CollectItem();
+        return true;
     }
 
     private void CollectItem()

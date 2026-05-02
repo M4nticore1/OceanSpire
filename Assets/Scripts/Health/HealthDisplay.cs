@@ -65,6 +65,8 @@ public class HealthDisplay : MonoBehaviour
 
     public void SetHealthComponent(HealthComponent health)
     {
+        Unsubscribe();
+
         this.health = health;
 
         if (ShouldSubscribe()) {

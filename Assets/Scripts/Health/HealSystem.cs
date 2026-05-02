@@ -21,6 +21,8 @@ public class HealSystem : MonoBehaviour
     private void HealCitizens()
     {
         foreach (var citizen in CreaturesManager.Instance.Citizens) {
+            if (!ShouldHeal(citizen)) continue;
+
             citizen.HealthComponent.AddHealth(healPerSecond * healFrequence);
         }
     }
@@ -28,5 +30,12 @@ public class HealSystem : MonoBehaviour
     private void ResetCurrentTime()
     {
         currentTime = 0f;
+    }
+
+    private bool ShouldHeal(Human human)
+    {
+        if (!human.HealthComponent.IsAlive) return false;
+
+        return true;
     }
 }

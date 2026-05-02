@@ -24,12 +24,12 @@ public class WandererState : HumanState
 
     }
 
-    public override void OnStartedAttacking()
+    public override void OnAttackStarted()
     {
 
     }
 
-    public override void OnStoppedAttacking()
+    public override void OnAttackStopped()
     {
 
     }
@@ -39,17 +39,17 @@ public class WandererState : HumanState
         
     }
 
-    public override void OnRemovedInteractBuilding()
+    public override void OnRemovedInteractBuilding(Building building)
     {
 
     }
 
-    public override void OnStartedInteracting()
+    public override void OnInteractionStarted()
     {
 
     }
 
-    public override void OnStoppedInteracting()
+    public override void OnInteractionStopped()
     {
 
     }

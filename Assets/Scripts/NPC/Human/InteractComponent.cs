@@ -3,92 +3,63 @@ using UnityEngine;
 
 public class InteractComponent : MonoBehaviour
 {
-    public Building interactBuilding { get; private set; }
+    public Building InteractBuilding { get; private set; }
 
-    public bool isInteracting { get; private set; } = false;
+    public bool IsInteracting { get; private set; } = false;
     public int workerIndex { get; private set; } = 0;
     public int raiderIndex { get; private set; } = 0;
 
-    public event Action onSetedInteractBuilding;
-    public event Action onRemovedInteractBuilding;
-    public event Action onStartedInteracting;
-    public event Action onStoppedInteracting;
+    public event Action<Building> onSetedInteractBuilding;
+    public event Action<Building> onRemovedInteractBuilding;
+    public event Action onInteractionStarted;
+    public event Action onInteractionStopped;
 
-    private void Update()
-    {
-        if (isInteracting) {
-            Interacting();
-        }
-    }
+    public static event Action<InteractComponent> onInteractorSetedInteractBuilding;
+    public static event Action<InteractComponent> onInteractorRemovedInteractBuilding;
 
     public void SetInteractBuilding(Building building)
     {
-        interactBuilding = building;
-        onSetedInteractBuilding?.Invoke();
+        InteractBuilding = building;
+        onSetedInteractBuilding?.Invoke(building);
+        onInteractorSetedInteractBuilding?.Invoke(this);
     }
 
     public void RemoveInteractBuilding()
     {
-        if (isInteracting) {
+        if (!InteractBuilding) return;
+
+        if (IsInteracting) {
             StopInteracting();
         }
 
-        interactBuilding = null;
-        onRemovedInteractBuilding?.Invoke();
+        Building lastInteractBuilding = InteractBuilding;
+        InteractBuilding = null;
+
+        onRemovedInteractBuilding?.Invoke(lastInteractBuilding);
+        onInteractorRemovedInteractBuilding?.Invoke(this);
     }
 
     public void StartInteracting()
     {
-        isInteracting = true;
-        onStartedInteracting?.Invoke();
+        IsInteracting = true;
+        onInteractionStarted?.Invoke();
     }
 
     public void StopInteracting()
     {
-        if (!isInteracting) return;
+        if (!IsInteracting) return;
         
-        isInteracting = false;
-        onStoppedInteracting?.Invoke();
+        IsInteracting = false;
+        onInteractionStopped?.Invoke();
     }
 
     public void AssignWorkerIndex()
     {
-        workerIndex = interactBuilding ? interactBuilding.WorkComponent.Workers.Count : -1;
+        workerIndex = InteractBuilding ? InteractBuilding.WorkComponent.Workers.Count : -1;
     }
 
     public void AssignRaiderIndex()
     {
-        raiderIndex = interactBuilding ? interactBuilding.WorkComponent.Workers.Count : -1;
-    }
-
-    // Events
-    private void OnWorkerWidgetClicked(CitizenWidget widget)
-    {
-        Human resident = widget.Human;
-        if (resident != GetComponent<Human>()) return;
-
-        Building selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
-
-        if (interactBuilding) {
-            if (selectedBuilding == interactBuilding) {
-                RemoveInteractBuilding();
-            }
-            else {
-                if (selectedBuilding.WorkComponent.Workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelComponent.level].maxResidentsCount) {
-                    RemoveInteractBuilding();
-                    SetInteractBuilding(selectedBuilding);
-                }
-            }
-        }
-        else {
-            if (selectedBuilding.WorkComponent.Workers.Count < selectedBuilding.LevelsData[selectedBuilding.LevelComponent.level].maxResidentsCount) {
-                SetInteractBuilding(selectedBuilding);
-            }
-        }
-    }
-
-    private void Interacting()
-    {
-
+        raiderIndex = InteractBuilding ? InteractBuilding.WorkComponent.Workers.Count : -1;
     }
 }

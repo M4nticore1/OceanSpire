@@ -2,24 +2,23 @@ using UnityEngine;
 
 public class CoalGeneratorModule : BuildingModule
 {
-    [Header("Coal Generator")]
-    [SerializeField] private ParticleSystem smokePrefab = null;
-    private ParticleSystem spawnedSmoke = null;
-    //[SerializeField] private Gradient smokeGradient = null;
+    [SerializeField] private ProductionModule productionModule;
+    [SerializeField] private ParticleSystem smokePrefab;
+    private ParticleSystem spawnedSmoke;
 
     CoalGenetatorConstructionModule CoalGenetatorConstructionModule => BuildingConstruction ? BuildingConstruction.GetComponent<CoalGenetatorConstructionModule>() : null;
     TimerHandle stopProductingTimerHandle = new TimerHandle();
 
     protected override void Subscribe()
     {
-        OwnedBuilding.onWorkStarted += OnWorkStarted;
-        OwnedBuilding.onWorkStopped += OnWorkStopped;
+        productionModule.onWorkStarted += OnWorkStarted;
+        productionModule.onWorkStopped += OnWorkStopped;
     }
 
     protected override void Unsubscribe()
     {
-        OwnedBuilding.onWorkStarted -= OnWorkStarted;
-        OwnedBuilding.onWorkStopped -= OnWorkStopped;
+        productionModule.onWorkStarted -= OnWorkStarted;
+        productionModule.onWorkStopped -= OnWorkStopped;
     }
 
     private void TrySpawnSmoke()

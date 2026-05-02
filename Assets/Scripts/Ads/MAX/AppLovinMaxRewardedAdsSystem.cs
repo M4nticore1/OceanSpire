@@ -87,7 +87,7 @@ public class AppLovinMaxRewardedAdsSystem : AdsSystem
     private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdk.AdInfo adInfo)
     {
         // The rewarded ad displayed and the user should receive the reward.
-        RewardedAdsManager.instance.ReceiveReward();
+        RewardedAdsManager.Instance.ReceiveReward();
         OnAdStarted();
     }
 

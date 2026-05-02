@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ReviveRewardMenu : UIBehaviour
+public class ReviveMenu : UIBehaviour
 {
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private CustomButton button;
@@ -46,13 +46,18 @@ public class ReviveRewardMenu : UIBehaviour
 
     private void OnButtonClicked()
     {
+        Human human = SelectManager.Instance.GetSelectedHuman();
+        ReviveAdRewardInstance rewrad = new ReviveAdRewardInstance(human);
 
+        RewardedAdsManager.Instance.SetCurrentReward(rewrad);
+        RewardedAdsManager.Instance.ShowAd();
     }
 
     public void Open()
     {
-        slidePanel.Open();
         isOpened = true;
+        slidePanel.Open();
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     public void Close()
@@ -60,7 +65,6 @@ public class ReviveRewardMenu : UIBehaviour
         slidePanel.Close();
         AssignButtonEnabled();
         UpdateRemainingRevivesText();
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     private void OnClosed()
@@ -89,6 +93,11 @@ public class ReviveRewardMenu : UIBehaviour
         UpdateRemainingRevivesText();
     }
 
+    private void OnRevived(AdRewardInstance reward)
+    {
+        Close();
+    }
+
     private void TrySubscribe()
     {
         if (isSubscribed) return;
@@ -97,6 +106,7 @@ public class ReviveRewardMenu : UIBehaviour
         button.onReleased += OnButtonClicked;
         slidePanel.onClosed += OnClosed;
         ReviveManager.Instance.onRevivesCountChanged += OnRemainingRevivesCountChanged;
+        ReviveAdRewardInstance.onRewardReceived += OnRevived;
 
         isSubscribed = true;
     }
@@ -109,6 +119,7 @@ public class ReviveRewardMenu : UIBehaviour
         button.onReleased -= OnButtonClicked;
         slidePanel.onClosed -= OnClosed;
         ReviveManager.Instance.onRevivesCountChanged -= OnRemainingRevivesCountChanged;
+        ReviveAdRewardInstance.onRewardReceived -= OnRevived;
 
         isSubscribed = false;
     }

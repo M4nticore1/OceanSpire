@@ -5,7 +5,6 @@ using UnityEngine;
 public static class EventBus
 {
     // Main Menu
-    public static event Action<string> onCreateWorldButtonClicked;
     public static event Action<WorldData> onLoadWorldButtonClicked;
 
     // City
@@ -27,26 +26,11 @@ public static class EventBus
     public static event Action<Boat> onBoatUnloaded;
     public static event Action<int, int> onBoatUnloadedItem;
 
-    // NPS
-    public static event Action<Human> onCitizenRevived;
-    public static event Action<Human> onCitizenDied;
-    public static event Action<Human> onRaiderDied;
-
-    // Residents
-    public static event Action<Human> onHumanInited;
-    public static event Action<Human> onCitizenDeleted;
-
-    // Workers
-    public static event Action<CitizenWidget> onCitizenWidgetClicked;
-    public static event Action onSetedWorkBuilding;
-    public static event Action onRemovedWorkBuilding;
-
     // Loot
     public static event Action<ItemInstance> onMainStorageItemAmountChanged;
     public static event Action<StorageItem> onMainStorageItemMaxAmountChanged;
 
     public static event Action<ItemInstance> onItemRemoved;
-    public static event Action<ItemInstance> onLootStorageChanged;
 
     // Building Stats Menu
     public static event Action<Building> onCameraEnteredStatsMenuDistance;
@@ -118,49 +102,6 @@ public static class EventBus
     public static void InvokeBoatUnloadedItem(int id, int amount)
     {
         onBoatUnloadedItem?.Invoke(id, amount);
-    }
-
-    // NPC
-    public static void InvokeCitizenRevived(Human human)
-    {
-        onCitizenRevived?.Invoke(human);
-    }
-
-    public static void InvokeCitizenDied(Human human)
-    {
-        onCitizenDied?.Invoke(human);
-    }
-
-    public static void InvokeRaiderDied(Human human)
-    {
-        onRaiderDied?.Invoke(human);
-    }
-
-    // Residents
-    public static void InvokeCitizenInited(Human resident)
-    {
-        onHumanInited?.Invoke(resident);
-    }
-
-    public static void InvokeCitizenDeleted(Human resident)
-    {
-        onCitizenDeleted?.Invoke(resident);
-    }
-
-    // Workers
-    public static void InvokeCitizenWidgetClicked(CitizenWidget widget)
-    {
-        onCitizenWidgetClicked?.Invoke(widget);
-    }
-
-    public static void InvokeSetedWorkBuilding()
-    {
-        onSetedWorkBuilding?.Invoke();
-    }
-
-    public static void InvokeRemovedWorkBuilding()
-    {
-        onRemovedWorkBuilding?.Invoke();
     }
 
     // Loot

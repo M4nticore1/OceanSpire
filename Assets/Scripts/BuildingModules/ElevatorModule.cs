@@ -97,7 +97,7 @@ public class ElevatorModule : BuildingModule, IElectricible, IBuildingListener
     // Passengers
     public void AddPassenger(CreatureCityNavigator passenger)
     {
-        switch (passenger.followingPathState) {
+        switch (passenger.FollowingPathState) {
             case FollowingPathState.GoingToWaiting:
                 spawnedElevatorCabin.AddGoingToWaitingPassenger(passenger);
                 break;
@@ -115,7 +115,7 @@ public class ElevatorModule : BuildingModule, IElectricible, IBuildingListener
 
     public void RemovePassenger(CreatureCityNavigator passenger)
     {
-        switch (passenger.followingPathState) {
+        switch (passenger.FollowingPathState) {
             case FollowingPathState.GoingToWaiting:
                 spawnedElevatorCabin.RemoveGoingToWaitingPassenger(passenger);
                 break;

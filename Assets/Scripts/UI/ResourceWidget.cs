@@ -24,10 +24,11 @@ public class ResourceWidget : MonoBehaviour
         EventBus.onMainStorageItemMaxAmountChanged += OnMainStorageItemMaxAmountChanged;
 
         if (itemData && itemData.ItemId == (int)ItemID.Population) {
-            CreaturesManager.onCitizenRegistered += OnCitizenAdded;
-            CreaturesManager.onCitizenUnregistered += OnCitizenRemoved;
-            EventBus.onCitizenRevived += OnCitizenRevived;
-            EventBus.onCitizenDied += OnCitizenDied;
+            CreaturesManager.onCitizenRegistered += OnHumanAdded;
+            CreaturesManager.onCitizenUnregistered += OnHumanRemoved;
+
+            Human.onHumanRevived += OnHumanRevived;
+            Human.onHumanDied += OnHumanDied;
         }
 
         UpdateAmount();
@@ -40,10 +41,11 @@ public class ResourceWidget : MonoBehaviour
 
         if (itemData && itemData.ItemId == (int)ItemID.Population) {
 
-            CreaturesManager.onCitizenRegistered -= OnCitizenAdded;
-            CreaturesManager.onCitizenUnregistered -= OnCitizenRemoved;
-            EventBus.onCitizenRevived -= OnCitizenRevived;
-            EventBus.onCitizenDied -= OnCitizenDied;
+            CreaturesManager.onCitizenRegistered -= OnHumanAdded;
+            CreaturesManager.onCitizenUnregistered -= OnHumanRemoved;
+
+            Human.onHumanRevived -= OnHumanRevived;
+            Human.onHumanDied -= OnHumanDied;
         }
     }
 
@@ -74,7 +76,7 @@ public class ResourceWidget : MonoBehaviour
         TryApplyItemData();
 
         if (HasPopulationItem()) {
-            UpdateCitizensAmount();
+            UpdateCitizensCount();
         }
         else {
             UpdateResourceAmount();
@@ -140,7 +142,14 @@ public class ResourceWidget : MonoBehaviour
         }
     }
 
-    private void UpdateCitizensAmount()
+    private void TryUpdateCitizensCount(Human human)
+    {
+        if (!ShouldUpdateCitizensCount(human)) return;
+
+        UpdateCitizensCount();
+    }
+
+    private void UpdateCitizensCount()
     {
         if (!itemData) return;
         if (amountItem == null) return;
@@ -150,7 +159,7 @@ public class ResourceWidget : MonoBehaviour
         int maxAmount = CityStorage.Instance.Inventory.GetItem(id).maxAmount;
 
         foreach (var citizen in CreaturesManager.Instance.Citizens) {
-            if (!citizen.HealthComponent.isAlive) continue;
+            if (!citizen.HealthComponent.IsAlive) continue;
 
             amount++;
         }
@@ -185,24 +194,24 @@ public class ResourceWidget : MonoBehaviour
         UpdateResourceAmount();
     }
 
-    private void OnCitizenAdded(Human citizen)
+    private void OnHumanAdded(Human human)
     {
-        UpdateCitizensAmount();
+        UpdateCitizensCount();
     }
 
-    private void OnCitizenRemoved(Human citizen)
+    private void OnHumanRemoved(Human human)
     {
-        UpdateCitizensAmount();
+        UpdateCitizensCount();
     }
 
-    private void OnCitizenRevived(Human human)
+    private void OnHumanRevived(Human human)
     {
-        UpdateCitizensAmount();
+        TryUpdateCitizensCount(human);
     }
 
-    private void OnCitizenDied(Human human)
+    private void OnHumanDied(Human human)
     {
-        UpdateCitizensAmount();
+        TryUpdateCitizensCount(human);
     }
 
     private bool HasPopulationItem()
@@ -211,5 +220,12 @@ public class ResourceWidget : MonoBehaviour
 
         int id = (int)ItemID.Population;
         return itemData.ItemId == id;
+    }
+
+    private bool ShouldUpdateCitizensCount(Human human)
+    {
+        if (human.currentStatusEnum != HumanStatusEnum.Citizen) return false;
+
+        return true;
     }
 }

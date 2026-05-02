@@ -30,6 +30,9 @@ public abstract class BuildingModule : MonoBehaviour
 
     private bool isSubscribed = false;
 
+    public event Action onWorkStarted;
+    public event Action onWorkStopped;
+
     protected void Awake()
     {
         ownedBuilding = GetComponent<Building>();
@@ -54,6 +57,7 @@ public abstract class BuildingModule : MonoBehaviour
         if (isWorking) return;
 
         isWorking = true;
+        onWorkStarted?.Invoke();
     }
 
     protected void StopWorking()
@@ -61,6 +65,7 @@ public abstract class BuildingModule : MonoBehaviour
         if (!isWorking) return;
 
         isWorking = false;
+        onWorkStopped?.Invoke();
     }
 
     protected void SetFlickingPower(float multiplier)

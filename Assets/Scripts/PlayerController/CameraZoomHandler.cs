@@ -24,14 +24,24 @@ public class CameraZoomHandler : MonoBehaviour
 
     private float lastPitch = 0;
 
+    private void OnEnable()
+    {
+        inputHandler.onCameraZoomPerformed += OnCameraZoomPerformed;
+    }
+
+    private void OnDisable()
+    {
+        inputHandler.onCameraZoomPerformed -= OnCameraZoomPerformed;
+    }
+
     private void Start()
     {
         currentArmLength = -transform.localPosition.z;
     }
 
-    public void Tick()
+    private void Update()
     {
-        if (inputHandler.isPrimaryInteractionPressed && inputHandler.isSecondaryInteractionPressed && !inputStateManager.isGameplayInputBlocked) {
+        if (ShouldMove()) {
             ProcessTouchscreenZoom();
         }
         else {
@@ -43,7 +53,7 @@ public class CameraZoomHandler : MonoBehaviour
         ApplyZoom();
     }
 
-    public void AddZoomVelocity(float value)
+    private void AddZoomVelocity(float value)
     {
         if (inputStateManager.isGameplayInputBlocked) return;
 
@@ -108,5 +118,19 @@ public class CameraZoomHandler : MonoBehaviour
     private void ResetPitch()
     {
         lastPitch = 0;
+    }
+
+    private void OnCameraZoomPerformed(float value)
+    {
+        AddZoomVelocity(value);
+    }
+
+    private bool ShouldMove()
+    {
+        if (!inputHandler.isPrimaryInteractionPressed) return false;
+        if (!inputHandler.isSecondaryInteractionPressed) return false;
+        if (inputStateManager.isGameplayInputBlocked) return false;
+
+        return true;
     }
 }

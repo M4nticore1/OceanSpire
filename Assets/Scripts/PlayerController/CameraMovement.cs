@@ -28,7 +28,7 @@ public class CameraMovement : MonoBehaviour
         playerInputHandler.onPrimaryInteractionPressed -= OnPrimaryInteractionPressed;
     }
 
-    public void Tick()
+    private void Update()
     {
         if (ShouldMove()) {
             ApplyVelocity();

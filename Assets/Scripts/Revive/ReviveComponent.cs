@@ -11,6 +11,7 @@ public class ReviveComponent : MonoBehaviour
 
     public float CurrentDiedTime { get; private set; }
 
+    public event Action onRevived;
     public event Action onLimitTimeOvered;
 
     private void OnEnable()
@@ -25,7 +26,7 @@ public class ReviveComponent : MonoBehaviour
 
     private void Update()
     {
-        if (health.isAlive) return;
+        if (health.IsAlive) return;
 
         CurrentDiedTime += Time.deltaTime;
 
@@ -37,6 +38,7 @@ public class ReviveComponent : MonoBehaviour
     public void Revive()
     {
         health.SetCurrentHealth(GetReviveHealth());
+        onRevived?.Invoke();
     }
 
     private void ResetDiedTime()

@@ -10,19 +10,19 @@ public class HumanAnimation : MonoBehaviour
         human.onStartedIdle += OnStartedIdle;
         human.onStoppedIdle += OnStoppedIdle;
 
-        human.Movement.onStartedMoving += OnStartedMoving;
-        human.Movement.onStoppedMoving += OnStoppedMoving;
+        human.Movement.onMovementStarted += OnMovementStarted;
+        human.Movement.onMovementStopped += OnMovementStopped;
 
         human.BoatRider.onStartedFloating += OnStartedFloating;
         human.BoatRider.onStoppedFloating += OnStoppedFloating;
 
-        human.InteractComponent.onStartedInteracting += OnStartedInteracting;
-        human.InteractComponent.onStoppedInteracting += OnStoppedInteracting;
+        human.InteractComponent.onInteractionStarted += OnInteractionStarted;
+        human.InteractComponent.onInteractionStopped += OnInteractionStopped;
 
-        human.AttackComponent.onStartedAttacking += OnStartedAttacking;
-        human.AttackComponent.onStoppedAttacking += OnStoppedAttacking;
+        human.AttackComponent.onAttackStarted += OnStartedAttacking;
+        human.AttackComponent.onAttackStopped += OnStoppedAttacking;
 
-        human.HealthComponent.onRevived += OnRevived;
+        human.ReviveComponent.onRevived += OnRevived;
         human.HealthComponent.onDied += OnDied;
     }
 
@@ -31,19 +31,19 @@ public class HumanAnimation : MonoBehaviour
         human.onStartedIdle -= OnStartedIdle;
         human.onStoppedIdle -= OnStoppedIdle;
 
-        human.Movement.onStartedMoving -= OnStartedMoving;
-        human.Movement.onStoppedMoving -= OnStoppedMoving;
+        human.Movement.onMovementStarted -= OnMovementStarted;
+        human.Movement.onMovementStopped -= OnMovementStopped;
 
-        human.Movement.onStartedMoving -= OnStartedMoving;
-        human.Movement.onStoppedMoving -= OnStoppedMoving;
+        human.Movement.onMovementStarted -= OnMovementStarted;
+        human.Movement.onMovementStopped -= OnMovementStopped;
 
-        human.InteractComponent.onStartedInteracting -= OnStartedInteracting;
-        human.InteractComponent.onStoppedInteracting -= OnStoppedInteracting;
+        human.InteractComponent.onInteractionStarted -= OnInteractionStarted;
+        human.InteractComponent.onInteractionStopped -= OnInteractionStopped;
 
-        human.AttackComponent.onStartedAttacking -= OnStartedAttacking;
-        human.AttackComponent.onStoppedAttacking -= OnStoppedAttacking;
+        human.AttackComponent.onAttackStarted -= OnStartedAttacking;
+        human.AttackComponent.onAttackStopped -= OnStoppedAttacking;
 
-        human.HealthComponent.onRevived -= OnRevived;
+        human.ReviveComponent.onRevived -= OnRevived;
         human.HealthComponent.onDied -= OnDied;
     }
 
@@ -57,28 +57,24 @@ public class HumanAnimation : MonoBehaviour
         animator.SetBool("isIdle", false);
     }
 
-    private void OnStartedMoving()
+    private void OnMovementStarted()
     {
         switch (human.Movement.currentMovementMethod) {
             case MovementMethod.Walk:
                 animator.SetBool("isWalking", true);
+                animator.SetBool("isRunning", false);
                 break;
             case MovementMethod.Run:
+                animator.SetBool("isWalking", false);
                 animator.SetBool("isRunning", true);
                 break;
         }
     }
 
-    private void OnStoppedMoving()
+    private void OnMovementStopped()
     {
-        switch (human.Movement.currentMovementMethod) {
-            case MovementMethod.Walk:
-                animator.SetBool("isWalking", false);
-                break;
-            case MovementMethod.Run:
-                animator.SetBool("isRunning", false);
-                break;
-        }
+        animator.SetBool("isWalking", false);
+        animator.SetBool("isRunning", false);
     }
 
     private void OnStartedFloating()
@@ -91,7 +87,7 @@ public class HumanAnimation : MonoBehaviour
         animator.SetBool("isFloating", false);
     }
 
-    private void OnStartedInteracting()
+    private void OnInteractionStarted()
     {
         switch (human.currentStatusEnum) {
             case HumanStatusEnum.Citizen:
@@ -103,7 +99,7 @@ public class HumanAnimation : MonoBehaviour
         }
     }
 
-    private void OnStoppedInteracting()
+    private void OnInteractionStopped()
     {
         animator.SetBool("isWorking", false);
     }

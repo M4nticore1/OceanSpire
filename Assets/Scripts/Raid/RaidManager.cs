@@ -53,14 +53,14 @@ public class RaidManager : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.onRaiderDied += OnRaiderDied;
+        Human.onHumanDied += OnHumanDied;
         Human.onEnteredBoat += OnEnteredBoat;
         Human.onExitedBoat += OnExitedBoat;
     }
 
     private void OnDisable()
     {
-        EventBus.onRaiderDied -= OnRaiderDied;
+        Human.onHumanDied -= OnHumanDied;
         Human.onEnteredBoat -= OnEnteredBoat;
         Human.onExitedBoat -= OnExitedBoat;
     }
@@ -220,8 +220,10 @@ public class RaidManager : MonoBehaviour
         }
     }
 
-    private void OnRaiderDied(Human human)
+    private void OnHumanDied(Human human)
     {
+        if (human.currentStatusEnum != HumanStatusEnum.Raider) return;
+
         aliveRaidersCount--;
 
         if (aliveRaidersCount <= 0) {

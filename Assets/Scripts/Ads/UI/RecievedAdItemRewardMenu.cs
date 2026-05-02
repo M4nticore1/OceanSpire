@@ -57,13 +57,13 @@ public class RecievedAdItemRewardMenu : MonoBehaviour
 
     private void AssignImage(AdRewardInstance reward)
     {
-        ItemAdRewardInstance itemReward = RewardedAdsManager.instance.currentReward as ItemAdRewardInstance;
+        ItemAdRewardInstance itemReward = RewardedAdsManager.Instance.currentReward as ItemAdRewardInstance;
         rewardImage.sprite = itemReward.itemRewardData.RewardIcon;
     }
 
     private void AssignText(AdRewardInstance reward)
     {
-        ItemAdRewardInstance itemReward = RewardedAdsManager.instance.currentReward as ItemAdRewardInstance;
+        ItemAdRewardInstance itemReward = RewardedAdsManager.Instance.currentReward as ItemAdRewardInstance;
         receiveText.SetLocalizationItem(itemReward.itemRewardData.ReceievedRewardLocalization);
         receiveText.SetPlaceHolderLocalization(itemReward);
         receiveText.UpdateText();

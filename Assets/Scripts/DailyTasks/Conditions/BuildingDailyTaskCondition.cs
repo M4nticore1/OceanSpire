@@ -19,7 +19,7 @@ public class BuildingDailyTaskCondition : DailyTaskCondition
     private void OnBuildingInited(Building building)
     {
         if (!BuildingsLoader.Instance) return;
-        if (!BuildingsLoader.Instance.isLoaded) return;
+        if (!BuildingsLoader.Instance.IsLoaded) return;
 
         InvokeProgressChanged(1);
     }

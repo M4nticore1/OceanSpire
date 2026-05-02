@@ -7,10 +7,9 @@ public class HealthComponent : MonoBehaviour
     public float MaxHealth => maxHealth;
 
     public float currentHealth { get; private set; } = 0;
-    public bool isAlive { get; private set; } = true;
+    public bool IsAlive { get; private set; } = true;
 
     public event Action onHealthChanged;
-    public event Action onRevived;
     public event Action onDied;
 
     public void Init(float currentHealth)
@@ -42,23 +41,38 @@ public class HealthComponent : MonoBehaviour
         currentHealth = value;
         onHealthChanged?.Invoke();
 
-        if (currentHealth <= 0 && isAlive) {
+        if (ShouldDie()) {
             OnDied();
         }
-        else if (currentHealth > 0 && !isAlive) {
+        else if (ShouldRevive()) {
             OnRevived();
         }
     }
 
-    public void OnRevived()
+    private void OnRevived()
     {
-        isAlive = true;
-        onRevived?.Invoke();
+        IsAlive = true;
     }
 
     private void OnDied()
     {
-        isAlive = false;
+        IsAlive = false;
         onDied?.Invoke();
+    }
+
+    private bool ShouldDie()
+    {
+        if (currentHealth > 0) return false;
+        if (!IsAlive) return false;
+
+        return true;
+    }
+
+    private bool ShouldRevive()
+    {
+        if (currentHealth <= 0) return false;
+        if (IsAlive) return false;
+
+        return true;
     }
 }

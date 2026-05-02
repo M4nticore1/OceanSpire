@@ -13,18 +13,22 @@ public class WorkersControlMenu : ControlMenu
     {
         base.OnEnable();
 
-        EventBus.onHumanInited += OnHumanInited;
-        EventBus.onSetedWorkBuilding += OnSetedCitizenWork;
-        EventBus.onRemovedWorkBuilding += OnRemovedCitizenWork;
+        Human.onHumanInited += OnHumanInited;
+        Human.onHumanDied += OnHumanDied;
+
+        InteractComponent.onInteractorSetedInteractBuilding += OnSetedCitizenWork;
+        InteractComponent.onInteractorRemovedInteractBuilding += OnRemovedCitizenWork;
     }
 
     protected override void OnDisable()
     {
         base.OnEnable();
 
-        EventBus.onHumanInited -= OnHumanInited;
-        EventBus.onSetedWorkBuilding -= OnSetedCitizenWork;
-        EventBus.onRemovedWorkBuilding -= OnRemovedCitizenWork;
+        Human.onHumanInited -= OnHumanInited;
+        Human.onHumanDied -= OnHumanDied;
+
+        InteractComponent.onInteractorSetedInteractBuilding -= OnSetedCitizenWork;
+        InteractComponent.onInteractorRemovedInteractBuilding -= OnRemovedCitizenWork;
     }
 
     protected override void OnOpen()
@@ -49,13 +53,14 @@ public class WorkersControlMenu : ControlMenu
         unemployedCitizensMenu.ClearWidgets();
 
         List<Human> citizens = CreaturesManager.Instance.Citizens.ToList();
-        for (int i = 0; i < citizens.Count; i++) {
-            Human citizen = citizens[i];
 
-            if (citizen.InteractComponent.interactBuilding == selectedBuilding) {
+        foreach (var citizen in citizens) {
+            if (!citizen.HealthComponent.IsAlive) continue;
+
+            if (citizen.InteractComponent.InteractBuilding == selectedBuilding) {
                 buildingWorkersMenu.CreateWidget(citizen);
             }
-            else if (citizen.InteractComponent.interactBuilding) {
+            else if (citizen.InteractComponent.InteractBuilding) {
                 employedCitizensMenu.CreateWidget(citizen);
             }
             else {
@@ -74,6 +79,13 @@ public class WorkersControlMenu : ControlMenu
         UpdateScrollRect();
     }
 
+    private void TryUpdateMenu(Human human)
+    {
+        if (!ShouldUpdateMenu(human)) return;
+
+        UpdateMenu();
+    }
+
     private void UpdateScrollRect()
     {
         var buildingWorkersRect = buildingWorkersMenu.GetComponent<RectTransform>();
@@ -85,29 +97,31 @@ public class WorkersControlMenu : ControlMenu
         scrollRectContent.sizeDelta = new Vector2(width, height);
     }
 
-    // Events
-    private void OnSetedCitizenWork()
+    private void OnSetedCitizenWork(InteractComponent interactor)
     {
-        if (!isOpened) return;
-
-        UpdateMenu();
-        UpdateScrollRect();
+        TryUpdateMenu(interactor.GetComponent<Human>());
     }
 
-    private void OnRemovedCitizenWork()
+    private void OnRemovedCitizenWork(InteractComponent interactor)
     {
-        if (!isOpened) return;
-
-        UpdateMenu();
-        UpdateScrollRect();
+        TryUpdateMenu(interactor.GetComponent<Human>());
     }
 
     private void OnHumanInited(Human human)
     {
-        if (!isOpened) return;
-        if (human.currentStatusEnum != HumanStatusEnum.Citizen) return;
+        TryUpdateMenu(human);
+    }
 
-        UpdateMenu();
-        UpdateScrollRect();
+    private void OnHumanDied(Human human)
+    {
+        TryUpdateMenu(human);
+    }
+
+    private bool ShouldUpdateMenu(Human human)
+    {
+        if (!isOpened) return false;
+        if (human.currentStatusEnum != HumanStatusEnum.Citizen) return false;
+
+        return true;
     }
 }

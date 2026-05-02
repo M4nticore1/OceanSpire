@@ -78,6 +78,6 @@ public class BoatUnloadingState : BoatState
     private bool ShouldExit()
     {
         InteractComponent interactor = boat.SelectedRider.GetComponent<InteractComponent>();
-        return !interactor.interactBuilding || BoatsManager.Instance.GetBoatByInteractorIndex(interactor.workerIndex) != boat;
+        return !interactor.InteractBuilding || BoatsManager.Instance.GetBoatByInteractorIndex(interactor.workerIndex) != boat;
     }
 }

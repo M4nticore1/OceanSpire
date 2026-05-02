@@ -150,7 +150,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     {
         for (int i = waitingPassengers.Count - 1; i >= 0; i--) {
             CreatureCityNavigator navigator = waitingPassengers[i];
-            int floor = navigator.floorIndex;
+            int floor = navigator.FloorIndex;
 
             if (!CanMoveToFloor(floor)) {
                 RemoveWaitingPassenger(navigator);
@@ -225,25 +225,25 @@ public class ElevatorCabinConstruction : BuildingConstruction
         int targetFloor = FloorIndex;
         if (ridingPassengers.Count > 0) {
             foreach (var rider in ridingPassengers) {
-                if (rider.currentPathBuilding) {
-                    targetFloor = rider.currentPathTowerBuilding ? rider.currentPathTowerBuilding.FloorIndex : FloorIndex;
+                if (rider.CurrentPathBuilding) {
+                    targetFloor = rider.CurrentPathTowerBuilding ? rider.CurrentPathTowerBuilding.FloorIndex : FloorIndex;
                     break;
                 }
             }
 
             if (ridingPassengers.Count < ownedBuilding.LevelData.maxResidentsCount && waitingPassengers.Count > 0) {
                 foreach (var waiter in waitingPassengers) {
-                    if (targetFloor < FloorIndex && waiter.floorIndex < FloorIndex) {
-                        targetFloor = math.max(targetFloor, waiter.floorIndex);
+                    if (targetFloor < FloorIndex && waiter.FloorIndex < FloorIndex) {
+                        targetFloor = math.max(targetFloor, waiter.FloorIndex);
                     }
-                    else if (targetFloor > FloorIndex && waiter.floorIndex > FloorIndex) {
-                        targetFloor = math.min(targetFloor, waiter.floorIndex);
+                    else if (targetFloor > FloorIndex && waiter.FloorIndex > FloorIndex) {
+                        targetFloor = math.min(targetFloor, waiter.FloorIndex);
                     }
                 }
             }
             else {
                 foreach (var rider in ridingPassengers) {
-                    TowerBuilding pathTowerBuilding = rider.currentPathTowerBuilding;
+                    TowerBuilding pathTowerBuilding = rider.CurrentPathTowerBuilding;
                     if (!pathTowerBuilding)
                         continue;
 
@@ -258,7 +258,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
             }
         }
         else if (waitingPassengers.Count > 0) {
-            targetFloor = waitingPassengers[0].floorIndex;
+            targetFloor = waitingPassengers[0].FloorIndex;
         }
         else {
             targetFloor = FloorIndex;

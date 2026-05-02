@@ -31,15 +31,19 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     [SerializeField] private bool isInteractable = true;
     public bool IsInteractable { get { return isInteractable; } set { isInteractable = value; } }
+
     [SerializeField] private bool isSelectable = false;
     public bool IsSelectable { get { return isSelectable; } set { isSelectable = value; } }
+
     [SerializeField] private bool isScalable = false;
     public bool IsScalable { get { return isScalable; } set { isScalable = value; } }
+
     [SerializeField] private bool deselectOnOutsideClick = false;
     [SerializeField] private bool cancelPressWhenMoving = false;
 
     [SerializeField] private int selectableGroupIndex = -1;
     [SerializeField] private float stateTransitionTime = 0.2f;
+
     private float stateTransitionAlpha = 1f;
 
     [Header("States")]

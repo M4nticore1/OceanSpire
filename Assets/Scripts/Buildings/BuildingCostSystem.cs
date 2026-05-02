@@ -34,6 +34,6 @@ public class BuildingCostSystem : MonoBehaviour
 
     private bool ShouldWork()
     {
-        return BuildingsLoader.Instance.isLoaded;
+        return BuildingsLoader.Instance.IsLoaded;
     }
 }

@@ -64,10 +64,13 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1786585214154959172}
+      addedObject: {fileID: 3320796776946038933}
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3320796776946038933}
+      addedObject: {fileID: -7227583769792038806}
+    - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1786585214154959172}
   m_SourcePrefab: {fileID: 100100000, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
 --- !u!82 &2175774227416732871 stripped
 AudioSource:
@@ -85,6 +88,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelComponent
+--- !u!114 &3822704267389728734 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3291799388632510304, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+  m_PrefabInstance: {fileID: 1775028883656775870}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673097211342416700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
 --- !u!114 &4146996725171637188 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2391196798673474426, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
@@ -112,23 +126,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
   m_PrefabInstance: {fileID: 1775028883656775870}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1786585214154959172
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8673097211342416700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7727480b4347748488d4839455d4bc43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CoalGenerator
-  levelsData:
-  - {fileID: 11400000, guid: 2b61ec27db2b0eb4481a6d2149707dc7, type: 2}
-  selectComponent: {fileID: 0}
-  electricityConsumption: 0
-  smokePrefab: {fileID: 932927189342864260, guid: 5b46cb6248341f54c8bc5c365bedb7df, type: 3}
 --- !u!114 &3320796776946038933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,3 +146,35 @@ MonoBehaviour:
   buildingLevelsData:
   - {fileID: 11400000, guid: 4bbb3a2a17e937e4ab3c5a716e539a8f, type: 2}
   isRuined: 0
+--- !u!114 &-7227583769792038806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673097211342416700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fce962352dc7074bbd6f4955705df38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProductionModule
+  levelsData:
+  - {fileID: 11400000, guid: 2b61ec27db2b0eb4481a6d2149707dc7, type: 2}
+  selectComponent: {fileID: 3822704267389728734}
+  electricityConsumption: 0.1
+--- !u!114 &1786585214154959172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673097211342416700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7727480b4347748488d4839455d4bc43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoalGenerator
+  levelsData:
+  - {fileID: 11400000, guid: 2b61ec27db2b0eb4481a6d2149707dc7, type: 2}
+  productionModule: {fileID: -7227583769792038806}
+  smokePrefab: {fileID: 932927189342864260, guid: 5b46cb6248341f54c8bc5c365bedb7df, type: 3}

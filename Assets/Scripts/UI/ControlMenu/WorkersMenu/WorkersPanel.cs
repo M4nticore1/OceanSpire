@@ -34,7 +34,7 @@ public class WorkersPanel : UIBehaviour
     {
         for (int i = spawnedWidgets.Count - 1; i >= 0; i--) {
             Destroy(spawnedWidgets[i].gameObject);
-            spawnedWidgets[i].gameObject.transform.parent = null;
+            spawnedWidgets[i].gameObject.transform.SetParent(null);
             spawnedWidgets.RemoveAt(i);
         }
     }

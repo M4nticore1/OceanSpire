@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum HumanStatusEnum
 {
@@ -60,6 +61,7 @@ public class Human : Creature, IClickable
 
     private bool isMale = true;
 
+    public static event Action<Human> onHumanInited;
     public static event Action<Human> onHumanRevived;
     public static event Action<Human> onHumanDied;
     public static event Action<Human> onWandererAccepted;
@@ -73,21 +75,21 @@ public class Human : Creature, IClickable
     {
         base.OnEnable();
 
-        healthComponent.onRevived += OnRevived;
         healthComponent.onDied += OnDied;
 
+        reviveComponent.onRevived += OnRevived;
         reviveComponent.onLimitTimeOvered += OnReviveLimitTimeOvered;
 
-        attackComponent.onStartedAttacking += OnStartedAttacking;
-        attackComponent.onStoppedAttacking += OnStoppedAttacking;
+        attackComponent.onAttackStarted += OnAttackStarted;
+        attackComponent.onAttackStopped += OnAttackStopped;
 
         cityNavigator.onEnteredBuilding += OnEnteredBuilding;
         cityNavigator.onReachedPath += OnReachedPathBuilding;
 
         interactComponent.onSetedInteractBuilding += OnSetedInteractBuilding;
         interactComponent.onRemovedInteractBuilding += OnRemovedInteractBuilding;
-        interactComponent.onStartedInteracting += OnStartedInteracting;
-        interactComponent.onStoppedInteracting += OnStoppedInteracting;
+        interactComponent.onInteractionStarted += OnStartedInteracting;
+        interactComponent.onInteractionStopped += OnStoppedInteracting;
 
         boatRider.onEnteredBoat += OnEnteredBoat;
         boatRider.onExitedBoat += OnExitedBoat;
@@ -107,19 +109,21 @@ public class Human : Creature, IClickable
 
         currentStatus.Exit();
 
-        healthComponent.onRevived -= OnRevived;
         healthComponent.onDied -= OnDied;
 
-        attackComponent.onStartedAttacking -= OnStartedAttacking;
-        attackComponent.onStoppedAttacking -= OnStoppedAttacking;
+        reviveComponent.onRevived -= OnRevived;
+        reviveComponent.onLimitTimeOvered -= OnReviveLimitTimeOvered;
+
+        attackComponent.onAttackStarted -= OnAttackStarted;
+        attackComponent.onAttackStopped -= OnAttackStopped;
 
         cityNavigator.onEnteredBuilding -= OnEnteredBuilding;
         cityNavigator.onReachedPath -= OnReachedPathBuilding;
 
         interactComponent.onSetedInteractBuilding -= OnSetedInteractBuilding;
         interactComponent.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
-        interactComponent.onStartedInteracting -= OnStartedInteracting;
-        interactComponent.onStoppedInteracting -= OnStoppedInteracting;
+        interactComponent.onInteractionStarted -= OnStartedInteracting;
+        interactComponent.onInteractionStopped -= OnStoppedInteracting;
 
         boatRider.onEnteredBoat -= OnEnteredBoat;
         boatRider.onExitedBoat -= OnExitedBoat;
@@ -166,51 +170,13 @@ public class Human : Creature, IClickable
             boatRider.EnterBoat();
         }
 
-        EventBus.InvokeCitizenInited(this);
-    }
-
-    public void SetInteractBuilding(Building building)
-    {
-        if (interactComponent.interactBuilding) {
-            RemoveInteractBuilding();
-        }
-
-        interactComponent.SetInteractBuilding(building);
-        cityNavigator.SetTargetBuilding(building);
-        currentStatus.OnSetedInteractBuilding(building);
-    }
-
-    public void RemoveInteractBuilding()
-    {
-        cityNavigator.RemoveTargetBuilding();
-        currentStatus.OnRemovedInteractBuilding();
-        interactComponent.RemoveInteractBuilding();
-
-        if (boatRider.isRidingOnBoat) {
-            BoatRider.selectedBoat.SetState(BoatStateEnum.MovingToDock);
-        }
-        else {
-            cityNavigator.UpdateFollowingPathState();
-        }
-    }
-
-    public void HandleClickedWorkerWidget()
-    {
-        if (interactComponent.interactBuilding) {
-            RemoveInteractBuilding();
-        }
-        else {
-            Building building = SelectManager.Instance.GetSelectedBuilding();
-            if (building.WorkComponent.Workers.Count >= building.LevelData.maxResidentsCount) return;
-
-            SetInteractBuilding(building);
-        }
+        onHumanInited?.Invoke(this);
     }
 
     // Boat
     public void MoveToBoat()
     {
-        if (cityNavigator.floorIndex > 0) {
+        if (cityNavigator.FloorIndex > 0) {
             Building building = BuildingsManager.instance.TowerGate;
             cityNavigator.SetTargetBuilding(building);
             cityNavigator.TryFindPathToTargetBuilding();
@@ -251,10 +217,10 @@ public class Human : Creature, IClickable
 
     protected override bool ShouldStartIdle()
     {
-        if (movement.isMoving) return false;
-        if (interactComponent.isInteracting) return false;
-        if (attackComponent.isAttacking) return false;
-        if (!healthComponent.isAlive) return false;
+        if (movement.IsMoving) return false;
+        if (interactComponent.IsInteracting) return false;
+        if (attackComponent.IsAttacking) return false;
+        if (!healthComponent.IsAlive) return false;
 
         return true;
     }
@@ -292,22 +258,25 @@ public class Human : Creature, IClickable
 
         currentStatus.OnStoppedMoving();
 
-        if (boatRider.isMovingToBoat && cityNavigator.floorIndex == 0 && movement.NavAgent.remainingDistance <= movement.NavAgent.stoppingDistance) {
+        if (ShouldStartInteracting()) {
+            interactComponent.StartInteracting();
+        }
+        else if (ShouldStartEnteringBoat()) {
             boatRider.StartEnteringBoat();
             boatRider.StopMovingToBoat();
         }
     }
 
     // Attack
-    private void OnStartedAttacking()
+    private void OnAttackStarted()
     {
-        currentStatus.OnStartedAttacking();
+        currentStatus.OnAttackStarted();
         TryStopIdle();
     }
 
-    private void OnStoppedAttacking()
+    private void OnAttackStopped()
     {
-        currentStatus.OnStoppedAttacking();
+        currentStatus.OnAttackStopped();
         TryStartIdle();
     }
 
@@ -316,7 +285,7 @@ public class Human : Creature, IClickable
     {
         currentStatus.OnEnteredBuilding(building);
 
-        if (boatRider.isMovingToBoat && building == cityNavigator.targetBuilding) {
+        if (boatRider.isMovingToBoat && building == cityNavigator.TargetBuilding) {
             Vector3 position = boatRider.selectedBoat.dockPoint.EntraceTransform.position;
             movement.TryMoveTo(position);
         }
@@ -327,24 +296,39 @@ public class Human : Creature, IClickable
 
     }
 
-    private void OnSetedInteractBuilding()
+    private void OnSetedInteractBuilding(Building building)
     {
+        Building interactBuilding = interactComponent.InteractBuilding;
 
+        cityNavigator.SetTargetBuilding(interactBuilding);
+        currentStatus.OnSetedInteractBuilding(interactBuilding);
     }
 
-    private void OnRemovedInteractBuilding()
+    private void OnRemovedInteractBuilding(Building building)
     {
-        cityNavigator.HandleInteractBuildingRemoved();
+        cityNavigator.RemoveTargetBuilding();
+        cityNavigator.RemovePath();
+
+        if (boatRider.isRidingOnBoat) {
+            BoatRider.selectedBoat.SetState(BoatStateEnum.MovingToDock);
+        }
+        else {
+            cityNavigator.UpdateFollowingPathState();
+        }
+
+        currentStatus.OnRemovedInteractBuilding(building);
     }
 
     private void OnStartedInteracting()
     {
-        currentStatus.OnStartedInteracting();
+        currentStatus.OnInteractionStarted();
+        StopIdle();
     }
 
     private void OnStoppedInteracting()
     {
-        currentStatus.OnStoppedInteracting();
+        currentStatus.OnInteractionStopped();
+        TryStartIdle();
     }
 
     // Boat
@@ -360,7 +344,7 @@ public class Human : Creature, IClickable
         movement.SetAgentEnabled(true);
         movement.NavAgent.Warp(transform.position);
 
-        if (interactComponent.interactBuilding) {
+        if (interactComponent.InteractBuilding) {
             cityNavigator.TryFindPathToTargetBuilding();
         }
 
@@ -448,5 +432,23 @@ public class Human : Creature, IClickable
         if (cityNavigator.IsRidingOnElevator) return;
 
         movement.SetAgentEnabled(true);
+    }
+
+    private bool ShouldStartInteracting()
+    {
+        if (attackComponent.IsAttacking) return false;
+        if (!interactComponent.InteractBuilding) return false;
+        if (interactComponent.InteractBuilding != cityNavigator.CurrentBuilding) return false;
+
+        return true;
+    }
+
+    private bool ShouldStartEnteringBoat()
+    {
+        if (!boatRider.isMovingToBoat) return false;
+        if (cityNavigator.FloorIndex != 0) return false;
+        if (movement.NavAgent.remainingDistance > movement.NavAgent.stoppingDistance) return false;
+
+        return true;
     }
 }

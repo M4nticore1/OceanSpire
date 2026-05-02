@@ -9,7 +9,7 @@ public class ReviveManager : MonoBehaviour
     [SerializeField] private ReviveAdRewardDefinition reviveRewardDefinition;
     public ReviveAdRewardDefinition ReviveRewardDefinition => reviveRewardDefinition;
 
-    [SerializeField] private ReviveRewardMenu reviveRewardMenu;
+    [SerializeField] private ReviveMenu reviveRewardMenu;
 
     [SerializeField] private int maxRevivesCount = 3;
     public int MaxRevivesCount => maxRevivesCount;
@@ -89,7 +89,7 @@ public class ReviveManager : MonoBehaviour
         ReviveAdRewardInstance reward = reviveRewardDefinition.CreateInstance() as ReviveAdRewardInstance;
         reward.SetHuman(human);
 
-        RewardedAdsManager.instance.SetCurrentReward(reward);
+        RewardedAdsManager.Instance.SetCurrentReward(reward);
     }
 
     private void OnComponentSelected(SelectComponent component)
@@ -97,7 +97,7 @@ public class ReviveManager : MonoBehaviour
         Human human = SelectManager.Instance.GetSelectedHuman();
         if (!human) return;
 
-        if (human.HealthComponent.isAlive) return;
+        if (human.HealthComponent.IsAlive) return;
 
         CreateReward(human);
         reviveRewardMenu.Open();

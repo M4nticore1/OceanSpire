@@ -92,7 +92,7 @@ public class PierBuildingStrategy : BuildingStrategy
             yield return new WaitForSeconds(0.5f);
         }
 
-        if (interactor.interactBuilding != building) yield break;
+        if (interactor.InteractBuilding != building) yield break;
 
         if (boat && boatRider) {
             boatRider.StartEnteringBoat();

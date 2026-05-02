@@ -25,7 +25,7 @@ public class ExtractionDailyTaskCondition : DailyTaskCondition
     private void OnAddedItemAmount(ItemInstance item)
     {
         if (!ItemsLoader.Instance) return;
-        if (!ItemsLoader.Instance.isLoaded) return;
+        if (!ItemsLoader.Instance.IsLoaded) return;
         if (item.ItemData != conditionItem) return;
 
         InvokeProgressChanged(item.Amount);

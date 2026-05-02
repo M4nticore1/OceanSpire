@@ -4,6 +4,11 @@ public class ReviveAdRewardInstance : AdRewardInstance
 {
     private Human human;
 
+    public ReviveAdRewardInstance(Human human) : base()
+    {
+        this.human = human;
+    }
+
     public ReviveAdRewardInstance(ReviveAdRewardDefinition definition, Human human) : base(definition)
     {
         this.human = human;
@@ -20,6 +25,7 @@ public class ReviveAdRewardInstance : AdRewardInstance
     protected override void OnRewardRecieved()
     {
         human.ReviveComponent.Revive();
+        human.SelectComponent.Select();
         ReviveManager.Instance.RemoveReviveCount();
     }
 

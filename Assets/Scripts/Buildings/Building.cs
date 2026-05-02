@@ -45,18 +45,20 @@ public abstract class Building : MonoBehaviour, ILocalizable
     public event Action onWorkStarted;
     public event Action onWorkStopped;
 
-    public static event Action<Building> onBuildingInited;
-    public static event Action<Building> onBuildingDemolished;
-
     public event Action onConstructionStarted;
     public event Action onConstructionFinished;
     public event Action onDemolished;
 
-    public static event Action<Building> onBuildingConstructionStarted;
-    public static event Action<Building> onBuildingConstructionFinished;
-
     public event Action<CreatureCityNavigator> onEnterBuilding;
     public event Action<CreatureCityNavigator> onExitBuilding;
+
+    public event Action onClicked;
+
+    public static event Action<Building> onBuildingInited;
+    public static event Action<Building> onBuildingDemolished;
+
+    public static event Action<Building> onBuildingConstructionStarted;
+    public static event Action<Building> onBuildingConstructionFinished;
 
     public static event Action<Building> onBuildingSelected;
     public static event Action<Building> onBuildingDeselected;
@@ -152,6 +154,13 @@ public abstract class Building : MonoBehaviour, ILocalizable
         InvokeExitBuilding(navigator);
     }
 
+    // Click
+    public void OnConstructionClicked()
+    {
+        SelectComponent.Click();
+        onClicked?.Invoke();
+    }
+
     // Modules
     public BuildingModule[] GetModules()
     {
@@ -199,17 +208,17 @@ public abstract class Building : MonoBehaviour, ILocalizable
                     return waypointTransform;
                 }
                 else {
-                    Debug.LogWarning("waypointTransform is not valid.");
+                    Debug.Log("waypointTransform is not valid.");
                     return transform;
                 }
             }
             else {
-                Debug.LogWarning("waypoints.Length == 0");
+                Debug.Log("waypoints.Length == 0");
                 return transform;
             }
         }
         else {
-            Debug.LogWarning("actions.Length <= index");
+            Debug.Log("actions.Length <= index");
             return transform;
         }
     }
@@ -358,7 +367,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
         OnConstructionFinish();
         UpdateConstruction();
 
-        if (SelectComponent.isSelected) {
+        if (SelectComponent.IsSelected) {
             SelectComponent.Select();
         }
 

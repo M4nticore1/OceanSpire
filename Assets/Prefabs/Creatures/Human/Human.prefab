@@ -183,7 +183,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CityPathFollower
   movement: {fileID: -7493649843608556168}
   pathBuildings: []
-  currentBuilding: {fileID: 0}
   pathIndex: 0
 --- !u!114 &6497944028369977301
 MonoBehaviour:
@@ -215,6 +214,7 @@ MonoBehaviour:
   health: {fileID: 4098557255172134659}
   damage: 10
   attackFrequency: 1.2
+  stopMovingDistance: 1
 --- !u!114 &8499683307490277393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCMovement
   navAgent: {fileID: 1338494420481879648}
   walkSpeed: 3
-  runSpeed: 6
+  runSpeed: 5
 --- !u!114 &4701473922447632886
 MonoBehaviour:
   m_ObjectHideFlags: 0

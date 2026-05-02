@@ -67,7 +67,7 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     // IClickable
     public void Click()
     {
-        ownedBuilding.SelectComponent.Click();
+        ownedBuilding.OnConstructionClicked();
     }
 
     public bool ShouldClick()

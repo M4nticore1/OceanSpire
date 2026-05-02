@@ -19,10 +19,10 @@ public class Movement : MonoBehaviour
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
 
-    public bool isMoving { get; private set; } = false;
+    public bool IsMoving { get; private set; } = false;
 
-    public event Action onStartedMoving;
-    public event Action onStoppedMoving;
+    public event Action onMovementStarted;
+    public event Action onMovementStopped;
     public event Action onReachedPath;
 
     private void Update()
@@ -44,8 +44,8 @@ public class Movement : MonoBehaviour
         navAgent.isStopped = false;
 
         if (navAgent.SetDestination(position)) {
-            isMoving = true;
-            onStartedMoving?.Invoke();
+            IsMoving = true;
+            onMovementStarted?.Invoke();
 
             return true;
         }
@@ -55,12 +55,12 @@ public class Movement : MonoBehaviour
 
     public void StopMoving()
     {
-        if (!isMoving) return;
+        if (!IsMoving) return;
 
         navAgent.isStopped = true;
         navAgent.ResetPath();
-        isMoving = false;
-        onStoppedMoving?.Invoke();
+        IsMoving = false;
+        onMovementStopped?.Invoke();
     }
 
     public void SetMovementMethod(MovementMethod method)
@@ -97,7 +97,7 @@ public class Movement : MonoBehaviour
 
     private bool CheckDistancePathPosition()
     {
-        if (!isMoving) return false;
+        if (!IsMoving) return false;
         if (!navAgent.enabled) return false;
         if (navAgent.pathPending) return false;
 

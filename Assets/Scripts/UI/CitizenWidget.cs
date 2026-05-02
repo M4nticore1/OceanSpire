@@ -24,12 +24,12 @@ public class CitizenWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        button.onClick.AddListener(ClickWidget);
+        button.onClick.AddListener(OnClicked);
     }
 
     private void OnDisable()
     {
-        button.onClick.RemoveListener(ClickWidget);
+        button.onClick.RemoveListener(OnClicked);
     }
 
     public void Init(Human citizen)
@@ -72,9 +72,17 @@ public class CitizenWidget : MonoBehaviour
         }
     }
 
-    private void ClickWidget()
+    private void OnClicked()
     {
-        Human.HandleClickedWorkerWidget();
-        EventBus.InvokeCitizenWidgetClicked(this);
+        if (Human.InteractComponent.InteractBuilding) {
+            Human.InteractComponent.RemoveInteractBuilding();
+        }
+        else {
+            Building building = SelectManager.Instance.GetSelectedBuilding();
+
+            if (building.WorkComponent.Workers.Count >= building.LevelData.maxResidentsCount) return;
+
+            Human.InteractComponent.SetInteractBuilding(building);
+        }
     }
 }

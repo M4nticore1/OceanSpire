@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CitizenState : HumanState
@@ -23,15 +24,14 @@ public class CitizenState : HumanState
 
     }
 
-    public override void OnStartedAttacking()
+    public override void OnAttackStarted()
     {
-        Debug.Log("OnStartedAttacking");
         human.InteractComponent.StopInteracting();
     }
 
-    public override void OnStoppedAttacking()
+    public override void OnAttackStopped()
     {
-        Building interactBuilding = human.InteractComponent.interactBuilding;
+        Building interactBuilding = human.InteractComponent.InteractBuilding;
         if (!interactBuilding) return;
 
         human.CityNavigator.TryFindPathToTargetBuilding();
@@ -48,33 +48,26 @@ public class CitizenState : HumanState
         else {
             human.CityNavigator.TryFindPathToTargetBuilding();
         }
-
-        EventBus.InvokeSetedWorkBuilding();
     }
 
-    public override void OnRemovedInteractBuilding()
+    public override void OnRemovedInteractBuilding(Building building)
     {
-        human.InteractComponent.interactBuilding.WorkComponent.RemoveWorker(human.InteractComponent);
-
-        EventBus.InvokeRemovedWorkBuilding();
+        building.WorkComponent.RemoveWorker(human.InteractComponent);
     }
 
-    public override void OnStartedInteracting()
+    public override void OnInteractionStarted()
     {
-        human.InteractComponent.interactBuilding.WorkComponent.EnterWorker(human.InteractComponent);
+        human.InteractComponent.InteractBuilding.WorkComponent.EnterWorker(human.InteractComponent);
     }
 
-    public override void OnStoppedInteracting()
+    public override void OnInteractionStopped()
     {
-        human.InteractComponent.interactBuilding.WorkComponent.ExitWorker(human.InteractComponent);
+        human.InteractComponent.InteractBuilding.WorkComponent.ExitWorker(human.InteractComponent);
     }
 
     public override void OnStoppedMoving()
     {
-        if (!human.InteractComponent.interactBuilding) return;
-        if (human.InteractComponent.interactBuilding != human.CityNavigator.currentBuilding) return;
 
-        human.InteractComponent.StartInteracting();
     }
 
     public override void OnEnteredBuilding(Building building)
@@ -94,17 +87,11 @@ public class CitizenState : HumanState
 
     public override void OnRevived()
     {
-        EventBus.InvokeCitizenRevived(human);
+
     }
 
     public override void OnDied()
     {
-        InteractComponent interactor = human.InteractComponent;
-
-        if (interactor) {
-            interactor.RemoveInteractBuilding();
-        }
-
-        EventBus.InvokeCitizenDied(human);
+        human.InteractComponent.RemoveInteractBuilding();
     }
 }

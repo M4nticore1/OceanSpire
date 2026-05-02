@@ -12,28 +12,36 @@ public class AttackComponent : MonoBehaviour
     [SerializeField] private float attackFrequency = 1f;
     private float currentAttackTime = 0f;
 
+    [SerializeField] private float stopMovingDistance = 1f;
+    [SerializeField] private float rotationSpeed = 1f;
+
     private AttackComponent currentTarget;
     private List<AttackComponent> currentAttackers = new List<AttackComponent>();
-    public bool isAttacking { get; private set; } = false;
+    public bool IsAttacking { get; private set; } = false;
 
-    public event Action onStartedAttacking;
-    public event Action onStoppedAttacking;
+    public event Action onAttackStarted;
+    public event Action onAttackStopped;
 
     private void OnEnable()
     {
-        movement.onStoppedMoving += OnStopped;
+        movement.onMovementStopped += OnStopped;
         health.onDied += OnDied;
     }
 
     private void OnDisable()
     {
-        movement.onStoppedMoving -= OnStopped;
+        movement.onMovementStopped -= OnStopped;
         health.onDied -= OnDied;
     }
 
     private void Update()
     {
-        if (!isAttacking) return;
+        if (currentTarget) {
+            TryStopMoving();
+            CorrentRotation();
+        }
+
+        if (!IsAttacking) return;
 
         currentAttackTime += Time.deltaTime;
         if (currentAttackTime < attackFrequency) return;
@@ -97,14 +105,32 @@ public class AttackComponent : MonoBehaviour
 
     private void StartAtacking()
     {
-        isAttacking = true;
-        onStartedAttacking?.Invoke();
+        IsAttacking = true;
+        onAttackStarted?.Invoke();
     }
 
     private void StopAtacking()
     {
-        isAttacking = false;
-        onStoppedAttacking?.Invoke();
+        IsAttacking = false;
+        onAttackStopped?.Invoke();
+    }
+
+    private void TryStopMoving()
+    {
+        float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
+        if (distance > stopMovingDistance) return;
+
+        movement.StopMoving();
+        Debug.Log("Stopped");
+    }
+
+    private void CorrentRotation()
+    {
+        if (movement.IsMoving) return;
+
+        Vector3 direction = currentTarget.transform.position - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
     }
 
     private void OnStopped()

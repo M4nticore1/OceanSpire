@@ -367,10 +367,10 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7788215894494709766, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5108738535506899550}
+      addedObject: {fileID: 4659521512223134829}
     - targetCorrespondingSourceObject: {fileID: 7788215894494709766, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4659521512223134829}
+      addedObject: {fileID: 5108738535506899550}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 430319028667219943, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
       insertIndex: -1
@@ -406,13 +406,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5007595269965447005}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5409ef2fa21a8547b9b694cbf73c395, type: 3}
+  m_Script: {fileID: 11500000, guid: 77ada63999d0b7c488c2ded78133bf88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReviveRewardMenu
   slidePanel: {fileID: 1303680501560314107}
+  button: {fileID: 6983401014482516234}
   remainingTimeText: {fileID: 6353437842786533338}
   remainingRevivesText: {fileID: 2389228191825434136}
-  button: {fileID: 6983401014482516234}
 --- !u!114 &6983401014482516234 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2336320941890386352, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}

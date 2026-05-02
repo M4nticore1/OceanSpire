@@ -24,8 +24,6 @@ public class WorldSaveManager
 
     private void Init()
     {
-        EventBus.onCreateWorldButtonClicked += CreateWorld;
-        EventBus.onLoadWorldButtonClicked += LoadWorld;
         FindSavesData();
     }
 

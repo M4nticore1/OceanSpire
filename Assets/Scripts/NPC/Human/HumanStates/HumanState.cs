@@ -13,13 +13,13 @@ public abstract class HumanState
     public abstract void Exit();
     public abstract void Tick();
 
-    public abstract void OnStartedAttacking();
-    public abstract void OnStoppedAttacking();
+    public abstract void OnAttackStarted();
+    public abstract void OnAttackStopped();
 
     public abstract void OnSetedInteractBuilding(Building building);
-    public abstract void OnRemovedInteractBuilding();
-    public abstract void OnStartedInteracting();
-    public abstract void OnStoppedInteracting();
+    public abstract void OnRemovedInteractBuilding(Building building);
+    public abstract void OnInteractionStarted();
+    public abstract void OnInteractionStopped();
 
     public abstract void OnStoppedMoving();
 

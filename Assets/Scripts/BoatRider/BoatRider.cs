@@ -55,7 +55,7 @@ public class BoatRider : MonoBehaviour
         selectedBoat.SetRider(this);
         transform.position = selectedBoat.SeatSlot.position;
         transform.rotation = selectedBoat.SeatSlot.rotation;
-        transform.parent = selectedBoat.SeatSlot;
+        transform.SetParent(selectedBoat.SeatSlot);
 
         isRidingOnBoat = true;
         isEnteringBoat = false;
@@ -67,7 +67,7 @@ public class BoatRider : MonoBehaviour
         selectedBoat.RemoveRider();
         transform.position = selectedBoat.dockPoint.EntraceTransform.position;
         transform.rotation = selectedBoat.dockPoint.EntraceTransform.rotation;
-        transform.parent = null;
+        transform.SetParent(null);
 
         isRidingOnBoat = false;
         isExitingBoat = false;

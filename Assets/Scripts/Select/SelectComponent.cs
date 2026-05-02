@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class SelectComponent : MonoBehaviour, IClickable
 {
-    public bool isSelected { get; private set; } = false;
+    public bool IsSelected { get; private set; } = false;
     private Dictionary<GameObject, int> layers = new Dictionary<GameObject, int>();
 
     [SerializeField] private bool isClickable = true;
@@ -29,6 +29,13 @@ public class SelectComponent : MonoBehaviour, IClickable
         onComponentDestroyed?.Invoke(this);
     }
 
+    public void TrySelect()
+    {
+        if (IsSelected) return;
+
+        Select();
+    }
+
     public void Select()
     {
         layers.Clear();
@@ -43,9 +50,16 @@ public class SelectComponent : MonoBehaviour, IClickable
             child.layer = LayerMask.NameToLayer("Outlined");
         }
 
-        isSelected = true;
+        IsSelected = true;
         onSelected?.Invoke();
         onComponentSelected?.Invoke(this);
+    }
+
+    public void TryDeselect()
+    {
+        if (!IsSelected) return;
+
+        Deselect();
     }
 
     public void Deselect()
@@ -64,7 +78,7 @@ public class SelectComponent : MonoBehaviour, IClickable
             }
         }
 
-        isSelected = false;
+        IsSelected = false;
         onDeselected?.Invoke();
         onComponentDeselected?.Invoke(this);
     }
@@ -72,7 +86,7 @@ public class SelectComponent : MonoBehaviour, IClickable
     // IClickable
     public void Click()
     {
-        if (isSelected) {
+        if (IsSelected) {
             Deselect();
         }
         else {
@@ -95,7 +109,7 @@ public class SelectComponent : MonoBehaviour, IClickable
         if (clicked == gameObject) return;
         if (GameUtils.GetAllChildren(transform).Contains(clicked)) return;
 
-        Deselect();
+        TryDeselect();
     }
 
     private bool ShouldInteract(GameObject transform)

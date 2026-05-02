@@ -583,17 +583,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948dda070484eea44ac9c5089a182b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerBuilding
---- !u!114 &122399286 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1336856739594368326, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
-  m_PrefabInstance: {fileID: 383697685}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e65e83ab08dfc0e48a34c6c7e30aef28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &123805247
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -655,147 +644,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 865e4d4ba8d60ba499751bda6823e55f, type: 3}
---- !u!1001 &125435660
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 879926669}
-    m_Modifications:
-    - target: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5127569501461543765, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: m_Name
-      value: CityManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: towerGate
-      value: 
-      objectReference: {fileID: 2043061798}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: towerRoot
-      value: 
-      objectReference: {fileID: 1290994963}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: pierBuilding
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: playerController
-      value: 
-      objectReference: {fileID: 122399286}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: towerNavMeshSurface
-      value: 
-      objectReference: {fileID: 1290994965}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: builtFloors.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: 'builtFloors.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1218081186}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: 'builtFloors.Array.data[1]'
-      value: 
-      objectReference: {fileID: 1853408846}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: 'builtFloors.Array.data[2]'
-      value: 
-      objectReference: {fileID: 1361519825}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: 'builtFloors.Array.data[3]'
-      value: 
-      objectReference: {fileID: 1361519825}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: 'allBuildings.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: 'spawnedFloors.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: <pierBuilding>k__BackingField
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: 'spawnedFloorPlaces.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: 'spawnedFloorPlaces.Array.data[1]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: <entitySpawnPosition>k__BackingField
-      value: 
-      objectReference: {fileID: 1408795208}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: <builtFloors>k__BackingField.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: '<builtFloors>k__BackingField.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: '<builtFloors>k__BackingField.Array.data[1]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: '<builtFloors>k__BackingField.Array.data[2]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5367906543175657419, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-      propertyPath: '<builtFloors>k__BackingField.Array.data[3]'
-      value: 
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
 --- !u!1 &128358826
 GameObject:
   m_ObjectHideFlags: 0
@@ -1587,11 +1435,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatsLoader
   startBoatIds: 00000000
---- !u!4 &367708166 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3100839605564067757, guid: ef8037abae2bc5b4d8aec600500e9197, type: 3}
-  m_PrefabInstance: {fileID: 125435660}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &376674309
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2075,7 +1918,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5409ef2fa21a8547b9b694cbf73c395, type: 3}
+  m_Script: {fileID: 11500000, guid: 77ada63999d0b7c488c2ded78133bf88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReviveRewardMenu
 --- !u!114 &383697687 stripped
@@ -3949,7 +3792,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 932374182}
-  - {fileID: 367708166}
   - {fileID: 1388613266}
   - {fileID: 1934078804}
   - {fileID: 538103143}

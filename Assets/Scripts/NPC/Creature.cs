@@ -21,14 +21,14 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        movement.onStartedMoving += OnStartedMoving;
-        movement.onStoppedMoving += OnStoppedMoving;
+        movement.onMovementStarted += OnStartedMoving;
+        movement.onMovementStopped += OnStoppedMoving;
     }
 
     protected virtual void OnDisable()
     {
-        movement.onStartedMoving -= OnStartedMoving;
-        movement.onStoppedMoving -= OnStoppedMoving;
+        movement.onMovementStarted -= OnStartedMoving;
+        movement.onMovementStopped -= OnStoppedMoving;
     }
 
     public void Init(CreatureDataV1 data)

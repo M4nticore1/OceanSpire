@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RewardedAdsManager : MonoBehaviour
 {
-    public static RewardedAdsManager instance;
+    public static RewardedAdsManager Instance;
 
     [SerializeField] private AdsSystem adsSystem;
 
@@ -15,12 +15,12 @@ public class RewardedAdsManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance) {
+        if (Instance) {
             Destroy(gameObject);
             return;
         }
 
-        instance = this;
+        Instance = this;
     }
 
     private void OnEnable()

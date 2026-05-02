@@ -43,6 +43,6 @@ public class BuildingAudioSystem : MonoBehaviour
 
     private bool ShouldPlay()
     {
-        return BuildingsLoader.Instance.isLoaded;
+        return BuildingsLoader.Instance.IsLoaded;
     }
 }
