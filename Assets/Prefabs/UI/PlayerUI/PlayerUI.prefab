@@ -857,24 +857,24 @@ RectTransform:
   - {fileID: 5268074832578338352}
   - {fileID: 397356515366550761}
   - {fileID: 8654088165783763327}
-  - {fileID: 4907218398093086892}
   - {fileID: 8733872584027164100}
   - {fileID: 688940845444648340}
   - {fileID: 5059259372177201316}
   - {fileID: 602205328399741602}
   - {fileID: 5584210009536254534}
   - {fileID: 2292485386691926290}
-  - {fileID: 1679691449546804637}
-  - {fileID: 5028220504261582107}
   - {fileID: 2781457527000803840}
-  - {fileID: 8229001796652491743}
-  - {fileID: 6662647340556842358}
-  - {fileID: 3157604540618814660}
   - {fileID: 3696478299053724344}
   - {fileID: 1759127215849909371}
-  - {fileID: 2764746097088807820}
   - {fileID: 6667550228668763758}
   - {fileID: 6716253054714219867}
+  - {fileID: 8229001796652491743}
+  - {fileID: 1679691449546804637}
+  - {fileID: 5028220504261582107}
+  - {fileID: 4907218398093086892}
+  - {fileID: 2764746097088807820}
+  - {fileID: 6662647340556842358}
+  - {fileID: 3157604540618814660}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -957,16 +957,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99aee27a09c8e2b45a3c436ce53e7646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
-  cityStorage: {fileID: 0}
-  buildingActionResourceWidgetPrefab: {fileID: 3414861423065995257, guid: 182cd47f78642304fb945011b714a68e, type: 3}
-  buildingInformationMenu: {fileID: 0}
-  workersMenu: {fileID: 0}
-  statsMenu: {fileID: 6519395463221355690}
-  contextMenuMaster: {fileID: 0}
-  buildingListsMenuButton: {fileID: 8971962629013174467}
-  storageListsMenuButton: {fileID: 829117099251789281}
-  actionResourcesLayourGroup: {fileID: 0}
 --- !u!114 &227430077283372662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5250,17 +5240,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5723313967483944410, guid: ebcf48c51e32f69409b97dd2946010b1, type: 3}
   m_PrefabInstance: {fileID: 5818018408232559816}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6519395463221355690 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 775827821996572770, guid: ebcf48c51e32f69409b97dd2946010b1, type: 3}
-  m_PrefabInstance: {fileID: 5818018408232559816}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33e237c86aacbbd408c468a87b797ab9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StatsMenu
 --- !u!1001 &5924446112227419137
 PrefabInstance:
   m_ObjectHideFlags: 0

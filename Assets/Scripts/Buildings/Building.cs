@@ -45,12 +45,15 @@ public abstract class Building : MonoBehaviour, ILocalizable
     public event Action onWorkStarted;
     public event Action onWorkStopped;
 
+    public event Action<CreatureCityNavigator> onEnterBuilding;
+    public event Action<CreatureCityNavigator> onExitBuilding;
+
+    public event Action<InteractComponent> onCurrentWorkerAdded;
+    public event Action<InteractComponent> onCurrentWorkerRemoved;
+
     public event Action onConstructionStarted;
     public event Action onConstructionFinished;
     public event Action onDemolished;
-
-    public event Action<CreatureCityNavigator> onEnterBuilding;
-    public event Action<CreatureCityNavigator> onExitBuilding;
 
     public event Action onClicked;
 
@@ -77,8 +80,8 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
         WorkComponent.onWorkerAdded += OnWorkerAdded;
         WorkComponent.onWorkerRemoved += OnWorkerRemoved;
-        WorkComponent.onWorkerEntered += OnWorkerEntered;
-        WorkComponent.onWorkerExited += OnWorkerExited;
+        WorkComponent.onWorkerEntered += OnCurrentWorkerAdded;
+        WorkComponent.onWorkerExited += OnCurrentWorkerRemoved;
 
         SelectComponent.onSelected += OnSelected;
         SelectComponent.onDeselected += OnDeselected;
@@ -142,16 +145,14 @@ public abstract class Building : MonoBehaviour, ILocalizable
     // Residents Management
     public void EnterBuilding(CreatureCityNavigator navigator)
     {
-        onEnterBuilding?.Invoke(navigator);
         strategy.OnEntityEnter(navigator);
-        InvokeEnterBuilding(navigator);
+        onEnterBuilding?.Invoke(navigator);
     }
 
     public void ExitBuilding(CreatureCityNavigator navigator)
     {
-        onExitBuilding?.Invoke(navigator);
         strategy.OnEntityExit(navigator);
-        InvokeExitBuilding(navigator);
+        onExitBuilding?.Invoke(navigator);
     }
 
     // Click
@@ -266,51 +267,22 @@ public abstract class Building : MonoBehaviour, ILocalizable
         strategy.OnRemoveInteractBuilding(interactor);
     }
 
-    private void OnWorkerEntered(InteractComponent interactor)
+    private void OnCurrentWorkerAdded(InteractComponent interactor)
     {
         if (WorkComponent.EnteredWorkers.Count == 1)
             StartWorking();
 
         strategy.OnStartedInteracting(interactor);
-        InvokeCurrentWorkerAdded(interactor);
+        onCurrentWorkerAdded?.Invoke(interactor);
     }
 
-    private void OnWorkerExited(InteractComponent interactor)
+    private void OnCurrentWorkerRemoved(InteractComponent interactor)
     {
         if (WorkComponent.EnteredWorkers.Count == 0)
             StopWorking();
 
         strategy.OnStoppedInteracting(interactor);
-        InvokeCurrentWorkerRemoved(interactor);
-    }
-
-    // Events
-    private void InvokeEnterBuilding(CreatureCityNavigator navigator)
-    {
-        foreach (var listener in GetComponentsInChildren<IEnterExitListener>()) {
-            listener.OnEnterBuilding(navigator);
-        }
-    }
-
-    private void InvokeExitBuilding(CreatureCityNavigator navigator)
-    {
-        foreach (var listener in GetComponentsInChildren<IEnterExitListener>()) {
-            listener.OnExitBuilding(navigator);
-        }
-    }
-
-    private void InvokeCurrentWorkerAdded(InteractComponent interactor)
-    {
-        foreach (var listener in GetComponentsInChildren<ICurrentWorkersListener>()) {
-            listener.OnCurrentWorkerAdded(interactor);
-        }
-    }
-
-    private void InvokeCurrentWorkerRemoved(InteractComponent interactor)
-    {
-        foreach (var listener in GetComponentsInChildren<ICurrentWorkersListener>()) {
-            listener.OnCurrentWorkerRemoved(interactor);
-        }
+        onCurrentWorkerRemoved?.Invoke(interactor);
     }
 
     // Working

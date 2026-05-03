@@ -22,7 +22,6 @@ public class Inventory : MonoBehaviour
 
     public List<StorageItem> Items { get; private set; } = new();
     private Dictionary<int, StorageItem> itemsDictId = new();
-    private Dictionary<string, StorageItem> itemsDictKey = new();
 
     public event Action<ItemInstance> onAddedItemAmount;
     public event Action<ItemInstance> onRemovedItemAmount;
@@ -76,13 +75,12 @@ public class Inventory : MonoBehaviour
 
     private void AddNewItem(int id)
     {
-        ItemData data = ItemsList.Instance.GetItemData(id);
+        ItemData data = ItemsList.Instance.GetItem(id);
         ItemInstance item = new ItemInstance(data);
         StorageItem storageItem = new StorageItem(item);
 
         Items.Add(storageItem);
         itemsDictId.Add(id, storageItem);
-        itemsDictKey.Add(data.itemKey, storageItem);
     }
 
     private void RemoveItem(int id)
@@ -94,7 +92,6 @@ public class Inventory : MonoBehaviour
 
             if (item.item.ItemData.ItemId == id) {
                 Items.RemoveAt(i);
-                itemsDictKey.Remove(item.item.ItemData.itemKey);
             }
         }
     }
@@ -142,14 +139,6 @@ public class Inventory : MonoBehaviour
     {
         StorageItem item;
         itemsDictId.TryGetValue(id, out item);
-
-        return item;
-    }
-
-    public StorageItem GetItem(string key)
-    {
-        StorageItem item;
-        itemsDictKey.TryGetValue(key, out item);
 
         return item;
     }

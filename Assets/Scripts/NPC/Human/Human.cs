@@ -88,7 +88,7 @@ public class Human : Creature, IClickable
 
         interactComponent.onSetedInteractBuilding += OnSetedInteractBuilding;
         interactComponent.onRemovedInteractBuilding += OnRemovedInteractBuilding;
-        interactComponent.onInteractionStarted += OnStartedInteracting;
+        interactComponent.onInteractionStarted += OnInteractionStarted;
         interactComponent.onInteractionStopped += OnStoppedInteracting;
 
         boatRider.onEnteredBoat += OnEnteredBoat;
@@ -122,7 +122,7 @@ public class Human : Creature, IClickable
 
         interactComponent.onSetedInteractBuilding -= OnSetedInteractBuilding;
         interactComponent.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
-        interactComponent.onInteractionStarted -= OnStartedInteracting;
+        interactComponent.onInteractionStarted -= OnInteractionStarted;
         interactComponent.onInteractionStopped -= OnStoppedInteracting;
 
         boatRider.onEnteredBoat -= OnEnteredBoat;
@@ -319,7 +319,7 @@ public class Human : Creature, IClickable
         currentStatus.OnRemovedInteractBuilding(building);
     }
 
-    private void OnStartedInteracting()
+    private void OnInteractionStarted()
     {
         currentStatus.OnInteractionStarted();
         StopIdle();

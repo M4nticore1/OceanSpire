@@ -80,6 +80,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelComponent
+--- !u!114 &3822704267389728734 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3291799388632510304, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+  m_PrefabInstance: {fileID: 1775028883656775870}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673097211342416700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
 --- !u!114 &4146996725171637188 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2391196798673474426, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
@@ -141,5 +152,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionModule
   levelsData:
   - {fileID: 11400000, guid: b38be2c152827054986d4c5c46e8e27b, type: 2}
-  selectComponent: {fileID: 0}
+  selectComponent: {fileID: 3822704267389728734}
   electricityConsumption: 0.1

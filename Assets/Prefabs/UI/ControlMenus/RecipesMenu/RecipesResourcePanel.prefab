@@ -307,7 +307,7 @@ MonoBehaviour:
   isSelectable: 1
   isScalable: 0
   deselectOnOutsideClick: 0
-  cancelPressWhenMoving: 0
+  cancelPressWhenMoving: 1
   selectableGroupIndex: 3
   stateTransitionTime: 0.2
   state: 0
@@ -330,11 +330,11 @@ MonoBehaviour:
     contentColorHolder: {fileID: 0}
     scale: 1
   selectedState:
-    bodyColor: {r: 1, g: 0.95, b: 0.8, a: 0.2}
+    bodyColor: {r: 1, g: 0.9411765, b: 0.75, a: 0.6}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
-    scale: 1.02
+    scale: 1.1
   disabledState:
     bodyColor: {r: 0.25, g: 0.25, b: 0.25, a: 1}
     bodyColorHolder: {fileID: 0}

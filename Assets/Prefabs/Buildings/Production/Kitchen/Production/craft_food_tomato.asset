@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a11f70ed47eda04696cf0ca64275b68, type: 3}
+  m_Name: craft_food_tomato
+  m_EditorClassIdentifier: Assembly-CSharp::CraftItem
+  produceItem:
+    itemData: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
+    amount: 8
+  consumeResources:
+  - itemData: {fileID: 11400000, guid: e6e0b672836d93b44bbc0c0b39214e20, type: 2}
+    amount: 4
+  produceTime: 330

@@ -12,13 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ada3316b484b749b58ea57c530f988, type: 3}
   m_Name: Kitchen_Production_Level_01
   m_EditorClassIdentifier: 
-  producedResources:
-  - produceItem:
-      itemData: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
-      amount: 5
-    consumeResources:
-    - itemData: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
-      amount: 1
-    - itemData: {fileID: 11400000, guid: f33c31b27ce6c2146aa59651f2d07c05, type: 2}
-      amount: 5
-    produceTime: 900
+  craftItems:
+  - {fileID: 11400000, guid: f3c636ea5777ebf419cca93f296af60c, type: 2}
+  - {fileID: 11400000, guid: d53d3ac041573d342be505b3dd671f7a, type: 2}
+  - {fileID: 11400000, guid: a5e56e7c84a8e4940809996a2b08fe82, type: 2}
+  - {fileID: 11400000, guid: 1545f9bc4536c9c4eaf5c9df3585c96c, type: 2}
+  - {fileID: 11400000, guid: d2f84db4d13b0c9468311a0ca9f990dd, type: 2}

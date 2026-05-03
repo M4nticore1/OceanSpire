@@ -37,9 +37,26 @@ public class DailyTaskCompletedMenu : DailyTaskPanel
         UpdateProgress();
 
         currentShowTime += Time.deltaTime;
-        if (currentShowTime >= showTime) {
-            Close();
-        }
+        if (currentShowTime < showTime) return;
+
+        Close();
+    }
+
+    public void Open()
+    {
+        if (isOpened) return;
+
+        slidePanel.Open();
+        isOpened = true;
+    }
+
+    public void Close()
+    {
+        if (!isOpened) return;
+
+        SetTask(null);
+        slidePanel.Close();
+        isOpened = false;
     }
 
     private void OnTaskProgressAdded(DailyTaskInstance task, int progress)
@@ -57,23 +74,6 @@ public class DailyTaskCompletedMenu : DailyTaskPanel
         ResetShowTime();
         ResetProgressLerpApha();
         SetCompleted(false);
-    }
-
-    private void Open()
-    {
-        if (isOpened) return;
-
-        slidePanel.Open();
-        isOpened = true;
-    }
-
-    private void Close()
-    {
-        if (!isOpened) return;
-
-        SetTask(null);
-        slidePanel.Close();
-        isOpened = false;
     }
 
     private void UpdateProgress()

@@ -16,7 +16,7 @@ public static class HumanDataFactory
         BoatRiderData boatRiderData = new BoatRiderData(-1, false);
 
         int damage = WeaponsDataFactory.GetMinWeaponDamageId();
-        WeaponHandlerData weaponsData = WeaponsDataFactory.CreateRandomDataGenerator(damage, damage);
+        EquipmentData weaponsData = WeaponsDataFactory.CreateRandomDataGenerator(damage, damage);
 
         SkillsData skillsData = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount());
 
@@ -39,7 +39,7 @@ public static class HumanDataFactory
         BoatRiderData boatRiderData = new BoatRiderData(-1, false);
 
         int damage = WeaponsDataFactory.GetMinWeaponDamageId();
-        WeaponHandlerData weaponsData = WeaponsDataFactory.CreateRandomDataGenerator(damage, damage);
+        EquipmentData weaponsData = WeaponsDataFactory.CreateRandomDataGenerator(damage, damage);
 
         SkillsData skillsData = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount());
 
@@ -60,7 +60,7 @@ public static class HumanDataFactory
         NameData nameData = new NameData(firstNameId, lastNameId);
 
         BoatRiderData boatRiderData = new BoatRiderData(-1, false);
-        WeaponHandlerData weaponsData = WeaponsDataFactory.CreateRandomDataGenerator(WeaponsDataFactory.GetMinWeaponDamageId() + 1, WeaponsDataFactory.GetMaxWeaponDamage());
+        EquipmentData weaponsData = WeaponsDataFactory.CreateRandomDataGenerator(WeaponsDataFactory.GetMinWeaponDamageId() + 1, WeaponsDataFactory.GetMaxWeaponDamage());
         SkillsData skillsData = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount());
 
         HumanDataV1 data = new HumanDataV1(id, instanceId, Vector3.zero, Vector3.zero, health, status, -1, nameData, boatRiderData, weaponsData, skillsData);

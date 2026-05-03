@@ -10,8 +10,12 @@ public enum ItemID
     Scrap = 5,
     Plastic = 6,
     Potato = 7,
-    Hands = 8,
-    BaseballBat = 9,
+    Tomato = 8,
+    Cucumber = 9,
+    Carrot = 10,
+    Cabbage = 11,
+    Hands = 12,
+    BaseballBat = 13,
 }
 
 //[System.Serializable]
@@ -29,17 +33,14 @@ public class ItemData : ScriptableObject
     [SerializeField] private ItemID itemId = ItemID.Population;
     public int ItemId => (int)itemId;
 
-    [SerializeField] private string itemIdName = "";
-    public string itemKey => itemIdName;
+    [SerializeField] private ItemCategory itemCategory = ItemCategory.Society;
+    public ItemCategory ItemCategory => itemCategory;
 
-    [SerializeField] private string itemName = "";
-    public string ItemName => itemName;
+    //[SerializeField] private string itemIdName = "";
+    //public string itemKey => itemIdName;
 
     [SerializeField] private float weight = 0;
     public float Weight => weight;
-
-    [SerializeField] private ItemCategory itemCategory = ItemCategory.Society;
-    public ItemCategory ItemCategory => itemCategory;
 
     [SerializeField] private LocalizationItem localizationItem;
     public LocalizationItem LocalizationItem => localizationItem;

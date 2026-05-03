@@ -2,40 +2,37 @@ using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("Building Modules/Production Module")]
-public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectricible, IRaidable
+public class ProductionModule : BuildingModule, IElectricible, IRaidable
 {
-    [SerializeField] private SelectComponent selectComponent;
-
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
     public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[OwnedBuilding.LevelComponent.level - 1];
 
-    public ProducedItem currentProductingItem { get; private set; }
-    public int currentProductingItemIndex { get; private set; }
-    public float currentProductionTime { get; private set; }
+    public CraftItem CurrentCraftItem { get; private set; }
+    public int CurrentProductingItemIndex { get; private set; }
+    public float CurrentProductionTime { get; private set; }
 
-    public bool isProducting { get; private set; } = false;
-    public bool isReadyToCollect { get; private set; } = false;
+    public bool IsReadyToCollect { get; private set; } = false;
 
     [SerializeField] private float electricityConsumption = 0f;
     public float ElectricityConsumption => electricityConsumption;
 
     private void Update()
     {
-        if (!isWorking) return;
+        if (!IsWorking) return;
 
         ProcessProduce();
     }
 
     public void SetProduceTime(float time)
     {
-        currentProductionTime = time;
+        CurrentProductionTime = time;
         TryProduceItem();
     }
 
     public void SetProducedItemIndex(int index)
     {
-        currentProductingItemIndex = index;
-        SetProducedItemByIndex(currentProductingItemIndex);
+        CurrentProductingItemIndex = index;
+        SetProducedItemByIndex(CurrentProductingItemIndex);
     }
 
     // IElectricible
@@ -46,24 +43,24 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectr
 
     public bool ShouldSpendElectricity()
     {
-        return isWorking;
+        return IsWorking;
     }
 
     // IRaidable
     public ItemInstance GetRaidLoot()
     {
-        return currentProductingItem.ConsumeResources[0];
+        return CurrentCraftItem.ConsumeResources[0];
     }
 
     // Workers
-    public void OnCurrentWorkerAdded(InteractComponent interactor)
+    private void OnCurrentWorkerAdded(InteractComponent interactor)
     {
         if (!ShouldStartWorking()) return;
 
         StartWorking();
     }
 
-    public void OnCurrentWorkerRemoved(InteractComponent interactor)
+    private void OnCurrentWorkerRemoved(InteractComponent interactor)
     {
         if (ShouldStartWorking()) return;
 
@@ -81,31 +78,28 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectr
     protected override void Subscribe()
     {
         OwnedBuilding.onInited += OnInit;
-        OwnedBuilding.onWorkStarted += OnWorkStarted;
         OwnedBuilding.onClicked += OnBuildingClicked;
+        OwnedBuilding.onCurrentWorkerAdded += OnCurrentWorkerAdded;
+        OwnedBuilding.onCurrentWorkerRemoved += OnCurrentWorkerRemoved;
     }
 
     protected override void Unsubscribe()
     {
         OwnedBuilding.onInited -= OnInit;
-        OwnedBuilding.onWorkStarted -= OnWorkStarted;
         OwnedBuilding.onClicked -= OnBuildingClicked;
+        OwnedBuilding.onCurrentWorkerAdded -= OnCurrentWorkerAdded;
+        OwnedBuilding.onCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
     }
 
     private void OnInit()
     {
-        SetProducedItemByIndex(currentProductingItemIndex);
-    }
-
-    private void OnWorkStarted()
-    {
-        StartProducting();
+        SetProducedItemByIndex(CurrentProductingItemIndex);
     }
 
     // Production
     private bool TryCollectItem()
     {
-        if (!isReadyToCollect) return false;
+        if (!IsReadyToCollect) return false;
 
         CollectItem();
         return true;
@@ -113,16 +107,15 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectr
 
     private void CollectItem()
     {
-        int id = currentProductingItem.ProductionItem.ItemData.ItemId;
-        int amount = currentProductingItem.ProductionItem.Amount;
+        int id = CurrentCraftItem.ProduceItem.ItemData.ItemId;
+        int amount = CurrentCraftItem.ProduceItem.Amount;
         CityStorage.Instance.Inventory.AddItemAmount(id, amount);
 
-        isReadyToCollect = false;
+        IsReadyToCollect = false;
         ResetProducedTime();
 
         if (ShouldStartWorking()) {
             StartWorking();
-            StartProducting();
         }
 
         SetCollectable(false);
@@ -130,7 +123,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectr
 
     private void TryProduceItem()
     {
-        if (currentProductionTime < currentProductingItem.ProduceTime) return;
+        if (CurrentProductionTime < CurrentCraftItem.ProduceTime) return;
 
         ProduceItem();
     }
@@ -139,28 +132,12 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectr
     {
         StopWorking();
         SetCollectable(true);
-        isReadyToCollect = true;
-        StopProducting();
-    }
-
-    private void StartProducting()
-    {
-        if (isProducting) return;
-
-        ConsumeResources();
-        isProducting = true;
-    }
-
-    private void StopProducting()
-    {
-        if (!isProducting) return;
-
-        isProducting = false;
+        IsReadyToCollect = true;
     }
 
     private void ConsumeResources()
     {
-        foreach (var resource in currentProductingItem.ConsumeResources) {
+        foreach (var resource in CurrentCraftItem.ConsumeResources) {
             int id = resource.ItemData.ItemId;
             int amount = resource.Amount;
             CityStorage.Instance.Inventory.RemoveItemAmount(id, amount);
@@ -169,7 +146,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectr
 
     private void RefundResources()
     {
-        foreach (var resource in currentProductingItem.ConsumeResources) {
+        foreach (var resource in CurrentCraftItem.ConsumeResources) {
             int id = resource.ItemData.ItemId;
             int amount = resource.Amount;
             CityStorage.Instance.Inventory.AddItemAmount(id, amount);
@@ -183,7 +160,7 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectr
 
     private void AddProducedTime()
     {
-        SetProduceTime(currentProductionTime += Time.deltaTime);
+        SetProduceTime(CurrentProductionTime += Time.deltaTime);
     }
 
     private void ResetProducedTime()
@@ -193,13 +170,13 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectr
 
     private void SetCollectable(bool value)
     {
-        isReadyToCollect = value;
+        IsReadyToCollect = value;
         AssignFlicking();
     }
 
     private void AssignFlicking()
     {
-        if (isReadyToCollect) {
+        if (IsReadyToCollect) {
             SetFlickingPower(1f);
         }
         else {
@@ -209,25 +186,26 @@ public class ProductionModule : BuildingModule, ICurrentWorkersListener, IElectr
 
     private void SetProducedItemByIndex(int index)
     {
-        if (isProducting && !isReadyToCollect && currentProductingItem != null) {
+        if (IsWorking && !IsReadyToCollect && CurrentCraftItem != null) {
             RefundResources();
             TryCollectItem();
             ResetProducedTime();
         }
 
-        currentProductingItem = ProductionLevelData.producedResources[index];
+        CurrentCraftItem = ProductionLevelData.craftItems[index];
 
-        if (isProducting) {
+        if (IsWorking) {
             ConsumeResources();
         }
     }
 
     private bool ShouldStartWorking()
     {
-        if (isReadyToCollect) return false;
+        if (IsReadyToCollect) return false;
+
         if (OwnedBuilding.WorkComponent.EnteredWorkers.Count == 0) return false;
 
-        foreach (var resource in currentProductingItem.ConsumeResources) {
+        foreach (var resource in CurrentCraftItem.ConsumeResources) {
             int id = resource.ItemData.ItemId;
             int amount = resource.Amount;
             if (CityStorage.Instance.Inventory.GetItem(id).item.Amount < amount) return false;

@@ -66,6 +66,10 @@
   "item_scrap": "Scrap",
   "item_plastic": "Plastic",
   "item_potato": "Potato",
+  "item_tomato": "Tomato",
+  "item_cucumber": "Cucumber",
+  "item_carrot": "Carrot",
+  "item_cabbage": "Cabbage",
 
   "skill_cooking": "Cooking",
   "skill_farming": "Farming",
@@ -76,13 +80,13 @@
   "skill_combat": "Combat",
   "skill_athletics": "Athletics",
 
-  "tasks_daily_tasks": "Daily tasks",
-  "tasks_update_time": "The tasks will be updated in {updateTime}",
-  "tasks_completed": "Completed!",
-  "tasks_time": "You'll get {itemAmount} {itemName} for spending {taskCondition} minutes in the game!",
-  "tasks_extraction": "You'll get {itemAmount} {itemName} for collecting {taskCondition} using the pier!",
-  "tasks_building": "You'll get {itemAmount} {itemName} for building {taskCondition} any buildings!",
-  "tasks_raid": "You'll get {itemAmount} {itemName} for repelling {taskCondition} raid!",
+  "task_daily_tasks": "Daily tasks",
+  "task_update_time": "The tasks will be updated in {updateTime}",
+  "task_completed": "Completed!",
+  "task_time": "You'll get {itemAmount} {itemName} for spending {taskCondition} minutes in the game!",
+  "task_extraction": "You'll get {itemAmount} {itemName} for collecting {taskCondition} using the pier!",
+  "task_building": "You'll get {itemAmount} {itemName} for building {taskCondition} any buildings!",
+  "task_raid": "You'll get {itemAmount} {itemName} for repelling {taskCondition} raid!",
 
   "ad_reward": "Reward",
   "ad_bonus": "Bonus",
@@ -100,6 +104,19 @@
   "first_name_michael": "Michael",
   "first_name_noah": "Noah",
   "first_name_sam": "Sam",
+  "first_name_isaac": "Isaac",
+  "first_name_miles": "Miles",
+
+  "first_name_eva": "Eva",
+  "first_name_zoe": "Zoe",
+  "first_name_mia": "Mia",
+  "first_name_noa": "Noa",
+  "first_name_sara": "Sara",
+  "first_name_kira": "Kira",
+  "first_name_iris": "Iris",
+  "first_name_freya": "Freya",
+  "first_name_Aria": "Aria",
+  "first_name_alina": "Alina",
 
   "last_name_anderson": "Anderson",
   "last_name_brown": "Brown",
@@ -108,5 +125,7 @@
   "last_name_moore": "Moore",
   "last_name_smith": "Smith",
   "last_name_taylor": "Taylor",
-  "last_name_wilson": "Wilson"
+  "last_name_wilson": "Wilson",
+  "last_name_fletcher": "Fletcher",
+  "last_name_stone": "Stone"
 }

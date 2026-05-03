@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 140}
+  m_AnchoredPosition: {x: 0, y: -40}
+  m_SizeDelta: {x: 0, y: 80}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &7976415270431692876
 CanvasRenderer:
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 54
+  m_fontSize: 64
   m_fontSizeBase: 54
   m_fontWeight: 400
   m_enableAutoSizing: 0
@@ -152,8 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
-  item: {fileID: 11400000, guid: 9f26c4f24612b7d408f5266f79ffb0b1, type: 2}
   textRole: 1
+  item: {fileID: 11400000, guid: 9f26c4f24612b7d408f5266f79ffb0b1, type: 2}
+  localizationTarget: {fileID: 0}
 --- !u!1 &166850717295243282
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,8 +266,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -110}
-  m_SizeDelta: {x: 0, y: 80}
+  m_AnchoredPosition: {x: 0, y: -140}
+  m_SizeDelta: {x: 0, y: 60}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &456427514662796914
 CanvasRenderer:
@@ -323,7 +324,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
+  m_fontSize: 46
   m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 0
@@ -380,8 +381,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  textRole: 0
   item: {fileID: 0}
-  textRole: 1
+  localizationTarget: {fileID: 0}
 --- !u!114 &2419302485153013417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,8 +469,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -190}
-  m_SizeDelta: {x: 0, y: 40}
+  m_AnchoredPosition: {x: 0, y: -200}
+  m_SizeDelta: {x: 0, y: 60}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &5063386411571015428
 CanvasRenderer:
@@ -525,7 +527,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
+  m_fontSize: 46
   m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 0
@@ -582,8 +584,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  textRole: 0
   item: {fileID: 0}
-  textRole: 1
+  localizationTarget: {fileID: 0}
 --- !u!114 &3460058032624241202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -598,6 +601,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SelectedBuildingLevelDisplay
   localizer: {fileID: 5360756985295186068}
   levelLocalization: {fileID: 11400000, guid: babfa891fdda2a940bd3637267626237, type: 2}
+  constructionLocalization: {fileID: 0}
 --- !u!1 &9054847388078206404
 GameObject:
   m_ObjectHideFlags: 0

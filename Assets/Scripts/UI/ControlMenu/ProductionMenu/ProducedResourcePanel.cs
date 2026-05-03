@@ -13,7 +13,7 @@ public class ProducedResourcePanel : MonoBehaviour
     private FlickingImage flickingProgressBar;
     private ProductionModule productionModule;
 
-    private ProducedItem currentProducedItem;
+    private CraftItem currentCraftItem;
     private int index = 0;
     private bool isSelected = false;
 
@@ -48,10 +48,10 @@ public class ProducedResourcePanel : MonoBehaviour
         UpdateProgressBar();
     }
 
-    public void Init(ProductionModule productionModule, ProducedItem producedResource, int index)
+    public void Init(ProductionModule productionModule, CraftItem craftItem, int index)
     {
         this.productionModule = productionModule;
-        this.currentProducedItem = producedResource;
+        this.currentCraftItem = craftItem;
         this.index = index;
 
         CreateProducedResource();
@@ -78,12 +78,12 @@ public class ProducedResourcePanel : MonoBehaviour
     private void CreateProducedResource()
     {
         ResourceWidget widget = Instantiate(resourceWidgetPrefab, producedResourceSlot.transform);
-        widget.SetAmountItem(currentProducedItem.ProductionItem);
+        widget.SetAmountItem(currentCraftItem.ProduceItem);
     }
 
     private void CreateConsumedResources()
     {
-        foreach (var resource in currentProducedItem.ConsumeResources) {
+        foreach (var resource in currentCraftItem.ConsumeResources) {
             ResourceWidget widget = Instantiate(resourceWidgetPrefab, consumedResourcesSlot.transform);
             widget.SetAmountItem(resource);
         }
@@ -91,23 +91,25 @@ public class ProducedResourcePanel : MonoBehaviour
 
     private void UpdateTimer()
     {
-        if (isSelected && (productionModule.isProducting || productionModule.isReadyToCollect)) {
-            int currentTime = (int)productionModule.currentProductionTime;
-            int targetTime = productionModule.ProductionLevelData.producedResources[index].ProduceTime;
-            string text = TimeFormatter.SecondToTimer(currentTime, targetTime);
-            timer.SetText(text);
+        string text;
+
+        if (isSelected && (productionModule.IsWorking || productionModule.IsReadyToCollect)) {
+            int currentTime = (int)productionModule.CurrentProductionTime;
+            int targetTime = productionModule.ProductionLevelData.craftItems[index].ProduceTime;
+            text = TimeFormatter.SecondToTimer(currentTime, targetTime);
         }
         else {
-            int targetTime = productionModule.ProductionLevelData.producedResources[index].ProduceTime;
-            string text = TimeFormatter.SecondsToMinuteTime(targetTime);
-            timer.SetText(text);
+            int targetTime = productionModule.ProductionLevelData.craftItems[index].ProduceTime;
+            text = TimeFormatter.SecondsToMinuteTime(targetTime);
         }
+
+        timer.SetText(text);
     }
 
     private void UpdateProgressBar()
     {
-        float currentTime = productionModule.currentProductionTime;
-        int targetTime = productionModule.ProductionLevelData.producedResources[index].ProduceTime;
+        float currentTime = productionModule.CurrentProductionTime;
+        int targetTime = productionModule.ProductionLevelData.craftItems[index].ProduceTime;
         float amount = 0f;
 
         if (targetTime > 0 && isSelected) {

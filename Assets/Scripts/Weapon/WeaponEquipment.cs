@@ -1,15 +1,5 @@
 using UnityEngine;
 
-public class WeaponHandlerData
-{
-    public int weaponId { get; private set; } = 0;
-
-    public WeaponHandlerData(int weaponId)
-    {
-        this.weaponId = weaponId;
-    }
-}
-
 public class WeaponEquipment : MonoBehaviour
 {
     [SerializeField] private Transform spawnPoint;
@@ -17,10 +7,10 @@ public class WeaponEquipment : MonoBehaviour
     private WeaponDefinition currentDefinition;
     private Weapon spawnedWeapon;
 
-    public void Init(WeaponHandlerData data)
+    public void Init(EquipmentData data)
     {
-        int id = data.weaponId;
-        WeaponDefinition definition = ItemsList.Instance.GetItemData(id) as WeaponDefinition;
+        int id = data.WeaponId;
+        WeaponDefinition definition = ItemsList.Instance.GetItem(id) as WeaponDefinition;
         SetWeaponAndApply(definition);
     }
 

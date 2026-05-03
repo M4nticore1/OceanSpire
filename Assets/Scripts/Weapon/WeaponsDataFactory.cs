@@ -5,10 +5,10 @@ public static class WeaponsDataFactory
 {
     public const int damagePerFloor = 2;
 
-    public static WeaponHandlerData CreateRandomDataGenerator(int minDamage, int maxDamage)
+    public static EquipmentData CreateRandomDataGenerator(int minDamage, int maxDamage)
     {
         int weaponId = GetRandomWeaponId(minDamage, maxDamage);
-        WeaponHandlerData data = new WeaponHandlerData(weaponId);
+        EquipmentData data = new EquipmentData(weaponId);
 
         return data;
     }

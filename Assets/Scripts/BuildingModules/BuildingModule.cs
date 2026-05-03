@@ -7,7 +7,7 @@ public abstract class BuildingModule : MonoBehaviour
     private Building ownedBuilding = null;
     public Building OwnedBuilding => ownedBuilding ? ownedBuilding : GetComponent<Building>();
 
-    protected bool isWorking { get; private set; } = false;
+    public bool IsWorking { get; private set; } = false;
 
     [SerializeField] protected BuildingModuleLevelData[] levelsData = { };
     public BuildingModuleLevelData[] LevelsData => levelsData;
@@ -33,7 +33,7 @@ public abstract class BuildingModule : MonoBehaviour
     public event Action onWorkStarted;
     public event Action onWorkStopped;
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         ownedBuilding = GetComponent<Building>();
     }
@@ -54,17 +54,17 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected void StartWorking()
     {
-        if (isWorking) return;
+        if (IsWorking) return;
 
-        isWorking = true;
+        IsWorking = true;
         onWorkStarted?.Invoke();
     }
 
     protected void StopWorking()
     {
-        if (!isWorking) return;
+        if (!IsWorking) return;
 
-        isWorking = false;
+        IsWorking = false;
         onWorkStopped?.Invoke();
     }
 

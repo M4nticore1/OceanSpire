@@ -10,7 +10,7 @@ public class HumanDataV1 : CreatureDataV1
     public int interactBuildingInstanceId { get; private set; } = 0;
     public NameData name { get; private set; }
     public BoatRiderData boatRider { get; private set; }
-    public WeaponHandlerData weapon { get; private set; }
+    public EquipmentData weapon { get; private set; }
     public SkillsData skills { get; private set; }
 
     public HumanDataV1(int id,
@@ -22,7 +22,7 @@ public class HumanDataV1 : CreatureDataV1
         int interactBuildingInstanceId,
         NameData name,
         BoatRiderData boatRider,
-        WeaponHandlerData weapon,
+        EquipmentData weapon,
         SkillsData skills) :
         base(id, instanceId, position, rotation)
     {
