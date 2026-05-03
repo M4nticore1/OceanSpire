@@ -4,9 +4,12 @@ public static class HumanDataFactory
 {
     public static HumanDataV1 CreateRandomCitizenData()
     {
-        int id = (int)CreatureIdEnum.Human;
+        Creature prefab = CreaturesList.Instance.GetRandomCitizen();
+        Debug.Log(prefab);
+        int id = prefab.Definition.CreatureId;
+
         int instanceId = InstancesManager.instance.GetNextInstanceId();
-        float health = CreaturesList.Instance.Creatures[id].GetComponent<HealthComponent>().MaxHealth;
+        float health = CreaturesList.Instance.GetCitizen(id).GetComponent<HealthComponent>().MaxHealth;
         HumanStatusEnum status = HumanStatusEnum.Citizen;
 
         int firstNameId = HumanNamesList.Instance.GetRandomMaleFirstNameId();
@@ -27,9 +30,11 @@ public static class HumanDataFactory
 
     public static HumanDataV1 CreateRandomWandererData()
     {
-        int id = (int)CreatureIdEnum.Human;
+        Creature prefab = CreaturesList.Instance.GetRandomWanderer();
+        int id = prefab.Definition.CreatureId;
+
         int instanceId = InstancesManager.instance.GetNextInstanceId();
-        float health = CreaturesList.Instance.Creatures[id].GetComponent<HealthComponent>().MaxHealth;
+        float health = CreaturesList.Instance.GetWanderer(id).GetComponent<HealthComponent>().MaxHealth;
         HumanStatusEnum status = HumanStatusEnum.Wanderer;
 
         int firstNameId = HumanNamesList.Instance.GetRandomMaleFirstNameId();
@@ -50,9 +55,11 @@ public static class HumanDataFactory
 
     public static HumanDataV1 CreateRandomRaiderData()
     {
-        int id = (int)CreatureIdEnum.Human;
+        Creature prefab = CreaturesList.Instance.GetRandomRaider();
+        int id = prefab.Definition.CreatureId;
+
         int instanceId = InstancesManager.instance.GetNextInstanceId();
-        float health = CreaturesList.Instance.Creatures[id].GetComponent<HealthComponent>().MaxHealth;
+        float health = CreaturesList.Instance.GetRaider(id).GetComponent<HealthComponent>().MaxHealth;
         HumanStatusEnum status = HumanStatusEnum.Raider;
 
         int firstNameId = HumanNamesList.Instance.GetRandomMaleFirstNameId();

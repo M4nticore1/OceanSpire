@@ -2,13 +2,17 @@ using UnityEngine;
 
 enum CreatureIdEnum
 {
-    Human,
-    Shark
+    HumanCitizenMale,
+    HumanCitizenFemale,
+    HumanWandererMale,
+    HumanWandererFemale,
+    HumanRaiderMale,
+    HumanRaiderFemale,
 }
 
 [CreateAssetMenu(fileName = "CreatureDefinition", menuName = "Creature/CreatureDefinition")]
 public class CreatureDefinition : ScriptableObject
 {
-    [SerializeField] private CreatureIdEnum creatureId = CreatureIdEnum.Human;
+    [SerializeField] private CreatureIdEnum creatureId = CreatureIdEnum.HumanCitizenMale;
     public int CreatureId => (int)creatureId;
 }

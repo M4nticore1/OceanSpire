@@ -117,7 +117,7 @@ public class WanderersManager : MonoBehaviour
         data.boatRider.SetBoatInstanceId(boatId);
         data.boatRider.SetRiding(true);
 
-        Human human = CreatureFactory.CreateHuman(data);
+        Human human = CreatureFactory.CreateWanderer(data);
 
         return human;
     }

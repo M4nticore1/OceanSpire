@@ -16,7 +16,7 @@ public class CitizensLoader : MonoBehaviour
 
         if (saveData != null) {
             foreach (var data in saveData.citizensData) {
-                Human citizen = CreatureFactory.CreateHuman(data);
+                Human citizen = CreatureFactory.CreateCitizen(data);
             }
         }
         else {
@@ -34,7 +34,7 @@ public class CitizensLoader : MonoBehaviour
                 data.SetPosition(finalPosition);
                 data.SetRotation(rotation);
 
-                Human citizen = CreatureFactory.CreateHuman(data);
+                Human citizen = CreatureFactory.CreateCitizen(data);
             }
         }
     }

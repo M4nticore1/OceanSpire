@@ -239,7 +239,7 @@ public class RaidManager : MonoBehaviour
         data.boatRider.SetBoatInstanceId(boatInstanceId);
         data.boatRider.SetRiding(true);
 
-        Human human = CreatureFactory.CreateHuman(data);
+        Human human = CreatureFactory.CreateRaider(data);
 
         return human;
     }

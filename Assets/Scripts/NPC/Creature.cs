@@ -4,13 +4,14 @@ using UnityEngine.AI;
 
 public abstract class Creature : MonoBehaviour
 {
+    [Header("Creature")]
+    [SerializeField] private CreatureDefinition definition;
+    public CreatureDefinition Definition => definition;
+
     [SerializeField] protected NavMeshAgent agent;
 
     [SerializeField] protected Movement movement;
     public Movement Movement => movement;
-
-    [SerializeField] protected CreatureDefinition creatureDefinition;
-    public CreatureDefinition CreatureDefinition => creatureDefinition;
 
     [SerializeField] private InstanceId instanceId;
 

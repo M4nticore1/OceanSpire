@@ -18,6 +18,7 @@ public enum HumanActivity
 
 public class Human : Creature, IClickable
 {
+    [Header("Human")]
     [SerializeField] private NameHandler nameHandler;
     public NameHandler NameHandler => nameHandler;
 
@@ -50,11 +51,6 @@ public class Human : Creature, IClickable
 
     [SerializeField] private ContextMenuTarget contextMenuTarget;
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
-
-    [Header("Status")]
-    [SerializeField] private GameObject citizenClothes;
-    [SerializeField] private GameObject wandererClothes;
-    [SerializeField] private GameObject raiderClothes;
 
     public HumanStatusEnum currentStatusEnum { get; private set; } = HumanStatusEnum.Citizen;
     public HumanState currentStatus { get; private set; }
@@ -146,7 +142,6 @@ public class Human : Creature, IClickable
     {
         HumanDataV1 humanData = data as HumanDataV1;
 
-        HideClothes();
         isMale = humanData.isMale;
         SetStatus(humanData.status);
 
@@ -376,15 +371,12 @@ public class Human : Creature, IClickable
         switch (status) {
             case HumanStatusEnum.Citizen:
                 currentStatus = new CitizenState(this);
-                citizenClothes.SetActive(true);
                 break;
             case HumanStatusEnum.Wanderer:
                 currentStatus = new WandererState(this);
-                wandererClothes.SetActive(true);
                 break;
             case HumanStatusEnum.Raider:
                 currentStatus = new RaiderState(this);
-                raiderClothes.SetActive(true);
                 break;
         }
 
@@ -395,26 +387,16 @@ public class Human : Creature, IClickable
     {
         switch (status) {
             case HumanStatusEnum.Citizen:
-                citizenClothes.SetActive(false);
                 break;
             case HumanStatusEnum.Wanderer:
-                wandererClothes.SetActive(false);
                 break;
             case HumanStatusEnum.Raider:
-                raiderClothes.SetActive(false);
                 break;
         }
 
         if (currentStatus != null) {
             currentStatus.Exit();
         }
-    }
-
-    private void HideClothes()
-    {
-        citizenClothes.SetActive(false);
-        wandererClothes.SetActive(false);
-        raiderClothes.SetActive(false);
     }
 
     private void OnSelected()

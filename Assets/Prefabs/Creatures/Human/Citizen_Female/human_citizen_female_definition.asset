@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4a955a6deebe66408e3f6bbeee33ca9, type: 3}
-  m_Name: CitizenData
-  m_EditorClassIdentifier: Assembly-CSharp::CreatureData
-  creatureId: 0
+  m_Script: {fileID: 11500000, guid: 877fbd1bf1b07f149bff81c6e5824171, type: 3}
+  m_Name: human_citizen_female_definition
+  m_EditorClassIdentifier: Assembly-CSharp::CreatureDefinition
+  creatureId: 1
