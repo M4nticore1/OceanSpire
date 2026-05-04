@@ -1,14 +1,16 @@
 using UnityEngine;
 
-public class NameHandler : MonoBehaviour
+public class NameComponent : MonoBehaviour
 {
+    [SerializeField] private GenderComponent genderComponent;
+
     private LocalizationItem firstName;
     private LocalizationItem lastName;
     
-    public void Init(NameData data, bool isMale)
+    public void Init(NameData data)
     {
-        SetFirstNameId(data.firstNameId, isMale);
-        SetLastNameId(data.lastNameId, isMale);
+        SetFirstNameId(data.firstNameId, genderComponent.IsMale);
+        SetLastNameId(data.lastNameId, genderComponent.IsMale);
     }
 
     public string GetName()

@@ -8,6 +8,7 @@ public class WorkersControlMenu : ControlMenu
     [SerializeField] private WorkersPanel unemployedCitizensMenu;
     [SerializeField] private WorkersPanel employedCitizensMenu;
     [SerializeField] private RectTransform scrollRectContent;
+    [SerializeField] private FitSizeToChildren fitSizeToChildren;
 
     protected override void OnEnable()
     {
@@ -88,13 +89,7 @@ public class WorkersControlMenu : ControlMenu
 
     private void UpdateScrollRect()
     {
-        var buildingWorkersRect = buildingWorkersMenu.GetComponent<RectTransform>();
-        var employedCitizensRect = employedCitizensMenu.GetComponent<RectTransform>();
-
-        float width = scrollRectContent.sizeDelta.x;
-        float height = employedCitizensRect.rect.position.y - buildingWorkersRect.rect.position.y + employedCitizensRect.rect.size.y;
-
-        scrollRectContent.sizeDelta = new Vector2(width, height);
+        fitSizeToChildren.UpdateSize();
     }
 
     private void OnSetedCitizenWork(InteractComponent interactor)

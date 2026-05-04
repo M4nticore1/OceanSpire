@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5552754147449274060}
   - component: {fileID: 9140235139351627301}
+  - component: {fileID: -6894311141705426696}
   - component: {fileID: 6264695886038843937}
   - component: {fileID: 4098557255172134659}
   - component: {fileID: 2775210278879926879}
@@ -61,11 +62,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a9c0911e75b5854cb6088ce4f6267e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Human
+  definition: {fileID: 0}
   agent: {fileID: 1338494420481879648}
   movement: {fileID: -7493649843608556168}
-  creatureDefinition: {fileID: 0}
   instanceId: {fileID: 6196963818731621145}
-  nameHandler: {fileID: 6264695886038843937}
+  genderComponent: {fileID: -6894311141705426696}
+  nameComponent: {fileID: 6264695886038843937}
   healthComponent: {fileID: 4098557255172134659}
   reviveComponent: {fileID: 2775210278879926879}
   cityNavigator: {fileID: 2185582854232776361}
@@ -76,9 +78,19 @@ MonoBehaviour:
   skillsComponent: {fileID: 4701473922447632886}
   selectComponent: {fileID: 8364959695361298754}
   contextMenuTarget: {fileID: 7000859086802169914}
-  citizenClothes: {fileID: 0}
-  wandererClothes: {fileID: 0}
-  raiderClothes: {fileID: 0}
+--- !u!114 &-6894311141705426696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c5b4adc1bda6fd4dae2e6069da5a680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GenderComponent
+  isMale: 1
 --- !u!114 &6264695886038843937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,9 +100,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6506537361480025273}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: caed12e63ca3c7c4699d81ccccb6e749, type: 3}
+  m_Script: {fileID: 11500000, guid: 18f715d7ff8df78429db4774edd723c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NameHandler
+  genderComponent: {fileID: -6894311141705426696}
 --- !u!114 &4098557255172134659
 MonoBehaviour:
   m_ObjectHideFlags: 0

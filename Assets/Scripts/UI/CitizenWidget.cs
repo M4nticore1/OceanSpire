@@ -21,6 +21,9 @@ public class CitizenWidget : MonoBehaviour
     [SerializeField] private TextMeshProUGUI citizenNameText;
     [SerializeField] private LayoutGroup skillsLayoutGroup;
     [SerializeField] private Button button;
+    [SerializeField] private Image genderImage;
+    [SerializeField] private Sprite maleIcon;
+    [SerializeField] private Sprite femaleIcon;
 
     private void OnEnable()
     {
@@ -39,6 +42,7 @@ public class CitizenWidget : MonoBehaviour
             ShowResidentMenu();
             UpdateName();
             UpdateSkills();
+            UpdateGender();
         }
         else {
             HideResidentMenu();
@@ -62,7 +66,7 @@ public class CitizenWidget : MonoBehaviour
 
     private void UpdateName()
     {
-        citizenNameText.SetText(Human.NameHandler.GetName());
+        citizenNameText.SetText(Human.NameComponent.GetName());
     }
 
     private void UpdateSkills()
@@ -70,6 +74,11 @@ public class CitizenWidget : MonoBehaviour
         foreach (var skill in Human.SkillsComponent.Skills.Values) {
             SkillWidgetFactory.CreateSkillWidget(skillWidget, skillsLayoutGroup.transform, skill);
         }
+    }
+
+    private void UpdateGender()
+    {
+        genderImage.sprite = Human.GenderComponent.IsMale ? maleIcon : femaleIcon;
     }
 
     private void OnClicked()

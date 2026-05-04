@@ -10,7 +10,7 @@ public class SelectedHumanNameDisplay : SelectedDisplay
         Human human = SelectManager.Instance.GetSelectedHuman();
         if (!human) return;
 
-        string name = human.NameHandler.GetName();
+        string name = human.NameComponent.GetName();
 
         text.SetText(name);
     }

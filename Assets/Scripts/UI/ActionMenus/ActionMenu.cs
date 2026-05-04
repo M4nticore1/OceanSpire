@@ -71,8 +71,6 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
         isSubscribed = false;
     }
 
-
-
     // IOpenable
     public void Open()
     {

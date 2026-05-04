@@ -18,10 +18,10 @@ public class FitSizeToChildren : UIBehaviour
     {
         base.Start();
 
-        FitToChildren();
+        UpdateSize();
     }
 
-    public void FitToChildren()
+    public void UpdateSize()
     {
         if (rect.childCount == 0) {
             rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, minHeight);

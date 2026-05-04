@@ -19,8 +19,11 @@ public enum HumanActivity
 public class Human : Creature, IClickable
 {
     [Header("Human")]
-    [SerializeField] private NameHandler nameHandler;
-    public NameHandler NameHandler => nameHandler;
+    [SerializeField] private GenderComponent genderComponent;
+    public GenderComponent GenderComponent => genderComponent;
+
+    [SerializeField] private NameComponent nameComponent;
+    public NameComponent NameComponent => nameComponent;
 
     [SerializeField] private HealthComponent healthComponent;
     public HealthComponent HealthComponent => healthComponent;
@@ -54,8 +57,6 @@ public class Human : Creature, IClickable
 
     public HumanStatusEnum currentStatusEnum { get; private set; } = HumanStatusEnum.Citizen;
     public HumanState currentStatus { get; private set; }
-
-    private bool isMale = true;
 
     public static event Action<Human> onHumanInited;
     public static event Action<Human> onHumanRevived;
@@ -142,11 +143,10 @@ public class Human : Creature, IClickable
     {
         HumanDataV1 humanData = data as HumanDataV1;
 
-        isMale = humanData.isMale;
         SetStatus(humanData.status);
 
         healthComponent.SetCurrentHealth(humanData.health);
-        nameHandler.Init(humanData.name, isMale);
+        nameComponent.Init(humanData.name);
 
         if (InstancesManager.instance.TryGetInstance(humanData.interactBuildingInstanceId, out var obj)) {
             if (obj.TryGetComponent<Building>(out var building)) {

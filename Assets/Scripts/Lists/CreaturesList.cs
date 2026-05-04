@@ -1,74 +1,99 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "CreaturesList", menuName = "GameContent/Creatures List")]
 public class CreaturesList : ScriptableObject
 {
-    private static CreaturesList _instance;
+    private static CreaturesList instance;
     public static CreaturesList Instance
     {
         get
         {
-            if (_instance == null) {
-                _instance = Resources.Load<CreaturesList>("Lists/CreaturesList");
+            if (instance == null) {
+                instance = Resources.Load<CreaturesList>("Lists/CreaturesList");
+                instance.Init();
             }
-            return _instance;
+            return instance;
         }
     }
 
     [SerializeField] private Creature[] creatures;
+    [SerializeField] private Dictionary<int, Creature> creaturesDict = new();
 
     [SerializeField] private Creature[] citizens;
+    [SerializeField] private Dictionary<int, Creature> citizensDict = new();
+
     [SerializeField] private Creature[] wanderers;
+    [SerializeField] private Dictionary<int, Creature> wanderersDict = new();
+
     [SerializeField] private Creature[] raiders;
+    [SerializeField] private Dictionary<int, Creature> raidersDict = new();
+
+    private void Init()
+    {
+        InitDict(creatures, creaturesDict);
+        InitDict(citizens, citizensDict);
+        InitDict(wanderers, wanderersDict);
+        InitDict(raiders, raidersDict);
+    }
 
     public Creature GetCreature(int id)
     {
-        return GetCreature(creatures, id);
+        return GetCreature(creaturesDict, id);
     }
 
     public Creature GetCitizen(int id)
     {
-        return GetCreature(citizens, id);
+        return GetCreature(citizensDict, id);
     }
 
     public Creature GetRandomCitizen()
     {
-        return GetRandomCreature(citizens);
+        return GetRandomCreature(citizensDict);
     }
 
     public Creature GetWanderer(int id)
     {
-        return GetCreature(wanderers, id);
+        return GetCreature(wanderersDict, id);
     }
 
     public Creature GetRandomWanderer()
     {
-        return GetRandomCreature(wanderers);
+        return GetRandomCreature(wanderersDict);
     }
 
     public Creature GetRaider(int id)
     {
-        return GetCreature(raiders, id);
+        return GetCreature(raidersDict, id);
     }
 
     public Creature GetRandomRaider()
     {
-        return GetRandomCreature(raiders);
+        return GetRandomCreature(raidersDict);
     }
 
-    private Creature GetCreature(Creature[] array, int id)
+    private Creature GetCreature(Dictionary<int, Creature> array, int id)
     {
-        if (id >= array.Length) return null;
+        Creature creature;
+        array.TryGetValue(id, out creature);
 
-        return array[id];
+        return creature;
     }
 
-    private Creature GetRandomCreature(Creature[] array)
+    private Creature GetRandomCreature(Dictionary<int, Creature> array)
     {
-        int id = UnityEngine.Random.Range(0, array.Length);
+        int index = UnityEngine.Random.Range(0, array.Values.Count);
+        int id = array.Values.ToArray()[index].Definition.CreatureId;
 
         return GetCreature(array, id);
+    }
+
+    private void InitDict(Creature[] creatures, Dictionary<int, Creature> creaturesDict)
+    {
+        foreach (var creature in creatures) {
+            creaturesDict.Add(creature.Definition.CreatureId, creature);
+        }
     }
 }

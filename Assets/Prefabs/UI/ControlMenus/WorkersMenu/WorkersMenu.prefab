@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -300}
-  m_SizeDelta: {x: -40, y: -320}
+  m_SizeDelta: {x: -80, y: -340}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1324262741190070697
 MonoBehaviour:
@@ -127,6 +127,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5955685899923583786}
+  - component: {fileID: 1615695403222982904}
+  - component: {fileID: 8909294856917433232}
+  - component: {fileID: 365300420343631483}
   m_Layer: 5
   m_Name: ScrollRectContent
   m_TagString: Untagged
@@ -154,6 +157,57 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!222 &1615695403222982904
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837631541914727809}
+  m_CullTransparentMesh: 1
+--- !u!114 &8909294856917433232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837631541914727809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &365300420343631483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837631541914727809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac0a64847ccd6a40861813768ff9708, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FitSizeToChildren
+  minHeight: 2000
 --- !u!1001 &1142211388075632633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -292,6 +346,7 @@ MonoBehaviour:
   unemployedCitizensMenu: {fileID: 3235917991513759199}
   employedCitizensMenu: {fileID: 8696446309502264944}
   scrollRectContent: {fileID: 5955685899923583786}
+  fitSizeToChildren: {fileID: 365300420343631483}
 --- !u!1001 &3271852802896944267
 PrefabInstance:
   m_ObjectHideFlags: 0

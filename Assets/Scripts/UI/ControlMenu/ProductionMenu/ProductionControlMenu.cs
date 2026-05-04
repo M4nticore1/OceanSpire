@@ -68,6 +68,6 @@ public class ProductionControlMenu : ControlMenu
         yield return new WaitForEndOfFrame();
 
         scrollRect.verticalNormalizedPosition = 1f;
-        fitSizeToChildren.FitToChildren();
+        fitSizeToChildren.UpdateSize();
     }
 }
