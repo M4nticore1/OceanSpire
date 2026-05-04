@@ -3,8 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ItemRewardData", menuName = "Ads Reward Definitions/reward_item")]
 public class ItemAdRewardDefinition : AdRewardDefinition
 {
-    [SerializeField] private ItemData itemData;
-    public ItemData ItemData => itemData;
+    [SerializeField] private ItemDefinition itemData;
+    public ItemDefinition ItemData => itemData;
 
     [SerializeField] private int minAmount;
     public int MinAmount => minAmount;

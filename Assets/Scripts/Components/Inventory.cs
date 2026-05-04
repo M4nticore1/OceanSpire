@@ -42,7 +42,7 @@ public class Inventory : MonoBehaviour
         }
 
         if (!isUnlimitedWeight) {
-            ItemData data = ItemsList.Instance.Items[id];
+            ItemDefinition data = ItemsList.Instance.Items[id];
             amount = math.clamp(amount, 0, (int)(RemainingWeight / data.Weight));
         }
 
@@ -75,7 +75,7 @@ public class Inventory : MonoBehaviour
 
     private void AddNewItem(int id)
     {
-        ItemData data = ItemsList.Instance.GetItem(id);
+        ItemDefinition data = ItemsList.Instance.GetItem(id);
         ItemInstance item = new ItemInstance(data);
         StorageItem storageItem = new StorageItem(item);
 

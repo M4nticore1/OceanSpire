@@ -28,7 +28,7 @@ public enum ItemCategory
 }
 
 [CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/ItemData")]
-public class ItemData : ScriptableObject
+public class ItemDefinition : ScriptableObject
 {
     [SerializeField] private ItemID itemId = ItemID.Population;
     public int ItemId => (int)itemId;

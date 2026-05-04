@@ -6,7 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public struct LootEntry
 {
-    public ItemData itemData;
+    public ItemDefinition itemData;
     public int dropChance;
     public int minAmount;
     public int maxAmount;
@@ -230,7 +230,7 @@ public class LootContainer : MonoBehaviour, IClickable
                 ItemInstance currentLoot = containedLoot[i];
                 if (remainingWeight.Value < currentLoot.ItemData.Weight) continue;
 
-                ItemData data = currentLoot.ItemData;
+                ItemDefinition data = currentLoot.ItemData;
                 int id = currentLoot.ItemData.ItemId;
                 int containedAmount = currentLoot.Amount;
 

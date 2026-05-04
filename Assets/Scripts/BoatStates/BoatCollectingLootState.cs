@@ -56,7 +56,7 @@ public class BoatCollectingLootState : BoatState
         foreach (var loot in collectedLoot) {
             if (boat.Inventory.RemainingWeight <= 0) break;
 
-            ItemData data = loot.ItemData;
+            ItemDefinition data = loot.ItemData;
             int id = loot.ItemData.ItemId;
             int amountToTake = math.min(loot.Amount, (int)(boat.Inventory.RemainingWeight / loot.ItemData.Weight));
 

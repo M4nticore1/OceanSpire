@@ -73,7 +73,7 @@ public abstract class AdRewardMenu : MonoBehaviour
             return;
         }
 
-        rewardImage.sprite = itemReward.definition.RewardIcon;
+        rewardImage.sprite = itemReward.Definition.RewardIcon;
     }
 
     private void AssignDescryption()
@@ -84,7 +84,7 @@ public abstract class AdRewardMenu : MonoBehaviour
             return;
         }
 
-        rewardDescryption.SetLocalizationItem(itemReward.definition.RewardDescryptionLocalization);
+        rewardDescryption.SetLocalizationItem(itemReward.Definition.RewardDescryptionLocalization);
         rewardDescryption.SetPlaceHolderLocalization(itemReward);
         rewardDescryption.UpdateText();
     }

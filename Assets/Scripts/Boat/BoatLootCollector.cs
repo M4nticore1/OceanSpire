@@ -77,7 +77,7 @@ public class BoatLootHandler : MonoBehaviour
         foreach (var loot in collectedLoot) {
             if (inventory.RemainingWeight <= 0) break;
 
-            ItemData data = loot.ItemData;
+            ItemDefinition data = loot.ItemData;
             int id = loot.ItemData.ItemId;
             int amountToTake = math.min(loot.Amount, (int)(inventory.RemainingWeight / loot.ItemData.Weight));
 

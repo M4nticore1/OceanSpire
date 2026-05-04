@@ -14,12 +14,12 @@ public class ItemCategoryData
 [System.Serializable]
 public class ItemInstance
 {
-    [SerializeField] private ItemData itemData;
-    public ItemData ItemData => itemData;
+    [SerializeField] private ItemDefinition itemData;
+    public ItemDefinition ItemData => itemData;
     [SerializeField] private int amount;
     public int Amount => amount;
 
-    public ItemInstance(ItemData itemData, int amount = 0)
+    public ItemInstance(ItemDefinition itemData, int amount = 0)
     {
         this.itemData = itemData;
         this.amount = amount;

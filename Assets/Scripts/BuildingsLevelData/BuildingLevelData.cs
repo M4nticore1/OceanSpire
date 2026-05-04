@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public struct ResourceToBuild
 {
-    public ItemData itemData;
+    public ItemDefinition itemData;
     public int amount;
 }
 

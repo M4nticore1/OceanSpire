@@ -3,37 +3,45 @@ using System.Collections.Generic;
 
 public class ItemAdRewardInstance : AdRewardInstance
 {
-    public ItemAdRewardDefinition itemRewardData { get; private set; }
-    public int amount { get; private set; } = 0;
+    public ItemAdRewardDefinition ItemRewardDefinition { get; private set; }
+    public int Amount { get; private set; } = 0;
 
     public Dictionary<string, string> Localization;
 
     public ItemAdRewardInstance(ItemAdRewardDefinition data) : base(data)
     {
-        itemRewardData = data;
-
-        GenerateAmount();
+        ItemRewardDefinition = data;
     }
 
     public override Dictionary<string, string> GetLocalization()
     {
         return new Dictionary<string, string>()
         {
-            { "itemName", LocalizationManager.Instance.GetText(itemRewardData.ItemData.LocalizationItem).ToLower() },
-            { "amount", amount.ToString()},
+            { "itemName", LocalizationManager.Instance.GetText(ItemRewardDefinition.ItemData.LocalizationItem).ToLower() },
+            { "amount", Amount.ToString()},
         };
     }
 
     protected override void OnRewardRecieved()
     {
-        int woodId = itemRewardData.ItemData.ItemId;
-        CityStorage.Instance.Inventory.AddItemAmount(woodId, amount);
+        int woodId = ItemRewardDefinition.ItemData.ItemId;
+        CityStorage.Instance.Inventory.AddItemAmount(woodId, Amount);
     }
 
-    private void GenerateAmount()
+    public void SetAmount(int amount)
     {
-        int minAmount = itemRewardData.MinAmount;
-        int maxAmount = itemRewardData.MaxAmount;
-        amount = Random.Range(minAmount, maxAmount);
+        Amount = amount;
+    }
+
+    public void SetAmountPercent(float percent)
+    {
+        Amount = (int)Mathf.Lerp(ItemRewardDefinition.MinAmount, ItemRewardDefinition.MaxAmount, percent);
+    }
+
+    public void GenerateAmount()
+    {
+        int minAmount = ItemRewardDefinition.MinAmount;
+        int maxAmount = ItemRewardDefinition.MaxAmount;
+        Amount = Random.Range(minAmount, maxAmount);
     }
 }

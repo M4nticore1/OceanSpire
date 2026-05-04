@@ -4,7 +4,7 @@ using TMPro;
 
 public class ResourceWidget : MonoBehaviour
 {
-    [SerializeField] private ItemData itemData;
+    [SerializeField] private ItemDefinition itemData;
     private ItemInstance amountItem;
     private ItemInstance maxAmountItem;
 

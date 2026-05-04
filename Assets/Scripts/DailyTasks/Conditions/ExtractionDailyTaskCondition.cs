@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ExtractionDailyTaskCondition : DailyTaskCondition
 {
-    [SerializeField] private ItemData conditionItem;
+    [SerializeField] private ItemDefinition conditionItem;
 
     protected override bool Subscribe()
     {

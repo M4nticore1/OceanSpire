@@ -8,7 +8,7 @@ public enum AttackMethod
 }
 
 [CreateAssetMenu(fileName = "WeaponDefinition", menuName = "Items/WeaponDefinition")]
-public class WeaponDefinition : ItemData
+public class WeaponDefinition : ItemDefinition
 {
     [Header("Weapon")]
     [SerializeField] private Weapon weaponPrefab;

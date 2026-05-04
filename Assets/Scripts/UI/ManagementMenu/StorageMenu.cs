@@ -12,12 +12,12 @@ public class StorageMenu : ManagementMenu
 
         for (int i = 0; i < count; i++) {
             ItemInstance amountItem = CityStorage.Instance.Inventory.Items[i].item;
-            ItemData amountItemData = amountItem.ItemData;
+            ItemDefinition amountItemData = amountItem.ItemData;
 
             if (!amountItemData.ShowInStorage) continue;
 
             ItemInstance maxAmountItem = CityStorage.Instance.Inventory.Items[i].maxAmountItem;
-            ItemData maxAmountItemData = maxAmountItem.ItemData;
+            ItemDefinition maxAmountItemData = maxAmountItem.ItemData;
 
             ItemCategory itemCategory = amountItemData.ItemCategory;
 

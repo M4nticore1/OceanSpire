@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 public abstract class AdRewardInstance : ILocalizable
 {
-    public AdRewardDefinition definition { get; private set; }
+    public AdRewardDefinition Definition { get; private set; }
+    public bool IsRecieved { get; private set; } = false;
 
     public static event Action<AdRewardInstance> onRewardReceived;
     public static event Action<AdRewardInstance> onRewardRemoved;
@@ -15,7 +16,7 @@ public abstract class AdRewardInstance : ILocalizable
 
     public AdRewardInstance(AdRewardDefinition definition)
     {
-        this.definition = definition;
+        Definition = definition;
     }
 
     public abstract Dictionary<string, string> GetLocalization();
@@ -24,6 +25,7 @@ public abstract class AdRewardInstance : ILocalizable
     public void RecieveReward()
     {
         OnRewardRecieved();
+        IsRecieved = true;
         onRewardReceived?.Invoke(this);
     }
 }

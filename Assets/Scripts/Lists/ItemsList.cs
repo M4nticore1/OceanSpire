@@ -17,9 +17,9 @@ public class ItemsList : ScriptableObject
         }
     }
 
-    [SerializeField] private ItemData[] items;
-    public ItemData[] Items => items;
-    private Dictionary<int, ItemData> itemsDict = new();
+    [SerializeField] private ItemDefinition[] items;
+    public ItemDefinition[] Items => items;
+    private Dictionary<int, ItemDefinition> itemsDict = new();
 
     private void Init()
     {
@@ -28,9 +28,9 @@ public class ItemsList : ScriptableObject
         }
     }
 
-    public ItemData GetItem(int id)
+    public ItemDefinition GetItem(int id)
     {
-        ItemData definition;
+        ItemDefinition definition;
         itemsDict.TryGetValue(id, out definition);
 
         return definition;
