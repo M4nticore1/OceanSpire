@@ -19,6 +19,11 @@ public enum HumanActivity
 public class Human : Creature, IClickable
 {
     [Header("Human")]
+    [SerializeField] private HumanStatusEnum currentStatusEnum = HumanStatusEnum.Citizen;
+    public HumanStatusEnum CurrentStatusEnum => currentStatusEnum;
+
+    public HumanState currentStatus { get; private set; }
+
     [SerializeField] private GenderComponent genderComponent;
     public GenderComponent GenderComponent => genderComponent;
 
@@ -54,9 +59,6 @@ public class Human : Creature, IClickable
 
     [SerializeField] private ContextMenuTarget contextMenuTarget;
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
-
-    public HumanStatusEnum currentStatusEnum { get; private set; } = HumanStatusEnum.Citizen;
-    public HumanState currentStatus { get; private set; }
 
     public static event Action<Human> onHumanInited;
     public static event Action<Human> onHumanRevived;
@@ -143,7 +145,7 @@ public class Human : Creature, IClickable
     {
         HumanDataV1 humanData = data as HumanDataV1;
 
-        SetStatus(humanData.status);
+        SetStatus(currentStatusEnum);
 
         healthComponent.SetCurrentHealth(humanData.health);
         nameComponent.Init(humanData.name);

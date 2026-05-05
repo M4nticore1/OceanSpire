@@ -224,7 +224,7 @@ public class ResourceWidget : MonoBehaviour
 
     private bool ShouldUpdateCitizensCount(Human human)
     {
-        if (human.currentStatusEnum != HumanStatusEnum.Citizen) return false;
+        if (human.CurrentStatusEnum != HumanStatusEnum.Citizen) return false;
 
         return true;
     }

@@ -171,7 +171,7 @@ MonoBehaviour:
   isScalable: 1
   deselectOnOutsideClick: 1
   cancelPressWhenMoving: 0
-  selectableGroupIndex: -1
+  selectGroup: {fileID: 0}
   stateTransitionTime: 0.3
   state: 0
   idleState:
@@ -204,6 +204,24 @@ MonoBehaviour:
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
+  onPressed:
+    m_PersistentCalls:
+      m_Calls: []
+  onReleased:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  onHovered:
+    m_PersistentCalls:
+      m_Calls: []
+  onUnhovered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7307172932021827837
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,7 +231,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5856474467311547503}
-  - component: {fileID: 8424090238478779707}
   m_Layer: 5
   m_Name: OpenMenuButton
   m_TagString: Untagged
@@ -242,18 +259,3 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -160}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 1, y: 1}
---- !u!114 &8424090238478779707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7307172932021827837}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de9a62ad38f7b87478463b5957351a01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OpenCloseButton
-  targetOpenable: {fileID: 0}
-  buttonType: 0
-  button: {fileID: 8307739286538277425}

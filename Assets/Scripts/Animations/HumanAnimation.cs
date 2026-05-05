@@ -89,7 +89,7 @@ public class HumanAnimation : MonoBehaviour
 
     private void OnInteractionStarted()
     {
-        switch (human.currentStatusEnum) {
+        switch (human.CurrentStatusEnum) {
             case HumanStatusEnum.Citizen:
                 animator.SetBool("isWorking", true);
                 break;

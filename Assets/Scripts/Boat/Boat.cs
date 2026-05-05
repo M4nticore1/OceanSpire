@@ -151,10 +151,10 @@ public class Boat : MonoBehaviour
         SelectedRider = rider;
 
         Human human = rider.GetComponent<Human>();
-        if (human.currentStatusEnum == HumanStatusEnum.Wanderer) {
+        if (human.CurrentStatusEnum == HumanStatusEnum.Wanderer) {
             contextMenuTarget.SetShowContextMenu(false);
         }
-        else if (human.currentStatusEnum == HumanStatusEnum.Raider) {
+        else if (human.CurrentStatusEnum == HumanStatusEnum.Raider) {
             selectComponent.SetClickable(false);
         }
 

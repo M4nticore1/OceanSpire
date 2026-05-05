@@ -7,13 +7,13 @@ public class UpdateDailyTasksButton : MonoBehaviour
 
     private void OnEnable()
     {
-        button.onReleased += OnClicked;
+        button.onReleased.AddListener(OnClicked);
         DailyTasksManager.Instance.onAdUpdateUsedSetTrue += OnUpdateSetedTrue;
     }
 
     private void OnDisable()
     {
-        button.onReleased -= OnClicked;
+        button.onReleased.RemoveListener(OnClicked);
         DailyTasksManager.Instance.onAdUpdateUsedSetTrue -= OnUpdateSetedTrue;
     }
 

@@ -24,14 +24,14 @@ public class ProducedResourcePanel : MonoBehaviour
 
     private void OnEnable()
     {
-        button.onReleased += OnClicked;
-        button.onDeselected += OnDeselected;
+        button.onReleased.AddListener(OnClicked);
+        button.onDeselected.AddListener(OnDeselected);
     }
 
     private void OnDisable()
     {
-        button.onReleased -= OnClicked;
-        button.onDeselected -= OnDeselected;
+        button.onReleased.RemoveListener(OnClicked);
+        button.onDeselected.RemoveListener(OnDeselected);
     }
 
     private void Start()
@@ -63,7 +63,7 @@ public class ProducedResourcePanel : MonoBehaviour
         isSelected = true;
 
         button.SetState(CustomButtonState.Selected);
-        button.FinishTransitionAnimation();
+        button.EndTransitionAnimation();
         UpdateTimer();
         UpdateProgressBar();
     }

@@ -1,49 +1,39 @@
-using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class ManagementMenu : MonoBehaviour
+public abstract class ManagementMenu : UIBehaviour
 {
+    [SerializeField] protected GameObject managementMenu;
+    [SerializeField] protected CustomButton openListButton;
     [SerializeField] protected GridLayoutGroup[] lists;
     [SerializeField] private CustomButton[] listButtons;
-    [SerializeField] private int[] includedCategoies;
-    [SerializeField] protected ScrollRect listsScrollRect;
+    [SerializeField] protected ScrollRect scrollRect;
 
     protected int lastOpenedBuildingsListCategory = 0;
-    protected Action[] buttonCallbacks;
 
-    private void Awake()
+    protected override void Start()
     {
-        buttonCallbacks = new Action[includedCategoies.Length];
+        base.Start();
 
-        foreach (GridLayoutGroup rect in lists) {
-            rect.gameObject.SetActive(false);
-        }
-    }
-
-    protected virtual void Start()
-    {
         CreateWidgets();
     }
 
-    private void OnEnable()
-    {
-        for (int i = 0; i < lists.Length; i++) {
-            int index = i;
-            buttonCallbacks[index] = () => OnListButtonClicked(index);
-            listButtons[index].onReleased += buttonCallbacks[index];
-        }
-    }
-
-    private void OnDisable()
-    {
-        for (int i = 0; i < lists.Length; i++) {
-            int index = i;
-            listButtons[index].onReleased -= buttonCallbacks[index];
-        }
-    }
-
     protected abstract void CreateWidgets();
+
+    public void Open()
+    {
+        openListButton.SetState(CustomButtonState.Selected);
+
+        managementMenu.SetActive(true);
+        gameObject.SetActive(true);
+    }
+
+    public void Close()
+    {
+        managementMenu.SetActive(false);
+        gameObject.SetActive(false);
+    }
 
     public void ResetOpenedList()
     {
@@ -57,40 +47,36 @@ public abstract class ManagementMenu : MonoBehaviour
         CustomButton newButton = listButtons[lastOpenedBuildingsListCategory];
         newButton.SetState(CustomButtonState.Selected);
 
-        lastButton.FinishTransitionAnimation();
-        newButton.FinishTransitionAnimation();
+        lastButton.EndTransitionAnimation();
+        newButton.EndTransitionAnimation();
     }
 
-    private void OpenListByCategory(int index)
+    public void OpenListByCategory(int index)
     {
         lists[index].gameObject.SetActive(true);
+        listButtons[index].SetState(CustomButtonState.Selected);
+
+        for (int i = 0; i < listButtons.Length; i++) {
+            listButtons[i].transform.SetAsFirstSibling();
+        }
         listButtons[index].transform.SetAsLastSibling();
 
-        listsScrollRect.content = lists[index].GetComponent<RectTransform>();
+        scrollRect.content = lists[index].GetComponent<RectTransform>();
         lastOpenedBuildingsListCategory = index;
     }
 
-    private void CloseListByCategory(int index)
+    public void OpenLastOpenedList()
     {
-        listButtons[index].transform.SetSiblingIndex(listButtons.Length - index - 1);
+        OpenListByCategory(lastOpenedBuildingsListCategory);
+    }
+
+    public void CloseListByCategory(int index)
+    {
         lists[index].gameObject.SetActive(false);
     }
 
-    // Events
-    private void OnListButtonClicked(int index)
+    public void CloseLastOpenedList()
     {
         CloseListByCategory(lastOpenedBuildingsListCategory);
-        OpenListByCategory(index);
-    }
-
-    // Toggle
-    public void Open()
-    {
-        gameObject.SetActive(true);
-    }
-
-    public void Close()
-    {
-        gameObject.SetActive(false);
     }
 }

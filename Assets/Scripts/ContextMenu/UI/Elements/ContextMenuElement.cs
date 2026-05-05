@@ -33,14 +33,14 @@ public abstract class ContextMenuElement : UIBehaviour
 
     protected virtual bool Subscribe()
     {
-        button.onReleased += OnButtonClicked;
+        button.onReleased.AddListener(OnButtonClicked);
 
         return true;
     }
 
     protected virtual bool Unsubscribe()
     {
-        button.onReleased -= OnButtonClicked;
+        button.onReleased.RemoveListener(OnButtonClicked);
 
         return true;
     }

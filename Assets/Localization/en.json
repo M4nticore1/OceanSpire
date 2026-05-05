@@ -30,6 +30,10 @@
   "ui_revive": "Revive",
   "ui_revive_citizen": "Revive the citizen!",
   "ui_refund_resources": "Refund resources",
+  "ui_reward": "Reward",
+  "ui_select": "Select",
+  "ui_selected": "Selected",
+  "ui_watch_ad": "Watch Ad",
 
   "construction": "Construction",
   "construction_build": "Build",
@@ -88,13 +92,8 @@
   "task_building": "You'll get {itemAmount} {itemName} for building {taskCondition} any buildings!",
   "task_raid": "You'll get {itemAmount} {itemName} for repelling {taskCondition} raid!",
 
-  "ad_reward": "Reward",
-  "ad_bonus": "Bonus",
-  "ad_bonus_ready": "Your bonus is ready!",
-  "ad_get_bonus": "Give bonus",
-  "ad_reward_item": "You will get {amount} {itemName} for watching",
-  "ad_reward_boost_boats": "You will double the speed of your boats by watching.",
-  "ad_reward_received_item": "You got {amount} {itemName}!",
+  "daily_reward": "Daily reward",
+  "daily_reward_reset_time": "The rewards will be reset in {remainingHours}h {remainingMinutes}m",
 
   "first_name_adam": "Adam",
   "first_name_daniel": "Daniel",

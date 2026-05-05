@@ -13,8 +13,8 @@ public class WandererAdmissionMenu : MonoBehaviour
     private void OnEnable()
     {
         slidePanel.onClosed += OnClosed;
-        acceptButton.onReleased += OnAcceptButtonClicked;
-        rejectButton.onReleased += OnRejectButtonClicked;
+        acceptButton.onReleased.AddListener(OnAcceptButtonClicked);
+        rejectButton.onReleased.AddListener(OnRejectButtonClicked);
 
         Boat.onBoatSelected += OnBoatSelected;
         Boat.onBoatDeselected += OnBoatDeselected;
@@ -23,8 +23,8 @@ public class WandererAdmissionMenu : MonoBehaviour
     private void OnDisable()
     {
         slidePanel.onClosed -= OnClosed;
-        acceptButton.onReleased -= OnAcceptButtonClicked;
-        rejectButton.onReleased -= OnRejectButtonClicked;
+        acceptButton.onReleased.RemoveListener(OnAcceptButtonClicked);
+        rejectButton.onReleased.RemoveListener(OnRejectButtonClicked);
 
         Boat.onBoatSelected -= OnBoatSelected;
         Boat.onBoatDeselected -= OnBoatDeselected;
@@ -70,7 +70,7 @@ public class WandererAdmissionMenu : MonoBehaviour
         if (!boat.SelectedRider) return;
 
         Human human = boat.SelectedRider.GetComponent<Human>();
-        if (human.currentStatusEnum != HumanStatusEnum.Wanderer) return;
+        if (human.CurrentStatusEnum != HumanStatusEnum.Wanderer) return;
 
         selectedHuman = human;
         Open();

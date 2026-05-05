@@ -6,8 +6,6 @@ public class ItemAdRewardInstance : AdRewardInstance
     public ItemAdRewardDefinition ItemRewardDefinition { get; private set; }
     public int Amount { get; private set; } = 0;
 
-    public Dictionary<string, string> Localization;
-
     public ItemAdRewardInstance(ItemAdRewardDefinition data) : base(data)
     {
         ItemRewardDefinition = data;

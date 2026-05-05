@@ -45,7 +45,7 @@ public class BoatRider : MonoBehaviour
     public void OnBoatSetedIdle()
     {
         Human human = GetComponent<Human>();
-        if (human.currentStatusEnum == HumanStatusEnum.Wanderer) return;
+        if (human.CurrentStatusEnum == HumanStatusEnum.Wanderer) return;
 
         StartExitingBoat();
     }

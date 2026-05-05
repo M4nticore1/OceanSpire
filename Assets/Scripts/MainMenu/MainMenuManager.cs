@@ -12,14 +12,14 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnEnable()
     {
-        loadSaveButton.onReleased += OnLoadWorldButtonClicked;
-        deleteSaveButton.onReleased += OnDeleteWorldButtonClicked;
+        loadSaveButton.onReleased.AddListener(OnLoadWorldButtonClicked);
+        deleteSaveButton.onReleased.AddListener(OnDeleteWorldButtonClicked);
     }
 
     private void OnDisable()
     {
-        loadSaveButton.onReleased -= OnLoadWorldButtonClicked;
-        deleteSaveButton.onReleased -= OnDeleteWorldButtonClicked;
+        loadSaveButton.onReleased.RemoveListener(OnLoadWorldButtonClicked);
+        deleteSaveButton.onReleased.RemoveListener(OnDeleteWorldButtonClicked);
     }
 
     private void Start()

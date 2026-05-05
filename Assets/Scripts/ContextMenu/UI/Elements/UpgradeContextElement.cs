@@ -11,7 +11,7 @@ public class UpgradeContextElement : ContextMenuElement
         if (building.NextLevelData) return;
 
         button.SetState(CustomButtonState.Disabled);
-        button.FinishTransitionAnimation();
+        button.EndTransitionAnimation();
     }
 
     protected override void OnButtonClicked()

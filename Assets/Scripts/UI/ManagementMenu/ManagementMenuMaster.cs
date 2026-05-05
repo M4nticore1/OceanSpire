@@ -15,29 +15,29 @@ public class ManagementMenuMaster : MonoBehaviour
 
     [SerializeField] private GameObject content;
 
-    private void OnEnable()
-    {
-        openConstructionMenuButton.onReleased += OnConstructionMenuButtonReleased;
-        openStorageMenuButton.onReleased += OnStorageMenuButtonReleased;
-        closeManagementMenuButton.onReleased += Close;
+    //private void OnEnable()
+    //{
+    //    openConstructionMenuButton.onReleased += OnConstructionMenuButtonReleased;
+    //    openStorageMenuButton.onReleased += OnStorageMenuButtonReleased;
+    //    closeManagementMenuButton.onReleased += Close;
 
-        constructionListsMenuButton.onReleased += OnConstructionListsButtonReleased;
-        storageListsMenuButton.onReleased += OnStorageListsButtonReleased;
+    //    constructionListsMenuButton.onReleased += OnConstructionListsButtonReleased;
+    //    storageListsMenuButton.onReleased += OnStorageListsButtonReleased;
 
-        EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
-    }
+    //    EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
+    //}
 
-    private void OnDisable()
-    {
-        openConstructionMenuButton.onReleased -= OnConstructionMenuButtonReleased;
-        openStorageMenuButton.onReleased -= OnStorageMenuButtonReleased;
-        closeManagementMenuButton.onReleased -= Close;
+    //private void OnDisable()
+    //{
+    //    openConstructionMenuButton.onReleased -= OnConstructionMenuButtonReleased;
+    //    openStorageMenuButton.onReleased -= OnStorageMenuButtonReleased;
+    //    closeManagementMenuButton.onReleased -= Close;
 
-        constructionListsMenuButton.onReleased -= OnConstructionListsButtonReleased;
-        storageListsMenuButton.onReleased -= OnStorageListsButtonReleased;
+    //    constructionListsMenuButton.onReleased -= OnConstructionListsButtonReleased;
+    //    storageListsMenuButton.onReleased -= OnStorageListsButtonReleased;
 
-        EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
-    }
+    //    EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
+    //}
 
     private void Start()
     {
@@ -54,8 +54,8 @@ public class ManagementMenuMaster : MonoBehaviour
         storageMenu.ResetOpenedList();
 
         constructionListsMenuButton.SetState(CustomButtonState.Selected);
-        constructionListsMenuButton.FinishTransitionAnimation();
-        storageListsMenuButton.FinishTransitionAnimation();
+        constructionListsMenuButton.EndTransitionAnimation();
+        storageListsMenuButton.EndTransitionAnimation();
     }
 
     private void OnStorageMenuButtonReleased()
@@ -67,8 +67,8 @@ public class ManagementMenuMaster : MonoBehaviour
         storageMenu.ResetOpenedList();
 
         storageListsMenuButton.SetState(CustomButtonState.Selected);
-        storageListsMenuButton.FinishTransitionAnimation();
-        constructionListsMenuButton.FinishTransitionAnimation();
+        storageListsMenuButton.EndTransitionAnimation();
+        constructionListsMenuButton.EndTransitionAnimation();
 
     }
 

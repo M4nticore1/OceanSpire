@@ -211,7 +211,7 @@ public class RaidManager : MonoBehaviour
 
     private void OnExitedBoat(Human human)
     {
-        if (human.currentStatusEnum != HumanStatusEnum.Raider) return;
+        if (human.CurrentStatusEnum != HumanStatusEnum.Raider) return;
 
         landedRaidersCount++;
 
@@ -222,7 +222,7 @@ public class RaidManager : MonoBehaviour
 
     private void OnHumanDied(Human human)
     {
-        if (human.currentStatusEnum != HumanStatusEnum.Raider) return;
+        if (human.CurrentStatusEnum != HumanStatusEnum.Raider) return;
 
         aliveRaidersCount--;
 

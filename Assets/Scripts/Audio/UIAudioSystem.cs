@@ -6,12 +6,12 @@ public class UIAudioSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        CustomButton.onButtonReleased += OnButtonReleased;
+        CustomButton.onButtonReleased.AddListener(OnButtonReleased);
     }
 
     private void OnDisable()
     {
-        CustomButton.onButtonReleased -= OnButtonReleased;
+        CustomButton.onButtonReleased.RemoveListener(OnButtonReleased);
     }
 
     private void OnButtonReleased(CustomButton button)

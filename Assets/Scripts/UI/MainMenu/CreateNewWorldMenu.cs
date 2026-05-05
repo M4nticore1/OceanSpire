@@ -16,14 +16,14 @@ public class CreateNewWorldMenu : MonoBehaviour
     {
         slidePanel.onClosed += OnClosed;
         inputField.onValueChanged.AddListener(OnWorldNameInputFieldChangeValue);
-        createWorldButton.onReleased += OnCreateWorldButtonClicked;
+        createWorldButton.onReleased.AddListener(OnCreateWorldButtonClicked);
     }
 
     private void OnDisable()
     {
         slidePanel.onClosed -= OnClosed;
         inputField.onValueChanged.RemoveListener(OnWorldNameInputFieldChangeValue);
-        createWorldButton.onReleased -= OnCreateWorldButtonClicked;
+        createWorldButton.onReleased.RemoveListener(OnCreateWorldButtonClicked);
     }
 
     private void Start()

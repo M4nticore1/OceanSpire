@@ -72,8 +72,12 @@ public class LocalizationManager
     public string GetText(LocalizationItem item)
     {
         string key = item.name;
-        string text = deserializedLocalization[key];
+        return GetText(key);
+    }
 
+    public string GetText(string key)
+    {
+        string text = deserializedLocalization[key];
         return text;
     }
 

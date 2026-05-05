@@ -17,7 +17,7 @@ public class EvictContextElement : ContextMenuElement
         Human human = target.GetComponent<Human>();
         if (!human) return false;
 
-        if (human.currentStatusEnum != HumanStatusEnum.Citizen) return false;
+        if (human.CurrentStatusEnum != HumanStatusEnum.Citizen) return false;
 
         return true;
     }

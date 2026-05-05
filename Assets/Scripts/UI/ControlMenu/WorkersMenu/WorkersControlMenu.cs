@@ -115,7 +115,7 @@ public class WorkersControlMenu : ControlMenu
     private bool ShouldUpdateMenu(Human human)
     {
         if (!isOpened) return false;
-        if (human.currentStatusEnum != HumanStatusEnum.Citizen) return false;
+        if (human.CurrentStatusEnum != HumanStatusEnum.Citizen) return false;
 
         return true;
     }

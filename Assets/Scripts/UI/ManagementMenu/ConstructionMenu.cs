@@ -7,19 +7,19 @@ public class ConstructionMenu : ManagementMenu
     [SerializeField] private BuildingWidget buildingWidgetPrefab = null;
     private List<BuildingWidget> spawnedWidgets = new List<BuildingWidget>();
 
-    protected override void Start()
-    {
-        base.Start();
+    //protected override void Start()
+    //{
+    //    base.Start();
 
-        int listsCount = lists.Length;
+    //    int listsCount = lists.Length;
 
-        for (int i = 0; i < listsCount; i++) {
-            RectTransform rect = lists[i].GetComponent<RectTransform>();
+    //    for (int i = 0; i < listsCount; i++) {
+    //        RectTransform rect = lists[i].GetComponent<RectTransform>();
 
-            Vector2 size = new Vector2(lists[i].cellSize.x, rect.transform.childCount * (lists[i].cellSize.y + lists[i].spacing.y) - lists[i].spacing.y);
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
-        }
-    }
+    //        Vector2 size = new Vector2(lists[i].cellSize.x, rect.transform.childCount * (lists[i].cellSize.y + lists[i].spacing.y) - lists[i].spacing.y);
+    //        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+    //    }
+    //}
 
     protected override void CreateWidgets()
     {

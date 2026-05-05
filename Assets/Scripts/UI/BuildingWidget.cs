@@ -19,16 +19,16 @@ public class BuildingWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        buildButton.onReleased += OnBuildButtonCliked;
-        informationButton.onReleased += OnInformationButtonClicked;
+        buildButton.onReleased.AddListener(OnBuildButtonCliked);
+        informationButton.onReleased.AddListener(OnInformationButtonClicked);
         EventBus.onMainStorageItemAmountChanged += OnMainStorageItemAmountChanged;
         UpdateResourcesToBuild();
     }
 
     private void OnDisable()
     {
-        buildButton.onReleased -= OnBuildButtonCliked;
-        informationButton.onReleased -= OnInformationButtonClicked;
+        buildButton.onReleased.RemoveListener(OnBuildButtonCliked);
+        informationButton.onReleased.RemoveListener(OnInformationButtonClicked);
         EventBus.onMainStorageItemAmountChanged -= OnMainStorageItemAmountChanged;
     }
 
@@ -101,7 +101,7 @@ public class BuildingWidget : MonoBehaviour
         else
             buildButton.SetState(CustomButtonState.Disabled);
 
-        buildButton.FinishTransitionAnimation();
+        buildButton.EndTransitionAnimation();
     }
 
     private void OnMainStorageItemAmountChanged(ItemInstance item)

@@ -30,6 +30,10 @@
   "ui_revive": "Возродить",
   "ui_revive_citizen": "Возроди жителя!",
   "ui_refund_resources": "Возвращаемые ресурсы",
+  "ui_reward": "Награда",
+  "ui_select": "Выбрать",
+  "ui_selected": "Выбрано",
+  "ui_watch_ad": "Смотреть Рекламу",
 
   "construction": "Строительство",
   "construction_build": "Построить",
@@ -88,13 +92,8 @@
   "task_building": "Ты получишь {rewardAmount} {rewardName} за постройку {taskCondition} любых здания!",
   "task_raid": "Ты получишь {rewardAmount} {rewardName} за отражение {taskCondition} рейда!",
 
-  "ad_reward": "Награда",
-  "ad_bonus": "Бонус",
-  "ad_bonus_ready": "Твой бонус готов!",
-  "ad_get_bonus": "Забрать бонус",
-  "ad_reward_item": "Вы получите {amount} {itemName} за просмотр",
-  "ad_reward_boost_boats": "Вы увеличите скорость всех ваших лодок в 2 раза за просмотр",
-  "ad_reward_received_item": "Вы получили {amount} {itemName}!",
+  "daily_reward": "Ежедневная награда",
+  "daily_reward_reset_time": "Награды будут обновлены через {remainingHours}ч {remainingMinutes}м",
 
   "first_name_male_adam": "Адам",
   "first_name_male_daniel": "Даниэль",
