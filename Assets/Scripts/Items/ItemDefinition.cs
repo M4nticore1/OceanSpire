@@ -18,11 +18,10 @@ public enum ItemID
     BaseballBat = 13,
 }
 
-//[System.Serializable]
 public enum ItemCategory
 {
     Society,
-    Building,
+    Resource,
     Food,
     Weapon
 }
@@ -36,8 +35,8 @@ public class ItemDefinition : ScriptableObject
     [SerializeField] private ItemCategory itemCategory = ItemCategory.Society;
     public ItemCategory ItemCategory => itemCategory;
 
-    //[SerializeField] private string itemIdName = "";
-    //public string itemKey => itemIdName;
+    [SerializeField] private ItemStackEnum stack = ItemStackEnum.Population;
+    public ItemStackEnum Stack => stack;
 
     [SerializeField] private float weight = 0;
     public float Weight => weight;

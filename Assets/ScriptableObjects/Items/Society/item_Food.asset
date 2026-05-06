@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: item_food
   m_EditorClassIdentifier: 
   itemId: 2
-  itemIdName: food
-  itemName: Food
-  weight: 0
   itemCategory: 0
+  stack: 2
+  weight: 0
   localizationItem: {fileID: 0}
   itemIcon: {fileID: 21300000, guid: a14efae1d95cb67479e314aade0c4fac, type: 3}
   showInStorage: 0

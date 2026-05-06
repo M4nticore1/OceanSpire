@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemId: 10
   itemCategory: 2
+  stack: 7
   weight: 1
   localizationItem: {fileID: 11400000, guid: 69e1c9275d6fdf14db4215dce94b8740, type: 2}
   itemIcon: {fileID: 21300000, guid: 2d315accb1bafe9479db73cc9f0b5ea0, type: 3}

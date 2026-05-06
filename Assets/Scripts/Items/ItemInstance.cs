@@ -1,5 +1,6 @@
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [System.Serializable]
 public class ItemCategoryData
@@ -12,20 +13,21 @@ public class ItemCategoryData
 }
 
 [System.Serializable]
-public class ItemInstance
+public class ItemInstance : IItemAmount
 {
-    [SerializeField] private ItemDefinition itemData;
-    public ItemDefinition ItemData => itemData;
+    [SerializeField, FormerlySerializedAs("itemData")] private ItemDefinition definition;
+    public ItemDefinition Definition => definition;
+
     [SerializeField] private int amount;
     public int Amount => amount;
 
-    public ItemInstance(ItemDefinition itemData, int amount = 0)
+    public ItemStack Stack { get; private set; }
+
+    public ItemInstance(ItemDefinition definition)
     {
-        this.itemData = itemData;
-        this.amount = amount;
+        this.definition = definition;
     }
 
-    // Set Amount
     public int SetAmount(int amount, int maxAmount)
     {
         return this.amount = math.clamp(amount, 0, maxAmount);
@@ -36,15 +38,18 @@ public class ItemInstance
         return this.amount = math.clamp(amount, 0, amount);
     }
 
-    // Add Amount
     public int AddAmount(int amount)
     {
         return SetAmount(this.amount + amount);
     }
 
-    // Remove Amount
     public int RemoveAmount(int amount)
     {
         return SetAmount(this.amount - amount);
+    }
+
+    public void SetStack(ItemStack stack)
+    {
+        this.Stack = stack;
     }
 }

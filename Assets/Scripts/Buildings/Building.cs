@@ -184,10 +184,13 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
         for (int i = 0; i < count; i++) {
             var resource = LevelData.ResourcesToBuild[i];
-            var data = resource.ItemData;
+            var data = resource.Definition;
             int amount = (int)(resource.Amount * DemolishionResourcesRefundPercent);
-            var instance = new ItemInstance(data, amount);
-            resources[i] = instance;
+
+            var item = new ItemInstance(data);
+            item.SetAmount(amount);
+
+            resources[i] = item;
         }
 
         return resources;

@@ -53,12 +53,12 @@ public class BoatLootHandler : MonoBehaviour
         if (inventory.RemainingWeight <= 0) return;
 
         float currentWeightToUnload = unloadLootSpeed * Time.deltaTime;
-        ItemInstance loot = inventory.Items[0].item;
-        int lootId = loot.ItemData.ItemId;
-        float lootWeight = loot.ItemData.Weight;
+        ItemInstance loot = inventory.GetItemByIndex(0);
+        int lootId = loot.Definition.ItemId;
+        float lootWeight = loot.Definition.Weight;
         int amountToUnload = math.min((int)(currentWeightToUnload / lootWeight), loot.Amount);
 
-        inventory.RemoveItemAmount(lootId, amountToUnload);
+        inventory.RemoveItem(lootId, amountToUnload);
     }
 
     private void StartCollectingLoot()
@@ -70,18 +70,18 @@ public class BoatLootHandler : MonoBehaviour
 
     private void CollectLoot()
     {
-        float remainingWeight = inventory.MaxWeight - inventory.CurrentWeight;
+        float remainingWeight = inventory.WeightLimit - inventory.CurrentWeight;
         LootContainer lootContainer = currentTarget.GetComponent<LootContainer>();
         List<ItemInstance> collectedLoot = lootContainer.TakeItems(remainingWeight);
 
         foreach (var loot in collectedLoot) {
             if (inventory.RemainingWeight <= 0) break;
 
-            ItemDefinition data = loot.ItemData;
-            int id = loot.ItemData.ItemId;
-            int amountToTake = math.min(loot.Amount, (int)(inventory.RemainingWeight / loot.ItemData.Weight));
+            ItemDefinition data = loot.Definition;
+            int id = loot.Definition.ItemId;
+            int amountToTake = math.min(loot.Amount, (int)(inventory.RemainingWeight / loot.Definition.Weight));
 
-            inventory.AddItemAmount(id, amountToTake);
+            inventory.AddItem(id, amountToTake);
         }
 
         isCollectingLoot = false;

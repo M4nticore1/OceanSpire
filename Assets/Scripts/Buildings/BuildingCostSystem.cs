@@ -19,7 +19,7 @@ public class BuildingCostSystem : MonoBehaviour
         if (!ShouldWork()) return;
 
         foreach (var resource in building.GetResourcesToBuild()) {
-            CityStorage.Instance.Inventory.RemoveItemAmount(resource.ItemData.ItemId, resource.Amount);
+            CityStorage.Instance.Inventory.RemoveItem(resource.Definition.ItemId, resource.Amount);
         }
     }
 
@@ -28,7 +28,7 @@ public class BuildingCostSystem : MonoBehaviour
         if (!ShouldWork()) return;
 
         foreach (var resource in building.GetResourcesToRefund()) {
-            CityStorage.Instance.Inventory.AddItemAmount(resource.ItemData.ItemId, resource.Amount);
+            CityStorage.Instance.Inventory.AddItem(resource.Definition.ItemId, resource.Amount);
         }
     }
 

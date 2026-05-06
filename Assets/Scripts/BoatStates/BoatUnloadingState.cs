@@ -52,7 +52,7 @@ public class BoatUnloadingState : BoatState
 
         // Item
         ItemInstance loot = boat.GetItemToUnload();
-        ItemDefinition data = loot.ItemData;
+        ItemDefinition data = loot.Definition;
         int lootId = data.ItemId;
         float lootWeight = data.Weight;
 
@@ -64,7 +64,7 @@ public class BoatUnloadingState : BoatState
         if (amountToUnload == 0) return;
 
         // Spend Item
-        boat.Inventory.RemoveItemAmount(lootId, amountToUnload);
+        boat.Inventory.RemoveItem(lootId, amountToUnload);
         currentWeightToUnload = 0f;
 
         EventBus.InvokeBoatUnloadedItem(lootId, amountToUnload);

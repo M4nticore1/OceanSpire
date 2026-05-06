@@ -11,13 +11,13 @@ public class StorageItem
     {
         this.item = item;
         this.maxAmount = maxAmount;
-        maxAmountItem = new ItemInstance(item.ItemData, maxAmount);
+        maxAmountItem = new ItemInstance(item.Definition);
     }
 
     public StorageItem(ItemInstance item)
     {
         this.item = item;
-        maxAmountItem = new ItemInstance(item.ItemData);
+        maxAmountItem = new ItemInstance(item.Definition);
     }
 
     public void AddAmount(int value)

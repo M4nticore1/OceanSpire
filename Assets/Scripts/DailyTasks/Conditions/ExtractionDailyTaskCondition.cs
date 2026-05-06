@@ -26,7 +26,7 @@ public class ExtractionDailyTaskCondition : DailyTaskCondition
     {
         if (!ItemsLoader.Instance) return;
         if (!ItemsLoader.Instance.IsLoaded) return;
-        if (item.ItemData != conditionItem) return;
+        if (item.Definition != conditionItem) return;
 
         InvokeProgressChanged(item.Amount);
     }

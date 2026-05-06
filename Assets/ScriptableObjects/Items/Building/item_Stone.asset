@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: item_stone
   m_EditorClassIdentifier: 
   itemId: 4
-  itemIdName: stone
-  itemName: Stone
-  weight: 5
   itemCategory: 1
+  stack: 4
+  weight: 5
   localizationItem: {fileID: 11400000, guid: 33b9e9077cd732b499baa90405e6a7e3, type: 2}
   itemIcon: {fileID: 21300000, guid: 8d4ff37e3a437cf4e91026e8b0ceb96a, type: 3}
   showInStorage: 1

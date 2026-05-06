@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: craft_potato
   m_EditorClassIdentifier: Assembly-CSharp::ProductionItem
   produceItem:
-    itemData: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
+    definition: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
     amount: 6
   consumeResources:
-  - itemData: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
+  - definition: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
     amount: 3
   produceTime: 960

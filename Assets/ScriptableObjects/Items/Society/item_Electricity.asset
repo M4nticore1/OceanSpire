@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: item_electricity
   m_EditorClassIdentifier: 
   itemId: 1
-  itemIdName: electricity
-  itemName: Electricity
-  weight: 0
   itemCategory: 0
+  stack: 1
+  weight: 0
   localizationItem: {fileID: 0}
   itemIcon: {fileID: 21300000, guid: 09b64a0887dac514ca8544a9a4fce084, type: 3}
   showInStorage: 0

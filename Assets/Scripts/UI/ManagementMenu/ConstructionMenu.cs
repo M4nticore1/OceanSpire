@@ -23,26 +23,26 @@ public class ConstructionMenu : ManagementMenu
 
     protected override void CreateWidgets()
     {
-        int categoriesCount = Enum.GetValues(typeof(BuildingCategory)).Length;
+        //int categoriesCount = Enum.GetValues(typeof(BuildingCategory)).Length;
 
-        foreach (var building in BuildingsList.Instance.Buildings) {
-            if (!building) {
-                Debug.LogError("building is NULL");
-                continue;
-            }
-            if (!building.BuildingData) {
-                Debug.LogError($"Building {building} does not have a Building Data");
-                continue;
-            }
+        //foreach (var building in BuildingsList.Instance.Buildings) {
+        //    if (!building) {
+        //        Debug.LogError("building is NULL");
+        //        continue;
+        //    }
+        //    if (!building.BuildingData) {
+        //        Debug.LogError($"Building {building} does not have a Building Data");
+        //        continue;
+        //    }
 
-            if (!building.BuildingData.IsDemolishable) continue;
+        //    if (!building.BuildingData.IsDemolishable) continue;
 
-            BuildingCategory buildingCategory = building.BuildingData.BuildingCategory;
-            BuildingWidget spawnedBuildingWidget = null;
-            spawnedBuildingWidget = Instantiate(buildingWidgetPrefab, transform);
-            spawnedBuildingWidget.Init(building);
-            spawnedBuildingWidget.transform.SetParent(lists[(int)buildingCategory].transform);
-            spawnedWidgets.Add(spawnedBuildingWidget);
-        }
+        //    BuildingCategory buildingCategory = building.BuildingData.BuildingCategory;
+        //    BuildingWidget spawnedBuildingWidget = null;
+        //    spawnedBuildingWidget = Instantiate(buildingWidgetPrefab, transform);
+        //    spawnedBuildingWidget.Init(building);
+        //    spawnedBuildingWidget.transform.SetParent(lists[(int)buildingCategory].transform);
+        //    spawnedWidgets.Add(spawnedBuildingWidget);
+        //}
     }
 }

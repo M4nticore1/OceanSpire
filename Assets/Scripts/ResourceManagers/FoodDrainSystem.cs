@@ -32,7 +32,7 @@ public class FoodDrainSystem : MonoBehaviour
         int id = (int)ItemID.Food;
         int amount = (int)drainAmount;
 
-        CityStorage.Instance.Inventory.RemoveItemAmount(id, amount);
+        CityStorage.Instance.Inventory.RemoveItem(id, amount);
         drainAmount -= amount;
     }
 

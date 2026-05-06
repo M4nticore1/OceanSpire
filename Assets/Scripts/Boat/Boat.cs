@@ -78,7 +78,7 @@ public class Boat : MonoBehaviour
 
     // Weight
     public float CurrentWeight => inventory.CurrentWeight;
-    public float MaxWeight => inventory.MaxWeight;
+    public float MaxWeight => inventory.WeightLimit;
 
     [SerializeField] private Transform seatSlot;
     public Transform SeatSlot => seatSlot;
@@ -186,7 +186,7 @@ public class Boat : MonoBehaviour
 
     public ItemInstance GetItemToUnload()
     {
-        return inventory.Items[0].item;
+        return inventory.GetItemByIndex(0);
     }
 
     public void ProcessDrainHealth()

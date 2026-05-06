@@ -40,7 +40,7 @@ public class ElectricityDrain : MonoBehaviour
     private void SpendElectricity(int amoount)
     {
         int id = (int)ItemID.Electricity;
-        cityStorage.Inventory.RemoveItemAmount(id, amoount);
+        cityStorage.Inventory.RemoveItem(id, amoount);
         currentElectricityToDrain = 0f;
     }
 }

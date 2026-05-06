@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24daa3b8425c9f24693d261f838f1c7d, type: 3}
+  m_Name: weapon_hatchet
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponDefinition
+  itemId: 13
+  itemCategory: 3
+  stack: 8
+  weight: 3
+  localizationItem: {fileID: 11400000, guid: cbfdfd4021cfc4d4fbf9684f664a5506, type: 2}
+  itemIcon: {fileID: 21300000, guid: b751e879ede5b1443982d88ae6fd1d55, type: 3}
+  showInStorage: 1
+  weaponPrefab: {fileID: 7020424732878029919, guid: 4b23172d7f81a014a937c1b9c3a00248, type: 3}
+  damage: 9
+  attackMethods: 1

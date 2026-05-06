@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public struct RaidEndedResult
@@ -89,9 +90,9 @@ public class RaidManager : MonoBehaviour
 
     public void AddLose(ItemInstance lose)
     {
-        int id = lose.ItemData.ItemId;
+        int id = lose.Definition.ItemId;
         int amount = lose.Amount;
-        inventory.AddItemAmount(id, amount);
+        inventory.AddItem(id, amount);
     }
 
     public Vector3 GetSpawnPosition(Boat boat)
@@ -164,24 +165,24 @@ public class RaidManager : MonoBehaviour
     private void RemoveCityLoot()
     {
         for (int i = 0; i < inventory.Items.Count; i++) {
-            ItemInstance item = inventory.Items[i].item;
+            ItemInstance item = inventory.GetItemByIndex(i);
 
-            int id = item.ItemData.ItemId;
+            int id = item.Definition.ItemId;
             int amount = item.Amount;
 
-            CityStorage.Instance.Inventory.RemoveItemAmount(id, amount);
+            CityStorage.Instance.Inventory.RemoveItem(id, amount);
         }
     }
 
     private void ClearLosses()
     {
         for (int i = 0; i < inventory.Items.Count; i++) {
-            ItemInstance item = inventory.Items[i].item;
+            ItemInstance item = inventory.GetItemByIndex(i);
 
-            int id = item.ItemData.ItemId;
+            int id = item.Definition.ItemId;
             int amount = item.Amount;
 
-            inventory.RemoveItemAmount(id, amount);
+            inventory.RemoveItem(id, amount);
         }
     }
 

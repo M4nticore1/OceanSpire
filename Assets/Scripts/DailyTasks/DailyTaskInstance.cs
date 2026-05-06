@@ -31,7 +31,7 @@ public class DailyTaskInstance : ILocalizable
     {
         return new Dictionary<string, string>()
         {
-            {"rewardName", LocalizationManager.Instance.GetText(Definition.Reward.ItemData.LocalizationItem).ToLower()},
+            {"rewardName", LocalizationManager.Instance.GetText(Definition.Reward.Definition.LocalizationItem).ToLower()},
             {"rewardAmount", Definition.Reward.Amount.ToString()},
             {"taskCondition", Definition.ConditionAmount.ToString() + (Definition.ConditionLocalizationItem ? " " + LocalizationManager.Instance.GetText(Definition.ConditionLocalizationItem).ToLower() : "")},
         };
@@ -73,9 +73,9 @@ public class DailyTaskInstance : ILocalizable
 
     private void ReceiveReward()
     {
-        int id = Definition.Reward.ItemData.ItemId;
+        int id = Definition.Reward.Definition.ItemId;
         int amount = Definition.Reward.Amount;
 
-        CityStorage.Instance.Inventory.AddItemAmount(id, amount);
+        CityStorage.Instance.Inventory.AddItem(id, amount);
     }
 }

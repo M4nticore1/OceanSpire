@@ -50,17 +50,17 @@ public class BoatCollectingLootState : BoatState
 
     private void CollectLoot()
     {
-        float remainingWeight = boat.Inventory.MaxWeight - boat.Inventory.CurrentWeight;
+        float remainingWeight = boat.Inventory.WeightLimit - boat.Inventory.CurrentWeight;
         List<ItemInstance> collectedLoot = boat.targetLootContainer.TakeItems(remainingWeight);
 
         foreach (var loot in collectedLoot) {
             if (boat.Inventory.RemainingWeight <= 0) break;
 
-            ItemDefinition data = loot.ItemData;
-            int id = loot.ItemData.ItemId;
-            int amountToTake = math.min(loot.Amount, (int)(boat.Inventory.RemainingWeight / loot.ItemData.Weight));
+            ItemDefinition data = loot.Definition;
+            int id = loot.Definition.ItemId;
+            int amountToTake = math.min(loot.Amount, (int)(boat.Inventory.RemainingWeight / loot.Definition.Weight));
 
-            boat.Inventory.AddItemAmount(id, amountToTake);
+            boat.Inventory.AddItem(id, amountToTake);
         }
     }
 }

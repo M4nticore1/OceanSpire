@@ -78,14 +78,14 @@ public class ProducedResourcePanel : MonoBehaviour
     private void CreateProducedResource()
     {
         ResourceWidget widget = Instantiate(resourceWidgetPrefab, producedResourceSlot.transform);
-        widget.SetAmountItem(currentCraftItem.ProduceItem);
+        widget.SetAmount(currentCraftItem.ProduceItem);
     }
 
     private void CreateConsumedResources()
     {
         foreach (var resource in currentCraftItem.ConsumeResources) {
             ResourceWidget widget = Instantiate(resourceWidgetPrefab, consumedResourcesSlot.transform);
-            widget.SetAmountItem(resource);
+            widget.SetAmount(resource);
         }
     }
 

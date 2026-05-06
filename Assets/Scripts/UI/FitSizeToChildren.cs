@@ -30,18 +30,25 @@ public class FitSizeToChildren : UIBehaviour
 
         Canvas.ForceUpdateCanvases();
 
-        float top = float.MinValue;
-        float bottom = float.MaxValue;
+        float top = 0f;
+        float bottom = 0f;
 
-        foreach (RectTransform child in rect) {
+        foreach (var child in GameUtils.GetAllChildren(rect)) {
             Vector3[] corners = new Vector3[4];
-            child.GetWorldCorners(corners);
+
+            RectTransform childRect = child.GetComponent<RectTransform>();
+            if (!childRect) continue;
+
+            childRect.GetWorldCorners(corners);
 
             float childTop = corners[1].y;
             float childBottom = corners[0].y;
 
-            if (childTop > top) top = childTop;
-            if (childBottom < bottom) bottom = childBottom;
+            if (childTop > top)
+                top = childTop;
+
+            if (childBottom < bottom)
+                bottom = childBottom;
         }
 
         float localTop = rect.InverseTransformPoint(new Vector3(0, top, 0)).y;

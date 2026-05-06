@@ -5,7 +5,7 @@ using UnityEngine;
 public class StorageBuildingModule : BuildingModule
 {
     public StorageModuleLevelData[] StorageLevelsData => levelsData.OfType<StorageModuleLevelData>().ToArray();
-    public StorageModuleLevelData StorageLevelData => StorageLevelsData[OwnedBuilding.LevelComponent.level - 1];
+    public StorageModuleLevelData StorageLevelData => LevelData as StorageModuleLevelData;
 
     protected override void Subscribe()
     {
@@ -25,54 +25,30 @@ public class StorageBuildingModule : BuildingModule
     {
         if (OwnedBuilding.ConstructionComponent.IsUnderConstruction) return;
 
-        AddAmountByCategory();
-        AddAmountByItem();
+        AddLimit();
     }
 
     private void OnConstructionFinished()
     {
-        AddAmountByCategory();
-        AddAmountByItem();
+        AddLimit();
     }
 
     private void OnDemolished()
     {
-        foreach (ItemInstance item in StorageLevelData.storageItems) {
-            int id = item.ItemData.ItemId;
-            int amount = item.Amount;
-            CityStorage.Instance.Inventory.RemoveItemMaxAmount(id, amount);
+        RemoveLimit();
+    }
+
+    private void AddLimit()
+    {
+        foreach (var stack in StorageLevelData.Stacks) {
+            CityStorage.Instance.Inventory.AddLimit(stack.StackEnum, stack.Amount);
         }
     }
 
-    private void AddAmountByCategory()
+    private void RemoveLimit()
     {
-        foreach (var category in StorageLevelData.storageItemCategories) {
-            foreach (var itemDef in ItemsList.Instance.Items) {
-                if (itemDef.ItemCategory != category.ItemCategory) continue;
-                if (HasCategory(category.ItemCategory)) continue;
-
-                int id = itemDef.ItemId;
-                int amount = category.Amount;
-                CityStorage.Instance.Inventory.AddItemMaxAmount(id, amount);
-            }
+        foreach (var stack in StorageLevelData.Stacks) {
+            CityStorage.Instance.Inventory.RemoveLimit(stack.StackEnum, stack.Amount);
         }
-    }
-
-    private void AddAmountByItem()
-    {
-        foreach (ItemInstance item in StorageLevelData.storageItems) {
-            int id = item.ItemData.ItemId;
-            int amount = item.Amount;
-            CityStorage.Instance.Inventory.AddItemMaxAmount(id, amount);
-        }
-    }
-
-    private bool HasCategory(ItemCategory category)
-    {
-        foreach (var item in StorageLevelData.storageItems) {
-            if (item.ItemData.ItemCategory == category) return true;
-        }
-
-        return false;
     }
 }

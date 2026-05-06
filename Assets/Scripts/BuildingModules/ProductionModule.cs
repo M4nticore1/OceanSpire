@@ -107,9 +107,9 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
 
     private void CollectItem()
     {
-        int id = CurrentCraftItem.ProduceItem.ItemData.ItemId;
+        int id = CurrentCraftItem.ProduceItem.Definition.ItemId;
         int amount = CurrentCraftItem.ProduceItem.Amount;
-        CityStorage.Instance.Inventory.AddItemAmount(id, amount);
+        CityStorage.Instance.Inventory.AddItem(id, amount);
 
         IsReadyToCollect = false;
         ResetProducedTime();
@@ -138,18 +138,18 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
     private void ConsumeResources()
     {
         foreach (var resource in CurrentCraftItem.ConsumeResources) {
-            int id = resource.ItemData.ItemId;
+            int id = resource.Definition.ItemId;
             int amount = resource.Amount;
-            CityStorage.Instance.Inventory.RemoveItemAmount(id, amount);
+            CityStorage.Instance.Inventory.RemoveItem(id, amount);
         }
     }
 
     private void RefundResources()
     {
         foreach (var resource in CurrentCraftItem.ConsumeResources) {
-            int id = resource.ItemData.ItemId;
+            int id = resource.Definition.ItemId;
             int amount = resource.Amount;
-            CityStorage.Instance.Inventory.AddItemAmount(id, amount);
+            CityStorage.Instance.Inventory.AddItem(id, amount);
         }
     }
 
@@ -206,9 +206,10 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
         if (OwnedBuilding.WorkComponent.EnteredWorkers.Count == 0) return false;
 
         foreach (var resource in CurrentCraftItem.ConsumeResources) {
-            int id = resource.ItemData.ItemId;
+            int id = resource.Definition.ItemId;
             int amount = resource.Amount;
-            if (CityStorage.Instance.Inventory.GetItem(id).item.Amount < amount) return false;
+
+            if (CityStorage.Instance.Inventory.GetItemById(id).Amount < amount) return false;
         }
 
         return true;

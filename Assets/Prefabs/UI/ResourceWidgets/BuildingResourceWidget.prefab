@@ -340,8 +340,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cbe901d618933c488cabc826610c8ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceWidget
-  itemData: {fileID: 0}
-  useCityStorage: 0
+  itemDefinition: {fileID: 0}
+  useLimit: 1
   resourceImage: {fileID: 1277891582841892986}
   resourceAmountText: {fileID: 8834238281448815289}
   resourceAmountBar: {fileID: 0}

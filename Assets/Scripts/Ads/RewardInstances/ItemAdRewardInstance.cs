@@ -22,8 +22,8 @@ public class ItemAdRewardInstance : AdRewardInstance
 
     protected override void OnRewardRecieved()
     {
-        int woodId = ItemRewardDefinition.ItemData.ItemId;
-        CityStorage.Instance.Inventory.AddItemAmount(woodId, Amount);
+        int id = ItemRewardDefinition.ItemData.ItemId;
+        CityStorage.Instance.Inventory.AddItem(id, Amount);
     }
 
     public void SetAmount(int amount)

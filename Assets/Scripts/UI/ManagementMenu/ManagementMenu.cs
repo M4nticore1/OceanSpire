@@ -6,9 +6,8 @@ public abstract class ManagementMenu : UIBehaviour
 {
     [SerializeField] protected GameObject managementMenu;
     [SerializeField] protected CustomButton openListButton;
-    [SerializeField] protected GridLayoutGroup[] lists;
+    [SerializeField] protected ManagementList[] lists;
     [SerializeField] private CustomButton[] listButtons;
-    [SerializeField] protected ScrollRect scrollRect;
 
     protected int lastOpenedBuildingsListCategory = 0;
 
@@ -27,6 +26,8 @@ public abstract class ManagementMenu : UIBehaviour
 
         managementMenu.SetActive(true);
         gameObject.SetActive(true);
+
+        ResetScrollRects();
     }
 
     public void Close()
@@ -53,15 +54,18 @@ public abstract class ManagementMenu : UIBehaviour
 
     public void OpenListByCategory(int index)
     {
+        CloseAllLists();
+
         lists[index].gameObject.SetActive(true);
         listButtons[index].SetState(CustomButtonState.Selected);
 
         for (int i = 0; i < listButtons.Length; i++) {
             listButtons[i].transform.SetAsFirstSibling();
         }
+
         listButtons[index].transform.SetAsLastSibling();
 
-        scrollRect.content = lists[index].GetComponent<RectTransform>();
+        //scrollRect.content = lists[index].GetComponent<RectTransform>();
         lastOpenedBuildingsListCategory = index;
     }
 
@@ -78,5 +82,19 @@ public abstract class ManagementMenu : UIBehaviour
     public void CloseLastOpenedList()
     {
         CloseListByCategory(lastOpenedBuildingsListCategory);
+    }
+
+    private void CloseAllLists()
+    {
+        for (int i = 0; i < lists.Length; i++) {
+            CloseListByCategory(i);
+        }
+    }
+
+    private void ResetScrollRects()
+    {
+        foreach (var list in lists) {
+            list.ScrollRect.verticalNormalizedPosition = 1f;
+        }
     }
 }

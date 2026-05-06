@@ -97,7 +97,10 @@ public class LootContainer : MonoBehaviour, IClickable
 
             if (chance <= possibleLoot[i].dropChance) {
                 int itemAmount = UnityEngine.Random.Range(possibleLoot[i].minAmount, possibleLoot[i].maxAmount);
-                containedLoot.Add(new ItemInstance(possibleLoot[i].itemData, itemAmount));
+                var item = new ItemInstance(possibleLoot[i].itemData);
+                item.SetAmount(itemAmount);
+
+                containedLoot.Add(item);
             }
         }
 
@@ -228,17 +231,19 @@ public class LootContainer : MonoBehaviour, IClickable
             for (int i = 0; i < containedLoot.Count; i++)
             {
                 ItemInstance currentLoot = containedLoot[i];
-                if (remainingWeight.Value < currentLoot.ItemData.Weight) continue;
+                if (remainingWeight.Value < currentLoot.Definition.Weight) continue;
 
-                ItemDefinition data = currentLoot.ItemData;
-                int id = currentLoot.ItemData.ItemId;
+                ItemDefinition data = currentLoot.Definition;
+                int id = currentLoot.Definition.ItemId;
                 int containedAmount = currentLoot.Amount;
 
                 int amountToCollect = (int)math.min(containedAmount, remainingWeight.Value / data.Weight);
 
                 currentLoot.RemoveAmount(amountToCollect);
 
-                ItemInstance newLoot = new ItemInstance(data, amountToCollect);
+                ItemInstance newLoot = new ItemInstance(data);
+                newLoot.SetAmount(amountToCollect);
+
                 loot.Add(newLoot);
             }
         }

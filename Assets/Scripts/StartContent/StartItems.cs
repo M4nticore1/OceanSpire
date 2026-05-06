@@ -7,9 +7,9 @@ public class StartItems : MonoBehaviour
     public void CollectItems()
     {
         foreach (var item in startItems) {
-            int id = item.ItemData.ItemId;
+            int id = item.Definition.ItemId;
             int amount = item.Amount;
-            CityStorage.Instance.Inventory.AddItemAmount(id, amount);
+            CityStorage.Instance.Inventory.AddItem(id, amount);
         }
     }
 }

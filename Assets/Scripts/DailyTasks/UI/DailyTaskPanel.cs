@@ -21,7 +21,7 @@ public abstract class DailyTaskPanel : MonoBehaviour
     protected void UpdateTaskInfo()
     {
         conditionImage.sprite = task.Definition.ConditionImage;
-        rewardImage.sprite = task.Definition.Reward.ItemData.ItemIcon;
+        rewardImage.sprite = task.Definition.Reward.Definition.ItemIcon;
 
         conditionAmount.SetText(task.Definition.ConditionAmount.ToString());
         rewardAmount.SetText(task.Definition.Reward.Amount.ToString());

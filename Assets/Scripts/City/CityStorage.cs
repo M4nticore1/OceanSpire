@@ -10,18 +10,22 @@ public class CityStorage : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        foreach (var item in ItemsList.Instance.Items) {
+            inventory.AddItem(item.ItemId, 0);
+        }
     }
 
     private void OnEnable()
     {
-        inventory.onChangedItemAmount += OnItemAmountChanged;
+        inventory.onItemAmountChanged += OnItemAmountChanged;
         inventory.onChangedItemMaxAmount += OnItemMaxAmountChanged;
         EventBus.onBoatUnloadedItem += OnBoatUnloadedItem;
     }
 
     private void OnDisable()
     {
-        inventory.onChangedItemAmount -= OnItemAmountChanged;
+        inventory.onItemAmountChanged -= OnItemAmountChanged;
         inventory.onChangedItemMaxAmount -= OnItemMaxAmountChanged;
         EventBus.onBoatUnloadedItem -= OnBoatUnloadedItem;
     }
@@ -39,6 +43,6 @@ public class CityStorage : MonoBehaviour
 
     private void OnBoatUnloadedItem(int id, int amount)
     {
-        inventory.AddItemAmount(id, amount);
+        inventory.AddItem(id, amount);
     }
 }
