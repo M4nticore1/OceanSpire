@@ -15,7 +15,7 @@ public class ItemAdRewardInstance : AdRewardInstance
     {
         return new Dictionary<string, string>()
         {
-            { "itemName", LocalizationManager.Instance.GetText(ItemRewardDefinition.ItemData.LocalizationItem).ToLower() },
+            { "itemName", LocalizationManager.Instance.GetText(ItemRewardDefinition.ItemData.NameLocalization).ToLower() },
             { "amount", Amount.ToString()},
         };
     }

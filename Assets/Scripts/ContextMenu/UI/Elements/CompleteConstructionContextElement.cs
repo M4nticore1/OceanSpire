@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CompleteConstructionContextElement : ContextMenuElement
+public class CompleteConstructionContextElement : ContextElement
 {
     [SerializeField] private CompleteConstructionMenu speedUpConstructionMenu;
     private Building building;

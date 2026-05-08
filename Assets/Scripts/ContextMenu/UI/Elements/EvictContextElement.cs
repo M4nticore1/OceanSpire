@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EvictContextElement : ContextMenuElement
+public class EvictContextElement : ContextElement
 {
     protected override void OnShowed()
     {

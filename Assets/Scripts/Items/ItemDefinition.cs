@@ -16,6 +16,7 @@ public enum ItemID
     Cabbage = 11,
     Hands = 12,
     BaseballBat = 13,
+    Pipe = 14,
 }
 
 public enum ItemCategory
@@ -42,7 +43,7 @@ public class ItemDefinition : ScriptableObject
     public float Weight => weight;
 
     [SerializeField] private LocalizationItem localizationItem;
-    public LocalizationItem LocalizationItem => localizationItem;
+    public LocalizationItem NameLocalization => localizationItem;
 
     [SerializeField] private Sprite itemIcon = null;
     public Sprite ItemIcon => itemIcon;

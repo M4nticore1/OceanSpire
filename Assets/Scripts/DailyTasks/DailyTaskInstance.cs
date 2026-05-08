@@ -31,7 +31,7 @@ public class DailyTaskInstance : ILocalizable
     {
         return new Dictionary<string, string>()
         {
-            {"rewardName", LocalizationManager.Instance.GetText(Definition.Reward.Definition.LocalizationItem).ToLower()},
+            {"rewardName", LocalizationManager.Instance.GetText(Definition.Reward.Definition.NameLocalization).ToLower()},
             {"rewardAmount", Definition.Reward.Amount.ToString()},
             {"taskCondition", Definition.ConditionAmount.ToString() + (Definition.ConditionLocalizationItem ? " " + LocalizationManager.Instance.GetText(Definition.ConditionLocalizationItem).ToLower() : "")},
         };

@@ -5,8 +5,6 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
 {
     protected bool isOpened = false;
 
-    [SerializeField] private RectTransform content = null;
-
     protected override void Start()
     {
         base.Start();
@@ -17,7 +15,7 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
     // IOpenable
     public void Open()
     {
-        content.gameObject.SetActive(true);
+        gameObject.SetActive(true);
         UpdateMenu();
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);
@@ -28,7 +26,7 @@ public abstract class ControlMenu : UIBehaviour, IOpenable
 
     public void Close()
     {
-        content.gameObject.SetActive(false);
+        gameObject.SetActive(false);
 
         EventBus.InvokeWorkersMenuClosed();
         InputStateManager.Instance.SetGameplayInputBlocked(false);

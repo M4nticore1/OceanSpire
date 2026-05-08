@@ -35,6 +35,9 @@
   "ui_selected": "Выбрано",
   "ui_watch_ad": "Смотреть Рекламу",
 
+  "equipment": "Экипировка",
+  "equipment_select": "Выбор экипировки",
+
   "construction": "Строительство",
   "construction_build": "Построить",
   "construction_upgrade": "Улучшить",
@@ -75,6 +78,11 @@
   "item_carrot": "Морковь",
   "item_cabbage": "Капуста",
 
+  "weapon": "Оружие",
+  "weapon_baseball_bat": "Бейсбольная бита",
+  "weapon_pipe": "Труба",
+
+  "skills": "Навыки",
   "skill_cooking": "Готовка",
   "skill_farming": "Фермерство",
   "skill_electricity": "Электричество",

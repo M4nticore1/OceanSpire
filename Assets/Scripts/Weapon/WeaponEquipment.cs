@@ -4,8 +4,8 @@ public class WeaponEquipment : MonoBehaviour
 {
     [SerializeField] private Transform spawnPoint;
 
-    private WeaponDefinition currentDefinition;
-    private Weapon spawnedWeapon;
+    public WeaponDefinition CurrentDefinition { get; private set; }
+    public Weapon spawnedWeapon { get; private set; }
 
     public void Init(EquipmentData data)
     {
@@ -23,17 +23,17 @@ public class WeaponEquipment : MonoBehaviour
 
     public int GetDamage()
     {
-        return currentDefinition.Damage;
+        return CurrentDefinition.Damage;
     }
 
     private void SetWeaponDefinition(WeaponDefinition definition)
     {
-        currentDefinition = definition;
+        CurrentDefinition = definition;
     }
 
     private void SpawnWeapon()
     {
-        Weapon prefab = currentDefinition.WeaponPrefab;
+        Weapon prefab = CurrentDefinition.WeaponPrefab;
         if (!prefab) return;
 
         Weapon weapon = WeaponFactory.CreateWeapon(prefab, spawnPoint);

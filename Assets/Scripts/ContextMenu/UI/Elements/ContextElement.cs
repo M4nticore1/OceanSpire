@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public abstract class ContextMenuElement : UIBehaviour
+public abstract class ContextElement : UIBehaviour
 {
-    [SerializeField] private ContextMenu contextMenu;
     [SerializeField] private GameObject content;
     [SerializeField] protected CustomButton button;
 

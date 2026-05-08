@@ -39,13 +39,13 @@ public class ResourceWidget : UIBehaviour
         UpdateAmount();
     }
 
-    public void SetItem(ItemDefinition definition)
+    public virtual void SetItem(ItemDefinition definition)
     {
         itemDefinition = definition;
         resourceImage.sprite = itemDefinition.ItemIcon;
     }
 
-    public virtual void SetAmount(IItemAmount amount)
+    public void SetAmount(IItemAmount amount)
     {
         Amount = amount;
     }

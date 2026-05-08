@@ -2,7 +2,14 @@ using UnityEngine;
 
 public class SelectedBuildingNameDisplay : SelectedDisplay
 {
-    [SerializeField] protected TextLocalizer localizer;
+    private TextLocalizer localizer;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        localizer = GetComponent<TextLocalizer>();
+    }
 
     protected override void TryDisplay()
     {

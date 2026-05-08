@@ -2,11 +2,18 @@ using UnityEngine;
 
 public class SelectedBuildingLevelDisplay : SelectedDisplay
 {
-    [SerializeField] protected TextLocalizer localizer;
+    private TextLocalizer localizer;
     [SerializeField] private LocalizationItem levelLocalization;
     [SerializeField] private LocalizationItem constructionLocalization;
 
     private Building building;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        localizer = GetComponent<TextLocalizer>();
+    }
 
     private void Update()
     {

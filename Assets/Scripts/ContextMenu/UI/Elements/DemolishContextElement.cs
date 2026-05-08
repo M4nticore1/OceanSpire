@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DemolishContextElement : ContextMenuElement
+public class DemolishContextElement : ContextElement
 {
     [SerializeField] private DemolishActionMenu demolishMenu;
 

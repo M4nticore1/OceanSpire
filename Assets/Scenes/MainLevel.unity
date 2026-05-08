@@ -1669,7 +1669,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 246370348499758136, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 24.999268
+      value: 24.999023
       objectReference: {fileID: 0}
     - target: {fileID: 421847181042054861, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_Pivot.y
@@ -1713,7 +1713,7 @@ PrefabInstance:
       objectReference: {fileID: 815262698}
     - target: {fileID: 1022405595491534480, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 24.999268
+      value: 24.999023
       objectReference: {fileID: 0}
     - target: {fileID: 1029548389024788439, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1905,7 +1905,7 @@ PrefabInstance:
       objectReference: {fileID: 101393569}
     - target: {fileID: 3055164988689838268, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 24.999268
+      value: 24.999023
       objectReference: {fileID: 0}
     - target: {fileID: 3252033114757556854, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: itemDefinition
@@ -1939,6 +1939,30 @@ PrefabInstance:
       propertyPath: inputStateManager
       value: 
       objectReference: {fileID: 2136275761}
+    - target: {fileID: 3841313132384317718, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3841313132384317718, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3841313132384317718, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3841313132384317718, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3841313132384317718, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3841313132384317718, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3866195605373588965, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_Spacing.y
       value: 100
@@ -1993,7 +2017,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4493515219944195287, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 24.999268
+      value: 24.999023
       objectReference: {fileID: 0}
     - target: {fileID: 4613539639389212835, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2105,7 +2129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5697993981545606129, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 24.999268
+      value: 24.999023
       objectReference: {fileID: 0}
     - target: {fileID: 5802081599400832544, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: speedUpConstructionMenu
@@ -2145,7 +2169,7 @@ PrefabInstance:
       objectReference: {fileID: 220072952}
     - target: {fileID: 6889641741561849520, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 24.999268
+      value: 24.999023
       objectReference: {fileID: 0}
     - target: {fileID: 7599699861659417980, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: rewardedAdsManager
@@ -5011,6 +5035,10 @@ MonoBehaviour:
     amount: 5
   - definition: {fileID: 11400000, guid: 6009cc6eba9fcf9489b14353fb2b3c9c, type: 2}
     amount: 5
+  - definition: {fileID: 11400000, guid: 0a719313980629b44bf36d6878f42391, type: 2}
+    amount: 1
+  - definition: {fileID: 11400000, guid: df1f21bae6de24c42807df07f0db0781, type: 2}
+    amount: 1
 --- !u!4 &1130765590 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: 30c442c818ea2e942a614aec33f638da, type: 3}

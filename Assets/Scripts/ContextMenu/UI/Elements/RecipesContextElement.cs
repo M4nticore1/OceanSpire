@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RecipesContextElement : ContextMenuElement
+public class RecipesContextElement : ContextElement
 {
     [SerializeField] private ProductionControlMenu recipesMenu;
 

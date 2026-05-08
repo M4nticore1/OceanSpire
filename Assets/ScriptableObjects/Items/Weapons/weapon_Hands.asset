@@ -19,6 +19,9 @@ MonoBehaviour:
   localizationItem: {fileID: 0}
   itemIcon: {fileID: 0}
   showInStorage: 0
+  category: 0
+  power: 0
+  defaultEquipment: 1
   weaponPrefab: {fileID: 0}
   damage: 3
   attackMethods: 0

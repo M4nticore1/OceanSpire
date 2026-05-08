@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7804947061151522760}
   - component: {fileID: 1256239440805894270}
   - component: {fileID: 7772729926661117182}
-  - component: {fileID: -6211142896014160740}
   m_Layer: 5
   m_Name: ToggleButton
   m_TagString: Untagged
@@ -98,7 +97,7 @@ MonoBehaviour:
   isScalable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectableGroupIndex: -1
+  selectGroup: {fileID: 0}
   stateTransitionTime: 0.3
   state: 0
   idleState:
@@ -131,21 +130,24 @@ MonoBehaviour:
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
---- !u!114 &-6211142896014160740
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1123348790435095458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de9a62ad38f7b87478463b5957351a01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ToggleButton
-  buttonType: 0
-  targetOpenable: {fileID: 0}
-  button: {fileID: 7772729926661117182}
+  onPressed:
+    m_PersistentCalls:
+      m_Calls: []
+  onReleased:
+    m_PersistentCalls:
+      m_Calls: []
+  onSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  onDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  onHovered:
+    m_PersistentCalls:
+      m_Calls: []
+  onUnhovered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4151105492405809274
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UpgradeContextElement : ContextMenuElement
+public class UpgradeContextElement : ContextElement
 {
     [SerializeField] private UpgradeActionMenu upgradeMenu;
 

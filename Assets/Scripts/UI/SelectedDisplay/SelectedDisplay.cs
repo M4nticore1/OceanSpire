@@ -1,22 +1,29 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public abstract class SelectedDisplay : MonoBehaviour
+public abstract class SelectedDisplay : UIBehaviour
 {
     private bool isSubscribed = false;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         Subscribe();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         Subscribe();
         TryDisplay();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         Unsubscribe();
         TryHide();
     }

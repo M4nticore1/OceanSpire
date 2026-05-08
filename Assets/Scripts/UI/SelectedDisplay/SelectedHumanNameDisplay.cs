@@ -3,7 +3,14 @@ using UnityEngine;
 
 public class SelectedHumanNameDisplay : SelectedDisplay
 {
-    [SerializeField] private TextMeshProUGUI text;
+    private TextMeshProUGUI text;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        text = GetComponent<TextMeshProUGUI>();
+    }
 
     protected override void TryDisplay()
     {

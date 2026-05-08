@@ -35,6 +35,9 @@
   "ui_selected": "Selected",
   "ui_watch_ad": "Watch Ad",
 
+  "equipment": "Equipment",
+  "equipment_select": "Select equipment",
+
   "construction": "Construction",
   "construction_build": "Build",
   "construction_upgrade": "Upgrade",
@@ -75,6 +78,11 @@
   "item_carrot": "Carrot",
   "item_cabbage": "Cabbage",
 
+  "weapon": "Weapon",
+  "weapon_baseball_bat": "Baseball bat",
+  "weapon_pipe": "Pipe",
+
+  "skills": "Skills",
   "skill_cooking": "Cooking",
   "skill_farming": "Farming",
   "skill_electricity": "Electricity",

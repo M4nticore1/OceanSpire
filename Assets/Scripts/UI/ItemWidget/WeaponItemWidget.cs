@@ -6,12 +6,12 @@ public class WeaponItemWidget : ResourceWidget
     [Header("Weapon")]
     [SerializeField] TextMeshProUGUI damageText;
 
-    public override void SetAmount(IItemAmount item)
+    public override void SetItem(ItemDefinition definition)
     {
-        base.SetAmount(item);
+        base.SetItem(definition);
 
-        WeaponDefinition weapon = ItemDefinition as WeaponDefinition;
-        if (weapon == null) return;
+        WeaponDefinition weapon = definition as WeaponDefinition;
+        if (!weapon) return;
 
         damageText.SetText(weapon.Damage.ToString());
     }
