@@ -4,8 +4,8 @@ public class EquipmentPanel : MonoBehaviour
 {
     [SerializeField] private EquipmentWidget weaponWidget;
 
-    public void SetWeapon(WeaponEquipment weaponEquipment)
+    public void SetWeapon(EquipmentComponent equipmentComponent)
     {
-        weaponWidget.SetEquipment(weaponEquipment.CurrentDefinition);
+        weaponWidget.SetEquipment(equipmentComponent);
     }
 }

@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 1222584910654512513}
   - component: {fileID: 7265388013044614165}
   m_Layer: 5
-  m_Name: WeaponItemWidget
+  m_Name: EquipmentItemWidget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,18 +186,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1558147022497944306}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd974d381c5f86e4381a0713861d2db4, type: 3}
+  m_Script: {fileID: 11500000, guid: 7331026def0e45f46b798aa6c8d9df1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponItemWidget
   itemDefinition: {fileID: 0}
   useLimit: 0
-  resourceImage: {fileID: 353891536657977764}
+  itemNameText: {fileID: 0}
   resourceAmountText: {fileID: 848859100641501343}
+  resourceImage: {fileID: 353891536657977764}
   resourceAmountBar: {fileID: 0}
   useAmountColors: 0
   enoughAmountColor: {r: 0, g: 1, b: 0, a: 1}
   notEnoughAmountColor: {r: 1, g: 0, b: 0, a: 1}
-  damageText: {fileID: 8973857035368531107}
+  powerText: {fileID: 8973857035368531107}
 --- !u!1 &3342274169244217352
 GameObject:
   m_ObjectHideFlags: 0

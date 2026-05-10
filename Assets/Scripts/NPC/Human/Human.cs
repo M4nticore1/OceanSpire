@@ -48,8 +48,8 @@ public class Human : Creature, IClickable
     [SerializeField] private AttackComponent attackComponent;
     public AttackComponent AttackComponent => attackComponent;
 
-    [SerializeField] private WeaponEquipment weaponEquipment;
-    public WeaponEquipment WeaponEquipment => weaponEquipment;
+    [SerializeField] private EquipmentComponent weaponComponent;
+    public EquipmentComponent WeaponComponent => weaponComponent;
 
     [SerializeField] private SkillsComponent skillsComponent;
     public SkillsComponent SkillsComponent => skillsComponent;
@@ -156,7 +156,7 @@ public class Human : Creature, IClickable
             }
         }
 
-        weaponEquipment.Init(humanData.weapon);
+        weaponComponent.Init(humanData.weapon);
         skillsComponent.Init(humanData.skills);
 
         if (humanData.boatRider.boatInstanceId >= 0) {

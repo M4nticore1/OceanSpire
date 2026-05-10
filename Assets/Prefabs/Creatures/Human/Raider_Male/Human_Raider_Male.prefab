@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7593600330846457393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5484778091350348048}
+  m_Layer: 0
+  m_Name: WeaponSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5484778091350348048
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7593600330846457393}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.4999999, y: -0.50000006, z: -0.5000001, w: -0.49999994}
+  m_LocalPosition: {x: 0, y: 0.050000686, z: 0.050000366}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2086424449374888513}
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 90}
 --- !u!1001 &4251119448612296978
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -163,7 +194,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6624931173127330936, guid: ae0190f14aedeb74cb1b1ed9b71e2f9c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5484778091350348048}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ae0190f14aedeb74cb1b1ed9b71e2f9c, type: 3}
       insertIndex: -1
@@ -172,6 +206,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 5404960586241236721}
   m_SourcePrefab: {fileID: 100100000, guid: ae0190f14aedeb74cb1b1ed9b71e2f9c, type: 3}
+--- !u!4 &2086424449374888513 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6624931173127330936, guid: ae0190f14aedeb74cb1b1ed9b71e2f9c, type: 3}
+  m_PrefabInstance: {fileID: 5117228503875763769}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4651854799765625298 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ae0190f14aedeb74cb1b1ed9b71e2f9c, type: 3}
@@ -379,6 +418,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Human_Raider_Male
       objectReference: {fileID: 0}
+    - target: {fileID: 8499683307490277393, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
+      propertyPath: spawnPoint
+      value: 
+      objectReference: {fileID: 5484778091350348048}
     - target: {fileID: 9140235139351627301, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
       propertyPath: definition
       value: 

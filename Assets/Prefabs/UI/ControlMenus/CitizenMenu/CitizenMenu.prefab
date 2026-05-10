@@ -31,7 +31,7 @@ PrefabInstance:
     - target: {fileID: 4966534438574311010, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
       propertyPath: item
       value: 
-      objectReference: {fileID: 11400000, guid: b816717e4b01a8f458105233e05f5e7b, type: 2}
+      objectReference: {fileID: 11400000, guid: 79b5ed15285eaf945b5b2b769eb6da57, type: 2}
     - target: {fileID: 5588598354278059917, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
       propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -157,7 +157,7 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 767585143533478389, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3296179975029734051}
+      addedObject: {fileID: 7697952025751789595}
     - targetCorrespondingSourceObject: {fileID: 767585143533478389, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2099836731337164817}
@@ -191,7 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a42e2984357b4e64d8bf4431eb01f8aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CitizenMenu
-  skillsPanel: {fileID: 1252363170253984994}
+  skillsPanel: {fileID: 2215212452621636395}
   equipmentPanel: {fileID: 505815509678335736}
 --- !u!1 &5682756847848722927 stripped
 GameObject:
@@ -256,7 +256,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 841354358498415354, guid: a90e2b4f6cd8eca41a51675de1ae6619, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1150
+      value: -1000
       objectReference: {fileID: 0}
     - target: {fileID: 841354358498415354, guid: a90e2b4f6cd8eca41a51675de1ae6619, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -295,7 +295,7 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 841354358498415354, guid: a90e2b4f6cd8eca41a51675de1ae6619, type: 3}
   m_PrefabInstance: {fileID: 1623839265713363691}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &7767933039568825141
+--- !u!1001 &3217753062362657165
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -309,7 +309,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5076506519082766742, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_Pivot.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5076506519082766742, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_AnchorMax.x
@@ -333,7 +333,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5076506519082766742, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 800
+      value: 700
       objectReference: {fileID: 0}
     - target: {fileID: 5076506519082766742, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -369,7 +369,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5076506519082766742, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -650
+      value: -250
       objectReference: {fileID: 0}
     - target: {fileID: 5076506519082766742, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -392,10 +392,10 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
---- !u!114 &1252363170253984994 stripped
+--- !u!114 &2215212452621636395 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8839568100434149335, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
-  m_PrefabInstance: {fileID: 7767933039568825141}
+  m_CorrespondingSourceObject: {fileID: 3610130575434048166, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
+  m_PrefabInstance: {fileID: 3217753062362657165}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -403,8 +403,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4142f18492561e642a71e9d80747ab62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillsPanel
---- !u!224 &3296179975029734051 stripped
+--- !u!224 &7697952025751789595 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5076506519082766742, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
-  m_PrefabInstance: {fileID: 7767933039568825141}
+  m_PrefabInstance: {fileID: 3217753062362657165}
   m_PrefabAsset: {fileID: 0}

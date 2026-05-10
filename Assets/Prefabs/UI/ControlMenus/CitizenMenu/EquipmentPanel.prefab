@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60a021714106563439937b66f0e23da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentPanel
-  weaponWidget: {fileID: 3096384344836116148}
+  weaponWidget: {fileID: 2723929417158471382}
 --- !u!1 &6876879084659113206
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,17 +377,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41912c9dfa96da045812ce6b3682d93a, type: 3}
---- !u!114 &3096384344836116148 stripped
+--- !u!114 &2723929417158471382 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4965259204163440135, guid: 41912c9dfa96da045812ce6b3682d93a, type: 3}
+  m_CorrespondingSourceObject: {fileID: 5466774592634269285, guid: 41912c9dfa96da045812ce6b3682d93a, type: 3}
   m_PrefabInstance: {fileID: 7931038884927832243}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 089bb96b991ccf4479525f510d37c80f, type: 3}
+  m_Script: {fileID: 11500000, guid: ee225a5e25416334b9f32ade594e3e77, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EquipmentWidget
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryEquipmentWidget
 --- !u!224 &7950038434647105645 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 19281094494445790, guid: 41912c9dfa96da045812ce6b3682d93a, type: 3}

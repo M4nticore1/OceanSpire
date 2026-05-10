@@ -1919,30 +1919,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1679691449546804637}
     m_Modifications:
-    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 600
-      objectReference: {fileID: 0}
-    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 350
-      objectReference: {fileID: 0}
-    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 490
-      objectReference: {fileID: 0}
-    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -175
-      objectReference: {fileID: 0}
     - target: {fileID: 1444914251701411287, guid: a2e0ac219a74f9749b18c2433b611b50, type: 3}
       propertyPath: m_Name
       value: SelectEquipmentMenu
@@ -2030,6 +2006,30 @@ PrefabInstance:
     - target: {fileID: 2765110158927145736, guid: a2e0ac219a74f9749b18c2433b611b50, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 600
+      objectReference: {fileID: 0}
+    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 350
+      objectReference: {fileID: 0}
+    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 490
+      objectReference: {fileID: 0}
+    - target: {fileID: 3267959103833279762, guid: 481dc9992a9cd4c4ba54a71296fd92ce, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -175
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3427,6 +3427,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1679691449546804637}
     m_Modifications:
+    - target: {fileID: 3694181404177511485, guid: c7e6d9e6845559d4dbb50c6739188c1f, type: 3}
+      propertyPath: selectEquipmentMenu
+      value: 
+      objectReference: {fileID: 7710872699722096961}
     - target: {fileID: 4355429566830122079, guid: c7e6d9e6845559d4dbb50c6739188c1f, type: 3}
       propertyPath: selectEquipmentMenu
       value: 

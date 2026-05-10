@@ -1,9 +1,21 @@
-using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SelectGroup : MonoBehaviour
 {
-    [SerializeField] private CustomButton[] buttons;
+    private List<CustomButton> buttons = new();
+
+    public void AddButton(CustomButton button)
+    {
+        if (buttons.Contains(button)) return;
+
+        buttons.Add(button);
+    }
+
+    public void RemoveButton(CustomButton button)
+    {
+        buttons.Remove(button);
+    }
 
     public void OnButtonSelected(CustomButton selectedButton)
     {

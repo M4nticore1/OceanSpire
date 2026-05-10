@@ -1,10 +1,10 @@
 using TMPro;
 using UnityEngine;
 
-public class WeaponItemWidget : ResourceWidget
+public class EquipmentItemWidget : ResourceWidget
 {
     [Header("Weapon")]
-    [SerializeField] TextMeshProUGUI damageText;
+    [SerializeField] TextMeshProUGUI powerText;
 
     public override void SetItem(ItemDefinition definition)
     {
@@ -13,6 +13,6 @@ public class WeaponItemWidget : ResourceWidget
         WeaponDefinition weapon = definition as WeaponDefinition;
         if (!weapon) return;
 
-        damageText.SetText(weapon.Damage.ToString());
+        powerText.SetText(weapon.Damage.ToString());
     }
 }

@@ -3,8 +3,11 @@ using UnityEngine;
 public abstract class EquipmentDefinition : ItemDefinition
 {
     [Header("Equipment")]
-    [SerializeField] EquipmentCategory category;
-    public EquipmentCategory Category => category;
+    [SerializeField] EquipmentCategory equipmentCategory;
+    public EquipmentCategory EquipmentCategory => equipmentCategory;
+
+    [SerializeField] private Equipment equipmentPrefab;
+    public Equipment EquipmentPrefab => equipmentPrefab;
 
     [SerializeField] private float power = 0;
     public float Power => power;

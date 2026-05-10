@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class EquipmentMenu : ControlMenu
 {
     [SerializeField] private EquipmentCategory equipmentCategory;
-    [SerializeField] private WeaponItemWidget equipmentWidget;
+    [SerializeField] private EquipmentItemWidget equipmentWidget;
     [SerializeField] private LayoutGroup layoutGroup;
 
     protected override void Start()
@@ -35,7 +35,7 @@ public class EquipmentMenu : ControlMenu
             var weapon = item.Definition as WeaponDefinition;
             if (!weapon) return;
 
-            if (weapon.Category != equipmentCategory) return;
+            if (weapon.EquipmentCategory != equipmentCategory) return;
 
             var widget = Instantiate(equipmentWidget, layoutGroup.transform);
             widget.SetItem(weapon);

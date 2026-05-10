@@ -85,7 +85,7 @@
   "skills": "Навыки",
   "skill_cooking": "Готовка",
   "skill_farming": "Фермерство",
-  "skill_electricity": "Электричество",
+  "skill_electrics": "Электрика",
   "skill_crafting": "Крафтинг",
   "skill_medicine": "Медицина",
   "skill_science": "Наука",
@@ -144,6 +144,6 @@
   "last_name_female_smith": "Смит",
   "last_name_female_taylor": "Тэйлор",
   "last_name_female_wilson": "Уилсон",
-  "last_name_female_fletcher": "Флетчек",
+  "last_name_female_fletcher": "Флетчер",
   "last_name_female_stone": "Стоун"
 }

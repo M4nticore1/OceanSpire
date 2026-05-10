@@ -56,7 +56,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     public bool IsSelected => state == CustomButtonState.Selected;
     public bool IsEnabled => state != CustomButtonState.Disabled;
     public bool isAnimating { get; private set; } = false;
-    private bool isPointerHovered => PointerUtils.IsUIHovered(gameObject);
 
     [SerializeField] private CustomSelectableStateEntry idleState = new CustomSelectableStateEntry()
     {
@@ -126,6 +125,10 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         InputListener.Instance.onPressed += OnPointerPressed;
         InputListener.Instance.onReleased += OnPointerReleased;
 
+        if (selectGroup) {
+            selectGroup.AddButton(this);
+        }
+
         EndTransitionAnimation();
     }
 
@@ -135,6 +138,10 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         InputListener.Instance.onPressed -= OnPointerPressed;
         InputListener.Instance.onReleased -= OnPointerReleased;
+
+        if (selectGroup) {
+            selectGroup.RemoveButton(this);
+        }
     }
 
     private void Update()
@@ -182,6 +189,18 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         ApplyContentTargetColor();
     }
 
+    public void SetSelectGroup(SelectGroup selectGroup)
+    {
+        this.selectGroup = selectGroup;
+        selectGroup.AddButton(this);
+    }
+
+    public void RemoveSelectGroup()
+    {
+        selectGroup = null;
+        selectGroup.RemoveButton(this);
+    }
+
     public void OnSelectGroupButtonSelected(CustomButton button)
     {
         if (button == this) return;
@@ -201,9 +220,9 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (!IsEnabled) return;
         if (!IsInteractable) return;
+        if (IsSelected) return;
 
-        if (!IsSelected)
-            SetState(CustomButtonState.Hovered);
+        SetState(CustomButtonState.Hovered);
     }
 
     private void Hover()
@@ -218,9 +237,9 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (!IsEnabled) return;
         if (!IsInteractable) return;
+        if (IsSelected) return;
 
-        if (!IsSelected)
-            SetState(CustomButtonState.Idle);
+        SetState(CustomButtonState.Idle);
     }
 
     private void Unhover()
@@ -254,7 +273,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!IsEnabled) return;
         if (!IsInteractable) return;
         if (!IsPressed && !deselectOnOutsideClick) return;
-        if (IsSelected && isPointerHovered) return;
+        //if (IsSelected && isPointerHovered) return;
 
         if (IsPressed) {
             if (IsSelectable)

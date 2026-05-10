@@ -1028,8 +1028,41 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8389494512692052445, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1840381992732999335}
   m_SourcePrefab: {fileID: 100100000, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+--- !u!1 &164877027300304693 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8389494512692052445, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+  m_PrefabInstance: {fileID: 8513133735699425000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1840381992732999335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164877027300304693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4142f18492561e642a71e9d80747ab62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillsPanel
+  skillWidgetPrefab: {fileID: 2430878040155571105, guid: b76f5bd1f948e0340b4176f8f77c0b76, type: 3}
+  layoutGroup: {fileID: 4398628544752614646}
+--- !u!114 &4398628544752614646 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5417737290340194846, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+  m_PrefabInstance: {fileID: 8513133735699425000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
 --- !u!224 &7728368124975035845 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2117843957883114285, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}

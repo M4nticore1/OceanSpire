@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AttackComponent : MonoBehaviour
 {
-    [SerializeField] private WeaponEquipment weaponHandler;
+    [SerializeField] private EquipmentComponent weaponComponent;
     [SerializeField] private Movement movement;
     [SerializeField] private HealthComponent health;
 
@@ -151,8 +151,8 @@ public class AttackComponent : MonoBehaviour
         }
     }
 
-    private int GetDamage()
+    private float GetDamage()
     {
-        return weaponHandler.GetDamage();
+        return weaponComponent.GetPower();
     }
 }

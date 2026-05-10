@@ -15,8 +15,9 @@ public class ResourceWidget : UIBehaviour
     public IItemAmount Limit { get; private set; }
 
     [Header("UI")]
-    [SerializeField] private Image resourceImage;
+    [SerializeField] private TextLocalizer itemNameText;
     [SerializeField] private TextMeshProUGUI resourceAmountText;
+    [SerializeField] private Image resourceImage;
     [SerializeField] private Image resourceAmountBar;
 
     [Header("Color")]
@@ -28,6 +29,7 @@ public class ResourceWidget : UIBehaviour
     {
         base.OnEnable();
 
+        TryUpdateItemName();
         UpdateAmount();
     }
 
@@ -35,6 +37,7 @@ public class ResourceWidget : UIBehaviour
     {
         base.Start();
 
+        TryUpdateItemName();
         UpdateAmountFromDefinition();
         UpdateAmount();
     }
@@ -102,6 +105,13 @@ public class ResourceWidget : UIBehaviour
 
         SetAmount(item);
         return true;
+    }
+
+    private void TryUpdateItemName()
+    {
+        if (!itemNameText) return;
+
+        itemNameText.SetLocalizationItem(itemDefinition.NameLocalization);
     }
 
     private void UpdateAmount()

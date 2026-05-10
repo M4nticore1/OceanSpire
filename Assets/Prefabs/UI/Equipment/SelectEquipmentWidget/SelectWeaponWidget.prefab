@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3103122694405168622, guid: 7279f399ae8409843ae7e180f209cac9, type: 3}
       propertyPath: m_Name
-      value: WeaponWidget
+      value: SelectWeaponWidget
       objectReference: {fileID: 0}
     - target: {fileID: 5530129912881569162, guid: 7279f399ae8409843ae7e180f209cac9, type: 3}
       propertyPath: m_Pivot.x

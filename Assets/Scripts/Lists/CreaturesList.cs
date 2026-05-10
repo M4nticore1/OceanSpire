@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem.Utilities;
 
 [CreateAssetMenu(fileName = "CreaturesList", menuName = "GameContent/Creatures List")]
 public class CreaturesList : ScriptableObject
@@ -20,15 +21,23 @@ public class CreaturesList : ScriptableObject
     }
 
     [SerializeField] private Creature[] creatures;
+    public ReadOnlyArray<Creature> Creatures => creatures;
+
     [SerializeField] private Dictionary<int, Creature> creaturesDict = new();
 
     [SerializeField] private Creature[] citizens;
+    public ReadOnlyArray<Creature> Citizens => citizens;
+
     [SerializeField] private Dictionary<int, Creature> citizensDict = new();
 
     [SerializeField] private Creature[] wanderers;
+    public ReadOnlyArray<Creature> Wanderers => wanderers;
+
     [SerializeField] private Dictionary<int, Creature> wanderersDict = new();
 
     [SerializeField] private Creature[] raiders;
+    public ReadOnlyArray<Creature> Raiders => raiders;
+
     [SerializeField] private Dictionary<int, Creature> raidersDict = new();
 
     private void Init()

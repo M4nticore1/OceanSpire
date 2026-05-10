@@ -797,6 +797,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ProvisionsList
       objectReference: {fileID: 0}
+    - target: {fileID: 2808804265490826206, guid: 6b86a49e2ff04d749a91b074c4fcb335, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3369811303394058941, guid: 6b86a49e2ff04d749a91b074c4fcb335, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1166,6 +1170,10 @@ PrefabInstance:
     - target: {fileID: 2808804265490826206, guid: 6b86a49e2ff04d749a91b074c4fcb335, type: 3}
       propertyPath: m_Name
       value: WeaponsList
+      objectReference: {fileID: 0}
+    - target: {fileID: 2808804265490826206, guid: 6b86a49e2ff04d749a91b074c4fcb335, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3369811303394058941, guid: 6b86a49e2ff04d749a91b074c4fcb335, type: 3}
       propertyPath: m_AnchorMax.x

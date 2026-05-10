@@ -22,6 +22,7 @@ public class StorageManagementList : ManagementList
     protected override void CreateWidgets()
     {
         foreach (var item in CityStorage.Instance.Inventory.Items) {
+            if (!item.Definition.ShowInStorage) continue;
             if (item.Definition.ItemCategory != itemCategory) continue;
 
             var widget = Instantiate(itemWidgetPrefab, LayoutGroup.transform);

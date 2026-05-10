@@ -19,9 +19,9 @@ MonoBehaviour:
   localizationItem: {fileID: 11400000, guid: 2b478cf960410074dbc0995d13ca785b, type: 2}
   itemIcon: {fileID: 21300000, guid: b751e879ede5b1443982d88ae6fd1d55, type: 3}
   showInStorage: 1
-  category: 0
-  power: 0
+  equipmentCategory: 0
+  equipmentPrefab: {fileID: 7020424732878029919, guid: 233a31aa7d095db489d0a643c1ee560b, type: 3}
+  power: 5
   defaultEquipment: 0
-  weaponPrefab: {fileID: 7020424732878029919, guid: 4b23172d7f81a014a937c1b9c3a00248, type: 3}
   damage: 5
   attackMethods: 1

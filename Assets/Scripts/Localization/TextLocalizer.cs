@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [Serializable]
 public enum TextRole
@@ -11,9 +12,10 @@ public enum TextRole
     Title
 }
 
-public class TextLocalizer : MonoBehaviour
+public class TextLocalizer : UIBehaviour
 {
     private TextMeshProUGUI textBlock;
+    private TextMeshProUGUI TextBlock => textBlock ? textBlock : GetComponent<TextMeshProUGUI>();
 
     [SerializeField] private TextRole textRole = TextRole.Default;
     [SerializeField] private LocalizationItem item;
@@ -21,8 +23,10 @@ public class TextLocalizer : MonoBehaviour
     [SerializeField] private MonoBehaviour localizationTarget;
     private ILocalizable LocalizationTarget = null;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         textBlock = GetComponent<TextMeshProUGUI>();
 
         if (localizationTarget) {
@@ -30,14 +34,18 @@ public class TextLocalizer : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         LocalizationManager.Instance.OnLocalizationChanged += OnLocalizationChanged;
         UpdateText();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+
         LocalizationManager.Instance.OnLocalizationChanged -= OnLocalizationChanged;
     }
 
@@ -75,7 +83,7 @@ public class TextLocalizer : MonoBehaviour
 
     public void SetText(string text)
     {
-        textBlock.SetText(text);
+        TextBlock.SetText(text);
     }
 
     private void UpdateFont()
@@ -86,7 +94,7 @@ public class TextLocalizer : MonoBehaviour
 
     private void SetFont(TMP_FontAsset font)
     {
-        textBlock.font = font;
+        TextBlock.font = font;
     }
 
     private void OnLocalizationChanged()

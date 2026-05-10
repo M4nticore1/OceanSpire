@@ -66,6 +66,7 @@ MonoBehaviour:
   agent: {fileID: 1338494420481879648}
   movement: {fileID: -7493649843608556168}
   instanceId: {fileID: 6196963818731621145}
+  currentStatusEnum: 0
   genderComponent: {fileID: -6894311141705426696}
   nameComponent: {fileID: 6264695886038843937}
   healthComponent: {fileID: 4098557255172134659}
@@ -74,7 +75,7 @@ MonoBehaviour:
   interactComponent: {fileID: 6316746746762001490}
   boatRider: {fileID: 6497944028369977301}
   attackComponent: {fileID: 774651871998097940}
-  weaponEquipment: {fileID: 8499683307490277393}
+  weaponComponent: {fileID: 8499683307490277393}
   skillsComponent: {fileID: 4701473922447632886}
   selectComponent: {fileID: 8364959695361298754}
   contextMenuTarget: {fileID: 7000859086802169914}
@@ -184,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd216d9cff4b16e47bbc88dc23d1f25a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Attack
-  weaponHandler: {fileID: 8499683307490277393}
+  weaponComponent: {fileID: 8499683307490277393}
   movement: {fileID: -7493649843608556168}
   health: {fileID: 4098557255172134659}
   damage: 10
@@ -200,10 +201,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6506537361480025273}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f10afa5003e153409a886bde52286b6, type: 3}
+  m_Script: {fileID: 11500000, guid: b4dfae5b3c86be74a9fa79356019a23e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponHandler
   spawnPoint: {fileID: 0}
+  defaultEquipment: {fileID: 11400000, guid: 37e13bf8008be8941bff3ae7dd92cecc, type: 2}
 --- !u!114 &-7493649843608556168
 MonoBehaviour:
   m_ObjectHideFlags: 0
