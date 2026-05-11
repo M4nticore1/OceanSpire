@@ -30,7 +30,7 @@ public class ConstructionComponent : MonoBehaviour
     {
         if (data != null) {
             CurrentConstructionTime = data.ConstructionTime;
-            IsUnderConstruction = data.UnderConstruction;
+            IsUnderConstruction = data.IsUnderConstruction;
 
             if (IsUnderConstruction) {
                 StartConstruction();

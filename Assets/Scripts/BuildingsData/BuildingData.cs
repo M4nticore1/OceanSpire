@@ -4,16 +4,26 @@ using UnityEngine;
 [Serializable]
 public class BuildingData
 {
-    public int Id { get; private set; } = 0;
-    public int InstanceId { get; private set; } = 0;
-    public int Level { get; private set; } = 1;
-    public ConstructionData ConstructionData { get; private set; }
+    public int Id = 0;
+    public int InstanceId = 0;
+    public int Level = 1;
+    public ConstructionData Construction;
+    public CraftingModuleData Crafting;
 
-    public BuildingData(int id, int instanceId, int level, ConstructionData constructionData)
+    protected void Fill(Building building)
     {
-        Id = id;
-        InstanceId = instanceId;
-        Level = level;
-        ConstructionData = constructionData;
+        Id = building.BuildingData.BuildingId;
+        InstanceId = building.InstanceId.Id;
+        Level = building.LevelComponent.Level;
+        Construction = ConstructionData.Create(building.ConstructionComponent);
+        Crafting = CraftingModuleData.Create(building.GetComponent<ProductionModule>());
+    }
+
+    public static BuildingData Create(Building building)
+    {
+        BuildingData data = new BuildingData();
+        data.Fill(building);
+
+        return data;
     }
 }

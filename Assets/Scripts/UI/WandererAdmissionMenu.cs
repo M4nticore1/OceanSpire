@@ -49,7 +49,7 @@ public class WandererAdmissionMenu : MonoBehaviour
     {
         if (!isOpened) return;
 
-        selectedHuman.BoatRider.selectedBoat.SelectComponent.Deselect();
+        selectedHuman.BoatRider.SelectedBoat.SelectComponent.Deselect();
         isOpened = false;
     }
 

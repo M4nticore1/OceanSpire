@@ -103,7 +103,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
         BuildingPlace startPlace;
         if (IsRidingOnElevator && CurrentElevator.spawnedElevatorCabin.isMoving) {
             int nextFloor = CurrentElevator.spawnedElevatorCabin.nextFloor;
-            startTowerBuilding = BuildingsManager.instance.BuiltFloors[nextFloor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
+            startTowerBuilding = BuildingsManager.Instance.BuiltFloors[nextFloor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
             startPlace = startTowerBuilding ? startTowerBuilding.BuildingPlace : null;
         }
         else {

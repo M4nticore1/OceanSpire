@@ -1,23 +1,28 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class BoatRiderData
 {
-    public int boatInstanceId { get; private set; } = 0;
-    public bool isRiding { get; private set; } = false;
-
-    public BoatRiderData(int boatInstanceId, bool isRiding)
-    {
-        this.boatInstanceId = boatInstanceId;
-        this.isRiding = isRiding;
-    }
+    public int? BoatInstanceId = null;
+    public bool IsRiding = false;
 
     public void SetBoatInstanceId(int value)
     {
-        boatInstanceId = value;
+        BoatInstanceId = value;
     }
 
     public void SetRiding(bool value)
     {
-        isRiding = value;
+        IsRiding = value;
+    }
+
+    public static BoatRiderData Create(BoatRider boatRider)
+    {
+        return new BoatRiderData()
+        {
+            BoatInstanceId = boatRider.SelectedBoat?.InstanceId.Id,
+            IsRiding = boatRider.IsRidingOnBoat
+        };
     }
 }

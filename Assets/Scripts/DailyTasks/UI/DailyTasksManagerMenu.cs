@@ -50,8 +50,8 @@ public class DailyTasksManagerMenu : MonoBehaviour, IOpenable
 
     private void CreateTaskWidgets()
     {
-        for (int i = 0; i < DailyTasksManager.Instance.Tasks.Count; i++) {
-            CreateTaskWidget(DailyTasksManager.Instance.Tasks[i]);
+        for (int i = 0; i < DailyTasksManager.Instance.CurrentTasks.Count; i++) {
+            CreateTaskWidget(DailyTasksManager.Instance.CurrentTasks[i]);
         }
 
         areWidgetsSpawned = true;

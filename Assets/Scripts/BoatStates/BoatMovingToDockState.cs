@@ -28,6 +28,6 @@ public class BoatMovingToDockState : BoatState
 
     private void StartMovingToDock()
     {
-        boat.Movement.TryMoveTo(boat.dockPoint.DockTransform.position);
+        boat.Movement.TryMoveTo(boat.DockPoint.DockTransform.position);
     }
 }

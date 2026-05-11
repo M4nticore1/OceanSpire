@@ -9,14 +9,15 @@ public class CitizensLoader : MonoBehaviour
 
     private void Start()
     {
-        WorldData saveData = WorldSaveManager.Instance.currentSaveWorldData;
+        WorldData saveData = WorldSaveManager.Instance.CurrentWorldData;
+        HumanData[] citizens = saveData != null ? saveData.Citizens : null;
 
         Vector3 position = Vector3.zero;
         Vector3 rotation = Vector3.zero;
 
-        if (saveData != null) {
-            foreach (var data in saveData.citizensData) {
-                Human citizen = CreatureFactory.CreateCitizen(data);
+        if (citizens != null) {
+            foreach (var data in saveData.Citizens) {
+                Human citizen = CreatureFactory.CreateHuman(data);
             }
         }
         else {
@@ -30,11 +31,11 @@ public class CitizensLoader : MonoBehaviour
 
                 Vector3 finalPosition = new Vector3(x, y, z);
 
-                HumanDataV1 data = HumanDataFactory.CreateRandomCitizenData();
-                data.SetPosition(finalPosition);
-                data.SetRotation(rotation);
+                HumanData data = HumanDataFactory.CreateRandomCitizenData();
+                data.Position = new Vector3Data(finalPosition);
+                data.Rotation = new Vector3Data(rotation);
 
-                Human citizen = CreatureFactory.CreateCitizen(data);
+                Human citizen = CreatureFactory.CreateHuman(data);
             }
         }
     }

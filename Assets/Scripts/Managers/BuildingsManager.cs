@@ -5,10 +5,13 @@ using UnityEngine.UIElements;
 
 public class BuildingsManager : MonoBehaviour
 {
-    public static BuildingsManager instance;
+    public static BuildingsManager Instance;
 
     [SerializeField] private List<FloorFrameModule> builtFloors = new List<FloorFrameModule>();
     public List<FloorFrameModule> BuiltFloors => builtFloors;
+
+    [SerializeField] private Transform firstFloorBuildingTransform;
+    public Transform FirstFloorBuildingTransform => firstFloorBuildingTransform;
 
     [Header("Environment Buildings")]
     [SerializeField] private GroundBuilding towerGate;
@@ -28,7 +31,7 @@ public class BuildingsManager : MonoBehaviour
     public const int RoomsWidth = 8;
     public const int FloorWidth = 24;
     public const int FirstBuildCityBuildingPlace = 1;
-    public float currentCityHeight { get; private set; } = 0;
+    public float CurrentCityHeight { get; private set; } = 0;
 
     public List<List<ElevatorModule>> elevatorGroups { get; private set; } = new List<List<ElevatorModule>>();
 
@@ -40,29 +43,39 @@ public class BuildingsManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance) {
+        if (Instance) {
             Destroy(gameObject);
             return;
         }
 
-        instance = this;
+        Instance = this;
     }
 
     private void OnEnable()
     {
         EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
-        Building.onBuildingInited += OnBuildingInited;
-        Building.onBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
         EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
-        Building.onBuildingInited -= OnBuildingInited;
-        Building.onBuildingDemolished -= OnBuildingDemolished;
     }
 
-    // Utils
+    public void RegisterFloorModule(FloorFrameModule floorModule)
+    {
+        if (!builtFloors.Contains(floorModule)) {
+            builtFloors.Add(floorModule);
+        }
+
+        UpdateCityHeight();
+    }
+
+    public void UnregisterFloorModule(FloorFrameModule floorModule)
+    {
+        builtFloors.Remove(floorModule);
+        UpdateCityHeight();
+    }
+
     public TowerBuilding GetBuildingByIndex(int floorIndex, int buildingPlaceIndex)
     {
         TowerBuilding building = null;
@@ -92,68 +105,10 @@ public class BuildingsManager : MonoBehaviour
         EventBus.InvokeBuildingStartPlacing(widget.buildingPrefab);
     }
 
-    private void OnBuildingInited(Building building)
-    {
-        var floorFrame = building.GetComponent<FloorFrameModule>();
-
-        if (floorFrame) {
-            if (builtFloors.Count == (floorFrame.OwnedBuilding as TowerBuilding).FloorIndex) {
-                builtFloors.Add(floorFrame);
-            }
-
-            UpdateEmptyBuildingPlacesCount();
-            UpdateCityHeight();
-        }
-    }
-
-    private void OnBuildingDemolished(Building building)
-    {
-        UpdateEmptyBuildingPlacesCount();
-        UpdateCityHeight();
-    }
-
-    private void UpdateEmptyBuildingPlacesCount()
-    {
-        List<int> lastPlacedRoomsFloorIndex = new List<int>();
-        for (int i = 0; i < RoomsCountPerFloor; i++)
-            lastPlacedRoomsFloorIndex.Add(0);
-
-        int lastPlacedHallFloorIndex = 0;
-
-        for (int i = 0; i < builtFloors.Count; i++) {
-            // Set room heights
-            bool isRoomPlacedOnFloor = false;
-            for (int j = 0; j < RoomsCountPerFloor; j++) {
-                if (builtFloors[i].RoomBuildingPlaces[j].PlacedBuilding)
-                    isRoomPlacedOnFloor = true;
-
-                if (builtFloors[i].RoomBuildingPlaces[j].PlacedBuilding)
-                    lastPlacedRoomsFloorIndex[j] = i;
-
-                for (int k = lastPlacedRoomsFloorIndex[j]; k <= i; k++) {
-                    builtFloors[k].RoomBuildingPlaces[j].emptyBuildingPlacesAbove = i - k;
-
-                    if (k != lastPlacedRoomsFloorIndex[j])
-                        builtFloors[k].RoomBuildingPlaces[j].emptyBuildingPlacesBelow = k - lastPlacedRoomsFloorIndex[j] - 1;
-                }
-            }
-
-            // Set hall heights
-            if (builtFloors[i].HallBuildingPlace.PlacedBuilding || isRoomPlacedOnFloor) {
-                lastPlacedHallFloorIndex = i;
-            }
-
-            for (int k = lastPlacedHallFloorIndex; k <= i; k++) {
-                builtFloors[k].HallBuildingPlace.emptyBuildingPlacesAbove = i - k;
-
-                if (k != lastPlacedHallFloorIndex)
-                    builtFloors[k].HallBuildingPlace.emptyBuildingPlacesBelow = k - lastPlacedHallFloorIndex - 1;
-            }
-        }
-    }
-
     private void UpdateCityHeight()
     {
-        currentCityHeight = builtFloors[builtFloors.Count - 1].transform.position.y + FloorHeight;
+        if (builtFloors.Count <= 0) return;
+
+        CurrentCityHeight = builtFloors[builtFloors.Count - 1].transform.position.y + FloorHeight;
     }
 }

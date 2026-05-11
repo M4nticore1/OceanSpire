@@ -16,19 +16,19 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     [SerializeField] private TaskDefinitions[] taskDefinitions;
 
     [Header("Update Tasks")]
-    [SerializeField] private int updateTasksTimeHour = 0;
+    [SerializeField] private int updateTasksTimeOffset = 0;
 
-    private long nextUpdateTime = 0;
+    public long NextRestTime { get; private set; } = 0;
+    public bool IsAdUpdateUsed { get; private set; } = false;
     private bool isUpdated = false;
-    private bool isAdUpdateUsed = false;
 
-    private List<DailyTaskInstance> tasks = new();
-    public IReadOnlyList<DailyTaskInstance> Tasks => tasks.AsReadOnly();
+    private List<DailyTaskInstance> currentTasks = new();
+    public IReadOnlyList<DailyTaskInstance> CurrentTasks => currentTasks.AsReadOnly();
 
     public event Action onTasksInited;
     public event Action<bool> onAdUpdateUsedSetTrue;
 
-    private void Start()
+    private void Awake()
     {
         if (Instance) {
             Destroy(gameObject);
@@ -36,66 +36,39 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         }
 
         Instance = this;
-
-        WorldData worldData = WorldSaveManager.Instance.currentSaveWorldData;
-        var data = worldData != null ? worldData.DailyTasksData : null;
-        Init(data);
     }
 
     private void Update()
     {
-        if (TimeManager.GetCurrentSecond() >= nextUpdateTime) {
-            if (TryUpdateTasks()) {
-                SetNextUpdateTime(CalculateNextUpdateSecond());
-                SetAdUpdateUsedSetTrue(false);
-            }
+        if (TimeManager.GetCurrentSecond() >= NextRestTime) {
+            if (!TryUpdateTasks()) return;
+
+            UpdateNextResetTime();
+            SetAdUpdateUsedSetTrue(false);
         }
         else {
             SetUpdated(false);
         }
     }
 
-    public void Init(DailyTasksDataV1 data)
+    public void Init(DailyTasksData data)
     {
-        if (data != null) {
-            CreateTasks(data.TaskIds, data.TaskProgresses);
-            SetNextUpdateTime(data.NextUpdateTime);
-            SetAdUpdateUsedSetTrue(data.AdUpdateUsed);
-            
-        }
-        else {
-            CreateTasks(GetRandomTaskIds(), GetEmptyTaskProgresses());
-            SetNextUpdateTime(CalculateNextUpdateSecond());
-        }
+        CreateTasks(data != null && data.Tasks != null ? data.Tasks : GetRandomTaskIds());
+        SetNextUpdateTime(data != null ? data.NextRestTime : CalculateNextUpdateSecond());
+        SetAdUpdateUsedSetTrue(data != null ? data.IsAdUpdateUsed : false);
     }
 
     public void UpdateTasks()
     {
         RemoveTasks();
-        CreateTasks(GetRandomTaskIds(), GetEmptyTaskProgresses());
+        CreateTasks(GetRandomTaskIds());
         SetUpdated(true);
     }
 
     public void SetAdUpdateUsedSetTrue(bool value)
     {
-        isAdUpdateUsed = value;
+        IsAdUpdateUsed = value;
         onAdUpdateUsedSetTrue?.Invoke(value);
-    }
-
-    public DailyTasksDataV1 GetCurrentData()
-    {
-        int[] taskIds = new int[tasks.Count];
-        int[] taskProgresses = new int[tasks.Count];
-
-        for (int i = 0; i < tasks.Count; i++) {
-            DailyTaskInstance task = tasks[i];
-            taskIds[i] = tasks.IndexOf(task);
-            taskProgresses[i] = task.Progress;
-        }
-
-        DailyTasksDataV1 data = new DailyTasksDataV1(taskIds, taskProgresses, nextUpdateTime, isAdUpdateUsed);
-
-        return data;
     }
 
     public Dictionary<string, string> GetLocalization()
@@ -106,49 +79,53 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         };
     }
 
+    private void SetUpdated(bool value)
+    {
+        isUpdated = true;
+    }
+
+    private void CreateTasks(DailyTaskInstanceData[] taskData)
+    {
+        for (int i = 0; i < taskData.Length; i++) {
+            CreateTask(taskData[i]);
+        }
+
+        onTasksInited?.Invoke();
+    }
+
+    private void CreateTask(DailyTaskInstanceData data)
+    {
+        DailyTaskDefinition definition = DailyTasksList.Instance.GetTaskDefinition(data.Id);
+        DailyTaskInstance task = new DailyTaskInstance(definition, data.Progress, data.IsCompleted);
+
+        currentTasks.Add(task);
+    }
+
+    private void RemoveTasks()
+    {
+        for (int i = currentTasks.Count - 1; i >= 0; i--) {
+            DailyTaskInstance task = currentTasks[i];
+            task.RemoveTask();
+            currentTasks.RemoveAt(i);
+        }
+    }
+
+    private void UpdateNextResetTime()
+    {
+        SetNextUpdateTime(CalculateNextUpdateSecond());
+    }
+
+    private void SetNextUpdateTime(long seconds)
+    {
+        NextRestTime = seconds;
+    }
+
     private bool TryUpdateTasks()
     {
         if (isUpdated) return false;
 
         UpdateTasks();
         return true;
-    }
-
-    private void SetUpdated(bool value)
-    {
-        isUpdated = true;
-    }
-
-    private void CreateTasks(int[] tasksId, int[] tasksProgress)
-    {
-        for (int i = 0; i < tasksId.Length; i++) {
-            DailyTaskDefinition definition = taskDefinitions[i].taskDefinitions[tasksId[i]];
-            int progress = tasksProgress[i];
-
-            CreateTask(definition, progress);
-        }
-
-        onTasksInited?.Invoke();
-    }
-
-    private void CreateTask(DailyTaskDefinition definition, int progress)
-    {
-        DailyTaskInstance task = new DailyTaskInstance(definition, progress);
-        tasks.Add(task);
-    }
-
-    private void RemoveTasks()
-    {
-        for (int i = tasks.Count - 1; i >= 0; i--) {
-            DailyTaskInstance task = tasks[i];
-            task.RemoveTask();
-            tasks.RemoveAt(i);
-        }
-    }
-
-    private void SetNextUpdateTime(long seconds)
-    {
-        nextUpdateTime = seconds;
     }
 
     private string GetUpdateTime()
@@ -162,38 +139,26 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     private long CalculateNextUpdateSecond()
     {
-        long minTargetSecond = updateTasksTimeHour * 3600;
-        long maxTargetSecond = (24 + updateTasksTimeHour) * 3600;
+        long minTargetSecond = updateTasksTimeOffset * 3600;
+        long maxTargetSecond = (24 + updateTasksTimeOffset) * 3600;
         long targetSecond = minTargetSecond - TimeManager.GetCurrentSecond() >= 0 ? minTargetSecond : maxTargetSecond;
 
         return targetSecond;
     }
 
-    private int[] GetRandomTaskIds()
+    private DailyTaskInstanceData[] GetRandomTaskIds()
     {
-        int[] ids = new int[taskDefinitions.Length];
+        DailyTaskInstanceData[] tasksData = new DailyTaskInstanceData[taskDefinitions.Length];
 
-        for (int i = 0; i < ids.Length; i++) {
-            ids[i] = GetRandomTaskId(taskDefinitions[i].taskDefinitions);
+        for (int i = 0; i < tasksData.Length; i++) {
+            tasksData[i] = new DailyTaskInstanceData()
+            {
+                Id = UnityEngine.Random.Range(0, taskDefinitions[i].taskDefinitions.Length),
+                Progress = 0
+            };
         }
 
-        return ids;
-    }
-
-    private int[] GetEmptyTaskProgresses()
-    {
-        int[] progresses = new int[taskDefinitions.Length];
-
-        for (int i = 0; i < progresses.Length; i++) {
-            progresses[i] = 0;
-        }
-
-        return progresses;
-    }
-
-    private int GetRandomTaskId(DailyTaskDefinition[] tasks)
-    {
-        return UnityEngine.Random.Range(0, tasks.Length);
+        return tasksData;
     }
 
     private DailyTaskDefinition GetRandomTaskDefinition(DailyTaskDefinition[] tasks)

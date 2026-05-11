@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerEntry
+public class PlayerData
 {
     public Vector3 cameraRotation;
 }

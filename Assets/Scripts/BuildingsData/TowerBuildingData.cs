@@ -4,12 +4,18 @@ using UnityEngine;
 [Serializable]
 public class TowerBuildingData : BuildingData
 {
-    public int FloorIndex { get; private set; } = 0;
-    public int PlaceIndex { get; private set; } = 0;
+    public int FloorIndex = 0;
+    public int PlaceIndex = 0;
 
-    public TowerBuildingData(int id, int instanceId, int level, ConstructionData constructionData, int floorIndex, int placeIndex) : base(id, instanceId, level, constructionData)
+    public static TowerBuildingData Create(TowerBuilding building)
     {
-        FloorIndex = floorIndex;
-        PlaceIndex = placeIndex;
+        TowerBuildingData data = new TowerBuildingData();
+
+        data.Fill(building);
+
+        data.FloorIndex = building.FloorIndex;
+        data.PlaceIndex = building.PlaceIndex;
+
+        return data;
     }
 }

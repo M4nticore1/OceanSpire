@@ -1,231 +1,162 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[System.Serializable]
-public class WorldData
+public static class WorldDataMigrator
 {
-    //// Main
-    //public string worldName { get; private set; } = "new_world";
-
-    //// Player
-    //public float cameraYawRotation { get; private set; } = 0;
-    //public float cameraHeightPosition { get; private set; } = 0;
-
-    // City
-    //public int builtFloorsCount { get; private set; } = 0;
-    //public int[] placedRoomIds { get; private set; } = new int[0];
-    //public int[] placedRoomLevels { get; private set; } = new int[0];
-    //public bool[] placedRoomsUnderConstruction { get; private set; } = new bool[0];
-    //public int[] placedRoomInteriorIds { get; private set; } = new int[0];
-
-    //public float[] elevatorPlatformHeights { get; private set; } = new float[0];
-
-    //public float[] buildingProductionTimers { get; private set; } = new float[0];
-
-    // Boats
-    public CityDataV1 cityData;
-    public PlayerEntry playerData;
-    public BuildingData[] GroundBuildings;
-    public TowerBuildingData[] towerBuildings;
-    public BoatData[] boatsData;
-    public HumanDataV1[] citizensData;
-
-    public DailyTasksDataV1 DailyTasksData { get; private set; }
-
-    //public int[] spawnedBoatIds { get; private set; } = new int[0];
-    //public bool[] spawnedBoatsAreUnderConstruction { get; private set; } = new bool[0];
-    //public bool[] spawnedBoatsAreFloating { get; private set; } = new bool[0];
-    //public bool[] spawnedBoatsAreReturning { get; private set; } = new bool[0];
-    //public float[] spawnedBoatsHealth { get; private set; } = new float[0];
-    //public float[] spawnedBoatPositionsX { get; private set; } = new float[0];
-    //public float[] spawnedBoatPositionsZ { get; private set; } = new float[0];
-    //public float[] spawnedBoatRotationsY { get; private set; } = new float[0];
-
-    //// Resources
-    //public int[] resourcesAmount { get; private set; } = new int[0];
-
-    //// Residents
-    //public int residentsCount { get; private set; } = 0;
-    //public bool[] residentsIsMoving { get; private set; } = new bool[0];
-    //public float[] residentPositionsX { get; private set; } = new float[0];
-    //public float[] residentPositionsY { get; private set; } = new float[0];
-    //public float[] residentPositionsZ { get; private set; } = new float[0];
-    //public int[] residentFloorIndexes { get; private set; } = new int[0];
-
-    //public int[] residentCurrentBuildingIndexes { get; private set; } = new int[0];
-    //public int[] residentTargetBuildingIndexes { get; private set; } = new int[0];
-    //public int[] residentTowerBuildingWorkIndexes { get; private set; } = new int[0];
-    //public int[] residentBuildingWorkIndexes { get; private set; } = new int[0];
-
-    //public int[] npcElevatorPassengerStates { get; private set; } = new int[0];
-
-    public WorldData(PlayerController playerController)
+    public static WorldData GetWorldData(string json)
     {
-        if (!playerController) {
-            Debug.LogError("playerController is NULL");
-            return;
+        var jObject = JObject.Parse(json);
+
+        if (!jObject.ContainsKey("Version"))
+            throw new Exception("Save file has no Version field");
+
+        int version = jObject["Version"]!.Value<int>();
+
+        switch (version) {
+            case 1:
+                return JsonConvert.DeserializeObject<WorldData>(json);
         }
 
-        //// Main
-        //worldName = SaveManager.Instance.saveWorldName;
+        throw new Exception($"Unsupported save version: {version}");
+    }
+}
 
-        //// Player
-        //cameraYawRotation = playerController.cameraYawRotateAlpha;
-        //cameraHeightPosition = playerController.cameraVerticalPosition.y;
+[Serializable]
+public class WorldData
+{
+    public int Version = 1;
 
-        //// City
-        //builtFloorsCount = CityManager.Instance.BuiltFloors.Count;
-        //int roomsCount = builtFloorsCount * CityManager.roomsCountPerFloor;
-        //placedRoomIds = new int[roomsCount + builtFloorsCount];
-        //placedRoomLevels = new int[roomsCount + builtFloorsCount];
-        //placedRoomsUnderConstruction = new bool[roomsCount + builtFloorsCount];
-        //placedRoomInteriorIds = new int[roomsCount + builtFloorsCount];
-        //buildingProductionTimers = new float[roomsCount + builtFloorsCount];
+    public string WorldName = "";
 
-        //elevatorPlatformHeights = new float[roomsCount];
-        //resourcesAmount = new int[CityManager.Instance.items.Length];
+    public PlayerData Player;
+    public BuildingData[] GroundBuildings;
+    public TowerBuildingData[] FloorFrameBuildings;
+    public TowerBuildingData[] TowerBuildings;
+    public BoatDockData[] CitizenBoatDocks;
+    public BoatDockData[] WandererBoatDocks;
+    public BoatDockData[] RaiderBoatDocks;
+    public BoatData[] Boats;
+    public HumanData[] Citizens;
+    public HumanData[] Wanderers;
+    public HumanData[] Raiders;
+    public ItemData[] Items;
+    public DailyTasksData DailyTasks;
 
-        //int buildingIndex = 0;
-        //int lastElevatorGroupId = -1;
-        //for (int floorIndex = 0; floorIndex < builtFloorsCount; floorIndex++) {
-        //    // Halls
-        //    BuildingPlace hallPlace = CityManager.Instance.BuiltFloors[floorIndex].hallBuildingPlace;
-        //    Building hall = hallPlace.placedBuilding;
-        //    placedRoomIds[buildingIndex] = hall ? hall.BuildingData.BuildingId : -1;
-        //    placedRoomLevels[buildingIndex] = hall ? hall.LevelIndex : -1;
-        //    placedRoomsUnderConstruction[buildingIndex] = hall ? hall.ConstructionComponent.isUnderConstruction : false;
-        //    buildingIndex++;
+    public static WorldData Create(WorldSaveManager saveManager, BuildingsManager buildings, DockPointsManager boatDocks, BoatsManager boats, CreaturesManager creatures, Inventory cityInventory, DailyTasksManager dailyTasks)
+    {
+        return new WorldData()
+        {
+            WorldName = saveManager.SaveWorldName,
 
-        //    // Rooms
-        //    for (int placeIndex = 0; placeIndex < CityManager.roomsCountPerFloor; placeIndex++) {
-        //        Building placedBuilding = CityManager.Instance.BuiltFloors[floorIndex].roomBuildingPlaces[placeIndex].placedBuilding;
-        //        placedRoomIds[buildingIndex] = placedBuilding ? placedBuilding.BuildingData.BuildingId : -1;
-        //        placedRoomLevels[buildingIndex] = placedBuilding ? placedBuilding.LevelIndex : 0;
-        //        placedRoomsUnderConstruction[buildingIndex] = placedBuilding ? placedBuilding.ConstructionComponent.isUnderConstruction : false;
-        //        placedRoomInteriorIds[buildingIndex] = placedBuilding ? placedBuilding.ConstructionComponent.interiorIndex : -1;
+            GroundBuildings = SaveWorldSystem.SaveGroundBuildings(buildings),
+            FloorFrameBuildings = SaveWorldSystem.SaveFloorFrameBuildings(buildings),
+            TowerBuildings = SaveWorldSystem.SaveTowerBuildings(buildings),
 
-        //        ProductionBuildingModule productionBuilding = placedBuilding ? placedBuilding.GetComponent<ProductionBuildingModule>() : null;
-        //        buildingProductionTimers[buildingIndex] = productionBuilding ? productionBuilding.currentProductionTime : 0;
+            CitizenBoatDocks = SaveWorldSystem.SaveBoatDocks(boatDocks.CitizenBoatDocks.ToArray()),
+            WandererBoatDocks = SaveWorldSystem.SaveBoatDocks(boatDocks.WandererDockPoints.ToArray()),
+            RaiderBoatDocks = SaveWorldSystem.SaveBoatDocks(boatDocks.RaiderDockPoints.ToArray()),
 
-        //        // Elevators
-        //        ElevatorBuilding elevatorBuilding = placedBuilding as ElevatorBuilding;
-        //        if (elevatorBuilding && elevatorBuilding.elevatorGroupId > lastElevatorGroupId) {
-        //            elevatorPlatformHeights[buildingIndex] = elevatorBuilding.spawnedElevatorCabin.transform.position.y;
-        //        }
-        //        buildingIndex++;
-        //    }
-        //}
+            Boats = SaveWorldSystem.SaveBoats(boats),
 
-        // Tower Buildings
+            Citizens = SaveWorldSystem.SaveHumans(creatures.Citizens.ToArray()),
+            Wanderers = SaveWorldSystem.SaveHumans(creatures.Wanderers.ToArray()),
+            Raiders = SaveWorldSystem.SaveHumans(creatures.Raiders.ToArray()),
 
+            Items = SaveWorldSystem.SaveItems(cityInventory),
 
-        //for (int i = 0; i < CityManager.Instance.items.Length; i++) {
-        //    resourcesAmount[i] = CityManager.Instance.items[i].Amount;
-        //}
+            DailyTasks = DailyTasksData.Create(dailyTasks),
+        };
+    }
+}
 
-        //// Boats
-        //Boat[] spawnedBoats = BoatsManager.Instance.citizenBoats.ToArray();
-        //int length = spawnedBoats.Length;
-        //boatsData = new BoatEntry[length];
-        //for (int i = 0; i < length; i++) {
-        //    Boat boat = spawnedBoats[i];
-        //    BoatEntry data = new BoatEntry();
-        //    boatsData[i] = data;
+public static class SaveWorldSystem
+{
+    public static BuildingData[] SaveGroundBuildings(BuildingsManager buildingsManager)
+    {
+        BuildingData[] buildings = new BuildingData[buildingsManager.GroundBuildings().Count()];
 
-        //    data.health = boat.CurrentHealth;
-        //}
+        for (int i = 0; i < buildingsManager.GroundBuildings().Count(); i++) {
+            buildings[i] = BuildingData.Create(buildingsManager.GroundBuildings().ToArray()[i]);
+        }
 
-        //int boatsCount = spawnedBoats.Count;
-        //spawnedBoatIds = new int[boatsCount];
-        //spawnedBoatsAreUnderConstruction = new bool[boatsCount];
-        //spawnedBoatsHealth = new float[boatsCount];
-        //spawnedBoatsAreFloating = new bool[boatsCount];
-        //spawnedBoatsAreReturning = new bool[boatsCount];
-        //spawnedBoatPositionsX = new float[boatsCount];
-        //spawnedBoatPositionsZ = new float[boatsCount];
-        //spawnedBoatRotationsY = new float[boatsCount];
-        //for (int i = 0; i < boatsCount; i++)
-        //{
-        //    Boat boat = spawnedBoats[i];
-        //    if (boat)
-        //    {
-        //        ConstructionComponent construction = boat.GetComponent<ConstructionComponent>();
-        //        spawnedBoatIds[i] = boat ? boat.BoatData.BoatId : -1;
-        //        spawnedBoatsAreUnderConstruction[i] = boat ? construction.isUnderConstruction : false;
-        //        spawnedBoatsAreFloating[i] = boat ? boat.isFloating : false;
-        //        spawnedBoatsAreReturning[i] = boat ? boat.isReturningToDock : false;
-        //        spawnedBoatsHealth[i] = boat ? boat.CurrentHealth : 0;
-        //        spawnedBoatPositionsX[i] = boat ? boat.transform.position.x : 0;
-        //        spawnedBoatPositionsZ[i] = boat ? boat.transform.position.z : 0;
-        //        spawnedBoatRotationsY[i] = boat ? boat.transform.rotation.eulerAngles.y : 0;
-        //    }
-        //}
+        return buildings;
+    }
 
-        // Residents
-        //residentsCount = CityManager.Instance.residents.Count;
-        //residentsIsMoving = new bool[residentsCount];
-        //residentPositionsX = new float[residentsCount];
-        //residentPositionsY = new float[residentsCount];
-        //residentPositionsZ = new float[residentsCount];
-        //residentFloorIndexes = new int[residentsCount];
+    public static TowerBuildingData[] SaveFloorFrameBuildings(BuildingsManager buildingsManager)
+    {
+        List<TowerBuildingData> floors = new();
 
-        //residentCurrentBuildingIndexes = new int[residentsCount];
-        //residentTargetBuildingIndexes = new int[residentsCount];
-        //residentTowerBuildingWorkIndexes = new int[residentsCount];
-        //residentBuildingWorkIndexes = new int[residentsCount];
+        foreach (var floor in buildingsManager.BuiltFloors) {
+            TowerBuilding building = floor.TowerOwnedBuilding;
+            if (!building) continue;
 
-        //npcElevatorPassengerStates = new int[residentsCount];
+            floors.Add(TowerBuildingData.Create(building));
+        }
 
-        //for (int i = 0; i < residentsCount; i++)
-        //{
-        //    Human resident = CityManager.Instance.residents[i];
+        return floors.ToArray();
+    }
 
-        //    residentsIsMoving[i] = resident.isMoving;
+    public static TowerBuildingData[] SaveTowerBuildings(BuildingsManager buildingsManager)
+    {
+        List<TowerBuildingData> buildings = new();
 
-        //    residentPositionsX[i] = resident.transform.position.x;
-        //    residentPositionsY[i] = resident.transform.position.y;
-        //    residentPositionsZ[i] = resident.transform.position.z;
-        //    residentFloorIndexes[i] = resident.currentBuilding ? ((TowerBuilding)resident.currentBuilding ? ((TowerBuilding)resident.currentBuilding).floorIndex : -1) : -1;
+        foreach (var floor in buildingsManager.BuiltFloors) {
+            foreach (var place in floor.RoomBuildingPlaces) {
+                TowerBuilding building = place.PlacedBuilding;
+                if (!building) continue;
 
-        //    Building currentBuilding = resident.currentBuilding;
-        //    if (currentBuilding) {
-        //        TowerBuilding towerBuilding = (TowerBuilding)currentBuilding;
-        //        if (towerBuilding)
-        //            residentCurrentBuildingIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
-        //        else
-        //            residentCurrentBuildingIndexes[i] = -1;
-        //    }
-        //    else
-        //        residentCurrentBuildingIndexes[i] = -1;
+                buildings.Add(TowerBuildingData.Create(building));
+            }
+        }
 
-        //    Building targetBuilding = resident.TargetBuilding;
-        //    if (targetBuilding) {
-        //        TowerBuilding towerBuilding = (TowerBuilding)targetBuilding;
-        //        if (towerBuilding)
-        //            residentTargetBuildingIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
-        //        else
-        //            residentTargetBuildingIndexes[i] = -1;
-        //    }
-        //    else
-        //        residentTargetBuildingIndexes[i] = -1;
+        return buildings.ToArray();
+    }
 
-        //    Building workBuilding = resident.workBuilding;
-        //    if (workBuilding) {
-        //        TowerBuilding towerBuilding = workBuilding as TowerBuilding;
-        //        if (towerBuilding) {
-        //            residentTowerBuildingWorkIndexes[i] = towerBuilding.floorIndex * CityManager.roomsCountPerFloor + towerBuilding.placeIndex;
-        //            residentBuildingWorkIndexes[i] = -1;
-        //        }
-        //        else {
-        //            residentTowerBuildingWorkIndexes[i] = -1;
-        //            //residentBuildingWorkIndexes[i] = workBuilding
-        //        }
-        //    }
-        //    else
-        //        residentTowerBuildingWorkIndexes[i] = -1;
+    public static BoatDockData[] SaveBoatDocks(BoatDockPoint[] boatDocks)
+    {
+        BoatDockData[] boatDocksData = new BoatDockData[boatDocks.Length];
 
-        //    npcElevatorPassengerStates[i] = (int)resident.followingPathState;
-        //}
+        for (int i = 0; i < boatDocks.Length; i++) {
+            boatDocksData[i] = BoatDockData.Create(boatDocks[i]);
+        }
+
+        return boatDocksData;
+    }
+
+    public static BoatData[] SaveBoats(BoatsManager boats)
+    {
+        BoatData[] boatsData = new BoatData[boats.Boats.Count];
+
+        for (int i = 0; i < boats.Boats.Count; i++) {
+            boatsData[i] = BoatData.Create(boats.Boats[i]);
+        }
+
+        return boatsData;
+    }
+
+    public static HumanData[] SaveHumans(Human[] humans)
+    {
+        HumanData[] result = new HumanData[humans.Length];
+
+        for (int i = 0; i < humans.Length; i++) {
+            result[i] = HumanData.Create(humans[i]);
+        }
+
+        return result;
+    }
+
+    public static ItemData[] SaveItems(Inventory inventory)
+    {
+        ItemData[] itemsData = new ItemData[inventory.Items.Count];
+
+        for (int i = 0; i < inventory.Items.Count; i++) {
+            itemsData[i] = ItemData.Create(inventory.Items[i]);
+        }
+
+        return itemsData;
     }
 }

@@ -4,13 +4,16 @@ public class NameComponent : MonoBehaviour
 {
     [SerializeField] private GenderComponent genderComponent;
 
+    public int FirstNameId { get; private set; } = 0;
+    public int LastNameId { get; private set; } = 0;
+
     private LocalizationItem firstName;
     private LocalizationItem lastName;
     
     public void Init(NameData data)
     {
-        SetFirstNameId(data.firstNameId, genderComponent.IsMale);
-        SetLastNameId(data.lastNameId, genderComponent.IsMale);
+        SetFirstNameId(data.FirstNameId, genderComponent.IsMale);
+        SetLastNameId(data.LastNameId, genderComponent.IsMale);
     }
 
     public string GetName()

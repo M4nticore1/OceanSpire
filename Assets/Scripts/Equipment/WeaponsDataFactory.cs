@@ -5,17 +5,19 @@ public static class WeaponsDataFactory
 {
     public const int damagePerFloor = 2;
 
-    public static EquipmentData CreateRandomDataGenerator(int minDamage, int maxDamage)
+    public static EquipmentData CreateRandomData(int minDamage, int maxDamage)
     {
         int weaponId = GetRandomWeaponId(minDamage, maxDamage);
-        EquipmentData data = new EquipmentData(weaponId);
-
+        EquipmentData data = new EquipmentData()
+        {
+            EquipmentId = weaponId,
+        };
         return data;
     }
 
     public static int GetMaxWeaponDamage()
     {
-        int maxDamage = BuildingsManager.instance.BuiltFloors.Count * damagePerFloor;
+        int maxDamage = BuildingsManager.Instance.BuiltFloors.Count * damagePerFloor;
 
         return maxDamage;
     }

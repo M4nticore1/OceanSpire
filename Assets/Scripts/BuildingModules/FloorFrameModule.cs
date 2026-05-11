@@ -22,6 +22,8 @@ public class FloorFrameModule : BuildingModule
     protected override void Subscribe()
     {
         OwnedBuilding.onInited += OnInited;
+        OwnedBuilding.onDemolished += OnDemolished;
+
         Building.onBuildingInited += OnBuildingInited;
         Building.onBuildingDemolished += OnBuildingDemolished;
     }
@@ -29,19 +31,23 @@ public class FloorFrameModule : BuildingModule
     protected override void Unsubscribe()
     {
         OwnedBuilding.onInited -= OnInited;
+        OwnedBuilding.onDemolished -= OnDemolished;
+
         Building.onBuildingInited -= OnBuildingInited;
         Building.onBuildingDemolished -= OnBuildingDemolished;
     }
 
     private void OnInited()
     {
-        int floorIndex = (OwnedBuilding as TowerBuilding).FloorIndex;
-        floorBuildingPlace.Init(floorIndex + 1);
-        hallBuildingPlace.Init(floorIndex);
+        int floorIndex = TowerOwnedBuilding.FloorIndex;
+        BuildingsManager.Instance.RegisterFloorModule(this);
+        InitBuildings();
+    }
 
-        for (int i = 0; i < BuildingsManager.RoomsCountPerFloor; i++) {
-            roomBuildingPlaces[i].Init(floorIndex);
-        }
+    private void OnDemolished()
+    {
+        BuildingsManager.Instance.UnregisterFloorModule(this);
+        DemolishBuildings();
     }
 
     private void OnBuildingInited(Building building)
@@ -53,7 +59,33 @@ public class FloorFrameModule : BuildingModule
     private void OnBuildingDemolished(Building building)
     {
         if (!ShouldBake(building)) return;
+
         StartBaking();
+    }
+
+    private void InitBuildings()
+    {
+        floorBuildingPlace.Init(TowerOwnedBuilding.FloorIndex + 1);
+        hallBuildingPlace.Init(TowerOwnedBuilding.FloorIndex);
+
+        for (int i = 0; i < BuildingsManager.RoomsCountPerFloor; i++) {
+            roomBuildingPlaces[i].Init(TowerOwnedBuilding.FloorIndex);
+        }
+    }
+
+    private void DemolishBuildings()
+    {
+        foreach (var buildingPlace in roomBuildingPlaces) {
+            var building = buildingPlace.PlacedBuilding;
+            if (!building) continue;
+
+            building.Demolish();
+        }
+
+        var floorBuilding = floorBuildingPlace.PlacedBuilding;
+        if (floorBuilding) {
+            floorBuilding.Demolish();
+        }
     }
 
     private void StartBaking()

@@ -57,8 +57,8 @@ public class CameraMovement : MonoBehaviour
     {
         float multiplier = 1f;
         float cameraHeight = math.abs(transform.position.y);
-        if (transform.position.y > BuildingsManager.instance.currentCityHeight && cameraMoveVelocity.y > 0f)
-            multiplier = 1f - math.clamp((cameraHeight - BuildingsManager.instance.currentCityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
+        if (transform.position.y > BuildingsManager.Instance.CurrentCityHeight && cameraMoveVelocity.y > 0f)
+            multiplier = 1f - math.clamp((cameraHeight - BuildingsManager.Instance.CurrentCityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
         else if (transform.position.y < 0f && cameraMoveVelocity.y < 0f)
             multiplier = 1f - math.clamp(cameraHeight / cameraVerticalBoundaryPadding, 0f, 1f);
 
@@ -71,7 +71,7 @@ public class CameraMovement : MonoBehaviour
         if (playerInputHandler.cameraMoveIA.IsPressed()) return;
 
         Vector3 cameraPosition = transform.position;
-        float targetHeight = transform.position.y > BuildingsManager.instance.currentCityHeight ? BuildingsManager.instance.currentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
+        float targetHeight = transform.position.y > BuildingsManager.Instance.CurrentCityHeight ? BuildingsManager.Instance.CurrentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
 
         transform.position = math.lerp(transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
     }
@@ -79,7 +79,7 @@ public class CameraMovement : MonoBehaviour
     private void ApplyMove()
     {
         transform.position += new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime;
-        transform.position = new Vector3(transform.position.x, math.clamp(transform.position.y, -cameraVerticalBoundaryPadding, BuildingsManager.instance.currentCityHeight + cameraVerticalBoundaryPadding), transform.position.z);
+        transform.position = new Vector3(transform.position.x, math.clamp(transform.position.y, -cameraVerticalBoundaryPadding, BuildingsManager.Instance.CurrentCityHeight + cameraVerticalBoundaryPadding), transform.position.z);
 
         Vector3 eulers = transform.eulerAngles;
         eulers.y += cameraMoveVelocity.x * Time.deltaTime;

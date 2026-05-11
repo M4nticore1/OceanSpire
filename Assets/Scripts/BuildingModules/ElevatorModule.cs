@@ -225,6 +225,8 @@ public class ElevatorModule : BuildingModule, IElectricible, IBuildingListener
 
     private void DestroyCabin()
     {
+        if (!spawnedElevatorCabin) return;
+
         Destroy(spawnedElevatorCabin.gameObject);
         spawnedElevatorCabin = null;
     }

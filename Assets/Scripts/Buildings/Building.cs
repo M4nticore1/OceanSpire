@@ -33,8 +33,8 @@ public abstract class Building : MonoBehaviour, ILocalizable
     public BuildingDefinition BuildingData => buildingData;
     [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
     public List<BuildingLevelData> LevelsData => buildingLevelsData;
-    public BuildingLevelData LevelData => LevelsData.Count > levelComponent.level - 1 ? LevelsData[levelComponent.level - 1] : null;
-    public BuildingLevelData NextLevelData => LevelsData.Count > levelComponent.level ? LevelsData[levelComponent.level] : null;
+    public BuildingLevelData LevelData => LevelsData.Count > levelComponent.Level - 1 ? LevelsData[levelComponent.Level - 1] : null;
+    public BuildingLevelData NextLevelData => LevelsData.Count > levelComponent.Level ? LevelsData[levelComponent.Level] : null;
     [SerializeField] private bool isRuined = false;
     public bool IsRuined => isRuined;
 
@@ -92,6 +92,11 @@ public abstract class Building : MonoBehaviour, ILocalizable
         constructionComponent.onConstructionStarted -= OnConstructionStarted;
         constructionComponent.onConstructionFinished -= OnConstructionFinished;
 
+        WorkComponent.onWorkerAdded -= OnWorkerAdded;
+        WorkComponent.onWorkerRemoved -= OnWorkerRemoved;
+        WorkComponent.onWorkerEntered -= OnCurrentWorkerAdded;
+        WorkComponent.onWorkerExited -= OnCurrentWorkerRemoved;
+
         SelectComponent.onSelected -= OnSelected;
         SelectComponent.onDeselected -= OnDeselected;
     }
@@ -99,27 +104,27 @@ public abstract class Building : MonoBehaviour, ILocalizable
     // Constructing
     public void Init(BuildingData data)
     {
+        instanceId.Init(data.InstanceId);
+
         AsssignStrategy();
-        constructionComponent.Init(data.ConstructionData);
+        constructionComponent.Init(data.Construction);
 
         OnInit(data);
         UpdateConstruction();
 
         onInited?.Invoke();
         onBuildingInited?.Invoke(this);
-
-        InvokeBuildingInited();
     }
 
     public void Demolish()
     {
         IsDemolished = true;
         OnDemolish();
-        InvokeBuildingDemolished();
-        Destroy(gameObject);
 
         onDemolished?.Invoke();
         onBuildingDemolished?.Invoke(this);
+
+        Destroy(gameObject);
     }
 
     protected abstract void OnInit(BuildingData saveData);
@@ -127,20 +132,6 @@ public abstract class Building : MonoBehaviour, ILocalizable
     protected abstract void OnDemolish();
 
     protected abstract BuildingConstruction GetConstructionToSpawn();
-
-    private void InvokeBuildingInited()
-    {
-        foreach (var module in GetComponents<IOwnedBuildingListener>()) {
-            module.OnOwnedBuildingInited();
-        }
-    }
-
-    private void InvokeBuildingDemolished()
-    {
-        foreach (var module in GetComponents<IOwnedBuildingListener>()) {
-            module.OnOwnedBuildingDemolished();
-        }
-    }
 
     // Residents Management
     public void EnterBuilding(CreatureCityNavigator navigator)
@@ -232,7 +223,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
     {
         return new Dictionary<string, string>()
         {
-            { "level", levelComponent.level.ToString() },
+            { "level", levelComponent.Level.ToString() },
             { "constructionTime", TimeFormatter.SecondsToMinuteTime((int)constructionComponent.CurrentConstructionTime).ToString() + "/" + TimeFormatter.SecondsToMinuteTime((int)constructionComponent.ConstructionTime).ToString() },
         };
     }

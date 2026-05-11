@@ -42,8 +42,8 @@ public class CitizenState : HumanState
         human.InteractComponent.AssignWorkerIndex();
         building.WorkComponent.AddWorker(human.InteractComponent);
 
-        if (human.BoatRider.isRidingOnBoat) {
-            human.BoatRider.selectedBoat.SetState(BoatStateEnum.FindingLoot);
+        if (human.BoatRider.IsRidingOnBoat) {
+            human.BoatRider.SelectedBoat.SetState(BoatStateEnum.FindingLoot);
         }
         else {
             human.CityNavigator.TryFindPathToTargetBuilding();
@@ -77,7 +77,7 @@ public class CitizenState : HumanState
 
     public override void OnEnteredBoat(Boat boat)
     {
-        human.BoatRider.selectedBoat.SetState(BoatStateEnum.FindingLoot);
+        human.BoatRider.SelectedBoat.SetState(BoatStateEnum.FindingLoot);
     }
 
     public override void OnExitedBoat(Boat boat)

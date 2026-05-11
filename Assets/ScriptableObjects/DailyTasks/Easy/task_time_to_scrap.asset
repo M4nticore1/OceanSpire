@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6a3d9466388ce944a37adb758a3e6f9, type: 3}
   m_Name: task_time_to_scrap
   m_EditorClassIdentifier: Assembly-CSharp::DailyTaskDefinition
+  taskId: 2
   conditionAmount: 1
   conditionImage: {fileID: 21300000, guid: 151c2538dff857843841cd998fd00e4b, type: 3}
   conditionLocalizationItem: {fileID: 0}
   reward:
-    itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
     amount: 100
   descriptionLocalizationItem: {fileID: 11400000, guid: 0d2df44f7746dfe4bac01ed9d5ebdf54, type: 2}

@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class InstanceId : MonoBehaviour
 {
-    public int id { get; private set; } = 0;
+    public int Id { get; private set; } = 0;
     private bool isRegistered = false;
 
     public void Init(int id)
     {
         if (isRegistered) {
-            Debug.Log($"Instance Id is already registered as {this.id}!");
+            Debug.Log($"Instance Id component of {this} is already registered as {Id}!");
             return;
         }
 
-        this.id = id;
-        InstancesManager.instance.RegisterInstance(this, id);
+        Id = id;
+        InstancesManager.Instance.RegisterInstance(id, this);
         isRegistered = true;
     }
 }

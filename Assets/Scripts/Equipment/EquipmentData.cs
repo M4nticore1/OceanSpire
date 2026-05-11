@@ -1,11 +1,16 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class EquipmentData
 {
-    public int WeaponId { get; private set; } = 0;
+    public int EquipmentId = 0;
 
-    public EquipmentData(int weaponId)
+    public static EquipmentData Create(EquipmentComponent equipment)
     {
-        WeaponId = weaponId;
+        return new EquipmentData()
+        {
+            EquipmentId = equipment.DefaultEquipment.ItemId
+        };
     }
 }

@@ -14,11 +14,10 @@ public class BuildingPlace : MonoBehaviour, IClickable
     [SerializeField] private BuildingType buildingType = BuildingType.Room;
     public BuildingType BuildingType => buildingType;
 
-    public int floorIndex = 0;
+    public int FloorIndex { get; private set; } = 0;
+
     [SerializeField] private int placeIndex = 0;
     public int PlaceIndex => placeIndex;
-    public int emptyBuildingPlacesAbove { get; set; } = 0;
-    public int emptyBuildingPlacesBelow { get; set; } = 0;
 
     [SerializeField] private TowerBuilding placedBuilding;
     public TowerBuilding PlacedBuilding => placedBuilding;
@@ -73,7 +72,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     public void Init(int newFloorindex)
     {
-        floorIndex = newFloorindex;
+        FloorIndex = newFloorindex;
         AssignNeighborPlaces();
         HideBuildingPlace();
     }
@@ -97,10 +96,10 @@ public class BuildingPlace : MonoBehaviour, IClickable
         int horizontalIndexOffset = side == Direction.Left ? 1 : side == Direction.Right ? -1 : 0;
         int verticalIndexOffset = side == Direction.Up ? 1 : side == Direction.Down ? -1 : 0;
         int sideIndex = (placeIndex + horizontalIndexOffset + BuildingsManager.RoomsCountPerFloor) % BuildingsManager.RoomsCountPerFloor;
-        int verticalIndex = floorIndex + verticalIndexOffset;
+        int verticalIndex = FloorIndex + verticalIndexOffset;
 
-        if (verticalIndex < BuildingsManager.instance.BuiltFloors.Count && verticalIndex >= 0) {
-            BuildingPlace place = BuildingsManager.instance.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
+        if (verticalIndex < BuildingsManager.Instance.BuiltFloors.Count && verticalIndex >= 0) {
+            BuildingPlace place = BuildingsManager.Instance.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
             return place;
         }
         return null;
@@ -123,7 +122,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     private void OnBuildingInited(Building building)
     {
         TowerBuilding towerBuilding = building as TowerBuilding;
-        if (towerBuilding && building.GetComponent<FloorFrameModule>() && floorIndex == towerBuilding.FloorIndex - 1) {
+        if (towerBuilding && building.GetComponent<FloorFrameModule>() && FloorIndex == towerBuilding.FloorIndex - 1) {
             AssignNeighborPlaces();
         }
 
@@ -203,16 +202,23 @@ public class BuildingPlace : MonoBehaviour, IClickable
     // Events
     public void Click()
     {
-        TowerBuilding building = ConstructionManager.Instance.buildingToPlace as TowerBuilding;
-        TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(BuildingDataFactory.CreateBuildingData(building, floorIndex, placeIndex));
+        TowerBuilding building = ConstructionManager.Instance.BuildingToPlace as TowerBuilding;
 
+        TowerBuildingData buildingData = TowerBuildingData.Create(building);
+        buildingData.FloorIndex = FloorIndex;
+        buildingData.PlaceIndex = placeIndex;
+        buildingData.Construction.ConstructionTime = 0f;
+        buildingData.Construction.IsUnderConstruction = true;
+
+        TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(building, buildingData);
         SetPlacedBuilding(spawnedBuilding);
+
         onClicked?.Invoke(spawnedBuilding);
     }
 
     public bool ShouldClick()
     {
-        Building buildingToPlace = ConstructionManager.Instance.buildingToPlace;
+        Building buildingToPlace = ConstructionManager.Instance.BuildingToPlace;
         if (!buildingToPlace) {
             Debug.Log("buildingToPlace is not valid.");
             return false;

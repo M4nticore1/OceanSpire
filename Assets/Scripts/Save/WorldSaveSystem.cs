@@ -1,51 +1,29 @@
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class WorldSaveSystem
+public static class WorldSaveSystem
 {
     private static string saveFileExtension = ".sav";
 
-    public static void SaveData(PlayerController playerController)
+    public static void SaveWorld(WorldData worldData)
     {
-        string worldName = WorldSaveManager.Instance.saveWorldName;
+        string worldName = worldData.WorldName;
         string folderPath = GetSaveFolderPathByName(worldName);
 
         Directory.CreateDirectory(folderPath);
 
         string filePath = GetSaveFilePathByName(worldName);
+        string json = JsonConvert.SerializeObject(worldData, Formatting.Indented);
 
-        if (File.Exists(filePath)) {
-            JsonConvert.SerializeObject(filePath);
-        }
-
-        SaveScreenshotByWorldName(worldName);
+        File.WriteAllText(filePath, json);
     }
 
-    public static WorldData GetSaveDataByWorldName(string worldName)
+    public static WorldData GetWorldDataByName(string worldName)
     {
         string path = GetSaveFilePathByName(worldName);
         return GetSaveDataByPath(path);
-    }
-
-    private static WorldData GetSaveDataByPath(string path)
-    {
-        if (!File.Exists(path)) {
-            Debug.Log("Save file not found in " + path);
-            return null;
-        }
-
-        try {
-            string json = File.ReadAllText(path);
-            WorldData data = JsonConvert.DeserializeObject<WorldData>(json);
-            return data;
-        }
-        catch (Exception e) {
-            Debug.LogError($"Failed to load save {path}\n{e}");
-            return null;
-        }
     }
 
     public static WorldData[] GetAllSaveData()
@@ -57,13 +35,12 @@ public class WorldSaveSystem
 
         string[] filePaths = Directory.GetFiles(GetSavesFolderPath(), $"*{saveFileExtension}", SearchOption.AllDirectories);
         List<WorldData> datas = new List<WorldData>();
-        foreach (string filePath in filePaths) {
-            WorldData data = GetSaveDataByPath(filePath);
 
-            if (data != null) {
-                datas.Add(data);
-            }
-            Debug.Log("get");
+        foreach (string filePath in filePaths) {
+            var data = GetSaveDataByPath(filePath);
+            if (data == null) continue;
+
+            datas.Add(data);
         }
 
         return datas.ToArray();
@@ -72,45 +49,27 @@ public class WorldSaveSystem
     public static void RemoveSaveByWorldName(string worldName)
     {
         string path = GetSaveFolderPathByName(worldName);
+
         if (!Directory.Exists(path)) {
-            Debug.Log("Файл сохранения не найден.");
+            Debug.Log("Save folder not found: " + path);
             return;
         }
 
         foreach (var file in Directory.GetFiles(path)) {
             File.Delete(file);
         }
-        Directory.Delete(path);
-        Debug.Log("Сохранение удалено!");
+
+        try {
+            Directory.Delete(path, true);
+            Debug.Log("The save has been deleted!");
+        }
+        catch (IOException ex) {
+            Debug.LogError($"Couldn't delete save: {ex.Message}");
+        }
+
     }
 
-    private static string GetSavesFolderPath()
-    {
-        string endPath = Path.Combine("Banzai Games", "Ocean Spire", "Saves");
-        return Path.Combine(Application.persistentDataPath, "Saves");
-        //if (Application.isMobilePlatform || Application.isConsolePlatform) {
-        //    return Path.Combine(Application.persistentDataPath, endPath);
-        //}
-
-        //return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), endPath);
-    }
-
-    private static string GetSaveFolderPathByName(string worldName)
-    {
-        return Path.Combine(GetSavesFolderPath(), worldName);
-    }
-
-    private static string GetSaveFilePathByName(string worldName)
-    {
-        return Path.Combine(GetSaveFolderPathByName(worldName), worldName + saveFileExtension);
-    }
-
-    private static string GetSaveThumbPathByName(string worldName)
-    {
-        return Path.Combine(GetSaveFolderPathByName(worldName), worldName + ".png");
-    }
-
-    public static void SaveScreenshotByWorldName(string worldName)
+    public static void SaveWorldThumb(WorldData worldData)
     {
         Camera camera = Camera.main;
         int resolution = 256;
@@ -135,7 +94,7 @@ public class WorldSaveSystem
         camera.fieldOfView = originalFov;
 
         byte[] bytes = tex.EncodeToPNG();
-        File.WriteAllBytes(GetSaveThumbPathByName(worldName), bytes);
+        File.WriteAllBytes(GetSaveThumbPathByName(worldData.WorldName), bytes);
     }
 
     public static Texture2D GetSaveScreenshotByWorldName(string worldName)
@@ -160,5 +119,38 @@ public class WorldSaveSystem
         }
 
         return tex;
+    }
+
+    private static WorldData GetSaveDataByPath(string path)
+    {
+        if (!File.Exists(path)) {
+            Debug.Log("Save file not found in " + path);
+            return null;
+        }
+
+        string json = File.ReadAllText(path);
+        var worldData = WorldDataMigrator.GetWorldData(json);
+
+        return worldData;
+    }
+
+    private static string GetSavesFolderPath()
+    {
+        return Path.Combine(Application.persistentDataPath, "Worlds");
+    }
+
+    private static string GetSaveFolderPathByName(string worldName)
+    {
+        return Path.Combine(GetSavesFolderPath(), worldName);
+    }
+
+    private static string GetSaveFilePathByName(string worldName)
+    {
+        return Path.Combine(GetSaveFolderPathByName(worldName), worldName + saveFileExtension);
+    }
+
+    private static string GetSaveThumbPathByName(string worldName)
+    {
+        return Path.Combine(GetSaveFolderPathByName(worldName), worldName + ".png");
     }
 }

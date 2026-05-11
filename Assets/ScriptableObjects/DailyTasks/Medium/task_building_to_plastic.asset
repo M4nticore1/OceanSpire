@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6a3d9466388ce944a37adb758a3e6f9, type: 3}
   m_Name: task_building_to_plastic
   m_EditorClassIdentifier: Assembly-CSharp::DailyTaskDefinition
+  taskId: 7
   conditionAmount: 2
   conditionImage: {fileID: 21300000, guid: c6f5fdbb68f953641a9dfa90e34e6c1b, type: 3}
   conditionLocalizationItem: {fileID: 0}
   reward:
-    itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+    definition: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
     amount: 500
   descriptionLocalizationItem: {fileID: 11400000, guid: 437e869bdbbfc904a8b105e15b72ae9b, type: 2}

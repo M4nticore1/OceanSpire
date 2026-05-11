@@ -34,8 +34,8 @@ public class PierBuildingStrategy : BuildingStrategy
         Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(interactor.workerIndex);
         if (!boat) return;
 
-        if (newBoatRider.selectedBoat) {
-            if (newBoatRider.selectedBoat == boat) {
+        if (newBoatRider.SelectedBoat) {
+            if (newBoatRider.SelectedBoat == boat) {
                 if (newBoatRider.isExitingBoat) {
                     newBoatRider.StopExitingBoat();
                 }
@@ -59,8 +59,8 @@ public class PierBuildingStrategy : BuildingStrategy
             boatRider.StopEnteringBoat();
         }
 
-        if (boatRider.isRidingOnBoat) {      
-            boatRider.selectedBoat?.SetState(BoatStateEnum.MovingToDock);
+        if (boatRider.IsRidingOnBoat) {      
+            boatRider.SelectedBoat?.SetState(BoatStateEnum.MovingToDock);
         }
     }
 

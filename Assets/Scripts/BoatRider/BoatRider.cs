@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class BoatRider : MonoBehaviour
 {
-    public Boat selectedBoat;
+    public Boat SelectedBoat;
 
-    public bool isRidingOnBoat { get; private set; } = false;
+    public bool IsRidingOnBoat { get; private set; } = false;
     public bool isEnteringBoat { get; private set; } = false;
     public bool isExitingBoat { get; private set; } = false;
     public bool isMovingToBoat { get; private set; } = false;
@@ -52,43 +52,43 @@ public class BoatRider : MonoBehaviour
 
     public void EnterBoat()
     {
-        selectedBoat.SetRider(this);
-        transform.position = selectedBoat.SeatSlot.position;
-        transform.rotation = selectedBoat.SeatSlot.rotation;
-        transform.SetParent(selectedBoat.SeatSlot);
+        SelectedBoat.SetRider(this);
+        transform.position = SelectedBoat.SeatSlot.position;
+        transform.rotation = SelectedBoat.SeatSlot.rotation;
+        transform.SetParent(SelectedBoat.SeatSlot);
 
-        isRidingOnBoat = true;
+        IsRidingOnBoat = true;
         isEnteringBoat = false;
-        onEnteredBoat?.Invoke(selectedBoat);
+        onEnteredBoat?.Invoke(SelectedBoat);
     }
 
     public void ExitBoat()
     {
-        selectedBoat.RemoveRider();
-        transform.position = selectedBoat.dockPoint.EntraceTransform.position;
-        transform.rotation = selectedBoat.dockPoint.EntraceTransform.rotation;
+        SelectedBoat.RemoveRider();
+        transform.position = SelectedBoat.DockPoint.EntraceTransform.position;
+        transform.rotation = SelectedBoat.DockPoint.EntraceTransform.rotation;
         transform.SetParent(null);
 
-        isRidingOnBoat = false;
+        IsRidingOnBoat = false;
         isExitingBoat = false;
 
-        onExitedBoat?.Invoke(selectedBoat);
+        onExitedBoat?.Invoke(SelectedBoat);
     }
 
     public void SetSelectedBoat(Boat boat)
     {
-        selectedBoat = boat;
+        SelectedBoat = boat;
     }
 
     public void SetSelectedBoat(int boatInstanceId)
     {
-        Boat boat = BoatsManager.Instance.boatsDict[boatInstanceId];
+        Boat boat = BoatsManager.Instance.GetBoat(boatInstanceId);
         SetSelectedBoat(boat);
     }
 
     public void RemoveSelectedBoat()
     {
-        selectedBoat = null;
+        SelectedBoat = null;
     }
 
     public void StartMovingToBoat()

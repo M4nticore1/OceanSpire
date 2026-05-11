@@ -1,18 +1,18 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class ConstructionData
 {
-    public float ConstructionTime { get; private set; }
-    public bool UnderConstruction { get; private set; }
+    public float ConstructionTime = 0f;
+    public bool IsUnderConstruction = false;
 
-    public ConstructionData(float constructionTime, bool underConstruction)
+    public static ConstructionData Create(ConstructionComponent construction)
     {
-        ConstructionTime = constructionTime;
-        UnderConstruction = underConstruction;
-    }
-
-    public void SetUnderConstruction(bool value)
-    {
-        UnderConstruction = value;
+        return new ConstructionData()
+        {
+            ConstructionTime = construction.CurrentConstructionTime,
+            IsUnderConstruction = construction.IsUnderConstruction
+        };
     }
 }

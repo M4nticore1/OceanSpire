@@ -1,36 +1,44 @@
 using System;
-using System.Collections.Generic;
+using UnityEngine;
 
+[Serializable]
 public class SkillInstanceData
 {
-    public int id { get; private set; }
-    public int level { get; private set; }
-    public float xp { get; private set; }
-
-    public SkillInstanceData(int id, int level, float xp)
-    {
-        this.id = id;
-        this.level = level;
-        this.xp = xp;
-    }
+    public int Id = 0;
+    public int Level = 0;
+    public float Xp = 0;
 }
 
 [Serializable]
 public class SkillsData
 {
-    public SkillInstanceData[] skills { get; private set; }
+    public SkillInstanceData[] Skills;
 
-    public SkillsData(List<SkillInstance> skills)
+    public static SkillsData Create(SkillsComponent skillsComponent)
     {
-        this.skills = new SkillInstanceData[skills.Count];
+        int count = skillsComponent.Skills.Count;
+        SkillInstanceData[] skills = new SkillInstanceData[count];
 
-        for (int i = 0; i < skills.Count; i++) {
-            int id = (int)skills[i].skillDefinition.SkillId;
-            int level = skills[i].currentLevel;
-            float xp = skills[i].currentXp;
+        for (int i = 0; i < count; i++) {
+            SkillId skillId = (SkillId)Enum.GetValues(typeof(SkillId)).GetValue(i);
 
-            SkillInstanceData data = new SkillInstanceData(id, level, xp);
-            this.skills[i] = data;
+            int id = (int)skillsComponent.GetSkill(skillId).skillDefinition.SkillId;
+            int level = skillsComponent.GetSkill(skillId).currentLevel;
+            float xp = skillsComponent.GetSkill(skillId).currentXp;
+
+            SkillInstanceData data = new SkillInstanceData()
+            {
+                Id = id,
+                Level = level,
+                Xp = xp,
+            };
+
+            skills[i] = data;
         }
+
+        return new SkillsData()
+        {
+            Skills = skills,
+        };
     }
 }

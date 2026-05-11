@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class DockPointsManager : MonoBehaviour
 {
-    public static DockPointsManager instance;
+    public static DockPointsManager Instance;
 
-    public List<BoatDockPoint> pierDockPoints { get; private set; } = new List<BoatDockPoint>();
+    public List<BoatDockPoint> CitizenBoatDocks { get; private set; } = new List<BoatDockPoint>();
 
     [SerializeField] private BoatDockPoint[] wandererDockPoints;
     public BoatDockPoint[] WandererDockPoints => wandererDockPoints;
@@ -15,16 +15,16 @@ public class DockPointsManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance) {
+        if (Instance) {
             Destroy(gameObject);
             return;
         }
 
-        instance = this;
+        Instance = this;
     }
 
     public void RegisterPierDockPoint(BoatDockPoint dockPoint)
     {
-        pierDockPoints.Add(dockPoint);
+        CitizenBoatDocks.Add(dockPoint);
     }
 }

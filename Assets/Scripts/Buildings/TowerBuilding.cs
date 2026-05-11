@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Rendering;
 using UnityEngine;
 using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
@@ -37,8 +38,8 @@ public class TowerBuilding : Building
     public BuildingPlace BuildingPlace { get; private set; }
 
     public BuildingPosition BuildingPosition { get; private set; }
-    public int FloorIndex { get; private set; }
-    public int PlaceIndex { get; private set; }
+    public int FloorIndex;
+    public int PlaceIndex;
 
     public Dictionary<Direction, TowerBuilding> NeighborBuildings { get; private set; } = new();
     public Dictionary<Direction, TowerBuilding> ConnectedBuildings { get; private set; } = new();
@@ -82,15 +83,18 @@ public class TowerBuilding : Building
         PlaceIndex = towerData.PlaceIndex;
 
         AssignBuildingPlace();
+        UpdatePosition();
         AssignNeighborBuildings();
         AssignConnectedBuildings();
-        AssignPosition();
-        ApplyTransform();
+        UpdatePositionType();
     }
 
     protected override void OnDemolish()
     {
-        BuildingPlace.SetPlacedBuilding(null);
+        if (BuildingPlace) {
+            BuildingPlace.SetPlacedBuilding(null);
+        }
+
         InvokeBuildingDemolished();
     }
 
@@ -203,7 +207,7 @@ public class TowerBuilding : Building
 
     private void AssignBuildingPlace()
     {
-        List<FloorFrameModule> floors = BuildingsManager.instance.BuiltFloors;
+        List<FloorFrameModule> floors = BuildingsManager.Instance.BuiltFloors;
         BuildingPlace place = null;
 
         if (BuildingData.BuildingType == BuildingType.Room) {
@@ -217,12 +221,12 @@ public class TowerBuilding : Building
             place = floors.Count > index && index >= 0 ? floors[index].FloorBuildingPlace : null;
         }
 
-        if (place) {
-            SetBuildingPlace(place);
-        }
+        if (!place) return;
+
+        SetBuildingPlace(place);
     }
 
-    private void AssignPosition()
+    private void UpdatePositionType()
     {
         if (PlaceIndex % 2 == 0) {
             SetBuildingPosition(BuildingPosition.Corner);
@@ -294,12 +298,15 @@ public class TowerBuilding : Building
         BuildingPosition = position;
     }
 
-    private void ApplyTransform()
+    private void UpdatePosition()
     {
-        if (!BuildingPlace) return;
-
-        if (GetComponent<FloorFrameModule>()) {
-            transform.position = BuildingPlace.transform.position;
+        if (buildingData.BuildingType == BuildingType.FloorFrame) {
+            if (BuildingPlace) {
+                transform.position = BuildingPlace.transform.position;
+            }
+            else {
+                transform.position = BuildingsManager.Instance.FirstFloorBuildingTransform.position;
+            }
         }
         else {
             transform.SetParent(BuildingPlace.transform);
@@ -385,7 +392,7 @@ public class TowerBuilding : Building
     {
         if (!target) return false;
         if (target.buildingData.BuildingId != buildingData.BuildingId) return false;
-        if (target.levelComponent.level != levelComponent.level) return false;
+        if (target.levelComponent.Level != levelComponent.Level) return false;
         if (target.constructionComponent.IsUnderConstruction) return false;
 
         return true;
@@ -393,7 +400,7 @@ public class TowerBuilding : Building
 
     private TowerBuilding CalculateNeighbor(Direction dir)
     {
-        var floors = BuildingsManager.instance.BuiltFloors;
+        var floors = BuildingsManager.Instance.BuiltFloors;
 
         int floor = FloorIndex;
         int place = PlaceIndex;

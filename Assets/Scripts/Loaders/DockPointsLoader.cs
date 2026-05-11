@@ -1,33 +1,31 @@
 using UnityEngine;
 
-public class DockPointsLoader : MonoBehaviour
+public class DockPointsLoader : Loader
 {
-    private void Start()
+    protected override void Load(WorldData data)
     {
-        WorldData data = WorldSaveManager.Instance.currentSaveWorldData;
+        InitDocks(DockPointsManager.Instance.CitizenBoatDocks.ToArray(), data?.CitizenBoatDocks);
+        InitDocks(DockPointsManager.Instance.WandererDockPoints, data?.WandererBoatDocks);
+        InitDocks(DockPointsManager.Instance.RaiderDockPoints, data?.RaiderBoatDocks);
+    }
 
-        if (data != null) {
+    private void InitDocks(BoatDockPoint[] docks, BoatDockData[] data)
+    {
+        for (int i = 0; i < docks.Length; i++) {
+            BoatDockData dockData = data != null && i < data.Length ? data[i] : GetBoatDockData();
 
-        }
-        else {
-            foreach (var dock in DockPointsManager.instance.pierDockPoints) {
-                dock.Init(GetBoatDockData());
-            }
-
-            foreach (var dock in DockPointsManager.instance.WandererDockPoints) {
-                dock.Init(GetBoatDockData());
-            }
-
-            foreach (var dock in DockPointsManager.instance.RaiderDockPoints) {
-                dock.Init(GetBoatDockData());
-            }
+            docks[i].Init(dockData);
         }
     }
 
     private BoatDockData GetBoatDockData()
     {
-        int id = InstancesManager.instance.GetNextInstanceId();
-        BoatDockData dockData = new BoatDockData(id);
+        int instanceId = InstancesManager.Instance.GetNextInstanceId();
+
+        BoatDockData dockData = new BoatDockData()
+        {
+            InstanceId = instanceId,
+        };
 
         return dockData;
     }

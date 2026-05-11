@@ -5,7 +5,7 @@ using UnityEngine;
 public class ProductionModule : BuildingModule, IElectricible, IRaidable
 {
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
-    public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[OwnedBuilding.LevelComponent.level - 1];
+    public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[OwnedBuilding.LevelComponent.Level - 1];
 
     public CraftItem CurrentCraftItem { get; private set; }
     public int CurrentProductingItemIndex { get; private set; }

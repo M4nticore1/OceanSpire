@@ -64,7 +64,7 @@ public class WanderersManager : MonoBehaviour
         Vector3 rotation = Quaternion.LookRotation(-position.normalized).eulerAngles;
 
         Boat boat = CreateBoat(position, rotation);
-        Human human = CreateWanderer(position, rotation, boat.InstanceId.id);
+        Human human = CreateWanderer(position, rotation, boat.InstanceId.Id);
 
         spawnPositions.Add(human, position);
     }
@@ -87,8 +87,8 @@ public class WanderersManager : MonoBehaviour
     private void OnWandererRejected(Human human)
     {
         Vector3 position = spawnPositions[human];
-        human.BoatRider.selectedBoat.SetState(BoatStateEnum.FloatingAway);
-        human.BoatRider.selectedBoat.Movement.TryMoveTo(position);
+        human.BoatRider.SelectedBoat.SetState(BoatStateEnum.FloatingAway);
+        human.BoatRider.SelectedBoat.Movement.TryMoveTo(position);
 
         spawnPositions.Remove(human);
 
@@ -101,23 +101,23 @@ public class WanderersManager : MonoBehaviour
 
         for (int i = 0; i < wanderers.Count; i++) {
             Human wanderer = wanderers[i];
-            Boat boat = wanderer.BoatRider.selectedBoat;
+            Boat boat = wanderer.BoatRider.SelectedBoat;
 
             boat.RemoveDockPoint();
-            boat.SetDockPoint(DockPointsManager.instance.WandererDockPoints[i]);
+            boat.SetDockPoint(DockPointsManager.Instance.WandererDockPoints[i]);
             boat.SetState(BoatStateEnum.MovingToDock);
         }
     }
 
     private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId)
     {
-        HumanDataV1 data = HumanDataFactory.CreateRandomWandererData();
-        data.SetPosition(position);
-        data.SetRotation(rotation);
-        data.boatRider.SetBoatInstanceId(boatId);
-        data.boatRider.SetRiding(true);
+        HumanData data = HumanDataFactory.CreateRandomWandererData();
+        data.Position = new Vector3Data(position);
+        data.Rotation = new Vector3Data(rotation);
+        data.BoatRider.SetBoatInstanceId(boatId);
+        data.BoatRider.SetRiding(true);
 
-        Human human = CreatureFactory.CreateWanderer(data);
+        Human human = CreatureFactory.CreateHuman(data);
 
         return human;
     }
@@ -125,10 +125,18 @@ public class WanderersManager : MonoBehaviour
     private Boat CreateBoat(Vector3 position, Vector3 rotation)
     {
         int id = boatPrefab.BoatData.BoatId;
-        int instanceId = InstancesManager.instance.GetNextInstanceId();
+        int instanceId = InstancesManager.Instance.GetNextInstanceId();
         float boatHealth = boatPrefab.Health.MaxHealth;
 
-        BoatData boatData = new BoatData(id, instanceId, BoatStateEnum.MovingToDock, position, rotation, boatHealth, GetDockPoint().InstanceId.id);
+        BoatData boatData = new BoatData()
+        {
+            Id = id,
+            InstanceId = instanceId,
+            Position = new Vector3Data(position),
+            Rotation = new Vector3Data(rotation),
+            Health = boatHealth,
+            DockInstanceId = GetDockPoint().InstanceId.Id
+        };
 
         Boat boat = BoatFactory.CreateBoat(boatPrefab, boatData);
 
@@ -138,18 +146,12 @@ public class WanderersManager : MonoBehaviour
 
     private BoatDockPoint GetDockPoint()
     {
-        foreach (var dockPoint in DockPointsManager.instance.WandererDockPoints) {
-            if (dockPoint.boat) continue;
-
-            return dockPoint;
-        }
-
-        return null;
+        return DockPointsManager.Instance.WandererDockPoints[CreaturesManager.Instance.Wanderers.Count()];
     }
 
     private bool CanSpawn()
     {
-        if (CreaturesManager.Instance.Wanderers.Count >= DockPointsManager.instance.WandererDockPoints.Length) return false;
+        if (CreaturesManager.Instance.Wanderers.Count >= DockPointsManager.Instance.WandererDockPoints.Length) return false;
 
         return true;
     }

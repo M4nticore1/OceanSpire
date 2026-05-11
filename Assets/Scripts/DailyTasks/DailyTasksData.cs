@@ -1,17 +1,32 @@
 using UnityEngine;
 
-public class DailyTasksDataV1
+public class DailyTasksData
 {
-    public int[] TaskIds { get; private set; }
-    public int[] TaskProgresses { get; private set; }
-    public long NextUpdateTime { get; private set; }
-    public bool AdUpdateUsed { get; private set; }
+    public DailyTaskInstanceData[] Tasks { get; private set; }
+    public long NextRestTime { get; private set; }
+    public bool IsAdUpdateUsed { get; private set; }
 
-    public DailyTasksDataV1(int[] taskIds, int[] taskProgresses, long nextUpdateTime, bool adUpdateUsed)
+    public static DailyTasksData Create(DailyTasksManager manager)
     {
-        TaskIds = taskIds;
-        TaskProgresses = taskProgresses;
-        NextUpdateTime = nextUpdateTime;
-        AdUpdateUsed = adUpdateUsed;
+        return new DailyTasksData()
+        {
+            Tasks = DailyTasksSaveSystem.SaveTasks(manager),
+            NextRestTime = manager.NextRestTime,
+            IsAdUpdateUsed = manager.IsAdUpdateUsed,
+        };
+    }
+}
+
+public static class DailyTasksSaveSystem
+{
+    public static DailyTaskInstanceData[] SaveTasks(DailyTasksManager manager)
+    {
+        DailyTaskInstanceData[] tasks = new DailyTaskInstanceData[manager.CurrentTasks.Count];
+
+        for (int i = 0; i < tasks.Length; i++) {
+            tasks[i] = DailyTaskInstanceData.Create(manager.CurrentTasks[i]);
+        }
+
+        return tasks;
     }
 }

@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class ElectricityDrain : MonoBehaviour
 {
-    [SerializeField] private BuildingsManager buildingsManager;
-    [SerializeField] private CityStorage cityStorage;
-
     private float currentElectricityToDrain = 0f;
 
     private double lastCheckTime = 0;
@@ -16,7 +13,8 @@ public class ElectricityDrain : MonoBehaviour
 
         lastCheckTime = Time.timeAsDouble;
 
-        foreach (var floorModule in buildingsManager.BuiltFloors) {
+        for (int i = 0; i < BuildingsManager.Instance.BuiltFloors.Count; i++) {
+            var floorModule = BuildingsManager.Instance.BuiltFloors[i];
             var floorBuilding = floorModule.GetComponent<Building>();
 
             foreach (var buildingPlace in floorModule.RoomBuildingPlaces) {
@@ -40,7 +38,7 @@ public class ElectricityDrain : MonoBehaviour
     private void SpendElectricity(int amoount)
     {
         int id = (int)ItemID.Electricity;
-        cityStorage.Inventory.RemoveItem(id, amoount);
+        CityStorage.Instance.Inventory.RemoveItem(id, amoount);
         currentElectricityToDrain = 0f;
     }
 }

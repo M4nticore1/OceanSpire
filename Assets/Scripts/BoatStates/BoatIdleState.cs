@@ -24,9 +24,9 @@ public class BoatIdleState : BoatState
 
     public override void Tick()
     {
-        if (boat.transform.rotation == boat.dockPoint.DockTransform.rotation) return;
+        if (boat.transform.rotation == boat.DockPoint.DockTransform.rotation) return;
 
-        boat.transform.rotation = Quaternion.Lerp(boat.transform.rotation, boat.dockPoint.DockTransform.rotation, correctDockRotationSpeed * Time.deltaTime);
+        boat.transform.rotation = Quaternion.Lerp(boat.transform.rotation, boat.DockPoint.DockTransform.rotation, correctDockRotationSpeed * Time.deltaTime);
     }
 
     public override void OnReachedPath()

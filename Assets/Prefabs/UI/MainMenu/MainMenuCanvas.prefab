@@ -320,6 +320,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2182063038729383193}
   - component: {fileID: 8020729538853753887}
+  - component: {fileID: 15524701050293671}
   m_Layer: 0
   m_Name: GameSavesList
   m_TagString: Untagged
@@ -375,6 +376,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &15524701050293671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2630369059958840343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a03c2b8eeb2c2d4aa90714a6236ec59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectGroup
 --- !u!1 &3540695263320030737
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,8 +941,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
-  item: {fileID: 11400000, guid: 453849d3874822449957b9541f51f4ae, type: 2}
   textRole: 1
+  item: {fileID: 11400000, guid: 453849d3874822449957b9541f51f4ae, type: 2}
+  localizationTarget: {fileID: 0}
 --- !u!1 &4491086013743770887
 GameObject:
   m_ObjectHideFlags: 0
@@ -1619,6 +1633,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6923714623927571086}
     - target: {fileID: 7259844161047167963, guid: 6b3698d570602a64f806b82c9a6be172, type: 3}
+      propertyPath: selectGroup
+      value: 
+      objectReference: {fileID: 15524701050293671}
+    - target: {fileID: 7259844161047167963, guid: 6b3698d570602a64f806b82c9a6be172, type: 3}
       propertyPath: selectableGroupIndex
       value: 0
       objectReference: {fileID: 0}
@@ -1886,6 +1904,10 @@ PrefabInstance:
       propertyPath: createNewWorldMenu
       value: 
       objectReference: {fileID: 6923714623927571086}
+    - target: {fileID: 7259844161047167963, guid: 6b3698d570602a64f806b82c9a6be172, type: 3}
+      propertyPath: selectGroup
+      value: 
+      objectReference: {fileID: 15524701050293671}
     - target: {fileID: 7259844161047167963, guid: 6b3698d570602a64f806b82c9a6be172, type: 3}
       propertyPath: selectableGroupIndex
       value: 0
@@ -2252,6 +2274,10 @@ PrefabInstance:
       propertyPath: isEnabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7259844161047167963, guid: 6b3698d570602a64f806b82c9a6be172, type: 3}
+      propertyPath: selectGroup
+      value: 
+      objectReference: {fileID: 15524701050293671}
     - target: {fileID: 7259844161047167963, guid: 6b3698d570602a64f806b82c9a6be172, type: 3}
       propertyPath: selectableGroupIndex
       value: 0

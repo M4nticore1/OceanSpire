@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CreateNewWorldMenu : MonoBehaviour
 {
@@ -62,7 +63,9 @@ public class CreateNewWorldMenu : MonoBehaviour
     private void OnCreateWorldButtonClicked()
     {
         string worldName = inputField.text;
-        WorldSaveManager.Instance.CreateWorld(worldName);
+
+        WorldSaveManager.Instance.SetSaveWorldName(worldName);
+        SceneManager.LoadScene(1);
     }
 
     private void CheckWorldName(string name)
@@ -84,11 +87,11 @@ public class CreateNewWorldMenu : MonoBehaviour
 
     private bool IsWorldNameExist(string name)
     {
-        WorldData[] worldData = WorldSaveManager.Instance.allSaveData;
+        WorldData[] worldData = WorldSaveManager.Instance.AllSaveData;
         if (worldData == null) return false;
 
         foreach (var data in worldData) {
-            if (data != null && data.cityData.cityName == name) {
+            if (data != null && data.WorldName == name) {
                 return true;
             }
         }

@@ -38,7 +38,7 @@ public class HealthDisplay : MonoBehaviour
     {
         if (!content) return;
 
-        float currentHealth = health.currentHealth;
+        float currentHealth = health.CurrentHealth;
         float maxHealth = health.MaxHealth;
         float alpha = currentHealth / maxHealth;
 
@@ -88,7 +88,7 @@ public class HealthDisplay : MonoBehaviour
 
     private bool TryToDisplay()
     {
-        float currentHealth = health.currentHealth;
+        float currentHealth = health.CurrentHealth;
         float maxHealth = health.MaxHealth;
         float alpha = currentHealth / maxHealth;
 
@@ -137,7 +137,7 @@ public class HealthDisplay : MonoBehaviour
 
     private void AssignHealthText()
     {
-        float currentHealth = health.currentHealth;
+        float currentHealth = health.CurrentHealth;
         float maxHealth = health.MaxHealth;
 
         string text = math.ceil(currentHealth).ToString() + "/" + maxHealth.ToString();
@@ -146,7 +146,7 @@ public class HealthDisplay : MonoBehaviour
 
     private void AssignHealthBar()
     {
-        float currentHealth = health.currentHealth;
+        float currentHealth = health.CurrentHealth;
         float maxHealth = health.MaxHealth;
         float alpha = currentHealth > 0 ? currentHealth / maxHealth : 0f;
         Color color = barGradient.Evaluate(alpha);

@@ -11,7 +11,7 @@ public class PierConstruction : BuildingConstruction
         base.Init(ownedBuilding);
 
         foreach (var dockPoint in boatDocks) {
-            DockPointsManager.instance.RegisterPierDockPoint(dockPoint);
+            DockPointsManager.Instance.RegisterPierDockPoint(dockPoint);
         }
     }
 }

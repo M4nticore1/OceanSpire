@@ -13,29 +13,6 @@ public enum BoatStateEnum
     Demolished
 }
 
-[Serializable]
-public class BoatData
-{
-    public int id { get; private set; } = 0;
-    public int instanceId { get; private set; } = -1;
-    public BoatStateEnum state { get; private set; } = BoatStateEnum.Idle;
-    public Vector3 position { get; private set; } = Vector3.zero;
-    public Vector3 rotation { get; private set; } = Vector3.zero;
-    public int dockInstanceId { get; private set; } = 0;
-    public float health { get; private set; } = 0;
-
-    public BoatData(int id, int instanceId, BoatStateEnum state, Vector3 position, Vector3 rotation, float health, int dockInstanceId)
-    {
-        this.id = id;
-        this.instanceId = instanceId;
-        this.state = state;
-        this.position = position;
-        this.rotation = rotation;
-        this.health = health;
-        this.dockInstanceId = dockInstanceId;
-    }
-}
-
 public class Boat : MonoBehaviour
 {
     [SerializeField] private BoatDefinition boatData;
@@ -69,11 +46,11 @@ public class Boat : MonoBehaviour
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
     // Dock
-    public BoatDockPoint dockPoint;
+    public BoatDockPoint DockPoint;
     public LootContainer targetLootContainer { get; private set; }
 
     // Health
-    public float CurrentHealth => health.currentHealth;
+    public float CurrentHealth => health.CurrentHealth;
     public float MaxHealth => health.MaxHealth;
 
     // Weight
@@ -115,17 +92,22 @@ public class Boat : MonoBehaviour
         lootHandler = GetComponent<BoatLootHandler>();
         lootHandler.Init();
 
-        instanceId.Init(data.instanceId);
+        instanceId.Init(data.InstanceId);
 
-        transform.position = data.position;
-        transform.rotation = Quaternion.Euler(data.rotation);
+        transform.position = data.Position.Vector3();
+        transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
 
-        health.Init(data.health);
+        health.Init(data.Health);
 
-        BoatDockPoint dockPoint = InstancesManager.instance.GetInstance(data.dockInstanceId).GetComponent<BoatDockPoint>();
-        SetDockPoint(dockPoint);
+        if (data.DockInstanceId != null) {
+            InstanceId boatDockInstance = null;
+            InstancesManager.Instance.TryGetInstance(data.DockInstanceId.Value, out boatDockInstance);
+            BoatDockPoint boatDock = boatDockInstance?.GetComponent<BoatDockPoint>();
 
-        SetState(data.state);
+            SetDockPoint(boatDock);
+        }
+
+        SetState(BoatStateEnum.Idle);
         BoatsManager.Instance.RegisterBoat(this);
     }
 
@@ -169,14 +151,14 @@ public class Boat : MonoBehaviour
     // Dock Point
     public void SetDockPoint(BoatDockPoint dockPoint)
     {
-        this.dockPoint = dockPoint;
+        this.DockPoint = dockPoint;
         dockPoint.SetBoat(this);
     }
 
     public void RemoveDockPoint()
     {
-        dockPoint.RemoveBoat();
-        dockPoint = null;
+        DockPoint.RemoveBoat();
+        DockPoint = null;
     }
 
     public void SetTargetLoot(LootContainer lootContainer)

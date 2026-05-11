@@ -4,7 +4,7 @@ public class ConstructionManager : MonoBehaviour
 {
     public static ConstructionManager Instance { get; private set; } = null;
 
-    public Building buildingToPlace { get; private set; } = null;
+    public Building BuildingToPlace { get; private set; } = null;
 
     private void Awake()
     {
@@ -25,11 +25,11 @@ public class ConstructionManager : MonoBehaviour
 
     private void OnSelectedBuildingToPlace(Building building)
     {
-        buildingToPlace = building;
+        BuildingToPlace = building;
     }
 
     private void OnBuildingFinishedPlacing(Building building)
     {
-        buildingToPlace = null;
+        BuildingToPlace = null;
     }
 }

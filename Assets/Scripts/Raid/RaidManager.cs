@@ -133,7 +133,7 @@ public class RaidManager : MonoBehaviour
 
             Boat boat = CreateBoat(position, rotation);
 
-            Human raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.id);
+            Human raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.Id);
 
             spawnPositions.Add(boat, position);
         }
@@ -234,13 +234,13 @@ public class RaidManager : MonoBehaviour
 
     private Human CreateRaider(Vector3 position, Vector3 rotation, int boatInstanceId)
     {
-        HumanDataV1 data = HumanDataFactory.CreateRandomRaiderData();
-        data.SetPosition(position);
-        data.SetRotation(rotation);
-        data.boatRider.SetBoatInstanceId(boatInstanceId);
-        data.boatRider.SetRiding(true);
+        HumanData data = HumanDataFactory.CreateRandomRaiderData();
+        data.Position = new Vector3Data(position);
+        data.Rotation = new Vector3Data(rotation);
+        data.BoatRider.SetBoatInstanceId(boatInstanceId);
+        data.BoatRider.SetRiding(true);
 
-        Human human = CreatureFactory.CreateRaider(data);
+        Human human = CreatureFactory.CreateHuman(data);
 
         return human;
     }
@@ -248,11 +248,20 @@ public class RaidManager : MonoBehaviour
     private Boat CreateBoat(Vector3 position, Quaternion rotation)
     {
         int id = boatPrefab.BoatData.BoatId;
-        int instanceId = InstancesManager.instance.GetNextInstanceId();
+        int instanceId = InstancesManager.Instance.GetNextInstanceId();
         float health = boatPrefab.Health.MaxHealth;
-        int dockInstanceId = GetNearestDockPoint(position).InstanceId.id;
+        int dockInstanceId = GetNearestDockPoint(position).InstanceId.Id;
 
-        BoatData data = new BoatData(id, instanceId, BoatStateEnum.MovingToDock, position, rotation.eulerAngles, health, dockInstanceId);
+        BoatData data = new BoatData()
+        {
+            Id = id,
+            InstanceId = instanceId,
+            Position = new Vector3Data(position),
+            Rotation = new Vector3Data(rotation.eulerAngles),
+            Health = health,
+            DockInstanceId = dockInstanceId,
+        };
+
         Boat boat = BoatFactory.CreateBoat(boatPrefab, data);
 
         return boat;
@@ -277,7 +286,7 @@ public class RaidManager : MonoBehaviour
 
     private int GetRandomRaidersAmount()
     {
-        int floorAmount = BuildingsManager.instance.BuiltFloors.Count;
+        int floorAmount = BuildingsManager.Instance.BuiltFloors.Count;
         int raidersAmount = Random.Range(floorAmount / 2, floorAmount + 1);
         return raidersAmount;
     }

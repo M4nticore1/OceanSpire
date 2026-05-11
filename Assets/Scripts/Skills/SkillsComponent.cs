@@ -8,14 +8,14 @@ public class SkillsComponent : MonoBehaviour
 
     public void Init(SkillsData data)
     {
-        foreach (var saved in data.skills) { 
-            var def = SkillsList.Instance.GetSkillDefinition((SkillId)saved.id);
+        foreach (var saved in data.Skills) { 
+            var def = SkillsList.Instance.GetSkillDefinition((SkillId)saved.Id);
 
             SkillId key = def.SkillId;
             SkillInstance skill = new SkillInstance(def);
 
-            skill.SetLevel(saved.level);
-            skill.SetXp(saved.xp);
+            skill.SetLevel(saved.Level);
+            skill.SetXp(saved.Xp);
 
             skills.Add(key, skill);
         }

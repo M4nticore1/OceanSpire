@@ -16,9 +16,9 @@ public class WorldSaveManager
         }
     }
 
-    public WorldData[] allSaveData { get; private set; }
-    public WorldData currentSaveWorldData { get; private set; }
-    public string saveWorldName { get; private set; }
+    public WorldData[] AllSaveData { get; private set; }
+    public WorldData CurrentWorldData { get; private set; }
+    public string SaveWorldName { get; private set; }
 
     private WorldSaveManager() { }
 
@@ -30,29 +30,17 @@ public class WorldSaveManager
     // World
     public void FindSavesData()
     {
-        allSaveData = WorldSaveSystem.GetAllSaveData();
+        AllSaveData = WorldSaveSystem.GetAllSaveData();
     }
 
     public void SetWorldData(WorldData data)
     {
-        currentSaveWorldData = data;
-        SetSaveWorldName(currentSaveWorldData.cityData.cityName);
+        CurrentWorldData = data;
+        SetSaveWorldName(CurrentWorldData.WorldName);
     }
 
     public void SetSaveWorldName(string name)
     {
-        saveWorldName = name;
-    }
-
-    public void CreateWorld(string worldName)
-    {
-        SetSaveWorldName(worldName);
-        SceneManager.LoadScene(1);
-    }
-
-    public void LoadWorld(WorldData data)
-    {
-        SetWorldData(data);
-        SceneManager.LoadScene(1);
+        SaveWorldName = name;
     }
 }

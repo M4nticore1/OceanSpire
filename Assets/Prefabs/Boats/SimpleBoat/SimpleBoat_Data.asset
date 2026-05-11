@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01fb52004f6d8b8408bca2f3111277d3, type: 3}
+  m_Script: {fileID: 11500000, guid: cf89977cd24b8d94aa20d5a08e46f9d8, type: 3}
   m_Name: SimpleBoat_Data
   m_EditorClassIdentifier: 
   boatId: 0
-  boatIdName: simple_boat
-  boatName: Simple Boat
-  maxHealth: 100
-  maxWeight: 300
-  lootCollectTime: 4
-  detailsMenuWidget: {fileID: 1628767903394670288, guid: 817390674c4710845b657886745b41b6, type: 3}
+  boatIdName: Simple Boat
+  nameLocalization: {fileID: 0}

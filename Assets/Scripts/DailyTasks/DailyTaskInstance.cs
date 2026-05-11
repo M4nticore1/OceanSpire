@@ -14,9 +14,11 @@ public class DailyTaskInstance : ILocalizable
     public static event Action<DailyTaskInstance, int> onTaskProgressAdded;
     public static event Action<DailyTaskInstance> onTaskCompleted;
 
-    public DailyTaskInstance(DailyTaskDefinition definition, int progress)
+    public DailyTaskInstance(DailyTaskDefinition definition, int progress, bool completed)
     {
         Definition = definition;
+        Progress = progress;
+        IsCompleted = completed;
 
         DailyTaskCondition.onProgressChanged += OnProgressChanged;
     }

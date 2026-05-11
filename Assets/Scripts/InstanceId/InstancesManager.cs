@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InstancesManager : MonoBehaviour
 {
-    public static InstancesManager instance { get; private set; }
+    public static InstancesManager Instance { get; private set; }
     private List<int> instanceIds = new List<int>();
     public IReadOnlyList<int> InstanceIds => instanceIds.AsReadOnly();
 
@@ -12,30 +12,35 @@ public class InstancesManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance) {
+        if (Instance) {
             Destroy(gameObject);
             return;
         }
 
-        instance = this;
+        Instance = this;
     }
 
     public void RegisterInstance(InstanceId instance)
     {
         int id = GetNextInstanceId();
-        RegisterInstance(instance, id);
+        RegisterInstance(id, instance);
     }
 
-    public void RegisterInstance(InstanceId instance, int id)
+    public void RegisterInstance(int id, InstanceId instance)
     {
+        if (instances.ContainsKey(id)) {
+            Debug.Log($"Instance Id of {instance} is already registered as {id} by {InstancesManager.Instance.GetInstance(id)}!");
+            instance.Init(GetNextInstanceId());
+            return;
+        }
+
         instanceIds.Add(id);
         instances.Add(id, instance);
     }
 
     public void UnregisterInstance(InstanceId instance)
     {
-        instanceIds.Remove(instance.id);
-        instances.Remove(instance.id);
+        instances.Remove(instance.Id);
     }
 
     public bool TryGetInstance(int id, out InstanceId instanceId)

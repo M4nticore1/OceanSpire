@@ -2,12 +2,15 @@ using UnityEngine;
 
 public class NameData
 {
-    public int firstNameId { get; private set; }
-    public int lastNameId { get; private set; }
+    public int FirstNameId = 0;
+    public int LastNameId = 0;
 
-    public NameData(int firstNameId, int lastNameIf)
+    public static NameData Create(NameComponent nameComponent)
     {
-        this.firstNameId = firstNameId;
-        this.lastNameId = lastNameIf;
+        return new NameData()
+        {
+            FirstNameId = nameComponent.FirstNameId,
+            LastNameId = nameComponent.LastNameId,
+        };
     }
 }

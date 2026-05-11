@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class BoatsManager : MonoBehaviour
 {
-    public static BoatsManager Instance { get; private set; } = null;
+    public static BoatsManager Instance { get; private set; }
 
-    public List<Boat> boats { get; private set; } = new List<Boat>();
-    public Dictionary<int, Boat> boatsDict { get; private set; } = new Dictionary<int, Boat>();
+    private List<Boat> boats = new List<Boat>();
+    public IReadOnlyList<Boat> Boats => boats.AsReadOnly();
+
+    private Dictionary<int, Boat> boatsDict = new Dictionary<int, Boat>();
 
     private void Awake()
     {
@@ -21,13 +23,21 @@ public class BoatsManager : MonoBehaviour
     public void RegisterBoat(Boat boat)
     {
         boats.Add(boat);
-        boatsDict.Add(boat.InstanceId.id, boat);
+        boatsDict.Add(boat.InstanceId.Id, boat);
     }
 
     public void UnregisterBoat(Boat boat)
     {
         boats.Remove(boat);
-        boatsDict.Remove(boat.InstanceId.id);
+        boatsDict.Remove(boat.InstanceId.Id);
+    }
+
+    public Boat GetBoat(int id)
+    {
+        Boat boat;
+        boatsDict.TryGetValue(id, out boat);
+
+        return boat;
     }
 
     public Boat GetBoatByInteractorIndex(int index)

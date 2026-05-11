@@ -14,6 +14,7 @@ public abstract class Creature : MonoBehaviour
     public Movement Movement => movement;
 
     [SerializeField] private InstanceId instanceId;
+    public InstanceId InstanceId => instanceId;
 
     private bool isIdle = true;
 
@@ -32,18 +33,18 @@ public abstract class Creature : MonoBehaviour
         movement.onMovementStopped -= OnStoppedMoving;
     }
 
-    public void Init(CreatureDataV1 data)
+    public void Init(CreatureData data)
     {
-        transform.position = data.position;
-        transform.rotation = Quaternion.Euler(data.rotation);
+        transform.position = data.Position.Vector3();
+        transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
 
-        instanceId.Init(data.instanceId);
+        instanceId.Init(data.InstanceId);
 
         OnInit(data);
         AssignIdle();
     }
 
-    protected abstract void OnInit(CreatureDataV1 data);
+    protected abstract void OnInit(CreatureData data);
     protected abstract bool ShouldStartIdle();
 
     // Idle

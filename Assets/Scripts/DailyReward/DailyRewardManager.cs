@@ -12,7 +12,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     [SerializeField] private int maxRewardsCount = 4;
     public int MaxRewardsCount => maxRewardsCount;
 
-    [SerializeField] private int updateFrequencyInHours = 24;
+    [SerializeField] private int updateRewardTimeOffset = 0;
 
     [Header("Receive Reward")]
     [SerializeField] private int maxFreeRewardsCount = 1;
@@ -100,7 +100,11 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     private void UpdateNextResetSeconds()
     {
-        nextResetSeconds = TimeManager.GetCurrentSecond() + updateFrequencyInHours * 60 * 60;
+        long minTargetSecond = updateRewardTimeOffset * 3600;
+        long maxTargetSecond = (24 + updateRewardTimeOffset) * 3600;
+        long targetSecond = minTargetSecond - TimeManager.GetCurrentSecond() >= 0 ? minTargetSecond : maxTargetSecond;
+
+        nextResetSeconds = TimeManager.GetCurrentSecond() + 24 * 3600;
     }
 
     private void ResetRewards()

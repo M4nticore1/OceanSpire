@@ -6,7 +6,7 @@ public class HealthComponent : MonoBehaviour
     [SerializeField] private float maxHealth = 100f;
     public float MaxHealth => maxHealth;
 
-    public float currentHealth { get; private set; } = 0;
+    public float CurrentHealth { get; private set; } = 0;
     public bool IsAlive { get; private set; } = true;
 
     public event Action onHealthChanged;
@@ -24,21 +24,21 @@ public class HealthComponent : MonoBehaviour
 
     public void AddHealth(float value)
     {
-        if (currentHealth >= maxHealth) return;
+        if (CurrentHealth >= maxHealth) return;
 
-        SetCurrentHealth(currentHealth + value);
+        SetCurrentHealth(CurrentHealth + value);
     }
 
     public void RemoveHealth(float value)
     {
-        if (currentHealth < 0f) return;
+        if (CurrentHealth < 0f) return;
 
-        SetCurrentHealth(currentHealth - value);
+        SetCurrentHealth(CurrentHealth - value);
     }
 
     public void SetCurrentHealth(float value)
     {
-        currentHealth = value;
+        CurrentHealth = value;
         onHealthChanged?.Invoke();
 
         if (ShouldDie()) {
@@ -62,7 +62,7 @@ public class HealthComponent : MonoBehaviour
 
     private bool ShouldDie()
     {
-        if (currentHealth > 0) return false;
+        if (CurrentHealth > 0) return false;
         if (!IsAlive) return false;
 
         return true;
@@ -70,7 +70,7 @@ public class HealthComponent : MonoBehaviour
 
     private bool ShouldRevive()
     {
-        if (currentHealth <= 0) return false;
+        if (CurrentHealth <= 0) return false;
         if (IsAlive) return false;
 
         return true;

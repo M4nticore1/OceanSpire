@@ -16,110 +16,124 @@ public class BuildingsLoader : Loader
         Instance = this;
     }
 
-    protected override void Load(WorldData data)
+    protected override void Load(WorldData worldData)
     {
-        LoadEnvironmentBuildings(data != null ? data.GroundBuildings : null);
-        LoadFloorFrames();
-        LoadTowerBuildings(data != null ? data.towerBuildings : null);
-    }
-
-    private void LoadEnvironmentBuildings(BuildingData[] data)
-    {
-        int groundBuildingsCount = BuildingsManager.instance.GroundBuildings().Count();
-
-        if (data == null) {
-            data = new BuildingData[groundBuildingsCount];
+        if (worldData?.GroundBuildings != null) {
+            LoadGroundBuildings(worldData.GroundBuildings);
+        }
+        else {
+            InitGroundBuildins();
         }
 
-        for (int i = 0; i < groundBuildingsCount; i++) {
-            if (i >= data.Length) break;
+        if (worldData?.FloorFrameBuildings != null && worldData?.TowerBuildings != null) {
+            ClearTowerBuildinds();
+            LoadFloorFrames(worldData.FloorFrameBuildings);
+            LoadTowerBuildings(worldData.TowerBuildings);
+        }
+        else {
+            InitFloorBuildinds();
+            InitTowerBuildings();
+        }
+    }
 
-            GroundBuilding building = BuildingsManager.instance.GroundBuildings().ToArray()[i];
+    private void LoadGroundBuildings(BuildingData[] buildingsData)
+    {
+        var buildings = BuildingsManager.Instance.GroundBuildings().ToArray();
 
-            var buildingData = data[i];
+        for (int i = 0; i < buildings.Length; i++) {
+            if (buildingsData.Length <= i) return;
+            var building = buildings[i];
+            BuildingData buildingData;
 
-            if (buildingData == null) {
-                buildingData = BuildingDataFactory.CreateBuildingData(building);
-                buildingData.ConstructionData.SetUnderConstruction(false);
-            }
-
-            if (WorldSaveManager.Instance.currentSaveWorldData != null && buildingData.Id != building.BuildingData.BuildingId) continue;
+            buildingData = buildingsData[i];
 
             building.Init(buildingData);
         }
     }
 
-    private void LoadFloorFrames()
+    private void LoadFloorFrames(TowerBuildingData[] floorFrameBuildingsData)
     {
-        int floorsCount = BuildingsManager.instance.BuiltFloors.Count;
+        for (int i = 0; i < floorFrameBuildingsData.Length; i++) {
+            int id = (int)BuildingIdEnum.FloorFrame;
+            var prefab = BuildingsList.Instance.GetBuilding(id) as TowerBuilding;
+            TowerBuildingData buildingData = TowerBuildingData.Create(prefab);
+            buildingData.InstanceId = InstancesManager.Instance.GetNextInstanceId();
+            buildingData.FloorIndex = i;
 
-        for (int i = 0; i < floorsCount; i++) {
-            FloorFrameModule floor = BuildingsManager.instance.BuiltFloors[i];
-            TowerBuilding building = floor.OwnedBuilding as TowerBuilding;
-            building.Init(BuildingDataFactory.CreateBuildingData(building, i, 0));
+            BuildingFactory.CreateBuilding(prefab, buildingData);
         }
     }
 
-    private void LoadTowerBuildings(TowerBuildingData[] saveData)
+    private void LoadTowerBuildings(TowerBuildingData[] towerBuildingsData)
     {
-        if (saveData != null) {
-            foreach (var data in saveData) {
-                if (data == null) {
-                    Debug.LogError($"entry was not found in towerBuildingsData");
-                    continue;
-                }
+        foreach (var towerBuildingData in towerBuildingsData) {
+            if (towerBuildingData == null) continue;
+            if (towerBuildingData.FloorIndex >= BuildingsManager.Instance.BuiltFloors.Count) continue;
+            if (towerBuildingData.PlaceIndex < 0) continue;
+            if (towerBuildingData.PlaceIndex >= BuildingsManager.RoomsCountPerFloor) continue;
 
-                if (data.PlaceIndex == 0) {
-                    TowerBuilding placedBuilding = BuildingsManager.instance.BuiltFloors[data.FloorIndex].HallBuildingPlace.PlacedBuilding;
-                    if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.Id) {
-                        placedBuilding.Demolish();
-                    }
-
-                    if (data.Id >= 0) {
-                        BuildingFactory.CreateBuilding(data);
-                    }
-                }
-                else {
-                    TowerBuilding placedBuilding = BuildingsManager.instance.BuiltFloors[data.FloorIndex].RoomBuildingPlaces[data.PlaceIndex].PlacedBuilding;
-                    if (placedBuilding && placedBuilding.BuildingData.BuildingId != data.Id) {
-                        placedBuilding.Demolish();
-                    }
-
-                    if (data.Id >= 0) {
-                        BuildingFactory.CreateBuilding(data);
-                    }
-                }
-            }
+            var prefab = BuildingsList.Instance.GetBuilding(towerBuildingData.Id) as TowerBuilding;
+            BuildingFactory.CreateBuilding(prefab, towerBuildingData);
         }
-        else {
-            int floorsCount = BuildingsManager.instance.BuiltFloors.Count;
+    }
 
-            for (int i = 0; i < floorsCount; i++) {
-                FloorFrameModule floor = BuildingsManager.instance.BuiltFloors[i];
+    private void ClearTowerBuildinds()
+    {
+        for (int i = BuildingsManager.Instance.BuiltFloors.Count - 1; i >= 0; i--) {
+            var floor = BuildingsManager.Instance.BuiltFloors[i];
+            floor.OwnedBuilding.Demolish();
+        }
+    }
 
-                // Hall
-                BuildingPlace hallPlace = floor.HallBuildingPlace;
-                TowerBuilding hall = hallPlace.PlacedBuilding;
+    private void InitGroundBuildins()
+    {
+        var buildings = BuildingsManager.Instance.GroundBuildings().ToArray();
 
-                if (hall) {
-                    TowerBuildingData data = BuildingDataFactory.CreateBuildingData(hall, i, 0);
-                    data.ConstructionData.SetUnderConstruction(false);
+        for (int i = 0; i < buildings.Length; i++) {
+            var building = buildings[i];
 
-                    hall.Init(data);
-                }
+            BuildingData buildingData = BuildingData.Create(building);
+            buildingData.InstanceId = InstancesManager.Instance.GetNextInstanceId();
 
-                // Rooms
-                for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
-                    BuildingPlace roomPlace = floor.RoomBuildingPlaces[j];
-                    TowerBuilding room = roomPlace.PlacedBuilding;
+            building.Init(buildingData);
+        }
+    }
 
-                    if (!room) continue;
+    private void InitFloorBuildinds()
+    {
+        int floorsCount = BuildingsManager.Instance.BuiltFloors.Count;
 
-                    TowerBuildingData data = BuildingDataFactory.CreateBuildingData(room, i, j);
-                    data.ConstructionData.SetUnderConstruction(false);
+        for (int i = 0; i < floorsCount; i++) {
+            var floor = BuildingsManager.Instance.BuiltFloors[i];
+            var building = floor.OwnedBuilding as TowerBuilding;
 
-                    room.Init(data);
-                }
+            var buildingData = TowerBuildingData.Create(building);
+            buildingData.InstanceId = InstancesManager.Instance.GetNextInstanceId();
+            buildingData.FloorIndex = i;
+
+            building.Init(buildingData);
+        }
+    }
+
+    private void InitTowerBuildings()
+    {
+        int floorsCount = BuildingsManager.Instance.BuiltFloors.Count;
+
+        for (int i = 0; i < floorsCount; i++) {
+            var floor = BuildingsManager.Instance.BuiltFloors[i];
+
+            for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
+                var roomPlace = floor.RoomBuildingPlaces[j];
+
+                var room = roomPlace.PlacedBuilding;
+                if (!room) continue;
+
+                var data = TowerBuildingData.Create(room);
+                data.InstanceId = InstancesManager.Instance.GetNextInstanceId();
+                data.FloorIndex = i;
+                data.PlaceIndex = j;
+
+                room.Init(data);
             }
         }
     }

@@ -1,25 +1,27 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    [SerializeField] private RectTransform managementSaveMenu;
+    [SerializeField] private GameObject managementSaveMenu;
     [SerializeField] private CustomButton loadSaveButton = null;
     [SerializeField] private CustomButton deleteSaveButton = null;
-
-    public SaveSlotWidget selectedWorldSaveSlot { get; private set; } = null;
-    private WorldData SelectedSaveData => selectedWorldSaveSlot ? selectedWorldSaveSlot.worldSaveData : null;
 
     private void OnEnable()
     {
         loadSaveButton.onReleased.AddListener(OnLoadWorldButtonClicked);
         deleteSaveButton.onReleased.AddListener(OnDeleteWorldButtonClicked);
+        SaveSlotWidget.onSaveSlotSelected += OnSaveSlotSelected;
+        SaveSlotWidget.onSaveSlotDeselected += OnSaveSlotDeselected;
     }
 
     private void OnDisable()
     {
         loadSaveButton.onReleased.RemoveListener(OnLoadWorldButtonClicked);
         deleteSaveButton.onReleased.RemoveListener(OnDeleteWorldButtonClicked);
+        SaveSlotWidget.onSaveSlotSelected -= OnSaveSlotSelected;
+        SaveSlotWidget.onSaveSlotDeselected -= OnSaveSlotDeselected;
     }
 
     private void Start()
@@ -29,16 +31,28 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnLoadWorldButtonClicked()
     {
-        WorldData data = SelectedSaveData;
-        WorldSaveManager.Instance.LoadWorld(data);
+        WorldData data = SaveSlotWidget.Selected.WorldSaveData;
+
+        WorldSaveManager.Instance.SetWorldData(data);
+        SceneManager.LoadScene(1);
     }
 
     private void OnDeleteWorldButtonClicked()
     {
-        string worldName = selectedWorldSaveSlot.worldSaveData.cityData.cityName;
+        string worldName = SaveSlotWidget.Selected.WorldSaveData.WorldName;
         WorldSaveSystem.RemoveSaveByWorldName(worldName);
+
         WorldSaveManager.Instance.FindSavesData();
-        selectedWorldSaveSlot.Button.SetState(CustomButtonState.Idle);
-        selectedWorldSaveSlot.RemoveSaveData();
+        SaveSlotWidget.Selected.RemoveSaveData();
+    }
+
+    private void OnSaveSlotSelected(SaveSlotWidget saveSlotWidget)
+    {
+        managementSaveMenu.SetActive(true);
+    }
+
+    private void OnSaveSlotDeselected(SaveSlotWidget saveSlotWidget)
+    {
+        managementSaveMenu.SetActive(false);
     }
 }

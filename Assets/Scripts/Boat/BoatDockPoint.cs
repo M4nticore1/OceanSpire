@@ -1,15 +1,5 @@
 using UnityEngine;
 
-public class BoatDockData
-{
-    public int instanceId { get; private set; } = -1;
-
-    public BoatDockData(int instanceId)
-    {
-        this.instanceId = instanceId;
-    }
-}
-
 public class BoatDockPoint : MonoBehaviour
 {
     public Boat boat { get; private set; }
@@ -23,9 +13,25 @@ public class BoatDockPoint : MonoBehaviour
     [SerializeField] private Transform entranceTransform;
     public Transform EntraceTransform => entranceTransform;
 
+    private bool isInited = false;
+
+    private void Start()
+    {
+        if (isInited) return;
+
+        BoatDockData dockData = new BoatDockData()
+        {
+            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
+        };
+
+        Init(dockData);
+    }
+
     public void Init(BoatDockData data)
     {
-        instanceId.Init(data.instanceId);
+        instanceId.Init(data.InstanceId);
+
+        isInited = true;
     }
 
     public void SetBoat(Boat boat)

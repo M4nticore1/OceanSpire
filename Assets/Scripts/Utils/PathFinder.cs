@@ -13,15 +13,15 @@ public static class PathFinder
     {
         Building targetBuilding = null;
 
-        for (int i = 0; i < BuildingsManager.instance.BuiltFloors.Count; i++) {
-            Building hall = BuildingsManager.instance.BuiltFloors[i].HallBuildingPlace.PlacedBuilding;
+        for (int i = 0; i < BuildingsManager.Instance.BuiltFloors.Count; i++) {
+            Building hall = BuildingsManager.Instance.BuiltFloors[i].HallBuildingPlace.PlacedBuilding;
             if (hall && targetBuildingCondition(hall)) {
                 targetBuilding = hall;
                 break;
             }
 
             for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
-                Building room = BuildingsManager.instance.BuiltFloors[i].RoomBuildingPlaces[j].PlacedBuilding;
+                Building room = BuildingsManager.Instance.BuiltFloors[i].RoomBuildingPlaces[j].PlacedBuilding;
                 if (room && targetBuildingCondition(room)) {
                     targetBuilding = room;
                     break;
@@ -41,7 +41,7 @@ public static class PathFinder
 
         if (startPlace || targetBuilding is TowerBuilding) {
             if (!startPlace) {
-                startPlace = BuildingsManager.instance.BuiltFloors[0].RoomBuildingPlaces[BuildingsManager.FirstBuildCityBuildingPlace];
+                startPlace = BuildingsManager.Instance.BuiltFloors[0].RoomBuildingPlaces[BuildingsManager.FirstBuildCityBuildingPlace];
             }
 
             // Find path
@@ -91,7 +91,7 @@ public static class PathFinder
                     continue;
 
                 // Check an emptiness of place
-                bool isSpecialEmpty = neighbor.floorIndex == 0 && neighbor.PlaceIndex == BuildingsManager.FirstBuildCityBuildingPlace;
+                bool isSpecialEmpty = neighbor.FloorIndex == 0 && neighbor.PlaceIndex == BuildingsManager.FirstBuildCityBuildingPlace;
                 if (!neighbor.PlacedBuilding && !isSpecialEmpty) {
                     continue;
                 }
@@ -101,7 +101,7 @@ public static class PathFinder
                 }
 
                 // Check elevator
-                if (hasElevator && place.floorIndex != neighbor.floorIndex && !neighbor.PlacedBuilding.GetComponent<ElevatorModule>()) continue;
+                if (hasElevator && place.FloorIndex != neighbor.FloorIndex && !neighbor.PlacedBuilding.GetComponent<ElevatorModule>()) continue;
                 if (hasElevator && neighbor.PlacedBuilding.ConstructionComponent.IsUnderConstruction) continue;
 
                 visited.Add(neighbor);

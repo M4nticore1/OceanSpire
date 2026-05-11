@@ -15,7 +15,7 @@ public class EquipmentComponent : MonoBehaviour
 
     public void Init(EquipmentData data)
     {
-        int id = data.WeaponId;
+        int id = data.EquipmentId;
         EquipmentDefinition definition = ItemsList.Instance.GetItem(id) as EquipmentDefinition;
         SetEquipmentAndApply(definition);
     }

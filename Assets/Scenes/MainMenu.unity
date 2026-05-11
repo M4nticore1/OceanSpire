@@ -300,11 +300,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbecc5e062f1a248886e04d11eb4646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputListener
---- !u!224 &371888447 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6836357081438930290, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-  m_PrefabInstance: {fileID: 6624092925259090882}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &564957211
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ecd4456a3c94a942a3585f28a56d7ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  managementSaveMenu: {fileID: 371888447}
+  managementSaveMenu: {fileID: 1229542939}
   loadSaveButton: {fileID: 1633443547}
   deleteSaveButton: {fileID: 1365414147}
 --- !u!4 &564957213
@@ -416,6 +411,11 @@ Transform:
   - {fileID: 1546888464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1229542939 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6759780315002228136, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+  m_PrefabInstance: {fileID: 6624092925259090882}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1305123311
 PrefabInstance:
   m_ObjectHideFlags: 0

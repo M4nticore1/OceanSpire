@@ -141,29 +141,35 @@ public class Human : Creature, IClickable
         currentStatus.Tick();
     }
 
-    protected override void OnInit(CreatureDataV1 data)
+    protected override void OnInit(CreatureData data)
     {
-        HumanDataV1 humanData = data as HumanDataV1;
+        HumanData humanData = data as HumanData;
 
         SetStatus(currentStatusEnum);
 
-        healthComponent.SetCurrentHealth(humanData.health);
-        nameComponent.Init(humanData.name);
+        healthComponent.SetCurrentHealth(humanData.Health);
+        nameComponent.Init(humanData.Name);
 
-        if (InstancesManager.instance.TryGetInstance(humanData.interactBuildingInstanceId, out var obj)) {
-            if (obj.TryGetComponent<Building>(out var building)) {
-                interactComponent.SetInteractBuilding(building);
-            }
+        if (humanData.InteractBuildingInstanceId != null) {
+            InstanceId instanceId = null;
+            InstancesManager.Instance.TryGetInstance(humanData.InteractBuildingInstanceId.Value, out instanceId);
+            Building interactBuilding = instanceId?.GetComponent<Building>();
+
+            interactComponent.SetInteractBuilding(interactBuilding);
         }
 
-        weaponComponent.Init(humanData.weapon);
-        skillsComponent.Init(humanData.skills);
+        if (humanData.BoatRider.BoatInstanceId != null) {
+            InstanceId instanceId = null;
+            InstancesManager.Instance.TryGetInstance(humanData.BoatRider.BoatInstanceId.Value, out instanceId);
+            Boat selectedBoat = instanceId?.GetComponent<Boat>();
 
-        if (humanData.boatRider.boatInstanceId >= 0) {
-            boatRider.SetSelectedBoat(humanData.boatRider.boatInstanceId);
+            boatRider.SetSelectedBoat(selectedBoat);
         }
 
-        if (humanData.boatRider.isRiding) {
+        weaponComponent.Init(humanData.Weapon);
+        skillsComponent.Init(humanData.Skills);
+
+        if (humanData.BoatRider.IsRiding) {
             boatRider.EnterBoat();
         }
 
@@ -174,12 +180,12 @@ public class Human : Creature, IClickable
     public void MoveToBoat()
     {
         if (cityNavigator.FloorIndex > 0) {
-            Building building = BuildingsManager.instance.TowerGate;
+            Building building = BuildingsManager.Instance.TowerGate;
             cityNavigator.SetTargetBuilding(building);
             cityNavigator.TryFindPathToTargetBuilding();
         }
         else {
-            Vector3 position = boatRider.selectedBoat.dockPoint.EntraceTransform.position;
+            Vector3 position = boatRider.SelectedBoat.DockPoint.EntraceTransform.position;
             movement.TryMoveTo(position);
         }
 
@@ -190,7 +196,7 @@ public class Human : Creature, IClickable
     public void AcceptWanderer()
     {
         SetStatus(HumanStatusEnum.Citizen);
-        Destroy(boatRider.selectedBoat.gameObject);
+        Destroy(boatRider.SelectedBoat.gameObject);
         boatRider.ExitBoat();
         onWandererAccepted?.Invoke(this);
     }
@@ -204,7 +210,7 @@ public class Human : Creature, IClickable
     // IClickable
     public void Click()
     {
-        BoatRider.selectedBoat.SelectComponent.Select();
+        BoatRider.SelectedBoat.SelectComponent.Select();
     }
 
     public bool ShouldClick()
@@ -283,7 +289,7 @@ public class Human : Creature, IClickable
         currentStatus.OnEnteredBuilding(building);
 
         if (boatRider.isMovingToBoat && building == cityNavigator.TargetBuilding) {
-            Vector3 position = boatRider.selectedBoat.dockPoint.EntraceTransform.position;
+            Vector3 position = boatRider.SelectedBoat.DockPoint.EntraceTransform.position;
             movement.TryMoveTo(position);
         }
     }
@@ -306,8 +312,8 @@ public class Human : Creature, IClickable
         cityNavigator.RemoveTargetBuilding();
         cityNavigator.RemovePath();
 
-        if (boatRider.isRidingOnBoat) {
-            BoatRider.selectedBoat.SetState(BoatStateEnum.MovingToDock);
+        if (boatRider.IsRidingOnBoat) {
+            BoatRider.SelectedBoat.SetState(BoatStateEnum.MovingToDock);
         }
         else {
             cityNavigator.UpdateFollowingPathState();

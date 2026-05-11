@@ -178,7 +178,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     public bool CanMoveToFloor(int floor)
     {
-        TowerBuilding targetBuilding = BuildingsManager.instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
+        TowerBuilding targetBuilding = BuildingsManager.Instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
         if (!targetBuilding)
             return false;
 
@@ -295,7 +295,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     private void ApplyOwnedBuildingByFloor(int floor)
     {
-        TowerBuilding building = BuildingsManager.instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
+        TowerBuilding building = BuildingsManager.Instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
         if (building == ownedBuilding) return;
 
         SetOwnedBuilding(building);

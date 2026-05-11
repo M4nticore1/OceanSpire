@@ -12,12 +12,14 @@ public class WorldEntry
 
 public class SaveSlotWidget : MonoBehaviour
 {
+    public static SaveSlotWidget Selected { get; private set; }
+
     [SerializeField] private CreateNewWorldMenu createNewWorldMenu;
 
-    public WorldData worldSaveData { get; private set; } = null;
+    public WorldData WorldSaveData { get; private set; } = null;
     [SerializeField] private int slotIndex = 0;
+
     [SerializeField] private CustomButton button;
-    public CustomButton Button => button;
     [SerializeField] private GameObject createWorldMenu;
     [SerializeField] private GameObject loadWorldMenu;
     [SerializeField] private TextMeshProUGUI worldNameText;
@@ -27,23 +29,27 @@ public class SaveSlotWidget : MonoBehaviour
     [SerializeField] private Image worldThumbImage;
 
     public static event System.Action<SaveSlotWidget> onSaveSlotSelected;
-    public static event System.Action<SaveSlotWidget> OnSaveSlotDeselected;
+    public static event System.Action<SaveSlotWidget> onSaveSlotDeselected;
 
     private void OnEnable()
     {
-        button.onReleased.AddListener(OnReleased);
+        button.onReleased.AddListener(OnClicked);
+        button.onSelected.AddListener(OnSelected);
+        button.onDeselected.AddListener(OnDeselected);
         createNewWorldMenu.onClosed += OnCreateMenuClosed;
     }
 
     private void OnDisable()
     {
-        button.onReleased.RemoveListener(OnReleased);
+        button.onReleased.RemoveListener(OnClicked);
+        button.onSelected.RemoveListener(OnSelected);
+        button.onDeselected.RemoveListener(OnDeselected);
         createNewWorldMenu.onClosed -= OnCreateMenuClosed;
     }
 
     private void Start()
     {
-        WorldData[] worldData = WorldSaveManager.Instance.allSaveData;
+        WorldData[] worldData = WorldSaveManager.Instance.AllSaveData;
         if (worldData == null) return;
 
         if (worldData.Length > slotIndex) {
@@ -61,45 +67,62 @@ public class SaveSlotWidget : MonoBehaviour
 
     public void SetSaveData(WorldData saveData)
     {
-        worldSaveData = saveData;
+        WorldSaveData = saveData;
 
         createWorldMenu.SetActive(false);
         loadWorldMenu.SetActive(true);
 
-        worldNameText.text = saveData.cityData.cityName;
-        floorsCountText.text += $"\n{saveData.cityData?.floorsCount.ToString()}";
-        residentsCountText.text += $"\n{saveData.citizensData.Length.ToString()}";
+        worldNameText.text = saveData.WorldName;
+        floorsCountText.text += $"\n{saveData.FloorFrameBuildings.Length.ToString()}";
+
+        if (saveData.Citizens != null) {
+            residentsCountText.text += $"\n{saveData.Citizens.Length.ToString()}";
+        }
+
         //lastSaveDataText.text += $"\n{data.lastSaveData.ToString()}";
 
-        Texture2D thumb = WorldSaveSystem.GetSaveScreenshotByWorldName(saveData.cityData.cityName);
+        Texture2D thumb = WorldSaveSystem.GetSaveScreenshotByWorldName(saveData.WorldName);
         if (thumb) {
             Sprite sprite = Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
             worldThumbImage.sprite = sprite;
         }
-        else
+        else {
             Debug.LogWarning("Save thumb is not found!");
+        }
     }
 
     public void RemoveSaveData()
     {
-        worldSaveData = null;
+        WorldSaveData = null;
+
+        button.SetState(CustomButtonState.Idle);
         createWorldMenu.SetActive(true);
         loadWorldMenu.SetActive(false);
     }
 
-    private void OnReleased()
+    private void OnClicked()
     {
-        if (worldSaveData == null) {
+        Selected = this;
+
+        if (WorldSaveData == null) {
+            createNewWorldMenu.Open();
             button.IsInteractable = false;
         }
+    }
 
-        createNewWorldMenu.Open();
-
+    private void OnSelected()
+    {
         onSaveSlotSelected?.Invoke(this);
+    }
+
+    private void OnDeselected()
+    {
+        onSaveSlotDeselected?.Invoke(this);
     }
 
     private void OnCreateMenuClosed()
     {
+        Selected = null;
         button.IsInteractable = true;
         button.SetState(CustomButtonState.Idle);
     }

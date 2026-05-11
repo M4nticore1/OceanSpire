@@ -6,6 +6,7 @@ public abstract class BuildingModule : MonoBehaviour
 {
     private Building ownedBuilding = null;
     public Building OwnedBuilding => ownedBuilding ? ownedBuilding : GetComponent<Building>();
+    public TowerBuilding TowerOwnedBuilding => OwnedBuilding as TowerBuilding;
 
     public bool IsWorking { get; private set; } = false;
 
@@ -15,7 +16,7 @@ public abstract class BuildingModule : MonoBehaviour
     {
         get
         {
-            int level = ownedBuilding.LevelComponent.level - 1;
+            int level = ownedBuilding.LevelComponent.Level - 1;
 
             if (level < LevelsData.Length) {
                 return LevelsData[level];

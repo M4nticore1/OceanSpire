@@ -1,10 +1,8 @@
-using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("BuildingModules/Storage Building Module")]
 public class StorageBuildingModule : BuildingModule
 {
-    public StorageModuleLevelData[] StorageLevelsData => levelsData.OfType<StorageModuleLevelData>().ToArray();
     public StorageModuleLevelData StorageLevelData => LevelData as StorageModuleLevelData;
 
     protected override void Subscribe()

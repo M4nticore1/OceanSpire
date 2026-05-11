@@ -100,11 +100,11 @@ public class RaiderState : HumanState
     public override void OnEnteredBoat(Boat boat)
     {
         if (isFinishedRaiding) {
-            Vector3 position = RaidManager.Instance.GetSpawnPosition(human.BoatRider.selectedBoat);
+            Vector3 position = RaidManager.Instance.GetSpawnPosition(human.BoatRider.SelectedBoat);
             boat.FloatAway(position);
         }
         else {
-            human.BoatRider.selectedBoat.SetState(BoatStateEnum.MovingToDock);
+            human.BoatRider.SelectedBoat.SetState(BoatStateEnum.MovingToDock);
         }
     }
 

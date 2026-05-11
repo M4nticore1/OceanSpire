@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4207ac79800eb744ba4944814a85a8f9, type: 3}
   m_Name: LivingRooms_StorageLevelData_01
   m_EditorClassIdentifier: 
-  storageItems:
-  - itemData: {fileID: 11400000, guid: 550b2a9af4e53db4990bef7a9fceb5fa, type: 2}
+  stacks:
+  - stackEnum: 0
     amount: 4
+  storageItems: []
   storageItemCategories: []
