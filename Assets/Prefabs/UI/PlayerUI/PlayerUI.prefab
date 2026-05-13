@@ -3687,6 +3687,34 @@ PrefabInstance:
       propertyPath: rewardMenu
       value: 
       objectReference: {fileID: 7583959492955261586}
+    - target: {fileID: 4280855259189230599, guid: 3ecbb0d89ed15b149b5e8cdb0b00706e, type: 3}
+      propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4280855259189230599, guid: 3ecbb0d89ed15b149b5e8cdb0b00706e, type: 3}
+      propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4280855259189230599, guid: 3ecbb0d89ed15b149b5e8cdb0b00706e, type: 3}
+      propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3082840923597711963}
+    - target: {fileID: 4280855259189230599, guid: 3ecbb0d89ed15b149b5e8cdb0b00706e, type: 3}
+      propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4280855259189230599, guid: 3ecbb0d89ed15b149b5e8cdb0b00706e, type: 3}
+      propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Close
+      objectReference: {fileID: 0}
+    - target: {fileID: 4280855259189230599, guid: 3ecbb0d89ed15b149b5e8cdb0b00706e, type: 3}
+      propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: DailyTasksManagerMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4280855259189230599, guid: 3ecbb0d89ed15b149b5e8cdb0b00706e, type: 3}
+      propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4579722025366605427, guid: 3ecbb0d89ed15b149b5e8cdb0b00706e, type: 3}
       propertyPath: m_Name
       value: DailyTasksMenu
@@ -3910,6 +3938,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5028220504261582107}
     m_Modifications:
+    - target: {fileID: 56828480321046143, guid: b8decfa6bc09b8e40bd2fdea659f0be0, type: 3}
+      propertyPath: content
+      value: 
+      objectReference: {fileID: 8291545848489941317}
+    - target: {fileID: 56828480321046143, guid: b8decfa6bc09b8e40bd2fdea659f0be0, type: 3}
+      propertyPath: openListButton
+      value: 
+      objectReference: {fileID: 8971962629013174467}
     - target: {fileID: 2778132464225699208, guid: 7b9184d8f016f6e40a363b09faff50ac, type: 3}
       propertyPath: managementMenu
       value: 
@@ -4006,14 +4042,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 56828480321046143, guid: b8decfa6bc09b8e40bd2fdea659f0be0, type: 3}
-      propertyPath: content
-      value: 
-      objectReference: {fileID: 8291545848489941317}
-    - target: {fileID: 56828480321046143, guid: b8decfa6bc09b8e40bd2fdea659f0be0, type: 3}
-      propertyPath: openListButton
-      value: 
-      objectReference: {fileID: 8971962629013174467}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

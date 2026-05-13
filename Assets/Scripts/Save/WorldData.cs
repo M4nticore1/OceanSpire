@@ -36,6 +36,7 @@ public class WorldData
     public BuildingData[] GroundBuildings;
     public TowerBuildingData[] FloorFrameBuildings;
     public TowerBuildingData[] TowerBuildings;
+    public ElevatorCabinData[] ElevatorCabins;
     public BoatDockData[] CitizenBoatDocks;
     public BoatDockData[] WandererBoatDocks;
     public BoatDockData[] RaiderBoatDocks;
@@ -43,10 +44,12 @@ public class WorldData
     public HumanData[] Citizens;
     public HumanData[] Wanderers;
     public HumanData[] Raiders;
-    public ItemData[] Items;
+    public ItemData[] CityInventory;
     public DailyTasksData DailyTasks;
+    public DailyRewardData DailyReward;
+    public RaidData Raid;
 
-    public static WorldData Create(WorldSaveManager saveManager, BuildingsManager buildings, DockPointsManager boatDocks, BoatsManager boats, CreaturesManager creatures, Inventory cityInventory, DailyTasksManager dailyTasks)
+    public static WorldData Create(WorldSaveManager saveManager, BuildingsManager buildings, DockPointsManager boatDocks, BoatsManager boats, CreaturesManager creatures, Inventory cityInventory, DailyTasksManager dailyTasks, DailyRewardManager dailyReward, RaidManager raid)
     {
         return new WorldData()
         {
@@ -55,6 +58,7 @@ public class WorldData
             GroundBuildings = SaveWorldSystem.SaveGroundBuildings(buildings),
             FloorFrameBuildings = SaveWorldSystem.SaveFloorFrameBuildings(buildings),
             TowerBuildings = SaveWorldSystem.SaveTowerBuildings(buildings),
+            ElevatorCabins = SaveWorldSystem.SaveElevatorCabins(buildings),
 
             CitizenBoatDocks = SaveWorldSystem.SaveBoatDocks(boatDocks.CitizenBoatDocks.ToArray()),
             WandererBoatDocks = SaveWorldSystem.SaveBoatDocks(boatDocks.WandererDockPoints.ToArray()),
@@ -66,9 +70,11 @@ public class WorldData
             Wanderers = SaveWorldSystem.SaveHumans(creatures.Wanderers.ToArray()),
             Raiders = SaveWorldSystem.SaveHumans(creatures.Raiders.ToArray()),
 
-            Items = SaveWorldSystem.SaveItems(cityInventory),
+            CityInventory = SaveWorldSystem.SaveItems(cityInventory),
 
             DailyTasks = DailyTasksData.Create(dailyTasks),
+            DailyReward = DailyRewardData.Create(dailyReward),
+            Raid = RaidData.Create(raid),
         };
     }
 }
@@ -77,7 +83,7 @@ public static class SaveWorldSystem
 {
     public static BuildingData[] SaveGroundBuildings(BuildingsManager buildingsManager)
     {
-        BuildingData[] buildings = new BuildingData[buildingsManager.GroundBuildings().Count()];
+        var buildings = new BuildingData[buildingsManager.GroundBuildings().Count()];
 
         for (int i = 0; i < buildingsManager.GroundBuildings().Count(); i++) {
             buildings[i] = BuildingData.Create(buildingsManager.GroundBuildings().ToArray()[i]);
@@ -91,7 +97,7 @@ public static class SaveWorldSystem
         List<TowerBuildingData> floors = new();
 
         foreach (var floor in buildingsManager.BuiltFloors) {
-            TowerBuilding building = floor.TowerOwnedBuilding;
+            var building = floor.OwnedTowerBuilding;
             if (!building) continue;
 
             floors.Add(TowerBuildingData.Create(building));
@@ -106,7 +112,7 @@ public static class SaveWorldSystem
 
         foreach (var floor in buildingsManager.BuiltFloors) {
             foreach (var place in floor.RoomBuildingPlaces) {
-                TowerBuilding building = place.PlacedBuilding;
+                var building = place.PlacedBuilding;
                 if (!building) continue;
 
                 buildings.Add(TowerBuildingData.Create(building));
@@ -114,6 +120,25 @@ public static class SaveWorldSystem
         }
 
         return buildings.ToArray();
+    }
+
+    public static ElevatorCabinData[] SaveElevatorCabins(BuildingsManager buildingsManager)
+    {
+        List<ElevatorCabinData> cabins = new();
+
+        foreach (var floor in buildingsManager.BuiltFloors) {
+            foreach (var place in floor.RoomBuildingPlaces) {
+                var building = place.PlacedBuilding;
+                if (!building) continue;
+
+                var elevator = building.GetComponent<ElevatorModule>();
+                if (!elevator) continue;
+
+                cabins.Add(ElevatorCabinData.Create(elevator.SpawnedElevatorCabin));
+            }
+        }
+
+        return cabins.ToArray();
     }
 
     public static BoatDockData[] SaveBoatDocks(BoatDockPoint[] boatDocks)

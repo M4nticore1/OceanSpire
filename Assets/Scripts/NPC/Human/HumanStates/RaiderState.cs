@@ -116,7 +116,7 @@ public class RaiderState : HumanState
             human.InteractComponent.SetInteractBuilding(interactBuilding);
         }
         else {
-            FinishRaidingBuilding();
+            
         }
     }
 
@@ -127,6 +127,7 @@ public class RaiderState : HumanState
 
     public override void OnDied()
     {
+
     }
 
     private void UpdateRaidAction()
@@ -163,6 +164,8 @@ public class RaiderState : HumanState
 
     private void AddLoot()
     {
+        if (!human.InteractComponent) return;
+
         IRaidable[] raidables = human.InteractComponent.InteractBuilding.GetComponents<IRaidable>();
         if (raidables == null) return;
 

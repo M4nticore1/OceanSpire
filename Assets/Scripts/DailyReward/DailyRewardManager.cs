@@ -7,12 +7,13 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 {
     public static DailyRewardManager Instance;
 
-    [SerializeField] private ItemAdRewardDefinition[] rewards;
+    [SerializeField] private RewardsList rewardsList;
+    [SerializeField] private AdRewardDefinition[] rewards;
 
     [SerializeField] private int maxRewardsCount = 4;
     public int MaxRewardsCount => maxRewardsCount;
 
-    [SerializeField] private int updateRewardTimeOffset = 0;
+    [SerializeField] private int updateRewardTimeOffset = 3;
 
     [Header("Receive Reward")]
     [SerializeField] private int maxFreeRewardsCount = 1;
@@ -21,12 +22,13 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     private int currentFreeRecievesCount = 0;
     private int currentAdRecievesCount = 0;
 
-    private long nextResetSeconds = 0;
+    public long NextResetTime { get; private set; } = 0;
 
-    private List<ItemAdRewardInstance> currentRewards = new();
+    private List<RewardInstance> currentRewards = new();
+    public IReadOnlyList<RewardInstance> CurrentRewards => currentRewards;
 
     public event Action onDailyRewardReset;
-    public event Action<AdRewardInstance> onDailyRewardRecieved;
+    public event Action<RewardInstance> onDailyRewardRecieved;
 
     private void Awake()
     {
@@ -40,37 +42,30 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     private void OnEnable()
     {
-        AdRewardInstance.onRewardReceived += OnRewardRecieved;
+        RewardInstance.onRewardReceived += OnRewardRecieved;
     }
 
     private void OnDisable()
     {
-        AdRewardInstance.onRewardReceived -= OnRewardRecieved;
+        RewardInstance.onRewardReceived -= OnRewardRecieved;
     }
 
     private void Update()
     {
         long currentSecond = TimeManager.GetCurrentSecond();
-        if (currentSecond < nextResetSeconds) return;
+        if (currentSecond < NextResetTime) return;
 
         ResetRewards();
     }
 
     public void Init(DailyRewardData data)
     {
-        if (data != null) {
-            nextResetSeconds = data.NextUpdateSeconds;
+        foreach (var rewardData in data.Rewards) {
+            var definition = rewardsList.GetRewardDefinition(rewardData.Id);
+            var reward = definition.CreateInstance();
+            reward.SetCollected(rewardData.Collected);
 
-            foreach (ItemData item in data.Items) {
-                var id = item.Id;
-                var reward = rewards[id].CreateInstance() as ItemAdRewardInstance;
-
-                reward.SetAmount(item.Amount);
-                currentRewards.Add(reward);
-            }
-        }
-        else {
-            ResetRewards();
+            currentRewards.Add(reward);
         }
     }
 
@@ -84,9 +79,35 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         return currentAdRecievesCount < maxAdRewardsCount;
     }
 
-    public ItemAdRewardInstance GetCurrentReward(int id)
+    public RewardInstance GetCurrentReward(int id)
     {
         return currentRewards[id];
+    }
+
+    public RewardInstanceData[] GetRandomRewardsData()
+    {
+        List<RewardInstanceData> rewardsData = new();
+        List<AdRewardDefinition> availableRewards = new(rewards);
+
+        int count = Mathf.Min(maxRewardsCount, availableRewards.Count);
+
+        for (int i = 0; i < count; i++) {
+            int randomIndex = UnityEngine.Random.Range(0, availableRewards.Count);
+
+            var def = availableRewards[randomIndex];
+            availableRewards.RemoveAt(randomIndex);
+
+            var rewardData = def.CreateInstance().CreateData();
+            rewardsData.Add(rewardData);
+
+            var reward = rewardData.CreateReward();
+
+            if (reward is ItemRewardInstance itemReward) {
+                itemReward.SetAmountPercent(GameStageSystem.CalculateGameStagePercent());
+            }
+        }
+
+        return rewardsData.ToArray();
     }
 
     public Dictionary<string, string> GetLocalization()
@@ -98,43 +119,35 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         };
     }
 
-    private void UpdateNextResetSeconds()
+    public long CalculateNextResetTime()
     {
         long minTargetSecond = updateRewardTimeOffset * 3600;
         long maxTargetSecond = (24 + updateRewardTimeOffset) * 3600;
         long targetSecond = minTargetSecond - TimeManager.GetCurrentSecond() >= 0 ? minTargetSecond : maxTargetSecond;
 
-        nextResetSeconds = TimeManager.GetCurrentSecond() + 24 * 3600;
+        return targetSecond;
+    }
+
+    private void UpdateRewards()
+    {
+        foreach (var rewardData in GetRandomRewardsData()) {
+            currentRewards.Add(rewardData.CreateReward());
+        }
     }
 
     private void ResetRewards()
     {
         UpdateRewards();
-        UpdateNextResetSeconds();
+        UpdateNextResetTime();
         onDailyRewardReset?.Invoke();
     }
 
-    private void UpdateRewards()
+    private void UpdateNextResetTime()
     {
-        List<int> rewardIds = new();
-
-        for (int i = 0; i < maxRewardsCount; i++) {
-            var id = UnityEngine.Random.Range(0, rewards.Length);
-
-            while (rewardIds.Contains(id) && rewardIds.Count < rewards.Length) {
-                id = UnityEngine.Random.Range(0, rewards.Length);
-            }
-
-            rewardIds.Add(id);
-
-            var reward = rewards[id].CreateInstance() as ItemAdRewardInstance;
-            reward.SetAmountPercent(GameStageSystem.CalculateGameStagePercent());
-
-            currentRewards.Add(reward);
-        }
+        NextResetTime = CalculateNextResetTime();
     }
 
-    private void OnRewardRecieved(AdRewardInstance reward)
+    private void OnRewardRecieved(RewardInstance reward)
     {
         if (!rewards.Contains(reward.Definition)) return;
 
@@ -151,7 +164,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     private string GetRemainingResetHours()
     {
         long currentSeconds = TimeManager.GetCurrentSecond();
-        long remainingTime = nextResetSeconds - currentSeconds;
+        long remainingTime = NextResetTime - currentSeconds;
 
         int hours = (int)((float)remainingTime / 3600);
         string text = hours.ToString();
@@ -162,7 +175,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     private string GetRemainingResetMinutes()
     {
         long currentSeconds = TimeManager.GetCurrentSecond();
-        long remainingTime = nextResetSeconds - currentSeconds;
+        long remainingTime = NextResetTime - currentSeconds;
 
         float hours = (float)remainingTime / 3600;
         int minutes = (int)((hours - (int)hours) * 60);

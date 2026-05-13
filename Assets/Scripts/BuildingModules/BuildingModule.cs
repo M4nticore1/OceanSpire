@@ -6,7 +6,7 @@ public abstract class BuildingModule : MonoBehaviour
 {
     private Building ownedBuilding = null;
     public Building OwnedBuilding => ownedBuilding ? ownedBuilding : GetComponent<Building>();
-    public TowerBuilding TowerOwnedBuilding => OwnedBuilding as TowerBuilding;
+    public TowerBuilding OwnedTowerBuilding => OwnedBuilding as TowerBuilding;
 
     public bool IsWorking { get; private set; } = false;
 
@@ -49,9 +49,15 @@ public abstract class BuildingModule : MonoBehaviour
         TryUnsubscribe();
     }
 
-    protected abstract void Subscribe();
+    protected virtual void Subscribe()
+    {
 
-    protected abstract void Unsubscribe();
+    }
+
+    protected virtual void Unsubscribe()
+    {
+
+    }
 
     protected void StartWorking()
     {

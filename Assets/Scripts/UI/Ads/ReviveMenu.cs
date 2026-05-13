@@ -93,7 +93,7 @@ public class ReviveMenu : UIBehaviour
         UpdateRemainingRevivesText();
     }
 
-    private void OnRevived(AdRewardInstance reward)
+    private void OnRevived(RewardInstance reward)
     {
         Close();
     }

@@ -1,13 +1,24 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class DailyRewardData
 {
-    public long NextUpdateSeconds { get; private set; } = 0;
-    public ItemData[] Items { get; private set; }
+    public long NextResetTime = 0;
+    public RewardInstanceData[] Rewards = null;
 
-    public DailyRewardData(long nextOpenSeconds, ItemData[] items)
+    public static DailyRewardData Create(DailyRewardManager dailyRewardManager)
     {
-        NextUpdateSeconds = nextOpenSeconds;
-        Items = items;
+        var rewards = new RewardInstanceData[dailyRewardManager.CurrentRewards.Count];
+        for (int i = 0; i < rewards.Length; i++) {
+            var reward = dailyRewardManager.CurrentRewards[i];
+            rewards[i] = reward.CreateData();
+        }
+
+        return new DailyRewardData()
+        {
+            NextResetTime = dailyRewardManager.NextResetTime,
+            Rewards = rewards,
+        };
     }
 }

@@ -11,26 +11,36 @@ public class DailyTasksList : ScriptableObject
         {
             if (instance == null) {
                 instance = Resources.Load<DailyTasksList>("Lists/DailyTasksList");
-                instance.Init();
             }
+
             return instance;
         }
     }
 
     [SerializeField] private DailyTaskDefinition[] dailyTaskDefinitions;
-    private Dictionary<int, DailyTaskDefinition> dailyTaskDefinitionsDict = new();
 
-    private void Init()
+    private Dictionary<int, DailyTaskDefinition> dailyTaskDefinitionsDict;
+
+    private Dictionary<int, DailyTaskDefinition> DailyTaskDefinitionsDict
     {
-        foreach (var task in dailyTaskDefinitions) {
-            dailyTaskDefinitionsDict.Add((int)task.TaskId, task);
+        get
+        {
+            if (dailyTaskDefinitionsDict == null) {
+                dailyTaskDefinitionsDict = new();
+
+                foreach (var task in dailyTaskDefinitions) {
+                    dailyTaskDefinitionsDict.Add((int)task.TaskId, task);
+                }
+            }
+
+            return dailyTaskDefinitionsDict;
         }
     }
 
     public DailyTaskDefinition GetTaskDefinition(int id)
     {
         DailyTaskDefinition task = null;
-        dailyTaskDefinitionsDict.TryGetValue(id, out task);
+        DailyTaskDefinitionsDict.TryGetValue(id, out task);
 
         return task;
     }

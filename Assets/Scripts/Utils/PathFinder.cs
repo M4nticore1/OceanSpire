@@ -85,14 +85,14 @@ public static class PathFinder
             bool hasElevator = place.PlacedBuilding && place.PlacedBuilding.GetComponent<ElevatorModule>();
             NeighborMask mask = hasElevator ? NeighborMask.All : NeighborMask.Horizontal;
 
-            foreach (BuildingPlace neighbor in place.NeighborPlaces(mask)) {
+            foreach (BuildingPlace neighborPlace in place.NeighborPlaces(mask)) {
                 // Check place
-                if (!neighbor || visited.Contains(neighbor))
+                if (!neighborPlace || visited.Contains(neighborPlace))
                     continue;
 
                 // Check an emptiness of place
-                bool isSpecialEmpty = neighbor.FloorIndex == 0 && neighbor.PlaceIndex == BuildingsManager.FirstBuildCityBuildingPlace;
-                if (!neighbor.PlacedBuilding && !isSpecialEmpty) {
+                bool isSpecialEmpty = neighborPlace.FloorIndex == 0 && neighborPlace.PlaceIndex == BuildingsManager.FirstBuildCityBuildingPlace;
+                if (!neighborPlace.PlacedBuilding && !isSpecialEmpty) {
                     continue;
                 }
                 else if (isSpecialEmpty && targetBuilding as GroundBuilding) {
@@ -101,11 +101,11 @@ public static class PathFinder
                 }
 
                 // Check elevator
-                if (hasElevator && place.FloorIndex != neighbor.FloorIndex && !neighbor.PlacedBuilding.GetComponent<ElevatorModule>()) continue;
-                if (hasElevator && neighbor.PlacedBuilding.ConstructionComponent.IsUnderConstruction) continue;
+                if (hasElevator && place.FloorIndex != neighborPlace.FloorIndex && !neighborPlace.PlacedBuilding.GetComponent<ElevatorModule>()) continue;
+                if (neighborPlace.PlacedBuilding && neighborPlace.PlacedBuilding.ConstructionComponent.IsUnderConstruction) continue;
 
-                visited.Add(neighbor);
-                queue.Enqueue((neighbor, currentPath));
+                visited.Add(neighborPlace);
+                queue.Enqueue((neighborPlace, currentPath));
             }
         }
 

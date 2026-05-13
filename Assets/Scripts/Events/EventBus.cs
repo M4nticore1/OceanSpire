@@ -51,7 +51,7 @@ public static class EventBus
     public static event Action onWorkersMenuClosed;
 
     // City
-    public static void InvokNavMeshBaked()
+    public static void InvokeNavMeshBaked()
     {
         onNavMeshBaked?.Invoke();
     }

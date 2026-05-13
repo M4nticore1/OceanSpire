@@ -70,6 +70,11 @@ public class Human : Creature, IClickable
     public static event Action<Human> onEnteredBoat;
     public static event Action<Human> onExitedBoat;
 
+    private void Awake()
+    {
+        movement.NavAgent.enabled = false;
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -150,17 +155,22 @@ public class Human : Creature, IClickable
         healthComponent.SetCurrentHealth(humanData.Health);
         nameComponent.Init(humanData.Name);
 
+        if (humanData.EnteredBuildingInstanceId != null) {
+            InstanceId instanceId = InstancesManager.Instance.GetInstance(humanData.EnteredBuildingInstanceId.Value);
+            Building interactBuilding = instanceId?.GetComponent<Building>();
+
+            cityNavigator.TryEnterBuilding(interactBuilding);
+        }
+
         if (humanData.InteractBuildingInstanceId != null) {
-            InstanceId instanceId = null;
-            InstancesManager.Instance.TryGetInstance(humanData.InteractBuildingInstanceId.Value, out instanceId);
+            InstanceId instanceId = InstancesManager.Instance.GetInstance(humanData.InteractBuildingInstanceId.Value);
             Building interactBuilding = instanceId?.GetComponent<Building>();
 
             interactComponent.SetInteractBuilding(interactBuilding);
         }
 
         if (humanData.BoatRider.BoatInstanceId != null) {
-            InstanceId instanceId = null;
-            InstancesManager.Instance.TryGetInstance(humanData.BoatRider.BoatInstanceId.Value, out instanceId);
+            InstanceId instanceId = InstancesManager.Instance.GetInstance(humanData.BoatRider.BoatInstanceId.Value);
             Boat selectedBoat = instanceId?.GetComponent<Boat>();
 
             boatRider.SetSelectedBoat(selectedBoat);
@@ -168,6 +178,10 @@ public class Human : Creature, IClickable
 
         weaponComponent.Init(humanData.Weapon);
         skillsComponent.Init(humanData.Skills);
+
+        if (humanData.RidingOnElevator) {
+            cityNavigator.SetState(FollowingPathState.Riding);
+        }
 
         if (humanData.BoatRider.IsRiding) {
             boatRider.EnterBoat();
@@ -422,6 +436,7 @@ public class Human : Creature, IClickable
         if (cityNavigator.IsRidingOnElevator) return;
 
         movement.SetAgentEnabled(true);
+        cityNavigator.UpdateFollowingPathState();
     }
 
     private bool ShouldStartInteracting()

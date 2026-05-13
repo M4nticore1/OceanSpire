@@ -2,17 +2,19 @@ using UnityEngine;
 
 public static class ConstructionFactory
 {
-    public static BuildingConstruction CreateConstruction(BuildingConstruction constructionToSpawn, Building ownedBuilding)
+    public static BuildingConstruction CreateConstruction(BuildingConstruction constructionToSpawn, Transform transform, BuildingConstructionData data)
     {
-        BuildingConstruction spawnedConstruction = Object.Instantiate(constructionToSpawn, ownedBuilding.transform);
-        spawnedConstruction.Init(ownedBuilding);
+        var spawnedConstruction = Object.Instantiate(constructionToSpawn, transform);
+        spawnedConstruction.Init(data);
+
         return spawnedConstruction;
     }
 
-    public static ElevatorCabinConstruction CreateConstruction(ElevatorCabinConstruction constructionToSpawn, Building ownedBuilding)
+    public static ElevatorCabinConstruction CreateConstruction(ElevatorCabinConstruction constructionToSpawn, Transform transform, BuildingConstructionData data)
     {
-        ElevatorCabinConstruction spawnedCabin = Object.Instantiate(constructionToSpawn, ownedBuilding.transform.position, ownedBuilding.transform.rotation);
-        spawnedCabin.Init(ownedBuilding);
+        var spawnedCabin = Object.Instantiate(constructionToSpawn, transform.position, transform.rotation);
+        spawnedCabin.Init(data);
+
         return spawnedCabin;
     }
 }

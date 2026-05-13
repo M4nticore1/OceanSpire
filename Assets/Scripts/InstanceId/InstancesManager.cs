@@ -43,16 +43,15 @@ public class InstancesManager : MonoBehaviour
         instances.Remove(instance.Id);
     }
 
-    public bool TryGetInstance(int id, out InstanceId instanceId)
-    {
-        instanceId = GetInstance(id);
-
-        return instanceId;
-    }
-
     public InstanceId GetInstance(int id)
     {
-        return instances.GetValueOrDefault(id);
+        var instance = instances.GetValueOrDefault(id);
+
+        if (!instance) {
+            Debug.Log($"Instance by Id {id} does not exitst!");
+        }
+
+        return instance;
     }
 
     public int GetNextInstanceId()

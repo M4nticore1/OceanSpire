@@ -27,7 +27,7 @@ public class DailyRewardChest : MonoBehaviour, IClickable
         return DailyRewardManager.Instance.CanSelectReward();
     }
 
-    private void OnDailyRewardRecieved(AdRewardInstance reward)
+    private void OnDailyRewardRecieved(RewardInstance reward)
     {
         if (DailyRewardManager.Instance.CanSelectReward()) return;
 

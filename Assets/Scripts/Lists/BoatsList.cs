@@ -11,7 +11,6 @@ public class BoatsList : ScriptableObject
         {
             if (instance == null) {
                 instance = Resources.Load<BoatsList>("Lists/BoatsList");
-                instance.Init();
             }
 
             return instance;
@@ -19,19 +18,29 @@ public class BoatsList : ScriptableObject
     }
 
     [SerializeField] private List<Boat> boats = new();
-    private Dictionary<int, Boat> boatsDict = new();
 
-    private void Init()
+    private Dictionary<int, Boat> boatsDict;
+
+    private Dictionary<int, Boat> BoatsDict
     {
-        foreach (var boat in boats) {
-            boatsDict.Add(boat.BoatData.BoatId, boat);
+        get
+        {
+            if (boatsDict == null) {
+                boatsDict = new();
+
+                foreach (var boat in boats) {
+                    boatsDict.Add(boat.BoatData.BoatId, boat);
+                }
+            }
+
+            return boatsDict;
         }
     }
 
     public Boat GetBoat(int id)
     {
         Boat boat = null;
-        boatsDict.TryGetValue(id, out boat);
+        BoatsDict.TryGetValue(id, out boat);
 
         return boat;
     }

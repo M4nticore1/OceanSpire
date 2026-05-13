@@ -14,7 +14,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     [SerializeField] private BuildingType buildingType = BuildingType.Room;
     public BuildingType BuildingType => buildingType;
 
-    public int FloorIndex { get; private set; } = 0;
+    public int FloorIndex = 0;
 
     [SerializeField] private int placeIndex = 0;
     public int PlaceIndex => placeIndex;
@@ -68,6 +68,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     private void Start()
     {
         HideBuildingPlace();
+        AssignFrameActivity();
     }
 
     public void Init(int newFloorindex)
@@ -77,10 +78,22 @@ public class BuildingPlace : MonoBehaviour, IClickable
         HideBuildingPlace();
     }
 
-    public void SetPlacedBuilding(TowerBuilding building)
+    public void TryPlaceBuilding(TowerBuilding building)
+    {
+        if (!CanPlaceBuilding(building)) return;
+
+        PlaceBuilding(building);
+    }
+
+    private void PlaceBuilding(TowerBuilding building)
     {
         placedBuilding = building;
         AssignFrameActivity();
+    }
+
+    public bool CanPlaceBuilding(TowerBuilding building)
+    {
+        return building && !placedBuilding;
     }
 
     private void AssignNeighborPlaces()
@@ -205,13 +218,14 @@ public class BuildingPlace : MonoBehaviour, IClickable
         TowerBuilding building = ConstructionManager.Instance.BuildingToPlace as TowerBuilding;
 
         TowerBuildingData buildingData = TowerBuildingData.Create(building);
+        buildingData.InstanceId = InstancesManager.Instance.GetNextInstanceId();
         buildingData.FloorIndex = FloorIndex;
         buildingData.PlaceIndex = placeIndex;
         buildingData.Construction.ConstructionTime = 0f;
         buildingData.Construction.IsUnderConstruction = true;
 
-        TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(building, buildingData);
-        SetPlacedBuilding(spawnedBuilding);
+        TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(building, transform, buildingData);
+        PlaceBuilding(spawnedBuilding);
 
         onClicked?.Invoke(spawnedBuilding);
     }

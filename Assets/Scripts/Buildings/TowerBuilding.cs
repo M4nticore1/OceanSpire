@@ -41,8 +41,11 @@ public class TowerBuilding : Building
     public int FloorIndex;
     public int PlaceIndex;
 
-    public Dictionary<Direction, TowerBuilding> NeighborBuildings { get; private set; } = new();
-    public Dictionary<Direction, TowerBuilding> ConnectedBuildings { get; private set; } = new();
+    private Dictionary<Direction, TowerBuilding> neighborBuildings = new();
+    public IReadOnlyDictionary<Direction, TowerBuilding> NeighborBuildings => neighborBuildings;
+
+    private Dictionary<Direction, TowerBuilding> connectedBuildings = new();
+    public IReadOnlyDictionary<Direction, TowerBuilding> ConnectedBuildings => connectedBuildings;
 
     public IEnumerable<TowerBuilding> NeighborBuildingsEnumerable(NeighborMask mask)
     {
@@ -82,8 +85,7 @@ public class TowerBuilding : Building
         FloorIndex = towerData.FloorIndex;
         PlaceIndex = towerData.PlaceIndex;
 
-        AssignBuildingPlace();
-        UpdatePosition();
+        AssignBuildingPlace(FloorIndex, PlaceIndex);
         AssignNeighborBuildings();
         AssignConnectedBuildings();
         UpdatePositionType();
@@ -92,7 +94,7 @@ public class TowerBuilding : Building
     protected override void OnDemolish()
     {
         if (BuildingPlace) {
-            BuildingPlace.SetPlacedBuilding(null);
+            BuildingPlace.TryPlaceBuilding(null);
         }
 
         InvokeBuildingDemolished();
@@ -185,8 +187,9 @@ public class TowerBuilding : Building
         while (queue.Count > 0) {
             TowerBuilding building = queue.Dequeue();
 
-            foreach (var connected in building.ConnectedBuildings.Values) {
+            foreach (var connected in building.connectedBuildings.Values) {
                 if (!connected) continue;
+                if (connected.IsDemolished) continue;
                 if (visited.Contains(connected)) continue;
 
                 visited.Add(connected);
@@ -205,23 +208,23 @@ public class TowerBuilding : Building
         AssignConnectedBuildings();
     }
 
-    private void AssignBuildingPlace()
+    private void AssignBuildingPlace(int floorIndex, int placeIndex)
     {
-        List<FloorFrameModule> floors = BuildingsManager.Instance.BuiltFloors;
+        IReadOnlyList<FloorFrameModule> floors = BuildingsManager.Instance.BuiltFloors;
         BuildingPlace place = null;
 
         if (BuildingData.BuildingType == BuildingType.Room) {
-            place = floors[FloorIndex].RoomBuildingPlaces[PlaceIndex];
+            place = BuildingsManager.Instance.GetRoomPlace(floorIndex, placeIndex);
         }
         else if (BuildingData.BuildingType == BuildingType.Hall) {
-            place = floors[FloorIndex].HallBuildingPlace;
+            place = floors[floorIndex].HallBuildingPlace;
         }
         else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
-            int index = FloorIndex - 1;
-            place = floors.Count > index && index >= 0 ? floors[index].FloorBuildingPlace : null;
-        }
+            place = BuildingsManager.Instance.GetFloorFrameBuilding(floorIndex - 1)?.FloorBuildingPlace;
 
-        if (!place) return;
+            if (!place)
+                transform.SetParent(BuildingsManager.Instance.FirstFloorBuildingTransform);
+        }
 
         SetBuildingPlace(place);
     }
@@ -238,7 +241,7 @@ public class TowerBuilding : Building
 
     private void AssignNeighborBuildings()
     {
-        NeighborBuildings.Clear();
+        neighborBuildings.Clear();
 
         foreach (Direction dir in Enum.GetValues(typeof(Direction))) {
             var building = CalculateNeighbor(dir);
@@ -253,7 +256,7 @@ public class TowerBuilding : Building
     {
         if (constructionComponent.IsUnderConstruction) return;
 
-        ConnectedBuildings.Clear();
+        connectedBuildings.Clear();
 
         foreach (Direction dir in Enum.GetValues(typeof(Direction))) {
             var building = GetNeighborBuilding(dir);
@@ -272,7 +275,7 @@ public class TowerBuilding : Building
         if (!target) return;
         if (!ShouldSetNeighborWith(target)) return;
 
-        NeighborBuildings[dir] = target;
+        neighborBuildings[dir] = target;
     }
 
     private void TryConnectTo(Direction dir, TowerBuilding target)
@@ -284,35 +287,21 @@ public class TowerBuilding : Building
 
     private void ConnectTo(Direction dir, TowerBuilding target)
     {
-        ConnectedBuildings[dir] = target;
+        connectedBuildings[dir] = target;
     }
 
     private void SetBuildingPlace(BuildingPlace place)
     {
         BuildingPlace = place;
-        BuildingPlace.SetPlacedBuilding(this);
+
+        if (BuildingPlace) {
+            BuildingPlace.TryPlaceBuilding(this);
+        }
     }
 
     private void SetBuildingPosition(BuildingPosition position)
     {
         BuildingPosition = position;
-    }
-
-    private void UpdatePosition()
-    {
-        if (buildingData.BuildingType == BuildingType.FloorFrame) {
-            if (BuildingPlace) {
-                transform.position = BuildingPlace.transform.position;
-            }
-            else {
-                transform.position = BuildingsManager.Instance.FirstFloorBuildingTransform.position;
-            }
-        }
-        else {
-            transform.SetParent(BuildingPlace.transform);
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-        }
     }
 
     private void InvokeBuildingConnected()
@@ -324,13 +313,13 @@ public class TowerBuilding : Building
 
     private void InvokeBuildingDemolished()
     {
-        foreach (var building in NeighborBuildings.Values.ToArray()) {
+        foreach (var building in neighborBuildings.Values.ToArray()) {
             if (!building) continue;
 
             building.OnNeighborBuildingDemolished(this);
         }
 
-        foreach (var building in ConnectedBuildings.Values.ToArray()) {
+        foreach (var building in connectedBuildings.Values.ToArray()) {
             if (!building) continue;
 
             building.OnConnectedBuildingDemolished(this);
@@ -369,7 +358,7 @@ public class TowerBuilding : Building
         }
         visited.Add(this);
 
-        foreach (var direction in ConnectedBuildings.Values) {
+        foreach (var direction in connectedBuildings.Values) {
             if (!direction) continue;
 
             if (!visited.Add(direction))
@@ -450,7 +439,7 @@ public class TowerBuilding : Building
     private TowerBuilding GetNeighborBuilding(Direction value)
     {
         TowerBuilding building = null;
-        NeighborBuildings.TryGetValue(value, out building);
+        neighborBuildings.TryGetValue(value, out building);
 
         return building;
     }
@@ -458,7 +447,7 @@ public class TowerBuilding : Building
     private TowerBuilding GetConnectedBuilding(Direction value)
     {
         TowerBuilding building = null;
-        ConnectedBuildings.TryGetValue(value, out building);
+        connectedBuildings.TryGetValue(value, out building);
 
         return building;
     }

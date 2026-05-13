@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -8,7 +9,7 @@ public class BuildingsManager : MonoBehaviour
     public static BuildingsManager Instance;
 
     [SerializeField] private List<FloorFrameModule> builtFloors = new List<FloorFrameModule>();
-    public List<FloorFrameModule> BuiltFloors => builtFloors;
+    public IReadOnlyList<FloorFrameModule> BuiltFloors => builtFloors;
 
     [SerializeField] private Transform firstFloorBuildingTransform;
     public Transform FirstFloorBuildingTransform => firstFloorBuildingTransform;
@@ -76,20 +77,22 @@ public class BuildingsManager : MonoBehaviour
         UpdateCityHeight();
     }
 
-    public TowerBuilding GetBuildingByIndex(int floorIndex, int buildingPlaceIndex)
+    public FloorFrameModule GetFloorFrameBuilding(int floorIndex)
     {
-        TowerBuilding building = null;
+        if (floorIndex < 0) return null;
+        if (floorIndex >= builtFloors.Count) return null;
 
-        bool isFloorIndexMoreMin = floorIndex >= 0;
-        bool isFloorIndexLessMax = floorIndex < builtFloors.Count;
-        bool isBuildingPlaceIndexMoreMin = buildingPlaceIndex >= 0;
-        bool isBuildingPlaceIndexLessMax = buildingPlaceIndex < RoomsCountPerFloor;
+        return builtFloors[floorIndex];
+    }
 
-        if (isFloorIndexMoreMin && isFloorIndexLessMax && isBuildingPlaceIndexMoreMin && isBuildingPlaceIndexLessMax) {
-            building = builtFloors[floorIndex].RoomBuildingPlaces[buildingPlaceIndex].PlacedBuilding;
-        }
+    public BuildingPlace GetRoomPlace(int floorIndex, int PlaceIndex)
+    {
+        if (floorIndex < 0) return null;
+        if (floorIndex >= builtFloors.Count) return null;
+        if (PlaceIndex < 0) return null;
+        if (PlaceIndex >= RoomsCountPerFloor) return null;
 
-        return building;
+        return builtFloors[floorIndex].RoomBuildingPlaces[PlaceIndex];
     }
 
     public static int GetFloorIndexByHeight(float height)

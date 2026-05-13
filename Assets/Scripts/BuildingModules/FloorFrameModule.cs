@@ -39,7 +39,7 @@ public class FloorFrameModule : BuildingModule
 
     private void OnInited()
     {
-        int floorIndex = TowerOwnedBuilding.FloorIndex;
+        int floorIndex = OwnedTowerBuilding.FloorIndex;
         BuildingsManager.Instance.RegisterFloorModule(this);
         InitBuildings();
     }
@@ -53,6 +53,7 @@ public class FloorFrameModule : BuildingModule
     private void OnBuildingInited(Building building)
     {
         if (!ShouldBake(building)) return;
+
         StartBaking();
     }
 
@@ -65,11 +66,11 @@ public class FloorFrameModule : BuildingModule
 
     private void InitBuildings()
     {
-        floorBuildingPlace.Init(TowerOwnedBuilding.FloorIndex + 1);
-        hallBuildingPlace.Init(TowerOwnedBuilding.FloorIndex);
+        floorBuildingPlace.Init(OwnedTowerBuilding.FloorIndex + 1);
+        hallBuildingPlace.Init(OwnedTowerBuilding.FloorIndex);
 
         for (int i = 0; i < BuildingsManager.RoomsCountPerFloor; i++) {
-            roomBuildingPlaces[i].Init(TowerOwnedBuilding.FloorIndex);
+            roomBuildingPlaces[i].Init(OwnedTowerBuilding.FloorIndex);
         }
     }
 
@@ -100,17 +101,18 @@ public class FloorFrameModule : BuildingModule
         yield return new WaitForEndOfFrame();
         navMeshSurface.BuildNavMesh();
         bakeNavMeshCoroutine = null;
-        EventBus.InvokNavMeshBaked();
+
+        EventBus.InvokeNavMeshBaked();
     }
 
     private bool ShouldBake(Building building)
     {
+        if (OwnedTowerBuilding.FloorIndex <= 0) return false;
+
         TowerBuilding towerBuilding = building as TowerBuilding;
         if (!towerBuilding) return false;
 
-        TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
-
-        if (towerBuilding.FloorIndex != ownedTowerBuilding.FloorIndex) return false;
+        if (towerBuilding.FloorIndex != OwnedTowerBuilding.FloorIndex) return false;
         return true;
     }
 }

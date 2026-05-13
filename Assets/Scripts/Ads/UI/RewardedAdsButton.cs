@@ -44,7 +44,7 @@ public class RewardedAdsButton : UIBehaviour
 
     private void AssignImage()
     {
-        ItemAdRewardInstance itemReward = rewardedAdsButtonManager.currentReward as ItemAdRewardInstance;
+        ItemRewardInstance itemReward = rewardedAdsButtonManager.currentReward as ItemRewardInstance;
         itemImage.sprite = itemReward.ItemRewardDefinition.RewardIcon;
     }
 

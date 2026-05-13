@@ -4,38 +4,64 @@ using UnityEngine;
 
 public class ElevatorCabinConstruction : BuildingConstruction
 {
-    public int FloorIndex => ((TowerBuilding)ownedBuilding).FloorIndex;
-    public int PlaceIndex => ((TowerBuilding)ownedBuilding).PlaceIndex;
+    public int FloorIndex => ((TowerBuilding)OwnedBuilding).FloorIndex;
+    public int PlaceIndex => ((TowerBuilding)OwnedBuilding).PlaceIndex;
 
-    public List<CreatureCityNavigator> goingForWaitingPassengers { get; private set; } = new List<CreatureCityNavigator>();
-    public List<CreatureCityNavigator> waitingPassengers { get; private set; } = new List<CreatureCityNavigator>();
-    public List<CreatureCityNavigator> goingToRidingPassengers { get; private set; } = new List<CreatureCityNavigator>();
-    public List<CreatureCityNavigator> ridingPassengers { get; private set; } = new List<CreatureCityNavigator>();
+    private List<CreatureCityNavigator> goingForWaitingPassengers = new();
+    public IReadOnlyList<CreatureCityNavigator> GoingForWaitingPassengers => goingForWaitingPassengers;
 
-    public bool isMoving { get; private set; } = false;
-    public int startFloorIndex { get; private set; } = 0;
-    public int targetFloor { get; private set; } = 0;
-    public int nextFloor { get; private set; } = 0;
+    private List<CreatureCityNavigator> waitingPassengers = new();
+    public IReadOnlyList<CreatureCityNavigator> WaitingPassengers => waitingPassengers;
 
-    private float moveSpeed => ((ownedBuilding.GetComponent<ElevatorModule>().LevelData) as ElevatorModuleLevelData).ElevatorMoveSpeed;
+    private List<CreatureCityNavigator> goingToRidingPassengers = new();
+    public IReadOnlyList<CreatureCityNavigator> GoingToRidingPassengers => goingToRidingPassengers;
+
+    private List<CreatureCityNavigator> ridingPassengers = new();
+    public IReadOnlyList<CreatureCityNavigator> RidingPassengers => ridingPassengers;
+
+    public bool IsMoving { get; private set; } = false;
+    public int StartFloorIndex { get; private set; } = 0;
+    public int TargetFloor { get; private set; } = 0;
+    public int NextFloor { get; private set; } = 0;
+
+    private float moveSpeed => ((OwnedBuilding.GetComponent<ElevatorModule>().LevelData) as ElevatorModuleLevelData).ElevatorMoveSpeed;
     private Vector3 moveDirection = Vector3.zero;
 
     private TimerHandle startMovingTimerHandle = new TimerHandle();
     private const float delayToStartMoving = 1f;
 
-    public ElevatorModule OwnedElevator => ownedBuilding.GetComponent<ElevatorModule>();
+    public ElevatorModule OwnedElevator => OwnedBuilding.GetComponent<ElevatorModule>();
     public static event System.Action<ElevatorCabinConstruction> onElevatorPlatformStopped;
     public static event System.Action<ElevatorCabinConstruction> onElevatorPlatformChangedFloor;
 
     private void Update()
     {
-        if (!isMoving) return;
+        if (!IsMoving) return;
 
         float speed = moveSpeed * Time.deltaTime;
         Move(moveDirection, speed);
 
         int floor = GetFloorIndexByPosition();
         ApplyOwnedBuildingByFloor(floor);
+    }
+
+    protected override void OnInited(BuildingConstructionData data)
+    {
+        base.OnInited(data);
+
+        var elevatorCabinData = data as ElevatorCabinData;
+        if (elevatorCabinData == null) return;
+
+        transform.position = new Vector3(transform.position.x, elevatorCabinData.Height, transform.position.z);
+
+        var instance = InstancesManager.Instance.GetInstance(elevatorCabinData.BuildingInstanceId);
+        if (!instance) return;
+
+        var elevator = instance.GetComponent<ElevatorModule>();
+        if (!elevator) return;
+
+        elevator.SetCabin(this);
+        elevator.UpdateNetworkCabins();
     }
 
     public override void SetOwnedBuilding(Building building)
@@ -48,30 +74,25 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
         AssignTargetFloor();
 
-        if (FloorIndex == targetFloor) {
+        if (FloorIndex == TargetFloor || !TryMoveToFloor(TargetFloor)) {
             StopMoving();
-        }
-        else {
-            if (!TryMoveToFloor(targetFloor)) {
-                StopMoving();
-            }
         }
     }
 
     public void SetTargetFloor(int floorIndex)
     {
-        targetFloor = floorIndex;
+        TargetFloor = floorIndex;
     }
 
     public void SetNextFloor(int floorIndex)
     {
-        nextFloor = floorIndex;
+        NextFloor = floorIndex;
     }
 
     public void StopMoving()
     {
-        isMoving = false;
-        ApplyOwnedBuildingPosition();
+        IsMoving = false;
+        ApplyBuildingPosition();
 
         // Stop entities riding
         foreach (var rider in ridingPassengers.ToArray()) {
@@ -102,9 +123,9 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void AddWaitingPassenger(CreatureCityNavigator passenger)
     {
         waitingPassengers.Add(passenger);
-        if (isMoving) {
+        if (IsMoving) {
             AssignTargetFloor();
-            StartMovingToFloor(targetFloor);
+            StartMovingToFloor(TargetFloor);
         }
         else {
             StartMovingToFloorTimer();
@@ -190,8 +211,8 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     private void StartMovingToFloor(int floorIndex)
     {
-        isMoving = true;
-        startFloorIndex = FloorIndex;
+        IsMoving = true;
+        StartFloorIndex = FloorIndex;
 
         if (floorIndex > FloorIndex)
             moveDirection = Vector3.up;
@@ -202,7 +223,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private void StartMovingToFloorTimer()
     {
         AssignTargetFloor();
-        TimerManager.Instance.StartTimer(startMovingTimerHandle, delayToStartMoving, () => StartMovingToFloor(targetFloor));
+        TimerManager.Instance.StartTimer(startMovingTimerHandle, delayToStartMoving, () => StartMovingToFloor(TargetFloor));
     }
 
     private void RemoveMovingToFloorTimer()
@@ -231,7 +252,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
                 }
             }
 
-            if (ridingPassengers.Count < ownedBuilding.LevelData.maxResidentsCount && waitingPassengers.Count > 0) {
+            if (ridingPassengers.Count < OwnedBuilding.LevelData.maxResidentsCount && waitingPassengers.Count > 0) {
                 foreach (var waiter in waitingPassengers) {
                     if (targetFloor < FloorIndex && waiter.FloorIndex < FloorIndex) {
                         targetFloor = math.max(targetFloor, waiter.FloorIndex);
@@ -268,7 +289,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     private int CalculateNextFloor()
     {
-        return targetFloor > FloorIndex ? FloorIndex + 1 : targetFloor < FloorIndex ? FloorIndex - 1 : FloorIndex;
+        return TargetFloor > FloorIndex ? FloorIndex + 1 : TargetFloor < FloorIndex ? FloorIndex - 1 : FloorIndex;
     }
 
     private void Move(Vector3 direction, float speed)
@@ -280,15 +301,15 @@ public class ElevatorCabinConstruction : BuildingConstruction
     {
         int floorIndex = 0;
 
-        if (targetFloor >= this.FloorIndex) {
+        if (TargetFloor >= this.FloorIndex) {
             floorIndex = (int)((transform.position.y - BuildingsManager.FirstFloorHeight) / BuildingsManager.FloorHeight);
-            if (floorIndex < startFloorIndex)
-                floorIndex = startFloorIndex;
+            if (floorIndex < StartFloorIndex)
+                floorIndex = StartFloorIndex;
         }
         else {
             floorIndex = (int)((transform.position.y - BuildingsManager.FirstFloorHeight + BuildingsManager.FloorHeight) / BuildingsManager.FloorHeight);
-            if (floorIndex > startFloorIndex)
-                floorIndex = startFloorIndex;
+            if (floorIndex > StartFloorIndex)
+                floorIndex = StartFloorIndex;
         }
         return floorIndex;
     }
@@ -296,7 +317,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private void ApplyOwnedBuildingByFloor(int floor)
     {
         TowerBuilding building = BuildingsManager.Instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
-        if (building == ownedBuilding) return;
+        if (building == OwnedBuilding) return;
 
         SetOwnedBuilding(building);
     }

@@ -57,7 +57,7 @@ public class IslandNavMeshBuilder : MonoBehaviour
         yield return new WaitForEndOfFrame();
         navMeshSurface.BuildNavMesh();
         bakeNavMeshCoroutine = null;
-        EventBus.InvokNavMeshBaked();
+        EventBus.InvokeNavMeshBaked();
     }
 
     private bool ShouldBake(Building building)

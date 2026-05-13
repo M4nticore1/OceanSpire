@@ -4,7 +4,7 @@ public class DailyTaskInstanceData
 {
     public int Id = 0;
     public int Progress = 0;
-    public bool IsCompleted = false;
+    public bool Completed = false;
 
     public static DailyTaskInstanceData Create(DailyTaskInstance task)
     {
@@ -12,7 +12,7 @@ public class DailyTaskInstanceData
         {
             Id = (int)task.Definition.TaskId,
             Progress = task.Progress,
-            IsCompleted = task.IsCompleted,
+            Completed = task.IsCompleted
         };
     }
 }

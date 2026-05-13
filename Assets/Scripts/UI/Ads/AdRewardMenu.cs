@@ -67,7 +67,7 @@ public abstract class AdRewardMenu : MonoBehaviour
 
     private void AssignImage()
     {
-        AdRewardInstance itemReward = RewardedAdsManager.Instance.currentReward;
+        RewardInstance itemReward = RewardedAdsManager.Instance.currentReward;
         if (itemReward == null) {
             Debug.Log("Current ad reward is not valid!");
             return;
@@ -78,7 +78,7 @@ public abstract class AdRewardMenu : MonoBehaviour
 
     private void AssignDescryption()
     {
-        AdRewardInstance itemReward = RewardedAdsManager.Instance.currentReward;
+        RewardInstance itemReward = RewardedAdsManager.Instance.currentReward;
         if (itemReward == null) {
             Debug.Log("Current ad reward is not valid!");
             return;
@@ -130,7 +130,7 @@ public abstract class AdRewardMenu : MonoBehaviour
         RewardedAdsManager.Instance.ShowAd();
     }
 
-    private void OnRewardReceived(AdRewardInstance reward)
+    private void OnRewardReceived(RewardInstance reward)
     {
         Close();
     }

@@ -2,25 +2,26 @@ using UnityEngine;
 
 public class RewardedAdsButtonManager : MonoBehaviour
 {
+    [SerializeField] private AdRewardDefinition[] rewardDefinitions;
     [SerializeField] private AppLovinMaxRewardedAdsSystem appLovinMaxAds;
     [SerializeField] private RewardedAdsButton rewardedAdsButton;
 
     [SerializeField] private float adShowTime = 30f;
     [SerializeField] private float adCooldownTime = 2f;
 
-    public AdRewardInstance currentReward { get; private set; }
+    public RewardInstance currentReward { get; private set; }
     private bool isAdButtonShowed = false;
 
     private double currentToggleTime = 0d;
 
     private void OnEnable()
     {
-        AdRewardInstance.onRewardReceived += OnAdRewardReceived;
+        RewardInstance.onRewardReceived += OnAdRewardReceived;
     }
 
     private void OnDisable()
     {
-        AdRewardInstance.onRewardReceived -= OnAdRewardReceived;
+        RewardInstance.onRewardReceived -= OnAdRewardReceived;
     }
 
     private void Start()
@@ -62,7 +63,7 @@ public class RewardedAdsButtonManager : MonoBehaviour
         isAdButtonShowed = false;
     }
 
-    private void OnAdRewardReceived(AdRewardInstance reward)
+    private void OnAdRewardReceived(RewardInstance reward)
     {
         if (reward != currentReward) return;
 
@@ -73,10 +74,10 @@ public class RewardedAdsButtonManager : MonoBehaviour
 
     private AdRewardDefinition GetRandomAdReward()
     {
-        int length = AdRewardsList.Instance.AdRewards.Length;
+        int length = rewardDefinitions.Length;
         int index = Random.Range(0, length);
 
-        AdRewardDefinition def = AdRewardsList.Instance.AdRewards[index];
+        AdRewardDefinition def = rewardDefinitions[index];
 
         return def;
     }

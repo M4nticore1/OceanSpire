@@ -659,6 +659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb506dccb6a42814d8797f1f1e35501b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BonusChestManager
+  rewardsList: {fileID: 11400000, guid: 774e239a80538e04f8c29955727d3f48, type: 2}
   rewards:
   - {fileID: 11400000, guid: 4348c8127ec8dde4ebc86627b9634c53, type: 2}
   - {fileID: 11400000, guid: 915a306cc1d84494aa2abc5bce0a5915, type: 2}
@@ -784,6 +785,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac63c26435142b940b21b075b10ba575, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemsLoader
+  cityStorage: {fileID: 1388613268}
   startItems: {fileID: 1125254136}
 --- !u!1 &142442282
 GameObject:
@@ -829,6 +831,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7ee6961884decc40a47e1ef45352a49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntitiesLoader
+  startResidentsCount: 2
   entitySpawnPosition: {fileID: 40920799}
   maxSpawnRange: 4
 --- !u!1 &159323675
@@ -1590,7 +1593,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9da8f84ec1fc384438f1af0e22c18c4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatsLoader
+  instancesManager: {fileID: 1081344388}
+  buildingsManager: {fileID: 455753200}
+  dockPointsManager: {fileID: 1711846142}
+  boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
   startBoatIds: 00000000
+--- !u!1 &344448267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 344448268}
+  - component: {fileID: 344448269}
+  m_Layer: 0
+  m_Name: DailyTasksLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &344448268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344448267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &344448269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344448267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cc89c971e41b304990e053897a7a8f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DailyTasksLoader
+  dailyTasksManager: {fileID: 1366684462}
 --- !u!1001 &376674309
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4119,9 +4171,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 819861728}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cc89c971e41b304990e053897a7a8f1, type: 3}
+  m_Script: {fileID: 11500000, guid: f49a4c4342b17b843bbbb3adf02de08e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DailyTasksLoader
+  m_EditorClassIdentifier: Assembly-CSharp::DailyRewardLoader
+  dailyRewardManager: {fileID: 101393569}
 --- !u!1 &821496964
 GameObject:
   m_ObjectHideFlags: 0
@@ -4201,6 +4254,7 @@ Transform:
   - {fileID: 1926240061}
   - {fileID: 1549214499}
   - {fileID: 2091013160}
+  - {fileID: 344448268}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
@@ -4594,6 +4648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a48a76fd21b595c48b7747d7887c2414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RewardedAdsManager
+  rewardDefinitions: []
   appLovinMaxAds: {fileID: 815262698}
   rewardedAdsButton: {fileID: 541437820}
   adShowTime: 30
@@ -5039,6 +5094,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1290994963}
   - {fileID: 164792755}
   - {fileID: 455527463}
   - {fileID: 1326211553}
@@ -5533,7 +5589,7 @@ Transform:
   - {fileID: 1946431605}
   - {fileID: 1642675885}
   - {fileID: 376674310}
-  m_Father: {fileID: 1542763785}
+  m_Father: {fileID: 1118607292}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1290994964
 MonoBehaviour:
@@ -5671,6 +5727,7 @@ Transform:
   - {fileID: 723582994}
   - {fileID: 2049673467}
   - {fileID: 238131042}
+  - {fileID: 1518449162}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1326211553 stripped
@@ -5738,6 +5795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5da9b34dbe8018e4bbb1b4d93a8cda74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DailyTasksManager
+  dailyTasksList: {fileID: 11400000, guid: c7d0e5080bd51034dbc86cb853ac9291, type: 2}
   taskDefinitions:
   - taskDefinitions:
     - {fileID: 11400000, guid: e09bb30ed6403234abebb6ff8599f06f, type: 2}
@@ -5958,9 +6016,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 819861729}
   - {fileID: 101393568}
   - {fileID: 838616487}
+  - {fileID: 819861729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1428861523
@@ -6277,6 +6335,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc1902a701d8605489882d852052c238, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DockPointsLoader
+  dockPointsManager: {fileID: 1711846142}
+--- !u!1 &1518449161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1518449162}
+  - component: {fileID: 1518449163}
+  m_Layer: 0
+  m_Name: ElevatorCabinsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1518449162
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518449161}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1518449163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1518449161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeff066db5bbba24c96ae59e4f4638a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElevatorCabinsManager
 --- !u!1 &1523508185
 GameObject:
   m_ObjectHideFlags: 0
@@ -6353,7 +6456,6 @@ Transform:
   - {fileID: 2064242588}
   - {fileID: 1118607292}
   - {fileID: 1343973832}
-  - {fileID: 1290994963}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1549214498
@@ -7153,6 +7255,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166521824b2b3c14f838c812990f7e1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingsLoader
+  instancesManager: {fileID: 1081344388}
+  buildingsManager: {fileID: 455753200}
 --- !u!1 &1918364869
 GameObject:
   m_ObjectHideFlags: 0
@@ -7257,7 +7361,7 @@ GameObject:
   - component: {fileID: 1926240061}
   - component: {fileID: 1926240062}
   m_Layer: 0
-  m_Name: ExtractWoodTaskCondition
+  m_Name: ExtractionTaskCondition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

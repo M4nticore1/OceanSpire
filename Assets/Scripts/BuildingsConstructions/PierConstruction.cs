@@ -6,9 +6,9 @@ public class PierConstruction : BuildingConstruction
     [SerializeField] private List<BoatDockPoint> boatDocks = new List<BoatDockPoint>();
     public List<BoatDockPoint> BoatDocks { get { return new List<BoatDockPoint>(boatDocks); } }
 
-    public override void Init(Building ownedBuilding)
+    protected override void Awake()
     {
-        base.Init(ownedBuilding);
+        base.Awake();
 
         foreach (var dockPoint in boatDocks) {
             DockPointsManager.Instance.RegisterPierDockPoint(dockPoint);

@@ -14,12 +14,12 @@ public class RecievedAdItemRewardMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        AdRewardInstance.onRewardReceived += OnAdRewardRecieved;
+        RewardInstance.onRewardReceived += OnAdRewardRecieved;
     }
 
     private void OnDisable()
     {
-        AdRewardInstance.onRewardReceived -= OnAdRewardRecieved;
+        RewardInstance.onRewardReceived -= OnAdRewardRecieved;
     }
 
     private void Update()
@@ -32,9 +32,9 @@ public class RecievedAdItemRewardMenu : MonoBehaviour
         }
     }
 
-    private void OnAdRewardRecieved(AdRewardInstance reward)
+    private void OnAdRewardRecieved(RewardInstance reward)
     {
-        if (reward as ItemAdRewardInstance == null) return;
+        if (reward as ItemRewardInstance == null) return;
 
         Open();
         AssignImage(reward);
@@ -55,15 +55,15 @@ public class RecievedAdItemRewardMenu : MonoBehaviour
         isOpened = false;
     }
 
-    private void AssignImage(AdRewardInstance reward)
+    private void AssignImage(RewardInstance reward)
     {
-        ItemAdRewardInstance itemReward = RewardedAdsManager.Instance.currentReward as ItemAdRewardInstance;
+        ItemRewardInstance itemReward = RewardedAdsManager.Instance.currentReward as ItemRewardInstance;
         rewardImage.sprite = itemReward.ItemRewardDefinition.RewardIcon;
     }
 
-    private void AssignText(AdRewardInstance reward)
+    private void AssignText(RewardInstance reward)
     {
-        ItemAdRewardInstance itemReward = RewardedAdsManager.Instance.currentReward as ItemAdRewardInstance;
+        ItemRewardInstance itemReward = RewardedAdsManager.Instance.currentReward as ItemRewardInstance;
         receiveText.SetLocalizationItem(itemReward.ItemRewardDefinition.ReceievedRewardLocalization);
         receiveText.SetPlaceHolderLocalization(itemReward);
         receiveText.UpdateText();

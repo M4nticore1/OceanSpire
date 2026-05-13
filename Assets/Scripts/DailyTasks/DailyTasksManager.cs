@@ -12,6 +12,8 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 {
     public static DailyTasksManager Instance { get; private set; }
 
+    [SerializeField] private DailyTasksList dailyTasksList;
+
     [Header("Tasks")]
     [SerializeField] private TaskDefinitions[] taskDefinitions;
 
@@ -53,15 +55,15 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     public void Init(DailyTasksData data)
     {
-        CreateTasks(data != null && data.Tasks != null ? data.Tasks : GetRandomTaskIds());
-        SetNextUpdateTime(data != null ? data.NextRestTime : CalculateNextUpdateSecond());
-        SetAdUpdateUsedSetTrue(data != null ? data.IsAdUpdateUsed : false);
+        CreateTasks(data.Tasks);
+        SetNextUpdateTime(data.NextResetTime);
+        SetAdUpdateUsedSetTrue(data.AdUpdateUsed);
     }
 
     public void UpdateTasks()
     {
         RemoveTasks();
-        CreateTasks(GetRandomTaskIds());
+        CreateTasks(GetRandomTasksData());
         SetUpdated(true);
     }
 
@@ -84,10 +86,10 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         isUpdated = true;
     }
 
-    private void CreateTasks(DailyTaskInstanceData[] taskData)
+    private void CreateTasks(DailyTaskInstanceData[] tasksData)
     {
-        for (int i = 0; i < taskData.Length; i++) {
-            CreateTask(taskData[i]);
+        foreach (var data in tasksData) {
+            CreateTask(data);
         }
 
         onTasksInited?.Invoke();
@@ -95,8 +97,8 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     private void CreateTask(DailyTaskInstanceData data)
     {
-        DailyTaskDefinition definition = DailyTasksList.Instance.GetTaskDefinition(data.Id);
-        DailyTaskInstance task = new DailyTaskInstance(definition, data.Progress, data.IsCompleted);
+        DailyTaskDefinition def = dailyTasksList.GetTaskDefinition(data.Id);
+        DailyTaskInstance task = new DailyTaskInstance(def, data.Progress, data.Completed);
 
         currentTasks.Add(task);
     }
@@ -112,7 +114,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     private void UpdateNextResetTime()
     {
-        SetNextUpdateTime(CalculateNextUpdateSecond());
+        SetNextUpdateTime(CalculateNextResetTime());
     }
 
     private void SetNextUpdateTime(long seconds)
@@ -130,14 +132,14 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     private string GetUpdateTime()
     {
-        int remainingSeconds = (int)(CalculateNextUpdateSecond() - TimeManager.GetCurrentSecond());
+        int remainingSeconds = (int)(CalculateNextResetTime() - TimeManager.GetCurrentSecond());
 
         string timer = TimeFormatter.SecondsToHourTime(remainingSeconds);
 
         return timer;
     }
 
-    private long CalculateNextUpdateSecond()
+    public long CalculateNextResetTime()
     {
         long minTargetSecond = updateTasksTimeOffset * 3600;
         long maxTargetSecond = (24 + updateTasksTimeOffset) * 3600;
@@ -146,14 +148,14 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         return targetSecond;
     }
 
-    private DailyTaskInstanceData[] GetRandomTaskIds()
+    public DailyTaskInstanceData[] GetRandomTasksData()
     {
         DailyTaskInstanceData[] tasksData = new DailyTaskInstanceData[taskDefinitions.Length];
 
         for (int i = 0; i < tasksData.Length; i++) {
             tasksData[i] = new DailyTaskInstanceData()
             {
-                Id = UnityEngine.Random.Range(0, taskDefinitions[i].taskDefinitions.Length),
+                Id = (int)taskDefinitions[i].taskDefinitions[UnityEngine.Random.Range(0, taskDefinitions[i].taskDefinitions.Length)].TaskId,
                 Progress = 0
             };
         }

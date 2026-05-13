@@ -21,15 +21,16 @@ public class BuildingWidget : MonoBehaviour
     {
         buildButton.onReleased.AddListener(OnBuildButtonCliked);
         informationButton.onReleased.AddListener(OnInformationButtonClicked);
-        EventBus.onMainStorageItemAmountChanged += OnMainStorageItemAmountChanged;
-        UpdateResourcesToBuild();
+        //EventBus.onMainStorageItemAmountChanged += OnMainStorageItemAmountChanged;
+
+        //UpdateResourcesToBuild();
     }
 
     private void OnDisable()
     {
         buildButton.onReleased.RemoveListener(OnBuildButtonCliked);
         informationButton.onReleased.RemoveListener(OnInformationButtonClicked);
-        EventBus.onMainStorageItemAmountChanged -= OnMainStorageItemAmountChanged;
+        //EventBus.onMainStorageItemAmountChanged -= OnMainStorageItemAmountChanged;
     }
 
     public void Init(Building prefab)
@@ -81,33 +82,33 @@ public class BuildingWidget : MonoBehaviour
         EventBus.InvokeBuildingWidgetInformationClicked(this);
     }
 
-    private void UpdateResourcesToBuild()
-    {
-        if (!isInited) return;
+    //private void UpdateResourcesToBuild()
+    //{
+    //    if (!isInited) return;
 
-        bool enoughResources = true;
+    //    bool enoughResources = true;
 
-        foreach (var resource in buildingPrefab.GetResourcesToBuild()) {
-            int amountToBuilding = resource.Amount;
-            int resourceId = resource.Definition.ItemId;
-            int currentAmount = cityStorage.Inventory.GetItemById(resourceId).Amount;
+    //    foreach (var resource in buildingPrefab.GetResourcesToBuild()) {
+    //        int amountToBuilding = resource.Amount;
+    //        int resourceId = resource.Definition.ItemId;
+    //        int currentAmount = cityStorage.Inventory.GetItemById(resourceId).Amount;
 
-            if (enoughResources && currentAmount < amountToBuilding) {
-                enoughResources = false;
-                break;
-            }
-        }
+    //        if (enoughResources && currentAmount < amountToBuilding) {
+    //            enoughResources = false;
+    //            break;
+    //        }
+    //    }
 
-        if (enoughResources)
-            buildButton.SetState(CustomButtonState.Idle);
-        else
-            buildButton.SetState(CustomButtonState.Disabled);
+    //    if (enoughResources)
+    //        buildButton.SetState(CustomButtonState.Idle);
+    //    else
+    //        buildButton.SetState(CustomButtonState.Disabled);
 
-        buildButton.EndTransitionAnimation();
-    }
+    //    buildButton.EndTransitionAnimation();
+    //}
 
-    private void OnMainStorageItemAmountChanged(ItemInstance item)
-    {
-        UpdateResourcesToBuild();
-    }
+    //private void OnMainStorageItemAmountChanged(ItemInstance item)
+    //{
+    //    UpdateResourcesToBuild();
+    //}
 }

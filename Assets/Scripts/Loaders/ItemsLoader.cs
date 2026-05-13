@@ -3,6 +3,9 @@ using UnityEngine;
 public class ItemsLoader : Loader
 {
     public static ItemsLoader Instance { get; private set; }
+
+    [SerializeField] private CityStorage cityStorage;
+
     [SerializeField] private StartItems startItems;
 
     private void Awake()
@@ -18,10 +21,10 @@ public class ItemsLoader : Loader
 
     protected override void Load(WorldData data)
     {
-        if (data != null && data.Items != null) {
-            for (int i = 0; i < data.Items.Length; i++) {
-                ItemData itemData = data.Items[i];
-                CityStorage.Instance.Inventory.AddItem(itemData.Id, itemData.Amount);
+        if (data != null && data.CityInventory != null) {
+            for (int i = 0; i < data.CityInventory.Length; i++) {
+                ItemData itemData = data.CityInventory[i];
+                cityStorage.Inventory.AddItem(itemData.Id, itemData.Amount);
             }
         }
         else {

@@ -7,11 +7,11 @@ public class RewardedAdsManager : MonoBehaviour
 
     [SerializeField] private AdsSystem adsSystem;
 
-    public AdRewardInstance currentReward { get; private set; }
+    public RewardInstance currentReward { get; private set; }
 
-    public static event Action<AdRewardInstance> onRewardSeted;
-    public static event Action<AdRewardInstance> onRewardRemoved;
-    public static event Action<AdRewardInstance> onRewardReceived;
+    public static event Action<RewardInstance> onRewardSeted;
+    public static event Action<RewardInstance> onRewardRemoved;
+    public static event Action<RewardInstance> onRewardReceived;
 
     private void Awake()
     {
@@ -38,9 +38,9 @@ public class RewardedAdsManager : MonoBehaviour
         SetCurrentReward(definition.CreateInstance());
     }
 
-    public void SetCurrentReward(AdRewardInstance reward)
+    public void SetCurrentReward(RewardInstance reward)
     {
-        AdRewardInstance lastReward = currentReward;
+        RewardInstance lastReward = currentReward;
         currentReward = reward;
 
         if (currentReward != null) {
@@ -53,7 +53,7 @@ public class RewardedAdsManager : MonoBehaviour
 
     public void RemoveCurrentReward()
     {
-        AdRewardInstance reward = currentReward;
+        RewardInstance reward = currentReward;
 
         currentReward = null;
         onRewardRemoved?.Invoke(reward);
@@ -61,7 +61,7 @@ public class RewardedAdsManager : MonoBehaviour
 
     public void ReceiveReward()
     {
-        AdRewardInstance reward = currentReward;
+        RewardInstance reward = currentReward;
 
         currentReward.RecieveReward();
         currentReward = null;

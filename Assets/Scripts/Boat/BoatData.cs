@@ -19,8 +19,8 @@ public class BoatData
             InstanceId = boat.InstanceId.Id,
             Position = new Vector3Data(boat.transform.position),
             Rotation = new Vector3Data(boat.transform.rotation.eulerAngles),
+            Health = boat.Health.CurrentHealth,
             DockInstanceId = boat.DockPoint?.InstanceId.Id,
-            Health = boat.Health.CurrentHealth
         };
     }
 }

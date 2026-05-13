@@ -15,7 +15,7 @@ public class BuildingTrigger : MonoBehaviour
 
         if (entity) {
             if (building)
-                entity.OnEnteredBuildingTrigger(building);
+                entity.TryEnterBuilding(building);
             else
                 Debug.LogError("building is null.");
         }

@@ -3,11 +3,11 @@ using UnityEngine;
 
 public static class BuildingFactory
 {
-    public static TowerBuilding CreateBuilding(TowerBuilding prefab, TowerBuildingData data)
+    public static TowerBuilding CreateBuilding(TowerBuilding prefab, Transform transform, TowerBuildingData data)
     {
-        var go = Object.Instantiate(prefab);
-        go.Init(data);
+        var buildings = Object.Instantiate(prefab, transform.position, transform.rotation);
+        buildings.Init(data);
 
-        return go;
+        return buildings;
     }
 }

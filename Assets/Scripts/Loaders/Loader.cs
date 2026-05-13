@@ -12,5 +12,5 @@ public abstract class Loader : MonoBehaviour
         IsLoaded = true;
     }
 
-    protected abstract void Load(WorldData data);
+    protected abstract void Load(WorldData worldData);
 }

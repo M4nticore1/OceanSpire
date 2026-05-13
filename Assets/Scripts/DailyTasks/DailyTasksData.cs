@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class DailyTasksData
 {
-    public DailyTaskInstanceData[] Tasks { get; private set; }
-    public long NextRestTime { get; private set; }
-    public bool IsAdUpdateUsed { get; private set; }
+    public DailyTaskInstanceData[] Tasks = null;
+    public long NextResetTime = 0;
+    public bool AdUpdateUsed = false;
 
     public static DailyTasksData Create(DailyTasksManager manager)
     {
         return new DailyTasksData()
         {
             Tasks = DailyTasksSaveSystem.SaveTasks(manager),
-            NextRestTime = manager.NextRestTime,
-            IsAdUpdateUsed = manager.IsAdUpdateUsed,
+            NextResetTime = manager.NextRestTime,
+            AdUpdateUsed = manager.IsAdUpdateUsed,
         };
     }
 }

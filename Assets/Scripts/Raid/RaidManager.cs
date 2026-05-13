@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public struct RaidEndedResult
@@ -21,8 +20,8 @@ public class RaidManager : MonoBehaviour
     [Header("Cooldown")]
     [SerializeField] private float minRaidCooldown = 10f;
     [SerializeField] private float maxRaidCooldown = 20f;
-    private float currentRaidCooldown = 0f;
-    private float currentRaidCooldownTime = 0f;
+    public float CurrentRaidCooldown { get; private set; } = 0f;
+    public float CurrentRaidCooldownTime { get; private set; } = 0f;
 
     [Header("Spawn")]
     [SerializeField] private float minSpawnAngleOffset = 5f;
@@ -35,7 +34,7 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private BoatDockPoint[] dockPoints;
     private Dictionary<Boat, Vector3> spawnPositions = new();
 
-    public bool IsRaidCreated { get; private set; } = false;
+    public bool IsRaidExist { get; private set; } = false;
     public bool IsUnderRaid { get; private set; } = false;
     public int landedRaidersCount = 0;
 
@@ -66,19 +65,22 @@ public class RaidManager : MonoBehaviour
         Human.onExitedBoat -= OnExitedBoat;
     }
 
-    private void Start()
+    public void Init(RaidData raidData)
     {
-        ApplyRandomCooldown();
+        IsRaidExist = raidData.RaidExist;
+        IsUnderRaid = raidData.UnderRaid;
+        CurrentRaidCooldown = raidData.RaidCooldown;
+        CurrentRaidCooldownTime = raidData.TimeSinceLastRaid;
     }
 
     private void Update()
     {
-        if (IsRaidCreated) return;
+        if (IsRaidExist) return;
 
-        if (currentRaidCooldownTime < currentRaidCooldown)
-            currentRaidCooldownTime += Time.deltaTime;
+        if (CurrentRaidCooldownTime < CurrentRaidCooldown)
+            CurrentRaidCooldownTime += Time.deltaTime;
 
-        if (currentRaidCooldownTime < currentRaidCooldown) return;
+        if (CurrentRaidCooldownTime < CurrentRaidCooldown) return;
 
         ResetCurrentRaidTime();
         ApplyRandomCooldown();
@@ -138,7 +140,7 @@ public class RaidManager : MonoBehaviour
             spawnPositions.Add(boat, position);
         }
 
-        IsRaidCreated = true;
+        IsRaidExist = true;
     }
 
     private void StartRaid()
@@ -152,7 +154,7 @@ public class RaidManager : MonoBehaviour
     {
         RemoveCityLoot();
         IsUnderRaid = false;
-        IsRaidCreated = false;
+        IsRaidExist = false;
 
         RaidEndedResult result = new RaidEndedResult()
         {
@@ -188,12 +190,12 @@ public class RaidManager : MonoBehaviour
 
     private void ApplyRandomCooldown()
     {
-        currentRaidCooldown = GetRandomCooldown();
+        CurrentRaidCooldown = GetRandomCooldown();
     }
 
     private void ResetCurrentRaidTime()
     {
-        currentRaidCooldownTime = 0;
+        CurrentRaidCooldownTime = 0;
     }
 
     private void OnEnteredBoat(Human human)

@@ -100,8 +100,7 @@ public class Boat : MonoBehaviour
         health.Init(data.Health);
 
         if (data.DockInstanceId != null) {
-            InstanceId boatDockInstance = null;
-            InstancesManager.Instance.TryGetInstance(data.DockInstanceId.Value, out boatDockInstance);
+            InstanceId boatDockInstance = InstancesManager.Instance.GetInstance(data.DockInstanceId.Value);
             BoatDockPoint boatDock = boatDockInstance?.GetComponent<BoatDockPoint>();
 
             SetDockPoint(boatDock);

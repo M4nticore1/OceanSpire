@@ -15,7 +15,7 @@ public class DailyRewardWidget : UIBehaviour
     [SerializeField] private TextLocalizer rewardNameText;
     [SerializeField] private TextLocalizer rewardAmountText;
 
-    private ItemAdRewardInstance reward;
+    private RewardInstance reward;
 
     protected override void OnEnable()
     {
@@ -33,7 +33,7 @@ public class DailyRewardWidget : UIBehaviour
         collectButton.onReleased.RemoveListener(OnTakeButtonClicked);
     }
 
-    public void Init(ItemAdRewardInstance reward)
+    public void Init(RewardInstance reward)
     {
         this.reward = reward;
         UpdateButtonEnabled();
@@ -45,13 +45,13 @@ public class DailyRewardWidget : UIBehaviour
 
     private void UpdateButtonEnabled()
     {
-        collectButton.SetState(!DailyRewardManager.Instance.CanSelectReward() || reward.IsRecieved ? CustomButtonState.Disabled : CustomButtonState.Idle);
+        collectButton.SetState(!DailyRewardManager.Instance.CanSelectReward() || reward.IsCollected ? CustomButtonState.Disabled : CustomButtonState.Idle);
     }
 
     private void UpdateButtonText()
     {
         var free = DailyRewardManager.Instance.CanSelectFreeReward();
-        var received = reward.IsRecieved;
+        var received = reward.IsCollected;
 
         freeRewardText.SetActive(free && !received);
         adRewardText.SetActive(!free && !received);
@@ -71,7 +71,10 @@ public class DailyRewardWidget : UIBehaviour
 
     private void UpdateRewardAmount()
     {
-        rewardAmountText.SetText(reward.Amount.ToString());
+        var itemReward = reward as ItemRewardInstance;
+        if (itemReward == null) return;
+
+        rewardAmountText.SetText(itemReward.Amount.ToString());
         rewardAmountText.UpdateText();
     }
 
@@ -86,7 +89,7 @@ public class DailyRewardWidget : UIBehaviour
         }
     }
 
-    private void OnBonusChestRewardRecieved(AdRewardInstance reward)
+    private void OnBonusChestRewardRecieved(RewardInstance reward)
     {
         UpdateButtonEnabled();
         UpdateButtonText();

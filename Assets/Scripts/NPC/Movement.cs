@@ -27,9 +27,9 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-        if (CheckDistancePathPosition()) {
-            OnReachedPath();
-        }
+        if (!CheckDistancePathPosition()) return;
+
+        OnReachedPath();
     }
 
     public void Move(Vector3 direction, float speed)

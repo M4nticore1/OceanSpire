@@ -24,7 +24,8 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
     private BuildingStrategy strategy;
 
-    private bool isWorking = false;
+    public bool isWorking { get; private set; } = false;
+    public bool IsDemolished { get; private set; } = false;
 
     public BuildingConstruction spawnedConstruction { get; private set; } = null;
 
@@ -38,7 +39,6 @@ public abstract class Building : MonoBehaviour, ILocalizable
     [SerializeField] private bool isRuined = false;
     public bool IsRuined => isRuined;
 
-    public bool IsDemolished { get; private set; } = false;
     public const float DemolishionResourcesRefundPercent = 0.2f;
 
     public event Action onInited;
@@ -248,7 +248,12 @@ public abstract class Building : MonoBehaviour, ILocalizable
         BuildingConstruction constructionToSpawn = GetConstructionToSpawn();
         if (!constructionToSpawn) return;
 
-        spawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, this);
+        BuildingConstructionData data = new BuildingConstructionData()
+        {
+            BuildingInstanceId = instanceId.Id
+        };
+
+        spawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, transform, data);
     }
 
     private void OnWorkerAdded(InteractComponent interactor)
