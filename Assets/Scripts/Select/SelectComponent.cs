@@ -19,12 +19,12 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     private void OnEnable()
     {
-        EventBus.onPlayerClicked += OnPlayerClicked;
+        EventBus.OnPlayerClicked += OnPlayerClicked;
     }
 
     private void OnDisable()
     {
-        EventBus.onPlayerClicked -= OnPlayerClicked;
+        EventBus.OnPlayerClicked -= OnPlayerClicked;
 
         onComponentDestroyed?.Invoke(this);
     }

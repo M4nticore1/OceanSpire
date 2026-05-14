@@ -15,12 +15,12 @@ public class ConstructionInformationMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        EventBus.onBuildingWidgetInformationClicked += OnBuildingWidgetInformationClicked;
+        EventBus.OnBuildingWidgetInformationClicked += OnBuildingWidgetInformationClicked;
     }
 
     private void OnDisable()
     {
-        EventBus.onBuildingWidgetInformationClicked -= OnBuildingWidgetInformationClicked;
+        EventBus.OnBuildingWidgetInformationClicked -= OnBuildingWidgetInformationClicked;
     }
 
     private void OnBuildingWidgetInformationClicked(BuildingWidget widget)

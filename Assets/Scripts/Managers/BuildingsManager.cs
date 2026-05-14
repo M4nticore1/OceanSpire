@@ -52,16 +52,6 @@ public class BuildingsManager : MonoBehaviour
         Instance = this;
     }
 
-    private void OnEnable()
-    {
-        EventBus.onBuildingWidgetBuildClicked += OnBuildingWidgetBuildClicked;
-    }
-
-    private void OnDisable()
-    {
-        EventBus.onBuildingWidgetBuildClicked -= OnBuildingWidgetBuildClicked;
-    }
-
     public void RegisterFloorModule(FloorFrameModule floorModule)
     {
         if (!builtFloors.Contains(floorModule)) {
@@ -101,11 +91,6 @@ public class BuildingsManager : MonoBehaviour
         if (floorIndex < 0) floorIndex = 0;
 
         return floorIndex;
-    }
-
-    private void OnBuildingWidgetBuildClicked(BuildingWidget widget)
-    {
-        EventBus.InvokeBuildingStartPlacing(widget.buildingPrefab);
     }
 
     private void UpdateCityHeight()

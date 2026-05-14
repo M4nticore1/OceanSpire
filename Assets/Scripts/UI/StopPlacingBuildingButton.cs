@@ -13,14 +13,14 @@ public class StopPlacingBuildingButton : MonoBehaviour
     private void OnEnable()
     {
         button.onReleased.AddListener(OnButtonClicked);
-        EventBus.onStartedPlacingBuilding += OnStartedPlacingBuilding;
+        EventBus.OnConstructionStarted += OnStartedPlacingBuilding;
         Building.onBuildingInited += OnBuildingInited;
     }
 
     private void OnDisable()
     {
         button.onReleased.RemoveListener(OnButtonClicked);
-        EventBus.onStartedPlacingBuilding -= OnStartedPlacingBuilding;
+        EventBus.OnConstructionStarted -= OnStartedPlacingBuilding;
         Building.onBuildingInited -= OnBuildingInited;
     }
 
@@ -36,7 +36,7 @@ public class StopPlacingBuildingButton : MonoBehaviour
 
     private void OnButtonClicked()
     {
-        EventBus.InvokeStopPlacingBuildingButtonClicked();
+        EventBus.InvokeConstructionStopped();
         Hide();
     }
 

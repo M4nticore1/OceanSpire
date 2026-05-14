@@ -22,7 +22,9 @@ public class SelectGroup : MonoBehaviour
         if (!buttons.Contains(selectedButton)) return;
 
         foreach (var button in buttons) {
-            button.OnSelectGroupButtonSelected(selectedButton);
+            if (button == selectedButton) continue;
+
+            button.SetState(CustomButtonState.Idle);
         }
     }
 }

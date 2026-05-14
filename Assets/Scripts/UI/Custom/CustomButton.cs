@@ -112,10 +112,11 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         base.Awake();
 
-        ApplyBodyTargetColor();
-        ApplyContentTargetColor();
-        ApplyColor();
-        ApplyScale();
+        UpdateBodyTargetColor();
+        UpdateContentTargetColor();
+        UpdateColor();
+        UpdateScale();
+        UpdateSelectGroup();
     }
 
     protected override void OnEnable()
@@ -124,10 +125,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         InputListener.Instance.onPressed += OnPointerPressed;
         InputListener.Instance.onReleased += OnPointerReleased;
-
-        if (selectGroup) {
-            selectGroup.AddButton(this);
-        }
 
         EndTransitionAnimation();
     }
@@ -138,10 +135,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         InputListener.Instance.onPressed -= OnPointerPressed;
         InputListener.Instance.onReleased -= OnPointerReleased;
-
-        if (selectGroup) {
-            selectGroup.RemoveButton(this);
-        }
     }
 
     private void Update()
@@ -161,8 +154,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         base.OnValidate();
 
         SetState(state);
-        ApplyBodyTargetColor();
-        ApplyContentTargetColor();
+        UpdateBodyTargetColor();
+        UpdateContentTargetColor();
         SetStateTransitionAlpha(1f);
     }
 
@@ -185,8 +178,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private void Disable()
     {
-        ApplyBodyTargetColor();
-        ApplyContentTargetColor();
+        UpdateBodyTargetColor();
+        UpdateContentTargetColor();
     }
 
     public void SetSelectGroup(SelectGroup selectGroup)
@@ -201,18 +194,18 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         selectGroup.RemoveButton(this);
     }
 
-    public void OnSelectGroupButtonSelected(CustomButton button)
+    private void UpdateSelectGroup()
     {
-        if (button == this) return;
-
-        SetState(CustomButtonState.Idle);
+        if (selectGroup) {
+            selectGroup.AddButton(this);
+        }
     }
 
     // Idle
     private void Idle()
     {
-        ApplyBodyTargetColor();
-        ApplyContentTargetColor();
+        UpdateBodyTargetColor();
+        UpdateContentTargetColor();
     }
 
     // Hover
@@ -227,8 +220,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private void Hover()
     {
-        ApplyBodyTargetColor();
-        ApplyContentTargetColor();
+        UpdateBodyTargetColor();
+        UpdateContentTargetColor();
         onHovered?.Invoke();
     }
 
@@ -260,8 +253,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private void Press()
     {
-        ApplyBodyTargetColor();
-        ApplyContentTargetColor();
+        UpdateBodyTargetColor();
+        UpdateContentTargetColor();
         pressedButtonPosition = transform.position;
         onPressed?.Invoke();
         onButtonPressed?.Invoke(this);
@@ -305,8 +298,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     // Select
     private void Select()
     {
-        ApplyBodyTargetColor();
-        ApplyContentTargetColor();
+        UpdateBodyTargetColor();
+        UpdateContentTargetColor();
 
         if (selectGroup) {
             selectGroup.OnButtonSelected(this);
@@ -329,22 +322,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         ExitState(state);
         state = newState;
         EnterState(state);
-        OnStateChanged();
-    }
 
-    private void ExitState(CustomButtonState state)
-    {
-        switch (state) {
-            case CustomButtonState.Hovered:
-                Unhover();
-                break;
-            case CustomButtonState.Selected:
-                Deselect();
-                break;
-            case CustomButtonState.Disabled:
-                Enable();
-                break;
-        }
+        OnStateChanged();
     }
 
     private void EnterState(CustomButtonState state)
@@ -366,15 +345,32 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
                 Disable();
                 break;
         }
+    }
 
-        if (!gameObject.activeSelf || !gameObject.activeInHierarchy) {
-            EndTransitionAnimation();
+    private void ExitState(CustomButtonState state)
+    {
+        switch (state) {
+            case CustomButtonState.Hovered:
+                Unhover();
+                break;
+            case CustomButtonState.Selected:
+                Deselect();
+                break;
+            case CustomButtonState.Disabled:
+                Enable();
+                break;
         }
     }
 
     private void OnStateChanged()
     {
-        ResetInteractionAlpha();
+        if (gameObject.activeInHierarchy && gameObject.activeSelf) {
+            ResetTransitionAnimation();
+        }
+        else {
+            EndTransitionAnimation();
+        }
+
         onStateChanged?.Invoke(this);
     }
 
@@ -388,11 +384,12 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         float duration = Mathf.Max(stateTransitionTime, 0.0001f);
         SetStateTransitionAlpha(stateTransitionAlpha + Time.deltaTime / duration);
+
         if (stateTransitionAlpha >= 1f)
             isAnimating = false;
     }
 
-    private void ResetInteractionAlpha()
+    private void ResetTransitionAnimation()
     {
         SetStateTransitionAlpha(0f);
     }
@@ -409,13 +406,13 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
             isAnimating = true;
         }
 
-        ApplyColor();
+        UpdateColor();
         if (isScalable && scaleRoot) {
-            ApplyScale();
+            UpdateScale();
         }
     }
 
-    private void ApplyColor()
+    private void UpdateColor()
     {
         if (targetGraphic) {
             targetGraphic.color = Color.Lerp(targetGraphic.color, targetBodyColor, stateTransitionAlpha);
@@ -430,7 +427,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
-    private void ApplyScale()
+    private void UpdateScale()
     {
         float targetScale = CurrentStateEntry.scale;
         CurrentScale = math.lerp(CurrentScale, new Vector3(targetScale, targetScale, targetScale), stateTransitionAlpha);
@@ -449,14 +446,14 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
-    private void ApplyBodyTargetColor()
+    private void UpdateBodyTargetColor()
     {
         ColorHolder colorHolder = CurrentStateEntry.bodyColorHolder;
         Color color = colorHolder ? colorHolder.color : CurrentStateEntry.bodyColor;
         targetBodyColor = color;
     }
 
-    private void ApplyContentTargetColor()
+    private void UpdateContentTargetColor()
     {
         ColorHolder colorHolder = CurrentStateEntry.contentColorHolder;
         Color color = colorHolder ? colorHolder.color : CurrentStateEntry.contentColor;

@@ -104,7 +104,7 @@ public class Human : Creature, IClickable
         RaidManager.Instance.onRaidStarted += OnRaidStarted;
         RaidManager.Instance.onRaidEnded += OnRaidEnded;
 
-        EventBus.onNavMeshBaked += OnNavMeshBaked;
+        EventBus.OnNavMeshBaked += OnNavMeshBaked;
     }
 
     protected override void OnDisable()
@@ -138,7 +138,7 @@ public class Human : Creature, IClickable
         RaidManager.Instance.onRaidStarted += OnRaidStarted;
         RaidManager.Instance.onRaidEnded += OnRaidEnded;
 
-        EventBus.onNavMeshBaked -= OnNavMeshBaked;
+        EventBus.OnNavMeshBaked -= OnNavMeshBaked;
     }
 
     private void Update()

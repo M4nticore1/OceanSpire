@@ -74,7 +74,7 @@ public class BuildingWidget : MonoBehaviour
 
     private void OnBuildButtonCliked()
     {
-        EventBus.InvokeBuildingWidgetBuildClicked(this);
+        EventBus.InvokeBuildingPlacingStarted(buildingPrefab);
     }
 
     private void OnInformationButtonClicked()

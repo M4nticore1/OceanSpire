@@ -6,14 +6,14 @@ public class AppLovinMaxRewardedAdsSystem : AdsSystem
 
     int retryAttempt;
 
-    void Start()
+    private void Start()
     {
-        MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "«your-IDFA»", "«your-GAID»" });
-        MaxSdk.InitializeSdk();
-
-        MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdk.SdkConfiguration sdkConfiguration) => {
+        MaxSdkCallbacks.OnSdkInitializedEvent += sdkConfiguration => {
             InitializeRewardedAds();
         };
+
+        //MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "«your-IDFA»", "«your-GAID»" });
+        MaxSdk.InitializeSdk();
     }
 
     public override void ShowAd()
@@ -56,6 +56,8 @@ public class AppLovinMaxRewardedAdsSystem : AdsSystem
     {
         // Rewarded ad failed to load
         // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds).
+
+        Debug.LogError("Rewarded failed to load: " + errorInfo);
 
         retryAttempt++;
         double retryDelay = Mathf.Pow(2, Mathf.Min(6, retryAttempt));

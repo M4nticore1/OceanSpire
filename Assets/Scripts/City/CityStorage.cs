@@ -20,14 +20,14 @@ public class CityStorage : MonoBehaviour
     {
         inventory.onItemAmountChanged += OnItemAmountChanged;
         inventory.onChangedItemMaxAmount += OnItemMaxAmountChanged;
-        EventBus.onBoatUnloadedItem += OnBoatUnloadedItem;
+        EventBus.OnBoatUnloadedItem += OnBoatUnloadedItem;
     }
 
     private void OnDisable()
     {
         inventory.onItemAmountChanged -= OnItemAmountChanged;
         inventory.onChangedItemMaxAmount -= OnItemMaxAmountChanged;
-        EventBus.onBoatUnloadedItem -= OnBoatUnloadedItem;
+        EventBus.OnBoatUnloadedItem -= OnBoatUnloadedItem;
     }
 
     // Inventory

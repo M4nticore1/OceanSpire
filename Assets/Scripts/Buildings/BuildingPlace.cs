@@ -53,16 +53,16 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void OnEnable()
     {
-        EventBus.onStartedPlacingBuilding += OnBuildingStartPlacing;
+        EventBus.OnConstructionStarted += OnBuildingStartPlacing;
         Building.onBuildingInited += OnBuildingInited;
-        EventBus.onStopPlacingBuildingButtonClicked += OnStopPlacingBuildingButtonClicked;
+        EventBus.OnConstructionStopped += OnStopPlacingBuildingButtonClicked;
     }
 
     private void OnDisable()
     {
-        EventBus.onStartedPlacingBuilding -= OnBuildingStartPlacing;
+        EventBus.OnConstructionStarted -= OnBuildingStartPlacing;
         Building.onBuildingInited -= OnBuildingInited;
-        EventBus.onStopPlacingBuildingButtonClicked -= OnStopPlacingBuildingButtonClicked;
+        EventBus.OnConstructionStopped -= OnStopPlacingBuildingButtonClicked;
     }
 
     private void Start()
