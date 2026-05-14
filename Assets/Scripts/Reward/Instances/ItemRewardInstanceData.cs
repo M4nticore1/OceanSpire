@@ -1,29 +1,29 @@
-using System;
-using UnityEngine;
+//using System;
+//using UnityEngine;
 
-[Serializable]
-public class ItemRewardInstanceData : RewardInstanceData
-{
-    public int Amount = 0;
+//[Serializable]
+//public class ItemRewardInstanceData : RewardInstanceData
+//{
+//    public int Amount = 0;
 
-    public override RewardInstance CreateReward()
-    {
-        var rewardDefinition = RewardsList.Instance.GetRewardDefinition(Id) as ItemAdRewardDefinition;
-        if (!rewardDefinition)
-            return null;
+//    public override RewardInstance CreateReward()
+//    {
+//        var rewardDefinition = RewardsList.Instance.GetRewardDefinition(Id) as ItemAdRewardDefinition;
+//        if (!rewardDefinition)
+//            return null;
 
-        var reward = new ItemRewardInstance(rewardDefinition, Amount);
+//        var reward = new ItemRewardInstance(rewardDefinition, Amount);
 
-        return reward;
-    }
+//        return reward;
+//    }
 
-    public static ItemRewardInstanceData Create(ItemRewardInstance reward)
-    {
-        return new ItemRewardInstanceData()
-        {
-            Id = (int)reward.Definition.RewardId,
-            Collected = reward.IsCollected,
-            Amount = reward.Amount
-        };
-    }
-}
+//    public static ItemRewardInstanceData Create(ItemRewardInstance reward)
+//    {
+//        return new ItemRewardInstanceData()
+//        {
+//            Id = (int)reward.Definition.RewardId,
+//            Collected = reward.IsCollected,
+//            Amount = reward.Amount
+//        };
+//    }
+//}

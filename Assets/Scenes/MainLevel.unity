@@ -667,8 +667,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 259eb26487b2cf04fa104196bf934d7e, type: 2}
   maxRewardsCount: 4
   updateRewardTimeOffset: 3
-  maxFreeRewardsCount: 1
-  maxAdRewardsCount: 1
 --- !u!114 &102002915 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3320796776946038933, guid: 1d4b6d91d77214c418442861ca8235ea, type: 3}
@@ -3517,6 +3515,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ef40b355e64a414a850e066fec9d95b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoSave
+  buildingsManager: {fileID: 455753200}
+  dockPointsManager: {fileID: 1711846142}
+  boatsManager: {fileID: 1934078805}
+  creaturesManager: {fileID: 220072952}
+  cityStorgae: {fileID: 1388613268}
+  dailyTasksManager: {fileID: 1366684462}
+  dailyRewardManager: {fileID: 101393569}
+  raidManager: {fileID: 2047238980}
+  wanderersManager: {fileID: 53266519}
   autoSaveDataFrequency: 1
   autoSaveThumbFrequency: 60
 --- !u!1001 &746247336
@@ -4500,6 +4507,84 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LootManager
   buildingsManager: {fileID: 455753200}
   updatePositionFrequency: 0.05
+--- !u!1 &919912077
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 919912078}
+  - component: {fileID: 919912079}
+  m_Layer: 0
+  m_Name: WanderersSystemLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &919912078
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919912077}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1424373026}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &919912079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919912077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8999fd7814b0b643aab94b18ecbf560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WanderersLoader
+  wanderersManager: {fileID: 53266519}
+--- !u!1 &928034253
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 928034254}
+  m_Layer: 0
+  m_Name: Raid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &928034254
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928034253}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2047238979}
+  - {fileID: 970860001}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &932374181
 GameObject:
   m_ObjectHideFlags: 0
@@ -4697,6 +4782,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3df3379b724154d8097e8fdd954951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WindManager
+--- !u!1 &970860000
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 970860001}
+  - component: {fileID: 970860002}
+  m_Layer: 0
+  m_Name: RaidLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &970860001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 970860000}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 928034254}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &970860002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 970860000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c6d6e15456b72544844f5da06e3b5e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RaidLoader
+  raidManager: {fileID: 2047238980}
 --- !u!1 &1013778939
 GameObject:
   m_ObjectHideFlags: 0
@@ -5712,7 +5842,6 @@ Transform:
   - {fileID: 916931149}
   - {fileID: 1428861524}
   - {fileID: 53266518}
-  - {fileID: 2047238979}
   - {fileID: 954540109}
   - {fileID: 1591262575}
   - {fileID: 2136275760}
@@ -5985,6 +6114,7 @@ Transform:
   - {fileID: 1493804849}
   - {fileID: 342273253}
   - {fileID: 142442283}
+  - {fileID: 919912078}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1428076146
@@ -7746,12 +7876,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047238978}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1317929167}
+  m_Father: {fileID: 928034254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2047238980
 MonoBehaviour:
@@ -8693,6 +8823,7 @@ SceneRoots:
   - {fileID: 1317929167}
   - {fileID: 830799193}
   - {fileID: 1428076147}
+  - {fileID: 928034254}
   - {fileID: 575860145}
   - {fileID: 1013778940}
   - {fileID: 178192283}

@@ -48,11 +48,11 @@ public class WorldData
     public DailyTasksData DailyTasks;
     public DailyRewardData DailyReward;
     public RaidData Raid;
+    public WanderersData WanderersSystem;
 
-    public static WorldData Create(WorldSaveManager saveManager, BuildingsManager buildings, DockPointsManager boatDocks, BoatsManager boats, CreaturesManager creatures, Inventory cityInventory, DailyTasksManager dailyTasks, DailyRewardManager dailyReward, RaidManager raid)
+    public static WorldData Create(WorldSaveManager saveManager, BuildingsManager buildings, DockPointsManager boatDocks, BoatsManager boats, CreaturesManager creatures, Inventory cityInventory, DailyTasksManager dailyTasks, DailyRewardManager dailyReward, RaidManager raid, WanderersManager wanderers)
     {
-        return new WorldData()
-        {
+        return new WorldData() {
             WorldName = saveManager.SaveWorldName,
 
             GroundBuildings = SaveWorldSystem.SaveGroundBuildings(buildings),
@@ -75,6 +75,7 @@ public class WorldData
             DailyTasks = DailyTasksData.Create(dailyTasks),
             DailyReward = DailyRewardData.Create(dailyReward),
             Raid = RaidData.Create(raid),
+            WanderersSystem = WanderersData.Create(wanderers)
         };
     }
 }

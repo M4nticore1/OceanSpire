@@ -39,6 +39,9 @@ public abstract class RewardInstance : ILocalizable
 
     public virtual RewardInstanceData CreateData()
     {
-        return RewardInstanceData.CreateData(this);
+        return new RewardInstanceData() {
+            Id = (int)Definition.RewardId,
+            Collected = IsCollected,
+        };
     }
 }

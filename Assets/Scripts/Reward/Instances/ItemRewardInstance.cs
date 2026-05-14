@@ -48,6 +48,10 @@ public class ItemRewardInstance : RewardInstance
 
     public override RewardInstanceData CreateData()
     {
-        return ItemRewardInstanceData.Create(this);
+        return new RewardInstanceData() {
+            Id = (int)Definition.RewardId,
+            Amount = Amount,
+            Collected = IsCollected,
+        };
     }
 }

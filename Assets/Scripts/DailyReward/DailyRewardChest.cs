@@ -7,14 +7,14 @@ public class DailyRewardChest : MonoBehaviour, IClickable
 
     private void OnEnable()
     {
-        DailyRewardManager.Instance.onDailyRewardRecieved += OnDailyRewardRecieved;
-        DailyRewardManager.Instance.onDailyRewardReset += OnDailyRewardsReset;
+        DailyRewardManager.Instance.OnDailyRewardRecieved += OnDailyRewardRecieved;
+        DailyRewardManager.Instance.OnDailyRewardReset += OnDailyRewardsReset;
     }
 
     private void OnDisable()
     {
-        DailyRewardManager.Instance.onDailyRewardRecieved -= OnDailyRewardRecieved;
-        DailyRewardManager.Instance.onDailyRewardReset -= OnDailyRewardsReset;
+        DailyRewardManager.Instance.OnDailyRewardRecieved -= OnDailyRewardRecieved;
+        DailyRewardManager.Instance.OnDailyRewardReset -= OnDailyRewardsReset;
     }
 
     public void Click()
@@ -24,12 +24,12 @@ public class DailyRewardChest : MonoBehaviour, IClickable
 
     public bool ShouldClick()
     {
-        return DailyRewardManager.Instance.CanSelectReward();
+        return !DailyRewardManager.Instance.AdRewardCollected;
     }
 
     private void OnDailyRewardRecieved(RewardInstance reward)
     {
-        if (DailyRewardManager.Instance.CanSelectReward()) return;
+        if (!DailyRewardManager.Instance.AdRewardCollected) return;
 
         content.SetActive(false);
     }

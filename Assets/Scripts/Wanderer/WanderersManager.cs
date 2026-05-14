@@ -13,8 +13,8 @@ public class WanderersManager : MonoBehaviour
     [Header("Cooldown")]
     [SerializeField] private float minWandererSpawnCooldown = 10;
     [SerializeField] private float maxWandererSpawnCooldown = 10;
-    private float currentWandererSpawnCooldown = 0;
-    private float currentWandererSpawnTime = 0;
+    public float CurrentWandererSpawnCooldown { get; private set; } = 0;
+    public float CurrentWandererSpawnTime { get; private set; } = 0;
 
     [Header("Positions")]
     private Dictionary<Human, Vector3> spawnPositions = new Dictionary<Human, Vector3>();
@@ -46,16 +46,28 @@ public class WanderersManager : MonoBehaviour
         ApplyRandomCooldown();
     }
 
+    public void Init(WanderersData wanderersData)
+    {
+        CurrentWandererSpawnCooldown = wanderersData.Cooldown;
+        CurrentWandererSpawnTime = wanderersData.TimeSinceLastSpawn;
+    }
+
     private void Update()
     {
         if (!CanSpawn()) return;
 
-        currentWandererSpawnTime += Time.deltaTime;
-        if (currentWandererSpawnTime <= currentWandererSpawnCooldown)return;
+        CurrentWandererSpawnTime += Time.deltaTime;
+        if (CurrentWandererSpawnTime <= CurrentWandererSpawnCooldown)return;
 
         SpawnWanderer();
         ResetTimeToSpawn();
         ApplyRandomCooldown();
+    }
+
+    public float CalculateRandomCooldown()
+    {
+        float cooldown = Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown);
+        return cooldown;
     }
 
     private void SpawnWanderer()
@@ -71,12 +83,12 @@ public class WanderersManager : MonoBehaviour
 
     private void ResetTimeToSpawn()
     {
-        currentWandererSpawnTime = 0f;
+        CurrentWandererSpawnTime = 0f;
     }
 
     private void ApplyRandomCooldown()
     {
-        currentWandererSpawnCooldown = GetRandomCooldown();
+        CurrentWandererSpawnCooldown = CalculateRandomCooldown();
     }
 
     private void OnWandererAccepted(Human human)
@@ -143,7 +155,6 @@ public class WanderersManager : MonoBehaviour
         return boat;
     }
 
-
     private BoatDockPoint GetDockPoint()
     {
         return DockPointsManager.Instance.WandererDockPoints[CreaturesManager.Instance.Wanderers.Count()];
@@ -154,11 +165,5 @@ public class WanderersManager : MonoBehaviour
         if (CreaturesManager.Instance.Wanderers.Count >= DockPointsManager.Instance.WandererDockPoints.Length) return false;
 
         return true;
-    }
-
-    private float GetRandomCooldown()
-    {
-        float cooldown = Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown);
-        return cooldown;
     }
 }

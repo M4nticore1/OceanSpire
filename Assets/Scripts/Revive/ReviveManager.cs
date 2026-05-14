@@ -86,7 +86,7 @@ public class ReviveManager : MonoBehaviour
     private void CreateReward(Human human)
     {
         float time = human.ReviveComponent.ReviveLimitTime - human.ReviveComponent.CurrentDiedTime;
-        ReviveAdRewardInstance reward = reviveRewardDefinition.CreateInstance() as ReviveAdRewardInstance;
+        ReviveAdRewardInstance reward = reviveRewardDefinition.CreateReward() as ReviveAdRewardInstance;
         reward.SetHuman(human);
 
         RewardedAdsManager.Instance.SetCurrentReward(reward);

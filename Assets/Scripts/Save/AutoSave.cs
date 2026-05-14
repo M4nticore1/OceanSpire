@@ -2,6 +2,18 @@ using UnityEngine;
 
 public class AutoSave : MonoBehaviour
 {
+    [Header("Managers")]
+    [SerializeField] private BuildingsManager buildingsManager;
+    [SerializeField] private DockPointsManager dockPointsManager;
+    [SerializeField] private BoatsManager boatsManager;
+    [SerializeField] private CreaturesManager creaturesManager;
+    [SerializeField] private CityStorage cityStorgae;
+    [SerializeField] private DailyTasksManager dailyTasksManager;
+    [SerializeField] private DailyRewardManager dailyRewardManager;
+    [SerializeField] private RaidManager raidManager;
+    [SerializeField] private WanderersManager wanderersManager;
+
+    [Header("Auto Save")]
     [SerializeField] private float autoSaveDataFrequency = 5f;
     [SerializeField] private float autoSaveThumbFrequency = 60f;
 
@@ -25,7 +37,7 @@ public class AutoSave : MonoBehaviour
         crrentSaveDataTime += Time.deltaTime;
         if (crrentSaveDataTime < autoSaveDataFrequency) return;
 
-        WorldData worldData = WorldData.Create(WorldSaveManager.Instance, BuildingsManager.Instance, DockPointsManager.Instance, BoatsManager.Instance, CreaturesManager.Instance, CityStorage.Instance.Inventory, DailyTasksManager.Instance, DailyRewardManager.Instance, RaidManager.Instance);
+        WorldData worldData = WorldData.Create(WorldSaveManager.Instance, buildingsManager, dockPointsManager, boatsManager, creaturesManager, cityStorgae.Inventory, dailyTasksManager, dailyRewardManager, raidManager, wanderersManager);
         WorldSaveSystem.SaveWorld(worldData);
         WorldSaveManager.Instance.SetWorldData(worldData);
 

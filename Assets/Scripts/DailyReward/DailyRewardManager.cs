@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class DailyRewardManager : MonoBehaviour, ILocalizable
@@ -15,20 +15,15 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     [SerializeField] private int updateRewardTimeOffset = 3;
 
-    [Header("Receive Reward")]
-    [SerializeField] private int maxFreeRewardsCount = 1;
-    [SerializeField] private int maxAdRewardsCount = 1;
-
-    private int currentFreeRecievesCount = 0;
-    private int currentAdRecievesCount = 0;
-
+    public bool FreeRewardCollected { get; private set; } = false;
+    public bool AdRewardCollected { get; private set; } = false;
     public long NextResetTime { get; private set; } = 0;
 
     private List<RewardInstance> currentRewards = new();
     public IReadOnlyList<RewardInstance> CurrentRewards => currentRewards;
 
-    public event Action onDailyRewardReset;
-    public event Action<RewardInstance> onDailyRewardRecieved;
+    public event Action OnDailyRewardReset;
+    public event Action<RewardInstance> OnDailyRewardRecieved;
 
     private void Awake()
     {
@@ -62,21 +57,20 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     {
         foreach (var rewardData in data.Rewards) {
             var definition = rewardsList.GetRewardDefinition(rewardData.Id);
-            var reward = definition.CreateInstance();
+            var reward = definition.CreateReward();
+
+            if (reward is ItemRewardInstance itemReward) {
+                itemReward.SetAmountPercent(GameStageSystem.CalculateGameStagePercent());
+            }
+
             reward.SetCollected(rewardData.Collected);
 
             currentRewards.Add(reward);
         }
-    }
 
-    public bool CanSelectFreeReward()
-    {
-        return currentFreeRecievesCount < maxFreeRewardsCount;
-    }
-
-    public bool CanSelectReward()
-    {
-        return currentAdRecievesCount < maxAdRewardsCount;
+        NextResetTime = data.NextResetTime;
+        FreeRewardCollected = data.FreeRewardCollected;
+        AdRewardCollected = data.AdRewardCollected;
     }
 
     public RewardInstance GetCurrentReward(int id)
@@ -97,14 +91,13 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
             var def = availableRewards[randomIndex];
             availableRewards.RemoveAt(randomIndex);
 
-            var rewardData = def.CreateInstance().CreateData();
-            rewardsData.Add(rewardData);
-
-            var reward = rewardData.CreateReward();
-
+            var reward = def.CreateReward();
             if (reward is ItemRewardInstance itemReward) {
                 itemReward.SetAmountPercent(GameStageSystem.CalculateGameStagePercent());
             }
+
+            var rewardData = reward.CreateData();
+            rewardsData.Add(rewardData);
         }
 
         return rewardsData.ToArray();
@@ -139,7 +132,8 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     {
         UpdateRewards();
         UpdateNextResetTime();
-        onDailyRewardReset?.Invoke();
+        UpdateRewardCollected();
+        OnDailyRewardReset?.Invoke();
     }
 
     private void UpdateNextResetTime()
@@ -147,18 +141,24 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         NextResetTime = CalculateNextResetTime();
     }
 
+    private void UpdateRewardCollected()
+    {
+        FreeRewardCollected = false;
+        AdRewardCollected = false;
+    }
+
     private void OnRewardRecieved(RewardInstance reward)
     {
-        if (!rewards.Contains(reward.Definition)) return;
+        if (!currentRewards.Contains(reward)) return;
 
-        if (CanSelectFreeReward()) {
-            currentFreeRecievesCount++;
+        if (!FreeRewardCollected) {
+            FreeRewardCollected = false;
         }
         else {
-            currentAdRecievesCount++;
+            AdRewardCollected = true;
         }
 
-        onDailyRewardRecieved?.Invoke(reward);
+        OnDailyRewardRecieved?.Invoke(reward);
     }
 
     private string GetRemainingResetHours()

@@ -4,8 +4,10 @@ using UnityEngine;
 [Serializable]
 public class DailyRewardData
 {
-    public long NextResetTime = 0;
     public RewardInstanceData[] Rewards = null;
+    public long NextResetTime = 0;
+    public bool FreeRewardCollected = false;
+    public bool AdRewardCollected = false;
 
     public static DailyRewardData Create(DailyRewardManager dailyRewardManager)
     {

@@ -43,7 +43,7 @@ public class RewardedAdsButtonManager : MonoBehaviour
         }
         else {
             if (currentToggleTime >= adCooldownTime) {
-                currentReward = GetRandomAdReward().CreateInstance();
+                currentReward = GetRandomAdReward().CreateReward();
 
                 ShowAdButton();
                 currentToggleTime = 0f;

@@ -25,5 +25,5 @@ public abstract class AdRewardDefinition : ScriptableObject
     [SerializeField] protected LocalizationItem receievedRewardLocalization;
     public LocalizationItem ReceievedRewardLocalization => receievedRewardLocalization;
 
-    public abstract RewardInstance CreateInstance();
+    public abstract RewardInstance CreateReward();
 }

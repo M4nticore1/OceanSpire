@@ -21,7 +21,7 @@ public class DailyRewardWidget : UIBehaviour
     {
         base.OnEnable();
 
-        DailyRewardManager.Instance.onDailyRewardRecieved += OnBonusChestRewardRecieved;
+        DailyRewardManager.Instance.OnDailyRewardRecieved += OnBonusChestRewardRecieved;
         collectButton.onReleased.AddListener(OnTakeButtonClicked);
     }
 
@@ -29,7 +29,7 @@ public class DailyRewardWidget : UIBehaviour
     {
         base.OnDisable();
 
-        DailyRewardManager.Instance.onDailyRewardRecieved -= OnBonusChestRewardRecieved;
+        DailyRewardManager.Instance.OnDailyRewardRecieved -= OnBonusChestRewardRecieved;
         collectButton.onReleased.RemoveListener(OnTakeButtonClicked);
     }
 
@@ -45,12 +45,12 @@ public class DailyRewardWidget : UIBehaviour
 
     private void UpdateButtonEnabled()
     {
-        collectButton.SetState(!DailyRewardManager.Instance.CanSelectReward() || reward.IsCollected ? CustomButtonState.Disabled : CustomButtonState.Idle);
+        collectButton.SetState(DailyRewardManager.Instance.AdRewardCollected || reward.IsCollected ? CustomButtonState.Disabled : CustomButtonState.Idle);
     }
 
     private void UpdateButtonText()
     {
-        var free = DailyRewardManager.Instance.CanSelectFreeReward();
+        var free = DailyRewardManager.Instance.FreeRewardCollected;
         var received = reward.IsCollected;
 
         freeRewardText.SetActive(free && !received);
@@ -71,16 +71,15 @@ public class DailyRewardWidget : UIBehaviour
 
     private void UpdateRewardAmount()
     {
-        var itemReward = reward as ItemRewardInstance;
-        if (itemReward == null) return;
-
-        rewardAmountText.SetText(itemReward.Amount.ToString());
-        rewardAmountText.UpdateText();
+        if (reward is ItemRewardInstance itemReward) {
+            rewardAmountText.SetText(itemReward.Amount.ToString());
+            rewardAmountText.UpdateText();
+        }
     }
 
     private void OnTakeButtonClicked()
     {
-        if (DailyRewardManager.Instance.CanSelectFreeReward()) {
+        if (DailyRewardManager.Instance.FreeRewardCollected) {
             reward.RecieveReward();
         }
         else {

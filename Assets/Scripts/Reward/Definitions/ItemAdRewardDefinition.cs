@@ -12,7 +12,7 @@ public class ItemAdRewardDefinition : AdRewardDefinition
     [SerializeField] private int maxAmount;
     public int MaxAmount => maxAmount;
 
-    public override RewardInstance CreateInstance()
+    public override RewardInstance CreateReward()
     {
         return new ItemRewardInstance(this, 0);
     }

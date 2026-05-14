@@ -35,7 +35,7 @@ public class RewardedAdsManager : MonoBehaviour
 
     public void SetCurrentReward(AdRewardDefinition definition)
     {
-        SetCurrentReward(definition.CreateInstance());
+        SetCurrentReward(definition.CreateReward());
     }
 
     public void SetCurrentReward(RewardInstance reward)

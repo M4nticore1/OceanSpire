@@ -118,6 +118,12 @@ public class RaidManager : MonoBehaviour
         return building;
     }
 
+    public float CalculateRandomCooldown()
+    {
+        float cooldown = Random.Range(minRaidCooldown, maxRaidCooldown);
+        return cooldown;
+    }
+
     private void CreateRaid()
     {
         int raidersAmount = GetRandomRaidersAmount();
@@ -190,7 +196,7 @@ public class RaidManager : MonoBehaviour
 
     private void ApplyRandomCooldown()
     {
-        CurrentRaidCooldown = GetRandomCooldown();
+        CurrentRaidCooldown = CalculateRandomCooldown();
     }
 
     private void ResetCurrentRaidTime()
@@ -291,11 +297,5 @@ public class RaidManager : MonoBehaviour
         int floorAmount = BuildingsManager.Instance.BuiltFloors.Count;
         int raidersAmount = Random.Range(floorAmount / 2, floorAmount + 1);
         return raidersAmount;
-    }
-
-    private float GetRandomCooldown()
-    {
-        float cooldown = Random.Range(minRaidCooldown, maxRaidCooldown);
-        return cooldown;
     }
 }
