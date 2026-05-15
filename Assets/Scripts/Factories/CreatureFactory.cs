@@ -2,16 +2,15 @@ using UnityEngine;
 
 public static class CreatureFactory
 {
-    public static Human CreateHuman(HumanData data)
+    public static Human CreateHuman(Creature prefab, Vector3 position, Quaternion rotation, HumanData data)
     {
-        Human prefab = CreaturesList.Instance.GetCreature(data.Id) as Human;
-
-        if (!prefab) {
-            Debug.LogError($"No prefab found for Creature ID {data.Id}");
+        var humanPrefab = prefab as Human;
+        if (!humanPrefab) {
+            Debug.Log("Selected prefab is not Human");
             return null;
         }
 
-        var human = Object.Instantiate(prefab);
+        var human = Object.Instantiate(humanPrefab, position, rotation);
         human.Init(data);
 
         return human;

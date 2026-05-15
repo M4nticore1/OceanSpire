@@ -85,9 +85,9 @@ public class TowerBuilding : Building
         FloorIndex = towerData.FloorIndex;
         PlaceIndex = towerData.PlaceIndex;
 
-        AssignBuildingPlace(FloorIndex, PlaceIndex);
-        AssignNeighborBuildings();
-        AssignConnectedBuildings();
+        UpdateBuildingPlace(FloorIndex, PlaceIndex);
+        UpdateNeighborBuildings();
+        UpdateConnectedBuildings();
         UpdatePositionType();
     }
 
@@ -205,25 +205,25 @@ public class TowerBuilding : Building
     {
         base.OnConstructionFinish();
 
-        AssignConnectedBuildings();
+        UpdateConnectedBuildings();
     }
 
-    private void AssignBuildingPlace(int floorIndex, int placeIndex)
+    private void UpdateBuildingPlace(int floorIndex, int placeIndex)
     {
         IReadOnlyList<FloorFrameModule> floors = BuildingsManager.Instance.BuiltFloors;
         BuildingPlace place = null;
 
         if (BuildingData.BuildingType == BuildingType.Room) {
             place = BuildingsManager.Instance.GetRoomPlace(floorIndex, placeIndex);
+            transform.SetParent(place.transform);
         }
         else if (BuildingData.BuildingType == BuildingType.Hall) {
             place = floors[floorIndex].HallBuildingPlace;
+            transform.SetParent(place.transform);
         }
         else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
             place = BuildingsManager.Instance.GetFloorFrameBuilding(floorIndex - 1)?.FloorBuildingPlace;
-
-            if (!place)
-                transform.SetParent(BuildingsManager.Instance.FirstFloorBuildingTransform);
+            transform.SetParent(place ? place.transform : BuildingsManager.Instance.FirstFloorBuildingTransform);
         }
 
         SetBuildingPlace(place);
@@ -239,7 +239,7 @@ public class TowerBuilding : Building
         }
     }
 
-    private void AssignNeighborBuildings()
+    private void UpdateNeighborBuildings()
     {
         neighborBuildings.Clear();
 
@@ -252,7 +252,7 @@ public class TowerBuilding : Building
         }
     }
 
-    private void AssignConnectedBuildings()
+    private void UpdateConnectedBuildings()
     {
         if (constructionComponent.IsUnderConstruction) return;
 
@@ -326,19 +326,14 @@ public class TowerBuilding : Building
         }
     }
 
-    private void OnNeighborBuildingConnected(TowerBuilding building)
-    {
-
-    }
-
     private void OnNeighborBuildingDemolished(TowerBuilding building)
     {
-        AssignNeighborBuildings();
+        UpdateNeighborBuildings();
     }
 
     private void OnConnectedBuildingDemolished(TowerBuilding building)
     {
-        AssignConnectedBuildings();
+        UpdateConnectedBuildings();
         UpdateConstruction();
 
         foreach (var module in GetComponents<IBuildingListener>()) {

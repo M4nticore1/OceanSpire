@@ -68,7 +68,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     private void Start()
     {
         HideBuildingPlace();
-        AssignFrameActivity();
+        UpdateFrameActivity();
     }
 
     public void Init(int newFloorindex)
@@ -76,6 +76,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         FloorIndex = newFloorindex;
         AssignNeighborPlaces();
         HideBuildingPlace();
+        UpdatePlaceActive();
     }
 
     public void TryPlaceBuilding(TowerBuilding building)
@@ -88,7 +89,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     private void PlaceBuilding(TowerBuilding building)
     {
         placedBuilding = building;
-        AssignFrameActivity();
+        UpdateFrameActivity();
     }
 
     public bool CanPlaceBuilding(TowerBuilding building)
@@ -150,7 +151,15 @@ public class BuildingPlace : MonoBehaviour, IClickable
         HideBuildingPlace();
     }
 
-    private void AssignFrameActivity()
+    private void UpdatePlaceActive()
+    {
+        if (FloorIndex != 0) return;
+        if (placeIndex != BuildingsManager.FirstBuildCityBuildingPlace) return;
+
+        gameObject.SetActive(false);
+    }
+
+    private void UpdateFrameActivity()
     {
         if (!buildingFrame) return;
 

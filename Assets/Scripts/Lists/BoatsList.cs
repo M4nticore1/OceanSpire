@@ -17,31 +17,27 @@ public class BoatsList : ScriptableObject
         }
     }
 
-    [SerializeField] private List<Boat> boats = new();
+    [SerializeField] private Boat[] boats;
 
     private Dictionary<int, Boat> boatsDict;
 
-    private Dictionary<int, Boat> BoatsDict
-    {
-        get
-        {
-            if (boatsDict == null) {
-                boatsDict = new();
-
-                foreach (var boat in boats) {
-                    boatsDict.Add(boat.BoatData.BoatId, boat);
-                }
-            }
-
-            return boatsDict;
-        }
-    }
-
     public Boat GetBoat(int id)
     {
-        Boat boat = null;
-        BoatsDict.TryGetValue(id, out boat);
+        TryInitDictionary(boats, ref boatsDict);
+
+        boatsDict.TryGetValue(id, out var boat);
 
         return boat;
+    }
+
+    private void TryInitDictionary(Boat[] boats, ref Dictionary<int, Boat> boatsDict)
+    {
+        if (boatsDict != null) return;
+
+        boatsDict = new();
+
+        foreach (var boat in boats) {
+            boatsDict.Add(boat.Definition.BoatId, boat);
+        }
     }
 }

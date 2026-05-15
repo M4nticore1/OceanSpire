@@ -27,6 +27,10 @@ public class RaiderState : HumanState
 
     public override void Tick()
     {
+        if (RaidManager.Instance.IsUnderRaid && !human.InteractComponent.InteractBuilding) {
+            human.TryMoveToBoat();
+        }
+
         if (isRaidingBuilding) {
             ProcessRaidBuilding();
         }
@@ -65,7 +69,7 @@ public class RaiderState : HumanState
             building.RaidComponent.AddRaider(human.InteractComponent);
         }
         else {
-            human.MoveToBoat();
+            human.TryMoveToBoat();
         }
     }
 
@@ -156,7 +160,7 @@ public class RaiderState : HumanState
 
     private void FinishRaidingBuilding()
     {
-        human.MoveToBoat();
+        human.TryMoveToBoat();
         AddLoot();
         isRaidingBuilding = false;
         isFinishedRaiding = true;

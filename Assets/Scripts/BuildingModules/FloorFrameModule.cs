@@ -41,6 +41,7 @@ public class FloorFrameModule : BuildingModule
     {
         int floorIndex = OwnedTowerBuilding.FloorIndex;
         BuildingsManager.Instance.RegisterFloorModule(this);
+
         InitBuildings();
     }
 
@@ -113,6 +114,7 @@ public class FloorFrameModule : BuildingModule
         if (!towerBuilding) return false;
 
         if (towerBuilding.FloorIndex != OwnedTowerBuilding.FloorIndex) return false;
+
         return true;
     }
 }

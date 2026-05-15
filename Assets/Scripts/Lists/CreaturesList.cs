@@ -1,106 +1,105 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem.Utilities;
 
 [CreateAssetMenu(fileName = "CreaturesList", menuName = "GameContent/Creatures List")]
 public class CreaturesList : ScriptableObject
 {
     private static CreaturesList instance;
+
     public static CreaturesList Instance
     {
         get
         {
             if (instance == null) {
                 instance = Resources.Load<CreaturesList>("Lists/CreaturesList");
-                instance.Init();
             }
+
             return instance;
         }
     }
 
     [SerializeField] private Creature[] creatures;
-    public ReadOnlyArray<Creature> Creatures => creatures;
+    public IReadOnlyList<Creature> Creatures => creatures;
 
-    [SerializeField] private Dictionary<int, Creature> creaturesDict = new();
+    [SerializeField] private Dictionary<int, Creature> creaturesDict;
 
     [SerializeField] private Creature[] citizens;
-    public ReadOnlyArray<Creature> Citizens => citizens;
+    public IReadOnlyList<Creature> Citizens => citizens;
 
-    [SerializeField] private Dictionary<int, Creature> citizensDict = new();
+    [SerializeField] private Dictionary<int, Creature> citizensDict;
 
     [SerializeField] private Creature[] wanderers;
-    public ReadOnlyArray<Creature> Wanderers => wanderers;
+    public IReadOnlyList<Creature> Wanderers => wanderers;
 
-    [SerializeField] private Dictionary<int, Creature> wanderersDict = new();
+    [SerializeField] private Dictionary<int, Creature> wanderersDict;
 
     [SerializeField] private Creature[] raiders;
-    public ReadOnlyArray<Creature> Raiders => raiders;
+    public IReadOnlyList<Creature> Raiders => raiders;
 
-    [SerializeField] private Dictionary<int, Creature> raidersDict = new();
-
-    private void Init()
-    {
-        InitDict(creatures, creaturesDict);
-        InitDict(citizens, citizensDict);
-        InitDict(wanderers, wanderersDict);
-        InitDict(raiders, raidersDict);
-    }
+    [SerializeField] private Dictionary<int, Creature> raidersDict;
 
     public Creature GetCreature(int id)
     {
+        TryInitDict(creatures, ref creaturesDict);
+
         return GetCreature(creaturesDict, id);
     }
 
     public Creature GetCitizen(int id)
     {
-        return GetCreature(citizensDict, id);
-    }
+        TryInitDict(citizens, ref citizensDict);
 
-    public Creature GetRandomCitizen()
-    {
-        return GetRandomCreature(citizensDict);
+        return GetCreature(citizensDict, id);
     }
 
     public Creature GetWanderer(int id)
     {
-        return GetCreature(wanderersDict, id);
-    }
+        TryInitDict(wanderers, ref wanderersDict);
 
-    public Creature GetRandomWanderer()
-    {
-        return GetRandomCreature(wanderersDict);
+        return GetCreature(wanderersDict, id);
     }
 
     public Creature GetRaider(int id)
     {
+        TryInitDict(raiders, ref raidersDict);
+
         return GetCreature(raidersDict, id);
+    }
+
+    public Creature GetRandomCitizen()
+    {
+        return GetRandomCreature(citizens);
+    }
+
+    public Creature GetRandomWanderer()
+    {
+        return GetRandomCreature(wanderers);
     }
 
     public Creature GetRandomRaider()
     {
-        return GetRandomCreature(raidersDict);
+        return GetRandomCreature(raiders);
     }
 
-    private Creature GetCreature(Dictionary<int, Creature> array, int id)
+    private Creature GetCreature(Dictionary<int, Creature> creatures, int id)
     {
-        Creature creature;
-        array.TryGetValue(id, out creature);
-
-        return creature;
+        return creatures[id];
     }
 
-    private Creature GetRandomCreature(Dictionary<int, Creature> array)
+    private Creature GetRandomCreature(Creature[] creatures)
     {
-        int index = UnityEngine.Random.Range(0, array.Values.Count);
-        int id = array.Values.ToArray()[index].Definition.CreatureId;
+        int index = UnityEngine.Random.Range(0, creatures.Length);
 
-        return GetCreature(array, id);
+        return creatures[index];
     }
 
-    private void InitDict(Creature[] creatures, Dictionary<int, Creature> creaturesDict)
+    private void TryInitDict(Creature[] creatures, ref Dictionary<int, Creature> creaturesDict)
     {
+        if (creaturesDict != null) return;
+
+        creaturesDict = new();
+
         foreach (var creature in creatures) {
             creaturesDict.Add(creature.Definition.CreatureId, creature);
         }

@@ -13,6 +13,8 @@ public class ElevatorCabinsManager : MonoBehaviour
         Building.onBuildingInited += OnBuildingInited;
         Building.onBuildingConstructionFinished += OnBuildingConstructionFinished;
         Building.onBuildingDemolished += OnBuildingDemolished;
+        BuildingConstruction.OnBuildingConstructionInited += OnBuildingConstructionInited;
+        BuildingConstruction.OnBuildingConstructionDemolished += OnBuildingConstructionDemolished;
     }
 
     private void OnDisable()
@@ -59,7 +61,7 @@ public class ElevatorCabinsManager : MonoBehaviour
                     connectedElevator.SetCabin(CreateCabin(connectedElevator));
                 }
 
-                connectedElevator.UpdateNetworkCabins();
+                UpdateElevatorNetworkCabins(connectedElevator);
             }
         }
         else {
@@ -74,7 +76,47 @@ public class ElevatorCabinsManager : MonoBehaviour
 
         var elevatorCabin = TryGetNetworkCabin(elevator);
 
-        elevator.SetCabin(elevatorCabin ? elevatorCabin : CreateCabin(elevator));
+        if (elevatorCabin) {
+            elevator.SetCabin(elevatorCabin);
+            UpdateElevatorNetworkCabins(elevator);
+        }
+        else {
+            CreateCabin(elevator);
+        }
+    }
+
+    private void OnBuildingConstructionInited(BuildingConstruction buildingConstruction)
+    {
+        var cabinConstruction = buildingConstruction as ElevatorCabinConstruction;
+        if (!cabinConstruction) return;
+
+        var elevator = cabinConstruction.OwnedBuilding.GetComponent<ElevatorModule>();
+        if (!elevator) return;
+
+        elevator.SetCabin(cabinConstruction);
+        UpdateElevatorNetworkCabins(elevator);
+
+        elevatorCabins.Add(cabinConstruction);
+    }
+
+    private void OnBuildingConstructionDemolished(BuildingConstruction buildingConstruction)
+    {
+        var cabinConstruction = buildingConstruction as ElevatorCabinConstruction;
+        if (!cabinConstruction) return;
+
+        elevatorCabins.Remove(cabinConstruction);
+    }
+
+    public void UpdateElevatorNetworkCabins(ElevatorModule elevator)
+    {
+        foreach (var networkBuilding in elevator.OwnedTowerBuilding.GetNetworkBuildings()) {
+            var networkElevator = networkBuilding.GetComponent<ElevatorModule>();
+
+            if (networkElevator.SpawnedElevatorCabin && networkElevator.SpawnedElevatorCabin != elevator.SpawnedElevatorCabin)
+                networkElevator.SpawnedElevatorCabin.Demolish();
+
+            networkElevator.SetCabin(elevator.SpawnedElevatorCabin);
+        }
     }
 
     private ElevatorCabinConstruction CreateCabin(ElevatorModule elevator)
@@ -85,14 +127,12 @@ public class ElevatorCabinsManager : MonoBehaviour
         };
 
         var cabin = ConstructionFactory.CreateConstruction(elevator.GetCabinConstructionPrefab(), elevator.OwnedTowerBuilding.transform, data);
-        elevatorCabins.Add(cabin);
-
         return cabin;
     }
 
     private ElevatorCabinConstruction TryGetNetworkCabin(ElevatorModule elevator)
     {
-        foreach (var connected in elevator.OwnedTowerBuilding.ConnectedBuildingsEnumerable()) {
+        foreach (var connected in elevator.OwnedTowerBuilding.ConnectedBuildingsEnumerable().Reverse()) {
             var connectedElevator = connected.GetComponent<ElevatorModule>();
             if (!connectedElevator.SpawnedElevatorCabin) continue;
 

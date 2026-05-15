@@ -50,7 +50,7 @@ public class WorldData
     public RaidData Raid;
     public WanderersData WanderersSystem;
 
-    public static WorldData Create(WorldSaveManager saveManager, BuildingsManager buildings, DockPointsManager boatDocks, BoatsManager boats, CreaturesManager creatures, Inventory cityInventory, DailyTasksManager dailyTasks, DailyRewardManager dailyReward, RaidManager raid, WanderersManager wanderers)
+    public static WorldData Create(WorldSaveManager saveManager, BuildingsManager buildings, ElevatorCabinsManager elevatorCabins, DockPointsManager boatDocks, BoatsManager boats, CreaturesManager creatures, Inventory cityInventory, DailyTasksManager dailyTasks, DailyRewardManager dailyReward, RaidManager raid, WanderersManager wanderers)
     {
         return new WorldData() {
             WorldName = saveManager.SaveWorldName,
@@ -58,7 +58,7 @@ public class WorldData
             GroundBuildings = SaveWorldSystem.SaveGroundBuildings(buildings),
             FloorFrameBuildings = SaveWorldSystem.SaveFloorFrameBuildings(buildings),
             TowerBuildings = SaveWorldSystem.SaveTowerBuildings(buildings),
-            ElevatorCabins = SaveWorldSystem.SaveElevatorCabins(buildings),
+            ElevatorCabins = SaveWorldSystem.SaveElevatorCabins(elevatorCabins),
 
             CitizenBoatDocks = SaveWorldSystem.SaveBoatDocks(boatDocks.CitizenBoatDocks.ToArray()),
             WandererBoatDocks = SaveWorldSystem.SaveBoatDocks(boatDocks.WandererDockPoints.ToArray()),
@@ -123,20 +123,14 @@ public static class SaveWorldSystem
         return buildings.ToArray();
     }
 
-    public static ElevatorCabinData[] SaveElevatorCabins(BuildingsManager buildingsManager)
+    public static ElevatorCabinData[] SaveElevatorCabins(ElevatorCabinsManager elevatorCabinsManager)
     {
         List<ElevatorCabinData> cabins = new();
 
-        foreach (var floor in buildingsManager.BuiltFloors) {
-            foreach (var place in floor.RoomBuildingPlaces) {
-                var building = place.PlacedBuilding;
-                if (!building) continue;
+        foreach (var cabin in elevatorCabinsManager.ElevatorCabins) {
+            if (!cabin) continue;
 
-                var elevator = building.GetComponent<ElevatorModule>();
-                if (!elevator) continue;
-
-                cabins.Add(ElevatorCabinData.Create(elevator.SpawnedElevatorCabin));
-            }
+            cabins.Add(ElevatorCabinData.Create(cabin));
         }
 
         return cabins.ToArray();

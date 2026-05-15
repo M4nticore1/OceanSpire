@@ -16,7 +16,7 @@ public enum BoatStateEnum
 public class Boat : MonoBehaviour
 {
     [SerializeField] private BoatDefinition boatData;
-    public BoatDefinition BoatData => boatData;
+    public BoatDefinition Definition => boatData;
 
     public BoatStateEnum currentState { get; private set; } = BoatStateEnum.Idle;
     private BoatState state;
@@ -34,9 +34,6 @@ public class Boat : MonoBehaviour
     [SerializeField] private Inventory inventory;
     public Inventory Inventory => inventory;
 
-    [SerializeField] private HealthComponent health;
-    public HealthComponent Health => health;
-
     [SerializeField] private HealthDrainer healthDrainer;
 
     [SerializeField] private SelectComponent selectComponent;
@@ -48,10 +45,6 @@ public class Boat : MonoBehaviour
     // Dock
     public BoatDockPoint DockPoint;
     public LootContainer targetLootContainer { get; private set; }
-
-    // Health
-    public float CurrentHealth => health.CurrentHealth;
-    public float MaxHealth => health.MaxHealth;
 
     // Weight
     public float CurrentWeight => inventory.CurrentWeight;
@@ -96,8 +89,6 @@ public class Boat : MonoBehaviour
 
         transform.position = data.Position.Vector3();
         transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
-
-        health.Init(data.Health);
 
         if (data.DockInstanceId != null) {
             InstanceId boatDockInstance = InstancesManager.Instance.GetInstance(data.DockInstanceId.Value);

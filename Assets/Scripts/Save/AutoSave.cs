@@ -4,6 +4,7 @@ public class AutoSave : MonoBehaviour
 {
     [Header("Managers")]
     [SerializeField] private BuildingsManager buildingsManager;
+    [SerializeField] private ElevatorCabinsManager elevatorCabinsManager;
     [SerializeField] private DockPointsManager dockPointsManager;
     [SerializeField] private BoatsManager boatsManager;
     [SerializeField] private CreaturesManager creaturesManager;
@@ -37,7 +38,7 @@ public class AutoSave : MonoBehaviour
         crrentSaveDataTime += Time.deltaTime;
         if (crrentSaveDataTime < autoSaveDataFrequency) return;
 
-        WorldData worldData = WorldData.Create(WorldSaveManager.Instance, buildingsManager, dockPointsManager, boatsManager, creaturesManager, cityStorgae.Inventory, dailyTasksManager, dailyRewardManager, raidManager, wanderersManager);
+        WorldData worldData = WorldData.Create(WorldSaveManager.Instance, buildingsManager, elevatorCabinsManager, dockPointsManager, boatsManager, creaturesManager, cityStorgae.Inventory, dailyTasksManager, dailyRewardManager, raidManager, wanderersManager);
         WorldSaveSystem.SaveWorld(worldData);
         WorldSaveManager.Instance.SetWorldData(worldData);
 

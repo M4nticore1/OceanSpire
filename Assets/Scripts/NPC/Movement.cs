@@ -84,15 +84,18 @@ public class Movement : MonoBehaviour
         navAgent.enabled = enabled;
     }
 
+    public bool CanMove()
+    {
+        if (!navAgent.enabled) return false;
+        if (!navAgent.isOnNavMesh) return false;
+
+        return true;
+    }
+
     private void OnReachedPath()
     {
         StopMoving();
         onReachedPath?.Invoke();
-    }
-
-    private bool CanMove()
-    {
-        return navAgent.enabled;
     }
 
     private bool CheckDistancePathPosition()

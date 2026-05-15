@@ -2,9 +2,9 @@ using UnityEngine;
 
 public static class BoatFactory
 {
-    public static Boat CreateBoat(Boat prefab, BoatData data)
+    public static Boat CreateBoat(Boat prefab, Vector3 position, Quaternion rotation, BoatData data)
     {
-        var obj = Object.Instantiate(prefab);
+        var obj = Object.Instantiate(prefab, position, rotation);
         obj.Init(data);
 
         EventBus.InvokeBoatCreated(obj);

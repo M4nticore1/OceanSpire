@@ -24,7 +24,7 @@ public class BoatsLoader : Loader
         foreach (var boatData in boatsData) {
             var boatPrefab = boatsList.GetBoat(boatData.Id);
 
-            var boat = BoatFactory.CreateBoat(boatPrefab, boatData);
+            var boat = BoatFactory.CreateBoat(boatPrefab, boatData.Position.Vector3(), Quaternion.Euler(boatData.Rotation.Vector3()), boatData);
         }
     }
 
@@ -33,30 +33,28 @@ public class BoatsLoader : Loader
         BoatIdEnum[] boatIds = startBoatIds;
 
         for (int i = 0; i < boatIds.Length; i++) {
-            int id = (int)boatIds[i];
-            int instanceId = instancesManager.GetNextInstanceId();
-            Boat prefab = boatsList.GetBoat(id);
+            var id = (int)boatIds[i];
+            var instanceId = instancesManager.GetNextInstanceId();
+            var prefab = boatsList.GetBoat(id);
 
-            PierModule pier = buildingsManager.PierBuilding.GetComponent<PierModule>();
-            BoatDockPoint spawnTransform = pier.PierConstruction.BoatDocks[i];
+            var pier = buildingsManager.PierBuilding.GetComponent<PierModule>();
+            var spawnTransform = pier.PierConstruction.BoatDocks[i];
 
-            Vector3 position = spawnTransform.DockTransform.position;
-            Vector3 rotation = spawnTransform.DockTransform.rotation.eulerAngles;
+            var position = spawnTransform.DockTransform.position;
+            var rotation = spawnTransform.DockTransform.rotation.eulerAngles;
 
-            float health = prefab.Health.MaxHealth;
-            int dockId = dockPointsManager.CitizenBoatDocks[i].InstanceId.Id;
+            var dockId = dockPointsManager.CitizenBoatDocks[i].InstanceId.Id;
 
-            BoatData boatData = new BoatData()
+            var boatData = new BoatData()
             {
                 Id = id,
                 InstanceId = instanceId,
                 Position = new Vector3Data(position),
                 Rotation = new Vector3Data(rotation),
-                Health = health,
                 DockInstanceId = dockId,
             };
 
-            Boat boat = BoatFactory.CreateBoat(prefab, boatData);
+            var boat = BoatFactory.CreateBoat(prefab, position, Quaternion.Euler(rotation), boatData);
         }
     }
 }

@@ -12,8 +12,13 @@ public class DailyRewardData
     public static DailyRewardData Create(DailyRewardManager dailyRewardManager)
     {
         var rewards = new RewardInstanceData[dailyRewardManager.CurrentRewards.Count];
+
         for (int i = 0; i < rewards.Length; i++) {
             var reward = dailyRewardManager.CurrentRewards[i];
+            if (reward == null) {
+                Debug.Log($"Reward by index {i} is not valid");
+            }
+
             rewards[i] = reward.CreateData();
         }
 

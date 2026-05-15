@@ -53,15 +53,6 @@ public class ElevatorCabinConstruction : BuildingConstruction
         if (elevatorCabinData == null) return;
 
         transform.position = new Vector3(transform.position.x, elevatorCabinData.Height, transform.position.z);
-
-        var instance = InstancesManager.Instance.GetInstance(elevatorCabinData.BuildingInstanceId);
-        if (!instance) return;
-
-        var elevator = instance.GetComponent<ElevatorModule>();
-        if (!elevator) return;
-
-        elevator.SetCabin(this);
-        elevator.UpdateNetworkCabins();
     }
 
     public override void SetOwnedBuilding(Building building)

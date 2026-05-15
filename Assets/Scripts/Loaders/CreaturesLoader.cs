@@ -1,7 +1,9 @@
 using UnityEngine;
 
-public class CitizensLoader : Loader
+public class CreaturesLoader : Loader
 {
+    [SerializeField] private CreaturesList creaturesList;
+
     [SerializeField] private int startResidentsCount = 2;
     [SerializeField] private Transform entitySpawnPosition;
     [SerializeField] public float maxSpawnRange = 5f;
@@ -27,9 +29,13 @@ public class CitizensLoader : Loader
     private void LoadHumans(HumanData[] humansData)
     {
         foreach (var data in humansData) {
-            if (data == null) continue;
+            if (data == null) {
+                Debug.Log("Save human data is null");
+                return;
+            }
 
-            var citizen = CreatureFactory.CreateHuman(data);
+            var prefab = creaturesList.GetCreature(data.Id);
+            var citizen = CreatureFactory.CreateHuman(prefab, data.Position.Vector3(), Quaternion.Euler(data.Rotation.Vector3()), data);
         }
     }
 
@@ -49,7 +55,8 @@ public class CitizensLoader : Loader
             data.Position = new Vector3Data(finalPosition);
             data.Rotation = new Vector3Data(rotation);
 
-            var citizen = CreatureFactory.CreateHuman(data);
+            var prefab = creaturesList.GetCreature(data.Id);
+            var citizen = CreatureFactory.CreateHuman(prefab, finalPosition, Quaternion.Euler(rotation), data);
         }
     }
 }

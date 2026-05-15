@@ -6,9 +6,10 @@ public class WanderersManager : MonoBehaviour
 {
     public static WanderersManager instance;
 
-    [Header("Prefabs")]
-    [SerializeField] private Human humanPrefab;
-    [SerializeField] private Boat boatPrefab;
+    [SerializeField] private CreaturesList creaturesList;
+    [SerializeField] private BoatsList boatsList;
+
+    [SerializeField] private BoatIdEnum wandererBoatId;
 
     [Header("Cooldown")]
     [SerializeField] private float minWandererSpawnCooldown = 10;
@@ -123,34 +124,32 @@ public class WanderersManager : MonoBehaviour
 
     private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId)
     {
-        HumanData data = HumanDataFactory.CreateRandomWandererData();
+        var data = HumanDataFactory.CreateRandomWandererData();
         data.Position = new Vector3Data(position);
         data.Rotation = new Vector3Data(rotation);
         data.BoatRider.SetBoatInstanceId(boatId);
         data.BoatRider.SetRiding(true);
 
-        Human human = CreatureFactory.CreateHuman(data);
+        var prefab = creaturesList.GetCreature(data.Id);
+        var human = CreatureFactory.CreateHuman(prefab, position, Quaternion.Euler(rotation), data);
 
         return human;
     }
 
     private Boat CreateBoat(Vector3 position, Vector3 rotation)
     {
-        int id = boatPrefab.BoatData.BoatId;
-        int instanceId = InstancesManager.Instance.GetNextInstanceId();
-        float boatHealth = boatPrefab.Health.MaxHealth;
+        var prefab = boatsList.GetBoat((int)wandererBoatId);
 
-        BoatData boatData = new BoatData()
+        var boatData = new BoatData()
         {
-            Id = id,
-            InstanceId = instanceId,
+            Id = prefab.Definition.BoatId,
+            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
-            Health = boatHealth,
             DockInstanceId = GetDockPoint().InstanceId.Id
         };
 
-        Boat boat = BoatFactory.CreateBoat(boatPrefab, boatData);
+        var boat = BoatFactory.CreateBoat(prefab, position, Quaternion.Euler(rotation), boatData);
 
         return boat;
     }

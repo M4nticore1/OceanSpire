@@ -108,14 +108,6 @@ public class ElevatorModule : BuildingModule, IElectricible
         SpawnedElevatorCabin = cabin;
     }
 
-    public void UpdateNetworkCabins()
-    {
-        foreach (var networkBuilding in OwnedTowerBuilding.GetNetworkBuildings()) {
-            var networkElevator = networkBuilding.GetComponent<ElevatorModule>();
-            networkElevator.SetCabin(SpawnedElevatorCabin);
-        }
-    }
-
     public ElevatorCabinConstruction GetCabinConstructionPrefab()
     {
         TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;

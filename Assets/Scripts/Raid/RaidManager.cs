@@ -10,12 +10,17 @@ public class RaidManager : MonoBehaviour
 {
     public static RaidManager Instance;
 
+    [SerializeField] private CreaturesList creaturesList;
+    [SerializeField] private BoatsList boatsList;
+    [SerializeField] private HumanNamesList humanNamesList;
+    [SerializeField] private CityStorage cityStorage;
+
     [SerializeField] private Inventory inventory;
     public Inventory Inventory => inventory;
 
     [Header("Prefabs")]
-    [SerializeField] private Human attackerPrefab;
-    [SerializeField] private Boat boatPrefab;
+    [SerializeField] private CreatureIdEnum[] raiderIds;
+    [SerializeField] private BoatIdEnum raiderBoatId;
 
     [Header("Cooldown")]
     [SerializeField] private float minRaidCooldown = 10f;
@@ -242,36 +247,51 @@ public class RaidManager : MonoBehaviour
 
     private Human CreateRaider(Vector3 position, Vector3 rotation, int boatInstanceId)
     {
-        HumanData data = HumanDataFactory.CreateRandomRaiderData();
-        data.Position = new Vector3Data(position);
-        data.Rotation = new Vector3Data(rotation);
-        data.BoatRider.SetBoatInstanceId(boatInstanceId);
-        data.BoatRider.SetRiding(true);
+        var id = (int)raiderIds[UnityEngine.Random.Range(0, raiderIds.Length)];
+        var prefab = creaturesList.GetCreature(id) as Human;
 
-        Human human = CreatureFactory.CreateHuman(data);
+        var data = new HumanData()
+        {
+            Id = id,
+            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
+            Position = new Vector3Data(position),
+            Rotation = new Vector3Data(rotation),
+            Health = prefab.HealthComponent.MaxHealth,
 
+            Name = new NameData()
+            {
+                FirstNameId = prefab.GenderComponent.IsMale ? humanNamesList.GetRandomMaleFirstNameId() : humanNamesList.GetRandomFemaleFirstNameId(),
+                LastNameId = prefab.GenderComponent.IsMale ? humanNamesList.GetRandomMaleLastNameId() : humanNamesList.GetRandomFemaleLastNameId(),
+            },
+
+            BoatRider = new BoatRiderData()
+            {
+                BoatInstanceId = boatInstanceId,
+                IsRiding = true,
+
+            },
+
+            Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId() + 1, WeaponsDataFactory.GetMaxWeaponDamage()),
+            Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount())
+        };
+
+        var human = CreatureFactory.CreateHuman(prefab, position, Quaternion.Euler(rotation), data);
         return human;
     }
 
     private Boat CreateBoat(Vector3 position, Quaternion rotation)
     {
-        int id = boatPrefab.BoatData.BoatId;
-        int instanceId = InstancesManager.Instance.GetNextInstanceId();
-        float health = boatPrefab.Health.MaxHealth;
-        int dockInstanceId = GetNearestDockPoint(position).InstanceId.Id;
-
-        BoatData data = new BoatData()
+        var data = new BoatData()
         {
-            Id = id,
-            InstanceId = instanceId,
+            Id = (int)raiderBoatId,
+            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation.eulerAngles),
-            Health = health,
-            DockInstanceId = dockInstanceId,
+            DockInstanceId = GetNearestDockPoint(position).InstanceId.Id,
         };
 
-        Boat boat = BoatFactory.CreateBoat(boatPrefab, data);
-
+        var prefab = boatsList.GetBoat(data.Id);
+        var boat = BoatFactory.CreateBoat(prefab, position, rotation, data);
         return boat;
     }
 

@@ -28,6 +28,7 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     private MaterialPropertyBlock propertyBlock;
 
     public static event Action<BuildingConstruction> OnBuildingConstructionInited;
+    public static event Action<BuildingConstruction> OnBuildingConstructionDemolished;
 
     protected virtual void Awake()
     {
@@ -58,9 +59,17 @@ public class BuildingConstruction : MonoBehaviour, IClickable
         OwnedBuilding = building;
     }
 
-    public virtual void Demolish()
+    public void Demolish()
     {
+        OnDemolished();
         Destroy(gameObject);
+
+        OnBuildingConstructionDemolished?.Invoke(this);
+    }
+
+    protected virtual void OnDemolished()
+    {
+
     }
 
     public void ApplyBuildingPosition()

@@ -39,9 +39,8 @@ public static class SkillsFactory
     {
         int skillsCount = SkillsList.Instance.SkillDefinitionsDict.Count;
         int maxLevelsCount = skillsCount * SkillDefinition.maxSkillLevel;
-        int multiplier = BuildingsManager.Instance.MaxFloorsCount / skillsCount;
-        int count = BuildingsManager.Instance.BuiltFloors.Count * multiplier;
+        int levelCount = (int)(maxLevelsCount * GameStageSystem.CalculateGameStagePercent());
 
-        return multiplier;
+        return levelCount;
     }
 }

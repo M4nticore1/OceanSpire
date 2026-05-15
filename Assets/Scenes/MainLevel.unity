@@ -438,8 +438,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf39201c3bdef74b8ca471d3bf0dbd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WanderersManager
-  humanPrefab: {fileID: 9140235139351627301, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
-  boatPrefab: {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
+  creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
+  boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
+  wandererBoatId: 0
   minWandererSpawnCooldown: 10
   maxWandererSpawnCooldown: 10
 --- !u!1001 &62199220
@@ -796,7 +797,7 @@ GameObject:
   - component: {fileID: 142442283}
   - component: {fileID: 142442284}
   m_Layer: 0
-  m_Name: EntitiesLoader
+  m_Name: CreaturesLoader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -829,6 +830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7ee6961884decc40a47e1ef45352a49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntitiesLoader
+  creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
   startResidentsCount: 2
   entitySpawnPosition: {fileID: 40920799}
   maxSpawnRange: 4
@@ -3516,6 +3518,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoSave
   buildingsManager: {fileID: 455753200}
+  elevatorCabinsManager: {fileID: 1518449163}
   dockPointsManager: {fileID: 1711846142}
   boatsManager: {fileID: 1934078805}
   creaturesManager: {fileID: 220072952}
@@ -7431,7 +7434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a23b45418b5451e44808d4991d80a4c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReviveCitizenManager
-  reviveRewardDefinition: {fileID: 11400000, guid: d84e1fe9ea7efb24e882b9ca3c3355a8, type: 2}
+  reviveRewardDefinition: {fileID: 11400000, guid: 7b7d3511133f39a41b08683e20ab9b61, type: 2}
   reviveRewardMenu: {fileID: 383697686}
   maxRevivesCount: 3
   restoreReviveTime: 300
@@ -7895,9 +7898,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5d4f9c2695e6744e8083b3e2ac960c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaidManager
+  creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
+  boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
+  humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
+  cityStorage: {fileID: 1388613268}
   inventory: {fileID: 2047238981}
-  attackerPrefab: {fileID: 9140235139351627301, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
-  boatPrefab: {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
+  raiderIds: 0400000005000000
+  raiderBoatId: 0
   minRaidCooldown: 10
   maxRaidCooldown: 10
   minSpawnAngleOffset: 5

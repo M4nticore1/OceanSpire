@@ -171,7 +171,7 @@ public class Human : Creature, IClickable
 
         if (humanData.BoatRider.BoatInstanceId != null) {
             InstanceId instanceId = InstancesManager.Instance.GetInstance(humanData.BoatRider.BoatInstanceId.Value);
-            Boat selectedBoat = instanceId?.GetComponent<Boat>();
+            Boat selectedBoat = instanceId.GetComponent<Boat>();
 
             boatRider.SetSelectedBoat(selectedBoat);
         }
@@ -191,8 +191,11 @@ public class Human : Creature, IClickable
     }
 
     // Boat
-    public void MoveToBoat()
+    public void TryMoveToBoat()
     {
+        if (!boatRider.SelectedBoat) return;
+        if (!movement.CanMove()) return;
+
         if (cityNavigator.FloorIndex > 0) {
             Building building = BuildingsManager.Instance.TowerGate;
             cityNavigator.SetTargetBuilding(building);
@@ -217,7 +220,6 @@ public class Human : Creature, IClickable
 
     public void RejectWanderer()
     {
-        CreaturesManager.Instance.UnregisterWanderer(this);
         onWandererRejected?.Invoke(this);
     }
 
@@ -434,6 +436,7 @@ public class Human : Creature, IClickable
     private void OnNavMeshBaked()
     {
         if (cityNavigator.IsRidingOnElevator) return;
+        if (boatRider.IsRidingOnBoat) return;
 
         movement.SetAgentEnabled(true);
         cityNavigator.UpdateFollowingPathState();
