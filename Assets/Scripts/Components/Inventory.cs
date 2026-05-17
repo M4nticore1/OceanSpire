@@ -59,8 +59,15 @@ public class Inventory : MonoBehaviour
             amount = math.clamp(amount, 0, stack.Amount - stack.TotalAmount);
         }
 
+        if (useWeightLimit) {
+            float remainingWeight = weightLimit - currentWeight;
+            amount = math.clamp(amount, 0, (int)(remainingWeight / item.Definition.Weight));
+        }
+
         item.AddAmount(amount);
         stack.AddAmount(amount);
+
+        currentWeight += amount * item.Definition.Weight;
     }
 
     public void RemoveItem(int id, int amount)
@@ -70,9 +77,11 @@ public class Inventory : MonoBehaviour
 
         item.RemoveAmount(amount);
 
-        if (item.Amount <= 0) {
+        if (autoCleaning && item.Amount <= 0) {
             RemoveItem(id);
         }
+
+        currentWeight -= amount * item.Definition.Weight;
     }
 
     public void AddLimit(ItemStackEnum stack, int amount)

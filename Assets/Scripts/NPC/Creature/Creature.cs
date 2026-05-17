@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -33,18 +34,26 @@ public abstract class Creature : MonoBehaviour
         movement.OnMovementStopped -= OnStoppedMoving;
     }
 
-    public void Init(CreatureData data)
+    public void Init(CreatureData creatureData)
+    {
+        StartCoroutine(InitNextFrame());
+        OnInit(creatureData);
+        AssignIdle();
+    }
+
+    protected virtual void OnInit(CreatureData data)
     {
         transform.position = data.Position.Vector3();
         transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
 
         instanceId.Register(data.InstanceId);
-
-        OnInit(data);
-        AssignIdle();
     }
 
-    protected abstract void OnInit(CreatureData data);
+    protected virtual void OnInitedNextFrame()
+    {
+        
+    }
+
     protected abstract bool ShouldStartIdle();
 
     // Idle
@@ -93,5 +102,12 @@ public abstract class Creature : MonoBehaviour
     protected virtual void OnStoppedMoving()
     {
         AssignIdle();
+    }
+
+    private IEnumerator InitNextFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
+        OnInitedNextFrame();
     }
 }

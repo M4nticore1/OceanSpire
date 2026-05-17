@@ -9,12 +9,12 @@ public class RaiderState : HumanState
 
     public override void Enter()
     {
-        CreaturesManager.Instance.RegisterRaider(human as Raider);
+
     }
 
     public override void Exit()
     {
-        CreaturesManager.Instance.UnregisterRaider(human as Raider);
+
     }
 
     public override void Tick()

@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5552754147449274060}
-  - component: {fileID: 9140235139351627301}
   - component: {fileID: -6894311141705426696}
   - component: {fileID: 6264695886038843937}
   - component: {fileID: 4098557255172134659}
@@ -50,35 +49,6 @@ Transform:
   - {fileID: 8498718057383756986}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9140235139351627301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6506537361480025273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a9c0911e75b5854cb6088ce4f6267e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Human
-  definition: {fileID: 0}
-  agent: {fileID: 1338494420481879648}
-  movement: {fileID: -7493649843608556168}
-  instanceId: {fileID: 6196963818731621145}
-  currentStatusEnum: 0
-  genderComponent: {fileID: -6894311141705426696}
-  nameComponent: {fileID: 6264695886038843937}
-  healthComponent: {fileID: 4098557255172134659}
-  reviveComponent: {fileID: 2775210278879926879}
-  cityNavigator: {fileID: 2185582854232776361}
-  interactComponent: {fileID: 6316746746762001490}
-  boatRider: {fileID: 6497944028369977301}
-  attackComponent: {fileID: 774651871998097940}
-  weaponComponent: {fileID: 8499683307490277393}
-  skillsComponent: {fileID: 4701473922447632886}
-  selectComponent: {fileID: 8364959695361298754}
-  contextMenuTarget: {fileID: 7000859086802169914}
 --- !u!114 &-6894311141705426696
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Raider : Human
 {
+    [Header("Raider")]
     [SerializeField] private float raidBuildingTime = 10f;
     private float currentRaidBuildingTime = 0f;
 
@@ -9,6 +10,20 @@ public class Raider : Human
     private bool isRaidingBuilding = false;
 
     public Vector3 SpawnPosition { get; private set; } = Vector3.zero;
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        CreaturesManager.Instance.RegisterRaider(this);
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        CreaturesManager.Instance.UnregisterRaider(this);
+    }
 
     protected override void Update()
     {
@@ -61,6 +76,8 @@ public class Raider : Human
         else {
             BoatRider.TryMoveToBoat();
         }
+
+        UpdateRaidAction();
     }
 
     protected override void OnRemovedInteractBuilding(Building building)

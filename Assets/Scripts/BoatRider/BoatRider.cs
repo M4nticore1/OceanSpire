@@ -138,6 +138,11 @@ public class BoatRider : MonoBehaviour
             return;
         }
 
+        MoveToBoat();
+    }
+
+    public void MoveToBoat()
+    {
         IsMovingToBoat = true;
         OnStartedMovingToBoat?.Invoke(SelectedBoat);
     }
@@ -149,6 +154,11 @@ public class BoatRider : MonoBehaviour
             return;
         }
 
+        EndMoveToBoat();
+    }
+
+    public void EndMoveToBoat()
+    {
         IsMovingToBoat = false;
         OnStoppedMovingToBoat?.Invoke(SelectedBoat);
     }

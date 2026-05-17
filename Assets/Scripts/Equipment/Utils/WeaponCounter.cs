@@ -6,8 +6,9 @@ public class WeaponCounter : EquipmentCounter<WeaponDefinition>
     {
         int amount = CityStorage.Instance.Inventory.GetItemById(definition.ItemId).Amount;
 
-        foreach (Human human in CreaturesList.Instance.Citizens) {
-            if (human.WeaponComponent.EquipmentDefinition != definition) continue;
+        foreach (Citizen citizen in CreaturesList.Instance.Creatures) {
+            if (!citizen) continue;
+            if (citizen.WeaponComponent.EquipmentDefinition != definition) continue;
 
             amount--;
         }

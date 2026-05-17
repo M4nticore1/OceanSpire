@@ -24,20 +24,20 @@ public class CreaturesList : ScriptableObject
 
     [SerializeField] private Dictionary<int, Creature> creaturesDict;
 
-    [SerializeField] private Creature[] citizens;
-    public IReadOnlyList<Creature> Citizens => citizens;
+    //[SerializeField] private Creature[] citizens;
+    //public IReadOnlyList<Creature> Citizens => citizens;
 
-    [SerializeField] private Dictionary<int, Creature> citizensDict;
+    //[SerializeField] private Dictionary<int, Creature> citizensDict;
 
-    [SerializeField] private Wanderer[] wanderers;
-    public IReadOnlyList<Wanderer> Wanderers => wanderers;
+    //[SerializeField] private Wanderer[] wanderers;
+    //public IReadOnlyList<Wanderer> Wanderers => wanderers;
 
-    [SerializeField] private Dictionary<int, Creature> wanderersDict;
+    //[SerializeField] private Dictionary<int, Creature> wanderersDict;
 
-    [SerializeField] private Raider[] raiders;
-    public IReadOnlyList<Raider> Raiders => raiders;
+    //[SerializeField] private Raider[] raiders;
+    //public IReadOnlyList<Raider> Raiders => raiders;
 
-    [SerializeField] private Dictionary<int, Creature> raidersDict;
+    //[SerializeField] private Dictionary<int, Creature> raidersDict;
 
     public Creature GetCreature(int id)
     {
@@ -46,53 +46,53 @@ public class CreaturesList : ScriptableObject
         return GetCreature(creaturesDict, id);
     }
 
-    public Creature GetCitizen(int id)
-    {
-        TryInitDict(citizens, ref citizensDict);
+    //public Creature GetCitizen(int id)
+    //{
+    //    TryInitDict(citizens, ref citizensDict);
 
-        return GetCreature(citizensDict, id);
-    }
+    //    return GetCreature(citizensDict, id);
+    //}
 
-    public Wanderer GetWanderer(int id)
-    {
-        TryInitDict(wanderers, ref wanderersDict);
+    //public Wanderer GetWanderer(int id)
+    //{
+    //    TryInitDict(wanderers, ref wanderersDict);
 
-        return GetCreature(wanderersDict, id) as Wanderer;
-    }
+    //    return GetCreature(wanderersDict, id) as Wanderer;
+    //}
 
-    public Raider GetRaider(int id)
-    {
-        TryInitDict(raiders, ref raidersDict);
+    //public Raider GetRaider(int id)
+    //{
+    //    TryInitDict(raiders, ref raidersDict);
 
-        return GetCreature(raidersDict, id) as Raider;
-    }
+    //    return GetCreature(raidersDict, id) as Raider;
+    //}
 
-    public Creature GetRandomCitizen()
-    {
-        return GetRandomCreature(citizens);
-    }
+    //public Creature GetRandomCitizen()
+    //{
+    //    return GetRandomCreature(citizens);
+    //}
 
-    public Creature GetRandomWanderer()
-    {
-        return GetRandomCreature(wanderers);
-    }
+    //public Creature GetRandomWanderer()
+    //{
+    //    return GetRandomCreature(wanderers);
+    //}
 
-    public Creature GetRandomRaider()
-    {
-        return GetRandomCreature(raiders);
-    }
+    //public Creature GetRandomRaider()
+    //{
+    //    return GetRandomCreature(raiders);
+    //}
 
     private Creature GetCreature(Dictionary<int, Creature> creatures, int id)
     {
         return creatures[id];
     }
 
-    private Creature GetRandomCreature(Creature[] creatures)
-    {
-        int index = UnityEngine.Random.Range(0, creatures.Length);
+    //private Creature GetRandomCreature(Creature[] creatures)
+    //{
+    //    int index = UnityEngine.Random.Range(0, creatures.Length);
 
-        return creatures[index];
-    }
+    //    return creatures[index];
+    //}
 
     private void TryInitDict(Creature[] creatures, ref Dictionary<int, Creature> creaturesDict)
     {

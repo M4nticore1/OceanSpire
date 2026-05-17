@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum HumanStatusEnum
 {
@@ -149,11 +147,11 @@ public class Human : Creature, IClickable
         currentStatus.Tick();
     }
 
-    protected override void OnInit(CreatureData data)
+    protected override void OnInit(CreatureData creatureData)
     {
-        StartCoroutine(InitNextFrame());
+        base.OnInit(creatureData);
 
-        var humanData = data as HumanData;
+        var humanData = creatureData as HumanData;
 
         SetStatus(currentStatusEnum);
 
@@ -184,6 +182,21 @@ public class Human : Creature, IClickable
         OnHumanInited?.Invoke(this);
     }
 
+    protected override void OnInitedNextFrame()
+    {
+        base.OnInitedNextFrame();
+
+        if (cityNavigator.IsRidingOnElevator) return;
+        if (boatRider.IsRidingOnBoat) return;
+
+        movement.SetAgentEnabled(true);
+        cityNavigator.FollowPath();
+
+        if (boatRider.IsMovingToBoat) {
+            boatRider.MoveToBoat();
+        }
+    }
+
     // IClickable
     public void Click()
     {
@@ -209,7 +222,7 @@ public class Human : Creature, IClickable
     }
 
     // Health
-    private void OnRevived()
+    protected virtual void OnRevived()
     {
         currentStatus.OnRevived();
         TryStartIdle();
@@ -218,7 +231,7 @@ public class Human : Creature, IClickable
         onHumanRevived?.Invoke(this);
     }
 
-    private void OnDied()
+    protected virtual void OnDied()
     {
         currentStatus.OnDied();
         interactComponent.RemoveInteractBuilding();
@@ -430,16 +443,5 @@ public class Human : Creature, IClickable
         if (interactComponent.InteractBuilding != cityNavigator.CurrentBuilding) return false;
 
         return true;
-    }
-
-    private IEnumerator InitNextFrame()
-    {
-        yield return new WaitForEndOfFrame();
-
-        if (cityNavigator.IsRidingOnElevator) yield break;
-        if (boatRider.IsRidingOnBoat) yield break;
-
-        movement.SetAgentEnabled(true);
-        cityNavigator.FollowPath();
     }
 }

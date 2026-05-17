@@ -13,18 +13,9 @@ MonoBehaviour:
   m_Name: CreaturesList
   m_EditorClassIdentifier: Assembly-CSharp::CreaturesList
   creatures:
-  - {fileID: 3249673455808537240, guid: 60cb42070bcb47841895d7db4f5b37d7, type: 3}
-  - {fileID: 3249673455808537240, guid: 109aad0fc03e26c458f0621bbfc49472, type: 3}
+  - {fileID: 5347342326728764334, guid: 60cb42070bcb47841895d7db4f5b37d7, type: 3}
+  - {fileID: 4134384234754827378, guid: 109aad0fc03e26c458f0621bbfc49472, type: 3}
   - {fileID: 8411686280589987336, guid: 649b0985789fc6c42bd0c217a9a1f0d5, type: 3}
   - {fileID: 7660346723931557201, guid: 301f8de32aed5d94f9a8a91d01f584c2, type: 3}
-  - {fileID: 5290309351902810709, guid: 8aee4d31267ad2a409a74dbaf84efb95, type: 3}
-  - {fileID: -4342417268633007667, guid: 40a2021fd71eee344acfdb909817990f, type: 3}
-  citizens:
-  - {fileID: 3249673455808537240, guid: 60cb42070bcb47841895d7db4f5b37d7, type: 3}
-  - {fileID: 3249673455808537240, guid: 109aad0fc03e26c458f0621bbfc49472, type: 3}
-  wanderers:
-  - {fileID: 8411686280589987336, guid: 649b0985789fc6c42bd0c217a9a1f0d5, type: 3}
-  - {fileID: 7660346723931557201, guid: 301f8de32aed5d94f9a8a91d01f584c2, type: 3}
-  raiders:
   - {fileID: 5290309351902810709, guid: 8aee4d31267ad2a409a74dbaf84efb95, type: 3}
   - {fileID: -4342417268633007667, guid: 40a2021fd71eee344acfdb909817990f, type: 3}

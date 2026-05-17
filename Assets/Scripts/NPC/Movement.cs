@@ -47,14 +47,12 @@ public class Movement : MonoBehaviour
         targetPosition = position;
         navAgent.isStopped = false;
 
-        if (navAgent.SetDestination(position)) {
-            IsMoving = true;
-            OnMovementStarted?.Invoke();
+        if (!navAgent.SetDestination(position)) return false;
 
-            return true;
-        }
+        IsMoving = true;
+        OnMovementStarted?.Invoke();
 
-        return false;
+        return true;
     }
 
     public void StopMoving()

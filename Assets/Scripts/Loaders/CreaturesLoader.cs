@@ -3,6 +3,8 @@ using UnityEngine;
 public class CreaturesLoader : Loader
 {
     [SerializeField] private CreaturesList creaturesList;
+    [SerializeField] private HumanNamesList humanNamesList;
+    [SerializeField] private CreatureIdEnum[] citizenIds;
 
     [SerializeField] private int startResidentsCount = 2;
     [SerializeField] private Transform entitySpawnPosition;
@@ -51,12 +53,30 @@ public class CreaturesLoader : Loader
 
             var finalPosition = new Vector3(x, y, z);
 
-            var data = HumanDataFactory.CreateRandomCitizenData();
-            data.Position = new Vector3Data(finalPosition);
-            data.Rotation = new Vector3Data(rotation);
+            int citizenId = (int)citizenIds[Random.Range(0, citizenIds.Length)];
+            var prefab = creaturesList.GetCreature(citizenId) as Human;
 
-            var prefab = creaturesList.GetCreature(data.Id);
-            var citizen = CreatureFactory.CreateHuman(prefab, finalPosition, Quaternion.Euler(rotation), data);
+            var citizenData = new HumanData()
+            {
+                Id = citizenId,
+                InstanceId = InstancesManager.Instance.GetNextInstanceId(),
+                Position = new Vector3Data(finalPosition),
+                Rotation = new Vector3Data(rotation),
+                Health = prefab.HealthComponent.MaxHealth,
+
+                Name = new NameData()
+                {
+                    FirstNameId = prefab.GenderComponent.IsMale ? humanNamesList.GetRandomMaleFirstNameId() : humanNamesList.GetRandomFemaleFirstNameId(),
+                    LastNameId = prefab.GenderComponent.IsMale ? humanNamesList.GetRandomMaleLastNameId() : humanNamesList.GetRandomFemaleLastNameId(),
+                },
+
+                BoatRider = new BoatRiderData(),
+
+                Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId(), WeaponsDataFactory.GetMaxWeaponDamage()),
+                Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount()),
+            };
+
+            var citizen = CreatureFactory.CreateHuman(prefab, finalPosition, Quaternion.Euler(rotation), citizenData);
         }
     }
 }

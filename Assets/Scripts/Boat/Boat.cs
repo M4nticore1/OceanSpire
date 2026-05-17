@@ -115,6 +115,8 @@ public class Boat : MonoBehaviour
 
     public void FloatAway(Vector3 position)
     {
+        if (SelectedRider.GetComponent<Citizen>())
+            Debug.Log("FloatAway");
         SetState(BoatStateEnum.FloatingAway);
         movement.TryMoveTo(position);
     }

@@ -120,8 +120,6 @@ public class WanderersManager : MonoBehaviour
 
     private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId)
     {
-        HumanDataFactory.CreateRandomWandererData();
-
         var id = (int)wandererIds[UnityEngine.Random.Range(0, wandererIds.Length)];
         var prefab = creaturesList.GetCreature(id) as Human;
 

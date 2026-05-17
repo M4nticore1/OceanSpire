@@ -5,12 +5,28 @@ public class Wanderer : Human
     public bool IsRejected = false;
     public Vector3 SpawnPosition { get; private set; } = Vector3.zero;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        CreaturesManager.Instance.RegisterWanderer(this);
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        CreaturesManager.Instance.UnregisterWanderer(this);
+    }
+
     protected override void OnInit(CreatureData data)
     {
         var wandererData = data as WandererData;
 
         IsRejected = wandererData.Rejected;
         SpawnPosition = wandererData.SpawnPosition.Vector3();
+
+        SelectComponent.SetClickable(false);
 
         base.OnInit(data);
     }
