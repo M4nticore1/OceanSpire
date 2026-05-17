@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WanderersManager : MonoBehaviour
 {
-    public static WanderersManager instance;
+    public static WanderersManager Instance;
 
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
@@ -16,32 +16,30 @@ public class WanderersManager : MonoBehaviour
     [Header("Cooldown")]
     [SerializeField] private float minWandererSpawnCooldown = 10;
     [SerializeField] private float maxWandererSpawnCooldown = 10;
+
     public float CurrentWandererSpawnCooldown { get; private set; } = 0;
     public float CurrentWandererSpawnTime { get; private set; } = 0;
 
-    [Header("Positions")]
-    private Dictionary<Human, Vector3> spawnPositions = new Dictionary<Human, Vector3>();
-
     private void Awake()
     {
-        if (instance) {
+        if (Instance) {
             Destroy(gameObject);
             return;
         }
 
-        instance = this;
+        Instance = this;
     }
 
     private void OnEnable()
     {
-        Human.onWandererAccepted += OnWandererAccepted;
-        Human.onWandererRejected += OnWandererRejected;
+        WandererAdmissionSystem.OnWandererAccepted += OnWandererAccepted;
+        WandererAdmissionSystem.OnWandererRejected += OnWandererRejected;
     }
 
     private void OnDisable()
     {
-        Human.onWandererAccepted -= OnWandererAccepted;
-        Human.onWandererRejected -= OnWandererRejected;
+        WandererAdmissionSystem.OnWandererAccepted -= OnWandererAccepted;
+        WandererAdmissionSystem.OnWandererRejected -= OnWandererRejected;
     }
 
     private void Start()
@@ -78,10 +76,8 @@ public class WanderersManager : MonoBehaviour
         Vector3 position = WorldUtils.GetRandomBorderPosition();
         Vector3 rotation = Quaternion.LookRotation(-position.normalized).eulerAngles;
 
-        Boat boat = CreateBoat(position, rotation);
-        Human human = CreateWanderer(position, rotation, boat.InstanceId.Id);
-
-        spawnPositions.Add(human, position);
+        var boat = CreateBoat(position, rotation);
+        var human = CreateWanderer(position, rotation, boat.InstanceId.Id);
     }
 
     private void ResetTimeToSpawn()
@@ -101,26 +97,24 @@ public class WanderersManager : MonoBehaviour
 
     private void OnWandererRejected(Human human)
     {
-        Vector3 position = spawnPositions[human];
-        human.BoatRider.SelectedBoat.SetState(BoatStateEnum.FloatingAway);
-        human.BoatRider.SelectedBoat.Movement.TryMoveTo(position);
-
-        spawnPositions.Remove(human);
-
         AssignDockPoints();
     }
 
     private void AssignDockPoints()
     {
-        List<Human> wanderers = CreaturesManager.Instance.Wanderers.ToList();
+        var wanderers = CreaturesManager.Instance.Wanderers;
+        int dockIndex = 0;
 
         for (int i = 0; i < wanderers.Count; i++) {
-            Human wanderer = wanderers[i];
-            Boat boat = wanderer.BoatRider.SelectedBoat;
+            var wanderer = wanderers[i];
+            var boat = wanderer.BoatRider.SelectedBoat;
+
+            if (!boat.DockPoint) continue;
 
             boat.RemoveDockPoint();
-            boat.SetDockPoint(DockPointsManager.Instance.WandererDockPoints[i]);
+            boat.SetDockPoint(DockPointsManager.Instance.WandererDockPoints[dockIndex]);
             boat.SetState(BoatStateEnum.MovingToDock);
+            dockIndex++;
         }
     }
 
@@ -131,7 +125,7 @@ public class WanderersManager : MonoBehaviour
         var id = (int)wandererIds[UnityEngine.Random.Range(0, wandererIds.Length)];
         var prefab = creaturesList.GetCreature(id) as Human;
 
-        var data = new HumanData()
+        var data = new WandererData()
         {
             Id = id,
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
@@ -152,7 +146,8 @@ public class WanderersManager : MonoBehaviour
             },
 
             Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId(), WeaponsDataFactory.GetMaxWeaponDamage()),
-            Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount())
+            Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount()),
+            SpawnPosition = new Vector3Data(position)
         };
 
         var human = CreatureFactory.CreateHuman(prefab, position, Quaternion.Euler(rotation), data);

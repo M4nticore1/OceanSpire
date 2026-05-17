@@ -10,13 +10,13 @@ public class WandererState : HumanState
     public override void Enter()
     {
         human.SelectComponent.SetClickable(false);
-        CreaturesManager.Instance.RegisterWanderer(human);
+        CreaturesManager.Instance.RegisterWanderer(human as Wanderer);
     }
 
     public override void Exit()
     {
         human.SelectComponent.SetClickable(true);
-        CreaturesManager.Instance.UnregisterWanderer(human);
+        CreaturesManager.Instance.UnregisterWanderer(human as Wanderer);
     }
 
     public override void Tick()
@@ -66,7 +66,7 @@ public class WandererState : HumanState
 
     public override void OnEnteredBoat(Boat boat)
     {
-        boat.SetState(BoatStateEnum.MovingToDock);
+
     }
 
     public override void OnExitedBoat(Boat boat)

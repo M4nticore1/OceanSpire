@@ -13,8 +13,8 @@ public class HumanAnimation : MonoBehaviour
         human.Movement.OnMovementStarted += OnMovementStarted;
         human.Movement.OnMovementStopped += OnMovementStopped;
 
-        human.BoatRider.OnStartedFloating += OnStartedFloating;
-        human.BoatRider.OnStoppedFloating += OnStoppedFloating;
+        human.BoatRider.OnBoatMovementStarted += OnBoatMovementStarted;
+        human.BoatRider.OnBoatMovementStopped += OnBoatMovementStopped;
 
         human.InteractComponent.onInteractionStarted += OnInteractionStarted;
         human.InteractComponent.onInteractionStopped += OnInteractionStopped;
@@ -77,17 +77,17 @@ public class HumanAnimation : MonoBehaviour
         animator.SetBool("isRunning", false);
     }
 
-    private void OnStartedFloating()
+    private void OnBoatMovementStarted(Boat boat)
     {
         animator.SetBool("isFloating", true);
     }
 
-    private void OnStoppedFloating()
+    private void OnBoatMovementStopped(Boat boat)
     {
         animator.SetBool("isFloating", false);
     }
 
-    private void OnInteractionStarted()
+    private void OnInteractionStarted(Building building)
     {
         switch (human.CurrentStatusEnum) {
             case HumanStatusEnum.Citizen:
@@ -99,7 +99,7 @@ public class HumanAnimation : MonoBehaviour
         }
     }
 
-    private void OnInteractionStopped()
+    private void OnInteractionStopped(Building building)
     {
         animator.SetBool("isWorking", false);
     }

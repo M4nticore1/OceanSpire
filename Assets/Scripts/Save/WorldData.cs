@@ -42,15 +42,25 @@ public class WorldData
     public BoatDockData[] RaiderBoatDocks;
     public BoatData[] Boats;
     public HumanData[] Citizens;
-    public HumanData[] Wanderers;
-    public HumanData[] Raiders;
+    public WandererData[] Wanderers;
+    public RaiderData[] Raiders;
     public ItemData[] CityInventory;
     public DailyTasksData DailyTasks;
     public DailyRewardData DailyReward;
     public RaidData Raid;
     public WanderersData WanderersSystem;
 
-    public static WorldData Create(WorldSaveManager saveManager, BuildingsManager buildings, ElevatorCabinsManager elevatorCabins, DockPointsManager boatDocks, BoatsManager boats, CreaturesManager creatures, Inventory cityInventory, DailyTasksManager dailyTasks, DailyRewardManager dailyReward, RaidManager raid, WanderersManager wanderers)
+    public static WorldData Create(WorldSaveManager saveManager,
+        BuildingsManager buildings,
+        ElevatorCabinsManager elevatorCabins,
+        DockPointsManager boatDocks,
+        BoatsManager boats,
+        CreaturesManager creatures,
+        Inventory cityInventory,
+        DailyTasksManager dailyTasks,
+        DailyRewardManager dailyReward,
+        RaidManager raid,
+        WanderersManager wanderers)
     {
         return new WorldData() {
             WorldName = saveManager.SaveWorldName,
@@ -67,8 +77,8 @@ public class WorldData
             Boats = SaveWorldSystem.SaveBoats(boats),
 
             Citizens = SaveWorldSystem.SaveHumans(creatures.Citizens.ToArray()),
-            Wanderers = SaveWorldSystem.SaveHumans(creatures.Wanderers.ToArray()),
-            Raiders = SaveWorldSystem.SaveHumans(creatures.Raiders.ToArray()),
+            Wanderers = WandererData.Create(creatures.Wanderers.ToArray()),
+            Raiders = RaiderData.Create(creatures.Raiders.ToArray()),
 
             CityInventory = SaveWorldSystem.SaveItems(cityInventory),
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class WandererAdmissionMenu : MonoBehaviour
 {
-    private Human selectedHuman;
+    private Wanderer selectedWanderer;
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private SkillsPanel skillPanel;
     [SerializeField] private CustomButton acceptButton;
@@ -32,53 +32,56 @@ public class WandererAdmissionMenu : MonoBehaviour
 
     public void Open()
     {
-        slidePanel.Open();
-        skillPanel.SetSkills(selectedHuman.SkillsComponent);
-
         isOpened = true;
+
+        slidePanel.Open();
+        skillPanel.SetSkills(selectedWanderer.SkillsComponent);
+
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     private void Close()
     {
         slidePanel.Close();
         OnClosed();
-        isOpened = false;
     }
 
     private void OnClosed()
     {
         if (!isOpened) return;
 
-        selectedHuman.BoatRider.SelectedBoat.SelectComponent.Deselect();
         isOpened = false;
+        selectedWanderer.BoatRider.SelectedBoat.SelectComponent.Deselect();
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     private void OnAcceptButtonClicked()
     {
-        selectedHuman.AcceptWanderer();
+        WandererAdmissionSystem.AcceptWanderer(selectedWanderer);
         Close();
     }
 
     private void OnRejectButtonClicked()
     {
-        selectedHuman.RejectWanderer();
+        WandererAdmissionSystem.RejectWanderer(selectedWanderer);
         Close();
     }
 
     private void OnBoatSelected(Boat boat)
     {
         if (!boat.SelectedRider) return;
+        var wanderer = boat.SelectedRider.GetComponent<Wanderer>();
 
-        Human human = boat.SelectedRider.GetComponent<Human>();
-        if (human.CurrentStatusEnum != HumanStatusEnum.Wanderer) return;
+        if (wanderer.CurrentStatusEnum != HumanStatusEnum.Wanderer) return;
+        if (wanderer.IsRejected) return;
 
-        selectedHuman = human;
+        selectedWanderer = wanderer;
         Open();
     }
 
     private void OnBoatDeselected(Boat boat)
     {
-        if (selectedHuman) return;
+        if (selectedWanderer) return;
 
         Close();
     }

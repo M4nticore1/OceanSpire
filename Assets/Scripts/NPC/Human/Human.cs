@@ -64,8 +64,6 @@ public class Human : Creature, IClickable
     public static event Action<Human> OnHumanInited;
     public static event Action<Human> onHumanRevived;
     public static event Action<Human> onHumanDied;
-    public static event Action<Human> onWandererAccepted;
-    public static event Action<Human> onWandererRejected;
     public static event Action<Human> onHumanSelected;
     public static event Action<Human> onHumanDeselected;
     public static event Action<Human> onEnteredBoat;
@@ -94,12 +92,14 @@ public class Human : Creature, IClickable
         interactComponent.onSetedInteractBuilding += OnSetedInteractBuilding;
         interactComponent.onRemovedInteractBuilding += OnRemovedInteractBuilding;
         interactComponent.onInteractionStarted += OnInteractionStarted;
-        interactComponent.onInteractionStopped += OnStoppedInteracting;
+        interactComponent.onInteractionStopped += OnInteractionStopped;
 
         boatRider.OnEnteredBoat += OnEnteredBoat;
         boatRider.OnExitedBoat += OnExitedBoat;
         boatRider.OnStartedMovingToBoat += OnStartedMovingToBoat;
         boatRider.OnStoppedMovingToBoat += OnStoppedMovingToBoat;
+        boatRider.OnBoatMovementStarted += OnBoatStartedMoving;
+        boatRider.OnBoatMovementStopped += OnBoatStoppedMoving;
 
         selectComponent.onSelected += OnSelected;
         selectComponent.onDeselected += OnDeselected;
@@ -128,21 +128,23 @@ public class Human : Creature, IClickable
         interactComponent.onSetedInteractBuilding -= OnSetedInteractBuilding;
         interactComponent.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
         interactComponent.onInteractionStarted -= OnInteractionStarted;
-        interactComponent.onInteractionStopped -= OnStoppedInteracting;
+        interactComponent.onInteractionStopped -= OnInteractionStopped;
 
         boatRider.OnEnteredBoat -= OnEnteredBoat;
         boatRider.OnExitedBoat -= OnExitedBoat;
-        boatRider.OnStartedMovingToBoat += OnStartedMovingToBoat;
-        boatRider.OnStoppedMovingToBoat += OnStoppedMovingToBoat;
+        boatRider.OnStartedMovingToBoat -= OnStartedMovingToBoat;
+        boatRider.OnStoppedMovingToBoat -= OnStoppedMovingToBoat;
+        boatRider.OnBoatMovementStarted -= OnBoatStartedMoving;
+        boatRider.OnBoatMovementStopped -= OnBoatStoppedMoving;
 
         selectComponent.onSelected -= OnSelected;
         selectComponent.onDeselected -= OnDeselected;
 
-        RaidManager.Instance.OnRaidStarted += OnRaidStarted;
-        RaidManager.Instance.OnRaidEnded += OnRaidEnded;
+        RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
+        RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         currentStatus.Tick();
     }
@@ -171,29 +173,15 @@ public class Human : Creature, IClickable
 
         nameComponent.Init(humanData.Name);
         healthComponent.SetCurrentHealth(humanData.Health);
-        boatRider.Init(humanData.BoatRider);
         weaponComponent.Init(humanData.Weapon);
         skillsComponent.Init(humanData.Skills);
+        boatRider.Init(humanData.BoatRider);
 
-        if (humanData.RidingOnElevator) {
+        if (humanData.MovementStateId == (int)FollowingPathState.Riding) {
             cityNavigator.SetState(FollowingPathState.Riding);
         }
 
         OnHumanInited?.Invoke(this);
-    }
-
-    // Wanderer
-    public void AcceptWanderer()
-    {
-        SetStatus(HumanStatusEnum.Citizen);
-        Destroy(boatRider.SelectedBoat.gameObject);
-        boatRider.ExitBoat();
-        onWandererAccepted?.Invoke(this);
-    }
-
-    public void RejectWanderer()
-    {
-        onWandererRejected?.Invoke(this);
     }
 
     // IClickable
@@ -204,6 +192,9 @@ public class Human : Creature, IClickable
 
     public bool ShouldClick()
     {
+        if (currentStatusEnum != HumanStatusEnum.Wanderer) return false;
+        if (boatRider.SelectedBoat.Movement.IsMoving) return false;
+
         return currentStatusEnum == HumanStatusEnum.Wanderer;
     }
 
@@ -256,20 +247,20 @@ public class Human : Creature, IClickable
     }
 
     // Attack
-    private void OnAttackStarted()
+    protected virtual void OnAttackStarted()
     {
         currentStatus.OnAttackStarted();
         TryStopIdle();
     }
 
-    private void OnAttackStopped()
+    protected virtual void OnAttackStopped()
     {
         currentStatus.OnAttackStopped();
         TryStartIdle();
     }
 
     // Entrance
-    private void OnEnteredBuilding(Building building)
+    protected virtual void OnEnteredBuilding(Building building)
     {
         currentStatus.OnEnteredBuilding(building);
 
@@ -279,12 +270,12 @@ public class Human : Creature, IClickable
         }
     }
 
-    private void OnReachedPathBuilding()
+    protected virtual void OnReachedPathBuilding()
     {
 
     }
 
-    private void OnSetedInteractBuilding(Building building)
+    protected virtual void OnSetedInteractBuilding(Building building)
     {
         if (cityNavigator.CurrentBuilding == building) {
             interactComponent.StartInteracting();
@@ -297,7 +288,7 @@ public class Human : Creature, IClickable
         currentStatus.OnSetedInteractBuilding(building);
     }
 
-    private void OnRemovedInteractBuilding(Building building)
+    protected virtual void OnRemovedInteractBuilding(Building building)
     {
         cityNavigator.RemoveTargetBuilding();
         cityNavigator.RemovePath();
@@ -312,27 +303,27 @@ public class Human : Creature, IClickable
         currentStatus.OnRemovedInteractBuilding(building);
     }
 
-    private void OnInteractionStarted()
+    protected virtual void OnInteractionStarted(Building building)
     {
         currentStatus.OnInteractionStarted();
         StopIdle();
     }
 
-    private void OnStoppedInteracting()
+    protected virtual void OnInteractionStopped(Building building)
     {
         currentStatus.OnInteractionStopped();
         TryStartIdle();
     }
 
     // Boat
-    private void OnEnteredBoat(Boat boat)
+    protected virtual void OnEnteredBoat(Boat boat)
     {
         movement.SetAgentEnabled(false);
         currentStatus.OnEnteredBoat(boat);
         onEnteredBoat?.Invoke(this);
     }
 
-    private void OnExitedBoat(Boat boat)
+    protected virtual void OnExitedBoat(Boat boat)
     {
         if (interactComponent.InteractBuilding) {
             cityNavigator.TryFindPathToTargetBuilding();
@@ -356,6 +347,16 @@ public class Human : Creature, IClickable
     }
 
     private void OnStoppedMovingToBoat(Boat boat)
+    {
+
+    }
+
+    protected virtual void OnBoatStartedMoving(Boat boat)
+    {
+
+    }
+
+    protected virtual void OnBoatStoppedMoving(Boat boat)
     {
 
     }

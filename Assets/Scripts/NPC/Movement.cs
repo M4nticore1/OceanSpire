@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,6 +13,8 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] private NavMeshAgent navAgent;
     public NavMeshAgent NavAgent => navAgent;
+
+    private Vector3 targetPosition;
 
     public MovementMethod currentMovementMethod { get; private set; }
 
@@ -41,6 +44,7 @@ public class Movement : MonoBehaviour
     {
         if (!CanMove()) return false;
 
+        targetPosition = position;
         navAgent.isStopped = false;
 
         if (navAgent.SetDestination(position)) {
@@ -107,7 +111,7 @@ public class Movement : MonoBehaviour
         if (navAgent.pathStatus != NavMeshPathStatus.PathComplete)
             return false;
 
-        if (navAgent.remainingDistance > navAgent.stoppingDistance)
+        if (Vector3.Distance(transform.position, targetPosition) > navAgent.stoppingDistance)
             return false;
 
         return true;

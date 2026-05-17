@@ -37,7 +37,6 @@ public class RaidManager : MonoBehaviour
 
     [Header("Positions")]
     [SerializeField] private BoatDockPoint[] dockPoints;
-    private Dictionary<Boat, Vector3> spawnPositions = new();
 
     public bool IsRaidExist { get; private set; } = false;
     public bool IsUnderRaid { get; private set; } = false;
@@ -105,11 +104,6 @@ public class RaidManager : MonoBehaviour
         inventory.AddItem(id, amount);
     }
 
-    public Vector3 GetSpawnPosition(Boat boat)
-    {
-        return spawnPositions[boat];
-    }
-
     public Building CalculateNextRaidBuilding()
     {
         Building building = null;
@@ -147,11 +141,8 @@ public class RaidManager : MonoBehaviour
             Vector3 position = dir * spawnDistance;
             Quaternion rotation = Quaternion.LookRotation(-position.normalized);
 
-            Boat boat = CreateBoat(position, rotation);
-
-            Human raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.Id);
-
-            spawnPositions.Add(boat, position);
+            var boat = CreateBoat(position, rotation);
+            var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.Id);
         }
 
         IsRaidExist = true;
@@ -213,10 +204,10 @@ public class RaidManager : MonoBehaviour
 
     private void OnEnteredBoat(Human human)
     {
-        RaiderState raiderState = human.currentStatus as RaiderState;
-        if (raiderState == null) return;
+        Raider raider = human as Raider;
+        if (raider == null) return;
 
-        if (!raiderState.isFinishedRaiding) return;
+        if (!raider.IsRaidFinished) return;
 
         landedRaidersCount--;
 
@@ -253,7 +244,7 @@ public class RaidManager : MonoBehaviour
         var id = (int)raiderIds[UnityEngine.Random.Range(0, raiderIds.Length)];
         var prefab = creaturesList.GetCreature(id) as Human;
 
-        var data = new HumanData()
+        var data = new RaiderData()
         {
             Id = id,
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
@@ -274,7 +265,8 @@ public class RaidManager : MonoBehaviour
             },
 
             Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId() + 1, WeaponsDataFactory.GetMaxWeaponDamage()),
-            Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount())
+            Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount()),
+            SpawnPosition = new Vector3Data(position)
         };
 
         var human = CreatureFactory.CreateHuman(prefab, position, Quaternion.Euler(rotation), data);
@@ -299,19 +291,24 @@ public class RaidManager : MonoBehaviour
 
     private BoatDockPoint GetNearestDockPoint(Vector3 position)
     {
-        BoatDockPoint dockPoint = dockPoints[0];
-        float distance = Vector3.Distance(position, dockPoint.transform.position);
+        BoatDockPoint bestDockPoint = null;
+        float bestSqr = float.MaxValue;
 
-        for (int i = 1; i < dockPoints.Length; i++) {
-            if (dockPoints[i].boat != null) continue;
+        for (int i = 0; i < dockPoints.Length; i++) {
+            var dockPoint = dockPoints[i];
 
-            float currentDistance = Vector3.Distance(position, dockPoints[i].transform.position);
-            if (currentDistance >= distance) continue;
+            if (dockPoint.boat != null)
+                continue;
 
-            dockPoint = dockPoints[i];
-            distance = currentDistance;       
+            float sqr = (position - dockPoint.transform.position).sqrMagnitude;
+
+            if (sqr < bestSqr) {
+                bestDockPoint = dockPoint;
+                bestSqr = sqr;
+            }
         }
-        return dockPoint;
+
+        return bestDockPoint;
     }
 
     private int GetRandomRaidersAmount()

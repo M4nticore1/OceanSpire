@@ -9,11 +9,11 @@ public class CreaturesManager : MonoBehaviour
     private List<Human> citizens = new();
     public IReadOnlyList<Human> Citizens => citizens.AsReadOnly();
 
-    private List<Human> wanderers = new();
-    public IReadOnlyList<Human> Wanderers => wanderers.AsReadOnly();
+    private List<Wanderer> wanderers = new();
+    public IReadOnlyList<Wanderer> Wanderers => wanderers.AsReadOnly();
 
-    private List<Human> raiders = new();
-    public IReadOnlyList<Human> Raiders => raiders.AsReadOnly();
+    private List<Raider> raiders = new();
+    public IReadOnlyList<Raider> Raiders => raiders.AsReadOnly();
 
     public static event Action<Human> onCitizenRegistered;
     public static event Action<Human> onCitizenUnregistered;
@@ -48,26 +48,26 @@ public class CreaturesManager : MonoBehaviour
     }
 
     // Wanderer
-    public void RegisterWanderer(Human human)
+    public void RegisterWanderer(Wanderer human)
     {
         wanderers.Add(human);
         onWandererRegistered?.Invoke(human);
     }
 
-    public void UnregisterWanderer(Human human)
+    public void UnregisterWanderer(Wanderer human)
     {
         wanderers.Remove(human);
         onWandererUnregistered?.Invoke(human);
     }
 
     // Enemy
-    public void RegisterRaider(Human human)
+    public void RegisterRaider(Raider human)
     {
         raiders.Add(human);
         onRaiderRegistered?.Invoke(human);
     }
 
-    public void UnregisterRaider(Human human)
+    public void UnregisterRaider(Raider human)
     {
         raiders.Remove(human);
         onRaiderUnregistered?.Invoke(human);

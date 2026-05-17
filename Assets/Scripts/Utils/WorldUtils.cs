@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class WorldUtils
 {
-    private const float spawnDistance = 145f;
+    private const float spawnDistance = 140f;
 
     public static Vector3 GetRandomBorderPosition()
     {

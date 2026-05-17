@@ -10,6 +10,7 @@ public class BoatFloatingAwayState : BoatState
     public override void Enter()
     {
         boat.RemoveDockPoint();
+        boat.Movement.SetAgentEnabled(true);
     }
 
     public override void Exit()

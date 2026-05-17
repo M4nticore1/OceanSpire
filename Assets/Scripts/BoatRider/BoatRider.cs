@@ -18,11 +18,11 @@ public class BoatRider : MonoBehaviour
     public event Action<Boat> OnEnteredBoat;
     public event Action<Boat> OnExitedBoat;
 
-    public event Action OnStartedFloating;
-    public event Action OnStoppedFloating;
-
     public event Action<Boat> OnStartedMovingToBoat;
     public event Action<Boat> OnStoppedMovingToBoat;
+
+    public event Action<Boat> OnBoatMovementStarted;
+    public event Action<Boat> OnBoatMovementStopped;
 
     private void OnEnable()
     {
@@ -153,14 +153,14 @@ public class BoatRider : MonoBehaviour
         OnStoppedMovingToBoat?.Invoke(SelectedBoat);
     }
 
-    public void HandleBoatStartedMoving()
+    public void HandleBoatMovementStarted()
     {
-        OnStartedFloating?.Invoke();
+        OnBoatMovementStarted?.Invoke(SelectedBoat);
     }
 
-    public void HandleBoatStoppedMoving()
+    public void HandleBoatMovementStopped()
     {
-        OnStoppedFloating?.Invoke();
+        OnBoatMovementStopped?.Invoke(SelectedBoat);
     }
 
     private bool ShouldStartEnteringBoat()

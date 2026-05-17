@@ -11,8 +11,8 @@ public class InteractComponent : MonoBehaviour
 
     public event Action<Building> onSetedInteractBuilding;
     public event Action<Building> onRemovedInteractBuilding;
-    public event Action onInteractionStarted;
-    public event Action onInteractionStopped;
+    public event Action<Building> onInteractionStarted;
+    public event Action<Building> onInteractionStopped;
 
     public static event Action<InteractComponent> onInteractorSetedInteractBuilding;
     public static event Action<InteractComponent> onInteractorRemovedInteractBuilding;
@@ -53,7 +53,7 @@ public class InteractComponent : MonoBehaviour
     public void StartInteracting()
     {
         IsInteracting = true;
-        onInteractionStarted?.Invoke();
+        onInteractionStarted?.Invoke(InteractBuilding);
     }
 
     public void StopInteracting()
@@ -61,7 +61,7 @@ public class InteractComponent : MonoBehaviour
         if (!IsInteracting) return;
         
         IsInteracting = false;
-        onInteractionStopped?.Invoke();
+        onInteractionStopped?.Invoke(InteractBuilding);
     }
 
     public void AssignWorkerIndex()

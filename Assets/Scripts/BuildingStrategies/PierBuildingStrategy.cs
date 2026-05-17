@@ -40,7 +40,7 @@ public class PierBuildingStrategy : BuildingStrategy
                     newBoatRider.StopExitingBoat();
                 }
                  
-                if (boat.currentState != BoatStateEnum.UnloadingLoot && boat.Inventory.RemainingWeight != 0) {
+                if (boat.CurrentState != BoatStateEnum.UnloadingLoot && boat.Inventory.RemainingWeight != 0) {
                     boat.SetState(BoatStateEnum.FindingLoot);
                 }
             }
@@ -88,7 +88,7 @@ public class PierBuildingStrategy : BuildingStrategy
         Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(index);
         boatRider.SetSelectedBoat(boat);
 
-        while (boat && boat.currentState != BoatStateEnum.Idle) {
+        while (boat && boat.CurrentState != BoatStateEnum.Idle) {
             yield return new WaitForSeconds(0.5f);
         }
 

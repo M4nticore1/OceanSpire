@@ -29,13 +29,13 @@ public class CreaturesList : ScriptableObject
 
     [SerializeField] private Dictionary<int, Creature> citizensDict;
 
-    [SerializeField] private Creature[] wanderers;
-    public IReadOnlyList<Creature> Wanderers => wanderers;
+    [SerializeField] private Wanderer[] wanderers;
+    public IReadOnlyList<Wanderer> Wanderers => wanderers;
 
     [SerializeField] private Dictionary<int, Creature> wanderersDict;
 
-    [SerializeField] private Creature[] raiders;
-    public IReadOnlyList<Creature> Raiders => raiders;
+    [SerializeField] private Raider[] raiders;
+    public IReadOnlyList<Raider> Raiders => raiders;
 
     [SerializeField] private Dictionary<int, Creature> raidersDict;
 
@@ -53,18 +53,18 @@ public class CreaturesList : ScriptableObject
         return GetCreature(citizensDict, id);
     }
 
-    public Creature GetWanderer(int id)
+    public Wanderer GetWanderer(int id)
     {
         TryInitDict(wanderers, ref wanderersDict);
 
-        return GetCreature(wanderersDict, id);
+        return GetCreature(wanderersDict, id) as Wanderer;
     }
 
-    public Creature GetRaider(int id)
+    public Raider GetRaider(int id)
     {
         TryInitDict(raiders, ref raidersDict);
 
-        return GetCreature(raidersDict, id);
+        return GetCreature(raidersDict, id) as Raider;
     }
 
     public Creature GetRandomCitizen()

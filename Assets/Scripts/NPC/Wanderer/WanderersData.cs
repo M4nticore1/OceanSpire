@@ -11,7 +11,7 @@ public class WanderersData
     {
         return new WanderersData() {
             Cooldown = (int)wanderersManager.CurrentWandererSpawnCooldown,
-            TimeSinceLastSpawn = (int)wanderersManager.CurrentWandererSpawnTime
+            TimeSinceLastSpawn = (int)wanderersManager.CurrentWandererSpawnTime,
         };
     }
 }

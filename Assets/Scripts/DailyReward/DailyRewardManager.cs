@@ -152,7 +152,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         if (!currentRewards.Contains(reward)) return;
 
         if (!FreeRewardCollected) {
-            FreeRewardCollected = false;
+            FreeRewardCollected = true;
         }
         else {
             AdRewardCollected = true;

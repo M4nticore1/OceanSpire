@@ -9,8 +9,7 @@ public class TowerBuildingData : BuildingData
 
     public static TowerBuildingData Create(TowerBuilding building)
     {
-        TowerBuildingData data = new TowerBuildingData();
-
+        var data = new TowerBuildingData();
         data.Fill(building);
 
         data.FloorIndex = building.FloorIndex;

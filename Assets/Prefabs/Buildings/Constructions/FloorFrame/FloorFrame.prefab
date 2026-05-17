@@ -233,6 +233,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HallPlace
       objectReference: {fileID: 0}
+    - target: {fileID: 7072113992813098010, guid: 792208a8c3e99f24e8238af10b287b66, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9194174278982147483, guid: 792208a8c3e99f24e8238af10b287b66, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -532,6 +536,8 @@ MonoBehaviour:
   buildingLevelsData:
   - {fileID: 11400000, guid: 900d1236c8a702a49b3effad3a42c5f0, type: 2}
   isRuined: 0
+  FloorIndex: 0
+  PlaceIndex: 0
 --- !u!114 &3416410043795393112
 MonoBehaviour:
   m_ObjectHideFlags: 0

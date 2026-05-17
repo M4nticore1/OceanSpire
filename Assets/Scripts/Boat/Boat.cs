@@ -18,7 +18,7 @@ public class Boat : MonoBehaviour
     [SerializeField] private BoatDefinition boatData;
     public BoatDefinition Definition => boatData;
 
-    public BoatStateEnum currentState { get; private set; } = BoatStateEnum.Idle;
+    public BoatStateEnum CurrentState { get; private set; } = BoatStateEnum.Idle;
     private BoatState state;
     public BoatRider SelectedRider { get; private set; }
 
@@ -53,22 +53,24 @@ public class Boat : MonoBehaviour
     [SerializeField] private Transform seatSlot;
     public Transform SeatSlot => seatSlot;
 
-    public bool isDemolished { get; private set; } = false;
-
     public static event Action<Boat> onBoatSelected;
     public static event Action<Boat> onBoatDeselected;
     public static event Action<Boat> onBoatDestroyed;
 
     private void OnEnable()
     {
-        movement.OnReachedPath += OnReachedPath;
+        movement.OnMovementStarted += OnMovementStarted;
+        movement.OnReachedPath += OnMovementStopped;
+
         selectComponent.onSelected += OnSelected;
         selectComponent.onDeselected += OnDeselected;
     }
 
     private void OnDisable()
     {
-        movement.OnReachedPath -= OnReachedPath;
+        movement.OnMovementStarted -= OnMovementStarted;
+        movement.OnReachedPath -= OnMovementStopped;
+
         selectComponent.onSelected -= OnSelected;
         selectComponent.onDeselected -= OnDeselected;
 
@@ -113,8 +115,8 @@ public class Boat : MonoBehaviour
 
     public void FloatAway(Vector3 position)
     {
-        movement.TryMoveTo(position);
         SetState(BoatStateEnum.FloatingAway);
+        movement.TryMoveTo(position);
     }
 
     // Enter / Exit
@@ -141,12 +143,16 @@ public class Boat : MonoBehaviour
     // Dock Point
     public void SetDockPoint(BoatDockPoint dockPoint)
     {
-        this.DockPoint = dockPoint;
+        if (dockPoint == DockPoint) return;
+
+        DockPoint = dockPoint;
         dockPoint.SetBoat(this);
     }
 
     public void RemoveDockPoint()
     {
+        if (!DockPoint) return;
+
         DockPoint.RemoveBoat();
         DockPoint = null;
     }
@@ -166,10 +172,15 @@ public class Boat : MonoBehaviour
         healthDrainer.ProcessDrainHealth();
     }
 
-    // Events
-    private void OnReachedPath()
+    private void OnMovementStarted()
+    {
+        SelectedRider.HandleBoatMovementStarted();
+    }
+
+    private void OnMovementStopped()
     {
         state.OnReachedPath();
+        SelectedRider.HandleBoatMovementStopped();
     }
 
     // State
@@ -207,7 +218,7 @@ public class Boat : MonoBehaviour
         }
 
         this.state.Enter();
-        currentState = state;
+        CurrentState = state;
     }
 
     // Clickable

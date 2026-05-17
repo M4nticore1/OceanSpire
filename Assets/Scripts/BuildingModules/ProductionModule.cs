@@ -49,7 +49,6 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
     // IRaidable
     public ItemInstance GetRaidLoot()
     {
-        Debug.Log(CurrentCraftItem.ConsumeResources[0].Amount);
         return CurrentCraftItem.ConsumeResources[0];
     }
 
