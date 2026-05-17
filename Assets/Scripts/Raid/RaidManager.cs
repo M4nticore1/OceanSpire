@@ -3,7 +3,7 @@ using UnityEngine;
 
 public struct RaidEndedResult
 {
-    public bool isRepeled;
+    public bool IsRepeled;
 }
 
 public class RaidManager : MonoBehaviour
@@ -43,8 +43,8 @@ public class RaidManager : MonoBehaviour
     public bool IsUnderRaid { get; private set; } = false;
     public int landedRaidersCount = 0;
 
-    public event System.Action onRaidStarted;
-    public event System.Action<RaidEndedResult> onRaidEnded;
+    public event System.Action OnRaidStarted;
+    public event System.Action<RaidEndedResult> OnRaidEnded;
 
     private void Awake()
     {
@@ -72,8 +72,11 @@ public class RaidManager : MonoBehaviour
 
     public void Init(RaidData raidData)
     {
+        if (raidData.UnderRaid) {
+            StartRaid();
+        }
+
         IsRaidExist = raidData.RaidExist;
-        IsUnderRaid = raidData.UnderRaid;
         CurrentRaidCooldown = raidData.RaidCooldown;
         CurrentRaidCooldownTime = raidData.TimeSinceLastRaid;
     }
@@ -156,9 +159,8 @@ public class RaidManager : MonoBehaviour
 
     private void StartRaid()
     {
-        ClearLosses();
         IsUnderRaid = true;
-        onRaidStarted?.Invoke();
+        OnRaidStarted?.Invoke();
     }
 
     private void EndRaid(bool isRepeled)
@@ -169,10 +171,10 @@ public class RaidManager : MonoBehaviour
 
         RaidEndedResult result = new RaidEndedResult()
         {
-            isRepeled = isRepeled
+            IsRepeled = isRepeled
         };
 
-        onRaidEnded?.Invoke(result);
+        OnRaidEnded?.Invoke(result);
     }
 
     private void RemoveCityLoot()
@@ -230,6 +232,7 @@ public class RaidManager : MonoBehaviour
         landedRaidersCount++;
 
         if (landedRaidersCount == 1) {
+            ClearLosses();
             StartRaid();
         }
     }
@@ -267,8 +270,7 @@ public class RaidManager : MonoBehaviour
             BoatRider = new BoatRiderData()
             {
                 BoatInstanceId = boatInstanceId,
-                IsRiding = true,
-
+                Riding = true,
             },
 
             Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId() + 1, WeaponsDataFactory.GetMaxWeaponDamage()),

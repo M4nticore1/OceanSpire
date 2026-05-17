@@ -9,14 +9,14 @@ public class SelectEquipmentWidget : EquipmentWidget
     {
         base.OnEnable();
 
-        EquipmentComponent.onEquipmentComponentEquiped += OnEquipmentComponentEquiped;
+        EquipmentComponent.OnEquipmentComponentEquiped += OnEquipmentComponentEquiped;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        EquipmentComponent.onEquipmentComponentEquiped -= OnEquipmentComponentEquiped;
+        EquipmentComponent.OnEquipmentComponentEquiped -= OnEquipmentComponentEquiped;
     }
 
     protected override void OnClicked()

@@ -23,14 +23,14 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        movement.onMovementStarted += OnStartedMoving;
-        movement.onMovementStopped += OnStoppedMoving;
+        movement.OnMovementStarted += OnStartedMoving;
+        movement.OnMovementStopped += OnStoppedMoving;
     }
 
     protected virtual void OnDisable()
     {
-        movement.onMovementStarted -= OnStartedMoving;
-        movement.onMovementStopped -= OnStoppedMoving;
+        movement.OnMovementStarted -= OnStartedMoving;
+        movement.OnMovementStopped -= OnStoppedMoving;
     }
 
     public void Init(CreatureData data)
@@ -38,7 +38,7 @@ public abstract class Creature : MonoBehaviour
         transform.position = data.Position.Vector3();
         transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
 
-        instanceId.Init(data.InstanceId);
+        instanceId.Register(data.InstanceId);
 
         OnInit(data);
         AssignIdle();

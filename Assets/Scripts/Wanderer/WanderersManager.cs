@@ -8,7 +8,9 @@ public class WanderersManager : MonoBehaviour
 
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
+    [SerializeField] private HumanNamesList humanNamesList;
 
+    [SerializeField] private CreatureIdEnum[] wandererIds;
     [SerializeField] private BoatIdEnum wandererBoatId;
 
     [Header("Cooldown")]
@@ -124,13 +126,35 @@ public class WanderersManager : MonoBehaviour
 
     private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId)
     {
-        var data = HumanDataFactory.CreateRandomWandererData();
-        data.Position = new Vector3Data(position);
-        data.Rotation = new Vector3Data(rotation);
-        data.BoatRider.SetBoatInstanceId(boatId);
-        data.BoatRider.SetRiding(true);
+        HumanDataFactory.CreateRandomWandererData();
 
-        var prefab = creaturesList.GetCreature(data.Id);
+        var id = (int)wandererIds[UnityEngine.Random.Range(0, wandererIds.Length)];
+        var prefab = creaturesList.GetCreature(id) as Human;
+
+        var data = new HumanData()
+        {
+            Id = id,
+            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
+            Position = new Vector3Data(position),
+            Rotation = new Vector3Data(rotation),
+            Health = prefab.HealthComponent.MaxHealth,
+
+            Name = new NameData()
+            {
+                FirstNameId = prefab.GenderComponent.IsMale ? humanNamesList.GetRandomMaleFirstNameId() : humanNamesList.GetRandomFemaleFirstNameId(),
+                LastNameId = prefab.GenderComponent.IsMale ? humanNamesList.GetRandomMaleLastNameId() : humanNamesList.GetRandomFemaleLastNameId(),
+            },
+
+            BoatRider = new BoatRiderData()
+            {
+                BoatInstanceId = boatId,
+                Riding = true
+            },
+
+            Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId(), WeaponsDataFactory.GetMaxWeaponDamage()),
+            Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount())
+        };
+
         var human = CreatureFactory.CreateHuman(prefab, position, Quaternion.Euler(rotation), data);
 
         return human;

@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21cf396309e47dc4299e233a12c6a5a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCBuildingInteractor
+  InteractBuilding: {fileID: 0}
 --- !u!114 &2185582854232776361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,6 +160,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CityPathFollower
   movement: {fileID: -7493649843608556168}
   pathBuildings: []
+  CurrentBuilding: {fileID: 0}
+  TargetBuilding: {fileID: 0}
   pathIndex: 0
 --- !u!114 &6497944028369977301
 MonoBehaviour:
@@ -172,7 +175,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b0c4d83530020347a7953f4fc928c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatRider
-  selectedBoat: {fileID: 0}
+  SelectedBoat: {fileID: 0}
+  movement: {fileID: -7493649843608556168}
+  useBoatTime: 1
 --- !u!114 &774651871998097940
 MonoBehaviour:
   m_ObjectHideFlags: 0

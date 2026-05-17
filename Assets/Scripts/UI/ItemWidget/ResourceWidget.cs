@@ -29,28 +29,32 @@ public class ResourceWidget : UIBehaviour
     {
         base.OnEnable();
 
-        TryUpdateItemName();
-        UpdateAmount();
+        UpdateItemName();
+        UpdateIcon();
+        UpdateAmountAndLimit();
     }
 
     protected override void Start()
     {
         base.Start();
 
-        TryUpdateItemName();
+        UpdateItemName();
+        UpdateIcon();
         UpdateAmountFromDefinition();
-        UpdateAmount();
+        UpdateAmountAndLimit();
     }
 
-    public virtual void SetItem(ItemDefinition definition)
+    public virtual void SetItemAndApply(ItemDefinition definition)
     {
         itemDefinition = definition;
-        resourceImage.sprite = itemDefinition.ItemIcon;
+        UpdateItemName();
+        UpdateIcon();
     }
 
     public void SetAmount(IItemAmount amount)
     {
         Amount = amount;
+        amount.OnAmountChanged += OnAmountChanged;
     }
 
     public void SetLimit(IItemAmount amount)
@@ -58,6 +62,7 @@ public class ResourceWidget : UIBehaviour
         if (!useLimit) return;
 
         Limit = amount;
+        Limit.OnAmountChanged += OnLimitChanged;
     }
 
     public void SetColor(Color color)
@@ -75,6 +80,13 @@ public class ResourceWidget : UIBehaviour
         resourceAmountText.SetText(amount.ToString() + "/" + limit.ToString());
         TryUpdateResourceBar(amount, limit);
         TryUpdateAmountColor(amount, limit);
+    }
+
+    private void UpdateIcon()
+    {
+        if (!itemDefinition) return;
+
+        resourceImage.sprite = itemDefinition.ItemIcon;
     }
 
     private void TryUpdateResourceBar(int amount, int limit)
@@ -107,14 +119,14 @@ public class ResourceWidget : UIBehaviour
         return true;
     }
 
-    private void TryUpdateItemName()
+    private void UpdateItemName()
     {
         if (!itemNameText) return;
 
         itemNameText.SetLocalizationItem(itemDefinition.NameLocalization);
     }
 
-    private void UpdateAmount()
+    private void UpdateAmountAndLimit()
     {
         if (Amount == null) return;
 
@@ -136,5 +148,15 @@ public class ResourceWidget : UIBehaviour
         else {
             SetColor(notEnoughAmountColor);
         }
+    }
+
+    private void OnAmountChanged()
+    {
+        UpdateAmountAndLimit();
+    }
+
+    private void OnLimitChanged()
+    {
+        UpdateAmountAndLimit();
     }
 }

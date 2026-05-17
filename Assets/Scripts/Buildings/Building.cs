@@ -104,9 +104,9 @@ public abstract class Building : MonoBehaviour, ILocalizable
     // Constructing
     public void Init(BuildingData data)
     {
-        instanceId.Init(data.InstanceId);
+        instanceId.Register(data.InstanceId);
 
-        AsssignStrategy();
+        UpdateStrategy();
         constructionComponent.Init(data.Construction);
 
         OnInit(data);
@@ -311,7 +311,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
         onWorkStopped?.Invoke();
     }
 
-    private void AsssignStrategy()
+    private void UpdateStrategy()
     {
         switch (buildingData.BuildingStrategy) {
             case BuildingStrategyEnum.WorkBuilding:

@@ -29,7 +29,7 @@ public class BoatDockPoint : MonoBehaviour
 
     public void Init(BoatDockData data)
     {
-        instanceId.Init(data.InstanceId);
+        instanceId.Register(data.InstanceId);
 
         isInited = true;
     }

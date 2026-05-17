@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Rendering;
 using UnityEngine;
-using static UnityEngine.LowLevelPhysics2D.PhysicsShape;
 
 public enum BuildingPosition
 {
@@ -81,7 +79,7 @@ public class TowerBuilding : Building
 
     protected override void OnInit(BuildingData data)
     {
-        TowerBuildingData towerData = data as TowerBuildingData;
+        var towerData = data as TowerBuildingData;
         FloorIndex = towerData.FloorIndex;
         PlaceIndex = towerData.PlaceIndex;
 
@@ -94,7 +92,7 @@ public class TowerBuilding : Building
     protected override void OnDemolish()
     {
         if (BuildingPlace) {
-            BuildingPlace.TryPlaceBuilding(null);
+            BuildingPlace.RemovePlacedBuilding();
         }
 
         InvokeBuildingDemolished();
@@ -223,7 +221,7 @@ public class TowerBuilding : Building
         }
         else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
             place = BuildingsManager.Instance.GetFloorFrameBuilding(floorIndex - 1)?.FloorBuildingPlace;
-            transform.SetParent(place ? place.transform : BuildingsManager.Instance.FirstFloorBuildingTransform);
+            transform.SetParent(place ? null : BuildingsManager.Instance.FirstFloorBuildingTransform);
         }
 
         SetBuildingPlace(place);
@@ -295,7 +293,7 @@ public class TowerBuilding : Building
         BuildingPlace = place;
 
         if (BuildingPlace) {
-            BuildingPlace.TryPlaceBuilding(this);
+            BuildingPlace.TrySetPlaceBuilding(this);
         }
     }
 

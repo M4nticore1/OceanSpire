@@ -1,28 +1,29 @@
+using NUnit.Framework;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
 public class ElevatorCabinConstruction : BuildingConstruction
 {
-    public int FloorIndex => ((TowerBuilding)OwnedBuilding).FloorIndex;
-    public int PlaceIndex => ((TowerBuilding)OwnedBuilding).PlaceIndex;
+    public int FloorIndex = 0;
+    public int PlaceIndex = 0;
 
-    private List<CreatureCityNavigator> goingForWaitingPassengers = new();
+    [SerializeField] private List<CreatureCityNavigator> goingForWaitingPassengers = new();
     public IReadOnlyList<CreatureCityNavigator> GoingForWaitingPassengers => goingForWaitingPassengers;
 
-    private List<CreatureCityNavigator> waitingPassengers = new();
+    [SerializeField] private List<CreatureCityNavigator> waitingPassengers = new();
     public IReadOnlyList<CreatureCityNavigator> WaitingPassengers => waitingPassengers;
 
-    private List<CreatureCityNavigator> goingToRidingPassengers = new();
+    [SerializeField] private List<CreatureCityNavigator> goingToRidingPassengers = new();
     public IReadOnlyList<CreatureCityNavigator> GoingToRidingPassengers => goingToRidingPassengers;
 
-    private List<CreatureCityNavigator> ridingPassengers = new();
+    [SerializeField] private List<CreatureCityNavigator> ridingPassengers = new();
     public IReadOnlyList<CreatureCityNavigator> RidingPassengers => ridingPassengers;
 
     public bool IsMoving { get; private set; } = false;
     public int StartFloorIndex { get; private set; } = 0;
-    public int TargetFloor { get; private set; } = 0;
-    public int NextFloor { get; private set; } = 0;
+    public int TargetFloor = 0;
+    public int NextFloor = 0;
 
     private float moveSpeed => ((OwnedBuilding.GetComponent<ElevatorModule>().LevelData) as ElevatorModuleLevelData).ElevatorMoveSpeed;
     private Vector3 moveDirection = Vector3.zero;
@@ -59,11 +60,13 @@ public class ElevatorCabinConstruction : BuildingConstruction
     {
         base.SetOwnedBuilding(building);
 
+        UpdateFloorAndPlaceIndexes(building);
+
         foreach (var npc in ridingPassengers.ToArray()) {
             npc.OnElevatorChangedFloor(building);
         }
 
-        AssignTargetFloor();
+        UpdateTargetFloor();
 
         if (FloorIndex == TargetFloor || !TryMoveToFloor(TargetFloor)) {
             StopMoving();
@@ -115,7 +118,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     {
         waitingPassengers.Add(passenger);
         if (IsMoving) {
-            AssignTargetFloor();
+            UpdateTargetFloor();
             StartMovingToFloor(TargetFloor);
         }
         else {
@@ -213,7 +216,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     private void StartMovingToFloorTimer()
     {
-        AssignTargetFloor();
+        UpdateTargetFloor();
         TimerManager.Instance.StartTimer(startMovingTimerHandle, delayToStartMoving, () => StartMovingToFloor(TargetFloor));
     }
 
@@ -222,7 +225,14 @@ public class ElevatorCabinConstruction : BuildingConstruction
         TimerManager.Instance.RemoveTimer(startMovingTimerHandle);
     }
 
-    private void AssignTargetFloor()
+    private void UpdateFloorAndPlaceIndexes(Building building)
+    {
+        var towerBuilding = building as TowerBuilding;
+        FloorIndex = towerBuilding.FloorIndex;
+        PlaceIndex = towerBuilding.PlaceIndex;
+    }
+
+    private void UpdateTargetFloor()
     {
         SetTargetFloor(CalculateTargetFloor());
         SetNextFloor(CalculateNextFloor());
@@ -234,48 +244,43 @@ public class ElevatorCabinConstruction : BuildingConstruction
             return FloorIndex;
         }
 
-        int targetFloor = FloorIndex;
-        if (ridingPassengers.Count > 0) {
-            foreach (var rider in ridingPassengers) {
-                if (rider.CurrentPathBuilding) {
-                    targetFloor = rider.CurrentPathTowerBuilding ? rider.CurrentPathTowerBuilding.FloorIndex : FloorIndex;
-                    break;
-                }
+        int? targetFloor = null;
+        int maxPassengersCount = OwnedBuilding.LevelData.maxResidentsCount;
+
+        foreach (var passenger in ridingPassengers) {
+            if (!passenger.CurrentPathTowerBuilding) continue;
+
+            int passengerTargetFloor = passenger.CurrentPathTowerBuilding.FloorIndex;
+
+            if (targetFloor == null) {
+                targetFloor = passengerTargetFloor;
+                continue;
             }
 
-            if (ridingPassengers.Count < OwnedBuilding.LevelData.maxResidentsCount && waitingPassengers.Count > 0) {
-                foreach (var waiter in waitingPassengers) {
-                    if (targetFloor < FloorIndex && waiter.FloorIndex < FloorIndex) {
-                        targetFloor = math.max(targetFloor, waiter.FloorIndex);
-                    }
-                    else if (targetFloor > FloorIndex && waiter.FloorIndex > FloorIndex) {
-                        targetFloor = math.min(targetFloor, waiter.FloorIndex);
-                    }
-                }
-            }
-            else {
-                foreach (var rider in ridingPassengers) {
-                    TowerBuilding pathTowerBuilding = rider.CurrentPathTowerBuilding;
-                    if (!pathTowerBuilding)
-                        continue;
+            bool nearUp = targetFloor.Value > FloorIndex && passengerTargetFloor > FloorIndex && passengerTargetFloor < targetFloor.Value;
+            bool nearDown = targetFloor.Value < FloorIndex && passengerTargetFloor < FloorIndex && passengerTargetFloor > targetFloor.Value;
 
-                    int pathFloor = pathTowerBuilding.FloorIndex;
-                    if (targetFloor < FloorIndex && pathFloor < FloorIndex) {
-                        targetFloor = math.max(targetFloor, pathFloor);
-                    }
-                    else if (targetFloor > FloorIndex && pathFloor > FloorIndex) {
-                        targetFloor = math.min(targetFloor, pathFloor);
-                    }
-                }
+            if (nearUp || nearDown)
+                targetFloor = passengerTargetFloor;
+        }
+
+        for (int i = 0; i < Mathf.Min(maxPassengersCount, waitingPassengers.Count - ridingPassengers.Count); i++) {
+            var passenger = waitingPassengers[i];
+            int passengerFloor = passenger.FloorIndex;
+
+            if (targetFloor == null) {
+                targetFloor = passengerFloor;
+                continue;
             }
+
+            bool nearUp = targetFloor.Value > FloorIndex && passengerFloor > FloorIndex && passengerFloor < targetFloor.Value;
+            bool nearDown = targetFloor.Value < FloorIndex && passengerFloor < FloorIndex && passengerFloor > targetFloor.Value;
+
+            if (nearUp || nearDown)
+                targetFloor = passengerFloor;
         }
-        else if (waitingPassengers.Count > 0) {
-            targetFloor = waitingPassengers[0].FloorIndex;
-        }
-        else {
-            targetFloor = FloorIndex;
-        }
-        return targetFloor;
+
+        return targetFloor != null ? targetFloor.Value : FloorIndex;
     }
 
     private int CalculateNextFloor()

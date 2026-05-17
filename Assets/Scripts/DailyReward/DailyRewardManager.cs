@@ -15,8 +15,8 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     [SerializeField] private int updateRewardTimeOffset = 3;
 
-    public bool FreeRewardCollected { get; private set; } = false;
-    public bool AdRewardCollected { get; private set; } = false;
+    public bool FreeRewardCollected = false;
+    public bool AdRewardCollected = false;
     public long NextResetTime { get; private set; } = 0;
 
     private List<RewardInstance> currentRewards = new();

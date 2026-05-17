@@ -10,11 +10,11 @@ public class HumanAnimation : MonoBehaviour
         human.onStartedIdle += OnStartedIdle;
         human.onStoppedIdle += OnStoppedIdle;
 
-        human.Movement.onMovementStarted += OnMovementStarted;
-        human.Movement.onMovementStopped += OnMovementStopped;
+        human.Movement.OnMovementStarted += OnMovementStarted;
+        human.Movement.OnMovementStopped += OnMovementStopped;
 
-        human.BoatRider.onStartedFloating += OnStartedFloating;
-        human.BoatRider.onStoppedFloating += OnStoppedFloating;
+        human.BoatRider.OnStartedFloating += OnStartedFloating;
+        human.BoatRider.OnStoppedFloating += OnStoppedFloating;
 
         human.InteractComponent.onInteractionStarted += OnInteractionStarted;
         human.InteractComponent.onInteractionStopped += OnInteractionStopped;
@@ -31,11 +31,11 @@ public class HumanAnimation : MonoBehaviour
         human.onStartedIdle -= OnStartedIdle;
         human.onStoppedIdle -= OnStoppedIdle;
 
-        human.Movement.onMovementStarted -= OnMovementStarted;
-        human.Movement.onMovementStopped -= OnMovementStopped;
+        human.Movement.OnMovementStarted -= OnMovementStarted;
+        human.Movement.OnMovementStopped -= OnMovementStopped;
 
-        human.Movement.onMovementStarted -= OnMovementStarted;
-        human.Movement.onMovementStopped -= OnMovementStopped;
+        human.Movement.OnMovementStarted -= OnMovementStarted;
+        human.Movement.OnMovementStopped -= OnMovementStopped;
 
         human.InteractComponent.onInteractionStarted -= OnInteractionStarted;
         human.InteractComponent.onInteractionStopped -= OnInteractionStopped;

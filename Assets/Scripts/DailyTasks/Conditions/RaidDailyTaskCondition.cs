@@ -6,7 +6,7 @@ public class RaidDailyTaskCondition : DailyTaskCondition
     {
         if (!RaidManager.Instance) return false;
 
-        RaidManager.Instance.onRaidEnded += OnRaidEnded;
+        RaidManager.Instance.OnRaidEnded += OnRaidEnded;
 
         return true;
     }
@@ -15,14 +15,14 @@ public class RaidDailyTaskCondition : DailyTaskCondition
     {
         if (!RaidManager.Instance) return false;
 
-        RaidManager.Instance.onRaidEnded -= OnRaidEnded;
+        RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
 
         return true;
     }
 
     private void OnRaidEnded(RaidEndedResult result)
     {
-        if (!result.isRepeled) return;
+        if (!result.IsRepeled) return;
 
         InvokeProgressChanged(1);
     }

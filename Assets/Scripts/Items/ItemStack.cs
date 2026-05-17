@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -25,6 +26,8 @@ public class ItemStack : IItemAmount
 
     public int TotalAmount { get; private set; } = 0;
 
+    public event Action OnAmountChanged;
+
     public ItemStack(ItemStackEnum stackEnum)
     {
         this.stackEnum = stackEnum;
@@ -32,21 +35,32 @@ public class ItemStack : IItemAmount
 
     public void AddLimit(int value)
     {
-        amount += value;
+        SetLimit(amount + value);
     }
 
     public void RemoveLimit(int value)
     {
-        amount -= value;
+        SetLimit(amount - value);
     }
 
     public void AddAmount(int value)
     {
-        TotalAmount += value;
+        SetAmount(TotalAmount + value);
     }
 
     public void RemoveAmount(int value)
     {
-        TotalAmount -= value;
+        SetAmount(TotalAmount - value);
+    }
+
+    private void SetLimit(int value)
+    {
+        amount = value;
+        OnAmountChanged?.Invoke();
+    }
+
+    private void SetAmount(int value)
+    {
+        TotalAmount = value;
     }
 }

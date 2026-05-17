@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class InteractComponent : MonoBehaviour
 {
-    public Building InteractBuilding { get; private set; }
+    public Building InteractBuilding;
 
     public bool IsInteracting { get; private set; } = false;
     public int workerIndex { get; private set; } = 0;
@@ -19,7 +19,18 @@ public class InteractComponent : MonoBehaviour
 
     public void SetInteractBuilding(Building building)
     {
+        if (building == InteractBuilding) {
+            Debug.Log($"Building {building} is already interact building");
+            return;
+        }
+
+        if (!building) {
+            RemoveInteractBuilding();
+            return;
+        }
+
         InteractBuilding = building;
+
         onSetedInteractBuilding?.Invoke(building);
         onInteractorSetedInteractBuilding?.Invoke(this);
     }

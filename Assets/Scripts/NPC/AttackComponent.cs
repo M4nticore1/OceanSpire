@@ -24,13 +24,13 @@ public class AttackComponent : MonoBehaviour
 
     private void OnEnable()
     {
-        movement.onMovementStopped += OnStopped;
+        movement.OnMovementStopped += OnStopped;
         health.onDied += OnDied;
     }
 
     private void OnDisable()
     {
-        movement.onMovementStopped -= OnStopped;
+        movement.OnMovementStopped -= OnStopped;
         health.onDied -= OnDied;
     }
 

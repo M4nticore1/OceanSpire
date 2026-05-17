@@ -54,8 +54,8 @@ public class RaidMenu : UIBehaviour
         if (isSubscribed) return;
         if (!RaidManager.Instance) return;
 
-        RaidManager.Instance.onRaidStarted += OnRaidStarted;
-        RaidManager.Instance.onRaidEnded += OnRaidEnded;
+        RaidManager.Instance.OnRaidStarted += OnRaidStarted;
+        RaidManager.Instance.OnRaidEnded += OnRaidEnded;
 
         isSubscribed = true;
     }
@@ -65,8 +65,8 @@ public class RaidMenu : UIBehaviour
         if (!isSubscribed) return;
         if (!RaidManager.Instance) return;
 
-        RaidManager.Instance.onRaidStarted -= OnRaidStarted;
-        RaidManager.Instance.onRaidEnded -= OnRaidEnded;
+        RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
+        RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
 
         isSubscribed = false;
     }

@@ -21,15 +21,15 @@ public class Movement : MonoBehaviour
 
     public bool IsMoving { get; private set; } = false;
 
-    public event Action onMovementStarted;
-    public event Action onMovementStopped;
-    public event Action onReachedPath;
+    public event Action OnMovementStarted;
+    public event Action OnMovementStopped;
+    public event Action OnReachedPath;
 
     private void Update()
     {
         if (!CheckDistancePathPosition()) return;
 
-        OnReachedPath();
+        HandleReachedPath();
     }
 
     public void Move(Vector3 direction, float speed)
@@ -45,7 +45,7 @@ public class Movement : MonoBehaviour
 
         if (navAgent.SetDestination(position)) {
             IsMoving = true;
-            onMovementStarted?.Invoke();
+            OnMovementStarted?.Invoke();
 
             return true;
         }
@@ -60,7 +60,7 @@ public class Movement : MonoBehaviour
         navAgent.isStopped = true;
         navAgent.ResetPath();
         IsMoving = false;
-        onMovementStopped?.Invoke();
+        OnMovementStopped?.Invoke();
     }
 
     public void SetMovementMethod(MovementMethod method)
@@ -92,10 +92,10 @@ public class Movement : MonoBehaviour
         return true;
     }
 
-    private void OnReachedPath()
+    private void HandleReachedPath()
     {
         StopMoving();
-        onReachedPath?.Invoke();
+        OnReachedPath?.Invoke();
     }
 
     private bool CheckDistancePathPosition()

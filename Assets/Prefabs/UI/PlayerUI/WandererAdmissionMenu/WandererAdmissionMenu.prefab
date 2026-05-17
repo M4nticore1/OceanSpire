@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WandererAdmissionMenu
   slidePanel: {fileID: 5016164376599019989}
-  skillPanel: {fileID: 7230412641082148633}
+  skillPanel: {fileID: 1389303499985549435}
   acceptButton: {fileID: 3563609097003125334}
   rejectButton: {fileID: 2426184036935657528}
 --- !u!1 &538399879337717078
@@ -380,8 +380,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
-  item: {fileID: 11400000, guid: 4760dca3e1d63e44e966d1910474a00c, type: 2}
   textRole: 1
+  item: {fileID: 11400000, guid: 4760dca3e1d63e44e966d1910474a00c, type: 2}
+  localizationTarget: {fileID: 0}
 --- !u!1 &8930832137668496981
 GameObject:
   m_ObjectHideFlags: 0
@@ -711,9 +712,9 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1820617394841569235, guid: 5fe14550eae246e40a31acb711cdad57, type: 3}
   m_PrefabInstance: {fileID: 2049205557221273193}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7230412641082148633 stripped
+--- !u!114 &1389303499985549435 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8658073963724548464, guid: 5fe14550eae246e40a31acb711cdad57, type: 3}
+  m_CorrespondingSourceObject: {fileID: -8126761242938943982, guid: 5fe14550eae246e40a31acb711cdad57, type: 3}
   m_PrefabInstance: {fileID: 2049205557221273193}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

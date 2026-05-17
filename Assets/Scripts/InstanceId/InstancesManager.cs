@@ -30,7 +30,7 @@ public class InstancesManager : MonoBehaviour
     {
         if (instances.ContainsKey(id)) {
             Debug.Log($"Instance Id of {instance} is already registered as {id} by {InstancesManager.Instance.GetInstance(id)}!");
-            instance.Init(GetNextInstanceId());
+            instance.Register(GetNextInstanceId());
             return;
         }
 

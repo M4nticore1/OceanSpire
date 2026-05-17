@@ -10,7 +10,9 @@ public static class WorldSaveSystem
     public static void SaveWorld(WorldData worldData)
     {
         string worldName = worldData.WorldName;
+
         string folderPath = GetSaveFolderPathByName(worldName);
+        if (string.IsNullOrEmpty(folderPath)) return;
 
         Directory.CreateDirectory(folderPath);
 
@@ -69,7 +71,7 @@ public static class WorldSaveSystem
 
     }
 
-    public static void SaveWorldThumb(WorldData worldData)
+    public static void SaveWorldThumb(string worldName)
     {
         Camera camera = Camera.main;
         int resolution = 256;
@@ -94,7 +96,7 @@ public static class WorldSaveSystem
         camera.fieldOfView = originalFov;
 
         byte[] bytes = tex.EncodeToPNG();
-        File.WriteAllBytes(GetSaveThumbPathByName(worldData.WorldName), bytes);
+        File.WriteAllBytes(GetSaveThumbPathByName(worldName), bytes);
     }
 
     public static Texture2D GetSaveScreenshotByWorldName(string worldName)
@@ -141,6 +143,9 @@ public static class WorldSaveSystem
 
     private static string GetSaveFolderPathByName(string worldName)
     {
+        if (string.IsNullOrEmpty(worldName))
+            return GetSavesFolderPath();
+
         return Path.Combine(GetSavesFolderPath(), worldName);
     }
 
@@ -151,6 +156,9 @@ public static class WorldSaveSystem
 
     private static string GetSaveThumbPathByName(string worldName)
     {
+        if (string.IsNullOrEmpty(worldName))
+            return GetSaveFolderPathByName(worldName + ".png");
+
         return Path.Combine(GetSaveFolderPathByName(worldName), worldName + ".png");
     }
 }

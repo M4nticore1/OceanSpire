@@ -38,7 +38,7 @@ public class Inventory : MonoBehaviour
 
     private void Awake()
     {
-        ItemStackEnum[] stackValues = (ItemStackEnum[])Enum.GetValues(typeof(ItemStackEnum));
+        var stackValues = (ItemStackEnum[])Enum.GetValues(typeof(ItemStackEnum));
 
         foreach (var stackEnum in stackValues) {
             itemStacks.Add(stackEnum, new ItemStack(stackEnum));
@@ -47,14 +47,17 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(int id, int amount)
     {
-        ItemInstance item = GetItemById(id);
+        var item = GetItemById(id);
 
         if (item == null) {
             item = AddItem(id);
         }
 
-        ItemStack stack = GetStack(item.Definition.Stack);
-        amount = math.clamp(amount, 0, stack.Amount - stack.TotalAmount);
+        var stack = GetStack(item.Definition.Stack);
+
+        if (useAmountLimit) {
+            amount = math.clamp(amount, 0, stack.Amount - stack.TotalAmount);
+        }
 
         item.AddAmount(amount);
         stack.AddAmount(amount);
@@ -62,7 +65,7 @@ public class Inventory : MonoBehaviour
 
     public void RemoveItem(int id, int amount)
     {
-        ItemInstance item = GetItemById(id);
+        var item = GetItemById(id);
         amount = math.clamp(amount, 0, item.Amount);
 
         item.RemoveAmount(amount);
@@ -94,8 +97,7 @@ public class Inventory : MonoBehaviour
 
     public ItemInstance GetItemById(int id)
     {
-        ItemInstance item;
-        itemsDict.TryGetValue(id, out item);
+        itemsDict.TryGetValue(id, out var item);
 
         return item;
     }
@@ -109,8 +111,8 @@ public class Inventory : MonoBehaviour
 
     private ItemInstance AddItem(int id)
     {
-        ItemDefinition definition = ItemsList.Instance.GetItem(id);
-        ItemInstance item = new ItemInstance(definition);
+        var definition = ItemsList.Instance.GetItem(id);
+        var item = new ItemInstance(definition);
 
         item.SetStack(GetStack(item.Definition.Stack));
 

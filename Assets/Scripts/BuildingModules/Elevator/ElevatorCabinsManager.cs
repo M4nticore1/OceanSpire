@@ -22,6 +22,8 @@ public class ElevatorCabinsManager : MonoBehaviour
         Building.onBuildingInited -= OnBuildingInited;
         Building.onBuildingConstructionFinished -= OnBuildingConstructionFinished;
         Building.onBuildingDemolished -= OnBuildingDemolished;
+        BuildingConstruction.OnBuildingConstructionInited -= OnBuildingConstructionInited;
+        BuildingConstruction.OnBuildingConstructionDemolished -= OnBuildingConstructionDemolished;
     }
 
     private void OnBuildingInited(Building building)
@@ -64,7 +66,7 @@ public class ElevatorCabinsManager : MonoBehaviour
                 UpdateElevatorNetworkCabins(connectedElevator);
             }
         }
-        else {
+        else if (elevatorCabin) {
             elevatorCabin.Demolish();
         }
     }

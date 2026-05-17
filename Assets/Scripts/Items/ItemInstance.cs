@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -23,19 +24,19 @@ public class ItemInstance : IItemAmount
 
     public ItemStack Stack { get; private set; }
 
+    public event Action OnAmountChanged;
+
     public ItemInstance(ItemDefinition definition)
     {
         this.definition = definition;
     }
 
-    public int SetAmount(int amount, int maxAmount)
-    {
-        return this.amount = math.clamp(amount, 0, maxAmount);
-    }
-
     public int SetAmount(int amount)
     {
-        return this.amount = math.clamp(amount, 0, amount);
+        this.amount = amount;
+        OnAmountChanged?.Invoke();
+
+        return this.amount;
     }
 
     public int AddAmount(int amount)

@@ -27,10 +27,6 @@ public class RaiderState : HumanState
 
     public override void Tick()
     {
-        if (RaidManager.Instance.IsUnderRaid && !human.InteractComponent.InteractBuilding) {
-            human.TryMoveToBoat();
-        }
-
         if (isRaidingBuilding) {
             ProcessRaidBuilding();
         }
@@ -65,17 +61,16 @@ public class RaiderState : HumanState
     public override void OnSetedInteractBuilding(Building building)
     {
         if (building) {
-            human.CityNavigator.TryFindPathToTargetBuilding();
             building.RaidComponent.AddRaider(human.InteractComponent);
         }
         else {
-            human.TryMoveToBoat();
+            human.BoatRider.TryMoveToBoat();
         }
     }
 
     public override void OnRemovedInteractBuilding(Building building)
     {
-        human.InteractComponent.InteractBuilding.RaidComponent.RemoveRaider(human.InteractComponent);
+        building.RaidComponent.RemoveRaider(human.InteractComponent);
     }
 
     public override void OnInteractionStarted()
@@ -160,8 +155,11 @@ public class RaiderState : HumanState
 
     private void FinishRaidingBuilding()
     {
-        human.TryMoveToBoat();
         AddLoot();
+
+        human.InteractComponent.RemoveInteractBuilding();
+        human.BoatRider.TryMoveToBoat();
+
         isRaidingBuilding = false;
         isFinishedRaiding = true;
     }

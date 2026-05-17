@@ -61,14 +61,14 @@ public class Boat : MonoBehaviour
 
     private void OnEnable()
     {
-        movement.onReachedPath += OnReachedPath;
+        movement.OnReachedPath += OnReachedPath;
         selectComponent.onSelected += OnSelected;
         selectComponent.onDeselected += OnDeselected;
     }
 
     private void OnDisable()
     {
-        movement.onReachedPath -= OnReachedPath;
+        movement.OnReachedPath -= OnReachedPath;
         selectComponent.onSelected -= OnSelected;
         selectComponent.onDeselected -= OnDeselected;
 
@@ -85,7 +85,7 @@ public class Boat : MonoBehaviour
         lootHandler = GetComponent<BoatLootHandler>();
         lootHandler.Init();
 
-        instanceId.Init(data.InstanceId);
+        instanceId.Register(data.InstanceId);
 
         transform.position = data.Position.Vector3();
         transform.rotation = Quaternion.Euler(data.Rotation.Vector3());

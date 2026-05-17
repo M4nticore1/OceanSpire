@@ -36,7 +36,7 @@ public class PierBuildingStrategy : BuildingStrategy
 
         if (newBoatRider.SelectedBoat) {
             if (newBoatRider.SelectedBoat == boat) {
-                if (newBoatRider.isExitingBoat) {
+                if (newBoatRider.IsExitingBoat) {
                     newBoatRider.StopExitingBoat();
                 }
                  
@@ -55,7 +55,7 @@ public class PierBuildingStrategy : BuildingStrategy
         BoatRider boatRider = TryGetBoatRider(interactor?.gameObject);
         if (!boatRider) return;
 
-        if (boatRider.isEnteringBoat) {
+        if (boatRider.IsEnteringBoat) {
             boatRider.StopEnteringBoat();
         }
 

@@ -64,7 +64,7 @@ public class BuildingWidget : MonoBehaviour
             int id = buildResource.Definition.ItemId;
             ItemInstance storageItem = cityStorage.Inventory.GetItemById(id);
 
-            resourceWidget.SetItem(buildResource.Definition);
+            resourceWidget.SetItemAndApply(buildResource.Definition);
             resourceWidget.SetLimit(storageItem);
             resourceWidget.SetLimit(buildResource);
 

@@ -11,7 +11,7 @@ public class EquipmentComponent : MonoBehaviour
     public EquipmentDefinition EquipmentDefinition { get; private set; }
     public Equipment spawnedEquipment { get; private set; }
 
-    public static event Action<EquipmentComponent> onEquipmentComponentEquiped;
+    public static event Action<EquipmentComponent> OnEquipmentComponentEquiped;
 
     public void Init(EquipmentData data)
     {
@@ -26,7 +26,7 @@ public class EquipmentComponent : MonoBehaviour
         TryDestroyEquipment();
         TrySpawnEquipment(definition);
 
-        onEquipmentComponentEquiped?.Invoke(this);
+        OnEquipmentComponentEquiped?.Invoke(this);
     }
 
     public float GetPower()

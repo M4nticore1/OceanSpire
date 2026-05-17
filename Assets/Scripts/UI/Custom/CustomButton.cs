@@ -137,6 +137,15 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         InputListener.Instance.onReleased -= OnPointerReleased;
     }
 
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        if (!selectGroup) return;
+
+        selectGroup.RemoveButton(this);
+    }
+
     private void Update()
     {
         if (isAnimating) {

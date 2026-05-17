@@ -5,41 +5,75 @@ public class BoatRider : MonoBehaviour
 {
     public Boat SelectedBoat;
 
-    public bool IsRidingOnBoat { get; private set; } = false;
-    public bool isEnteringBoat { get; private set; } = false;
-    public bool isExitingBoat { get; private set; } = false;
-    public bool isMovingToBoat { get; private set; } = false;
+    [SerializeField] private Movement movement;
 
-    private const float useBoatTime = 1;
+    [SerializeField] private float useBoatTime = 1;
     private TimerHandle useBoatTimerHandle = new TimerHandle();
 
-    public event Action<Boat> onEnteredBoat;
-    public event Action<Boat> onExitedBoat;
-    public event Action onStartedFloating;
-    public event Action onStoppedFloating;
+    public bool IsRidingOnBoat { get; private set; } = false;
+    public bool IsEnteringBoat { get; private set; } = false;
+    public bool IsExitingBoat { get; private set; } = false;
+    public bool IsMovingToBoat { get; private set; } = false;
+
+    public event Action<Boat> OnEnteredBoat;
+    public event Action<Boat> OnExitedBoat;
+
+    public event Action OnStartedFloating;
+    public event Action OnStoppedFloating;
+
+    public event Action<Boat> OnStartedMovingToBoat;
+    public event Action<Boat> OnStoppedMovingToBoat;
+
+    private void OnEnable()
+    {
+        movement.OnMovementStopped += OnMovementStopped;
+    }
+
+    private void OnDisable()
+    {
+        movement.OnMovementStopped -= OnMovementStopped;
+    }
+
+    public void Init(BoatRiderData boatRiderData)
+    {
+        if (boatRiderData.BoatInstanceId != null) {
+            var instanceId = InstancesManager.Instance.GetInstance(boatRiderData.BoatInstanceId.Value);
+            var selectedBoat = instanceId.GetComponent<Boat>();
+
+            SetSelectedBoat(selectedBoat);
+        }
+
+        if (boatRiderData.Riding) {
+            EnterBoat();
+        }
+
+        if (boatRiderData.MovingToBoat) {
+            TryMoveToBoat();
+        }
+    }
 
     public void StartEnteringBoat()
     {
         TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, EnterBoat);
-        isEnteringBoat = true;
+        IsEnteringBoat = true;
     }
 
     public void StartExitingBoat()
     {
         TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, ExitBoat);
-        isExitingBoat = true;
+        IsExitingBoat = true;
     }
 
     public void StopEnteringBoat()
     {
         TimerManager.Instance.RemoveTimer(useBoatTimerHandle);
-        isEnteringBoat = false;
+        IsEnteringBoat = false;
     }
 
     public void StopExitingBoat()
     {
         TimerManager.Instance.RemoveTimer(useBoatTimerHandle);
-        isExitingBoat = false;
+        IsExitingBoat = false;
     }
 
     public void OnBoatSetedIdle()
@@ -58,21 +92,27 @@ public class BoatRider : MonoBehaviour
         transform.SetParent(SelectedBoat.SeatSlot);
 
         IsRidingOnBoat = true;
-        isEnteringBoat = false;
-        onEnteredBoat?.Invoke(SelectedBoat);
+        IsEnteringBoat = false;
+        OnEnteredBoat?.Invoke(SelectedBoat);
     }
 
     public void ExitBoat()
     {
         SelectedBoat.RemoveRider();
-        transform.position = SelectedBoat.DockPoint.EntraceTransform.position;
-        transform.rotation = SelectedBoat.DockPoint.EntraceTransform.rotation;
+
+        Vector3 pos = SelectedBoat.DockPoint.EntraceTransform.position;
+        Quaternion rot = SelectedBoat.DockPoint.EntraceTransform.rotation;
+
         transform.SetParent(null);
+        transform.SetPositionAndRotation(pos, rot);
 
         IsRidingOnBoat = false;
-        isExitingBoat = false;
+        IsExitingBoat = false;
 
-        onExitedBoat?.Invoke(SelectedBoat);
+        movement.NavAgent.Warp(transform.position);
+        movement.SetAgentEnabled(true);
+
+        OnExitedBoat?.Invoke(SelectedBoat);
     }
 
     public void SetSelectedBoat(Boat boat)
@@ -91,23 +131,52 @@ public class BoatRider : MonoBehaviour
         SelectedBoat = null;
     }
 
-    public void StartMovingToBoat()
+    public void TryMoveToBoat()
     {
-        isMovingToBoat = true;
+        if (IsMovingToBoat) {
+            Debug.Log("Rider is already moving to boat");
+            return;
+        }
+
+        IsMovingToBoat = true;
+        OnStartedMovingToBoat?.Invoke(SelectedBoat);
     }
 
-    public void StopMovingToBoat()
+    public void TryEndMoveBoat()
     {
-        isMovingToBoat = false;
+        if (!IsMovingToBoat) {
+            Debug.Log("Rider is already not moving to boat");
+            return;
+        }
+
+        IsMovingToBoat = false;
+        OnStoppedMovingToBoat?.Invoke(SelectedBoat);
     }
 
     public void HandleBoatStartedMoving()
     {
-        onStartedFloating?.Invoke();
+        OnStartedFloating?.Invoke();
     }
 
     public void HandleBoatStoppedMoving()
     {
-        onStoppedFloating?.Invoke();
+        OnStoppedFloating?.Invoke();
+    }
+
+    private bool ShouldStartEnteringBoat()
+    {
+        if (!IsMovingToBoat) return false;
+        
+        if (Vector3.Distance(transform.position, SelectedBoat.DockPoint.EntraceTransform.position) > movement.NavAgent.stoppingDistance) return false;
+
+        return true;
+    }
+
+    private void OnMovementStopped()
+    {
+        if (!ShouldStartEnteringBoat()) return;
+
+        StartEnteringBoat();
+        TryEndMoveBoat();
     }
 }

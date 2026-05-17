@@ -58,7 +58,7 @@ public class RaidEndedMenu : UIBehaviour
         if (isSubscribed) return;
         if (!RaidManager.Instance) return;
 
-        RaidManager.Instance.onRaidEnded += OnRaidEnded;
+        RaidManager.Instance.OnRaidEnded += OnRaidEnded;
 
         isSubscribed = true;
     }
@@ -67,7 +67,7 @@ public class RaidEndedMenu : UIBehaviour
     {
         if (!isSubscribed) return;
 
-        RaidManager.Instance.onRaidEnded -= OnRaidEnded;
+        RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
 
         isSubscribed = false;
     }
@@ -75,9 +75,9 @@ public class RaidEndedMenu : UIBehaviour
     private void OnRaidEnded(RaidEndedResult result)
     {
         Open();
-        currentVisibilityTime = 0f;
         RemoveLosses();
         CreateLosses();
+        currentVisibilityTime = 0f;
     }
 
     private void Open()

@@ -5,24 +5,16 @@ using UnityEngine;
 public class BoatRiderData
 {
     public int? BoatInstanceId = null;
-    public bool IsRiding = false;
-
-    public void SetBoatInstanceId(int value)
-    {
-        BoatInstanceId = value;
-    }
-
-    public void SetRiding(bool value)
-    {
-        IsRiding = value;
-    }
+    public bool Riding = false;
+    public bool MovingToBoat = false;
 
     public static BoatRiderData Create(BoatRider boatRider)
     {
         return new BoatRiderData()
         {
             BoatInstanceId = boatRider.SelectedBoat?.InstanceId.Id,
-            IsRiding = boatRider.IsRidingOnBoat
+            Riding = boatRider.IsRidingOnBoat,
+            MovingToBoat = boatRider.IsMovingToBoat
         };
     }
 }

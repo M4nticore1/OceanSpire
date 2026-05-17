@@ -10,7 +10,7 @@ public class EquipmentData
     {
         return new EquipmentData()
         {
-            EquipmentId = equipment.DefaultEquipment.ItemId
+            EquipmentId = equipment.EquipmentDefinition.ItemId
         };
     }
 }

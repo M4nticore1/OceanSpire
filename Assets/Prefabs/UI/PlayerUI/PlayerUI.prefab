@@ -4737,6 +4737,10 @@ PrefabInstance:
       propertyPath: itemData
       value: 
       objectReference: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
+    - target: {fileID: 3414861423065995257, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
+      propertyPath: itemDefinition
+      value: 
+      objectReference: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
     - target: {fileID: 5804422935121878369, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
       propertyPath: m_SizeDelta.x
       value: -100
@@ -4744,13 +4748,46 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1558147022497944306, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1302545106745645721}
   m_SourcePrefab: {fileID: 100100000, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
+--- !u!114 &5591584534065114591 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3414861423065995257, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
+  m_PrefabInstance: {fileID: 7132939697932499494}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602698458024831188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cbe901d618933c488cabc826610c8ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8217438343313287079 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1222584910654512513, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
   m_PrefabInstance: {fileID: 7132939697932499494}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8602698458024831188 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1558147022497944306, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
+  m_PrefabInstance: {fileID: 7132939697932499494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1302545106745645721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602698458024831188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a91fc487fb9f54641a4f3d22e656341c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HudItemWidget
+  cityStorage: {fileID: 0}
+  itemWidget: {fileID: 5591584534065114591}
 --- !u!1001 &7159357708450845812
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5179,8 +5216,41 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1558147022497944306, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4660861374075788509}
   m_SourcePrefab: {fileID: 100100000, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
+--- !u!114 &6558702190212172958 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3414861423065995257, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
+  m_PrefabInstance: {fileID: 8386044159607495527}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7061240477046426005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cbe901d618933c488cabc826610c8ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &7061240477046426005 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1558147022497944306, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
+  m_PrefabInstance: {fileID: 8386044159607495527}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4660861374075788509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7061240477046426005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a91fc487fb9f54641a4f3d22e656341c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HudItemWidget
+  cityStorage: {fileID: 0}
+  itemWidget: {fileID: 6558702190212172958}
 --- !u!224 &7248060660430685926 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1222584910654512513, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}

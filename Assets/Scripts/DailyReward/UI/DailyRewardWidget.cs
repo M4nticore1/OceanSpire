@@ -50,11 +50,11 @@ public class DailyRewardWidget : UIBehaviour
 
     private void UpdateButtonText()
     {
-        var free = DailyRewardManager.Instance.FreeRewardCollected;
+        var freeCollected = DailyRewardManager.Instance.FreeRewardCollected;
         var received = reward.IsCollected;
 
-        freeRewardText.SetActive(free && !received);
-        adRewardText.SetActive(!free && !received);
+        freeRewardText.SetActive(!freeCollected && !received);
+        adRewardText.SetActive(freeCollected && !received);
         selectedText.SetActive(received);
     }
 
@@ -80,11 +80,11 @@ public class DailyRewardWidget : UIBehaviour
     private void OnTakeButtonClicked()
     {
         if (DailyRewardManager.Instance.FreeRewardCollected) {
-            reward.RecieveReward();
-        }
-        else {
             RewardedAdsManager.Instance.SetCurrentReward(reward);
             RewardedAdsManager.Instance.ShowAd();
+        }
+        else {
+            reward.RecieveReward();
         }
     }
 

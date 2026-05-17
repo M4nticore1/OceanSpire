@@ -45,9 +45,6 @@ public class CitizenState : HumanState
         if (human.BoatRider.IsRidingOnBoat) {
             human.BoatRider.SelectedBoat.SetState(BoatStateEnum.FindingLoot);
         }
-        else {
-            human.CityNavigator.TryFindPathToTargetBuilding();
-        }
     }
 
     public override void OnRemovedInteractBuilding(Building building)

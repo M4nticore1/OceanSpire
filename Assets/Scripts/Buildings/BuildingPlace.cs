@@ -79,14 +79,19 @@ public class BuildingPlace : MonoBehaviour, IClickable
         UpdatePlaceActive();
     }
 
-    public void TryPlaceBuilding(TowerBuilding building)
+    public void TrySetPlaceBuilding(TowerBuilding building)
     {
         if (!CanPlaceBuilding(building)) return;
 
-        PlaceBuilding(building);
+        SetPlacedBuilding(building);
     }
 
-    private void PlaceBuilding(TowerBuilding building)
+    public void RemovePlacedBuilding()
+    {
+        SetPlacedBuilding(null);
+    }
+
+    private void SetPlacedBuilding(TowerBuilding building)
     {
         placedBuilding = building;
         UpdateFrameActivity();
@@ -234,7 +239,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         buildingData.Construction.IsUnderConstruction = true;
 
         TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(building, transform, buildingData);
-        PlaceBuilding(spawnedBuilding);
+        SetPlacedBuilding(spawnedBuilding);
 
         onClicked?.Invoke(spawnedBuilding);
     }

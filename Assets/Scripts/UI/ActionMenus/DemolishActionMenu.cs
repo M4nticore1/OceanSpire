@@ -7,7 +7,7 @@ public class DemolishActionMenu : ActionMenu
         if (!base.Subscribe()) return false;
         if (!RaidManager.Instance) return false;
 
-        RaidManager.Instance.onRaidStarted += OnRaidStarted;
+        RaidManager.Instance.OnRaidStarted += OnRaidStarted;
 
         return true;
     }
@@ -17,7 +17,7 @@ public class DemolishActionMenu : ActionMenu
         if (!base.Unsubscribe()) return false;
         if (!RaidManager.Instance) return false;
 
-        RaidManager.Instance.onRaidStarted -= OnRaidStarted;
+        RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
 
         return true;
     }

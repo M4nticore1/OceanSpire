@@ -55,9 +55,7 @@ public class BuildingsLoader : Loader
         for (int i = 0; i < buildings.Length; i++) {
             if (buildingsData.Length <= i) return;
             var building = buildings[i];
-            BuildingData buildingData;
-
-            buildingData = buildingsData[i];
+            var buildingData = buildingsData[i];
 
             building.Init(buildingData);
         }
@@ -66,6 +64,7 @@ public class BuildingsLoader : Loader
     private void LoadFloorFrames(TowerBuildingData[] floorFrameBuildingsData)
     {
         for (int i = 0; i < floorFrameBuildingsData.Length; i++) {
+            var data = floorFrameBuildingsData[i];
             int id = (int)BuildingIdEnum.FloorFrame;
             var prefab = BuildingsList.Instance.GetBuilding(id) as TowerBuilding;
 
@@ -80,7 +79,7 @@ public class BuildingsLoader : Loader
             else
                 transform = buildingsManager.FirstFloorBuildingTransform;
 
-            BuildingFactory.CreateBuilding(prefab, transform, buildingData);
+            BuildingFactory.CreateBuilding(prefab, transform, data);
         }
     }
 
@@ -116,7 +115,7 @@ public class BuildingsLoader : Loader
             if (!elevator) continue;
 
             var prefab = elevator.GetCabinConstructionPrefab();
-            var cabin = ConstructionFactory.CreateConstruction(prefab, elevator.transform, data);
+            ConstructionFactory.CreateConstruction(prefab, elevator.transform, data);
         }
     }
 

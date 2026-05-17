@@ -21,12 +21,6 @@ public class AutoSave : MonoBehaviour
     private float crrentSaveDataTime = 0f;
     private float crrentSaveThumbTime = 0f;
 
-    private void Start()
-    {
-        crrentSaveDataTime = autoSaveDataFrequency;
-        crrentSaveThumbTime = autoSaveThumbFrequency;
-    }
-
     private void Update()
     {
         TickSaveData();
@@ -38,7 +32,17 @@ public class AutoSave : MonoBehaviour
         crrentSaveDataTime += Time.deltaTime;
         if (crrentSaveDataTime < autoSaveDataFrequency) return;
 
-        WorldData worldData = WorldData.Create(WorldSaveManager.Instance, buildingsManager, elevatorCabinsManager, dockPointsManager, boatsManager, creaturesManager, cityStorgae.Inventory, dailyTasksManager, dailyRewardManager, raidManager, wanderersManager);
+        WorldData worldData = WorldData.Create(WorldSaveManager.Instance,
+            buildingsManager, elevatorCabinsManager,
+            dockPointsManager,
+            boatsManager,
+            creaturesManager,
+            cityStorgae.Inventory,
+            dailyTasksManager,
+            dailyRewardManager,
+            raidManager,
+            wanderersManager);
+
         WorldSaveSystem.SaveWorld(worldData);
         WorldSaveManager.Instance.SetWorldData(worldData);
 
@@ -50,7 +54,7 @@ public class AutoSave : MonoBehaviour
         crrentSaveThumbTime += Time.deltaTime;
         if (crrentSaveThumbTime < autoSaveThumbFrequency) return;
 
-        WorldSaveSystem.SaveWorldThumb(WorldSaveManager.Instance.CurrentWorldData);
+        WorldSaveSystem.SaveWorldThumb(WorldSaveManager.Instance.SaveWorldName);
         crrentSaveThumbTime = 0f;
     }
 }
