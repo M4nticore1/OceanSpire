@@ -21,6 +21,11 @@ public class AutoSave : MonoBehaviour
     private float crrentSaveDataTime = 0f;
     private float crrentSaveThumbTime = 0f;
 
+    private void Start()
+    {
+        crrentSaveThumbTime = autoSaveThumbFrequency - autoSaveDataFrequency;
+    }
+
     private void Update()
     {
         TickSaveData();

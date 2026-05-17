@@ -2230,6 +2230,10 @@ PrefabInstance:
       propertyPath: cityStorage
       value: 
       objectReference: {fileID: 1388613268}
+    - target: {fileID: 7589306950019021996, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: cityStorage
+      value: 
+      objectReference: {fileID: 1388613268}
     - target: {fileID: 7599699861659417980, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: rewardedAdsManager
       value: 

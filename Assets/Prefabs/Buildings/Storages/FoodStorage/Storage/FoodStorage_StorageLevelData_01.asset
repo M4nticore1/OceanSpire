@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4207ac79800eb744ba4944814a85a8f9, type: 3}
   m_Name: FoodStorage_StorageLevelData_01
   m_EditorClassIdentifier: 
-  storageItems:
-  - itemData: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
+  stacks:
+  - stackEnum: 2
+    amount: 100
+  - stackEnum: 7
     amount: 25
-  storageItemCategories:
-  - itemCategory: 2
-    amount: 10
+  storageItems: []
+  storageItemCategories: []

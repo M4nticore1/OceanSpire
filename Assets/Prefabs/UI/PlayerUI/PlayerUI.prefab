@@ -3145,16 +3145,53 @@ PrefabInstance:
       propertyPath: m_Name
       value: PopulationResourceWidget
       objectReference: {fileID: 0}
+    - target: {fileID: 7399389432176521362, guid: 1c783c87fe391124eb756c36d6203894, type: 3}
+      propertyPath: useLimit
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6709760816975631820, guid: 1c783c87fe391124eb756c36d6203894, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2267026337087314500}
   m_SourcePrefab: {fileID: 100100000, guid: 1c783c87fe391124eb756c36d6203894, type: 3}
+--- !u!114 &6126848918446087445 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7399389432176521362, guid: 1c783c87fe391124eb756c36d6203894, type: 3}
+  m_PrefabInstance: {fileID: 3722535005652397447}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7977214371333208139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa10e4a24902bdb42a56de41079166c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PopolationItemWidget
 --- !u!224 &7772115906917234488 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6374005109481331391, guid: 1c783c87fe391124eb756c36d6203894, type: 3}
   m_PrefabInstance: {fileID: 3722535005652397447}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7977214371333208139 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6709760816975631820, guid: 1c783c87fe391124eb756c36d6203894, type: 3}
+  m_PrefabInstance: {fileID: 3722535005652397447}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2267026337087314500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7977214371333208139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a91fc487fb9f54641a4f3d22e656341c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HudItemWidget
+  cityStorage: {fileID: 0}
+  itemWidget: {fileID: 6126848918446087445}
 --- !u!1001 &4192142667273637590
 PrefabInstance:
   m_ObjectHideFlags: 0

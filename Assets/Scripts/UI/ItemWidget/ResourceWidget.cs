@@ -61,6 +61,10 @@ public class ResourceWidget : UIBehaviour
     {
         if (!useLimit) return;
 
+        if (Limit != null) {
+            Limit.OnAmountChanged -= OnLimitChanged;
+        }
+
         Limit = amount;
         Limit.OnAmountChanged += OnLimitChanged;
     }

@@ -26,13 +26,20 @@ public class PopulationItemWidget : ResourceWidget
         Human.onHumanDied -= OnHumanDied;
     }
 
+    protected override void Start()
+    {
+        base.Start();
+
+        UpdateCitizensCount();
+    }
+
     private void UpdateCitizensCount()
     {
         if (!ItemDefinition) return;
-        if (Amount == null) return;
 
         int amount = 0;
-        int limit = CityStorage.Instance.Inventory.GetLimit(ItemDefinition.Stack);
+        var limit = CityStorage.Instance.Inventory.GetStack(ItemDefinition.Stack);
+        SetLimit(limit);
 
         foreach (var citizen in CreaturesManager.Instance.Citizens) {
             if (!citizen.HealthComponent.IsAlive) continue;
@@ -40,7 +47,7 @@ public class PopulationItemWidget : ResourceWidget
             amount++;
         }
 
-        SetAmountText(amount, limit);
+        SetAmountText(amount, limit.Amount);
     }
 
     private void OnHumanAdded(Human human)
