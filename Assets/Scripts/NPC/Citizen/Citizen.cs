@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Citizen : Human
 {
+    public bool IsEvicted { get; private set; } = false;
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -14,6 +16,11 @@ public class Citizen : Human
         base.OnDisable();
 
         CreaturesManager.Instance.UnregisterCitizen(this);
+    }
+
+    public void Evict()
+    {
+        IsEvicted = true;
     }
 
     protected override void OnInit(CreatureData creatureData)
@@ -59,6 +66,13 @@ public class Citizen : Human
         base.OnEnteredBoat(boat);
 
         boat.SetState(BoatStateEnum.FindingLoot);
+    }
+
+    protected override void OnBoatSetedIdle()
+    {
+        base.OnBoatSetedIdle();
+
+        BoatRider.StartExitingBoat();
     }
 
     protected override void OnAttackStarted()

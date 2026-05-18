@@ -70,9 +70,10 @@ public class WandererAdmissionMenu : MonoBehaviour
     private void OnBoatSelected(Boat boat)
     {
         if (!boat.SelectedRider) return;
-        var wanderer = boat.SelectedRider.GetComponent<Wanderer>();
 
-        if (wanderer.CurrentStatusEnum != HumanStatusEnum.Wanderer) return;
+        var wanderer = boat.SelectedRider.GetComponent<Wanderer>();
+        if (!wanderer) return;
+
         if (wanderer.IsRejected) return;
 
         selectedWanderer = wanderer;

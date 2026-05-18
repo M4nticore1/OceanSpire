@@ -218,7 +218,8 @@ public class RaidManager : MonoBehaviour
 
     private void OnExitedBoat(Human human)
     {
-        if (human.CurrentStatusEnum != HumanStatusEnum.Raider) return;
+        var raider = human.GetComponent<Raider>();
+        if (!raider) return;
 
         landedRaidersCount++;
 
@@ -230,7 +231,8 @@ public class RaidManager : MonoBehaviour
 
     private void OnHumanDied(Human human)
     {
-        if (human.CurrentStatusEnum != HumanStatusEnum.Raider) return;
+        var raider = human.GetComponent<Raider>();
+        if (!raider) return;
 
         aliveRaidersCount--;
 
@@ -297,7 +299,7 @@ public class RaidManager : MonoBehaviour
         for (int i = 0; i < dockPoints.Length; i++) {
             var dockPoint = dockPoints[i];
 
-            if (dockPoint.boat != null)
+            if (dockPoint.Boat != null)
                 continue;
 
             float sqr = (position - dockPoint.transform.position).sqrMagnitude;

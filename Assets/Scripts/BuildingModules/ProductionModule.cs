@@ -77,7 +77,8 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
 
     protected override void Subscribe()
     {
-        OwnedBuilding.onInited += OnInit;
+        base.Subscribe();
+
         OwnedBuilding.onClicked += OnBuildingClicked;
         OwnedBuilding.onCurrentWorkerAdded += OnCurrentWorkerAdded;
         OwnedBuilding.onCurrentWorkerRemoved += OnCurrentWorkerRemoved;
@@ -85,14 +86,17 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
 
     protected override void Unsubscribe()
     {
-        OwnedBuilding.onInited -= OnInit;
+        base.Unsubscribe();
+
         OwnedBuilding.onClicked -= OnBuildingClicked;
         OwnedBuilding.onCurrentWorkerAdded -= OnCurrentWorkerAdded;
         OwnedBuilding.onCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
     }
 
-    private void OnInit()
+    protected override void OnInited()
     {
+        base.OnInited();
+
         SetProducedItemByIndex(CurrentProductingItemIndex);
     }
 

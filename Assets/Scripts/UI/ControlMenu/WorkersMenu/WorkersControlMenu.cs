@@ -44,7 +44,7 @@ public class WorkersControlMenu : ControlMenu
 
     protected override void UpdateMenu()
     {
-        Building selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
+        var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
         if (!selectedBuilding) return;
 
         int maxWorkersCount = selectedBuilding.LevelData.maxResidentsCount;
@@ -53,7 +53,7 @@ public class WorkersControlMenu : ControlMenu
         employedCitizensMenu.ClearWidgets();
         unemployedCitizensMenu.ClearWidgets();
 
-        List<Human> citizens = CreaturesManager.Instance.Citizens.ToList();
+        var citizens = CreaturesManager.Instance.Citizens.ToList();
 
         foreach (var citizen in citizens) {
             if (!citizen.HealthComponent.IsAlive) continue;
@@ -115,7 +115,9 @@ public class WorkersControlMenu : ControlMenu
     private bool ShouldUpdateMenu(Human human)
     {
         if (!isOpened) return false;
-        if (human.CurrentStatusEnum != HumanStatusEnum.Citizen) return false;
+
+        var citizen = human.GetComponent<Citizen>();
+        if (!citizen) return false;
 
         return true;
     }

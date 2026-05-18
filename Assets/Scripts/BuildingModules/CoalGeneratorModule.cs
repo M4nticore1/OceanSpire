@@ -11,12 +11,16 @@ public class CoalGeneratorModule : BuildingModule
 
     protected override void Subscribe()
     {
+        base.Subscribe();
+
         productionModule.onWorkStarted += OnWorkStarted;
         productionModule.onWorkStopped += OnWorkStopped;
     }
 
     protected override void Unsubscribe()
     {
+        base.Unsubscribe();
+
         productionModule.onWorkStarted -= OnWorkStarted;
         productionModule.onWorkStopped -= OnWorkStopped;
     }

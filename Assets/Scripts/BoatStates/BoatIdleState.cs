@@ -13,7 +13,7 @@ public class BoatIdleState : BoatState
     {
         if (!boat.SelectedRider) return;
 
-        boat.SelectedRider.OnBoatSetedIdle();
+        boat.SelectedRider.HandleBoatSetedIdle(boat);
         boat.Movement.SetAgentEnabled(false);
     }
 

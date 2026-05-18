@@ -54,9 +54,9 @@ public class CreaturesLoader : Loader
             var finalPosition = new Vector3(x, y, z);
 
             int citizenId = (int)citizenIds[Random.Range(0, citizenIds.Length)];
-            var prefab = creaturesList.GetCreature(citizenId) as Human;
+            var prefab = creaturesList.GetCreature(citizenId) as Citizen;
 
-            var citizenData = new HumanData()
+            var citizenData = new CitizenData()
             {
                 Id = citizenId,
                 InstanceId = InstancesManager.Instance.GetNextInstanceId(),

@@ -41,7 +41,7 @@ public class WorldData
     public BoatDockData[] WandererBoatDocks;
     public BoatDockData[] RaiderBoatDocks;
     public BoatData[] Boats;
-    public HumanData[] Citizens;
+    public CitizenData[] Citizens;
     public WandererData[] Wanderers;
     public RaiderData[] Raiders;
     public ItemData[] CityInventory;
@@ -76,7 +76,7 @@ public class WorldData
 
             Boats = SaveWorldSystem.SaveBoats(boats),
 
-            Citizens = SaveWorldSystem.SaveHumans(creatures.Citizens.ToArray()),
+            Citizens = CitizenData.Create(creatures.Citizens.ToArray()),
             Wanderers = WandererData.Create(creatures.Wanderers.ToArray()),
             Raiders = RaiderData.Create(creatures.Raiders.ToArray()),
 

@@ -8,8 +8,6 @@ public abstract class BuildingModule : MonoBehaviour
     public Building OwnedBuilding => ownedBuilding ? ownedBuilding : GetComponent<Building>();
     public TowerBuilding OwnedTowerBuilding => OwnedBuilding as TowerBuilding;
 
-    public bool IsWorking { get; private set; } = false;
-
     [SerializeField] protected BuildingModuleLevelData[] levelsData = { };
     public BuildingModuleLevelData[] LevelsData => levelsData;
     public BuildingModuleLevelData LevelData
@@ -29,7 +27,9 @@ public abstract class BuildingModule : MonoBehaviour
     }
     protected BuildingConstruction BuildingConstruction => ownedBuilding.spawnedConstruction;
 
+    protected bool IsInited { get; private set; } = false;
     private bool isSubscribed = false;
+    public bool IsWorking { get; private set; } = false;
 
     public event Action onWorkStarted;
     public event Action onWorkStopped;
@@ -51,12 +51,22 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected virtual void Subscribe()
     {
-
+        ownedBuilding.onInited += Init;
     }
 
     protected virtual void Unsubscribe()
     {
+        ownedBuilding.onInited -= Init;
+    }
 
+    private void Init()
+    {
+        OnInited();
+    }
+
+    protected virtual void OnInited()
+    {
+        IsInited = true;
     }
 
     protected void StartWorking()

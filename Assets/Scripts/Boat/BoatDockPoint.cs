@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BoatDockPoint : MonoBehaviour
 {
-    public Boat boat { get; private set; }
+    public Boat Boat { get; private set; }
 
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
@@ -36,11 +36,11 @@ public class BoatDockPoint : MonoBehaviour
 
     public void SetBoat(Boat boat)
     {
-        this.boat = boat;
+        this.Boat = boat;
     }
 
     public void RemoveBoat()
     {
-        boat = null;
+        Boat = null;
     }
 }

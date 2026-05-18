@@ -24,6 +24,8 @@ public class BoatRider : MonoBehaviour
     public event Action<Boat> OnBoatMovementStarted;
     public event Action<Boat> OnBoatMovementStopped;
 
+    public event Action<Boat> OnBoatSetedIdle;
+
     private void OnEnable()
     {
         movement.OnMovementStopped += OnMovementStopped;
@@ -76,12 +78,9 @@ public class BoatRider : MonoBehaviour
         IsExitingBoat = false;
     }
 
-    public void OnBoatSetedIdle()
+    public void HandleBoatSetedIdle(Boat boat)
     {
-        Human human = GetComponent<Human>();
-        if (human.CurrentStatusEnum == HumanStatusEnum.Wanderer) return;
-
-        StartExitingBoat();
+        OnBoatSetedIdle?.Invoke(boat);
     }
 
     public void EnterBoat()
@@ -154,13 +153,13 @@ public class BoatRider : MonoBehaviour
             return;
         }
 
-        EndMoveToBoat();
+        EndMoveToBoat(SelectedBoat);
     }
 
-    public void EndMoveToBoat()
+    public void EndMoveToBoat(Boat boat)
     {
         IsMovingToBoat = false;
-        OnStoppedMovingToBoat?.Invoke(SelectedBoat);
+        OnStoppedMovingToBoat?.Invoke(boat);
     }
 
     public void HandleBoatMovementStarted()

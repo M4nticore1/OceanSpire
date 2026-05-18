@@ -115,8 +115,6 @@ public class Boat : MonoBehaviour
 
     public void FloatAway(Vector3 position)
     {
-        if (SelectedRider.GetComponent<Citizen>())
-            Debug.Log("FloatAway");
         SetState(BoatStateEnum.FloatingAway);
         movement.TryMoveTo(position);
     }
@@ -125,15 +123,6 @@ public class Boat : MonoBehaviour
     public void SetRider(BoatRider rider)
     {
         SelectedRider = rider;
-
-        Human human = rider.GetComponent<Human>();
-        if (human.CurrentStatusEnum == HumanStatusEnum.Wanderer) {
-            contextMenuTarget.SetShowContextMenu(false);
-        }
-        else if (human.CurrentStatusEnum == HumanStatusEnum.Raider) {
-            selectComponent.SetClickable(false);
-        }
-
         movement.SetAgentEnabled(true);
     }
 

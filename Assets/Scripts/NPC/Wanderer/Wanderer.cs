@@ -47,6 +47,8 @@ public class Wanderer : Human
         else {
             BoatRider.SelectedBoat.SetState(BoatStateEnum.MovingToDock);
         }
+
+        boat.ContextMenuTarget.SetShowContextMenu(false);
     }
 
     protected override void OnBoatStartedMoving(Boat boat)

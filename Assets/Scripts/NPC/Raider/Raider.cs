@@ -111,6 +111,8 @@ public class Raider : Human
         else {
             BoatRider.SelectedBoat.SetState(BoatStateEnum.MovingToDock);
         }
+
+        boat.SelectComponent.SetClickable(false);
     }
 
     protected override void OnExitedBoat(Boat boat)
@@ -122,6 +124,13 @@ public class Raider : Human
         if (interactBuilding) {
             InteractComponent.SetInteractBuilding(interactBuilding);
         }
+    }
+
+    protected override void OnBoatSetedIdle()
+    {
+        base.OnBoatSetedIdle();
+
+        BoatRider.StartExitingBoat();
     }
 
     protected override void OnAttackStopped()

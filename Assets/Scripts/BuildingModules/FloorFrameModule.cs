@@ -21,7 +21,8 @@ public class FloorFrameModule : BuildingModule
 
     protected override void Subscribe()
     {
-        OwnedBuilding.onInited += OnInited;
+        base.Subscribe();
+
         OwnedBuilding.onDemolished += OnDemolished;
 
         Building.onBuildingInited += OnBuildingInited;
@@ -30,15 +31,18 @@ public class FloorFrameModule : BuildingModule
 
     protected override void Unsubscribe()
     {
-        OwnedBuilding.onInited -= OnInited;
+        base.Unsubscribe();
+
         OwnedBuilding.onDemolished -= OnDemolished;
 
         Building.onBuildingInited -= OnBuildingInited;
         Building.onBuildingDemolished -= OnBuildingDemolished;
     }
 
-    private void OnInited()
+    protected override void OnInited()
     {
+        base.OnInited();
+
         int floorIndex = OwnedTowerBuilding.FloorIndex;
         BuildingsManager.Instance.RegisterFloorModule(this);
 

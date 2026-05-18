@@ -89,13 +89,11 @@ public class HumanAnimation : MonoBehaviour
 
     private void OnInteractionStarted(Building building)
     {
-        switch (human.CurrentStatusEnum) {
-            case HumanStatusEnum.Citizen:
-                animator.SetBool("isWorking", true);
-                break;
-            case HumanStatusEnum.Raider:
-                animator.SetBool("isRaiding", true);
-                break;
+        if (human.GetComponent<Citizen>()) {
+            animator.SetBool("isWorking", true);
+        }
+        else if (human.GetComponent<Raider>()) {
+            animator.SetBool("isRaiding", true);
         }
     }
 

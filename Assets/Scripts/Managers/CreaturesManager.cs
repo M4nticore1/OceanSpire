@@ -6,14 +6,14 @@ public class CreaturesManager : MonoBehaviour
 {
     public static CreaturesManager Instance { get; private set; }
 
-    private List<Human> citizens = new();
-    public IReadOnlyList<Human> Citizens => citizens.AsReadOnly();
+    private List<Citizen> citizens = new();
+    public IReadOnlyList<Citizen> Citizens => citizens;
 
     private List<Wanderer> wanderers = new();
-    public IReadOnlyList<Wanderer> Wanderers => wanderers.AsReadOnly();
+    public IReadOnlyList<Wanderer> Wanderers => wanderers;
 
     private List<Raider> raiders = new();
-    public IReadOnlyList<Raider> Raiders => raiders.AsReadOnly();
+    public IReadOnlyList<Raider> Raiders => raiders;
 
     public static event Action<Human> onCitizenRegistered;
     public static event Action<Human> onCitizenUnregistered;
@@ -35,13 +35,13 @@ public class CreaturesManager : MonoBehaviour
     }
 
     // Citizen
-    public void RegisterCitizen(Human human)
+    public void RegisterCitizen(Citizen human)
     {
         citizens.Add(human);
         onCitizenRegistered?.Invoke(human);
     }
 
-    public void UnregisterCitizen(Human human)
+    public void UnregisterCitizen(Citizen human)
     {
         citizens.Remove(human);
         onCitizenUnregistered?.Invoke(human);

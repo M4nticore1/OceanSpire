@@ -7,20 +7,24 @@ public class StorageBuildingModule : BuildingModule
 
     protected override void Subscribe()
     {
-        OwnedBuilding.onInited += OnInited;
+        base.Subscribe();
+
         OwnedBuilding.onConstructionFinished += OnConstructionFinished;
         OwnedBuilding.onDemolished += OnDemolished;
     }
 
     protected override void Unsubscribe()
     {
-        OwnedBuilding.onInited -= OnInited;
+        base.Unsubscribe();
+
         OwnedBuilding.onConstructionFinished -= OnConstructionFinished;
         OwnedBuilding.onDemolished -= OnDemolished;
     }
 
-    private void OnInited()
+    protected override void OnInited()
     {
+        base.OnInited();
+
         if (OwnedBuilding.ConstructionComponent.IsUnderConstruction) return;
 
         AddLimit();
@@ -45,6 +49,8 @@ public class StorageBuildingModule : BuildingModule
 
     private void RemoveLimit()
     {
+        if (!IsInited) return;
+
         foreach (var stack in StorageLevelData.Stacks) {
             CityStorage.Instance.Inventory.RemoveLimit(stack.StackEnum, stack.Amount);
         }

@@ -40,6 +40,7 @@ public class ItemStack : IItemAmount
 
     public void RemoveLimit(int value)
     {
+        value = Mathf.Clamp(value, 0, amount);
         SetLimit(amount - value);
     }
 

@@ -64,13 +64,12 @@ public class BuildingsLoader : Loader
     private void LoadFloorFrames(TowerBuildingData[] floorFrameBuildingsData)
     {
         for (int i = 0; i < floorFrameBuildingsData.Length; i++) {
-            var data = floorFrameBuildingsData[i];
-            int id = (int)BuildingIdEnum.FloorFrame;
-            var prefab = BuildingsList.Instance.GetBuilding(id) as TowerBuilding;
+            var floorFrameData = floorFrameBuildingsData[i];
+            var prefab = BuildingsList.Instance.GetBuilding(floorFrameData.Id) as TowerBuilding;
 
             var buildingData = TowerBuildingData.Create(prefab);
-            buildingData.InstanceId = instancesManager.GetNextInstanceId();
-            buildingData.FloorIndex = i;
+            buildingData.InstanceId = floorFrameData.InstanceId;
+            buildingData.FloorIndex = floorFrameData.FloorIndex;
 
             Transform transform = null;
 
@@ -79,7 +78,7 @@ public class BuildingsLoader : Loader
             else
                 transform = buildingsManager.FirstFloorBuildingTransform;
 
-            BuildingFactory.CreateBuilding(prefab, transform, data);
+            BuildingFactory.CreateBuilding(prefab, transform, floorFrameData);
         }
     }
 

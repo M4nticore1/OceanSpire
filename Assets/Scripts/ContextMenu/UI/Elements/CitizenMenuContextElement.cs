@@ -16,10 +16,8 @@ public class CitizenMenuContextElement : ContextElement
 
     protected override bool ShouldShow(ContextMenuTarget target)
     {
-        Human human = target.GetComponent<Human>();
-        if (!human) return false;
-
-        if (human.CurrentStatusEnum != HumanStatusEnum.Citizen) return false;
+        var citizen = target.GetComponent<Citizen>();
+        if (!citizen) return false;
 
         return true;
     }
