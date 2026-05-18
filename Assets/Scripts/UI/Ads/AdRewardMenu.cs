@@ -20,7 +20,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     protected virtual void OnEnable()
     {
         RewardedAdsManager.onRewardReceived += OnRewardReceived;
-        watchButton.onReleased.AddListener(OnWatchAdButtonClicked);
+        watchButton.OnReleased.AddListener(OnWatchAdButtonClicked);
         slidePanel.onOpened += OnOpen;
         slidePanel.onClosed += OnClose;
     }
@@ -28,7 +28,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     protected virtual void OnDisable()
     {
         RewardedAdsManager.onRewardReceived -= OnRewardReceived;
-        watchButton.onReleased.RemoveListener(OnWatchAdButtonClicked);
+        watchButton.OnReleased.RemoveListener(OnWatchAdButtonClicked);
         slidePanel.onOpened -= OnOpen;
         slidePanel.onClosed -= OnClose;
     }

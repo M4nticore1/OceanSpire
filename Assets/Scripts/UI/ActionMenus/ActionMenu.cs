@@ -39,8 +39,8 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
 
     protected virtual bool Subscribe()
     {
-        actionButton.onReleased.AddListener(OnClickedActionButton);
-        closeButton.onReleased.AddListener(OnClickedCloseButton);
+        actionButton.OnReleased.AddListener(OnClickedActionButton);
+        closeButton.OnReleased.AddListener(OnClickedCloseButton);
         slidePanel.onClosed += OnClosed;
 
         return true;
@@ -48,8 +48,8 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
 
     protected virtual bool Unsubscribe()
     {
-        actionButton.onReleased.RemoveListener(OnClickedActionButton);
-        closeButton.onReleased.RemoveListener(OnClickedCloseButton);
+        actionButton.OnReleased.RemoveListener(OnClickedActionButton);
+        closeButton.OnReleased.RemoveListener(OnClickedCloseButton);
         slidePanel.onClosed += OnClosed;
 
         return true;

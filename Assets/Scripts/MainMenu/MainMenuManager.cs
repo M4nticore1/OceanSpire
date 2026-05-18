@@ -10,16 +10,16 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnEnable()
     {
-        loadSaveButton.onReleased.AddListener(OnLoadWorldButtonClicked);
-        deleteSaveButton.onReleased.AddListener(OnDeleteWorldButtonClicked);
+        loadSaveButton.OnReleased.AddListener(OnLoadWorldButtonClicked);
+        deleteSaveButton.OnReleased.AddListener(OnDeleteWorldButtonClicked);
         SaveSlotWidget.onSaveSlotSelected += OnSaveSlotSelected;
         SaveSlotWidget.onSaveSlotDeselected += OnSaveSlotDeselected;
     }
 
     private void OnDisable()
     {
-        loadSaveButton.onReleased.RemoveListener(OnLoadWorldButtonClicked);
-        deleteSaveButton.onReleased.RemoveListener(OnDeleteWorldButtonClicked);
+        loadSaveButton.OnReleased.RemoveListener(OnLoadWorldButtonClicked);
+        deleteSaveButton.OnReleased.RemoveListener(OnDeleteWorldButtonClicked);
         SaveSlotWidget.onSaveSlotSelected -= OnSaveSlotSelected;
         SaveSlotWidget.onSaveSlotDeselected -= OnSaveSlotDeselected;
     }

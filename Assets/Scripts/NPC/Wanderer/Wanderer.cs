@@ -37,9 +37,9 @@ public class Wanderer : Human
         BoatRider.SelectedBoat.FloatAway(SpawnPosition);
     }
 
-    protected override void OnEnteredBoat(Boat boat)
+    protected override void HandleEnteredBoat(Boat boat)
     {
-        base.OnEnteredBoat(boat);
+        base.HandleEnteredBoat(boat);
 
         if (IsRejected) {
             boat.FloatAway(SpawnPosition);

@@ -19,8 +19,8 @@ public class BuildingWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        buildButton.onReleased.AddListener(OnBuildButtonCliked);
-        informationButton.onReleased.AddListener(OnInformationButtonClicked);
+        buildButton.OnReleased.AddListener(OnBuildButtonCliked);
+        informationButton.OnReleased.AddListener(OnInformationButtonClicked);
         //EventBus.onMainStorageItemAmountChanged += OnMainStorageItemAmountChanged;
 
         //UpdateResourcesToBuild();
@@ -28,8 +28,8 @@ public class BuildingWidget : MonoBehaviour
 
     private void OnDisable()
     {
-        buildButton.onReleased.RemoveListener(OnBuildButtonCliked);
-        informationButton.onReleased.RemoveListener(OnInformationButtonClicked);
+        buildButton.OnReleased.RemoveListener(OnBuildButtonCliked);
+        informationButton.OnReleased.RemoveListener(OnInformationButtonClicked);
         //EventBus.onMainStorageItemAmountChanged -= OnMainStorageItemAmountChanged;
     }
 

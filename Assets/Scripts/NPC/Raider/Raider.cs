@@ -101,9 +101,9 @@ public class Raider : Human
         building.RaidComponent.EnterRaider(InteractComponent);
     }
 
-    protected override void OnEnteredBoat(Boat boat)
+    protected override void HandleEnteredBoat(Boat boat)
     {
-        base.OnEnteredBoat(boat);
+        base.HandleEnteredBoat(boat);
 
         if (IsRaidFinished) {
             boat.FloatAway(SpawnPosition);
@@ -115,9 +115,9 @@ public class Raider : Human
         boat.SelectComponent.SetClickable(false);
     }
 
-    protected override void OnExitedBoat(Boat boat)
+    protected override void HandleExitedBoat(Boat boat)
     {
-        base.OnExitedBoat(boat);
+        base.HandleExitedBoat(boat);
 
         var interactBuilding = RaidManager.Instance.CalculateNextRaidBuilding();
 

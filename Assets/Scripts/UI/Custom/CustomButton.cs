@@ -97,12 +97,12 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private Vector3 pressedButtonPosition;
 
-    public UnityEvent onPressed = new();
-    public UnityEvent onReleased = new();
-    public UnityEvent onSelected = new();
-    public UnityEvent onDeselected = new();
-    public UnityEvent onHovered = new();
-    public UnityEvent onUnhovered = new();
+    public UnityEvent OnPressed = new();
+    public UnityEvent OnReleased = new();
+    public UnityEvent OnSelected = new();
+    public UnityEvent OnDeselected = new();
+    public UnityEvent OnHovered = new();
+    public UnityEvent OnUnhovered = new();
 
     public static UnityEvent<CustomButton> onStateChanged = new();
     public static UnityEvent<CustomButton> onButtonPressed = new();
@@ -231,7 +231,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         UpdateBodyTargetColor();
         UpdateContentTargetColor();
-        onHovered?.Invoke();
+        OnHovered?.Invoke();
     }
 
     // Unhover
@@ -246,7 +246,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private void Unhover()
     {
-        onUnhovered?.Invoke();
+        OnUnhovered?.Invoke();
     }
 
     // Press
@@ -265,7 +265,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         UpdateBodyTargetColor();
         UpdateContentTargetColor();
         pressedButtonPosition = transform.position;
-        onPressed?.Invoke();
+        OnPressed?.Invoke();
         onButtonPressed?.Invoke(this);
     }
 
@@ -300,7 +300,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (!PointerUtils.IsUIHovered(gameObject)) return;
 
-        onReleased?.Invoke();
+        OnReleased?.Invoke();
         onButtonReleased?.Invoke(this);
     }
 
@@ -314,12 +314,12 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
             selectGroup.OnButtonSelected(this);
         }
 
-        onSelected?.Invoke();
+        OnSelected?.Invoke();
     }
 
     private void Deselect()
     {
-        onDeselected?.Invoke();
+        OnDeselected?.Invoke();
     }
 
     // Set State

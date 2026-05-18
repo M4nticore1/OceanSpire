@@ -9,8 +9,8 @@ public class PopulationItemWidget : ResourceWidget
         CreaturesManager.onCitizenRegistered += OnHumanAdded;
         CreaturesManager.onCitizenUnregistered += OnHumanRemoved;
 
-        Human.onHumanRevived += OnHumanRevived;
-        Human.onHumanDied += OnHumanDied;
+        Human.OnHumanRevived += OnHumanRevived;
+        Human.OnHumanDied += OnHumanDied;
 
         UpdateCitizensCount();
     }
@@ -22,8 +22,8 @@ public class PopulationItemWidget : ResourceWidget
         CreaturesManager.onCitizenRegistered -= OnHumanAdded;
         CreaturesManager.onCitizenUnregistered -= OnHumanRemoved;
 
-        Human.onHumanRevived -= OnHumanRevived;
-        Human.onHumanDied -= OnHumanDied;
+        Human.OnHumanRevived -= OnHumanRevived;
+        Human.OnHumanDied -= OnHumanDied;
     }
 
     protected override void Start()

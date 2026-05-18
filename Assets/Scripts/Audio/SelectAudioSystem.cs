@@ -8,14 +8,14 @@ public class SelectAudioSystem : MonoBehaviour
     {
         Building.onBuildingSelected += OnBuildingSelected;
         Boat.onBoatSelected += OnBoatSelected;
-        Human.onHumanSelected += OnHumanSelected;
+        Human.OnHumanSelected += OnHumanSelected;
     }
 
     private void OnDisable()
     {
         Building.onBuildingSelected -= OnBuildingSelected;
         Boat.onBoatSelected -= OnBoatSelected;
-        Human.onHumanSelected -= OnHumanSelected;
+        Human.OnHumanSelected -= OnHumanSelected;
     }
 
     private void OnBuildingSelected(Building building)

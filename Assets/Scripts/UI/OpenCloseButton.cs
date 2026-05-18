@@ -20,9 +20,9 @@ public class OpenCloseButton : MonoBehaviour
         if (!button) return;
 
         if (buttonType == ToggleButtonType.Open)
-            button.onReleased.AddListener(TargetOpenable.Open);
+            button.OnReleased.AddListener(TargetOpenable.Open);
         else
-            button.onReleased.AddListener(TargetOpenable.Close);
+            button.OnReleased.AddListener(TargetOpenable.Close);
     }
 
     private void OnDisable()
@@ -31,8 +31,8 @@ public class OpenCloseButton : MonoBehaviour
         if (!button) return;
 
         if (buttonType == ToggleButtonType.Open)
-            button.onReleased.RemoveListener(TargetOpenable.Open);
+            button.OnReleased.RemoveListener(TargetOpenable.Open);
         else
-            button.onReleased.RemoveListener(TargetOpenable.Close);
+            button.OnReleased.RemoveListener(TargetOpenable.Close);
     }
 }

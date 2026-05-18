@@ -24,14 +24,14 @@ public class ProducedResourcePanel : MonoBehaviour
 
     private void OnEnable()
     {
-        button.onReleased.AddListener(OnClicked);
-        button.onDeselected.AddListener(OnDeselected);
+        button.OnReleased.AddListener(OnClicked);
+        button.OnDeselected.AddListener(OnDeselected);
     }
 
     private void OnDisable()
     {
-        button.onReleased.RemoveListener(OnClicked);
-        button.onDeselected.RemoveListener(OnDeselected);
+        button.OnReleased.RemoveListener(OnClicked);
+        button.OnDeselected.RemoveListener(OnDeselected);
     }
 
     private void Start()

@@ -22,7 +22,7 @@ public class DailyRewardWidget : UIBehaviour
         base.OnEnable();
 
         DailyRewardManager.Instance.OnDailyRewardRecieved += OnBonusChestRewardRecieved;
-        collectButton.onReleased.AddListener(OnTakeButtonClicked);
+        collectButton.OnReleased.AddListener(OnTakeButtonClicked);
     }
 
     protected override void OnDisable()
@@ -30,7 +30,7 @@ public class DailyRewardWidget : UIBehaviour
         base.OnDisable();
 
         DailyRewardManager.Instance.OnDailyRewardRecieved -= OnBonusChestRewardRecieved;
-        collectButton.onReleased.RemoveListener(OnTakeButtonClicked);
+        collectButton.OnReleased.RemoveListener(OnTakeButtonClicked);
     }
 
     public void Init(RewardInstance reward)

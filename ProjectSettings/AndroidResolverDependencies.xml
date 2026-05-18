@@ -3,7 +3,7 @@
     <package>androidx.recyclerview:recyclerview:1.2.1</package>
     <package>com.applovin.mediation:mintegral-adapter:17.1.11.0</package>
     <package>com.applovin.mediation:yandex-adapter:7.18.4.0</package>
-    <package>com.applovin:applovin-sdk:13.6.1</package>
+    <package>com.applovin:applovin-sdk:13.6.2</package>
     <package>com.google.android.play:app-update:2.1.0</package>
     <package>com.google.android.play:core-common:2.0.4</package>
   </packages>

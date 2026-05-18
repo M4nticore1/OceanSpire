@@ -33,17 +33,17 @@ public class SaveSlotWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        button.onReleased.AddListener(OnClicked);
-        button.onSelected.AddListener(OnSelected);
-        button.onDeselected.AddListener(OnDeselected);
+        button.OnReleased.AddListener(OnClicked);
+        button.OnSelected.AddListener(OnSelected);
+        button.OnDeselected.AddListener(OnDeselected);
         createNewWorldMenu.onClosed += OnCreateMenuClosed;
     }
 
     private void OnDisable()
     {
-        button.onReleased.RemoveListener(OnClicked);
-        button.onSelected.RemoveListener(OnSelected);
-        button.onDeselected.RemoveListener(OnDeselected);
+        button.OnReleased.RemoveListener(OnClicked);
+        button.OnSelected.RemoveListener(OnSelected);
+        button.OnDeselected.RemoveListener(OnDeselected);
         createNewWorldMenu.onClosed -= OnCreateMenuClosed;
     }
 

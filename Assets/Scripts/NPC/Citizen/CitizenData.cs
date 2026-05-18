@@ -5,15 +5,19 @@ using UnityEngine;
 public class CitizenData : HumanData
 {
     public bool Evicted = false;
+    public int? EvictionBoatInstanceId = null;
+    public Vector3Data? LeavePosition = null;
 
     public static CitizenData Create(Citizen citizen)
     {
-        var wandererData = new CitizenData();
-        wandererData.FillHumanData(citizen);
+        var citizenData = new CitizenData();
+        citizenData.FillHumanData(citizen);
 
-        wandererData.Evicted = citizen.IsEvicted;
+        citizenData.Evicted = citizen.IsEvicted;
+        citizenData.EvictionBoatInstanceId = citizen.EvictionBoat?.InstanceId.Id;
+        citizenData.LeavePosition = citizenData.EvictionBoatInstanceId != null ? new Vector3Data(citizen.LeavePosition) : null;
 
-        return wandererData;
+        return citizenData;
     }
 
     public static CitizenData[] Create(Citizen[] citizens)

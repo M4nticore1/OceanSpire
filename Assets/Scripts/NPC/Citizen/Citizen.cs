@@ -3,6 +3,8 @@ using UnityEngine;
 public class Citizen : Human
 {
     public bool IsEvicted { get; private set; } = false;
+    public Boat EvictionBoat { get; private set; }
+    public Vector3 LeavePosition { get; private set; }
 
     protected override void OnEnable()
     {
@@ -18,14 +20,23 @@ public class Citizen : Human
         CreaturesManager.Instance.UnregisterCitizen(this);
     }
 
-    public void Evict()
+    public void Evict(Boat boat)
     {
         IsEvicted = true;
+        EvictionBoat = boat;
+
+        if (BoatRider.IsRidingOnBoat) {
+            BoatRider.SelectedBoat.SetState(BoatStateEnum.MovingToDock);
+        }
     }
 
     protected override void OnInit(CreatureData creatureData)
     {
         base.OnInit(creatureData);
+
+        var citizenData = creatureData as CitizenData;
+
+        IsEvicted = citizenData.Evicted;
     }
 
     protected override void OnSetedInteractBuilding(Building building)
@@ -61,11 +72,21 @@ public class Citizen : Human
         building.WorkComponent.ExitWorker(InteractComponent);
     }
 
-    protected override void OnEnteredBoat(Boat boat)
+    protected override void HandleEnteredBoat(Boat boat)
     {
-        base.OnEnteredBoat(boat);
+        base.HandleEnteredBoat(boat);
 
         boat.SetState(BoatStateEnum.FindingLoot);
+    }
+
+    protected override void HandleExitedBoat(Boat boat)
+    {
+        base.HandleExitedBoat(boat);
+
+        if (IsEvicted) {
+            BoatRider.SetSelectedBoat(EvictionBoat);
+            BoatRider.TryMoveToBoat();
+        }
     }
 
     protected override void OnBoatSetedIdle()

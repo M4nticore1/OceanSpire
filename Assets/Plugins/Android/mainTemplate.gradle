@@ -9,7 +9,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1' // Packages/com.applovin.mediation.adapters.mintegral.android/Editor/Dependencies.xml:9
     implementation 'com.applovin.mediation:mintegral-adapter:17.1.11.0' // Packages/com.applovin.mediation.adapters.mintegral.android/Editor/Dependencies.xml:8
     implementation 'com.applovin.mediation:yandex-adapter:7.18.4.0' // Packages/com.applovin.mediation.adapters.yandex.android/Editor/Dependencies.xml:4
-    implementation 'com.applovin:applovin-sdk:13.6.1' // Packages/com.applovin.mediation.ads/AppLovin/Editor/Dependencies.xml:4
+    implementation 'com.applovin:applovin-sdk:13.6.2' // Packages/com.applovin.mediation.ads/AppLovin/Editor/Dependencies.xml:4
     implementation 'com.google.android.play:app-update:2.1.0' // Assets/GooglePlayPlugins/com.google.play.appupdate/Editor/Dependencies.xml:3
     implementation 'com.google.android.play:core-common:2.0.4' // Assets/GooglePlayPlugins/com.google.play.core/Editor/Dependencies.xml:3
 // Android Resolver Dependencies End

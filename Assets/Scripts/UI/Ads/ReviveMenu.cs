@@ -103,7 +103,7 @@ public class ReviveMenu : UIBehaviour
         if (isSubscribed) return;
         if (!ReviveManager.Instance) return;
 
-        button.onReleased.AddListener(OnButtonClicked);
+        button.OnReleased.AddListener(OnButtonClicked);
         slidePanel.onClosed += OnClosed;
         ReviveManager.Instance.onRevivesCountChanged += OnRemainingRevivesCountChanged;
         ReviveAdRewardInstance.onRewardReceived += OnRevived;
@@ -116,7 +116,7 @@ public class ReviveMenu : UIBehaviour
         if (!isSubscribed) return;
         if (!ReviveManager.Instance) return;
 
-        button.onReleased.RemoveListener(OnButtonClicked);
+        button.OnReleased.RemoveListener(OnButtonClicked);
         slidePanel.onClosed -= OnClosed;
         ReviveManager.Instance.onRevivesCountChanged -= OnRemainingRevivesCountChanged;
         ReviveAdRewardInstance.onRewardReceived -= OnRevived;

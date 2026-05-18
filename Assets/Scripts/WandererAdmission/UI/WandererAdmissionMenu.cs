@@ -13,8 +13,8 @@ public class WandererAdmissionMenu : MonoBehaviour
     private void OnEnable()
     {
         slidePanel.onClosed += OnClosed;
-        acceptButton.onReleased.AddListener(OnAcceptButtonClicked);
-        rejectButton.onReleased.AddListener(OnRejectButtonClicked);
+        acceptButton.OnReleased.AddListener(OnAcceptButtonClicked);
+        rejectButton.OnReleased.AddListener(OnRejectButtonClicked);
 
         Boat.onBoatSelected += OnBoatSelected;
         Boat.onBoatDeselected += OnBoatDeselected;
@@ -23,8 +23,8 @@ public class WandererAdmissionMenu : MonoBehaviour
     private void OnDisable()
     {
         slidePanel.onClosed -= OnClosed;
-        acceptButton.onReleased.RemoveListener(OnAcceptButtonClicked);
-        rejectButton.onReleased.RemoveListener(OnRejectButtonClicked);
+        acceptButton.OnReleased.RemoveListener(OnAcceptButtonClicked);
+        rejectButton.OnReleased.RemoveListener(OnRejectButtonClicked);
 
         Boat.onBoatSelected -= OnBoatSelected;
         Boat.onBoatDeselected -= OnBoatDeselected;

@@ -10,12 +10,12 @@ public class SetEquipmentButton : MonoBehaviour
 
     private void OnEnable()
     {
-        button.onReleased.AddListener(OnClicked);
+        button.OnReleased.AddListener(OnClicked);
     }
 
     private void OnDisable()
     {
-        button.onReleased.RemoveListener(OnClicked);
+        button.OnReleased.RemoveListener(OnClicked);
     }
 
     private void OnClicked()

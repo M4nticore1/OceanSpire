@@ -14,14 +14,14 @@ public class RewardedAdsButton : UIBehaviour
     {
         base.OnEnable();
 
-        button.onReleased.AddListener(OnButtonReleased);
+        button.OnReleased.AddListener(OnButtonReleased);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        button.onReleased.RemoveListener(OnButtonReleased);
+        button.OnReleased.RemoveListener(OnButtonReleased);
     }
 
     //private void Update()

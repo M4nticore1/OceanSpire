@@ -57,16 +57,16 @@ public class RaidManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Human.onHumanDied += OnHumanDied;
-        Human.onEnteredBoat += OnEnteredBoat;
-        Human.onExitedBoat += OnExitedBoat;
+        Human.OnHumanDied += OnHumanDied;
+        Human.OnEnteredBoat += OnEnteredBoat;
+        Human.OnExitedBoat += OnExitedBoat;
     }
 
     private void OnDisable()
     {
-        Human.onHumanDied -= OnHumanDied;
-        Human.onEnteredBoat -= OnEnteredBoat;
-        Human.onExitedBoat -= OnExitedBoat;
+        Human.OnHumanDied -= OnHumanDied;
+        Human.OnEnteredBoat -= OnEnteredBoat;
+        Human.OnExitedBoat -= OnExitedBoat;
     }
 
     public void Init(RaidData raidData)

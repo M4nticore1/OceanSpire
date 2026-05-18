@@ -12,13 +12,13 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     private void OnEnable()
     {
-        completeButton.onReleased.AddListener(OnCompleteButtonReleased);
+        completeButton.OnReleased.AddListener(OnCompleteButtonReleased);
         Building.onBuildingConstructionFinished += OnBuildingConstructionFinished;
     }
 
     private void OnDisable()
     {
-        completeButton.onReleased.RemoveListener(OnCompleteButtonReleased);
+        completeButton.OnReleased.RemoveListener(OnCompleteButtonReleased);
         Building.onBuildingConstructionFinished -= OnBuildingConstructionFinished;
     }
 

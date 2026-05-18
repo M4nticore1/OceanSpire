@@ -28,14 +28,14 @@ public abstract class EquipmentWidget : UIBehaviour
     {
         base.OnEnable();
 
-        button.onReleased.AddListener(OnButtonClicked);
+        button.OnReleased.AddListener(OnButtonClicked);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        button.onReleased.RemoveListener(OnButtonClicked);
+        button.OnReleased.RemoveListener(OnButtonClicked);
     }
 
     public virtual void SetEquipment(EquipmentComponent component)

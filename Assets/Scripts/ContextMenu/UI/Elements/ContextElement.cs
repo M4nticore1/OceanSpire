@@ -32,14 +32,14 @@ public abstract class ContextElement : UIBehaviour
 
     protected virtual bool Subscribe()
     {
-        button.onReleased.AddListener(OnButtonClicked);
+        button.OnReleased.AddListener(OnButtonClicked);
 
         return true;
     }
 
     protected virtual bool Unsubscribe()
     {
-        button.onReleased.RemoveListener(OnButtonClicked);
+        button.OnReleased.RemoveListener(OnButtonClicked);
 
         return true;
     }

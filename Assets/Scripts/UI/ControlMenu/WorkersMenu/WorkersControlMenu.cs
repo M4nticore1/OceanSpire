@@ -15,7 +15,7 @@ public class WorkersControlMenu : ControlMenu
         base.OnEnable();
 
         Human.OnHumanInited += OnHumanInited;
-        Human.onHumanDied += OnHumanDied;
+        Human.OnHumanDied += OnHumanDied;
 
         InteractComponent.onInteractorSetedInteractBuilding += OnSetedCitizenWork;
         InteractComponent.onInteractorRemovedInteractBuilding += OnRemovedCitizenWork;
@@ -26,7 +26,7 @@ public class WorkersControlMenu : ControlMenu
         base.OnEnable();
 
         Human.OnHumanInited -= OnHumanInited;
-        Human.onHumanDied -= OnHumanDied;
+        Human.OnHumanDied -= OnHumanDied;
 
         InteractComponent.onInteractorSetedInteractBuilding -= OnSetedCitizenWork;
         InteractComponent.onInteractorRemovedInteractBuilding -= OnRemovedCitizenWork;

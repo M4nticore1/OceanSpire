@@ -55,12 +55,12 @@ public abstract class Human : Creature, IClickable
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
     public static event Action<Human> OnHumanInited;
-    public static event Action<Human> onHumanRevived;
-    public static event Action<Human> onHumanDied;
-    public static event Action<Human> onHumanSelected;
-    public static event Action<Human> onHumanDeselected;
-    public static event Action<Human> onEnteredBoat;
-    public static event Action<Human> onExitedBoat;
+    public static event Action<Human> OnHumanRevived;
+    public static event Action<Human> OnHumanDied;
+    public static event Action<Human> OnHumanSelected;
+    public static event Action<Human> OnHumanDeselected;
+    public static event Action<Human> OnEnteredBoat;
+    public static event Action<Human> OnExitedBoat;
 
     private void Awake()
     {
@@ -87,8 +87,8 @@ public abstract class Human : Creature, IClickable
         interactComponent.onInteractionStarted += OnInteractionStarted;
         interactComponent.onInteractionStopped += OnInteractionStopped;
 
-        boatRider.OnEnteredBoat += OnEnteredBoat;
-        boatRider.OnExitedBoat += OnExitedBoat;
+        boatRider.OnEnteredBoat += HandleEnteredBoat;
+        boatRider.OnExitedBoat += HandleExitedBoat;
         boatRider.OnStartedMovingToBoat += OnStartedMovingToBoat;
         boatRider.OnStoppedMovingToBoat += OnStoppedMovingToBoat;
         boatRider.OnBoatMovementStarted += OnBoatStartedMoving;
@@ -122,8 +122,8 @@ public abstract class Human : Creature, IClickable
         interactComponent.onInteractionStarted -= OnInteractionStarted;
         interactComponent.onInteractionStopped -= OnInteractionStopped;
 
-        boatRider.OnEnteredBoat -= OnEnteredBoat;
-        boatRider.OnExitedBoat -= OnExitedBoat;
+        boatRider.OnEnteredBoat -= HandleEnteredBoat;
+        boatRider.OnExitedBoat -= HandleExitedBoat;
         boatRider.OnStartedMovingToBoat -= OnStartedMovingToBoat;
         boatRider.OnStoppedMovingToBoat -= OnStoppedMovingToBoat;
         boatRider.OnBoatMovementStarted -= OnBoatStartedMoving;
@@ -218,7 +218,7 @@ public abstract class Human : Creature, IClickable
         TryStartIdle();
         contextMenuTarget.SetShowContextMenu(true);
 
-        onHumanRevived?.Invoke(this);
+        OnHumanRevived?.Invoke(this);
     }
 
     protected virtual void OnDied()
@@ -227,7 +227,7 @@ public abstract class Human : Creature, IClickable
         TryStopIdle();
         contextMenuTarget.SetShowContextMenu(false);
 
-        onHumanDied?.Invoke(this);
+        OnHumanDied?.Invoke(this);
     }
 
     // Revive
@@ -306,19 +306,19 @@ public abstract class Human : Creature, IClickable
     }
 
     // Boat
-    protected virtual void OnEnteredBoat(Boat boat)
+    protected virtual void HandleEnteredBoat(Boat boat)
     {
         movement.SetAgentEnabled(false);
-        onEnteredBoat?.Invoke(this);
+        OnEnteredBoat?.Invoke(this);
     }
 
-    protected virtual void OnExitedBoat(Boat boat)
+    protected virtual void HandleExitedBoat(Boat boat)
     {
         if (interactComponent.InteractBuilding) {
             cityNavigator.TryFindPathToTargetBuilding();
         }
 
-        onExitedBoat?.Invoke(this);
+        OnExitedBoat?.Invoke(this);
     }
 
     private void OnStartedMovingToBoat(Boat boat)
@@ -367,12 +367,12 @@ public abstract class Human : Creature, IClickable
 
     private void OnSelected()
     {
-        onHumanSelected?.Invoke(this);
+        OnHumanSelected?.Invoke(this);
     }
 
     private void OnDeselected()
     {
-        onHumanDeselected?.Invoke(this);
+        OnHumanDeselected?.Invoke(this);
     }
 
     private bool ShouldStartInteracting()

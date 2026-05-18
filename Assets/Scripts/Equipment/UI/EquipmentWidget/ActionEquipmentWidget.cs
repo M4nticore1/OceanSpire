@@ -11,16 +11,16 @@ public class ActionEquipmentWidget : EquipmentWidget
     {
         base.OnEnable();
 
-        Button.onSelected.AddListener(OnButtonSelected);
-        Button.onDeselected.AddListener(OnButtonDeselected);
+        Button.OnSelected.AddListener(OnButtonSelected);
+        Button.OnDeselected.AddListener(OnButtonDeselected);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        Button.onSelected.RemoveListener(OnButtonSelected);
-        Button.onDeselected.RemoveListener(OnButtonDeselected);
+        Button.OnSelected.RemoveListener(OnButtonSelected);
+        Button.OnDeselected.RemoveListener(OnButtonDeselected);
     }
 
     public override void SetEquipment(EquipmentComponent component)
