@@ -48,6 +48,7 @@ android {
             jniDebuggable true
         }
         release {
+            shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt')**SIGNCONFIG**
         }
