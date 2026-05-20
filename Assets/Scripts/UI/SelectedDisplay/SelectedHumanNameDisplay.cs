@@ -1,29 +1,26 @@
-using TMPro;
 using UnityEngine;
 
 public class SelectedHumanNameDisplay : SelectedDisplay
 {
-    private TextMeshProUGUI text;
+    [SerializeField] private TextLocalizer text;
 
-    protected override void Awake()
+    protected override bool ShouldDisplay(SelectComponent selectComponent)
     {
-        base.Awake();
+        if (!selectComponent) return false;
 
-        text = GetComponent<TextMeshProUGUI>();
+        var human = selectComponent.GetComponent<Human>();
+        if (!human) return false;
+
+        return true;
     }
 
-    protected override void TryDisplay()
+    protected override void Display(SelectComponent selectComponent)
     {
-        Human human = SelectManager.Instance.GetSelectedHuman();
-        if (!human) return;
+        base.Display(selectComponent);
 
-        string name = human.NameComponent.GetName();
+        var human = selectComponent.GetComponent<Human>();
 
-        text.SetText(name);
-    }
-
-    protected override void TryHide()
-    {
-        text.SetText("");
+        text.SetPlaceHolderLocalization(human.NameComponent);
+        text.UpdateText();
     }
 }

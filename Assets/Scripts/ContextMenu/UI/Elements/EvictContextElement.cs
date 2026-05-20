@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class EvictContextElement : ContextElement
 {
+    [SerializeField] private EvictMenu evictMenu;
+
     protected override void OnShowed()
     {
 
@@ -9,7 +11,7 @@ public class EvictContextElement : ContextElement
 
     protected override void OnButtonClicked()
     {
-
+        evictMenu.Open();
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)

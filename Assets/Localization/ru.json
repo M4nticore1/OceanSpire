@@ -67,6 +67,7 @@
   "creature_citizen": "Житель",
   "creature_wanderer": "Странник",
   "creature_raider": "Рейдер",
+  "creature_name": "{firstName} {lastName}",
 
   "item_wood": "Дерево",
   "item_stone": "Камень",

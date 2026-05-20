@@ -93,7 +93,7 @@ public abstract class Human : Creature, IClickable
         boatRider.OnStoppedMovingToBoat += OnStoppedMovingToBoat;
         boatRider.OnBoatMovementStarted += OnBoatStartedMoving;
         boatRider.OnBoatMovementStopped += OnBoatStoppedMoving;
-        boatRider.OnBoatSetedIdle += OnBoatStoppedMoving;
+        boatRider.OnBoatSetedIdle += OnBoatSetedIdle;
 
         selectComponent.onSelected += OnSelected;
         selectComponent.onDeselected += OnDeselected;
@@ -127,7 +127,7 @@ public abstract class Human : Creature, IClickable
         boatRider.OnStartedMovingToBoat -= OnStartedMovingToBoat;
         boatRider.OnStoppedMovingToBoat -= OnStoppedMovingToBoat;
         boatRider.OnBoatMovementStarted -= OnBoatStartedMoving;
-        boatRider.OnBoatMovementStopped -= OnBoatStoppedMoving;
+        boatRider.OnBoatMovementStopped -= OnBoatSetedIdle;
 
         selectComponent.onSelected -= OnSelected;
         selectComponent.onDeselected -= OnDeselected;
@@ -162,7 +162,7 @@ public abstract class Human : Creature, IClickable
         }
 
         nameComponent.Init(humanData.Name);
-        healthComponent.SetCurrentHealth(humanData.Health);
+        healthComponent.Init(humanData.Health);
         weaponComponent.Init(humanData.Weapon);
         skillsComponent.Init(humanData.Skills);
         boatRider.Init(humanData.BoatRider);
@@ -192,13 +192,16 @@ public abstract class Human : Creature, IClickable
     // IClickable
     public void Click()
     {
-        BoatRider.SelectedBoat.SelectComponent.Select();
+        if (boatRider.SelectedBoat) {
+            BoatRider.SelectedBoat.SelectComponent.Click();
+        }
+        else {
+            selectComponent.Click();
+        }
     }
 
-    public bool ShouldClick()
+    public virtual bool ShouldClick()
     {
-        if (boatRider.SelectedBoat.Movement.IsMoving) return false;
-
         return true;
     }
 
@@ -349,7 +352,7 @@ public abstract class Human : Creature, IClickable
 
     }
 
-    protected virtual void OnBoatSetedIdle()
+    protected virtual void OnBoatSetedIdle(Boat boat)
     {
 
     }

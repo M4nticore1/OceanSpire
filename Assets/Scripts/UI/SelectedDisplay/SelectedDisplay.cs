@@ -3,35 +3,35 @@ using UnityEngine.EventSystems;
 
 public abstract class SelectedDisplay : UIBehaviour
 {
+    [SerializeField] private GameObject content;
+
     private bool isSubscribed = false;
+    private SelectComponent selectComponent;
 
     protected override void Awake()
     {
         base.Awake();
 
-        Subscribe();
+        TrySubscribe();
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        Subscribe();
-        TryDisplay();
+        TrySubscribe();
+        TryDisplay(SelectManager.Instance?.SelectedComponent);
+        TryHide(SelectManager.Instance?.SelectedComponent);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        Unsubscribe();
-        TryHide();
+        TryUnsubscribe();
     }
 
-    protected abstract void TryDisplay();
-    protected abstract void TryHide();
-
-    private void Subscribe()
+    private void TrySubscribe()
     {
         if (isSubscribed) return;
 
@@ -41,7 +41,7 @@ public abstract class SelectedDisplay : UIBehaviour
         isSubscribed = true;
     }
 
-    private void Unsubscribe()
+    private void TryUnsubscribe()
     {
         if (!isSubscribed) return;
 
@@ -51,14 +51,44 @@ public abstract class SelectedDisplay : UIBehaviour
         isSubscribed = false;
     }
 
-    private void OnComponentSelected(SelectComponent selected)
+    protected abstract bool ShouldDisplay(SelectComponent selectComponent);
+
+    protected virtual void Display(SelectComponent selectComponent)
     {
-        TryHide();
-        TryDisplay();
+        content.SetActive(true);
     }
 
-    private void OnComponentDeselected(SelectComponent selected)
+    protected virtual void Hide(SelectComponent selectComponent)
     {
-        TryHide();
+        content.SetActive(false);
+    }
+
+    private void TryDisplay(SelectComponent selectComponent)
+    {
+        if (!ShouldDisplay(selectComponent)) return;
+
+        Display(selectComponent);
+    }
+
+    private void TryHide(SelectComponent selectComponent)
+    {
+        if (ShouldDisplay(selectComponent)) return;
+
+        Hide(selectComponent);
+    }
+
+    private void OnComponentSelected(SelectComponent selectComponent)
+    {
+        this.selectComponent = selectComponent;
+
+        TryHide(selectComponent);
+        TryDisplay(selectComponent);
+    }
+
+    private void OnComponentDeselected(SelectComponent selectselectComponentd)
+    {
+        selectComponent = null;
+
+        TryHide(selectselectComponentd);
     }
 }

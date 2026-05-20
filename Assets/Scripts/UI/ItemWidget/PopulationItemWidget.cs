@@ -12,6 +12,8 @@ public class PopulationItemWidget : ResourceWidget
         Human.OnHumanRevived += OnHumanRevived;
         Human.OnHumanDied += OnHumanDied;
 
+        Citizen.OnCitizenEvicted += OnCitizenEvicted;
+
         UpdateCitizensCount();
     }
 
@@ -24,6 +26,8 @@ public class PopulationItemWidget : ResourceWidget
 
         Human.OnHumanRevived -= OnHumanRevived;
         Human.OnHumanDied -= OnHumanDied;
+
+        Citizen.OnCitizenEvicted -= OnCitizenEvicted;
     }
 
     protected override void Start()
@@ -42,6 +46,7 @@ public class PopulationItemWidget : ResourceWidget
         SetLimit(limit);
 
         foreach (var citizen in CreaturesManager.Instance.Citizens) {
+            if (citizen.IsEvicted) continue;
             if (!citizen.HealthComponent.IsAlive) continue;
 
             amount++;
@@ -66,6 +71,11 @@ public class PopulationItemWidget : ResourceWidget
     }
 
     private void OnHumanDied(Human human)
+    {
+        UpdateCitizensCount();
+    }
+
+    private void OnCitizenEvicted(Citizen citizen)
     {
         UpdateCitizensCount();
     }

@@ -11,6 +11,8 @@ public class EvictMenu : UIBehaviour
     [SerializeField] private SkillsPanel skilsPanel;
     [SerializeField] private SlidePanel slidePanel;
 
+    [SerializeField] private TextLocalizer citizenNameText;
+
     private Citizen SelectedCitizen;
 
     protected override void OnEnable()
@@ -31,11 +33,16 @@ public class EvictMenu : UIBehaviour
         Human.OnHumanDied -= OnHumanDied;
     }
 
-    public void Open(Citizen citizen)
+    public void Open()
     {
+        slidePanel.Open();
+
+        var citizen = SelectManager.Instance.GetSelectedHuman() as Citizen;
         SelectedCitizen = citizen;
-        UpdateEvictButtonEnabled();
-        skilsPanel.SetSkills(citizen.SkillsComponent);
+
+        UpdateCitizenName(citizen);
+        UpdateSkills(citizen);
+        UpdateEvictButtonEnabled(citizen);
     }
 
     private void Close()
@@ -43,9 +50,20 @@ public class EvictMenu : UIBehaviour
         slidePanel.Close();
     }
 
-    private void UpdateEvictButtonEnabled()
+    private void UpdateCitizenName(Citizen citizen)
     {
-        bool shouldEnable = SelectedCitizen && SelectedCitizen.HealthComponent.IsAlive;
+        citizenNameText.SetPlaceHolderLocalization(citizen.NameComponent);
+        citizenNameText.UpdateText();
+    }
+
+    private void UpdateSkills(Citizen citizen)
+    {
+        skilsPanel.SetSkills(citizen.SkillsComponent);
+    }
+
+    private void UpdateEvictButtonEnabled(Citizen citizen)
+    {
+        bool shouldEnable = citizen && citizen.HealthComponent.IsAlive;
         evictButton.SetState(shouldEnable ? CustomButtonState.Idle : CustomButtonState.Disabled);
     }
 
@@ -63,6 +81,6 @@ public class EvictMenu : UIBehaviour
     {
         if (human != SelectedCitizen) return;
 
-        UpdateEvictButtonEnabled();
+        UpdateEvictButtonEnabled(SelectedCitizen);
     }
 }

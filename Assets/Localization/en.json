@@ -67,6 +67,7 @@
   "creature_citizen": "Citizen",
   "creature_wanderer": "Wanderer",
   "creature_raider": "Raider",
+  "creature_name": "{firstName} {lastName}",
 
   "item_wood": "Wood",
   "item_stone": "Stone",

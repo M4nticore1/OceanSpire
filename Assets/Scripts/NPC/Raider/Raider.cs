@@ -126,9 +126,9 @@ public class Raider : Human
         }
     }
 
-    protected override void OnBoatSetedIdle()
+    protected override void OnBoatSetedIdle(Boat boat)
     {
-        base.OnBoatSetedIdle();
+        base.OnBoatSetedIdle(boat);
 
         BoatRider.StartExitingBoat();
     }
@@ -140,6 +140,11 @@ public class Raider : Human
         if (!HealthComponent.IsAlive) return;
 
         UpdateRaidAction();
+    }
+
+    public override bool ShouldClick()
+    {
+        return false;
     }
 
     private void UpdateRaidAction()

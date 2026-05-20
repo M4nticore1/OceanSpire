@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Citizen : Human
@@ -5,6 +6,8 @@ public class Citizen : Human
     public bool IsEvicted { get; private set; } = false;
     public Boat EvictionBoat { get; private set; }
     public Vector3 LeavePosition { get; private set; }
+
+    public static event Action<Citizen> OnCitizenEvicted;
 
     protected override void OnEnable()
     {
@@ -20,23 +23,38 @@ public class Citizen : Human
         CreaturesManager.Instance.UnregisterCitizen(this);
     }
 
-    public void Evict(Boat boat)
+    public void Evict(EvictData evictData)
     {
         IsEvicted = true;
-        EvictionBoat = boat;
+        EvictionBoat = evictData.Boat;
+        LeavePosition = evictData.LeavePosition;
 
-        if (BoatRider.IsRidingOnBoat) {
-            BoatRider.SelectedBoat.SetState(BoatStateEnum.MovingToDock);
+        InteractComponent.TryRemoveInteractBuilding();
+
+        if (!BoatRider.IsRidingOnBoat) {
+            BoatRider.SetSelectedBoat(evictData.Boat);
         }
+
+        BoatRider.MoveToBoat();
+
+        OnCitizenEvicted?.Invoke(this);
+    }
+
+    public override bool ShouldClick()
+    {
+        if (!base.ShouldClick()) return false;
+        if (IsEvicted) return false;
+
+        return true;
     }
 
     protected override void OnInit(CreatureData creatureData)
     {
-        base.OnInit(creatureData);
-
         var citizenData = creatureData as CitizenData;
 
         IsEvicted = citizenData.Evicted;
+
+        base.OnInit(creatureData);
     }
 
     protected override void OnSetedInteractBuilding(Building building)
@@ -76,7 +94,12 @@ public class Citizen : Human
     {
         base.HandleEnteredBoat(boat);
 
-        boat.SetState(BoatStateEnum.FindingLoot);
+        if (IsEvicted) {
+            boat.FloatAway(LeavePosition);
+        }
+        else {
+            boat.SetState(BoatStateEnum.FindingLoot);
+        }
     }
 
     protected override void HandleExitedBoat(Boat boat)
@@ -89,9 +112,9 @@ public class Citizen : Human
         }
     }
 
-    protected override void OnBoatSetedIdle()
+    protected override void OnBoatSetedIdle(Boat boat)
     {
-        base.OnBoatSetedIdle();
+        base.OnBoatSetedIdle(boat);
 
         BoatRider.StartExitingBoat();
     }

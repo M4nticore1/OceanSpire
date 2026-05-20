@@ -62,6 +62,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GenderComponent
   isMale: 1
+  maleSprite: {fileID: 21300000, guid: e88421dc316bfcf42892abe91266ad58, type: 3}
+  femaleSprite: {fileID: 21300000, guid: f3a5e7dc745722e49a9e73896b163909, type: 3}
 --- !u!114 &6264695886038843937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
-  isClickable: 1
+  isClickable: 0
 --- !u!114 &7000859086802169914
 MonoBehaviour:
   m_ObjectHideFlags: 0

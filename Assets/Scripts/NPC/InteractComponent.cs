@@ -35,10 +35,15 @@ public class InteractComponent : MonoBehaviour
         onInteractorSetedInteractBuilding?.Invoke(this);
     }
 
-    public void RemoveInteractBuilding()
+    public void TryRemoveInteractBuilding()
     {
         if (!InteractBuilding) return;
 
+        RemoveInteractBuilding();
+    }
+
+    public void RemoveInteractBuilding()
+    {
         if (IsInteracting) {
             StopInteracting();
         }

@@ -9,7 +9,7 @@ public class EvictManager : MonoBehaviour
     public void TryEvict(Citizen citizen)
     {
         if (!citizen) return;
-        if (citizen.HealthComponent.IsAlive) return;
+        if (!citizen.HealthComponent.IsAlive) return;
 
         Evict(citizen);
     }
@@ -17,8 +17,15 @@ public class EvictManager : MonoBehaviour
     private void Evict(Citizen citizen)
     {
         var boat = CreateBoat();
+        var leavePosition = WorldUtils.GetRandomBorderPosition();
 
-        citizen.Evict(boat);
+        var evictData = new EvictData()
+        {
+            Boat = boat,
+            LeavePosition = leavePosition
+        };
+
+        citizen.Evict(evictData);
     }
 
     private Boat CreateBoat()

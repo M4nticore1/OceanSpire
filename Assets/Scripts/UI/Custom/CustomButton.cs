@@ -3,6 +3,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public enum CustomButtonState
@@ -98,7 +99,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     private Vector3 pressedButtonPosition;
 
     public UnityEvent OnPressed = new();
-    public UnityEvent OnReleased = new();
+    [FormerlySerializedAs("onReleased")] public UnityEvent OnReleased = new();
     public UnityEvent OnSelected = new();
     public UnityEvent OnDeselected = new();
     public UnityEvent OnHovered = new();

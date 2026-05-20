@@ -2,28 +2,26 @@ using UnityEngine;
 
 public class SelectedBuildingNameDisplay : SelectedDisplay
 {
-    private TextLocalizer localizer;
+    [SerializeField] private TextLocalizer localizer;
 
-    protected override void Awake()
+    protected override bool ShouldDisplay(SelectComponent selectComponent)
     {
-        base.Awake();
+        if (!selectComponent) return false;
 
-        localizer = GetComponent<TextLocalizer>();
+        var building = selectComponent.GetComponent<Building>();
+        if (!building) return false;
+
+        return true;
     }
 
-    protected override void TryDisplay()
+    protected override void Display(SelectComponent selectComponent)
     {
-        Building building = SelectManager.Instance.GetSelectedBuilding();
-        if (!building) return;
+        base.Display(selectComponent);
 
-        LocalizationItem item = building.BuildingData.LocalizationItem;
+        var building = selectComponent.GetComponent<Building>();
+        var item = building.BuildingData.LocalizationItem;
 
         localizer.SetLocalizationItem(item);
         localizer.UpdateText();
-    }
-
-    protected override void TryHide()
-    {
-        localizer.SetText("");
     }
 }

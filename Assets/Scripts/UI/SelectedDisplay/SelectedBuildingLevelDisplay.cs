@@ -2,18 +2,11 @@ using UnityEngine;
 
 public class SelectedBuildingLevelDisplay : SelectedDisplay
 {
-    private TextLocalizer localizer;
+    [SerializeField] private TextLocalizer localizer;
     [SerializeField] private LocalizationItem levelLocalization;
     [SerializeField] private LocalizationItem constructionLocalization;
 
     private Building building;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        localizer = GetComponent<TextLocalizer>();
-    }
 
     private void Update()
     {
@@ -23,10 +16,19 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
         localizer.UpdateText();
     }
 
-    protected override void TryDisplay()
+    protected override bool ShouldDisplay(SelectComponent selectComponent)
     {
-        building = SelectManager.Instance.GetSelectedBuilding();
-        if (!building) return;
+        if (!selectComponent) return false;
+
+        building = selectComponent.GetComponent<Building>();
+        if (!building) return false;
+
+        return true;
+    }
+
+    protected override void Display(SelectComponent selectComponent)
+    {
+        base.Display(selectComponent);
 
         ILocalizable localizable = building.GetComponent<ILocalizable>();
 
@@ -39,10 +41,5 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
 
         localizer.SetPlaceHolderLocalization(localizable);
         localizer.UpdateText();
-    }
-
-    protected override void TryHide()
-    {
-        localizer.SetText("");
     }
 }

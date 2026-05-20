@@ -239,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isClickable: 1
+  isClickable: 0
 --- !u!114 &4463480740995804658
 MonoBehaviour:
   m_ObjectHideFlags: 0

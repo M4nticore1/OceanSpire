@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class NameComponent : MonoBehaviour
+public class NameComponent : MonoBehaviour, ILocalizable
 {
     [SerializeField] private GenderComponent genderComponent;
 
@@ -25,6 +26,15 @@ public class NameComponent : MonoBehaviour
         return name;
     }
 
+    public Dictionary<string, string> GetLocalization()
+    {
+        return new Dictionary<string, string>()
+        {
+            { "firstName", GetFirstNameText() },
+            { "lastName", GetLastNameText() },
+        };
+    }
+
     private void SetFirstNameId(int id, bool isMale)
     {
         firstName = isMale ? HumanNamesList.Instance.GetMaleFirstName(id) : HumanNamesList.Instance.GetFemaleFirstName(id);
@@ -33,5 +43,15 @@ public class NameComponent : MonoBehaviour
     private void SetLastNameId(int id, bool isMale)
     {
         lastName = isMale ? HumanNamesList.Instance.GetMaleLastName(id) : HumanNamesList.Instance.GetFemaleLastName(id);
+    }
+
+    private string GetFirstNameText()
+    {
+        return LocalizationManager.Instance.GetText(firstName);
+    }
+
+    private string GetLastNameText()
+    {
+        return LocalizationManager.Instance.GetText(lastName);
     }
 }
