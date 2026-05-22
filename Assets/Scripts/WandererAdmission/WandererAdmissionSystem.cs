@@ -13,7 +13,7 @@ public static class WandererAdmissionSystem
         var position = wanderer.BoatRider.SelectedBoat.DockPoint.EntraceTransform.position;
         var rotaton = wanderer.BoatRider.SelectedBoat.DockPoint.EntraceTransform.rotation;
 
-        var data = HumanData.Create(wanderer);
+        var data = CitizenData.Create(wanderer);
         data.Id = creautereId;
         data.InstanceId = InstancesManager.Instance.GetNextInstanceId();
         data.BoatRider = new BoatRiderData();

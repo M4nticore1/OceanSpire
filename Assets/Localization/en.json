@@ -26,7 +26,6 @@
   "ui_no_unemployed_citizens": "There are no unemployed citizens in the city",
   "ui_accept": "Accept",
   "ui_reject": "Reject",
-  "ui_evict": "Evict",
   "ui_revive": "Revive",
   "ui_revive_citizen": "Revive the citizen!",
   "ui_refund_resources": "Refund resources",
@@ -37,6 +36,9 @@
 
   "equipment": "Equipment",
   "equipment_select": "Select equipment",
+
+  "evict": "Evict",
+  "evict_citizen": "Evict",
 
   "construction": "Construction",
   "construction_build": "Build",

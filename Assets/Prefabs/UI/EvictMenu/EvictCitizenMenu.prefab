@@ -463,6 +463,7 @@ GameObject:
   - component: {fileID: 3733979120062168192}
   - component: {fileID: 1266557519761411141}
   - component: {fileID: 3532889092615397045}
+  - component: {fileID: 4804762481098329421}
   m_Layer: 5
   m_Name: EvictLabel
   m_TagString: Untagged
@@ -487,7 +488,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 150}
+  m_SizeDelta: {x: -300, y: 150}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1266557519761411141
 CanvasRenderer:
@@ -547,8 +548,8 @@ MonoBehaviour:
   m_fontSize: 72
   m_fontSizeBase: 72
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 58
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -561,7 +562,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -589,6 +590,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4804762481098329421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5685408755116662128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  textRole: 1
+  item: {fileID: 11400000, guid: c622ccb4b8f8edb468220e6a3cd8cdd5, type: 2}
+  localizationTarget: {fileID: 0}
 --- !u!1 &6570998699179647473
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,7 +909,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -150}
+  m_AnchoredPosition: {x: 0, y: -140}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &7982281093687017832

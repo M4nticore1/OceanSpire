@@ -110,6 +110,9 @@ public class Citizen : Human
             BoatRider.SetSelectedBoat(EvictionBoat);
             BoatRider.TryMoveToBoat();
         }
+        else {
+            BoatRider.RemoveSelectedBoat();
+        }
     }
 
     protected override void OnBoatSetedIdle(Boat boat)

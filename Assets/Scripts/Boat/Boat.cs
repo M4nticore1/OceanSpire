@@ -106,11 +106,9 @@ public class Boat : MonoBehaviour
     public void OnReturnedToDock()
     {
         if (Inventory.CurrentWeight > 0) {
-            Debug.Log(Inventory.CurrentWeight);
             SetState(BoatStateEnum.UnloadingLoot);
         }
         else {
-            Debug.Log("Idle");
             SetState(BoatStateEnum.Idle);
         }
     }

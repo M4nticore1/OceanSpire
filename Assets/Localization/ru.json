@@ -26,7 +26,6 @@
   "ui_no_unemployed_citizens": "В городе нет безработных жителей",
   "ui_accept": "Принять",
   "ui_reject": "Отказать",
-  "ui_evict": "Выгнать",
   "ui_revive": "Возродить",
   "ui_revive_citizen": "Возроди жителя!",
   "ui_refund_resources": "Возвращаемые ресурсы",
@@ -37,6 +36,9 @@
 
   "equipment": "Экипировка",
   "equipment_select": "Выбор экипировки",
+
+  "evict": "Выгнать",
+  "evict_citizen": "Выгнать жителя",
 
   "construction": "Строительство",
   "construction_build": "Построить",

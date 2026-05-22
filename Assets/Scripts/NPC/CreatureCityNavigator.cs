@@ -141,9 +141,9 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
         else if (ShouldFollowPath()) {
             SetState(FollowingPathState.FollowingPath);
         }
-        //else if (ShouldIdle()) {
-        //    SetState(FollowingPathState.None);
-        //}
+        else if (ShouldIdle()) {
+            SetState(FollowingPathState.None);
+        }
     }
 
     public void RemovePath()

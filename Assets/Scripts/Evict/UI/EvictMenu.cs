@@ -70,6 +70,7 @@ public class EvictMenu : UIBehaviour
     private void OnEvictButtonClicked()
     {
         evictManager.TryEvict(SelectedCitizen);
+        Close();
     }
 
     private void OnCloseButtonClicked()

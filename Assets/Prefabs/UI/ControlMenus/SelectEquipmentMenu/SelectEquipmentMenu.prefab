@@ -301,6 +301,10 @@ PrefabInstance:
       propertyPath: item
       value: 
       objectReference: {fileID: 11400000, guid: 674c3b6be5318dd458b9ba5cda0f2630, type: 2}
+    - target: {fileID: 5348611504111124649, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
+      propertyPath: m_text
+      value: '{firstName} {lastName}'
+      objectReference: {fileID: 0}
     - target: {fileID: 5588598354278059917, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.size
       value: 1

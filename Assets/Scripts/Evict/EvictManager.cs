@@ -8,8 +8,7 @@ public class EvictManager : MonoBehaviour
 
     public void TryEvict(Citizen citizen)
     {
-        if (!citizen) return;
-        if (!citizen.HealthComponent.IsAlive) return;
+        if (!ShouldEvict(citizen)) return;
 
         Evict(citizen);
     }
@@ -55,5 +54,14 @@ public class EvictManager : MonoBehaviour
         }
 
         return evictBoatDockPoints[0];
+    }
+
+    private bool ShouldEvict(Citizen citizen)
+    {
+        if (!citizen) return false;
+        if (citizen.IsEvicted) return false;
+        if (!citizen.HealthComponent.IsAlive) return false;
+
+        return true;
     }
 }
