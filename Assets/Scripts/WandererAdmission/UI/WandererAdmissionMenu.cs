@@ -12,7 +12,7 @@ public class WandererAdmissionMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        slidePanel.onClosed += OnClosed;
+        slidePanel.OnClosed += OnClosed;
         acceptButton.OnReleased.AddListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.AddListener(OnRejectButtonClicked);
 
@@ -22,7 +22,7 @@ public class WandererAdmissionMenu : MonoBehaviour
 
     private void OnDisable()
     {
-        slidePanel.onClosed -= OnClosed;
+        slidePanel.OnClosed -= OnClosed;
         acceptButton.OnReleased.RemoveListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.RemoveListener(OnRejectButtonClicked);
 

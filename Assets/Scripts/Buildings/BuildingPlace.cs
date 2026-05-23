@@ -235,7 +235,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         buildingData.InstanceId = InstancesManager.Instance.GetNextInstanceId();
         buildingData.FloorIndex = FloorIndex;
         buildingData.PlaceIndex = placeIndex;
-        buildingData.Construction.ConstructionTime = 0f;
+        buildingData.Construction.CurrentConstructionTime = 0f;
         buildingData.Construction.IsUnderConstruction = true;
 
         TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(building, transform, buildingData);

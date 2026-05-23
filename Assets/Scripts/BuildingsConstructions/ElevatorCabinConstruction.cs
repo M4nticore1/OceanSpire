@@ -245,7 +245,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
         }
 
         int? targetFloor = null;
-        int maxPassengersCount = OwnedBuilding.LevelData.maxResidentsCount;
+        int maxPassengersCount = OwnedBuilding.LevelData.MaxHumansCount;
 
         foreach (var passenger in ridingPassengers) {
             if (!passenger.CurrentPathTowerBuilding) continue;

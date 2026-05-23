@@ -12,6 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaf23feaaaab3d446a84f4c67432fbd2, type: 3}
   m_Name: Pier_LevelData_01
   m_EditorClassIdentifier: 
-  resourcesToBuild: []
-  maxResidentsCount: 1
-  constructionStraight: {fileID: 1914733326926101518, guid: badf20e085e5138479e28bd50ece45ae, type: 3}
+  boatsCount: 1

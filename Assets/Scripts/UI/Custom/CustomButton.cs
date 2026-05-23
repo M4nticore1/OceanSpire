@@ -174,7 +174,9 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         base.Reset();
 
         if (!targetGraphic) {
-            Graphic background = GetComponent<Graphic>();
+            var background = GetComponent<Graphic>();
+            if (background) return;
+
             targetGraphic = background;
             scaleRoot = background.rectTransform;
         }

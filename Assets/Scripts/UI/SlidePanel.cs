@@ -48,8 +48,8 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
     private Vector2 pressPossition;
     private Vector2 releasePossition;
     private int openedFrame = 0;
-    public event Action onOpened;
-    public event Action onClosed;
+    public event Action OnOpened;
+    public event Action OnClosed;
 
     private void Awake()
     {
@@ -150,7 +150,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
         isOpened = true;
         isMoving = true;
-        onOpened?.Invoke();
+        OnOpened?.Invoke();
     }
 
     public void Close()
@@ -164,7 +164,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
         isOpened = false;
         isMoving = true;
-        onClosed?.Invoke();
+        OnClosed?.Invoke();
     }
 
     private void SetMoving(bool value)

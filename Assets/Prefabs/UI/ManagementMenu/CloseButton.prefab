@@ -97,7 +97,7 @@ MonoBehaviour:
   isScalable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectableGroupIndex: -1
+  selectGroup: {fileID: 0}
   stateTransitionTime: 0.3
   state: 0
   idleState:
@@ -130,22 +130,22 @@ MonoBehaviour:
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
-  onPressed:
+  OnPressed:
     m_PersistentCalls:
       m_Calls: []
-  onReleased:
+  OnReleased:
     m_PersistentCalls:
       m_Calls: []
-  onSelected:
+  OnSelected:
     m_PersistentCalls:
       m_Calls: []
-  onDeselected:
+  OnDeselected:
     m_PersistentCalls:
       m_Calls: []
-  onHovered:
+  OnHovered:
     m_PersistentCalls:
       m_Calls: []
-  onUnhovered:
+  OnUnhovered:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &4151105492405809274

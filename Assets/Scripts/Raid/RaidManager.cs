@@ -109,7 +109,7 @@ public class RaidManager : MonoBehaviour
         Building building = null;
         List<Building> path = new();
 
-        if (PathFinder.TryGetPathToBuilding(null, b => b.BuildingData.IsRaidable && b.RaidComponent.Raiders.Count < b.LevelData.maxResidentsCount, ref path)) {
+        if (PathFinder.TryGetPathToBuilding(null, b => b.BuildingData.IsRaidable && b.RaidComponent.Raiders.Count < b.LevelData.MaxHumansCount, ref path)) {
             building = path[path.Count - 1];
         }
 

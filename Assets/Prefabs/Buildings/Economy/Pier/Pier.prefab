@@ -146,6 +146,7 @@ MonoBehaviour:
   buildingData: {fileID: 11400000, guid: ccb7e31f2afcb32489365485829535c1, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 587424f546877bb4091690556a7c1c3b, type: 2}
+  - {fileID: 11400000, guid: dffb62ea83b0b0240ab7bd963651136f, type: 2}
   isRuined: 0
 --- !u!114 &-6800168630710787975
 MonoBehaviour:
@@ -161,3 +162,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PierModule
   levelsData:
   - {fileID: 11400000, guid: d7f0a759f61058d4f903fc26dc960d36, type: 2}
+  - {fileID: 11400000, guid: 245cd4840c9ee2445832a2d6ee727b8e, type: 2}

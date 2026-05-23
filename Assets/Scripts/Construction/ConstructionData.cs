@@ -5,13 +5,15 @@ using UnityEngine;
 public class ConstructionData
 {
     public float ConstructionTime = 0f;
+    public float CurrentConstructionTime = 0f;
     public bool IsUnderConstruction = false;
 
     public static ConstructionData Create(ConstructionComponent construction)
     {
         return new ConstructionData()
         {
-            ConstructionTime = construction.CurrentConstructionTime,
+            ConstructionTime = construction.ConstructionTime,
+            CurrentConstructionTime = construction.CurrentConstructionTime,
             IsUnderConstruction = construction.IsUnderConstruction
         };
     }

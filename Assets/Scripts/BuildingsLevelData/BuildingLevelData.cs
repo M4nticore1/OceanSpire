@@ -10,8 +10,13 @@ public struct ResourceToBuild
 
 public abstract class BuildingLevelData : ScriptableObject
 {
-    [Header("Main")]
+    [Header("Building")]
     [SerializeField] private ItemInstance[] resourcesToBuild;
     public ItemInstance[] ResourcesToBuild => resourcesToBuild;
-    public int maxResidentsCount = 0;
+
+    [SerializeField] private int maxResidentsCount = 0;
+    public int MaxHumansCount = 0;
+
+    [SerializeField] private int constructionTime;
+    public int UpgradeTime => constructionTime;
 }

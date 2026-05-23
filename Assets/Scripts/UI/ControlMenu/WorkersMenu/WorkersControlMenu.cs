@@ -47,7 +47,7 @@ public class WorkersControlMenu : ControlMenu
         var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
         if (!selectedBuilding) return;
 
-        int maxWorkersCount = selectedBuilding.LevelData.maxResidentsCount;
+        int maxWorkersCount = selectedBuilding.LevelData.MaxHumansCount;
 
         buildingWorkersMenu.ClearWidgets();
         employedCitizensMenu.ClearWidgets();

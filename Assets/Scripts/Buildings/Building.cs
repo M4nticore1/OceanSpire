@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class Building : MonoBehaviour, ILocalizable
+public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 {
     [SerializeField] protected ConstructionComponent constructionComponent;
     public ConstructionComponent ConstructionComponent => constructionComponent;
@@ -75,8 +75,8 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
     protected virtual void OnEnable()
     {
-        constructionComponent.onConstructionStarted += OnConstructionStarted;
-        constructionComponent.onConstructionFinished += OnConstructionFinished;
+        constructionComponent.OnConstructionStarted += OnConstructionStarted;
+        constructionComponent.OnConstructionCompleted += OnConstructionFinished;
 
         WorkComponent.onWorkerAdded += OnWorkerAdded;
         WorkComponent.onWorkerRemoved += OnWorkerRemoved;
@@ -89,8 +89,8 @@ public abstract class Building : MonoBehaviour, ILocalizable
 
     protected virtual void OnDisable()
     {
-        constructionComponent.onConstructionStarted -= OnConstructionStarted;
-        constructionComponent.onConstructionFinished -= OnConstructionFinished;
+        constructionComponent.OnConstructionStarted -= OnConstructionStarted;
+        constructionComponent.OnConstructionCompleted -= OnConstructionFinished;
 
         WorkComponent.onWorkerAdded -= OnWorkerAdded;
         WorkComponent.onWorkerRemoved -= OnWorkerRemoved;
@@ -190,7 +190,7 @@ public abstract class Building : MonoBehaviour, ILocalizable
     // Interaction
     public Transform GetInteractionTransform()
     {
-        int index = WorkComponent.Workers.Count > 0 ? ((WorkComponent.Workers.Count - 1) % LevelData.maxResidentsCount) : 0;
+        int index = WorkComponent.Workers.Count > 0 ? ((WorkComponent.Workers.Count - 1) % LevelData.MaxHumansCount) : 0;
         BuildingAction[] actions = spawnedConstruction.BuildingInteractions;
 
         if (actions.Length > index) {
@@ -216,6 +216,11 @@ public abstract class Building : MonoBehaviour, ILocalizable
             Debug.Log("actions.Length <= index");
             return transform;
         }
+    }
+
+    public float GetUpgradeTime()
+    {
+        return LevelData.UpgradeTime;
     }
 
     // ILocalizable

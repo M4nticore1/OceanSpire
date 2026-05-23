@@ -41,7 +41,7 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
     {
         actionButton.OnReleased.AddListener(OnClickedActionButton);
         closeButton.OnReleased.AddListener(OnClickedCloseButton);
-        slidePanel.onClosed += OnClosed;
+        slidePanel.OnClosed += OnClosed;
 
         return true;
     }
@@ -50,7 +50,7 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
     {
         actionButton.OnReleased.RemoveListener(OnClickedActionButton);
         closeButton.OnReleased.RemoveListener(OnClickedCloseButton);
-        slidePanel.onClosed += OnClosed;
+        slidePanel.OnClosed += OnClosed;
 
         return true;
     }

@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class ConstructionComponent : MonoBehaviour
 {
-    [SerializeField] private float constructionTime = 300f;
-    public float ConstructionTime => constructionTime;
-
+    public float ConstructionTime { get; private set; } = 0f;
     public float CurrentConstructionTime { get; private set; } = 0f;
 
     [SerializeField] private bool isConstructable = true;
@@ -13,15 +11,15 @@ public class ConstructionComponent : MonoBehaviour
 
     public bool IsUnderConstruction { get; private set; } = false;
 
-    public event Action onConstructionStarted;
-    public event Action onConstructionFinished;
+    public event Action OnConstructionStarted;
+    public event Action OnConstructionCompleted;
 
     private void Update()
     {
         if (!IsUnderConstruction) return;
 
         CurrentConstructionTime += Time.deltaTime;
-        if (CurrentConstructionTime < constructionTime) return;
+        if (CurrentConstructionTime < ConstructionTime) return;
 
         FinishConstruction();
     }
@@ -29,25 +27,26 @@ public class ConstructionComponent : MonoBehaviour
     public void Init(ConstructionData data)
     {
         if (data != null) {
-            CurrentConstructionTime = data.ConstructionTime;
+            CurrentConstructionTime = data.CurrentConstructionTime;
             IsUnderConstruction = data.IsUnderConstruction;
 
             if (IsUnderConstruction) {
-                StartConstruction();
+                StartConstruction(data.ConstructionTime);
             }
         }
     }
 
-    public void StartConstruction()
+    public void StartConstruction(float constructionTime)
     {
+        ConstructionTime = constructionTime;
         IsUnderConstruction = true;
-        onConstructionStarted?.Invoke();
+        OnConstructionStarted?.Invoke();
     }
 
     public void FinishConstruction()
     {
         CurrentConstructionTime = 0f;
         IsUnderConstruction = false;
-        onConstructionFinished?.Invoke();
+        OnConstructionCompleted?.Invoke();
     }
 }
