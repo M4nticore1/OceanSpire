@@ -11,16 +11,16 @@ public class IslandNavMeshBuilder : MonoBehaviour
 
     private void OnEnable()
     {
-        Building.onBuildingInited += OnBuildingInited;
-        Building.onBuildingConstructionFinished += OnBuildingConstructionFinished;
-        Building.onBuildingDemolished += OnBuildingDemolished;
+        Building.OnBuildingInited += OnBuildingInited;
+        Building.OnBuildingConstructionFinished += OnBuildingConstructionFinished;
+        Building.OnBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
-        Building.onBuildingInited -= OnBuildingInited;
-        Building.onBuildingConstructionFinished -= OnBuildingConstructionFinished;
-        Building.onBuildingDemolished -= OnBuildingDemolished;
+        Building.OnBuildingInited -= OnBuildingInited;
+        Building.OnBuildingConstructionFinished -= OnBuildingConstructionFinished;
+        Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 
     private void OnBuildingInited(Building building)

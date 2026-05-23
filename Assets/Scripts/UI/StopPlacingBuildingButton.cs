@@ -14,14 +14,14 @@ public class StopPlacingBuildingButton : MonoBehaviour
     {
         button.OnReleased.AddListener(OnButtonClicked);
         EventBus.OnConstructionStarted += OnStartedPlacingBuilding;
-        Building.onBuildingInited += OnBuildingInited;
+        Building.OnBuildingInited += OnBuildingInited;
     }
 
     private void OnDisable()
     {
         button.OnReleased.RemoveListener(OnButtonClicked);
         EventBus.OnConstructionStarted -= OnStartedPlacingBuilding;
-        Building.onBuildingInited -= OnBuildingInited;
+        Building.OnBuildingInited -= OnBuildingInited;
     }
 
     private void Show()

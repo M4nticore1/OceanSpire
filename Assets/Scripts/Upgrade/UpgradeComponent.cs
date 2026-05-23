@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UpgradeComponent : MonoBehaviour
@@ -7,6 +8,9 @@ public class UpgradeComponent : MonoBehaviour
 
     private IUpgradable upgradable;
     public int NextLevel { get; private set; } = 1;
+
+    public event Action OnUpgradeStarted;
+    public event Action OnUpgradeCompleted;
 
     private void Awake()
     {
@@ -36,10 +40,12 @@ public class UpgradeComponent : MonoBehaviour
     {
         NextLevel = levelComponent.Level + 1;
         constructionComponent.StartConstruction(upgradable.GetUpgradeTime());
+        OnUpgradeStarted?.Invoke();
     }
 
     private void OnConstructionCompleted()
     {
         levelComponent.SetLevel(NextLevel);
+        OnUpgradeCompleted?.Invoke();
     }
 }

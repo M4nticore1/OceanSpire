@@ -15,17 +15,17 @@ public class BoatDockPoint : MonoBehaviour
 
     private bool isInited = false;
 
-    private void Start()
-    {
-        if (isInited) return;
+    //private void Start()
+    //{
+    //    if (isInited) return;
 
-        BoatDockData dockData = new BoatDockData()
-        {
-            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
-        };
+    //    BoatDockData dockData = new BoatDockData()
+    //    {
+    //        InstanceId = InstancesManager.Instance.GetNextInstanceId(),
+    //    };
 
-        Init(dockData);
-    }
+    //    Init(dockData);
+    //}
 
     public void Init(BoatDockData data)
     {

@@ -10,6 +10,7 @@ public class BoatData
     public Vector3Data Rotation = Vector3Data.Zero();
     public int StateId = 0;
     public int? DockInstanceId = null;
+    public HumanStatusEnum Status = HumanStatusEnum.Citizen; 
 
     public static BoatData Create(Boat boat)
     {
@@ -21,6 +22,7 @@ public class BoatData
             Rotation = new Vector3Data(boat.transform.rotation.eulerAngles),
             StateId = (int)boat.CurrentState,
             DockInstanceId = boat.DockPoint?.InstanceId.Id,
+            Status = boat.CurrentStatus
         };
     }
 }

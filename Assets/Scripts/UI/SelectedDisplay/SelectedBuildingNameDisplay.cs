@@ -19,7 +19,7 @@ public class SelectedBuildingNameDisplay : SelectedDisplay
         base.Display(selectComponent);
 
         var building = selectComponent.GetComponent<Building>();
-        var item = building.BuildingData.LocalizationItem;
+        var item = building.BuildingData.NameLocalizationItem;
 
         localizer.SetLocalizationItem(item);
         localizer.UpdateText();

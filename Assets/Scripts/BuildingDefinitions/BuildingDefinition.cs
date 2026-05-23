@@ -50,7 +50,7 @@ public class BuildingDefinition : ScriptableObject
     public int BuildingId { get { return (int)buildingId; } }
 
     [SerializeField] private LocalizationItem localizationItem = null;
-    public LocalizationItem LocalizationItem => localizationItem;
+    public LocalizationItem NameLocalizationItem => localizationItem;
 
     [Header("Enums")]
     [SerializeField] private BuildingType buildingType = BuildingType.Room;

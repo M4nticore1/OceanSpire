@@ -18,15 +18,15 @@ public class Boat : MonoBehaviour
     [SerializeField] private BoatDefinition boatData;
     public BoatDefinition Definition => boatData;
 
-    public BoatStateEnum CurrentState { get; private set; } = BoatStateEnum.Idle;
+    public BoatStateEnum CurrentState { get; private set; }
     private BoatState state;
+
+    public HumanStatusEnum CurrentStatus { get; private set; }
+
     public BoatRider SelectedRider { get; private set; }
 
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
-
-    // Components
-    [SerializeField] private BoatLootHandler lootHandler;
 
     [SerializeField] private Movement movement;
     public Movement Movement => movement;
@@ -84,22 +84,21 @@ public class Boat : MonoBehaviour
 
     public void Init(BoatData data)
     {
-        lootHandler = GetComponent<BoatLootHandler>();
-        lootHandler.Init();
-
         instanceId.Register(data.InstanceId);
+
+        SetState(BoatStateEnum.Idle);
+        CurrentStatus = data.Status;
 
         transform.position = data.Position.Vector3();
         transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
 
         if (data.DockInstanceId != null) {
-            InstanceId boatDockInstance = InstancesManager.Instance.GetInstance(data.DockInstanceId.Value);
-            BoatDockPoint boatDock = boatDockInstance?.GetComponent<BoatDockPoint>();
+            var boatDockInstance = InstancesManager.Instance.GetInstance(data.DockInstanceId.Value);
+            var boatDock = boatDockInstance?.GetComponent<BoatDockPoint>();
 
             SetDockPoint(boatDock);
         }
 
-        SetState(BoatStateEnum.Idle);
         BoatsManager.Instance.RegisterBoat(this);
     }
 

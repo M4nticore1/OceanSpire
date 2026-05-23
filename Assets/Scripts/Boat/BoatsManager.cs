@@ -5,10 +5,17 @@ public class BoatsManager : MonoBehaviour
 {
     public static BoatsManager Instance { get; private set; }
 
-    private List<Boat> boats = new List<Boat>();
-    public IReadOnlyList<Boat> Boats => boats.AsReadOnly();
+    private Dictionary<int, Boat> boats = new();
+    public IReadOnlyDictionary<int, Boat> Boats => boats;
 
-    private Dictionary<int, Boat> boatsDict = new Dictionary<int, Boat>();
+    private Dictionary<int, Boat> citizenBoats = new();
+    public IReadOnlyDictionary<int, Boat> CitizenBoats => citizenBoats;
+
+    private Dictionary<int, Boat> wandererBoats = new();
+    public IReadOnlyDictionary<int, Boat> WandererBoats => wandererBoats;
+
+    private Dictionary<int, Boat> raiderBoats = new();
+    public IReadOnlyDictionary<int, Boat> RaiderBoats => raiderBoats;
 
     private void Awake()
     {
@@ -20,31 +27,82 @@ public class BoatsManager : MonoBehaviour
         Instance = this;
     }
 
+    public void RegisterCitizenBoat(Boat boat)
+    {
+        RegisterBoat(citizenBoats, boat);
+    }
+
+    public void UnregisterCitizenBoat(Boat boat)
+    {
+        UnregisterBoat(citizenBoats, boat);
+    }
+
+    public void RegisterWandererBoat(Boat boat)
+    {
+        RegisterBoat(wandererBoats, boat);
+    }
+
+    public void UnregisterWandererBoat(Boat boat)
+    {
+        UnregisterBoat(wandererBoats, boat);
+    }
+
+    public void RegisterRaiderBoat(Boat boat)
+    {
+        RegisterBoat(raiderBoats, boat);
+    }
+
+    public void UnregisterRaiderBoat(Boat boat)
+    {
+        UnregisterBoat(raiderBoats, boat);
+    }
+
     public void RegisterBoat(Boat boat)
     {
-        boats.Add(boat);
-        boatsDict.Add(boat.InstanceId.Id, boat);
+        switch (boat.CurrentStatus) {
+            case HumanStatusEnum.Citizen:
+                RegisterCitizenBoat(boat);
+                break;
+            case HumanStatusEnum.Wanderer:
+                RegisterWandererBoat(boat);
+                break;
+            case HumanStatusEnum.Raider:
+                RegisterRaiderBoat(boat);
+                break;
+        }
     }
 
     public void UnregisterBoat(Boat boat)
     {
-        boats.Remove(boat);
-        boatsDict.Remove(boat.InstanceId.Id);
+        switch (boat.CurrentStatus) {
+            case HumanStatusEnum.Citizen:
+                UnregisterCitizenBoat(boat);
+                break;
+            case HumanStatusEnum.Wanderer:
+                UnregisterWandererBoat(boat);
+                break;
+            case HumanStatusEnum.Raider:
+                UnregisterRaiderBoat(boat);
+                break;
+        }
     }
 
     public Boat GetBoat(int id)
     {
-        Boat boat;
-        boatsDict.TryGetValue(id, out boat);
+        boats.TryGetValue(id, out var boat);
 
         return boat;
     }
 
-    public Boat GetBoatByInteractorIndex(int index)
+    private void RegisterBoat(Dictionary<int, Boat> boatsList, Boat boat)
     {
-        if (boats.Count <= index) return null;
+        boatsList.Add(boat.InstanceId.Id, boat);
+        boats.Add(boat.InstanceId.Id, boat);
+    }
 
-        Boat boat = boats[index];
-        return boat;
+    private void UnregisterBoat(Dictionary<int, Boat> boatsList, Boat boat)
+    {
+        boatsList.Remove(boat.InstanceId.Id);
+        boats.Remove(boat.InstanceId.Id);
     }
 }

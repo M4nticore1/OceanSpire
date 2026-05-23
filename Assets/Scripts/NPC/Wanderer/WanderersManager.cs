@@ -163,7 +163,8 @@ public class WanderersManager : MonoBehaviour
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
-            DockInstanceId = GetDockPoint().InstanceId.Id
+            DockInstanceId = GetDockPoint().InstanceId.Id,
+            Status = HumanStatusEnum.Wanderer
         };
 
         var boat = BoatFactory.CreateBoat(prefab, position, Quaternion.Euler(rotation), boatData);

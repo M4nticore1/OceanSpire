@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f6fa528c834c0a4ca6a8b970685981f, type: 3}
   m_Name: Pier_LevelData_02
   m_EditorClassIdentifier: Assembly-CSharp::GroundBuildingLevelData
-  resourcesToBuild: []
+  resourcesToBuild:
+  - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 1500
   maxResidentsCount: 1
-  construction: {fileID: 4629692952556708248, guid: 59375b4847ab5244d8ff9e98c96ed08a, type: 3}
+  constructionTime: 5
+  construction: {fileID: 4629692952556708248, guid: 8e0acbf0146ce9b4a85fcf2266b85894, type: 3}
+  constructionFrame: {fileID: 0}

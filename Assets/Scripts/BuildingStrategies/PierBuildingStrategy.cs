@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class PierBuildingStrategy : BuildingStrategy
@@ -30,8 +31,9 @@ public class PierBuildingStrategy : BuildingStrategy
             return;
         }
 
-        BoatRider newBoatRider = TryGetBoatRider(interactor.gameObject);
-        Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(interactor.workerIndex);
+        var newBoatRider = TryGetBoatRider(interactor.gameObject);
+
+        var boat = BoatsManager.Instance.CitizenBoats.Values.ToArray()[interactor.workerIndex];
         if (!boat) return;
 
         if (newBoatRider.SelectedBoat) {
@@ -84,8 +86,9 @@ public class PierBuildingStrategy : BuildingStrategy
         BoatRider boatRider = TryGetBoatRider(interactor.gameObject);
         if (!boatRider) yield break;
 
-        int index = interactor.workerIndex;
-        Boat boat = BoatsManager.Instance.GetBoatByInteractorIndex(index);
+        var index = interactor.workerIndex;
+
+        var boat = BoatsManager.Instance.CitizenBoats.Values.ToArray()[interactor.workerIndex];
         boatRider.SetSelectedBoat(boat);
 
         while (boat && boat.CurrentState != BoatStateEnum.Idle) {

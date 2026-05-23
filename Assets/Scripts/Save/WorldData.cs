@@ -148,7 +148,7 @@ public static class SaveWorldSystem
 
     public static BoatDockData[] SaveBoatDocks(BoatDockPoint[] boatDocks)
     {
-        BoatDockData[] boatDocksData = new BoatDockData[boatDocks.Length];
+        var boatDocksData = new BoatDockData[boatDocks.Length];
 
         for (int i = 0; i < boatDocks.Length; i++) {
             boatDocksData[i] = BoatDockData.Create(boatDocks[i]);
@@ -159,10 +159,10 @@ public static class SaveWorldSystem
 
     public static BoatData[] SaveBoats(BoatsManager boats)
     {
-        BoatData[] boatsData = new BoatData[boats.Boats.Count];
+        var boatsData = new BoatData[boats.Boats.Count];
 
         for (int i = 0; i < boats.Boats.Count; i++) {
-            boatsData[i] = BoatData.Create(boats.Boats[i]);
+            boatsData[i] = BoatData.Create(boats.Boats.Values.ToArray()[i]);
         }
 
         return boatsData;
@@ -170,7 +170,7 @@ public static class SaveWorldSystem
 
     public static HumanData[] SaveHumans(Human[] humans)
     {
-        HumanData[] result = new HumanData[humans.Length];
+        var result = new HumanData[humans.Length];
 
         for (int i = 0; i < humans.Length; i++) {
             result[i] = HumanData.Create(humans[i]);
@@ -181,7 +181,7 @@ public static class SaveWorldSystem
 
     public static ItemData[] SaveItems(Inventory inventory)
     {
-        ItemData[] itemsData = new ItemData[inventory.Items.Count];
+        var itemsData = new ItemData[inventory.Items.Count];
 
         for (int i = 0; i < inventory.Items.Count; i++) {
             itemsData[i] = ItemData.Create(inventory.Items[i]);

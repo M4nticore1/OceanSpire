@@ -33,6 +33,8 @@
   "ui_select": "Select",
   "ui_selected": "Selected",
   "ui_watch_ad": "Watch Ad",
+  "name_level": "{name} (Level {level})",
+  "upgrade": "Upgrade",
 
   "equipment": "Equipment",
   "equipment_select": "Select equipment",

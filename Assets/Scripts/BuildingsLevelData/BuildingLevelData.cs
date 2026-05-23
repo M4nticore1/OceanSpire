@@ -15,7 +15,7 @@ public abstract class BuildingLevelData : ScriptableObject
     public ItemInstance[] ResourcesToBuild => resourcesToBuild;
 
     [SerializeField] private int maxResidentsCount = 0;
-    public int MaxHumansCount = 0;
+    public int MaxHumansCount => maxResidentsCount;
 
     [SerializeField] private int constructionTime;
     public int UpgradeTime => constructionTime;

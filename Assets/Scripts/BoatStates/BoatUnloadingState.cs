@@ -1,3 +1,4 @@
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -77,7 +78,8 @@ public class BoatUnloadingState : BoatState
 
     private bool ShouldExit()
     {
-        InteractComponent interactor = boat.SelectedRider.GetComponent<InteractComponent>();
-        return !interactor.InteractBuilding || BoatsManager.Instance.GetBoatByInteractorIndex(interactor.workerIndex) != boat;
+        var interactor = boat.SelectedRider.GetComponent<InteractComponent>();
+
+        return !interactor.InteractBuilding || BoatsManager.Instance.CitizenBoats.Values.ToArray()[interactor.workerIndex] != boat;
     }
 }

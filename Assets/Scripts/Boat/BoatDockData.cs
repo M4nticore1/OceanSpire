@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BoatDockData
 {
-    public int InstanceId = -1;
+    public int InstanceId = 0;
 
     public static BoatDockData Create(BoatDockPoint boatDock)
     {

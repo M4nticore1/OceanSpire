@@ -13,13 +13,13 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     private void OnEnable()
     {
         completeButton.OnReleased.AddListener(OnCompleteButtonReleased);
-        Building.onBuildingConstructionFinished += OnBuildingConstructionFinished;
+        Building.OnBuildingConstructionFinished += OnBuildingConstructionFinished;
     }
 
     private void OnDisable()
     {
         completeButton.OnReleased.RemoveListener(OnCompleteButtonReleased);
-        Building.onBuildingConstructionFinished -= OnBuildingConstructionFinished;
+        Building.OnBuildingConstructionFinished -= OnBuildingConstructionFinished;
     }
 
     private void Update()
@@ -31,7 +31,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     {
         gameObject.SetActive(true);
 
-        buildingName.SetLocalizationItem(building.BuildingData.LocalizationItem);
+        buildingName.SetLocalizationItem(building.BuildingData.NameLocalizationItem);
         buildingName.UpdateText();
 
         buildingLevel.SetPlaceHolderLocalization(building);

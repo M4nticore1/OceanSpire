@@ -56,17 +56,17 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     private void OnEnable()
     {
         movement.OnMovementStopped += OnStoppedMoving;
-        Building.onBuildingInited += OnBuildingInited;
-        Building.onBuildingConstructionFinished += OnBuildingConstructionFinished;
-        Building.onBuildingDemolished += OnBuildingDemolished;
+        Building.OnBuildingInited += OnBuildingInited;
+        Building.OnBuildingConstructionFinished += OnBuildingConstructionFinished;
+        Building.OnBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
         movement.OnMovementStopped -= OnStoppedMoving;
-        Building.onBuildingInited -= OnBuildingInited;
-        Building.onBuildingConstructionFinished -= OnBuildingConstructionFinished;
-        Building.onBuildingDemolished -= OnBuildingDemolished;
+        Building.OnBuildingInited -= OnBuildingInited;
+        Building.OnBuildingConstructionFinished -= OnBuildingConstructionFinished;
+        Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 
     private void OnStoppedMoving()

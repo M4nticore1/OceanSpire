@@ -23,20 +23,20 @@ public class FloorFrameModule : BuildingModule
     {
         base.Subscribe();
 
-        OwnedBuilding.onDemolished += OnDemolished;
+        OwnedBuilding.OnDemolished += OnDemolished;
 
-        Building.onBuildingInited += OnBuildingInited;
-        Building.onBuildingDemolished += OnBuildingDemolished;
+        Building.OnBuildingInited += OnBuildingInited;
+        Building.OnBuildingDemolished += OnBuildingDemolished;
     }
 
     protected override void Unsubscribe()
     {
         base.Unsubscribe();
 
-        OwnedBuilding.onDemolished -= OnDemolished;
+        OwnedBuilding.OnDemolished -= OnDemolished;
 
-        Building.onBuildingInited -= OnBuildingInited;
-        Building.onBuildingDemolished -= OnBuildingDemolished;
+        Building.OnBuildingInited -= OnBuildingInited;
+        Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 
     protected override void OnInited()

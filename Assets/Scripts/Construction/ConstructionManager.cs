@@ -14,13 +14,13 @@ public class ConstructionManager : MonoBehaviour
     private void OnEnable()
     {
         EventBus.OnConstructionStarted += OnSelectedBuildingToPlace;
-        Building.onBuildingInited += OnBuildingFinishedPlacing;
+        Building.OnBuildingInited += OnBuildingFinishedPlacing;
     }
 
     private void OnDisable()
     {
         EventBus.OnConstructionStarted -= OnSelectedBuildingToPlace;
-        Building.onBuildingInited -= OnBuildingFinishedPlacing;
+        Building.OnBuildingInited -= OnBuildingFinishedPlacing;
     }
 
     private void OnSelectedBuildingToPlace(Building building)

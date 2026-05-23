@@ -53,8 +53,15 @@ public class ResourceWidget : UIBehaviour
 
     public void SetAmount(IItemAmount amount)
     {
+        if (Amount != null) {
+            Amount.OnAmountChanged -= OnAmountChanged;
+        }
+
         Amount = amount;
         amount.OnAmountChanged += OnAmountChanged;
+
+        TryUpdateResourceBar();
+        TryUpdateAmountColor();
     }
 
     public void SetLimit(IItemAmount amount)
@@ -67,6 +74,9 @@ public class ResourceWidget : UIBehaviour
 
         Limit = amount;
         Limit.OnAmountChanged += OnLimitChanged;
+
+        TryUpdateResourceBar();
+        TryUpdateAmountColor();
     }
 
     public void SetColor(Color color)
@@ -82,8 +92,8 @@ public class ResourceWidget : UIBehaviour
     public void SetAmountText(int amount, int limit)
     {
         resourceAmountText.SetText(amount.ToString() + "/" + limit.ToString());
-        TryUpdateResourceBar(amount, limit);
-        TryUpdateAmountColor(amount, limit);
+        TryUpdateResourceBar();
+        TryUpdateAmountColor();
     }
 
     private void UpdateIcon()
@@ -93,14 +103,14 @@ public class ResourceWidget : UIBehaviour
         resourceImage.sprite = itemDefinition.ItemIcon;
     }
 
-    private void TryUpdateResourceBar(int amount, int limit)
+    private void TryUpdateResourceBar()
     {
         if (!resourceAmountBar) return;
 
         float alpha = 0;
 
-        if (limit > 0) {
-            alpha = (float)amount / limit;
+        if (Limit.Amount > 0) {
+            alpha = (float)Amount.Amount / Limit.Amount;
         }
         else {
             alpha = 0.0f;
@@ -142,11 +152,11 @@ public class ResourceWidget : UIBehaviour
         }
     }
 
-    private void TryUpdateAmountColor(int amount, int limit)
+    private void TryUpdateAmountColor()
     {
         if (!useAmountColors) return;
 
-        if (amount >= limit) {
+        if (Amount != null && Limit != null && Amount.Amount >= Limit.Amount) {
             SetColor(enoughAmountColor);
         }
         else {
@@ -157,6 +167,7 @@ public class ResourceWidget : UIBehaviour
     private void OnAmountChanged()
     {
         UpdateAmountAndLimit();
+        TryUpdateAmountColor();
     }
 
     private void OnLimitChanged()

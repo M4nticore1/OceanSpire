@@ -25,7 +25,7 @@ public abstract class BuildingModule : MonoBehaviour
             }
         }
     }
-    protected BuildingConstruction BuildingConstruction => ownedBuilding.spawnedConstruction;
+    protected BuildingConstruction BuildingConstruction => ownedBuilding.SpawnedConstruction;
 
     protected bool IsInited { get; private set; } = false;
     private bool isSubscribed = false;

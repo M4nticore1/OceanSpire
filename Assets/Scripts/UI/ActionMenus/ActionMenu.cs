@@ -80,7 +80,7 @@ public abstract class ActionMenu : UIBehaviour, IOpenable
         Building building = SelectManager.Instance.GetSelectedBuilding();
         if (!building) return;
 
-        LocalizationItem localization = building.BuildingData.LocalizationItem;
+        LocalizationItem localization = building.BuildingData.NameLocalizationItem;
         actionTargetText.SetLocalizationItem(localization);
         actionTargetText.UpdateText();
 

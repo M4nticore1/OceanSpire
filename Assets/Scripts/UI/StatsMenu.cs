@@ -10,7 +10,7 @@ public class StatsMenu : UIBehaviour
 
     public void OpenStatsMenu(Building building)
     {
-        buildingName.SetLocalizationItem(building.BuildingData.LocalizationItem);
+        buildingName.SetLocalizationItem(building.BuildingData.NameLocalizationItem);
         buildingName.UpdateText();
 
         string interactorsCountText = building.WorkComponent.EnteredWorkers.Count.ToString();

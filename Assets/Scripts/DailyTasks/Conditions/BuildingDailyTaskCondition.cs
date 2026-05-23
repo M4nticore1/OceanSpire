@@ -4,14 +4,14 @@ public class BuildingDailyTaskCondition : DailyTaskCondition
 {
     protected override bool Subscribe()
     {
-        Building.onBuildingInited += OnBuildingInited;
+        Building.OnBuildingInited += OnBuildingInited;
 
         return true;
     }
 
     protected override bool Unsubscribe()
     {
-        Building.onBuildingInited -= OnBuildingInited;
+        Building.OnBuildingInited -= OnBuildingInited;
 
         return true;
     }

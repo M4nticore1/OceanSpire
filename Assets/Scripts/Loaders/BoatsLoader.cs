@@ -52,6 +52,7 @@ public class BoatsLoader : Loader
                 Position = new Vector3Data(position),
                 Rotation = new Vector3Data(rotation),
                 DockInstanceId = dockId,
+                Status = HumanStatusEnum.Citizen
             };
 
             var boat = BoatFactory.CreateBoat(prefab, position, Quaternion.Euler(rotation), boatData);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -22,6 +23,8 @@ public class TextLocalizer : UIBehaviour
 
     [SerializeField] private MonoBehaviour localizationTarget;
     private ILocalizable LocalizationTarget = null;
+
+    private bool updateText = false;
 
     protected override void Awake()
     {
@@ -49,6 +52,21 @@ public class TextLocalizer : UIBehaviour
         LocalizationManager.Instance.OnLocalizationChanged -= OnLocalizationChanged;
     }
 
+    public void SetLocalizationItem(LocalizationItem item)
+    {
+        this.item = item;
+    }
+
+    public void SetPlaceHolderLocalization(ILocalizable placeHolders)
+    {
+        LocalizationTarget = placeHolders;
+    }
+
+    public void SetText(string text)
+    {
+        TextBlock.SetText(text);
+    }
+
     public void UpdateText()
     {
         if (item) {
@@ -69,21 +87,6 @@ public class TextLocalizer : UIBehaviour
         }
 
         UpdateFont();
-    }
-
-    public void SetLocalizationItem(LocalizationItem item)
-    {
-        this.item = item;
-    }
-
-    public void SetPlaceHolderLocalization(ILocalizable placeHolders)
-    {
-        LocalizationTarget = placeHolders;
-    }
-
-    public void SetText(string text)
-    {
-        TextBlock.SetText(text);
     }
 
     private void UpdateFont()

@@ -10,7 +10,7 @@ public class StorageBuildingModule : BuildingModule
         base.Subscribe();
 
         OwnedBuilding.onConstructionFinished += OnConstructionFinished;
-        OwnedBuilding.onDemolished += OnDemolished;
+        OwnedBuilding.OnDemolished += OnDemolished;
     }
 
     protected override void Unsubscribe()
@@ -18,7 +18,7 @@ public class StorageBuildingModule : BuildingModule
         base.Unsubscribe();
 
         OwnedBuilding.onConstructionFinished -= OnConstructionFinished;
-        OwnedBuilding.onDemolished -= OnDemolished;
+        OwnedBuilding.OnDemolished -= OnDemolished;
     }
 
     protected override void OnInited()

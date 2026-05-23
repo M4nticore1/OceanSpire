@@ -2565,6 +2565,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4909432724401704260, guid: 20a17be85a1d76748911c70e19266abe, type: 3}
+      propertyPath: upgradeMenu
+      value: 
+      objectReference: {fileID: 4197049116871381161}
     - target: {fileID: 5160500762553864800, guid: 20a17be85a1d76748911c70e19266abe, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -5072,6 +5076,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8714575712904251559, guid: 3944d4665cf739a4e9bfbd32c3056859, type: 3}
   m_PrefabInstance: {fileID: 6860150123050014195}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4197049116871381161 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7280860308137297242, guid: 3944d4665cf739a4e9bfbd32c3056859, type: 3}
+  m_PrefabInstance: {fileID: 6860150123050014195}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccd9e212319384f48944d849810bef1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeActionMenu
 --- !u!1001 &6881741781185211903
 PrefabInstance:
   m_ObjectHideFlags: 0

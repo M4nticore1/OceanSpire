@@ -79,7 +79,7 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
     {
         base.Subscribe();
 
-        OwnedBuilding.onClicked += OnBuildingClicked;
+        OwnedBuilding.OnClicked += OnBuildingClicked;
         OwnedBuilding.onCurrentWorkerAdded += OnCurrentWorkerAdded;
         OwnedBuilding.onCurrentWorkerRemoved += OnCurrentWorkerRemoved;
     }
@@ -88,7 +88,7 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
     {
         base.Unsubscribe();
 
-        OwnedBuilding.onClicked -= OnBuildingClicked;
+        OwnedBuilding.OnClicked -= OnBuildingClicked;
         OwnedBuilding.onCurrentWorkerAdded -= OnCurrentWorkerAdded;
         OwnedBuilding.onCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
     }

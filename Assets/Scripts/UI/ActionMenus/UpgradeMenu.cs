@@ -1,18 +1,23 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UpgradeMenu : UIBehaviour
 {
-    [SerializeField] private ResourceWidget resourceWidget;
+    [SerializeField] private ResourceWidget resourceWidgetPrefab;
+
+    [SerializeField] private CityStorage cityStorage;
 
     [SerializeField] private SlidePanel slidePanel;
-
     [SerializeField] private CustomButton upgradeButton;
     [SerializeField] private CustomButton closeButton;
     [SerializeField] private GridLayoutGroup layoutGroup;
 
+    [SerializeField] private TextLocalizer targetLocalizer;
+
     private UpgradeComponent upgradeComponent;
+    private List<ResourceWidget> spawnedResourceWidgets = new();
 
     protected override void OnEnable()
     {
@@ -30,10 +35,14 @@ public class UpgradeMenu : UIBehaviour
         closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
     }
 
-    public void Open(UpgradeComponent upgradeComponent)
+    public void Open(Building building)
     {
-        this.upgradeComponent = upgradeComponent;
+        upgradeComponent = building.UpgradeComponent;
         slidePanel.Open();
+
+        ClearWidgets();
+        CreateWidgets(building);
+        UpdateTargetName(building);
     }
 
     public void Close()
@@ -44,13 +53,26 @@ public class UpgradeMenu : UIBehaviour
     private void CreateWidgets(Building building)
     {
         foreach (var item in building.NextLevelData.ResourcesToBuild) {
+            var widget = ResourceWidgetFactory.CreateResourceWidget(resourceWidgetPrefab, layoutGroup.transform);
+            spawnedResourceWidgets.Add(widget);
 
+            widget.SetAmount(cityStorage.Inventory.GetItemById(item.Definition.ItemId));
+            widget.SetLimit(item);
         }
     }
 
     private void ClearWidgets()
     {
+        for (int i = 0; i < spawnedResourceWidgets.Count; i++) {
+            Destroy(spawnedResourceWidgets[i].gameObject);
+            spawnedResourceWidgets.RemoveAt(i);
+        }
+    }
 
+    private void UpdateTargetName(Building building)
+    {
+        targetLocalizer.SetPlaceHolderLocalization(building);
+        targetLocalizer.UpdateText();
     }
 
     private void OnUpgradeButtonClicked()

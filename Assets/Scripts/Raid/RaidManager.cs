@@ -284,10 +284,12 @@ public class RaidManager : MonoBehaviour
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation.eulerAngles),
             DockInstanceId = GetNearestDockPoint(position).InstanceId.Id,
+            Status = HumanStatusEnum.Raider
         };
 
         var prefab = boatsList.GetBoat(data.Id);
         var boat = BoatFactory.CreateBoat(prefab, position, rotation, data);
+
         return boat;
     }
 

@@ -8,19 +8,16 @@ public class UpgradeContextElement : ContextElement
 
     protected override void OnShowed()
     {
-        Debug.Log(building.NextLevelData);
-        if (building.NextLevelData) return;
-
-        button.SetState(CustomButtonState.Disabled);
+        button.SetState(building.NextLevelData ? CustomButtonState.Idle : CustomButtonState.Disabled);
         button.EndTransitionAnimation();
     }
 
     protected override void OnButtonClicked()
     {
-        var selectedUpgradeComponent = SelectManager.Instance.SelectedComponent.GetComponent<UpgradeComponent>();
-        if (!selectedUpgradeComponent) return;
+        var selectedBuilding = SelectManager.Instance.SelectedComponent.GetComponent<Building>();
+        if (!selectedBuilding) return;
 
-        upgradeMenu.Open(selectedUpgradeComponent);
+        upgradeMenu.Open(selectedBuilding);
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)

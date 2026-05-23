@@ -4,14 +4,14 @@ public class BuildingCostSystem : MonoBehaviour
 {
     private void OnEnable()
     {
-        Building.onBuildingInited += OnBuildingInited;
-        Building.onBuildingDemolished += OnBuildingDemolished;
+        Building.OnBuildingInited += OnBuildingInited;
+        Building.OnBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
-        Building.onBuildingInited -= OnBuildingInited;
-        Building.onBuildingDemolished -= OnBuildingDemolished;
+        Building.OnBuildingInited -= OnBuildingInited;
+        Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 
     private void OnBuildingInited(Building building)

@@ -1954,6 +1954,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -355
       objectReference: {fileID: 0}
+    - target: {fileID: 2386065170443381450, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_fontSize
+      value: 42
+      objectReference: {fileID: 0}
     - target: {fileID: 2411408065692301716, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: buildingsManager
       value: 
@@ -2154,6 +2158,30 @@ PrefabInstance:
       propertyPath: useCityStorage
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4363787726656235776, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4363787726656235776, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4363787726656235776, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4363787726656235776, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4363787726656235776, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4363787726656235776, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4493515219944195287, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 24.999023
@@ -2270,6 +2298,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5483787753822778945, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: cityStorage
+      value: 
+      objectReference: {fileID: 1388613268}
     - target: {fileID: 5697993981545606129, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 24.999023
