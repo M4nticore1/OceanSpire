@@ -102,7 +102,7 @@ PrefabInstance:
     - target: {fileID: -7796214933308666227, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 9196486350585339327, guid: 570f94a34e459ae46ba08bd6bb1068eb, type: 3}
+      objectReference: {fileID: -564722278229899895, guid: 5bf8ee0b652a3d147a0383e868d973e2, type: 3}
     - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -152,7 +152,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8686542714077158728, guid: ac96f6580f535ff47968a04636e83d83, type: 3}
     m_RemovedComponents:
-    - {fileID: -7796214933308666227, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
     - {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -169,9 +168,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5452299794892249143, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       insertIndex: 1
       addedObject: {fileID: 4629692952556708248}
-    - targetCorrespondingSourceObject: {fileID: 5452299794892249143, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3659707912324191962}
   m_SourcePrefab: {fileID: 100100000, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
 --- !u!1 &225444294769174946 stripped
 GameObject:
@@ -190,51 +186,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4600463ecb658da4f9dbb57e48b43984, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PierConstruction
-  selectComponent: {fileID: 8175279948602501505}
-  buildingInteriors: []
   buildingInteractions:
   - waypoints:
     - transform: {fileID: 423467173397231927}
       actionTime: 0
   boatDocks:
   - {fileID: 6964030646355368549}
---- !u!65 &3659707912324191962
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 225444294769174946}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 7, y: 6, z: 12}
-  m_Center: {x: 0, y: -1, z: -5}
 --- !u!4 &5486632833755438258 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
   m_PrefabInstance: {fileID: 5227137252125454741}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8175279948602501505 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4179033065990215700, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
-  m_PrefabInstance: {fileID: 5227137252125454741}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 225444294769174946}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
 --- !u!1001 &6335149939643643299
 PrefabInstance:
   m_ObjectHideFlags: 0

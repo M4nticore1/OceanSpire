@@ -9,12 +9,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 562888234851873099, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+      propertyPath: m_Size.x
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 562888234851873099, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       propertyPath: m_Size.y
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 562888234851873099, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       propertyPath: m_Size.z
-      value: 16
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 562888234851873099, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       propertyPath: m_Center.y
@@ -22,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 562888234851873099, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       propertyPath: m_Center.z
-      value: -8
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 3107269609673161727, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       propertyPath: m_LocalPosition.x
@@ -163,3 +167,5 @@ MonoBehaviour:
   levelsData:
   - {fileID: 11400000, guid: d7f0a759f61058d4f903fc26dc960d36, type: 2}
   - {fileID: 11400000, guid: 245cd4840c9ee2445832a2d6ee727b8e, type: 2}
+  boatsManager: {fileID: 0}
+  citizenBoatPrefab: {fileID: 0}

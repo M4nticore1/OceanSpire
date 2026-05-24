@@ -12,6 +12,9 @@ public class UpgradeComponent : MonoBehaviour
     public event Action OnUpgradeStarted;
     public event Action OnUpgradeCompleted;
 
+    public static event Action<UpgradeComponent> OnGlobalUpgradeStarted;
+    public static event Action<UpgradeComponent> OnGlobalUpgradeCompleted;
+
     private void Awake()
     {
         upgradable = GetComponent<IUpgradable>();
@@ -40,12 +43,16 @@ public class UpgradeComponent : MonoBehaviour
     {
         NextLevel = levelComponent.Level + 1;
         constructionComponent.StartConstruction(upgradable.GetUpgradeTime());
+
         OnUpgradeStarted?.Invoke();
+        OnGlobalUpgradeStarted?.Invoke(this);
     }
 
     private void OnConstructionCompleted()
     {
         levelComponent.SetLevel(NextLevel);
+
         OnUpgradeCompleted?.Invoke();
+        OnGlobalUpgradeCompleted?.Invoke(this);
     }
 }

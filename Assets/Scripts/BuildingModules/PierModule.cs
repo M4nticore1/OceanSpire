@@ -22,6 +22,15 @@ public class PierModule : BuildingModule
         OwnedBuilding.UpgradeComponent.OnUpgradeCompleted -= OnUpgradeCompleted;
     }
 
+    protected override void OnInited()
+    {
+        base.OnInited();
+
+        foreach (var dockPoint in PierConstruction.BoatDocks) {
+            DockPointsManager.Instance.RegisterPierDockPoint(dockPoint);
+        }
+    }
+
     private void OnUpgradeCompleted()
     {
         InitBoatDocks();
@@ -44,8 +53,6 @@ public class PierModule : BuildingModule
     private void CreateBoats()
     {
         int count = PierConstruction.BoatDocks.Count - boatsManager.CitizenBoats.Count;
-        Debug.Log(PierConstruction.BoatDocks.Count);
-        Debug.Log(boatsManager.CitizenBoats.Count);
 
         for (int i = 0; i < count; i++) {
             var dockIndex = PierConstruction.BoatDocks.Count - count + i;
@@ -76,7 +83,7 @@ public class PierModule : BuildingModule
             var dockPoint = PierConstruction.BoatDocks[i];
 
             boat.SetDockPoint(dockPoint);
-            boat.transform.position = dockPoint.DockTransform.position;
+            boat.Movement.NavAgent.Warp(dockPoint.DockTransform.position);
         }
     }
 }

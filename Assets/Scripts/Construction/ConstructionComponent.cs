@@ -14,6 +14,9 @@ public class ConstructionComponent : MonoBehaviour
     public event Action OnConstructionStarted;
     public event Action OnConstructionCompleted;
 
+    public static event Action<ConstructionComponent> OnGlobalConstructionStarted;
+    public static event Action<ConstructionComponent> OnGlobalConstructionCompleted;
+
     private void Update()
     {
         if (!IsUnderConstruction) return;
@@ -40,13 +43,17 @@ public class ConstructionComponent : MonoBehaviour
     {
         ConstructionTime = constructionTime;
         IsUnderConstruction = true;
+
         OnConstructionStarted?.Invoke();
+        OnGlobalConstructionStarted?.Invoke(this);
     }
 
     public void FinishConstruction()
     {
         CurrentConstructionTime = 0f;
         IsUnderConstruction = false;
+
         OnConstructionCompleted?.Invoke();
+        OnGlobalConstructionCompleted?.Invoke(this);
     }
 }

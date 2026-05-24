@@ -56,9 +56,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public event Action onConstructionStarted;
     public event Action onConstructionFinished;
 
-    public event Action OnUpgradeStarted;
-    public event Action OnUpgradeCompleted;
-
     public event Action OnDemolished;
 
     public event Action OnClicked;

@@ -1,13 +1,8 @@
-using System.Collections;
-using Unity.AI.Navigation;
 using UnityEngine;
 
-public class IslandNavMeshBuilder : MonoBehaviour
+public class IslandNavMeshSurfaceBuilder : MonoBehaviour
 {
-    [SerializeField] private NavMeshSurface navMeshSurface = null;
-
-    public Coroutine bakeNavMeshCoroutine { get; private set; } = null;
-    public bool isNavMeshBuilt { get; private set; } = false;
+    [SerializeField] private NavMeshBuilder navMeshBuilder;
 
     private void OnEnable()
     {
@@ -42,28 +37,13 @@ public class IslandNavMeshBuilder : MonoBehaviour
     {
         if (!ShouldBake(building)) return;
 
-        Bake();
-    }
-
-    private void Bake()
-    {
-        bakeNavMeshCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
-    }
-
-    private IEnumerator BakeNavMeshSurfaceCoroutine()
-    {
-        if (bakeNavMeshCoroutine != null) yield break;
-
-        yield return new WaitForEndOfFrame();
-        navMeshSurface.BuildNavMesh();
-        bakeNavMeshCoroutine = null;
-        EventBus.InvokeNavMeshBaked();
+        navMeshBuilder.BakeNavMesh();
     }
 
     private bool ShouldBake(Building building)
     {
-        GroundBuilding groundBuilding = building as GroundBuilding;
-        if (!groundBuilding) return false;
-        return true;
+        var groundBuilding = building as GroundBuilding;
+
+        return groundBuilding;
     }
 }

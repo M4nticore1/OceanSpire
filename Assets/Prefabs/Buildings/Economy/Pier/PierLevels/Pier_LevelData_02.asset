@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Pier_LevelData_02
   m_EditorClassIdentifier: 
   boatsCount: 2
+  collision: {fileID: -6000116490026414202, guid: 496b87157808ed244aa70660299fc1ec, type: 3}

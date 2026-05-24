@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum BoatStateEnum
 {
@@ -13,7 +14,7 @@ public enum BoatStateEnum
     Demolished
 }
 
-public class Boat : MonoBehaviour
+public class Boat : MonoBehaviour, IClickable
 {
     [SerializeField] private BoatDefinition boatData;
     public BoatDefinition Definition => boatData;
@@ -162,17 +163,6 @@ public class Boat : MonoBehaviour
         healthDrainer.ProcessDrainHealth();
     }
 
-    private void OnMovementStarted()
-    {
-        SelectedRider.HandleBoatMovementStarted();
-    }
-
-    private void OnMovementStopped()
-    {
-        state.OnReachedPath();
-        SelectedRider.HandleBoatMovementStopped();
-    }
-
     // State
     public void SetState(BoatStateEnum state)
     {
@@ -209,6 +199,28 @@ public class Boat : MonoBehaviour
 
         this.state.Enter();
         CurrentState = state;
+    }
+
+    // IClickable
+    public void Click()
+    {
+        selectComponent.Click();
+    }
+
+    public bool ShouldClick()
+    {
+        return CurrentStatus == HumanStatusEnum.Citizen;
+    }
+
+    private void OnMovementStarted()
+    {
+        SelectedRider.HandleBoatMovementStarted();
+    }
+
+    private void OnMovementStopped()
+    {
+        state.OnReachedPath();
+        SelectedRider.HandleBoatMovementStopped();
     }
 
     // Clickable
