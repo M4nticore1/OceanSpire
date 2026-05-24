@@ -77,9 +77,11 @@ public class TowerBuilding : Building
         }
     }
 
-    protected override void OnInit(BuildingData data)
+    protected override void OnInit(BuildingData buildingData)
     {
-        var towerData = data as TowerBuildingData;
+        base.OnInit(buildingData);
+
+        var towerData = buildingData as TowerBuildingData;
         FloorIndex = towerData.FloorIndex;
         PlaceIndex = towerData.PlaceIndex;
 

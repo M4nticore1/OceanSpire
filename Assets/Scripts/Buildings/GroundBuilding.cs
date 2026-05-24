@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class GroundBuilding : Building
 {
-    protected override void OnInit(BuildingData saveData)
-    {
-        
-    }
-
     protected override void OnDemolish()
     {
         
@@ -15,7 +10,8 @@ public class GroundBuilding : Building
 
     protected override BuildingConstruction GetConstructionToSpawn()
     {
-        GroundBuildingLevelData levelData = LevelData as GroundBuildingLevelData;
-        return constructionComponent.IsUnderConstruction ? levelData.ConstructionFrame : levelData.Construction;
+        var levelData = LevelData as GroundBuildingLevelData;
+
+        return constructionComponent.IsUnderConstruction && levelData.ConstructionFrame ? levelData.ConstructionFrame : levelData.Construction;
     }
 }

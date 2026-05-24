@@ -64,6 +64,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2504490325117585013}
   m_SourcePrefab: {fileID: 100100000, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+--- !u!114 &1543726248379608248 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 994804609152676870, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+  m_PrefabInstance: {fileID: 1775028883656775870}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673097211342416700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7c847fa34584a748a6cb04cc70ad067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeComponent
 --- !u!82 &2175774227416732871 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 473947221653736569, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
@@ -80,17 +91,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelComponent
---- !u!114 &3822704267389728734 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3291799388632510304, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
-  m_PrefabInstance: {fileID: 1775028883656775870}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8673097211342416700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
 --- !u!114 &4146996725171637188 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2391196798673474426, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
@@ -132,12 +132,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerBuilding
   constructionComponent: {fileID: 5184340577209235502}
   levelComponent: {fileID: 3623753502408224289}
+  upgradeComponent: {fileID: 1543726248379608248}
   instanceId: {fileID: 4146996725171637188}
   workAudioSource: {fileID: 2175774227416732871}
   buildingData: {fileID: 11400000, guid: 9f3b464f4b9d26d49b79a2aa5e566168, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 390af1cede006e844ac0d3d0444b8de1, type: 2}
   isRuined: 0
+  FloorIndex: 0
+  PlaceIndex: 0
 --- !u!114 &2504490325117585013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,5 +155,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionModule
   levelsData:
   - {fileID: 11400000, guid: b38be2c152827054986d4c5c46e8e27b, type: 2}
-  selectComponent: {fileID: 3822704267389728734}
   electricityConsumption: 0.1

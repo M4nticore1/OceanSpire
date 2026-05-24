@@ -14,7 +14,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     [SerializeField] protected LevelComponent levelComponent;
     public LevelComponent LevelComponent => levelComponent;
 
-    public UpgradeComponent UpgradeComponent { get; private set; }
+    [SerializeField] private UpgradeComponent upgradeComponent;
+    public UpgradeComponent UpgradeComponent => upgradeComponent;
 
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
@@ -71,7 +72,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private void Awake()
     {
-        UpgradeComponent = GetComponent<UpgradeComponent>();
         SelectComponent = GetComponent<SelectComponent>();
         WorkComponent = GetComponent<WorkComponent>();
         RaidComponent = GetComponent<RaidComponent>();
@@ -110,14 +110,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     }
 
     // Constructing
-    public void Init(BuildingData data)
+    public void Init(BuildingData buildingData)
     {
-        instanceId.Register(data.InstanceId);
-
-        UpdateStrategy();
-        constructionComponent.Init(data.Construction);
-
-        OnInit(data);
+        OnInit(buildingData);
         UpdateConstruction();
 
         onInited?.Invoke();
@@ -135,7 +130,13 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         Destroy(gameObject);
     }
 
-    protected abstract void OnInit(BuildingData saveData);
+    protected virtual void OnInit(BuildingData buildingData)
+    {
+        UpdateStrategy();
+        instanceId.Register(buildingData.InstanceId);
+        UpgradeComponent.Init(buildingData.Upgrade);
+        constructionComponent.Init(buildingData.Construction);
+    }
 
     protected abstract void OnDemolish();
 

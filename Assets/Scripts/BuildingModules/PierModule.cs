@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class PierModule : BuildingModule
     {
         base.Subscribe();
 
+        OwnedBuilding.ConstructionComponent.OnConstructionStarted += OnConstructionStarted;
         OwnedBuilding.UpgradeComponent.OnUpgradeCompleted += OnUpgradeCompleted;
     }
 
@@ -19,6 +21,7 @@ public class PierModule : BuildingModule
     {
         base.Unsubscribe();
 
+        OwnedBuilding.ConstructionComponent.OnConstructionStarted -= OnConstructionStarted;
         OwnedBuilding.UpgradeComponent.OnUpgradeCompleted -= OnUpgradeCompleted;
     }
 
@@ -31,11 +34,19 @@ public class PierModule : BuildingModule
         }
     }
 
+    private void OnConstructionStarted()
+    {
+        UpdatePier();
+    }
+
     private void OnUpgradeCompleted()
     {
-        InitBoatDocks();
-        CreateBoats();
-        InitBoats();
+        UpdatePier();
+    }
+
+    private void UpdatePier()
+    {
+        StartCoroutine(UpdatePierCoroutine());
     }
 
     private void InitBoatDocks()
@@ -85,5 +96,14 @@ public class PierModule : BuildingModule
             boat.SetDockPoint(dockPoint);
             boat.Movement.NavAgent.Warp(dockPoint.DockTransform.position);
         }
+    }
+
+    private IEnumerator UpdatePierCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+        InitBoatDocks();
+        CreateBoats();
+        InitBoats();
     }
 }

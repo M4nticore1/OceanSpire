@@ -64,6 +64,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 99572900756894899}
   m_SourcePrefab: {fileID: 100100000, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+--- !u!114 &1543726248379608248 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 994804609152676870, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+  m_PrefabInstance: {fileID: 1775028883656775870}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8673097211342416700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7c847fa34584a748a6cb04cc70ad067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeComponent
 --- !u!82 &2175774227416732871 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 473947221653736569, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
@@ -121,12 +132,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerBuilding
   constructionComponent: {fileID: 5184340577209235502}
   levelComponent: {fileID: 3623753502408224289}
+  upgradeComponent: {fileID: 1543726248379608248}
   instanceId: {fileID: 4146996725171637188}
   workAudioSource: {fileID: 2175774227416732871}
   buildingData: {fileID: 11400000, guid: 125116f10d362a140a6e3901d5e841e4, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 1d872900195cd094588ee702295cdb83, type: 2}
   isRuined: 0
+  FloorIndex: 0
+  PlaceIndex: 0
 --- !u!114 &99572900756894899
 MonoBehaviour:
   m_ObjectHideFlags: 0
