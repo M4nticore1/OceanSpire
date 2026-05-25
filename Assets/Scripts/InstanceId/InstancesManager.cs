@@ -52,7 +52,7 @@ public class InstancesManager : MonoBehaviour
         var instance = instances.GetValueOrDefault(id);
 
         if (!instance) {
-            Debug.Log($"Instance by Id {id} does not exitst!");
+            Debug.Log($"Instance by Id {id} does not exitst by!");
         }
 
         return instance;

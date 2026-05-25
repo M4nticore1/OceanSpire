@@ -44,9 +44,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     public const float DemolishionResourcesRefundPercent = 0.2f;
 
-    public event Action onInited;
-    public event Action onWorkStarted;
-    public event Action onWorkStopped;
+    public event Action OnInited;
+    public event Action OnWorkStarted;
+    public event Action OnWorkStopped;
 
     public event Action<CreatureCityNavigator> onEnterBuilding;
     public event Action<CreatureCityNavigator> onExitBuilding;
@@ -80,9 +80,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     protected virtual void OnEnable()
     {
         constructionComponent.OnConstructionStarted += OnConstructionStarted;
-        constructionComponent.OnConstructionCompleted += OnConstructionFinished;
-
-        UpgradeComponent.OnUpgradeCompleted += HandleUpgradeCompleted;
+        levelComponent.OnLevelChanged += OnLevelChanged;
 
         WorkComponent.onWorkerAdded += OnWorkerAdded;
         WorkComponent.onWorkerRemoved += OnWorkerRemoved;
@@ -96,9 +94,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     protected virtual void OnDisable()
     {
         constructionComponent.OnConstructionStarted -= OnConstructionStarted;
-        constructionComponent.OnConstructionCompleted -= OnConstructionFinished;
-
-        UpgradeComponent.OnUpgradeCompleted -= HandleUpgradeCompleted;
+        levelComponent.OnLevelChanged -= OnLevelChanged;
 
         WorkComponent.onWorkerAdded -= OnWorkerAdded;
         WorkComponent.onWorkerRemoved -= OnWorkerRemoved;
@@ -113,9 +109,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public void Init(BuildingData buildingData)
     {
         OnInit(buildingData);
-        UpdateConstruction();
 
-        onInited?.Invoke();
+        OnInited?.Invoke();
         OnBuildingInited?.Invoke(this);
     }
 
@@ -134,7 +129,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     {
         UpdateStrategy();
         instanceId.Register(buildingData.InstanceId);
-        UpgradeComponent.Init(buildingData.Upgrade);
+        levelComponent.Init(buildingData.Level);
+        upgradeComponent.Init(buildingData.Upgrade);
         constructionComponent.Init(buildingData.Construction);
     }
 
@@ -273,12 +269,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         SpawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, transform, data);
     }
 
-    // Upgrade
-    private void HandleUpgradeCompleted()
-    {
-        UpdateConstruction();
-    }
-
     // Work
     private void OnWorkerAdded(InteractComponent interactor)
     {
@@ -319,7 +309,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         PlayWorkSound();
 
         isWorking = true;
-        onWorkStarted?.Invoke();
+        OnWorkStarted?.Invoke();
     }
 
     private void StopWorking()
@@ -332,7 +322,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         StopWorkSound();
 
         isWorking = false;
-        onWorkStopped?.Invoke();
+        OnWorkStopped?.Invoke();
     }
 
     private void UpdateStrategy()
@@ -357,7 +347,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         onConstructionStarted?.Invoke();
     }
 
-    private void OnConstructionFinished()
+    private void OnLevelChanged()
     {
         OnConstructionFinish();
         UpdateConstruction();

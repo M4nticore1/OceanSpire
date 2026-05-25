@@ -23,8 +23,13 @@ public class DockPointsManager : MonoBehaviour
         Instance = this;
     }
 
-    public void RegisterPierDockPoint(BoatDockPoint dockPoint)
+    public void RegisterCitizenDockPoint(BoatDockPoint dockPoint)
     {
         CitizenBoatDocks.Add(dockPoint);
+    }
+
+    public void UnregisterCitizenDockPoint(BoatDockPoint dockPoint)
+    {
+        CitizenBoatDocks.Remove(dockPoint);
     }
 }

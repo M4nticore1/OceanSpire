@@ -78,6 +78,7 @@ public class UpgradeMenu : UIBehaviour
     private void OnUpgradeButtonClicked()
     {
         upgradeComponent.Upgrade();
+        Close();
     }
 
     private void OnCloseButtonClicked()

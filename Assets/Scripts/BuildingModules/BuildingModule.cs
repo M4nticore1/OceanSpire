@@ -51,12 +51,12 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected virtual void Subscribe()
     {
-        ownedBuilding.onInited += OnInited;
+        ownedBuilding.OnInited += OnInited;
     }
 
     protected virtual void Unsubscribe()
     {
-        ownedBuilding.onInited -= OnInited;
+        ownedBuilding.OnInited -= OnInited;
     }
 
     protected virtual void OnInited()

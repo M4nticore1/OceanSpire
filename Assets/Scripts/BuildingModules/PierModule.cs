@@ -6,7 +6,11 @@ public class PierModule : BuildingModule
 {
     public PierConstruction PierConstruction => OwnedBuilding.SpawnedConstruction as PierConstruction;
 
+    [SerializeField] private BoatsLoader boatsLoader;
+    [SerializeField] private DockPointsLoader docksLoader;
+
     [SerializeField] private BoatsManager boatsManager;
+    [SerializeField] private DockPointsManager boatDocksManager;
     [SerializeField] private Boat citizenBoatPrefab;
 
     protected override void Subscribe()
@@ -14,7 +18,7 @@ public class PierModule : BuildingModule
         base.Subscribe();
 
         OwnedBuilding.ConstructionComponent.OnConstructionStarted += OnConstructionStarted;
-        OwnedBuilding.UpgradeComponent.OnUpgradeCompleted += OnUpgradeCompleted;
+        OwnedBuilding.LevelComponent.OnLevelChanged += OnLevelChanged;
     }
 
     protected override void Unsubscribe()
@@ -22,16 +26,14 @@ public class PierModule : BuildingModule
         base.Unsubscribe();
 
         OwnedBuilding.ConstructionComponent.OnConstructionStarted -= OnConstructionStarted;
-        OwnedBuilding.UpgradeComponent.OnUpgradeCompleted -= OnUpgradeCompleted;
+        OwnedBuilding.LevelComponent.OnLevelChanged -= OnLevelChanged;
     }
 
     protected override void OnInited()
     {
         base.OnInited();
 
-        foreach (var dockPoint in PierConstruction.BoatDocks) {
-            DockPointsManager.Instance.RegisterPierDockPoint(dockPoint);
-        }
+        RegisterBoatDocks();
     }
 
     private void OnConstructionStarted()
@@ -39,14 +41,33 @@ public class PierModule : BuildingModule
         UpdatePier();
     }
 
-    private void OnUpgradeCompleted()
+    private void OnLevelChanged()
     {
         UpdatePier();
     }
 
     private void UpdatePier()
     {
+        if (!boatsLoader.IsLoaded) return;
+        if (!docksLoader.IsLoaded) return;
+
+        Debug.Log("UpdatePier");
         StartCoroutine(UpdatePierCoroutine());
+    }
+
+    private void RegisterBoatDocks()
+    {
+        foreach (var dock in PierConstruction.BoatDocks) {
+            boatDocksManager.RegisterCitizenDockPoint(dock);
+        }
+    }
+
+    private void UnregisterBoatDocks()
+    {
+        for (int i = 0; i < boatDocksManager.CitizenBoatDocks.Count; i++) {
+            var dock = boatDocksManager.CitizenBoatDocks[i];
+            boatDocksManager.UnregisterCitizenDockPoint(dock);
+        }
     }
 
     private void InitBoatDocks()
@@ -102,6 +123,8 @@ public class PierModule : BuildingModule
     {
         yield return new WaitForEndOfFrame();
 
+        UnregisterBoatDocks();
+        RegisterBoatDocks();
         InitBoatDocks();
         CreateBoats();
         InitBoats();

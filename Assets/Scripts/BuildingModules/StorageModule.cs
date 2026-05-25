@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [AddComponentMenu("BuildingModules/Storage Building Module")]
-public class StorageBuildingModule : BuildingModule
+public class StorageModule : BuildingModule
 {
     public StorageModuleLevelData StorageLevelData => LevelData as StorageModuleLevelData;
 
@@ -9,7 +9,7 @@ public class StorageBuildingModule : BuildingModule
     {
         base.Subscribe();
 
-        OwnedBuilding.onConstructionFinished += OnConstructionFinished;
+        OwnedBuilding.UpgradeComponent.OnUpgradeCompleted += OnUpgradeCompleted;
         OwnedBuilding.OnDemolished += OnDemolished;
     }
 
@@ -17,7 +17,7 @@ public class StorageBuildingModule : BuildingModule
     {
         base.Unsubscribe();
 
-        OwnedBuilding.onConstructionFinished -= OnConstructionFinished;
+        OwnedBuilding.UpgradeComponent.OnUpgradeCompleted -= OnUpgradeCompleted;
         OwnedBuilding.OnDemolished -= OnDemolished;
     }
 
@@ -25,33 +25,34 @@ public class StorageBuildingModule : BuildingModule
     {
         base.OnInited();
 
-        if (OwnedBuilding.ConstructionComponent.IsUnderConstruction) return;
+        if (OwnedBuilding.UpgradeComponent.NextLevel == 1 && OwnedBuilding.ConstructionComponent.IsUnderConstruction) return;
 
-        AddLimit();
+        AddLimit(StorageLevelData);
     }
 
-    private void OnConstructionFinished()
+    private void OnUpgradeCompleted()
     {
-        AddLimit();
+        RemoveLimit(LevelsData[OwnedBuilding.LevelComponent.Level - 1] as StorageModuleLevelData);
+        AddLimit(StorageLevelData);
     }
 
     private void OnDemolished()
     {
-        RemoveLimit();
+        RemoveLimit(StorageLevelData);
     }
 
-    private void AddLimit()
+    private void AddLimit(StorageModuleLevelData levelData)
     {
-        foreach (var stack in StorageLevelData.Stacks) {
+        foreach (var stack in levelData.Stacks) {
             CityStorage.Instance.Inventory.AddLimit(stack.StackEnum, stack.Amount);
         }
     }
 
-    private void RemoveLimit()
+    private void RemoveLimit(StorageModuleLevelData levelData)
     {
         if (!IsInited) return;
 
-        foreach (var stack in StorageLevelData.Stacks) {
+        foreach (var stack in levelData.Stacks) {
             CityStorage.Instance.Inventory.RemoveLimit(stack.StackEnum, stack.Amount);
         }
     }

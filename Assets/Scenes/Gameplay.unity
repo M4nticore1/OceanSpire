@@ -8693,13 +8693,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 1118607292}
     m_Modifications:
     - target: {fileID: -6800168630710787975, guid: e51d997d0cfe8274ea0a75e835dd16ea, type: 3}
+      propertyPath: boatsLoader
+      value: 
+      objectReference: {fileID: 342273254}
+    - target: {fileID: -6800168630710787975, guid: e51d997d0cfe8274ea0a75e835dd16ea, type: 3}
+      propertyPath: docksLoader
+      value: 
+      objectReference: {fileID: 1493804850}
+    - target: {fileID: -6800168630710787975, guid: e51d997d0cfe8274ea0a75e835dd16ea, type: 3}
       propertyPath: boatsManager
       value: 
       objectReference: {fileID: 1934078805}
     - target: {fileID: -6800168630710787975, guid: e51d997d0cfe8274ea0a75e835dd16ea, type: 3}
-      propertyPath: citizenBoatPrefab
+      propertyPath: boatDocksManager
       value: 
-      objectReference: {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
+      objectReference: {fileID: 1711846142}
     - target: {fileID: 3728160677861581633, guid: e51d997d0cfe8274ea0a75e835dd16ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8

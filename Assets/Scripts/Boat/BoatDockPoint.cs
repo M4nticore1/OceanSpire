@@ -13,25 +13,9 @@ public class BoatDockPoint : MonoBehaviour
     [SerializeField] private Transform entranceTransform;
     public Transform EntraceTransform => entranceTransform;
 
-    private bool isInited = false;
-
-    //private void Start()
-    //{
-    //    if (isInited) return;
-
-    //    BoatDockData dockData = new BoatDockData()
-    //    {
-    //        InstanceId = InstancesManager.Instance.GetNextInstanceId(),
-    //    };
-
-    //    Init(dockData);
-    //}
-
     public void Init(BoatDockData data)
     {
         instanceId.Register(data.InstanceId);
-
-        isInited = true;
     }
 
     public void SetBoat(Boat boat)

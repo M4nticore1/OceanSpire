@@ -179,5 +179,7 @@ MonoBehaviour:
   levelsData:
   - {fileID: 11400000, guid: d7f0a759f61058d4f903fc26dc960d36, type: 2}
   - {fileID: 11400000, guid: 245cd4840c9ee2445832a2d6ee727b8e, type: 2}
+  boatsLoader: {fileID: 0}
+  docksLoader: {fileID: 0}
   boatsManager: {fileID: 0}
-  citizenBoatPrefab: {fileID: 0}
+  citizenBoatPrefab: {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
