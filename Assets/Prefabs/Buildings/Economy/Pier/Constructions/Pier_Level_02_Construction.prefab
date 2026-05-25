@@ -138,7 +138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPoint
   instanceId: {fileID: 659428611009722365}
   dockTransform: {fileID: 5756661674879679686}
-  entranceTransform: {fileID: 423467173397231927}
+  entranceTransform: {fileID: 5434992826118720399}
 --- !u!114 &659428611009722365
 MonoBehaviour:
   m_ObjectHideFlags: 0

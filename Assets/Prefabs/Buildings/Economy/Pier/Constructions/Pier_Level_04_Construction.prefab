@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPoint
   instanceId: {fileID: 5934167589895105820}
   dockTransform: {fileID: 7520797491184225906}
-  entranceTransform: {fileID: 0}
+  entranceTransform: {fileID: 3381236725833478110}
 --- !u!114 &5934167589895105820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPoint
   instanceId: {fileID: 1044133195452869409}
   dockTransform: {fileID: 5409195733063228577}
-  entranceTransform: {fileID: 0}
+  entranceTransform: {fileID: 1410661677361914195}
 --- !u!114 &1044133195452869409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,7 +289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPoint
   instanceId: {fileID: 659428611009722365}
   dockTransform: {fileID: 5756661674879679686}
-  entranceTransform: {fileID: 423467173397231927}
+  entranceTransform: {fileID: 5434992826118720399}
 --- !u!114 &659428611009722365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,7 +375,7 @@ PrefabInstance:
     - target: {fileID: -7796214933308666227, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -6000116490026414202, guid: 496b87157808ed244aa70660299fc1ec, type: 3}
+      objectReference: {fileID: 8185892626345846014, guid: 5790c08ed00d7ae4cbddb96c8b4195a3, type: 3}
     - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -423,7 +423,7 @@ PrefabInstance:
     - target: {fileID: 8712712631989154949, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 5375583868524598644, guid: 6302811f4223fcc4b8741af7086c6433, type: 3}
+      objectReference: {fileID: 2354551771936503909, guid: 46169b56e5b5fbd49a635c8c266a4b05, type: 3}
     m_RemovedComponents:
     - {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
     m_RemovedGameObjects: []

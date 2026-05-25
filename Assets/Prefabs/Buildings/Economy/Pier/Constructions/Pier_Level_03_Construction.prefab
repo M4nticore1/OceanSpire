@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPoint
   instanceId: {fileID: 1719093100722711660}
   dockTransform: {fileID: 872754913549918724}
-  entranceTransform: {fileID: 423467173397231927}
+  entranceTransform: {fileID: 1111884825752848150}
 --- !u!114 &1719093100722711660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPoint
   instanceId: {fileID: 659428611009722365}
   dockTransform: {fileID: 5756661674879679686}
-  entranceTransform: {fileID: 423467173397231927}
+  entranceTransform: {fileID: 5434992826118720399}
 --- !u!114 &659428611009722365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,7 +284,7 @@ PrefabInstance:
     - target: {fileID: -7796214933308666227, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -6000116490026414202, guid: 496b87157808ed244aa70660299fc1ec, type: 3}
+      objectReference: {fileID: -5236437990967233482, guid: 1c32a51af0116404790d012d311ca306, type: 3}
     - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -332,7 +332,7 @@ PrefabInstance:
     - target: {fileID: 8712712631989154949, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 5375583868524598644, guid: 6302811f4223fcc4b8741af7086c6433, type: 3}
+      objectReference: {fileID: 7275271607298021531, guid: c25acfe5855e70a46ac0bf9370ef8202, type: 3}
     m_RemovedComponents:
     - {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
     m_RemovedGameObjects: []

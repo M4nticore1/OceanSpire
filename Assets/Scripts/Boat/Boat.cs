@@ -87,7 +87,9 @@ public class Boat : MonoBehaviour, IClickable
     {
         instanceId.Register(data.InstanceId);
 
-        SetState(BoatStateEnum.Idle);
+        BoatStateEnum state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(data.StateId);
+        SetState(state);
+
         CurrentStatus = data.Status;
 
         transform.position = data.Position.Vector3();

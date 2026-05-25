@@ -51,8 +51,11 @@ public class PierModule : BuildingModule
         if (!boatsLoader.IsLoaded) return;
         if (!docksLoader.IsLoaded) return;
 
-        Debug.Log("UpdatePier");
-        StartCoroutine(UpdatePierCoroutine());
+        UnregisterBoatDocks();
+        RegisterBoatDocks();
+        InitBoatDocks();
+        CreateBoats();
+        InitBoats();
     }
 
     private void RegisterBoatDocks()
@@ -64,7 +67,7 @@ public class PierModule : BuildingModule
 
     private void UnregisterBoatDocks()
     {
-        for (int i = 0; i < boatDocksManager.CitizenBoatDocks.Count; i++) {
+        for (int i = boatDocksManager.CitizenBoatDocks.Count - 1; i >= 0; i--) {
             var dock = boatDocksManager.CitizenBoatDocks[i];
             boatDocksManager.UnregisterCitizenDockPoint(dock);
         }
@@ -110,23 +113,14 @@ public class PierModule : BuildingModule
 
     private void InitBoats()
     {
-        for (int i = 0; i < boatsManager.CitizenBoats.Count; i++) {
-            var boat = boatsManager.CitizenBoats.Values.ToArray()[i];
+        var boats = boatsManager.CitizenBoats.Values.ToList();
+
+        for (int i = 0; i < boats.Count; i++) {
+            var boat = boats[i];
             var dockPoint = PierConstruction.BoatDocks[i];
 
             boat.SetDockPoint(dockPoint);
             boat.Movement.NavAgent.Warp(dockPoint.DockTransform.position);
         }
-    }
-
-    private IEnumerator UpdatePierCoroutine()
-    {
-        yield return new WaitForEndOfFrame();
-
-        UnregisterBoatDocks();
-        RegisterBoatDocks();
-        InitBoatDocks();
-        CreateBoats();
-        InitBoats();
     }
 }
