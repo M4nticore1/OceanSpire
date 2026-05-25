@@ -163,6 +163,8 @@ MonoBehaviour:
   buildingLevelsData:
   - {fileID: 11400000, guid: 587424f546877bb4091690556a7c1c3b, type: 2}
   - {fileID: 11400000, guid: dffb62ea83b0b0240ab7bd963651136f, type: 2}
+  - {fileID: 11400000, guid: 578231e2de6d8424baeff4e05abbd415, type: 2}
+  - {fileID: 11400000, guid: 32a70d4aef9a62c4cadd9a288fa2cd99, type: 2}
   isRuined: 0
 --- !u!114 &-6800168630710787975
 MonoBehaviour:
@@ -179,7 +181,10 @@ MonoBehaviour:
   levelsData:
   - {fileID: 11400000, guid: d7f0a759f61058d4f903fc26dc960d36, type: 2}
   - {fileID: 11400000, guid: 245cd4840c9ee2445832a2d6ee727b8e, type: 2}
+  - {fileID: 11400000, guid: bb1aed19bf245c442b14ef0bcdce28af, type: 2}
+  - {fileID: 11400000, guid: 2b8d53d4727b155419b03e4d2f2cde61, type: 2}
   boatsLoader: {fileID: 0}
   docksLoader: {fileID: 0}
   boatsManager: {fileID: 0}
+  boatDocksManager: {fileID: 0}
   citizenBoatPrefab: {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
