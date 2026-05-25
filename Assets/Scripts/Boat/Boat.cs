@@ -1,6 +1,6 @@
 using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum BoatStateEnum
 {
@@ -44,8 +44,8 @@ public class Boat : MonoBehaviour, IClickable
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
     // Dock
-    public BoatDockPoint DockPoint;
-    public LootContainer targetLootContainer { get; private set; }
+    public BoatDockPoint DockPoint { get; private set; }
+    public LootContainer TargetLootContainer { get; private set; }
 
     // Weight
     public float CurrentWeight => inventory.CurrentWeight;
@@ -80,27 +80,31 @@ public class Boat : MonoBehaviour, IClickable
 
     private void Update()
     {
+        if (state == null) return;
+
         state.Tick();
     }
 
-    public void Init(BoatData data)
+    public void Init(BoatData boatData)
     {
-        instanceId.Register(data.InstanceId);
+        //StartCoroutine(InitCoroutine(boatData));
 
-        BoatStateEnum state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(data.StateId);
-        SetState(state);
+        instanceId.Register(boatData.InstanceId);
 
-        CurrentStatus = data.Status;
+        transform.position = boatData.Position.Vector3();
+        transform.rotation = Quaternion.Euler(boatData.Rotation.Vector3());
 
-        transform.position = data.Position.Vector3();
-        transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
-
-        if (data.DockInstanceId != null) {
-            var boatDockInstance = InstancesManager.Instance.GetInstance(data.DockInstanceId.Value);
+        if (boatData.DockInstanceId != null) {
+            var boatDockInstance = InstancesManager.Instance.GetInstance(boatData.DockInstanceId.Value);
             var boatDock = boatDockInstance?.GetComponent<BoatDockPoint>();
 
             SetDockPoint(boatDock);
         }
+
+        BoatStateEnum state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(boatData.StateId);
+        SetState(state);
+
+        CurrentStatus = boatData.Status;
 
         BoatsManager.Instance.RegisterBoat(this);
     }
@@ -152,7 +156,7 @@ public class Boat : MonoBehaviour, IClickable
 
     public void SetTargetLoot(LootContainer lootContainer)
     {
-        targetLootContainer = lootContainer;
+        TargetLootContainer = lootContainer;
     }
 
     public ItemInstance GetItemToUnload()
@@ -216,13 +220,16 @@ public class Boat : MonoBehaviour, IClickable
 
     private void OnMovementStarted()
     {
-        SelectedRider.HandleBoatMovementStarted();
+        if (SelectedRider)
+            SelectedRider.HandleBoatMovementStarted();
     }
 
     private void OnMovementStopped()
     {
         state.OnReachedPath();
-        SelectedRider.HandleBoatMovementStopped();
+
+        if (SelectedRider)
+            SelectedRider.HandleBoatMovementStopped();
     }
 
     // Clickable
@@ -234,5 +241,15 @@ public class Boat : MonoBehaviour, IClickable
     private void OnDeselected()
     {
         onBoatDeselected?.Invoke(this);
+    }
+
+    private IEnumerator InitCoroutine(BoatData boatData)
+    {
+        yield return new WaitForEndOfFrame();
+
+        BoatStateEnum state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(boatData.StateId);
+        SetState(state);
+
+        CurrentStatus = boatData.Status;
     }
 }

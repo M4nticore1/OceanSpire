@@ -14,12 +14,12 @@ public class BoatCollectingLootState : BoatState
 
     public override void Enter()
     {
-        boat.targetLootContainer.StopMoving();
+        boat.TargetLootContainer.StopMoving();
     }
 
     public override void Exit()
     {
-        LootContainer container = boat.targetLootContainer;
+        LootContainer container = boat.TargetLootContainer;
         if (!container) return;
 
         container.StartMoving();
@@ -51,7 +51,7 @@ public class BoatCollectingLootState : BoatState
     private void CollectLoot()
     {
         float remainingWeight = boat.Inventory.WeightLimit - boat.Inventory.CurrentWeight;
-        List<ItemInstance> collectedLoot = boat.targetLootContainer.TakeItems(remainingWeight);
+        List<ItemInstance> collectedLoot = boat.TargetLootContainer.TakeItems(remainingWeight);
 
         foreach (var loot in collectedLoot) {
             if (boat.Inventory.RemainingWeight <= 0) break;

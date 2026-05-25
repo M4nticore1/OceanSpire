@@ -91,8 +91,6 @@ public abstract class Human : Creature, IClickable
         boatRider.OnExitedBoat += HandleExitedBoat;
         boatRider.OnStartedMovingToBoat += OnStartedMovingToBoat;
         boatRider.OnStoppedMovingToBoat += OnStoppedMovingToBoat;
-        boatRider.OnBoatMovementStarted += OnBoatStartedMoving;
-        boatRider.OnBoatMovementStopped += OnBoatStoppedMoving;
         boatRider.OnBoatSetedIdle += OnBoatSetedIdle;
 
         selectComponent.onSelected += OnSelected;
@@ -126,8 +124,6 @@ public abstract class Human : Creature, IClickable
         boatRider.OnExitedBoat -= HandleExitedBoat;
         boatRider.OnStartedMovingToBoat -= OnStartedMovingToBoat;
         boatRider.OnStoppedMovingToBoat -= OnStoppedMovingToBoat;
-        boatRider.OnBoatMovementStarted -= OnBoatStartedMoving;
-        boatRider.OnBoatMovementStopped -= OnBoatSetedIdle;
 
         selectComponent.onSelected -= OnSelected;
         selectComponent.onDeselected -= OnDeselected;
@@ -338,16 +334,6 @@ public abstract class Human : Creature, IClickable
     }
 
     private void OnStoppedMovingToBoat(Boat boat)
-    {
-
-    }
-
-    protected virtual void OnBoatStartedMoving(Boat boat)
-    {
-
-    }
-
-    protected virtual void OnBoatStoppedMoving(Boat boat)
     {
 
     }

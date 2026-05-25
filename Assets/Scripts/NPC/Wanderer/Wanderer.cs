@@ -50,18 +50,4 @@ public class Wanderer : Human
 
         boat.ContextMenuTarget.SetShowContextMenu(false);
     }
-
-    protected override void OnBoatStartedMoving(Boat boat)
-    {
-        base.OnBoatStartedMoving(boat);
-
-        boat.SelectComponent.SetClickable(false);
-    }
-
-    protected override void OnBoatStoppedMoving(Boat boat)
-    {
-        base.OnBoatStoppedMoving(boat);
-
-        boat.SelectComponent.SetClickable(true);
-    }
 }
