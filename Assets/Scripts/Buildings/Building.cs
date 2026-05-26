@@ -132,6 +132,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         levelComponent.Init(buildingData.Level);
         upgradeComponent.Init(buildingData.Upgrade);
         constructionComponent.Init(buildingData.Construction);
+
+        GetComponent<CraftingModule>()?.Init(buildingData.Crafting);
     }
 
     protected abstract void OnDemolish();

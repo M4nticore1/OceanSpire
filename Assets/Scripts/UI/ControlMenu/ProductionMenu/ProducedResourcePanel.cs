@@ -11,7 +11,7 @@ public class ProducedResourcePanel : MonoBehaviour
     [SerializeField] private Transform producedResourceSlot;
     [SerializeField] private LayoutGroup consumedResourcesSlot;
     private FlickingImage flickingProgressBar;
-    private ProductionModule productionModule;
+    private CraftingModule productionModule;
 
     private CraftItem currentCraftItem;
     private int index = 0;
@@ -48,11 +48,12 @@ public class ProducedResourcePanel : MonoBehaviour
         UpdateProgressBar();
     }
 
-    public void Init(ProductionModule productionModule, CraftItem craftItem, int index)
+    public void Init(CraftingModule productionModule, CraftItem craftItem, int index, SelectGroup selectGroup)
     {
         this.productionModule = productionModule;
         this.currentCraftItem = craftItem;
         this.index = index;
+        button.SetSelectGroup(selectGroup);
 
         CreateProducedResource();
         CreateConsumedResources();
@@ -77,14 +78,16 @@ public class ProducedResourcePanel : MonoBehaviour
 
     private void CreateProducedResource()
     {
-        ResourceWidget widget = Instantiate(resourceWidgetPrefab, producedResourceSlot.transform);
+        var widget = Instantiate(resourceWidgetPrefab, producedResourceSlot.transform);
+        widget.SetItem(currentCraftItem.ProduceItem.Definition);
         widget.SetAmount(currentCraftItem.ProduceItem);
     }
 
     private void CreateConsumedResources()
     {
         foreach (var resource in currentCraftItem.ConsumeResources) {
-            ResourceWidget widget = Instantiate(resourceWidgetPrefab, consumedResourcesSlot.transform);
+            var widget = Instantiate(resourceWidgetPrefab, consumedResourcesSlot.transform);
+            widget.SetItem(resource.Definition);
             widget.SetAmount(resource);
         }
     }
@@ -126,7 +129,7 @@ public class ProducedResourcePanel : MonoBehaviour
 
     private void OnClicked()
     {
-        productionModule.SetProducedItemIndex(index);
+        productionModule.SetProducedItemByIndex(index);
         Select();
     }
 

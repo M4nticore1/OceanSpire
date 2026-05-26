@@ -79,8 +79,6 @@ public class TowerBuilding : Building
 
     protected override void OnInit(BuildingData buildingData)
     {
-        base.OnInit(buildingData);
-
         var towerData = buildingData as TowerBuildingData;
         FloorIndex = towerData.FloorIndex;
         PlaceIndex = towerData.PlaceIndex;
@@ -89,6 +87,8 @@ public class TowerBuilding : Building
         UpdateNeighborBuildings();
         UpdateConnectedBuildings();
         UpdatePositionType();
+
+        base.OnInit(buildingData);
     }
 
     protected override void OnDemolish()

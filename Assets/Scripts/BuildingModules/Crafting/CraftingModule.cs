@@ -1,8 +1,8 @@
 using System.Linq;
 using UnityEngine;
 
-[AddComponentMenu("Building Modules/Production Module")]
-public class ProductionModule : BuildingModule, IElectricible, IRaidable
+[AddComponentMenu("Building Modules/Crafting Module")]
+public class CraftingModule : BuildingModule, IElectricible, IRaidable
 {
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
     public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[OwnedBuilding.LevelComponent.Level - 1];
@@ -16,11 +16,38 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
     [SerializeField] private float electricityConsumption = 0f;
     public float ElectricityConsumption => electricityConsumption;
 
+    public void Init(CraftingModuleData craftingModuleData)
+    {
+        if (craftingModuleData != null) {
+            SetProducedItemByIndex(craftingModuleData.CraftId);
+            SetProduceTime(craftingModuleData.CraftingTime);
+        }
+        else {
+            SetProducedItemByIndex(0);
+        }
+    }
+
     private void Update()
     {
         if (!IsWorking) return;
 
         ProcessProduce();
+    }
+
+    public void SetProducedItemByIndex(int index)
+    {
+        if (IsWorking && !IsReadyToCollect && CurrentCraftItem) {
+            RefundResources();
+            TryCollectItem();
+            ResetProducedTime();
+        }
+
+        CurrentProductingItemIndex = index;
+        CurrentCraftItem = ProductionLevelData.craftItems[index];
+
+        if (IsWorking) {
+            ConsumeResources();
+        }
     }
 
     public void SetProduceTime(float time)
@@ -29,10 +56,12 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
         TryProduceItem();
     }
 
-    public void SetProducedItemIndex(int index)
+    // Click
+    public void OnBuildingClicked()
     {
-        CurrentProductingItemIndex = index;
-        SetProducedItemByIndex(CurrentProductingItemIndex);
+        if (!TryCollectItem()) return;
+
+        SelectManager.Instance.SelectedComponent.Click();
     }
 
     // IElectricible
@@ -67,14 +96,6 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
         StopWorking();
     }
 
-    // Click
-    public void OnBuildingClicked()
-    {
-        if (!TryCollectItem()) return;
-
-        SelectManager.Instance.SelectedComponent.Click();
-    }
-
     protected override void Subscribe()
     {
         base.Subscribe();
@@ -91,13 +112,6 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
         OwnedBuilding.OnClicked -= OnBuildingClicked;
         OwnedBuilding.onCurrentWorkerAdded -= OnCurrentWorkerAdded;
         OwnedBuilding.onCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
-    }
-
-    protected override void OnInited()
-    {
-        base.OnInited();
-
-        SetProducedItemByIndex(CurrentProductingItemIndex);
     }
 
     // Production
@@ -185,21 +199,6 @@ public class ProductionModule : BuildingModule, IElectricible, IRaidable
         }
         else {
             SetFlickingPower(0);
-        }
-    }
-
-    private void SetProducedItemByIndex(int index)
-    {
-        if (IsWorking && !IsReadyToCollect && CurrentCraftItem != null) {
-            RefundResources();
-            TryCollectItem();
-            ResetProducedTime();
-        }
-
-        CurrentCraftItem = ProductionLevelData.craftItems[index];
-
-        if (IsWorking) {
-            ConsumeResources();
         }
     }
 

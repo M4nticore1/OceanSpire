@@ -26,7 +26,7 @@ public class StorageManagementList : ManagementList
             if (item.Definition.ItemCategory != itemCategory) continue;
 
             var widget = Instantiate(itemWidgetPrefab, LayoutGroup.transform);
-            widget.SetItemAndApply(item.Definition);
+            widget.SetItem(item.Definition);
             widget.SetAmount(item);
             widget.SetLimit(item.Stack);
         }

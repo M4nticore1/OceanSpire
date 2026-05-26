@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CoalGeneratorModule : BuildingModule
 {
-    [SerializeField] private ProductionModule productionModule;
+    [SerializeField] private CraftingModule productionModule;
     [SerializeField] private ParticleSystem smokePrefab;
     private ParticleSystem spawnedSmoke;
 

@@ -3,6 +3,7 @@ using UnityEngine;
 public class ElevatorCabinData : BuildingConstructionData
 {
     public float Height = 0f;
+    public int TargetFloor = 0;
 
     public static ElevatorCabinData Create(ElevatorCabinConstruction construction)
     {
@@ -14,7 +15,8 @@ public class ElevatorCabinData : BuildingConstructionData
         return new ElevatorCabinData()
         {
             BuildingInstanceId = construction.OwnedBuilding.InstanceId.Id,
-            Height = construction.transform.position.y
+            Height = construction.transform.position.y,
+            TargetFloor = construction.TargetFloor,
         };
     }
 }

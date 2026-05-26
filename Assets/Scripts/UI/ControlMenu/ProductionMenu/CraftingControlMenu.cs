@@ -2,13 +2,14 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ProductionControlMenu : ControlMenu
+public class CraftingControlMenu : ControlMenu
 {
     [SerializeField] private ProducedResourcePanel producedResourcePanelPrefab;
     private ProducedResourcePanel[] spawnedProducedResourcePanels;
 
     [SerializeField] private LayoutGroup layoutGroup;
     [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private SelectGroup selectGroup;
     [SerializeField] private FitSizeToChildren fitSizeToChildren;
 
     protected override void OnOpen()
@@ -30,15 +31,17 @@ public class ProductionControlMenu : ControlMenu
 
     private void CreatePanels()
     {
-        ProductionModule module = SelectManager.Instance.GetSelectedBuilding().GetComponent<ProductionModule>();
-        CraftItem[] crafts = module.ProductionLevelData.craftItems;
+        var module = SelectManager.Instance.GetSelectedBuilding().GetComponent<CraftingModule>();
+        var crafts = module.ProductionLevelData.craftItems;
         int length = crafts.Length;
         spawnedProducedResourcePanels = new ProducedResourcePanel[length];
 
         for (int i = 0; i < length; i++) {
-            CraftItem craft = crafts[i];
-            ProducedResourcePanel spawned = Instantiate(producedResourcePanelPrefab, layoutGroup.transform);
-            spawned.Init(module, craft, i);
+            var craft = crafts[i];
+
+            var spawned = Instantiate(producedResourcePanelPrefab, layoutGroup.transform);
+            spawned.Init(module, craft, i, selectGroup);
+
             spawnedProducedResourcePanels[i] = spawned;
 
             if (i != module.CurrentProductingItemIndex) continue;

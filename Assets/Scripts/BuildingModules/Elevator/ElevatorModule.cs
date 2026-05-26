@@ -9,8 +9,6 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     public ElevatorCabinConstruction SpawnedElevatorCabin;
 
-    private bool IsMoving => SpawnedElevatorCabin ? SpawnedElevatorCabin.IsMoving : false;
-
     // Subscribe
     protected override void Subscribe()
     {
@@ -97,7 +95,7 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     public bool ShouldSpendElectricity()
     {
-        return IsMoving && SpawnedElevatorCabin && SpawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).FloorIndex;
+        return SpawnedElevatorCabin.IsMoving && SpawnedElevatorCabin && SpawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).FloorIndex;
     }
 
     public void SetCabin(ElevatorCabinConstruction cabin)

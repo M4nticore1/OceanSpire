@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RecipesContextElement : ContextElement
 {
-    [SerializeField] private ProductionControlMenu recipesMenu;
+    [SerializeField] private CraftingControlMenu recipesMenu;
 
     protected override void OnShowed()
     {
@@ -16,10 +16,10 @@ public class RecipesContextElement : ContextElement
 
     protected override bool ShouldShow(ContextMenuTarget target)
     {
-        Building building = target.GetComponent<Building>();
+        var building = target.GetComponent<Building>();
         if (!building) return false;
 
-        if (!building.GetComponent<ProductionModule>()) return false;
+        if (!building.GetComponent<CraftingModule>()) return false;
         if (building.ConstructionComponent.IsUnderConstruction) return false;
 
         return true;

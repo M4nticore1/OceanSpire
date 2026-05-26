@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: 1314082678567658609}
   - component: {fileID: 5000427502305262710}
   - component: {fileID: 1773445323046720086}
+  - component: {fileID: 3567810257309652963}
   m_Layer: 5
   m_Name: LayoutGroup
   m_TagString: Untagged
@@ -462,6 +463,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FitSizeToChildren
   minHeight: 1900
+--- !u!114 &3567810257309652963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4424771004643402847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a03c2b8eeb2c2d4aa90714a6236ec59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectGroup
 --- !u!1 &4626346637677259833
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,12 +838,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5547891556668468624}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c791e0faf9df4df42bf10beaacba7fab, type: 3}
+  m_Script: {fileID: 11500000, guid: a954451a4a50ffe4ea5ca9c940c0e1f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProductionControlMenu
   producedResourcePanelPrefab: {fileID: 5968302294432705402, guid: 29184d8a9adf1db45b7c71598dce4862, type: 3}
   layoutGroup: {fileID: 4896204670629501784}
   scrollRect: {fileID: 6165497256048796172}
+  selectGroup: {fileID: 3567810257309652963}
   fitSizeToChildren: {fileID: 1773445323046720086}
 --- !u!1 &5682756847848722927 stripped
 GameObject:

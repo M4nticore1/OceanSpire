@@ -44,6 +44,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
         int floor = GetFloorIndexByPosition();
         ApplyOwnedBuildingByFloor(floor);
+        TryStopMoving();
     }
 
     protected override void OnInited(BuildingConstructionData data)
@@ -54,6 +55,10 @@ public class ElevatorCabinConstruction : BuildingConstruction
         if (elevatorCabinData == null) return;
 
         transform.position = new Vector3(transform.position.x, elevatorCabinData.Height, transform.position.z);
+        SetTargetFloor(elevatorCabinData.TargetFloor);
+        SetNextFloor(CalculateNextFloor());
+        TryMoveToFloor(TargetFloor);
+        TryStopMoving();
     }
 
     public override void SetOwnedBuilding(Building building)
@@ -67,10 +72,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
         }
 
         UpdateTargetFloor();
-
-        if (FloorIndex == TargetFloor || !TryMoveToFloor(TargetFloor)) {
-            StopMoving();
-        }
+        TryStopMoving();
     }
 
     public void SetTargetFloor(int floorIndex)
@@ -85,7 +87,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     public void StopMoving()
     {
-        IsMoving = false;
+        SetIsMoving(false);
         ApplyBuildingPosition();
 
         // Stop entities riding
@@ -167,7 +169,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
             CreatureCityNavigator navigator = waitingPassengers[i];
             int floor = navigator.FloorIndex;
 
-            if (!CanMoveToFloor(floor)) {
+            if (!ShouldMoveToFloor(floor)) {
                 RemoveWaitingPassenger(navigator);
             }
         }
@@ -184,28 +186,29 @@ public class ElevatorCabinConstruction : BuildingConstruction
     // Floor
     public bool TryMoveToFloor(int floor)
     {
-        if (!CanMoveToFloor(floor))
+        if (!ShouldMoveToFloor(floor))
             return false;
 
         StartMovingToFloor(floor);
+
         return true;
     }
 
-    public bool CanMoveToFloor(int floor)
+    public bool ShouldMoveToFloor(int floor)
     {
-        TowerBuilding targetBuilding = BuildingsManager.Instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
-        if (!targetBuilding)
-            return false;
+        if (FloorIndex == floor) return false;
 
-        if (!targetBuilding.NetworkWith(OwnedElevator.OwnedTowerBuilding))
-            return false;
+        var targetBuilding = BuildingsManager.Instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
+        if (!targetBuilding) return false;
+
+        if (!targetBuilding.NetworkWith(OwnedElevator.OwnedTowerBuilding)) return false;
 
         return true;
     }
 
     private void StartMovingToFloor(int floorIndex)
     {
-        IsMoving = true;
+        SetIsMoving(true);
         StartFloorIndex = FloorIndex;
 
         if (floorIndex > FloorIndex)
@@ -235,7 +238,19 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private void UpdateTargetFloor()
     {
         SetTargetFloor(CalculateTargetFloor());
-        SetNextFloor(CalculateNextFloor());
+    }
+
+    private void TryStopMoving()
+    {
+        if (!IsMoving) return;
+        if (FloorIndex != TargetFloor && TryMoveToFloor(TargetFloor)) return;
+
+        StopMoving();
+    }
+
+    private void SetIsMoving(bool value)
+    {
+        IsMoving = value;
     }
 
     private int CalculateTargetFloor()
@@ -312,7 +327,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     private void ApplyOwnedBuildingByFloor(int floor)
     {
-        TowerBuilding building = BuildingsManager.Instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
+        var building = BuildingsManager.Instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
         if (building == OwnedBuilding) return;
 
         SetOwnedBuilding(building);

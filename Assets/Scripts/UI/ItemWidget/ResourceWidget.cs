@@ -34,6 +34,17 @@ public class ResourceWidget : UIBehaviour
         UpdateAmountAndLimit();
     }
 
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        if (Amount != null)
+            Amount.OnAmountChanged -= OnAmountChanged;
+
+        if (Limit != null)
+            Limit.OnAmountChanged -= OnLimitChanged;
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -44,7 +55,7 @@ public class ResourceWidget : UIBehaviour
         UpdateAmountAndLimit();
     }
 
-    public virtual void SetItemAndApply(ItemDefinition definition)
+    public virtual void SetItem(ItemDefinition definition)
     {
         itemDefinition = definition;
         UpdateItemName();
@@ -156,7 +167,7 @@ public class ResourceWidget : UIBehaviour
     {
         if (!useAmountColors) return;
 
-        if (Amount != null && Limit != null && Amount.Amount >= Limit.Amount) {
+        if (Amount == null || Limit == null || Amount.Amount >= Limit.Amount) {
             SetColor(enoughAmountColor);
         }
         else {

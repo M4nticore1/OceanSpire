@@ -18,7 +18,7 @@ public class BuildingData
         Level = LevelData.Create(building.LevelComponent);
         Upgrade = UpgradeData.Create(building.UpgradeComponent);
         Construction = ConstructionData.Create(building.ConstructionComponent);
-        Crafting = CraftingModuleData.Create(building.GetComponent<ProductionModule>());
+        Crafting = CraftingModuleData.Create(building.GetComponent<CraftingModule>());
     }
 
     public static BuildingData Create(Building building)
