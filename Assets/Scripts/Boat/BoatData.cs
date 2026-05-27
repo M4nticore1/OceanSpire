@@ -17,12 +17,23 @@ public class BoatData
         return new BoatData()
         {
             Id = boat.Definition.BoatId,
-            InstanceId = boat.InstanceId.Id,
+            InstanceId = boat.InstanceId.GetId(),
             Position = new Vector3Data(boat.transform.position),
             Rotation = new Vector3Data(boat.transform.rotation.eulerAngles),
             StateId = (int)boat.CurrentState,
-            DockInstanceId = boat.DockPoint?.InstanceId.Id,
+            DockInstanceId = boat.DockPoint?.InstanceId.GetId(),
             Status = boat.CurrentStatus
         };
+    }
+
+    public static BoatData[] Create(Boat[] boats)
+    {
+        var boatsData = new BoatData[boats.Length];
+
+        for (int i = 0; i < boats.Length; i++) {
+            boatsData[i] = Create(boats[i]);
+        }
+
+        return boatsData;
     }
 }

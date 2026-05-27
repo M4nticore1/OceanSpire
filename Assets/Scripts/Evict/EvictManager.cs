@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class EvictManager : MonoBehaviour
 {
+    [SerializeField] private DockPointsManager boatDocksManager;
     [SerializeField] private Boat evictBoatPrefab;
-
-    [SerializeField] private BoatDockPoint[] evictBoatDockPoints;
 
     public void TryEvict(Citizen citizen)
     {
@@ -37,7 +36,7 @@ public class EvictManager : MonoBehaviour
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(dockPoint.transform.position),
             Rotation = new Vector3Data(dockPoint.transform.rotation.eulerAngles),
-            DockInstanceId = dockPoint.InstanceId.Id
+            DockInstanceId = dockPoint.InstanceId.GetId()
         };
 
         var boat = BoatFactory.CreateBoat(evictBoatPrefab, dockPoint.transform.position, dockPoint.transform.rotation, boatData);
@@ -47,13 +46,13 @@ public class EvictManager : MonoBehaviour
 
     private BoatDockPoint GetNextDockPoint()
     {
-        foreach (var dockPoint in evictBoatDockPoints) {
+        foreach (var dockPoint in boatDocksManager.EvictDockPoints) {
             if (dockPoint.Boat) continue;
 
             return dockPoint;
         }
 
-        return evictBoatDockPoints[0];
+        return boatDocksManager.EvictDockPoints[0];
     }
 
     private bool ShouldEvict(Citizen citizen)

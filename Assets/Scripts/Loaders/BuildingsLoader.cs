@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BuildingsLoader : Loader
 {
@@ -133,8 +134,15 @@ public class BuildingsLoader : Loader
         for (int i = 0; i < buildings.Length; i++) {
             var building = buildings[i];
 
-            BuildingData buildingData = BuildingData.Create(building);
-            buildingData.InstanceId = instancesManager.GetNextInstanceId();
+            var buildingData = new BuildingData
+            {
+                Id = building.BuildingData.BuildingId,
+                InstanceId = instancesManager.GetNextInstanceId(),
+                Level = LevelData.Create(building.LevelComponent),
+                Upgrade = UpgradeData.Create(building.UpgradeComponent),
+                Construction = ConstructionData.Create(building.ConstructionComponent),
+                Crafting = CraftingModuleData.Create(building.GetComponent<CraftingModule>()),
+            };
 
             building.Init(buildingData);
         }
@@ -148,9 +156,16 @@ public class BuildingsLoader : Loader
             var floor = buildingsManager.BuiltFloors[i];
             var building = floor.OwnedBuilding as TowerBuilding;
 
-            var buildingData = TowerBuildingData.Create(building);
-            buildingData.InstanceId = instancesManager.GetNextInstanceId();
-            buildingData.FloorIndex = i;
+            var buildingData = new TowerBuildingData
+            {
+                Id = building.BuildingData.BuildingId,
+                InstanceId = instancesManager.GetNextInstanceId(),
+                Level = LevelData.Create(building.LevelComponent),
+                Upgrade = UpgradeData.Create(building.UpgradeComponent),
+                Construction = ConstructionData.Create(building.ConstructionComponent),
+                Crafting = CraftingModuleData.Create(building.GetComponent<CraftingModule>()),
+                FloorIndex = i,
+            };
 
             building.Init(buildingData);
         }
@@ -166,15 +181,22 @@ public class BuildingsLoader : Loader
             for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
                 var roomPlace = floor.RoomBuildingPlaces[j];
 
-                var room = roomPlace.PlacedBuilding;
-                if (!room) continue;
+                var building = roomPlace.PlacedBuilding;
+                if (!building) continue;
 
-                var data = TowerBuildingData.Create(room);
-                data.InstanceId = instancesManager.GetNextInstanceId();
-                data.FloorIndex = i;
-                data.PlaceIndex = j;
+                var buildingData = new TowerBuildingData
+                {
+                    Id = building.BuildingData.BuildingId,
+                    InstanceId = instancesManager.GetNextInstanceId(),
+                    Level = LevelData.Create(building.LevelComponent),
+                    Upgrade = UpgradeData.Create(building.UpgradeComponent),
+                    Construction = ConstructionData.Create(building.ConstructionComponent),
+                    Crafting = CraftingModuleData.Create(building.GetComponent<CraftingModule>()),
+                    FloorIndex = i,
+                    PlaceIndex = j
+                };
 
-                room.Init(data);
+                building.Init(buildingData);
             }
         }
     }

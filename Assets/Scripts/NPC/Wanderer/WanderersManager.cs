@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,12 +5,14 @@ public class WanderersManager : MonoBehaviour
 {
     public static WanderersManager Instance;
 
+    [Header("Main")]
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
     [SerializeField] private HumanNamesList humanNamesList;
 
-    [SerializeField] private CreatureIdEnum[] wandererIds;
-    [SerializeField] private BoatIdEnum wandererBoatId;
+    [Header("Prefabs")]
+    [SerializeField] private Creature[] wandererPrefabs;
+    [SerializeField] private Boat boatPrefab;
 
     [Header("Cooldown")]
     [SerializeField] private float minWandererSpawnCooldown = 10;
@@ -77,7 +78,7 @@ public class WanderersManager : MonoBehaviour
         Vector3 rotation = Quaternion.LookRotation(-position.normalized).eulerAngles;
 
         var boat = CreateBoat(position, rotation);
-        var human = CreateWanderer(position, rotation, boat.InstanceId.Id);
+        var human = CreateWanderer(position, rotation, boat.InstanceId.GetId());
     }
 
     private void ResetTimeToSpawn()
@@ -120,12 +121,11 @@ public class WanderersManager : MonoBehaviour
 
     private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId)
     {
-        var id = (int)wandererIds[UnityEngine.Random.Range(0, wandererIds.Length)];
-        var prefab = creaturesList.GetCreature(id) as Human;
+        var prefab = wandererPrefabs[UnityEngine.Random.Range(0, wandererPrefabs.Length)] as Human;
 
         var data = new WandererData()
         {
-            Id = id,
+            Id = prefab.Definition.CreatureId,
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
@@ -155,19 +155,17 @@ public class WanderersManager : MonoBehaviour
 
     private Boat CreateBoat(Vector3 position, Vector3 rotation)
     {
-        var prefab = boatsList.GetBoat((int)wandererBoatId);
-
         var boatData = new BoatData()
         {
-            Id = prefab.Definition.BoatId,
+            Id = boatPrefab.Definition.BoatId,
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
-            DockInstanceId = GetDockPoint().InstanceId.Id,
+            DockInstanceId = GetDockPoint().InstanceId.GetId(),
             Status = HumanStatusEnum.Wanderer
         };
 
-        var boat = BoatFactory.CreateBoat(prefab, position, Quaternion.Euler(rotation), boatData);
+        var boat = BoatFactory.CreateBoat(boatPrefab, position, Quaternion.Euler(rotation), boatData);
 
         return boat;
     }

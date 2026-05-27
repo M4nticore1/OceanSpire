@@ -44,7 +44,7 @@ public class InstancesManager : MonoBehaviour
 
     public void UnregisterInstance(InstanceId instance)
     {
-        instances.Remove(instance.Id);
+        instances.Remove(instance.GetId());
     }
 
     public InstanceId GetInstance(int id)

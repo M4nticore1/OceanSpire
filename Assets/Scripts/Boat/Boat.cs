@@ -35,8 +35,6 @@ public class Boat : MonoBehaviour, IClickable
     [SerializeField] private Inventory inventory;
     public Inventory Inventory => inventory;
 
-    [SerializeField] private HealthDrainer healthDrainer;
-
     [SerializeField] private SelectComponent selectComponent;
     public SelectComponent SelectComponent => selectComponent;
 
@@ -44,7 +42,7 @@ public class Boat : MonoBehaviour, IClickable
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
     // Dock
-    public BoatDockPoint DockPoint { get; private set; }
+    public BoatDockPoint DockPoint;
     public LootContainer TargetLootContainer { get; private set; }
 
     // Weight
@@ -162,11 +160,6 @@ public class Boat : MonoBehaviour, IClickable
     public ItemInstance GetItemToUnload()
     {
         return inventory.GetItemByIndex(0);
-    }
-
-    public void ProcessDrainHealth()
-    {
-        healthDrainer.ProcessDrainHealth();
     }
 
     // State

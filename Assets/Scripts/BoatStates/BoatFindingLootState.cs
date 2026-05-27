@@ -28,8 +28,6 @@ public class BoatFindingLootState : BoatState
 
     public override void Tick()
     {
-        boat.ProcessDrainHealth();
-
         if (Time.timeAsDouble < lastUpdateDestinationTime + updateDestinationRate) return;
 
         UpdateDestination();

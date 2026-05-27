@@ -13,6 +13,9 @@ public class DockPointsManager : MonoBehaviour
     [SerializeField] private BoatDockPoint[] raiderDockPoints;
     public BoatDockPoint[] RaiderDockPoints => raiderDockPoints;
 
+    [SerializeField] private BoatDockPoint[] evictDockPoints;
+    public BoatDockPoint[] EvictDockPoints => evictDockPoints;
+
     private void Awake()
     {
         if (Instance) {

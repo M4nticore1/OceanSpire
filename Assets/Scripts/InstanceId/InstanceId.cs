@@ -2,18 +2,27 @@ using UnityEngine;
 
 public class InstanceId : MonoBehaviour
 {
-    public int Id { get; private set; } = 0;
-    private bool isRegistered = false;
+    private int id = 0;
+    public bool IsRegistered = false;
 
     public void Register(int id)
     {
-        if (isRegistered) {
-            Debug.Log($"Instance Id component of {this} is already registered as {Id}!");
+        if (IsRegistered) {
+            Debug.Log($"Instance Id component of {this} is already registered as {this.id}!");
             return;
         }
 
-        Id = id;
+        this.id = id;
         InstancesManager.Instance.RegisterInstance(id, this);
-        isRegistered = true;
+        IsRegistered = true;
+    }
+
+    public int GetId()
+    {
+        if (!IsRegistered) {
+            Debug.Log("You are trying to get an unregistered InstanceId");
+        }
+
+        return id;
     }
 }

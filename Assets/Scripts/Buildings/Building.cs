@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -43,6 +44,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public bool IsRuined => isRuined;
 
     public const float DemolishionResourcesRefundPercent = 0.2f;
+
+    public bool IsInited { get; private set; } = false;
 
     public event Action OnInited;
     public event Action OnWorkStarted;
@@ -110,6 +113,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     {
         OnInit(buildingData);
 
+        IsInited = true;
         OnInited?.Invoke();
         OnBuildingInited?.Invoke(this);
     }
@@ -127,8 +131,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected virtual void OnInit(BuildingData buildingData)
     {
-        UpdateStrategy();
         instanceId.Register(buildingData.InstanceId);
+        UpdateStrategy();
         levelComponent.Init(buildingData.Level);
         upgradeComponent.Init(buildingData.Upgrade);
         constructionComponent.Init(buildingData.Construction);
@@ -254,6 +258,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected void UpdateConstruction()
     {
+        if (!InstanceId.IsRegistered) return;
+
         var constructionToSpawn = GetConstructionToSpawn();
         if (!constructionToSpawn) return;
 
@@ -265,7 +271,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
         var data = new BuildingConstructionData()
         {
-            BuildingInstanceId = instanceId.Id
+            BuildingInstanceId = instanceId.GetId()
         };
 
         SpawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, transform, data);

@@ -499,12 +499,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 53266517}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1317929167}
+  m_Father: {fileID: 236297353}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &53266519
 MonoBehaviour:
@@ -521,8 +521,10 @@ MonoBehaviour:
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
   boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
   humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
-  wandererIds: 0200000003000000
-  wandererBoatId: 0
+  wandererPrefabs:
+  - {fileID: 8411686280589987336, guid: 649b0985789fc6c42bd0c217a9a1f0d5, type: 3}
+  - {fileID: 7660346723931557201, guid: 301f8de32aed5d94f9a8a91d01f584c2, type: 3}
+  boatPrefab: {fileID: 8804275003585880861, guid: d0ad1226837183441b6e694aa3c9279b, type: 3}
   minWandererSpawnCooldown: 10
   maxWandererSpawnCooldown: 10
 --- !u!1001 &62199220
@@ -995,7 +997,7 @@ Transform:
   m_GameObject: {fileID: 159323675}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.9914449, z: 0, w: 0.13052626}
-  m_LocalPosition: {x: -18.380001, y: 0, z: 60.55}
+  m_LocalPosition: {x: -15, y: 0, z: 56}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1181,6 +1183,39 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &236297352
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 236297353}
+  m_Layer: 0
+  m_Name: Wanderer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &236297353
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236297352}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 53266518}
+  - {fileID: 919912078}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &238131041
 GameObject:
@@ -1495,9 +1530,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c0e107a89229fb41ba15273c8e5fac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EvictManager
-  evictBoatPrefab: {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
-  evictBoatDockPoints:
-  - {fileID: 776500033}
+  boatDocksManager: {fileID: 1711846142}
+  evictBoatPrefab: {fileID: 8804275003585880861, guid: d0ad1226837183441b6e694aa3c9279b, type: 3}
 --- !u!1 &310042638
 GameObject:
   m_ObjectHideFlags: 0
@@ -3185,7 +3219,7 @@ Transform:
   m_GameObject: {fileID: 576763786}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.976296, z: 0, w: 0.2164397}
-  m_LocalPosition: {x: -12.610001, y: 0, z: 55.55}
+  m_LocalPosition: {x: -10, y: 0, z: 51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4964,12 +4998,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919912077}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1424373026}
+  m_Father: {fileID: 236297353}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &919912079
 MonoBehaviour:
@@ -5475,7 +5509,7 @@ Transform:
   m_GameObject: {fileID: 1080517326}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -9.8, y: 0, z: 32.76}
+  m_LocalPosition: {x: -10, y: 0, z: 32.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6293,7 +6327,6 @@ Transform:
   - {fileID: 1928442170}
   - {fileID: 916931149}
   - {fileID: 1428861524}
-  - {fileID: 53266518}
   - {fileID: 954540109}
   - {fileID: 1591262575}
   - {fileID: 2136275760}
@@ -6566,7 +6599,6 @@ Transform:
   - {fileID: 1493804849}
   - {fileID: 342273253}
   - {fileID: 142442283}
-  - {fileID: 919912078}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1428076146
@@ -7422,7 +7454,7 @@ Transform:
   m_GameObject: {fileID: 1710163120}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.9945219, z: 0, w: 0.10452846}
-  m_LocalPosition: {x: -8.690001, y: 0, z: 41.1}
+  m_LocalPosition: {x: -7.5, y: 0, z: 39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7509,6 +7541,8 @@ MonoBehaviour:
   - {fileID: 1635530771}
   - {fileID: 932695337}
   - {fileID: 1276318085}
+  evictDockPoints:
+  - {fileID: 776500033}
 --- !u!1001 &1787946470
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8395,8 +8429,10 @@ MonoBehaviour:
   humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
   cityStorage: {fileID: 1388613268}
   inventory: {fileID: 2047238981}
-  raiderIds: 0400000005000000
-  raiderBoatId: 0
+  raiderPrefabs:
+  - {fileID: 5290309351902810709, guid: 8aee4d31267ad2a409a74dbaf84efb95, type: 3}
+  - {fileID: -4342417268633007667, guid: 40a2021fd71eee344acfdb909817990f, type: 3}
+  boatPrefab: {fileID: 8804275003585880861, guid: 334b1aa3d8a36e74daf244e8ed0fb4d7, type: 3}
   minRaidCooldown: 10
   maxRaidCooldown: 10
   minSpawnAngleOffset: 5
@@ -8517,7 +8553,7 @@ Transform:
   m_GameObject: {fileID: 2072337169}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.997564, z: 0, w: 0.06975657}
-  m_LocalPosition: {x: -13.440001, y: 0, z: 47.57}
+  m_LocalPosition: {x: -13, y: 0, z: 45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9338,6 +9374,7 @@ SceneRoots:
   - {fileID: 1317929167}
   - {fileID: 830799193}
   - {fileID: 1428076147}
+  - {fileID: 236297353}
   - {fileID: 928034254}
   - {fileID: 113762102}
   - {fileID: 575860145}

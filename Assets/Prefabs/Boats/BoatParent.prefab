@@ -87,11 +87,8 @@ GameObject:
   m_Component:
   - component: {fileID: 959300913105641093}
   - component: {fileID: 8520330495291878649}
-  - component: {fileID: 3202602922045262551}
   - component: {fileID: 1275618266238498596}
   - component: {fileID: 1147310907644242627}
-  - component: {fileID: 1718763975742808754}
-  - component: {fileID: 5453205600493844167}
   - component: {fileID: 4575534088428067244}
   - component: {fileID: 6306187827067608498}
   - component: {fileID: 4463480740995804658}
@@ -133,31 +130,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7ae5fb5bee4b34683a3116056ed90d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boatData: {fileID: 11400000, guid: 21496443aa3fd6c42b41a50f08781f1a, type: 2}
+  boatData: {fileID: 0}
   instanceId: {fileID: 8122635706453091689}
-  lootHandler: {fileID: 3202602922045262551}
   movement: {fileID: 1275618266238498596}
   inventory: {fileID: 1147310907644242627}
-  healthDrainer: {fileID: 5453205600493844167}
+  healthDrainer: {fileID: 0}
   selectComponent: {fileID: 6306187827067608498}
   contextMenuTarget: {fileID: 4463480740995804658}
-  DockPoint: {fileID: 0}
   seatSlot: {fileID: 6338914725495003467}
---- !u!114 &3202602922045262551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9194760719431650583}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e90a54985aec11439e2d46e5a10d3c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BoatLootCollector
-  movement: {fileID: 1275618266238498596}
-  inventory: {fileID: 1147310907644242627}
-  collectLootTime: 0
 --- !u!114 &1275618266238498596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,32 +169,6 @@ MonoBehaviour:
   useAmountLimit: 0
   useWeightLimit: 1
   weightLimit: 50
---- !u!114 &1718763975742808754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9194760719431650583}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28d0e2a60aaaab745affb91810c0fdf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
-  maxHealth: 100
---- !u!114 &5453205600493844167
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9194760719431650583}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3d76abc9fb7bfe4d8730f8b3f966752, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HealthDrainer
-  damagePerSecond: 0.1
 --- !u!114 &4575534088428067244
 MonoBehaviour:
   m_ObjectHideFlags: 0

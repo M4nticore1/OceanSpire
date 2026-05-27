@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -40,6 +39,7 @@ public class WorldData
     public BoatDockData[] CitizenBoatDocks;
     public BoatDockData[] WandererBoatDocks;
     public BoatDockData[] RaiderBoatDocks;
+    public BoatDockData[] EvictBoatDocks;
     public BoatData[] Boats;
     public CitizenData[] Citizens;
     public WandererData[] Wanderers;
@@ -65,128 +65,28 @@ public class WorldData
         return new WorldData() {
             WorldName = saveManager.SaveWorldName,
 
-            GroundBuildings = SaveWorldSystem.SaveGroundBuildings(buildings),
-            FloorFrameBuildings = SaveWorldSystem.SaveFloorFrameBuildings(buildings),
-            TowerBuildings = SaveWorldSystem.SaveTowerBuildings(buildings),
-            ElevatorCabins = SaveWorldSystem.SaveElevatorCabins(elevatorCabins),
+            GroundBuildings = BuildingData.Create(buildings.GroundBuildings().ToArray()),
+            FloorFrameBuildings = TowerBuildingData.Create(buildings.BuiltFloors.Select(b => b.OwnedTowerBuilding).ToArray()),
+            TowerBuildings = TowerBuildingData.Create(buildings.BuiltFloors.SelectMany(b => b.RoomBuildingPlaces).Select(p => p.PlacedBuilding).Where(b => b != null).ToArray()),
+            ElevatorCabins = ElevatorCabinData.Create(elevatorCabins.ElevatorCabins.ToArray()),
 
-            CitizenBoatDocks = SaveWorldSystem.SaveBoatDocks(boatDocks.CitizenBoatDocks.ToArray()),
-            WandererBoatDocks = SaveWorldSystem.SaveBoatDocks(boatDocks.WandererDockPoints.ToArray()),
-            RaiderBoatDocks = SaveWorldSystem.SaveBoatDocks(boatDocks.RaiderDockPoints.ToArray()),
+            CitizenBoatDocks = BoatDockData.Create(boatDocks.CitizenBoatDocks.ToArray()),
+            WandererBoatDocks = BoatDockData.Create(boatDocks.WandererDockPoints.ToArray()),
+            RaiderBoatDocks = BoatDockData.Create(boatDocks.RaiderDockPoints.ToArray()),
+            EvictBoatDocks = BoatDockData.Create(boatDocks.EvictDockPoints.ToArray()),
 
-            Boats = SaveWorldSystem.SaveBoats(boats),
+            Boats = BoatData.Create(boats.Boats.Values.ToArray()),
 
             Citizens = CitizenData.Create(creatures.Citizens.ToArray()),
             Wanderers = WandererData.Create(creatures.Wanderers.ToArray()),
             Raiders = RaiderData.Create(creatures.Raiders.ToArray()),
 
-            CityInventory = SaveWorldSystem.SaveItems(cityInventory),
+            CityInventory = ItemData.Create(cityInventory.Items.ToArray()),
 
             DailyTasks = DailyTasksData.Create(dailyTasks),
             DailyReward = DailyRewardData.Create(dailyReward),
             Raid = RaidData.Create(raid),
             WanderersSystem = WanderersData.Create(wanderers)
         };
-    }
-}
-
-public static class SaveWorldSystem
-{
-    public static BuildingData[] SaveGroundBuildings(BuildingsManager buildingsManager)
-    {
-        var buildings = new BuildingData[buildingsManager.GroundBuildings().Count()];
-
-        for (int i = 0; i < buildingsManager.GroundBuildings().Count(); i++) {
-            buildings[i] = BuildingData.Create(buildingsManager.GroundBuildings().ToArray()[i]);
-        }
-
-        return buildings;
-    }
-
-    public static TowerBuildingData[] SaveFloorFrameBuildings(BuildingsManager buildingsManager)
-    {
-        List<TowerBuildingData> floors = new();
-
-        foreach (var floor in buildingsManager.BuiltFloors) {
-            var building = floor.OwnedTowerBuilding;
-            if (!building) continue;
-
-            floors.Add(TowerBuildingData.Create(building));
-        }
-
-        return floors.ToArray();
-    }
-
-    public static TowerBuildingData[] SaveTowerBuildings(BuildingsManager buildingsManager)
-    {
-        List<TowerBuildingData> buildings = new();
-
-        foreach (var floor in buildingsManager.BuiltFloors) {
-            foreach (var place in floor.RoomBuildingPlaces) {
-                var building = place.PlacedBuilding;
-                if (!building) continue;
-
-                buildings.Add(TowerBuildingData.Create(building));
-            }
-        }
-
-        return buildings.ToArray();
-    }
-
-    public static ElevatorCabinData[] SaveElevatorCabins(ElevatorCabinsManager elevatorCabinsManager)
-    {
-        List<ElevatorCabinData> cabins = new();
-
-        foreach (var cabin in elevatorCabinsManager.ElevatorCabins) {
-            if (!cabin) continue;
-
-            cabins.Add(ElevatorCabinData.Create(cabin));
-        }
-
-        return cabins.ToArray();
-    }
-
-    public static BoatDockData[] SaveBoatDocks(BoatDockPoint[] boatDocks)
-    {
-        var boatDocksData = new BoatDockData[boatDocks.Length];
-
-        for (int i = 0; i < boatDocks.Length; i++) {
-            boatDocksData[i] = BoatDockData.Create(boatDocks[i]);
-        }
-
-        return boatDocksData;
-    }
-
-    public static BoatData[] SaveBoats(BoatsManager boats)
-    {
-        var boatsData = new BoatData[boats.Boats.Count];
-
-        for (int i = 0; i < boats.Boats.Count; i++) {
-            boatsData[i] = BoatData.Create(boats.Boats.Values.ToArray()[i]);
-        }
-
-        return boatsData;
-    }
-
-    public static HumanData[] SaveHumans(Human[] humans)
-    {
-        var result = new HumanData[humans.Length];
-
-        for (int i = 0; i < humans.Length; i++) {
-            result[i] = HumanData.Create(humans[i]);
-        }
-
-        return result;
-    }
-
-    public static ItemData[] SaveItems(Inventory inventory)
-    {
-        var itemsData = new ItemData[inventory.Items.Count];
-
-        for (int i = 0; i < inventory.Items.Count; i++) {
-            itemsData[i] = ItemData.Create(inventory.Items[i]);
-        }
-
-        return itemsData;
     }
 }

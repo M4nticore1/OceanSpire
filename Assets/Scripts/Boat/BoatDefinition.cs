@@ -2,7 +2,9 @@ using UnityEngine;
 
 public enum BoatIdEnum
 {
-    BasicBoat
+    BasicBoat,
+    Raft,
+    RaidBoat
 }
 
 [CreateAssetMenu(fileName = "BoatData", menuName = "Boat/BoatData")]

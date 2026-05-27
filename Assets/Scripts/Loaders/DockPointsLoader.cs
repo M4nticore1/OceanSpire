@@ -26,6 +26,13 @@ public class DockPointsLoader : Loader
         else {
             InitDocks(dockPointsManager.RaiderDockPoints);
         }
+
+        if (worldData != null && worldData.EvictBoatDocks != null) {
+            LoadDocks(dockPointsManager.EvictDockPoints, worldData?.EvictBoatDocks);
+        }
+        else {
+            InitDocks(dockPointsManager.EvictDockPoints);
+        }
     }
 
     private void LoadDocks(BoatDockPoint[] docks, BoatDockData[] docksData)

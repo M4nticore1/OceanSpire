@@ -14,7 +14,7 @@ public class BuildingData
     protected void Fill(Building building)
     {
         Id = building.BuildingData.BuildingId;
-        InstanceId = building.InstanceId.Id;
+        InstanceId = building.InstanceId.GetId();
         Level = LevelData.Create(building.LevelComponent);
         Upgrade = UpgradeData.Create(building.UpgradeComponent);
         Construction = ConstructionData.Create(building.ConstructionComponent);
@@ -23,9 +23,20 @@ public class BuildingData
 
     public static BuildingData Create(Building building)
     {
-        BuildingData data = new BuildingData();
+        var data = new BuildingData();
         data.Fill(building);
 
         return data;
+    }
+
+    public static BuildingData[] Create(Building[] buildings)
+    {
+        var buildingsData = new BuildingData[buildings.Length];
+
+        for (int i = 0; i < buildings.Length; i++) {
+            buildingsData[i] = Create(buildings[i]);
+        }
+
+        return buildingsData;
     }
 }

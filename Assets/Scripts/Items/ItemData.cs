@@ -15,4 +15,15 @@ public class ItemData
             Amount = item.Amount
         };
     }
+
+    public static ItemData[] Create(ItemInstance[] items)
+    {
+        var itemsData = new ItemData[items.Length];
+
+        for (int i = 0; i < items.Length; i++) {
+            itemsData[i] = Create(items[i]);
+        }
+
+        return itemsData;
+    }
 }

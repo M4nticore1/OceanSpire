@@ -12,7 +12,7 @@ public class BoatRiderData
     {
         return new BoatRiderData()
         {
-            BoatInstanceId = boatRider.SelectedBoat?.InstanceId.Id,
+            BoatInstanceId = boatRider.SelectedBoat?.InstanceId.GetId(),
             Riding = boatRider.IsRidingOnBoat,
             MovingToBoat = boatRider.IsMovingToBoat
         };

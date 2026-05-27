@@ -14,7 +14,7 @@ public class CitizenData : HumanData
         citizenData.FillHumanData(citizen);
 
         citizenData.Evicted = citizen.IsEvicted;
-        citizenData.EvictionBoatInstanceId = citizen.EvictionBoat?.InstanceId.Id;
+        citizenData.EvictionBoatInstanceId = citizen.EvictionBoat?.InstanceId.GetId();
         citizenData.LeavePosition = citizenData.EvictionBoatInstanceId != null ? new Vector3Data(citizen.LeavePosition) : null;
 
         return citizenData;

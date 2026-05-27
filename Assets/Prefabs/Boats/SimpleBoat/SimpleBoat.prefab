@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: collectLootTime
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8520330495291878649, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: boatData
+      value: 
+      objectReference: {fileID: 11400000, guid: 21496443aa3fd6c42b41a50f08781f1a, type: 2}
     - target: {fileID: 9194760719431650583, guid: 679b2165b2bee36439352713bb868b16, type: 3}
       propertyPath: m_Name
       value: SimpleBoat

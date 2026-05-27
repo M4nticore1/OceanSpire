@@ -43,7 +43,7 @@ public class BoatsLoader : Loader
             var position = spawnTransform.DockTransform.position;
             var rotation = spawnTransform.DockTransform.rotation.eulerAngles;
 
-            var dockId = dockPointsManager.CitizenBoatDocks[i].InstanceId.Id;
+            var dockId = dockPointsManager.CitizenBoatDocks[i].InstanceId.GetId();
 
             var boatData = new BoatData()
             {

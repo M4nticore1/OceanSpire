@@ -10,6 +10,7 @@ public class RaidManager : MonoBehaviour
 {
     public static RaidManager Instance;
 
+    [Header("Main")]
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
     [SerializeField] private HumanNamesList humanNamesList;
@@ -19,8 +20,8 @@ public class RaidManager : MonoBehaviour
     public Inventory Inventory => inventory;
 
     [Header("Prefabs")]
-    [SerializeField] private CreatureIdEnum[] raiderIds;
-    [SerializeField] private BoatIdEnum raiderBoatId;
+    [SerializeField] private Creature[] raiderPrefabs;
+    [SerializeField] private Boat boatPrefab;
 
     [Header("Cooldown")]
     [SerializeField] private float minRaidCooldown = 10f;
@@ -142,7 +143,7 @@ public class RaidManager : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(-position.normalized);
 
             var boat = CreateBoat(position, rotation);
-            var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.Id);
+            var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.GetId());
         }
 
         IsRaidExist = true;
@@ -243,12 +244,11 @@ public class RaidManager : MonoBehaviour
 
     private Human CreateRaider(Vector3 position, Vector3 rotation, int boatInstanceId)
     {
-        var id = (int)raiderIds[UnityEngine.Random.Range(0, raiderIds.Length)];
-        var prefab = creaturesList.GetCreature(id) as Human;
+        var prefab = raiderPrefabs[UnityEngine.Random.Range(0, raiderPrefabs.Length)] as Human;
 
         var data = new RaiderData()
         {
-            Id = id,
+            Id = prefab.Definition.CreatureId,
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
@@ -279,16 +279,15 @@ public class RaidManager : MonoBehaviour
     {
         var data = new BoatData()
         {
-            Id = (int)raiderBoatId,
+            Id = boatPrefab.Definition.BoatId,
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation.eulerAngles),
-            DockInstanceId = GetNearestDockPoint(position).InstanceId.Id,
+            DockInstanceId = GetNearestDockPoint(position).InstanceId.GetId(),
             Status = HumanStatusEnum.Raider
         };
 
-        var prefab = boatsList.GetBoat(data.Id);
-        var boat = BoatFactory.CreateBoat(prefab, position, rotation, data);
+        var boat = BoatFactory.CreateBoat(boatPrefab, position, rotation, data);
 
         return boat;
     }

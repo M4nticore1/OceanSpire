@@ -24,8 +24,6 @@ public class BoatUnloadingState : BoatState
 
     public override void Tick()
     {
-        boat.ProcessDrainHealth();
-
         if (ShouldUnload()) {
             ProcessStoreResources();
         }
