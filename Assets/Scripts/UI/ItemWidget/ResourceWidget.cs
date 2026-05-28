@@ -120,7 +120,7 @@ public class ResourceWidget : UIBehaviour
 
         float alpha = 0;
 
-        if (Limit.Amount > 0) {
+        if (Limit != null && Limit.Amount > 0) {
             alpha = (float)Amount.Amount / Limit.Amount;
         }
         else {

@@ -65,7 +65,7 @@
   "building_kitchen": "Кухня",
   "building_resource_storage": "Грузовой отсек",
   "building_food_storage": "Пищевой отсек",
-  "building_electricity_storage": "Аккумуляторная комната",
+  "building_battery_room": "Аккумуляторная комната",
   "building_weapon_storage": "Оружейный склад",
 
   "creature_citizen": "Житель",

@@ -32,8 +32,7 @@ public class BuildingsList : ScriptableObject
 
     public Building GetBuilding(int id)
     {
-        Building building;
-        buildingsDict.TryGetValue(id, out building);
+        buildingsDict.TryGetValue(id, out var building);
 
         return building;
     }

@@ -13,7 +13,7 @@ public enum BuildingIdEnum
     Kitchen,
     ResourceStorage,
     FoodStorage,
-    ElectricityStorage,
+    BatteryRoom,
     WeaponStorage,
 };
 

@@ -1015,6 +1015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+  IsRegistered: 0
 --- !u!1001 &164792754
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3252,6 +3253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+  IsRegistered: 0
 --- !u!1 &593505074
 GameObject:
   m_ObjectHideFlags: 0
@@ -4544,6 +4546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+  IsRegistered: 0
 --- !u!114 &776500033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5155,6 +5158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+  IsRegistered: 0
 --- !u!1 &939943839
 GameObject:
   m_ObjectHideFlags: 0
@@ -5542,6 +5546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+  IsRegistered: 0
 --- !u!1 &1081344386
 GameObject:
   m_ObjectHideFlags: 0
@@ -6117,6 +6122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+  IsRegistered: 0
 --- !u!1 &1290112042
 GameObject:
   m_ObjectHideFlags: 0
@@ -7302,6 +7308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+  IsRegistered: 0
 --- !u!1001 &1642675884
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7487,6 +7494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+  IsRegistered: 0
 --- !u!1 &1711846140
 GameObject:
   m_ObjectHideFlags: 0
@@ -8586,6 +8594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+  IsRegistered: 0
 --- !u!1001 &2072819812
 PrefabInstance:
   m_ObjectHideFlags: 0

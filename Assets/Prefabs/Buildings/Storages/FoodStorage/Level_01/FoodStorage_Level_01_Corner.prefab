@@ -55,13 +55,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3818391220124879568}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -1, y: 0.5, z: -1.5}
+  m_LocalRotation: {x: 0, y: 0.25881916, z: -0, w: -0.9659258}
+  m_LocalPosition: {x: -1.5, y: 0.5, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5486632833755438258}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 330, z: 0}
 --- !u!1001 &1896364395874887016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -198,11 +198,11 @@ PrefabInstance:
       objectReference: {fileID: 1002301749493896526}
     - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: buildingInteractions.Array.data[0].waypoints.Array.data[0].actionTime
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: buildingInteractions.Array.data[0].waypoints.Array.data[1].actionTime
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8712712631989154949, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Mesh

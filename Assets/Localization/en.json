@@ -65,7 +65,7 @@
   "building_kitchen": "Kitchen",
   "building_resource_storage": "Resource storage",
   "building_food_storage": "Food storage",
-  "building_electricity_storage": "Battery room",
+  "building_battery_room": "Battery room",
   "building_weapon_storage": "Armory",
 
   "creature_citizen": "Citizen",

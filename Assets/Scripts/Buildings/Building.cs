@@ -2,10 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 {
+    [Header("Data")]
+    [SerializeField] protected BuildingDefinition buildingData;
+    public BuildingDefinition BuildingData => buildingData;
+
+    [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
+    public IReadOnlyList<BuildingLevelData> LevelsData => buildingLevelsData;
+
+    public BuildingLevelData LevelData => LevelsData.Count > levelComponent.Level - 1 ? LevelsData[levelComponent.Level - 1] : null;
+    public BuildingLevelData NextLevelData => LevelsData.Count > levelComponent.Level ? LevelsData[levelComponent.Level] : null;
+
+    [SerializeField] private bool isRuined = false;
+    public bool IsRuined => isRuined;
+
+    [Header("Main")]
     [SerializeField] protected ConstructionComponent constructionComponent;
     public ConstructionComponent ConstructionComponent => constructionComponent;
 
@@ -32,16 +45,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public bool IsDemolished { get; private set; } = false;
 
     public BuildingConstruction SpawnedConstruction { get; private set; }
-
-    [Header("Data")]
-    [SerializeField] protected BuildingDefinition buildingData;
-    public BuildingDefinition BuildingData => buildingData;
-    [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
-    public List<BuildingLevelData> LevelsData => buildingLevelsData;
-    public BuildingLevelData LevelData => LevelsData.Count > levelComponent.Level - 1 ? LevelsData[levelComponent.Level - 1] : null;
-    public BuildingLevelData NextLevelData => LevelsData.Count > levelComponent.Level ? LevelsData[levelComponent.Level] : null;
-    [SerializeField] private bool isRuined = false;
-    public bool IsRuined => isRuined;
 
     public const float DemolishionResourcesRefundPercent = 0.2f;
 

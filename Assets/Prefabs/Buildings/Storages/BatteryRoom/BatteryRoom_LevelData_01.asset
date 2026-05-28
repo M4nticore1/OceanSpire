@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
+  m_Name: BatteryRoom_LevelData_01
+  m_EditorClassIdentifier: Assembly-CSharp::TowerBuildingLevelData
+  resourcesToBuild:
+  - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 2500
+  - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+    amount: 800
+  - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    amount: 150
+  - definition: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+    amount: 300
+  maxResidentsCount: 1
+  constructionTime: 0
+  constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
+  constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}
+  constructionStraight: {fileID: 3395891878762895499, guid: f1d99bf63dd58c64388584a509532ff9, type: 3}
+  constructionCorner: {fileID: 3395891878762895499, guid: a968162db29a703469b1d323e9a09124, type: 3}
+  constructionStraightLeft: {fileID: 3395891878762895499, guid: 92cb961fd789dc446863715de3d04817, type: 3}
+  constructionStraightRight: {fileID: 3395891878762895499, guid: 78fbdfa19f7c0284e92deb461b02bbfa, type: 3}
+  constructionStraightLeftRight: {fileID: 3395891878762895499, guid: 15b2dc035262727418bfcd218e2c9066, type: 3}
+  constructionCornerLeft: {fileID: 3395891878762895499, guid: cc033368a25a9f348bdffceb58c3bfb7, type: 3}
+  constructionCornerRight: {fileID: 3395891878762895499, guid: ce17ae23e0980f1438b9ee1e577d7b4c, type: 3}
+  constructionCornerLeftRight: {fileID: 3395891878762895499, guid: c652ba4113bcaaa489c567cd53bf9aaf, type: 3}
+  constructionStraightUp: {fileID: 0}
+  constructionStraightDown: {fileID: 0}
+  constructionStraightUpDown: {fileID: 0}
+  constructionCornerUp: {fileID: 0}
+  constructionCornerDown: {fileID: 0}
+  constructionCornerUpDown: {fileID: 0}
