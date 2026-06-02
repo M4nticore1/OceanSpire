@@ -24,12 +24,12 @@ public class HumanData : CreatureData
     protected void FillHumanData(Human human)
     {
         Id = human.Definition.CreatureId;
-        InstanceId = human.InstanceId.GetId();
+        InstanceId = human.InstanceId.GetInstanceId();
         Position = new Vector3Data(human.transform.position);
         Rotation = new Vector3Data(human.transform.rotation.eulerAngles);
         Health = human.HealthComponent.CurrentHealth;
-        EnteredBuildingInstanceId = human.CityNavigator.CurrentBuilding?.InstanceId.GetId();
-        InteractBuildingInstanceId = human.InteractComponent.InteractBuilding?.InstanceId.GetId();
+        EnteredBuildingInstanceId = human.CityNavigator.CurrentBuilding?.InstanceId.GetInstanceId();
+        InteractBuildingInstanceId = human.InteractComponent.InteractBuilding?.InstanceId.GetInstanceId();
         MovementStateId = (int)human.CityNavigator.FollowingPathState;
         Name = NameData.Create(human.NameComponent);
         BoatRider = BoatRiderData.Create(human.BoatRider);

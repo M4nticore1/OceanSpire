@@ -12,14 +12,14 @@ public class ContextMenuTarget : MonoBehaviour
 
     private void OnEnable()
     {
-        selectComponent.onSelected += OnComponentSelected;
-        selectComponent.onDeselected += OnComponentDeselected;
+        selectComponent.OnSelected += OnComponentSelected;
+        selectComponent.OnDeselected += OnComponentDeselected;
     }
 
     private void OnDisable()
     {
-        selectComponent.onSelected -= OnComponentSelected;
-        selectComponent.onDeselected -= OnComponentDeselected;
+        selectComponent.OnSelected -= OnComponentSelected;
+        selectComponent.OnDeselected -= OnComponentDeselected;
         onTargetDestroyed?.Invoke(this);
     }
 

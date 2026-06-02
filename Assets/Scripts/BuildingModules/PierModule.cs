@@ -103,7 +103,7 @@ public class PierModule : BuildingModule
                 InstanceId = InstancesManager.Instance.GetNextInstanceId(),
                 Position = new Vector3Data(position),
                 Rotation = new Vector3Data(rotation.eulerAngles),
-                DockInstanceId = boatDock.InstanceId.GetId(),
+                DockInstanceId = boatDock.InstanceId.GetInstanceId(),
                 Status = HumanStatusEnum.Citizen
             };
 

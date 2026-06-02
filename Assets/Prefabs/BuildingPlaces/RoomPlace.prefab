@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 1070029525359184519}
   - component: {fileID: 3886927274127674739}
   - component: {fileID: 8882172810405225091}
+  - component: {fileID: 3985275281207292112}
   m_Layer: 0
   m_Name: BuildingPlaceMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 126
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &5793648607910408088
 Transform:
@@ -103,6 +104,20 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3985275281207292112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3859439699844814488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08277d85c8d42d34cbd82d3632c1d3b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PulseEffect
+  pulseIntensity: 0.5
+  pulseSpeed: 2
 --- !u!1 &7072113992813098010
 GameObject:
   m_ObjectHideFlags: 0
@@ -119,7 +134,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 126
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &9194174278982147483
 Transform:
@@ -152,6 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingType: 0
+  FloorIndex: 0
   placeIndex: 0
   placedBuilding: {fileID: 0}
   buildingZone: {fileID: 3859439699844814488}
@@ -192,6 +208,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2569763168683146206, guid: 0877c3878a3196543ab690de8b6b2420, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2569763168683146206, guid: 0877c3878a3196543ab690de8b6b2420, type: 3}
+      propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6834441055252940992, guid: 0877c3878a3196543ab690de8b6b2420, type: 3}
@@ -294,7 +314,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 662964577805851290, guid: 49c27867525f29940985583fa63d50b2, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 126
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 665527401993494788, guid: 49c27867525f29940985583fa63d50b2, type: 3}
       propertyPath: m_Name
@@ -306,7 +326,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 665527401993494788, guid: 49c27867525f29940985583fa63d50b2, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 126
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

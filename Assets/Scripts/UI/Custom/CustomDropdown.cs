@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,10 +10,17 @@ public class CustomDropdown : UIBehaviour
     [SerializeField] private LayoutGroup layoutGroup;
     [SerializeField] private RectTransform viewport;
     [SerializeField] private float transitionSpeed = 1f;
+
+    public bool IsListeningClick = true;
+
     private float transitionAlpha = 0;
     private Vector3 targetScale;
+
     private bool isOpened = false;
     private bool isAnimating = false;
+
+    public event Action OnOpened;
+    public event Action OnClosed;
 
     protected override void OnEnable()
     {
@@ -44,6 +52,11 @@ public class CustomDropdown : UIBehaviour
         MoveDropdown();
     }
 
+    public void SetListeningClick(bool value)
+    {
+        IsListeningClick = value;
+    }
+
     private void OnButtonClicked()
     {
         if (isOpened)
@@ -54,18 +67,20 @@ public class CustomDropdown : UIBehaviour
 
     private void Open()
     {
+        isOpened = true;
         SetTransitionAlpha(0f);
         targetScale = Vector3.one;
-        isOpened = true;
         OnStateShanged();
+        OnOpened?.Invoke();
     }
 
     private void Close()
     {
+        isOpened = false;
         SetTransitionAlpha(0f);
         targetScale = Vector3.zero;
-        isOpened = false;
         OnStateShanged();
+        OnClosed?.Invoke();
     }
 
     private void OnStateShanged()
@@ -95,7 +110,7 @@ public class CustomDropdown : UIBehaviour
     private void OnPointerReleased()
     {
         if (!isOpened) return;
-        //if (InputListener.Instance.startPosition != InputListener.Instance.lastPosition) return;
+        if (!IsListeningClick) return;
         if (PointerUtils.GetRaycastUIResult().gameObject == button.gameObject) return;
 
         Close();

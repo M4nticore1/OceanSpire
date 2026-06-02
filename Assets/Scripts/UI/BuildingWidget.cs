@@ -5,15 +5,17 @@ using UnityEngine.UI;
 public class BuildingWidget : MonoBehaviour
 {
     private CityStorage cityStorage;
-    public Building buildingPrefab { get; private set; } = null;
-    [SerializeField] private ResourceWidget buildingResourceWidget = null;
+    public Building BuildingPrefab { get; private set; }
+    [SerializeField] private ResourceWidget buildingResourceWidget;
     private List<ResourceWidget> spawnedBuildingResourceWidgets = new List<ResourceWidget>();
 
-    [SerializeField] private TextLocalizer buildingNameTextLocalizer = null;
-    [SerializeField] private Image buildingImage = null;
-    [SerializeField] private CustomButton buildButton = null;
-    [SerializeField] private CustomButton informationButton = null;
-    [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup = null;
+    [SerializeField] private CustomButton buildButton;
+    public CustomButton BuildButton => buildButton;
+
+    [SerializeField] private TextLocalizer buildingNameTextLocalizer;
+    [SerializeField] private Image buildingImage;
+    [SerializeField] private CustomButton informationButton;
+    [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup;
 
     private bool isInited = false;
 
@@ -37,7 +39,7 @@ public class BuildingWidget : MonoBehaviour
     {
         cityStorage = FindAnyObjectByType<CityStorage>();
 
-        buildingPrefab = prefab;
+        BuildingPrefab = prefab;
 
         Building building = prefab.GetComponentInChildren<Building>();
 
@@ -55,7 +57,7 @@ public class BuildingWidget : MonoBehaviour
 
     private void CreateResourcesToBuild()
     {
-        ItemInstance[] buildResources = buildingPrefab.LevelData.ResourcesToBuild;
+        ItemInstance[] buildResources = BuildingPrefab.LevelData.ResourcesToBuild;
 
         for (int i = 0; i < buildResources.Length; i++) {
             ResourceWidget resourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);
@@ -74,7 +76,7 @@ public class BuildingWidget : MonoBehaviour
 
     private void OnBuildButtonCliked()
     {
-        EventBus.InvokeBuildingPlacingStarted(buildingPrefab);
+        EventBus.InvokeBuildingPlacingStarted(BuildingPrefab);
     }
 
     private void OnInformationButtonClicked()

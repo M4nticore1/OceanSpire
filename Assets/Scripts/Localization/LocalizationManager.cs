@@ -77,7 +77,11 @@ public class LocalizationManager
 
     public string GetText(string key)
     {
-        string text = deserializedLocalization[key];
+        if (!deserializedLocalization.TryGetValue(key, out var text)) {
+            Debug.LogWarning($"Localization key not found: '{key}'");
+            return key;
+        }
+
         return text;
     }
 

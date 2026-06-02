@@ -17,7 +17,7 @@ public class InstanceId : MonoBehaviour
         IsRegistered = true;
     }
 
-    public int GetId()
+    public int GetInstanceId()
     {
         if (!IsRegistered) {
             Debug.Log("You are trying to get an unregistered InstanceId");

@@ -11,7 +11,16 @@ public class Billboard : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (cam)
-            transform.LookAt(transform.position - cam.transform.forward, cam.transform.up);
+        if (!cam) return;
+
+        transform.LookAt(cam.transform.position, cam.transform.up);
+
+        if (!transform.parent) return;
+
+        //Vector3 rotation = billboardWorld.eulerAngles;
+        //Vector3 parentRotation = transform.parent.rotation.eulerAngles;
+
+        //transform.rotation = billboardWorld;
+        transform.rotation *= transform.parent.rotation;
     }
 }

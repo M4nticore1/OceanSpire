@@ -143,7 +143,7 @@ public class RaidManager : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(-position.normalized);
 
             var boat = CreateBoat(position, rotation);
-            var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.GetId());
+            var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.GetInstanceId());
         }
 
         IsRaidExist = true;
@@ -283,7 +283,7 @@ public class RaidManager : MonoBehaviour
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation.eulerAngles),
-            DockInstanceId = GetNearestDockPoint(position).InstanceId.GetId(),
+            DockInstanceId = GetNearestDockPoint(position).InstanceId.GetInstanceId(),
             Status = HumanStatusEnum.Raider
         };
 

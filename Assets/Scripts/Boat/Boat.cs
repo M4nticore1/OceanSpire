@@ -52,6 +52,10 @@ public class Boat : MonoBehaviour, IClickable
     [SerializeField] private Transform seatSlot;
     public Transform SeatSlot => seatSlot;
 
+    public bool IsClickable { get; private set; } = true;
+
+    public event Action OnClicked;
+
     public static event Action<Boat> onBoatSelected;
     public static event Action<Boat> onBoatDeselected;
     public static event Action<Boat> onBoatDestroyed;
@@ -61,8 +65,8 @@ public class Boat : MonoBehaviour, IClickable
         movement.OnMovementStarted += OnMovementStarted;
         movement.OnReachedPath += OnMovementStopped;
 
-        selectComponent.onSelected += OnSelected;
-        selectComponent.onDeselected += OnDeselected;
+        selectComponent.OnSelected += OnSelected;
+        selectComponent.OnDeselected += OnDeselected;
     }
 
     private void OnDisable()
@@ -70,8 +74,8 @@ public class Boat : MonoBehaviour, IClickable
         movement.OnMovementStarted -= OnMovementStarted;
         movement.OnReachedPath -= OnMovementStopped;
 
-        selectComponent.onSelected -= OnSelected;
-        selectComponent.onDeselected -= OnDeselected;
+        selectComponent.OnSelected -= OnSelected;
+        selectComponent.OnDeselected -= OnDeselected;
 
         BoatsManager.Instance.UnregisterBoat(this);
     }
@@ -85,8 +89,6 @@ public class Boat : MonoBehaviour, IClickable
 
     public void Init(BoatData boatData)
     {
-        //StartCoroutine(InitCoroutine(boatData));
-
         instanceId.Register(boatData.InstanceId);
 
         transform.position = boatData.Position.Vector3();
@@ -206,9 +208,19 @@ public class Boat : MonoBehaviour, IClickable
         selectComponent.Click();
     }
 
+    public void SetClickable(bool value)
+    {
+        IsClickable = value;
+        OnClicked?.Invoke();
+    }
+
     public bool ShouldClick()
     {
-        return CurrentStatus == HumanStatusEnum.Citizen;
+        if (!IsClickable) return false;
+        if (CurrentStatus == HumanStatusEnum.Raider) return false;
+        if (CurrentStatus == HumanStatusEnum.Wanderer && movement.IsMoving) return false;
+
+        return true;
     }
 
     private void OnMovementStarted()
@@ -234,15 +246,5 @@ public class Boat : MonoBehaviour, IClickable
     private void OnDeselected()
     {
         onBoatDeselected?.Invoke(this);
-    }
-
-    private IEnumerator InitCoroutine(BoatData boatData)
-    {
-        yield return new WaitForEndOfFrame();
-
-        BoatStateEnum state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(boatData.StateId);
-        SetState(state);
-
-        CurrentStatus = boatData.Status;
     }
 }

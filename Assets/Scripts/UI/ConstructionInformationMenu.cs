@@ -25,7 +25,7 @@ public class ConstructionInformationMenu : MonoBehaviour
 
     private void OnBuildingWidgetInformationClicked(BuildingWidget widget)
     {
-        Building building = widget.buildingPrefab;
+        Building building = widget.BuildingPrefab;
         Open(building);
     }
 

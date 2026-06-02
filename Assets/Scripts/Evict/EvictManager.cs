@@ -36,7 +36,7 @@ public class EvictManager : MonoBehaviour
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(dockPoint.transform.position),
             Rotation = new Vector3Data(dockPoint.transform.rotation.eulerAngles),
-            DockInstanceId = dockPoint.InstanceId.GetId()
+            DockInstanceId = dockPoint.InstanceId.GetInstanceId()
         };
 
         var boat = BoatFactory.CreateBoat(evictBoatPrefab, dockPoint.transform.position, dockPoint.transform.rotation, boatData);

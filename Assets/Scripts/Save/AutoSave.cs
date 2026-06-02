@@ -13,6 +13,7 @@ public class AutoSave : MonoBehaviour
     [SerializeField] private DailyRewardManager dailyRewardManager;
     [SerializeField] private RaidManager raidManager;
     [SerializeField] private WanderersManager wanderersManager;
+    [SerializeField] private TutorialManager tutorialManager;
 
     [Header("Auto Save")]
     [SerializeField] private float autoSaveDataFrequency = 5f;
@@ -46,7 +47,8 @@ public class AutoSave : MonoBehaviour
             dailyTasksManager,
             dailyRewardManager,
             raidManager,
-            wanderersManager);
+            wanderersManager,
+            tutorialManager);
 
         WorldSaveSystem.SaveWorld(worldData);
         WorldSaveManager.Instance.SetWorldData(worldData);

@@ -68,11 +68,7 @@ public class BuildingsLoader : Loader
             var floorFrameData = floorFrameBuildingsData[i];
             var prefab = BuildingsList.Instance.GetBuilding(floorFrameData.Id) as TowerBuilding;
 
-            var buildingData = TowerBuildingData.Create(prefab);
-            buildingData.InstanceId = floorFrameData.InstanceId;
-            buildingData.FloorIndex = floorFrameData.FloorIndex;
-
-            Transform transform = null;
+            Transform transform;
 
             if (i > 0)
                 transform = buildingsManager.GetFloorFrameBuilding(i - 1)?.FloorBuildingPlace.transform;

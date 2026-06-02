@@ -1,9 +1,14 @@
+using System;
 using UnityEngine;
 
 public class DailyRewardChest : MonoBehaviour, IClickable
 {
     [SerializeField] private DailyRewardMenu dailyRewardMenu;
     [SerializeField] private GameObject content;
+
+    public bool IsClickable { get; private set; } = true;
+
+    public event Action OnClicked;
 
     private void OnEnable()
     {
@@ -20,11 +25,20 @@ public class DailyRewardChest : MonoBehaviour, IClickable
     public void Click()
     {
         dailyRewardMenu.Open();
+
+        OnClicked?.Invoke();
+    }
+
+    public void SetClickable(bool value)
+    {
+        IsClickable = value;
     }
 
     public bool ShouldClick()
     {
-        return !DailyRewardManager.Instance.AdRewardCollected;
+        if (!IsClickable) return false;
+
+        return true;
     }
 
     private void OnDailyRewardRecieved(RewardInstance reward)

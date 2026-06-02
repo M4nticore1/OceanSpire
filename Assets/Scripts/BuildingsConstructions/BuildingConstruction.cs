@@ -27,6 +27,10 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     private MeshRenderer[] meshRendererers;
     private MaterialPropertyBlock propertyBlock;
 
+    public bool IsClickable { get; private set; } = true;
+
+    public event Action OnClicked;
+
     public static event Action<BuildingConstruction> OnBuildingConstructionInited;
     public static event Action<BuildingConstruction> OnBuildingConstructionDemolished;
 
@@ -90,10 +94,16 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     public void Click()
     {
         OwnedBuilding.OnConstructionClicked();
+        OnClicked?.Invoke();
+    }
+
+    public void SetClickable(bool value)
+    {
+        IsClickable = value;
     }
 
     public bool ShouldClick()
     {
-        return true;
+        return IsClickable;
     }
 }

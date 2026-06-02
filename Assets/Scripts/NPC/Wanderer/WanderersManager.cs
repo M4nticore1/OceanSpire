@@ -78,7 +78,7 @@ public class WanderersManager : MonoBehaviour
         Vector3 rotation = Quaternion.LookRotation(-position.normalized).eulerAngles;
 
         var boat = CreateBoat(position, rotation);
-        var human = CreateWanderer(position, rotation, boat.InstanceId.GetId());
+        var human = CreateWanderer(position, rotation, boat.InstanceId.GetInstanceId());
     }
 
     private void ResetTimeToSpawn()
@@ -161,7 +161,7 @@ public class WanderersManager : MonoBehaviour
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
-            DockInstanceId = GetDockPoint().InstanceId.GetId(),
+            DockInstanceId = GetDockPoint().InstanceId.GetInstanceId(),
             Status = HumanStatusEnum.Wanderer
         };
 

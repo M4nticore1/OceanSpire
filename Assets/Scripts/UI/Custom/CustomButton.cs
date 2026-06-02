@@ -32,7 +32,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] public RectTransform scaleRoot = null;
 
     [SerializeField] private bool isInteractable = true;
-    public bool IsInteractable { get { return isInteractable; } set { isInteractable = value; } }
+    public bool IsInteractable => isInteractable;
 
     [SerializeField] private bool isSelectable = false;
     public bool IsSelectable { get { return isSelectable; } set { isSelectable = value; } }
@@ -108,6 +108,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     public static UnityEvent<CustomButton> onStateChanged = new();
     public static UnityEvent<CustomButton> onButtonPressed = new();
     public static UnityEvent<CustomButton> onButtonReleased = new();
+
+    public event Action OnTutorialInteracted;
 
     protected override void Awake()
     {
@@ -204,6 +206,11 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         selectGroup = null;
         selectGroup.RemoveButton(this);
+    }
+
+    public void SetInteractable(bool value)
+    {
+        isInteractable = value;
     }
 
     private void UpdateSelectGroup()
@@ -305,6 +312,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         OnReleased?.Invoke();
         onButtonReleased?.Invoke(this);
+        OnTutorialInteracted?.Invoke();
     }
 
     // Select
@@ -329,7 +337,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void SetState(CustomButtonState newState)
     {
         if (newState == state) return;
-        if (!IsInteractable) return;
+        //if (!IsInteractable) return;
 
         ExitState(state);
         state = newState;

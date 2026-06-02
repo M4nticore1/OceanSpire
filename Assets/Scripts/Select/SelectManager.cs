@@ -78,8 +78,8 @@ public class SelectManager : MonoBehaviour
     {
         if (isSubscribed) return;
 
-        SelectComponent.onComponentSelected += OnComponentSelected;
-        SelectComponent.onComponentDeselected += OnComponentDeselected;
+        SelectComponent.OnComponentSelected += OnComponentSelected;
+        SelectComponent.OnComponentDeselected += OnComponentDeselected;
 
         isSubscribed = true;
     }
@@ -88,8 +88,8 @@ public class SelectManager : MonoBehaviour
     {
         if (!isSubscribed) return;
 
-        SelectComponent.onComponentSelected -= OnComponentSelected;
-        SelectComponent.onComponentDeselected -= OnComponentDeselected;
+        SelectComponent.OnComponentSelected -= OnComponentSelected;
+        SelectComponent.OnComponentDeselected -= OnComponentDeselected;
 
         isSubscribed = false;
     }

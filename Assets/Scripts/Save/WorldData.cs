@@ -49,6 +49,7 @@ public class WorldData
     public DailyRewardData DailyReward;
     public RaidData Raid;
     public WanderersData WanderersSystem;
+    public TutorialData Tutorial;
 
     public static WorldData Create(WorldSaveManager saveManager,
         BuildingsManager buildings,
@@ -60,7 +61,8 @@ public class WorldData
         DailyTasksManager dailyTasks,
         DailyRewardManager dailyReward,
         RaidManager raid,
-        WanderersManager wanderers)
+        WanderersManager wanderers,
+        TutorialManager tutorial)
     {
         return new WorldData() {
             WorldName = saveManager.SaveWorldName,
@@ -86,7 +88,8 @@ public class WorldData
             DailyTasks = DailyTasksData.Create(dailyTasks),
             DailyReward = DailyRewardData.Create(dailyReward),
             Raid = RaidData.Create(raid),
-            WanderersSystem = WanderersData.Create(wanderers)
+            WanderersSystem = WanderersData.Create(wanderers),
+            Tutorial = TutorialData.Create(tutorial)
         };
     }
 }

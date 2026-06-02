@@ -8,7 +8,7 @@ public class BoatDockData
     {
         return new BoatDockData()
         {
-            InstanceId = boatDock.InstanceId.GetId(),
+            InstanceId = boatDock.InstanceId.GetInstanceId(),
         };
     }
 

@@ -14,9 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoatPrefabsList
   boats:
   - {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
-  citizenBoats:
-  - {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
-  wandererBoats:
-  - {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
-  raiderBoats:
-  - {fileID: 8804275003585880861, guid: 9b8b99cd44072d647ae0489d464ae8e6, type: 3}
+  - {fileID: 8804275003585880861, guid: d0ad1226837183441b6e694aa3c9279b, type: 3}
+  - {fileID: 8804275003585880861, guid: 334b1aa3d8a36e74daf244e8ed0fb4d7, type: 3}

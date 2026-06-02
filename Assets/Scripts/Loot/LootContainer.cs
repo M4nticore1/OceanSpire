@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [System.Serializable]
 public struct LootEntry
@@ -82,6 +83,10 @@ public class LootContainer : MonoBehaviour, IClickable
     private const float checkPositionFrequency = 1.0f;
     private double lastCheckPositionTime = 0d;
 
+    public bool IsClickable { get; private set; } = true;
+
+    public event Action OnClicked;
+
     public static event Action<LootContainer> OnContainerTaken;
     public static event Action<LootContainer> OnContainerStartedFalling;
     public static event Action<LootContainer> onContainerLanded;
@@ -147,12 +152,22 @@ public class LootContainer : MonoBehaviour, IClickable
 
         Destroy(balloons.gameObject);
         isFalling = true;
+
+        OnClicked?.Invoke();
         OnContainerStartedFalling?.Invoke(this);
+    }
+
+    public void SetClickable(bool value)
+    {
+        IsClickable = value;
     }
 
     public bool ShouldClick()
     {
-        return isFlying;
+        if (!IsClickable) return false;
+        if (!isFlying) return false;
+
+        return true;
     }
 
     private void Move(float deltaTime)

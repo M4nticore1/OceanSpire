@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum HumanStatusEnum
 {
@@ -54,6 +55,10 @@ public abstract class Human : Creature, IClickable
     [SerializeField] private ContextMenuTarget contextMenuTarget;
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
+    public bool IsClickable { get; private set; } = true;
+
+    public event Action OnClicked;
+
     public static event Action<Human> OnHumanInited;
     public static event Action<Human> OnHumanRevived;
     public static event Action<Human> OnHumanDied;
@@ -79,8 +84,8 @@ public abstract class Human : Creature, IClickable
         attackComponent.onAttackStarted += OnAttackStarted;
         attackComponent.onAttackStopped += OnAttackStopped;
 
-        cityNavigator.onEnteredBuilding += OnEnteredBuilding;
-        cityNavigator.onReachedPath += OnReachedPathBuilding;
+        cityNavigator.OnEnteredBuilding += OnEnteredBuilding;
+        cityNavigator.OnExitedBuilding += OnExitedBuilding;
 
         interactComponent.onSetedInteractBuilding += OnSetedInteractBuilding;
         interactComponent.onRemovedInteractBuilding += OnRemovedInteractBuilding;
@@ -93,8 +98,8 @@ public abstract class Human : Creature, IClickable
         boatRider.OnStoppedMovingToBoat += OnStoppedMovingToBoat;
         boatRider.OnBoatSetedIdle += OnBoatSetedIdle;
 
-        selectComponent.onSelected += OnSelected;
-        selectComponent.onDeselected += OnDeselected;
+        selectComponent.OnSelected += OnSelected;
+        selectComponent.OnDeselected += OnDeselected;
 
         RaidManager.Instance.OnRaidStarted += OnRaidStarted;
         RaidManager.Instance.OnRaidEnded += OnRaidEnded;
@@ -112,8 +117,8 @@ public abstract class Human : Creature, IClickable
         attackComponent.onAttackStarted -= OnAttackStarted;
         attackComponent.onAttackStopped -= OnAttackStopped;
 
-        cityNavigator.onEnteredBuilding -= OnEnteredBuilding;
-        cityNavigator.onReachedPath -= OnReachedPathBuilding;
+        cityNavigator.OnEnteredBuilding -= OnEnteredBuilding;
+        cityNavigator.OnExitedBuilding -= OnExitedBuilding;
 
         interactComponent.onSetedInteractBuilding -= OnSetedInteractBuilding;
         interactComponent.onRemovedInteractBuilding -= OnRemovedInteractBuilding;
@@ -125,8 +130,8 @@ public abstract class Human : Creature, IClickable
         boatRider.OnStartedMovingToBoat -= OnStartedMovingToBoat;
         boatRider.OnStoppedMovingToBoat -= OnStoppedMovingToBoat;
 
-        selectComponent.onSelected -= OnSelected;
-        selectComponent.onDeselected -= OnDeselected;
+        selectComponent.OnSelected -= OnSelected;
+        selectComponent.OnDeselected -= OnDeselected;
 
         RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
         RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
@@ -194,6 +199,13 @@ public abstract class Human : Creature, IClickable
         else {
             selectComponent.Click();
         }
+
+        OnClicked?.Invoke();
+    }
+
+    public void SetClickable(bool value)
+    {
+        IsClickable = value;
     }
 
     public virtual bool ShouldClick()
@@ -222,7 +234,7 @@ public abstract class Human : Creature, IClickable
 
     protected virtual void OnDied()
     {
-        interactComponent.RemoveInteractBuilding();
+        interactComponent.TryRemoveInteractBuilding();
         TryStopIdle();
         contextMenuTarget.SetShowContextMenu(false);
 
@@ -265,9 +277,12 @@ public abstract class Human : Creature, IClickable
         }
     }
 
-    protected virtual void OnReachedPathBuilding()
+    protected virtual void OnExitedBuilding(Building building)
     {
-
+        //if (boatRider.IsMovingToBoat && !cityNavigator.TargetBuilding) {
+        //    Vector3 position = boatRider.SelectedBoat.DockPoint.EntraceTransform.position;
+        //    movement.TryMoveTo(position);
+        //}
     }
 
     protected virtual void OnSetedInteractBuilding(Building building)
@@ -283,7 +298,7 @@ public abstract class Human : Creature, IClickable
 
     protected virtual void OnRemovedInteractBuilding(Building building)
     {
-        cityNavigator.RemoveTargetBuilding();
+        cityNavigator.SetTargetBuilding(null);
         cityNavigator.RemovePath();
 
         if (boatRider.IsRidingOnBoat) {

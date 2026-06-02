@@ -32,8 +32,11 @@ public class BuildingPlace : MonoBehaviour, IClickable
     public BuildingPlace downPlace { get; private set; }
 
     private bool isShowed = false;
+    public bool IsClickable { get; private set; } = true;
 
-    public static event Action<Building> onClicked;
+    public event Action OnClicked;
+
+    public static event Action<Building> OnBuildingPlaceClicked;
 
     public IEnumerable NeighborPlaces(NeighborMask mask)
     {
@@ -229,19 +232,36 @@ public class BuildingPlace : MonoBehaviour, IClickable
     // Events
     public void Click()
     {
-        TowerBuilding building = ConstructionManager.Instance.BuildingToPlace as TowerBuilding;
+        var buildingPrefab = ConstructionManager.Instance.BuildingToPlace as TowerBuilding;
 
-        TowerBuildingData buildingData = TowerBuildingData.Create(building);
+        TowerBuildingData buildingData = new TowerBuildingData()
+        {
+            Id = buildingPrefab.BuildingData.BuildingId,
+            InstanceId = buildingPrefab.InstanceId.GetInstanceId(),
+            Level = LevelData.Create(buildingPrefab.LevelComponent),
+            Upgrade = UpgradeData.Create(buildingPrefab.UpgradeComponent),
+            Construction = ConstructionData.Create(buildingPrefab.ConstructionComponent),
+            Crafting = CraftingModuleData.Create(buildingPrefab.GetComponent<CraftingModule>()),
+            FloorIndex = FloorIndex,
+            PlaceIndex = placeIndex,
+        };
+
         buildingData.InstanceId = InstancesManager.Instance.GetNextInstanceId();
         buildingData.FloorIndex = FloorIndex;
         buildingData.PlaceIndex = placeIndex;
         buildingData.Construction.CurrentConstructionTime = 0f;
         buildingData.Construction.IsUnderConstruction = true;
 
-        TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(building, transform, buildingData);
+        TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(buildingPrefab, transform, buildingData);
         SetPlacedBuilding(spawnedBuilding);
 
-        onClicked?.Invoke(spawnedBuilding);
+        OnClicked?.Invoke();
+        OnBuildingPlaceClicked?.Invoke(spawnedBuilding);
+    }
+
+    public void SetClickable(bool value)
+    {
+        IsClickable = value;
     }
 
     public bool ShouldClick()

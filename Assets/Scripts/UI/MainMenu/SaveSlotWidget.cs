@@ -106,7 +106,7 @@ public class SaveSlotWidget : MonoBehaviour
 
         if (WorldSaveData == null) {
             createNewWorldMenu.Open();
-            button.IsInteractable = false;
+            button.SetInteractable(false);
         }
     }
 
@@ -123,7 +123,7 @@ public class SaveSlotWidget : MonoBehaviour
     private void OnCreateMenuClosed()
     {
         Selected = null;
-        button.IsInteractable = true;
+        button.SetInteractable(true);
         button.SetState(CustomButtonState.Idle);
     }
 }

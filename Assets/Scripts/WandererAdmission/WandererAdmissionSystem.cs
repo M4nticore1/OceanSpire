@@ -13,17 +13,21 @@ public static class WandererAdmissionSystem
         var position = wanderer.BoatRider.SelectedBoat.DockPoint.EntraceTransform.position;
         var rotaton = wanderer.BoatRider.SelectedBoat.DockPoint.EntraceTransform.rotation;
 
-        var data = CitizenData.Create(wanderer);
-        data.Id = creautereId;
-        data.InstanceId = InstancesManager.Instance.GetNextInstanceId();
-        data.BoatRider = new BoatRiderData();
-        data.Position = new Vector3Data(position);
-        data.Rotation = new Vector3Data(rotaton.eulerAngles);
+        var data = new CitizenData()
+        {
+            Id = creautereId,
+            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
+            Health = wanderer.HealthComponent.CurrentHealth,
+            Position = new Vector3Data(position),
+            Rotation = new Vector3Data(rotaton.eulerAngles),
+            Name = NameData.Create(wanderer.NameComponent),
+            BoatRider = new BoatRiderData(),
+            Weapon = EquipmentData.Create(wanderer.WeaponComponent),
+            Skills = SkillsData.Create(wanderer.SkillsComponent)
+        };
 
-        var citizen = CreatureFactory.CreateHuman(prefab, position, rotaton, data);
-
-        GameObject.Destroy(wanderer.gameObject);
         GameObject.Destroy(wanderer.BoatRider.SelectedBoat.gameObject);
+        var citizen = CreatureFactory.CreateHuman(prefab, position, rotaton, data);
 
         OnWandererAccepted?.Invoke(citizen);
     }

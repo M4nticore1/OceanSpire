@@ -93,8 +93,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         WorkComponent.onWorkerEntered += OnCurrentWorkerAdded;
         WorkComponent.onWorkerExited += OnCurrentWorkerRemoved;
 
-        SelectComponent.onSelected += OnSelected;
-        SelectComponent.onDeselected += OnDeselected;
+        SelectComponent.OnSelected += OnSelected;
+        SelectComponent.OnDeselected += OnDeselected;
     }
 
     protected virtual void OnDisable()
@@ -107,8 +107,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         WorkComponent.onWorkerEntered -= OnCurrentWorkerAdded;
         WorkComponent.onWorkerExited -= OnCurrentWorkerRemoved;
 
-        SelectComponent.onSelected -= OnSelected;
-        SelectComponent.onDeselected -= OnDeselected;
+        SelectComponent.OnSelected -= OnSelected;
+        SelectComponent.OnDeselected -= OnDeselected;
     }
 
     // Constructing
@@ -274,7 +274,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
         var data = new BuildingConstructionData()
         {
-            BuildingInstanceId = instanceId.GetId()
+            BuildingInstanceId = instanceId.GetInstanceId()
         };
 
         SpawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, transform, data);

@@ -9,13 +9,16 @@ public class SelectComponent : MonoBehaviour, IClickable
     private Dictionary<GameObject, int> layers = new Dictionary<GameObject, int>();
 
     [SerializeField] private bool isClickable = true;
+    public bool IsClickable => isClickable;
 
-    public event Action onSelected;
-    public event Action onDeselected;
+    public event Action OnSelected;
+    public event Action OnDeselected;
 
-    public static event Action<SelectComponent> onComponentSelected;
-    public static event Action<SelectComponent> onComponentDeselected;
-    public static event Action<SelectComponent> onComponentDestroyed;
+    public event Action OnClicked;
+
+    public static event Action<SelectComponent> OnComponentSelected;
+    public static event Action<SelectComponent> OnComponentDeselected;
+    public static event Action<SelectComponent> OnComponentDestroyed;
 
     private void OnEnable()
     {
@@ -26,7 +29,7 @@ public class SelectComponent : MonoBehaviour, IClickable
     {
         EventBus.OnPlayerClicked -= OnPlayerClicked;
 
-        onComponentDestroyed?.Invoke(this);
+        OnComponentDestroyed?.Invoke(this);
     }
 
     public void TrySelect()
@@ -51,8 +54,8 @@ public class SelectComponent : MonoBehaviour, IClickable
         }
 
         IsSelected = true;
-        onSelected?.Invoke();
-        onComponentSelected?.Invoke(this);
+        OnSelected?.Invoke();
+        OnComponentSelected?.Invoke(this);
     }
 
     public void TryDeselect()
@@ -79,11 +82,18 @@ public class SelectComponent : MonoBehaviour, IClickable
         }
 
         IsSelected = false;
-        onDeselected?.Invoke();
-        onComponentDeselected?.Invoke(this);
+        OnDeselected?.Invoke();
+        OnComponentDeselected?.Invoke(this);
     }
 
     // IClickable
+    public void TryClick()
+    {
+        if (!ShouldClick()) return;
+
+        Click();
+    }
+
     public void Click()
     {
         if (IsSelected) {
@@ -92,6 +102,8 @@ public class SelectComponent : MonoBehaviour, IClickable
         else {
             Select();
         }
+
+        OnClicked?.Invoke();
     }
 
     public bool ShouldClick()
