@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class Wanderer : Human
 {
-    public bool IsRejected = false;
+    public bool IsAccepted { get; private set; } = false;
+    public bool IsRejected { get; private set; } = false;
     public Vector3 SpawnPosition { get; private set; } = Vector3.zero;
 
     protected override void OnEnable()
@@ -29,6 +30,11 @@ public class Wanderer : Human
         SelectComponent.SetClickable(false);
 
         base.OnInit(data);
+    }
+
+    public void Accept()
+    {
+        IsAccepted = true;
     }
 
     public void Reject()

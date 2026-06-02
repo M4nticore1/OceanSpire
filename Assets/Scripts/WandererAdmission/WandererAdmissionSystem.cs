@@ -8,6 +8,8 @@ public static class WandererAdmissionSystem
 
     public static void AcceptWanderer(Wanderer wanderer)
     {
+        wanderer.Accept();
+
         int creautereId = wanderer.GenderComponent.IsMale ? (int)CreatureIdEnum.HumanCitizenMale : (int)CreatureIdEnum.HumanCitizenFemale;
         var prefab = CreaturesList.Instance.GetCreature(creautereId);
         var position = wanderer.BoatRider.SelectedBoat.DockPoint.EntraceTransform.position;

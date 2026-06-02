@@ -93,23 +93,24 @@ public class WanderersManager : MonoBehaviour
 
     private void OnWandererAccepted(Human human)
     {
-        AssignDockPoints();
+        UpdateDockPoints();
     }
 
     private void OnWandererRejected(Human human)
     {
-        AssignDockPoints();
+        UpdateDockPoints();
     }
 
-    private void AssignDockPoints()
+    private void UpdateDockPoints()
     {
         var wanderers = CreaturesManager.Instance.Wanderers;
         int dockIndex = 0;
 
         for (int i = 0; i < wanderers.Count; i++) {
             var wanderer = wanderers[i];
-            var boat = wanderer.BoatRider.SelectedBoat;
+            if (wanderer.IsAccepted) continue;
 
+            var boat = wanderer.BoatRider.SelectedBoat;
             if (!boat.DockPoint) continue;
 
             boat.RemoveDockPoint();
