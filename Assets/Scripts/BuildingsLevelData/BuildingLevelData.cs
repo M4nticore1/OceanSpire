@@ -17,6 +17,9 @@ public abstract class BuildingLevelData : ScriptableObject
     [SerializeField] private int maxResidentsCount = 0;
     public int MaxHumansCount => maxResidentsCount;
 
-    [SerializeField] private int constructionTime;
+    [SerializeField] private int constructionTime = 0;
     public int UpgradeTime => constructionTime;
+
+    [SerializeField] private Sprite buildingThumb;
+    public Sprite BuildingThumb => buildingThumb;
 }

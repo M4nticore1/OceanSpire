@@ -36,7 +36,7 @@ public class TutorialSequence : MonoBehaviour
         SetCurrentStep(tutorialSequenceData.CurrentStep);
         SetCompleted(tutorialSequenceData.InProgress ? true : tutorialSequenceData.Completed);
         SetInProgress(IsInProgress ? true : tutorialSequenceData.InProgress);
-        TryShowTutorialStep(tutorialSequenceData.CurrentStep);
+        TryShowStep(tutorialSequenceData.CurrentStep);
     }
 
     public void SetCurrentStep(int value)
@@ -54,6 +54,7 @@ public class TutorialSequence : MonoBehaviour
         IsCompleted = value;
 
         if (IsCompleted) {
+            CompleteAllSteps();
             OnCompleted?.Invoke();
         }
     }
@@ -73,7 +74,7 @@ public class TutorialSequence : MonoBehaviour
         SetInProgress(CurrentStep < tutorialSteps.Length);
     }
 
-    private void TryShowTutorialStep(int tutorialStepIndex)
+    private void TryShowStep(int tutorialStepIndex)
     {
         if (!IsInProgress) return;
         if (IsCompleted) return;
@@ -83,12 +84,27 @@ public class TutorialSequence : MonoBehaviour
         tutorialStep.Show();
     }
 
+    private void CompleteAllSteps()
+    {
+        foreach (var step in TutorialSteps) {
+            step.Complete();
+        }
+    }
+
+    private void TryCompleteStep(int tutorialStepIndex)
+    {
+        if (tutorialStepIndex >= tutorialSteps.Length) return;
+
+        var tutorialStep = tutorialSteps[tutorialStepIndex];
+        tutorialStep.Complete();
+    }
+
     private void OnShowEventListenerTriggered()
     {
         if (!ShouldStartSequence()) return;
 
         SetInProgress(true);
-        TryShowTutorialStep(CurrentStep);
+        TryShowStep(CurrentStep);
     }
 
     private void OnTutorialStepCompleted(TutorialStep tutorialStep)
@@ -98,7 +114,7 @@ public class TutorialSequence : MonoBehaviour
         AddCurrentStep();
         UpdateInProgress();
         UpdateCompleted();
-        TryShowTutorialStep(CurrentStep);
+        TryShowStep(CurrentStep);
     }
 
     private bool ShouldShowNextStep(TutorialStep tutorialStep)

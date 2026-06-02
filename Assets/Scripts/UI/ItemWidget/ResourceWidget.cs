@@ -151,7 +151,7 @@ public class ResourceWidget : UIBehaviour
         itemNameText.SetLocalizationItem(itemDefinition.NameLocalization);
     }
 
-    private void UpdateAmountAndLimit()
+    protected virtual void UpdateAmountAndLimit()
     {
         if (Amount == null) return;
 

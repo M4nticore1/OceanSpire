@@ -14,4 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GroundBuildingLevelData
   resourcesToBuild: []
   maxResidentsCount: 1
+  constructionTime: 0
+  buildingThumb: {fileID: 21300000, guid: 442cffb7a7b11db43860be39b5127df7, type: 3}
   construction: {fileID: 4629692952556708248, guid: 59375b4847ab5244d8ff9e98c96ed08a, type: 3}
+  constructionFrame: {fileID: 0}

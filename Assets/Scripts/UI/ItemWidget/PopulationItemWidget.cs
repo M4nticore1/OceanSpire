@@ -14,7 +14,7 @@ public class PopulationItemWidget : ResourceWidget
 
         Citizen.OnCitizenEvicted += OnCitizenEvicted;
 
-        UpdateCitizensCount();
+        UpdateAmountAndLimit();
     }
 
     protected override void OnDisable()
@@ -34,10 +34,10 @@ public class PopulationItemWidget : ResourceWidget
     {
         base.Start();
 
-        UpdateCitizensCount();
+        UpdateAmountAndLimit();
     }
 
-    private void UpdateCitizensCount()
+    protected override void UpdateAmountAndLimit()
     {
         if (!ItemDefinition) return;
 
@@ -57,26 +57,26 @@ public class PopulationItemWidget : ResourceWidget
 
     private void OnHumanAdded(Human human)
     {
-        UpdateCitizensCount();
+        UpdateAmountAndLimit();
     }
 
     private void OnHumanRemoved(Human human)
     {
-        UpdateCitizensCount();
+        UpdateAmountAndLimit();
     }
 
     private void OnHumanRevived(Human human)
     {
-        UpdateCitizensCount();
+        UpdateAmountAndLimit();
     }
 
     private void OnHumanDied(Human human)
     {
-        UpdateCitizensCount();
+        UpdateAmountAndLimit();
     }
 
     private void OnCitizenEvicted(Citizen citizen)
     {
-        UpdateCitizensCount();
+        UpdateAmountAndLimit();
     }
 }

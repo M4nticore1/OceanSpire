@@ -568,6 +568,7 @@ MonoBehaviour:
   resourceWidgetPrefab: {fileID: 5555003485712965333, guid: 763ac9d7ae98aec469591bf82e8f8f9d, type: 3}
   cityStorage: {fileID: 0}
   slidePanel: {fileID: 2820262624275471394}
+  buildingImage: {fileID: 5670061754591126255}
   upgradeButton: {fileID: 5014548701621932497}
   closeButton: {fileID: 5087557780741895138}
   layoutGroup: {fileID: 7035767582389290}

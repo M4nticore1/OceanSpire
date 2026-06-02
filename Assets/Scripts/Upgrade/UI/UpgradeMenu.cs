@@ -6,10 +6,10 @@ using UnityEngine.UI;
 public class UpgradeMenu : UIBehaviour
 {
     [SerializeField] private ResourceWidget resourceWidgetPrefab;
-
     [SerializeField] private CityStorage cityStorage;
 
     [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private Image buildingImage;
     [SerializeField] private CustomButton upgradeButton;
     [SerializeField] private CustomButton closeButton;
     [SerializeField] private GridLayoutGroup layoutGroup;
@@ -43,6 +43,7 @@ public class UpgradeMenu : UIBehaviour
         ClearWidgets();
         CreateWidgets(building);
         UpdateTargetName(building);
+        UpdateIcon(building);
     }
 
     public void Close()
@@ -73,6 +74,11 @@ public class UpgradeMenu : UIBehaviour
     {
         targetLocalizer.SetPlaceHolderLocalization(building);
         targetLocalizer.UpdateText();
+    }
+
+    private void UpdateIcon(Building building)
+    {
+        buildingImage.sprite = building.NextLevelData.BuildingThumb;
     }
 
     private void OnUpgradeButtonClicked()
