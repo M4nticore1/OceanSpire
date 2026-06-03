@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum BuildingPlaceState
@@ -26,46 +26,27 @@ public class BuildingPlace : MonoBehaviour, IClickable
     [SerializeField] private GameObject buildingFrame;
     [SerializeField] private BoxCollider boxCollider;
 
-    public BuildingPlace leftPlace { get; private set; }
-    public BuildingPlace rightPlace { get; private set; }
-    public BuildingPlace upPlace { get; private set; }
-    public BuildingPlace downPlace { get; private set; }
+    private Dictionary<Direction, BuildingPlace> neighborBuildingPlaces = new();
+    public IReadOnlyDictionary<Direction, BuildingPlace> NeighborBuildingPlaces => neighborBuildingPlaces;
 
-    private bool isShowed = false;
     public bool IsClickable { get; private set; } = true;
 
     public event Action OnClicked;
 
     public static event Action<Building> OnBuildingPlaceClicked;
 
-    public IEnumerable NeighborPlaces(NeighborMask mask)
-    {
-        if (mask.HasFlag(NeighborMask.Left)) {
-            yield return leftPlace;
-        }
-        if (mask.HasFlag(NeighborMask.Right)) {
-            yield return rightPlace;
-        }
-        if (mask.HasFlag(NeighborMask.Up)) {
-            yield return upPlace;
-        }
-        if (mask.HasFlag(NeighborMask.Down)) {
-            yield return downPlace;
-        }
-    }
-
     private void OnEnable()
     {
         EventBus.OnConstructionStarted += OnBuildingStartPlacing;
-        Building.OnBuildingInited += OnBuildingInited;
         EventBus.OnConstructionStopped += OnStopPlacingBuildingButtonClicked;
+        Building.OnBuildingInited += OnBuildingInited;
     }
 
     private void OnDisable()
     {
         EventBus.OnConstructionStarted -= OnBuildingStartPlacing;
-        Building.OnBuildingInited -= OnBuildingInited;
         EventBus.OnConstructionStopped -= OnStopPlacingBuildingButtonClicked;
+        Building.OnBuildingInited -= OnBuildingInited;
     }
 
     private void Start()
@@ -77,7 +58,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     public void Init(int newFloorindex)
     {
         FloorIndex = newFloorindex;
-        AssignNeighborPlaces();
+        UpdateNeighborPlaces();
         HideBuildingPlace();
         UpdatePlaceActive();
     }
@@ -105,47 +86,121 @@ public class BuildingPlace : MonoBehaviour, IClickable
         return building && !placedBuilding;
     }
 
-    private void AssignNeighborPlaces()
+    public void Click()
     {
-        leftPlace = GetNeighborPlace(Direction.Left);
-        rightPlace = GetNeighborPlace(Direction.Right);
-        upPlace = GetNeighborPlace(Direction.Up);
-        downPlace = GetNeighborPlace(Direction.Down);
+        var buildingPrefab = ConstructionManager.Instance.BuildingToPlace as TowerBuilding;
+
+        TowerBuildingData buildingData = new TowerBuildingData()
+        {
+            Id = buildingPrefab.BuildingData.BuildingId,
+            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
+            Level = LevelData.Create(buildingPrefab.LevelComponent),
+            Upgrade = UpgradeData.Create(buildingPrefab.UpgradeComponent),
+            Construction = new ConstructionData()
+            {
+                IsUnderConstruction = true,
+            },
+            Crafting = CraftingModuleData.Create(buildingPrefab.GetComponent<CraftingModule>()),
+            FloorIndex = FloorIndex,
+            PlaceIndex = placeIndex,
+        };
+
+        var spawnedBuilding = BuildingFactory.CreateBuilding(buildingPrefab, transform, buildingData);
+        SetPlacedBuilding(spawnedBuilding);
+
+        OnClicked?.Invoke();
+        OnBuildingPlaceClicked?.Invoke(spawnedBuilding);
     }
 
-    private BuildingPlace GetNeighborPlace(Direction side)
+    public void SetClickable(bool value)
+    {
+        IsClickable = value;
+    }
+
+    public bool ShouldClick()
+    {
+        Building buildingToPlace = ConstructionManager.Instance.BuildingToPlace;
+        if (!buildingToPlace) {
+            Debug.Log("buildingToPlace is not valid.");
+            return false;
+        }
+
+        TowerBuilding towerBuilding = buildingToPlace as TowerBuilding;
+        if (!towerBuilding) {
+            Debug.Log("buildingToPlace is not TowerBuilding.");
+            return false;
+        }
+
+        return true;
+    }
+
+    public IEnumerable<BuildingPlace> GetNeighborPlaces(NeighborMask mask)
+    {
+        if (mask.HasFlag(NeighborMask.Left)) {
+            var place = neighborBuildingPlaces[Direction.Left];
+            if (place) {
+                yield return place;
+            }
+        }
+        if (mask.HasFlag(NeighborMask.Right)) {
+            var place = neighborBuildingPlaces[Direction.Right];
+            if (place) {
+                yield return place;
+            }
+        }
+        if (mask.HasFlag(NeighborMask.Up)) {
+            var place = neighborBuildingPlaces[Direction.Up];
+            if (place) {
+                yield return place;
+            }
+        }
+        if (mask.HasFlag(NeighborMask.Down)) {
+            var place = neighborBuildingPlaces[Direction.Down];
+            if (place) {
+                yield return place;
+            }
+        }
+    }
+
+    private void UpdateNeighborPlaces()
+    {
+        neighborBuildingPlaces[Direction.Left] = CalculateNeighborPlace(Direction.Left);
+        neighborBuildingPlaces[Direction.Right] = CalculateNeighborPlace(Direction.Right);
+        neighborBuildingPlaces[Direction.Up] = CalculateNeighborPlace(Direction.Up);
+        neighborBuildingPlaces[Direction.Down] = CalculateNeighborPlace(Direction.Down);
+    }
+
+    private BuildingPlace CalculateNeighborPlace(Direction side)
     {
         int horizontalIndexOffset = side == Direction.Left ? 1 : side == Direction.Right ? -1 : 0;
         int verticalIndexOffset = side == Direction.Up ? 1 : side == Direction.Down ? -1 : 0;
         int sideIndex = (placeIndex + horizontalIndexOffset + BuildingsManager.RoomsCountPerFloor) % BuildingsManager.RoomsCountPerFloor;
         int verticalIndex = FloorIndex + verticalIndexOffset;
 
-        if (verticalIndex < BuildingsManager.Instance.BuiltFloors.Count && verticalIndex >= 0) {
-            BuildingPlace place = BuildingsManager.Instance.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
-            return place;
-        }
-        return null;
+        if (verticalIndex >= BuildingsManager.Instance.BuiltFloors.Count) return null;
+        if (verticalIndex < 0) return null;
+
+        var place = BuildingsManager.Instance.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
+        return place;
     }
 
     private void OnBuildingStartPlacing(Building building)
     {
-        if (placedBuilding) return;
+        if (!ShouldShow(building)) return;
 
         if (building.BuildingData.BuildingType != buildingType) {
-            if (isShowed) {
-                HideBuildingPlace();
-            }
-            return;
+            HideBuildingPlace();
         }
-
-        ShowBuildingPlace(BuildingPlaceState.Valid);
+        else {
+            ShowBuildingPlace(BuildingPlaceState.Valid);
+        }
     }
 
     private void OnBuildingInited(Building building)
     {
         TowerBuilding towerBuilding = building as TowerBuilding;
         if (towerBuilding && building.GetComponent<FloorFrameModule>() && FloorIndex == towerBuilding.FloorIndex - 1) {
-            AssignNeighborPlaces();
+            UpdateNeighborPlaces();
         }
 
         if (placedBuilding && building != placedBuilding) return;
@@ -183,37 +238,6 @@ public class BuildingPlace : MonoBehaviour, IClickable
         if (boxCollider) {
             boxCollider.enabled = true;
         }
-
-        isShowed = true;
-
-        //Color mainColor = Color.black;
-        //Color outlineColor = Color.black;
-
-        //if (buildingPlaceState == BuildingPlaceState.Valid)
-        //{
-        //    mainColor = buildingPlaceValidColor;
-        //    outlineColor = buildingPlaceValidOutlineColor;
-        //}
-        //else if (buildingPlaceState == BuildingPlaceState.Warning)
-        //{
-        //    mainColor = buildingPlaceWarningColor;
-        //    outlineColor = buildingPlaceWarningOutlineColor;
-        //}
-        //else if (buildingPlaceState == BuildingPlaceState.Invalid)
-        //{
-        //    mainColor = buildingPlaceInvalidColor;
-        //    outlineColor = buildingPlaceInvalidOutlineColor;
-        //}
-
-        //if (materialPropertyBlock != null)
-        //    materialPropertyBlock.SetColor("_BaseColor", mainColor);
-        //if (buildingZoneMeshRenderer)
-        //buildingZoneMeshRenderer.SetPropertyBlock(materialPropertyBlock, 0);
-
-        //if (outlineMaterialPropertyBlock != null)
-        //    outlineMaterialPropertyBlock.SetColor("_OutlineColor", outlineColor);
-        //if (buildingZoneMeshRenderer)
-        //    buildingZoneMeshRenderer.SetPropertyBlock(outlineMaterialPropertyBlock, 1);
     }
 
     private void HideBuildingPlace()
@@ -225,59 +249,33 @@ public class BuildingPlace : MonoBehaviour, IClickable
         if (boxCollider) {
             boxCollider.enabled = false;
         }
-
-        isShowed = false;
     }
 
-    // Events
-    public void Click()
+    private bool ShouldShow(Building building)
     {
-        var buildingPrefab = ConstructionManager.Instance.BuildingToPlace as TowerBuilding;
+        var towerBuilding = building as TowerBuilding;
+        if (!towerBuilding) return false;
 
-        TowerBuildingData buildingData = new TowerBuildingData()
-        {
-            Id = buildingPrefab.BuildingData.BuildingId,
-            InstanceId = buildingPrefab.InstanceId.GetInstanceId(),
-            Level = LevelData.Create(buildingPrefab.LevelComponent),
-            Upgrade = UpgradeData.Create(buildingPrefab.UpgradeComponent),
-            Construction = ConstructionData.Create(buildingPrefab.ConstructionComponent),
-            Crafting = CraftingModuleData.Create(buildingPrefab.GetComponent<CraftingModule>()),
-            FloorIndex = FloorIndex,
-            PlaceIndex = placeIndex,
-        };
+        if (placedBuilding) return false;
+        if (buildingType != BuildingType.Room) return true;
 
-        buildingData.InstanceId = InstancesManager.Instance.GetNextInstanceId();
-        buildingData.FloorIndex = FloorIndex;
-        buildingData.PlaceIndex = placeIndex;
-        buildingData.Construction.CurrentConstructionTime = 0f;
-        buildingData.Construction.IsUnderConstruction = true;
+        var targetBuilding = BuildingsManager.Instance.GetRoomPlace(0, BuildingsManager.FirstBuildCityBuildingPlace);
 
-        TowerBuilding spawnedBuilding = BuildingFactory.CreateBuilding(buildingPrefab, transform, buildingData);
-        SetPlacedBuilding(spawnedBuilding);
+        var path = new List<Building>();
+        if (neighborBuildingPlaces[Direction.Left])
+            if (PathFinder.TryFindBuildingPath(neighborBuildingPlaces[Direction.Left], targetBuilding.placedBuilding, ref path)) return true;
 
-        OnClicked?.Invoke();
-        OnBuildingPlaceClicked?.Invoke(spawnedBuilding);
-    }
+        if (neighborBuildingPlaces[Direction.Right])
+            if (PathFinder.TryFindBuildingPath(neighborBuildingPlaces[Direction.Right], targetBuilding.placedBuilding, ref path)) return true;
 
-    public void SetClickable(bool value)
-    {
-        IsClickable = value;
-    }
+        if (building.GetComponent<ElevatorModule>()) {
+            var up = neighborBuildingPlaces[Direction.Up];
+            if (up && up.placedBuilding && up.placedBuilding.ShouldConnectTo(towerBuilding)) return true;
 
-    public bool ShouldClick()
-    {
-        Building buildingToPlace = ConstructionManager.Instance.BuildingToPlace;
-        if (!buildingToPlace) {
-            Debug.Log("buildingToPlace is not valid.");
-            return false;
+            var down = neighborBuildingPlaces[Direction.Down];
+            if (down && down.placedBuilding && down.placedBuilding.ShouldConnectTo(towerBuilding)) return true;
         }
 
-        TowerBuilding towerBuilding = buildingToPlace as TowerBuilding;
-        if (!towerBuilding) {
-            Debug.Log("buildingToPlace is not TowerBuilding.");
-            return false;
-        }
-
-        return true;
+        return false;
     }
 }

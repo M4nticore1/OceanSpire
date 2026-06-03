@@ -176,6 +176,44 @@ public class TowerBuilding : Building
         return construction;
     }
 
+    protected override void OnConstructionFinish()
+    {
+        base.OnConstructionFinish();
+
+        UpdateConnectedBuildings();
+    }
+
+    public bool NetworkWith(TowerBuilding target, HashSet<TowerBuilding> visited = null)
+    {
+        if (this == target)
+            return true;
+
+        if (visited == null) {
+            visited = new HashSet<TowerBuilding>();
+        }
+        visited.Add(this);
+
+        foreach (var direction in connectedBuildings.Values) {
+            if (!direction) continue;
+
+            if (!visited.Add(direction))
+                continue;
+            if (direction.NetworkWith(target, visited))
+                return true;
+        }
+        return false;
+    }
+
+    public bool ShouldConnectTo(TowerBuilding target)
+    {
+        if (!target) return false;
+        if (target.buildingData.BuildingId != buildingData.BuildingId) return false;
+        if (target.levelComponent.Level != levelComponent.Level) return false;
+        if (target.constructionComponent.IsUnderConstruction) return false;
+
+        return true;
+    }
+
     public List<TowerBuilding> GetNetworkBuildings()
     {
         List<TowerBuilding> network = new List<TowerBuilding>();
@@ -200,13 +238,6 @@ public class TowerBuilding : Building
         }
 
         return network;
-    }
-
-    protected override void OnConstructionFinish()
-    {
-        base.OnConstructionFinish();
-
-        UpdateConnectedBuildings();
     }
 
     private void UpdateBuildingPlace(int floorIndex, int placeIndex)
@@ -344,41 +375,10 @@ public class TowerBuilding : Building
         }
     }
 
-    public bool NetworkWith(TowerBuilding target, HashSet<TowerBuilding> visited = null)
-    {
-        if (this == target)
-            return true;
-
-        if (visited == null) {
-            visited = new HashSet<TowerBuilding>();
-        }
-        visited.Add(this);
-
-        foreach (var direction in connectedBuildings.Values) {
-            if (!direction) continue;
-
-            if (!visited.Add(direction))
-                continue;
-            if (direction.NetworkWith(target, visited))
-                return true;
-        }
-        return false;
-    }
-
     private bool ShouldSetNeighborWith(TowerBuilding target)
     {
         if (!target) return false;
         if (target.IsDemolished) return false;
-
-        return true;
-    }
-
-    private bool ShouldConnectTo(TowerBuilding target)
-    {
-        if (!target) return false;
-        if (target.buildingData.BuildingId != buildingData.BuildingId) return false;
-        if (target.levelComponent.Level != levelComponent.Level) return false;
-        if (target.constructionComponent.IsUnderConstruction) return false;
 
         return true;
     }

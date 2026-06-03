@@ -112,7 +112,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
             startPlace = startTowerBuilding ? startTowerBuilding.BuildingPlace : null;
         }
 
-        if (!PathFinder.TryGetPathToBuilding(startPlace, TargetBuilding, ref pathBuildings)) return false;
+        if (!PathFinder.TryFindBuildingPath(startPlace, TargetBuilding, ref pathBuildings)) return false;
 
         SortPath(ref pathBuildings);
         UpdatePathBuildings(pathBuildings);

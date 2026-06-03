@@ -4,38 +4,7 @@ using UnityEngine;
 
 public static class PathFinder
 {
-    public static bool TryGetPathToBuilding(BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
-    {
-        return TryGetPathToBuilding_Internal(startPlace, targetBuilding, ref buildingsPath);
-    }
-
-    public static bool TryGetPathToBuilding(BuildingPlace startPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
-    {
-        Building targetBuilding = null;
-
-        for (int i = 0; i < BuildingsManager.Instance.BuiltFloors.Count; i++) {
-            Building hall = BuildingsManager.Instance.BuiltFloors[i].HallBuildingPlace.PlacedBuilding;
-            if (hall && targetBuildingCondition(hall)) {
-                targetBuilding = hall;
-                break;
-            }
-
-            for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
-                Building room = BuildingsManager.Instance.BuiltFloors[i].RoomBuildingPlaces[j].PlacedBuilding;
-                if (room && targetBuildingCondition(room)) {
-                    targetBuilding = room;
-                    break;
-                }
-            }
-
-            if (targetBuilding)
-                break;
-        }
-
-        return TryGetPathToBuilding_Internal(startPlace, targetBuilding, ref buildingsPath);
-    }
-
-    private static bool TryGetPathToBuilding_Internal(BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
+    public static bool TryFindBuildingPath(BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
     {
         buildingsPath.Clear();
 
@@ -45,7 +14,7 @@ public static class PathFinder
             }
 
             // Find path
-            List<Building> path = FindPath(startPlace, targetBuilding);
+            List<Building> path = FindBuildingPath(startPlace, targetBuilding);
 
             if (path != null) {
                 buildingsPath.AddRange(path);
@@ -59,12 +28,42 @@ public static class PathFinder
         }
     }
 
-    private static List<Building> FindPath(BuildingPlace startPlace, Building targetBuilding)
+    public static bool TryFindBuildingPath(BuildingPlace startPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
     {
-        if (startPlace == null) {
+        Building targetBuilding = null;
+
+        for (int i = 0; i < BuildingsManager.Instance.BuiltFloors.Count; i++) {
+            var hall = BuildingsManager.Instance.BuiltFloors[i].HallBuildingPlace.PlacedBuilding;
+
+            if (hall && targetBuildingCondition(hall)) {
+                targetBuilding = hall;
+                break;
+            }
+
+            for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
+                var room = BuildingsManager.Instance.BuiltFloors[i].RoomBuildingPlaces[j].PlacedBuilding;
+                if (room && targetBuildingCondition(room)) {
+                    targetBuilding = room;
+                    break;
+                }
+            }
+
+            if (targetBuilding)
+                break;
+        }
+
+        return TryFindBuildingPath(startPlace, targetBuilding, ref buildingsPath);
+    }
+
+    private static List<Building> FindBuildingPath(BuildingPlace startPlace, Building targetBuilding)
+    {
+        if (!startPlace) {
             Debug.LogError("startPlace is null");
             return null;
         }
+
+        if (!startPlace.PlacedBuilding)
+            return null;
 
         Queue<(BuildingPlace place, List<Building> path)> queue = new();
         HashSet<BuildingPlace> visited = new();
@@ -74,7 +73,7 @@ public static class PathFinder
 
         while (queue.Count > 0) {
             var (place, path) = queue.Dequeue();
-            List<Building> currentPath = new List<Building>(path);
+            var currentPath = new List<Building>(path);
 
             if (place.PlacedBuilding)
                 currentPath.Add(place.PlacedBuilding);
@@ -85,7 +84,7 @@ public static class PathFinder
             bool hasElevator = place.PlacedBuilding && place.PlacedBuilding.GetComponent<ElevatorModule>();
             NeighborMask mask = hasElevator ? NeighborMask.All : NeighborMask.Horizontal;
 
-            foreach (BuildingPlace neighborPlace in place.NeighborPlaces(mask)) {
+            foreach (BuildingPlace neighborPlace in place.GetNeighborPlaces(mask)) {
                 // Check place
                 if (!neighborPlace || visited.Contains(neighborPlace))
                     continue;
