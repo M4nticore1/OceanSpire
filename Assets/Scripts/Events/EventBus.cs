@@ -38,7 +38,7 @@ public static class EventBus
     public static event Action<GameObject> OnPlayerClicked;
 
     // Click
-    public static event Action<LootContainer> OnClickedOnLootContainer;
+    public static event Action<DriftingLoot> OnClickedOnLootContainer;
 
     // UI
     public static event Action OnWorkersMenuClosed;
@@ -111,7 +111,7 @@ public static class EventBus
 
     // Clicks
 
-    public static void InvokeClickedOnLootContainer(LootContainer loot)
+    public static void InvokeClickedOnLootContainer(DriftingLoot loot)
     {
         OnClickedOnLootContainer?.Invoke(loot);
     }

@@ -8,19 +8,25 @@ public static class WorldDataMigrator
 {
     public static WorldData GetWorldData(string json)
     {
-        var jObject = JObject.Parse(json);
+        try {
+            var jObject = JObject.Parse(json);
 
-        if (!jObject.ContainsKey("Version"))
-            throw new Exception("Save file has no Version field");
+            if (!jObject.ContainsKey("Version"))
+                throw new Exception("Save file has no Version field");
 
-        int version = jObject["Version"]!.Value<int>();
+            int version = jObject["Version"]!.Value<int>();
 
-        switch (version) {
-            case 1:
-                return JsonConvert.DeserializeObject<WorldData>(json);
+            switch (version) {
+                case 1:
+                    return JsonConvert.DeserializeObject<WorldData>(json);
+            }
+
+            throw new Exception($"Unsupported save version: {version}");
         }
-
-        throw new Exception($"Unsupported save version: {version}");
+        catch (Exception ex) {
+            Console.WriteLine(ex);
+            return null;
+        }
     }
 }
 
@@ -44,12 +50,14 @@ public class WorldData
     public CitizenData[] Citizens;
     public WandererData[] Wanderers;
     public RaiderData[] Raiders;
+    public DriftingLootSystemData DriftingLoot;
     public ItemData[] CityInventory;
     public DailyTasksData DailyTasks;
     public DailyRewardData DailyReward;
     public RaidData Raid;
     public WanderersData WanderersSystem;
     public TutorialData Tutorial;
+    public WindData Wind;
 
     public static WorldData Create(WorldSaveManager saveManager,
         BuildingsManager buildings,
@@ -57,12 +65,14 @@ public class WorldData
         DockPointsManager boatDocks,
         BoatsManager boats,
         CreaturesManager creatures,
+        DriftingLootManager driftingLoot,
         Inventory cityInventory,
         DailyTasksManager dailyTasks,
         DailyRewardManager dailyReward,
         RaidManager raid,
         WanderersManager wanderers,
-        TutorialManager tutorial)
+        TutorialManager tutorial,
+        WindManager wind)
     {
         return new WorldData() {
             WorldName = saveManager.SaveWorldName,
@@ -83,13 +93,15 @@ public class WorldData
             Wanderers = WandererData.Create(creatures.Wanderers.ToArray()),
             Raiders = RaiderData.Create(creatures.Raiders.ToArray()),
 
+            DriftingLoot = DriftingLootSystemData.Create(driftingLoot),
             CityInventory = ItemData.Create(cityInventory.Items.ToArray()),
 
             DailyTasks = DailyTasksData.Create(dailyTasks),
             DailyReward = DailyRewardData.Create(dailyReward),
             Raid = RaidData.Create(raid),
             WanderersSystem = WanderersData.Create(wanderers),
-            Tutorial = TutorialData.Create(tutorial)
+            Tutorial = TutorialData.Create(tutorial),
+            Wind = WindData.Create(wind)
         };
     }
 }

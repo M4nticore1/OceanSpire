@@ -2,23 +2,6 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UIElements;
-
-[System.Serializable]
-public struct LootEntry
-{
-    public ItemDefinition itemData;
-    public int dropChance;
-    public int minAmount;
-    public int maxAmount;
-}
-
-[System.Serializable]
-public enum TransportMethod
-{
-    Floating,
-    Flying
-}
 
 public class LootContainer : MonoBehaviour, IClickable
 {
@@ -26,7 +9,7 @@ public class LootContainer : MonoBehaviour, IClickable
     [SerializeField] private Rigidbody rigidBody;
 
     [Header("Loot")]
-    [SerializeField] private List<LootEntry> possibleLoot = new List<LootEntry>();
+    [SerializeField] private List<LootTableData> possibleLoot = new List<LootTableData>();
     [SerializeField] private GameObject[] meshes;
     private List<ItemInstance> containedLoot = new List<ItemInstance>();
 
@@ -109,7 +92,7 @@ public class LootContainer : MonoBehaviour, IClickable
             }
         }
 
-        Vector3 direction = WindManager.Instance.windDirection;
+        Vector3 direction = WindManager.Instance.WindDirection;
         moveDirection = new Vector3(direction.x, 0, direction.z);
         startMoveDirection = moveDirection;
         spawnFloorIndex = floorIndex;
@@ -208,7 +191,7 @@ public class LootContainer : MonoBehaviour, IClickable
         {
             float distance = Vector3.Distance(Vector3.zero, transform.position);
             
-            if (distance > LootManager.spawnDistance + despawnDistance)
+            if (distance > DriftingLootManager.spawnDistance + despawnDistance)
                 Destroy(gameObject);
 
             lastCheckPositionTime = Time.timeAsDouble;
@@ -232,7 +215,7 @@ public class LootContainer : MonoBehaviour, IClickable
 
         Instantiate(demolishParticlesPrefab, position, rotation);
 
-        LootManager.instance.RegisterLootContainer(container);
+        //DriftingLootManager.instance.RegisterLootContainer(container);
         Destroy(gameObject);
         onContainerLanded?.Invoke(this);
     }

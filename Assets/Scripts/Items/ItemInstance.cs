@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -52,5 +53,28 @@ public class ItemInstance : IItemAmount
     public void SetStack(ItemStack stack)
     {
         this.Stack = stack;
+    }
+
+    public static ItemInstance Create(ItemData itemData)
+    {
+        var definition = ItemsList.Instance.GetItem(itemData.Id);
+
+        return new ItemInstance(definition);
+    }
+
+    public static ItemInstance[] Create(ItemData[] itemData)
+    {
+        if (itemData == null) {
+            Debug.Log("itemData array not found");
+            return null;
+        }
+
+        List<ItemInstance> items = new List<ItemInstance>();
+
+        foreach (ItemData item in itemData) {
+            items.Add(Create(item));
+        }
+
+        return items.ToArray();
     }
 }

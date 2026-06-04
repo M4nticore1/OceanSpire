@@ -5,7 +5,7 @@ public class WindManager : MonoBehaviour
 {
     public static WindManager Instance;
 
-    public Vector3 windDirection { get; private set; } = Vector3.zero;
+    public Vector3 WindDirection { get; private set; } = Vector3.zero;
     public float windRotation { get; private set; } = 0;
     private Vector3 newWindDirection = Vector3.zero;
 
@@ -19,15 +19,20 @@ public class WindManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
-    {
-        ChangeWind();
-        windDirection = newWindDirection;
-    }
-
     private void Update()
     {
         //ChangingWind();
+    }
+
+    public void Init(WindData windData)
+    {
+        if (windData != null) {
+            WindDirection = windData.WindDirection.Vector3();
+        }
+        else {
+            ChangeWind();
+            WindDirection = newWindDirection;
+        }
     }
 
     private void ChangingWind()
@@ -35,7 +40,7 @@ public class WindManager : MonoBehaviour
         if (Time.time > windDirectionChangeTime + windDirectionChangeFreqency) {
             ChangeWind();
         }
-        windDirection = math.lerp(windDirection, newWindDirection, windChangingSpeed * Time.deltaTime);
+        WindDirection = math.lerp(WindDirection, newWindDirection, windChangingSpeed * Time.deltaTime);
     }
 
     private void ChangeWind()

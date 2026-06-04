@@ -42,8 +42,8 @@ public class Boat : MonoBehaviour, IClickable
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
     // Dock
-    public BoatDockPoint DockPoint;
-    public LootContainer TargetLootContainer { get; private set; }
+    public BoatDockPoint DockPoint { get; private set; }
+    public SwimmingDriftingLoot TargetDriftingLoot { get; private set; }
 
     // Weight
     public float CurrentWeight => inventory.CurrentWeight;
@@ -154,9 +154,9 @@ public class Boat : MonoBehaviour, IClickable
         DockPoint = null;
     }
 
-    public void SetTargetLoot(LootContainer lootContainer)
+    public void SetTargetLoot(SwimmingDriftingLoot driftingLoot)
     {
-        TargetLootContainer = lootContainer;
+        TargetDriftingLoot = driftingLoot;
     }
 
     public ItemInstance GetItemToUnload()

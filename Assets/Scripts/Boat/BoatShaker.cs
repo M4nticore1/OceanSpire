@@ -16,7 +16,7 @@ public class BoatShaker : MonoBehaviour
 
     private void ProcessShake()
     {
-        Vector3 windDirection = WindManager.Instance.windDirection;
+        Vector3 windDirection = WindManager.Instance.WindDirection;
         shakeRotation = windDirection * math.sin(Time.time * shakeSpeed) * shakeAmplitude;
     }
 

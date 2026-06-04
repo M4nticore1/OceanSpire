@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class BoatMovingToLootState : BoatFindingLootState
 {
+    private bool isMovingToTarget = false;
+
     public BoatMovingToLootState(Boat boat) : base(boat)
     {
 
@@ -11,7 +13,7 @@ public class BoatMovingToLootState : BoatFindingLootState
     {
         base.Enter();
 
-        StartMovingToLoot();
+        TryStartMovingToTarget();
     }
 
     public override void Exit()
@@ -22,6 +24,8 @@ public class BoatMovingToLootState : BoatFindingLootState
     public override void Tick()
     {
         base.Tick();
+
+        TryStartMovingToTarget();
     }
 
     public override void OnReachedPath()
@@ -31,8 +35,22 @@ public class BoatMovingToLootState : BoatFindingLootState
         boat.SetState(BoatStateEnum.CollectingLoot);
     }
 
-    private void StartMovingToLoot()
+    private void TryStartMovingToTarget()
     {
-        boat.Movement.TryMoveTo(boat.TargetLootContainer.transform.position);
+        if (!ShouldStartMovingToTarget()) return;
+
+        isMovingToTarget = true;
+        boat.Movement.TryMoveTo(boat.TargetDriftingLoot.transform.position);
+    }
+
+    private bool ShouldStartMovingToTarget()
+    {
+        if (isMovingToTarget) return false;
+        if (!boat) return false;
+        if (!boat.TargetDriftingLoot) return false;
+        if (!boat.TargetDriftingLoot) return false;
+        if (!boat.TargetDriftingLoot.transform) return false;
+
+        return true;
     }
 }

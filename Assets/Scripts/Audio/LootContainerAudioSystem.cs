@@ -11,29 +11,29 @@ public class LootContainerAudioSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        LootContainer.OnContainerTaken += OnContainerTaked;
-        LootContainer.OnContainerStartedFalling += OnContainerStartedFalling;
-        LootContainer.onContainerLanded += OnContainerFalled;
+        SwimmingDriftingLoot.OnContainerTaken += OnContainerTaked;
+        FlyingDriftingLoot.OnFlyingLootStartedFalling += OnContainerStartedFalling;
+        FlyingDriftingLoot.onContainerLanded += OnContainerFalled;
     }
 
     private void OnDisable()
     {
-        LootContainer.OnContainerTaken -= OnContainerTaked;
-        LootContainer.OnContainerStartedFalling -= OnContainerStartedFalling;
-        LootContainer.onContainerLanded -= OnContainerFalled;
+        SwimmingDriftingLoot.OnContainerTaken -= OnContainerTaked;
+        FlyingDriftingLoot.OnFlyingLootStartedFalling -= OnContainerStartedFalling;
+        FlyingDriftingLoot.onContainerLanded -= OnContainerFalled;
     }
 
-    private void OnContainerTaked(LootContainer container)
+    private void OnContainerTaked(DriftingLoot container)
     {
         AudioUtils.PlaySFXAtPosition(containerTakenClips, container.transform.position, minDistance, maxDistance);
     }
 
-    private void OnContainerStartedFalling(LootContainer container)
+    private void OnContainerStartedFalling(DriftingLoot container)
     {
         AudioUtils.PlaySFXAtPosition(containerFallStartClips, container.transform.position, minDistance, maxDistance);
     }
 
-    private void OnContainerFalled(LootContainer container)
+    private void OnContainerFalled(DriftingLoot container)
     {
         AudioUtils.PlaySFXAtPosition(containerLandedClips, container.transform.position, minDistance, maxDistance);
     }

@@ -268,7 +268,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         if (neighborBuildingPlaces[Direction.Right])
             if (PathFinder.TryFindBuildingPath(neighborBuildingPlaces[Direction.Right], targetBuilding.placedBuilding, ref path)) return true;
 
-        if (building.GetComponent<ElevatorModule>()) {
+        if (building.BuildingData.ConnectionType == ConnectionType.Vertical) {
             var up = neighborBuildingPlaces[Direction.Up];
             if (up && up.placedBuilding && up.placedBuilding.ShouldConnectTo(towerBuilding)) return true;
 

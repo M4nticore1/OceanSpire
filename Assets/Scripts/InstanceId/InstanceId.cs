@@ -3,7 +3,7 @@ using UnityEngine;
 public class InstanceId : MonoBehaviour
 {
     private int id = 0;
-    public bool IsRegistered = false;
+    public bool IsRegistered { get; private set; } = false;
 
     public void Register(int id)
     {
