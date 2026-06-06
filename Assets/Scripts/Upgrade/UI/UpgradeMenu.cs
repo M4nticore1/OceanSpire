@@ -83,7 +83,7 @@ public class UpgradeMenu : UIBehaviour
 
     private void OnUpgradeButtonClicked()
     {
-        upgradeComponent.Upgrade();
+        upgradeComponent.StartUpgrading();
         Close();
     }
 

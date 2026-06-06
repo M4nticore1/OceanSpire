@@ -68,37 +68,37 @@ public class Raider : Human
 
     protected override void OnSetedInteractBuilding(Building building)
     {
-        base.OnSetedInteractBuilding(building);
-
         if (building) {
-            building.RaidComponent.AddRaider(InteractComponent);
+            building.RaidComponent.AddRaider(this);
         }
         else {
             BoatRider.TryMoveToBoat();
         }
 
         UpdateRaidAction();
+
+        base.OnSetedInteractBuilding(building);
     }
 
     protected override void OnRemovedInteractBuilding(Building building)
     {
         base.OnRemovedInteractBuilding(building);
 
-        building.RaidComponent.RemoveRaider(InteractComponent);
+        building.RaidComponent.RemoveRaider(this);
     }
 
     protected override void OnInteractionStarted(Building building)
     {
         base.OnInteractionStarted(building);
 
-        building.RaidComponent.EnterRaider(InteractComponent);
+        building.RaidComponent.AddCurrentRaider(this);
     }
 
     protected override void OnInteractionStopped(Building building)
     {
         base.OnInteractionStopped(building);
 
-        building.RaidComponent.EnterRaider(InteractComponent);
+        building.RaidComponent.RemoveCurrentRaider(this);
     }
 
     protected override void HandleEnteredBoat(Boat boat)

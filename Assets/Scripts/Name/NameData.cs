@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class NameData
 {
     public int FirstNameId = 0;

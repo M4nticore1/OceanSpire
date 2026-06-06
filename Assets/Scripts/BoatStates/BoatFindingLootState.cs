@@ -1,10 +1,7 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 public class BoatFindingLootState : BoatState
 {
-    private DriftingLootManager lootManager;
-
     private const double updateDestinationRate = 0.5f;
     private double lastUpdateDestinationTime = 0;
 
@@ -13,7 +10,7 @@ public class BoatFindingLootState : BoatState
 
     public BoatFindingLootState(Boat boat) : base(boat)
     {
-        lootManager = Object.FindAnyObjectByType<DriftingLootManager>();
+
     }
 
     public override void Enter()
@@ -23,14 +20,14 @@ public class BoatFindingLootState : BoatState
 
     public override void Exit()
     {
-
+        boat.SetTargetLoot(null);
     }
 
     public override void Tick()
     {
         if (Time.timeAsDouble < lastUpdateDestinationTime + updateDestinationRate) return;
 
-        UpdateDestination();
+        TryUpdateTarget();
         lastUpdateDestinationTime = Time.timeAsDouble;
     }
 
@@ -39,49 +36,25 @@ public class BoatFindingLootState : BoatState
         
     }
 
-    private void UpdateDestination()
+    private void TryUpdateTarget()
     {
-        var target = TryFindNearestLoot();
-        if (!target) return;
+        var target = DriftingLootFinder.TryFindNearestSwimmingDriftingLoot(DriftingLootManager.Instance, boat.transform.position);
 
-        SetTarget(target);
+        TrySetTarget(target);
     }
 
-    private SwimmingDriftingLoot TryFindNearestLoot()
+    private void TrySetTarget(SwimmingDriftingLoot driftingLoot)
     {
-        var driftingLoot = lootManager.SpawnedSwimmingDriftingLoot;
+        if (!ShouldSetTarget(driftingLoot)) return;
 
-        if (driftingLoot.Count == 0) return null;
-
-        SwimmingDriftingLoot nearestContainer = null;
-        float shortestDistance = float.MaxValue;
-
-        foreach (var loot in driftingLoot) {
-            if (!loot) continue;
-
-            var swimmingLoot = loot as SwimmingDriftingLoot;
-            if (!swimmingLoot) continue;
-
-            Vector3 position = loot.transform.position;
-
-            float distance = Vector3.Distance(boat.transform.position, position);
-
-            if (distance >= shortestDistance) continue;
-
-            var path = new NavMeshPath();
-
-            if (NavMesh.CalculatePath(boat.transform.position, position, NavMesh.AllAreas, path)) {
-                shortestDistance = distance;
-                nearestContainer = swimmingLoot;
-            }
-        }
-
-        return nearestContainer;
-    }
-
-    private void SetTarget(SwimmingDriftingLoot driftingLoot)
-    {
         boat.SetTargetLoot(driftingLoot);
         boat.SetState(BoatStateEnum.MovingToLoot);
+    }
+
+    private bool ShouldSetTarget(SwimmingDriftingLoot driftingLoot)
+    {
+        if (!driftingLoot) return false;
+
+        return true;
     }
 }

@@ -1,12 +1,15 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class PierBuildingStrategy : BuildingStrategy
 {
+    private PierModule pier;
+
     public PierBuildingStrategy(Building building) : base(building)
     {
-
+        pier = building.GetComponent<PierModule>();
     }
 
     public override void OnEntityEnter(CreatureCityNavigator navigator)
@@ -19,43 +22,57 @@ public class PierBuildingStrategy : BuildingStrategy
 
     }
 
-    public override void OnSetInteractBuilding(InteractComponent interactor)
+    public override void OnSetInteractBuilding(BuildingInteractComponent interactor)
     {
         if (!BoatsManager.Instance) {
-            Debug.LogError("BoatManager is not on the scene.");
+            Debug.Log("BoatManager is not on the scene.");
             return;
         }
 
         if (!interactor) {
-            Debug.LogError("interactor is not valid.");
+            Debug.Log("Interactor not found");
             return;
         }
 
-        var newBoatRider = TryGetBoatRider(interactor.gameObject);
+        var boatRider = interactor.GetComponent<BoatRider>();
+        if (!boatRider) {
+            Debug.Log($"BoatRider not found at {interactor.name}");
+            return;
+        }
 
-        var boat = BoatsManager.Instance.CitizenBoats.Values.ToArray()[interactor.workerIndex];
-        if (!boat) return;
+        var citizen = interactor.GetComponent<Citizen>();
+        if (!citizen) {
+            Debug.Log($"Citizen not found at {interactor.name}");
+            return;
+        }
 
-        if (newBoatRider.SelectedBoat) {
-            if (newBoatRider.SelectedBoat == boat) {
-                if (newBoatRider.IsExitingBoat) {
-                    newBoatRider.StopExitingBoat();
-                }
-                 
-                if (boat.CurrentState != BoatStateEnum.UnloadingLoot && boat.Inventory.RemainingWeight != 0) {
-                    boat.SetState(BoatStateEnum.FindingLoot);
-                }
+        int index = building.WorkComponent.TryGetIndexOf(citizen);
+        var boat = BoatsManager.Instance.CitizenBoats.Values.ToArray()[index];
+        boatRider.SetSelectedBoat(boat);
+
+        if (boatRider.IsRidingOnBoat) {
+            if (boatRider.IsExitingBoat) {
+                boatRider.StopExitingBoat();
             }
-            else {
-                boat.SetState(BoatStateEnum.MovingToDock);
+
+            if (!boatRider.IsEnteringBoat && boatRider.SelectedBoat.CurrentStateEnum != BoatStateEnum.UnloadingLoot && boatRider.SelectedBoat.Inventory.RemainingWeight != 0) {
+                boatRider.SelectedBoat.SetState(BoatStateEnum.FindingLoot);
             }
         }
     }
 
-    public override void OnRemoveInteractBuilding(InteractComponent interactor)
+    public override void OnRemoveInteractBuilding(BuildingInteractComponent interactor)
     {
-        BoatRider boatRider = TryGetBoatRider(interactor?.gameObject);
-        if (!boatRider) return;
+        if (!interactor) {
+            Debug.Log($"Interactor not found");
+            return;
+        }
+
+        var boatRider = interactor.GetComponent<BoatRider>();
+        if (!boatRider) {
+            Debug.Log($"Boat Rider not found at {interactor}");
+            return;
+        }
 
         if (boatRider.IsEnteringBoat) {
             boatRider.StopEnteringBoat();
@@ -66,50 +83,44 @@ public class PierBuildingStrategy : BuildingStrategy
         }
     }
 
-    public override void OnStartedInteracting(InteractComponent interactor)
+    public override void OnStartedInteracting(BuildingInteractComponent interactor)
     {
         interactor.StartCoroutine(WaitForBoatAndEnter(interactor));
     }
 
-    public override void OnStoppedInteracting(InteractComponent interactor)
+    public override void OnStoppedInteracting(BuildingInteractComponent interactor)
     {
 
     }
 
-    public override void OnInteracting(InteractComponent interactor)
+    public override void OnInteracting(BuildingInteractComponent interactor)
     {
         
     }
 
-    private IEnumerator WaitForBoatAndEnter(InteractComponent interactor)
+    private IEnumerator WaitForBoatAndEnter(BuildingInteractComponent interactor)
     {
-        BoatRider boatRider = TryGetBoatRider(interactor.gameObject);
-        if (!boatRider) yield break;
-
-        var index = interactor.workerIndex;
-
-        var boat = BoatsManager.Instance.CitizenBoats.Values.ToArray()[interactor.workerIndex];
-        boatRider.SetSelectedBoat(boat);
-
-        while (boat && boat.CurrentState != BoatStateEnum.Idle) {
-            yield return new WaitForSeconds(0.5f);
-        }
-
         if (interactor.InteractBuilding != building) yield break;
 
-        if (boat && boatRider) {
-            boatRider.StartEnteringBoat();
+        var boatRider = interactor.GetComponent<BoatRider>();
+        if (!boatRider) {
+            Debug.Log($"Boat Rider not found at {boatRider.name}");
+            yield break;
         }
-    }
 
-    private BoatRider TryGetBoatRider(GameObject root)
-    {
-        if (root == null) return null;
+        if (boatRider.IsRidingOnBoat) yield break;
 
-        BoatRider rider = root.GetComponent<BoatRider>();
-        if (rider == null) {
-            Debug.LogWarning($"BoatRider not found on {root.name}");
+        var boat = boatRider.SelectedBoat;
+        if (!boat) {
+            Debug.Log($"Selected Boat not found at {boatRider.name}");
+            yield break;
         }
-        return rider;
+
+        while (boat.CurrentStateEnum != BoatStateEnum.Idle) {
+            Debug.Log(boat.CurrentStateEnum);
+            yield return new WaitForEndOfFrame();
+        }
+
+        boatRider.StartEnteringBoat();
     }
 }

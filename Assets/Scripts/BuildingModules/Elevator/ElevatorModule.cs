@@ -95,7 +95,7 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     public bool ShouldSpendElectricity()
     {
-        return SpawnedElevatorCabin.IsMoving && SpawnedElevatorCabin && SpawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).FloorIndex;
+        return SpawnedElevatorCabin && SpawnedElevatorCabin.IsMoving && SpawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).FloorIndex;
     }
 
     public void SetCabin(ElevatorCabinConstruction cabin)

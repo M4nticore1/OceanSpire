@@ -37,11 +37,13 @@ public class NameComponent : MonoBehaviour, ILocalizable
 
     private void SetFirstNameId(int id, bool isMale)
     {
+        FirstNameId = id;
         firstName = isMale ? HumanNamesList.Instance.GetMaleFirstName(id) : HumanNamesList.Instance.GetFemaleFirstName(id);
     }
 
     private void SetLastNameId(int id, bool isMale)
     {
+        LastNameId = id;
         lastName = isMale ? HumanNamesList.Instance.GetMaleLastName(id) : HumanNamesList.Instance.GetFemaleLastName(id);
     }
 

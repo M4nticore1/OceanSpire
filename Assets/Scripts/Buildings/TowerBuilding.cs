@@ -86,10 +86,9 @@ public class TowerBuilding : Building
         PlaceIndex = towerData.PlaceIndex;
 
         UpdateBuildingPlace(FloorIndex, PlaceIndex);
+        UpdatePositionType();
         UpdateNeighborBuildings();
         UpdateConnectedBuildings();
-        UpdatePositionType();
-        UpdateConstruction();
     }
 
     protected override void OnDemolish()
@@ -176,9 +175,16 @@ public class TowerBuilding : Building
         return construction;
     }
 
-    protected override void OnConstructionFinish()
+    protected override void OnConstructionComplete()
     {
-        base.OnConstructionFinish();
+        base.OnConstructionComplete();
+
+        UpdateConnectedBuildings();
+    }
+
+    protected override void OnLevelChange()
+    {
+        base.OnLevelChange();
 
         UpdateConnectedBuildings();
     }
@@ -202,6 +208,11 @@ public class TowerBuilding : Building
                 return true;
         }
         return false;
+    }
+
+    public bool ConnectedWith(TowerBuilding target)
+    {
+        return connectedBuildings.Values.Contains(target);
     }
 
     public bool ShouldConnectTo(TowerBuilding target)
@@ -302,12 +313,16 @@ public class TowerBuilding : Building
         }
     }
 
-    private void TrySetNeighborWith(Direction dir, TowerBuilding target)
+    private void TrySetNeighborWith(Direction dir, TowerBuilding neighbor)
     {
-        if (!target) return;
-        if (!ShouldSetNeighborWith(target)) return;
+        if (!ShouldSetNeighbor(neighbor)) return;
 
-        neighborBuildings[dir] = target;
+        SetNeighbor(dir, neighbor);
+    }
+
+    private void SetNeighbor(Direction dir, TowerBuilding neighbor)
+    {
+        neighborBuildings[dir] = neighbor;
     }
 
     private void TryConnectTo(Direction dir, TowerBuilding target)
@@ -375,10 +390,10 @@ public class TowerBuilding : Building
         }
     }
 
-    private bool ShouldSetNeighborWith(TowerBuilding target)
+    private bool ShouldSetNeighbor(TowerBuilding neighbor)
     {
-        if (!target) return false;
-        if (target.IsDemolished) return false;
+        if (!neighbor) return false;
+        if (neighbor.IsDemolished) return false;
 
         return true;
     }
@@ -432,10 +447,9 @@ public class TowerBuilding : Building
         return Direction.Left;
     }
 
-    private TowerBuilding GetNeighborBuilding(Direction value)
+    private TowerBuilding GetNeighborBuilding(Direction dir)
     {
-        TowerBuilding building = null;
-        neighborBuildings.TryGetValue(value, out building);
+        neighborBuildings.TryGetValue(dir, out var building);
 
         return building;
     }

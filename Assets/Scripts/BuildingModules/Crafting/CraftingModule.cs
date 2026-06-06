@@ -82,14 +82,14 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     }
 
     // Workers
-    private void OnCurrentWorkerAdded(InteractComponent interactor)
+    private void OnCurrentWorkerAdded(BuildingInteractComponent interactor)
     {
         if (!ShouldStartWorking()) return;
 
         StartWorking();
     }
 
-    private void OnCurrentWorkerRemoved(InteractComponent interactor)
+    private void OnCurrentWorkerRemoved(BuildingInteractComponent interactor)
     {
         if (ShouldStartWorking()) return;
 

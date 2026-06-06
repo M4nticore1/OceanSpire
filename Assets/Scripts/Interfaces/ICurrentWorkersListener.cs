@@ -2,6 +2,6 @@ using UnityEngine;
 
 public interface ICurrentWorkersListener
 {
-    public void OnCurrentWorkerAdded(InteractComponent interactor);
-    public void OnCurrentWorkerRemoved(InteractComponent interactor);
+    public void OnCurrentWorkerAdded(BuildingInteractComponent interactor);
+    public void OnCurrentWorkerRemoved(BuildingInteractComponent interactor);
 }

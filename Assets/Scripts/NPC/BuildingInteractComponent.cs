@@ -1,21 +1,19 @@
 using System;
 using UnityEngine;
 
-public class InteractComponent : MonoBehaviour
+public class BuildingInteractComponent : MonoBehaviour
 {
     public Building InteractBuilding;
 
     public bool IsInteracting { get; private set; } = false;
-    public int workerIndex { get; private set; } = 0;
-    public int raiderIndex { get; private set; } = 0;
 
     public event Action<Building> onSetedInteractBuilding;
     public event Action<Building> onRemovedInteractBuilding;
     public event Action<Building> onInteractionStarted;
     public event Action<Building> onInteractionStopped;
 
-    public static event Action<InteractComponent> onInteractorSetedInteractBuilding;
-    public static event Action<InteractComponent> onInteractorRemovedInteractBuilding;
+    public static event Action<BuildingInteractComponent> onInteractorSetedInteractBuilding;
+    public static event Action<BuildingInteractComponent> onInteractorRemovedInteractBuilding;
 
     public void SetInteractBuilding(Building building)
     {
@@ -45,37 +43,53 @@ public class InteractComponent : MonoBehaviour
     public void RemoveInteractBuilding()
     {
         if (IsInteracting) {
-            StopInteracting();
+            TryStopInteracting();
         }
 
-        Building lastInteractBuilding = InteractBuilding;
+        var lastInteractBuilding = InteractBuilding;
         InteractBuilding = null;
 
         onRemovedInteractBuilding?.Invoke(lastInteractBuilding);
         onInteractorRemovedInteractBuilding?.Invoke(this);
     }
 
-    public void StartInteracting()
+    public void TryStartInteracting()
+    {
+        if (!ShouldStartInteracting()) return;
+
+        StartInteracting();
+    }
+
+    public void TryStopInteracting()
+    {
+        if (!ShouldStopInteracting()) return;
+
+        StopInteracting();
+    }
+
+    private void StartInteracting()
     {
         IsInteracting = true;
         onInteractionStarted?.Invoke(InteractBuilding);
     }
 
-    public void StopInteracting()
+    private void StopInteracting()
     {
-        if (!IsInteracting) return;
-        
         IsInteracting = false;
         onInteractionStopped?.Invoke(InteractBuilding);
     }
 
-    public void AssignWorkerIndex()
+    private bool ShouldStartInteracting()
     {
-        workerIndex = InteractBuilding ? InteractBuilding.WorkComponent.Workers.Count : -1;
+        if (IsInteracting) return false;
+
+        return true;
     }
 
-    public void AssignRaiderIndex()
+    private bool ShouldStopInteracting()
     {
-        raiderIndex = InteractBuilding ? InteractBuilding.WorkComponent.Workers.Count : -1;
+        if (!IsInteracting) return false;
+
+        return true;
     }
 }

@@ -39,7 +39,7 @@ public class UpgradeComponent : MonoBehaviour
         NextLevel = upgradeData.NextLevel;
     }
 
-    public void Upgrade()
+    public void StartUpgrading()
     {
         NextLevel = levelComponent.Level + 1;
         constructionComponent.StartConstruction(upgradable.GetUpgradeTime());
@@ -50,7 +50,7 @@ public class UpgradeComponent : MonoBehaviour
 
     private void OnConstructionCompleted()
     {
-        levelComponent.SetLevel(NextLevel);
+        levelComponent.TrySetLevel(NextLevel);
 
         OnUpgradeCompleted?.Invoke();
         OnGlobalUpgradeCompleted?.Invoke(this);

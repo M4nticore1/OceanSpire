@@ -9,12 +9,26 @@ public class LevelComponent : MonoBehaviour
 
     public void Init(LevelData levelData)
     {
-        SetLevel(levelData.Level);
+        TrySetLevel(levelData.Level);
     }
 
-    public void SetLevel(int value)
+    public void TrySetLevel(int value)
+    {
+        if (!ShouldSetLevel(value)) return;
+
+        SetLevel(value);
+    }
+
+    private void SetLevel(int value)
     {
         Level = value;
         OnLevelChanged?.Invoke();
+    }
+
+    private bool ShouldSetLevel(int value)
+    {
+        if (Level == value) return false;
+
+        return true;
     }
 }

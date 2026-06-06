@@ -19,7 +19,11 @@ MonoBehaviour:
   maxSpawnTime: 60
   meshes:
   - {fileID: 919132149155446097, guid: 359859985b88c3e4bbbcad29c3102f4f, type: 3}
-  demolishDriftingLootTable: []
+  demolishDriftingLootTable:
+  - {fileID: 9092713361229683442, guid: f0e44bc41752d53408b295c85a69750d, type: 3}
+  - {fileID: 9092713361229683442, guid: 0219d66037bfc9744aadb5abe161980c, type: 3}
+  - {fileID: 9092713361229683442, guid: 66bf09a591535c147a2cd1c2223243af, type: 3}
+  - {fileID: 9092713361229683442, guid: 642a6aea44523a141b1a9aff5211e2f9, type: 3}
   floorsToSpawn: 0
   minSpawnFloor: 4
   maxSpawnFloor: 0

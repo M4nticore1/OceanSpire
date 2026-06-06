@@ -48,8 +48,6 @@ public class BoatMovingToLootState : BoatFindingLootState
         if (isMovingToTarget) return false;
         if (!boat) return false;
         if (!boat.TargetDriftingLoot) return false;
-        if (!boat.TargetDriftingLoot) return false;
-        if (!boat.TargetDriftingLoot.transform) return false;
 
         return true;
     }

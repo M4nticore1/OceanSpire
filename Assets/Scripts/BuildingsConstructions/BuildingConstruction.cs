@@ -19,7 +19,7 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 {
     private LightProbeGroupManager lightProbeGroupManager;
 
-    public Building OwnedBuilding { get; private set; }
+    public Building OwnedBuilding;
 
     [SerializeField] private BuildingAction[] buildingInteractions;
     public BuildingAction[] BuildingInteractions => buildingInteractions;

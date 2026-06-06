@@ -22,9 +22,8 @@ public class ConstructionComponent : MonoBehaviour
         if (!IsUnderConstruction) return;
 
         CurrentConstructionTime += Time.deltaTime;
-        if (CurrentConstructionTime < ConstructionTime) return;
 
-        FinishConstruction();
+        TryCompleteConstruction();
     }
 
     public void Init(ConstructionData data)
@@ -38,6 +37,8 @@ public class ConstructionComponent : MonoBehaviour
                 StartConstruction(data.ConstructionTime);
             }
         }
+
+        TryCompleteConstruction();
     }
 
     public void StartConstruction(float constructionTime)
@@ -49,12 +50,27 @@ public class ConstructionComponent : MonoBehaviour
         OnGlobalConstructionStarted?.Invoke(this);
     }
 
-    public void FinishConstruction()
+    public void TryCompleteConstruction()
+    {
+        if (!ShouldCompleteConstruction()) return;
+
+        CompleteConstruction();
+    }
+
+    public void CompleteConstruction()
     {
         CurrentConstructionTime = 0f;
         IsUnderConstruction = false;
 
         OnConstructionCompleted?.Invoke();
         OnGlobalConstructionCompleted?.Invoke(this);
+    }
+
+    private bool ShouldCompleteConstruction()
+    {
+        if (!IsUnderConstruction) return false;
+        if (CurrentConstructionTime < ConstructionTime) return false;
+
+        return true;
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -14,12 +13,18 @@ public class BoatCollectingLootState : BoatState
 
     public override void Enter()
     {
-        boat.TargetDriftingLoot.StopMoving();
+        if (!boat.TargetDriftingLoot) {
+            boat.SetTargetLoot(DriftingLootFinder.TryFindNearestSwimmingDriftingLoot(DriftingLootManager.Instance, boat.transform.position));
+        }
+
+        if (!TryStopDriftingLoot()) {
+            boat.SetState(BoatStateEnum.FindingLoot);
+        }
     }
 
     public override void Exit()
     {
-        DriftingLoot container = boat.TargetDriftingLoot;
+        var container = boat.TargetDriftingLoot;
         if (!container) return;
 
         container.StartMoving();
@@ -27,11 +32,13 @@ public class BoatCollectingLootState : BoatState
 
     public override void Tick()
     {
+        TryStopDriftingLoot();
+
         currentCollectingTime += Time.deltaTime;
 
         if (currentCollectingTime <= collectLootTime) return;
 
-        CollectLoot();
+        TryCollectLoot();
 
         if (boat.Inventory.RemainingWeight > 0) {
             boat.SetState(BoatStateEnum.FindingLoot);
@@ -46,8 +53,20 @@ public class BoatCollectingLootState : BoatState
 
     }
 
-    private void CollectLoot()
+    private bool TryStopDriftingLoot()
     {
+        if (!boat) return false;
+        if (!boat.TargetDriftingLoot) return false;
+        if (!boat.TargetDriftingLoot.IsMoving) return false;
+
+        boat.TargetDriftingLoot.StopMoving();
+        return true;
+    }
+
+    private void TryCollectLoot()
+    {
+        if (!ShouldCollectLoot()) return;
+
         var collectedLoot = boat.TargetDriftingLoot.TakeItems();
 
         foreach (var loot in collectedLoot) {
@@ -59,5 +78,13 @@ public class BoatCollectingLootState : BoatState
 
             boat.Inventory.AddItem(id, amountToTake);
         }
+    }
+
+    private bool ShouldCollectLoot()
+    {
+        if (!boat) return false;
+        if (!boat.TargetDriftingLoot) return false;
+
+        return true;
     }
 }

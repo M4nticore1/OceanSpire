@@ -17,8 +17,8 @@ public class WorkersControlMenu : ControlMenu
         Human.OnHumanInited += OnHumanInited;
         Human.OnHumanDied += OnHumanDied;
 
-        InteractComponent.onInteractorSetedInteractBuilding += OnSetedCitizenWork;
-        InteractComponent.onInteractorRemovedInteractBuilding += OnRemovedCitizenWork;
+        BuildingInteractComponent.onInteractorSetedInteractBuilding += OnSetedCitizenWork;
+        BuildingInteractComponent.onInteractorRemovedInteractBuilding += OnRemovedCitizenWork;
     }
 
     protected override void OnDisable()
@@ -28,8 +28,8 @@ public class WorkersControlMenu : ControlMenu
         Human.OnHumanInited -= OnHumanInited;
         Human.OnHumanDied -= OnHumanDied;
 
-        InteractComponent.onInteractorSetedInteractBuilding -= OnSetedCitizenWork;
-        InteractComponent.onInteractorRemovedInteractBuilding -= OnRemovedCitizenWork;
+        BuildingInteractComponent.onInteractorSetedInteractBuilding -= OnSetedCitizenWork;
+        BuildingInteractComponent.onInteractorRemovedInteractBuilding -= OnRemovedCitizenWork;
     }
 
     protected override void OnOpen()
@@ -92,12 +92,12 @@ public class WorkersControlMenu : ControlMenu
         fitSizeToChildren.UpdateSize();
     }
 
-    private void OnSetedCitizenWork(InteractComponent interactor)
+    private void OnSetedCitizenWork(BuildingInteractComponent interactor)
     {
         TryUpdateMenu(interactor.GetComponent<Human>());
     }
 
-    private void OnRemovedCitizenWork(InteractComponent interactor)
+    private void OnRemovedCitizenWork(BuildingInteractComponent interactor)
     {
         TryUpdateMenu(interactor.GetComponent<Human>());
     }

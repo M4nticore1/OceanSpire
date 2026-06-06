@@ -20,7 +20,7 @@ public class BoatData
             InstanceId = boat.InstanceId.GetInstanceId(),
             Position = new Vector3Data(boat.transform.position),
             Rotation = new Vector3Data(boat.transform.rotation.eulerAngles),
-            StateId = (int)boat.CurrentState,
+            StateId = (int)boat.CurrentStateEnum,
             DockInstanceId = boat.DockPoint?.InstanceId.GetInstanceId(),
             Status = boat.CurrentStatus
         };

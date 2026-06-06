@@ -25,6 +25,7 @@ public class PierModule : BuildingModule
     {
         base.Unsubscribe();
 
+        OwnedBuilding.OnInited -= OnConstructionStarted;
         OwnedBuilding.ConstructionComponent.OnConstructionStarted -= OnConstructionStarted;
         OwnedBuilding.LevelComponent.OnLevelChanged -= OnLevelChanged;
     }
@@ -34,6 +35,7 @@ public class PierModule : BuildingModule
         base.OnInited();
 
         RegisterBoatDocks();
+        UpdatePier();
     }
 
     private void OnConstructionStarted()

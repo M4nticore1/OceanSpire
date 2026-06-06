@@ -1,32 +1,43 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RaidComponent : MonoBehaviour
 {
-    private List<InteractComponent> raiders = new();
-    public IReadOnlyList<InteractComponent> Raiders => raiders.AsReadOnly();
+    private List<Raider> raiders = new();
+    public IReadOnlyList<Raider> Raiders => raiders.AsReadOnly();
 
-    private List<InteractComponent> enteredRaiders = new();
-    public IReadOnlyList<InteractComponent> EnteredRaiders => enteredRaiders.AsReadOnly();
+    private List<Raider> enteredRaiders = new();
+    public IReadOnlyList<Raider> EnteredRaiders => enteredRaiders.AsReadOnly();
+
+    public event Action<Raider> OnRaiderAdded;
+    public event Action<Raider> OnRaiderRemoved;
+
+    public event Action<Raider> OnCurrentRaiderAdded;
+    public event Action<Raider> OnCurrentRaiderRemoved;
 
     // Raiders
-    public void AddRaider(InteractComponent interactor)
+    public void AddRaider(Raider raider)
     {
-        raiders.Add(interactor);
+        raiders.Add(raider);
+        OnRaiderAdded?.Invoke(raider);
     }
 
-    public void RemoveRaider(InteractComponent interactor)
+    public void RemoveRaider(Raider raider)
     {
-        raiders.Remove(interactor);
+        raiders.Remove(raider);
+        OnRaiderRemoved?.Invoke(raider);
     }
 
-    public void EnterRaider(InteractComponent interactor)
+    public void AddCurrentRaider(Raider raider)
     {
-        enteredRaiders.Add(interactor);
+        enteredRaiders.Add(raider);
+        OnCurrentRaiderAdded?.Invoke(raider);
     }
 
-    public void ExitRaider(InteractComponent interactor)
+    public void RemoveCurrentRaider(Raider raider)
     {
-        enteredRaiders.Remove(interactor);
+        enteredRaiders.Remove(raider);
+        OnCurrentRaiderRemoved?.Invoke(raider);
     }
 }

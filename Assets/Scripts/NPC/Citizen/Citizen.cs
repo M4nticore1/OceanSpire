@@ -59,35 +59,30 @@ public class Citizen : Human
 
     protected override void OnSetedInteractBuilding(Building building)
     {
+        building.WorkComponent.AddWorker(this);
+
         base.OnSetedInteractBuilding(building);
-
-        InteractComponent.AssignWorkerIndex();
-        building.WorkComponent.AddWorker(InteractComponent);
-
-        if (BoatRider.IsRidingOnBoat) {
-            BoatRider.SelectedBoat.SetState(BoatStateEnum.FindingLoot);
-        }
     }
 
     protected override void OnRemovedInteractBuilding(Building building)
     {
         base.OnRemovedInteractBuilding(building);
 
-        building.WorkComponent.RemoveWorker(InteractComponent);
+        building.WorkComponent.RemoveWorker(this);
     }
 
     protected override void OnInteractionStarted(Building building)
     {
         base.OnInteractionStarted(building);
 
-        building.WorkComponent.EnterWorker(InteractComponent);
+        building.WorkComponent.AddCurrentWorker(this);
     }
 
     protected override void OnInteractionStopped(Building building)
     {
         base.OnInteractionStopped(building);
 
-        building.WorkComponent.ExitWorker(InteractComponent);
+        building.WorkComponent.ExitWorker(this);
     }
 
     protected override void HandleEnteredBoat(Boat boat)
@@ -98,6 +93,18 @@ public class Citizen : Human
             boat.FloatAway(LeavePosition);
         }
         else {
+            var building = InteractComponent.InteractBuilding;
+            if (!building) {
+                boat.SetState(BoatStateEnum.MovingToDock);
+                return;
+            }
+
+            var pier = building.GetComponent<PierModule>();
+            if (!pier) {
+                boat.SetState(BoatStateEnum.MovingToDock);
+                return;
+            }
+
             boat.SetState(BoatStateEnum.FindingLoot);
         }
     }
@@ -126,7 +133,7 @@ public class Citizen : Human
     {
         base.OnAttackStarted();
 
-        InteractComponent.StopInteracting();
+        InteractComponent.TryStopInteracting();
     }
 
     protected override void OnAttackStopped()

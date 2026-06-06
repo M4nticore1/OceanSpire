@@ -11,7 +11,7 @@ public class ElevatorCabinsManager : MonoBehaviour
     private void OnEnable()
     {
         Building.OnBuildingInited += OnBuildingInited;
-        Building.OnBuildingConstructionFinished += OnBuildingConstructionFinished;
+        Building.OnBuildingLevelChanged += OnBuildingConstructionFinished;
         Building.OnBuildingDemolished += OnBuildingDemolished;
         BuildingConstruction.OnBuildingConstructionInited += OnBuildingConstructionInited;
         BuildingConstruction.OnBuildingConstructionDemolished += OnBuildingConstructionDemolished;
@@ -20,7 +20,7 @@ public class ElevatorCabinsManager : MonoBehaviour
     private void OnDisable()
     {
         Building.OnBuildingInited -= OnBuildingInited;
-        Building.OnBuildingConstructionFinished -= OnBuildingConstructionFinished;
+        Building.OnBuildingLevelChanged -= OnBuildingConstructionFinished;
         Building.OnBuildingDemolished -= OnBuildingDemolished;
         BuildingConstruction.OnBuildingConstructionInited -= OnBuildingConstructionInited;
         BuildingConstruction.OnBuildingConstructionDemolished -= OnBuildingConstructionDemolished;
@@ -60,7 +60,7 @@ public class ElevatorCabinsManager : MonoBehaviour
                     elevatorCabin.SetOwnedBuilding(connectedBuilding);
                 }
                 else {
-                    connectedElevator.SetCabin(CreateCabin(connectedElevator));
+                    connectedElevator.SetCabin(TryCreateCabin(connectedElevator));
                 }
 
                 UpdateElevatorNetworkCabins(connectedElevator);
@@ -83,7 +83,7 @@ public class ElevatorCabinsManager : MonoBehaviour
             UpdateElevatorNetworkCabins(elevator);
         }
         else {
-            CreateCabin(elevator);
+            TryCreateCabin(elevator);
         }
     }
 
@@ -121,8 +121,10 @@ public class ElevatorCabinsManager : MonoBehaviour
         }
     }
 
-    private ElevatorCabinConstruction CreateCabin(ElevatorModule elevator)
+    private ElevatorCabinConstruction TryCreateCabin(ElevatorModule elevator)
     {
+        if (elevator.SpawnedElevatorCabin) return null;
+
         BuildingConstructionData data = new BuildingConstructionData()
         {
             BuildingInstanceId = elevator.OwnedTowerBuilding.InstanceId.GetInstanceId()

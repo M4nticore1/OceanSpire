@@ -24,6 +24,8 @@ public class BuildingsManager : MonoBehaviour
     [SerializeField] private int maxFloorsCount = 25;
     public int MaxFloorsCount => maxFloorsCount;
 
+    public BuildingPlace EntranceBuildingPlace { get; private set; }
+
     public const int FloorHeight = 5;
     public const int FirstFloorHeight = 10;
 
@@ -31,7 +33,8 @@ public class BuildingsManager : MonoBehaviour
     public const int RoomsCountPerSide = 3;
     public const int RoomsWidth = 8;
     public const int FloorWidth = 24;
-    public const int FirstBuildCityBuildingPlace = 1;
+    public const int FirstBuildingFloor = 0;
+    public const int FirstBuildingPlace = 1;
     public float CurrentCityHeight { get; private set; } = 0;
 
     public List<List<ElevatorModule>> elevatorGroups { get; private set; } = new List<List<ElevatorModule>>();
@@ -50,6 +53,11 @@ public class BuildingsManager : MonoBehaviour
         }
 
         Instance = this;
+    }
+
+    private void Start()
+    {
+        InitEnterBuildingPlace();
     }
 
     public void RegisterFloorModule(FloorFrameModule floorModule)
@@ -98,5 +106,10 @@ public class BuildingsManager : MonoBehaviour
         if (builtFloors.Count <= 0) return;
 
         CurrentCityHeight = builtFloors[builtFloors.Count - 1].transform.position.y + FloorHeight;
+    }
+
+    private void InitEnterBuildingPlace()
+    {
+        EntranceBuildingPlace = builtFloors[FirstBuildingFloor].RoomBuildingPlaces[FirstBuildingPlace];
     }
 }

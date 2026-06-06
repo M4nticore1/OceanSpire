@@ -19,8 +19,8 @@ public class Boat : MonoBehaviour, IClickable
     [SerializeField] private BoatDefinition boatData;
     public BoatDefinition Definition => boatData;
 
-    public BoatStateEnum CurrentState { get; private set; }
-    private BoatState state;
+    public BoatStateEnum CurrentStateEnum { get; private set; }
+    private BoatState currentState;
 
     public HumanStatusEnum CurrentStatus { get; private set; }
 
@@ -82,9 +82,9 @@ public class Boat : MonoBehaviour, IClickable
 
     private void Update()
     {
-        if (state == null) return;
+        if (currentState == null) return;
 
-        state.Tick();
+        currentState.Tick();
     }
 
     public void Init(BoatData boatData)
@@ -167,39 +167,41 @@ public class Boat : MonoBehaviour, IClickable
     // State
     public void SetState(BoatStateEnum state)
     {
-        if (this.state != null) {
-            this.state.Exit();
+        if (currentState != null && state == CurrentStateEnum) return;
+
+        if (currentState != null) {
+            currentState.Exit();
         }
 
         switch (state) {
             case BoatStateEnum.Idle:
-                this.state = new BoatIdleState(this);
+                currentState = new BoatIdleState(this);
                 break;
             case BoatStateEnum.FindingLoot:
-                this.state = new BoatFindingLootState(this);
+                currentState = new BoatFindingLootState(this);
                 break;
             case BoatStateEnum.MovingToLoot:
-                this.state = new BoatMovingToLootState(this);
+                currentState = new BoatMovingToLootState(this);
                 break;
             case BoatStateEnum.CollectingLoot:
-                this.state = new BoatCollectingLootState(this);
+                currentState = new BoatCollectingLootState(this);
                 break;
             case BoatStateEnum.MovingToDock:
-                this.state = new BoatMovingToDockState(this);
+                currentState = new BoatMovingToDockState(this);
                 break;
             case BoatStateEnum.UnloadingLoot:
-                this.state = new BoatUnloadingState(this);
+                currentState = new BoatUnloadingState(this);
                 break;
             case BoatStateEnum.FloatingAway:
-                this.state = new BoatFloatingAwayState(this);
+                currentState = new BoatFloatingAwayState(this);
                 break;
             case BoatStateEnum.Demolished:
-                this.state = new BoatDemolishState(this);
+                currentState = new BoatDemolishState(this);
                 break;
         }
 
-        this.state.Enter();
-        CurrentState = state;
+        currentState.Enter();
+        CurrentStateEnum = state;
     }
 
     // IClickable
@@ -231,7 +233,7 @@ public class Boat : MonoBehaviour, IClickable
 
     private void OnMovementStopped()
     {
-        state.OnReachedPath();
+        currentState.OnReachedPath();
 
         if (SelectedRider)
             SelectedRider.HandleBoatMovementStopped();

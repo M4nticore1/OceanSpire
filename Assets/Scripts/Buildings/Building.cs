@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,6 +40,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private BuildingStrategy strategy;
 
+    private Dictionary<CreatureCityNavigator, Transform> interactTransforms = new();
+
     public bool isWorking { get; private set; } = false;
     public bool IsDemolished { get; private set; } = false;
 
@@ -57,12 +58,13 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public event Action<CreatureCityNavigator> onEnterBuilding;
     public event Action<CreatureCityNavigator> onExitBuilding;
 
-    public event Action<InteractComponent> onCurrentWorkerAdded;
-    public event Action<InteractComponent> onCurrentWorkerRemoved;
+    public event Action<BuildingInteractComponent> onCurrentWorkerAdded;
+    public event Action<BuildingInteractComponent> onCurrentWorkerRemoved;
 
-    public event Action onConstructionStarted;
-    public event Action onConstructionFinished;
+    public event Action OnConstructionStarted;
+    public event Action OnConstructionCompleted;
 
+    public event Action OnLevelChanged;
     public event Action OnDemolished;
 
     public event Action OnClicked;
@@ -71,7 +73,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public static event Action<Building> OnBuildingDemolished;
 
     public static event Action<Building> OnBuildingConstructionStarted;
-    public static event Action<Building> OnBuildingConstructionFinished;
+    public static event Action<Building> OnBuildingConstructionCompleted;
+
+    public static event Action<Building> OnBuildingLevelChanged;
 
     public static event Action<Building> OnBuildingSelected;
     public static event Action<Building> OnBuildingDeselected;
@@ -85,13 +89,18 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected virtual void OnEnable()
     {
-        constructionComponent.OnConstructionStarted += OnConstructionStarted;
-        levelComponent.OnLevelChanged += OnLevelChanged;
+        constructionComponent.OnConstructionStarted += HandleConstructionStarted;
+        constructionComponent.OnConstructionCompleted += HandleConstructionStarted;
 
-        WorkComponent.onWorkerAdded += OnWorkerAdded;
-        WorkComponent.onWorkerRemoved += OnWorkerRemoved;
-        WorkComponent.onWorkerEntered += OnCurrentWorkerAdded;
-        WorkComponent.onWorkerExited += OnCurrentWorkerRemoved;
+        levelComponent.OnLevelChanged += HandleLevelChanged;
+
+        WorkComponent.OnWorkerAdded += OnWorkerAdded;
+        WorkComponent.OnWorkerRemoved += OnWorkerRemoved;
+        WorkComponent.OnWorkerEntered += OnCurrentWorkerAdded;
+        WorkComponent.OnWorkerExited += OnCurrentWorkerRemoved;
+
+        RaidComponent.OnRaiderAdded += OnRaiderAdded;
+        RaidComponent.OnRaiderRemoved += OnRaiderRemoved;
 
         SelectComponent.OnSelected += OnSelected;
         SelectComponent.OnDeselected += OnDeselected;
@@ -99,13 +108,18 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected virtual void OnDisable()
     {
-        constructionComponent.OnConstructionStarted -= OnConstructionStarted;
-        levelComponent.OnLevelChanged -= OnLevelChanged;
+        constructionComponent.OnConstructionStarted -= HandleConstructionStarted;
+        constructionComponent.OnConstructionCompleted -= HandleConstructionStarted;
 
-        WorkComponent.onWorkerAdded -= OnWorkerAdded;
-        WorkComponent.onWorkerRemoved -= OnWorkerRemoved;
-        WorkComponent.onWorkerEntered -= OnCurrentWorkerAdded;
-        WorkComponent.onWorkerExited -= OnCurrentWorkerRemoved;
+        levelComponent.OnLevelChanged -= HandleLevelChanged;
+
+        WorkComponent.OnWorkerAdded -= OnWorkerAdded;
+        WorkComponent.OnWorkerRemoved -= OnWorkerRemoved;
+        WorkComponent.OnWorkerEntered -= OnCurrentWorkerAdded;
+        WorkComponent.OnWorkerExited -= OnCurrentWorkerRemoved;
+
+        RaidComponent.OnRaiderAdded -= OnRaiderAdded;
+        RaidComponent.OnRaiderRemoved -= OnRaiderRemoved;
 
         SelectComponent.OnSelected -= OnSelected;
         SelectComponent.OnDeselected -= OnDeselected;
@@ -115,6 +129,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public void Init(BuildingData buildingData)
     {
         OnInit(buildingData);
+        UpdateConstruction();
 
         IsInited = true;
         OnInited?.Invoke();
@@ -136,9 +151,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     {
         instanceId.Register(buildingData.InstanceId);
         UpdateStrategy();
-        levelComponent.Init(buildingData.Level);
-        upgradeComponent.Init(buildingData.Upgrade);
         constructionComponent.Init(buildingData.Construction);
+        upgradeComponent.Init(buildingData.Upgrade);
+        levelComponent.Init(buildingData.Level);
 
         GetComponent<CraftingModule>()?.Init(buildingData.Crafting);
     }
@@ -202,34 +217,30 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     }
 
     // Interaction
-    public Transform GetInteractionTransform()
+    public Transform GetInteractionTransform(CreatureCityNavigator navigator)
     {
-        int index = WorkComponent.Workers.Count > 0 ? ((WorkComponent.Workers.Count - 1) % LevelData.MaxHumansCount) : 0;
-        BuildingAction[] actions = SpawnedConstruction.BuildingInteractions;
-
-        if (actions.Length > index) {
-            BuildingActionWaypoint[] waypoints = actions[index].waypoints;
-
-            if (waypoints.Length > 0) {
-                Transform waypointTransform = actions[index].waypoints[0].transform;
-
-                if (waypointTransform) {
-                    return waypointTransform;
-                }
-                else {
-                    Debug.Log("waypointTransform is not valid.");
-                    return transform;
-                }
-            }
-            else {
-                Debug.Log("waypoints.Length == 0");
-                return transform;
-            }
-        }
-        else {
-            Debug.Log("actions.Length <= index");
+        if (!interactTransforms.ContainsKey(navigator)) {
+            Debug.Log("City Navigator not found at dictionary");
             return transform;
         }
+
+        return interactTransforms[navigator];
+    }
+
+    public void TryAssignInteractTransform(CreatureCityNavigator navigator)
+    {
+        if (interactTransforms.ContainsKey(navigator)) return;
+
+        var actions = SpawnedConstruction.BuildingInteractions;
+        var transform = actions.Length > 0 ? actions[WorkComponent.Workers.Count % actions.Length].waypoints[0].transform : this.transform;
+        interactTransforms.Add(navigator, transform);
+    }
+
+    public void TryRemoveInteractTransform(CreatureCityNavigator navigator)
+    {
+        if (!interactTransforms.ContainsKey(navigator)) return;
+
+        interactTransforms.Remove(navigator);
     }
 
     public float GetUpgradeTime()
@@ -254,7 +265,12 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     }
 
-    protected virtual void OnConstructionFinish()
+    protected virtual void OnConstructionComplete()
+    {
+
+    }
+
+    protected virtual void OnLevelChange()
     {
 
     }
@@ -281,32 +297,47 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     }
 
     // Work
-    private void OnWorkerAdded(InteractComponent interactor)
+    private void OnWorkerAdded(Citizen citizen)
     {
-        strategy.OnSetInteractBuilding(interactor);
+        TryAssignInteractTransform(citizen.CityNavigator);
+
+        strategy.OnSetInteractBuilding(citizen.InteractComponent);
     }
 
-    private void OnWorkerRemoved(InteractComponent interactor)
+    private void OnWorkerRemoved(Citizen citizen)
     {
-        strategy.OnRemoveInteractBuilding(interactor);
+        TryRemoveInteractTransform(citizen.CityNavigator);
+
+        strategy.OnRemoveInteractBuilding(citizen.InteractComponent);
     }
 
-    private void OnCurrentWorkerAdded(InteractComponent interactor)
+    private void OnCurrentWorkerAdded(Citizen citizen)
     {
         if (WorkComponent.EnteredWorkers.Count == 1)
             StartWorking();
 
-        strategy.OnStartedInteracting(interactor);
-        onCurrentWorkerAdded?.Invoke(interactor);
+        strategy.OnStartedInteracting(citizen.InteractComponent);
+        onCurrentWorkerAdded?.Invoke(citizen.InteractComponent);
     }
 
-    private void OnCurrentWorkerRemoved(InteractComponent interactor)
+    private void OnCurrentWorkerRemoved(Citizen citizen)
     {
         if (WorkComponent.EnteredWorkers.Count == 0)
             StopWorking();
 
-        strategy.OnStoppedInteracting(interactor);
-        onCurrentWorkerRemoved?.Invoke(interactor);
+        strategy.OnStoppedInteracting(citizen.InteractComponent);
+        onCurrentWorkerRemoved?.Invoke(citizen.InteractComponent);
+    }
+
+    // Raid
+    private void OnRaiderAdded(Raider raider)
+    {
+        TryAssignInteractTransform(raider.CityNavigator);
+    }
+
+    private void OnRaiderRemoved(Raider raider)
+    {
+        TryRemoveInteractTransform(raider.CityNavigator);
     }
 
     // Working
@@ -349,26 +380,35 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     }
 
     // Construction
-    private void OnConstructionStarted()
+    private void HandleConstructionStarted()
     {
         OnConstructionStart();
         UpdateConstruction();
 
+        OnConstructionStarted?.Invoke();
         OnBuildingConstructionStarted?.Invoke(this);
-        onConstructionStarted?.Invoke();
     }
 
-    private void OnLevelChanged()
+    private void HandleConstructionCompleted()
     {
-        OnConstructionFinish();
+        OnConstructionComplete();
+        UpdateConstruction();
+
+        OnConstructionCompleted?.Invoke();
+        OnBuildingConstructionCompleted?.Invoke(this);
+    }
+
+    private void HandleLevelChanged()
+    {
+        OnLevelChange();
         UpdateConstruction();
 
         if (SelectComponent.IsSelected) {
             SelectComponent.Select();
         }
 
-        OnBuildingConstructionFinished?.Invoke(this);
-        onConstructionFinished?.Invoke();
+        OnLevelChanged?.Invoke();
+        OnBuildingLevelChanged?.Invoke(this);
     }
 
     // Audio

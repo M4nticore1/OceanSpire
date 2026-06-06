@@ -114,7 +114,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6506537361480025273}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21cf396309e47dc4299e233a12c6a5a9, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e57cbe27cd43c64cbfff3033446d035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCBuildingInteractor
   InteractBuilding: {fileID: 0}
@@ -135,6 +135,7 @@ MonoBehaviour:
   CurrentBuilding: {fileID: 0}
   TargetBuilding: {fileID: 0}
   pathIndex: 0
+  FollowingPathState: 0
 --- !u!114 &6497944028369977301
 MonoBehaviour:
   m_ObjectHideFlags: 0

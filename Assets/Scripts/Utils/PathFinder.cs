@@ -4,31 +4,32 @@ using UnityEngine;
 
 public static class PathFinder
 {
-    public static bool TryFindBuildingPath(BuildingPlace startPlace, Building targetBuilding, ref List<Building> buildingsPath)
+    public static bool TryFindBuildingPath(BuildingPlace startPlace, Building targetBuilding, out List<Building> buildingsPath)
     {
-        buildingsPath.Clear();
-
         if (startPlace || targetBuilding is TowerBuilding) {
-            if (!startPlace) {
-                startPlace = BuildingsManager.Instance.BuiltFloors[0].RoomBuildingPlaces[BuildingsManager.FirstBuildCityBuildingPlace];
-            }
+            if (!startPlace)
+                startPlace = BuildingsManager.Instance.EntranceBuildingPlace;
 
-            // Find path
-            List<Building> path = FindBuildingPath(startPlace, targetBuilding);
+            BuildingPlace targetBuildingPlace = null;
+            if (targetBuilding as TowerBuilding)
+                targetBuildingPlace = (targetBuilding as TowerBuilding).BuildingPlace;
+            else if (targetBuilding as GroundBuilding)
+                targetBuildingPlace = BuildingsManager.Instance.EntranceBuildingPlace;
 
-            if (path != null) {
-                buildingsPath.AddRange(path);
+            if (TryFindTowerPath(startPlace, targetBuildingPlace, out buildingsPath))
                 return true;
-            }
+
             return false;
         }
         else {
+            buildingsPath = new();
             buildingsPath.Add(targetBuilding);
+
             return true;
         }
     }
 
-    public static bool TryFindBuildingPath(BuildingPlace startPlace, Func<Building, bool> targetBuildingCondition, ref List<Building> buildingsPath)
+    public static bool TryFindBuildingPath(BuildingPlace startPlace, Func<Building, bool> targetBuildingCondition, List<Building> buildingsPath)
     {
         Building targetBuilding = null;
 
@@ -52,62 +53,63 @@ public static class PathFinder
                 break;
         }
 
-        return TryFindBuildingPath(startPlace, targetBuilding, ref buildingsPath);
+        return TryFindBuildingPath(startPlace, targetBuilding, out buildingsPath);
     }
 
-    private static List<Building> FindBuildingPath(BuildingPlace startPlace, Building targetBuilding)
+    public static bool TryFindTowerPath(BuildingPlace startPlace, BuildingPlace targetPlace, out List<Building> path)
     {
+        path = null;
+
         if (!startPlace) {
-            Debug.LogError("startPlace is null");
-            return null;
+            Debug.Log("StartPlace not found to find path");
+            return false;
         }
 
-        if (!startPlace.PlacedBuilding)
-            return null;
+        if (!targetPlace) {
+            Debug.Log("TargetPlace not found to find path");
+            return false;
+        }
 
-        Queue<(BuildingPlace place, List<Building> path)> queue = new();
+        if (!startPlace.PlacedBuilding && startPlace != BuildingsManager.Instance.EntranceBuildingPlace)
+            return false;
+
+        if (!targetPlace.PlacedBuilding && targetPlace != BuildingsManager.Instance.EntranceBuildingPlace)
+            return false;
+
+        Queue<(BuildingPlace place, List<Building> currentPath)> queue = new();
         HashSet<BuildingPlace> visited = new();
 
         queue.Enqueue((startPlace, new List<Building>()));
         visited.Add(startPlace);
 
         while (queue.Count > 0) {
-            var (place, path) = queue.Dequeue();
-            var currentPath = new List<Building>(path);
+            var (place, currentPath) = queue.Dequeue();
+            var newPath = new List<Building>(currentPath);
 
             if (place.PlacedBuilding)
-                currentPath.Add(place.PlacedBuilding);
+                newPath.Add(place.PlacedBuilding);
 
-            if (place.PlacedBuilding == targetBuilding)
-                return currentPath;
+            if (place == targetPlace) {
+                path = newPath;
+                return true;
+            }
 
             bool hasElevator = place.PlacedBuilding && place.PlacedBuilding.GetComponent<ElevatorModule>();
             NeighborMask mask = hasElevator ? NeighborMask.All : NeighborMask.Horizontal;
 
-            foreach (BuildingPlace neighborPlace in place.GetNeighborPlaces(mask)) {
-                // Check place
-                if (!neighborPlace || visited.Contains(neighborPlace))
-                    continue;
+            foreach (var neighborPlace in place.GetNeighborPlaces(mask)) {
+                if (!neighborPlace) continue;
+                if (!neighborPlace.PlacedBuilding && neighborPlace != BuildingsManager.Instance.EntranceBuildingPlace) continue;
+                if (visited.Contains(neighborPlace)) continue;
 
-                // Check an emptiness of place
-                bool isSpecialEmpty = neighborPlace.FloorIndex == 0 && neighborPlace.PlaceIndex == BuildingsManager.FirstBuildCityBuildingPlace;
-                if (!neighborPlace.PlacedBuilding && !isSpecialEmpty) {
+                if (hasElevator && place.FloorIndex != neighborPlace.FloorIndex && !neighborPlace.PlacedBuilding.GetComponent<ElevatorModule>())
                     continue;
-                }
-                else if (isSpecialEmpty && targetBuilding as GroundBuilding) {
-                    currentPath.Add(targetBuilding);
-                    return currentPath;
-                }
-
-                // Check elevator
-                if (hasElevator && place.FloorIndex != neighborPlace.FloorIndex && !neighborPlace.PlacedBuilding.GetComponent<ElevatorModule>()) continue;
-                if (neighborPlace.PlacedBuilding && neighborPlace.PlacedBuilding.ConstructionComponent.IsUnderConstruction) continue;
 
                 visited.Add(neighborPlace);
-                queue.Enqueue((neighborPlace, currentPath));
+                queue.Enqueue((neighborPlace, newPath));
             }
         }
 
-        return null;
+        return false;
     }
 }

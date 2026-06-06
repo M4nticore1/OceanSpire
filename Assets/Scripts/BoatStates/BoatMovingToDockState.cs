@@ -14,6 +14,7 @@ public class BoatMovingToDockState : BoatState
 
     public override void Exit()
     {
+        boat.Movement.StopMoving();
     }
 
     public override void Tick()

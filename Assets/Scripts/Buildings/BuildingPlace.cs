@@ -217,7 +217,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     private void UpdatePlaceActive()
     {
         if (FloorIndex != 0) return;
-        if (placeIndex != BuildingsManager.FirstBuildCityBuildingPlace) return;
+        if (placeIndex != BuildingsManager.FirstBuildingPlace) return;
 
         gameObject.SetActive(false);
     }
@@ -259,21 +259,21 @@ public class BuildingPlace : MonoBehaviour, IClickable
         if (placedBuilding) return false;
         if (buildingType != BuildingType.Room) return true;
 
-        var targetBuilding = BuildingsManager.Instance.GetRoomPlace(0, BuildingsManager.FirstBuildCityBuildingPlace);
+        List<Building> path;
+        var targetBuilding = BuildingsManager.Instance.EntranceBuildingPlace;
 
-        var path = new List<Building>();
-        if (neighborBuildingPlaces[Direction.Left])
-            if (PathFinder.TryFindBuildingPath(neighborBuildingPlaces[Direction.Left], targetBuilding.placedBuilding, ref path)) return true;
+        var left = neighborBuildingPlaces[Direction.Left];
+        if (left && PathFinder.TryFindTowerPath(left, targetBuilding, out path)) return true;
 
-        if (neighborBuildingPlaces[Direction.Right])
-            if (PathFinder.TryFindBuildingPath(neighborBuildingPlaces[Direction.Right], targetBuilding.placedBuilding, ref path)) return true;
+        var right = neighborBuildingPlaces[Direction.Right];
+        if (right && PathFinder.TryFindTowerPath(right, targetBuilding, out path)) return true;
 
         if (building.BuildingData.ConnectionType == ConnectionType.Vertical) {
             var up = neighborBuildingPlaces[Direction.Up];
-            if (up && up.placedBuilding && up.placedBuilding.ShouldConnectTo(towerBuilding)) return true;
+            if (up && PathFinder.TryFindTowerPath(up, targetBuilding, out path)) return true;
 
             var down = neighborBuildingPlaces[Direction.Down];
-            if (down && down.placedBuilding && down.placedBuilding.ShouldConnectTo(towerBuilding)) return true;
+            if (down && PathFinder.TryFindTowerPath(down, targetBuilding, out path)) return true;
         }
 
         return false;
