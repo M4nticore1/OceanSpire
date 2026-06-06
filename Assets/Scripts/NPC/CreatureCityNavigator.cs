@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -311,8 +312,8 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     // Path
     private void SortPath(List<Building> pathBuildings)
     {
-        //SortPathBuildings(pathBuildings);
-        //SortPathElevators(pathBuildings);
+        SortPathBuildings(pathBuildings);
+        SortPathElevators(pathBuildings);
     }
 
     private void SortPathBuildings(List<Building> pathBuildings)
@@ -334,23 +335,20 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     {
         int length = pathBuildings.Count;
 
-        for (int i = pathBuildings.Count - 1; i >= 1; i--) {
-            var current = pathBuildings[i]?.GetComponent<ElevatorModule>();
-            var previous = pathBuildings[i - 1]?.GetComponent<ElevatorModule>();
-            var next = pathBuildings.Count > i + 1 ? pathBuildings[i + 1]?.GetComponent<ElevatorModule>() : null;
+        for (int i = pathBuildings.Count - 2; i >= 0; i--) {
+            var current = pathBuildings[i] ? pathBuildings[i].GetComponent<ElevatorModule>() : null;
+            var next = i - 1 >= 0 && pathBuildings[i - 1] ? pathBuildings[i - 1].GetComponent<ElevatorModule>() : null;
+            var previous = pathBuildings.Count > i + 1 && pathBuildings[i + 1] ? pathBuildings[i + 1].GetComponent<ElevatorModule>() : null;
 
-            if (!current) {
-                Debug.Log($"Elevator not found on path at {name}");
-                continue;
-            }
+            if (!current) continue;
 
-            bool connectedToPrevious = previous ? current.OwnedTowerBuilding.ConnectedWith(previous.OwnedTowerBuilding) : false;
             bool connectedToNext = next ? current.OwnedTowerBuilding.ConnectedWith(next.OwnedTowerBuilding) : false;
+            bool connectedToPrevious = previous ? current.OwnedTowerBuilding.ConnectedWith(previous.OwnedTowerBuilding) : false;
 
-            bool notConnected = !connectedToPrevious && !connectedToNext;
-            bool connectedBoth = connectedToPrevious && connectedToNext;
+            bool notConnected = !connectedToNext && !connectedToPrevious;
+            bool fullConnected = connectedToNext && connectedToPrevious;
 
-            if (notConnected || connectedBoth) {
+            if (notConnected || fullConnected) {
                 pathBuildings.RemoveAt(i);
             }
         }

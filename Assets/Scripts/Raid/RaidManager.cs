@@ -108,14 +108,18 @@ public class RaidManager : MonoBehaviour
     public Building CalculateNextRaidBuilding()
     {
         Building building = null;
-        List<Building> path = new();
+        List<Building> path;
 
-        if (PathFinder.TryFindBuildingPath(null, b => b.BuildingData.IsRaidable && b.RaidComponent.Raiders.Count < b.LevelData.MaxHumansCount, path)) {
-            building = path[path.Count - 1];
+        if (PathFinder.TryFindBuildingPath(null, b => b.BuildingData.IsRaidable && b.RaidComponent.Raiders.Count < b.LevelData.MaxHumansCount, out path)) {
+            int count = path.Count;
+            if (count - 1 >= 0)
+                building = path[count - 1];
         }
 
-        if (!building && PathFinder.TryFindBuildingPath(null, b => b.BuildingData.IsRaidable, path)) {
-            building = path[path.Count - 1];
+        if (!building && PathFinder.TryFindBuildingPath(null, b => b.BuildingData.IsRaidable, out path)) {
+            int count = path.Count;
+            if (count - 1 >= 0)
+                building = path[count - 1];
         }
 
         return building;

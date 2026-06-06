@@ -6,6 +6,8 @@ public static class PathFinder
 {
     public static bool TryFindBuildingPath(BuildingPlace startPlace, Building targetBuilding, out List<Building> buildingsPath)
     {
+        buildingsPath = null;
+
         if (startPlace || targetBuilding is TowerBuilding) {
             if (!startPlace)
                 startPlace = BuildingsManager.Instance.EntranceBuildingPlace;
@@ -16,31 +18,28 @@ public static class PathFinder
             else if (targetBuilding as GroundBuilding)
                 targetBuildingPlace = BuildingsManager.Instance.EntranceBuildingPlace;
 
-            if (TryFindTowerPath(startPlace, targetBuildingPlace, out buildingsPath))
-                return true;
+            if (TryFindTowerPath(startPlace, targetBuildingPlace, out buildingsPath)) {
+                if (targetBuilding as GroundBuilding) {
+                    buildingsPath.Add(targetBuilding);
+                }
 
-            return false;
+                return true;
+            }
         }
-        else {
+        else if (buildingsPath != null && targetBuilding as GroundBuilding) {
             buildingsPath = new();
             buildingsPath.Add(targetBuilding);
-
             return true;
         }
+
+        return false;
     }
 
-    public static bool TryFindBuildingPath(BuildingPlace startPlace, Func<Building, bool> targetBuildingCondition, List<Building> buildingsPath)
+    public static bool TryFindBuildingPath(BuildingPlace startPlace, Func<Building, bool> targetBuildingCondition, out List<Building> buildingsPath)
     {
-        Building targetBuilding = null;
+        TowerBuilding targetBuilding = null;
 
         for (int i = 0; i < BuildingsManager.Instance.BuiltFloors.Count; i++) {
-            var hall = BuildingsManager.Instance.BuiltFloors[i].HallBuildingPlace.PlacedBuilding;
-
-            if (hall && targetBuildingCondition(hall)) {
-                targetBuilding = hall;
-                break;
-            }
-
             for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
                 var room = BuildingsManager.Instance.BuiltFloors[i].RoomBuildingPlaces[j].PlacedBuilding;
                 if (room && targetBuildingCondition(room)) {
@@ -48,9 +47,6 @@ public static class PathFinder
                     break;
                 }
             }
-
-            if (targetBuilding)
-                break;
         }
 
         return TryFindBuildingPath(startPlace, targetBuilding, out buildingsPath);

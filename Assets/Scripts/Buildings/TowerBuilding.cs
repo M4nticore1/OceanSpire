@@ -212,7 +212,7 @@ public class TowerBuilding : Building
 
     public bool ConnectedWith(TowerBuilding target)
     {
-        return connectedBuildings.Values.Contains(target);
+        return connectedBuildings.Values.ToArray().Contains(target);
     }
 
     public bool ShouldConnectTo(TowerBuilding target)
