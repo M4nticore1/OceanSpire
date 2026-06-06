@@ -41,10 +41,8 @@ public class Movement : MonoBehaviour
 
     public bool TryMoveTo(Vector3 position)
     {
-        Debug.Log("TryMoveTo");
         if (!CanMove()) return false;
 
-        Debug.Log("TryMoveTo1");
         targetPosition = position;
         navAgent.isStopped = false;
 

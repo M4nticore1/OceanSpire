@@ -115,7 +115,6 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
             startPlace = startTowerBuilding ? startTowerBuilding.BuildingPlace : BuildingsManager.Instance.BuiltFloors[BuildingsManager.FirstBuildingFloor].RoomBuildingPlaces[BuildingsManager.FirstBuildingPlace];
         }
 
-        Debug.Log("StartPlace "  + startPlace.FloorIndex + " " + startPlace.PlaceIndex);
         if (!PathFinder.TryFindBuildingPath(startPlace, TargetBuilding, out pathBuildings)) return false;
 
         SortPath(pathBuildings);
@@ -221,7 +220,6 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
 
     public void EnterState(FollowingPathState state)
     {
-        Debug.Log($"{gameObject} enter state {state}");
         switch (state) {
             case FollowingPathState.None:
                 movement.StopMoving();

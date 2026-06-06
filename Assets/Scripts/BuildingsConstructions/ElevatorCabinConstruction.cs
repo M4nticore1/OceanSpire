@@ -51,7 +51,6 @@ public class ElevatorCabinConstruction : BuildingConstruction
     {
         base.OnInited(data);
 
-        Debug.Log("InitElevator " + name);
         var elevatorCabinData = data as ElevatorCabinData;
         if (elevatorCabinData == null) return;
 

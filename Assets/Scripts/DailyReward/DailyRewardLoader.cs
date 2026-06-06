@@ -6,27 +6,11 @@ public class DailyRewardLoader : Loader
 
     protected override void Load(WorldData worldData)
     {
-        if (worldData != null && worldData.DailyReward != null) {
-            LoadRewards(worldData.DailyReward);
-        }
-        else {
-            InitRewards();
-        }
-    }
+        var dailyRewardData = worldData?.DailyReward;
 
-    private void LoadRewards(DailyRewardData dailyRewardData)
-    {
-        dailyRewardManager.Init(dailyRewardData);
-    }
-
-    private void InitRewards()
-    {
-        var dailyRewardData = new DailyRewardData()
-        {
-            Rewards = dailyRewardManager.GetRandomRewardsData(),
-            NextResetTime = dailyRewardManager.CalculateNextResetTime(),
-        };
-
-        dailyRewardManager.Init(dailyRewardData);
+        if (dailyRewardData != null && dailyRewardData != null)
+            dailyRewardManager.Init(dailyRewardData);
+        else
+            dailyRewardManager.Init();
     }
 }

@@ -53,17 +53,40 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         ResetRewards();
     }
 
+    public void Init()
+    {
+        var newData = new DailyRewardData
+        {
+            Rewards = GetRandomRewardsData(),
+            NextResetTime = CalculateNextResetTime(),
+        };
+
+        Init(newData);
+    }
+
     public void Init(DailyRewardData data)
     {
         foreach (var rewardData in data.Rewards) {
-            var definition = rewardsList.GetRewardDefinition(rewardData.Id);
-            var reward = definition.CreateReward();
+            int id = rewardData.Id;
 
-            if (reward is ItemRewardInstance itemReward) {
-                itemReward.SetAmountPercent(GameStageSystem.CalculateGameStagePercent());
+            var reward = TryCreateReward(id);
+            if (reward == null) {
+                Debug.Log($"Reward not found at {name}");
             }
 
             reward.SetCollected(rewardData.Collected);
+            currentRewards.Add(reward);
+        }
+
+        while (currentRewards.Count > maxRewardsCount) {
+            currentRewards.RemoveAt(currentRewards.Count - 1);
+        }
+
+        while (currentRewards.Count < maxRewardsCount) {
+            var reward = TryCreateRandomReward();
+            if (reward == null) {
+                Debug.Log($"Reward not found at {name}");
+            }
 
             currentRewards.Add(reward);
         }
@@ -86,14 +109,19 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         int count = Mathf.Min(maxRewardsCount, availableRewards.Count);
 
         for (int i = 0; i < count; i++) {
-            int randomIndex = UnityEngine.Random.Range(0, availableRewards.Count);
+            int index = UnityEngine.Random.Range(0, availableRewards.Count);
 
-            var def = availableRewards[randomIndex];
-            availableRewards.RemoveAt(randomIndex);
+            var definition = availableRewards[index];
+            if (!definition) {
+                Debug.Log($"Reward Definition not found at {name} at index {index}");
+                continue;
+            }
 
-            var reward = def.CreateReward();
-            if (reward is ItemRewardInstance itemReward) {
-                itemReward.SetAmountPercent(GameStageSystem.CalculateGameStagePercent());
+            int id = (int)definition.RewardId;
+
+            var reward = TryCreateReward(id);
+            if (reward == null) {
+                Debug.Log($"Reward not found at {name}");
             }
 
             var rewardData = reward.CreateData();
@@ -182,5 +210,35 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         string text = minutes.ToString();
 
         return text;
+    }
+
+    private RewardInstance TryCreateRandomReward()
+    {
+        int count = rewards.Length;
+        int index = UnityEngine.Random.Range(0, count);
+        int id = (int)rewards[index].RewardId;
+
+        return TryCreateReward(id);
+    }
+
+    private RewardInstance TryCreateReward(int id)
+    {
+        var definition = rewardsList.GetRewardDefinition(id);
+        if (!definition) {
+            Debug.Log($"Reward Definition not found at {name}");
+            return null;
+        }
+
+        var reward = definition.CreateReward();
+        if (reward == null) {
+            Debug.Log($"Reward not found at {name}");
+            return null;
+        }
+
+        if (reward is ItemRewardInstance itemReward) {
+            itemReward.SetAmountPercent(GameStageSystem.CalculateGameStagePercent());
+        }
+
+        return reward;
     }
 }
