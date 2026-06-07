@@ -24,7 +24,7 @@ public class DemolishActionMenu : ActionMenu
 
     protected override void OnOpened()
     {
-        actionButton.SetState(RaidManager.Instance.IsUnderRaid ? CustomButtonState.Disabled : CustomButtonState.Idle);
+        actionButton.SetState(RaidManager.Instance.IsRaidStarted ? CustomButtonState.Disabled : CustomButtonState.Idle);
     }
 
     protected override void OnAction(Building building)

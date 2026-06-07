@@ -9637,6 +9637,7 @@ MonoBehaviour:
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
   boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
   humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
+  creaturesManager: {fileID: 220072952}
   cityStorage: {fileID: 1388613268}
   inventory: {fileID: 2047238981}
   raiderPrefabs:
@@ -9652,7 +9653,6 @@ MonoBehaviour:
   - {fileID: 1635530771}
   - {fileID: 932695337}
   - {fileID: 1276318085}
-  landedRaidersCount: 0
 --- !u!114 &2047238981
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
     [SerializeField] private HumanNamesList humanNamesList;
+    [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private CityStorage cityStorage;
 
     [SerializeField] private Inventory inventory;
@@ -40,8 +41,7 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private BoatDockPoint[] dockPoints;
 
     public bool IsRaidExist { get; private set; } = false;
-    public bool IsUnderRaid { get; private set; } = false;
-    public int landedRaidersCount = 0;
+    public bool IsRaidStarted { get; private set; } = false;
 
     public event System.Action OnRaidStarted;
     public event System.Action<RaidEndedResult> OnRaidEnded;
@@ -72,7 +72,7 @@ public class RaidManager : MonoBehaviour
 
     public void Init(RaidData raidData)
     {
-        if (raidData.UnderRaid) {
+        if (raidData.RaidStarted) {
             StartRaid();
         }
 
@@ -155,14 +155,14 @@ public class RaidManager : MonoBehaviour
 
     private void StartRaid()
     {
-        IsUnderRaid = true;
+        IsRaidStarted = true;
         OnRaidStarted?.Invoke();
     }
 
     private void EndRaid(bool isRepeled)
     {
         RemoveCityLoot();
-        IsUnderRaid = false;
+        IsRaidStarted = false;
         IsRaidExist = false;
 
         RaidEndedResult result = new RaidEndedResult()
@@ -209,41 +209,57 @@ public class RaidManager : MonoBehaviour
 
     private void OnEnteredBoat(Human human)
     {
-        Raider raider = human as Raider;
-        if (raider == null) return;
+        if (!ShouldEndRaid()) return;
 
-        if (!raider.IsRaidFinished) return;
-
-        landedRaidersCount--;
-
-        if (landedRaidersCount == 0) {
-            EndRaid(false);
-        }
+        EndRaid(false);
     }
 
     private void OnExitedBoat(Human human)
     {
-        var raider = human.GetComponent<Raider>();
-        if (!raider) return;
+        if (!TryStartRaid()) return;
 
-        landedRaidersCount++;
-
-        if (landedRaidersCount == 1) {
-            ClearLosses();
-            StartRaid();
-        }
+        ClearLosses();
     }
 
     private void OnHumanDied(Human human)
     {
-        var raider = human.GetComponent<Raider>();
-        if (!raider) return;
+        if (!ShouldEndRaid()) return;
 
-        aliveRaidersCount--;
+        EndRaid(true);
+    }
 
-        if (aliveRaidersCount <= 0) {
-            EndRaid(true);
+    private bool TryStartRaid()
+    {
+        if (!ShouldStartRaid()) return false;
+
+        StartRaid();
+        return true;
+    }
+
+    private bool ShouldStartRaid()
+    {
+        if (IsRaidStarted) return false;
+
+        foreach (var raider in creaturesManager.Raiders) {
+            if (raider.IsRaidFinished) return false;
         }
+
+        return true;
+    }
+
+    private bool ShouldEndRaid()
+    {
+        if (!IsRaidStarted) return false;
+
+        foreach (var raider in creaturesManager.Raiders) {
+            if (!raider.HealthComponent.IsAlive) return false;
+        }
+
+        foreach (var raider in creaturesManager.Raiders) {
+            if (!raider.IsRaidFinished) return false;
+        }
+
+        return true;
     }
 
     private Human CreateRaider(Vector3 position, Vector3 rotation, int boatInstanceId)

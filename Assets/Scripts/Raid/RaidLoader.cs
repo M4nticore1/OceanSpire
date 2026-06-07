@@ -23,7 +23,7 @@ public class RaidLoader : Loader
     {
         var raidData = new RaidData() {
             RaidExist = false,
-            UnderRaid = false,
+            RaidStarted = false,
             RaidCooldown = (int)raidManager.CalculateRandomCooldown(),
             TimeSinceLastRaid = 0,
         };

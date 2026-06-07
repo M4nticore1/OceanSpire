@@ -226,7 +226,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
                 movement.StopMoving();
                 break;
             case FollowingPathState.FollowingPath:
-                if (CurrentPathBuilding == TargetBuilding || CurrentBuilding == TargetBuilding)
+                if (CurrentBuilding == TargetBuilding)
                     movement.TryMoveTo(CurrentPathBuilding.GetInteractionTransform(this).position);
                 else
                     movement.TryMoveTo(CurrentPathBuilding.transform.position);
