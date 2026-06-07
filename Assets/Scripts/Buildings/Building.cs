@@ -460,12 +460,14 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     private Transform GetFirstWaypointTransform()
     {
         var actions = SpawnedConstruction.BuildingInteractions;
-
-        if (actions.Length == 0 || WorkComponent.Workers.Count == 0)
+        if (actions.Length == 0)
             return transform;
 
-        var workerCount = WorkComponent.Workers.Count;
-        var actionIndex = (workerCount - 1) % actions.Length;
+        var interactorsCount = interactTransforms.Values.Count;
+
+        var actionIndex = interactorsCount % actions.Length;
+        actionIndex = Mathf.Clamp(actionIndex, 0, actionIndex);
+
         var action = actions[actionIndex];
 
         if (action.waypoints == null || action.waypoints.Length == 0)

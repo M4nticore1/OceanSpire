@@ -44,7 +44,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
         int floor = GetFloorIndexByPosition();
         ApplyOwnedBuildingByFloor(floor);
-        TryStopMoving();
+        //TryStopMoving();
     }
 
     protected override void OnInited(BuildingConstructionData data)
@@ -243,7 +243,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private void TryStopMoving()
     {
         if (!IsMoving) return;
-        if (FloorIndex != TargetFloor && TryMoveToFloor(TargetFloor)) return;
+        if (FloorIndex != TargetFloor && !ShouldMoveToFloor(TargetFloor)) return;
 
         StopMoving();
     }

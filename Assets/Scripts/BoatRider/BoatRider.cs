@@ -85,14 +85,12 @@ public class BoatRider : MonoBehaviour
 
     public void StartExitingBoat()
     {
-        Debug.Log("StartExitingBoat");
         TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, ExitBoat);
         IsExitingBoat = true;
     }
 
     public void StopExitingBoat()
     {
-        Debug.Log("StopExitingBoat");
         TimerManager.Instance.RemoveTimer(useBoatTimerHandle);
         IsExitingBoat = false;
     }
@@ -143,7 +141,6 @@ public class BoatRider : MonoBehaviour
 
     public void ExitBoat()
     {
-        Debug.Log("ExitBoat");
         if (!RidingBoat) {
             Debug.Log($"Entered Boat not found at {name}");
             return;

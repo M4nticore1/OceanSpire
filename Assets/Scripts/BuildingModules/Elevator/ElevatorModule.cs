@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ElevatorModule : BuildingModule, IElectricible
 {
@@ -77,15 +78,16 @@ public class ElevatorModule : BuildingModule, IElectricible
     {
         int ridersCount = SpawnedElevatorCabin.RidingPassengers.Count;
         int goingToRidingCount = SpawnedElevatorCabin.GoingToRidingPassengers.Count;
+        int totalPassengers = ridersCount + goingToRidingCount;
 
         int length = SpawnedElevatorCabin.BuildingInteractions.Length;
-        if (length > 0) {
-            int index = ((ridersCount > 0 ? (ridersCount - 1) : 0) + (goingToRidingCount > 0 ? (goingToRidingCount - 1) : 0)) % length;
+        if (length > 0 && totalPassengers > 0) {
+            int index = (totalPassengers - 1) % length;
+
             return SpawnedElevatorCabin.BuildingInteractions[index].waypoints[0].transform;
         }
-        else {
-            return transform;
-        }
+
+        return transform;
     }
 
     public float GetElectricityConsumption()
