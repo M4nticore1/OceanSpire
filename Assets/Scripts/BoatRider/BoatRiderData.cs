@@ -4,16 +4,16 @@ using UnityEngine;
 [Serializable]
 public class BoatRiderData
 {
-    public int? BoatInstanceId = null;
-    public bool Riding = false;
+    public int? TargetBoatInstanceId = null;
+    public int? RidingBoatInstanceId = null;
     public bool MovingToBoat = false;
 
     public static BoatRiderData Create(BoatRider boatRider)
     {
         return new BoatRiderData()
         {
-            BoatInstanceId = boatRider.SelectedBoat?.InstanceId.GetInstanceId(),
-            Riding = boatRider.IsRidingOnBoat,
+            TargetBoatInstanceId = boatRider.TargetBoat?.InstanceId.GetInstanceId(),
+            RidingBoatInstanceId = boatRider.RidingBoat?.InstanceId.GetInstanceId(),
             MovingToBoat = boatRider.IsMovingToBoat
         };
     }

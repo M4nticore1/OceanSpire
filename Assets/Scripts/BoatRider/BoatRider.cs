@@ -1,19 +1,23 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BoatRider : MonoBehaviour
 {
-    public Boat SelectedBoat;
+    public Boat TargetBoat;
+    public Boat RidingBoat;
 
     [SerializeField] private Movement movement;
 
     [SerializeField] private float useBoatTime = 1;
     private TimerHandle useBoatTimerHandle = new TimerHandle();
 
-    public bool IsRidingOnBoat { get; private set; } = false;
     public bool IsEnteringBoat { get; private set; } = false;
     public bool IsExitingBoat { get; private set; } = false;
     public bool IsMovingToBoat { get; private set; } = false;
+
+    private Coroutine waitingBoatCoroutine;
 
     public event Action<Boat> OnEnteredBoat;
     public event Action<Boat> OnExitedBoat;
@@ -38,15 +42,20 @@ public class BoatRider : MonoBehaviour
 
     public void Init(BoatRiderData boatRiderData)
     {
-        if (boatRiderData.BoatInstanceId != null) {
-            var instanceId = InstancesManager.Instance.GetInstance(boatRiderData.BoatInstanceId.Value);
-            var selectedBoat = instanceId.GetComponent<Boat>();
+        int? targetBoatInstanceId = boatRiderData.TargetBoatInstanceId;
+        if (targetBoatInstanceId != null) {
+            var instance = InstancesManager.Instance.GetInstance(targetBoatInstanceId.Value);
+            var boat = instance.GetComponent<Boat>();
 
-            SetSelectedBoat(selectedBoat);
+            TrySetTargetBoat(boat);
         }
 
-        if (boatRiderData.Riding) {
-            EnterBoat();
+        int? ridingBoatInstanceId = boatRiderData.RidingBoatInstanceId;
+        if (ridingBoatInstanceId != null) {
+            var instance = InstancesManager.Instance.GetInstance(ridingBoatInstanceId.Value);
+            var boat = instance.GetComponent<Boat>();
+
+            EnterBoat(boat);
         }
 
         if (boatRiderData.MovingToBoat) {
@@ -54,28 +63,50 @@ public class BoatRider : MonoBehaviour
         }
     }
 
-    public void StartEnteringBoat()
+    public bool TryStartEnteringBoat(Boat boat)
     {
-        TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, EnterBoat);
+        if (IsEnteringBoat) return false;
+
+        TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, () => EnterBoat(boat));
         IsEnteringBoat = true;
+
+        return true;
+    }
+
+    public bool TryStopEnteringBoat()
+    {
+        if (!IsEnteringBoat) return false;
+
+        TimerManager.Instance.RemoveTimer(useBoatTimerHandle);
+        IsEnteringBoat = false;
+
+        return true;
     }
 
     public void StartExitingBoat()
     {
+        Debug.Log("StartExitingBoat");
         TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, ExitBoat);
         IsExitingBoat = true;
     }
 
-    public void StopEnteringBoat()
-    {
-        TimerManager.Instance.RemoveTimer(useBoatTimerHandle);
-        IsEnteringBoat = false;
-    }
-
     public void StopExitingBoat()
     {
+        Debug.Log("StopExitingBoat");
         TimerManager.Instance.RemoveTimer(useBoatTimerHandle);
         IsExitingBoat = false;
+    }
+
+    public void WaitForBoatAndEnter()
+    {
+        waitingBoatCoroutine = StartCoroutine(WaitForBoatAndEnterCoroutine(TargetBoat));
+    }
+
+    public void StopWaitingForBoat()
+    {
+        if (waitingBoatCoroutine == null) return;
+
+        StopCoroutine(waitingBoatCoroutine);
     }
 
     public void HandleBoatSetedIdle(Boat boat)
@@ -83,59 +114,99 @@ public class BoatRider : MonoBehaviour
         OnBoatSetedIdle?.Invoke(boat);
     }
 
-    public void EnterBoat()
+    public void EnterBoat(Boat boat)
     {
-        SelectedBoat.SetRider(this);
-        transform.position = SelectedBoat.SeatSlot.position;
-        transform.rotation = SelectedBoat.SeatSlot.rotation;
-        transform.SetParent(SelectedBoat.SeatSlot);
+        if (!boat) {
+            Debug.Log($"Boat not found at {name}");
+            return;
+        }
 
-        IsRidingOnBoat = true;
+        if (!TargetBoat) {
+            Debug.Log($"Selected Boat not found at {name}");
+            return;
+        }
+
+        if (boat != TargetBoat) return;
+
+        SetRidingBoat(TargetBoat);
+
+        RidingBoat.SetRider(this);
+
+        transform.position = TargetBoat.SeatSlot.position;
+        transform.rotation = TargetBoat.SeatSlot.rotation;
+        transform.SetParent(TargetBoat.SeatSlot);
+
         IsEnteringBoat = false;
-        OnEnteredBoat?.Invoke(SelectedBoat);
+
+        OnEnteredBoat?.Invoke(RidingBoat);
     }
 
     public void ExitBoat()
     {
-        SelectedBoat.RemoveRider();
+        Debug.Log("ExitBoat");
+        if (!RidingBoat) {
+            Debug.Log($"Entered Boat not found at {name}");
+            return;
+        }
 
-        Vector3 pos = SelectedBoat.DockPoint.EntraceTransform.position;
-        Quaternion rot = SelectedBoat.DockPoint.EntraceTransform.rotation;
+        if (!RidingBoat.DockPoint) {
+            Debug.Log($"Dock Point not found at {RidingBoat}");
+            return;
+        }
+
+        if (!RidingBoat.DockPoint.EntraceTransform) {
+            Debug.Log($"Entrace Transform Boat not found at {RidingBoat.DockPoint}");
+            return;
+        }
+
+        RidingBoat.RemoveRider();
+
+        Vector3 pos = RidingBoat.DockPoint.EntraceTransform.position;
+        Quaternion rot = RidingBoat.DockPoint.EntraceTransform.rotation;
 
         transform.SetParent(null);
         transform.SetPositionAndRotation(pos, rot);
 
-        IsRidingOnBoat = false;
         IsExitingBoat = false;
 
         movement.NavAgent.Warp(transform.position);
         movement.SetAgentEnabled(true);
 
-        OnExitedBoat?.Invoke(SelectedBoat);
+        RemoveRidingBoat();
+        OnExitedBoat?.Invoke(TargetBoat);
     }
 
-    public void SetSelectedBoat(Boat boat)
+    public bool TrySetTargetBoat(Boat boat)
     {
-        SelectedBoat = boat;
+        if (!boat) {
+            Debug.Log("Target Boat not found");
+            return false;
+        }
+
+        if (boat == TargetBoat) return false;
+
+        TargetBoat = boat;
+        return true;
     }
 
-    public void SetSelectedBoat(int boatInstanceId)
+    public void RemoveTargetBoat()
     {
-        Boat boat = BoatsManager.Instance.GetBoat(boatInstanceId);
-        SetSelectedBoat(boat);
+        TargetBoat = null;
     }
 
-    public void RemoveSelectedBoat()
+    public void SetRidingBoat(Boat boat)
     {
-        SelectedBoat = null;
+        RidingBoat = boat;
+    }
+
+    public void RemoveRidingBoat()
+    {
+        RidingBoat = null;
     }
 
     public void TryMoveToBoat()
     {
-        if (IsMovingToBoat) {
-            Debug.Log("Rider is already moving to boat");
-            return;
-        }
+        if (!ShouldMoveToBoat()) return;
 
         MoveToBoat();
     }
@@ -143,7 +214,7 @@ public class BoatRider : MonoBehaviour
     public void MoveToBoat()
     {
         IsMovingToBoat = true;
-        OnStartedMovingToBoat?.Invoke(SelectedBoat);
+        OnStartedMovingToBoat?.Invoke(TargetBoat);
     }
 
     public void TryEndMoveBoat()
@@ -153,7 +224,7 @@ public class BoatRider : MonoBehaviour
             return;
         }
 
-        EndMoveToBoat(SelectedBoat);
+        EndMoveToBoat(TargetBoat);
     }
 
     public void EndMoveToBoat(Boat boat)
@@ -164,28 +235,64 @@ public class BoatRider : MonoBehaviour
 
     public void HandleBoatMovementStarted()
     {
-        OnBoatMovementStarted?.Invoke(SelectedBoat);
+        OnBoatMovementStarted?.Invoke(TargetBoat);
     }
 
     public void HandleBoatMovementStopped()
     {
-        OnBoatMovementStopped?.Invoke(SelectedBoat);
-    }
-
-    private bool ShouldStartEnteringBoat()
-    {
-        if (!IsMovingToBoat) return false;
-        
-        if (Vector3.Distance(transform.position, SelectedBoat.DockPoint.EntraceTransform.position) > movement.NavAgent.stoppingDistance) return false;
-
-        return true;
+        OnBoatMovementStopped?.Invoke(TargetBoat);
     }
 
     private void OnMovementStopped()
     {
         if (!ShouldStartEnteringBoat()) return;
 
-        StartEnteringBoat();
+        WaitForBoatAndEnter();
         TryEndMoveBoat();
+    }
+
+    private bool ShouldMoveToBoat()
+    {
+        if (IsMovingToBoat) return false;
+
+        return true;
+    }
+
+    private bool ShouldStartEnteringBoat()
+    {
+        if (!IsMovingToBoat) return false;
+
+        if (!TargetBoat) {
+            Debug.Log($"Selected Boat not found at {name}");
+            return false;
+        }
+
+        if (!TargetBoat.DockPoint) {
+            Debug.Log($"Boat Dock not found at {TargetBoat}");
+            return false;
+        }
+
+        if (Vector3.Distance(transform.position, TargetBoat.DockPoint.EntraceTransform.position) > movement.NavAgent.stoppingDistance) return false;
+
+        return true;
+    }
+
+    private IEnumerator WaitForBoatAndEnterCoroutine(Boat boat)
+    {
+        if (RidingBoat) yield break;
+
+        if (!boat) {
+            Debug.Log($"Selected Boat not found at {name}");
+            yield break;
+        }
+
+        while (boat.CurrentStateEnum != BoatStateEnum.Idle || boat.CurrentRider) {
+            Debug.Log(boat.CurrentStateEnum);
+            yield return new WaitForEndOfFrame();
+        }
+
+        if (boat != TargetBoat) yield break;
+
+        TryStartEnteringBoat(boat);
     }
 }

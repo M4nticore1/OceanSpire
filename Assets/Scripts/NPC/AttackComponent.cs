@@ -19,8 +19,8 @@ public class AttackComponent : MonoBehaviour
     private List<AttackComponent> currentAttackers = new List<AttackComponent>();
     public bool IsAttacking { get; private set; } = false;
 
-    public event Action onAttackStarted;
-    public event Action onAttackStopped;
+    public event Action OnAttackStarted;
+    public event Action OnAttackStopped;
 
     private void OnEnable()
     {
@@ -106,13 +106,13 @@ public class AttackComponent : MonoBehaviour
     private void StartAtacking()
     {
         IsAttacking = true;
-        onAttackStarted?.Invoke();
+        OnAttackStarted?.Invoke();
     }
 
     private void StopAtacking()
     {
         IsAttacking = false;
-        onAttackStopped?.Invoke();
+        OnAttackStopped?.Invoke();
     }
 
     private void TryStopMoving()
@@ -123,7 +123,6 @@ public class AttackComponent : MonoBehaviour
         if (distance > stopMovingDistance) return;
 
         movement.StopMoving();
-        Debug.Log("Stopped");
     }
 
     private void CorrentRotation()

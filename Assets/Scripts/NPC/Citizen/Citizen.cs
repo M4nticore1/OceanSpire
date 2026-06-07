@@ -31,8 +31,8 @@ public class Citizen : Human
 
         InteractComponent.TryRemoveInteractBuilding();
 
-        if (!BoatRider.IsRidingOnBoat) {
-            BoatRider.SetSelectedBoat(evictData.Boat);
+        if (!BoatRider.RidingBoat) {
+            BoatRider.TrySetTargetBoat(evictData.Boat);
         }
 
         BoatRider.MoveToBoat();
@@ -57,18 +57,18 @@ public class Citizen : Human
         base.OnInit(creatureData);
     }
 
-    protected override void OnSetedInteractBuilding(Building building)
+    protected override void OnInteractBuildingSeted(Building building)
     {
         building.WorkComponent.AddWorker(this);
 
-        base.OnSetedInteractBuilding(building);
+        base.OnInteractBuildingSeted(building);
     }
 
-    protected override void OnRemovedInteractBuilding(Building building)
+    protected override void OnInteractBuildingRemoved(Building building)
     {
-        base.OnRemovedInteractBuilding(building);
-
         building.WorkComponent.RemoveWorker(this);
+
+        base.OnInteractBuildingRemoved(building);
     }
 
     protected override void OnInteractionStarted(Building building)
@@ -114,11 +114,8 @@ public class Citizen : Human
         base.HandleExitedBoat(boat);
 
         if (IsEvicted) {
-            BoatRider.SetSelectedBoat(EvictionBoat);
+            BoatRider.TrySetTargetBoat(EvictionBoat);
             BoatRider.TryMoveToBoat();
-        }
-        else {
-            BoatRider.RemoveSelectedBoat();
         }
     }
 

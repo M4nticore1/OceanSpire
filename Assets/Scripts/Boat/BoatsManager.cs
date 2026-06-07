@@ -5,17 +5,29 @@ public class BoatsManager : MonoBehaviour
 {
     public static BoatsManager Instance { get; private set; }
 
-    private Dictionary<int, Boat> boats = new();
-    public IReadOnlyDictionary<int, Boat> Boats => boats;
+    private List<Boat> boats = new();
+    public IReadOnlyList<Boat> Boats => boats;
 
-    private Dictionary<int, Boat> citizenBoats = new();
-    public IReadOnlyDictionary<int, Boat> CitizenBoats => citizenBoats;
+    private Dictionary<int, Boat> boatsDict = new();
+    public IReadOnlyDictionary<int, Boat> BoatsDict => boatsDict;
 
-    private Dictionary<int, Boat> wandererBoats = new();
-    public IReadOnlyDictionary<int, Boat> WandererBoats => wandererBoats;
+    private List<Boat> citizenBoats = new();
+    public IReadOnlyList<Boat> CitizenBoats => citizenBoats;
 
-    private Dictionary<int, Boat> raiderBoats = new();
-    public IReadOnlyDictionary<int, Boat> RaiderBoats => raiderBoats;
+    private Dictionary<int, Boat> citizenBoatsDict = new();
+    public IReadOnlyDictionary<int, Boat> CitizenBoatsDict => citizenBoatsDict;
+
+    private List<Boat> wandererBoats = new();
+    public IReadOnlyList<Boat> WandererBoats => wandererBoats;
+
+    private Dictionary<int, Boat> wandererBoatsDict = new();
+    public IReadOnlyDictionary<int, Boat> WandererBoatsDict => wandererBoatsDict;
+
+    private List<Boat> raiderBoats = new();
+    public IReadOnlyList<Boat> RaiderBoats => raiderBoats;
+
+    private Dictionary<int, Boat> raiderBoatsDict = new();
+    public IReadOnlyDictionary<int, Boat> RaiderBoatsDict => raiderBoatsDict;
 
     private void Awake()
     {
@@ -30,31 +42,37 @@ public class BoatsManager : MonoBehaviour
     public void RegisterCitizenBoat(Boat boat)
     {
         RegisterBoat(citizenBoats, boat);
+        RegisterBoat(citizenBoatsDict, boat);
     }
 
     public void UnregisterCitizenBoat(Boat boat)
     {
         UnregisterBoat(citizenBoats, boat);
+        UnregisterBoat(citizenBoatsDict, boat);
     }
 
     public void RegisterWandererBoat(Boat boat)
     {
         RegisterBoat(wandererBoats, boat);
+        RegisterBoat(wandererBoatsDict, boat);
     }
 
     public void UnregisterWandererBoat(Boat boat)
     {
         UnregisterBoat(wandererBoats, boat);
+        UnregisterBoat(wandererBoatsDict, boat);
     }
 
     public void RegisterRaiderBoat(Boat boat)
     {
         RegisterBoat(raiderBoats, boat);
+        RegisterBoat(raiderBoatsDict, boat);
     }
 
     public void UnregisterRaiderBoat(Boat boat)
     {
         UnregisterBoat(raiderBoats, boat);
+        UnregisterBoat(raiderBoatsDict, boat);
     }
 
     public void RegisterBoat(Boat boat)
@@ -89,20 +107,32 @@ public class BoatsManager : MonoBehaviour
 
     public Boat GetBoat(int id)
     {
-        boats.TryGetValue(id, out var boat);
+        boatsDict.TryGetValue(id, out var boat);
 
         return boat;
     }
 
-    private void RegisterBoat(Dictionary<int, Boat> boatsList, Boat boat)
+    private void RegisterBoat(Dictionary<int, Boat> boatsDict, Boat boat)
     {
-        boatsList.Add(boat.InstanceId.GetInstanceId(), boat);
-        boats.Add(boat.InstanceId.GetInstanceId(), boat);
+        boatsDict.Add(boat.InstanceId.GetInstanceId(), boat);
+        this.boatsDict.Add(boat.InstanceId.GetInstanceId(), boat);
     }
 
-    private void UnregisterBoat(Dictionary<int, Boat> boatsList, Boat boat)
+    private void UnregisterBoat(Dictionary<int, Boat> boatsDict, Boat boat)
     {
-        boatsList.Remove(boat.InstanceId.GetInstanceId());
-        boats.Remove(boat.InstanceId.GetInstanceId());
+        boatsDict.Remove(boat.InstanceId.GetInstanceId());
+        this.boatsDict.Remove(boat.InstanceId.GetInstanceId());
+    }
+
+    private void RegisterBoat(List<Boat> boatsList, Boat boat)
+    {
+        boatsList.Add(boat);
+        boats.Add(boat);
+    }
+
+    private void UnregisterBoat(List<Boat> boatsList, Boat boat)
+    {
+        boatsList.Remove(boat);
+        boats.Remove(boat);
     }
 }

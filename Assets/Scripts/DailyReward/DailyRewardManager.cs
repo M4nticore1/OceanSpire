@@ -67,6 +67,11 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     public void Init(DailyRewardData data)
     {
         foreach (var rewardData in data.Rewards) {
+            if (rewardData == null) {
+                Debug.Log($"Reward Data not found at {name}");
+                continue;
+            }
+
             int id = rewardData.Id;
 
             var reward = TryCreateReward(id);

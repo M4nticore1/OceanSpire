@@ -266,8 +266,8 @@ public class RaidManager : MonoBehaviour
 
             BoatRider = new BoatRiderData()
             {
-                BoatInstanceId = boatInstanceId,
-                Riding = true,
+                TargetBoatInstanceId = boatInstanceId,
+                RidingBoatInstanceId = boatInstanceId,
             },
 
             Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId() + 1, WeaponsDataFactory.GetMaxWeaponDamage()),

@@ -12,8 +12,8 @@ public static class WandererAdmissionSystem
 
         int creautereId = wanderer.GenderComponent.IsMale ? (int)CreatureIdEnum.HumanCitizenMale : (int)CreatureIdEnum.HumanCitizenFemale;
         var prefab = CreaturesList.Instance.GetCreature(creautereId);
-        var position = wanderer.BoatRider.SelectedBoat.DockPoint.EntraceTransform.position;
-        var rotaton = wanderer.BoatRider.SelectedBoat.DockPoint.EntraceTransform.rotation;
+        var position = wanderer.BoatRider.TargetBoat.DockPoint.EntraceTransform.position;
+        var rotaton = wanderer.BoatRider.TargetBoat.DockPoint.EntraceTransform.rotation;
 
         var data = new CitizenData()
         {
@@ -28,7 +28,7 @@ public static class WandererAdmissionSystem
             Skills = SkillsData.Create(wanderer.SkillsComponent)
         };
 
-        GameObject.Destroy(wanderer.BoatRider.SelectedBoat.gameObject);
+        GameObject.Destroy(wanderer.BoatRider.TargetBoat.gameObject);
         var citizen = CreatureFactory.CreateHuman(prefab, position, rotaton, data);
 
         OnWandererAccepted?.Invoke(citizen);

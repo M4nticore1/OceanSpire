@@ -16,11 +16,11 @@ public class HumanAnimation : MonoBehaviour
         human.BoatRider.OnBoatMovementStarted += OnBoatMovementStarted;
         human.BoatRider.OnBoatMovementStopped += OnBoatMovementStopped;
 
-        human.InteractComponent.onInteractionStarted += OnInteractionStarted;
-        human.InteractComponent.onInteractionStopped += OnInteractionStopped;
+        human.InteractComponent.OnInteractionStarted += OnInteractionStarted;
+        human.InteractComponent.OnInteractionStopped += OnInteractionStopped;
 
-        human.AttackComponent.onAttackStarted += OnStartedAttacking;
-        human.AttackComponent.onAttackStopped += OnStoppedAttacking;
+        human.AttackComponent.OnAttackStarted += OnStartedAttacking;
+        human.AttackComponent.OnAttackStopped += OnStoppedAttacking;
 
         human.ReviveComponent.onRevived += OnRevived;
         human.HealthComponent.onDied += OnDied;
@@ -37,11 +37,11 @@ public class HumanAnimation : MonoBehaviour
         human.Movement.OnMovementStarted -= OnMovementStarted;
         human.Movement.OnMovementStopped -= OnMovementStopped;
 
-        human.InteractComponent.onInteractionStarted -= OnInteractionStarted;
-        human.InteractComponent.onInteractionStopped -= OnInteractionStopped;
+        human.InteractComponent.OnInteractionStarted -= OnInteractionStarted;
+        human.InteractComponent.OnInteractionStopped -= OnInteractionStopped;
 
-        human.AttackComponent.onAttackStarted -= OnStartedAttacking;
-        human.AttackComponent.onAttackStopped -= OnStoppedAttacking;
+        human.AttackComponent.OnAttackStarted -= OnStartedAttacking;
+        human.AttackComponent.OnAttackStopped -= OnStoppedAttacking;
 
         human.ReviveComponent.onRevived -= OnRevived;
         human.HealthComponent.onDied -= OnDied;

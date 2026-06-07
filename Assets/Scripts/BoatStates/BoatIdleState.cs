@@ -11,10 +11,11 @@ public class BoatIdleState : BoatState
 
     public override void Enter()
     {
-        if (!boat.SelectedRider) return;
-
-        boat.SelectedRider.HandleBoatSetedIdle(boat);
         boat.Movement.SetAgentEnabled(false);
+
+        if (boat.CurrentRider) {
+            boat.CurrentRider.HandleBoatSetedIdle(boat);
+        }
     }
 
     public override void Exit()

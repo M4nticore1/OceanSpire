@@ -17,12 +17,12 @@ public class WorkBuildingStrategy : BuildingStrategy
 
     }
 
-    public override void OnSetInteractBuilding(BuildingInteractComponent navigator)
+    public override void OnInteractBuildingSet(BuildingInteractComponent navigator)
     {
         
     }
 
-    public override void OnRemoveInteractBuilding(BuildingInteractComponent navigator)
+    public override void OnInteractBuildingRemove(BuildingInteractComponent navigator)
     {
         
     }

@@ -66,7 +66,7 @@ public class Raider : Human
         UpdateRaidAction();
     }
 
-    protected override void OnSetedInteractBuilding(Building building)
+    protected override void OnInteractBuildingSeted(Building building)
     {
         if (building) {
             building.RaidComponent.AddRaider(this);
@@ -77,12 +77,12 @@ public class Raider : Human
 
         UpdateRaidAction();
 
-        base.OnSetedInteractBuilding(building);
+        base.OnInteractBuildingSeted(building);
     }
 
-    protected override void OnRemovedInteractBuilding(Building building)
+    protected override void OnInteractBuildingRemoved(Building building)
     {
-        base.OnRemovedInteractBuilding(building);
+        base.OnInteractBuildingRemoved(building);
 
         building.RaidComponent.RemoveRaider(this);
     }
@@ -109,7 +109,7 @@ public class Raider : Human
             boat.FloatAway(SpawnPosition);
         }
         else {
-            BoatRider.SelectedBoat.SetState(BoatStateEnum.MovingToDock);
+            BoatRider.TargetBoat.SetState(BoatStateEnum.MovingToDock);
         }
 
         boat.SelectComponent.SetClickable(false);

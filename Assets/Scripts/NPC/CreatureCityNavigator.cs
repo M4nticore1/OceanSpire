@@ -35,7 +35,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     public ElevatorModule CurrentPathElevator { get; private set; }
 
     public Building TargetBuilding;
-    [SerializeField] private int pathIndex = 0;
+    [SerializeField] private int pathProgress = 0;
     private bool HasPath => pathBuildings.Count > 0;
 
     // Positions
@@ -113,7 +113,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
         }
         else {
             startTowerBuilding = CurrentBuilding as TowerBuilding;
-            startPlace = startTowerBuilding ? startTowerBuilding.BuildingPlace : BuildingsManager.Instance.BuiltFloors[BuildingsManager.FirstBuildingFloor].RoomBuildingPlaces[BuildingsManager.FirstBuildingPlace];
+            startPlace = startTowerBuilding ? startTowerBuilding.BuildingPlace : BuildingsManager.Instance.EntranceBuildingPlace;
         }
 
         if (!PathFinder.TryFindBuildingPath(startPlace, TargetBuilding, out pathBuildings)) return false;
@@ -226,13 +226,13 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
                 movement.StopMoving();
                 break;
             case FollowingPathState.FollowingPath:
-                if (CurrentPathBuilding == TargetBuilding)
+                if (CurrentPathBuilding == TargetBuilding || CurrentBuilding == TargetBuilding)
                     movement.TryMoveTo(CurrentPathBuilding.GetInteractionTransform(this).position);
                 else
                     movement.TryMoveTo(CurrentPathBuilding.transform.position);
                 break;
             case FollowingPathState.GoingToWaiting:
-                CurrentBuilding.TryAssignInteractTransform(this);
+                CurrentBuilding.AssignInteractTransform(this);
                 CurrentElevator.AddPassenger(this);
                 movement.TryMoveTo(CurrentElevator.OwnedBuilding.GetInteractionTransform(this).position);
                 break;
@@ -249,7 +249,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
                 transform.SetParent(CurrentElevator.SpawnedElevatorCabin.transform);
                 break;
             case FollowingPathState.ExitingElevator:
-                CurrentBuilding.TryAssignInteractTransform(this);
+                CurrentBuilding.AssignInteractTransform(this);
                 movement.TryMoveTo(CurrentElevator.OwnedBuilding.GetInteractionTransform(this).position);
                 break;
         }
@@ -357,21 +357,16 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     private void ResetPath()
     {
         pathBuildings.Clear();
-        pathIndex = 0;
+        pathProgress = 0;
     }
 
     private void OnReachedPath()
     {
-        AddPathIndex();
+        UpdatePathIndex();
         UpdatePathBuildings(pathBuildings);
         UpdateFollowingPathState();
 
         onReachedPath?.Invoke();
-    }
-
-    private void OnReachedTarget()
-    {
-        UpdateFollowingPathState();
     }
 
     private bool IsOnCurrentPathBuilding()
@@ -390,15 +385,15 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
         return true;
     }
 
-    private void AddPathIndex()
+    private void UpdatePathIndex()
     {
-        pathIndex++;
+        pathProgress = CurrentBuilding ? pathBuildings.IndexOf(CurrentBuilding) + 1 : 0;
     }
 
     private void UpdatePathBuildings(List<Building> pathBuildings)
     {
-        LastPathBuilding = pathIndex - 1 >= 0 && pathBuildings.Count > pathIndex - 1 ? pathBuildings[pathIndex - 1] : null;
-        CurrentPathBuilding = pathBuildings.Count > pathIndex ? pathBuildings[pathIndex] : TargetBuilding;
+        LastPathBuilding = pathProgress - 1 >= 0 && pathBuildings.Count > pathProgress - 1 ? pathBuildings[pathProgress - 1] : null;
+        CurrentPathBuilding = pathBuildings.Count > pathProgress ? pathBuildings[pathProgress] : TargetBuilding;
 
         LastPathTowerBuilding = LastPathBuilding as TowerBuilding;
         CurrentPathTowerBuilding = CurrentPathBuilding as TowerBuilding;
@@ -411,8 +406,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     public void FollowPath()
     {
         if (IsOnTargetBuilding()) {
-            OnReachedTarget();
-            RemovePath();
+            UpdateFollowingPathState();
         }
         else if (IsOnCurrentPathBuilding()) {
             OnReachedPath();
@@ -432,7 +426,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     private bool ShouldFollowPath()
     {
         if (!HasPath) return false;
-        if (pathIndex == 1) return false;
+        //if (pathIndex == 1) return false;
         if (IsRidingOnElevator && CurrentBuilding != LastPathBuilding) return false;
         if (CurrentElevator && !CurrentElevator.IsPossibleToExit()) return false;
 

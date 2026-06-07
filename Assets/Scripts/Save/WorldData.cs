@@ -87,7 +87,7 @@ public class WorldData
             RaiderBoatDocks = BoatDockData.Create(boatDocks.RaiderDockPoints.ToArray()),
             EvictBoatDocks = BoatDockData.Create(boatDocks.EvictDockPoints.ToArray()),
 
-            Boats = BoatData.Create(boats.Boats.Values.ToArray()),
+            Boats = BoatData.Create(boats.BoatsDict.Values.ToArray()),
 
             Citizens = CitizenData.Create(creatures.Citizens.ToArray()),
             Wanderers = WandererData.Create(creatures.Wanderers.ToArray()),

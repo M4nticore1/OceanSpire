@@ -89,7 +89,7 @@ public class PierModule : BuildingModule
 
     private void CreateBoats()
     {
-        int count = PierConstruction.BoatDocks.Count - boatsManager.CitizenBoats.Count;
+        int count = PierConstruction.BoatDocks.Count - boatsManager.CitizenBoatsDict.Count;
 
         for (int i = 0; i < count; i++) {
             var dockIndex = PierConstruction.BoatDocks.Count - count + i;
@@ -115,7 +115,7 @@ public class PierModule : BuildingModule
 
     private void InitBoats()
     {
-        var boats = boatsManager.CitizenBoats.Values.ToList();
+        var boats = boatsManager.CitizenBoatsDict.Values.ToList();
 
         for (int i = 0; i < boats.Count; i++) {
             var boat = boats[i];

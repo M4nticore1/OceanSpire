@@ -110,7 +110,7 @@ public class WanderersManager : MonoBehaviour
             var wanderer = wanderers[i];
             if (wanderer.IsAccepted) continue;
 
-            var boat = wanderer.BoatRider.SelectedBoat;
+            var boat = wanderer.BoatRider.TargetBoat;
             if (!boat.DockPoint) continue;
 
             boat.RemoveDockPoint();
@@ -120,7 +120,7 @@ public class WanderersManager : MonoBehaviour
         }
     }
 
-    private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatId)
+    private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatInstanceId)
     {
         var prefab = wandererPrefabs[UnityEngine.Random.Range(0, wandererPrefabs.Length)] as Human;
 
@@ -140,8 +140,8 @@ public class WanderersManager : MonoBehaviour
 
             BoatRider = new BoatRiderData()
             {
-                BoatInstanceId = boatId,
-                Riding = true
+                TargetBoatInstanceId = boatInstanceId,
+                RidingBoatInstanceId = boatInstanceId,
             },
 
             Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId(), WeaponsDataFactory.GetMaxWeaponDamage()),

@@ -76,7 +76,7 @@ public class BoatUnloadingState : BoatState
 
     private bool ShouldExit()
     {
-        if (!boat.SelectedRider) return false;
+        if (!boat.CurrentRider) return false;
 
         return true;
     }

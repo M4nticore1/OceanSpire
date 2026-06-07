@@ -41,16 +41,16 @@ public class WorkComponent : MonoBehaviour
         OnWorkerExited?.Invoke(interactor);
     }
 
-    public int TryGetIndexOf(Citizen citizen)
+    public int? TryGetWorkerIndex(Citizen citizen)
     {
         if (!citizen) {
             Debug.Log($"Citizen not found at {name}");
-            return 0;
+            return null;
         }
 
         if (!workers.Contains(citizen)) {
             Debug.Log($"Citizen not found at Workers");
-            return 0;
+            return null;
         }
 
         return workers.IndexOf(citizen);

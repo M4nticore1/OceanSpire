@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -11,23 +12,36 @@ public class DailyRewardData
 
     public static DailyRewardData Create(DailyRewardManager dailyRewardManager)
     {
-        var rewards = new RewardInstanceData[dailyRewardManager.CurrentRewards.Count];
-
-        for (int i = 0; i < rewards.Length; i++) {
-            var reward = dailyRewardManager.CurrentRewards[i];
-
-            if (reward == null) {
-                Debug.Log($"Reward by index {i} is not valid");
-                continue;
-            }
-
-            rewards[i] = reward.CreateData();
+        if (!dailyRewardManager) {
+            Debug.Log("Daily Reward Manager not found");
+            return null;
         }
 
         return new DailyRewardData()
         {
             NextResetTime = dailyRewardManager.NextResetTime,
-            Rewards = rewards,
+            Rewards = CreateRewards(dailyRewardManager),
         };
+    }
+
+    private static RewardInstanceData[] CreateRewards(DailyRewardManager dailyRewardManager)
+    {
+        if (dailyRewardManager.CurrentRewards == null) {
+            Debug.Log("Current Rewards not found");
+            return null;
+        }
+
+        List<RewardInstanceData> rewards = new();
+
+        foreach (var reward in dailyRewardManager.CurrentRewards) {
+            if (reward == null) {
+                Debug.Log($"Daily Reward not found");
+                continue;
+            }
+
+            rewards.Add(reward.CreateData());
+        }
+
+        return rewards.ToArray();
     }
 }

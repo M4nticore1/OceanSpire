@@ -217,6 +217,22 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     }
 
     // Interaction
+    public void AssignInteractTransform(CreatureCityNavigator navigator)
+    {
+        if (interactTransforms.ContainsKey(navigator)) {
+            interactTransforms.Remove(navigator);
+        }
+
+        interactTransforms.Add(navigator, GetFirstWaypointTransform());
+    }
+
+    public void TryRemoveInteractTransform(CreatureCityNavigator navigator)
+    {
+        if (!interactTransforms.ContainsKey(navigator)) return;
+
+        interactTransforms.Remove(navigator);
+    }
+
     public Transform GetInteractionTransform(CreatureCityNavigator navigator)
     {
         if (!interactTransforms.ContainsKey(navigator)) {
@@ -225,22 +241,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         }
 
         return interactTransforms[navigator];
-    }
-
-    public void TryAssignInteractTransform(CreatureCityNavigator navigator)
-    {
-        if (interactTransforms.ContainsKey(navigator)) return;
-
-        var actions = SpawnedConstruction.BuildingInteractions;
-        var transform = actions.Length > 0 ? actions[WorkComponent.Workers.Count % actions.Length].waypoints[0].transform : this.transform;
-        interactTransforms.Add(navigator, transform);
-    }
-
-    public void TryRemoveInteractTransform(CreatureCityNavigator navigator)
-    {
-        if (!interactTransforms.ContainsKey(navigator)) return;
-
-        interactTransforms.Remove(navigator);
     }
 
     public float GetUpgradeTime()
@@ -299,16 +299,16 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // Work
     private void OnWorkerAdded(Citizen citizen)
     {
-        TryAssignInteractTransform(citizen.CityNavigator);
+        UpdateWorkerInteractionTransforms();
 
-        strategy.OnSetInteractBuilding(citizen.InteractComponent);
+        strategy.OnInteractBuildingSet(citizen.InteractComponent);
     }
 
     private void OnWorkerRemoved(Citizen citizen)
     {
-        TryRemoveInteractTransform(citizen.CityNavigator);
+        UpdateWorkerInteractionTransforms();
 
-        strategy.OnRemoveInteractBuilding(citizen.InteractComponent);
+        strategy.OnInteractBuildingRemove(citizen.InteractComponent);
     }
 
     private void OnCurrentWorkerAdded(Citizen citizen)
@@ -332,12 +332,12 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // Raid
     private void OnRaiderAdded(Raider raider)
     {
-        TryAssignInteractTransform(raider.CityNavigator);
+        UpdateRaiderInteractionTransforms();
     }
 
     private void OnRaiderRemoved(Raider raider)
     {
-        TryRemoveInteractTransform(raider.CityNavigator);
+        UpdateRaiderInteractionTransforms();
     }
 
     // Working
@@ -435,5 +435,42 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     private void OnDeselected()
     {
         OnBuildingDeselected?.Invoke(this);
+    }
+
+    private void UpdateWorkerInteractionTransforms()
+    {
+        for (int i = 0; i < WorkComponent.Workers.Count; i++) {
+            var worker = WorkComponent.Workers[i];
+            var navigator = worker.CityNavigator;
+
+            AssignInteractTransform(navigator);
+        }
+    }
+
+    private void UpdateRaiderInteractionTransforms()
+    {
+        for (int i = 0; i < RaidComponent.Raiders.Count; i++) {
+            var raider = RaidComponent.Raiders[i];
+            var navigator = raider.CityNavigator;
+
+            AssignInteractTransform(navigator);
+        }
+    }
+
+    private Transform GetFirstWaypointTransform()
+    {
+        var actions = SpawnedConstruction.BuildingInteractions;
+
+        if (actions.Length == 0 || WorkComponent.Workers.Count == 0)
+            return transform;
+
+        var workerCount = WorkComponent.Workers.Count;
+        var actionIndex = (workerCount - 1) % actions.Length;
+        var action = actions[actionIndex];
+
+        if (action.waypoints == null || action.waypoints.Length == 0)
+            return transform;
+
+        return action.waypoints[0].transform;
     }
 }

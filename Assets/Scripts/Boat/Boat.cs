@@ -24,7 +24,7 @@ public class Boat : MonoBehaviour, IClickable
 
     public HumanStatusEnum CurrentStatus { get; private set; }
 
-    public BoatRider SelectedRider { get; private set; }
+    public BoatRider CurrentRider { get; private set; }
 
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
@@ -128,13 +128,13 @@ public class Boat : MonoBehaviour, IClickable
     // Enter / Exit
     public void SetRider(BoatRider rider)
     {
-        SelectedRider = rider;
+        CurrentRider = rider;
         movement.SetAgentEnabled(true);
     }
 
     public void RemoveRider()
     {
-        SelectedRider = null;
+        CurrentRider = null;
     }
 
     // Dock Point
@@ -168,7 +168,6 @@ public class Boat : MonoBehaviour, IClickable
     public void SetState(BoatStateEnum state)
     {
         if (currentState != null && state == CurrentStateEnum) return;
-
         if (currentState != null) {
             currentState.Exit();
         }
@@ -227,16 +226,16 @@ public class Boat : MonoBehaviour, IClickable
 
     private void OnMovementStarted()
     {
-        if (SelectedRider)
-            SelectedRider.HandleBoatMovementStarted();
+        if (CurrentRider)
+            CurrentRider.HandleBoatMovementStarted();
     }
 
     private void OnMovementStopped()
     {
         currentState.OnReachedPath();
 
-        if (SelectedRider)
-            SelectedRider.HandleBoatMovementStopped();
+        if (CurrentRider)
+            CurrentRider.HandleBoatMovementStopped();
     }
 
     // Clickable

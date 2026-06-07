@@ -7,13 +7,13 @@ public class BuildingInteractComponent : MonoBehaviour
 
     public bool IsInteracting { get; private set; } = false;
 
-    public event Action<Building> onSetedInteractBuilding;
-    public event Action<Building> onRemovedInteractBuilding;
-    public event Action<Building> onInteractionStarted;
-    public event Action<Building> onInteractionStopped;
+    public event Action<Building> OnInteractBuildingSeted;
+    public event Action<Building> OnInteractBuildingRemoved;
+    public event Action<Building> OnInteractionStarted;
+    public event Action<Building> OnInteractionStopped;
 
-    public static event Action<BuildingInteractComponent> onInteractorSetedInteractBuilding;
-    public static event Action<BuildingInteractComponent> onInteractorRemovedInteractBuilding;
+    public static event Action<BuildingInteractComponent> OnInteractorInteractBuildingSeted;
+    public static event Action<BuildingInteractComponent> OnInteractorInteractBuildirngRemoved;
 
     public void SetInteractBuilding(Building building)
     {
@@ -29,8 +29,8 @@ public class BuildingInteractComponent : MonoBehaviour
 
         InteractBuilding = building;
 
-        onSetedInteractBuilding?.Invoke(building);
-        onInteractorSetedInteractBuilding?.Invoke(this);
+        OnInteractBuildingSeted?.Invoke(building);
+        OnInteractorInteractBuildingSeted?.Invoke(this);
     }
 
     public void TryRemoveInteractBuilding()
@@ -49,8 +49,8 @@ public class BuildingInteractComponent : MonoBehaviour
         var lastInteractBuilding = InteractBuilding;
         InteractBuilding = null;
 
-        onRemovedInteractBuilding?.Invoke(lastInteractBuilding);
-        onInteractorRemovedInteractBuilding?.Invoke(this);
+        OnInteractBuildingRemoved?.Invoke(lastInteractBuilding);
+        OnInteractorInteractBuildirngRemoved?.Invoke(this);
     }
 
     public void TryStartInteracting()
@@ -70,13 +70,13 @@ public class BuildingInteractComponent : MonoBehaviour
     private void StartInteracting()
     {
         IsInteracting = true;
-        onInteractionStarted?.Invoke(InteractBuilding);
+        OnInteractionStarted?.Invoke(InteractBuilding);
     }
 
     private void StopInteracting()
     {
         IsInteracting = false;
-        onInteractionStopped?.Invoke(InteractBuilding);
+        OnInteractionStopped?.Invoke(InteractBuilding);
     }
 
     private bool ShouldStartInteracting()

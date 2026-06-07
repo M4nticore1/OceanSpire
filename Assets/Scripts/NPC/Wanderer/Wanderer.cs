@@ -40,7 +40,7 @@ public class Wanderer : Human
     public void Reject()
     {
         IsRejected = true;
-        BoatRider.SelectedBoat.FloatAway(SpawnPosition);
+        BoatRider.TargetBoat.FloatAway(SpawnPosition);
     }
 
     protected override void HandleEnteredBoat(Boat boat)
@@ -51,7 +51,7 @@ public class Wanderer : Human
             boat.FloatAway(SpawnPosition);
         }
         else {
-            BoatRider.SelectedBoat.SetState(BoatStateEnum.MovingToDock);
+            BoatRider.TargetBoat.SetState(BoatStateEnum.MovingToDock);
         }
 
         boat.ContextMenuTarget.SetShowContextMenu(false);
