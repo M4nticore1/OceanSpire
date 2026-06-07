@@ -76,7 +76,7 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
     }
 
-    public void ApplyBuildingPosition()
+    public void ApplyConstructionPosition()
     {
         transform.position = OwnedBuilding.transform.position;
     }

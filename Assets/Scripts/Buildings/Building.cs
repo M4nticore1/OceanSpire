@@ -235,10 +235,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     public Transform GetInteractionTransform(CreatureCityNavigator navigator)
     {
-        if (!interactTransforms.ContainsKey(navigator)) {
-            Debug.Log("City Navigator not found at dictionary");
+        if (!interactTransforms.ContainsKey(navigator))
             return transform;
-        }
 
         return interactTransforms[navigator];
     }

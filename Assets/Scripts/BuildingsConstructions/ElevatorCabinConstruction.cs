@@ -43,8 +43,12 @@ public class ElevatorCabinConstruction : BuildingConstruction
         Move(moveDirection, speed);
 
         int floor = GetFloorIndexByPosition();
-        ApplyOwnedBuildingByFloor(floor);
-        //TryStopMoving();
+        if (TryApplyOwnedBuildingByFloor(floor)) {
+            if (TryStopMoving()) {
+                ApplyConstructionPosition();
+                UpdateTargetFloor();
+            }
+        }
     }
 
     protected override void OnInited(BuildingConstructionData data)
@@ -58,21 +62,21 @@ public class ElevatorCabinConstruction : BuildingConstruction
         SetTargetFloor(elevatorCabinData.TargetFloor);
         SetNextFloor(CalculateNextFloor());
         TryMoveToFloor(TargetFloor);
-        TryStopMoving();
     }
 
     public override void SetOwnedBuilding(Building building)
     {
         base.SetOwnedBuilding(building);
 
-        UpdateFloorAndPlaceIndexes(building);
-
-        foreach (var npc in ridingPassengers.ToArray()) {
-            npc.OnElevatorChangedFloor(building);
+        if (building is not TowerBuilding towerBuilding) {
+            Debug.Log($"Tower Building not found at {name}");
+            return;
         }
 
-        UpdateTargetFloor();
-        TryStopMoving();
+        SetFloorIndex(towerBuilding.FloorIndex);
+        SetPlaceIndex(towerBuilding.PlaceIndex);
+
+        NotifyPassengersAboutFloorChange();
     }
 
     public void SetTargetFloor(int floorIndex)
@@ -88,7 +92,6 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void StopMoving()
     {
         SetIsMoving(false);
-        ApplyBuildingPosition();
 
         // Stop entities riding
         foreach (var rider in ridingPassengers.ToArray()) {
@@ -228,11 +231,14 @@ public class ElevatorCabinConstruction : BuildingConstruction
         TimerManager.Instance.RemoveTimer(startMovingTimerHandle);
     }
 
-    private void UpdateFloorAndPlaceIndexes(Building building)
+    private void SetFloorIndex(int value)
     {
-        var towerBuilding = building as TowerBuilding;
-        FloorIndex = towerBuilding.FloorIndex;
-        PlaceIndex = towerBuilding.PlaceIndex;
+        FloorIndex = value;
+    }
+
+    private void SetPlaceIndex(int value)
+    {
+        PlaceIndex = value;
     }
 
     private void UpdateTargetFloor()
@@ -240,17 +246,25 @@ public class ElevatorCabinConstruction : BuildingConstruction
         SetTargetFloor(CalculateTargetFloor());
     }
 
-    private void TryStopMoving()
+    private bool TryStopMoving()
     {
-        if (!IsMoving) return;
-        if (FloorIndex != TargetFloor && !ShouldMoveToFloor(TargetFloor)) return;
+        if (!IsMoving) return false;
+        if (FloorIndex != TargetFloor && !ShouldMoveToFloor(TargetFloor)) return false;
 
         StopMoving();
+        return true;
     }
 
     private void SetIsMoving(bool value)
     {
         IsMoving = value;
+    }
+
+    private void NotifyPassengersAboutFloorChange()
+    {
+        foreach (var npc in ridingPassengers.ToArray()) {
+            npc.OnElevatorChangedFloor(OwnedBuilding);
+        }
     }
 
     private int CalculateTargetFloor()
@@ -311,25 +325,29 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private int GetFloorIndexByPosition()
     {
         int floorIndex = 0;
+        float firstFloorHeight = BuildingsManager.FirstFloorHeight;
+        float floorHeight = BuildingsManager.FloorHeight;
 
-        if (TargetFloor >= this.FloorIndex) {
-            floorIndex = (int)((transform.position.y - BuildingsManager.FirstFloorHeight) / BuildingsManager.FloorHeight);
+        if (TargetFloor >= FloorIndex) {
+            floorIndex = (int)((transform.position.y - firstFloorHeight) / floorHeight);
             if (floorIndex < StartFloorIndex)
                 floorIndex = StartFloorIndex;
         }
         else {
-            floorIndex = (int)((transform.position.y - BuildingsManager.FirstFloorHeight + BuildingsManager.FloorHeight) / BuildingsManager.FloorHeight);
+            floorIndex = (int)((transform.position.y - firstFloorHeight + floorHeight) / floorHeight);
             if (floorIndex > StartFloorIndex)
                 floorIndex = StartFloorIndex;
         }
+
         return floorIndex;
     }
 
-    private void ApplyOwnedBuildingByFloor(int floor)
+    private bool TryApplyOwnedBuildingByFloor(int floor)
     {
         var building = BuildingsManager.Instance.BuiltFloors[floor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
-        if (building == OwnedBuilding) return;
+        if (building == OwnedBuilding) return false;
 
         SetOwnedBuilding(building);
+        return true;
     }
 }
