@@ -165,7 +165,7 @@ public class Raider : Human
     private void AttackWorker()
     {
         var building = CityNavigator.CurrentBuilding;
-        var target = building.WorkComponent.EnteredWorkers[0].GetComponent<AttackComponent>();
+        var target = building.WorkComponent.CurrentWorkers[0].GetComponent<AttackComponent>();
 
         AttackComponent.SetTarget(target);
         AttackComponent.MoveToTarget();
@@ -197,15 +197,13 @@ public class Raider : Human
 
     private bool ShouldAttackWorker()
     {
-        Building building = CityNavigator.CurrentBuilding;
-        if (building != InteractComponent.InteractBuilding) return false;
+        var currentBuilding = CityNavigator.CurrentBuilding;
+        if (currentBuilding != InteractComponent.InteractBuilding) return false;
 
-        if (building.WorkComponent.EnteredWorkers.Count == 0) return false;
+        if (currentBuilding.WorkComponent.CurrentWorkers.Count <= 0) return false;
 
-        Human firstWorker = building.WorkComponent.EnteredWorkers[0].GetComponent<Human>();
-        if (!firstWorker.HealthComponent.IsAlive) return false;
-
-        if (building.WorkComponent.EnteredWorkers.Count <= 0) return false;
+        var worker = currentBuilding.WorkComponent.CurrentWorkers[0];
+        if (!worker.HealthComponent.IsAlive) return false;
 
         return true;
     }

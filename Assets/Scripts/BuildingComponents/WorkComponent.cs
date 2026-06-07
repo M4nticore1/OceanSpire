@@ -7,8 +7,8 @@ public class WorkComponent : MonoBehaviour
     private List<Citizen> workers = new();
     public IReadOnlyList<Citizen> Workers => workers.AsReadOnly();
 
-    private List<Citizen> enteredWorkers = new();
-    public IReadOnlyList<Citizen> EnteredWorkers => enteredWorkers.AsReadOnly();
+    private List<Citizen> currentWorkers = new();
+    public IReadOnlyList<Citizen> CurrentWorkers => currentWorkers.AsReadOnly();
 
     public event Action<Citizen> OnWorkerAdded;
     public event Action<Citizen> OnWorkerRemoved;
@@ -31,13 +31,13 @@ public class WorkComponent : MonoBehaviour
 
     public void AddCurrentWorker(Citizen interactor)
     {
-        enteredWorkers.Add(interactor);
+        currentWorkers.Add(interactor);
         OnWorkerEntered?.Invoke(interactor);
     }
 
     public void ExitWorker(Citizen interactor)
     {
-        enteredWorkers.Remove(interactor);
+        currentWorkers.Remove(interactor);
         OnWorkerExited?.Invoke(interactor);
     }
 

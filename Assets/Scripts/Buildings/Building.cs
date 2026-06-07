@@ -311,7 +311,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private void OnCurrentWorkerAdded(Citizen citizen)
     {
-        if (WorkComponent.EnteredWorkers.Count == 1)
+        if (WorkComponent.CurrentWorkers.Count == 1)
             StartWorking();
 
         strategy.OnStartedInteracting(citizen.InteractComponent);
@@ -320,7 +320,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private void OnCurrentWorkerRemoved(Citizen citizen)
     {
-        if (WorkComponent.EnteredWorkers.Count == 0)
+        if (WorkComponent.CurrentWorkers.Count == 0)
             StopWorking();
 
         strategy.OnStoppedInteracting(citizen.InteractComponent);

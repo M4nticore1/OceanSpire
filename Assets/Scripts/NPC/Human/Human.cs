@@ -266,6 +266,7 @@ public abstract class Human : Creature, IClickable
 
     protected virtual void OnAttackStopped()
     {
+        cityNavigator.FollowPath();
         TryStartIdle();
     }
 
@@ -293,11 +294,6 @@ public abstract class Human : Creature, IClickable
         if (cityNavigator.TryFindPathToTargetBuilding()) {
             cityNavigator.FollowPath();
         }
-
-        //if (building == cityNavigator.CurrentBuilding) {
-        //    movement.TryMoveTo(building.GetInteractionTransform(cityNavigator).position);
-        //    TryStartInteracting();
-        //}
     }
 
     protected virtual void OnInteractBuildingRemoved(Building building)

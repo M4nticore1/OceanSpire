@@ -206,7 +206,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         if (IsReadyToCollect) return false;
 
-        if (OwnedBuilding.WorkComponent.EnteredWorkers.Count == 0) return false;
+        if (OwnedBuilding.WorkComponent.CurrentWorkers.Count == 0) return false;
 
         foreach (var resource in CurrentCraftItem.ConsumeResources) {
             int id = resource.Definition.ItemId;
