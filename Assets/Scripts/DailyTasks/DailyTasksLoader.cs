@@ -7,27 +7,10 @@ public class DailyTasksLoader : Loader
     protected override void Load(WorldData worldData)
     {
         if (worldData != null && worldData.DailyTasks != null) {
-            LoadTasks(worldData.DailyTasks);
+            dailyTasksManager.Init(worldData.DailyTasks);
         }
         else {
-            InitTasks();
+            dailyTasksManager.Init();
         }
-    }
-
-    private void LoadTasks(DailyTasksData dailyTasksData)
-    {
-        dailyTasksManager.Init(dailyTasksData);
-    }
-
-    private void InitTasks()
-    {
-        DailyTasksData dailyTasksData = new DailyTasksData()
-        {
-            Tasks = dailyTasksManager.GetRandomTasksData(),
-            NextResetTime = dailyTasksManager.CalculateNextResetTime(),
-            AdUpdateUsed = false
-        };
-
-        dailyTasksManager.Init(dailyTasksData);
     }
 }

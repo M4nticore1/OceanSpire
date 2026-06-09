@@ -22,13 +22,16 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     public long NextRestTime { get; private set; } = 0;
     public bool IsAdUpdateUsed { get; private set; } = false;
+    public bool IsDailyTasksViewed { get; private set; } = false;
     private bool isUpdated = false;
 
     private List<DailyTaskInstance> currentTasks = new();
     public IReadOnlyList<DailyTaskInstance> CurrentTasks => currentTasks.AsReadOnly();
 
-    public event Action onTasksInited;
+    public event Action OnTasksInited;
+    public event Action OnTasksReset;
     public event Action<bool> onAdUpdateUsedSetTrue;
+    public event Action<bool> OnTasksViewedChanged;
 
     private void Awake()
     {
@@ -43,14 +46,30 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     private void Update()
     {
         if (TimeManager.GetCurrentSecond() >= NextRestTime) {
-            if (!TryUpdateTasks()) return;
+            if (!TryResetTasks()) return;
 
             UpdateNextResetTime();
             SetAdUpdateUsedSetTrue(false);
+            SetUpdated(true);
+            SetTasksViewed(false);
+            OnTasksReset?.Invoke();
         }
         else {
             SetUpdated(false);
         }
+    }
+
+    public void Init()
+    {
+        DailyTasksData dailyTasksData = new DailyTasksData()
+        {
+            Tasks = GetRandomTasksData(),
+            NextResetTime = CalculateNextResetTime(),
+            AdUpdateUsed = false,
+            TasksViewed = false,
+        };
+
+        Init(dailyTasksData);
     }
 
     public void Init(DailyTasksData data)
@@ -58,19 +77,25 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         CreateTasks(data.Tasks);
         SetNextUpdateTime(data.NextResetTime);
         SetAdUpdateUsedSetTrue(data.AdUpdateUsed);
+        SetTasksViewed(data.TasksViewed);
     }
 
-    public void UpdateTasks()
+    public void ResetTasks()
     {
         RemoveTasks();
         CreateTasks(GetRandomTasksData());
-        SetUpdated(true);
     }
 
     public void SetAdUpdateUsedSetTrue(bool value)
     {
         IsAdUpdateUsed = value;
         onAdUpdateUsedSetTrue?.Invoke(value);
+    }
+
+    public void SetTasksViewed(bool value)
+    {
+        IsDailyTasksViewed = value;
+        OnTasksViewedChanged?.Invoke(value);
     }
 
     public Dictionary<string, string> GetLocalization()
@@ -92,13 +117,13 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
             CreateTask(data);
         }
 
-        onTasksInited?.Invoke();
+        OnTasksInited?.Invoke();
     }
 
     private void CreateTask(DailyTaskInstanceData data)
     {
-        DailyTaskDefinition def = dailyTasksList.GetTaskDefinition(data.Id);
-        DailyTaskInstance task = new DailyTaskInstance(def, data.Progress, data.Completed);
+        var def = dailyTasksList.GetTaskDefinition(data.Id);
+        var task = new DailyTaskInstance(def, data.Progress, data.Completed);
 
         currentTasks.Add(task);
     }
@@ -106,7 +131,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     private void RemoveTasks()
     {
         for (int i = currentTasks.Count - 1; i >= 0; i--) {
-            DailyTaskInstance task = currentTasks[i];
+            var task = currentTasks[i];
             task.RemoveTask();
             currentTasks.RemoveAt(i);
         }
@@ -122,11 +147,11 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         NextRestTime = seconds;
     }
 
-    private bool TryUpdateTasks()
+    private bool TryResetTasks()
     {
         if (isUpdated) return false;
 
-        UpdateTasks();
+        ResetTasks();
         return true;
     }
 
@@ -150,7 +175,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     public DailyTaskInstanceData[] GetRandomTasksData()
     {
-        DailyTaskInstanceData[] tasksData = new DailyTaskInstanceData[taskDefinitions.Length];
+        var tasksData = new DailyTaskInstanceData[taskDefinitions.Length];
 
         for (int i = 0; i < tasksData.Length; i++) {
             tasksData[i] = new DailyTaskInstanceData()
@@ -166,7 +191,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     private DailyTaskDefinition GetRandomTaskDefinition(DailyTaskDefinition[] tasks)
     {
         int index = UnityEngine.Random.Range(0, tasks.Length);
-        DailyTaskDefinition definion = GetDefinition(tasks, index);
+        var definion = GetDefinition(tasks, index);
 
         return tasks[index];
     }

@@ -17,7 +17,7 @@ public class UpdateDailyTasksAdRewardInstance : RewardInstance
     {
         base.OnRewardRecieved();
 
-        DailyTasksManager.Instance.UpdateTasks();
+        DailyTasksManager.Instance.ResetTasks();
         DailyTasksManager.Instance.SetAdUpdateUsedSetTrue(true);
     }
 }

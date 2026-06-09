@@ -319,7 +319,6 @@ GameObject:
   - component: {fileID: 7388978357352574682}
   - component: {fileID: 5380196258439718363}
   - component: {fileID: 8300345608489651005}
-  - component: {fileID: 227430077283372662}
   m_Layer: 5
   m_Name: PlayerUI
   m_TagString: Untagged
@@ -434,38 +433,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &227430077283372662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4405103202460231820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f787ea4a44e972443a5ec657ef103b36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorGroups:
-  - uiColor: {fileID: 11400000, guid: 5967c4bf9493ca347a1811119eb1de4c, type: 2}
-    images:
-    - {fileID: 0}
-    buttons: []
-    texts: []
-  - uiColor: {fileID: 11400000, guid: 56cd69bc136b11243b7894fac81889bf, type: 2}
-    images:
-    - {fileID: 0}
-    - {fileID: 0}
-    buttons:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    texts: []
 --- !u!1 &5147959992463781598
 GameObject:
   m_ObjectHideFlags: 0

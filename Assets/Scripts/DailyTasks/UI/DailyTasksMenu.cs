@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DailyTasksManagerMenu : MonoBehaviour, IOpenable
+public class DailyTasksMenu : MonoBehaviour, IOpenable
 {
+    [SerializeField] private DailyTasksManager dailyTasksManager;
     [SerializeField] private DailyTaskWidget dailyTaskWidgetPrefab;
     [SerializeField] private LayoutGroup tasksLayoutGroup;
     [SerializeField] private TextLocalizer updateTasksText;
@@ -15,6 +16,7 @@ public class DailyTasksManagerMenu : MonoBehaviour, IOpenable
 
     private void OnEnable()
     {
+        dailyTasksManager.SetTasksViewed(true);
         TrySubscribe();
     }
 
@@ -84,7 +86,8 @@ public class DailyTasksManagerMenu : MonoBehaviour, IOpenable
     {
         if (isSubscribed) return;
 
-        DailyTasksManager.Instance.onTasksInited += OnTasksInited;
+        dailyTasksManager.OnTasksInited += OnTasksInited;
+        dailyTasksManager.OnTasksViewedChanged += OnTasksViewedChanged;
         isSubscribed = true;
     }
 
@@ -92,7 +95,7 @@ public class DailyTasksManagerMenu : MonoBehaviour, IOpenable
     {
         if (!isSubscribed) return;
 
-        DailyTasksManager.Instance.onTasksInited -= OnTasksInited;
+        dailyTasksManager.OnTasksViewedChanged -= OnTasksViewedChanged;
         isSubscribed = false;
     }
 
@@ -100,5 +103,10 @@ public class DailyTasksManagerMenu : MonoBehaviour, IOpenable
     {
         RemoveTaskWidgets();
         CreateTaskWidgets();
+    }
+
+    private void OnTasksViewedChanged(bool value)
+    {
+        dailyTasksManager.SetTasksViewed(false);
     }
 }

@@ -5,6 +5,7 @@ public class DailyTasksData
     public DailyTaskInstanceData[] Tasks = null;
     public long NextResetTime = 0;
     public bool AdUpdateUsed = false;
+    public bool TasksViewed = false;
 
     public static DailyTasksData Create(DailyTasksManager manager)
     {
@@ -13,6 +14,7 @@ public class DailyTasksData
             Tasks = DailyTasksSaveSystem.SaveTasks(manager),
             NextResetTime = manager.NextRestTime,
             AdUpdateUsed = manager.IsAdUpdateUsed,
+            TasksViewed = manager.IsDailyTasksViewed,
         };
     }
 }

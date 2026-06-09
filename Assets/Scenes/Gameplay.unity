@@ -2156,6 +2156,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -355
       objectReference: {fileID: 0}
+    - target: {fileID: 2287769875997860488, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: dailyTasksManager
+      value: 
+      objectReference: {fileID: 1366684462}
     - target: {fileID: 2304336757154247335, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: disabledInteractions.Array.size
       value: 1
@@ -2328,6 +2332,14 @@ PrefabInstance:
       propertyPath: inputStateManager
       value: 
       objectReference: {fileID: 2136275761}
+    - target: {fileID: 3835712511108380887, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3835712511108380887, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3841313132384317718, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2632,6 +2644,34 @@ PrefabInstance:
       propertyPath: entitiesManager
       value: 
       objectReference: {fileID: 220072952}
+    - target: {fileID: 6695948279195503795, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: dailyTasksManager
+      value: 
+      objectReference: {fileID: 1366684462}
+    - target: {fileID: 6780373738608503627, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6780373738608503627, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6780373738608503627, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6780373738608503627, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6780373738608503627, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6780373738608503627, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6843160973976178423, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: entitiesManager
       value: 
@@ -7311,6 +7351,7 @@ MonoBehaviour:
   useAmountLimit: 1
   useWeightLimit: 0
   weightLimit: 0
+  items: []
 --- !u!114 &1388613268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8584,6 +8625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee6c43b4297575d45b152b064b28e923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPointsManager
+  CitizenBoatDocks: []
   wandererDockPoints:
   - {fileID: 1080517328}
   - {fileID: 1710163122}
@@ -9673,6 +9715,7 @@ MonoBehaviour:
   useAmountLimit: 0
   useWeightLimit: 0
   weightLimit: 0
+  items: []
 --- !u!1 &2049673466
 GameObject:
   m_ObjectHideFlags: 0
