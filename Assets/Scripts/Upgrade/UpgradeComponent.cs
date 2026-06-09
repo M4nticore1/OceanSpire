@@ -7,6 +7,7 @@ public class UpgradeComponent : MonoBehaviour
     [SerializeField] private ConstructionComponent constructionComponent;
 
     private IUpgradable upgradable;
+    public bool IsUnderUpgrade { get; private set; } = false;
     public int NextLevel { get; private set; } = 1;
 
     public event Action OnUpgradeStarted;
@@ -37,10 +38,15 @@ public class UpgradeComponent : MonoBehaviour
     public void Init(UpgradeData upgradeData)
     {
         NextLevel = upgradeData.NextLevel;
+
+        if (upgradeData.UnderUpgrade) {
+            StartUpgrading();
+        }
     }
 
     public void StartUpgrading()
     {
+        IsUnderUpgrade = true;
         NextLevel = levelComponent.Level + 1;
         constructionComponent.StartConstruction(upgradable.GetUpgradeTime());
 
@@ -50,6 +56,7 @@ public class UpgradeComponent : MonoBehaviour
 
     private void OnConstructionCompleted()
     {
+        IsUnderUpgrade = false;
         levelComponent.TrySetLevel(NextLevel);
 
         OnUpgradeCompleted?.Invoke();

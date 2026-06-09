@@ -34,6 +34,24 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         ProcessProduce();
     }
 
+    protected override void Subscribe()
+    {
+        base.Subscribe();
+
+        OwnedBuilding.OnClicked += OnBuildingClicked;
+        OwnedBuilding.onCurrentWorkerAdded += OnCurrentWorkerAdded;
+        OwnedBuilding.onCurrentWorkerRemoved += OnCurrentWorkerRemoved;
+    }
+
+    protected override void Unsubscribe()
+    {
+        base.Unsubscribe();
+
+        OwnedBuilding.OnClicked -= OnBuildingClicked;
+        OwnedBuilding.onCurrentWorkerAdded -= OnCurrentWorkerAdded;
+        OwnedBuilding.onCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
+    }
+
     public void SetProducedItemByIndex(int index)
     {
         if (IsWorking && !IsReadyToCollect && CurrentCraftItem) {
@@ -91,27 +109,10 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private void OnCurrentWorkerRemoved(BuildingInteractComponent interactor)
     {
-        if (ShouldStartWorking()) return;
+        Debug.Log("OnCurrentWorkerRemoved");
+        if (!ShouldStopWorking()) return;
 
         StopWorking();
-    }
-
-    protected override void Subscribe()
-    {
-        base.Subscribe();
-
-        OwnedBuilding.OnClicked += OnBuildingClicked;
-        OwnedBuilding.onCurrentWorkerAdded += OnCurrentWorkerAdded;
-        OwnedBuilding.onCurrentWorkerRemoved += OnCurrentWorkerRemoved;
-    }
-
-    protected override void Unsubscribe()
-    {
-        base.Unsubscribe();
-
-        OwnedBuilding.OnClicked -= OnBuildingClicked;
-        OwnedBuilding.onCurrentWorkerAdded -= OnCurrentWorkerAdded;
-        OwnedBuilding.onCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
     }
 
     // Production
@@ -214,6 +215,13 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
             if (CityStorage.Instance.Inventory.GetItemById(id).Amount < amount) return false;
         }
+
+        return true;
+    }
+
+    private bool ShouldStopWorking()
+    {
+        if (OwnedBuilding.WorkComponent.CurrentWorkers.Count > 0) return false;
 
         return true;
     }

@@ -21,9 +21,9 @@ public class StorageModule : BuildingModule
         OwnedBuilding.OnDemolished -= OnDemolished;
     }
 
-    protected override void OnInited()
+    protected override void OnInit()
     {
-        base.OnInited();
+        base.OnInit();
 
         if (OwnedBuilding.UpgradeComponent.NextLevel == 1 && OwnedBuilding.ConstructionComponent.IsUnderConstruction) return;
 

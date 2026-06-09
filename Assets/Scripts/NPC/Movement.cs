@@ -13,7 +13,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private NavMeshAgent navAgent;
     public NavMeshAgent NavAgent => navAgent;
 
-    private Vector3 targetPosition;
+    public Vector3 TargetPosition { get; private set; }
 
     public MovementMethod currentMovementMethod { get; private set; }
 
@@ -29,9 +29,9 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
-        if (!CheckDistancePathPosition()) return;
+        if (!IsDestinationReached()) return;
 
-        HandleReachedPath();
+        TryStopMoving();
     }
 
     public void Move(Vector3 direction, float speed)
@@ -41,12 +41,19 @@ public class Movement : MonoBehaviour
 
     public bool TryMoveTo(Vector3 position)
     {
-        if (!CanMove()) return false;
+        if (!CanStartMoving()) return false;
 
-        targetPosition = position;
+        Debug.Log("MoveTo");
+        TargetPosition = position;
+
+        if (IsDestinationReached()) {
+            OnReachedPath?.Invoke();
+            return true;
+        }
+
         navAgent.isStopped = false;
-
-        if (!navAgent.SetDestination(position)) return false;
+        if (!navAgent.SetDestination(position))
+            return false;
 
         IsMoving = true;
         OnMovementStarted?.Invoke();
@@ -54,14 +61,18 @@ public class Movement : MonoBehaviour
         return true;
     }
 
-    public void StopMoving()
+    public bool TryStopMoving()
     {
-        if (!IsMoving) return;
+        if (!CanStopMoving()) return false;
 
         navAgent.isStopped = true;
         navAgent.ResetPath();
         IsMoving = false;
+
         OnMovementStopped?.Invoke();
+        OnReachedPath?.Invoke();
+
+        return true;
     }
 
     public void SetMovementMethod(MovementMethod method)
@@ -85,7 +96,7 @@ public class Movement : MonoBehaviour
         navAgent.enabled = enabled;
     }
 
-    public bool CanMove()
+    public bool CanStartMoving()
     {
         if (!navAgent.enabled) return false;
         if (!navAgent.isOnNavMesh) return false;
@@ -93,24 +104,28 @@ public class Movement : MonoBehaviour
         return true;
     }
 
-    private void HandleReachedPath()
-    {
-        StopMoving();
-        OnReachedPath?.Invoke();
-    }
-
-    private bool CheckDistancePathPosition()
+    public bool CanStopMoving()
     {
         if (!IsMoving) return false;
-        if (!navAgent.enabled) return false;
-        if (navAgent.pathPending) return false;
-
-        if (navAgent.pathStatus != NavMeshPathStatus.PathComplete)
-            return false;
-
-        if (Vector3.Distance(transform.position, targetPosition) > navAgent.stoppingDistance)
-            return false;
 
         return true;
+    }
+
+    public bool IsDestinationReached()
+    {
+        if (IsReachedPosition(TargetPosition)) return true;
+        //if (navAgent.pathStatus == NavMeshPathStatus.PathComplete) return true;
+
+        return false;
+    }
+
+    public bool IsReachedPosition(Vector3 position)
+    {
+        return Vector3.Distance(transform.position, position) <= navAgent.stoppingDistance;
+    }
+
+    public float GetTargetPositionDistance()
+    {
+        return Vector3.Distance(transform.position, TargetPosition);
     }
 }

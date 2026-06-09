@@ -304,6 +304,7 @@ public class TowerBuilding : Building
         foreach (Direction dir in Enum.GetValues(typeof(Direction))) {
             var building = GetNeighborBuilding(dir);
             if (!building) continue;
+            if (!building.IsInited) continue;
 
             TryConnectTo(dir, building);
             InvokeBuildingConnected();

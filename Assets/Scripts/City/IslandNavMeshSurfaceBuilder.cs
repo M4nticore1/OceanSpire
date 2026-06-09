@@ -42,8 +42,11 @@ public class IslandNavMeshSurfaceBuilder : MonoBehaviour
 
     private bool ShouldBake(Building building)
     {
-        var groundBuilding = building as GroundBuilding;
+        var towerBuilding = building as TowerBuilding;
+        if (towerBuilding) {
+            return towerBuilding.FloorIndex == 0;
+        }
 
-        return groundBuilding;
+        return true;
     }
 }

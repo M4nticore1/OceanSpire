@@ -167,7 +167,10 @@ public class Boat : MonoBehaviour, IClickable
     // State
     public void SetState(BoatStateEnum state)
     {
-        if (currentState != null && state == CurrentStateEnum) return;
+        if (state == CurrentStateEnum) return;
+
+        Debug.Log($"Set state {state}");
+
         if (currentState != null) {
             currentState.Exit();
         }
@@ -199,8 +202,17 @@ public class Boat : MonoBehaviour, IClickable
                 break;
         }
 
-        currentState.Enter();
         CurrentStateEnum = state;
+        currentState.Enter();
+    }
+
+    public bool ShouldFindLoot()
+    {
+        if (!CurrentRider) return false;
+        if (!CurrentRider.GetComponent<Citizen>()) return false;
+        if (inventory.RemainingWeight <= 0) return false;
+
+        return true;
     }
 
     // IClickable

@@ -110,7 +110,7 @@ public class WanderersManager : MonoBehaviour
             var wanderer = wanderers[i];
             if (wanderer.IsAccepted) continue;
 
-            var boat = wanderer.BoatRider.TargetBoat;
+            var boat = wanderer.BoatRider.RidingBoat;
             if (!boat.DockPoint) continue;
 
             boat.RemoveDockPoint();
@@ -140,7 +140,6 @@ public class WanderersManager : MonoBehaviour
 
             BoatRider = new BoatRiderData()
             {
-                TargetBoatInstanceId = boatInstanceId,
                 RidingBoatInstanceId = boatInstanceId,
             },
 

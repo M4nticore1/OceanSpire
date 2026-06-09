@@ -5,25 +5,25 @@ public class BoatsManager : MonoBehaviour
 {
     public static BoatsManager Instance { get; private set; }
 
-    private List<Boat> boats = new();
+    [SerializeField] private List<Boat> boats = new();
     public IReadOnlyList<Boat> Boats => boats;
 
     private Dictionary<int, Boat> boatsDict = new();
     public IReadOnlyDictionary<int, Boat> BoatsDict => boatsDict;
 
-    private List<Boat> citizenBoats = new();
+    [SerializeField] private List<Boat> citizenBoats = new();
     public IReadOnlyList<Boat> CitizenBoats => citizenBoats;
 
     private Dictionary<int, Boat> citizenBoatsDict = new();
     public IReadOnlyDictionary<int, Boat> CitizenBoatsDict => citizenBoatsDict;
 
-    private List<Boat> wandererBoats = new();
+    [SerializeField] private List<Boat> wandererBoats = new();
     public IReadOnlyList<Boat> WandererBoats => wandererBoats;
 
     private Dictionary<int, Boat> wandererBoatsDict = new();
     public IReadOnlyDictionary<int, Boat> WandererBoatsDict => wandererBoatsDict;
 
-    private List<Boat> raiderBoats = new();
+    [SerializeField] private List<Boat> raiderBoats = new();
     public IReadOnlyList<Boat> RaiderBoats => raiderBoats;
 
     private Dictionary<int, Boat> raiderBoatsDict = new();

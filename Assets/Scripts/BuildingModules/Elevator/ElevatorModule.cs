@@ -24,7 +24,7 @@ public class ElevatorModule : BuildingModule, IElectricible
     // Passengers
     public void AddPassenger(CreatureCityNavigator passenger)
     {
-        switch (passenger.FollowingPathState) {
+        switch (passenger.CurrentState) {
             case FollowingPathState.GoingToWaiting:
                 SpawnedElevatorCabin.AddGoingToWaitingPassenger(passenger);
                 break;
@@ -42,7 +42,7 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     public void RemovePassenger(CreatureCityNavigator passenger)
     {
-        switch (passenger.FollowingPathState) {
+        switch (passenger.CurrentState) {
             case FollowingPathState.GoingToWaiting:
                 SpawnedElevatorCabin.RemoveGoingToWaitingPassenger(passenger);
                 break;

@@ -15,15 +15,14 @@ public class BoatRider : MonoBehaviour
 
     public bool IsEnteringBoat { get; private set; } = false;
     public bool IsExitingBoat { get; private set; } = false;
-    public bool IsMovingToBoat { get; private set; } = false;
 
     private Coroutine waitingBoatCoroutine;
 
     public event Action<Boat> OnEnteredBoat;
     public event Action<Boat> OnExitedBoat;
 
-    public event Action<Boat> OnStartedMovingToBoat;
-    public event Action<Boat> OnStoppedMovingToBoat;
+    public event Action<Boat> OnTargetBoatSeted;
+    public event Action<Boat> OnTargetBoatRemoved;
 
     public event Action<Boat> OnBoatMovementStarted;
     public event Action<Boat> OnBoatMovementStopped;
@@ -57,16 +56,13 @@ public class BoatRider : MonoBehaviour
 
             EnterBoat(boat);
         }
-
-        if (boatRiderData.MovingToBoat) {
-            TryMoveToBoat();
-        }
     }
 
     public bool TryStartEnteringBoat(Boat boat)
     {
         if (IsEnteringBoat) return false;
 
+        Debug.Log("StartEnteringBoat");
         TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, () => EnterBoat(boat));
         IsEnteringBoat = true;
 
@@ -119,24 +115,18 @@ public class BoatRider : MonoBehaviour
             return;
         }
 
-        if (!TargetBoat) {
-            Debug.Log($"Selected Boat not found at {name}");
-            return;
-        }
+        SetRidingBoat(boat);
 
-        if (boat != TargetBoat) return;
-
-        SetRidingBoat(TargetBoat);
-
+        movement.SetAgentEnabled(false);
         RidingBoat.SetRider(this);
 
-        transform.position = TargetBoat.SeatSlot.position;
-        transform.rotation = TargetBoat.SeatSlot.rotation;
-        transform.SetParent(TargetBoat.SeatSlot);
+        transform.position = boat.SeatSlot.position;
+        transform.rotation = boat.SeatSlot.rotation;
+        transform.SetParent(boat.SeatSlot);
 
         IsEnteringBoat = false;
 
-        OnEnteredBoat?.Invoke(RidingBoat);
+        OnEnteredBoat?.Invoke(boat);
     }
 
     public void ExitBoat()
@@ -183,12 +173,16 @@ public class BoatRider : MonoBehaviour
         if (boat == TargetBoat) return false;
 
         TargetBoat = boat;
+        OnTargetBoatSeted?.Invoke(boat);
+
         return true;
     }
 
     public void RemoveTargetBoat()
     {
+        var boat = TargetBoat;
         TargetBoat = null;
+        OnTargetBoatRemoved?.Invoke(boat);
     }
 
     public void SetRidingBoat(Boat boat)
@@ -199,35 +193,6 @@ public class BoatRider : MonoBehaviour
     public void RemoveRidingBoat()
     {
         RidingBoat = null;
-    }
-
-    public void TryMoveToBoat()
-    {
-        if (!ShouldMoveToBoat()) return;
-
-        MoveToBoat();
-    }
-
-    public void MoveToBoat()
-    {
-        IsMovingToBoat = true;
-        OnStartedMovingToBoat?.Invoke(TargetBoat);
-    }
-
-    public void TryEndMoveBoat()
-    {
-        if (!IsMovingToBoat) {
-            Debug.Log("Rider is already not moving to boat");
-            return;
-        }
-
-        EndMoveToBoat(TargetBoat);
-    }
-
-    public void EndMoveToBoat(Boat boat)
-    {
-        IsMovingToBoat = false;
-        OnStoppedMovingToBoat?.Invoke(boat);
     }
 
     public void HandleBoatMovementStarted()
@@ -244,25 +209,20 @@ public class BoatRider : MonoBehaviour
     {
         if (!ShouldStartEnteringBoat()) return;
 
+        Debug.Log("WaitForBoatAndEnter");
         WaitForBoatAndEnter();
-        TryEndMoveBoat();
     }
 
     private bool ShouldMoveToBoat()
     {
-        if (IsMovingToBoat) return false;
+        if (TargetBoat) return false;
 
         return true;
     }
 
     private bool ShouldStartEnteringBoat()
     {
-        if (!IsMovingToBoat) return false;
-
-        if (!TargetBoat) {
-            Debug.Log($"Selected Boat not found at {name}");
-            return false;
-        }
+        if (!TargetBoat) return false;
 
         if (!TargetBoat.DockPoint) {
             Debug.Log($"Boat Dock not found at {TargetBoat}");

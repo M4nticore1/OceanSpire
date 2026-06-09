@@ -30,7 +30,7 @@ public class HumanData : CreatureData
         Health = human.HealthComponent.CurrentHealth;
         EnteredBuildingInstanceId = human.CityNavigator.CurrentBuilding?.InstanceId.GetInstanceId();
         InteractBuildingInstanceId = human.InteractComponent.InteractBuilding?.InstanceId.GetInstanceId();
-        MovementStateId = (int)human.CityNavigator.FollowingPathState;
+        MovementStateId = (int)human.CityNavigator.CurrentState;
         Name = NameData.Create(human.NameComponent);
         BoatRider = BoatRiderData.Create(human.BoatRider);
         Weapon = EquipmentData.Create(human.WeaponComponent);

@@ -34,6 +34,16 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     public static event Action<BuildingConstruction> OnBuildingConstructionInited;
     public static event Action<BuildingConstruction> OnBuildingConstructionDemolished;
 
+    protected virtual void OnEnable()
+    {
+
+    }
+
+    protected virtual void OnDisable()
+    {
+
+    }
+
     protected virtual void Awake()
     {
         lightProbeGroupManager = FindAnyObjectByType<LightProbeGroupManager>();

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -17,62 +16,35 @@ public class PierModule : BuildingModule
     {
         base.Subscribe();
 
-        OwnedBuilding.ConstructionComponent.OnConstructionStarted += OnConstructionStarted;
-        OwnedBuilding.LevelComponent.OnLevelChanged += OnLevelChanged;
+        OwnedBuilding.UpgradeComponent.OnUpgradeStarted += OnUpgradeStarted;
+        OwnedBuilding.UpgradeComponent.OnUpgradeCompleted += OnUpgradeCompleted;
     }
 
     protected override void Unsubscribe()
     {
         base.Unsubscribe();
 
-        OwnedBuilding.OnInited -= OnConstructionStarted;
-        OwnedBuilding.ConstructionComponent.OnConstructionStarted -= OnConstructionStarted;
-        OwnedBuilding.LevelComponent.OnLevelChanged -= OnLevelChanged;
+        OwnedBuilding.UpgradeComponent.OnUpgradeStarted -= OnUpgradeStarted;
+        OwnedBuilding.UpgradeComponent.OnUpgradeCompleted -= OnUpgradeCompleted;
     }
 
-    protected override void OnInited()
+    private void OnUpgradeStarted()
     {
-        base.OnInited();
+        if (!docksLoader.IsLoaded) return;
 
-        RegisterBoatDocks();
-        UpdatePier();
+        InitBoatDocks();
+        UpdateBoatDocks();
     }
 
-    private void OnConstructionStarted()
-    {
-        UpdatePier();
-    }
-
-    private void OnLevelChanged()
-    {
-        UpdatePier();
-    }
-
-    private void UpdatePier()
+    private void OnUpgradeCompleted()
     {
         if (!boatsLoader.IsLoaded) return;
         if (!docksLoader.IsLoaded) return;
 
-        UnregisterBoatDocks();
-        RegisterBoatDocks();
         InitBoatDocks();
         CreateBoats();
-        InitBoats();
-    }
-
-    private void RegisterBoatDocks()
-    {
-        foreach (var dock in PierConstruction.BoatDocks) {
-            boatDocksManager.RegisterCitizenDockPoint(dock);
-        }
-    }
-
-    private void UnregisterBoatDocks()
-    {
-        for (int i = boatDocksManager.CitizenBoatDocks.Count - 1; i >= 0; i--) {
-            var dock = boatDocksManager.CitizenBoatDocks[i];
-            boatDocksManager.UnregisterCitizenDockPoint(dock);
-        }
+        UpdateBoatDocks();
+        UpdateBoatPositions();
     }
 
     private void InitBoatDocks()
@@ -113,7 +85,7 @@ public class PierModule : BuildingModule
         }
     }
 
-    private void InitBoats()
+    private void UpdateBoatDocks()
     {
         var boats = boatsManager.CitizenBoatsDict.Values.ToList();
 
@@ -122,6 +94,17 @@ public class PierModule : BuildingModule
             var dockPoint = PierConstruction.BoatDocks[i];
 
             boat.SetDockPoint(dockPoint);
+        }
+    }
+
+    private void UpdateBoatPositions()
+    {
+        var boats = boatsManager.CitizenBoatsDict.Values.ToList();
+
+        for (int i = 0; i < boats.Count; i++) {
+            var boat = boats[i];
+            var dockPoint = PierConstruction.BoatDocks[i];
+
             boat.Movement.NavAgent.Warp(dockPoint.DockTransform.position);
         }
     }

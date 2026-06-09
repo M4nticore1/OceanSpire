@@ -24,13 +24,13 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        movement.OnMovementStarted += OnStartedMoving;
+        movement.OnReachedPath += OnStartedMoving;
         movement.OnMovementStopped += OnStoppedMoving;
     }
 
     protected virtual void OnDisable()
     {
-        movement.OnMovementStarted -= OnStartedMoving;
+        movement.OnReachedPath -= OnStartedMoving;
         movement.OnMovementStopped -= OnStoppedMoving;
     }
 
@@ -38,7 +38,7 @@ public abstract class Creature : MonoBehaviour
     {
         StartCoroutine(InitNextFrame());
         OnInit(creatureData);
-        AssignIdle();
+        UpdateIdle();
     }
 
     protected virtual void OnInit(CreatureData data)
@@ -54,10 +54,12 @@ public abstract class Creature : MonoBehaviour
         
     }
 
+    protected abstract void DetermineNextAction();
+
     protected abstract bool ShouldStartIdle();
 
     // Idle
-    protected void AssignIdle()
+    protected void UpdateIdle()
     {
         if (ShouldStartIdle()) {
             StartIdle();
@@ -101,7 +103,7 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void OnStoppedMoving()
     {
-        AssignIdle();
+        UpdateIdle();
     }
 
     private IEnumerator InitNextFrame()

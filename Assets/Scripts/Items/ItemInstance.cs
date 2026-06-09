@@ -59,7 +59,10 @@ public class ItemInstance : IItemAmount
     {
         var definition = ItemsList.Instance.GetItem(itemData.Id);
 
-        return new ItemInstance(definition);
+        var item = new ItemInstance(definition);
+        item.SetAmount(itemData.Amount);
+
+        return item;
     }
 
     public static ItemInstance[] Create(ItemData[] itemData)

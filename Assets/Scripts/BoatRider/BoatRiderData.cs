@@ -6,7 +6,6 @@ public class BoatRiderData
 {
     public int? TargetBoatInstanceId = null;
     public int? RidingBoatInstanceId = null;
-    public bool MovingToBoat = false;
 
     public static BoatRiderData Create(BoatRider boatRider)
     {
@@ -14,7 +13,6 @@ public class BoatRiderData
         {
             TargetBoatInstanceId = boatRider.TargetBoat?.InstanceId.GetInstanceId(),
             RidingBoatInstanceId = boatRider.RidingBoat?.InstanceId.GetInstanceId(),
-            MovingToBoat = boatRider.IsMovingToBoat
         };
     }
 }

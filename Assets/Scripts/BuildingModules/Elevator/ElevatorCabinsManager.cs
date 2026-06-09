@@ -11,7 +11,7 @@ public class ElevatorCabinsManager : MonoBehaviour
     private void OnEnable()
     {
         Building.OnBuildingInited += OnBuildingInited;
-        Building.OnBuildingLevelChanged += OnBuildingConstructionFinished;
+        Building.OnBuildingUpgradeCompleted += OnBuildingConstructionFinished;
         Building.OnBuildingDemolished += OnBuildingDemolished;
         BuildingConstruction.OnBuildingConstructionInited += OnBuildingConstructionInited;
         BuildingConstruction.OnBuildingConstructionDemolished += OnBuildingConstructionDemolished;
@@ -20,7 +20,7 @@ public class ElevatorCabinsManager : MonoBehaviour
     private void OnDisable()
     {
         Building.OnBuildingInited -= OnBuildingInited;
-        Building.OnBuildingLevelChanged -= OnBuildingConstructionFinished;
+        Building.OnBuildingUpgradeCompleted -= OnBuildingConstructionFinished;
         Building.OnBuildingDemolished -= OnBuildingDemolished;
         BuildingConstruction.OnBuildingConstructionInited -= OnBuildingConstructionInited;
         BuildingConstruction.OnBuildingConstructionDemolished -= OnBuildingConstructionDemolished;

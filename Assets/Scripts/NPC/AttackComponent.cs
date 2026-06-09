@@ -122,7 +122,7 @@ public class AttackComponent : MonoBehaviour
         float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
         if (distance > stopMovingDistance) return;
 
-        movement.StopMoving();
+        movement.TryStopMoving();
     }
 
     private void CorrentRotation()

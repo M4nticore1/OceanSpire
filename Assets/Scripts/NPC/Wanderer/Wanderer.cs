@@ -32,27 +32,51 @@ public class Wanderer : Human
         base.OnInit(data);
     }
 
+    protected override void DetermineNextAction()
+    {
+        if (ShouldBoatMoveToDock()) {
+            BoatMoveToDock();
+            return;
+        }
+        if (ShouldBoatFloatAway()) {
+            BoatFloatAway();
+            return;
+        }
+
+        base.DetermineNextAction();
+    }
+
+    protected override bool ShouldBoatMoveToDock()
+    {
+        if (!base.ShouldBoatMoveToDock()) return false;
+        if (IsRejected) return false;
+
+        return true;
+    }
+
+    protected override bool ShouldBoatFloatAway()
+    {
+        if (!base.ShouldBoatFloatAway()) return false;
+        if (!IsRejected) return false;
+
+        return true;
+    }
+
     public void Accept()
     {
         IsAccepted = true;
+        DetermineNextAction();
     }
 
     public void Reject()
     {
         IsRejected = true;
-        BoatRider.TargetBoat.FloatAway(SpawnPosition);
+        DetermineNextAction();
     }
 
     protected override void HandleEnteredBoat(Boat boat)
     {
         base.HandleEnteredBoat(boat);
-
-        if (IsRejected) {
-            boat.FloatAway(SpawnPosition);
-        }
-        else {
-            BoatRider.TargetBoat.SetState(BoatStateEnum.MovingToDock);
-        }
 
         boat.ContextMenuTarget.SetShowContextMenu(false);
     }

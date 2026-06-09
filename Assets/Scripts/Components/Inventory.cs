@@ -21,7 +21,7 @@ public class Inventory : MonoBehaviour
 
     public float RemainingWeight => WeightLimit - CurrentWeight;
 
-    private List<ItemInstance> items = new();
+    [SerializeField] private List<ItemInstance> items = new();
     public IReadOnlyList<ItemInstance> Items => items;
 
     private Dictionary<int, ItemInstance> itemsDict = new();

@@ -17,13 +17,13 @@ public class BuildingInteractComponent : MonoBehaviour
 
     public void SetInteractBuilding(Building building)
     {
-        if (building == InteractBuilding) {
-            Debug.Log($"Building {building} is already interact building");
+        if (!building) {
+            Debug.Log("Building not found. Use RemoveInteractBuilding method instead of SetInteractBuilding.");
             return;
         }
 
-        if (!building) {
-            RemoveInteractBuilding();
+        if (building == InteractBuilding) {
+            Debug.Log($"Building {building} is already interact building");
             return;
         }
 
@@ -42,12 +42,10 @@ public class BuildingInteractComponent : MonoBehaviour
 
     public void RemoveInteractBuilding()
     {
-        if (IsInteracting) {
-            TryStopInteracting();
-        }
-
         var lastInteractBuilding = InteractBuilding;
         InteractBuilding = null;
+
+        TryStopInteracting(lastInteractBuilding);
 
         OnInteractBuildingRemoved?.Invoke(lastInteractBuilding);
         OnInteractorInteractBuildirngRemoved?.Invoke(this);
@@ -60,11 +58,11 @@ public class BuildingInteractComponent : MonoBehaviour
         StartInteracting();
     }
 
-    public void TryStopInteracting()
+    public void TryStopInteracting(Building building)
     {
         if (!ShouldStopInteracting()) return;
 
-        StopInteracting();
+        StopInteracting(building);
     }
 
     private void StartInteracting()
@@ -73,10 +71,10 @@ public class BuildingInteractComponent : MonoBehaviour
         OnInteractionStarted?.Invoke(InteractBuilding);
     }
 
-    private void StopInteracting()
+    private void StopInteracting(Building building)
     {
         IsInteracting = false;
-        OnInteractionStopped?.Invoke(InteractBuilding);
+        OnInteractionStopped?.Invoke(building);
     }
 
     private bool ShouldStartInteracting()

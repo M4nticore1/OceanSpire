@@ -22,61 +22,60 @@ public class PierBuildingStrategy : BuildingStrategy
 
     public override void OnInteractBuildingSet(BuildingInteractComponent interactor)
     {
-        if (!BoatsManager.Instance) {
-            Debug.Log("BoatManager is not on the scene.");
-            return;
-        }
+        //if (!BoatsManager.Instance) {
+        //    Debug.Log("BoatManager is not on the scene.");
+        //    return;
+        //}
 
-        if (!interactor) {
-            Debug.Log("Interactor not found");
-            return;
-        }
+        //if (!interactor) {
+        //    Debug.Log("Interactor not found");
+        //    return;
+        //}
 
-        var boatRider = interactor.GetComponent<BoatRider>();
-        if (!boatRider) {
-            Debug.Log($"BoatRider not found at {interactor.name}");
-            return;
-        }
+        //var boatRider = interactor.GetComponent<BoatRider>();
+        //if (!boatRider) {
+        //    Debug.Log($"BoatRider not found at {interactor.name}");
+        //    return;
+        //}
 
-        var citizen = interactor.GetComponent<Citizen>();
-        if (!citizen) {
-            Debug.Log($"Citizen not found at {interactor.name}");
-            return;
-        }
+        //var citizen = interactor.GetComponent<Citizen>();
+        //if (!citizen) {
+        //    Debug.Log($"Citizen not found at {interactor.name}");
+        //    return;
+        //}
 
-        int? index = building.WorkComponent.TryGetWorkerIndex(citizen);
-        if (index == null) return;
+        //int? index = building.WorkComponent.TryGetWorkerIndex(citizen);
+        //if (index == null) return;
 
-        var boat = BoatsManager.Instance.CitizenBoats[index.Value];
-        boatRider.TrySetTargetBoat(boat);
+        //var boat = BoatsManager.Instance.CitizenBoats[index.Value];
+        //boatRider.TrySetTargetBoat(boat);
 
-        if (boatRider.RidingBoat) {
-            if (boatRider.IsExitingBoat) {
-                boatRider.StopExitingBoat();
-            }
+        //if (boatRider.RidingBoat) {
+        //    if (boatRider.IsExitingBoat) {
+        //        boatRider.StopExitingBoat();
+        //    }
 
-            if (boatRider.RidingBoat == boat &&
-                boatRider.TargetBoat.CurrentStateEnum != BoatStateEnum.UnloadingLoot &&
-                boatRider.TargetBoat.Inventory.RemainingWeight != 0) {
-                boatRider.TargetBoat.SetState(BoatStateEnum.FindingLoot);
-            }
-        }
+        //    if (boatRider.RidingBoat == boat &&
+        //        boatRider.TargetBoat.CurrentStateEnum != BoatStateEnum.UnloadingLoot &&
+        //        boatRider.TargetBoat.Inventory.RemainingWeight != 0) {
+        //        boatRider.TargetBoat.SetState(BoatStateEnum.FindingLoot);
+        //    }
+        //}
+
+        UpdateTargetBoats();
     }
 
     public override void OnInteractBuildingRemove(BuildingInteractComponent interactor)
     {
+        var boatRider = interactor.GetComponent<BoatRider>();
+        boatRider.RemoveTargetBoat();
+
         UpdateTargetBoats();
     }
 
     public override void OnStartedInteracting(BuildingInteractComponent interactor)
     {
-        var boatRider = interactor.GetComponent<BoatRider>();
-        if (!boatRider) {
-            Debug.Log($"Boat Rider not found at {interactor}");
-            return;
-        }
 
-        boatRider.WaitForBoatAndEnter();
     }
 
     public override void OnStoppedInteracting(BuildingInteractComponent interactor)
@@ -104,6 +103,11 @@ public class PierBuildingStrategy : BuildingStrategy
                 continue;
             }
 
+            if (BoatsManager.Instance.CitizenBoats.Count <= i) {
+                Debug.Log($"Citizen Boats count is less than worker index {i}");
+                continue;
+            }
+
             var boat = BoatsManager.Instance.CitizenBoats[i];
             if (!boat) {
                 Debug.Log($"Citizen Boat not found at {BoatsManager.Instance.name}");
@@ -113,7 +117,6 @@ public class PierBuildingStrategy : BuildingStrategy
             if (!boatRider.TrySetTargetBoat(boat)) continue;
 
             boatRider.TryStopEnteringBoat();
-            boatRider.TryMoveToBoat();
         }
     }
 }

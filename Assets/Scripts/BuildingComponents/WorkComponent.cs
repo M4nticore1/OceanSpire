@@ -35,7 +35,7 @@ public class WorkComponent : MonoBehaviour
         OnWorkerEntered?.Invoke(interactor);
     }
 
-    public void ExitWorker(Citizen interactor)
+    public void RemoveCurrentWorker(Citizen interactor)
     {
         currentWorkers.Remove(interactor);
         OnWorkerExited?.Invoke(interactor);

@@ -12,12 +12,12 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
 
     private void OnEnable()
     {
-        DailyRewardManager.Instance.OnDailyRewardReset += OnChestUpdated;
+        DailyRewardManager.Instance.OnDailyRewardReset += OnDailyRewardReset;
     }
 
     private void OnDisable()
     {
-        DailyRewardManager.Instance.OnDailyRewardReset -= OnChestUpdated;
+        DailyRewardManager.Instance.OnDailyRewardReset -= OnDailyRewardReset;
     }
 
     private void Start()
@@ -56,7 +56,7 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
         }
     }
 
-    private void OnChestUpdated()
+    private void OnDailyRewardReset()
     {
         ClearRewardWidgets();
         CreateRewardWidgets();

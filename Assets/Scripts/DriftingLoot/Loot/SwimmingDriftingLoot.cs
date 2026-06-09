@@ -80,13 +80,13 @@ public class SwimmingDriftingLoot : DriftingLoot
         for (int i = 0; i < lootTable.Length; i++) {
             int chance = UnityEngine.Random.Range(0, 100);
 
-            if (chance <= lootTable[i].dropChance) {
-                int itemAmount = UnityEngine.Random.Range(lootTable[i].minAmount, lootTable[i].maxAmount);
-                var item = new ItemInstance(lootTable[i].itemData);
-                item.SetAmount(itemAmount);
+            if (chance > lootTable[i].dropChance) continue;
 
-                containedLoot.Add(ItemData.Create(item));
-            }
+            int itemAmount = UnityEngine.Random.Range(lootTable[i].minAmount, lootTable[i].maxAmount);
+            var item = new ItemInstance(lootTable[i].itemData);
+            item.SetAmount(itemAmount);
+
+            containedLoot.Add(ItemData.Create(item));
         }
 
         return containedLoot.ToArray();

@@ -8,15 +8,15 @@ public class BuildingAudioSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        Building.OnBuildingConstructionStarted += OnBuildingConstructionStarted;
-        Building.OnBuildingLevelChanged += OnBuildingConstructionFinished;
+        Building.OnBuildingUpgradeStarted += OnBuildingConstructionStarted;
+        Building.OnBuildingUpgradeCompleted += OnBuildingUpgradeCompleted;
         Building.OnBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
-        Building.OnBuildingConstructionStarted -= OnBuildingConstructionStarted;
-        Building.OnBuildingLevelChanged -= OnBuildingConstructionFinished;
+        Building.OnBuildingUpgradeStarted -= OnBuildingConstructionStarted;
+        Building.OnBuildingUpgradeCompleted -= OnBuildingUpgradeCompleted;
         Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 
@@ -27,7 +27,7 @@ public class BuildingAudioSystem : MonoBehaviour
         AudioUtils.PlaySFX(buildingStartedClips);
     }
 
-    private void OnBuildingConstructionFinished(Building building)
+    private void OnBuildingUpgradeCompleted(Building building)
     {
         if (!ShouldPlay()) return;
 

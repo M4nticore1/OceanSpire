@@ -56,7 +56,7 @@ public class WorkersControlMenu : ControlMenu
         var citizens = CreaturesManager.Instance.Citizens.ToList();
 
         foreach (var citizen in citizens) {
-            if (!citizen.HealthComponent.IsAlive) continue;
+            if (!citizen.IsCitizenAvaliable()) continue;
 
             if (citizen.InteractComponent.InteractBuilding == selectedBuilding) {
                 buildingWorkersMenu.CreateWidget(citizen);

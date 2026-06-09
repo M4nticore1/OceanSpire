@@ -39,9 +39,9 @@ public class FloorFrameModule : BuildingModule
         Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 
-    protected override void OnInited()
+    protected override void OnInit()
     {
-        base.OnInited();
+        base.OnInit();
 
         int floorIndex = OwnedTowerBuilding.FloorIndex;
         BuildingsManager.Instance.RegisterFloorModule(this);

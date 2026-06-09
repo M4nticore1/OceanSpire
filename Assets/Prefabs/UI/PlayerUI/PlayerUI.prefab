@@ -675,6 +675,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 735555027216073535, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4348810092422040377}
+    - target: {fileID: 735555027216073535, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Open
+      objectReference: {fileID: 0}
+    - target: {fileID: 735555027216073535, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: DailyRewardMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1603146411383079203, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
       propertyPath: m_Name
       value: Toolbar
@@ -4473,6 +4485,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6162328177944236312, guid: 2c5d2965d3458284fb3b1e0c110e18bb, type: 3}
   m_PrefabInstance: {fileID: 6614624963454507066}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4348810092422040377 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7462972450478756611, guid: 2c5d2965d3458284fb3b1e0c110e18bb, type: 3}
+  m_PrefabInstance: {fileID: 6614624963454507066}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 614ada89eff67da46a9fecea65641768, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BonusChestMenu
 --- !u!1001 &6649919610081096456
 PrefabInstance:
   m_ObjectHideFlags: 0

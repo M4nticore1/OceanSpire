@@ -1251,7 +1251,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &236297353
 Transform:
   m_ObjectHideFlags: 0
@@ -5641,7 +5641,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &928034254
 Transform:
   m_ObjectHideFlags: 0
@@ -9306,6 +9306,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7a7483f4cd89c14c86d59262de97b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatsManager
+  boats: []
+  citizenBoats: []
+  wandererBoats: []
+  raiderBoats: []
 --- !u!4 &1946431605 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3728160677861581633, guid: 440b02943862e8a4b9a97002ceac8cd9, type: 3}

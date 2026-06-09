@@ -39,13 +39,7 @@ public class BoatCollectingLootState : BoatState
         if (currentCollectingTime <= collectLootTime) return;
 
         TryCollectLoot();
-
-        if (boat.Inventory.RemainingWeight > 0) {
-            boat.SetState(BoatStateEnum.FindingLoot);
-        }
-        else {
-            boat.SetState(BoatStateEnum.MovingToDock);
-        }
+        UpdateState();
     }
 
     public override void OnReachedPath()
@@ -72,11 +66,17 @@ public class BoatCollectingLootState : BoatState
         foreach (var loot in collectedLoot) {
             if (boat.Inventory.RemainingWeight <= 0) break;
 
-            var data = loot.Definition;
-            int id = loot.Definition.ItemId;
-            int amountToTake = math.min(loot.Amount, (int)(boat.Inventory.RemainingWeight / loot.Definition.Weight));
+            boat.Inventory.AddItem(loot.Definition.ItemId, loot.Amount);
+        }
+    }
 
-            boat.Inventory.AddItem(id, amountToTake);
+    private void UpdateState()
+    {
+        if (boat.Inventory.RemainingWeight > 0) {
+            boat.SetState(BoatStateEnum.FindingLoot);
+        }
+        else {
+            boat.SetState(BoatStateEnum.MovingToDock);
         }
     }
 

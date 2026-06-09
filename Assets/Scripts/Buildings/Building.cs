@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
@@ -41,11 +42,12 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     private BuildingStrategy strategy;
 
     private Dictionary<CreatureCityNavigator, Transform> interactTransforms = new();
+    public List<Transform> interactTransformsqwe = new();
 
     public bool isWorking { get; private set; } = false;
     public bool IsDemolished { get; private set; } = false;
 
-    public BuildingConstruction SpawnedConstruction { get; private set; }
+    public BuildingConstruction SpawnedConstruction;
 
     public const float DemolishionResourcesRefundPercent = 0.2f;
 
@@ -61,8 +63,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public event Action<BuildingInteractComponent> onCurrentWorkerAdded;
     public event Action<BuildingInteractComponent> onCurrentWorkerRemoved;
 
-    public event Action OnConstructionStarted;
-    public event Action OnConstructionCompleted;
+    public event Action OnUpgradeStarted;
+    public event Action OnUpgradeCompleted;
 
     public event Action OnLevelChanged;
     public event Action OnDemolished;
@@ -72,8 +74,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public static event Action<Building> OnBuildingInited;
     public static event Action<Building> OnBuildingDemolished;
 
-    public static event Action<Building> OnBuildingConstructionStarted;
-    public static event Action<Building> OnBuildingConstructionCompleted;
+    public static event Action<Building> OnBuildingUpgradeStarted;
+    public static event Action<Building> OnBuildingUpgradeCompleted;
 
     public static event Action<Building> OnBuildingLevelChanged;
 
@@ -89,10 +91,13 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected virtual void OnEnable()
     {
-        constructionComponent.OnConstructionStarted += HandleConstructionStarted;
-        constructionComponent.OnConstructionCompleted += HandleConstructionStarted;
+        //constructionComponent.OnConstructionStarted += HandleConstructionStarted;
+        //constructionComponent.OnConstructionCompleted += HandleConstructionCompleted;
 
         levelComponent.OnLevelChanged += HandleLevelChanged;
+
+        upgradeComponent.OnUpgradeStarted += HandleUpgradeStarted;
+        upgradeComponent.OnUpgradeCompleted += HandleUpgradeCompleted;
 
         WorkComponent.OnWorkerAdded += OnWorkerAdded;
         WorkComponent.OnWorkerRemoved += OnWorkerRemoved;
@@ -108,10 +113,13 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected virtual void OnDisable()
     {
-        constructionComponent.OnConstructionStarted -= HandleConstructionStarted;
-        constructionComponent.OnConstructionCompleted -= HandleConstructionStarted;
+        //constructionComponent.OnConstructionStarted -= HandleConstructionStarted;
+        //constructionComponent.OnConstructionCompleted -= HandleConstructionCompleted;
 
         levelComponent.OnLevelChanged -= HandleLevelChanged;
+
+        upgradeComponent.OnUpgradeStarted += HandleUpgradeStarted;
+        upgradeComponent.OnUpgradeCompleted += HandleUpgradeCompleted;
 
         WorkComponent.OnWorkerAdded -= OnWorkerAdded;
         WorkComponent.OnWorkerRemoved -= OnWorkerRemoved;
@@ -260,12 +268,12 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // Construction
     protected virtual void OnConstructionStart()
     {
-
+        UpdateInteractTransforms();
     }
 
     protected virtual void OnConstructionComplete()
     {
-
+        UpdateInteractTransforms();
     }
 
     protected virtual void OnLevelChange()
@@ -275,7 +283,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected void UpdateConstruction()
     {
-        if (!InstanceId.IsRegistered) return;
+        if (!InstanceId.IsRegistered) {
+            Debug.Log($"Instance Id is not registrated at {name}");
+            return;
+        }
 
         var constructionToSpawn = GetConstructionToSpawn();
         if (!constructionToSpawn) return;
@@ -284,6 +295,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
         if (SpawnedConstruction) {
             Destroy(SpawnedConstruction.gameObject);
+            SpawnedConstruction = null;
         }
 
         var data = new BuildingConstructionData()
@@ -378,32 +390,53 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     }
 
     // Construction
-    private void HandleConstructionStarted()
-    {
-        OnConstructionStart();
-        UpdateConstruction();
+    //private void HandleConstructionStarted()
+    //{
+    //    UpdateConstruction();
+    //    OnConstructionStart();
 
-        OnConstructionStarted?.Invoke();
-        OnBuildingConstructionStarted?.Invoke(this);
+    //    OnConstructionStarted?.Invoke();
+    //    OnBuildingConstructionStarted?.Invoke(this);
+    //}
+
+    //private void HandleConstructionCompleted()
+    //{
+    //    UpdateConstruction();
+    //    OnConstructionComplete();
+
+    //    OnConstructionCompleted?.Invoke();
+    //    OnBuildingConstructionCompleted?.Invoke(this);
+    //}
+
+    private void HandleUpgradeStarted()
+    {
+        UpdateConstruction();
+        OnConstructionComplete();
+
+        if (SelectComponent.IsSelected) {
+            SelectComponent.Select();
+        }
+
+        OnUpgradeStarted?.Invoke();
+        OnBuildingUpgradeStarted?.Invoke(this);
     }
 
-    private void HandleConstructionCompleted()
+    private void HandleUpgradeCompleted()
     {
-        OnConstructionComplete();
         UpdateConstruction();
+        OnConstructionComplete();
 
-        OnConstructionCompleted?.Invoke();
-        OnBuildingConstructionCompleted?.Invoke(this);
+        if (SelectComponent.IsSelected) {
+            SelectComponent.Select();
+        }
+
+        OnUpgradeCompleted?.Invoke();
+        OnBuildingUpgradeCompleted?.Invoke(this);
     }
 
     private void HandleLevelChanged()
     {
         OnLevelChange();
-        UpdateConstruction();
-
-        if (SelectComponent.IsSelected) {
-            SelectComponent.Select();
-        }
 
         OnLevelChanged?.Invoke();
         OnBuildingLevelChanged?.Invoke(this);
@@ -452,6 +485,20 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
             var navigator = raider.CityNavigator;
 
             AssignInteractTransform(navigator);
+        }
+    }
+
+    private void UpdateInteractTransforms()
+    {
+        interactTransformsqwe.Clear();
+
+        var keys = interactTransforms.Keys.ToArray();
+        for (int i = 0; i < keys.Length; i++) {
+            if (i >= SpawnedConstruction.BuildingInteractions.Length) break;
+
+            var transform = SpawnedConstruction.BuildingInteractions[i].waypoints[0].transform;
+            interactTransforms[keys[i]] = transform;
+            interactTransformsqwe.Add(transform);
         }
     }
 

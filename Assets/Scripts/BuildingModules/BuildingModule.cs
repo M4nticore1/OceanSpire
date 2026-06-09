@@ -50,15 +50,15 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected virtual void Subscribe()
     {
-        ownedBuilding.OnInited += OnInited;
+        ownedBuilding.OnInited += OnInit;
     }
 
     protected virtual void Unsubscribe()
     {
-        ownedBuilding.OnInited -= OnInited;
+        ownedBuilding.OnInited -= OnInit;
     }
 
-    protected virtual void OnInited()
+    protected virtual void OnInit()
     {
         IsInited = true;
     }
@@ -66,6 +66,7 @@ public abstract class BuildingModule : MonoBehaviour
     protected void StartWorking()
     {
         if (IsWorking) return;
+        Debug.Log("StartWorking");
 
         IsWorking = true;
         onWorkStarted?.Invoke();
@@ -75,6 +76,7 @@ public abstract class BuildingModule : MonoBehaviour
     {
         if (!IsWorking) return;
 
+        Debug.Log("StopWorking");
         IsWorking = false;
         onWorkStopped?.Invoke();
     }

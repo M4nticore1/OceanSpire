@@ -282,7 +282,6 @@ public class RaidManager : MonoBehaviour
 
             BoatRider = new BoatRiderData()
             {
-                TargetBoatInstanceId = boatInstanceId,
                 RidingBoatInstanceId = boatInstanceId,
             },
 

@@ -5,8 +5,7 @@ using UnityEngine;
 public class CitizenData : HumanData
 {
     public bool Evicted = false;
-    public int? EvictionBoatInstanceId = null;
-    public Vector3Data? LeavePosition = null;
+    public Vector3Data LeavePosition = Vector3Data.Zero();
 
     public static CitizenData Create(Citizen citizen)
     {
@@ -14,8 +13,7 @@ public class CitizenData : HumanData
         citizenData.FillHumanData(citizen);
 
         citizenData.Evicted = citizen.IsEvicted;
-        citizenData.EvictionBoatInstanceId = citizen.EvictionBoat?.InstanceId.GetInstanceId();
-        citizenData.LeavePosition = citizenData.EvictionBoatInstanceId != null ? new Vector3Data(citizen.LeavePosition) : null;
+        citizenData.LeavePosition = new Vector3Data(citizen.LeavePosition);
 
         return citizenData;
     }

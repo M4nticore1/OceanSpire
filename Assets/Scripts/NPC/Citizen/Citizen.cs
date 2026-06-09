@@ -4,7 +4,6 @@ using UnityEngine;
 public class Citizen : Human
 {
     public bool IsEvicted { get; private set; } = false;
-    public Boat EvictionBoat { get; private set; }
     public Vector3 LeavePosition { get; private set; }
 
     public static event Action<Citizen> OnCitizenEvicted;
@@ -26,16 +25,8 @@ public class Citizen : Human
     public void Evict(EvictData evictData)
     {
         IsEvicted = true;
-        EvictionBoat = evictData.Boat;
         LeavePosition = evictData.LeavePosition;
-
-        InteractComponent.TryRemoveInteractBuilding();
-
-        if (!BoatRider.RidingBoat) {
-            BoatRider.TrySetTargetBoat(evictData.Boat);
-        }
-
-        BoatRider.MoveToBoat();
+        BoatRider.TrySetTargetBoat(evictData.Boat);
 
         OnCitizenEvicted?.Invoke(this);
     }
@@ -44,6 +35,15 @@ public class Citizen : Human
     {
         if (!base.ShouldClick()) return false;
         if (IsEvicted) return false;
+        if (BoatRider.RidingBoat && BoatRider.RidingBoat.CurrentStateEnum != BoatStateEnum.Idle) return false;
+
+        return true;
+    }
+
+    public bool IsCitizenAvaliable()
+    {
+        if (IsEvicted) return false;
+        if (!HealthComponent.IsAlive) return false;
 
         return true;
     }
@@ -51,10 +51,71 @@ public class Citizen : Human
     protected override void OnInit(CreatureData creatureData)
     {
         var citizenData = creatureData as CitizenData;
+        if (citizenData == null) {
+            Debug.Log($"Citizen Data not found at {name}");
+            return;
+        }
 
         IsEvicted = citizenData.Evicted;
+        LeavePosition = citizenData.LeavePosition.Vector3();
 
         base.OnInit(creatureData);
+    }
+
+    protected override void DetermineNextAction()
+    {
+        if (ShouldBoatFindLoot()) {
+            BoatFindLoot();
+            return;
+        }
+        if (ShouldBoatFloatAway()) {
+            BoatFloatAway();
+            return;
+        }
+
+        base.DetermineNextAction();
+    }
+
+    protected override void BoatFindLoot()
+    {
+        var boat = BoatRider.RidingBoat;
+        boat.SetState(BoatStateEnum.FindingLoot);
+    }
+
+    protected override void BoatFloatAway()
+    {
+        var boat = BoatRider.RidingBoat;
+        boat.FloatAway(LeavePosition);
+    }
+
+    protected override bool ShouldBoatMoveToDock()
+    {
+        if (!base.ShouldBoatMoveToDock()) return false;
+        if (InteractComponent.InteractBuilding && InteractComponent.InteractBuilding.GetComponent<PierModule>()) return false;
+
+        return true;
+    }
+
+    protected override bool ShouldBoatFloatAway()
+    {
+        if (!base.ShouldBoatFloatAway()) return false;
+
+        if (BoatRider.RidingBoat != BoatRider.TargetBoat) return false;
+        if (!IsEvicted) return false;
+
+        return true;
+    }
+
+    protected override bool ShouldBoatFindLoot()
+    {
+        if (!base.ShouldBoatFindLoot()) return false;
+
+        if (IsEvicted) return false;
+        if (BoatRider.RidingBoat != BoatRider.TargetBoat) return false;
+        if (!InteractComponent.InteractBuilding) return false;
+        if (!InteractComponent.InteractBuilding.GetComponent<PierModule>()) return false;
+
+        return true;
     }
 
     protected override void OnInteractBuildingSeted(Building building)
@@ -73,74 +134,16 @@ public class Citizen : Human
 
     protected override void OnInteractionStarted(Building building)
     {
-        base.OnInteractionStarted(building);
-
         building.WorkComponent.AddCurrentWorker(this);
+
+        base.OnInteractionStarted(building);
     }
 
     protected override void OnInteractionStopped(Building building)
     {
+        building.WorkComponent.RemoveCurrentWorker(this);
+
         base.OnInteractionStopped(building);
-
-        building.WorkComponent.ExitWorker(this);
-    }
-
-    protected override void HandleEnteredBoat(Boat boat)
-    {
-        base.HandleEnteredBoat(boat);
-
-        if (IsEvicted) {
-            boat.FloatAway(LeavePosition);
-        }
-        else {
-            var building = InteractComponent.InteractBuilding;
-            if (!building) {
-                boat.SetState(BoatStateEnum.MovingToDock);
-                return;
-            }
-
-            var pier = building.GetComponent<PierModule>();
-            if (!pier) {
-                boat.SetState(BoatStateEnum.MovingToDock);
-                return;
-            }
-
-            boat.SetState(BoatStateEnum.FindingLoot);
-        }
-    }
-
-    protected override void HandleExitedBoat(Boat boat)
-    {
-        base.HandleExitedBoat(boat);
-
-        if (IsEvicted) {
-            BoatRider.TrySetTargetBoat(EvictionBoat);
-            BoatRider.TryMoveToBoat();
-        }
-    }
-
-    protected override void OnBoatSetedIdle(Boat boat)
-    {
-        base.OnBoatSetedIdle(boat);
-
-        BoatRider.StartExitingBoat();
-    }
-
-    protected override void OnAttackStarted()
-    {
-        base.OnAttackStarted();
-
-        InteractComponent.TryStopInteracting();
-    }
-
-    protected override void OnAttackStopped()
-    {
-        base.OnAttackStopped();
-
-        var interactBuilding = InteractComponent.InteractBuilding;
-        if (!interactBuilding) return;
-
-        CityNavigator.TryFindPathToTargetBuilding();
     }
 
     protected override void OnDied()
