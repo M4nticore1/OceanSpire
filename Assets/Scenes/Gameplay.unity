@@ -752,8 +752,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 259eb26487b2cf04fa104196bf934d7e, type: 2}
   maxRewardsCount: 4
   updateRewardTimeOffset: 3
-  FreeRewardCollected: 0
-  AdRewardCollected: 0
 --- !u!114 &102002915 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3320796776946038933, guid: 1d4b6d91d77214c418442861ca8235ea, type: 3}
@@ -2596,6 +2594,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5367914429779357137, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: dailyRewardManager
+      value: 
+      objectReference: {fileID: 101393569}
     - target: {fileID: 5483787753822778945, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: cityStorage
       value: 
@@ -2784,6 +2786,10 @@ PrefabInstance:
       propertyPath: 'disabledInteractions.Array.data[2]'
       value: 
       objectReference: {fileID: 394561666}
+    - target: {fileID: 8279558782033676583, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: dailyRewardManager
+      value: 
+      objectReference: {fileID: 101393569}
     - target: {fileID: 8498656696490118757, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: rewardedAdsManager
       value: 

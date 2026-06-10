@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class DailyRewardMenu : MonoBehaviour, IOpenable
 {
+    [SerializeField] private DailyRewardManager dailyRewardManager;
     [SerializeField] private DailyRewardWidget bonusChestRewardWidgetPrefab;
     [SerializeField] private GridLayoutGroup layoutGroup;
     [SerializeField] private TextLocalizer resetTimeText;
@@ -33,6 +34,7 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     public void Open()
     {
         gameObject.SetActive(true);
+        dailyRewardManager.SetRewardViewed(true);
     }
 
     public void Close()

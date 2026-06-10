@@ -15,15 +15,17 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     [SerializeField] private int updateRewardTimeOffset = 3;
 
-    public bool FreeRewardCollected = false;
-    public bool AdRewardCollected = false;
+    public bool FreeRewardCollected { get; private set; } = false;
+    public bool AdRewardCollected { get; private set; } = false;
     public long NextResetTime { get; private set; } = 0;
+    public bool IsRewardViewed { get; private set; } = false;
 
     private List<RewardInstance> currentRewards = new();
     public IReadOnlyList<RewardInstance> CurrentRewards => currentRewards;
 
     public event Action OnDailyRewardReset;
     public event Action<RewardInstance> OnDailyRewardRecieved;
+    public event Action<bool> OnRewardViewedChanged;
 
     private void Awake()
     {
@@ -51,6 +53,10 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         if (currentSecond < NextResetTime) return;
 
         ResetRewards();
+        ResetNextResetTime();
+        ResetRewardCollected();
+        SetRewardViewed(false);
+        OnDailyRewardReset?.Invoke();
     }
 
     public void Init()
@@ -59,6 +65,9 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         {
             Rewards = GetRandomRewardsData(),
             NextResetTime = CalculateNextResetTime(),
+            FreeRewardCollected = false,
+            AdRewardCollected = false,
+            RewardViewed = false,
         };
 
         Init(newData);
@@ -99,6 +108,13 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         NextResetTime = data.NextResetTime;
         FreeRewardCollected = data.FreeRewardCollected;
         AdRewardCollected = data.AdRewardCollected;
+        SetRewardViewed(data.RewardViewed);
+    }
+
+    public void SetRewardViewed(bool value)
+    {
+        IsRewardViewed = value;
+        OnRewardViewedChanged?.Invoke(value);
     }
 
     public RewardInstance GetCurrentReward(int id)
@@ -154,27 +170,19 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         return targetSecond;
     }
 
-    private void UpdateRewards()
+    private void ResetRewards()
     {
         foreach (var rewardData in GetRandomRewardsData()) {
             currentRewards.Add(rewardData.CreateReward());
         }
     }
 
-    private void ResetRewards()
-    {
-        UpdateRewards();
-        UpdateNextResetTime();
-        UpdateRewardCollected();
-        OnDailyRewardReset?.Invoke();
-    }
-
-    private void UpdateNextResetTime()
+    private void ResetNextResetTime()
     {
         NextResetTime = CalculateNextResetTime();
     }
 
-    private void UpdateRewardCollected()
+    private void ResetRewardCollected()
     {
         FreeRewardCollected = false;
         AdRewardCollected = false;

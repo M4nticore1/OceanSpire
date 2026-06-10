@@ -658,6 +658,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Toolbar
       objectReference: {fileID: 0}
+    - target: {fileID: 2898158464937469281, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2898158464937469281, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2898158464937469281, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2898158464937469281, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2898158464937469281, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2898158464937469281, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3066002497124368989, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
