@@ -56,7 +56,7 @@ public class Inventory : MonoBehaviour
         var stack = GetStack(item.Definition.Stack);
 
         if (useAmountLimit) {
-            amount = math.clamp(amount, 0, stack.Amount - stack.TotalAmount);
+            amount = math.clamp(amount, 0, stack.Amount - stack.GetItemAmountsSum());
         }
 
         if (useWeightLimit) {
@@ -65,7 +65,7 @@ public class Inventory : MonoBehaviour
         }
 
         item.AddAmount(amount);
-        stack.AddAmount(amount);
+        stack.AddItemAmount(item);
 
         currentWeight += amount * item.Definition.Weight;
     }

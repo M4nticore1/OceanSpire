@@ -91,6 +91,7 @@ public class CustomDropdown : UIBehaviour
     private void MoveDropdown()
     {
         transitionAlpha = math.lerp(transitionAlpha, 1f, transitionSpeed * Time.deltaTime);
+        transitionAlpha = Mathf.Clamp01(transitionAlpha);
         SetTransitionAlpha(transitionAlpha);
     }
 
@@ -99,7 +100,7 @@ public class CustomDropdown : UIBehaviour
         transitionAlpha = value;
 
         Vector3 scale = viewport.localScale;
-        scale.y = math.lerp(scale.y, targetScale.y, transitionAlpha);
+        scale.y = math.lerp(scale.y, targetScale.y, value);
         viewport.localScale = scale;
 
         if (transitionAlpha >= 1f) {

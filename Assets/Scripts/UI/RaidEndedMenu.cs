@@ -103,10 +103,10 @@ public class RaidEndedMenu : UIBehaviour
             noLossesText.gameObject.SetActive(false);
 
             for (int i = 0; i < lossesCount; i++) {
-                ResourceWidget widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
+                var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
 
-                ItemInstance item = RaidManager.Instance.Inventory.GetItemByIndex(i);
-                widget.SetAmount(item);
+                var item = RaidManager.Instance.Inventory.GetItemByIndex(i);
+                widget.AddAmount(item);
                 widget.SetColor(loseColor);
                 spawnedResourceWidgets.Add(widget);
             }

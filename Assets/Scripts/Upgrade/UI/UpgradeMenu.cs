@@ -57,7 +57,7 @@ public class UpgradeMenu : UIBehaviour
             var widget = ResourceWidgetFactory.CreateResourceWidget(resourceWidgetPrefab, layoutGroup.transform);
             spawnedResourceWidgets.Add(widget);
 
-            widget.SetAmount(cityStorage.Inventory.GetItemById(item.Definition.ItemId));
+            widget.AddAmount(cityStorage.Inventory.GetItemById(item.Definition.ItemId));
             widget.SetLimit(item);
         }
     }

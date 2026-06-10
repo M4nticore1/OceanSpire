@@ -27,7 +27,7 @@ public class StorageManagementList : ManagementList
 
             var widget = Instantiate(itemWidgetPrefab, LayoutGroup.transform);
             widget.SetItem(item.Definition);
-            widget.SetAmount(item);
+            widget.AddAmount(item);
             widget.SetLimit(item.Stack);
         }
     }
@@ -36,10 +36,13 @@ public class StorageManagementList : ManagementList
     {
         if (!stackWidget) return;
 
-        int amount = CityStorage.Instance.Inventory.GetStack(itemStack).TotalAmount;
-        int limit = CityStorage.Instance.Inventory.GetStack(itemStack).Amount;
+        var stack = CityStorage.Instance.Inventory.GetStack(itemStack);
 
-        stackWidget.SetAmountText(amount, limit);
+        foreach (var item in stack.ItemAmounts) {
+            stackWidget.AddAmount(stack);
+        }
+
+        stackWidget.SetLimit(stack);
     }
 
     private void OnItemAmountChanged(ItemInstance item)

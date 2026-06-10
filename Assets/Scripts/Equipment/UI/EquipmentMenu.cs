@@ -39,7 +39,7 @@ public class EquipmentMenu : ControlMenu
 
             var widget = Instantiate(equipmentWidget, layoutGroup.transform);
             widget.SetItem(weapon);
-            widget.SetAmount(item);
+            widget.AddAmount(item);
             widget.SetLimit(item.Stack);
         }
     }

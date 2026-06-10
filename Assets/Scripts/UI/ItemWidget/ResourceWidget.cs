@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class ResourceWidget : UIBehaviour
 {
@@ -11,8 +12,11 @@ public class ResourceWidget : UIBehaviour
 
     [SerializeField] private bool useLimit = false;
 
-    public IItemAmount Amount { get; private set; }
+    public List<IItemAmount> Amounts { get; private set; } = new();
     public IItemAmount Limit { get; private set; }
+
+    public bool amount;
+    public bool limit;
 
     [Header("UI")]
     [SerializeField] private TextLocalizer itemNameText;
@@ -32,17 +36,26 @@ public class ResourceWidget : UIBehaviour
         UpdateItemName();
         UpdateIcon();
         UpdateAmountAndLimit();
+        TryUpdateResourceBar();
+        TryUpdateAmountColor();
     }
 
-    protected override void OnDisable()
+    protected override void OnDestroy()
     {
-        base.OnDisable();
+        base.OnDestroy();
 
-        if (Amount != null)
-            Amount.OnAmountChanged -= OnAmountChanged;
+        foreach (var amount in Amounts) {
+            amount.OnAmountChanged -= OnAmountChanged;
+        }
 
         if (Limit != null)
             Limit.OnAmountChanged -= OnLimitChanged;
+    }
+
+    private void Update()
+    {
+        amount = Amounts.Count > 0;
+        limit = Limit != null;
     }
 
     protected override void Start()
@@ -53,6 +66,8 @@ public class ResourceWidget : UIBehaviour
         UpdateIcon();
         UpdateAmountFromDefinition();
         UpdateAmountAndLimit();
+        TryUpdateResourceBar();
+        TryUpdateAmountColor();
     }
 
     public virtual void SetItem(ItemDefinition definition)
@@ -62,14 +77,21 @@ public class ResourceWidget : UIBehaviour
         UpdateIcon();
     }
 
-    public void SetAmount(IItemAmount amount)
+    public void AddAmount(IItemAmount amount)
     {
-        if (Amount != null) {
-            Amount.OnAmountChanged -= OnAmountChanged;
-        }
+        if (Amounts.Contains(amount)) return;
 
-        Amount = amount;
+        Amounts.Add(amount);
         amount.OnAmountChanged += OnAmountChanged;
+
+        TryUpdateResourceBar();
+        TryUpdateAmountColor();
+    }
+
+    public void RemoveAmount(IItemAmount amount)
+    {
+        Amounts.Remove(amount);
+        amount.OnAmountChanged -= OnAmountChanged;
 
         TryUpdateResourceBar();
         TryUpdateAmountColor();
@@ -119,9 +141,10 @@ public class ResourceWidget : UIBehaviour
         if (!resourceAmountBar) return;
 
         float alpha = 0;
+        int amountsSum = CalculateAmountsSum();
 
         if (Limit != null && Limit.Amount > 0) {
-            alpha = (float)Amount.Amount / Limit.Amount;
+            alpha = (float)amountsSum / Limit.Amount;
         }
         else {
             alpha = 0.0f;
@@ -132,15 +155,14 @@ public class ResourceWidget : UIBehaviour
 
     private bool UpdateAmountFromDefinition()
     {
-        if (Amount != null) return false;
         if (!itemDefinition) return false;
 
         int id = itemDefinition.ItemId;
 
-        ItemInstance item = CityStorage.Instance.Inventory.GetItemById(id);
+        var item = CityStorage.Instance.Inventory.GetItemById(id);
         if (item == null) return false;
 
-        SetAmount(item);
+        AddAmount(item);
         return true;
     }
 
@@ -153,13 +175,14 @@ public class ResourceWidget : UIBehaviour
 
     protected virtual void UpdateAmountAndLimit()
     {
-        if (Amount == null) return;
+        if (Amounts == null) return;
 
+        int amountsSum = CalculateAmountsSum();
         if (Limit != null) {
-            SetAmountText(Amount.Amount, Limit.Amount);
+            SetAmountText(amountsSum, Limit.Amount);
         }
         else {
-            SetAmountText(Amount.Amount);
+            SetAmountText(amountsSum);
         }
     }
 
@@ -167,7 +190,8 @@ public class ResourceWidget : UIBehaviour
     {
         if (!useAmountColors) return;
 
-        if (Amount == null || Limit == null || Amount.Amount >= Limit.Amount) {
+        int amountsSum = CalculateAmountsSum();
+        if (Amounts == null || Limit == null || amountsSum >= Limit.Amount) {
             SetColor(enoughAmountColor);
         }
         else {
@@ -175,9 +199,20 @@ public class ResourceWidget : UIBehaviour
         }
     }
 
+    private int CalculateAmountsSum()
+    {
+        int sum = 0;
+        foreach (var amount in Amounts) {
+            sum += amount.Amount;
+        }
+
+        return sum;
+    }
+
     private void OnAmountChanged()
     {
         UpdateAmountAndLimit();
+        TryUpdateResourceBar();
         TryUpdateAmountColor();
     }
 

@@ -80,7 +80,7 @@ public class ProducedResourcePanel : MonoBehaviour
     {
         var widget = Instantiate(resourceWidgetPrefab, producedResourceSlot.transform);
         widget.SetItem(currentCraftItem.ProduceItem.Definition);
-        widget.SetAmount(currentCraftItem.ProduceItem);
+        widget.AddAmount(currentCraftItem.ProduceItem);
     }
 
     private void CreateConsumedResources()
@@ -88,7 +88,7 @@ public class ProducedResourcePanel : MonoBehaviour
         foreach (var resource in currentCraftItem.ConsumeResources) {
             var widget = Instantiate(resourceWidgetPrefab, consumedResourcesSlot.transform);
             widget.SetItem(resource.Definition);
-            widget.SetAmount(resource);
+            widget.AddAmount(resource);
         }
     }
 

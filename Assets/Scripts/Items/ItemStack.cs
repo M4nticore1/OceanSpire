@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -24,7 +25,7 @@ public class ItemStack : IItemAmount
     [SerializeField, FormerlySerializedAs("limit")] private int amount = 0;
     public int Amount => amount;
 
-    public int TotalAmount { get; private set; } = 0;
+    public List<IItemAmount> ItemAmounts = new();
 
     public event Action OnAmountChanged;
 
@@ -44,24 +45,29 @@ public class ItemStack : IItemAmount
         SetLimit(amount - value);
     }
 
-    public void AddAmount(int value)
+    public void AddItemAmount(IItemAmount value)
     {
-        SetAmount(TotalAmount + value);
+        ItemAmounts.Add(value);
     }
 
-    public void RemoveAmount(int value)
+    public void RemoveItemAmount(IItemAmount value)
     {
-        SetAmount(TotalAmount - value);
+        ItemAmounts.Remove(value);
+    }
+
+    public int GetItemAmountsSum()
+    {
+        int sum = 0;
+        foreach (var item in ItemAmounts) {
+            sum += item.Amount;
+        }
+        
+        return sum;
     }
 
     private void SetLimit(int value)
     {
         amount = value;
         OnAmountChanged?.Invoke();
-    }
-
-    private void SetAmount(int value)
-    {
-        TotalAmount = value;
     }
 }

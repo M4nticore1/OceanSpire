@@ -42,7 +42,7 @@ public class DemolishActionMenu : ActionMenu
             ItemInstance resource = resourcesToBuild[i];
 
             spawnedResourceWidgets[i] = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
-            spawnedResourceWidgets[i].SetAmount(resource);
+            spawnedResourceWidgets[i].AddAmount(resource);
         }
     }
 
