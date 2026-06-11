@@ -46,6 +46,20 @@ public class Wanderer : Human
         base.DetermineNextAction();
     }
 
+    protected override void BoatFloatAway()
+    {
+        base.BoatFloatAway();
+
+        BoatRider.RidingBoat.FloatAway(SpawnPosition);
+    }
+
+    protected override void HandleEnteredBoat(Boat boat)
+    {
+        base.HandleEnteredBoat(boat);
+
+        boat.ContextMenuTarget.SetShowContextMenu(false);
+    }
+
     protected override bool ShouldBoatMoveToDock()
     {
         if (!base.ShouldBoatMoveToDock()) return false;
@@ -62,6 +76,19 @@ public class Wanderer : Human
         return true;
     }
 
+    protected override bool ShouldStartExitingBoat()
+    {
+        return false;
+    }
+
+    public override bool ShouldClick()
+    {
+        if (!base.ShouldClick()) return false;
+        if (BoatRider.RidingBoat.Movement.IsMoving) return false;
+
+        return true;
+    }
+
     public void Accept()
     {
         IsAccepted = true;
@@ -71,13 +98,18 @@ public class Wanderer : Human
     public void Reject()
     {
         IsRejected = true;
+        RemoveBoatDock();
         DetermineNextAction();
     }
 
-    protected override void HandleEnteredBoat(Boat boat)
+    private void RemoveBoatDock()
     {
-        base.HandleEnteredBoat(boat);
+        var ridingBoat = BoatRider.RidingBoat;
+        if (!ridingBoat) {
+            Debug.Log($"Riding Boat not fount at {name}");
+            return;
+        }
 
-        boat.ContextMenuTarget.SetShowContextMenu(false);
+        ridingBoat.RemoveDockPoint();
     }
 }

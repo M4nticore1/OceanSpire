@@ -518,6 +518,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf39201c3bdef74b8ca471d3bf0dbd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WanderersManager
+  creaturesManager: {fileID: 220072952}
+  dockPointsManager: {fileID: 1711846142}
+  instancesManager: {fileID: 1081344388}
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
   boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
   humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
@@ -1249,7 +1252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &236297353
 Transform:
   m_ObjectHideFlags: 0
@@ -2798,6 +2801,10 @@ PrefabInstance:
       propertyPath: dailyRewardManager
       value: 
       objectReference: {fileID: 101393569}
+    - target: {fileID: 8448156322343606041, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: selectEquipmentMenu
+      value: 
+      objectReference: {fileID: 693700826}
     - target: {fileID: 8498656696490118757, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: rewardedAdsManager
       value: 
@@ -4364,6 +4371,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2717670}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &693700826 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2100436486027691945, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+  m_PrefabInstance: {fileID: 383697685}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3eacb25991ffc441bb3034927a1829c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectEquipmentMenu
 --- !u!4 &702965309 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9061576425982903825, guid: 262d9e7a20b2d5b4c92bc78480af3a48, type: 3}
@@ -4446,8 +4464,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7edb4679dc3e29242a8e7cb481f90a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FoodDrain
-  entitiesManager: {fileID: 220072952}
-  drainPerSecond: 0.025
+  creaturesManager: {fileID: 220072952}
+  cityStorage: {fileID: 1388613268}
+  drainPerSecond: 0.01
   drainFrequency: 10
 --- !u!1001 &731686007
 PrefabInstance:
@@ -5695,7 +5714,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &928034254
 Transform:
   m_ObjectHideFlags: 0

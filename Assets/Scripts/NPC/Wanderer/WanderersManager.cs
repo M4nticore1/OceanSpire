@@ -6,6 +6,9 @@ public class WanderersManager : MonoBehaviour
     public static WanderersManager Instance;
 
     [Header("Main")]
+    [SerializeField] private CreaturesManager creaturesManager;
+    [SerializeField] private DockPointsManager dockPointsManager;
+    [SerializeField] private InstancesManager instancesManager;
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
     [SerializeField] private HumanNamesList humanNamesList;
@@ -103,19 +106,27 @@ public class WanderersManager : MonoBehaviour
 
     private void UpdateDockPoints()
     {
-        var wanderers = CreaturesManager.Instance.Wanderers;
+        var wanderers = creaturesManager.Wanderers;
         int dockIndex = 0;
 
         for (int i = 0; i < wanderers.Count; i++) {
             var wanderer = wanderers[i];
+
+            if (!wanderer) {
+                Debug.LogError($"Wanderer not found by index {i}");
+                continue;
+            }
+
             if (wanderer.IsAccepted) continue;
+            if (wanderer.IsRejected) continue;
 
-            var boat = wanderer.BoatRider.RidingBoat;
-            if (!boat.DockPoint) continue;
+            var ridingBoat = wanderer.BoatRider.RidingBoat;
+            if (!ridingBoat) {
+                Debug.LogError($"Riding Boat not found at {wanderer.BoatRider.name}");
+                continue;
+            }
 
-            boat.RemoveDockPoint();
-            boat.SetDockPoint(DockPointsManager.Instance.WandererDockPoints[dockIndex]);
-            boat.SetState(BoatStateEnum.MovingToDock);
+            ridingBoat.SetDockPoint(dockPointsManager.WandererDockPoints[dockIndex]);
             dockIndex++;
         }
     }
@@ -172,12 +183,12 @@ public class WanderersManager : MonoBehaviour
 
     private BoatDockPoint GetDockPoint()
     {
-        return DockPointsManager.Instance.WandererDockPoints[CreaturesManager.Instance.Wanderers.Count()];
+        return dockPointsManager.WandererDockPoints[creaturesManager.Wanderers.Count()];
     }
 
     private bool CanSpawn()
     {
-        if (CreaturesManager.Instance.Wanderers.Count >= DockPointsManager.Instance.WandererDockPoints.Length) return false;
+        if (creaturesManager.Wanderers.Count >= dockPointsManager.WandererDockPoints.Length) return false;
 
         return true;
     }

@@ -35,4 +35,9 @@ public class BoatIdleState : BoatState
     {
 
     }
+
+    public override void OnBoatDockChanged(BoatDockPoint boatDock)
+    {
+        boat.SetState(BoatStateEnum.MovingToDock);
+    }
 }

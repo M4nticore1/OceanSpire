@@ -42,6 +42,11 @@ public class BoatUnloadingState : BoatState
 
     }
 
+    public override void OnBoatDockChanged(BoatDockPoint boatDock)
+    {
+
+    }
+
     private void ProcessStoreResources()
     {
         if (boat.Inventory.Items.Count == 0) {

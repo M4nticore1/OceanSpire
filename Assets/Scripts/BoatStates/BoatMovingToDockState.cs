@@ -9,12 +9,12 @@ public class BoatMovingToDockState : BoatState
 
     public override void Enter()
     {
-        boat.Movement.TryMoveTo(boat.DockPoint.DockTransform.position);
+        UpdateMovement();
     }
 
     public override void Exit()
     {
-        //boat.Movement.TryStopMoving();
+
     }
 
     public override void Tick()
@@ -25,5 +25,20 @@ public class BoatMovingToDockState : BoatState
     public override void OnReachedPath()
     {
         boat.OnReturnedToDock();
+    }
+
+    public override void OnBoatDockChanged(BoatDockPoint boatDock)
+    {
+        UpdateMovement();
+    }
+
+    private void UpdateMovement()
+    {
+        if (boat.DockPoint) {
+            boat.Movement.TryMoveTo(boat.DockPoint.DockTransform.position);
+        }
+        else {
+            boat.Movement.TryStopMoving();
+        }
     }
 }

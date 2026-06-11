@@ -27,7 +27,6 @@ public class ActionEquipmentWidget : EquipmentWidget
     {
         base.SetEquipmentComponent(component);
 
-        Debug.Log("SetEquipment");
         UpdateSelected(null);
     }
 

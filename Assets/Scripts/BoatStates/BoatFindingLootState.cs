@@ -36,6 +36,11 @@ public class BoatFindingLootState : BoatState
         
     }
 
+    public override void OnBoatDockChanged(BoatDockPoint boatDock)
+    {
+
+    }
+
     private void TryUpdateTarget()
     {
         var target = DriftingLootFinder.TryFindNearestSwimmingDriftingLoot(DriftingLootManager.Instance, boat.transform.position);

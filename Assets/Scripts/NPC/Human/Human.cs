@@ -403,6 +403,7 @@ public abstract class Human : Creature, IClickable
     protected virtual bool ShouldBoatMoveToDock()
     {
         if (!boatRider.RidingBoat) return false;
+        if (!boatRider.RidingBoat.DockPoint) return false;
         if (boatRider.RidingBoat.CurrentStateEnum == BoatStateEnum.MovingToDock) return false;
         if (BoatRider.RidingBoat.Movement.IsReachedPosition(boatRider.RidingBoat.DockPoint.DockTransform.position)) return false;
 
@@ -437,8 +438,8 @@ public abstract class Human : Creature, IClickable
     // IClickable
     public void Click()
     {
-        if (boatRider.TargetBoat) {
-            BoatRider.TargetBoat.SelectComponent.Click();
+        if (boatRider.RidingBoat) {
+            BoatRider.RidingBoat.SelectComponent.Click();
         }
         else {
             selectComponent.Click();

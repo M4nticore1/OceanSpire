@@ -26,4 +26,9 @@ public class BoatDemolishState : BoatState
     {
 
     }
+
+    public override void OnBoatDockChanged(BoatDockPoint boatDock)
+    {
+
+    }
 }

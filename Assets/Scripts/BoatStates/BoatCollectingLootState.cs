@@ -47,6 +47,11 @@ public class BoatCollectingLootState : BoatState
 
     }
 
+    public override void OnBoatDockChanged(BoatDockPoint boatDock)
+    {
+        
+    }
+
     private bool TryStopDriftingLoot()
     {
         if (!boat) return false;

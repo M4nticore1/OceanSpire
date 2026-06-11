@@ -42,7 +42,7 @@ public class Boat : MonoBehaviour, IClickable
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
     // Dock
-    public BoatDockPoint DockPoint { get; private set; }
+    public BoatDockPoint DockPoint;
     public SwimmingDriftingLoot TargetDriftingLoot { get; private set; }
 
     // Weight
@@ -89,6 +89,9 @@ public class Boat : MonoBehaviour, IClickable
 
     public void Init(BoatData boatData)
     {
+        BoatStateEnum state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(boatData.StateId);
+        SetState(state);
+
         instanceId.Register(boatData.InstanceId);
 
         transform.position = boatData.Position.Vector3();
@@ -100,9 +103,6 @@ public class Boat : MonoBehaviour, IClickable
 
             SetDockPoint(boatDock);
         }
-
-        BoatStateEnum state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(boatData.StateId);
-        SetState(state);
 
         CurrentStatus = boatData.Status;
 
@@ -144,14 +144,19 @@ public class Boat : MonoBehaviour, IClickable
 
         DockPoint = dockPoint;
         dockPoint.SetBoat(this);
+        currentState.OnBoatDockChanged(dockPoint);
     }
 
     public void RemoveDockPoint()
     {
-        if (!DockPoint) return;
+        if (!DockPoint) {
+            Debug.Log($"Dock Pint is already null at {name}");
+            return;
+        }
 
         DockPoint.RemoveBoat();
         DockPoint = null;
+        currentState.OnBoatDockChanged(null);
     }
 
     public void SetTargetLoot(SwimmingDriftingLoot driftingLoot)
@@ -167,9 +172,7 @@ public class Boat : MonoBehaviour, IClickable
     // State
     public void SetState(BoatStateEnum state)
     {
-        if (state == CurrentStateEnum) return;
-
-        Debug.Log($"Set state {state}");
+        if (currentState != null && state == CurrentStateEnum) return;
 
         if (currentState != null) {
             currentState.Exit();

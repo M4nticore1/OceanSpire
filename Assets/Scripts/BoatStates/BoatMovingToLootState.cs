@@ -33,6 +33,11 @@ public class BoatMovingToLootState : BoatFindingLootState
         boat.SetState(BoatStateEnum.CollectingLoot);
     }
 
+    public override void OnBoatDockChanged(BoatDockPoint boatDock)
+    {
+
+    }
+
     private void TryStartMovingToTarget()
     {
         if (!ShouldStartMovingToTarget()) return;

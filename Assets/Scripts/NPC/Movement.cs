@@ -43,7 +43,6 @@ public class Movement : MonoBehaviour
     {
         if (!CanStartMoving()) return false;
 
-        Debug.Log("MoveTo");
         TargetPosition = position;
 
         if (IsDestinationReached()) {

@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class FoodDrainSystem : MonoBehaviour
 {
-    [SerializeField] private CreaturesManager entitiesManager;
+    [SerializeField] private CreaturesManager creaturesManager;
+    [SerializeField] private CityStorage cityStorage;
 
-    [SerializeField] private float drainPerSecond = 0.1f;
+    [SerializeField] private float drainPerSecond = 0.01f;
     [SerializeField] private float drainFrequency = 10f;
     private float currentTime = 0f;
 
@@ -22,7 +23,7 @@ public class FoodDrainSystem : MonoBehaviour
 
     private void ApplyDrainAmount()
     {
-        drainAmount += drainPerSecond * drainFrequency * CreaturesManager.Instance.Citizens.Count;
+        drainAmount += drainPerSecond * drainFrequency * creaturesManager.Citizens.Count;
     }
 
     private void TryDrainFood()
@@ -32,7 +33,7 @@ public class FoodDrainSystem : MonoBehaviour
         int id = (int)ItemID.Food;
         int amount = (int)drainAmount;
 
-        CityStorage.Instance.Inventory.RemoveItem(id, amount);
+        cityStorage.Inventory.RemoveItem(id, amount);
         drainAmount -= amount;
     }
 

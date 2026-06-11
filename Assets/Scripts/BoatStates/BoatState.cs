@@ -13,4 +13,5 @@ public abstract class BoatState
     public abstract void Exit();
     public abstract void Tick();
     public abstract void OnReachedPath();
+    public abstract void OnBoatDockChanged(BoatDockPoint boatDock);
 }

@@ -8,12 +8,47 @@ public static class WandererAdmissionSystem
 
     public static void AcceptWanderer(Wanderer wanderer)
     {
-        wanderer.Accept();
+        if (!wanderer) {
+            Debug.LogError("Wanderer not fount to access");
+            return;
+        }
+
+        var boatRider = wanderer.BoatRider;
+        if (!boatRider) {
+            Debug.LogError($"Boat Rider not fount at {wanderer}");
+            return;
+        }
+
+        var ridingBoat = boatRider.RidingBoat;
+        if (!ridingBoat) {
+            Debug.LogError($"Riding Boat not fount at {boatRider}");
+            return;
+        }
+
+        var dockPoint = ridingBoat.DockPoint;
+        if (!dockPoint) {
+            Debug.LogError($"Dock Point not fount at {ridingBoat}");
+            return;
+        }
+
+        var entranceTransform = dockPoint.EntraceTransform;
+        if (!entranceTransform) {
+            Debug.LogError($"Entrance Transform not fount at {dockPoint}");
+            return;
+        }
 
         int creautereId = wanderer.GenderComponent.IsMale ? (int)CreatureIdEnum.HumanCitizenMale : (int)CreatureIdEnum.HumanCitizenFemale;
-        var prefab = CreaturesList.Instance.GetCreature(creautereId);
-        var position = wanderer.BoatRider.TargetBoat.DockPoint.EntraceTransform.position;
-        var rotaton = wanderer.BoatRider.TargetBoat.DockPoint.EntraceTransform.rotation;
+        var citizenPrefab = CreaturesList.Instance.GetCreature(creautereId);
+
+        if (!citizenPrefab) {
+            Debug.LogError($"Wanderer Prefab not fount at {CreaturesList.Instance}");
+            return;
+        }
+
+        wanderer.Accept();
+
+        var position = entranceTransform.position;
+        var rotaton = entranceTransform.rotation;
 
         var data = new CitizenData()
         {
@@ -28,14 +63,19 @@ public static class WandererAdmissionSystem
             Skills = SkillsData.Create(wanderer.SkillsComponent)
         };
 
-        GameObject.Destroy(wanderer.BoatRider.TargetBoat.gameObject);
-        var citizen = CreatureFactory.CreateHuman(prefab, position, rotaton, data);
+        GameObject.Destroy(ridingBoat.gameObject);
+        var citizen = CreatureFactory.CreateHuman(citizenPrefab, position, rotaton, data);
 
         OnWandererAccepted?.Invoke(citizen);
     }
 
     public static void RejectWanderer(Wanderer wanderer)
     {
+        if (!wanderer) {
+            Debug.LogError("Wanderer not fount to reject");
+            return;
+        }
+
         wanderer.Reject();
         OnWandererRejected?.Invoke(wanderer);
     }

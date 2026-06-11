@@ -51,7 +51,7 @@ public class WandererAdmissionMenu : MonoBehaviour
         if (!isOpened) return;
 
         isOpened = false;
-        selectedWanderer.BoatRider.TargetBoat.SelectComponent.Deselect();
+        selectedWanderer.BoatRider.RidingBoat.SelectComponent.Deselect();
         InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
