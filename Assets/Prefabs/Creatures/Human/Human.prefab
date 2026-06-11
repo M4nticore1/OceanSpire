@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 774651871998097940}
   - component: {fileID: 8499683307490277393}
   - component: {fileID: -7493649843608556168}
+  - component: {fileID: 3276445640208814929}
   - component: {fileID: 4701473922447632886}
   - component: {fileID: 8364959695361298754}
   - component: {fileID: 7000859086802169914}
@@ -134,8 +135,8 @@ MonoBehaviour:
   pathBuildings: []
   CurrentBuilding: {fileID: 0}
   TargetBuilding: {fileID: 0}
-  pathIndex: 0
-  FollowingPathState: 0
+  PathProgress: 0
+  CurrentState: 0
 --- !u!114 &6497944028369977301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,7 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b0c4d83530020347a7953f4fc928c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatRider
-  SelectedBoat: {fileID: 0}
+  TargetBoat: {fileID: 0}
+  RidingBoat: {fileID: 0}
   movement: {fileID: -7493649843608556168}
   useBoatTime: 1
 --- !u!114 &774651871998097940
@@ -199,6 +201,20 @@ MonoBehaviour:
   navAgent: {fileID: 1338494420481879648}
   walkSpeed: 3
   runSpeed: 5
+--- !u!114 &3276445640208814929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04bf37e08356d0340b40683a6aa619bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementRotationContoller
+  movement: {fileID: -7493649843608556168}
+  rotationSpeed: 1
 --- !u!114 &4701473922447632886
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -249,82 +249,70 @@ public abstract class Human : Creature, IClickable
 
     protected virtual void StartInteracting()
     {
-        Debug.Log("StartInteracting");
         InteractComponent.TryStartInteracting();
         UpdateIdle();
     }
 
     protected virtual void StartEnteringBoat()
     {
-        Debug.Log("StartEnteringBoat");
         boatRider.TryStartEnteringBoat(boatRider.TargetBoat);
         UpdateIdle();
     }
 
     protected virtual void StopEnteringBoat()
     {
-        Debug.Log("StopEnteringBoat");
         boatRider.TryStopEnteringBoat();
         UpdateIdle();
     }
 
     protected virtual void StartExitingBoat()
     {
-        Debug.Log("StartExitingBoat");
         boatRider.StartExitingBoat();
         UpdateIdle();
     }
 
     protected virtual void StopExitingBoat()
     {
-        Debug.Log("StopExitingBoat");
         boatRider.StopExitingBoat();
         UpdateIdle();
     }
 
     protected virtual void MoveToTargetBoat()
     {
-        Debug.Log("MoveToTargetBoat");
         movement.TryMoveTo(boatRider.TargetBoat.DockPoint.EntraceTransform.position);
         UpdateIdle();
     }
 
     protected virtual void StartAttacking()
     {
-        Debug.Log("StartAttacking");
         UpdateIdle();
     }
 
     protected virtual void StopAttacking()
     {
-        Debug.Log("StopAttacking");
         UpdateIdle();
     }
 
     protected virtual void FollowPath()
     {
-        Debug.Log("MoveToTargetBuilding");
         cityNavigator.FollowPath();
         UpdateIdle();
     }
 
     protected virtual void BoatMoveToDock()
     {
-        Debug.Log("MoveBoatToDock");
         BoatRider.RidingBoat.SetState(BoatStateEnum.MovingToDock);
         UpdateIdle();
     }
 
     protected virtual void BoatFindLoot()
     {
-        Debug.Log("BoatFindLoot");
         boatRider.RidingBoat.SetState(BoatStateEnum.FindingLoot);
         UpdateIdle();
     }
 
     protected virtual void BoatFloatAway()
     {
-        Debug.Log("BoatFloatAway");
         UpdateIdle();
     }
 

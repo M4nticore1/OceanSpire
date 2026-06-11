@@ -13,7 +13,10 @@ public class Movement : MonoBehaviour
     [SerializeField] private NavMeshAgent navAgent;
     public NavMeshAgent NavAgent => navAgent;
 
-    public Vector3 TargetPosition { get; private set; }
+    public Vector3 TargetPosition { get; private set; } = Vector3.zero;
+
+    public bool UseTargetRotation { get; private set; } = false;
+    public Quaternion TargetRotation { get; private set; } = Quaternion.identity;
 
     public MovementMethod currentMovementMethod { get; private set; }
 
@@ -39,41 +42,6 @@ public class Movement : MonoBehaviour
         transform.position += direction * speed;
     }
 
-    public bool TryMoveTo(Vector3 position)
-    {
-        if (!CanStartMoving()) return false;
-
-        TargetPosition = position;
-
-        if (IsDestinationReached()) {
-            OnReachedPath?.Invoke();
-            return true;
-        }
-
-        navAgent.isStopped = false;
-        if (!navAgent.SetDestination(position))
-            return false;
-
-        IsMoving = true;
-        OnMovementStarted?.Invoke();
-
-        return true;
-    }
-
-    public bool TryStopMoving()
-    {
-        if (!CanStopMoving()) return false;
-
-        navAgent.isStopped = true;
-        navAgent.ResetPath();
-        IsMoving = false;
-
-        OnMovementStopped?.Invoke();
-        OnReachedPath?.Invoke();
-
-        return true;
-    }
-
     public void SetMovementMethod(MovementMethod method)
     {
         if (!navAgent) return;
@@ -95,6 +63,50 @@ public class Movement : MonoBehaviour
         navAgent.enabled = enabled;
     }
 
+    public bool TryMoveTo(Transform transform)
+    {
+        if (!TryMoveTo(transform.position)) return false;
+
+        SetTargetRotation(transform.rotation);
+        return true;
+    }
+
+    public bool TryMoveTo(Vector3 position)
+    {
+        if (!CanStartMoving()) return false;
+
+        IsMoving = true;
+        TargetPosition = position;
+        RemoveTargetRotation();
+
+        if (IsDestinationReached()) {
+            OnReachedPath?.Invoke();
+            return true;
+        }
+
+        navAgent.isStopped = false;
+        if (!navAgent.SetDestination(position))
+            return false;
+
+        OnMovementStarted?.Invoke();
+
+        return true;
+    }
+
+    public bool TryStopMoving()
+    {
+        if (!CanStopMoving()) return false;
+
+        navAgent.isStopped = true;
+        navAgent.ResetPath();
+        IsMoving = false;
+
+        OnMovementStopped?.Invoke();
+        OnReachedPath?.Invoke();
+
+        return true;
+    }
+
     public bool CanStartMoving()
     {
         if (!navAgent.enabled) return false;
@@ -105,6 +117,8 @@ public class Movement : MonoBehaviour
 
     public bool CanStopMoving()
     {
+        if (!navAgent.enabled) return false;
+        if (!navAgent.isOnNavMesh) return false;
         if (!IsMoving) return false;
 
         return true;
@@ -126,5 +140,16 @@ public class Movement : MonoBehaviour
     public float GetTargetPositionDistance()
     {
         return Vector3.Distance(transform.position, TargetPosition);
+    }
+
+    private void SetTargetRotation(Quaternion value)
+    {
+        TargetRotation = value;
+        UseTargetRotation = true;
+    }
+
+    private void RemoveTargetRotation()
+    {
+        UseTargetRotation = false;
     }
 }

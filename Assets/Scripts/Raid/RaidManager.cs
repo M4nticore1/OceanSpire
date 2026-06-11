@@ -11,11 +11,12 @@ public class RaidManager : MonoBehaviour
     public static RaidManager Instance;
 
     [Header("Main")]
+    [SerializeField] private CreaturesManager creaturesManager;
+    [SerializeField] private BoatsManager boatsManager;
+    [SerializeField] private CityStorage cityStorage;
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
     [SerializeField] private HumanNamesList humanNamesList;
-    [SerializeField] private CreaturesManager creaturesManager;
-    [SerializeField] private CityStorage cityStorage;
 
     [SerializeField] private Inventory inventory;
     public Inventory Inventory => inventory;
@@ -161,6 +162,7 @@ public class RaidManager : MonoBehaviour
 
     private void EndRaid(bool isRepeled)
     {
+        DestroyEmptyBoats();
         RemoveCityLoot();
         IsRaidStarted = false;
         IsRaidExist = false;
@@ -171,6 +173,22 @@ public class RaidManager : MonoBehaviour
         };
 
         OnRaidEnded?.Invoke(result);
+    }
+
+    private void DestroyEmptyBoats()
+    {
+        for (int i = boatsManager.RaiderBoats.Count - 1; i >= 0; i--) {
+            var boat = boatsManager.RaiderBoats[i];
+            if (!boat) {
+                Debug.LogError($"Raider Boat not found at index {i}");
+                continue;
+            }
+
+            if (boat.CurrentRider) continue;
+
+            Destroy(boat.gameObject);
+            boatsManager.UnregisterRaiderBoat(boat);
+        }
     }
 
     private void RemoveCityLoot()

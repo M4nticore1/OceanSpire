@@ -118,7 +118,7 @@ public class BoatRider : MonoBehaviour
         SetRidingBoat(boat);
 
         movement.SetAgentEnabled(false);
-        RidingBoat.SetRider(this);
+        RidingBoat.SetCurrentRider(this);
 
         transform.position = boat.SeatSlot.position;
         transform.rotation = boat.SeatSlot.rotation;
@@ -146,7 +146,7 @@ public class BoatRider : MonoBehaviour
             return;
         }
 
-        RidingBoat.RemoveRider();
+        RidingBoat.RemoveCurrentRider();
 
         Vector3 pos = RidingBoat.DockPoint.EntraceTransform.position;
         Quaternion rot = RidingBoat.DockPoint.EntraceTransform.rotation;
@@ -173,6 +173,8 @@ public class BoatRider : MonoBehaviour
         if (boat == TargetBoat) return false;
 
         TargetBoat = boat;
+        boat.SetTargetRider(this);
+
         OnTargetBoatSeted?.Invoke(boat);
 
         return true;
@@ -181,7 +183,10 @@ public class BoatRider : MonoBehaviour
     public void RemoveTargetBoat()
     {
         var boat = TargetBoat;
+
         TargetBoat = null;
+        boat.RemoveTargetRider();
+
         OnTargetBoatRemoved?.Invoke(boat);
     }
 

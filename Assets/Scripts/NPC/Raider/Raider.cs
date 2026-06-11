@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 public class Raider : Human
@@ -78,20 +77,19 @@ public class Raider : Human
 
     protected override void BoatFloatAway()
     {
-        Debug.Log("BoatFloatAway");
+        base.BoatFloatAway();
+
         BoatRider.RidingBoat.FloatAway(SpawnPosition);
     }
 
     protected virtual void StartRaidingBuilding()
     {
-        Debug.Log("StartRaidingBuilding");
         isRaidingBuilding = true;
         CityNavigator.FollowPath();
     }
 
     protected virtual void AttackWorker()
     {
-        Debug.Log("AttackWorker");
         var building = CityNavigator.CurrentBuilding;
         var target = building.WorkComponent.CurrentWorkers[0].GetComponent<AttackComponent>();
 
@@ -194,6 +192,18 @@ public class Raider : Human
         BoatRider.StartExitingBoat();
     }
 
+    protected override void OnEnteredBuilding(Building buildng)
+    {
+        base.OnEnteredBuilding(buildng);
+
+        if (!IsRaidFinished) return;
+        if (buildng != CityNavigator.TargetBuilding) return;
+
+        CityNavigator.RemoveTargetBuilding();
+        CityNavigator.RemoveTargetBuilding();
+        CityNavigator.RemovePath();
+    }
+
     public override bool ShouldClick()
     {
         return false;
@@ -220,9 +230,20 @@ public class Raider : Human
 
     private void UpdateTargetBoat()
     {
-        int index = CreaturesManager.Instance.Raiders.ToList().IndexOf(this);
-        var boat = BoatsManager.Instance.RaiderBoats[index];
+        for (int i = 0; i < BoatsManager.Instance.RaiderBoats.Count; i++) {
+            var boat = BoatsManager.Instance.RaiderBoats[i];
+            if (!boat) {
+                Debug.LogError($"Raider Boat not fount at index {i}");
+                continue;
+            }
 
-        BoatRider.TrySetTargetBoat(boat);
+            if (boat.CurrentRider) continue;
+            if (boat.TargetRider) continue;
+
+            BoatRider.TrySetTargetBoat(boat);
+            return;
+        }
+
+        Debug.LogError("No free raid boats available");
     }
 }
