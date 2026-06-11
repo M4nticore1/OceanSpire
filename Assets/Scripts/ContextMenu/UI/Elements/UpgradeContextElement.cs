@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class UpgradeContextElement : ContextElement
 {
-    [SerializeField] private UpgradeMenu upgradeMenu;
-
+    [SerializeField] private UpgradeBuildingMenu upgradeMenu;
     private Building building;
 
     protected override void OnShowed()
@@ -24,7 +23,6 @@ public class UpgradeContextElement : ContextElement
     {
         building = target.GetComponent<Building>();
         if (!building) return false;
-
         if (building.ConstructionComponent.IsUnderConstruction) return false;
 
         return true;

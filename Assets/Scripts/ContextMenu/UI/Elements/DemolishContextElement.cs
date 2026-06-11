@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class DemolishContextElement : ContextElement
 {
-    [SerializeField] private DemolishActionMenu demolishMenu;
+    [SerializeField] private DemolishBuildingMenu demolishMenu;
+    private Building building;
 
     protected override void OnShowed()
     {
@@ -11,14 +12,13 @@ public class DemolishContextElement : ContextElement
 
     protected override void OnButtonClicked()
     {
-        demolishMenu.Open();
+        demolishMenu.Open(building);
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)
     {
-        Building building = target.GetComponent<Building>();
+        building = target.GetComponent<Building>();
         if (!building) return false;
-
         if (!building.BuildingData.IsDemolishable) return false;
 
         return true;

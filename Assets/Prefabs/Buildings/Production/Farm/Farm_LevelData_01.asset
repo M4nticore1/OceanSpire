@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: Farm_LevelData_01
   m_EditorClassIdentifier: 
   resourcesToBuild:
-  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+  - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     amount: 3600
-  - itemData: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+  - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
     amount: 800
-  - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+  - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
     amount: 200
   maxResidentsCount: 1
+  constructionTime: 0
+  buildingThumb: {fileID: 21300000, guid: 027349861b5ac6349a3638e12f68c3df, type: 3}
   constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
   constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}
   constructionStraight: {fileID: 3395891878762895499, guid: c9155c794856b584182a1047a9ba6f05, type: 3}

@@ -2050,6 +2050,10 @@ PrefabInstance:
       propertyPath: cityStorage
       value: 
       objectReference: {fileID: 1388613268}
+    - target: {fileID: 1456585662485150543, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: raidManager
+      value: 
+      objectReference: {fileID: 2047238980}
     - target: {fileID: 1497440472571837797, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: turorialId
       value: 1
@@ -2246,6 +2250,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2698017856457038692, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: cityStorage
+      value: 
+      objectReference: {fileID: 1388613268}
     - target: {fileID: 2841506790372911082, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

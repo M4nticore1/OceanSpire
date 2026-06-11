@@ -55,12 +55,16 @@ public abstract class SelectedDisplay : UIBehaviour
 
     protected virtual void Display(SelectComponent selectComponent)
     {
-        content.SetActive(true);
+        if (content) {
+            content.SetActive(true);
+        }
     }
 
     protected virtual void Hide(SelectComponent selectComponent)
     {
-        content.SetActive(false);
+        if (content) {
+            content.SetActive(false);
+        }
     }
 
     private void TryDisplay(SelectComponent selectComponent)

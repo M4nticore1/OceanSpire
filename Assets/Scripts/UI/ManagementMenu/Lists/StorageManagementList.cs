@@ -39,7 +39,7 @@ public class StorageManagementList : ManagementList
         var stack = CityStorage.Instance.Inventory.GetStack(itemStack);
 
         foreach (var item in stack.ItemAmounts) {
-            stackWidget.AddAmount(stack);
+            stackWidget.AddAmount(item);
         }
 
         stackWidget.SetLimit(stack);

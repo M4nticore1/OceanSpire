@@ -13,15 +13,17 @@ MonoBehaviour:
   m_Name: ResourceStorage_LevelData_01
   m_EditorClassIdentifier: Assembly-CSharp::TowerBuildingLevelData
   resourcesToBuild:
-  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+  - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     amount: 1500
-  - itemData: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+  - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
     amount: 800
-  - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+  - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
     amount: 300
-  - itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+  - definition: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
     amount: 150
   maxResidentsCount: 1
+  constructionTime: 0
+  buildingThumb: {fileID: 21300000, guid: 538c05922f3413e409857d3ccb1ef3d3, type: 3}
   constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
   constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}
   constructionStraight: {fileID: 3395891878762895499, guid: b10334c8c4317b74d901fd1654822407, type: 3}
