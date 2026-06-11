@@ -33,6 +33,7 @@
   "ui_select": "Выбрать",
   "ui_selected": "Выбрано",
   "ui_watch_ad": "Смотреть Рекламу",
+  "none": "Пусто",
   "name_level": "{name} (Уровень {level})",
   "upgrade": "Улучшить",
   "upgrade_resources": "Ресурсы для улучшения",

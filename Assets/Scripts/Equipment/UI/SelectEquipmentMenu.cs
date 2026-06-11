@@ -28,28 +28,31 @@ public class SelectEquipmentMenu : UIBehaviour
     private void UpdateMenu(EquipmentCategory category)
     {
         ClearWidgets();
-        CreateWidgets(category);
+        CreateDeselectWidget();
+        CreateStorageWidgets(category);
     }
 
-    private void CreateWidgets(EquipmentCategory category)
+    private void CreateDeselectWidget()
     {
-        ActionEquipmentWidget widget;
-        widget = Instantiate(equipmentWidgetPrefab, layoutGroup.transform);
+        var widget = Instantiate(equipmentWidgetPrefab, layoutGroup.transform);
 
         var selectedCitizen = SelectManager.Instance.GetSelectedHuman();
-        widget.SetEquipment(selectedCitizen.WeaponComponent);
         widget.SetSelectGroup(selectGroup);
+        widget.SetEquipmentComponent(selectedCitizen.WeaponComponent);
 
         spawnedWidgets.Add(widget);
+    }
 
+    private void CreateStorageWidgets(EquipmentCategory category)
+    {
         foreach (var item in CityStorage.Instance.Inventory.Items) {
             if (!ShouldCreateWidget(category, item)) continue;
 
             var definition = item.Definition as EquipmentDefinition;
 
-            widget = Instantiate(equipmentWidgetPrefab, layoutGroup.transform);
-            widget.SetEquipment(definition);
+            var widget = Instantiate(equipmentWidgetPrefab, layoutGroup.transform);
             widget.SetSelectGroup(selectGroup);
+            widget.SetEquipmentDefinition(definition);
 
             spawnedWidgets.Add(widget);
         }
@@ -74,7 +77,7 @@ public class SelectEquipmentMenu : UIBehaviour
 
         int amount = item.Amount;
 
-        foreach (Human human in CreaturesManager.Instance.Citizens) {
+        foreach (var human in CreaturesManager.Instance.Citizens) {
             if (human.WeaponComponent.EquipmentDefinition != definition) continue;
 
             amount--;

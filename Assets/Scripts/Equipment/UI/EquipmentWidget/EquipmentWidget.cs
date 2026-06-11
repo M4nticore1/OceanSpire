@@ -22,7 +22,7 @@ public abstract class EquipmentWidget : UIBehaviour
     protected EquipmentComponent equipmentComponent;
     protected EquipmentDefinition equipmentDefinition;
 
-    public static event Action<EquipmentWidget> onEquipmentWidgetClicked;
+    public static event Action<EquipmentWidget> OnEquipmentWidgetClicked;
 
     protected override void OnEnable()
     {
@@ -38,14 +38,14 @@ public abstract class EquipmentWidget : UIBehaviour
         button.OnReleased.RemoveListener(OnButtonClicked);
     }
 
-    public virtual void SetEquipment(EquipmentComponent component)
+    public virtual void SetEquipmentComponent(EquipmentComponent component)
     {
         equipmentComponent = component;
 
         UpdateEquipmentPanel(null);
     }
 
-    public virtual void SetEquipment(EquipmentDefinition definition)
+    public virtual void SetEquipmentDefinition(EquipmentDefinition definition)
     {
         equipmentDefinition = definition;
 
@@ -88,7 +88,7 @@ public abstract class EquipmentWidget : UIBehaviour
     protected void OnButtonClicked()
     {
         OnClicked();
-        onEquipmentWidgetClicked?.Invoke(this);
+        OnEquipmentWidgetClicked?.Invoke(this);
     }
 
     protected abstract void OnClicked();

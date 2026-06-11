@@ -23,16 +23,17 @@ public class ActionEquipmentWidget : EquipmentWidget
         Button.OnDeselected.RemoveListener(OnButtonDeselected);
     }
 
-    public override void SetEquipment(EquipmentComponent component)
+    public override void SetEquipmentComponent(EquipmentComponent component)
     {
-        base.SetEquipment(component);
+        base.SetEquipmentComponent(component);
 
+        Debug.Log("SetEquipment");
         UpdateSelected(null);
     }
 
-    public override void SetEquipment(EquipmentDefinition definition)
+    public override void SetEquipmentDefinition(EquipmentDefinition definition)
     {
-        base.SetEquipment(definition);
+        base.SetEquipmentDefinition(definition);
 
         UpdateSelected(definition);
         UpdateAmount(definition);
@@ -46,7 +47,10 @@ public class ActionEquipmentWidget : EquipmentWidget
     protected override void OnClicked()
     {
         var human = SelectManager.Instance.GetSelectedHuman();
-        if (!human) return;
+        if (!human) {
+            Debug.Log($"Human not found at {name}");
+            return;
+        }
 
         if (equipmentDefinition) {
             equipmentDefinition.Equip(human);

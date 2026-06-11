@@ -33,6 +33,7 @@
   "ui_select": "Select",
   "ui_selected": "Selected",
   "ui_watch_ad": "Watch Ad",
+  "none": "None",
   "name_level": "{name} (Level {level})",
   "upgrade": "Upgrade",
   "upgrade_resource": "Upgrade resources",

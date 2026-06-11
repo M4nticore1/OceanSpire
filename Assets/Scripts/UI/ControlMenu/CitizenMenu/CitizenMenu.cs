@@ -7,11 +7,10 @@ public class CitizenMenu : ControlMenu
 
     protected override void OnOpen()
     {
-        Human selectedCitizen = SelectManager.Instance.GetSelectedHuman();
+        var selectedCitizen = SelectManager.Instance.GetSelectedHuman();
         if (!selectedCitizen) return;
 
         skillsPanel.SetSkills(selectedCitizen.SkillsComponent);
-        equipmentPanel.SetWeapon(selectedCitizen.WeaponComponent);
     }
 
     protected override void OnClose()

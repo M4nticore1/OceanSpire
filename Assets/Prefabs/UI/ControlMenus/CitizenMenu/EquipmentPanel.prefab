@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60a021714106563439937b66f0e23da1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentPanel
-  weaponWidget: {fileID: 2723929417158471382}
+  weaponWidget: {fileID: 5836216368994366489}
 --- !u!1 &6876879084659113206
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,18 +368,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 667122620427050367, guid: 41912c9dfa96da045812ce6b3682d93a, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: 65fa82668474de04c92453026d0933b2, type: 2}
     - target: {fileID: 7488068295536451770, guid: 41912c9dfa96da045812ce6b3682d93a, type: 3}
       propertyPath: m_Name
-      value: WeaponWidget
+      value: SelectWeaponWidget
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41912c9dfa96da045812ce6b3682d93a, type: 3}
---- !u!114 &2723929417158471382 stripped
+--- !u!114 &5836216368994366489 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5466774592634269285, guid: 41912c9dfa96da045812ce6b3682d93a, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4534792797379998890, guid: 41912c9dfa96da045812ce6b3682d93a, type: 3}
   m_PrefabInstance: {fileID: 7931038884927832243}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

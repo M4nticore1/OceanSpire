@@ -472,7 +472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3eacb25991ffc441bb3034927a1829c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectEquipmentMenu
-  equipmentWidgetPrefab: {fileID: 7783757165204355733, guid: 00ebaab132082c04792b7c93d50251fe, type: 3}
+  equipmentWidgetPrefab: {fileID: 4540245856533810644, guid: 656975973c1a4154ea2bd7c5d63b5e38, type: 3}
   layoutGroup: {fileID: 2264566347939058248}
   selectGroup: {fileID: 4463070620049519230}
 --- !u!1 &1598348094714552744 stripped

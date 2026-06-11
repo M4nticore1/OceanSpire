@@ -28,6 +28,6 @@ public class SelectEquipmentWidget : EquipmentWidget
     {
         if (equipmentComponent != this.equipmentComponent) return;
 
-        SetEquipment(equipmentComponent.EquipmentDefinition);
+        SetEquipmentDefinition(equipmentComponent.EquipmentDefinition);
     }
 }
