@@ -1,15 +1,16 @@
 ﻿using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    [SerializeField] private BuildingsManager buildingsManager;
     [SerializeField] private PlayerInputHandler playerInputHandler;
 
     private Vector2 startPressPosition = Vector2.zero;
     private Vector2 cameraMoveVelocity = Vector2.zero;
 
-    [SerializeField] private float cameraVerticalBoundaryPadding = 10.0f;
+    [SerializeField] private float cameraTopBoundaryPadding = 10.0f;
+    [SerializeField] private float cameraBottomBoundaryPadding = 5.0f;
     [SerializeField] private float cameraVerticalReturnSpeed = 5.0f;
 
     [SerializeField] private float cameraMoveLerpSpeed = 10.0f;
@@ -57,10 +58,10 @@ public class CameraMovement : MonoBehaviour
     {
         float multiplier = 1f;
         float cameraHeight = math.abs(transform.position.y);
-        if (transform.position.y > BuildingsManager.Instance.CurrentCityHeight && cameraMoveVelocity.y > 0f)
-            multiplier = 1f - math.clamp((cameraHeight - BuildingsManager.Instance.CurrentCityHeight) / cameraVerticalBoundaryPadding, 0f, 1f);
+        if (transform.position.y > buildingsManager.CurrentCityHeight && cameraMoveVelocity.y > 0f)
+            multiplier = 1f - math.clamp((cameraHeight - buildingsManager.CurrentCityHeight) / cameraTopBoundaryPadding, 0f, 1f);
         else if (transform.position.y < 0f && cameraMoveVelocity.y < 0f)
-            multiplier = 1f - math.clamp(cameraHeight / cameraVerticalBoundaryPadding, 0f, 1f);
+            multiplier = 1f - math.clamp(cameraHeight / cameraBottomBoundaryPadding, 0f, 1f);
 
         return multiplier;
     }
@@ -71,7 +72,7 @@ public class CameraMovement : MonoBehaviour
         if (playerInputHandler.cameraMoveIA.IsPressed()) return;
 
         Vector3 cameraPosition = transform.position;
-        float targetHeight = transform.position.y > BuildingsManager.Instance.CurrentCityHeight ? BuildingsManager.Instance.CurrentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
+        float targetHeight = transform.position.y > buildingsManager.CurrentCityHeight ? buildingsManager.CurrentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
 
         transform.position = math.lerp(transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
     }
@@ -79,7 +80,7 @@ public class CameraMovement : MonoBehaviour
     private void ApplyMove()
     {
         transform.position += new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime;
-        transform.position = new Vector3(transform.position.x, math.clamp(transform.position.y, -cameraVerticalBoundaryPadding, BuildingsManager.Instance.CurrentCityHeight + cameraVerticalBoundaryPadding), transform.position.z);
+        transform.position = new Vector3(transform.position.x, math.clamp(transform.position.y, -cameraBottomBoundaryPadding, buildingsManager.CurrentCityHeight + cameraTopBoundaryPadding), transform.position.z);
 
         Vector3 eulers = transform.eulerAngles;
         eulers.y += cameraMoveVelocity.x * Time.deltaTime;
@@ -101,7 +102,7 @@ public class CameraMovement : MonoBehaviour
 
         float seg = 1f / 4f;
 
-        if (t < seg) {  // Bottom → Right
+        if (t < seg) { // Bottom → Right
             float k = t / seg;
             return new Vector2(math.lerp(-halfSize, halfSize, GetSquareSmooth(k, corner)), -halfSize);
         }

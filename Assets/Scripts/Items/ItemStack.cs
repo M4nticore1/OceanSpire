@@ -47,6 +47,8 @@ public class ItemStack : IItemAmount
 
     public void AddItemAmount(IItemAmount value)
     {
+        if (ItemAmounts.Contains(value)) return;
+
         ItemAmounts.Add(value);
     }
 

@@ -91,6 +91,13 @@
   "weapon": "Оружие",
   "weapon_baseball_bat": "Бейсбольная бита",
   "weapon_pipe": "Труба",
+  "weapon_crowbar": "Монтировка",
+  "weapon_hammer": "Молоток",
+  "weapon_hatchet": "Топорик",
+  "weapon_kitchen_knife": "Кухонный нож",
+  "weapon_machete": "Мачете",
+  "weapon_fire_axe": "Пожарный топор",
+  "weapon_sledgehammer": "Кувалда",
 
   "skills": "Навыки",
   "skill_cooking": "Готовка",

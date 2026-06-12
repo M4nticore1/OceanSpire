@@ -17,9 +17,6 @@ public enum AttackMethod
 public class WeaponDefinition : EquipmentDefinition
 {
     [Header("Weapon")]
-    [SerializeField] private int damage;
-    public int Damage => damage;
-
     [SerializeField] private AttackMethod attackMethods;
     public AttackMethod AttackMethods => attackMethods;
 

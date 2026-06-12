@@ -453,7 +453,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
         if (!TargetBuilding) return false;
         if (!CurrentPathBuilding) return false;
         if (PathProgress > pathBuildings.Count) return false;
-        if (IsRidingOnElevator && CurrentPathTowerBuilding.FloorIndex != CurrentTowerBuilding.FloorIndex) return false;
+        if (IsRidingOnElevator && CurrentPathTowerBuilding && CurrentPathTowerBuilding.FloorIndex != CurrentTowerBuilding.FloorIndex) return false;
         if (IsRidingOnElevator && CurrentElevator && !CurrentElevator.IsPossibleToExit()) return false;
 
         return true;

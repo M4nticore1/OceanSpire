@@ -191,6 +191,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponItemWidget
   itemDefinition: {fileID: 0}
   useLimit: 0
+  amount: 0
+  limit: 0
   itemNameText: {fileID: 0}
   resourceAmountText: {fileID: 848859100641501343}
   resourceImage: {fileID: 353891536657977764}
@@ -216,7 +218,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5458544170024859496
 RectTransform:
   m_ObjectHideFlags: 0

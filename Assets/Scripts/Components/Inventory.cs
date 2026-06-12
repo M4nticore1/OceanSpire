@@ -48,13 +48,11 @@ public class Inventory : MonoBehaviour
     public void AddItem(int id, int amount)
     {
         var item = GetItemById(id);
-
         if (item == null) {
             item = AddItem(id);
         }
 
         var stack = GetStack(item.Definition.Stack);
-
         if (useAmountLimit) {
             amount = math.clamp(amount, 0, stack.Amount - stack.GetItemAmountsSum());
         }

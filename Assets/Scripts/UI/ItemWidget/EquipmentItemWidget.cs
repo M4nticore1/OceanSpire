@@ -13,6 +13,6 @@ public class EquipmentItemWidget : ResourceWidget
         WeaponDefinition weapon = definition as WeaponDefinition;
         if (!weapon) return;
 
-        powerText.SetText(weapon.Damage.ToString());
+        powerText.SetText(weapon.Power.ToString());
     }
 }

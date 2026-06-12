@@ -91,6 +91,13 @@
   "weapon": "Weapon",
   "weapon_baseball_bat": "Baseball bat",
   "weapon_pipe": "Pipe",
+  "weapon_crowbar": "Crowbar",
+  "weapon_hammer": "Hammer",
+  "weapon_hatchet": "Hatchet",
+  "weapon_kitchen_knife": "Kitchen knife",
+  "weapon_machete": "Machete",
+  "weapon_fire_axe": "Fire axe",
+  "weapon_sledgehammer": "Sledgehammer",
 
   "skills": "Skills",
   "skill_cooking": "Cooking",

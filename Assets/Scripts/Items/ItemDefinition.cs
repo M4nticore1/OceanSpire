@@ -17,6 +17,13 @@ public enum ItemID
     Hands = 12,
     BaseballBat = 13,
     Pipe = 14,
+    Crowbar = 15,
+    Hammer = 16,
+    Hatchet = 17,
+    KitchenKnife = 18,
+    Machete = 19,
+    FireAxe = 20,
+    SledgeHammer = 21,
 }
 
 public enum ItemCategory

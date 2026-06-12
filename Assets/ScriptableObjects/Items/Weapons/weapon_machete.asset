@@ -12,16 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24daa3b8425c9f24693d261f838f1c7d, type: 3}
   m_Name: weapon_machete
   m_EditorClassIdentifier: Assembly-CSharp::WeaponDefinition
-  itemId: 13
+  itemId: 19
   itemCategory: 3
   stack: 8
   weight: 3
-  localizationItem: {fileID: 11400000, guid: cbfdfd4021cfc4d4fbf9684f664a5506, type: 2}
-  itemIcon: {fileID: 21300000, guid: b751e879ede5b1443982d88ae6fd1d55, type: 3}
+  localizationItem: {fileID: 11400000, guid: cb2e9696386901b42aa7c8a830658a70, type: 2}
+  itemIcon: {fileID: 21300000, guid: 00b96a9d3b89d634a954d109349a2eac, type: 3}
   showInStorage: 1
   equipmentCategory: 0
+  equipmentPrefab: {fileID: 7020424732878029919, guid: f7766f92d21dec241b2b912a8901ca17, type: 3}
   power: 10
   defaultEquipment: 0
-  weaponPrefab: {fileID: 7020424732878029919, guid: 4b23172d7f81a014a937c1b9c3a00248, type: 3}
-  damage: 10
   attackMethods: 1

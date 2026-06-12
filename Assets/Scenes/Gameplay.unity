@@ -6482,6 +6482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009b016c9e26c4c408d8e623b9ada0a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartItems
+  cityStorage: {fileID: 1388613268}
   startItems:
   - definition: {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
     amount: 100
@@ -6504,6 +6505,20 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: 0a719313980629b44bf36d6878f42391, type: 2}
     amount: 1
   - definition: {fileID: 11400000, guid: df1f21bae6de24c42807df07f0db0781, type: 2}
+    amount: 1
+  - definition: {fileID: 11400000, guid: 2885e0f30598a164395e493ce7632386, type: 2}
+    amount: 1
+  - definition: {fileID: 11400000, guid: f06fe61b7098b2146a7f57b9763df44e, type: 2}
+    amount: 1
+  - definition: {fileID: 11400000, guid: cab8b74954853c24480473f9ce175af9, type: 2}
+    amount: 1
+  - definition: {fileID: 11400000, guid: 031121acef0caee429e0623fc1e8ad0d, type: 2}
+    amount: 1
+  - definition: {fileID: 11400000, guid: 677ad137e7eef8c459a8abf5d4c96165, type: 2}
+    amount: 1
+  - definition: {fileID: 11400000, guid: aeddd71371bac66409027e47a3d1241e, type: 2}
+    amount: 1
+  - definition: {fileID: 11400000, guid: f3751d18bd6e96c40989c2511505e1da, type: 2}
     amount: 1
 --- !u!4 &1130765590 stripped
 Transform:
@@ -9713,11 +9728,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5d4f9c2695e6744e8083b3e2ac960c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaidManager
+  creaturesManager: {fileID: 220072952}
+  boatsManager: {fileID: 1934078805}
+  cityStorage: {fileID: 1388613268}
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
   boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
   humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
-  creaturesManager: {fileID: 220072952}
-  cityStorage: {fileID: 1388613268}
   inventory: {fileID: 2047238981}
   raiderPrefabs:
   - {fileID: 5290309351902810709, guid: 8aee4d31267ad2a409a74dbaf84efb95, type: 3}
