@@ -122,7 +122,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
         if (IsMoving) {
             SetTargetFloor(CalculateTargetFloor());
-            StartMovingToFloor(TargetFloor);
+            StartMovingToTargetFloor();
         }
         else {
             SetTargetFloor(CalculateTargetFloor());
@@ -275,59 +275,27 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     private int CalculateTargetFloor()
     {
-        if (goingToRidingPassengers.Count > 0) {
+        if (goingToRidingPassengers.Count > 0)
             return goingToRidingPassengers[0].FloorIndex;
-        }
 
         int currentFloor = FloorIndex;
-        int? targetFloor = null;
-        int maxPassengersCount = OwnedBuilding.LevelData.MaxHumansCount;
+        int freeSpace = OwnedBuilding.LevelData.MaxHumansCount - ridingPassengers.Count;
 
-        foreach (var passenger in ridingPassengers) {
-            if (!passenger.CurrentPathTowerBuilding) continue;
-            int floor = passenger.CurrentPathTowerBuilding.FloorIndex;
+        List<int> possibleFloors = new List<int>();
 
-            if (targetFloor == null) {
-                targetFloor = floor;
-                continue;
-            }
+        possibleFloors.AddRange(ridingPassengers
+            .Where(p => p.CurrentPathTowerBuilding != null)
+            .Select(p => p.CurrentPathTowerBuilding.FloorIndex));
 
-            bool isMovingUp = targetFloor.Value > currentFloor;
-            if (isMovingUp) {
-                if (floor > currentFloor && floor < targetFloor.Value)
-                    targetFloor = floor;
-            }
-            else {
-                if (floor < currentFloor && floor > targetFloor.Value)
-                    targetFloor = floor;
-            }
-        }
-
-        int freeSpace = maxPassengersCount - ridingPassengers.Count;
         if (freeSpace > 0) {
-            var sortedWaiting = waitingPassengers.OrderBy(p => Mathf.Abs(p.FloorIndex - currentFloor)).Take(freeSpace);
-
-            foreach (var passenger in sortedWaiting) {
-                int floor = passenger.FloorIndex;
-
-                if (targetFloor == null) {
-                    targetFloor = floor;
-                    continue;
-                }
-
-                bool isMovingUp = targetFloor.Value > currentFloor;
-                if (isMovingUp) {
-                    if (floor > currentFloor && floor < targetFloor.Value)
-                        targetFloor = floor;
-                }
-                else {
-                    if (floor < currentFloor && floor > targetFloor.Value)
-                        targetFloor = floor;
-                }
-            }
+            possibleFloors.AddRange(waitingPassengers
+                .Select(p => p.FloorIndex));
         }
 
-        return targetFloor ?? currentFloor;
+        if (possibleFloors.Count == 0)
+            return currentFloor;
+
+        return possibleFloors.OrderBy(floor => Mathf.Abs(floor - currentFloor)).First();
     }
 
     private int CalculateNextFloor()

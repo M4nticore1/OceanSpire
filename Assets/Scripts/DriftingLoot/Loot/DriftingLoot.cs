@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.XR;
 
 [System.Serializable]
 public struct LootTableData
@@ -20,6 +18,8 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
+
+    [SerializeField] private Transform meshSpawnTransform;
 
     private float currentMoveSpeedMultiplier = 1f;
 
@@ -160,7 +160,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
         var mesh = definition.Meshes[id];
         if (!mesh) return;
 
-        Instantiate(mesh, transform);
+        Instantiate(mesh, meshSpawnTransform);
     }
 
     private void UpdateMovementDirection()

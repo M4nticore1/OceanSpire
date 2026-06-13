@@ -74,6 +74,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6456257199870247446, guid: 41445534a2a12bf41a008fe86a3b5f17, type: 3}
   m_PrefabInstance: {fileID: 5732222477442260120}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &3238478444632207962 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7169047828381789890, guid: 41445534a2a12bf41a008fe86a3b5f17, type: 3}
+  m_PrefabInstance: {fileID: 5732222477442260120}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3558711020087060221 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9146781335153162853, guid: 41445534a2a12bf41a008fe86a3b5f17, type: 3}
@@ -93,13 +98,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FlyingDriftingLoot
   definition: {fileID: 11400000, guid: 7a447ceaef79bfa4ab921470ef5905d4, type: 2}
   instanceId: {fileID: 4642032650157003502}
+  meshSpawnTransform: {fileID: 3238478444632207962}
   boxCollider: {fileID: 3755649386295299430}
   rigidBody: {fileID: 1260949892068589940}
   balloons: {fileID: 6147969601782582974}
   demolishParticlesPrefab: {fileID: 1569574898052744210, guid: 1415b7b93ed0e694cbc21804bdb069fa, type: 3}
   fallingSpeedForce: 100
   fallingDemolishHeightOffset: 0
-  IsFalling: 0
 --- !u!65 &3755649386295299430
 BoxCollider:
   m_ObjectHideFlags: 0

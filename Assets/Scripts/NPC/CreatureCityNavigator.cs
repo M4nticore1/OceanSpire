@@ -80,13 +80,11 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     // Target Building
     public void SetTargetBuilding(Building target)
     {
-        Debug.Log("SetTargetBuilding");
         TargetBuilding = target;
     }
 
     public void RemoveTargetBuilding()
     {
-        Debug.Log("RemoveTargetBuilding");
         TargetBuilding = null;
     }
 
@@ -234,7 +232,6 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
 
     public void SetState(FollowingPathState state)
     {
-        Debug.Log($"Set state {state}");
         ExitState(CurrentState);
         CurrentState = state;
         EnterState(CurrentState);
@@ -427,6 +424,43 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
         CurrentPathElevator = CurrentPathTowerBuilding ? CurrentPathBuilding.GetComponent<ElevatorModule>() : null;
     }
 
+    // Events
+    private void OnBuildingInited(Building building)
+    {
+        if (!TargetBuilding) return;
+
+        if (TryFindPathToTargetBuilding()) {
+            FollowPath();
+        }
+        else {
+            SetState(FollowingPathState.None);
+        }
+    }
+
+    private void OnBuildingConstructionFinished(Building building)
+    {
+        if (!TargetBuilding) return;
+
+        if (TryFindPathToTargetBuilding()) {
+            FollowPath();
+        }
+        else {
+            SetState(FollowingPathState.None);
+        }
+    }
+
+    private void OnBuildingDemolished(Building building)
+    {
+        if (!TargetBuilding) return;
+
+        if (TryFindPathToTargetBuilding()) {
+            FollowPath();
+        }
+        else {
+            SetState(FollowingPathState.None);
+        }
+    }
+
     // Follow Path
     public void FollowPath()
     {
@@ -513,42 +547,5 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
         if (PathProgress >= pathBuildings.Count) return false;
 
         return true;
-    }
-
-    // Events
-    private void OnBuildingInited(Building building)
-    {
-        if (!TargetBuilding) return;
-
-        if (TryFindPathToTargetBuilding()) {
-            FollowPath();
-        }
-        else {
-            SetState(FollowingPathState.None);
-        }
-    }
-
-    private void OnBuildingConstructionFinished(Building building)
-    {
-        if (!TargetBuilding) return;
-
-        if (TryFindPathToTargetBuilding()) {
-            FollowPath();
-        }
-        else {
-            SetState(FollowingPathState.None);
-        }
-    }
-
-    private void OnBuildingDemolished(Building building)
-    {
-        if (!TargetBuilding) return;
-
-        if (TryFindPathToTargetBuilding()) {
-            FollowPath();
-        }
-        else {
-            SetState(FollowingPathState.None);
-        }
     }
 }

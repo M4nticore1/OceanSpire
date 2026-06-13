@@ -60,6 +60,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 9092713361229683442}
   m_SourcePrefab: {fileID: 100100000, guid: 41445534a2a12bf41a008fe86a3b5f17, type: 3}
+--- !u!4 &3238478444632207962 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7169047828381789890, guid: 41445534a2a12bf41a008fe86a3b5f17, type: 3}
+  m_PrefabInstance: {fileID: 5732222477442260120}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3558711020087060221 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9146781335153162853, guid: 41445534a2a12bf41a008fe86a3b5f17, type: 3}
@@ -79,6 +84,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SwimmingDriftingLoot
   definition: {fileID: 11400000, guid: 29f0bf6c17077b24491db024cfada838, type: 2}
   instanceId: {fileID: 4642032650157003502}
+  meshSpawnTransform: {fileID: 3238478444632207962}
 --- !u!114 &4642032650157003502 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1145921881265344118, guid: 41445534a2a12bf41a008fe86a3b5f17, type: 3}
