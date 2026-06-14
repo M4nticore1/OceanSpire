@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RaidLoader : Loader
+public class RaidLoader : WorldLoader
 {
     [SerializeField] private RaidManager raidManager;
 

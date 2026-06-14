@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class CraftingControlMenu : ControlMenu
 {
-    [SerializeField] private ProducedResourcePanel producedResourcePanelPrefab;
-    private ProducedResourcePanel[] spawnedProducedResourcePanels;
+    [SerializeField] private CraftItemPanel producedResourcePanelPrefab;
+    private CraftItemPanel[] spawnedProducedResourcePanels;
 
     [SerializeField] private LayoutGroup layoutGroup;
     [SerializeField] private ScrollRect scrollRect;
@@ -32,9 +32,9 @@ public class CraftingControlMenu : ControlMenu
     private void CreatePanels()
     {
         var module = SelectManager.Instance.GetSelectedBuilding().GetComponent<CraftingModule>();
-        var crafts = module.ProductionLevelData.craftItems;
+        var crafts = module.ProductionLevelData.CraftItems;
         int length = crafts.Length;
-        spawnedProducedResourcePanels = new ProducedResourcePanel[length];
+        spawnedProducedResourcePanels = new CraftItemPanel[length];
 
         for (int i = 0; i < length; i++) {
             var craft = crafts[i];

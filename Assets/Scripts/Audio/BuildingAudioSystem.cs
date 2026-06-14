@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class BuildingAudioSystem : MonoBehaviour
 {
+    [SerializeField] private AudioMixerGroup mixerGoup;
     [SerializeField] private AudioClip[] buildingStartedClips;
     [SerializeField] private AudioClip[] buildingFinishedClips;
     [SerializeField] private AudioClip[] buildingDemolishedClips;
@@ -24,21 +26,21 @@ public class BuildingAudioSystem : MonoBehaviour
     {
         if (!ShouldPlay()) return;
 
-        AudioUtils.PlaySFX(buildingStartedClips);
+        AudioUtils.PlaySFX(buildingStartedClips, mixerGoup);
     }
 
     private void OnBuildingUpgradeCompleted(Building building)
     {
         if (!ShouldPlay()) return;
 
-        AudioUtils.PlaySFX(buildingFinishedClips);
+        AudioUtils.PlaySFX(buildingFinishedClips, mixerGoup);
     }
 
     private void OnBuildingDemolished(Building building)
     {
         if (!ShouldPlay()) return;
 
-        AudioUtils.PlaySFX(buildingDemolishedClips);
+        AudioUtils.PlaySFX(buildingDemolishedClips, mixerGoup);
     }
 
     private bool ShouldPlay()

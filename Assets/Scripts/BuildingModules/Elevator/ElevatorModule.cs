@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -89,6 +90,16 @@ public class ElevatorModule : BuildingModule, IElectricible
 
         return transform;
     }
+
+    //public Transform GetCabinRidingTransform(CreatureCityNavigator cityNavagator)
+    //{
+    //    int length = SpawnedElevatorCabin.BuildingInteractions.Length;
+    //    if (length <= 0) return transform;
+
+    //    int index = OwnedBuilding.InteractTransformsDict.Keys.ToList().IndexOf(cityNavagator) % length;
+
+    //    return SpawnedElevatorCabin.BuildingInteractions[index].waypoints[0].transform;
+    //}
 
     public float GetElectricityConsumption()
     {

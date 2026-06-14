@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BoatsLoader : Loader
+public class BoatsLoader : WorldLoader
 {
     [SerializeField] private InstancesManager instancesManager;
     [SerializeField] private BuildingsManager buildingsManager;

@@ -10,7 +10,7 @@ public class HealthComponent : MonoBehaviour
     public bool IsAlive { get; private set; } = true;
 
     public event Action onHealthChanged;
-    public event Action onDied;
+    public event Action OnDied;
 
     public void Init(float currentHealth)
     {
@@ -42,22 +42,22 @@ public class HealthComponent : MonoBehaviour
         onHealthChanged?.Invoke();
 
         if (ShouldDie()) {
-            OnDied();
+            Die();
         }
         else if (ShouldRevive()) {
-            OnRevived();
+            Revive();
         }
     }
 
-    private void OnRevived()
+    private void Revive()
     {
         IsAlive = true;
     }
 
-    private void OnDied()
+    private void Die()
     {
         IsAlive = false;
-        onDied?.Invoke();
+        OnDied?.Invoke();
     }
 
     private bool ShouldDie()

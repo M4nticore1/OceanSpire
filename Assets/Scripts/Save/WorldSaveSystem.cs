@@ -12,7 +12,10 @@ public static class WorldSaveSystem
         string worldName = worldData.WorldName;
 
         string folderPath = GetSaveFolderPathByName(worldName);
-        if (string.IsNullOrEmpty(folderPath)) return;
+        if (string.IsNullOrEmpty(folderPath)) {
+            Debug.LogError("FolderPath is null or empty!");
+            return;
+        }
 
         Directory.CreateDirectory(folderPath);
 

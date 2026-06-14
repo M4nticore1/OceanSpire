@@ -41,8 +41,11 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private BuildingStrategy strategy;
 
-    private Dictionary<CreatureCityNavigator, Transform> interactTransforms = new();
-    public List<Transform> interactTransformsqwe = new();
+    private Dictionary<CreatureCityNavigator, Transform> interactTransformsDict = new();
+    public IReadOnlyDictionary<CreatureCityNavigator, Transform> InteractTransformsDict => interactTransformsDict;
+
+    private List<Transform> interactTransformsList = new();
+    public IReadOnlyList<Transform> InteractTransformsList => interactTransformsList;
 
     public bool isWorking { get; private set; } = false;
     public bool IsDemolished { get; private set; } = false;
@@ -227,26 +230,26 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // Interaction
     public void AssignInteractTransform(CreatureCityNavigator navigator)
     {
-        if (interactTransforms.ContainsKey(navigator)) {
-            interactTransforms.Remove(navigator);
+        if (interactTransformsDict.ContainsKey(navigator)) {
+            interactTransformsDict.Remove(navigator);
         }
 
-        interactTransforms.Add(navigator, GetFirstWaypointTransform());
+        interactTransformsDict.Add(navigator, GetFirstWaypointTransform());
     }
 
     public void TryRemoveInteractTransform(CreatureCityNavigator navigator)
     {
-        if (!interactTransforms.ContainsKey(navigator)) return;
+        if (!interactTransformsDict.ContainsKey(navigator)) return;
 
-        interactTransforms.Remove(navigator);
+        interactTransformsDict.Remove(navigator);
     }
 
     public Transform GetInteractionTransform(CreatureCityNavigator navigator)
     {
-        if (!interactTransforms.ContainsKey(navigator))
+        if (!interactTransformsDict.ContainsKey(navigator))
             return transform;
 
-        return interactTransforms[navigator];
+        return interactTransformsDict[navigator];
     }
 
     public float GetUpgradeTime()
@@ -490,15 +493,15 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private void UpdateInteractTransforms()
     {
-        interactTransformsqwe.Clear();
+        interactTransformsList.Clear();
 
-        var keys = interactTransforms.Keys.ToArray();
+        var keys = interactTransformsDict.Keys.ToArray();
         for (int i = 0; i < keys.Length; i++) {
             if (i >= SpawnedConstruction.BuildingInteractions.Length) break;
 
             var transform = SpawnedConstruction.BuildingInteractions[i].waypoints[0].transform;
-            interactTransforms[keys[i]] = transform;
-            interactTransformsqwe.Add(transform);
+            interactTransformsDict[keys[i]] = transform;
+            interactTransformsList.Add(transform);
         }
     }
 
@@ -508,7 +511,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         if (actions.Length == 0)
             return transform;
 
-        var interactorsCount = interactTransforms.Values.Count;
+        var interactorsCount = interactTransformsDict.Values.Count;
 
         var actionIndex = interactorsCount % actions.Length;
         actionIndex = Mathf.Clamp(actionIndex, 0, actionIndex);

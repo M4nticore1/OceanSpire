@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.Audio;
 
 public static class AudioUtils
 {
-    public static void PlaySFX(AudioClip clip)
+    public static void PlaySFX(AudioClip clip, AudioMixerGroup group)
     {
         if (!clip) return;
 
-        var src = CreateAudioSource();
+        var src = CreateAudioSource(group);
         src.clip = clip;
         src.spatialBlend = 0f;
 
@@ -14,16 +15,16 @@ public static class AudioUtils
         Object.Destroy(src.gameObject, clip.length);
     }
 
-    public static void PlaySFX(AudioClip[] clips)
+    public static void PlaySFX(AudioClip[] clips, AudioMixerGroup group)
     {
-        PlaySFX(GetRandomAudioClip(clips));
+        PlaySFX(GetRandomAudioClip(clips), group);
     }
 
-    public static void PlaySFXAtPosition(AudioClip clip, Vector3 pos, float minDist, float maxDist)
+    public static void PlaySFXAtPosition(AudioClip clip, Vector3 pos, float minDist, float maxDist, AudioMixerGroup group)
     {
         if (!clip) return;
 
-        var src = CreateAudioSource();
+        var src = CreateAudioSource(group);
         src.gameObject.transform.position = pos;
 
         src.clip = clip;
@@ -36,9 +37,9 @@ public static class AudioUtils
         GameObject.Destroy(src.gameObject, clip.length);
     }
 
-    public static void PlaySFXAtPosition(AudioClip[] clips, Vector3 pos, float minDist, float maxDist)
+    public static void PlaySFXAtPosition(AudioClip[] clips, Vector3 pos, float minDist, float maxDist, AudioMixerGroup group)
     {
-        PlaySFXAtPosition(GetRandomAudioClip(clips), pos, minDist, maxDist);
+        PlaySFXAtPosition(GetRandomAudioClip(clips), pos, minDist, maxDist, group);
     }
 
     private static AudioClip GetRandomAudioClip(AudioClip[] clips)
@@ -50,10 +51,11 @@ public static class AudioUtils
         return clips[index];
     }
 
-    private static AudioSource CreateAudioSource()
+    private static AudioSource CreateAudioSource(AudioMixerGroup group)
     {
         var go = new GameObject("SFX");
-        var src = go.AddComponent<AudioSource>();
-        return src;
+        var source = go.AddComponent<AudioSource>();
+        source.outputAudioMixerGroup = group;
+        return source;
     }
 }

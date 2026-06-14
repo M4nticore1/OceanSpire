@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,60 +14,29 @@ public class LocalizationManager
         {
             if (instance == null) {
                 instance = new LocalizationManager();
-                instance.Init(null);
             }
 
             return instance;
         }
     }
 
-    public Dictionary<SystemLanguage, LocalizationTable> localizations { get; private set; } = new Dictionary<SystemLanguage, LocalizationTable>();
-    public LocalizationTable currentLocalization { get; private set; }
+    public LocalizationTable CurrentLocalization { get; private set; }
     private Dictionary<string, string> deserializedLocalization;
 
-    private bool isInited = false;
-    public event System.Action OnLocalizationChanged;
+    public event Action<LocalizationTable> OnLocalizationChanged;
 
     private LocalizationManager() { }
 
-    private void Init(SettingsData data)
-    {
-        if (isInited) return;
-
-        foreach (var localization in LocalizationsList.Instance.Localizations) {
-            localizations.Add(localization.Language, localization);
-        }
-        Debug.Log("Loaded " + localizations.Count + " localizations");
-
-        if (data != null) {
-            SetLocalization(data.language);
-        }
-        else {
-            SystemLanguage systemLanguage = SystemLanguage.Russian;
-
-            if (localizations.ContainsKey(systemLanguage)) {
-                SetLocalization(systemLanguage);
-            }
-            else {
-                SetLocalization(SystemLanguage.English);
-            }
-        }
-
-        isInited = true;
-    }
-
-    public void SetLocalization(int value)
-    {
-        SystemLanguage language = localizations.Values.ToArray()[value].Language;
-        SetLocalization(language);
-    }
-
     public void SetLocalization(SystemLanguage language)
     {
-        currentLocalization = localizations[language];
-        deserializedLocalization = JsonConvert.DeserializeObject<Dictionary<string, string>>(currentLocalization.LocalizationAsset.text);
+        if (!LocalizationsList.Instance.LocalizationsDict.ContainsKey(language)) {
+            SetLocalization(SystemLanguage.English);
+            return;
+        }
 
-        OnLocalizationChanged?.Invoke();
+        CurrentLocalization = LocalizationsList.Instance.GetLocalization(language);
+        deserializedLocalization = JsonConvert.DeserializeObject<Dictionary<string, string>>(CurrentLocalization.LocalizationAsset.text);
+        OnLocalizationChanged?.Invoke(CurrentLocalization);
     }
 
     public string GetText(LocalizationItem item)
@@ -77,6 +47,8 @@ public class LocalizationManager
 
     public string GetText(string key)
     {
+        if (deserializedLocalization == null) return null;
+
         if (!deserializedLocalization.TryGetValue(key, out var text)) {
             Debug.LogWarning($"Localization key not found: '{key}'");
             return key;
@@ -87,15 +59,18 @@ public class LocalizationManager
 
     public TMP_FontAsset GetFont(TextRole role)
     {
+        if (!CurrentLocalization) return null;
+
         int fontIndex = (int)role;
-        TMP_FontAsset font = currentLocalization.Fonts[fontIndex];
+        var font = CurrentLocalization.Fonts[fontIndex];
+
         return font;
     }
 
     public string GetLanguageNameByLocalization(SystemLanguage language)
     {
-        TextAsset textAsset = localizations[language].LocalizationAsset;
-        Dictionary<string, string> localiations = JsonConvert.DeserializeObject<Dictionary<string, string>>(textAsset.text);
+        var textAsset = LocalizationsList.Instance.GetLocalization(language).LocalizationAsset;
+        var localiations = JsonConvert.DeserializeObject<Dictionary<string, string>>(textAsset.text);
         string text = localiations["language_name"];
         return text;
     }

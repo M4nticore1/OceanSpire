@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
@@ -126,6 +127,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         base.OnEnable();
 
+        CustomUIManager.Instance.RegisterCustomButton(this);
+
         InputListener.Instance.onPressed += OnPointerPressed;
         InputListener.Instance.onReleased += OnPointerReleased;
 
@@ -135,6 +138,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     protected override void OnDisable()
     {
         base.OnDisable();
+
+        CustomUIManager.Instance.UnregisterCustomButton(this);
 
         InputListener.Instance.onPressed -= OnPointerPressed;
         InputListener.Instance.onReleased -= OnPointerReleased;
@@ -149,13 +154,16 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         selectGroup.RemoveButton(this);
     }
 
-    private void Update()
+    public void Tick()
     {
+        if (!gameObject.activeInHierarchy) return;
+        if (!enabled) return;
+
         if (isAnimating) {
             ApplyInteractionAlpha();
         }
 
-        if (cancelPressWhenMoving && IsPressed && pressedButtonPosition != transform.position) {
+        if (cancelPressWhenMoving && IsPressed && (pressedButtonPosition - transform.position).sqrMagnitude >= 1f) {
             SetState(CustomButtonState.Idle);
         }
     }
@@ -177,7 +185,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         if (!targetGraphic) {
             var background = GetComponent<Graphic>();
-            if (background) return;
+            if (!background) return;
 
             targetGraphic = background;
             scaleRoot = background.rectTransform;
@@ -284,8 +292,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (!IsEnabled) return;
         if (!IsInteractable) return;
-        if (!IsPressed && !deselectOnOutsideClick) return;
-        //if (IsSelected && isPointerHovered) return;
+        //if (!IsPressed && !deselectOnOutsideClick) return;
 
         if (IsPressed) {
             if (IsSelectable)
@@ -295,9 +302,16 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
             Release();
         }
+        else if (IsIdle) {
+            if (PointerUtils.GetRaycastUIResult().gameObject == gameObject) {
+                SetState(CustomButtonState.Hovered);
+            }
+        }
         else if (!IsIdle) {
-            GameObject go = PointerUtils.GetRaycastUIResult().gameObject;
-            CustomButton button = go ? go.GetComponent<CustomButton>() : null;
+            if (isSelectable) return;
+
+            var go = PointerUtils.GetRaycastUIResult().gameObject;
+            var button = go ? go.GetComponent<CustomButton>() : null;
 
             if (button && (!selectGroup || button.selectGroup == selectGroup) && !deselectOnOutsideClick)
                 SetState(CustomButtonState.Idle);

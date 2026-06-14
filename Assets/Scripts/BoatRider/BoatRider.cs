@@ -44,17 +44,25 @@ public class BoatRider : MonoBehaviour
         int? targetBoatInstanceId = boatRiderData.TargetBoatInstanceId;
         if (targetBoatInstanceId != null) {
             var instance = InstancesManager.Instance.GetInstance(targetBoatInstanceId.Value);
-            var boat = instance.GetComponent<Boat>();
 
-            TrySetTargetBoat(boat);
+            if (instance) {
+                var boat = instance.GetComponent<Boat>();
+
+                if (boat)
+                    TrySetTargetBoat(boat);
+            }
         }
 
         int? ridingBoatInstanceId = boatRiderData.RidingBoatInstanceId;
         if (ridingBoatInstanceId != null) {
             var instance = InstancesManager.Instance.GetInstance(ridingBoatInstanceId.Value);
-            var boat = instance.GetComponent<Boat>();
 
-            EnterBoat(boat);
+            if (instance) {
+                var boat = instance.GetComponent<Boat>();
+
+                if (boat)
+                    EnterBoat(boat);
+            }
         }
     }
 
@@ -214,7 +222,6 @@ public class BoatRider : MonoBehaviour
     {
         if (!ShouldStartEnteringBoat()) return;
 
-        Debug.Log("WaitForBoatAndEnter");
         WaitForBoatAndEnter();
     }
 

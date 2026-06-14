@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TutorialLoader : Loader
+public class TutorialLoader : WorldLoader
 {
     [SerializeField] private TutorialManager tutorialManager;
 

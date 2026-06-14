@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class LootContainerAudioSystem : MonoBehaviour
 {
+    [SerializeField] private AudioMixerGroup mixerGoup;
+
     [SerializeField] private AudioClip[] containerTakenClips;
     [SerializeField] private AudioClip[] containerFallStartClips;
     [SerializeField] private AudioClip[] containerLandedClips;
@@ -25,16 +28,16 @@ public class LootContainerAudioSystem : MonoBehaviour
 
     private void OnContainerTaked(DriftingLoot container)
     {
-        AudioUtils.PlaySFXAtPosition(containerTakenClips, container.transform.position, minDistance, maxDistance);
+        AudioUtils.PlaySFXAtPosition(containerTakenClips, container.transform.position, minDistance, maxDistance, mixerGoup);
     }
 
     private void OnContainerStartedFalling(DriftingLoot container)
     {
-        AudioUtils.PlaySFXAtPosition(containerFallStartClips, container.transform.position, minDistance, maxDistance);
+        AudioUtils.PlaySFXAtPosition(containerFallStartClips, container.transform.position, minDistance, maxDistance, mixerGoup);
     }
 
     private void OnContainerFalled(DriftingLoot container)
     {
-        AudioUtils.PlaySFXAtPosition(containerLandedClips, container.transform.position, minDistance, maxDistance);
+        AudioUtils.PlaySFXAtPosition(containerLandedClips, container.transform.position, minDistance, maxDistance, mixerGoup);
     }
 }

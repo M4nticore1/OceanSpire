@@ -15,9 +15,6 @@ public class ResourceWidget : UIBehaviour
     public List<IItemAmount> Amounts { get; private set; } = new();
     public IItemAmount Limit { get; private set; }
 
-    public bool amount;
-    public bool limit;
-
     [Header("UI")]
     [SerializeField] private TextLocalizer itemNameText;
     [SerializeField] private TextMeshProUGUI resourceAmountText;
@@ -52,19 +49,12 @@ public class ResourceWidget : UIBehaviour
             Limit.OnAmountChanged -= OnLimitChanged;
     }
 
-    private void Update()
-    {
-        amount = Amounts.Count > 0;
-        limit = Limit != null;
-    }
-
     protected override void Start()
     {
         base.Start();
 
         UpdateItemName();
         UpdateIcon();
-        UpdateAmountFromDefinition();
         UpdateAmountAndLimit();
         TryUpdateResourceBar();
         TryUpdateAmountColor();
@@ -114,16 +104,22 @@ public class ResourceWidget : UIBehaviour
 
     public void SetColor(Color color)
     {
+        if (!resourceAmountText) return;
+
         resourceAmountText.color = color;
     }
 
     public void SetAmountText(int amount)
     {
+        if (!resourceAmountText) return;
+
         resourceAmountText.SetText(amount.ToString());
     }
 
     public void SetAmountText(int amount, int limit)
     {
+        if (!resourceAmountText) return;
+
         resourceAmountText.SetText(amount.ToString() + "/" + limit.ToString());
         TryUpdateResourceBar();
         TryUpdateAmountColor();
@@ -153,24 +149,13 @@ public class ResourceWidget : UIBehaviour
         resourceAmountBar.fillAmount = alpha;
     }
 
-    private bool UpdateAmountFromDefinition()
-    {
-        if (!itemDefinition) return false;
-
-        int id = itemDefinition.ItemId;
-
-        var item = CityStorage.Instance.Inventory.GetItemById(id);
-        if (item == null) return false;
-
-        AddAmount(item);
-        return true;
-    }
-
     private void UpdateItemName()
     {
         if (!itemNameText) return;
+        if (!itemDefinition) return;
 
         itemNameText.SetLocalizationItem(itemDefinition.NameLocalization);
+        itemNameText.UpdateText();
     }
 
     protected virtual void UpdateAmountAndLimit()

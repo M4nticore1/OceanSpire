@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class SelectAudioSystem : MonoBehaviour
 {
+    [SerializeField] private AudioMixerGroup mixerGoup;
     [SerializeField] private AudioClip[] selectAudioClips;
 
     private void OnEnable()
@@ -20,16 +22,16 @@ public class SelectAudioSystem : MonoBehaviour
 
     private void OnBuildingSelected(Building building)
     {
-        AudioUtils.PlaySFX(selectAudioClips);
+        AudioUtils.PlaySFX(selectAudioClips, mixerGoup);
     }
 
     private void OnBoatSelected(Boat boat)
     {
-        AudioUtils.PlaySFX(selectAudioClips);
+        AudioUtils.PlaySFX(selectAudioClips, mixerGoup);
     }
 
     private void OnHumanSelected(Human human)
     {
-        AudioUtils.PlaySFX(selectAudioClips);
+        AudioUtils.PlaySFX(selectAudioClips, mixerGoup);
     }
 }

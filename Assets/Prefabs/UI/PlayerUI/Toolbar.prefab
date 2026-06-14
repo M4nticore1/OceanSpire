@@ -1447,7 +1447,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307739286538277425, guid: 4c069ed7813208d49bd1d9bd098800e8, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Open
+      value: Show
       objectReference: {fileID: 0}
     - target: {fileID: 8307739286538277425, guid: 4c069ed7813208d49bd1d9bd098800e8, type: 3}
       propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName

@@ -48,6 +48,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
             if (TryStopMoving()) {
                 ApplyConstructionPosition();
                 SetTargetFloor(CalculateTargetFloor());
+                UpdateMoveDirection();
                 StartMovingToTargetFloorTimer();
             }
         }
@@ -120,31 +121,29 @@ public class ElevatorCabinConstruction : BuildingConstruction
     {
         waitingPassengers.Add(passenger);
 
-        if (IsMoving) {
-            SetTargetFloor(CalculateTargetFloor());
-            StartMovingToTargetFloor();
-        }
-        else {
-            SetTargetFloor(CalculateTargetFloor());
-            StartMovingToTargetFloorTimer();
-        }
+        UpdateDestinationAndProceed();
     }
 
     public void RemoveWaitingPassenger(CreatureCityNavigator passenger)
     {
         waitingPassengers.Remove(passenger);
+
+        UpdateDestinationAndProceed();
     }
 
     // Going To Riding Passengers
     public void AddGoingToRidingPassenger(CreatureCityNavigator passenger)
     {
         goingToRidingPassengers.Add(passenger);
-        RemoveMovingToFloorTimer();
+
+        UpdateDestinationAndProceed();
     }
 
     public void RemoveGoingToRidingPassenger(CreatureCityNavigator passenger)
     {
         goingToRidingPassengers.Remove(passenger);
+
+        UpdateDestinationAndProceed();
     }
 
     // Riding Passengers
@@ -152,18 +151,14 @@ public class ElevatorCabinConstruction : BuildingConstruction
     {
         ridingPassengers.Add(passenger);
 
-        SetTargetFloor(CalculateTargetFloor());
-        StartMovingToTargetFloorTimer();
+        UpdateDestinationAndProceed();
     }
 
     public void RemoveRidingPassenger(CreatureCityNavigator passenger)
     {
         ridingPassengers.Remove(passenger);
 
-        if (ridingPassengers.Count > 0)
-            TimerManager.Instance.ResetTimer(startMovingTimerHandle);
-        else
-            TimerManager.Instance.RemoveTimer(startMovingTimerHandle);
+        UpdateDestinationAndProceed();
     }
 
     // Passengers
@@ -210,6 +205,20 @@ public class ElevatorCabinConstruction : BuildingConstruction
         return true;
     }
 
+    private void UpdateDestinationAndProceed()
+    {
+        if (IsMoving) {
+            SetTargetFloor(CalculateTargetFloor());
+            UpdateMoveDirection();
+            StartMovingToTargetFloor();
+        }
+        else {
+            SetTargetFloor(CalculateTargetFloor());
+            UpdateMoveDirection();
+            StartMovingToTargetFloorTimer();
+        }
+    }
+
     private void StartMovingToTargetFloor()
     {
         StartMovingToFloor(TargetFloor);
@@ -221,13 +230,6 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
         SetIsMoving(true);
         StartFloorIndex = FloorIndex;
-
-        if (floorIndex > FloorIndex)
-            moveDirection = Vector3.up;
-        else if (floorIndex < FloorIndex)
-            moveDirection = Vector3.down;
-        else
-            moveDirection = Vector3.zero;
     }
 
     private void StartMovingToTargetFloorTimer()
@@ -235,6 +237,16 @@ public class ElevatorCabinConstruction : BuildingConstruction
         if (TargetFloor == FloorIndex) return;
 
         TimerManager.Instance.StartTimer(startMovingTimerHandle, delayToStartMoving, StartMovingToTargetFloor);
+    }
+
+    private void UpdateMoveDirection()
+    {
+        if (TargetFloor > FloorIndex)
+            moveDirection = Vector3.up;
+        else if (TargetFloor < FloorIndex)
+            moveDirection = Vector3.down;
+        else
+            moveDirection = Vector3.zero;
     }
 
     private void RemoveMovingToFloorTimer()
@@ -310,16 +322,16 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     private int GetFloorIndexByPosition()
     {
-        int floorIndex = 0;
+        int floorIndex = FloorIndex;
         float firstFloorHeight = BuildingsManager.FirstFloorHeight;
         float floorHeight = BuildingsManager.FloorHeight;
 
-        if (TargetFloor >= FloorIndex) {
+        if (TargetFloor > FloorIndex) {
             floorIndex = (int)((transform.position.y - firstFloorHeight) / floorHeight);
             if (floorIndex < StartFloorIndex)
                 floorIndex = StartFloorIndex;
         }
-        else {
+        else if (TargetFloor < FloorIndex) {
             floorIndex = (int)((transform.position.y - firstFloorHeight + floorHeight) / floorHeight);
             if (floorIndex > StartFloorIndex)
                 floorIndex = StartFloorIndex;

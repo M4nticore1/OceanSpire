@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WindLoader : Loader
+public class WindLoader : WorldLoader
 {
     [SerializeField] private WindManager windManager;
 

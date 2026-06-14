@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e1a75c84982d6b429c85b4c1fc0134f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootContainerAudioSystem
+  mixerGoup: {fileID: -5464991957138809496, guid: 6d04f55806270354e929cb51e5741f66, type: 2}
   containerTakenClips: []
   containerFallStartClips:
   - {fileID: 8300000, guid: 8c6b2cbd4f10e6b4c97c9c2b5e511180, type: 3}

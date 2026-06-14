@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class BuildingsLoader : Loader
+public class BuildingsLoader : WorldLoader
 {
     public static BuildingsLoader Instance { get; private set; }
 

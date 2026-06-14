@@ -100,18 +100,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -100
       objectReference: {fileID: 0}
-    - target: {fileID: 5673741942134079900, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5673741942134079900, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5673741942134079900, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5802997262551608550, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -127,14 +115,6 @@ PrefabInstance:
     - target: {fileID: 6231984969278463931, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6477441796283476379, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
-      propertyPath: m_CellSize.x
-      value: 420
-      objectReference: {fileID: 0}
-    - target: {fileID: 6477441796283476379, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
-      propertyPath: m_ConstraintCount
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

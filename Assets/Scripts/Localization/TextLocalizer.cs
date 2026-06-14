@@ -71,10 +71,12 @@ public class TextLocalizer : UIBehaviour
     {
         if (item) {
             string text = LocalizationManager.Instance.GetText(item);
+            if (text == null) return;
             if (text == "") return;
 
             if (LocalizationTarget != null) {
-                Dictionary<string, string> dict = LocalizationTarget.GetLocalization();
+                var dict = LocalizationTarget.GetLocalization();
+                if (dict == null) return;
 
                 foreach (var key in dict.Keys.ToArray()) {
                     string holder = "{" + key + "}";
@@ -91,7 +93,7 @@ public class TextLocalizer : UIBehaviour
 
     private void UpdateFont()
     {
-        TMP_FontAsset font = LocalizationManager.Instance.GetFont(textRole);
+        var font = LocalizationManager.Instance.GetFont(textRole);
         SetFont(font);
     }
 
@@ -100,7 +102,7 @@ public class TextLocalizer : UIBehaviour
         TextBlock.font = font;
     }
 
-    private void OnLocalizationChanged()
+    private void OnLocalizationChanged(LocalizationTable localizationTable)
     {
         UpdateText();
     }

@@ -19,19 +19,19 @@ public abstract class Creature : MonoBehaviour
 
     private bool isIdle = true;
 
-    public event Action onStartedIdle;
-    public event Action onStoppedIdle;
+    public event Action OnIdleStarted;
+    public event Action OnIdleStopped;
 
     protected virtual void OnEnable()
     {
-        movement.OnReachedPath += OnStartedMoving;
-        movement.OnMovementStopped += OnStoppedMoving;
+        movement.OnReachedPath += OnReachedPath;
+        movement.OnMovementStopped += OnMovementStopped;
     }
 
     protected virtual void OnDisable()
     {
-        movement.OnReachedPath -= OnStartedMoving;
-        movement.OnMovementStopped -= OnStoppedMoving;
+        movement.OnReachedPath -= OnReachedPath;
+        movement.OnMovementStopped -= OnMovementStopped;
     }
 
     public void Init(CreatureData creatureData)
@@ -79,7 +79,7 @@ public abstract class Creature : MonoBehaviour
     protected void StartIdle()
     {
         isIdle = true;
-        onStartedIdle?.Invoke();
+        OnIdleStarted?.Invoke();
     }
 
     protected void TryStopIdle()
@@ -92,16 +92,16 @@ public abstract class Creature : MonoBehaviour
     protected void StopIdle()
     {
         isIdle = false;
-        onStoppedIdle?.Invoke();
+        OnIdleStopped?.Invoke();
     }
 
     // Movement
-    protected virtual void OnStartedMoving()
+    protected virtual void OnReachedPath()
     {
-        StopIdle();
+        UpdateIdle();
     }
 
-    protected virtual void OnStoppedMoving()
+    protected virtual void OnMovementStopped()
     {
         UpdateIdle();
     }

@@ -17,22 +17,16 @@ public class BuildingWidget : MonoBehaviour
     [SerializeField] private CustomButton informationButton;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup;
 
-    private bool isInited = false;
-
     private void OnEnable()
     {
         buildButton.OnReleased.AddListener(OnBuildButtonCliked);
         informationButton.OnReleased.AddListener(OnInformationButtonClicked);
-        //EventBus.onMainStorageItemAmountChanged += OnMainStorageItemAmountChanged;
-
-        //UpdateResourcesToBuild();
     }
 
     private void OnDisable()
     {
         buildButton.OnReleased.RemoveListener(OnBuildButtonCliked);
         informationButton.OnReleased.RemoveListener(OnInformationButtonClicked);
-        //EventBus.onMainStorageItemAmountChanged -= OnMainStorageItemAmountChanged;
     }
 
     public void Init(Building prefab)
@@ -41,7 +35,7 @@ public class BuildingWidget : MonoBehaviour
 
         BuildingPrefab = prefab;
 
-        Building building = prefab.GetComponentInChildren<Building>();
+        var building = prefab.GetComponentInChildren<Building>();
 
         if (building) {
             buildingNameTextLocalizer.SetLocalizationItem(building.BuildingData.NameLocalizationItem);
@@ -52,22 +46,21 @@ public class BuildingWidget : MonoBehaviour
         }
 
         CreateResourcesToBuild();
-        isInited = true;
     }
 
     private void CreateResourcesToBuild()
     {
-        ItemInstance[] buildResources = BuildingPrefab.LevelData.ResourcesToBuild;
+        var buildResources = BuildingPrefab.LevelData.ResourcesToBuild;
 
         for (int i = 0; i < buildResources.Length; i++) {
-            ResourceWidget resourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);
+            var resourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);
 
-            ItemInstance buildResource = buildResources[i];
+            var buildResource = buildResources[i];
             int id = buildResource.Definition.ItemId;
-            ItemInstance storageItem = cityStorage.Inventory.GetItemById(id);
+            var storageItem = cityStorage.Inventory.GetItemById(id);
 
             resourceWidget.SetItem(buildResource.Definition);
-            resourceWidget.SetLimit(storageItem);
+            resourceWidget.AddAmount(storageItem);
             resourceWidget.SetLimit(buildResource);
 
             spawnedBuildingResourceWidgets.Add(resourceWidget);
@@ -83,34 +76,4 @@ public class BuildingWidget : MonoBehaviour
     {
         EventBus.InvokeBuildingWidgetInformationClicked(this);
     }
-
-    //private void UpdateResourcesToBuild()
-    //{
-    //    if (!isInited) return;
-
-    //    bool enoughResources = true;
-
-    //    foreach (var resource in buildingPrefab.GetResourcesToBuild()) {
-    //        int amountToBuilding = resource.Amount;
-    //        int resourceId = resource.Definition.ItemId;
-    //        int currentAmount = cityStorage.Inventory.GetItemById(resourceId).Amount;
-
-    //        if (enoughResources && currentAmount < amountToBuilding) {
-    //            enoughResources = false;
-    //            break;
-    //        }
-    //    }
-
-    //    if (enoughResources)
-    //        buildButton.SetState(CustomButtonState.Idle);
-    //    else
-    //        buildButton.SetState(CustomButtonState.Disabled);
-
-    //    buildButton.EndTransitionAnimation();
-    //}
-
-    //private void OnMainStorageItemAmountChanged(ItemInstance item)
-    //{
-    //    UpdateResourcesToBuild();
-    //}
 }

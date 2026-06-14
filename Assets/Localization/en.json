@@ -35,11 +35,16 @@
   "ui_watch_ad": "Watch Ad",
   "none": "None",
   "name_level": "{name} (Level {level})",
+  "toolbox": "Toolbox",
+
   "upgrade": "Upgrade",
   "upgrade_resource": "Upgrade resources",
-  "toolbox": "Toolbox",
+
   "raid": "Raid",
   "raid_under_raid": "Your city is under raid!",
+
+  "language": "Language",
+  "language_select": "Select language",
 
   "equipment": "Equipment",
   "equipment_select": "Select equipment",

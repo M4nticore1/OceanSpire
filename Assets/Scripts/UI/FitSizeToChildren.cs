@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 public class FitSizeToChildren : UIBehaviour
 {
     [SerializeField] private float minHeight = 0f;
+    [SerializeField] private float extraHeight = 0f;
 
     private RectTransform rect;
 
@@ -30,34 +31,25 @@ public class FitSizeToChildren : UIBehaviour
 
         Canvas.ForceUpdateCanvases();
 
-        float top = 0f;
-        float bottom = 0f;
+        float minY = float.MaxValue;
+        float maxY = float.MinValue;
 
         foreach (var child in GameUtils.GetAllChildren(rect)) {
-            Vector3[] corners = new Vector3[4];
-
-            RectTransform childRect = child.GetComponent<RectTransform>();
+            var childRect = child.GetComponent<RectTransform>();
             if (!childRect) continue;
 
-            childRect.GetWorldCorners(corners);
+            // Работаем в локальных координатах rect
+            Vector3 childMin = rect.InverseTransformPoint(childRect.TransformPoint(childRect.rect.min));
+            Vector3 childMax = rect.InverseTransformPoint(childRect.TransformPoint(childRect.rect.max));
 
-            float childTop = corners[1].y;
-            float childBottom = corners[0].y;
-
-            if (childTop > top)
-                top = childTop;
-
-            if (childBottom < bottom)
-                bottom = childBottom;
+            minY = Mathf.Min(minY, childMin.y, childMax.y);
+            maxY = Mathf.Max(maxY, childMin.y, childMax.y);
         }
 
-        float localTop = rect.InverseTransformPoint(new Vector3(0, top, 0)).y;
-        float localBottom = rect.InverseTransformPoint(new Vector3(0, bottom, 0)).y;
-
-        float height = localTop - localBottom;
-
+        float height = maxY - minY + extraHeight;
         height = Mathf.Max(height, minHeight);
 
         rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
     }
+
 }

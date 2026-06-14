@@ -35,11 +35,16 @@
   "ui_watch_ad": "Смотреть Рекламу",
   "none": "Пусто",
   "name_level": "{name} (Уровень {level})",
+  "toolbox": "Интерактивное меню",
+
   "upgrade": "Улучшить",
   "upgrade_resources": "Ресурсы для улучшения",
-  "toolbox": "Интерактивное меню",
+
   "raid": "Рейд",
   "raid_under_raid": "На ваш город напали!",
+
+  "language": "Языка",
+  "language_select": "Выбрать язык",
 
   "equipment": "Экипировка",
   "equipment_select": "Выбор экипировки",

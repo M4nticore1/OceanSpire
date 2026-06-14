@@ -46,7 +46,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
 
     // State
     public FollowingPathState CurrentState = FollowingPathState.None;
-    public bool IsFollowingPath => CurrentState != FollowingPathState.None;
+    public bool IsFollowingPath => CurrentState == FollowingPathState.FollowingPath;
     public bool IsGoingToWaitingForElevator => CurrentState == FollowingPathState.GoingToWaiting;
     public bool IsWaitingForElevator => CurrentState == FollowingPathState.Waiting;
     public bool IsGoingToRidingOnElevator => CurrentState == FollowingPathState.GoingToRiding;
@@ -58,7 +58,6 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
 
     private void OnEnable()
     {
-        movement.OnReachedPath += OnReachedPath;
         Building.OnBuildingInited += OnBuildingInited;
         Building.OnBuildingLevelChanged += OnBuildingConstructionFinished;
         Building.OnBuildingDemolished += OnBuildingDemolished;
@@ -66,15 +65,9 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
 
     private void OnDisable()
     {
-        movement.OnReachedPath -= OnReachedPath;
         Building.OnBuildingInited -= OnBuildingInited;
         Building.OnBuildingLevelChanged -= OnBuildingConstructionFinished;
         Building.OnBuildingDemolished -= OnBuildingDemolished;
-    }
-
-    private void OnReachedPath()
-    {
-        FollowPath();
     }
 
     // Target Building
@@ -256,14 +249,14 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
             case FollowingPathState.GoingToWaiting:
                 CurrentBuilding.AssignInteractTransform(this);
                 CurrentElevator.AddPassenger(this);
-                movement.TryMoveTo(CurrentElevator.OwnedBuilding.GetInteractionTransform(this).position);
+                movement.TryMoveTo(CurrentElevator.OwnedBuilding.GetInteractionTransform(this));
                 break;
             case FollowingPathState.Waiting:
                 CurrentElevator.AddPassenger(this);
                 break;
             case FollowingPathState.GoingToRiding:
                 CurrentElevator.AddPassenger(this);
-                movement.TryMoveTo(CurrentElevator.GetCabinRidingTransform().position);
+                movement.TryMoveTo(CurrentElevator.GetCabinRidingTransform());
                 break;
             case FollowingPathState.Riding:
                 CurrentElevator.AddPassenger(this);
@@ -272,7 +265,7 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
                 break;
             case FollowingPathState.ExitingElevator:
                 CurrentBuilding.AssignInteractTransform(this);
-                movement.TryMoveTo(CurrentElevator.OwnedBuilding.GetInteractionTransform(this).position);
+                movement.TryMoveTo(CurrentElevator.OwnedBuilding.GetInteractionTransform(this));
                 break;
         }
     }
@@ -496,16 +489,17 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     private bool ShouldWaitForElevator()
     {
         if (!ShouldUseElevator()) return false;
-        if (!movement.IsDestinationReached()) return false;
-        if (!IsGoingToWaitingForElevator) return false;
+        if (IsRidingOnElevator) return false;
+        if (!movement.IsReachedPosition(CurrentTowerBuilding.GetInteractionTransform(this).position)) return false;
 
         return true;
     }
 
     private bool ShouldGoingToWaitingForElevator()
     {
-        if (IsRidingOnElevator) return false;
         if (!ShouldUseElevator()) return false;
+        if (IsRidingOnElevator) return false;
+        if (IsGoingToRidingOnElevator) return false;
 
         return true;
     }
@@ -513,16 +507,17 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     private bool ShouldRideOnElevator()
     {
         if (!ShouldUseElevator()) return false;
-        if (movement.IsMoving) return false;
         if (!IsGoingToRidingOnElevator) return false;
+        if (!CurrentElevator.IsPossibleToEnter()) return false;
+        if (movement.IsMoving) return false;
 
         return true;
     }
 
     private bool ShouldGoingToRideOnElevator()
     {
-        if (IsRidingOnElevator) return false;
         if (!ShouldUseElevator()) return false;
+        if (IsRidingOnElevator) return false;
         if (!CurrentElevator.IsPossibleToEnter()) return false;
 
         return true;
@@ -531,16 +526,18 @@ public class CreatureCityNavigator : MonoBehaviour, IElevatorPassenger
     private bool ShouldExitFromElevator()
     {
         if (HasPath) return false;
-        if (!IsRidingOnElevator && !IsGoingToWaitingForElevator) return false;
         if (!CurrentElevator) return false;
         if (!CurrentElevator.IsPossibleToExit()) return false;
 
-        return true;
+        if (IsRidingOnElevator) return true;
+        if (IsGoingToRidingOnElevator) return true;
+        if (IsGoingToWaitingForElevator) return true;
+
+        return false;
     }
 
     private bool ShouldUseElevator()
     {
-        if (!HasPath) return false;
         if (!CurrentElevator) return false;
         if (!CurrentPathTowerBuilding) return false;
         if (!CurrentPathTowerBuilding.NetworkWith(CurrentTowerBuilding)) return false;

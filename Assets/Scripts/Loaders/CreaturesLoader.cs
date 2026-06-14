@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CreaturesLoader : Loader
+public class CreaturesLoader : WorldLoader
 {
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private HumanNamesList humanNamesList;
@@ -72,7 +72,7 @@ public class CreaturesLoader : Loader
 
                 BoatRider = new BoatRiderData(),
 
-                Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId(), WeaponsDataFactory.GetMaxWeaponDamage()),
+                Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId(), WeaponsDataFactory.GetMinWeaponDamageId()),
                 Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount()),
             };
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WanderersLoader : Loader
+public class WanderersLoader : WorldLoader
 {
     [SerializeField] private WanderersManager wanderersManager;
 

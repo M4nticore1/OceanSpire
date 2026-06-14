@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DailyRewardLoader : Loader
+public class DailyRewardLoader : WorldLoader
 {
     [SerializeField] DailyRewardManager dailyRewardManager;
 

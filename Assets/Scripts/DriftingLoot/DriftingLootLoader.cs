@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DriftingLootLoader : Loader
+public class DriftingLootLoader : WorldLoader
 {
     [SerializeField] private DriftingLootManager driftingLootManager;
 

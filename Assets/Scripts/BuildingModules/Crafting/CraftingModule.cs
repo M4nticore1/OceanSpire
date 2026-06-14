@@ -61,7 +61,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         }
 
         CurrentProductingItemIndex = index;
-        CurrentCraftItem = ProductionLevelData.craftItems[index];
+        CurrentCraftItem = ProductionLevelData.CraftItems[index];
 
         if (IsWorking) {
             ConsumeResources();

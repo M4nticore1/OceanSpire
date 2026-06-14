@@ -148,6 +148,8 @@ public class RaidManager : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(-position.normalized);
 
             var boat = CreateBoat(position, rotation);
+            if (!boat) continue;
+
             var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.GetInstanceId());
         }
 
@@ -314,6 +316,12 @@ public class RaidManager : MonoBehaviour
 
     private Boat CreateBoat(Vector3 position, Quaternion rotation)
     {
+        var dockPoint = GetNearestDockPoint(position);
+        if (!dockPoint) {
+            Debug.Log($"NearestDockPoint not found at {name}");
+            return null;
+        }
+
         var data = new BoatData()
         {
             Id = boatPrefab.Definition.BoatId,

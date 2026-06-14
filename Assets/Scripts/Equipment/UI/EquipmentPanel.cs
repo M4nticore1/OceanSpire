@@ -20,7 +20,6 @@ public class EquipmentPanel : MonoBehaviour
 
     public void SetWeapon(EquipmentComponent equipmentComponent)
     {
-        Debug.Log($"Set {equipmentComponent.gameObject}");
         weaponWidget.SetEquipmentComponent(equipmentComponent);
         weaponWidget.SetEquipmentDefinition(equipmentComponent.EquipmentDefinition);
     }

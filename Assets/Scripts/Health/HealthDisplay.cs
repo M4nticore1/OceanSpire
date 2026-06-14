@@ -158,14 +158,14 @@ public class HealthDisplay : MonoBehaviour
     private void Subscribe()
     {
         health.onHealthChanged += OnHealthChanged;
-        health.onDied += OnDied;
+        health.OnDied += OnDied;
         isSubscribed = true;
     }
 
     private void Unsubscribe()
     {
         health.onHealthChanged -= OnHealthChanged;
-        health.onDied -= OnDied;
+        health.OnDied -= OnDied;
         isSubscribed = false;
     }
 

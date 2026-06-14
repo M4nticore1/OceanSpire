@@ -7,8 +7,8 @@ public class HumanAnimation : MonoBehaviour
 
     private void OnEnable()
     {
-        human.onStartedIdle += OnStartedIdle;
-        human.onStoppedIdle += OnStoppedIdle;
+        human.OnIdleStarted += OnIdleStarted;
+        human.OnIdleStopped += OnIdleStopped;
 
         human.Movement.OnMovementStarted += OnMovementStarted;
         human.Movement.OnMovementStopped += OnMovementStopped;
@@ -22,14 +22,14 @@ public class HumanAnimation : MonoBehaviour
         human.AttackComponent.OnAttackStarted += OnStartedAttacking;
         human.AttackComponent.OnAttackStopped += OnStoppedAttacking;
 
-        human.ReviveComponent.onRevived += OnRevived;
-        human.HealthComponent.onDied += OnDied;
+        human.ReviveComponent.OnRevived += OnRevived;
+        human.HealthComponent.OnDied += OnDied;
     }
 
     private void OnDisable()
     {
-        human.onStartedIdle -= OnStartedIdle;
-        human.onStoppedIdle -= OnStoppedIdle;
+        human.OnIdleStarted -= OnIdleStarted;
+        human.OnIdleStopped -= OnIdleStopped;
 
         human.Movement.OnMovementStarted -= OnMovementStarted;
         human.Movement.OnMovementStopped -= OnMovementStopped;
@@ -43,16 +43,16 @@ public class HumanAnimation : MonoBehaviour
         human.AttackComponent.OnAttackStarted -= OnStartedAttacking;
         human.AttackComponent.OnAttackStopped -= OnStoppedAttacking;
 
-        human.ReviveComponent.onRevived -= OnRevived;
-        human.HealthComponent.onDied -= OnDied;
+        human.ReviveComponent.OnRevived -= OnRevived;
+        human.HealthComponent.OnDied -= OnDied;
     }
 
-    private void OnStartedIdle()
+    private void OnIdleStarted()
     {
         animator.SetBool("isIdle", true);
     }
 
-    private void OnStoppedIdle()
+    private void OnIdleStopped()
     {
         animator.SetBool("isIdle", false);
     }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DockPointsLoader : Loader
+public class DockPointsLoader : WorldLoader
 {
     [SerializeField] private DockPointsManager dockPointsManager;
 

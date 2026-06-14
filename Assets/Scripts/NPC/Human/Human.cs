@@ -75,9 +75,9 @@ public abstract class Human : Creature, IClickable
     {
         base.OnEnable();
 
-        healthComponent.onDied += OnDied;
+        healthComponent.OnDied += OnDied;
 
-        reviveComponent.onRevived += OnRevived;
+        reviveComponent.OnRevived += OnRevived;
         reviveComponent.onLimitTimeOvered += OnReviveLimitTimeOvered;
 
         attackComponent.OnAttackStarted += OnAttackStarted;
@@ -110,9 +110,9 @@ public abstract class Human : Creature, IClickable
     {
         base.OnDisable();
 
-        healthComponent.onDied -= OnDied;
+        healthComponent.OnDied -= OnDied;
 
-        reviveComponent.onRevived -= OnRevived;
+        reviveComponent.OnRevived -= OnRevived;
         reviveComponent.onLimitTimeOvered -= OnReviveLimitTimeOvered;
 
         attackComponent.OnAttackStarted -= OnAttackStarted;
@@ -481,9 +481,9 @@ public abstract class Human : Creature, IClickable
     }
 
     // Movement
-    protected override void OnStoppedMoving()
+    protected override void OnMovementStopped()
     {
-        base.OnStoppedMoving();
+        base.OnMovementStopped();
 
         DetermineNextAction();
     }

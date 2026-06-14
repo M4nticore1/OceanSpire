@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DailyTasksLoader : Loader
+public class DailyTasksLoader : WorldLoader
 {
     [SerializeField] private DailyTasksManager dailyTasksManager;
 

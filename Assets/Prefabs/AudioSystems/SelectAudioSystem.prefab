@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35b164bb1382c66499334b64456c1c83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectAudioSystem
+  mixerGoup: {fileID: -5464991957138809496, guid: 6d04f55806270354e929cb51e5741f66, type: 2}
   selectAudioClips:
   - {fileID: 8300000, guid: 7e833979bff58f74c8638cb72ff15c20, type: 3}
   - {fileID: 8300000, guid: f0fcd97cc7cb13c44868f2dce4e96ad7, type: 3}

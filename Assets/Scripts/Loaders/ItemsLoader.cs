@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ItemsLoader : Loader
+public class ItemsLoader : WorldLoader
 {
     public static ItemsLoader Instance { get; private set; }
 
