@@ -55,7 +55,7 @@ public class BoatUnloadingState : BoatState
         }
 
         // Item
-        ItemInstance loot = boat.GetItemToUnload();
+        ItemInstance loot = boat.TryGetItemToUnload();
         ItemDefinition data = loot.Definition;
         int lootId = data.ItemId;
         float lootWeight = data.Weight;

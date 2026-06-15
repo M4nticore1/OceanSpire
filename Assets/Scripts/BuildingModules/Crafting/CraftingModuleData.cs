@@ -14,7 +14,7 @@ public class CraftingModuleData
         return new CraftingModuleData()
         {
             CraftId = craftingModule.CurrentProductingItemIndex,
-            CraftingTime = (int)craftingModule.CurrentProductionTime,
+            CraftingTime = (int)craftingModule.CurrentCraftItem.CurrentCraftingTime,
         };
     }
 }

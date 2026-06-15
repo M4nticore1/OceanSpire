@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: 999
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
   m_sharedMaterial: {fileID: -7972126630211567766, guid: aa5db1cb08820d9469d8e45a65a861ac, type: 2}
@@ -74,8 +74,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4284940134
+  m_fontColor: {r: 0.4, g: 1, b: 0.4, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 56
+  m_fontSize: 80
   m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -338,11 +338,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cbe901d618933c488cabc826610c8ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceWidget
-  itemData: {fileID: 0}
-  useCityStorage: 0
-  resourceImage: {fileID: 1277891582841892986}
+  itemDefinition: {fileID: 0}
+  useLimit: 0
+  itemNameText: {fileID: 0}
   resourceAmountText: {fileID: 8834238281448815289}
+  resourceImage: {fileID: 1277891582841892986}
   resourceAmountBar: {fileID: 0}
   useAmountColors: 1
-  enoughAmountColor: {r: 0, g: 1, b: 0, a: 1}
-  notEnoughAmountColor: {r: 1, g: 0, b: 0, a: 1}
+  enoughAmountColor: {r: 0.35000002, g: 1, b: 0.35000002, a: 1}
+  notEnoughAmountColor: {r: 1, g: 0.34901962, b: 0.34901962, a: 1}

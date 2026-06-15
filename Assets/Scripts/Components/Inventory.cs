@@ -109,7 +109,7 @@ public class Inventory : MonoBehaviour
         return item;
     }
 
-    public ItemInstance GetItemByIndex(int index)
+    public ItemInstance TryGetItemByIndex(int index)
     {
         if (index >= items.Count) return null;
 

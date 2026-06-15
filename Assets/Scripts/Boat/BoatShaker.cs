@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class BoatShaker : MonoBehaviour
 {
-    private const float shakeAmplitude = 5f;
-    private const float shakeSpeed = 1f;
+    [SerializeField] private float shakeAmplitude = 5f;
+    [SerializeField] private float shakeSpeed = 1f;
 
     private Vector3 shakeRotation = Vector3.zero;
 
-    private void Update()
+    public void Tick()
     {
         ProcessShake();
         ApplyShake();

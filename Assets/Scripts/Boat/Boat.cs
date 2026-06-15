@@ -42,6 +42,8 @@ public class Boat : MonoBehaviour, IClickable
     [SerializeField] private ContextMenuTarget contextMenuTarget;
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
+    [SerializeField] private BoatShaker boatShake;
+
     // Dock
     public BoatDockPoint DockPoint;
     public SwimmingDriftingLoot TargetDriftingLoot { get; private set; }
@@ -57,8 +59,8 @@ public class Boat : MonoBehaviour, IClickable
 
     public event Action OnClicked;
 
-    public static event Action<Boat> onBoatSelected;
-    public static event Action<Boat> onBoatDeselected;
+    public static event Action<Boat> OnBoatSelected;
+    public static event Action<Boat> OnBoatDeselected;
     public static event Action<Boat> onBoatDestroyed;
 
     private void OnEnable()
@@ -81,8 +83,10 @@ public class Boat : MonoBehaviour, IClickable
         BoatsManager.Instance.UnregisterBoat(this);
     }
 
-    private void Update()
+    public void Tick()
     {
+        boatShake.Tick();
+
         if (currentState == null) return;
 
         currentState.Tick();
@@ -100,9 +104,13 @@ public class Boat : MonoBehaviour, IClickable
 
         if (boatData.DockInstanceId != null) {
             var boatDockInstance = InstancesManager.Instance.GetInstance(boatData.DockInstanceId.Value);
-            var boatDock = boatDockInstance?.GetComponent<BoatDockPoint>();
 
-            SetDockPoint(boatDock);
+            if (boatDockInstance) {
+                var boatDock = boatDockInstance.GetComponent<BoatDockPoint>();
+
+                if (boatDock)
+                    SetDockPoint(boatDock);
+            }
         }
 
         CurrentStatus = boatData.Status;
@@ -151,6 +159,11 @@ public class Boat : MonoBehaviour, IClickable
     // Dock Point
     public void SetDockPoint(BoatDockPoint dockPoint)
     {
+        if (!dockPoint) {
+            Debug.Log($"DockPoint is not valid. Use RemoveDockPoint method to remove it insteod of this.");
+            return;
+        }
+
         if (dockPoint == DockPoint) return;
 
         DockPoint = dockPoint;
@@ -161,7 +174,7 @@ public class Boat : MonoBehaviour, IClickable
     public void RemoveDockPoint()
     {
         if (!DockPoint) {
-            Debug.Log($"Dock Pint is already null at {name}");
+            Debug.Log($"DockPoint is already null at {name}");
             return;
         }
 
@@ -175,9 +188,9 @@ public class Boat : MonoBehaviour, IClickable
         TargetDriftingLoot = driftingLoot;
     }
 
-    public ItemInstance GetItemToUnload()
+    public ItemInstance TryGetItemToUnload()
     {
-        return inventory.GetItemByIndex(0);
+        return inventory.TryGetItemByIndex(0);
     }
 
     // State
@@ -252,26 +265,28 @@ public class Boat : MonoBehaviour, IClickable
 
     private void OnMovementStarted()
     {
-        if (CurrentRider)
-            CurrentRider.HandleBoatMovementStarted();
+        if (!CurrentRider) return;
+
+        CurrentRider.HandleBoatMovementStarted();
     }
 
     private void OnMovementStopped()
     {
         currentState.OnReachedPath();
 
-        if (CurrentRider)
-            CurrentRider.HandleBoatMovementStopped();
+        if (!CurrentRider) return;
+
+        CurrentRider.HandleBoatMovementStopped();
     }
 
     // Clickable
     private void OnSelected()
     {
-        onBoatSelected?.Invoke(this);
+        OnBoatSelected?.Invoke(this);
     }
 
     private void OnDeselected()
     {
-        onBoatDeselected?.Invoke(this);
+        OnBoatDeselected?.Invoke(this);
     }
 }

@@ -13,7 +13,7 @@ public class CraftItemPanel : MonoBehaviour
     private FlickingImage flickingProgressBar;
     private CraftingModule craftingModule;
 
-    private CraftItem currentCraftItem;
+    private CraftItemDefinition currentCraftItem;
     private int index = 0;
     private bool isSelected = false;
 
@@ -48,7 +48,7 @@ public class CraftItemPanel : MonoBehaviour
         UpdateProgressBar();
     }
 
-    public void Init(CraftingModule craftingModule, CraftItem craftItem, int index, SelectGroup selectGroup)
+    public void Init(CraftingModule craftingModule, CraftItemDefinition craftItem, int index, SelectGroup selectGroup)
     {
         this.craftingModule = craftingModule;
         currentCraftItem = craftItem;
@@ -94,15 +94,20 @@ public class CraftItemPanel : MonoBehaviour
 
     private void UpdateTimer()
     {
+        if (!craftingModule) {
+            Debug.Log($"CraftingModule not found at {name}");
+            return;
+        }
+
         string text;
 
         if (isSelected && (craftingModule.IsWorking || craftingModule.IsReadyToCollect)) {
-            int currentTime = (int)craftingModule.CurrentProductionTime;
-            int targetTime = craftingModule.ProductionLevelData.CraftItems[index].ProduceTime;
+            int currentTime = (int)craftingModule.CurrentCraftItem.CurrentCraftingTime;
+            int targetTime = craftingModule.ProductionLevelData.TryGetCraftItem(index).ProduceTime;
             text = TimeFormatter.SecondToTimer(currentTime, targetTime);
         }
         else {
-            int targetTime = craftingModule.ProductionLevelData.CraftItems[index].ProduceTime;
+            int targetTime = craftingModule.ProductionLevelData.TryGetCraftItem(index).ProduceTime;
             text = TimeFormatter.SecondsToMinuteTime(targetTime);
         }
 
@@ -111,8 +116,19 @@ public class CraftItemPanel : MonoBehaviour
 
     private void UpdateProgressBar()
     {
-        float currentTime = craftingModule.CurrentProductionTime;
-        int targetTime = craftingModule.ProductionLevelData.CraftItems[index].ProduceTime;
+        if (!craftingModule) {
+            Debug.Log($"CraftingModule is not valid at {name}");
+            return;
+        }
+
+        var craftItem = craftingModule.ProductionLevelData.TryGetCraftItem(index);
+        if (!craftItem) {
+            Debug.Log($"CraftItem is not valid in {craftingModule.ProductionLevelData} by index {index}");
+            return;
+        }
+
+        float currentTime = craftingModule.CurrentCraftItem.CurrentCraftingTime;
+        int targetTime = craftItem.ProduceTime;
         float amount = 0f;
 
         if (targetTime > 0 && isSelected) {
@@ -129,7 +145,7 @@ public class CraftItemPanel : MonoBehaviour
 
     private void OnClicked()
     {
-        craftingModule.SetProducedItemByIndex(index);
+        craftingModule.SetCraftingItemByIndex(index);
         Select();
     }
 

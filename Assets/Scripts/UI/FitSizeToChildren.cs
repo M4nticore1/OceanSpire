@@ -37,8 +37,7 @@ public class FitSizeToChildren : UIBehaviour
         foreach (var child in GameUtils.GetAllChildren(rect)) {
             var childRect = child.GetComponent<RectTransform>();
             if (!childRect) continue;
-
-            // Работаем в локальных координатах rect
+            
             Vector3 childMin = rect.InverseTransformPoint(childRect.TransformPoint(childRect.rect.min));
             Vector3 childMax = rect.InverseTransformPoint(childRect.TransformPoint(childRect.rect.max));
 

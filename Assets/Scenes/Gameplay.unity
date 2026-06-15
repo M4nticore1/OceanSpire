@@ -8229,6 +8229,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e93738c8f72427f44a8e87051181e3c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingDemolitionRefund
+  cityStorage: {fileID: 1388613268}
+  buildingsLoader: {fileID: 1911230802}
 --- !u!1 &1542763784
 GameObject:
   m_ObjectHideFlags: 0

@@ -70,7 +70,6 @@ public class BoatRider : MonoBehaviour
     {
         if (IsEnteringBoat) return false;
 
-        Debug.Log("StartEnteringBoat");
         TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, () => EnterBoat(boat));
         IsEnteringBoat = true;
 
@@ -119,7 +118,7 @@ public class BoatRider : MonoBehaviour
     public void EnterBoat(Boat boat)
     {
         if (!boat) {
-            Debug.Log($"Boat not found at {name}");
+            Debug.LogError($"Boat not found at {name}");
             return;
         }
 
@@ -140,17 +139,17 @@ public class BoatRider : MonoBehaviour
     public void ExitBoat()
     {
         if (!RidingBoat) {
-            Debug.Log($"Entered Boat not found at {name}");
+            Debug.LogError($"RidingBoat not found at {name}");
             return;
         }
 
         if (!RidingBoat.DockPoint) {
-            Debug.Log($"Dock Point not found at {RidingBoat}");
+            Debug.LogError($"DockPoint not found at {RidingBoat}");
             return;
         }
 
         if (!RidingBoat.DockPoint.EntraceTransform) {
-            Debug.Log($"Entrace Transform Boat not found at {RidingBoat.DockPoint}");
+            Debug.LogError($"EntraceTransform not found at {RidingBoat.DockPoint}");
             return;
         }
 
@@ -174,7 +173,7 @@ public class BoatRider : MonoBehaviour
     public bool TrySetTargetBoat(Boat boat)
     {
         if (!boat) {
-            Debug.Log("Target Boat not found");
+            Debug.LogError("Boat is not valid. Use RemoveTargetBoat method instead of this.");
             return false;
         }
 
@@ -190,6 +189,11 @@ public class BoatRider : MonoBehaviour
 
     public void RemoveTargetBoat()
     {
+        if (!TargetBoat) {
+            Debug.LogError("TargetBoat is already null");
+            return;
+        }
+
         var boat = TargetBoat;
 
         TargetBoat = null;
@@ -251,12 +255,11 @@ public class BoatRider : MonoBehaviour
         if (RidingBoat) yield break;
 
         if (!boat) {
-            Debug.Log($"Selected Boat not found at {name}");
+            Debug.LogError($"RidingBoat not found at {name}");
             yield break;
         }
 
         while (boat.CurrentStateEnum != BoatStateEnum.Idle || boat.CurrentRider) {
-            Debug.Log(boat.CurrentStateEnum);
             yield return new WaitForEndOfFrame();
         }
 

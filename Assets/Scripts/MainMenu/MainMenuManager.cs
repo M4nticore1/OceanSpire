@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,16 +11,16 @@ public class MainMenuManager : MonoBehaviour
     {
         loadSaveButton.OnReleased.AddListener(OnLoadWorldButtonClicked);
         deleteSaveButton.OnReleased.AddListener(OnDeleteWorldButtonClicked);
-        SaveSlotWidget.onSaveSlotSelected += OnSaveSlotSelected;
-        SaveSlotWidget.onSaveSlotDeselected += OnSaveSlotDeselected;
+        SaveSlotWidget.OnSaveSlotSelected += OnSaveSlotSelected;
+        SaveSlotWidget.OnSaveSlotDeselected += OnSaveSlotDeselected;
     }
 
     private void OnDisable()
     {
         loadSaveButton.OnReleased.RemoveListener(OnLoadWorldButtonClicked);
         deleteSaveButton.OnReleased.RemoveListener(OnDeleteWorldButtonClicked);
-        SaveSlotWidget.onSaveSlotSelected -= OnSaveSlotSelected;
-        SaveSlotWidget.onSaveSlotDeselected -= OnSaveSlotDeselected;
+        SaveSlotWidget.OnSaveSlotSelected -= OnSaveSlotSelected;
+        SaveSlotWidget.OnSaveSlotDeselected -= OnSaveSlotDeselected;
     }
 
     private void Start()
@@ -31,7 +30,17 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnLoadWorldButtonClicked()
     {
-        WorldData data = SaveSlotWidget.Selected.WorldSaveData;
+        var selectedSaveSlot = SaveSlotWidget.Selected;
+        if (!selectedSaveSlot) {
+            Debug.LogError("Selected SaveSlotWidget not found");
+            return;
+        }
+
+        var data = selectedSaveSlot.WorldSaveData;
+        if (data == null) {
+            Debug.Log($"WorldSaveData not found at {SaveSlotWidget.Selected}");
+            return;
+        }
 
         WorldSaveManager.Instance.SetWorldData(data);
         SceneManager.LoadScene(1);
@@ -39,7 +48,19 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnDeleteWorldButtonClicked()
     {
-        string worldName = SaveSlotWidget.Selected.WorldSaveData.WorldName;
+        var selectedSaveSlot = SaveSlotWidget.Selected;
+        if (!selectedSaveSlot) {
+            Debug.LogError("Selected SaveSlotWidget not found");
+            return;
+        }
+
+        var data = selectedSaveSlot.WorldSaveData;
+        if (data == null) {
+            Debug.Log($"WorldSaveData not found at {SaveSlotWidget.Selected}");
+            return;
+        }
+
+        string worldName = data.WorldName;
         WorldSaveSystem.RemoveSaveByWorldName(worldName);
 
         WorldSaveManager.Instance.FindSavesData();

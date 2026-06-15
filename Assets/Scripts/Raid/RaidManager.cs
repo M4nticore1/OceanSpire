@@ -196,7 +196,7 @@ public class RaidManager : MonoBehaviour
     private void RemoveCityLoot()
     {
         for (int i = 0; i < inventory.Items.Count; i++) {
-            ItemInstance item = inventory.GetItemByIndex(i);
+            ItemInstance item = inventory.TryGetItemByIndex(i);
 
             int id = item.Definition.ItemId;
             int amount = item.Amount;
@@ -208,7 +208,7 @@ public class RaidManager : MonoBehaviour
     private void ClearLosses()
     {
         for (int i = 0; i < inventory.Items.Count; i++) {
-            ItemInstance item = inventory.GetItemByIndex(i);
+            ItemInstance item = inventory.TryGetItemByIndex(i);
 
             int id = item.Definition.ItemId;
             int amount = item.Amount;

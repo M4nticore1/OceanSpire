@@ -72,7 +72,7 @@ public static class WandererAdmissionSystem
     public static void RejectWanderer(Wanderer wanderer)
     {
         if (!wanderer) {
-            Debug.LogError("Wanderer not fount to reject");
+            Debug.LogError("Wanderer is not valid to reject");
             return;
         }
 

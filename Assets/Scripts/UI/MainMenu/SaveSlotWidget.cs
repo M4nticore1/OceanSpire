@@ -28,8 +28,8 @@ public class SaveSlotWidget : MonoBehaviour
     [SerializeField] private TextMeshProUGUI lastSaveDataText;
     [SerializeField] private Image worldThumbImage;
 
-    public static event System.Action<SaveSlotWidget> onSaveSlotSelected;
-    public static event System.Action<SaveSlotWidget> onSaveSlotDeselected;
+    public static event System.Action<SaveSlotWidget> OnSaveSlotSelected;
+    public static event System.Action<SaveSlotWidget> OnSaveSlotDeselected;
 
     private void OnEnable()
     {
@@ -112,12 +112,12 @@ public class SaveSlotWidget : MonoBehaviour
 
     private void OnSelected()
     {
-        onSaveSlotSelected?.Invoke(this);
+        OnSaveSlotSelected?.Invoke(this);
     }
 
     private void OnDeselected()
     {
-        onSaveSlotDeselected?.Invoke(this);
+        OnSaveSlotDeselected?.Invoke(this);
     }
 
     private void OnCreateMenuClosed()

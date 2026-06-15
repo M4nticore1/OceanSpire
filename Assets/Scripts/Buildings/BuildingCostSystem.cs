@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class BuildingCostSystem : MonoBehaviour
 {
+    [SerializeField] private CityStorage cityStorage;
+    [SerializeField] private BuildingsLoader buildingsLoader;
+
     private void OnEnable()
     {
         Building.OnBuildingInited += OnBuildingInited;
@@ -19,7 +22,7 @@ public class BuildingCostSystem : MonoBehaviour
         if (!ShouldWork()) return;
 
         foreach (var resource in building.GetResourcesToBuild()) {
-            CityStorage.Instance.Inventory.RemoveItem(resource.Definition.ItemId, resource.Amount);
+            cityStorage.Inventory.RemoveItem(resource.Definition.ItemId, resource.Amount);
         }
     }
 
@@ -28,12 +31,12 @@ public class BuildingCostSystem : MonoBehaviour
         if (!ShouldWork()) return;
 
         foreach (var resource in building.GetResourcesToRefund()) {
-            CityStorage.Instance.Inventory.AddItem(resource.Definition.ItemId, resource.Amount);
+            cityStorage.Inventory.AddItem(resource.Definition.ItemId, resource.Amount);
         }
     }
 
     private bool ShouldWork()
     {
-        return BuildingsLoader.Instance.IsLoaded;
+        return buildingsLoader.IsLoaded;
     }
 }

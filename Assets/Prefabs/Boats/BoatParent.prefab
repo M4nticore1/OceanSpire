@@ -77,6 +77,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ffcfbe798354444a80cd6ba3d9136f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatShaker
+  shakeAmplitude: 5
+  shakeSpeed: 1
 --- !u!1 &9194760719431650583
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,12 +133,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boatData: {fileID: 0}
+  CurrentRider: {fileID: 0}
+  TargetRider: {fileID: 0}
   instanceId: {fileID: 8122635706453091689}
   movement: {fileID: 1275618266238498596}
   inventory: {fileID: 1147310907644242627}
-  healthDrainer: {fileID: 0}
   selectComponent: {fileID: 6306187827067608498}
   contextMenuTarget: {fileID: 4463480740995804658}
+  boatShake: {fileID: 2548635620121274822}
+  DockPoint: {fileID: 0}
   seatSlot: {fileID: 6338914725495003467}
 --- !u!114 &1275618266238498596
 MonoBehaviour:
@@ -169,6 +174,7 @@ MonoBehaviour:
   useAmountLimit: 0
   useWeightLimit: 1
   weightLimit: 50
+  items: []
 --- !u!114 &4575534088428067244
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,6 +15,11 @@ public class EvictManager : MonoBehaviour
     private void Evict(Citizen citizen)
     {
         var boat = CreateBoat();
+        if (!boat) {
+            Debug.LogError("EvictBoat is not valid");
+            return;
+        }
+
         var leavePosition = WorldUtils.GetRandomBorderPosition();
 
         var evictData = new EvictData()
@@ -29,6 +34,10 @@ public class EvictManager : MonoBehaviour
     private Boat CreateBoat()
     {
         var dockPoint = GetNextDockPoint();
+        if (!dockPoint) {
+            Debug.Log("EvictDockPoint is not valid");
+            return null;
+        }
 
         var boatData = new BoatData()
         {

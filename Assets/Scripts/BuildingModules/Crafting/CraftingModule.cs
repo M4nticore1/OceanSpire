@@ -7,11 +7,11 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
     public ProductionModuleLevelData ProductionLevelData => ProductionLevelsData[OwnedBuilding.LevelComponent.Level - 1];
 
-    public CraftItem CurrentCraftItem { get; private set; }
+    public CraftItemDefinition CurrentCraftItemDefinition { get; private set; }
     public int CurrentProductingItemIndex { get; private set; }
-    public float CurrentProductionTime { get; private set; }
 
-    public bool IsReadyToCollect { get; private set; } = false;
+    public CraftItemInstance CurrentCraftItem { get; private set; }
+    public bool IsReadyToCollect => CurrentCraftItem != null ? CurrentCraftItem.IsReadyToCollect() : false;
 
     [SerializeField] private float electricityConsumption = 0f;
     public float ElectricityConsumption => electricityConsumption;
@@ -19,11 +19,11 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     public void Init(CraftingModuleData craftingModuleData)
     {
         if (craftingModuleData != null) {
-            SetProducedItemByIndex(craftingModuleData.CraftId);
-            SetProduceTime(craftingModuleData.CraftingTime);
+            SetCraftingItemByIndex(craftingModuleData.CraftId);
+            SetCraftingTime(craftingModuleData.CraftingTime);
         }
         else {
-            SetProducedItemByIndex(0);
+            SetCraftingItemByIndex(0);
         }
     }
 
@@ -52,25 +52,31 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         OwnedBuilding.onCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
     }
 
-    public void SetProducedItemByIndex(int index)
+    public void SetCraftingItemByIndex(int index)
     {
-        if (IsWorking && !IsReadyToCollect && CurrentCraftItem) {
+        if (IsWorking && !IsReadyToCollect && CurrentCraftItemDefinition) {
             RefundResources();
             TryCollectItem();
             ResetProducedTime();
         }
 
         CurrentProductingItemIndex = index;
-        CurrentCraftItem = ProductionLevelData.CraftItems[index];
+        CurrentCraftItemDefinition = ProductionLevelData.CraftItems[index];
+        CurrentCraftItem = CurrentCraftItemDefinition.CreateInstance(CraftItemData.Default());
 
         if (IsWorking) {
             ConsumeResources();
         }
     }
 
-    public void SetProduceTime(float time)
+    public void SetCraftingTime(float time)
     {
-        CurrentProductionTime = time;
+        if (CurrentCraftItem == null) {
+            Debug.LogError("CurrentCraftItem is not valid");
+            return;
+        }
+
+        CurrentCraftItem.SetCurrentCraftingTime(time);
         TryProduceItem();
     }
 
@@ -96,7 +102,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     // IRaidable
     public ItemInstance GetRaidLoot()
     {
-        return CurrentCraftItem.ConsumeResources[0];
+        return CurrentCraftItemDefinition.ConsumeResources[0];
     }
 
     // Workers
@@ -109,7 +115,6 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private void OnCurrentWorkerRemoved(BuildingInteractComponent interactor)
     {
-        Debug.Log("OnCurrentWorkerRemoved");
         if (!ShouldStopWorking()) return;
 
         StopWorking();
@@ -126,11 +131,10 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private void CollectItem()
     {
-        int id = CurrentCraftItem.ProduceItem.Definition.ItemId;
-        int amount = CurrentCraftItem.ProduceItem.Amount;
+        int id = CurrentCraftItemDefinition.ProduceItem.Definition.ItemId;
+        int amount = CurrentCraftItemDefinition.ProduceItem.Amount;
         CityStorage.Instance.Inventory.AddItem(id, amount);
 
-        IsReadyToCollect = false;
         ResetProducedTime();
 
         if (ShouldStartWorking()) {
@@ -142,7 +146,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private void TryProduceItem()
     {
-        if (CurrentProductionTime < CurrentCraftItem.ProduceTime) return;
+        if (IsReadyToCollect) return;
 
         ProduceItem();
     }
@@ -151,12 +155,11 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         StopWorking();
         SetCollectable(true);
-        IsReadyToCollect = true;
     }
 
     private void ConsumeResources()
     {
-        foreach (var resource in CurrentCraftItem.ConsumeResources) {
+        foreach (var resource in CurrentCraftItemDefinition.ConsumeResources) {
             int id = resource.Definition.ItemId;
             int amount = resource.Amount;
             CityStorage.Instance.Inventory.RemoveItem(id, amount);
@@ -165,7 +168,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private void RefundResources()
     {
-        foreach (var resource in CurrentCraftItem.ConsumeResources) {
+        foreach (var resource in CurrentCraftItemDefinition.ConsumeResources) {
             int id = resource.Definition.ItemId;
             int amount = resource.Amount;
             CityStorage.Instance.Inventory.AddItem(id, amount);
@@ -179,17 +182,16 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private void AddProducedTime()
     {
-        SetProduceTime(CurrentProductionTime += Time.deltaTime);
+        SetCraftingTime(CurrentCraftItem.CurrentCraftingTime + Time.deltaTime);
     }
 
     private void ResetProducedTime()
     {
-        SetProduceTime(0f);
+        SetCraftingTime(0f);
     }
 
     private void SetCollectable(bool value)
     {
-        IsReadyToCollect = value;
         AssignFlicking();
     }
 
@@ -209,7 +211,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
         if (OwnedBuilding.WorkComponent.CurrentWorkers.Count == 0) return false;
 
-        foreach (var resource in CurrentCraftItem.ConsumeResources) {
+        foreach (var resource in CurrentCraftItemDefinition.ConsumeResources) {
             int id = resource.Definition.ItemId;
             int amount = resource.Amount;
 

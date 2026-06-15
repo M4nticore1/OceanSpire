@@ -105,7 +105,7 @@ public class RaidEndedMenu : UIBehaviour
             for (int i = 0; i < lossesCount; i++) {
                 var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
 
-                var item = RaidManager.Instance.Inventory.GetItemByIndex(i);
+                var item = RaidManager.Instance.Inventory.TryGetItemByIndex(i);
                 widget.AddAmount(item);
                 widget.SetColor(loseColor);
                 spawnedResourceWidgets.Add(widget);

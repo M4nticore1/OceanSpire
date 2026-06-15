@@ -122,6 +122,11 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     private void CreateTask(DailyTaskInstanceData data)
     {
+        if (data == null) {
+            Debug.LogError("DailyTaskData is not valid");
+            return;
+        }
+
         var def = dailyTasksList.GetTaskDefinition(data.Id);
         var task = new DailyTaskInstance(def, data.Progress, data.Completed);
 

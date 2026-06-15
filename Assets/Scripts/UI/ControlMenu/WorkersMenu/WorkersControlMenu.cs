@@ -45,7 +45,10 @@ public class WorkersControlMenu : ControlMenu
     protected override void UpdateMenu()
     {
         var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
-        if (!selectedBuilding) return;
+        if (!selectedBuilding) {
+            Debug.LogError("SelectedBuilding is not valid");
+            return;
+        }
 
         int maxWorkersCount = selectedBuilding.LevelData.MaxHumansCount;
 
@@ -58,10 +61,12 @@ public class WorkersControlMenu : ControlMenu
         foreach (var citizen in citizens) {
             if (!citizen.IsCitizenAvaliable()) continue;
 
-            if (citizen.InteractComponent.InteractBuilding == selectedBuilding) {
+            var interactBuilding = citizen.InteractComponent.InteractBuilding;
+
+            if (interactBuilding == selectedBuilding) {
                 buildingWorkersMenu.CreateWidget(citizen);
             }
-            else if (citizen.InteractComponent.InteractBuilding) {
+            else if (interactBuilding) {
                 employedCitizensMenu.CreateWidget(citizen);
             }
             else {

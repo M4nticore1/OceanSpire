@@ -94,9 +94,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected virtual void OnEnable()
     {
-        //constructionComponent.OnConstructionStarted += HandleConstructionStarted;
-        //constructionComponent.OnConstructionCompleted += HandleConstructionCompleted;
-
         levelComponent.OnLevelChanged += HandleLevelChanged;
 
         upgradeComponent.OnUpgradeStarted += HandleUpgradeStarted;
@@ -116,9 +113,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected virtual void OnDisable()
     {
-        //constructionComponent.OnConstructionStarted -= HandleConstructionStarted;
-        //constructionComponent.OnConstructionCompleted -= HandleConstructionCompleted;
-
         levelComponent.OnLevelChanged -= HandleLevelChanged;
 
         upgradeComponent.OnUpgradeStarted += HandleUpgradeStarted;

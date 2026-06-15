@@ -1,11 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CraftingControlMenu : ControlMenu
 {
     [SerializeField] private CraftItemPanel producedResourcePanelPrefab;
-    private CraftItemPanel[] spawnedProducedResourcePanels;
+    private List<CraftItemPanel> spawnedCraftResourcePanels = new();
 
     [SerializeField] private LayoutGroup layoutGroup;
     [SerializeField] private ScrollRect scrollRect;
@@ -31,18 +32,33 @@ public class CraftingControlMenu : ControlMenu
 
     private void CreatePanels()
     {
-        var module = SelectManager.Instance.GetSelectedBuilding().GetComponent<CraftingModule>();
-        var crafts = module.ProductionLevelData.CraftItems;
-        int length = crafts.Length;
-        spawnedProducedResourcePanels = new CraftItemPanel[length];
+        var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
+        if (!selectedBuilding) {
+            Debug.LogError("SelectedBuilding is not valid");
+            return;
+        }
 
-        for (int i = 0; i < length; i++) {
+        var module = selectedBuilding.GetComponent<CraftingModule>();
+        if (!module) {
+            Debug.LogError($"{selectedBuilding} does not have a CraftingModule");
+            return;
+        }
+
+        var craftingLevelData = module.ProductionLevelData;
+        if (!craftingLevelData) {
+            Debug.LogError($"{module} doesn not have a LevelData");
+            return;
+        }
+
+        var crafts = craftingLevelData.CraftItems;
+
+        for (int i = 0; i < crafts.Length; i++) {
             var craft = crafts[i];
 
             var spawned = Instantiate(producedResourcePanelPrefab, layoutGroup.transform);
             spawned.Init(module, craft, i, selectGroup);
 
-            spawnedProducedResourcePanels[i] = spawned;
+            spawnedCraftResourcePanels.Add(spawned);
 
             if (i != module.CurrentProductingItemIndex) continue;
 
@@ -52,13 +68,11 @@ public class CraftingControlMenu : ControlMenu
 
     private void ClearPanels()
     {
-        if (spawnedProducedResourcePanels == null) return;
-
-        foreach (var panel in spawnedProducedResourcePanels) {
+        for (int i = spawnedCraftResourcePanels.Count - 1; i >= 0; i--) {
+            var panel = spawnedCraftResourcePanels[i];
             Destroy(panel.gameObject);
+            spawnedCraftResourcePanels.RemoveAt(i);
         }
-
-        spawnedProducedResourcePanels = null;
     }
 
     private void FitLayoutGroupSize()

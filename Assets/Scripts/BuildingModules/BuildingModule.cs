@@ -66,7 +66,6 @@ public abstract class BuildingModule : MonoBehaviour
     protected void StartWorking()
     {
         if (IsWorking) return;
-        Debug.Log("StartWorking");
 
         IsWorking = true;
         onWorkStarted?.Invoke();
@@ -76,7 +75,6 @@ public abstract class BuildingModule : MonoBehaviour
     {
         if (!IsWorking) return;
 
-        Debug.Log("StopWorking");
         IsWorking = false;
         onWorkStopped?.Invoke();
     }

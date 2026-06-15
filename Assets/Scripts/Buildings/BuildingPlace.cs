@@ -88,24 +88,34 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     public void Click()
     {
-        var buildingPrefab = ConstructionManager.Instance.BuildingToPlace as TowerBuilding;
+        var buildingPrefab = ConstructionManager.Instance.BuildingToPlace;
+        if (!buildingPrefab) {
+            Debug.Log("BuildingToPlace is not vali.");
+            return;
+        }
 
-        TowerBuildingData buildingData = new TowerBuildingData()
+        var towerBuildingPrefab = buildingPrefab as TowerBuilding;
+        if (!towerBuildingPrefab) {
+            Debug.Log("BuildingToPlace is not a TowerBuilding");
+            return;
+        }
+
+        var buildingData = new TowerBuildingData()
         {
-            Id = buildingPrefab.BuildingData.BuildingId,
+            Id = towerBuildingPrefab.BuildingData.BuildingId,
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
-            Level = LevelData.Create(buildingPrefab.LevelComponent),
-            Upgrade = UpgradeData.Create(buildingPrefab.UpgradeComponent),
+            Level = LevelData.Create(towerBuildingPrefab.LevelComponent),
+            Upgrade = UpgradeData.Create(towerBuildingPrefab.UpgradeComponent),
             Construction = new ConstructionData()
             {
                 IsUnderConstruction = true,
             },
-            Crafting = CraftingModuleData.Create(buildingPrefab.GetComponent<CraftingModule>()),
+            Crafting = CraftingModuleData.Create(towerBuildingPrefab.GetComponent<CraftingModule>()),
             FloorIndex = FloorIndex,
             PlaceIndex = placeIndex,
         };
 
-        var spawnedBuilding = BuildingFactory.CreateBuilding(buildingPrefab, transform, buildingData);
+        var spawnedBuilding = BuildingFactory.CreateBuilding(towerBuildingPrefab, transform, buildingData);
         SetPlacedBuilding(spawnedBuilding);
 
         OnClicked?.Invoke();
@@ -119,18 +129,6 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     public bool ShouldClick()
     {
-        Building buildingToPlace = ConstructionManager.Instance.BuildingToPlace;
-        if (!buildingToPlace) {
-            Debug.Log("buildingToPlace is not valid.");
-            return false;
-        }
-
-        TowerBuilding towerBuilding = buildingToPlace as TowerBuilding;
-        if (!towerBuilding) {
-            Debug.Log("buildingToPlace is not TowerBuilding.");
-            return false;
-        }
-
         return true;
     }
 

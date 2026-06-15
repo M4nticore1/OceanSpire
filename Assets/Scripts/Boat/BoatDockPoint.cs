@@ -20,7 +20,7 @@ public class BoatDockPoint : MonoBehaviour
 
     public void SetBoat(Boat boat)
     {
-        this.Boat = boat;
+        Boat = boat;
     }
 
     public void RemoveBoat()

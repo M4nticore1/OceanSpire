@@ -16,8 +16,8 @@ public class WandererAdmissionMenu : MonoBehaviour
         acceptButton.OnReleased.AddListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.AddListener(OnRejectButtonClicked);
 
-        Boat.onBoatSelected += OnBoatSelected;
-        Boat.onBoatDeselected += OnBoatDeselected;
+        Boat.OnBoatSelected += OnBoatSelected;
+        Boat.OnBoatDeselected += OnBoatDeselected;
     }
 
     private void OnDisable()
@@ -26,8 +26,8 @@ public class WandererAdmissionMenu : MonoBehaviour
         acceptButton.OnReleased.RemoveListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.RemoveListener(OnRejectButtonClicked);
 
-        Boat.onBoatSelected -= OnBoatSelected;
-        Boat.onBoatDeselected -= OnBoatDeselected;
+        Boat.OnBoatSelected -= OnBoatSelected;
+        Boat.OnBoatDeselected -= OnBoatDeselected;
     }
 
     public void Open()

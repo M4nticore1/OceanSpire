@@ -39,6 +39,13 @@ public class BoatsManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Update()
+    {
+        foreach (var boat in boats) {
+            boat.Tick();
+        }
+    }
+
     public void RegisterCitizenBoat(Boat boat)
     {
         RegisterBoat(citizenBoats, boat);

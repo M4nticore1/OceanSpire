@@ -42,7 +42,7 @@ public class EquipmentComponent : MonoBehaviour
     private void SetWeaponDefinition(EquipmentDefinition definition)
     {
         EquipmentDefinition = definition;
-        if (EquipmentDefinition) return;
+        if (definition) return;
 
         EquipmentDefinition = defaultEquipment;
     }
@@ -51,7 +51,7 @@ public class EquipmentComponent : MonoBehaviour
     {
         if (!definition) return;
 
-        Equipment prefab = definition.EquipmentPrefab;
+        var prefab = definition.EquipmentPrefab;
         if (!prefab) return;
 
         spawnedEquipment = EquipmentFactory.CreateEquipment(prefab, spawnPoint);
