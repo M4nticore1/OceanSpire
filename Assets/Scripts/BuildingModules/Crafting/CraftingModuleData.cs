@@ -4,8 +4,8 @@ using UnityEngine;
 [Serializable]
 public class CraftingModuleData
 {
-    public int CraftId = 0;
-    public int CraftingTime = 0;
+    public int CurrentCraftId = 0;
+    public CraftItemData CurrentCraft = CraftItemData.Default();
 
     public static CraftingModuleData Create(CraftingModule craftingModule)
     {
@@ -13,8 +13,13 @@ public class CraftingModuleData
 
         return new CraftingModuleData()
         {
-            CraftId = craftingModule.CurrentProductingItemIndex,
-            CraftingTime = (int)craftingModule.CurrentCraftItem.CurrentCraftingTime,
+            CurrentCraftId = craftingModule.CurrentProductingItemIndex,
+            CurrentCraft = craftingModule.CurrentCraftItem != null ? CraftItemData.Create(craftingModule.CurrentCraftItem) : CraftItemData.Default(),
         };
+    }
+
+    public static CraftingModuleData Default()
+    {
+        return new CraftingModuleData();
     }
 }

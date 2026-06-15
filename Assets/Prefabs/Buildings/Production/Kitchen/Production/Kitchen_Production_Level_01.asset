@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Kitchen_Production_Level_01
   m_EditorClassIdentifier: 
   craftItems:
-  - {fileID: 11400000, guid: f3c636ea5777ebf419cca93f296af60c, type: 2}
-  - {fileID: 11400000, guid: d53d3ac041573d342be505b3dd671f7a, type: 2}
-  - {fileID: 11400000, guid: a5e56e7c84a8e4940809996a2b08fe82, type: 2}
-  - {fileID: 11400000, guid: 1545f9bc4536c9c4eaf5c9df3585c96c, type: 2}
-  - {fileID: 11400000, guid: d2f84db4d13b0c9468311a0ca9f990dd, type: 2}
+  - {fileID: 11400000, guid: 84d95cc42add00c49bfe0b339db4e294, type: 2}
+  - {fileID: 11400000, guid: a8ee5f96464ef104db83041a951a8123, type: 2}
+  - {fileID: 11400000, guid: d9d730b958025504990bdca1e1b64234, type: 2}
+  - {fileID: 11400000, guid: da5efd79a33293a4cbda1fac4d660fca, type: 2}
+  - {fileID: 11400000, guid: 4ae87f9dd1d1b6b47baed20e4f576c4c, type: 2}

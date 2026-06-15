@@ -34,12 +34,6 @@ public class CraftItemPanel : MonoBehaviour
         button.OnDeselected.RemoveListener(OnDeselected);
     }
 
-    private void Start()
-    {
-        UpdateTimer();
-        UpdateProgressBar();
-    }
-
     private void Update()
     {
         if (!isSelected) return; 
@@ -57,6 +51,9 @@ public class CraftItemPanel : MonoBehaviour
 
         CreateProducedResourceWidget();
         CreateConsumedResourcesWidget();
+
+        UpdateTimer();
+        UpdateProgressBar();
     }
 
     public void Select()
@@ -95,13 +92,13 @@ public class CraftItemPanel : MonoBehaviour
     private void UpdateTimer()
     {
         if (!craftingModule) {
-            Debug.Log($"CraftingModule not found at {name}");
+            Debug.LogError($"CraftingModule not found at {name}");
             return;
         }
 
         string text;
 
-        if (isSelected && (craftingModule.IsWorking || craftingModule.IsReadyToCollect)) {
+        if (craftingModule.CurrentCraftItem.IsCrafting) {
             int currentTime = (int)craftingModule.CurrentCraftItem.CurrentCraftingTime;
             int targetTime = craftingModule.ProductionLevelData.TryGetCraftItem(index).ProduceTime;
             text = TimeFormatter.SecondToTimer(currentTime, targetTime);
@@ -117,13 +114,13 @@ public class CraftItemPanel : MonoBehaviour
     private void UpdateProgressBar()
     {
         if (!craftingModule) {
-            Debug.Log($"CraftingModule is not valid at {name}");
+            Debug.LogError($"CraftingModule is not valid at {name}");
             return;
         }
 
         var craftItem = craftingModule.ProductionLevelData.TryGetCraftItem(index);
         if (!craftItem) {
-            Debug.Log($"CraftItem is not valid in {craftingModule.ProductionLevelData} by index {index}");
+            Debug.LogError($"CraftItem is not valid in {craftingModule.ProductionLevelData} by index {index}");
             return;
         }
 
@@ -145,7 +142,12 @@ public class CraftItemPanel : MonoBehaviour
 
     private void OnClicked()
     {
+        craftingModule.TryCollectItem();
+        craftingModule.TryRefundResources();
+        craftingModule.ResetProducedTime();
         craftingModule.SetCraftingItemByIndex(index);
+        craftingModule.TryConsumeResources();
+
         Select();
     }
 

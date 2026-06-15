@@ -22,8 +22,11 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     [SerializeField] protected ConstructionComponent constructionComponent;
     public ConstructionComponent ConstructionComponent => constructionComponent;
 
-    public WorkComponent WorkComponent { get; private set; }
-    public RaidComponent RaidComponent { get; private set; }
+    private WorkComponent workComponent;
+    public WorkComponent WorkComponent => workComponent ? workComponent : GetComponent<WorkComponent>();
+
+    private RaidComponent raidComponent;
+    public RaidComponent RaidComponent => raidComponent ? raidComponent : GetComponent<RaidComponent>();
 
     [SerializeField] protected LevelComponent levelComponent;
     public LevelComponent LevelComponent => levelComponent;
@@ -63,9 +66,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public event Action<CreatureCityNavigator> onEnterBuilding;
     public event Action<CreatureCityNavigator> onExitBuilding;
 
-    public event Action<BuildingInteractComponent> onCurrentWorkerAdded;
-    public event Action<BuildingInteractComponent> onCurrentWorkerRemoved;
-
     public event Action OnUpgradeStarted;
     public event Action OnUpgradeCompleted;
 
@@ -88,8 +88,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     private void Awake()
     {
         SelectComponent = GetComponent<SelectComponent>();
-        WorkComponent = GetComponent<WorkComponent>();
-        RaidComponent = GetComponent<RaidComponent>();
+        workComponent = GetComponent<WorkComponent>();
+        raidComponent = GetComponent<RaidComponent>();
     }
 
     protected virtual void OnEnable()
@@ -101,8 +101,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
         WorkComponent.OnWorkerAdded += OnWorkerAdded;
         WorkComponent.OnWorkerRemoved += OnWorkerRemoved;
-        WorkComponent.OnWorkerEntered += OnCurrentWorkerAdded;
-        WorkComponent.OnWorkerExited += OnCurrentWorkerRemoved;
+        WorkComponent.OnCurrentWorkerAdded += OnCurrentWorkerAdded;
+        WorkComponent.OnCurrentWorkerRemoved += OnCurrentWorkerRemoved;
 
         RaidComponent.OnRaiderAdded += OnRaiderAdded;
         RaidComponent.OnRaiderRemoved += OnRaiderRemoved;
@@ -120,8 +120,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
         WorkComponent.OnWorkerAdded -= OnWorkerAdded;
         WorkComponent.OnWorkerRemoved -= OnWorkerRemoved;
-        WorkComponent.OnWorkerEntered -= OnCurrentWorkerAdded;
-        WorkComponent.OnWorkerExited -= OnCurrentWorkerRemoved;
+        WorkComponent.OnCurrentWorkerAdded -= OnCurrentWorkerAdded;
+        WorkComponent.OnCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
 
         RaidComponent.OnRaiderAdded -= OnRaiderAdded;
         RaidComponent.OnRaiderRemoved -= OnRaiderRemoved;
@@ -135,6 +135,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     {
         OnInit(buildingData);
         UpdateConstruction();
+
+        GetComponent<CraftingModule>()?.Init(buildingData.Crafting);
 
         IsInited = true;
         OnInited?.Invoke();
@@ -159,8 +161,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         constructionComponent.Init(buildingData.Construction);
         upgradeComponent.Init(buildingData.Upgrade);
         levelComponent.Init(buildingData.Level);
-
-        GetComponent<CraftingModule>()?.Init(buildingData.Crafting);
     }
 
     protected abstract void OnDemolish();
@@ -324,7 +324,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
             StartWorking();
 
         strategy.OnStartedInteracting(citizen.InteractComponent);
-        onCurrentWorkerAdded?.Invoke(citizen.InteractComponent);
     }
 
     private void OnCurrentWorkerRemoved(Citizen citizen)
@@ -333,7 +332,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
             StopWorking();
 
         strategy.OnStoppedInteracting(citizen.InteractComponent);
-        onCurrentWorkerRemoved?.Invoke(citizen.InteractComponent);
     }
 
     // Raid
@@ -385,25 +383,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
                 break;
         }
     }
-
-    // Construction
-    //private void HandleConstructionStarted()
-    //{
-    //    UpdateConstruction();
-    //    OnConstructionStart();
-
-    //    OnConstructionStarted?.Invoke();
-    //    OnBuildingConstructionStarted?.Invoke(this);
-    //}
-
-    //private void HandleConstructionCompleted()
-    //{
-    //    UpdateConstruction();
-    //    OnConstructionComplete();
-
-    //    OnConstructionCompleted?.Invoke();
-    //    OnBuildingConstructionCompleted?.Invoke(this);
-    //}
 
     private void HandleUpgradeStarted()
     {

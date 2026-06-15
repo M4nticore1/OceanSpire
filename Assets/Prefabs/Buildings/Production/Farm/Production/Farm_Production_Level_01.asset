@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Farm_Production_Level_01
   m_EditorClassIdentifier: 
   craftItems:
-  - {fileID: 11400000, guid: 669fefa807ce24344ba6de71842af20b, type: 2}
-  - {fileID: 11400000, guid: 562ed2f3b6ba51c42928fed9c3c686f0, type: 2}
-  - {fileID: 11400000, guid: ef14f4586f159744684f626b6c90149d, type: 2}
-  - {fileID: 11400000, guid: 3d0635fe7d06db54fa6a689d0ff20182, type: 2}
-  - {fileID: 11400000, guid: 58446048d024a9c48a313417a5e5911e, type: 2}
+  - {fileID: 11400000, guid: 0d350feca0fe411419e050c9520bdb4a, type: 2}
+  - {fileID: 11400000, guid: 134255424a1ce35438305cc08fa1f2f7, type: 2}
+  - {fileID: 11400000, guid: f5ad79fa5fdb3a7408a5c13935cebf4f, type: 2}
+  - {fileID: 11400000, guid: 3809161ecc2a6564e96f9a4cc0001f23, type: 2}
+  - {fileID: 11400000, guid: 79e7ae28e1514604a9566ee3468b9882, type: 2}

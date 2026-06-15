@@ -13,6 +13,11 @@ public abstract class BuildingModule : MonoBehaviour
     {
         get
         {
+            if (!ownedBuilding) {
+                Debug.LogError("OwnedBuilding is not valid ", this);
+                return null;
+            }
+
             int level = ownedBuilding.LevelComponent.Level - 1;
 
             if (level < LevelsData.Length) {
@@ -30,8 +35,8 @@ public abstract class BuildingModule : MonoBehaviour
     private bool isSubscribed = false;
     public bool IsWorking { get; private set; } = false;
 
-    public event Action onWorkStarted;
-    public event Action onWorkStopped;
+    public event Action OnWorkingStarted;
+    public event Action OnWorkingStopped;
 
     protected virtual void Awake()
     {
@@ -51,11 +56,19 @@ public abstract class BuildingModule : MonoBehaviour
     protected virtual void Subscribe()
     {
         ownedBuilding.OnInited += OnInit;
+        ownedBuilding.WorkComponent.OnWorkerAdded += OnWorkerAdded;
+        ownedBuilding.WorkComponent.OnWorkerRemoved += OnWorkerRemoved;
+        ownedBuilding.WorkComponent.OnCurrentWorkerAdded += OnCurrentWorkerAdded;
+        ownedBuilding.WorkComponent.OnCurrentWorkerRemoved += OnCurrentWorkerRemoved;
     }
 
     protected virtual void Unsubscribe()
     {
         ownedBuilding.OnInited -= OnInit;
+        ownedBuilding.WorkComponent.OnWorkerAdded -= OnWorkerAdded;
+        ownedBuilding.WorkComponent.OnWorkerRemoved -= OnWorkerRemoved;
+        ownedBuilding.WorkComponent.OnCurrentWorkerAdded -= OnCurrentWorkerAdded;
+        ownedBuilding.WorkComponent.OnCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
     }
 
     protected virtual void OnInit()
@@ -63,42 +76,129 @@ public abstract class BuildingModule : MonoBehaviour
         IsInited = true;
     }
 
-    protected void StartWorking()
+    protected virtual void OnWorkingStart()
     {
-        if (IsWorking) return;
 
-        IsWorking = true;
-        onWorkStarted?.Invoke();
     }
 
-    protected void StopWorking()
+    protected virtual void OnWorkingStop()
     {
-        if (!IsWorking) return;
 
-        IsWorking = false;
-        onWorkStopped?.Invoke();
+    }
+
+    protected virtual bool ShouldSubscribe()
+    {
+        if (isSubscribed) return false;
+        if (!ownedBuilding) return false;
+
+        return true;
+    }
+
+    protected virtual bool ShouldUnsubscribe()
+    {
+        if (!isSubscribed) return false;
+        if (!ownedBuilding) return false;
+
+        return true;
+    }
+
+    protected virtual bool ShouldStartWorking()
+    {
+        if (ownedBuilding.WorkComponent.CurrentWorkers.Count <= 0) return false;
+
+        return true;
+    }
+
+    protected virtual bool ShouldStopWorking()
+    {
+        if (OwnedBuilding.WorkComponent.CurrentWorkers.Count <= 0) return true;
+
+        return false;
+    }
+
+    protected bool TryStartWorking()
+    {
+        if (!ShouldStartWorking()) return false;
+
+        StartWorking();
+        return true;
+    }
+
+    protected bool TryStopWorking()
+    {
+        if (!ShouldStopWorking()) return false;
+
+        StopWorking();
+        return true;
     }
 
     protected void SetFlickingPower(float multiplier)
     {
+        if (!BuildingConstruction) {
+            Debug.Log("BuildingConstruction is not valid");
+            return;
+        }
+
         BuildingConstruction.SetFlickingPower(multiplier);
     }
 
-    private void TrySubscribe()
+    private void OnWorkerAdded(Citizen citizen)
     {
-        if (isSubscribed) return;
-
-        Subscribe();
-
-        isSubscribed = true;
+        TryStartWorking();
     }
 
-    private void TryUnsubscribe()
+    private void OnWorkerRemoved(Citizen citizen)
     {
-        if (!isSubscribed) return;
+        TryStopWorking();
+    }
+
+    private void OnCurrentWorkerAdded(Citizen citizen)
+    {
+        TryStartWorking();
+    }
+
+    private void OnCurrentWorkerRemoved(Citizen citizen)
+    {
+        TryStopWorking();
+    }
+
+    private bool TrySubscribe()
+    {
+        if (!ShouldSubscribe()) return false;
+
+        Subscribe();
+        isSubscribed = true;
+
+        return true;
+    }
+
+    private bool TryUnsubscribe()
+    {
+        if (!ShouldUnsubscribe()) return false;
 
         Unsubscribe();
-
         isSubscribed = false;
+
+        return true;
+    }
+
+    private void StartWorking()
+    {
+        if (IsWorking) return;
+        Debug.Log("StartWorking");
+
+        IsWorking = true;
+        OnWorkingStart();
+        OnWorkingStarted?.Invoke();
+    }
+
+    private void StopWorking()
+    {
+        if (!IsWorking) return;
+        Debug.Log("StopWorking");
+
+        IsWorking = false;
+        OnWorkingStop();
+        OnWorkingStopped?.Invoke();
     }
 }

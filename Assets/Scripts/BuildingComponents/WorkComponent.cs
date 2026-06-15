@@ -13,8 +13,8 @@ public class WorkComponent : MonoBehaviour
     public event Action<Citizen> OnWorkerAdded;
     public event Action<Citizen> OnWorkerRemoved;
 
-    public event Action<Citizen> OnWorkerEntered;
-    public event Action<Citizen> OnWorkerExited;
+    public event Action<Citizen> OnCurrentWorkerAdded;
+    public event Action<Citizen> OnCurrentWorkerRemoved;
 
     // Workers
     public void AddWorker(Citizen interactor)
@@ -32,13 +32,13 @@ public class WorkComponent : MonoBehaviour
     public void AddCurrentWorker(Citizen interactor)
     {
         currentWorkers.Add(interactor);
-        OnWorkerEntered?.Invoke(interactor);
+        OnCurrentWorkerAdded?.Invoke(interactor);
     }
 
     public void RemoveCurrentWorker(Citizen interactor)
     {
         currentWorkers.Remove(interactor);
-        OnWorkerExited?.Invoke(interactor);
+        OnCurrentWorkerRemoved?.Invoke(interactor);
     }
 
     public int? TryGetWorkerIndex(Citizen citizen)

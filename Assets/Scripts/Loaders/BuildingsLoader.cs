@@ -187,7 +187,7 @@ public class BuildingsLoader : WorldLoader
                     Level = LevelData.Create(building.LevelComponent),
                     Upgrade = UpgradeData.Create(building.UpgradeComponent),
                     Construction = ConstructionData.Create(building.ConstructionComponent),
-                    Crafting = CraftingModuleData.Create(building.GetComponent<CraftingModule>()),
+                    Crafting = CraftingModuleData.Default(),
                     FloorIndex = i,
                     PlaceIndex = j
                 };

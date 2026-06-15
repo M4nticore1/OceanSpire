@@ -219,12 +219,15 @@ public class Raider : Human
     {
         if (!InteractComponent) return;
 
-        IRaidable[] raidables = InteractComponent.InteractBuilding.GetComponents<IRaidable>();
+        var raidables = InteractComponent.InteractBuilding.GetComponents<IRaidable>();
         if (raidables == null) return;
 
         foreach (IRaidable raidable in raidables) {
-            ItemInstance instance = raidable.GetRaidLoot();
-            RaidManager.Instance.AddLose(instance);
+            var loot = raidable.GetRaidLoot();
+
+            foreach (var items in loot) {
+                RaidManager.Instance.AddLose(items);
+            }
         }
     }
 

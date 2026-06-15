@@ -65,8 +65,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -131,9 +131,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingResourceWidget: {fileID: 5555003485712965333, guid: 9d3feffcad0e637408bef2ff4d7db94d, type: 3}
+  buildButton: {fileID: 3753086174136718447}
   buildingNameTextLocalizer: {fileID: 9025228998122799740}
   buildingImage: {fileID: 5005537298302894448}
-  buildButton: {fileID: 3753086174136718447}
   informationButton: {fileID: 42081283019150995}
   resourcesToBuildLayoutGroup: {fileID: 5228974229580240534}
 --- !u!1 &3306016871298986454
@@ -673,7 +673,7 @@ MonoBehaviour:
   isScalable: 0
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectableGroupIndex: -1
+  selectGroup: {fileID: 0}
   stateTransitionTime: 0.3
   state: 0
   idleState:
@@ -706,6 +706,24 @@ MonoBehaviour:
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnReleased:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHovered:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUnhovered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7851105217921123813
 GameObject:
   m_ObjectHideFlags: 0
@@ -894,7 +912,7 @@ MonoBehaviour:
   isScalable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 1
-  selectableGroupIndex: -1
+  selectGroup: {fileID: 0}
   stateTransitionTime: 0.3
   state: 0
   idleState:
@@ -927,3 +945,21 @@ MonoBehaviour:
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnReleased:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHovered:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUnhovered:
+    m_PersistentCalls:
+      m_Calls: []

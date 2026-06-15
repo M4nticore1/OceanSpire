@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a11f70ed47eda04696cf0ca64275b68, type: 3}
+  m_Script: {fileID: 11500000, guid: 651485729ab488c439f3873c6637545e, type: 3}
   m_Name: craft_tomato
-  m_EditorClassIdentifier: Assembly-CSharp::ProductionItem
+  m_EditorClassIdentifier: Assembly-CSharp::CraftItemDefinition
   produceItem:
-    itemData: {fileID: 11400000, guid: e6e0b672836d93b44bbc0c0b39214e20, type: 2}
+    definition: {fileID: 11400000, guid: e6e0b672836d93b44bbc0c0b39214e20, type: 2}
     amount: 6
   consumeResources:
-  - itemData: {fileID: 11400000, guid: e6e0b672836d93b44bbc0c0b39214e20, type: 2}
+  - definition: {fileID: 11400000, guid: e6e0b672836d93b44bbc0c0b39214e20, type: 2}
     amount: 3
   produceTime: 1080

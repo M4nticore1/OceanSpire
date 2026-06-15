@@ -13,16 +13,16 @@ public class CoalGeneratorModule : BuildingModule
     {
         base.Subscribe();
 
-        productionModule.onWorkStarted += OnWorkStarted;
-        productionModule.onWorkStopped += OnWorkStopped;
+        productionModule.OnWorkingStarted += OnWorkStarted;
+        productionModule.OnWorkingStopped += OnWorkStopped;
     }
 
     protected override void Unsubscribe()
     {
         base.Unsubscribe();
 
-        productionModule.onWorkStarted -= OnWorkStarted;
-        productionModule.onWorkStopped -= OnWorkStopped;
+        productionModule.OnWorkingStarted -= OnWorkStarted;
+        productionModule.OnWorkingStopped -= OnWorkStopped;
     }
 
     private void TrySpawnSmoke()
