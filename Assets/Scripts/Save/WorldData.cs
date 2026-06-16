@@ -36,6 +36,7 @@ public class WorldData
     public int Version = 1;
 
     public string WorldName = "";
+    public long SaveTime = 0;
 
     public PlayerData Player;
     public BuildingData[] GroundBuildings;
@@ -76,6 +77,7 @@ public class WorldData
     {
         return new WorldData() {
             WorldName = saveManager.SaveWorldName,
+            SaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
 
             GroundBuildings = BuildingData.Create(buildings.GroundBuildings().ToArray()),
             FloorFrameBuildings = TowerBuildingData.Create(buildings.BuiltFloors.Select(b => b.OwnedTowerBuilding).ToArray()),

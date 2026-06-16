@@ -6,10 +6,15 @@ using UnityEngine.SceneManagement;
 public class CreateNewWorldMenu : MonoBehaviour
 {
     [SerializeField] private SlidePanel slidePanel;
-    [SerializeField] private TMP_InputField inputField = null;
-    [SerializeField] private KeyboardOffsetUI keyboardOffsetUI = null;
-    [SerializeField] private CustomButton createWorldButton = null;
-    [SerializeField] private TextMeshProUGUI worldNameAlreadyExistsText = null;
+    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private KeyboardOffsetUI keyboardOffsetUI;
+    [SerializeField] private CustomButton createWorldButton;
+    [SerializeField] private CustomButton cancelButton;
+
+    [Header("World Name")]
+    [SerializeField] private TextLocalizer incorrectWorkNameText;
+    [SerializeField] private LocalizationItem existWorldNameLocalization;
+    [SerializeField] private LocalizationItem incorrectWorldNameLocalization;
 
     public event Action onClosed;
 
@@ -18,6 +23,7 @@ public class CreateNewWorldMenu : MonoBehaviour
         slidePanel.OnClosed += OnClosed;
         inputField.onValueChanged.AddListener(OnWorldNameInputFieldChangeValue);
         createWorldButton.OnReleased.AddListener(OnCreateWorldButtonClicked);
+        cancelButton.OnReleased.AddListener(OnCancelButtonClicked);
     }
 
     private void OnDisable()
@@ -25,6 +31,7 @@ public class CreateNewWorldMenu : MonoBehaviour
         slidePanel.OnClosed -= OnClosed;
         inputField.onValueChanged.RemoveListener(OnWorldNameInputFieldChangeValue);
         createWorldButton.OnReleased.RemoveListener(OnCreateWorldButtonClicked);
+        cancelButton.OnReleased.RemoveListener(OnCancelButtonClicked);
     }
 
     private void Start()
@@ -38,7 +45,6 @@ public class CreateNewWorldMenu : MonoBehaviour
         slidePanel.Open();
 
         inputField.text = "";
-        worldNameAlreadyExistsText.gameObject.SetActive(false);
         string name = inputField.text;
         CheckWorldName(name);
     }
@@ -68,21 +74,44 @@ public class CreateNewWorldMenu : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
+    private void OnCancelButtonClicked()
+    {
+        Close();
+    }
+
     private void CheckWorldName(string name)
     {
-        if (!IsWorldNameFit(name)) {
+        if (!IsPossibleWorldNameLength(name)) {
+            incorrectWorkNameText.gameObject.SetActive(false);
+            createWorldButton.SetState(CustomButtonState.Disabled);
+            return;
+        }
+
+        if (!IsPossibleWorldName(name)) {
+            incorrectWorkNameText.gameObject.SetActive(true);
+            incorrectWorkNameText.SetLocalizationItem(incorrectWorldNameLocalization);
+            incorrectWorkNameText.UpdateText();
             createWorldButton.SetState(CustomButtonState.Disabled);
             return;
         }
 
         if (IsWorldNameExist(name)) {
-            worldNameAlreadyExistsText.gameObject.SetActive(true);
+            incorrectWorkNameText.gameObject.SetActive(true);
+            incorrectWorkNameText.SetLocalizationItem(existWorldNameLocalization);
+            incorrectWorkNameText.UpdateText();
             createWorldButton.SetState(CustomButtonState.Disabled);
             return;
         }
 
-        worldNameAlreadyExistsText.gameObject.SetActive(false);
+        incorrectWorkNameText.gameObject.SetActive(false);
         createWorldButton.SetState(CustomButtonState.Idle);
+    }
+
+    private bool IsPossibleWorldName(string name)
+    {
+        if (!WorldSaveSystem.CanCreateSaveFolder(name)) return false;
+
+        return true;
     }
 
     private bool IsWorldNameExist(string name)
@@ -98,11 +127,10 @@ public class CreateNewWorldMenu : MonoBehaviour
         return false;
     }
 
-    private bool IsWorldNameFit(string name)
+    private bool IsPossibleWorldNameLength(string name)
     {
-        if (name.Length > 0) {
-            return true;
-        }
-        return false;
+        if (name.Length <= 0) return false;
+
+        return true;
     }
 }

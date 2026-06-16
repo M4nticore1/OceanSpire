@@ -4,6 +4,7 @@
   "ui_new_world": "New world",
   "ui_name_your_world": "Name your world",
   "ui_world_name_already_exists": "World name already exists",
+  "ui_world_name_incorrect": "World name is incorrect",
   "ui_enter_name": "Enter name..",
   "ui_load": "Load",
   "ui_create": "Create",
@@ -36,6 +37,7 @@
   "none": "None",
   "name_level": "{name} (Level {level})",
   "toolbox": "Toolbox",
+  "last_save": "Last save",
 
   "upgrade": "Upgrade",
   "upgrade_resource": "Upgrade resources",
@@ -54,6 +56,7 @@
 
   "construction": "Construction",
   "construction_build": "Build",
+  "construction_floors": "Floors",
   "construction_upgrade": "Upgrade",
   "construction_demolish": "Demolish",
   "construction_demolish_building": "Demolish building",
@@ -78,7 +81,8 @@
   "building_battery_room": "Battery room",
   "building_weapon_storage": "Armory",
 
-  "creature_citizen": "Citizen",
+  "creature_citizen": "Resident",
+  "creature_citizens": "Residents",
   "creature_wanderer": "Wanderer",
   "creature_raider": "Raider",
   "creature_name": "{firstName} {lastName}",

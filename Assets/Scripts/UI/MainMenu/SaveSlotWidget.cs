@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,7 +50,7 @@ public class SaveSlotWidget : MonoBehaviour
 
     private void Start()
     {
-        WorldData[] worldData = WorldSaveManager.Instance.AllSaveData;
+        var worldData = WorldSaveManager.Instance.AllSaveData;
         if (worldData == null) return;
 
         if (worldData.Length > slotIndex) {
@@ -65,25 +66,26 @@ public class SaveSlotWidget : MonoBehaviour
         }
     }
 
-    public void SetSaveData(WorldData saveData)
+    public void SetSaveData(WorldData worldData)
     {
-        WorldSaveData = saveData;
+        WorldSaveData = worldData;
 
         createWorldMenu.SetActive(false);
         loadWorldMenu.SetActive(true);
 
-        worldNameText.text = saveData.WorldName;
-        floorsCountText.text += $"\n{saveData.FloorFrameBuildings.Length.ToString()}";
+        worldNameText.SetText(worldData.WorldName);
+        floorsCountText.SetText(worldData.FloorFrameBuildings.Length.ToString());
 
-        if (saveData.Citizens != null) {
-            residentsCountText.text += $"\n{saveData.Citizens.Length.ToString()}";
+        if (worldData.Citizens != null) {
+            residentsCountText.SetText(worldData.Citizens.Length.ToString());
         }
 
-        //lastSaveDataText.text += $"\n{data.lastSaveData.ToString()}";
+        var date = DateTimeOffset.FromUnixTimeSeconds(worldData.SaveTime).DateTime;
+        lastSaveDataText.SetText(date.ToString());
 
-        Texture2D thumb = WorldSaveSystem.GetSaveScreenshotByWorldName(saveData.WorldName);
+        var thumb = WorldSaveSystem.GetSaveScreenshotByWorldName(worldData.WorldName);
         if (thumb) {
-            Sprite sprite = Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
+            var sprite = Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
             worldThumbImage.sprite = sprite;
         }
         else {

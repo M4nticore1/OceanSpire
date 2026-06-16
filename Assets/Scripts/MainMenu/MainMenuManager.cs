@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
-    [SerializeField] private GameObject managementSaveMenu;
     [SerializeField] private CustomButton loadSaveButton = null;
     [SerializeField] private CustomButton deleteSaveButton = null;
 
@@ -25,7 +24,8 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-        managementSaveMenu.gameObject.SetActive(false);
+        loadSaveButton.SetState(CustomButtonState.Disabled);
+        deleteSaveButton.SetState(CustomButtonState.Disabled);
     }
 
     private void OnLoadWorldButtonClicked()
@@ -69,11 +69,13 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnSaveSlotSelected(SaveSlotWidget saveSlotWidget)
     {
-        managementSaveMenu.SetActive(true);
+        loadSaveButton.SetState(CustomButtonState.Idle);
+        deleteSaveButton.SetState(CustomButtonState.Idle);
     }
 
     private void OnSaveSlotDeselected(SaveSlotWidget saveSlotWidget)
     {
-        managementSaveMenu.SetActive(false);
+        loadSaveButton.SetState(CustomButtonState.Disabled);
+        deleteSaveButton.SetState(CustomButtonState.Disabled);
     }
 }

@@ -4,6 +4,7 @@
   "ui_new_world": "Новый мир",
   "ui_name_your_world": "Назовите ваш мир",
   "ui_world_name_already_exists": "Название мира уже существует",
+  "ui_world_name_incorrect": "Некорректное название мира",
   "ui_enter_name": "Введите имя..",
   "ui_load": "Загрузить",
   "ui_create": "Создать",
@@ -36,6 +37,7 @@
   "none": "Пусто",
   "name_level": "{name} (Уровень {level})",
   "toolbox": "Интерактивное меню",
+  "last_save": "Последнее сохранение",
 
   "upgrade": "Улучшить",
   "upgrade_resources": "Ресурсы для улучшения",
@@ -54,6 +56,7 @@
 
   "construction": "Строительство",
   "construction_build": "Построить",
+  "construction_floors": "Этажи",
   "construction_upgrade": "Улучшить",
   "construction_demolish": "Разрушить",
   "construction_demolish_building": "Разрушить здание",
@@ -79,6 +82,7 @@
   "building_weapon_storage": "Оружейный склад",
 
   "creature_citizen": "Житель",
+  "creature_citizens": "Жители",
   "creature_wanderer": "Странник",
   "creature_raider": "Рейдер",
   "creature_name": "{firstName} {lastName}",
