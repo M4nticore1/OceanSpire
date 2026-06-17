@@ -65,6 +65,11 @@ public class Movement : MonoBehaviour
 
     public bool TryMoveTo(Transform transform)
     {
+        if (!transform) {
+            Debug.LogError("Transform is not valid!");
+            return false;
+        }
+
         if (!TryMoveTo(transform.position)) return false;
 
         SetTargetRotation(transform.rotation);

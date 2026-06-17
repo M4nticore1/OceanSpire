@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
   m_Name: BatteryRoom_Definition
   m_EditorClassIdentifier: 
-  buildingId: 10
+  buildingId: 11
   localizationItem: {fileID: 11400000, guid: cf5c11cdc2841a142a1b7200b93d25e5, type: 2}
   buildingType: 0
   buildingCategory: 3

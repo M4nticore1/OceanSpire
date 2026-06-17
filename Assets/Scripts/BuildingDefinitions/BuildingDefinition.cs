@@ -11,6 +11,7 @@ public enum BuildingIdEnum
     CoalGenerator,
     Farm,
     Kitchen,
+    WeaponWorkshop,
     ResourceStorage,
     FoodStorage,
     BatteryRoom,

@@ -373,7 +373,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ecd4456a3c94a942a3585f28a56d7ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  managementSaveMenu: {fileID: 1229542939}
   loadSaveButton: {fileID: 1633443547}
   deleteSaveButton: {fileID: 1365414147}
 --- !u!4 &564957213
@@ -455,11 +454,6 @@ Transform:
   - {fileID: 1546888464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1229542939 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6759780315002228136, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
-  m_PrefabInstance: {fileID: 6624092925259090882}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1305123311
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -875,7 +869,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 778086849105559690, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
-      value: 58
+      value: 68
       objectReference: {fileID: 0}
     - target: {fileID: 1284224325063122657, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_hasFontAssetChanged
@@ -911,7 +905,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3367302558773861489, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
-      value: 58
+      value: 68
       objectReference: {fileID: 0}
     - target: {fileID: 3617058027276914375, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
@@ -943,7 +937,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4858137478602336601, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
-      value: 58
+      value: 68
       objectReference: {fileID: 0}
     - target: {fileID: 4925410492509476317, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontColor32.rgba
@@ -971,7 +965,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7071742386713176888, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
-      value: 58
+      value: 68
       objectReference: {fileID: 0}
     - target: {fileID: 7454327220394151889, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_Enabled

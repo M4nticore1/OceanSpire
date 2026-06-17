@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public class CraftItemPanel : MonoBehaviour
 {
-    [SerializeField] private ResourceWidget resourceWidgetPrefab;
+    [SerializeField] private ResourceWidget consumeResourceWidgetPrefab;
+    [SerializeField] private ResourceWidget craftResourceWidgetPrefab;
     [SerializeField] private CustomButton button;
     [SerializeField] private TextMeshProUGUI timer;
     [SerializeField] private Image progressBar;
@@ -75,7 +76,7 @@ public class CraftItemPanel : MonoBehaviour
 
     private void CreateProducedResourceWidget()
     {
-        var widget = Instantiate(resourceWidgetPrefab, producedResourceSlot.transform);
+        var widget = Instantiate(craftResourceWidgetPrefab, producedResourceSlot.transform);
         widget.SetItem(currentCraftItem.ProduceItem.Definition);
         widget.AddAmount(currentCraftItem.ProduceItem);
     }
@@ -83,7 +84,7 @@ public class CraftItemPanel : MonoBehaviour
     private void CreateConsumedResourcesWidget()
     {
         foreach (var resource in currentCraftItem.ConsumeResources) {
-            var widget = Instantiate(resourceWidgetPrefab, consumedResourcesSlot.transform);
+            var widget = Instantiate(consumeResourceWidgetPrefab, consumedResourcesSlot.transform);
             widget.SetItem(resource.Definition);
             widget.AddAmount(resource);
         }

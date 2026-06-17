@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
   m_Name: ResourceStorage_Definition
   m_EditorClassIdentifier: 
-  buildingId: 8
+  buildingId: 9
   localizationItem: {fileID: 11400000, guid: ca26a1b1d93ff7f478f1e1f510438950, type: 2}
   buildingType: 0
   buildingCategory: 3
