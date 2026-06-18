@@ -12,9 +12,14 @@ public class HealthComponent : MonoBehaviour
     public event Action onHealthChanged;
     public event Action OnDied;
 
-    public void Init(float currentHealth)
+    public void Init(HealthData healthData)
     {
-        SetCurrentHealth(currentHealth);
+        if (healthData == null) {
+            Debug.LogError("healthData is not valid", this);
+            return;
+        }
+
+        SetCurrentHealth(healthData.CurrentHealth);
     }
 
     public void SetMaxHealh(float value)

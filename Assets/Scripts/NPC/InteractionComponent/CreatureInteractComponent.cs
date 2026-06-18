@@ -1,10 +1,9 @@
 using System;
 using UnityEngine;
 
-public class BuildingInteractComponent : MonoBehaviour
+public class CreatureInteractComponent : MonoBehaviour
 {
-    public Building InteractBuilding;
-
+    public Building InteractBuilding { get; private set; }
     public bool IsInteracting { get; private set; } = false;
 
     public event Action<Building> OnInteractBuildingSeted;
@@ -12,8 +11,24 @@ public class BuildingInteractComponent : MonoBehaviour
     public event Action<Building> OnInteractionStarted;
     public event Action<Building> OnInteractionStopped;
 
-    public static event Action<BuildingInteractComponent> OnInteractorInteractBuildingSeted;
-    public static event Action<BuildingInteractComponent> OnInteractorInteractBuildirngRemoved;
+    public static event Action<CreatureInteractComponent> OnInteractorInteractBuildingSeted;
+    public static event Action<CreatureInteractComponent> OnInteractorInteractBuildirngRemoved;
+
+    public void Init(InteractionComponentData interactionData)
+    {
+        if (interactionData == null) {
+            Debug.LogError("interactionData is not valid", this);
+            return;
+        }
+
+        var instanceId = interactionData.InteractBuildingInstanceId;
+        if (instanceId == null) return;
+
+        var instance = InstancesManager.Instance.GetInstance(instanceId.Value);
+        var interactBuilding = instance?.GetComponent<Building>();
+
+        SetInteractBuilding(interactBuilding);
+    }
 
     public void SetInteractBuilding(Building building)
     {
@@ -44,8 +59,6 @@ public class BuildingInteractComponent : MonoBehaviour
     {
         var lastInteractBuilding = InteractBuilding;
         InteractBuilding = null;
-
-        TryStopInteracting(lastInteractBuilding);
 
         OnInteractBuildingRemoved?.Invoke(lastInteractBuilding);
         OnInteractorInteractBuildirngRemoved?.Invoke(this);

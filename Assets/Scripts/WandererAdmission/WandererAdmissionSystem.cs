@@ -54,7 +54,7 @@ public static class WandererAdmissionSystem
         {
             Id = creautereId,
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
-            Health = wanderer.HealthComponent.CurrentHealth,
+            Health = HealthData.Create(wanderer.HealthComponent),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotaton.eulerAngles),
             Name = NameData.Create(wanderer.NameComponent),

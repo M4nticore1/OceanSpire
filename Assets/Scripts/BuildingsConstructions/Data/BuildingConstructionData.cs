@@ -13,7 +13,7 @@ public class BuildingConstructionData
 
         return new BuildingConstructionData()
         {
-            BuildingInstanceId = construction.OwnedBuilding.InstanceId.GetInstanceId()
+            BuildingInstanceId = construction.OwnedBuilding.InstanceId.GetId()
         };
     }
 }

@@ -33,8 +33,11 @@ public abstract class Human : Creature, IClickable
     [SerializeField] private CreatureCityNavigator cityNavigator;
     public CreatureCityNavigator CityNavigator => cityNavigator;
 
-    [SerializeField] private BuildingInteractComponent interactComponent;
-    public BuildingInteractComponent InteractComponent => interactComponent;
+    [SerializeField] private ElevatorPassenger elevatorPassenger;
+    public ElevatorPassenger ElevatorPassenger => elevatorPassenger;
+
+    [SerializeField] private CreatureInteractComponent interactComponent;
+    public CreatureInteractComponent InteractComponent => interactComponent;
 
     [SerializeField] private BoatRider boatRider;
     public BoatRider BoatRider => boatRider;
@@ -152,29 +155,13 @@ public abstract class Human : Creature, IClickable
 
         var humanData = creatureData as HumanData;
 
-        if (humanData.EnteredBuildingInstanceId != null) {
-            var instanceId = InstancesManager.Instance.GetInstance(humanData.EnteredBuildingInstanceId.Value);
-            var interactBuilding = instanceId?.GetComponent<Building>();
-
-            cityNavigator.EnterBuilding(interactBuilding);
-        }
-
-        if (humanData.InteractBuildingInstanceId != null) {
-            var instanceId = InstancesManager.Instance.GetInstance(humanData.InteractBuildingInstanceId.Value);
-            var interactBuilding = instanceId?.GetComponent<Building>();
-
-            interactComponent.SetInteractBuilding(interactBuilding);
-        }
-
         nameComponent.Init(humanData.Name);
         healthComponent.Init(humanData.Health);
+        cityNavigator.Init(humanData.CityNavigator);
+        interactComponent.Init(humanData.Interaction);
         weaponComponent.Init(humanData.Weapon);
         skillsComponent.Init(humanData.Skills);
         boatRider.Init(humanData.BoatRider);
-
-        if (humanData.MovementStateId == (int)FollowingPathState.Riding) {
-            cityNavigator.SetState(FollowingPathState.Riding);
-        }
 
         DetermineNextAction();
 
@@ -185,7 +172,7 @@ public abstract class Human : Creature, IClickable
     {
         base.OnInitedNextFrame();
 
-        if (cityNavigator.IsRidingOnElevator) return;
+        if (elevatorPassenger.IsRiding) return;
         if (boatRider.RidingBoat) return;
 
         movement.SetAgentEnabled(true);
@@ -324,7 +311,7 @@ public abstract class Human : Creature, IClickable
         if (!cityNavigator.CurrentBuilding) return false;
         if (cityNavigator.CurrentBuilding != interactComponent.InteractBuilding) return false;
         if (boatRider.RidingBoat) return false;
-        if (!boatRider.RidingBoat && Vector3.Distance(transform.position, interactComponent.InteractBuilding.GetInteractionTransform(cityNavigator).position) > movement.NavAgent.stoppingDistance) return false;
+        if (!boatRider.RidingBoat && Vector3.Distance(transform.position, interactComponent.InteractBuilding.SpawnedConstruction.GetInteraction(cityNavigator).GetWaypoint(0).Transform.position) > movement.NavAgent.stoppingDistance) return false;
         if (attackComponent.IsAttacking) return false;
 
         return true;
@@ -332,10 +319,7 @@ public abstract class Human : Creature, IClickable
 
     protected virtual bool ShouldFollowPath()
     {
-        //if (!cityNavigator.TargetBuilding) return false;
         if (boatRider.RidingBoat) return false;
-        //if (cityNavigator.TargetBuilding && cityNavigator.PathProgress >= cityNavigator.PathBuildings.Count) return false;
-        //if (!cityNavigator.CanReachTargetBuilding()) return false;
 
         return true;
     }
@@ -467,7 +451,10 @@ public abstract class Human : Creature, IClickable
 
     protected virtual void OnDied()
     {
+        var interactBuilding = interactComponent.InteractBuilding;
         interactComponent.TryRemoveInteractBuilding();
+        interactComponent.TryStopInteracting(interactBuilding);
+
         TryStopIdle();
         contextMenuTarget.SetShowContextMenu(false);
 
@@ -559,8 +546,10 @@ public abstract class Human : Creature, IClickable
 
     private void OnTargetBoatSeted(Boat boat)
     {
-        if (interactComponent.InteractBuilding && !interactComponent.InteractBuilding.GetComponent<PierModule>()) {
+        var interactBuilding = interactComponent.InteractBuilding;
+        if (interactBuilding && !interactBuilding.GetComponent<PierModule>()) {
             interactComponent.RemoveInteractBuilding();
+            interactComponent.TryStopInteracting(interactBuilding);
         }
 
         if (cityNavigator.CurrentBuilding && cityNavigator.CurrentBuilding as TowerBuilding) {

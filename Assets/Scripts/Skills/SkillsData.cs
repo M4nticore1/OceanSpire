@@ -14,6 +14,11 @@ public class SkillsData
 {
     public SkillInstanceData[] Skills;
 
+    public static SkillsData Default()
+    {
+        return new SkillsData();
+    }
+
     public static SkillsData Create(SkillsComponent skillsComponent)
     {
         int count = skillsComponent.Skills.Count;

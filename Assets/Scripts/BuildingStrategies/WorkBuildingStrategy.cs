@@ -17,27 +17,27 @@ public class WorkBuildingStrategy : BuildingStrategy
 
     }
 
-    public override void OnInteractBuildingSet(BuildingInteractComponent navigator)
+    public override void OnInteractBuildingSet(CreatureInteractComponent navigator)
     {
         
     }
 
-    public override void OnInteractBuildingRemove(BuildingInteractComponent navigator)
+    public override void OnInteractBuildingRemove(CreatureInteractComponent navigator)
     {
         
     }
 
-    public override void OnStartedInteracting(BuildingInteractComponent interactor)
+    public override void OnStartedInteracting(CreatureInteractComponent interactor)
     {
 
     }
 
-    public override void OnStoppedInteracting(BuildingInteractComponent interactor)
+    public override void OnStoppedInteracting(CreatureInteractComponent interactor)
     {
         
     }
 
-    public override void OnInteracting(BuildingInteractComponent interactor)
+    public override void OnInteracting(CreatureInteractComponent interactor)
     {
         //if (interactBuilding.spawnedConstruction.BuildingInteractions.Length > interactorIndex) {
         //    BuildingAction buildingAction = interactBuilding.spawnedConstruction.BuildingInteractions[interactorIndex];

@@ -7,6 +7,11 @@ public class NameData
     public int FirstNameId = 0;
     public int LastNameId = 0;
 
+    public static NameData Default()
+    {
+        return new NameData();
+    }
+
     public static NameData Create(NameComponent nameComponent)
     {
         return new NameData()

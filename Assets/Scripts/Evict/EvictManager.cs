@@ -21,14 +21,7 @@ public class EvictManager : MonoBehaviour
         }
 
         var leavePosition = WorldUtils.GetRandomBorderPosition();
-
-        var evictData = new EvictData()
-        {
-            Boat = boat,
-            LeavePosition = leavePosition
-        };
-
-        citizen.Evict(evictData);
+        citizen.Evict(boat, leavePosition);
     }
 
     private Boat CreateBoat()
@@ -45,7 +38,7 @@ public class EvictManager : MonoBehaviour
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(dockPoint.transform.position),
             Rotation = new Vector3Data(dockPoint.transform.rotation.eulerAngles),
-            DockInstanceId = dockPoint.InstanceId.GetInstanceId()
+            DockInstanceId = dockPoint.InstanceId.GetId()
         };
 
         var boat = BoatFactory.CreateBoat(evictBoatPrefab, dockPoint.transform.position, dockPoint.transform.rotation, boatData);

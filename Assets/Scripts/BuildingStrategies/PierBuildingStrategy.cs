@@ -20,7 +20,7 @@ public class PierBuildingStrategy : BuildingStrategy
 
     }
 
-    public override void OnInteractBuildingSet(BuildingInteractComponent interactor)
+    public override void OnInteractBuildingSet(CreatureInteractComponent interactor)
     {
         //if (!BoatsManager.Instance) {
         //    Debug.Log("BoatManager is not on the scene.");
@@ -65,7 +65,7 @@ public class PierBuildingStrategy : BuildingStrategy
         UpdateTargetBoats();
     }
 
-    public override void OnInteractBuildingRemove(BuildingInteractComponent interactor)
+    public override void OnInteractBuildingRemove(CreatureInteractComponent interactor)
     {
         var boatRider = interactor.GetComponent<BoatRider>();
         boatRider.RemoveTargetBoat();
@@ -73,17 +73,17 @@ public class PierBuildingStrategy : BuildingStrategy
         UpdateTargetBoats();
     }
 
-    public override void OnStartedInteracting(BuildingInteractComponent interactor)
+    public override void OnStartedInteracting(CreatureInteractComponent interactor)
     {
 
     }
 
-    public override void OnStoppedInteracting(BuildingInteractComponent interactor)
+    public override void OnStoppedInteracting(CreatureInteractComponent interactor)
     {
 
     }
 
-    public override void OnInteracting(BuildingInteractComponent interactor)
+    public override void OnInteracting(CreatureInteractComponent interactor)
     {
         
     }

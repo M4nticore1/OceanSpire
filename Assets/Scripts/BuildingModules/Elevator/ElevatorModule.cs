@@ -1,6 +1,4 @@
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ElevatorModule : BuildingModule, IElectricible
 {
@@ -23,40 +21,70 @@ public class ElevatorModule : BuildingModule, IElectricible
     }
 
     // Passengers
-    public void AddPassenger(CreatureCityNavigator passenger)
+    public void AddGoingToWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
-        switch (passenger.CurrentState) {
-            case FollowingPathState.GoingToWaiting:
-                SpawnedElevatorCabin.AddGoingToWaitingPassenger(passenger);
-                break;
-            case FollowingPathState.Waiting:
-                SpawnedElevatorCabin.AddWaitingPassenger(passenger);
-                break;
-            case FollowingPathState.GoingToRiding:
-                SpawnedElevatorCabin.AddGoingToRidingPassenger(passenger);
-                break;
-            case FollowingPathState.Riding:
-                SpawnedElevatorCabin.AddRidingPassenger(passenger);
-                break;
-        }
+        if (!CanGetSpawnedCabin()) return;
+
+        SpawnedElevatorCabin.AddGoingToWaitingPassenger(elevatorPassenger);
     }
 
-    public void RemovePassenger(CreatureCityNavigator passenger)
+    public void RemoveGoingToWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
-        switch (passenger.CurrentState) {
-            case FollowingPathState.GoingToWaiting:
-                SpawnedElevatorCabin.RemoveGoingToWaitingPassenger(passenger);
-                break;
-            case FollowingPathState.Waiting:
-                SpawnedElevatorCabin.RemoveWaitingPassenger(passenger);
-                break;
-            case FollowingPathState.GoingToRiding:
-                SpawnedElevatorCabin.RemoveGoingToRidingPassenger(passenger);
-                break;
-            case FollowingPathState.Riding:
-                SpawnedElevatorCabin.RemoveRidingPassenger(passenger);
-                break;
+        if (!CanGetSpawnedCabin()) return;
+
+        SpawnedElevatorCabin.RemoveGoingToWaitingPassenger(elevatorPassenger);
+    }
+
+    public void AddWaitingPassenger(ElevatorPassenger elevatorPassenger)
+    {
+        if (!CanGetSpawnedCabin()) return;
+
+        SpawnedElevatorCabin.AddWaitingPassenger(elevatorPassenger);
+    }
+
+    public void RemoveWaitingPassenger(ElevatorPassenger elevatorPassenger)
+    {
+        if (!CanGetSpawnedCabin()) return;
+
+        SpawnedElevatorCabin.RemoveWaitingPassenger(elevatorPassenger);
+    }
+
+    public void AddGoingToRidingPassenger(ElevatorPassenger elevatorPassenger)
+    {
+        if (!CanGetSpawnedCabin()) return;
+
+        SpawnedElevatorCabin.AddGoingToRidingPassenger(elevatorPassenger);
+    }
+
+    public void RemoveGoingToRidingPassenger(ElevatorPassenger elevatorPassenger)
+    {
+        if (!CanGetSpawnedCabin()) return;
+
+        SpawnedElevatorCabin.RemoveGoingToRidingPassenger(elevatorPassenger);
+    }
+
+    public void AddRidingPassenger(ElevatorPassenger elevatorPassenger)
+    {
+        if (!CanGetSpawnedCabin()) return;
+
+        SpawnedElevatorCabin.AddRidingPassenger(elevatorPassenger);
+    }
+
+    public void RemoveRidingPassenger(ElevatorPassenger elevatorPassenger)
+    {
+        if (!CanGetSpawnedCabin()) return;
+
+        SpawnedElevatorCabin.RemoveRidingPassenger(elevatorPassenger);
+    }
+
+    private bool CanGetSpawnedCabin()
+    {
+        if (!SpawnedElevatorCabin) {
+            Debug.LogError("SpawnedElevatorCabin is not valid");
+            return false;
         }
+
+        return true;
     }
 
     public bool IsPossibleToEnter()
@@ -75,31 +103,40 @@ public class ElevatorModule : BuildingModule, IElectricible
         return true;
     }
 
-    public Transform GetCabinRidingTransform()
+    //public Transform GetCabinRidingTransform()
+    //{
+    //    int ridersCount = SpawnedElevatorCabin.RidingPassengers.Count;
+    //    int goingToRidingCount = SpawnedElevatorCabin.GoingToRidingPassengers.Count;
+    //    int totalPassengers = ridersCount + goingToRidingCount;
+
+    //    int length = SpawnedElevatorCabin.BuildingInteractions.Length;
+    //    if (length > 0 && totalPassengers > 0) {
+    //        int index = (totalPassengers - 1) % length;
+
+    //        return SpawnedElevatorCabin.GetInteraction(index).GetWaypoint(0).transform;
+    //    }
+
+    //    return transform;
+    //}
+
+    public Transform GetCabinRidingTransform(ElevatorPassenger elevatorPassenger)
     {
-        int ridersCount = SpawnedElevatorCabin.RidingPassengers.Count;
-        int goingToRidingCount = SpawnedElevatorCabin.GoingToRidingPassengers.Count;
-        int totalPassengers = ridersCount + goingToRidingCount;
+        if (!CanGetSpawnedCabin()) return null;
 
-        int length = SpawnedElevatorCabin.BuildingInteractions.Length;
-        if (length > 0 && totalPassengers > 0) {
-            int index = (totalPassengers - 1) % length;
-
-            return SpawnedElevatorCabin.BuildingInteractions[index].waypoints[0].transform;
+        var interaction = SpawnedElevatorCabin.GetInteraction(elevatorPassenger.CityNavigator);
+        if (interaction == null) {
+            Debug.LogError("interaction is not valid", this);
+            return null;
         }
 
-        return transform;
+        var waypoint = interaction.GetWaypoint(0);
+        if (waypoint == null) {
+            Debug.LogError("waypoint is not valid", this);
+            return null;
+        }
+
+        return waypoint.Transform;
     }
-
-    //public Transform GetCabinRidingTransform(CreatureCityNavigator cityNavagator)
-    //{
-    //    int length = SpawnedElevatorCabin.BuildingInteractions.Length;
-    //    if (length <= 0) return transform;
-
-    //    int index = OwnedBuilding.InteractTransformsDict.Keys.ToList().IndexOf(cityNavagator) % length;
-
-    //    return SpawnedElevatorCabin.BuildingInteractions[index].waypoints[0].transform;
-    //}
 
     public float GetElectricityConsumption()
     {
@@ -121,7 +158,7 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     public ElevatorCabinConstruction GetCabinConstructionPrefab()
     {
-        TowerBuilding ownedTowerBuilding = OwnedBuilding as TowerBuilding;
+        var ownedTowerBuilding = OwnedBuilding as TowerBuilding;
 
         if (ownedTowerBuilding.BuildingPosition == BuildingPosition.Straight) {
             return ElevatorLevelData.ElevatorPlatformStraight;
@@ -129,6 +166,5 @@ public class ElevatorModule : BuildingModule, IElectricible
         else {
             return ElevatorLevelData.ElevatorPlatformCorner;
         }
-
     }
 }

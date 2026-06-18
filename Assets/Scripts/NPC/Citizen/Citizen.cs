@@ -22,11 +22,11 @@ public class Citizen : Human
         CreaturesManager.Instance.UnregisterCitizen(this);
     }
 
-    public void Evict(EvictData evictData)
+    public void Evict(Boat boat, Vector3 leavePosition)
     {
         IsEvicted = true;
-        LeavePosition = evictData.LeavePosition;
-        BoatRider.TrySetTargetBoat(evictData.Boat);
+        LeavePosition = leavePosition;
+        BoatRider.TrySetTargetBoat(boat);
 
         OnCitizenEvicted?.Invoke(this);
     }
@@ -52,12 +52,17 @@ public class Citizen : Human
     {
         var citizenData = creatureData as CitizenData;
         if (citizenData == null) {
-            Debug.Log($"Citizen Data not found at {name}");
+            Debug.Log($"citizenData is not valid", this);
             return;
         }
 
-        IsEvicted = citizenData.Evicted;
-        LeavePosition = citizenData.LeavePosition.Vector3();
+        if (citizenData.EvictData != null) {
+            IsEvicted = citizenData.EvictData.Evicted;
+            LeavePosition = citizenData.EvictData.LeavePosition.Vector3();
+        }
+        else {
+            Debug.LogError("EvictData is not valid", this);
+        }
 
         base.OnInit(creatureData);
     }
@@ -150,6 +155,8 @@ public class Citizen : Human
     {
         base.OnDied();
 
+        var building = InteractComponent.InteractBuilding;
         InteractComponent.RemoveInteractBuilding();
+        InteractComponent.TryStopInteracting(building);
     }
 }

@@ -44,12 +44,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private BuildingStrategy strategy;
 
-    private Dictionary<CreatureCityNavigator, Transform> interactTransformsDict = new();
-    public IReadOnlyDictionary<CreatureCityNavigator, Transform> InteractTransformsDict => interactTransformsDict;
-
-    private List<Transform> interactTransformsList = new();
-    public IReadOnlyList<Transform> InteractTransformsList => interactTransformsList;
-
     public bool isWorking { get; private set; } = false;
     public bool IsDemolished { get; private set; } = false;
 
@@ -221,31 +215,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         return resources;
     }
 
-    // Interaction
-    public void AssignInteractTransform(CreatureCityNavigator navigator)
-    {
-        if (interactTransformsDict.ContainsKey(navigator)) {
-            interactTransformsDict.Remove(navigator);
-        }
-
-        interactTransformsDict.Add(navigator, GetFirstWaypointTransform());
-    }
-
-    public void TryRemoveInteractTransform(CreatureCityNavigator navigator)
-    {
-        if (!interactTransformsDict.ContainsKey(navigator)) return;
-
-        interactTransformsDict.Remove(navigator);
-    }
-
-    public Transform GetInteractionTransform(CreatureCityNavigator navigator)
-    {
-        if (!interactTransformsDict.ContainsKey(navigator))
-            return transform;
-
-        return interactTransformsDict[navigator];
-    }
-
     public float GetUpgradeTime()
     {
         return NextLevelData.UpgradeTime;
@@ -265,12 +234,22 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // Construction
     protected virtual void OnConstructionStart()
     {
-        UpdateInteractTransforms();
+        if (!SpawnedConstruction) {
+            Debug.LogError("SpawnedConstruction is not valid", this);
+            return;
+        }
+
+        SpawnedConstruction.UpdateInteractTransforms();
     }
 
     protected virtual void OnConstructionComplete()
     {
-        UpdateInteractTransforms();
+        if (!SpawnedConstruction) {
+            Debug.LogError("SpawnedConstruction is not valid", this);
+            return;
+        }
+
+        SpawnedConstruction.UpdateInteractTransforms();
     }
 
     protected virtual void OnLevelChange()
@@ -297,7 +276,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
         var data = new BuildingConstructionData()
         {
-            BuildingInstanceId = instanceId.GetInstanceId()
+            BuildingInstanceId = instanceId.GetId()
         };
 
         SpawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, transform, data);
@@ -306,14 +285,14 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // Work
     private void OnWorkerAdded(Citizen citizen)
     {
-        UpdateWorkerInteractionTransforms();
+        //UpdateWorkerInteractionTransforms();
 
         strategy.OnInteractBuildingSet(citizen.InteractComponent);
     }
 
     private void OnWorkerRemoved(Citizen citizen)
     {
-        UpdateWorkerInteractionTransforms();
+        //UpdateWorkerInteractionTransforms();
 
         strategy.OnInteractBuildingRemove(citizen.InteractComponent);
     }
@@ -337,12 +316,12 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // Raid
     private void OnRaiderAdded(Raider raider)
     {
-        UpdateRaiderInteractionTransforms();
+        //UpdateRaiderInteractionTransforms();
     }
 
     private void OnRaiderRemoved(Raider raider)
     {
-        UpdateRaiderInteractionTransforms();
+        //UpdateRaiderInteractionTransforms();
     }
 
     // Working
@@ -444,56 +423,27 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         OnBuildingDeselected?.Invoke(this);
     }
 
-    private void UpdateWorkerInteractionTransforms()
-    {
-        for (int i = 0; i < WorkComponent.Workers.Count; i++) {
-            var worker = WorkComponent.Workers[i];
-            var navigator = worker.CityNavigator;
+    //private BuildingAction GetNextAction()
+    //{
+    //    if (!SpawnedConstruction) {
+    //        Debug.LogError("SpawnedConstruction is not valid ", this);
+    //        return null;
+    //    }
 
-            AssignInteractTransform(navigator);
-        }
-    }
+    //    var actions = SpawnedConstruction.BuildingInteractions;
+    //    if (actions.Length == 0)
+    //        return null;
 
-    private void UpdateRaiderInteractionTransforms()
-    {
-        for (int i = 0; i < RaidComponent.Raiders.Count; i++) {
-            var raider = RaidComponent.Raiders[i];
-            var navigator = raider.CityNavigator;
+    //    var interactorsCount = interactTransformsDict.Values.Count;
 
-            AssignInteractTransform(navigator);
-        }
-    }
+    //    var actionIndex = interactorsCount % actions.Length;
+    //    actionIndex = Mathf.Clamp(actionIndex, 0, actionIndex);
 
-    private void UpdateInteractTransforms()
-    {
-        interactTransformsList.Clear();
+    //    var action = actions[actionIndex];
 
-        var keys = interactTransformsDict.Keys.ToArray();
-        for (int i = 0; i < keys.Length; i++) {
-            if (i >= SpawnedConstruction.BuildingInteractions.Length) break;
+    //    if (action.waypoints == null || action.waypoints.Length == 0)
+    //        return null;
 
-            var transform = SpawnedConstruction.BuildingInteractions[i].waypoints[0].transform;
-            interactTransformsDict[keys[i]] = transform;
-            interactTransformsList.Add(transform);
-        }
-    }
-
-    private Transform GetFirstWaypointTransform()
-    {
-        var actions = SpawnedConstruction.BuildingInteractions;
-        if (actions.Length == 0)
-            return transform;
-
-        var interactorsCount = interactTransformsDict.Values.Count;
-
-        var actionIndex = interactorsCount % actions.Length;
-        actionIndex = Mathf.Clamp(actionIndex, 0, actionIndex);
-
-        var action = actions[actionIndex];
-
-        if (action.waypoints == null || action.waypoints.Length == 0)
-            return transform;
-
-        return action.waypoints[0].transform;
-    }
+    //    return action.waypoints[0];
+    //}
 }

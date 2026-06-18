@@ -4,16 +4,14 @@ using UnityEngine;
 [Serializable]
 public class CitizenData : HumanData
 {
-    public bool Evicted = false;
-    public Vector3Data LeavePosition = Vector3Data.Zero();
+    public EvictData EvictData = EvictData.Default();
 
     public static CitizenData Create(Citizen citizen)
     {
         var citizenData = new CitizenData();
         citizenData.FillHumanData(citizen);
 
-        citizenData.Evicted = citizen.IsEvicted;
-        citizenData.LeavePosition = new Vector3Data(citizen.LeavePosition);
+        citizenData.EvictData = EvictData.Create(citizen);
 
         return citizenData;
     }

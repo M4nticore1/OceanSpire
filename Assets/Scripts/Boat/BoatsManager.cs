@@ -121,14 +121,14 @@ public class BoatsManager : MonoBehaviour
 
     private void RegisterBoat(Dictionary<int, Boat> boatsDict, Boat boat)
     {
-        boatsDict.Add(boat.InstanceId.GetInstanceId(), boat);
-        this.boatsDict.Add(boat.InstanceId.GetInstanceId(), boat);
+        boatsDict.Add(boat.InstanceId.GetId(), boat);
+        this.boatsDict.Add(boat.InstanceId.GetId(), boat);
     }
 
     private void UnregisterBoat(Dictionary<int, Boat> boatsDict, Boat boat)
     {
-        boatsDict.Remove(boat.InstanceId.GetInstanceId());
-        this.boatsDict.Remove(boat.InstanceId.GetInstanceId());
+        boatsDict.Remove(boat.InstanceId.GetId());
+        this.boatsDict.Remove(boat.InstanceId.GetId());
     }
 
     private void RegisterBoat(List<Boat> boatsList, Boat boat)

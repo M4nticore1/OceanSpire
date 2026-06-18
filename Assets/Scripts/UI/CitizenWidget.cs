@@ -83,14 +83,22 @@ public class CitizenWidget : MonoBehaviour
 
     private void OnClicked()
     {
-        if (Human.InteractComponent.InteractBuilding) {
-            Human.InteractComponent.RemoveInteractBuilding();
+        var interactComponent = Human.InteractComponent;
+        var interactBuilding = Human.InteractComponent.InteractBuilding;
+
+        if (interactBuilding) {
+            interactComponent.RemoveInteractBuilding();
+            interactComponent.TryStopInteracting(interactBuilding);
         }
         else {
-            var building = SelectManager.Instance.GetSelectedBuilding();
-            if (building.WorkComponent.Workers.Count >= building.LevelData.MaxHumansCount) return;
+            var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
+            if (!selectedBuilding) {
+                Debug.LogError("SelectedBuilding is not valid", this);
+            }
 
-            Human.InteractComponent.SetInteractBuilding(building);
+            if (selectedBuilding.WorkComponent.Workers.Count >= selectedBuilding.LevelData.MaxHumansCount) return;
+
+            interactComponent.SetInteractBuilding(selectedBuilding);
         }
     }
 }

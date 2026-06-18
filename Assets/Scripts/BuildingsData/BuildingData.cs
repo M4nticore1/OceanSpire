@@ -14,7 +14,7 @@ public class BuildingData
     protected void Fill(Building building)
     {
         Id = building.BuildingData.BuildingId;
-        InstanceId = building.InstanceId.GetInstanceId();
+        InstanceId = building.InstanceId.GetId();
         Level = LevelData.Create(building.LevelComponent);
         Upgrade = UpgradeData.Create(building.UpgradeComponent);
         Construction = ConstructionData.Create(building.ConstructionComponent);

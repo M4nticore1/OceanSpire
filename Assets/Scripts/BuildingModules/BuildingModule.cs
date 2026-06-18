@@ -185,7 +185,6 @@ public abstract class BuildingModule : MonoBehaviour
     private void StartWorking()
     {
         if (IsWorking) return;
-        Debug.Log("StartWorking");
 
         IsWorking = true;
         OnWorkingStart();
@@ -195,7 +194,6 @@ public abstract class BuildingModule : MonoBehaviour
     private void StopWorking()
     {
         if (!IsWorking) return;
-        Debug.Log("StopWorking");
 
         IsWorking = false;
         OnWorkingStop();

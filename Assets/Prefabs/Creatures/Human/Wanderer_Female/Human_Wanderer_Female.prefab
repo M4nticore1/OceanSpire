@@ -466,7 +466,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 687457434963288068}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21cf396309e47dc4299e233a12c6a5a9, type: 3}
+  m_Script: {fileID: 11500000, guid: b5408492365fd0f4b97066addd4542d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCBuildingInteractor
 --- !u!114 &374115513058551452 stripped
@@ -512,12 +512,12 @@ MonoBehaviour:
   agent: {fileID: 4707038079339793117}
   movement: {fileID: 5458572271330249157}
   instanceId: {fileID: 414756016778997668}
-  currentStatusEnum: 1
   genderComponent: {fileID: 8328271919694642245}
   nameComponent: {fileID: 374115513058551452}
   healthComponent: {fileID: 7719323413831070654}
   reviveComponent: {fileID: 8449329797804703458}
   cityNavigator: {fileID: 5590457673492052500}
+  elevatorPassenger: {fileID: 4838781242632844817}
   interactComponent: {fileID: 317534655034775791}
   boatRider: {fileID: 715190593776507752}
   attackComponent: {fileID: 6413572688562527913}
@@ -590,6 +590,17 @@ NavMeshAgent:
   m_CorrespondingSourceObject: {fileID: 1338494420481879648, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
   m_PrefabInstance: {fileID: 6035258515464070333}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4838781242632844817 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1218019482049909420, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
+  m_PrefabInstance: {fileID: 6035258515464070333}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 687457434963288068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d5f599ea7fd77740a1f430b7a650110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElevatorPassenger
 --- !u!114 &5458572271330249157 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -7493649843608556168, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}

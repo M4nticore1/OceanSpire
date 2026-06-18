@@ -1,18 +1,33 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
 public class BuildingAction
 {
-    public BuildingActionWaypoint[] waypoints;
+    [SerializeField] private BuildingActionWaypoint[] waypoints;
+    public BuildingActionWaypoint[] Waypoints => waypoints;
+
+    public BuildingActionWaypoint GetWaypoint(int index)
+    {
+        if (index >= waypoints.Length) {
+            Debug.LogError("index is over than waypoints length");
+            return null;
+        }
+
+        return waypoints[index];
+    }
 }
 
 [System.Serializable]
 public class BuildingActionWaypoint
 {
-    public Transform transform;
-    public int actionTime;
+    [SerializeField] private Transform transform;
+    public Transform Transform => transform;
+
+    [SerializeField] private int actionTime;
+    public int ActionTime => actionTime;
 }
 
 public class BuildingConstruction : MonoBehaviour, IClickable
@@ -26,6 +41,12 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
     private MeshRenderer[] meshRendererers;
     private MaterialPropertyBlock propertyBlock;
+
+    private Dictionary<CreatureCityNavigator, BuildingAction> interactionsDict = new();
+    public IReadOnlyDictionary<CreatureCityNavigator, BuildingAction> InteractionsDict => interactionsDict;
+
+    private List<BuildingAction> interactionsList = new();
+    public IReadOnlyList<BuildingAction> InteractionsList => interactionsList;
 
     public bool IsClickable { get; private set; } = true;
 
@@ -98,6 +119,73 @@ public class BuildingConstruction : MonoBehaviour, IClickable
         foreach (MeshRenderer renderer in meshRendererers) {
             renderer.SetPropertyBlock(propertyBlock);
         }
+    }
+
+    // Interaction
+    public void AssignInteract(CreatureCityNavigator navigator)
+    {
+        if (interactionsDict.ContainsKey(navigator))
+            return;
+
+        interactionsDict.Add(navigator, GetInteraction(interactionsDict.Count));
+    }
+
+    public void RemoveInteract(CreatureCityNavigator navigator)
+    {
+        if (!interactionsDict.ContainsKey(navigator))
+            return;
+
+        interactionsDict.Remove(navigator);
+    }
+
+    public void UpdateWorkerInteractionTransforms()
+    {
+        for (int i = 0; i < OwnedBuilding.WorkComponent.Workers.Count; i++) {
+            var worker = OwnedBuilding.WorkComponent.Workers[i];
+            var navigator = worker.CityNavigator;
+
+            AssignInteract(navigator);
+        }
+    }
+
+    public void UpdateRaiderInteractionTransforms()
+    {
+        for (int i = 0; i < OwnedBuilding.RaidComponent.Raiders.Count; i++) {
+            var raider = OwnedBuilding.RaidComponent.Raiders[i];
+            var navigator = raider.CityNavigator;
+
+            AssignInteract(navigator);
+        }
+    }
+
+    public void UpdateInteractTransforms()
+    {
+        interactionsList.Clear();
+
+        var keys = interactionsDict.Keys.ToArray();
+        for (int i = 0; i < keys.Length; i++) {
+            if (i >= BuildingInteractions.Length) break;
+
+            var interaction = BuildingInteractions[i];
+            interactionsDict[keys[i]] = interaction;
+            interactionsList.Add(interaction);
+        }
+    }
+
+    public BuildingAction GetInteraction(CreatureCityNavigator navigator)
+    {
+        if (!interactionsDict.ContainsKey(navigator))
+            return null;
+
+        return interactionsDict[navigator];
+    }
+
+    public BuildingAction GetInteraction(int index)
+    {
+        var actions = BuildingInteractions;
+        index %= actions.Length;
+
+        return actions[index];
     }
 
     // IClickable

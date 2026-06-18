@@ -1,7 +1,5 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class ElevatorCabinConstruction : BuildingConstruction
@@ -9,17 +7,17 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public int FloorIndex = 0;
     public int PlaceIndex = 0;
 
-    [SerializeField] private List<CreatureCityNavigator> goingForWaitingPassengers = new();
-    public IReadOnlyList<CreatureCityNavigator> GoingForWaitingPassengers => goingForWaitingPassengers;
+    [SerializeField] private List<ElevatorPassenger> goingForWaitingPassengers = new();
+    public IReadOnlyList<ElevatorPassenger> GoingForWaitingPassengers => goingForWaitingPassengers;
 
-    [SerializeField] private List<CreatureCityNavigator> waitingPassengers = new();
-    public IReadOnlyList<CreatureCityNavigator> WaitingPassengers => waitingPassengers;
+    [SerializeField] private List<ElevatorPassenger> waitingPassengers = new();
+    public IReadOnlyList<ElevatorPassenger> WaitingPassengers => waitingPassengers;
 
-    [SerializeField] private List<CreatureCityNavigator> goingToRidingPassengers = new();
-    public IReadOnlyList<CreatureCityNavigator> GoingToRidingPassengers => goingToRidingPassengers;
+    [SerializeField] private List<ElevatorPassenger> goingToRidingPassengers = new();
+    public IReadOnlyList<ElevatorPassenger> GoingToRidingPassengers => goingToRidingPassengers;
 
-    [SerializeField] private List<CreatureCityNavigator> ridingPassengers = new();
-    public IReadOnlyList<CreatureCityNavigator> RidingPassengers => ridingPassengers;
+    [SerializeField] private List<ElevatorPassenger> ridingPassengers = new();
+    public IReadOnlyList<ElevatorPassenger> RidingPassengers => ridingPassengers;
 
     public bool IsMoving = false;
     public int StartFloorIndex = 0;
@@ -106,57 +104,65 @@ public class ElevatorCabinConstruction : BuildingConstruction
     }
 
     // Waiting Passengers
-    public void AddGoingToWaitingPassenger(CreatureCityNavigator passenger)
+    public void AddGoingToWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
-        goingForWaitingPassengers.Add(passenger);
+        goingForWaitingPassengers.Add(elevatorPassenger);
+        AssignInteract(elevatorPassenger.CityNavigator);
     }
 
-    public void RemoveGoingToWaitingPassenger(CreatureCityNavigator passenger)
+    public void RemoveGoingToWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
-        goingForWaitingPassengers.Remove(passenger);
+        goingForWaitingPassengers.Remove(elevatorPassenger);
+        RemoveInteract(elevatorPassenger.CityNavigator);
     }
 
     // Waiting Passengers
-    public void AddWaitingPassenger(CreatureCityNavigator passenger)
+    public void AddWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
-        waitingPassengers.Add(passenger);
+        waitingPassengers.Add(elevatorPassenger);
+        AssignInteract(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
 
-    public void RemoveWaitingPassenger(CreatureCityNavigator passenger)
+    public void RemoveWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
-        waitingPassengers.Remove(passenger);
+        waitingPassengers.Remove(elevatorPassenger);
+        RemoveInteract(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
 
     // Going To Riding Passengers
-    public void AddGoingToRidingPassenger(CreatureCityNavigator passenger)
+    public void AddGoingToRidingPassenger(ElevatorPassenger elevatorPassenger)
     {
-        goingToRidingPassengers.Add(passenger);
+        goingToRidingPassengers.Add(elevatorPassenger);
+        AssignInteract(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
 
-    public void RemoveGoingToRidingPassenger(CreatureCityNavigator passenger)
+    public void RemoveGoingToRidingPassenger(ElevatorPassenger elevatorPassenger)
     {
-        goingToRidingPassengers.Remove(passenger);
+        goingToRidingPassengers.Remove(elevatorPassenger);
+        RemoveInteract(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
 
     // Riding Passengers
-    public void AddRidingPassenger(CreatureCityNavigator passenger)
+    public void AddRidingPassenger(ElevatorPassenger elevatorPassenger)
     {
-        ridingPassengers.Add(passenger);
+        ridingPassengers.Add(elevatorPassenger);
+        AssignInteract(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
 
-    public void RemoveRidingPassenger(CreatureCityNavigator passenger)
+    public void RemoveRidingPassenger(ElevatorPassenger elevatorPassenger)
     {
-        ridingPassengers.Remove(passenger);
+        ridingPassengers.Remove(elevatorPassenger);
+        RemoveInteract(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
@@ -165,11 +171,11 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void UpdateWaitingPassengers()
     {
         for (int i = waitingPassengers.Count - 1; i >= 0; i--) {
-            CreatureCityNavigator navigator = waitingPassengers[i];
-            int floor = navigator.FloorIndex;
+            var passenger = waitingPassengers[i];
+            int floor = passenger.CityNavigator.FloorIndex;
 
             if (!ShouldMoveToFloor(floor)) {
-                RemoveWaitingPassenger(navigator);
+                RemoveWaitingPassenger(passenger);
             }
         }
     }
@@ -177,8 +183,8 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void UnloadRidingPassengers()
     {
         for (int i = ridingPassengers.Count - 1; i >= 0; i--) {
-            CreatureCityNavigator passenger = ridingPassengers[i];
-            passenger.SetState(FollowingPathState.GoingToWaiting);
+            var passenger = ridingPassengers[i];
+            passenger.SetState(ElevatorPassengerStateEnum.GoingToWaiting);
         }
     }
 
@@ -288,20 +294,16 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private int CalculateTargetFloor()
     {
         if (goingToRidingPassengers.Count > 0)
-            return goingToRidingPassengers[0].FloorIndex;
+            return goingToRidingPassengers[0].CityNavigator.FloorIndex;
 
         int currentFloor = FloorIndex;
         int freeSpace = OwnedBuilding.LevelData.MaxHumansCount - ridingPassengers.Count;
+        var possibleFloors = new List<int>();
 
-        List<int> possibleFloors = new List<int>();
-
-        possibleFloors.AddRange(ridingPassengers
-            .Where(p => p.CurrentPathTowerBuilding != null)
-            .Select(p => p.CurrentPathTowerBuilding.FloorIndex));
+        possibleFloors.AddRange(ridingPassengers.Where(p => p.CityNavigator.CurrentPathTowerBuilding != null).Select(p => p.CityNavigator.CurrentPathTowerBuilding.FloorIndex));
 
         if (freeSpace > 0) {
-            possibleFloors.AddRange(waitingPassengers
-                .Select(p => p.FloorIndex));
+            possibleFloors.AddRange(waitingPassengers.Select(p => p.CityNavigator.FloorIndex));
         }
 
         if (possibleFloors.Count == 0)

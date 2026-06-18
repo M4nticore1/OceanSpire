@@ -150,7 +150,7 @@ public class RaidManager : MonoBehaviour
             var boat = CreateBoat(position, rotation);
             if (!boat) continue;
 
-            var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.GetInstanceId());
+            var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.GetId());
         }
 
         IsRaidExist = true;
@@ -292,12 +292,16 @@ public class RaidManager : MonoBehaviour
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
-            Health = prefab.HealthComponent.MaxHealth,
 
             Name = new NameData()
             {
                 FirstNameId = prefab.GenderComponent.IsMale ? humanNamesList.GetRandomMaleFirstNameId() : humanNamesList.GetRandomFemaleFirstNameId(),
                 LastNameId = prefab.GenderComponent.IsMale ? humanNamesList.GetRandomMaleLastNameId() : humanNamesList.GetRandomFemaleLastNameId(),
+            },
+
+            Health = new HealthData()
+            {
+                CurrentHealth = prefab.HealthComponent.MaxHealth
             },
 
             BoatRider = new BoatRiderData()
@@ -328,7 +332,7 @@ public class RaidManager : MonoBehaviour
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation.eulerAngles),
-            DockInstanceId = GetNearestDockPoint(position).InstanceId.GetInstanceId(),
+            DockInstanceId = GetNearestDockPoint(position).InstanceId.GetId(),
             Status = HumanStatusEnum.Raider
         };
 

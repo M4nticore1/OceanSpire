@@ -62,7 +62,11 @@ public class CreaturesLoader : WorldLoader
                 InstanceId = InstancesManager.Instance.GetNextInstanceId(),
                 Position = new Vector3Data(finalPosition),
                 Rotation = new Vector3Data(rotation),
-                Health = prefab.HealthComponent.MaxHealth,
+
+                Health = new HealthData()
+                {
+                    CurrentHealth = prefab.HealthComponent.MaxHealth
+                },
 
                 Name = new NameData()
                 {

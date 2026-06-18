@@ -17,11 +17,11 @@ public class BoatData
         return new BoatData()
         {
             Id = boat.Definition.BoatId,
-            InstanceId = boat.InstanceId.GetInstanceId(),
+            InstanceId = boat.InstanceId.GetId(),
             Position = new Vector3Data(boat.transform.position),
             Rotation = new Vector3Data(boat.transform.rotation.eulerAngles),
             StateId = (int)boat.CurrentStateEnum,
-            DockInstanceId = boat.DockPoint?.InstanceId.GetInstanceId(),
+            DockInstanceId = boat.DockPoint?.InstanceId.GetId(),
             Status = boat.CurrentStatus
         };
     }
