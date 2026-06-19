@@ -1,10 +1,11 @@
-using Unity.AI.Navigation;
 using UnityEngine;
 
 public class PierNavObstacle : MonoBehaviour
 {
     [SerializeField] private NavMeshBuilder navMeshBuilder;
     [SerializeField] private MeshCollider meshCollider;
+
+    private GameObject spawnedNavMeshModifier;
 
     private void OnEnable()
     {
@@ -22,24 +23,42 @@ public class PierNavObstacle : MonoBehaviour
 
     private void OnBuildingInited(Building building)
     {
+        if (!building) {
+            Debug.LogError("building is not valid");
+            return;
+        }
+
         TryUpdateMesh(building.gameObject);
     }
 
     private void OnConstructionCompleted(ConstructionComponent construction)
     {
+        if (!construction) {
+            Debug.LogError("construction is not valid");
+            return;
+        }
+
         TryUpdateMesh(construction.gameObject);
     }
 
     private void OnUpgradeCompleted(UpgradeComponent upgradeComponent)
     {
+        if (!upgradeComponent) {
+            Debug.LogError("upgradeComponent is not valid");
+            return;
+        }
+
         TryUpdateMesh(upgradeComponent.gameObject);
     }
 
     private void TryUpdateMesh(GameObject gameObject)
     {
-        if (!ShouldUpdateMesh(gameObject)) return;
+        var pierModule = gameObject.GetComponent<PierModule>();
+        if (!ShouldUpdateNavMesh(pierModule)) return;
 
         UpdateMesh(gameObject);
+        DestroySpawnedNavMeshModifier();
+        SpawnNavMeshModifier(pierModule);
     }
 
     private void UpdateMesh(GameObject gameObject)
@@ -51,10 +70,28 @@ public class PierNavObstacle : MonoBehaviour
         navMeshBuilder.BakeNavMesh();
     }
 
-    private bool ShouldUpdateMesh(GameObject gameObject)
+    private void SpawnNavMeshModifier(PierModule pierModule)
     {
-        var pier = gameObject.GetComponent<PierModule>();
+        var navMeshModifier = pierModule.CurrentPierLevelData.NavMeshModifierVolumePrefab;
+        if (!navMeshModifier) {
+            Debug.LogError("navMeshModifier is not valid");
+            return;
+        }
 
-        return pier;
+        spawnedNavMeshModifier = Instantiate(navMeshModifier, transform);
+    }
+
+    private void DestroySpawnedNavMeshModifier()
+    {
+        if (!spawnedNavMeshModifier) return;
+
+        Destroy(spawnedNavMeshModifier.gameObject);
+    }
+
+    private bool ShouldUpdateNavMesh(PierModule pierModule)
+    {
+        if (!pierModule) return false;
+
+        return true;
     }
 }

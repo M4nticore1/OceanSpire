@@ -64,16 +64,24 @@ public class CreatureCityNavigator : MonoBehaviour
             return;
         }
 
+        var currentBuildingInstanceId = cityNavigatorData.EnteredBuildingInstanceId;
+        if (currentBuildingInstanceId != null) {
+            var instance = InstancesManager.Instance.GetInstance(currentBuildingInstanceId.Value);
+            var building = instance?.GetComponent<Building>();
+            EnterBuilding(building);
+        }
+
+        var targetBuildingInstanceId = cityNavigatorData.TargetBuildingInstanceId;
+        if (targetBuildingInstanceId != null) {
+            var instance = InstancesManager.Instance.GetInstance(targetBuildingInstanceId.Value);
+            var building = instance?.GetComponent<Building>();
+            SetTargetBuilding(building);
+            TryFindPathToTargetBuilding();
+            FollowPath();
+        }
+
         elevatorPassenger.Init(cityNavigatorData.ElevatorPassenger);
         waypointsComponent.Init(cityNavigatorData.Waypoints);
-
-        var instanceId = cityNavigatorData.EnteredBuildingInstanceId;
-        if (instanceId != null) {
-            var instance = InstancesManager.Instance.GetInstance(instanceId.Value);
-            var interactBuilding = instance?.GetComponent<Building>();
-
-            EnterBuilding(interactBuilding);
-        }
     }
 
     // Target Building
@@ -266,7 +274,14 @@ public class CreatureCityNavigator : MonoBehaviour
             }
 
             construction.AssignInteract(this);
-            Movement.TryMoveTo(WaypointsComponent.GetCurrentWaypoint().Transform);
+
+            var waypoint = WaypointsComponent.GetCurrentWaypoint();
+            if (waypoint == null) {
+                Debug.LogError("waypoint is not valid", this);
+                return;
+            }
+
+            Movement.TryMoveTo(waypoint.Transform);
         }
         else {
             if (!CurrentPathBuilding) {

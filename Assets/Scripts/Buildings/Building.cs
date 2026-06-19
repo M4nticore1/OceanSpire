@@ -234,20 +234,14 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // Construction
     protected virtual void OnConstructionStart()
     {
-        if (!SpawnedConstruction) {
-            Debug.LogError("SpawnedConstruction is not valid", this);
-            return;
-        }
+        if (!SpawnedConstruction) return;
 
         SpawnedConstruction.UpdateInteractTransforms();
     }
 
     protected virtual void OnConstructionComplete()
     {
-        if (!SpawnedConstruction) {
-            Debug.LogError("SpawnedConstruction is not valid", this);
-            return;
-        }
+        if (!SpawnedConstruction) return;
 
         SpawnedConstruction.UpdateInteractTransforms();
     }

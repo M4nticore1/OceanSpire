@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boatsCount: 4
   collision: {fileID: 8185892626345846014, guid: 5790c08ed00d7ae4cbddb96c8b4195a3, type: 3}
+  navMeshModifierVolumePrefab: {fileID: 9131043431342437806, guid: 704bd8bdf68ab774db1647815154d1fa, type: 3}

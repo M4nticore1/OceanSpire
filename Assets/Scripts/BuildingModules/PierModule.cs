@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PierModule : BuildingModule
 {
+    public PierLevelData CurrentPierLevelData => LevelData ? LevelData as PierLevelData : null;
     public PierConstruction PierConstruction => OwnedBuilding.SpawnedConstruction as PierConstruction;
 
     [SerializeField] private BoatsLoader boatsLoader;

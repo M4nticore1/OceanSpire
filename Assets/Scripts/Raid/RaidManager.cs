@@ -32,6 +32,8 @@ public class RaidManager : MonoBehaviour
     public float CurrentRaidCooldownTime { get; private set; } = 0f;
 
     [Header("Spawn")]
+    [SerializeField] private float minRaiderCountMultiplier = 0.5f;
+    [SerializeField] private float maxRaiderCountMultiplier = 1f;
     [SerializeField] private float minSpawnAngleOffset = 5f;
     [SerializeField] private float maxSpawnAngleOffset = 10f;
     [SerializeField] private float spawnDistance = 145f;
@@ -134,7 +136,7 @@ public class RaidManager : MonoBehaviour
 
     private void CreateRaid()
     {
-        int raidersAmount = GetRandomRaidersAmount();
+        int raidersAmount = GetRandomRaidersCount();
         aliveRaidersCount = raidersAmount;
 
         Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
@@ -363,10 +365,10 @@ public class RaidManager : MonoBehaviour
         return bestDockPoint;
     }
 
-    private int GetRandomRaidersAmount()
+    private int GetRandomRaidersCount()
     {
-        int floorAmount = BuildingsManager.Instance.BuiltFloors.Count;
-        int raidersAmount = Random.Range(floorAmount / 2, floorAmount + 1);
-        return raidersAmount;
+        int floorsCount = BuildingsManager.Instance.BuiltFloors.Count;
+        int raidersCount = Random.Range((int)(floorsCount * minRaiderCountMultiplier), (int)(floorsCount * maxRaiderCountMultiplier));
+        return raidersCount;
     }
 }

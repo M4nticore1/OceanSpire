@@ -300,16 +300,22 @@ public class ElevatorCabinConstruction : BuildingConstruction
         int freeSpace = OwnedBuilding.LevelData.MaxHumansCount - ridingPassengers.Count;
         var possibleFloors = new List<int>();
 
-        possibleFloors.AddRange(ridingPassengers.Where(p => p.CityNavigator.CurrentPathTowerBuilding != null).Select(p => p.CityNavigator.CurrentPathTowerBuilding.FloorIndex));
+        possibleFloors.AddRange(ridingPassengers
+            .Where(p => p.CityNavigator.CurrentPathTowerBuilding != null)
+            .Select(p => p.CityNavigator.CurrentPathTowerBuilding.FloorIndex));
 
         if (freeSpace > 0) {
-            possibleFloors.AddRange(waitingPassengers.Select(p => p.CityNavigator.FloorIndex));
+            possibleFloors.AddRange(waitingPassengers
+                .Where(p => p.CityNavigator.FloorIndex != currentFloor)
+                .Select(p => p.CityNavigator.FloorIndex));
         }
 
         if (possibleFloors.Count == 0)
             return currentFloor;
 
-        return possibleFloors.OrderBy(floor => Mathf.Abs(floor - currentFloor)).First();
+        return possibleFloors
+            .OrderBy(floor => Mathf.Abs(floor - currentFloor))
+            .First();
     }
 
     private int CalculateNextFloor()

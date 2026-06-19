@@ -32,6 +32,7 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
+        if (!IsMoving) return;
         if (!IsDestinationReached()) return;
 
         TryStopMoving();

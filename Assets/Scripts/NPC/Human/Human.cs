@@ -157,8 +157,8 @@ public abstract class Human : Creature, IClickable
 
         nameComponent.Init(humanData.Name);
         healthComponent.Init(humanData.Health);
-        cityNavigator.Init(humanData.CityNavigator);
         interactComponent.Init(humanData.Interaction);
+        cityNavigator.Init(humanData.CityNavigator);
         weaponComponent.Init(humanData.Weapon);
         skillsComponent.Init(humanData.Skills);
         boatRider.Init(humanData.BoatRider);
@@ -311,7 +311,14 @@ public abstract class Human : Creature, IClickable
         if (!cityNavigator.CurrentBuilding) return false;
         if (cityNavigator.CurrentBuilding != interactComponent.InteractBuilding) return false;
         if (boatRider.RidingBoat) return false;
-        if (!boatRider.RidingBoat && Vector3.Distance(transform.position, interactComponent.InteractBuilding.SpawnedConstruction.GetInteraction(cityNavigator).GetWaypoint(0).Transform.position) > movement.NavAgent.stoppingDistance) return false;
+
+        var waypoint = cityNavigator.WaypointsComponent.GetCurrentWaypoint();
+        if (waypoint == null) {
+            Debug.LogError("waypoint is not valid", this);
+            return false;
+        }
+
+        if (!boatRider.RidingBoat && !movement.IsReachedPosition(cityNavigator.WaypointsComponent.GetCurrentWaypoint().Transform.position)) return false;
         if (attackComponent.IsAttacking) return false;
 
         return true;

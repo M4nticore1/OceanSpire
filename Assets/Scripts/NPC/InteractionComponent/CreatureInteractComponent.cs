@@ -80,12 +80,14 @@ public class CreatureInteractComponent : MonoBehaviour
 
     private void StartInteracting()
     {
+        Debug.Log("StartInteracting");
         IsInteracting = true;
         OnInteractionStarted?.Invoke(InteractBuilding);
     }
 
     private void StopInteracting(Building building)
     {
+        Debug.Log("StopInteracting");
         IsInteracting = false;
         OnInteractionStopped?.Invoke(building);
     }

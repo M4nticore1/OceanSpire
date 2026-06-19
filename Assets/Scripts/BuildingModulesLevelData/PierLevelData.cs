@@ -1,3 +1,4 @@
+using Unity.AI.Navigation;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PierLevelData", menuName = "Modules Level Data/PierLevelData")]
@@ -8,4 +9,7 @@ public class PierLevelData : BuildingModuleLevelData
 
     [SerializeField] private Mesh collision;
     public Mesh Collision => collision;
+
+    [SerializeField] private GameObject navMeshModifierVolumePrefab;
+    public GameObject NavMeshModifierVolumePrefab => navMeshModifierVolumePrefab;
 }
