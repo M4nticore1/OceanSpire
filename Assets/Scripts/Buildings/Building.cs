@@ -109,8 +109,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     {
         levelComponent.OnLevelChanged -= HandleLevelChanged;
 
-        upgradeComponent.OnUpgradeStarted += HandleUpgradeStarted;
-        upgradeComponent.OnUpgradeCompleted += HandleUpgradeCompleted;
+        upgradeComponent.OnUpgradeStarted -= HandleUpgradeStarted;
+        upgradeComponent.OnUpgradeCompleted -= HandleUpgradeCompleted;
 
         WorkComponent.OnWorkerAdded -= OnWorkerAdded;
         WorkComponent.OnWorkerRemoved -= OnWorkerRemoved;

@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 1218019482049909420}
   - component: {fileID: 7048535748943796013}
   - component: {fileID: 6497944028369977301}
+  - component: {fileID: 1015444410268524039}
   - component: {fileID: 774651871998097940}
   - component: {fileID: 8499683307490277393}
   - component: {fileID: -7493649843608556168}
@@ -149,6 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ElevatorPassenger
   cityNavigator: {fileID: 2185582854232776361}
+  <CurrentStateEnum>k__BackingField: 0
 --- !u!114 &7048535748943796013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,6 +181,21 @@ MonoBehaviour:
   RidingBoat: {fileID: 0}
   movement: {fileID: -7493649843608556168}
   useBoatTime: 1
+--- !u!114 &1015444410268524039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6506537361480025273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ba18df1f685db54e98bed21a2c9393a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PaddleContoller
+  boatRider: {fileID: 6497944028369977301}
+  equipmentComponent: {fileID: 8499683307490277393}
+  paddle: {fileID: 0}
 --- !u!114 &774651871998097940
 MonoBehaviour:
   m_ObjectHideFlags: 0

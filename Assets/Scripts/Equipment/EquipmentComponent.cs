@@ -31,6 +31,13 @@ public class EquipmentComponent : MonoBehaviour
         OnEquipmentComponentEquiped?.Invoke(this);
     }
 
+    public void SetCurrentEquipmentVisible(bool value)
+    {
+        if (!spawnedEquipment) return;
+
+        spawnedEquipment.gameObject.SetActive(value);
+    }
+
     public float GetPower()
     {
         return EquipmentDefinition.Power;

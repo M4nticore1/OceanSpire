@@ -8,18 +8,17 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Foliage
-  m_Shader: {fileID: -6465566751694194690, guid: 63ded6de49bef1b4ca0816fc25da04ce, type: 3}
+  m_Shader: {fileID: 4800000, guid: f1f7ff003854fc8438d557108e5df36d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
-  disabledShaderPasses:
-  - MOTIONVECTORS
+  disabledShaderPasses: []
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -119,7 +118,7 @@ Material:
     - _Surface: 0
     - _WindDensity: 0.06
     - _WindSpeed: 6
-    - _WindStrength: 1.2
+    - _WindStrength: 1
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1

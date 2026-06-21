@@ -13,31 +13,36 @@ public class SkillWidget : MonoBehaviour
 
     public void Init(SkillInstance skill)
     {
+        if (skill == null) {
+            Debug.LogError("skill is not valid", this);
+            return;
+        }
+
         this.skill = skill;
-        AssignSkillName();
-        AssignSkillBonus();
-        AssignHighlight();
+        UpdateSkillName();
+        UpdateSkillBonus();
+        UpdateColor();
     }
 
-    private void AssignSkillName()
+    private void UpdateSkillName()
     {
-        LocalizationItem item = skill.skillDefinition.LocalizeItem;
+        var item = skill.skillDefinition.LocalizeItem;
         skillName.SetLocalizationItem(item);
         skillName.UpdateText();
     }
 
-    private void AssignSkillBonus()
+    private void UpdateSkillBonus()
     {
         float bonus = skill.GetBonus() * 100;
         string text = $"({GetBonusText()})";
         skillBonus.SetText(text);
     }
 
-    private void AssignHighlight()
+    private void UpdateColor()
     {
         float alpha = (float)(skill.currentLevel - 1) / (SkillDefinition.maxSkillLevel / SkillsFactory.GetLevelsCount());
 
-        Color color = Color.Lerp(normalColor, highlightedColor, alpha);
+        var color = Color.Lerp(normalColor, highlightedColor, alpha);
         string hex = ColorUtility.ToHtmlStringRGBA(color);
 
         string bonus = GetBonusText();

@@ -9,6 +9,11 @@ public class BoatMovingToDockState : BoatState
 
     public override void Enter()
     {
+        if (IsReachedDock()) {
+            boat.OnReturnedToDock();
+            return;
+        }
+
         UpdateMovement();
     }
 
@@ -40,5 +45,13 @@ public class BoatMovingToDockState : BoatState
         else {
             boat.Movement.TryStopMoving();
         }
+    }
+
+    private bool IsReachedDock()
+    {
+        if (!boat.DockPoint) return false;
+        if (!boat.Movement.IsReachedPosition(boat.DockPoint.DockTransform.position)) return false;
+
+        return true;
     }
 }

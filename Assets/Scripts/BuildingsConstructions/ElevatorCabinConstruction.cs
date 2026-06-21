@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,8 +32,8 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private const float delayToStartMoving = 1f;
 
     public ElevatorModule OwnedElevator => OwnedBuilding.GetComponent<ElevatorModule>();
-    public static event System.Action<ElevatorCabinConstruction> onElevatorPlatformStopped;
-    public static event System.Action<ElevatorCabinConstruction> onElevatorPlatformChangedFloor;
+    public static event Action<ElevatorCabinConstruction> onElevatorPlatformStopped;
+    public static event Action<ElevatorCabinConstruction> onElevatorPlatformChangedFloor;
 
     private void Update()
     {
@@ -92,6 +93,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     public void StopMoving()
     {
+        Debug.Log("StopMoving");
         SetIsMoving(false);
 
         // Stop entities riding
@@ -273,7 +275,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private bool TryStopMoving()
     {
         if (!IsMoving) return false;
-        if (FloorIndex != TargetFloor && !ShouldMoveToFloor(TargetFloor)) return false;
+        if (FloorIndex != TargetFloor/* && !ShouldMoveToFloor(TargetFloor)*/) return false;
 
         StopMoving();
         return true;
@@ -301,7 +303,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
         var possibleFloors = new List<int>();
 
         possibleFloors.AddRange(ridingPassengers
-            .Where(p => p.CityNavigator.CurrentPathTowerBuilding != null)
+            .Where(p => p.CityNavigator.CurrentPathTowerBuilding)
             .Select(p => p.CityNavigator.CurrentPathTowerBuilding.FloorIndex));
 
         if (freeSpace > 0) {

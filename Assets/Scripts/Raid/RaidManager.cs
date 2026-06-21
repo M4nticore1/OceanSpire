@@ -38,13 +38,11 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private float maxSpawnAngleOffset = 10f;
     [SerializeField] private float spawnDistance = 145f;
 
-    private int aliveRaidersCount = 0;
-
     [Header("Positions")]
     [SerializeField] private BoatDockPoint[] dockPoints;
 
     public bool IsRaidExist { get; private set; } = false;
-    public bool IsRaidStarted { get; private set; } = false;
+    public bool IsUnderRaid { get; private set; } = false;
 
     public event System.Action OnRaidStarted;
     public event System.Action<RaidEndedResult> OnRaidEnded;
@@ -73,15 +71,28 @@ public class RaidManager : MonoBehaviour
         Human.OnExitedBoat -= OnExitedBoat;
     }
 
+    public void Init()
+    {
+        var raidData = RaidData.Default();
+        raidData.RaidCooldown = (int)CalculateRandomCooldown();
+
+        Init(raidData);
+    }
+
     public void Init(RaidData raidData)
     {
-        if (raidData.RaidStarted) {
-            StartRaid();
+        if (raidData == null) {
+            Debug.LogError("raidData is not valid");
+            return;
         }
 
         IsRaidExist = raidData.RaidExist;
         CurrentRaidCooldown = raidData.RaidCooldown;
         CurrentRaidCooldownTime = raidData.TimeSinceLastRaid;
+
+        if (raidData.UnderRaid) {
+            StartRaid();
+        }
     }
 
     private void Update()
@@ -137,22 +148,28 @@ public class RaidManager : MonoBehaviour
     private void CreateRaid()
     {
         int raidersAmount = GetRandomRaidersCount();
-        aliveRaidersCount = raidersAmount;
 
-        Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
+        var dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         dir.Normalize();
 
         for (int i = 0; i < raidersAmount; i++) {
             float angle = Random.Range(minSpawnAngleOffset, maxSpawnAngleOffset);
             dir = Quaternion.Euler(0f, angle, 0f) * dir;
 
-            Vector3 position = dir * spawnDistance;
-            Quaternion rotation = Quaternion.LookRotation(-position.normalized);
+            var position = dir * spawnDistance;
+            var rotation = Quaternion.LookRotation(-position.normalized);
 
             var boat = CreateBoat(position, rotation);
-            if (!boat) continue;
+            if (!boat) {
+                Debug.LogError("boat is not valid");
+                continue;
+            }
 
             var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.GetId());
+            if (!raider) {
+                Debug.LogError("raiedr is not valid");
+                continue;
+            }
         }
 
         IsRaidExist = true;
@@ -160,7 +177,7 @@ public class RaidManager : MonoBehaviour
 
     private void StartRaid()
     {
-        IsRaidStarted = true;
+        IsUnderRaid = true;
         OnRaidStarted?.Invoke();
     }
 
@@ -168,7 +185,7 @@ public class RaidManager : MonoBehaviour
     {
         DestroyEmptyBoats();
         RemoveCityLoot();
-        IsRaidStarted = false;
+        IsUnderRaid = false;
         IsRaidExist = false;
 
         RaidEndedResult result = new RaidEndedResult()
@@ -260,7 +277,7 @@ public class RaidManager : MonoBehaviour
 
     private bool ShouldStartRaid()
     {
-        if (IsRaidStarted) return false;
+        if (IsUnderRaid) return false;
 
         foreach (var raider in creaturesManager.Raiders) {
             if (raider.IsRaidFinished) return false;
@@ -271,14 +288,11 @@ public class RaidManager : MonoBehaviour
 
     private bool ShouldEndRaid()
     {
-        if (!IsRaidStarted) return false;
+        if (!IsUnderRaid) return false;
 
         foreach (var raider in creaturesManager.Raiders) {
-            if (!raider.HealthComponent.IsAlive) return false;
-        }
-
-        foreach (var raider in creaturesManager.Raiders) {
-            if (!raider.IsRaidFinished) return false;
+            if (!raider.IsRaidFinished && !raider.BoatRider.RidingBoat) return false;
+            if (raider.HealthComponent.IsAlive && !raider.BoatRider.RidingBoat) return false;
         }
 
         return true;
@@ -334,11 +348,15 @@ public class RaidManager : MonoBehaviour
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation.eulerAngles),
-            DockInstanceId = GetNearestDockPoint(position).InstanceId.GetId(),
+            DockInstanceId = dockPoint.InstanceId.GetId(),
             Status = HumanStatusEnum.Raider
         };
 
         var boat = BoatFactory.CreateBoat(boatPrefab, position, rotation, data);
+        if (!boat) {
+            Debug.LogError("boat is not valid");
+            return null;
+        }
 
         return boat;
     }

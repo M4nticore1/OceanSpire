@@ -15,13 +15,28 @@ public class DailyRewardWidget : UIBehaviour
     [SerializeField] private TextLocalizer rewardNameText;
     [SerializeField] private TextLocalizer rewardAmountText;
 
+    private DailyRewardManager dailyRewardManager;
+    private RewardedAdsManager rewardedAdsManager;
     private RewardInstance reward;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        dailyRewardManager = DailyRewardManager.Instance;
+        rewardedAdsManager = RewardedAdsManager.Instance;
+    }
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
-        DailyRewardManager.Instance.OnDailyRewardRecieved += OnBonusChestRewardRecieved;
+        if (dailyRewardManager) {
+            dailyRewardManager.OnDailyRewardRecieved += OnBonusChestRewardRecieved;
+        }
+        else
+            Debug.Log("dailyRewardManager is not valud", this);
+
         collectButton.OnReleased.AddListener(OnTakeButtonClicked);
     }
 
@@ -29,12 +44,22 @@ public class DailyRewardWidget : UIBehaviour
     {
         base.OnDisable();
 
-        DailyRewardManager.Instance.OnDailyRewardRecieved -= OnBonusChestRewardRecieved;
+        if (dailyRewardManager) {
+            dailyRewardManager.OnDailyRewardRecieved -= OnBonusChestRewardRecieved;
+        }
+        else
+            Debug.Log("dailyRewardManager is not valud", this);
+
         collectButton.OnReleased.RemoveListener(OnTakeButtonClicked);
     }
 
     public void Init(RewardInstance reward)
     {
+        if (reward == null) {
+            Debug.LogError("reward is not valid", this);
+            return;
+        }
+
         this.reward = reward;
         UpdateButtonEnabled();
         UpdateButtonText();
@@ -45,12 +70,22 @@ public class DailyRewardWidget : UIBehaviour
 
     private void UpdateButtonEnabled()
     {
-        collectButton.SetState(DailyRewardManager.Instance.AdRewardCollected || reward.IsCollected ? CustomButtonState.Disabled : CustomButtonState.Idle);
+        if (!dailyRewardManager) {
+            Debug.Log("dailyRewardManager is not valid", this);
+            return;
+        }
+
+        collectButton.SetState(dailyRewardManager.AdRewardCollected || reward.IsCollected ? CustomButtonState.Disabled : CustomButtonState.Idle);
     }
 
     private void UpdateButtonText()
     {
-        var freeCollected = DailyRewardManager.Instance.FreeRewardCollected;
+        if (!dailyRewardManager) {
+            Debug.Log("dailyRewardManager is not valid", this);
+            return;
+        }
+
+        var freeCollected = dailyRewardManager.FreeRewardCollected;
         var received = reward.IsCollected;
 
         freeRewardText.SetActive(!freeCollected && !received);
@@ -79,9 +114,19 @@ public class DailyRewardWidget : UIBehaviour
 
     private void OnTakeButtonClicked()
     {
-        if (DailyRewardManager.Instance.FreeRewardCollected) {
-            RewardedAdsManager.Instance.SetCurrentReward(reward);
-            RewardedAdsManager.Instance.ShowAd();
+        if (!dailyRewardManager) {
+            Debug.Log("dailyRewardManager is not valid", this);
+            return;
+        }
+
+        if (!rewardedAdsManager) {
+            Debug.Log("rewardedAdsManager is not valid", this);
+            return;
+        }
+
+        if (dailyRewardManager.FreeRewardCollected) {
+            rewardedAdsManager.SetCurrentReward(reward);
+            rewardedAdsManager.ShowAd();
         }
         else {
             reward.RecieveReward();

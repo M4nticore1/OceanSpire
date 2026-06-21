@@ -19,7 +19,7 @@ public class Boat : MonoBehaviour, IClickable
     [SerializeField] private BoatDefinition boatData;
     public BoatDefinition Definition => boatData;
 
-    public BoatStateEnum CurrentStateEnum { get; private set; }
+    [field: SerializeField] public BoatStateEnum CurrentStateEnum { get; private set; }
     private BoatState currentState;
 
     public HumanStatusEnum CurrentStatus { get; private set; }
@@ -61,12 +61,12 @@ public class Boat : MonoBehaviour, IClickable
 
     public static event Action<Boat> OnBoatSelected;
     public static event Action<Boat> OnBoatDeselected;
-    public static event Action<Boat> onBoatDestroyed;
+    public static event Action<Boat> OnBoatDestroyed;
 
     private void OnEnable()
     {
         movement.OnMovementStarted += OnMovementStarted;
-        movement.OnReachedPath += OnMovementStopped;
+        movement.OnReachedPath += OnReachedPath;
 
         selectComponent.OnSelected += OnSelected;
         selectComponent.OnDeselected += OnDeselected;
@@ -75,7 +75,7 @@ public class Boat : MonoBehaviour, IClickable
     private void OnDisable()
     {
         movement.OnMovementStarted -= OnMovementStarted;
-        movement.OnReachedPath -= OnMovementStopped;
+        movement.OnReachedPath -= OnReachedPath;
 
         selectComponent.OnSelected -= OnSelected;
         selectComponent.OnDeselected -= OnDeselected;
@@ -94,10 +94,17 @@ public class Boat : MonoBehaviour, IClickable
 
     public void Init(BoatData boatData)
     {
-        BoatStateEnum state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(boatData.StateId);
-        SetState(state);
+        if (boatData == null) {
+            Debug.LogError("boatData is not valid");
+        }
+
+        CurrentStatus = boatData.Status;
 
         instanceId.Register(boatData.InstanceId);
+        BoatsManager.Instance.RegisterBoat(this);
+
+        var state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(boatData.StateId);
+        SetState(state);
 
         transform.position = boatData.Position.Vector3();
         transform.rotation = Quaternion.Euler(boatData.Rotation.Vector3());
@@ -110,12 +117,10 @@ public class Boat : MonoBehaviour, IClickable
 
                 if (boatDock)
                     SetDockPoint(boatDock);
+                else
+                    Debug.LogError($"dockPoint is not valid by instance {boatDockInstance}");
             }
         }
-
-        CurrentStatus = boatData.Status;
-
-        BoatsManager.Instance.RegisterBoat(this);
     }
 
     public void OnReturnedToDock()
@@ -137,8 +142,17 @@ public class Boat : MonoBehaviour, IClickable
     // Enter / Exit
     public void SetCurrentRider(BoatRider rider)
     {
+        if (!rider) {
+            Debug.LogError("rider is not valid", this);
+            return;
+        }
+
         CurrentRider = rider;
-        movement.SetAgentEnabled(true);
+
+        if (movement.IsMoving)
+            CurrentRider.HandleBoatMovementStarted();
+        else
+            CurrentRider.HandleBoatMovementStopped();
     }
 
     public void RemoveCurrentRider()
@@ -216,6 +230,7 @@ public class Boat : MonoBehaviour, IClickable
                 currentState = new BoatCollectingLootState(this);
                 break;
             case BoatStateEnum.MovingToDock:
+                Debug.Log("MovingToDock");
                 currentState = new BoatMovingToDockState(this);
                 break;
             case BoatStateEnum.UnloadingLoot:
@@ -263,6 +278,7 @@ public class Boat : MonoBehaviour, IClickable
         return true;
     }
 
+    // Movement
     private void OnMovementStarted()
     {
         if (!CurrentRider) return;
@@ -270,7 +286,7 @@ public class Boat : MonoBehaviour, IClickable
         CurrentRider.HandleBoatMovementStarted();
     }
 
-    private void OnMovementStopped()
+    private void OnReachedPath()
     {
         currentState.OnReachedPath();
 

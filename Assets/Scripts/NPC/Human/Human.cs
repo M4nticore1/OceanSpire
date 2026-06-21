@@ -99,6 +99,8 @@ public abstract class Human : Creature, IClickable
         boatRider.OnTargetBoatSeted += OnTargetBoatSeted;
         boatRider.OnTargetBoatRemoved += OnTargetBoatRemoved;
         boatRider.OnBoatSetedIdle += OnBoatSetedIdle;
+        BoatRider.OnBoatMovementStarted += OnBoatMovementStarted;
+        BoatRider.OnBoatMovementStopped += OnBoatMovementStopped;
 
         selectComponent.OnSelected += OnSelected;
         selectComponent.OnDeselected += OnDeselected;
@@ -107,6 +109,8 @@ public abstract class Human : Creature, IClickable
             RaidManager.Instance.OnRaidStarted += OnRaidStarted;
             RaidManager.Instance.OnRaidEnded += OnRaidEnded;
         }
+        else
+            Debug.Log("raidManager is not valid", this);
     }
 
     protected override void OnDisable()
@@ -134,6 +138,8 @@ public abstract class Human : Creature, IClickable
         boatRider.OnTargetBoatSeted -= OnTargetBoatSeted;
         boatRider.OnTargetBoatRemoved -= OnTargetBoatRemoved;
         boatRider.OnBoatSetedIdle -= OnBoatSetedIdle;
+        BoatRider.OnBoatMovementStarted -= OnBoatMovementStarted;
+        BoatRider.OnBoatMovementStopped -= OnBoatMovementStopped;
 
         selectComponent.OnSelected -= OnSelected;
         selectComponent.OnDeselected -= OnDeselected;
@@ -142,6 +148,8 @@ public abstract class Human : Creature, IClickable
             RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
             RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
         }
+        else
+            Debug.Log("raidManager is not valid", this);
     }
 
     protected virtual void Update()
@@ -310,6 +318,7 @@ public abstract class Human : Creature, IClickable
         if (!cityNavigator.TargetBuilding) return false;
         if (!cityNavigator.CurrentBuilding) return false;
         if (cityNavigator.CurrentBuilding != interactComponent.InteractBuilding) return false;
+        if (interactComponent.InteractBuilding.GetComponent<PierModule>()) return false;
         if (boatRider.RidingBoat) return false;
 
         var waypoint = cityNavigator.WaypointsComponent.GetCurrentWaypoint();
@@ -362,11 +371,19 @@ public abstract class Human : Creature, IClickable
 
     protected virtual bool ShouldStartExitingBoat()
     {
+        Debug.Log("ShouldStartExitingBoat");
         if (!boatRider.RidingBoat) return false;
+
+        Debug.Log("ShouldStartExitingBoat1");
         if (boatRider.TargetBoat && boatRider.TargetBoat == BoatRider.RidingBoat) return false;
+
+        Debug.Log("ShouldStartExitingBoat2");
         if (boatRider.RidingBoat.CurrentStateEnum != BoatStateEnum.Idle) return false;
+
+        Debug.Log("ShouldStartExitingBoat3");
         if (!BoatRider.RidingBoat.Movement.IsReachedPosition(boatRider.RidingBoat.DockPoint.DockTransform.position)) return false;
 
+        Debug.Log("ShouldStartExitingBoat4");
         return true;
     }
 
@@ -381,10 +398,13 @@ public abstract class Human : Creature, IClickable
 
     protected virtual bool ShouldBoatMoveToDock()
     {
-        if (!boatRider.RidingBoat) return false;
-        if (!boatRider.RidingBoat.DockPoint) return false;
-        if (boatRider.RidingBoat.CurrentStateEnum == BoatStateEnum.MovingToDock) return false;
-        if (BoatRider.RidingBoat.Movement.IsReachedPosition(boatRider.RidingBoat.DockPoint.DockTransform.position)) return false;
+        var ridingBoat = boatRider.RidingBoat;
+        if (!ridingBoat) return false;
+        if (!ridingBoat.DockPoint) return false;
+        if (ridingBoat.CurrentStateEnum == BoatStateEnum.MovingToDock) return false;
+        if (ridingBoat.CurrentStateEnum == BoatStateEnum.Idle) return false;
+        if (boatRider.IsExitingBoat) return false;
+        //if (ridingBoat.Movement.IsReachedPosition(ridingBoat.DockPoint.DockTransform.position)) return false;
 
         return true;
     }
@@ -441,6 +461,7 @@ public abstract class Human : Creature, IClickable
     {
         if (movement.IsMoving) return false;
         if (interactComponent.IsInteracting) return false;
+        if (boatRider.RidingBoat && boatRider.RidingBoat.Movement.IsMoving) return false;
         if (attackComponent.IsAttacking) return false;
         if (!healthComponent.IsAlive) return false;
 
@@ -573,6 +594,16 @@ public abstract class Human : Creature, IClickable
     private void OnTargetBoatRemoved(Boat boat)
     {
         DetermineNextAction();
+    }
+
+    private void OnBoatMovementStarted(Boat boat)
+    {
+        UpdateIdle();
+    }
+
+    private void OnBoatMovementStopped(Boat boat)
+    {
+        UpdateIdle();
     }
 
     // Raid

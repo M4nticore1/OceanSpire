@@ -61,12 +61,12 @@ Material:
     m_Floats:
     - _BlendPower: 0
     - _CausticsAngleOffset: 5
-    - _CausticsDensity: 0.05
+    - _CausticsDensity: 0.045
     - _CausticsDirection: 270
     - _CausticsHighStep: -0.97
     - _CausticsLowStep: 0.28
     - _CausticsPower: 1.7
-    - _CausticsRadius: 50
+    - _CausticsRadius: 57
     - _CausticsRadiusSoftness: 28
     - _CausticsSharpness: 4
     - _CausticsSpeed: 0.1
@@ -110,7 +110,7 @@ Material:
     m_Colors:
     - _CausticsColor: {r: 1, g: 1, b: 1, a: 1}
     - _CausticsDensity: {r: 1, g: 1, b: 1, a: 0}
-    - _Color: {r: 0.195, g: 0.5650002, b: 0.75, a: 1}
+    - _Color: {r: 0.121658996, g: 0.5714286, b: 0.8, a: 1}
     - _ColorDeep: {r: 0, g: 0.2803233, b: 0.49056602, a: 0}
     - _ColorDepp: {r: 0.19339621, g: 0.38634863, b: 1, a: 0}
     - _ColorShallow: {r: 0.25882354, g: 0.84705883, b: 1, a: 0}
@@ -124,7 +124,7 @@ Material:
     - _SecondColor: {r: 1, g: 1, b: 1, a: 0}
     - _SecondFlowDirection: {r: 0, g: 1, b: 0, a: 0}
     - _ShallowColor: {r: 0.11, g: 0.4619999, b: 0.55, a: 0}
-    - _ShoalColor: {r: 0, g: 0.6431373, b: 0.6431373, a: 1}
+    - _ShoalColor: {r: 0, g: 0.7, b: 0.7, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
     - _UVTiling: {r: 0.05, g: 0.05, b: 0, a: 0}
     - _WaterSpeed: {r: 0.3, g: 0, b: 0, a: 0}

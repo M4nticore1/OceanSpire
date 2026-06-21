@@ -7,7 +7,6 @@ public static class BoatFactory
         var obj = Object.Instantiate(prefab, position, rotation);
         obj.Init(data);
 
-        EventBus.InvokeBoatCreated(obj);
         return obj;
     }
 }

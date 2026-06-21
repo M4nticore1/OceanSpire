@@ -7,27 +7,10 @@ public class RaidLoader : WorldLoader
     protected override void Load(WorldData data)
     {
         if (data != null && data.Raid != null) {
-            LoadRaid(data.Raid);
+            raidManager.Init(data.Raid);
         }
         else {
-            InitRaid();
+            raidManager.Init();
         }
-    }
-
-    private void LoadRaid(RaidData raidData)
-    {
-        raidManager.Init(raidData);
-    }
-
-    private void InitRaid()
-    {
-        var raidData = new RaidData() {
-            RaidExist = false,
-            RaidStarted = false,
-            RaidCooldown = (int)raidManager.CalculateRandomCooldown(),
-            TimeSinceLastRaid = 0,
-        };
-
-        raidManager.Init(raidData);
     }
 }

@@ -204,6 +204,11 @@ public class BoatRider : MonoBehaviour
 
     public void SetRidingBoat(Boat boat)
     {
+        if (!boat) {
+            Debug.LogError("ridingBoat is not valid", this);
+            return;
+        }
+
         RidingBoat = boat;
     }
 

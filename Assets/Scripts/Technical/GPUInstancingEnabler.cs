@@ -4,15 +4,18 @@ public class GPUInstancingEnabler : MonoBehaviour
 {
     private void Awake()
     {
-        MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
-        MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
+        var meshRenderer = GetComponent<MeshRenderer>();
 
         if (!meshRenderer) {
             meshRenderer = GetComponentInChildren<MeshRenderer>();
         }
 
-        if (meshRenderer) {
-            meshRenderer.SetPropertyBlock(propertyBlock);
+        if (!meshRenderer) {
+            Debug.LogError($"meshRenderer not fount at {name}");
+            return;
         }
+
+        var propertyBlock = new MaterialPropertyBlock();
+        meshRenderer.SetPropertyBlock(propertyBlock);
     }
 }

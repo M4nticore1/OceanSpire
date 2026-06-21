@@ -91,6 +91,7 @@ public class Citizen : Human
     {
         var boat = BoatRider.RidingBoat;
         boat.FloatAway(LeavePosition);
+        boat.RemoveDockPoint();
     }
 
     protected override bool ShouldBoatMoveToDock()

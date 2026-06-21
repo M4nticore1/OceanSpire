@@ -34,8 +34,8 @@ public class HumanAnimation : MonoBehaviour
         human.Movement.OnMovementStarted -= OnMovementStarted;
         human.Movement.OnMovementStopped -= OnMovementStopped;
 
-        human.Movement.OnMovementStarted -= OnMovementStarted;
-        human.Movement.OnMovementStopped -= OnMovementStopped;
+        human.BoatRider.OnBoatMovementStarted -= OnBoatMovementStarted;
+        human.BoatRider.OnBoatMovementStopped -= OnBoatMovementStopped;
 
         human.InteractComponent.OnInteractionStarted -= OnInteractionStarted;
         human.InteractComponent.OnInteractionStopped -= OnInteractionStopped;
@@ -45,6 +45,18 @@ public class HumanAnimation : MonoBehaviour
 
         human.ReviveComponent.OnRevived -= OnRevived;
         human.HealthComponent.OnDied -= OnDied;
+    }
+
+    private void DisableAllCondition()
+    {
+        foreach (var param in animator.parameters) {
+            var paramName = param.name;
+
+            var paramType = param.type;
+            if (paramType != AnimatorControllerParameterType.Bool) return;
+
+            animator.SetBool(paramName, false);
+        }
     }
 
     private void OnIdleStarted()

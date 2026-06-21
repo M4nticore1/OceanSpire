@@ -15,7 +15,6 @@ public static class EventBus
     public static event Action OnConstructionStopped;
 
     // Boats
-    public static event Action<Boat> OnBoatCreated;
     public static event Action<Boat> OnBoatUnloaded;
     public static event Action<int, int> OnBoatUnloadedItem;
 
@@ -66,11 +65,6 @@ public static class EventBus
     }
 
     // Boats
-    public static void InvokeBoatCreated(Boat boat)
-    {
-        OnBoatCreated?.Invoke(boat);
-    }
-
     public static void InvokeBoatExitedUnloadingState(Boat boat)
     {
         OnBoatUnloaded?.Invoke(boat);

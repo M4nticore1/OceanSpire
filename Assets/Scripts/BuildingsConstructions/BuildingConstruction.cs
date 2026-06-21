@@ -87,6 +87,9 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     {
         var building = InstancesManager.Instance.GetInstance(data.BuildingInstanceId).GetComponent<Building>();
         SetOwnedBuilding(building);
+
+        UpdateWorkerInteractionTransforms();
+        UpdateRaiderInteractionTransforms();
     }
 
     public virtual void SetOwnedBuilding(Building building)
@@ -116,7 +119,7 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     {
         propertyBlock.SetFloat("_FlickingPower", power);
 
-        foreach (MeshRenderer renderer in meshRendererers) {
+        foreach (var renderer in meshRendererers) {
             renderer.SetPropertyBlock(propertyBlock);
         }
     }

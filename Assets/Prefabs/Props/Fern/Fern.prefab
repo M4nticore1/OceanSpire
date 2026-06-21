@@ -80,10 +80,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: b8b6de6bb393a074cb9f17a0037f31bd, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 981cb64e3d5d57b419840a839d334bd1, type: 2}
     - target: {fileID: 919132149155446097, guid: b8b6de6bb393a074cb9f17a0037f31bd, type: 3}
       propertyPath: m_Name
       value: Fern

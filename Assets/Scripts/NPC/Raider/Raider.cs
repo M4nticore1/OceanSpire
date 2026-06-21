@@ -79,7 +79,9 @@ public class Raider : Human
     {
         base.BoatFloatAway();
 
-        BoatRider.RidingBoat.FloatAway(SpawnPosition);
+        var boat = BoatRider.RidingBoat;
+        boat.FloatAway(SpawnPosition);
+        boat.RemoveDockPoint();
     }
 
     protected virtual void StartRaidingBuilding()
@@ -233,15 +235,19 @@ public class Raider : Human
 
     private void UpdateTargetBoat()
     {
-        for (int i = 0; i < BoatsManager.Instance.RaiderBoats.Count; i++) {
-            var boat = BoatsManager.Instance.RaiderBoats[i];
+        var raiderBoats = BoatsManager.Instance.RaiderBoats;
+
+        for (int i = 0; i < raiderBoats.Count; i++) {
+            var boat = raiderBoats[i];
             if (!boat) {
                 Debug.LogError($"Raider Boat not fount at index {i}");
                 continue;
             }
 
             if (boat.CurrentRider) continue;
-            if (boat.TargetRider) continue;
+
+            var targetRidget = boat.TargetRider;
+            if (targetRidget && targetRidget != BoatRider) continue;
 
             BoatRider.TrySetTargetBoat(boat);
             return;

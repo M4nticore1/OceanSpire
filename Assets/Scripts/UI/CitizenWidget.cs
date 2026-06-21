@@ -15,7 +15,7 @@ public class CitizenWidget : MonoBehaviour
     public Human Human { get; private set; }
     public int WidgetIndex { get; private set; } = 0;
 
-    [SerializeField] private SkillWidget skillWidget;
+    [SerializeField] private SkillsPanel skillsPanel;
     [SerializeField] private GameObject selectedResidentMenu;
     [SerializeField] private GameObject nonSelectedResidentMenu;
     [SerializeField] private TextMeshProUGUI citizenNameText;
@@ -71,9 +71,7 @@ public class CitizenWidget : MonoBehaviour
 
     private void UpdateSkills()
     {
-        foreach (var skill in Human.SkillsComponent.Skills.Values) {
-            SkillWidgetFactory.CreateSkillWidget(skillWidget, skillsLayoutGroup.transform, skill);
-        }
+        skillsPanel.SetSkills(Human.SkillsComponent);
     }
 
     private void UpdateGender()
@@ -83,6 +81,8 @@ public class CitizenWidget : MonoBehaviour
 
     private void OnClicked()
     {
+        if (!Human) return;
+
         var interactComponent = Human.InteractComponent;
         var interactBuilding = Human.InteractComponent.InteractBuilding;
 
@@ -90,15 +90,13 @@ public class CitizenWidget : MonoBehaviour
             interactComponent.RemoveInteractBuilding();
             interactComponent.TryStopInteracting(interactBuilding);
         }
-        else {
-            var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
-            if (!selectedBuilding) {
-                Debug.LogError("SelectedBuilding is not valid", this);
-            }
 
-            if (selectedBuilding.WorkComponent.Workers.Count >= selectedBuilding.LevelData.MaxHumansCount) return;
+        var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
 
-            interactComponent.SetInteractBuilding(selectedBuilding);
-        }
+        if (!selectedBuilding) return;
+        if (selectedBuilding == interactBuilding) return;
+        if (selectedBuilding.WorkComponent.Workers.Count >= selectedBuilding.LevelData.MaxHumansCount) return;
+
+        interactComponent.SetInteractBuilding(selectedBuilding);
     }
 }

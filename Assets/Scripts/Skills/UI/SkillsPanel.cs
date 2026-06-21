@@ -9,16 +9,21 @@ public class SkillsPanel : MonoBehaviour
     [SerializeField] private LayoutGroup layoutGroup;
     private List<SkillWidget> spawnedSkillWidgets = new();
 
-    public void SetSkills(SkillsComponent skills)
+    public void SetSkills(SkillsComponent skillsComponent)
     {
+        if (!skillsComponent) {
+            Debug.LogError("skillsComponent is not valid", this);
+            return;
+        }
+
         RemoveWidgets();
-        CreateWidgets(skills);
+        CreateWidgets(skillsComponent);
     }
 
     private void CreateWidgets(SkillsComponent skills)
     {
         foreach (var skill in skills.Skills.Values) {
-            SkillWidget widget = SkillWidgetFactory.CreateSkillWidget(skillWidgetPrefab, layoutGroup.transform, skill);
+            var widget = SkillWidgetFactory.CreateSkillWidget(skillWidgetPrefab, layoutGroup.transform, skill);
             spawnedSkillWidgets.Add(widget);
         }
     }
