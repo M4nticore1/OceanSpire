@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class Billboard : MonoBehaviour
 {
-    private Camera cam = null;
+    [SerializeField] private bool useParentRotation = false;
+
+    private Camera cam;
 
     private void Awake()
     {
@@ -15,12 +17,10 @@ public class Billboard : MonoBehaviour
 
         transform.LookAt(cam.transform.position, cam.transform.up);
 
-        if (!transform.parent) return;
+        if (useParentRotation) {
+            if (!transform.parent) return;
 
-        //Vector3 rotation = billboardWorld.eulerAngles;
-        //Vector3 parentRotation = transform.parent.rotation.eulerAngles;
-
-        //transform.rotation = billboardWorld;
-        transform.rotation *= transform.parent.rotation;
+            transform.rotation *= transform.parent.rotation;
+        }
     }
 }

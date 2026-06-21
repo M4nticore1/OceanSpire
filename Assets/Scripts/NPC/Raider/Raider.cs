@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class Raider : Human
+public class Raider : Human, IProgressable
 {
     [Header("Raider")]
     [SerializeField] private float raidBuildingTime = 10f;
@@ -10,6 +11,9 @@ public class Raider : Human
     private bool isRaidingBuilding = false;
 
     public Vector3 SpawnPosition { get; private set; } = Vector3.zero;
+
+    public event Action<Building> OnRaidBuildingStarted;
+    public event Action<Building> OnRaidBuildingStopped;
 
     protected override void OnEnable()
     {
@@ -88,6 +92,8 @@ public class Raider : Human
     {
         isRaidingBuilding = true;
         CityNavigator.FollowPath();
+
+        OnRaidBuildingStarted?.Invoke(CityNavigator.CurrentBuilding);
     }
 
     protected virtual void AttackWorker()
@@ -215,6 +221,8 @@ public class Raider : Human
     {
         isRaidingBuilding = false;
         IsRaidFinished = true;
+
+        OnRaidBuildingStopped?.Invoke(CityNavigator.CurrentBuilding);
     }
 
     private void AddLoot()
@@ -254,5 +262,12 @@ public class Raider : Human
         }
 
         Debug.LogError("No free raid boats available");
+    }
+
+    public float GetProgress()
+    {
+        if (raidBuildingTime == 0) return 0f;
+
+        return currentRaidBuildingTime / raidBuildingTime;
     }
 }

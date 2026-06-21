@@ -232,6 +232,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6506537361480025273, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
       insertIndex: -1
       addedObject: {fileID: -4342417268633007667}
+    - targetCorrespondingSourceObject: {fileID: 4203777609428078257, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5260844395683120604}
   m_SourcePrefab: {fileID: 100100000, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
 --- !u!114 &317534655034775791 stripped
 MonoBehaviour:
@@ -312,6 +315,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b0c4d83530020347a7953f4fc928c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatRider
+--- !u!114 &826466897016813743 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6393344449693178898, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
+  m_PrefabInstance: {fileID: 6035258515464070333}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7608649954819615244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b110b5982e0bd0499983107f2ed03b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ProgressDisplay
 --- !u!114 &1368942810633588043 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4701473922447632886, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
@@ -410,6 +424,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd216d9cff4b16e47bbc88dc23d1f25a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Attack
+--- !u!1 &7608649954819615244 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4203777609428078257, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
+  m_PrefabInstance: {fileID: 6035258515464070333}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5260844395683120604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7608649954819615244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e230d81c78eb8484791a7a2ccbbf81a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RaiderProgressDisplayController
+  progressDisplay: {fileID: 826466897016813743}
+  raider: {fileID: -4342417268633007667}
 --- !u!114 &7719323413831070654 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4098557255172134659, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}

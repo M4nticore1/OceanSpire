@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class BoatIdleState : BoatState
+public class IdleBoatState : BoatState
 {
     private const float correctDockRotationSpeed = 0.5f;
 
-    public BoatIdleState(Boat boat) : base(boat)
+    public IdleBoatState(Boat boat) : base(boat)
     {
 
     }

@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class BoatMovingToLootState : BoatFindingLootState
+public class MovingToLootBoatState : FindingLootBoatState
 {
-    public BoatMovingToLootState(Boat boat) : base(boat)
+    public MovingToLootBoatState(Boat boat) : base(boat)
     {
 
     }

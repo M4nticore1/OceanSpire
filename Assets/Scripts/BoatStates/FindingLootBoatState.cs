@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BoatFindingLootState : BoatState
+public class FindingLootBoatState : BoatState
 {
     private const double updateDestinationRate = 0.5f;
     private double lastUpdateDestinationTime = 0;
@@ -8,7 +8,7 @@ public class BoatFindingLootState : BoatState
     public DriftingLoot currentTarget { get; private set; } = null;
     public bool isCollectingLoot { get; private set; } = false;
 
-    public BoatFindingLootState(Boat boat) : base(boat)
+    public FindingLootBoatState(Boat boat) : base(boat)
     {
 
     }

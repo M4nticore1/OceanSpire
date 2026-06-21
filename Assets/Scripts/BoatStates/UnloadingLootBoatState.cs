@@ -1,13 +1,12 @@
-using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class BoatUnloadingState : BoatState
+public class UnloadingLootBoatState : BoatState, IProgressable
 {
     public const float UnloadSpeed = 20f;
     private float currentWeightToUnload = 0f;
 
-    public BoatUnloadingState(Boat boat) : base(boat)
+    public UnloadingLootBoatState(Boat boat) : base(boat)
     {
 
     }
@@ -45,6 +44,13 @@ public class BoatUnloadingState : BoatState
     public override void OnBoatDockChanged(BoatDockPoint boatDock)
     {
 
+    }
+
+    public float GetProgress()
+    {
+        if (boat.MaxWeight == 0) return 0f;
+
+        return boat.CurrentWeight / boat.MaxWeight;
     }
 
     private void ProcessStoreResources()

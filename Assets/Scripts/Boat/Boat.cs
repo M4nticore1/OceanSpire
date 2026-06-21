@@ -19,8 +19,8 @@ public class Boat : MonoBehaviour, IClickable
     [SerializeField] private BoatDefinition boatData;
     public BoatDefinition Definition => boatData;
 
-    [field: SerializeField] public BoatStateEnum CurrentStateEnum { get; private set; }
-    private BoatState currentState;
+    public BoatStateEnum CurrentStateEnum { get; private set; }
+    public BoatState CurrentState { get; private set; }
 
     public HumanStatusEnum CurrentStatus { get; private set; }
 
@@ -59,6 +59,9 @@ public class Boat : MonoBehaviour, IClickable
 
     public event Action OnClicked;
 
+    public event Action<BoatState> OnStateEntered;
+    public event Action<BoatState> OnStateExited;
+
     public static event Action<Boat> OnBoatSelected;
     public static event Action<Boat> OnBoatDeselected;
     public static event Action<Boat> OnBoatDestroyed;
@@ -87,9 +90,9 @@ public class Boat : MonoBehaviour, IClickable
     {
         boatShake.Tick();
 
-        if (currentState == null) return;
+        if (CurrentState == null) return;
 
-        currentState.Tick();
+        CurrentState.Tick();
     }
 
     public void Init(BoatData boatData)
@@ -182,7 +185,7 @@ public class Boat : MonoBehaviour, IClickable
 
         DockPoint = dockPoint;
         dockPoint.SetBoat(this);
-        currentState.OnBoatDockChanged(dockPoint);
+        CurrentState.OnBoatDockChanged(dockPoint);
     }
 
     public void RemoveDockPoint()
@@ -194,7 +197,7 @@ public class Boat : MonoBehaviour, IClickable
 
         DockPoint.RemoveBoat();
         DockPoint = null;
-        currentState.OnBoatDockChanged(null);
+        CurrentState.OnBoatDockChanged(null);
     }
 
     public void SetTargetLoot(SwimmingDriftingLoot driftingLoot)
@@ -210,42 +213,45 @@ public class Boat : MonoBehaviour, IClickable
     // State
     public void SetState(BoatStateEnum state)
     {
-        if (currentState != null && state == CurrentStateEnum) return;
+        if (CurrentState != null && state == CurrentStateEnum) return;
 
-        if (currentState != null) {
-            currentState.Exit();
+        if (CurrentState != null) {
+            CurrentState.Exit();
+            OnStateExited?.Invoke(CurrentState);
         }
 
         switch (state) {
             case BoatStateEnum.Idle:
-                currentState = new BoatIdleState(this);
+                CurrentState = new IdleBoatState(this);
                 break;
             case BoatStateEnum.FindingLoot:
-                currentState = new BoatFindingLootState(this);
+                CurrentState = new FindingLootBoatState(this);
                 break;
             case BoatStateEnum.MovingToLoot:
-                currentState = new BoatMovingToLootState(this);
+                CurrentState = new MovingToLootBoatState(this);
                 break;
             case BoatStateEnum.CollectingLoot:
-                currentState = new BoatCollectingLootState(this);
+                CurrentState = new CollectingLootBoatState(this);
                 break;
             case BoatStateEnum.MovingToDock:
                 Debug.Log("MovingToDock");
-                currentState = new BoatMovingToDockState(this);
+                CurrentState = new MovingToDockBoatState(this);
                 break;
             case BoatStateEnum.UnloadingLoot:
-                currentState = new BoatUnloadingState(this);
+                CurrentState = new UnloadingLootBoatState(this);
                 break;
             case BoatStateEnum.FloatingAway:
-                currentState = new BoatFloatingAwayState(this);
+                CurrentState = new FloatingAwayBoatState(this);
                 break;
             case BoatStateEnum.Demolished:
-                currentState = new BoatDemolishState(this);
+                CurrentState = new DemolishBoatState(this);
                 break;
         }
 
         CurrentStateEnum = state;
-        currentState.Enter();
+        CurrentState.Enter();
+
+        OnStateEntered?.Invoke(CurrentState);
     }
 
     public bool ShouldFindLoot()
@@ -288,7 +294,7 @@ public class Boat : MonoBehaviour, IClickable
 
     private void OnReachedPath()
     {
-        currentState.OnReachedPath();
+        CurrentState.OnReachedPath();
 
         if (!CurrentRider) return;
 

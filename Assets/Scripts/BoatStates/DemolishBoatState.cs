@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class BoatDemolishState : BoatState
+public class DemolishBoatState : BoatState
 {
-    public BoatDemolishState(Boat boat) : base(boat)
+    public DemolishBoatState(Boat boat) : base(boat)
     {
 
     }

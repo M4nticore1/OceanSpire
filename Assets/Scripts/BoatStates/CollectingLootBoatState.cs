@@ -1,12 +1,11 @@
-using Unity.Mathematics;
 using UnityEngine;
 
-public class BoatCollectingLootState : BoatState
+public class CollectingLootBoatState : BoatState, IProgressable
 {
     private float currentCollectingTime = 0f;
     private float collectLootTime = 2f;
 
-    public BoatCollectingLootState(Boat boat) : base(boat)
+    public CollectingLootBoatState(Boat boat) : base(boat)
     {
 
     }
@@ -52,27 +51,9 @@ public class BoatCollectingLootState : BoatState
         
     }
 
-    private bool TryStopDriftingLoot()
+    public float GetProgress()
     {
-        if (!boat) return false;
-        if (!boat.TargetDriftingLoot) return false;
-        if (!boat.TargetDriftingLoot.IsMoving) return false;
-
-        boat.TargetDriftingLoot.StopMoving();
-        return true;
-    }
-
-    private void TryCollectLoot()
-    {
-        if (!ShouldCollectLoot()) return;
-
-        var collectedLoot = boat.TargetDriftingLoot.TakeItems();
-
-        foreach (var loot in collectedLoot) {
-            if (boat.Inventory.RemainingWeight <= 0) break;
-
-            boat.Inventory.AddItem(loot.Definition.ItemId, loot.Amount);
-        }
+        return currentCollectingTime / collectLootTime;
     }
 
     private void UpdateState()
@@ -83,6 +64,31 @@ public class BoatCollectingLootState : BoatState
         else {
             boat.SetState(BoatStateEnum.MovingToDock);
         }
+    }
+
+    private bool TryStopDriftingLoot()
+    {
+        if (!boat) return false;
+        if (!boat.TargetDriftingLoot) return false;
+        if (!boat.TargetDriftingLoot.IsMoving) return false;
+
+        boat.TargetDriftingLoot.StopMoving();
+        return true;
+    }
+
+    private bool TryCollectLoot()
+    {
+        if (!ShouldCollectLoot()) return false;
+
+        var collectedLoot = boat.TargetDriftingLoot.TakeItems();
+
+        foreach (var loot in collectedLoot) {
+            if (boat.Inventory.RemainingWeight <= 0) break;
+
+            boat.Inventory.AddItem(loot.Definition.ItemId, loot.Amount);
+        }
+
+        return true;
     }
 
     private bool ShouldCollectLoot()
