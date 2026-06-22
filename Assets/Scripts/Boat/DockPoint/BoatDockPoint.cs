@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BoatDockPoint : MonoBehaviour
 {
-    public Boat Boat { get; private set; }
+    public List<Boat> Boats { get; private set; } = new();
 
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
@@ -18,13 +19,23 @@ public class BoatDockPoint : MonoBehaviour
         instanceId.Register(data.InstanceId);
     }
 
-    public void SetBoat(Boat boat)
+    public void AddBoat(Boat boat)
     {
-        Boat = boat;
+        if (Boats.Contains(boat)) {
+            Debug.LogError("boat is already in the list");
+            return;
+        }
+
+        Boats.Add(boat);
     }
 
-    public void RemoveBoat()
+    public void RemoveBoat(Boat boat)
     {
-        Boat = null;
+        if (!Boats.Contains(boat)) {
+            Debug.LogError("boat is not in the list");
+            return;
+        }
+
+        Boats.Remove(boat);
     }
 }

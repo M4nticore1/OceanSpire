@@ -174,7 +174,7 @@ MonoBehaviour:
   autoCleaning: 1
   useAmountLimit: 0
   useWeightLimit: 1
-  weightLimit: 50
+  weightLimit: 100
   items: []
 --- !u!114 &4575534088428067244
 MonoBehaviour:
@@ -241,7 +241,7 @@ NavMeshAgent:
   m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 2
+  m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

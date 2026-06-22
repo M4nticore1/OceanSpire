@@ -24,13 +24,13 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        movement.OnReachedPath += OnReachedPath;
+        movement.OnReachedDestination += OnReachedPath;
         movement.OnMovementStopped += OnMovementStopped;
     }
 
     protected virtual void OnDisable()
     {
-        movement.OnReachedPath -= OnReachedPath;
+        movement.OnReachedDestination -= OnReachedPath;
         movement.OnMovementStopped -= OnMovementStopped;
     }
 

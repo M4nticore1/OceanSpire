@@ -22,7 +22,7 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
     amount: 300
   maxResidentsCount: 1
-  constructionTime: 0
+  constructionTime: 300
   buildingThumb: {fileID: 21300000, guid: 2c8035d4b542f5b469b24b9f05a28e55, type: 3}
   constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
   constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}

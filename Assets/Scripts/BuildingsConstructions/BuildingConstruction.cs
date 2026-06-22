@@ -186,6 +186,12 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     public BuildingAction GetInteraction(int index)
     {
         var actions = BuildingInteractions;
+
+        if (actions.Length <= 0) {
+            Debug.LogError("intreactions count is 0");
+            return null;
+        }
+
         index %= actions.Length;
 
         return actions[index];

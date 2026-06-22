@@ -13,6 +13,7 @@ public class RaidManager : MonoBehaviour
     [Header("Main")]
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private BoatsManager boatsManager;
+    [SerializeField] private DockPointsManager boatDocksManager;
     [SerializeField] private CityStorage cityStorage;
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
@@ -37,9 +38,6 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private float minSpawnAngleOffset = 5f;
     [SerializeField] private float maxSpawnAngleOffset = 10f;
     [SerializeField] private float spawnDistance = 145f;
-
-    [Header("Positions")]
-    [SerializeField] private BoatDockPoint[] dockPoints;
 
     public bool IsRaidExist { get; private set; } = false;
     public bool IsUnderRaid { get; private set; } = false;
@@ -124,13 +122,20 @@ public class RaidManager : MonoBehaviour
         Building building = null;
         List<Building> path;
 
-        if (PathFinder.TryFindBuildingPath(null, b => b.BuildingData.IsRaidable && b.RaidComponent.Raiders.Count < b.LevelData.MaxHumansCount, out path)) {
+        if (PathFinder.TryFindBuildingPath(null, b =>
+        b.BuildingData.IsRaidable &&
+        b.RaidComponent.Raiders.Count < b.LevelData.MaxHumansCount &&
+        !b.ConstructionComponent.IsUnderConstruction,
+        out path)) {
             int count = path.Count;
             if (count - 1 >= 0)
                 building = path[count - 1];
         }
 
-        if (!building && PathFinder.TryFindBuildingPath(null, b => b.BuildingData.IsRaidable, out path)) {
+        if (!building && PathFinder.TryFindBuildingPath(null,
+            b => b.BuildingData.IsRaidable &&
+            !b.ConstructionComponent.IsUnderConstruction,
+            out path)) {
             int count = path.Count;
             if (count - 1 >= 0)
                 building = path[count - 1];
@@ -336,9 +341,9 @@ public class RaidManager : MonoBehaviour
 
     private Boat CreateBoat(Vector3 position, Quaternion rotation)
     {
-        var dockPoint = GetNearestDockPoint(position);
+        var dockPoint = BoatDockUtils.GetNearestFreeDockPoint(boatDocksManager.RaiderDockPoints, position);
         if (!dockPoint) {
-            Debug.Log($"NearestDockPoint not found at {name}");
+            Debug.Log($"nearestDockPoint not found");
             return null;
         }
 
@@ -359,28 +364,6 @@ public class RaidManager : MonoBehaviour
         }
 
         return boat;
-    }
-
-    private BoatDockPoint GetNearestDockPoint(Vector3 position)
-    {
-        BoatDockPoint bestDockPoint = null;
-        float bestSqr = float.MaxValue;
-
-        for (int i = 0; i < dockPoints.Length; i++) {
-            var dockPoint = dockPoints[i];
-
-            if (dockPoint.Boat != null)
-                continue;
-
-            float sqr = (position - dockPoint.transform.position).sqrMagnitude;
-
-            if (sqr < bestSqr) {
-                bestDockPoint = dockPoint;
-                bestSqr = sqr;
-            }
-        }
-
-        return bestDockPoint;
     }
 
     private int GetRandomRaidersCount()

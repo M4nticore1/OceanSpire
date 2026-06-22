@@ -28,7 +28,7 @@ public class Movement : MonoBehaviour
 
     public event Action OnMovementStarted;
     public event Action OnMovementStopped;
-    public event Action OnReachedPath;
+    public event Action OnReachedDestination;
 
     private void Update()
     {
@@ -86,7 +86,7 @@ public class Movement : MonoBehaviour
         RemoveTargetRotation();
 
         if (IsDestinationReached()) {
-            OnReachedPath?.Invoke();
+            OnReachedDestination?.Invoke();
             return true;
         }
 
@@ -108,7 +108,10 @@ public class Movement : MonoBehaviour
         IsMoving = false;
 
         OnMovementStopped?.Invoke();
-        OnReachedPath?.Invoke();
+
+        if (IsDestinationReached()) {
+            OnReachedDestination?.Invoke();
+        }
 
         return true;
     }

@@ -49,7 +49,7 @@ public class EvictManager : MonoBehaviour
     private BoatDockPoint GetNextDockPoint()
     {
         foreach (var dockPoint in boatDocksManager.EvictDockPoints) {
-            if (dockPoint.Boat) continue;
+            if (dockPoint.Boats.Count > 0) continue;
 
             return dockPoint;
         }

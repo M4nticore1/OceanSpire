@@ -148,8 +148,6 @@ public abstract class Human : Creature, IClickable
             RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
             RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
         }
-        else
-            Debug.Log("raidManager is not valid", this);
     }
 
     protected virtual void Update()
@@ -371,19 +369,11 @@ public abstract class Human : Creature, IClickable
 
     protected virtual bool ShouldStartExitingBoat()
     {
-        Debug.Log("ShouldStartExitingBoat");
         if (!boatRider.RidingBoat) return false;
-
-        Debug.Log("ShouldStartExitingBoat1");
         if (boatRider.TargetBoat && boatRider.TargetBoat == BoatRider.RidingBoat) return false;
-
-        Debug.Log("ShouldStartExitingBoat2");
         if (boatRider.RidingBoat.CurrentStateEnum != BoatStateEnum.Idle) return false;
-
-        Debug.Log("ShouldStartExitingBoat3");
         if (!BoatRider.RidingBoat.Movement.IsReachedPosition(boatRider.RidingBoat.DockPoint.DockTransform.position)) return false;
 
-        Debug.Log("ShouldStartExitingBoat4");
         return true;
     }
 

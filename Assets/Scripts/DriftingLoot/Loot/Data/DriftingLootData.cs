@@ -8,6 +8,7 @@ public abstract class DriftingLootData
     public int InstanceId = 0;
     public Vector3Data Position;
     public Vector3Data Rotation;
+    public Vector3Data MeshRotation;
     public int MeshId = 0;
 
     public static DriftingLootData Create(DriftingLoot driftingLoot)

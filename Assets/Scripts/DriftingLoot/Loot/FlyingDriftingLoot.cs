@@ -34,10 +34,12 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
         var flyingDriftingLootData = driftingLootData as FlyingDriftingLootData;
 
         if (flyingDriftingLootData == null) {
-            Debug.Log($"flyingDriftingLootData not found at {name}");
+            Debug.Log($"flyingDriftingLootData is not valid");
             Destroy(gameObject);
             return;
         }
+
+        Movement.NavAgent.baseOffset = flyingDriftingLootData.Position.Y;
 
         TrySetFalling(flyingDriftingLootData.IsFalling);
 
@@ -119,7 +121,7 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
         IsFalling = value;
         boxCollider.enabled = !value;
         rigidBody.useGravity = value;
-        rigidBody.isKinematic = !value;
+        rigidBody.isKinematic = value;
 
         if (value) {
             Destroy(balloons.gameObject);

@@ -69,7 +69,7 @@ public class Boat : MonoBehaviour, IClickable
     private void OnEnable()
     {
         movement.OnMovementStarted += OnMovementStarted;
-        movement.OnReachedPath += OnReachedPath;
+        movement.OnReachedDestination += OnReachedPath;
 
         selectComponent.OnSelected += OnSelected;
         selectComponent.OnDeselected += OnDeselected;
@@ -78,7 +78,7 @@ public class Boat : MonoBehaviour, IClickable
     private void OnDisable()
     {
         movement.OnMovementStarted -= OnMovementStarted;
-        movement.OnReachedPath -= OnReachedPath;
+        movement.OnReachedDestination -= OnReachedPath;
 
         selectComponent.OnSelected -= OnSelected;
         selectComponent.OnDeselected -= OnDeselected;
@@ -184,7 +184,7 @@ public class Boat : MonoBehaviour, IClickable
         if (dockPoint == DockPoint) return;
 
         DockPoint = dockPoint;
-        dockPoint.SetBoat(this);
+        dockPoint.AddBoat(this);
         CurrentState.OnBoatDockChanged(dockPoint);
     }
 
@@ -195,7 +195,7 @@ public class Boat : MonoBehaviour, IClickable
             return;
         }
 
-        DockPoint.RemoveBoat();
+        DockPoint.RemoveBoat(this);
         DockPoint = null;
         CurrentState.OnBoatDockChanged(null);
     }
@@ -234,7 +234,6 @@ public class Boat : MonoBehaviour, IClickable
                 CurrentState = new CollectingLootBoatState(this);
                 break;
             case BoatStateEnum.MovingToDock:
-                Debug.Log("MovingToDock");
                 CurrentState = new MovingToDockBoatState(this);
                 break;
             case BoatStateEnum.UnloadingLoot:

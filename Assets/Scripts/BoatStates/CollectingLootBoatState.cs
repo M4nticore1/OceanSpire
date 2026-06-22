@@ -70,7 +70,6 @@ public class CollectingLootBoatState : BoatState, IProgressable
     {
         if (!boat) return false;
         if (!boat.TargetDriftingLoot) return false;
-        if (!boat.TargetDriftingLoot.IsMoving) return false;
 
         boat.TargetDriftingLoot.StopMoving();
         return true;

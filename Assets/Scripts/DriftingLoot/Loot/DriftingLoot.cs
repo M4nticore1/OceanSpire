@@ -1,5 +1,4 @@
 ﻿using System;
-using Unity.Mathematics;
 using UnityEngine;
 
 [System.Serializable]
@@ -19,37 +18,26 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
 
+    [SerializeField] private Movement movement;
+    public Movement Movement => movement;
+
     [SerializeField] private Transform meshSpawnTransform;
 
-    private float currentMoveSpeedMultiplier = 1f;
-
-    public Vector3 moveDirection { get; private set; } = Vector3.zero;
-    private Vector3 startMoveDirection = Vector3.zero;
-
-    private const float despawnDistance = 100.0f;
-
-    public const int limitSpawnFloorsCount = 10;
-
-    private const int minDistanceToMoveAroundCity = 30;
-    private const int maxDistanceToMoveAroundCity = 35;
-
-    private const float checkPositionFrequency = 1.0f;
-    private double lastCheckPositionTime = 0d;
-
-    public bool IsMoving { get; private set; } = true;
     public int MeshId { get; private set; } = 0;
+    public GameObject SpawnedMesh { get; private set; }
+
     public bool IsClickable { get; private set; } = true;
 
     public event Action OnClicked;
 
     protected virtual void OnEnable()
     {
-        
+        movement.OnReachedDestination += OnReachedDestination;
     }
 
     protected virtual void OnDisable()
     {
-
+        movement.OnReachedDestination -= OnReachedDestination;
     }
 
     public void Init(DriftingLootData driftingLootData)
@@ -57,20 +45,48 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
         OnInit(driftingLootData);
     }
 
+    protected virtual void OnInit(DriftingLootData driftingLootData)
+    {
+        if (driftingLootData == null) {
+            Debug.LogError("driftingLootData is not valid");
+            return;
+        }
+
+        CreateMesh(driftingLootData);
+        UpdateDestination();
+        //UpdateMovementDirection();
+    }
+
     public virtual void Tick(float deltaTime)
     {
-        Move(deltaTime);
-        CheckPosition();
+        //Move(deltaTime);
+        //TryDestroy();
+    }
+
+    public abstract DriftingLootData CreateData();
+
+    public abstract DriftingLootData CreateRandomData();
+
+    public virtual bool ShouldClick()
+    {
+        if (!IsClickable) return false;
+
+        return true;
+    }
+
+    protected virtual void OnClick()
+    {
+
     }
 
     public void StartMoving()
     {
-        IsMoving = true;
+        UpdateDestination();
     }
 
     public void StopMoving()
     {
-        IsMoving = false;
+        movement.TryStopMoving();
     }
 
     public void Click()
@@ -85,88 +101,33 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
         IsClickable = value;
     }
 
-    public abstract DriftingLootData CreateData();
-
-    public abstract DriftingLootData CreateRandomData();
-
-    public virtual bool ShouldClick()
+    private void CreateMesh(DriftingLootData driftingLootData)
     {
-        if (!IsClickable) return false;
+        if (definition.Meshes.Length <= 0) return;
 
-        return true;
+        var meshId = driftingLootData.MeshId;
+        meshId = meshId % definition.Meshes.Length;
+        MeshId = meshId;
+
+        var meshPrefab = definition.Meshes[meshId];
+        if (!meshPrefab) return;
+
+        SpawnedMesh = Instantiate(meshPrefab, meshSpawnTransform);
+
+        var rotation = Quaternion.Euler(driftingLootData.MeshRotation.Vector3());
+        SpawnedMesh.transform.rotation = rotation;
     }
 
-    protected virtual void OnInit(DriftingLootData driftingLootData)
+    private void UpdateDestination()
     {
-        if (driftingLootData == null) return;
-
-        CreateMesh(driftingLootData.MeshId);
-        UpdateMovementDirection();
+        var windDir = WindManager.Instance.WindDirection;
+        var dir = new Vector3(windDir.x, 0, windDir.z).normalized;
+        var destination = WorldUtils.GetBorderPosition(dir);
+        movement.TryMoveTo(destination);
     }
 
-    protected virtual void OnClick()
+    private void OnReachedDestination()
     {
-
-    }
-
-    private void Move(float deltaTime)
-    {
-        if (IsMoving) {
-            if (currentMoveSpeedMultiplier < 1f) {
-                currentMoveSpeedMultiplier = math.lerp(currentMoveSpeedMultiplier, 1f, definition.StopMovingSpeed * Time.deltaTime);
-            }
-
-            Vector3 crossDirection = Vector3.Cross(moveDirection, new Vector3(-transform.position.x, 0, -transform.position.z).normalized);
-            float distanceToIsland = new Vector3(transform.position.x, 0, transform.position.z).magnitude;
-
-            if (distanceToIsland > maxDistanceToMoveAroundCity) {
-                Vector3 currentMoveDirection = -transform.position.normalized;
-            }
-            else {
-                float alpha = 1 - ((distanceToIsland - minDistanceToMoveAroundCity) / (maxDistanceToMoveAroundCity - minDistanceToMoveAroundCity));
-                alpha = math.clamp(alpha, 0, 1);
-
-                float angleOffset = (crossDirection.y >= 0 ? 90 : -90) * alpha;
-                Quaternion rotation = Quaternion.Euler(0, -angleOffset, 0);
-
-                moveDirection = rotation * startMoveDirection;
-            }
-        }
-        else {
-            currentMoveSpeedMultiplier = math.lerp(currentMoveSpeedMultiplier, 0f, definition.StopMovingSpeed * Time.deltaTime);
-        }
-
-        transform.position += moveDirection * currentMoveSpeedMultiplier * definition.MovementSpeed * deltaTime;
-    }
-
-    private void CheckPosition()
-    {
-        if (Time.timeAsDouble > lastCheckPositionTime + checkPositionFrequency)
-        {
-            float distance = Vector3.Distance(Vector3.zero, transform.position);
-            
-            if (distance > DriftingLootManager.spawnDistance + despawnDistance)
-                Destroy(gameObject);
-
-            lastCheckPositionTime = Time.timeAsDouble;
-        }
-    }
-
-    private void CreateMesh(int id)
-    {
-        id = id % definition.Meshes.Length;
-        MeshId = id;
-
-        var mesh = definition.Meshes[id];
-        if (!mesh) return;
-
-        Instantiate(mesh, meshSpawnTransform);
-    }
-
-    private void UpdateMovementDirection()
-    {
-        Vector3 direction = WindManager.Instance.WindDirection;
-        moveDirection = new Vector3(direction.x, 0, direction.z);
-        startMoveDirection = moveDirection;
+        Destroy(gameObject);
     }
 }

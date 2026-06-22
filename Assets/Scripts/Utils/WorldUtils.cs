@@ -2,13 +2,18 @@ using UnityEngine;
 
 public static class WorldUtils
 {
-    private const float spawnDistance = 140f;
+    public const float SpawnDistance = 150f;
 
     public static Vector3 GetRandomBorderPosition()
     {
-        Vector3 dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
+        var dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
         dir.Normalize();
-        Vector3 position = dir * spawnDistance;
-        return position;
+
+        return GetBorderPosition(dir);
+    }
+
+    public static Vector3 GetBorderPosition(Vector3 dir)
+    {
+        return dir * SpawnDistance;
     }
 }

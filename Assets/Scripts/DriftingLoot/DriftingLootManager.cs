@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class DriftingLootManager : MonoBehaviour
@@ -24,8 +22,6 @@ public class DriftingLootManager : MonoBehaviour
     [SerializeField] private float updatePositionFrequency = 0.05f;
     private float currentUpdatePositionTime = 0f;
 
-    // Spawn Position
-    public const float spawnDistance = 160.0f;
     private const float spawnMaxOffsetYaw = 60.0f;
 
     private void Awake()
@@ -178,7 +174,7 @@ public class DriftingLootManager : MonoBehaviour
             positionY = spawnFloorNumber * BuildingsManager.FloorHeight + BuildingsManager.FirstFloorHeight;
         }
 
-        var spawnPosition = new Vector3(-rotatedDir.x * spawnDistance, positionY, -rotatedDir.y * spawnDistance);
+        var spawnPosition = new Vector3(-rotatedDir.x * WorldUtils.SpawnDistance, positionY, -rotatedDir.y * WorldUtils.SpawnDistance);
 
         float rotationAngle = UnityEngine.Random.Range(0f, 360f);
         var spawnRotation = Quaternion.Euler(0f, rotationAngle, 0f);
@@ -186,7 +182,8 @@ public class DriftingLootManager : MonoBehaviour
         var driftingLootData = prefab.CreateRandomData();
         driftingLootData.InstanceId = InstancesManager.Instance.GetNextInstanceId();
         driftingLootData.Position = new Vector3Data(spawnPosition);
-        driftingLootData.Rotation = new Vector3Data(spawnRotation.eulerAngles);
+        driftingLootData.Rotation = new Vector3Data(Vector3.zero);
+        driftingLootData.MeshRotation = new Vector3Data(spawnRotation.eulerAngles);
 
         var driftingLoot = DriftingLootFactory.CreateDriftingLoot(prefab, driftingLootData);
 

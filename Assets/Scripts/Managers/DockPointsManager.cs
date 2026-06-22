@@ -5,7 +5,7 @@ public class DockPointsManager : MonoBehaviour
 {
     public static DockPointsManager Instance;
 
-    public List<BoatDockPoint> CitizenBoatDocks = new List<BoatDockPoint>();
+    public List<BoatDockPoint> CitizenBoatDocks { get; private set; } = new List<BoatDockPoint>();
 
     [SerializeField] private BoatDockPoint[] wandererDockPoints;
     public BoatDockPoint[] WandererDockPoints => wandererDockPoints;

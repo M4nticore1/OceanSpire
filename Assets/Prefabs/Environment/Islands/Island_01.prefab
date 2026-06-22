@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2507607305674435601}
+  - component: {fileID: 2997149603848523087}
   m_Layer: 0
   m_Name: Island_01
   m_TagString: Untagged
@@ -45,6 +46,23 @@ Transform:
   - {fileID: 6407209118446399365}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2997149603848523087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3625424195344641282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
+  m_SerializedVersion: 0
+  m_Size: {x: 11, y: 5, z: 13}
+  m_Center: {x: -1, y: 2.5, z: 0.5}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!1001 &863818200604443235
 PrefabInstance:
   m_ObjectHideFlags: 0

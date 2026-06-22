@@ -93,7 +93,6 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     public void StopMoving()
     {
-        Debug.Log("StopMoving");
         SetIsMoving(false);
 
         // Stop entities riding

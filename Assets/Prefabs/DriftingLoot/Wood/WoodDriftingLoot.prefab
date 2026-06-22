@@ -84,6 +84,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SwimmingDriftingLoot
   definition: {fileID: 11400000, guid: 564c8f18a95f032429f94491a98bbe51, type: 2}
   instanceId: {fileID: 4642032650157003502}
+  movement: {fileID: 4883358000253329580}
   meshSpawnTransform: {fileID: 3238478444632207962}
 --- !u!114 &4642032650157003502 stripped
 MonoBehaviour:
@@ -96,3 +97,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+--- !u!114 &4883358000253329580 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 885482629621480500, guid: 41445534a2a12bf41a008fe86a3b5f17, type: 3}
+  m_PrefabInstance: {fileID: 5732222477442260120}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3558711020087060221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 912213559928a484a8491f74359e20b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Movement

@@ -90,13 +90,13 @@ public class BuildingPlace : MonoBehaviour, IClickable
     {
         var buildingPrefab = ConstructionManager.Instance.BuildingToPlace;
         if (!buildingPrefab) {
-            Debug.Log("BuildingToPlace is not vali.");
+            Debug.Log("BuildingToPlace is not valid");
             return;
         }
 
         var towerBuildingPrefab = buildingPrefab as TowerBuilding;
         if (!towerBuildingPrefab) {
-            Debug.Log("BuildingToPlace is not a TowerBuilding");
+            Debug.Log("towerBuildingPrefab is not valid");
             return;
         }
 
@@ -106,10 +106,14 @@ public class BuildingPlace : MonoBehaviour, IClickable
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Level = LevelData.Create(towerBuildingPrefab.LevelComponent),
             Upgrade = UpgradeData.Create(towerBuildingPrefab.UpgradeComponent),
+
             Construction = new ConstructionData()
             {
                 IsUnderConstruction = true,
+                ConstructionTime = buildingPrefab.LevelData.UpgradeTime,
+                CurrentConstructionTime = 0
             },
+
             Crafting = CraftingModuleData.Create(towerBuildingPrefab.GetComponent<CraftingModule>()),
             FloorIndex = FloorIndex,
             PlaceIndex = placeIndex,

@@ -92,7 +92,16 @@ public class PierModule : BuildingModule
 
         for (int i = 0; i < boats.Count; i++) {
             var boat = boats[i];
+            if (!boat) {
+                Debug.LogError($"boat is not valid by index {i}");
+                continue;
+            }
+
             var dockPoint = PierConstruction.BoatDocks[i];
+            if (!dockPoint) {
+                Debug.LogError($"dockPoint is not valid by index {i}");
+                continue;
+            }
 
             boat.SetDockPoint(dockPoint);
         }
@@ -104,7 +113,18 @@ public class PierModule : BuildingModule
 
         for (int i = 0; i < boats.Count; i++) {
             var boat = boats[i];
+            if (!boat) {
+                Debug.LogError($"boat is not valid by index {i}");
+                continue;
+            }
+
+            if (boat.CurrentStateEnum != BoatStateEnum.Idle && boat.CurrentStateEnum != BoatStateEnum.UnloadingLoot) continue;
+
             var dockPoint = PierConstruction.BoatDocks[i];
+            if (!dockPoint) {
+                Debug.LogError($"dockPoint is not valid by index {i}");
+                continue;
+            }
 
             boat.Movement.NavAgent.Warp(dockPoint.DockTransform.position);
         }

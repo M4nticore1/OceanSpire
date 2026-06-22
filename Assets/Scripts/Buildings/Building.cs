@@ -90,6 +90,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     {
         levelComponent.OnLevelChanged += HandleLevelChanged;
 
+        constructionComponent.OnConstructionStarted += HandleConstructionStarted;
+        constructionComponent.OnConstructionCompleted += HandleConstructionCompleted;
+
         upgradeComponent.OnUpgradeStarted += HandleUpgradeStarted;
         upgradeComponent.OnUpgradeCompleted += HandleUpgradeCompleted;
 
@@ -108,6 +111,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     protected virtual void OnDisable()
     {
         levelComponent.OnLevelChanged -= HandleLevelChanged;
+
+        constructionComponent.OnConstructionStarted -= HandleConstructionStarted;
+        constructionComponent.OnConstructionCompleted -= HandleConstructionCompleted;
 
         upgradeComponent.OnUpgradeStarted -= HandleUpgradeStarted;
         upgradeComponent.OnUpgradeCompleted -= HandleUpgradeCompleted;
@@ -355,6 +361,16 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
                 strategy = new PierBuildingStrategy(this);
                 break;
         }
+    }
+
+    private void HandleConstructionStarted()
+    {
+
+    }
+
+    private void HandleConstructionCompleted()
+    {
+
     }
 
     private void HandleUpgradeStarted()
