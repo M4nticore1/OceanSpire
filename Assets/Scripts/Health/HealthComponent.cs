@@ -1,7 +1,8 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthComponent : MonoBehaviour
+public class HealthComponent : MonoBehaviour, ILocalizable
 {
     [SerializeField] private float maxHealth = 100f;
     public float MaxHealth => maxHealth;
@@ -9,7 +10,7 @@ public class HealthComponent : MonoBehaviour
     public float CurrentHealth { get; private set; } = 0;
     public bool IsAlive { get; private set; } = true;
 
-    public event Action onHealthChanged;
+    public event Action OnHealthChanged;
     public event Action OnDied;
 
     public void Init(HealthData healthData)
@@ -44,7 +45,7 @@ public class HealthComponent : MonoBehaviour
     public void SetCurrentHealth(float value)
     {
         CurrentHealth = value;
-        onHealthChanged?.Invoke();
+        OnHealthChanged?.Invoke();
 
         if (ShouldDie()) {
             Die();
@@ -52,6 +53,16 @@ public class HealthComponent : MonoBehaviour
         else if (ShouldRevive()) {
             Revive();
         }
+    }
+
+    public Dictionary<string, string> GetLocalization()
+    {
+        return new Dictionary<string, string>()
+        {
+            { "currentHealth", Mathf.Ceil(CurrentHealth).ToString() },
+            { "maxHealth", Mathf.Ceil(MaxHealth).ToString() },
+            { "currentHealthPercent", MaxHealth > 0? Mathf.Ceil(CurrentHealth / MaxHealth * 100).ToString(): "0" },
+        };
     }
 
     private void Revive()

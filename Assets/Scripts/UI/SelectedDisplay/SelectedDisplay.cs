@@ -6,7 +6,6 @@ public abstract class SelectedDisplay : UIBehaviour
     [SerializeField] private GameObject content;
 
     private bool isSubscribed = false;
-    private SelectComponent selectComponent;
 
     protected override void Awake()
     {
@@ -83,16 +82,12 @@ public abstract class SelectedDisplay : UIBehaviour
 
     private void OnComponentSelected(SelectComponent selectComponent)
     {
-        this.selectComponent = selectComponent;
-
         TryHide(selectComponent);
         TryDisplay(selectComponent);
     }
 
     private void OnComponentDeselected(SelectComponent selectselectComponentd)
     {
-        selectComponent = null;
-
         TryHide(selectselectComponentd);
     }
 }

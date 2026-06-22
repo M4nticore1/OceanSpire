@@ -38,6 +38,13 @@
   "name_level": "{name} (Уровень {level})",
   "toolbox": "Интерактивное меню",
   "last_save": "Последнее сохранение",
+  "starvation": "Голодание",
+  "energy_shortage": "Энергодефицит",
+
+  "health": "Здоровье",
+  "health_current": "Здоровье {currentHealth}%",
+  "health_current_percent": "Здоровье {currentHealthPercent}%",
+  "health_current_max": "Здоровье {currentHealth}/{maxHealth}",
 
   "upgrade": "Улучшить",
   "upgrade_resources": "Ресурсы для улучшения",

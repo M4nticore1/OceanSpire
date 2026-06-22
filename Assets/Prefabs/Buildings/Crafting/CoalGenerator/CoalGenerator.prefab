@@ -138,15 +138,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948dda070484eea44ac9c5089a182b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerBuilding
+  buildingData: {fileID: 11400000, guid: 729d9660a6c906e4daee160193b3e157, type: 2}
+  buildingLevelsData:
+  - {fileID: 11400000, guid: 4bbb3a2a17e937e4ab3c5a716e539a8f, type: 2}
+  isRuined: 0
   constructionComponent: {fileID: 5184340577209235502}
   levelComponent: {fileID: 3623753502408224289}
   upgradeComponent: {fileID: 1543726248379608248}
   instanceId: {fileID: 4146996725171637188}
   workAudioSource: {fileID: 2175774227416732871}
-  buildingData: {fileID: 11400000, guid: 729d9660a6c906e4daee160193b3e157, type: 2}
-  buildingLevelsData:
-  - {fileID: 11400000, guid: 4bbb3a2a17e937e4ab3c5a716e539a8f, type: 2}
-  isRuined: 0
+  SpawnedConstruction: {fileID: 0}
   FloorIndex: 0
   PlaceIndex: 0
 --- !u!114 &-7227583769792038806
@@ -163,7 +164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionModule
   levelsData:
   - {fileID: 11400000, guid: 2b61ec27db2b0eb4481a6d2149707dc7, type: 2}
-  electricityConsumption: 0.1
+  electricityConsumption: 0
 --- !u!114 &1786585214154959172
 MonoBehaviour:
   m_ObjectHideFlags: 0

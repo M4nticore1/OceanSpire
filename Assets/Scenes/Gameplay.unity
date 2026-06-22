@@ -1844,6 +1844,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+--- !u!1 &160833739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 160833740}
+  - component: {fileID: 160833741}
+  m_Layer: 0
+  m_Name: StarvationNotificationController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &160833740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160833739}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1616675883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &160833741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160833739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22e8efa66fc5288478e494d3623494cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StarvationNotificationController
+  notificationsPanel: {fileID: 383697688}
+  notificationPrefab: {fileID: 4723193520140092988, guid: 1396744b18f380449b4ec88823c7d4c5, type: 3}
+  cityStorage: {fileID: 1388613268}
 --- !u!4 &164716819 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
@@ -4358,6 +4405,34 @@ PrefabInstance:
       propertyPath: itemDefinition
       value: 
       objectReference: {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
+    - target: {fileID: 3252033114757556854, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: changeColorType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3252033114757556854, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: useAmountColors
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3252033114757556854, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: enoughAmountColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3252033114757556854, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: enoughAmountColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3252033114757556854, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: enoughAmountColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3252033114757556854, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: notEnoughAmountColor.b
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3252033114757556854, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: notEnoughAmountColor.g
+      value: 0.35833335
+      objectReference: {fileID: 0}
     - target: {fileID: 3364798657196465612, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_BackGroundColor.a
       value: 1
@@ -4482,6 +4557,30 @@ PrefabInstance:
       propertyPath: 'disabledInteractions.Array.data[0]'
       value: 
       objectReference: {fileID: 1738036949}
+    - target: {fileID: 4127113368588066469, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127113368588066469, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127113368588066469, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127113368588066469, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127113368588066469, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4127113368588066469, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4250377236931291004, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -4497,6 +4596,34 @@ PrefabInstance:
     - target: {fileID: 4304867870686759735, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: useCityStorage
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4304867870686759735, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: changeColorType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4304867870686759735, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: useAmountColors
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4304867870686759735, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: enoughAmountColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4304867870686759735, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: enoughAmountColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4304867870686759735, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: enoughAmountColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4304867870686759735, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: notEnoughAmountColor.b
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4304867870686759735, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: notEnoughAmountColor.g
+      value: 0.35833335
       objectReference: {fileID: 0}
     - target: {fileID: 4363787726656235776, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4986,6 +5113,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c329fc6b1274d9e4ebfafc5fc91b64a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeedUpConstructionMenu
+--- !u!114 &383697688 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3591824754584164624, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+  m_PrefabInstance: {fileID: 383697685}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dac728f0f9065e344b102053677b64d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotificationsPanel
 --- !u!114 &383697690 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1274036015047312501, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
@@ -11901,9 +12039,9 @@ MonoBehaviour:
   cityStorage: {fileID: 1388613268}
   startItems:
   - definition: {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
-    amount: 100
+    amount: 0
   - definition: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
-    amount: 100
+    amount: 0
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     amount: 15000
   - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
@@ -12888,6 +13026,7 @@ Transform:
   - {fileID: 1013778940}
   - {fileID: 178192283}
   - {fileID: 512418805}
+  - {fileID: 1616675883}
   - {fileID: 1445600141}
   - {fileID: 1596085377}
   m_Father: {fileID: 0}
@@ -16097,6 +16236,39 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3264082960243944127, guid: 56a9005df137a8e4088488a174eade01, type: 3}
   m_PrefabInstance: {fileID: 1615336730}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1616675882
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1616675883}
+  m_Layer: 0
+  m_Name: Notifications
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1616675883
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1616675882}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 160833740}
+  - {fileID: 1923834356}
+  m_Father: {fileID: 1238355532}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1630705137 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4806550018059111172, guid: 6c5e90268744ad847ad81e73907eda27, type: 3}
@@ -16733,7 +16905,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee6c43b4297575d45b152b064b28e923, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPointsManager
-  CitizenBoatDocks: []
   wandererDockPoints:
   - {fileID: 1080517328}
   - {fileID: 1710163122}
@@ -18389,6 +18560,53 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c18bd5454c7fa947aeaae703c88205a, type: 3}
+--- !u!1 &1923834355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1923834356}
+  - component: {fileID: 1923834357}
+  m_Layer: 0
+  m_Name: EnergyNotificationController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1923834356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923834355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1616675883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1923834357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923834355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d220ec7909ad547aaf42739c59bacf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnergyShortageNotificationController
+  notificationsPanel: {fileID: 383697688}
+  notificationPrefab: {fileID: 4723193520140092988, guid: 680b4a7e833d1be479d7ed03c8fba350, type: 3}
+  cityStorage: {fileID: 1388613268}
 --- !u!1 &1925740695
 GameObject:
   m_ObjectHideFlags: 0
@@ -19697,7 +19915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HungerManager
   damagePerSecond: 0.1
-  damageFrequence: 5
+  damageFrequence: 10
 --- !u!1 &2055893609
 GameObject:
   m_ObjectHideFlags: 0

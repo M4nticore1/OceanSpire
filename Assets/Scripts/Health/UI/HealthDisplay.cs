@@ -10,7 +10,7 @@ public class HealthDisplay : MonoBehaviour
 
     [Header("Display")]
     [SerializeField] private GameObject content;
-    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private TextLocalizer healthTextLocalizer;
     [SerializeField] private Image bar;
     [SerializeField] private Gradient barGradient;
 
@@ -37,6 +37,7 @@ public class HealthDisplay : MonoBehaviour
     private void Start()
     {
         if (!content) return;
+        if (!health) return;
 
         float currentHealth = health.CurrentHealth;
         float maxHealth = health.MaxHealth;
@@ -77,7 +78,7 @@ public class HealthDisplay : MonoBehaviour
     private void OnHealthChanged()
     {
         TryToDisplay();
-        TryAssignHealth();
+        TryUpdateHealth();
         ResetVisibilityTime();
     }
 
@@ -117,34 +118,31 @@ public class HealthDisplay : MonoBehaviour
         currentVisibilityTime = 0;
     }
 
-    private void TryAssignHealth()
+    private void TryUpdateHealth()
     {
         if (!isDisplayed) return;
 
-        AssignHealth();
+        UpdateHealth();
     }
 
-    private void AssignHealth()
+    public void UpdateHealth()
     {
-        if (healthText) {
-            AssignHealthText();
+        if (healthTextLocalizer) {
+            UpdateHealthText();
         }
 
         if (bar) {
-            AssignHealthBar();
+            UpdateHealthBar();
         }
     }
 
-    private void AssignHealthText()
+    private void UpdateHealthText()
     {
-        float currentHealth = health.CurrentHealth;
-        float maxHealth = health.MaxHealth;
-
-        string text = math.ceil(currentHealth).ToString() + "/" + maxHealth.ToString();
-        healthText.SetText(text);
+        healthTextLocalizer.SetPlaceHolderLocalization(health);
+        healthTextLocalizer.UpdateText();
     }
 
-    private void AssignHealthBar()
+    private void UpdateHealthBar()
     {
         float currentHealth = health.CurrentHealth;
         float maxHealth = health.MaxHealth;
@@ -157,14 +155,18 @@ public class HealthDisplay : MonoBehaviour
 
     private void Subscribe()
     {
-        health.onHealthChanged += OnHealthChanged;
+        if (!health) return;
+
+        health.OnHealthChanged += OnHealthChanged;
         health.OnDied += OnDied;
         isSubscribed = true;
     }
 
     private void Unsubscribe()
     {
-        health.onHealthChanged -= OnHealthChanged;
+        if (!health) return;
+
+        health.OnHealthChanged -= OnHealthChanged;
         health.OnDied -= OnDied;
         isSubscribed = false;
     }

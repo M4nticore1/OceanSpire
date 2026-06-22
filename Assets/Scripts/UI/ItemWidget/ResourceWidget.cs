@@ -4,6 +4,12 @@ using TMPro;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
+public enum ItemWidgetColorType
+{
+    LessThanMax,
+    Zero
+}
+
 public class ResourceWidget : UIBehaviour
 {
     [Header("Main")]
@@ -22,6 +28,7 @@ public class ResourceWidget : UIBehaviour
     [SerializeField] private Image resourceAmountBar;
 
     [Header("Color")]
+    [SerializeField] private ItemWidgetColorType changeColorType = ItemWidgetColorType.LessThanMax;
     [SerializeField] private bool useAmountColors = false;
     [SerializeField] private Color enoughAmountColor = Color.green;
     [SerializeField] private Color notEnoughAmountColor = Color.red;
@@ -65,6 +72,19 @@ public class ResourceWidget : UIBehaviour
         itemDefinition = definition;
         UpdateItemName();
         UpdateIcon();
+    }
+
+    protected virtual void UpdateAmountAndLimit()
+    {
+        if (Amounts == null) return;
+
+        int amountsSum = CalculateAmountsSum();
+        if (Limit != null) {
+            SetAmountText(amountsSum, Limit.Amount);
+        }
+        else {
+            SetAmountText(amountsSum);
+        }
     }
 
     public void AddAmount(IItemAmount amount)
@@ -158,30 +178,17 @@ public class ResourceWidget : UIBehaviour
         itemNameText.UpdateText();
     }
 
-    protected virtual void UpdateAmountAndLimit()
-    {
-        if (Amounts == null) return;
-
-        int amountsSum = CalculateAmountsSum();
-        if (Limit != null) {
-            SetAmountText(amountsSum, Limit.Amount);
-        }
-        else {
-            SetAmountText(amountsSum);
-        }
-    }
-
     private void TryUpdateAmountColor()
     {
         if (!useAmountColors) return;
 
         int amountsSum = CalculateAmountsSum();
-        if (Amounts == null || Limit == null || amountsSum >= Limit.Amount) {
-            SetColor(enoughAmountColor);
-        }
-        else {
-            SetColor(notEnoughAmountColor);
-        }
+
+        var enough = changeColorType == ItemWidgetColorType.LessThanMax ? Amounts == null || Limit == null || amountsSum >= Limit.Amount :
+            changeColorType == ItemWidgetColorType.Zero ? Amounts == null || Limit == null || amountsSum > 0 :
+            false;
+
+        SetColor(enough ? enoughAmountColor : notEnoughAmountColor);
     }
 
     private int CalculateAmountsSum()
@@ -194,14 +201,14 @@ public class ResourceWidget : UIBehaviour
         return sum;
     }
 
-    private void OnAmountChanged()
+    private void OnAmountChanged(int amount)
     {
         UpdateAmountAndLimit();
         TryUpdateResourceBar();
         TryUpdateAmountColor();
     }
 
-    private void OnLimitChanged()
+    private void OnLimitChanged(int amount)
     {
         UpdateAmountAndLimit();
     }

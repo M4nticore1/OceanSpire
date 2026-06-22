@@ -25,7 +25,7 @@ public class ItemInstance : IItemAmount
 
     public ItemStack Stack { get; private set; }
 
-    public event Action OnAmountChanged;
+    public event Action<int> OnAmountChanged;
 
     public ItemInstance(ItemDefinition definition)
     {
@@ -35,7 +35,7 @@ public class ItemInstance : IItemAmount
     public int SetAmount(int amount)
     {
         this.amount = amount;
-        OnAmountChanged?.Invoke();
+        OnAmountChanged?.Invoke(amount);
 
         return this.amount;
     }

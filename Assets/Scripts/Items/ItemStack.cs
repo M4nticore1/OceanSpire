@@ -27,7 +27,7 @@ public class ItemStack : IItemAmount
 
     public List<IItemAmount> ItemAmounts = new();
 
-    public event Action OnAmountChanged;
+    public event Action<int> OnAmountChanged;
 
     public ItemStack(ItemStackEnum stackEnum)
     {
@@ -70,6 +70,6 @@ public class ItemStack : IItemAmount
     private void SetLimit(int value)
     {
         amount = value;
-        OnAmountChanged?.Invoke();
+        OnAmountChanged?.Invoke(value);
     }
 }

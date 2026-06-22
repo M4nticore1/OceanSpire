@@ -38,6 +38,13 @@
   "name_level": "{name} (Level {level})",
   "toolbox": "Toolbox",
   "last_save": "Last save",
+  "starvation": "Starvation",
+  "energy_shortage": "Energy shortage",
+
+  "health": "Health",
+  "health_current": "Health {currentHealth}",
+  "health_current_percent": "Health {currentHealthPercent}%",
+  "health_current_max": "Health {currentHealth}/{maxHealth}",
 
   "upgrade": "Upgrade",
   "upgrade_resource": "Upgrade resources",
