@@ -1,5 +1,4 @@
 using System;
-using System.Security.Cryptography;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
@@ -154,20 +153,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         selectGroup.RemoveButton(this);
     }
 
-    public void Tick()
-    {
-        if (!gameObject.activeInHierarchy) return;
-        if (!enabled) return;
-
-        if (isAnimating) {
-            ApplyInteractionAlpha();
-        }
-
-        if (cancelPressWhenMoving && IsPressed && (pressedButtonPosition - transform.position).sqrMagnitude >= 1f) {
-            SetState(CustomButtonState.Idle);
-        }
-    }
-
 #if UNITY_EDITOR
     protected override void OnValidate()
     {
@@ -192,6 +177,20 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 #endif
+
+    public void Tick()
+    {
+        if (!gameObject.activeInHierarchy) return;
+        if (!enabled) return;
+
+        if (isAnimating) {
+            ApplyInteractionAlpha();
+        }
+
+        if (cancelPressWhenMoving && IsPressed && (pressedButtonPosition - transform.position).sqrMagnitude >= 1f) {
+            SetState(CustomButtonState.Idle);
+        }
+    }
 
     // Enable
     private void Enable()
@@ -308,15 +307,24 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
             }
         }
         else if (!IsIdle) {
-            if (isSelectable) return;
+            //if (isSelectable) return;
 
             var go = PointerUtils.GetRaycastUIResult().gameObject;
             var button = go ? go.GetComponent<CustomButton>() : null;
 
-            if (button && (!selectGroup || button.selectGroup == selectGroup) && !deselectOnOutsideClick)
-                SetState(CustomButtonState.Idle);
-            else if (deselectOnOutsideClick && !button)
-                SetState(CustomButtonState.Idle);
+            if (deselectOnOutsideClick) {
+                if (!go || go != gameObject) {
+                    SetState(CustomButtonState.Idle);
+                }
+            }
+            //else {
+
+            //}
+
+            //if (button && (!selectGroup || button.selectGroup == selectGroup) && !deselectOnOutsideClick)
+            //    SetState(CustomButtonState.Idle);
+            //else if (deselectOnOutsideClick && !button)
+            //    SetState(CustomButtonState.Idle);
         }
     }
 

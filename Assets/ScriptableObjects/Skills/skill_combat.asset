@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f774e7fb366e6e47aa3b1e535887b26, type: 3}
   m_Name: skill_combat
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
-  skillId: 6
+  skillId: 7
   bonusPerLevel: 0.1
   xpGainRate: 0.1
-  localizeItem: {fileID: 11400000, guid: 7059b64e6f5d707418996db2806285e8, type: 2}
+  skillNameLocalization: {fileID: 11400000, guid: 7059b64e6f5d707418996db2806285e8, type: 2}
+  skillDescriptionLocalization: {fileID: 11400000, guid: 2a42f96cc05820947be6244e4e7b8cce, type: 2}

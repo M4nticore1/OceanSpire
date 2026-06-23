@@ -85,7 +85,6 @@ public abstract class BuildingMenu : UIBehaviour
 
         ClearWidgets();
         CreateWidgets(building);
-        //UpdateTargetName(building);
         UpdateIcon(building);
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);
@@ -112,12 +111,6 @@ public abstract class BuildingMenu : UIBehaviour
             spawnedResourceWidgets.RemoveAt(i);
         }
     }
-
-    //private void UpdateTargetName(Building building)
-    //{
-    //    targetLocalizer.SetPlaceHolderLocalization(building);
-    //    targetLocalizer.UpdateText();
-    //}
 
     private void OnClosed()
     {

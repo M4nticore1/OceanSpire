@@ -41,10 +41,15 @@ public class PopulationItemWidget : ResourceWidget
     {
         if (!ItemDefinition) return;
 
-        int amount = 0;
         var limit = CityStorage.Instance.Inventory.GetStack(ItemDefinition.Stack);
         SetLimit(limit);
 
+        SetAmountText(CalculateAmountsSum(), limit.Amount);
+    }
+
+    protected override int CalculateAmountsSum()
+    {
+        int amount = 0;
         foreach (var citizen in CreaturesManager.Instance.Citizens) {
             if (citizen.IsEvicted) continue;
             if (!citizen.HealthComponent.IsAlive) continue;
@@ -52,7 +57,7 @@ public class PopulationItemWidget : ResourceWidget
             amount++;
         }
 
-        SetAmountText(amount, limit.Amount);
+        return amount;
     }
 
     private void OnHumanAdded(Human human)

@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f774e7fb366e6e47aa3b1e535887b26, type: 3}
-  m_Name: skill_athletics
+  m_Name: skill_boating
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
-  skillId: 7
+  skillId: 4
   bonusPerLevel: 0.1
   xpGainRate: 0.1
-  localizeItem: {fileID: 11400000, guid: cc85cc844d90c5c4ab8a4cc8d47f8eab, type: 2}
+  skillNameLocalization: {fileID: 11400000, guid: cc85cc844d90c5c4ab8a4cc8d47f8eab, type: 2}
+  skillDescriptionLocalization: {fileID: 11400000, guid: 8584959f44c81204d8d89d66dd70b981, type: 2}

@@ -5,8 +5,8 @@ public class StarvationSystem : MonoBehaviour
     public static StarvationSystem Instance { get; private set; }
 
     [SerializeField] private float damagePerSecond = 0.1f;
-
     [SerializeField] private float damageFrequence = 5f;
+
     private float currentTime = 0f;
 
     public bool IsUnderStarvation { get; private set; } = false;
@@ -40,6 +40,8 @@ public class StarvationSystem : MonoBehaviour
     private void DamageCitizens()
     {
         foreach (var citizen in CreaturesManager.Instance.Citizens) {
+            if (!citizen.IsCitizenAvaliable()) continue;
+
             citizen.HealthComponent.RemoveHealth(damagePerSecond * damageFrequence);
         }
     }

@@ -87,6 +87,16 @@ public class ResourceWidget : UIBehaviour
         }
     }
 
+    protected virtual int CalculateAmountsSum()
+    {
+        int sum = 0;
+        foreach (var amount in Amounts) {
+            sum += amount.Amount;
+        }
+
+        return sum;
+    }
+
     public void AddAmount(IItemAmount amount)
     {
         if (Amounts.Contains(amount)) return;
@@ -189,16 +199,6 @@ public class ResourceWidget : UIBehaviour
             false;
 
         SetColor(enough ? enoughAmountColor : notEnoughAmountColor);
-    }
-
-    private int CalculateAmountsSum()
-    {
-        int sum = 0;
-        foreach (var amount in Amounts) {
-            sum += amount.Amount;
-        }
-
-        return sum;
     }
 
     private void OnAmountChanged(int amount)

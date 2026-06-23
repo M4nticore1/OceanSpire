@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f774e7fb366e6e47aa3b1e535887b26, type: 3}
   m_Name: skill_medicine
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
-  skillId: 4
+  skillId: 5
   bonusPerLevel: 0.1
   xpGainRate: 0.1
-  localizeItem: {fileID: 11400000, guid: 0d15ae27a591cfc4494aa74a24d1f8dc, type: 2}
+  skillNameLocalization: {fileID: 11400000, guid: 0d15ae27a591cfc4494aa74a24d1f8dc, type: 2}
+  skillDescriptionLocalization: {fileID: 11400000, guid: da5f35d9860595a4784af1bf0d464b13, type: 2}

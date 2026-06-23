@@ -15,4 +15,5 @@ MonoBehaviour:
   skillId: 3
   bonusPerLevel: 0.1
   xpGainRate: 0.1
-  localizeItem: {fileID: 11400000, guid: 208c29e9f04e8d64386b6c4c926959c0, type: 2}
+  skillNameLocalization: {fileID: 11400000, guid: 208c29e9f04e8d64386b6c4c926959c0, type: 2}
+  skillDescriptionLocalization: {fileID: 11400000, guid: ebe03faa4bb4fe9459622bee58d0712e, type: 2}

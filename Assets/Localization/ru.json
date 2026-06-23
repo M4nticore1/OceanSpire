@@ -40,6 +40,7 @@
   "last_save": "Последнее сохранение",
   "starvation": "Голодание",
   "energy_shortage": "Энергодефицит",
+  "coming_soon": "Скоро",
 
   "health": "Здоровье",
   "health_current": "Здоровье {currentHealth}%",
@@ -121,10 +122,19 @@
   "skill_farming": "Фермерство",
   "skill_electrics": "Электрика",
   "skill_crafting": "Крафтинг",
+  "skill_boating": "Плавание",
   "skill_medicine": "Медицина",
   "skill_science": "Наука",
   "skill_combat": "Сражение",
-  "skill_athletics": "Атлетика",
+
+  "skill_description_cooking": "Кулинарные изыски из минимума ресурсов. Ускоряет приготовление пищи на {skillBonus}.",
+  "skill_description_farming": "Секреты бережного ухода за почвой. Ускоряет созревание урожая на {skillBonus}.",
+  "skill_description_electrics": "Понимание ампер и вольт. Повышает эффективность генерации энергии на {skillBonus}.",
+  "skill_description_crafting": "Ловкие руки и знание чертежей. Ускоряет создание предметов и ресурсов на {skillBonus}.",
+  "skill_description_boating": "Идеальное чувство течения и ветра. Увеличивает скорость хода лодки на {skillBonus}.",
+  "skill_description_medicine": "Знание анатомии и первой помощи. Ускоряет восстановление здоровья на {skillBonus}.",
+  "skill_description_science": "Острый ум и тяга к открытиям. Увеличивает скорость изучения новых технологий на {skillBonus}.",
+  "skill_description_combat": "Хладнокровие в бою и твердая рука. Повышает наносимый урон на {skillBonus} ко всем атакам.",
 
   "task_daily_tasks": "Ежедневные задания",
   "task_update_time": "Задания будут обновлены через {updateTime}",

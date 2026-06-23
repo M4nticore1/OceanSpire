@@ -3,22 +3,22 @@ using UnityEngine.Audio;
 
 public class BuildingAudioSystem : MonoBehaviour
 {
-    [SerializeField] private AudioMixerGroup mixerGoup;
+    [SerializeField] private AudioMixerGroup mixerGroup;
     [SerializeField] private AudioClip[] buildingStartedClips;
     [SerializeField] private AudioClip[] buildingFinishedClips;
     [SerializeField] private AudioClip[] buildingDemolishedClips;
 
     private void OnEnable()
     {
-        Building.OnBuildingUpgradeStarted += OnBuildingConstructionStarted;
-        Building.OnBuildingUpgradeCompleted += OnBuildingUpgradeCompleted;
+        Building.OnBuildingConstructionStarted += OnBuildingConstructionStarted;
+        Building.OnBuildingConstructionCompleted += OnBuildingUpgradeCompleted;
         Building.OnBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
-        Building.OnBuildingUpgradeStarted -= OnBuildingConstructionStarted;
-        Building.OnBuildingUpgradeCompleted -= OnBuildingUpgradeCompleted;
+        Building.OnBuildingConstructionStarted -= OnBuildingConstructionStarted;
+        Building.OnBuildingConstructionCompleted -= OnBuildingUpgradeCompleted;
         Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 
@@ -26,21 +26,21 @@ public class BuildingAudioSystem : MonoBehaviour
     {
         if (!ShouldPlay()) return;
 
-        AudioUtils.PlaySFX(buildingStartedClips, mixerGoup);
+        AudioUtils.PlaySFX(buildingStartedClips, mixerGroup);
     }
 
     private void OnBuildingUpgradeCompleted(Building building)
     {
         if (!ShouldPlay()) return;
 
-        AudioUtils.PlaySFX(buildingFinishedClips, mixerGoup);
+        AudioUtils.PlaySFX(buildingFinishedClips, mixerGroup);
     }
 
     private void OnBuildingDemolished(Building building)
     {
         if (!ShouldPlay()) return;
 
-        AudioUtils.PlaySFX(buildingDemolishedClips, mixerGoup);
+        AudioUtils.PlaySFX(buildingDemolishedClips, mixerGroup);
     }
 
     private bool ShouldPlay()

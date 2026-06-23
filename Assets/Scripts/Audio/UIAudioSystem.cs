@@ -3,7 +3,7 @@ using UnityEngine.Audio;
 
 public class UIAudioSystem : MonoBehaviour
 {
-    [SerializeField] private AudioMixerGroup mixerGoup;
+    [SerializeField] private AudioMixerGroup mixerGroup;
     [SerializeField] private AudioClip[] releaseClips;
 
     private void OnEnable()
@@ -18,6 +18,6 @@ public class UIAudioSystem : MonoBehaviour
 
     private void OnButtonReleased(CustomButton button)
     {
-        AudioUtils.PlaySFX(releaseClips, mixerGoup);
+        AudioUtils.PlaySFX(releaseClips, mixerGroup);
     }
 }

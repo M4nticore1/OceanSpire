@@ -153,8 +153,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -318,6 +318,7 @@ GameObject:
   - component: {fileID: 2515736690825686925}
   - component: {fileID: 2380179548661223750}
   - component: {fileID: 5014548701621932497}
+  - component: {fileID: 8350660627902098019}
   m_Layer: 5
   m_Name: ActionButton
   m_TagString: Untagged
@@ -366,7 +367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.29803923, g: 0.64705884, b: 1, a: 1}
+  m_Color: {r: 0.9019608, g: 0.72901964, b: 0.49607843, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -407,19 +408,19 @@ MonoBehaviour:
   stateTransitionTime: 0.2
   state: 0
   idleState:
-    bodyColor: {r: 0.29803923, g: 0.64705884, b: 1, a: 1}
+    bodyColor: {r: 0.9019608, g: 0.72901964, b: 0.49607843, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    bodyColor: {r: 0.39999998, g: 0.698324, b: 1, a: 1}
+    bodyColor: {r: 0.95, g: 0.7682609, b: 0.5204348, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    bodyColor: {r: 0.5, g: 0.74860334, b: 1, a: 1}
+    bodyColor: {r: 1, g: 0.8086957, b: 0.54782605, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
@@ -431,7 +432,7 @@ MonoBehaviour:
     contentColorHolder: {fileID: 0}
     scale: 1.05
   disabledState:
-    bodyColor: {r: 0.2937255, g: 0.35433552, b: 0.41960785, a: 1}
+    bodyColor: {r: 0.6509804, g: 0.5689569, b: 0.45568627, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
@@ -454,6 +455,19 @@ MonoBehaviour:
   OnUnhovered:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8350660627902098019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817781159606625379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23345ccd9f026a47b406acbe6ce7b15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RaidDisablerButton
+  button: {fileID: 5014548701621932497}
 --- !u!1 &3596092969989892093
 GameObject:
   m_ObjectHideFlags: 0

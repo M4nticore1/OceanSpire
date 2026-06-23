@@ -1,15 +1,35 @@
+using System;
 using TMPro;
 using UnityEngine;
 
 public class SkillWidget : MonoBehaviour
 {
-    private SkillInstance skill;
+    public SkillInstance Skill { get; private set; }
 
+    [SerializeField] private CustomButton button;
     [SerializeField] private TextLocalizer skillName;
     [SerializeField] private TextMeshProUGUI skillBonus;
 
+    [SerializeField] private RectTransform descriptionTransform;
+    public RectTransform DescriptionTransform => descriptionTransform;
+
     [SerializeField] private Color normalColor;
     [SerializeField] private Color highlightedColor;
+
+    public static event Action<SkillWidget> OnSkillWidgetSelected;
+    public static event Action<SkillWidget> OnSkillWidgetDeselected;
+
+    private void OnEnable()
+    {
+        button.OnSelected.AddListener(OnButtonSelected);
+        button.OnDeselected.AddListener(OnButtonDeselected);
+    }
+
+    private void OnDisable()
+    {
+        button.OnSelected.RemoveListener(OnButtonSelected);
+        button.OnDeselected.RemoveListener(OnButtonDeselected);
+    }
 
     public void Init(SkillInstance skill)
     {
@@ -18,7 +38,7 @@ public class SkillWidget : MonoBehaviour
             return;
         }
 
-        this.skill = skill;
+        this.Skill = skill;
         UpdateSkillName();
         UpdateSkillBonus();
         UpdateColor();
@@ -26,21 +46,21 @@ public class SkillWidget : MonoBehaviour
 
     private void UpdateSkillName()
     {
-        var item = skill.skillDefinition.LocalizeItem;
+        var item = Skill.SkillDefinition.SkillNameLocalization;
         skillName.SetLocalizationItem(item);
         skillName.UpdateText();
     }
 
     private void UpdateSkillBonus()
     {
-        float bonus = skill.GetBonus() * 100;
+        float bonus = Skill.GetBonus() * 100;
         string text = $"({GetBonusText()})";
         skillBonus.SetText(text);
     }
 
     private void UpdateColor()
     {
-        float alpha = (float)(skill.currentLevel - 1) / (SkillDefinition.maxSkillLevel / SkillsFactory.GetLevelsCount());
+        float alpha = (float)(Skill.currentLevel - 1) / (SkillDefinition.maxSkillLevel / SkillsFactory.GetLevelsCount());
 
         var color = Color.Lerp(normalColor, highlightedColor, alpha);
         string hex = ColorUtility.ToHtmlStringRGBA(color);
@@ -52,9 +72,19 @@ public class SkillWidget : MonoBehaviour
         skillBonus.SetText(newText);
     }
 
+    private void OnButtonSelected()
+    {
+        OnSkillWidgetSelected?.Invoke(this);
+    }
+
+    private void OnButtonDeselected()
+    {
+        OnSkillWidgetDeselected?.Invoke(this);
+    }
+
     private string GetBonusText()
     {
-        string bonus = (skill.GetBonus() * 100).ToString();
+        string bonus = (Skill.GetBonus() * 100).ToString();
         string text = $"+{bonus}%";
 
         return text;

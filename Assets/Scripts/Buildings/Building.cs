@@ -74,6 +74,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public static event Action<Building> OnBuildingUpgradeStarted;
     public static event Action<Building> OnBuildingUpgradeCompleted;
 
+    public static event Action<Building> OnBuildingConstructionStarted;
+    public static event Action<Building> OnBuildingConstructionCompleted;
+
     public static event Action<Building> OnBuildingLevelChanged;
 
     public static event Action<Building> OnBuildingSelected;
@@ -365,12 +368,12 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private void HandleConstructionStarted()
     {
-
+        OnBuildingConstructionStarted?.Invoke(this);
     }
 
     private void HandleConstructionCompleted()
     {
-
+        OnBuildingConstructionCompleted?.Invoke(this);
     }
 
     private void HandleUpgradeStarted()

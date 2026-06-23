@@ -1,20 +1,21 @@
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class SkillInstance
+public class SkillInstance : ILocalizable
 {
-    public SkillDefinition skillDefinition { get; private set; }
+    public SkillDefinition SkillDefinition { get; private set; }
     public int currentLevel { get; private set; } = 1;
     public float currentXp { get; private set; } = 0f;
 
     public SkillInstance(SkillDefinition definition)
     {
-        skillDefinition = definition;
+        SkillDefinition = definition;
     }
 
     public void AddExperience(float deltaTime)
     {
-        currentXp += skillDefinition.XpGainRate * deltaTime;
+        currentXp += SkillDefinition.XpGainRate * deltaTime;
 
         if (ShouldLevelUp()) {
             LevelUp();
@@ -39,8 +40,16 @@ public class SkillInstance
 
     public float GetBonus()
     {
-        float bonus = skillDefinition.BonusPerLevel * (currentLevel - 1);
+        float bonus = SkillDefinition.BonusPerLevel * (currentLevel - 1);
         return bonus;
+    }
+
+    public Dictionary<string, string> GetLocalization()
+    {
+        return new Dictionary<string, string>()
+        {
+            {"skillBonus", $"<color=green>{GetBonus() * 100}%</color>"}
+        };
     }
 
     private void ResetCurrentExperience()

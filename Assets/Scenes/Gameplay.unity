@@ -1888,8 +1888,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22e8efa66fc5288478e494d3623494cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarvationNotificationController
-  notificationsPanel: {fileID: 383697688}
   notificationPrefab: {fileID: 4723193520140092988, guid: 1396744b18f380449b4ec88823c7d4c5, type: 3}
+  notificationsPanel: {fileID: 383697688}
   cityStorage: {fileID: 1388613268}
 --- !u!4 &164716819 stripped
 Transform:
@@ -13830,6 +13830,7 @@ Transform:
   - {fileID: 394561665}
   - {fileID: 1220750728}
   - {fileID: 2079402389}
+  - {fileID: 1455395273}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1325339854
@@ -14681,6 +14682,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
   m_PrefabInstance: {fileID: 1035593556}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1455395272
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1455395273}
+  - component: {fileID: 1455395274}
+  m_Layer: 0
+  m_Name: SkillDescriptionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1455395273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455395272}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1455395274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455395272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb9de4321be4e0140890bc6ff4738702, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillDescriptionManager
+  skillDescriptionWidgetPrefab: {fileID: 1851082066680436668, guid: 7c128759e5a2a8342aefcf61cae9e0a6, type: 3}
 --- !u!114 &1458649859 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3329064454774493816, guid: 832db7892f1c7104a8a0fc9124ae1486, type: 3}
@@ -18604,8 +18650,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d220ec7909ad547aaf42739c59bacf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnergyShortageNotificationController
-  notificationsPanel: {fileID: 383697688}
   notificationPrefab: {fileID: 4723193520140092988, guid: 680b4a7e833d1be479d7ed03c8fba350, type: 3}
+  notificationsPanel: {fileID: 383697688}
   cityStorage: {fileID: 1388613268}
 --- !u!1 &1925740695
 GameObject:
@@ -22701,10 +22747,6 @@ PrefabInstance:
     - target: {fileID: 4199834856623929239, guid: c9ca0f298cb6b9146a09c23469074ca3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 6419733973877320630, guid: c9ca0f298cb6b9146a09c23469074ca3, type: 3}
-      propertyPath: entranceTransform
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6838095890116239261, guid: c9ca0f298cb6b9146a09c23469074ca3, type: 3}
       propertyPath: m_LocalPosition.x

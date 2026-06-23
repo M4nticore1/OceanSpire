@@ -40,6 +40,7 @@
   "last_save": "Last save",
   "starvation": "Starvation",
   "energy_shortage": "Energy shortage",
+  "coming_soon": "Coming Soon",
 
   "health": "Health",
   "health_current": "Health {currentHealth}",
@@ -47,7 +48,7 @@
   "health_current_max": "Health {currentHealth}/{maxHealth}",
 
   "upgrade": "Upgrade",
-  "upgrade_resource": "Upgrade resources",
+  "upgrade_resources": "Upgrade resources",
 
   "raid": "Raid",
   "raid_under_raid": "Your city is under raid!",
@@ -121,10 +122,19 @@
   "skill_farming": "Farming",
   "skill_electrics": "Electrics",
   "skill_crafting": "Crafring",
+  "skill_boating": "Athletics",
   "skill_medicine": "Medicine",
   "skill_science": "Science",
   "skill_combat": "Combat",
-  "skill_athletics": "Athletics",
+
+  "skill_description_cooking": "Culinary mastery from minimal resources. Increases cooking speed by {skillBonus}.",
+  "skill_description_farming": "Secrets of gentle soil care. Accelerates crop growth and maturation by {skillBonus}.",
+  "skill_description_electrics": "A deep understanding of amps and volts. Boosts power generation efficiency by {skillBonus}.",
+  "skill_description_crafting": "Deft hands and blueprint expertise. Speeds up item and resource crafting by {skillBonus}.",
+  "skill_description_boating": "Flawless reading of currents and winds. Increases boat movement speed by {skillBonus}.",
+  "skill_description_medicine": "Knowledge of anatomy and emergency care. Accelerates health recovery speed by {skillBonus}.",
+  "skill_description_science": "A sharp mind driven by discovery. Accelerates tech research progress by {skillBonus}.",
+  "skill_description_combat": "Composure in battle and a steady grip. Increases overall damage output by {skillBonus}.",
 
   "task_daily_tasks": "Daily tasks",
   "task_update_time": "The tasks will be updated in {updateTime}",

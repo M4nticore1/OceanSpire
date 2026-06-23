@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DemolishBuildingMenu : BuildingMenu
 {
@@ -9,8 +8,6 @@ public class DemolishBuildingMenu : BuildingMenu
     {
         if (!base.TrySubscribe()) return false;
 
-        raidManager.OnRaidStarted += OnRaidStarted;
-
         return true;
     }
 
@@ -18,14 +15,12 @@ public class DemolishBuildingMenu : BuildingMenu
     {
         if (!base.TryUnsubscribe()) return false;
 
-        raidManager.OnRaidStarted -= OnRaidStarted;
-
         return true;
     }
 
     protected override void OnOpened(Building building)
     {
-        ActionButton.SetState(raidManager.IsUnderRaid ? CustomButtonState.Disabled : CustomButtonState.Idle);
+
     }
 
     protected override void OnAction(Building building)
@@ -50,10 +45,5 @@ public class DemolishBuildingMenu : BuildingMenu
     protected override void UpdateIcon(Building building)
     {
         BuildingImage.sprite = building.LevelData.BuildingThumb;
-    }
-
-    private void OnRaidStarted()
-    {
-        ActionButton.SetState(CustomButtonState.Disabled);
     }
 }

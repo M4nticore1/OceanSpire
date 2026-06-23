@@ -27,7 +27,7 @@ public class SkillsData
         for (int i = 0; i < count; i++) {
             SkillId skillId = (SkillId)Enum.GetValues(typeof(SkillId)).GetValue(i);
 
-            int id = (int)skillsComponent.GetSkill(skillId).skillDefinition.SkillId;
+            int id = (int)skillsComponent.GetSkill(skillId).SkillDefinition.SkillId;
             int level = skillsComponent.GetSkill(skillId).currentLevel;
             float xp = skillsComponent.GetSkill(skillId).currentXp;
 

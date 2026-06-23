@@ -363,7 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4142f18492561e642a71e9d80747ab62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillsPanel
-  skillWidgetPrefab: {fileID: 2430878040155571105, guid: 70e21833b096f4c47a2c578fc7257f50, type: 3}
+  skillWidgetPrefab: {fileID: 8915270229867174409, guid: 221b4b93096fb154bbd7efc53b09038c, type: 3}
   layoutGroup: {fileID: 388670184927767880}
 --- !u!1 &5686957945929870805
 GameObject:

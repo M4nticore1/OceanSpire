@@ -10,5 +10,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1b08574c7d3f7fc4691054c0a840d9f1, type: 3}
-  m_Name: skill_athletics
+  m_Name: skill_description_electrics
   m_EditorClassIdentifier: Assembly-CSharp::LocalizationItem

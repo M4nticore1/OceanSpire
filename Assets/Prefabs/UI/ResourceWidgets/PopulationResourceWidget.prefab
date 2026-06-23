@@ -339,9 +339,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PopolationItemWidget
   itemDefinition: {fileID: 11400000, guid: 550b2a9af4e53db4990bef7a9fceb5fa, type: 2}
-  resourceImage: {fileID: 5506560826875336346}
+  useLimit: 0
+  itemNameText: {fileID: 0}
   resourceAmountText: {fileID: 4847488678628452257}
+  resourceImage: {fileID: 5506560826875336346}
   resourceAmountBar: {fileID: 0}
-  useAmountColors: 0
-  enoughAmountColor: {r: 0, g: 1, b: 0, a: 1}
-  notEnoughAmountColor: {r: 1, g: 0, b: 0, a: 1}
+  changeColorType: 1
+  useAmountColors: 1
+  enoughAmountColor: {r: 1, g: 1, b: 1, a: 1}
+  notEnoughAmountColor: {r: 1, g: 0.3, b: 0.3, a: 1}

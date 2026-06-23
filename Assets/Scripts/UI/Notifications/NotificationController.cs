@@ -2,10 +2,10 @@ using UnityEngine;
 
 public abstract class NotificationController : MonoBehaviour
 {
+    [SerializeField] private GameObject notificationPrefab;
+
     [SerializeField] private NotificationsPanel notificationsPanel;
     public NotificationsPanel NotificationsPanel => notificationsPanel;
-
-    [SerializeField] private GameObject notificationPrefab;
 
     private GameObject spawnedNotification;
     private bool isSubscribed;
