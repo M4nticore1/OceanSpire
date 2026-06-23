@@ -16,6 +16,9 @@ public class BoatDefinition : ScriptableObject
     [SerializeField] private string boatIdName = "";
     public string BoatIdName => boatIdName;
 
+    [SerializeField] private float boatSpeed = 1;
+    public float BoatSpeed => boatSpeed;
+
     [SerializeField] private LocalizationItem nameLocalization;
     public LocalizationItem NameLocalization => nameLocalization;
 

@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 6306187827067608498}
   - component: {fileID: 4463480740995804658}
   - component: {fileID: 8122635706453091689}
+  - component: {fileID: 6679614601082950428}
   - component: {fileID: 2423519319514539946}
   - component: {fileID: 9149124761615220950}
   m_Layer: 0
@@ -227,6 +228,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
+--- !u!114 &6679614601082950428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9194760719431650583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afede4afcb886824085797bdb3bef33a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoatingSkillAdapter
+  skillId: 4
+  boat: {fileID: 8520330495291878649}
 --- !u!195 &2423519319514539946
 NavMeshAgent:
   m_ObjectHideFlags: 0

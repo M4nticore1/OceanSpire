@@ -125,7 +125,7 @@ public class BoatRider : MonoBehaviour
         SetRidingBoat(boat);
 
         movement.SetAgentEnabled(false);
-        RidingBoat.SetCurrentRider(this);
+        boat.SetCurrentRider(this);
 
         transform.position = boat.SeatSlot.position;
         transform.rotation = boat.SeatSlot.rotation;

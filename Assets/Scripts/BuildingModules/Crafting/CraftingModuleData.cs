@@ -13,7 +13,7 @@ public class CraftingModuleData
 
         return new CraftingModuleData()
         {
-            CurrentCraftId = craftingModule.CurrentProductingItemIndex,
+            CurrentCraftId = craftingModule.GetIndexOfCurrentCraftItem(),
             CurrentCraft = craftingModule.CurrentCraftItem != null ? CraftItemData.Create(craftingModule.CurrentCraftItem) : CraftItemData.Default(),
         };
     }

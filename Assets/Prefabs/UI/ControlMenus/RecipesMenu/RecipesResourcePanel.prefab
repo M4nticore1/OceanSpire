@@ -859,3 +859,4 @@ MonoBehaviour:
   progressBar: {fileID: 1497012999590979100}
   producedResourceSlot: {fileID: 7372219914452450961}
   consumedResourcesSlot: {fileID: 5974322526356385371}
+  bonusColor: {r: 0.39999998, g: 1, b: 0.39999998, a: 1}

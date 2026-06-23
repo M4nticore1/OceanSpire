@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public static class PathFinder
@@ -39,13 +40,18 @@ public static class PathFinder
     {
         TowerBuilding targetBuilding = null;
 
-        for (int i = 0; i < BuildingsManager.Instance.BuiltFloors.Count; i++) {
-            for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
-                var room = BuildingsManager.Instance.BuiltFloors[i].RoomBuildingPlaces[j].PlacedBuilding;
-                if (room && targetBuildingCondition(room)) {
-                    targetBuilding = room;
-                    break;
-                }
+        var builtFloors = BuildingsManager.Instance.BuiltFloors;
+
+        foreach (var floor in builtFloors) {
+            if (targetBuilding) break;
+
+            foreach (var room in floor.RoomBuildingPlaces) {
+                var building = room.PlacedBuilding;
+                if (!building) continue;
+                if (!targetBuildingCondition(building)) continue;
+
+                targetBuilding = building;
+                break;
             }
         }
 

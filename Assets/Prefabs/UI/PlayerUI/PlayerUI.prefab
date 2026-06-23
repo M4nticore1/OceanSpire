@@ -724,22 +724,30 @@ PrefabInstance:
     - target: {fileID: 4746473471676759800, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[4].m_Target
       value: 
-      objectReference: {fileID: 6217224786227396167}
+      objectReference: {fileID: 8296612112711526452}
     - target: {fileID: 4746473471676759800, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_Target
       value: 
-      objectReference: {fileID: 8296612112711526452}
+      objectReference: {fileID: 6217224786227396167}
     - target: {fileID: 4746473471676759800, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4746473471676759800, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
-      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_MethodName
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[4].m_MethodName
       value: Close
       objectReference: {fileID: 0}
     - target: {fileID: 4746473471676759800, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
-      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_TargetAssemblyTypeName
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_MethodName
+      value: Open
+      objectReference: {fileID: 0}
+    - target: {fileID: 4746473471676759800, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[4].m_TargetAssemblyTypeName
       value: ConstructionMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4746473471676759800, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_TargetAssemblyTypeName
+      value: StorageMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4746473471676759800, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -844,22 +852,30 @@ PrefabInstance:
     - target: {fileID: 8597379296945270492, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[4].m_Target
       value: 
-      objectReference: {fileID: 8296612112711526452}
+      objectReference: {fileID: 6217224786227396167}
     - target: {fileID: 8597379296945270492, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_Target
       value: 
-      objectReference: {fileID: 6217224786227396167}
+      objectReference: {fileID: 8296612112711526452}
     - target: {fileID: 8597379296945270492, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8597379296945270492, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
-      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_MethodName
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[4].m_MethodName
       value: Close
       objectReference: {fileID: 0}
     - target: {fileID: 8597379296945270492, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
-      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_TargetAssemblyTypeName
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_MethodName
+      value: Open
+      objectReference: {fileID: 0}
+    - target: {fileID: 8597379296945270492, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[4].m_TargetAssemblyTypeName
       value: StorageMenu, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8597379296945270492, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+      propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_TargetAssemblyTypeName
+      value: ConstructionMenu, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8597379296945270492, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_Arguments.m_ObjectArgumentAssemblyTypeName

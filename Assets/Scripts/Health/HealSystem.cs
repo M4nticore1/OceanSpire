@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class HealSystem : MonoBehaviour
 {
+    [SerializeField] private CreaturesManager creaturesManager;
+    [SerializeField] private StarvationSystem starvationSystem;
     [SerializeField] private float healPerSecond = 0.1f;
 
     [SerializeField] private float healFrequence = 10f;
@@ -9,7 +11,7 @@ public class HealSystem : MonoBehaviour
 
     private void Update()
     {
-        if (StarvationSystem.Instance.IsUnderStarvation) return;
+        if (starvationSystem.IsUnderStarvation) return;
 
         currentTime += Time.deltaTime;
         if (currentTime < healFrequence) return;
@@ -20,7 +22,7 @@ public class HealSystem : MonoBehaviour
 
     private void HealCitizens()
     {
-        foreach (var citizen in CreaturesManager.Instance.Citizens) {
+        foreach (var citizen in creaturesManager.Citizens) {
             if (!ShouldHeal(citizen)) continue;
 
             citizen.HealthComponent.AddHealth(healPerSecond * healFrequence);

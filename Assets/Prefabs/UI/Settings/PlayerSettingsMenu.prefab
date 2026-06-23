@@ -474,7 +474,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4097635953341862605, guid: 35c28091e4f095f4fbbe6d79ad625d1d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1680
+      value: -1200
       objectReference: {fileID: 0}
     - target: {fileID: 4097635953341862605, guid: 35c28091e4f095f4fbbe6d79ad625d1d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -601,8 +601,31 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4570525168383766395, guid: 9ecf5f5c266f83644a0733db58206794, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8009975635813076358}
   m_SourcePrefab: {fileID: 100100000, guid: 9ecf5f5c266f83644a0733db58206794, type: 3}
+--- !u!1 &572846235978490597 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4570525168383766395, guid: 9ecf5f5c266f83644a0733db58206794, type: 3}
+  m_PrefabInstance: {fileID: 4079958832746712478}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8009975635813076358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572846235978490597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  textRole: 0
+  item: {fileID: 11400000, guid: 5306b34ee01b2bb499e17b6234a42423, type: 2}
+  localizationTarget: {fileID: 0}
 --- !u!224 &6193667416521695483 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7884324388772392293, guid: 9ecf5f5c266f83644a0733db58206794, type: 3}
@@ -885,7 +908,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 958295160746162893, guid: e08d3b0d04eec484b93bcccb8e8a3615, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1890
+      value: -1400
       objectReference: {fileID: 0}
     - target: {fileID: 958295160746162893, guid: e08d3b0d04eec484b93bcccb8e8a3615, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boatId: 1
   boatIdName: Simple Boat
+  boatSpeed: 2.5
   nameLocalization: {fileID: 0}

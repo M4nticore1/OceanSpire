@@ -53,7 +53,7 @@
   "raid": "Рейд",
   "raid_under_raid": "На ваш город напали!",
 
-  "language": "Языка",
+  "language": "Язык",
   "language_select": "Выбрать язык",
 
   "equipment": "Экипировка",
@@ -73,6 +73,7 @@
 
   "settings": "Настройки",
   "settings_fps_counter": "Счётчик FPS",
+  "settings_fps_limit": "Лимит FPS",
   "settings_sound": "Звук",
   "settings_music": "Музыка",
 
@@ -127,14 +128,14 @@
   "skill_science": "Наука",
   "skill_combat": "Сражение",
 
-  "skill_description_cooking": "Кулинарные изыски из минимума ресурсов. Ускоряет приготовление пищи на {skillBonus}.",
-  "skill_description_farming": "Секреты бережного ухода за почвой. Ускоряет созревание урожая на {skillBonus}.",
-  "skill_description_electrics": "Понимание ампер и вольт. Повышает эффективность генерации энергии на {skillBonus}.",
-  "skill_description_crafting": "Ловкие руки и знание чертежей. Ускоряет создание предметов и ресурсов на {skillBonus}.",
-  "skill_description_boating": "Идеальное чувство течения и ветра. Увеличивает скорость хода лодки на {skillBonus}.",
-  "skill_description_medicine": "Знание анатомии и первой помощи. Ускоряет восстановление здоровья на {skillBonus}.",
-  "skill_description_science": "Острый ум и тяга к открытиям. Увеличивает скорость изучения новых технологий на {skillBonus}.",
-  "skill_description_combat": "Хладнокровие в бою и твердая рука. Повышает наносимый урон на {skillBonus} ко всем атакам.",
+  "skill_description_cooking": "Кулинарные изыски из минимума ресурсов. Скорость приготовления пищи увеличина на {skillBonus}.",
+  "skill_description_farming": "Секреты бережного ухода за почвой. Время созревания урожая сокращено на {skillBonus}.",
+  "skill_description_electrics": "Понимание ампер и вольт. Эффективность генерации энергии увеличина на {skillBonus}.",
+  "skill_description_crafting": "Ловкие руки и знание чертежей. Создание предметов и ресурсов ускорено на {skillBonus}.",
+  "skill_description_boating": "Идеальное чувство течения и ветра. Скорость хода лодки увеличина на {skillBonus}.",
+  "skill_description_medicine": "Знание анатомии и первой помощи. Скорость восстановление здоровья на {skillBonus}.",
+  "skill_description_science": "Острый ум и тяга к открытиям. Эффективность изучения навыков повышена на {skillBonus}.",
+  "skill_description_combat": "Хладнокровие в бою и твердая рука. Наносимый урон увеличен на {skillBonus} ко всем атакам.",
 
   "task_daily_tasks": "Ежедневные задания",
   "task_update_time": "Задания будут обновлены через {updateTime}",

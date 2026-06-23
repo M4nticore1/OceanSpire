@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -5,8 +6,10 @@ using UnityEngine;
 public class SkillInstance : ILocalizable
 {
     public SkillDefinition SkillDefinition { get; private set; }
-    public int currentLevel { get; private set; } = 1;
-    public float currentXp { get; private set; } = 0f;
+    public int CurrentLevel { get; private set; } = 1;
+    public float CurrentXp { get; private set; } = 0f;
+
+    public event Action<SkillInstance> OnLevelChanged;
 
     public SkillInstance(SkillDefinition definition)
     {
@@ -15,7 +18,7 @@ public class SkillInstance : ILocalizable
 
     public void AddExperience(float deltaTime)
     {
-        currentXp += SkillDefinition.XpGainRate * deltaTime;
+        CurrentXp += SkillDefinition.XpGainRate * deltaTime;
 
         if (ShouldLevelUp()) {
             LevelUp();
@@ -25,22 +28,24 @@ public class SkillInstance : ILocalizable
 
     public void LevelUp()
     {
-        SetLevel(currentLevel + 1);
+        SetLevel(CurrentLevel + 1);
     }
 
     public void SetLevel(int value)
     {
-        currentLevel = math.clamp(value, 1, SkillDefinition.maxSkillLevel);
+        CurrentLevel = math.clamp(value, 1, SkillDefinition.maxSkillLevel);
+
+        OnLevelChanged?.Invoke(this);
     }
 
     public void SetXp(float value)
     {
-        currentXp = value;
+        CurrentXp = value;
     }
 
     public float GetBonus()
     {
-        float bonus = SkillDefinition.BonusPerLevel * (currentLevel - 1);
+        float bonus = SkillDefinition.BonusPerLevel * (CurrentLevel - 1);
         return bonus;
     }
 
@@ -54,11 +59,11 @@ public class SkillInstance : ILocalizable
 
     private void ResetCurrentExperience()
     {
-        currentXp = 0f;
+        CurrentXp = 0f;
     }
 
     private bool ShouldLevelUp()
     {
-        return currentXp >= 1f;
+        return CurrentXp >= 1f;
     }
 }

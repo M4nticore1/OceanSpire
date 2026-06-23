@@ -11038,6 +11038,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31519bdee27b0b6449f850fc349763c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealSystem
+  creaturesManager: {fileID: 220072952}
+  starvationSystem: {fileID: 2049673468}
   healPerSecond: 0.1
   healFrequence: 10
 --- !u!1001 &1035593556

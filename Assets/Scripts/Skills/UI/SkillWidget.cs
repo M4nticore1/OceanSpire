@@ -31,6 +31,13 @@ public class SkillWidget : MonoBehaviour
         button.OnDeselected.RemoveListener(OnButtonDeselected);
     }
 
+    private void OnDestroy()
+    {
+        if (Skill == null) return;
+
+        Skill.OnLevelChanged -= OnSkillLevelChanged;
+    }
+
     public void Init(SkillInstance skill)
     {
         if (skill == null) {
@@ -38,10 +45,12 @@ public class SkillWidget : MonoBehaviour
             return;
         }
 
-        this.Skill = skill;
+        Skill = skill;
         UpdateSkillName();
         UpdateSkillBonus();
         UpdateColor();
+
+        skill.OnLevelChanged += OnSkillLevelChanged;
     }
 
     private void UpdateSkillName()
@@ -60,7 +69,7 @@ public class SkillWidget : MonoBehaviour
 
     private void UpdateColor()
     {
-        float alpha = (float)(Skill.currentLevel - 1) / (SkillDefinition.maxSkillLevel / SkillsFactory.GetLevelsCount());
+        float alpha = (float)(Skill.CurrentLevel - 1) / (SkillDefinition.maxSkillLevel / SkillsFactory.GetLevelsCount());
 
         var color = Color.Lerp(normalColor, highlightedColor, alpha);
         string hex = ColorUtility.ToHtmlStringRGBA(color);
@@ -80,6 +89,12 @@ public class SkillWidget : MonoBehaviour
     private void OnButtonDeselected()
     {
         OnSkillWidgetDeselected?.Invoke(this);
+    }
+
+    private void OnSkillLevelChanged(SkillInstance skill)
+    {
+        UpdateSkillBonus();
+        UpdateColor();
     }
 
     private string GetBonusText()

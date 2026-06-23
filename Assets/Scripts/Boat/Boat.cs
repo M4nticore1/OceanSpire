@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 public enum BoatStateEnum
@@ -58,6 +57,9 @@ public class Boat : MonoBehaviour, IClickable
     public bool IsClickable { get; private set; } = true;
 
     public event Action OnClicked;
+
+    public event Action<BoatRider> OnRiderAdded;
+    public event Action<BoatRider> OnRiderRemoved;
 
     public event Action<BoatState> OnStateEntered;
     public event Action<BoatState> OnStateExited;
@@ -124,6 +126,8 @@ public class Boat : MonoBehaviour, IClickable
                     Debug.LogError($"dockPoint is not valid by instance {boatDockInstance}");
             }
         }
+
+        movement.NavAgent.speed = Definition.BoatSpeed;
     }
 
     public void OnReturnedToDock()
@@ -156,11 +160,15 @@ public class Boat : MonoBehaviour, IClickable
             CurrentRider.HandleBoatMovementStarted();
         else
             CurrentRider.HandleBoatMovementStopped();
+
+        OnRiderAdded?.Invoke(rider);
     }
 
     public void RemoveCurrentRider()
     {
+        var lastRider = CurrentRider;
         CurrentRider = null;
+        OnRiderRemoved?.Invoke(lastRider);
     }
 
     public void SetTargetRider(BoatRider rider)

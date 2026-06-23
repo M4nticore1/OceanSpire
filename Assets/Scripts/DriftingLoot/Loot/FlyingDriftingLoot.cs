@@ -121,7 +121,7 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
         IsFalling = value;
         boxCollider.enabled = !value;
         rigidBody.useGravity = value;
-        rigidBody.isKinematic = value;
+        rigidBody.isKinematic = !value;
 
         if (value) {
             Destroy(balloons.gameObject);

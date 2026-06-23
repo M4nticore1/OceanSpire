@@ -11,11 +11,12 @@ public class CraftItemPanel : MonoBehaviour
     [SerializeField] private Image progressBar;
     [SerializeField] private Transform producedResourceSlot;
     [SerializeField] private LayoutGroup consumedResourcesSlot;
+    [SerializeField] private Color bonusColor = Color.HSVToRGB(120, 60, 100);
     private FlickingImage flickingProgressBar;
-    private CraftingModule craftingModule;
 
-    private CraftItemDefinition currentCraftItem;
-    private int index = 0;
+    private CraftingModule craftingModule;
+    private CraftItemInstance craftItem;
+
     private bool isSelected = false;
 
     private void Awake()
@@ -35,19 +36,36 @@ public class CraftItemPanel : MonoBehaviour
         button.OnDeselected.RemoveListener(OnDeselected);
     }
 
+    private void OnDestroy()
+    {
+        if (craftItem == null) return;
+
+        craftItem.OnCraftingSpeedBonusChanged -= OnCraftingSpeedBonusChanged;
+    }
+
     private void Update()
     {
-        if (!isSelected) return; 
+        if (!isSelected) return;
+        if (!craftingModule.IsWorking) return;
 
         UpdateTimer();
         UpdateProgressBar();
     }
 
-    public void Init(CraftingModule craftingModule, CraftItemDefinition craftItem, int index, SelectGroup selectGroup)
+    public void Init(CraftingModule craftingModule, CraftItemInstance craftItem, SelectGroup selectGroup)
     {
+        if (!craftingModule) {
+            Debug.LogError("craftingModule is not valid");
+            return;
+        }
+
+        if (craftItem == null) {
+            Debug.LogError("craftItem is not valid");
+            return;
+        }
+
         this.craftingModule = craftingModule;
-        currentCraftItem = craftItem;
-        this.index = index;
+        this.craftItem = craftItem;
         button.SetSelectGroup(selectGroup);
 
         CreateProducedResourceWidget();
@@ -55,6 +73,8 @@ public class CraftItemPanel : MonoBehaviour
 
         UpdateTimer();
         UpdateProgressBar();
+
+        craftItem.OnCraftingSpeedBonusChanged += OnCraftingSpeedBonusChanged;
     }
 
     public void Select()
@@ -77,13 +97,13 @@ public class CraftItemPanel : MonoBehaviour
     private void CreateProducedResourceWidget()
     {
         var widget = Instantiate(craftResourceWidgetPrefab, producedResourceSlot.transform);
-        widget.SetItem(currentCraftItem.ProduceItem.Definition);
-        widget.AddAmount(currentCraftItem.ProduceItem);
+        widget.SetItem(craftItem.Definition.ProduceItem.Definition);
+        widget.AddAmount(craftItem.Definition.ProduceItem);
     }
 
     private void CreateConsumedResourcesWidget()
     {
-        foreach (var resource in currentCraftItem.ConsumeResources) {
+        foreach (var resource in craftItem.Definition.ConsumeResources) {
             var widget = Instantiate(consumeResourceWidgetPrefab, consumedResourcesSlot.transform);
             widget.SetItem(resource.Definition);
             widget.AddAmount(resource);
@@ -92,41 +112,30 @@ public class CraftItemPanel : MonoBehaviour
 
     private void UpdateTimer()
     {
-        if (!craftingModule) {
-            Debug.LogError($"CraftingModule not found at {name}");
-            return;
-        }
-
         string text;
 
-        if (craftingModule.CurrentCraftItem.IsCrafting) {
-            int currentTime = (int)craftingModule.CurrentCraftItem.CurrentCraftingTime;
-            int targetTime = craftingModule.ProductionLevelData.TryGetCraftItem(index).ProduceTime;
+        if (craftItem.IsCrafting) {
+            int currentTime = (int)craftItem.CurrentCraftingTime;
+            int targetTime = (int)craftItem.GetProduceTime();
             text = TimeFormatter.SecondToTimer(currentTime, targetTime);
         }
         else {
-            int targetTime = craftingModule.ProductionLevelData.TryGetCraftItem(index).ProduceTime;
+            int targetTime = (int)craftItem.GetProduceTime();
             text = TimeFormatter.SecondsToMinuteTime(targetTime);
         }
+
+        var bonusColorHex = ColorUtility.ToHtmlStringRGB(bonusColor);
+        var bonus = craftItem.CraftingSpeedBonus * 100;
+        var bonusText = bonus > 0f ? $" <color=#{bonusColorHex}>(-{bonus}%)</color>" : "";
+        text += bonusText;
 
         timer.SetText(text);
     }
 
     private void UpdateProgressBar()
     {
-        if (!craftingModule) {
-            Debug.LogError($"CraftingModule is not valid at {name}");
-            return;
-        }
-
-        var craftItem = craftingModule.ProductionLevelData.TryGetCraftItem(index);
-        if (!craftItem) {
-            Debug.LogError($"CraftItem is not valid in {craftingModule.ProductionLevelData} by index {index}");
-            return;
-        }
-
-        float currentTime = craftingModule.CurrentCraftItem.CurrentCraftingTime;
-        int targetTime = craftItem.ProduceTime;
+        float currentTime = craftItem.CurrentCraftingTime;
+        float targetTime = craftItem.GetProduceTime();
         float amount = 0f;
 
         if (targetTime > 0 && isSelected) {
@@ -141,12 +150,18 @@ public class CraftItemPanel : MonoBehaviour
         progressBar.fillAmount = amount;
     }
 
+    private void OnCraftingSpeedBonusChanged(float bonus)
+    {
+        UpdateTimer();
+        UpdateProgressBar();
+    }
+
     private void OnClicked()
     {
         craftingModule.TryCollectItem();
         craftingModule.TryRefundResources();
         craftingModule.ResetProducedTime();
-        craftingModule.SetCraftingItemByIndex(index);
+        craftingModule.SetCraftingItem(craftItem);
         craftingModule.TryConsumeResources();
 
         Select();

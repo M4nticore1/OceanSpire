@@ -280,7 +280,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SFXSetting
   playerSettingsManager: {fileID: 0}
   slider: {fileID: 4040405841488986936}
-  volumeText: {fileID: 3045648141237067754}
 --- !u!1 &1647771983260799030
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,6 +567,7 @@ GameObject:
   - component: {fileID: 3146175476419344586}
   - component: {fileID: 9000880633899771715}
   - component: {fileID: 6714039039702118359}
+  - component: {fileID: 4105959100208618400}
   m_Layer: 5
   m_Name: SoundText
   m_TagString: Untagged
@@ -694,6 +694,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4105959100208618400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5938947777295781785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  textRole: 0
+  item: {fileID: 11400000, guid: 364c7859e97f8dd4d9992e9b9ee203e2, type: 2}
+  localizationTarget: {fileID: 0}
 --- !u!1 &6243752711725304932
 GameObject:
   m_ObjectHideFlags: 0

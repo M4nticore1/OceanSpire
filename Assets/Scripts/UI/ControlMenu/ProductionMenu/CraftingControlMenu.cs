@@ -25,12 +25,12 @@ public class CraftingControlMenu : ControlMenu
 
     protected override void UpdateMenu()
     {
-        ClearPanels();
-        CreatePanels();
+        DestroyCraftWidgets();
+        CreateCraftWidgets();
         FitLayoutGroupSize();
     }
 
-    private void CreatePanels()
+    private void CreateCraftWidgets()
     {
         var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
         if (!selectedBuilding) {
@@ -50,23 +50,25 @@ public class CraftingControlMenu : ControlMenu
             return;
         }
 
-        var crafts = craftingLevelData.CraftItems;
+        var craftItems = module.CraftItems;
+        var craftDefinitions = craftingLevelData.CraftItems;
 
-        for (int i = 0; i < crafts.Length; i++) {
-            var craft = crafts[i];
+        for (int i = 0; i < craftDefinitions.Length; i++) {
+            var craftItem = craftItems[i];
+            var craftDefinition = craftDefinitions[i];
 
             var spawned = Instantiate(producedResourcePanelPrefab, layoutGroup.transform);
-            spawned.Init(module, craft, i, selectGroup);
+            spawned.Init(module, craftItem, selectGroup);
 
             spawnedCraftResourcePanels.Add(spawned);
 
-            if (i != module.CurrentProductingItemIndex) continue;
+            if (i != module.GetIndexOfCurrentCraftItem()) continue;
 
             spawned.Select();
         }
     }
 
-    private void ClearPanels()
+    private void DestroyCraftWidgets()
     {
         for (int i = spawnedCraftResourcePanels.Count - 1; i >= 0; i--) {
             var panel = spawnedCraftResourcePanels[i];

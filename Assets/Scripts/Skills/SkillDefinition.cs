@@ -4,7 +4,7 @@ public enum SkillId
 {
     Cooking = 0,
     Farming = 1,
-    Electricity = 2,
+    Electrics = 2,
     Crafting = 3,
     Boating = 4,
     Medicine = 5,
