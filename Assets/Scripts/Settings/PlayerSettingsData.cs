@@ -24,7 +24,6 @@ public class PlayerSettingsData
 
     public static PlayerSettingsData Default()
     {
-        Debug.Log(Application.systemLanguage);
         return new PlayerSettingsData()
         {
             Language = Application.systemLanguage,

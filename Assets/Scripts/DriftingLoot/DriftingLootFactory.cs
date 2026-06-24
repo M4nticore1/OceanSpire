@@ -7,7 +7,7 @@ public static class DriftingLootFactory
         var position = driftingLootData.Position.Vector3();
         var rotation = Quaternion.Euler(driftingLootData.Rotation.Vector3());
 
-        var driftingLoot = GameObject.Instantiate(prefab, position, rotation);
+        var driftingLoot = GameObject.Instantiate(prefab, new Vector3(position.x, 0, position.z), rotation);
         driftingLoot.Init(driftingLootData);
 
         return driftingLoot;

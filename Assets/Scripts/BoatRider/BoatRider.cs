@@ -29,6 +29,9 @@ public class BoatRider : MonoBehaviour
 
     public event Action<Boat> OnBoatSetedIdle;
 
+    public static event Action<BoatRider, Boat> OnRiderEnteredBoat;
+    public static event Action<BoatRider, Boat> OnRiderExitedBoat;
+
     private void OnEnable()
     {
         movement.OnMovementStopped += OnMovementStopped;
@@ -134,6 +137,7 @@ public class BoatRider : MonoBehaviour
         IsEnteringBoat = false;
 
         OnEnteredBoat?.Invoke(boat);
+        OnRiderEnteredBoat?.Invoke(this, boat);
     }
 
     public void ExitBoat()
@@ -167,7 +171,9 @@ public class BoatRider : MonoBehaviour
         movement.SetAgentEnabled(true);
 
         RemoveRidingBoat();
+
         OnExitedBoat?.Invoke(TargetBoat);
+        OnRiderExitedBoat?.Invoke(this, TargetBoat);
     }
 
     public bool TrySetTargetBoat(Boat boat)

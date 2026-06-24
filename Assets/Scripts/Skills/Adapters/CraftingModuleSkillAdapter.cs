@@ -2,57 +2,79 @@ using UnityEngine;
 
 public class CraftingModuleSkillAdapter : SkillAdapter
 {
-    [SerializeField] private CraftingModule craftingModule;
-
     protected override bool TrySubscribe()
     {
-        if (!craftingModule.OwnedBuilding) return false;
         if (!base.TrySubscribe()) return false;
 
-        craftingModule.OwnedBuilding.WorkComponent.OnCurrentWorkerAdded += OnCurrentWorkerAdded;
-        craftingModule.OwnedBuilding.WorkComponent.OnCurrentWorkerRemoved += OnCurrentWorkerRemoved;
+        WorkComponent.OnComponentCurrentWorkerAdded += OnCurrentWorkerAdded;
+        WorkComponent.OnComponentCurrentWorkerRemoved += OnCurrentWorkerRemoved;
 
         return true;
     }
 
     protected override bool TryUnsubscribe()
     {
-        if (!craftingModule.OwnedBuilding) return false;
         if (!base.TryUnsubscribe()) return false;
 
-        craftingModule.OwnedBuilding.WorkComponent.OnCurrentWorkerAdded -= OnCurrentWorkerAdded;
-        craftingModule.OwnedBuilding.WorkComponent.OnCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
+        WorkComponent.OnComponentCurrentWorkerAdded -= OnCurrentWorkerAdded;
+        WorkComponent.OnComponentCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
 
         return true;
     }
 
-    protected override void AddBonus(float bonus)
+    protected override void OnSkillLevelChanged(SkillsComponent skillsComponent)
     {
-        var currentBonus = craftingModule.CraftingSpeedBonus;
+        var interactComponent = skillsComponent.GetComponent<CreatureInteractComponent>();
+        var interactBuilding = interactComponent.InteractBuilding;
+        if (!interactBuilding) return;
+
+        var craftModule = interactBuilding.GetComponent<CraftingModule>();
+        if (!craftModule) return;
+
+        var skill = skillsComponent.GetSkill(SkillId);
+        var skillLevel = skill.CurrentLevel;
+        var skillBonus = skill.GetBonus();
+
+        var skillLastLevel = skillLevel - 1;
+        var skillLastBonus = skill.SkillDefinition.BonusPerLevel * skillLastLevel;
+
+        RemoveBonus(craftModule, skillLastBonus);
+        AddBonus(craftModule, skillBonus);
+    }
+
+    private void AddBonus(CraftingModule module, float bonus)
+    {
+        var currentBonus = module.CraftingSpeedBonus;
         var skillBonus = bonus;
         var finalBonus = currentBonus + skillBonus;
 
-        craftingModule.SetCraftingSpeedBonus(finalBonus);
+        module.SetCraftingSpeedBonus(finalBonus);
     }
 
-    protected override void RemoveBonus(float bonus)
+    private void RemoveBonus(CraftingModule module, float bonus)
     {
-        var currentBonus = craftingModule.CraftingSpeedBonus;
+        var currentBonus = module.CraftingSpeedBonus;
         var skillBonus = bonus;
         var finalBonus = currentBonus - skillBonus;
 
-        craftingModule.SetCraftingSpeedBonus(finalBonus);
+        module.SetCraftingSpeedBonus(finalBonus);
     }
 
-    private void OnCurrentWorkerAdded(Citizen citizen)
+    private void OnCurrentWorkerAdded(WorkComponent workComponent, Citizen citizen)
     {
+        var craftingModule = workComponent.GetComponent<CraftingModule>();
+        if (!craftingModule) return;
+
         var skillsComponent = citizen.GetComponent<SkillsComponent>();
-        AddBonus(GetBonus(skillsComponent));
+        AddBonus(craftingModule, GetBonus(skillsComponent));
     }
 
-    private void OnCurrentWorkerRemoved(Citizen citizen)
+    private void OnCurrentWorkerRemoved(WorkComponent workComponent, Citizen citizen)
     {
+        var craftingModule = workComponent.GetComponent<CraftingModule>();
+        if (!craftingModule) return;
+
         var skillsComponent = citizen.GetComponent<SkillsComponent>();
-        RemoveBonus(GetBonus(skillsComponent));
+        RemoveBonus(craftingModule, GetBonus(skillsComponent));
     }
 }

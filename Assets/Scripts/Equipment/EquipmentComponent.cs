@@ -11,6 +11,9 @@ public class EquipmentComponent : MonoBehaviour
     public EquipmentDefinition EquipmentDefinition { get; private set; }
     public Equipment spawnedEquipment { get; private set; }
 
+    private float powerBonus;
+
+    public event Action<Equipment> OnEquipmentEquiped;
     public static event Action<EquipmentComponent> OnEquipmentComponentEquiped;
 
     public void Init(EquipmentData data)
@@ -38,9 +41,23 @@ public class EquipmentComponent : MonoBehaviour
         spawnedEquipment.gameObject.SetActive(value);
     }
 
+    public void AddPowerBonus(float value)
+    {
+        powerBonus += value;
+    }
+
+    public void RemovePowerBonus(float value)
+    {
+        powerBonus -= value;
+    }
+
     public float GetPower()
     {
-        return EquipmentDefinition.Power;
+        var power = EquipmentDefinition.Power;
+        var bonusMultiplier = 1 + powerBonus;
+        var powerWithBonus = power * bonusMultiplier;
+
+        return powerWithBonus;
     }
 
     public bool EquipedDefaultEquipement()

@@ -9,6 +9,7 @@ public class SkillInstance : ILocalizable
     public int CurrentLevel { get; private set; } = 1;
     public float CurrentXp { get; private set; } = 0f;
 
+    public event Action<SkillInstance> OnXpChanged;
     public event Action<SkillInstance> OnLevelChanged;
 
     public SkillInstance(SkillDefinition definition)
@@ -16,14 +17,15 @@ public class SkillInstance : ILocalizable
         SkillDefinition = definition;
     }
 
-    public void AddExperience(float deltaTime)
+    public void AddXp(float deltaTime)
     {
         CurrentXp += SkillDefinition.XpGainRate * deltaTime;
+        OnXpChanged?.Invoke(this);
 
-        if (ShouldLevelUp()) {
-            LevelUp();
-            ResetCurrentExperience();
-        }
+        //if (ShouldLevelUp()) {
+        //    LevelUp();
+        //    ResetCurrentExperience();
+        //}
     }
 
     public void LevelUp()

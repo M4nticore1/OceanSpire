@@ -52,6 +52,8 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
             return;
         }
 
+        movement.NavAgent.Warp(transform.position);
+
         CreateMesh(driftingLootData);
         UpdateDestination();
         //UpdateMovementDirection();
@@ -123,7 +125,8 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
         var windDir = WindManager.Instance.WindDirection;
         var dir = new Vector3(windDir.x, 0, windDir.z).normalized;
         var destination = WorldUtils.GetBorderPosition(dir);
-        movement.TryMoveTo(destination);
+        if (!movement.TryMoveTo(destination))
+            Debug.Log(gameObject);
     }
 
     private void OnReachedDestination()

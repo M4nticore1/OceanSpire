@@ -32,9 +32,17 @@ public abstract class SkillAdapter : MonoBehaviour
         TrySubscribe();
     }
 
-    protected abstract void AddBonus(float bonus);
+    protected abstract void OnSkillLevelChanged(SkillsComponent skillsComponent);
 
-    protected abstract void RemoveBonus(float bonus);
+    private void OnSkillLevelChanged(SkillInstance skill)
+    {
+        foreach (var component in skillComponents) {
+            if (component.GetSkill(SkillId) != skill) continue;
+
+            OnSkillLevelChanged(component);
+            break;
+        }
+    }
 
     protected virtual bool TrySubscribe()
     {
@@ -50,6 +58,17 @@ public abstract class SkillAdapter : MonoBehaviour
 
         isSubscribed = false;
         return true;
+    }
+
+    public SkillInstance[] GetSkills()
+    {
+        var skills = new List<SkillInstance>();
+        foreach (var component in skillComponents) {
+            var skill = component.GetSkill(skillId);
+            skills.Add(skill);
+        }
+
+        return skills.ToArray();
     }
 
     protected void AddSkillsComponent(SkillsComponent skillsComponent)
@@ -99,17 +118,5 @@ public abstract class SkillAdapter : MonoBehaviour
         }
 
         return bonus;
-    }
-
-    private void OnSkillLevelChanged(SkillInstance skill)
-    {
-        var skillLevel = skill.CurrentLevel;
-        var skillBonus = skill.GetBonus();
-
-        var skillLastLevel = skillLevel - 1;
-        var skillLastBonus = skill.SkillDefinition.BonusPerLevel * skillLastLevel;
-
-        RemoveBonus(skillLastBonus);
-        AddBonus(skillBonus);
     }
 }

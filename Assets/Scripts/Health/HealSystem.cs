@@ -25,7 +25,11 @@ public class HealSystem : MonoBehaviour
         foreach (var citizen in creaturesManager.Citizens) {
             if (!ShouldHeal(citizen)) continue;
 
-            citizen.HealthComponent.AddHealth(healPerSecond * healFrequence);
+            var healthAmount = healPerSecond * healFrequence;
+            var bonus = citizen.SkillsComponent.GetSkill(SkillId.Medicine).GetBonus();
+            var healthWithBonus = healthAmount * (1 + bonus);
+
+            citizen.HealthComponent.AddHealth(healthWithBonus);
         }
     }
 

@@ -28,6 +28,10 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     public bool IsReadyToCollect => CurrentCraftItem != null && CurrentCraftItem.IsCraftingFinished();
     public float CraftingSpeedBonus { get; private set; } = 0f;
 
+    public event Action<CraftItemInstance> OnItemCrafted;
+
+    public static event Action<CraftingModule, CraftItemInstance> OnModuleItemCrafted;
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -362,6 +366,9 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
         TryStopWorking();
         AssignFlicking();
+
+        OnItemCrafted?.Invoke(CurrentCraftItem);
+        OnModuleItemCrafted?.Invoke(this, CurrentCraftItem);
 
         return true;
     }

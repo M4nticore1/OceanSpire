@@ -21,9 +21,9 @@ public class SkillsComponent : MonoBehaviour
         }
     }
 
-    public void TryAddExperience(SkillId id, float deltaTime = 1)
+    public void AddExperience(SkillId id, float xp)
     {
-        GetSkill(id).AddExperience(deltaTime);
+        GetSkill(id).AddXp(xp);
     }
 
     public SkillInstance GetSkill(SkillId id)
