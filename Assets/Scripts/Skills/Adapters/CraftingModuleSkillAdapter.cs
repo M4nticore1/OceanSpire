@@ -65,8 +65,12 @@ public class CraftingModuleSkillAdapter : SkillAdapter
         var craftingModule = workComponent.GetComponent<CraftingModule>();
         if (!craftingModule) return;
 
+        if (craftingModule.SkillId != SkillId) return;
+
         var skillsComponent = citizen.GetComponent<SkillsComponent>();
         AddBonus(craftingModule, GetBonus(skillsComponent));
+
+        AddSkillsComponent(skillsComponent);
     }
 
     private void OnCurrentWorkerRemoved(WorkComponent workComponent, Citizen citizen)
@@ -74,7 +78,11 @@ public class CraftingModuleSkillAdapter : SkillAdapter
         var craftingModule = workComponent.GetComponent<CraftingModule>();
         if (!craftingModule) return;
 
+        if (craftingModule.SkillId != SkillId) return;
+
         var skillsComponent = citizen.GetComponent<SkillsComponent>();
         RemoveBonus(craftingModule, GetBonus(skillsComponent));
+
+        AddSkillsComponent(skillsComponent);
     }
 }

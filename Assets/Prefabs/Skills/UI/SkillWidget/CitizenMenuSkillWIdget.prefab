@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &6486680703174728104
+--- !u!1001 &2343029377331219214
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -90,7 +90,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6679481996557297315, guid: b76f5bd1f948e0340b4176f8f77c0b76, type: 3}
       propertyPath: m_Name
-      value: CitizenSkillWidget
+      value: CitizenMenuSkillWIdget
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

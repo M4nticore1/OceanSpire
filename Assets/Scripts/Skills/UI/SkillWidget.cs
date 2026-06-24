@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SkillWidget : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class SkillWidget : MonoBehaviour
     [SerializeField] private CustomButton button;
     [SerializeField] private TextLocalizer skillName;
     [SerializeField] private TextMeshProUGUI skillBonus;
+    [SerializeField] private Image skillProgress;
 
     [SerializeField] private RectTransform descriptionTransform;
     public RectTransform DescriptionTransform => descriptionTransform;
@@ -35,6 +37,7 @@ public class SkillWidget : MonoBehaviour
     {
         if (Skill == null) return;
 
+        Skill.OnXpChanged -= OnSkillXpChanged;
         Skill.OnLevelChanged -= OnSkillLevelChanged;
     }
 
@@ -47,28 +50,36 @@ public class SkillWidget : MonoBehaviour
 
         Skill = skill;
         UpdateSkillName();
-        UpdateSkillBonus();
-        UpdateColor();
+        UpdateBonusText();
+        UpdateBonusColor();
+        UpdateProgress();
 
+        skill.OnXpChanged += OnSkillXpChanged;
         skill.OnLevelChanged += OnSkillLevelChanged;
     }
 
     private void UpdateSkillName()
     {
+        if (Skill == null) return;
+
         var item = Skill.SkillDefinition.SkillNameLocalization;
         skillName.SetLocalizationItem(item);
         skillName.UpdateText();
     }
 
-    private void UpdateSkillBonus()
+    private void UpdateBonusText()
     {
+        if (Skill == null) return;
+
         float bonus = Skill.GetBonus() * 100;
         string text = $"({GetBonusText()})";
         skillBonus.SetText(text);
     }
 
-    private void UpdateColor()
+    private void UpdateBonusColor()
     {
+        if (Skill == null) return;
+
         float alpha = (float)(Skill.CurrentLevel - 1) / (SkillDefinition.maxSkillLevel / SkillsFactory.GetLevelsCount());
 
         var color = Color.Lerp(normalColor, highlightedColor, alpha);
@@ -81,6 +92,14 @@ public class SkillWidget : MonoBehaviour
         skillBonus.SetText(newText);
     }
 
+    private void UpdateProgress()
+    {
+        if (Skill == null) return;
+
+        var fillAmount = Skill.CurrentXp;
+        skillProgress.fillAmount = fillAmount;
+    }
+
     private void OnButtonSelected()
     {
         OnSkillWidgetSelected?.Invoke(this);
@@ -91,14 +110,21 @@ public class SkillWidget : MonoBehaviour
         OnSkillWidgetDeselected?.Invoke(this);
     }
 
-    private void OnSkillLevelChanged(SkillInstance skill)
+    private void OnSkillXpChanged(SkillInstance skill, float xp)
     {
-        UpdateSkillBonus();
-        UpdateColor();
+        UpdateProgress();
+    }
+
+    private void OnSkillLevelChanged(SkillInstance skill, int level)
+    {
+        UpdateBonusText();
+        UpdateBonusColor();
     }
 
     private string GetBonusText()
     {
+        if (Skill == null) return string.Empty;
+
         string bonus = (Skill.GetBonus() * 100).ToString();
         string text = $"+{bonus}%";
 

@@ -3,6 +3,10 @@ using UnityEngine;
 public abstract class SkillProgress : MonoBehaviour
 {
     [SerializeField] private SkillAdapter skillAdapter;
+    public SkillAdapter SkillAdapter => skillAdapter;
+
+    [SerializeField] private float xpGain;
+    public float XpGain => xpGain;
 
     private bool isSubscribed = false;
 
@@ -35,10 +39,9 @@ public abstract class SkillProgress : MonoBehaviour
         return true;
     }
 
-    protected void AddXp()
+    protected void AddXp(float xp)
     {
         foreach (var skill in skillAdapter.GetSkills()) {
-            var xp = skill.SkillDefinition.XpGainRate;
             skill.AddXp(xp);
         }
     }

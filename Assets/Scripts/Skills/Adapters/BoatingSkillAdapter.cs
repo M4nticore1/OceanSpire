@@ -44,14 +44,22 @@ public class BoatingSkillAdapter : SkillAdapter
 
     private void OnRiderBoatAdded(BoatRider rider, Boat boat)
     {
-        var skillsComponent = rider.GetComponent<SkillsComponent>();
+        var citizen = rider.GetComponent<Citizen>();
+        if (!citizen) return;
+
+        var skillsComponent = citizen.SkillsComponent;
+
         AddSkillsComponent(skillsComponent);
         AddBonus(boat, GetBonus(skillsComponent));
     }
 
     private void OnRiderBoatRemoved(BoatRider rider, Boat boat)
     {
-        var skillsComponent = rider.GetComponent<SkillsComponent>();
+        var citizen = rider.GetComponent<Citizen>();
+        if (!citizen) return;
+
+        var skillsComponent = citizen.SkillsComponent;
+
         RemoveSkillsComponent(skillsComponent);
         RemoveBonus(boat, GetBonus(skillsComponent));
     }

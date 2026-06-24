@@ -4,9 +4,9 @@ using UnityEngine;
 public abstract class SkillAdapter : MonoBehaviour
 {
     [SerializeField] private SkillId skillId;
-    protected SkillId SkillId => skillId;
+    public SkillId SkillId => skillId;
 
-    private List<SkillsComponent> skillComponents = new();
+    public List<SkillsComponent> SkillComponents { get; private set; } = new();
 
     private bool isSubscribed = false;
 
@@ -22,8 +22,8 @@ public abstract class SkillAdapter : MonoBehaviour
 
     private void OnDestroy()
     {
-        foreach (var component in skillComponents) {
-            component.GetSkill(skillId).OnLevelChanged -= OnSkillLevelChanged;
+        foreach (var component in SkillComponents) {
+            component.OnSkillLevelChanged -= OnSkillLevelChanged;
         }
     }
 
@@ -32,11 +32,11 @@ public abstract class SkillAdapter : MonoBehaviour
         TrySubscribe();
     }
 
-    protected abstract void OnSkillLevelChanged(SkillsComponent skillsComponent);
+    protected abstract void OnSkillLevelChanged(SkillsComponent skillsComponents);
 
-    private void OnSkillLevelChanged(SkillInstance skill)
+    private void OnSkillLevelChanged(SkillInstance skill, int level)
     {
-        foreach (var component in skillComponents) {
+        foreach (var component in SkillComponents) {
             if (component.GetSkill(SkillId) != skill) continue;
 
             OnSkillLevelChanged(component);
@@ -63,7 +63,7 @@ public abstract class SkillAdapter : MonoBehaviour
     public SkillInstance[] GetSkills()
     {
         var skills = new List<SkillInstance>();
-        foreach (var component in skillComponents) {
+        foreach (var component in SkillComponents) {
             var skill = component.GetSkill(skillId);
             skills.Add(skill);
         }
@@ -78,7 +78,7 @@ public abstract class SkillAdapter : MonoBehaviour
             return;
         }
 
-        skillComponents.Add(skillsComponent);
+        SkillComponents.Add(skillsComponent);
 
         var skill = skillsComponent.GetSkill(skillId);
         skill.OnLevelChanged += OnSkillLevelChanged;
@@ -86,12 +86,12 @@ public abstract class SkillAdapter : MonoBehaviour
 
     protected void RemoveSkillsComponent(SkillsComponent skillsComponent)
     {
-        if (!skillComponents.Contains(skillsComponent)) {
+        if (!SkillComponents.Contains(skillsComponent)) {
             Debug.LogError("skillComponents does not contain skillsComponent");
             return;
         }
 
-        skillComponents.Remove(skillsComponent);
+        SkillComponents.Remove(skillsComponent);
 
         var skill = skillsComponent.GetSkill(skillId);
         skill.OnLevelChanged -= OnSkillLevelChanged;
@@ -113,7 +113,7 @@ public abstract class SkillAdapter : MonoBehaviour
     protected float GetBonusSum()
     {
         var bonus = 0f;
-        foreach (var component in skillComponents) {
+        foreach (var component in SkillComponents) {
             bonus += component.GetSkill(SkillId).GetBonus();
         }
 

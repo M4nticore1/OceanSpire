@@ -22,6 +22,9 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     [SerializeField] private float electricityConsumption = 0f;
     public float ElectricityConsumption => electricityConsumption;
 
+    [SerializeField] private SkillId skillId;
+    public SkillId SkillId => skillId;
+
     public List<CraftItemInstance> CraftItems { get; private set; } = new();
     public CraftItemInstance CurrentCraftItem { get; private set; }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class SkillInstanceData
 {
-    public int Id = 0;
+    public SkillId Id = 0;
     public int Level = 0;
     public float Xp = 0;
 }
@@ -21,17 +21,18 @@ public class SkillsData
 
     public static SkillsData Create(SkillsComponent skillsComponent)
     {
-        int count = skillsComponent.Skills.Count;
-        SkillInstanceData[] skills = new SkillInstanceData[count];
+        var count = skillsComponent.Skills.Count;
+        var skills = new SkillInstanceData[count];
 
         for (int i = 0; i < count; i++) {
-            SkillId skillId = (SkillId)Enum.GetValues(typeof(SkillId)).GetValue(i);
+            var skillId = (SkillId)Enum.GetValues(typeof(SkillId)).GetValue(i);
 
-            int id = (int)skillsComponent.GetSkill(skillId).SkillDefinition.SkillId;
-            int level = skillsComponent.GetSkill(skillId).CurrentLevel;
-            float xp = skillsComponent.GetSkill(skillId).CurrentXp;
+            var skill = skillsComponent.GetSkill(skillId);
+            var id = skill.SkillDefinition.SkillId;
+            var level = skill.CurrentLevel;
+            var xp = skill.CurrentXp;
 
-            SkillInstanceData data = new SkillInstanceData()
+            var data = new SkillInstanceData()
             {
                 Id = id,
                 Level = level,

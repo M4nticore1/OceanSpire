@@ -90,13 +90,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
   targetGraphic: {fileID: 1256683166846239721}
-  contentGraphic: {fileID: 0}
+  contentGraphics: []
   scaleRoot: {fileID: 4190100430879470837}
   isInteractable: 1
   isSelectable: 0
   isScalable: 1
-  deselectOnOutsideClick: 1
-  selectableGroupIndex: -1
+  deselectOnOutsideClick: 0
+  cancelPressWhenMoving: 0
+  selectGroup: {fileID: 0}
   stateTransitionTime: 0.3
   state: 0
   idleState:
@@ -129,6 +130,24 @@ MonoBehaviour:
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnReleased:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHovered:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUnhovered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6899296538988913584
 GameObject:
   m_ObjectHideFlags: 0
@@ -279,4 +298,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+  textRole: 0
   item: {fileID: 11400000, guid: 65d322290d96b8640a366f235a975a27, type: 2}
+  localizationTarget: {fileID: 0}

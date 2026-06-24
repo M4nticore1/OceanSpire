@@ -2,21 +2,20 @@ using UnityEngine;
 
 public class BoatingSkillProgress : SkillProgress
 {
-    [SerializeField] private CreaturesManager creaturesManager;
-    [SerializeField] private float addXpFrequency;
+    [SerializeField] private float gainXpFrequency = 10f;
 
     private float currentAddXpTime;
 
     private void Update()
     {
         currentAddXpTime += Time.deltaTime;
-        if (currentAddXpTime < addXpFrequency) return;
+        if (currentAddXpTime < gainXpFrequency) return;
 
-        foreach (var citizen in creaturesManager.Citizens) {
-            var boatRider = citizen.BoatRider;
-            if (!ShouldAddXp(boatRider)) continue;
+        foreach (var component in SkillAdapter.SkillComponents) {
+            if (!ShouldAddXp(component)) continue;
 
-            AddXp();
+            float xp = XpGain * gainXpFrequency;
+            AddXp(xp);
         }
 
         currentAddXpTime = 0f;
@@ -36,9 +35,10 @@ public class BoatingSkillProgress : SkillProgress
         return true;
     }
 
-    private bool ShouldAddXp(BoatRider rider)
+    private bool ShouldAddXp(SkillsComponent skillsComponent)
     {
-        if (!rider.RidingBoat) return false;
+        var boatRider = skillsComponent.GetComponent<BoatRider>();
+        if (!boatRider.RidingBoat) return false;
 
         return true;
     }

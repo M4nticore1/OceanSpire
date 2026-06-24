@@ -41,6 +41,7 @@
   "starvation": "Голодание",
   "energy_shortage": "Энергодефицит",
   "coming_soon": "Скоро",
+  "level_up": "Новый Уровень",
 
   "health": "Здоровье",
   "health_current": "Здоровье {currentHealth}%",

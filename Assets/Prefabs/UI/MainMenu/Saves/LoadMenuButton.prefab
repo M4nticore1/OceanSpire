@@ -248,7 +248,7 @@ MonoBehaviour:
   isInteractable: 1
   isSelectable: 0
   isScalable: 1
-  deselectOnOutsideClick: 1
+  deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
   selectGroup: {fileID: 0}
   stateTransitionTime: 0.2

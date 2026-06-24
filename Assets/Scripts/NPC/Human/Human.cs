@@ -162,11 +162,11 @@ public abstract class Human : Creature, IClickable
         var humanData = creatureData as HumanData;
 
         nameComponent.Init(humanData.Name);
+        skillsComponent.Init(humanData.Skills);
         healthComponent.Init(humanData.Health);
         interactComponent.Init(humanData.Interaction);
         cityNavigator.Init(humanData.CityNavigator);
         weaponComponent.Init(humanData.Weapon);
-        skillsComponent.Init(humanData.Skills);
         boatRider.Init(humanData.BoatRider);
 
         DetermineNextAction();

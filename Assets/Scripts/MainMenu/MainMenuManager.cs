@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -75,6 +76,13 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnSaveSlotDeselected(SaveSlotWidget saveSlotWidget)
     {
+        StartCoroutine(DisableButtonsCoroutine());
+    }
+
+    private IEnumerator DisableButtonsCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
         loadSaveButton.SetState(CustomButtonState.Disabled);
         deleteSaveButton.SetState(CustomButtonState.Disabled);
     }

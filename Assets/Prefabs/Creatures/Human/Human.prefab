@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: -7493649843608556168}
   - component: {fileID: 3276445640208814929}
   - component: {fileID: 4701473922447632886}
-  - component: {fileID: 6756364316174304027}
+  - component: {fileID: 1580299350803602520}
   - component: {fileID: 8364959695361298754}
   - component: {fileID: 7000859086802169914}
   - component: {fileID: 6196963818731621145}
@@ -52,6 +52,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8498718057383756986}
+  - {fileID: 4291709260565939577}
   - {fileID: 1988476021581704376}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -272,7 +273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab249bb4d0e980f40ba538f5019e4420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillComponent
---- !u!114 &6756364316174304027
+--- !u!114 &1580299350803602520
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -281,11 +282,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6506537361480025273}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8dfeb73d78537746a8e086d63ce085f, type: 3}
+  m_Script: {fileID: 11500000, guid: a2d0bd1570e1c514f82052b5c4204f78, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CombatSkillAdapter
-  skillId: 7
-  weaponEquipmentComponent: {fileID: 8499683307490277393}
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeSkillComponent
+  skillComponent: {fileID: 4701473922447632886}
+  isClickable: 0
 --- !u!114 &8364959695361298754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,6 +398,64 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1001 &4572597623428345826
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5552754147449274060}
+    m_Modifications:
+    - target: {fileID: 358625071972248219, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 358625071972248219, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 358625071972248219, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 358625071972248219, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 358625071972248219, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 358625071972248219, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 358625071972248219, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2657996240455761951, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: skillComponent
+      value: 
+      objectReference: {fileID: 4701473922447632886}
+    - target: {fileID: 2680972785362503826, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: m_Name
+      value: LevelUpWidget
+      objectReference: {fileID: 0}
+    - target: {fileID: 3378358381403698184, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+--- !u!224 &4291709260565939577 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 358625071972248219, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+  m_PrefabInstance: {fileID: 4572597623428345826}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5419846946268642617
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -585,7 +644,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5170307472270884104, guid: 63dac51a073a19c47bda824592f2b4c3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5170307472270884104, guid: 63dac51a073a19c47bda824592f2b4c3, type: 3}
       propertyPath: m_AnchoredPosition.y

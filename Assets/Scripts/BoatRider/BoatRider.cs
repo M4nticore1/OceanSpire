@@ -170,10 +170,11 @@ public class BoatRider : MonoBehaviour
         movement.NavAgent.Warp(transform.position);
         movement.SetAgentEnabled(true);
 
+        var lastRidingBoat = RidingBoat;
         RemoveRidingBoat();
 
-        OnExitedBoat?.Invoke(TargetBoat);
-        OnRiderExitedBoat?.Invoke(this, TargetBoat);
+        OnExitedBoat?.Invoke(lastRidingBoat);
+        OnRiderExitedBoat?.Invoke(this, lastRidingBoat);
     }
 
     public bool TrySetTargetBoat(Boat boat)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,12 +7,12 @@ public static class SkillsFactory
 {
     public static SkillsData CreateRandomSkillsData(int levelsCount)
     {
-        Dictionary<int, SkillInstanceData> skills = new();
+        Dictionary<SkillId, SkillInstanceData> skills = new();
 
         foreach(var def in SkillsList.Instance.SkillDefinitionsDict.Values) {
-            int id = (int)def.SkillId;
+            var id = def.SkillId;
 
-            SkillInstanceData skill = new SkillInstanceData()
+            var skill = new SkillInstanceData()
             {
                 Id = id,
             };
@@ -19,12 +20,14 @@ public static class SkillsFactory
             skills.Add(id, skill);
         }
 
-        int randomCount = Random.Range(levelsCount / 2, levelsCount + 1);
+        int randomCount = UnityEngine.Random.Range(levelsCount / 2, levelsCount + 1);
         randomCount = Mathf.Max(randomCount, 1);
 
         for (int i = 0; i < randomCount; i++) {
-            int skillIndex = Random.Range(0, skills.Values.Count);
-            skills[skillIndex].Level += 1;
+            var skillIndex = UnityEngine.Random.Range(0, skills.Values.Count);
+            var skillid = (SkillId)Enum.GetValues(typeof(SkillId)).GetValue(skillIndex);
+
+            skills[skillid].Level += 1;
         }
 
         SkillsData data = new SkillsData()
