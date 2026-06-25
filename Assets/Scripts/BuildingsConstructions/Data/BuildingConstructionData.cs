@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
 public class BuildingConstructionData
 {
-    public int BuildingInstanceId = 0;
+    public Guid BuildingInstanceId;
 
     public static BuildingConstructionData Create(BuildingConstruction construction)
     {
@@ -13,7 +14,7 @@ public class BuildingConstructionData
 
         return new BuildingConstructionData()
         {
-            BuildingInstanceId = construction.OwnedBuilding.InstanceId.GetId()
+            BuildingInstanceId = construction.OwnedBuilding.InstanceId.GetGuid()
         };
     }
 }

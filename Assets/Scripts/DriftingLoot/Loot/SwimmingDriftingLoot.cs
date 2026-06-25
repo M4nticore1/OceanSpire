@@ -59,7 +59,6 @@ public class SwimmingDriftingLoot : DriftingLoot
         return new SwimmingDriftingLootData()
         {
             Id = (int)Definition.Id,
-            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(transform.position),
             Rotation = new Vector3Data(transform.rotation.eulerAngles),
             MeshId = MeshId,

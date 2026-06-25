@@ -15,7 +15,7 @@ public class ElevatorCabinData : BuildingConstructionData
 
         return new ElevatorCabinData()
         {
-            BuildingInstanceId = construction.OwnedBuilding.InstanceId.GetId(),
+            BuildingInstanceId = construction.OwnedBuilding.InstanceId.GetGuid(),
             Height = construction.transform.position.y,
             TargetFloor = construction.TargetFloor,
         };

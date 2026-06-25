@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
 public class InteractionComponentData
 {
-    public int? InteractBuildingInstanceId = null;
+    public Guid? InteractBuildingInstanceId = null;
 
     public static InteractionComponentData Default()
     {
@@ -13,7 +14,7 @@ public class InteractionComponentData
     {
         return new InteractionComponentData()
         {
-            InteractBuildingInstanceId = interactionComponent.InteractBuilding?.InstanceId.GetId()
+            InteractBuildingInstanceId = interactionComponent.InteractBuilding?.InstanceId.GetGuid()
         };
     }
 }

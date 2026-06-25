@@ -7,9 +7,9 @@ public class LevelComponent : MonoBehaviour
 
     public event Action OnLevelChanged;
 
-    public void Init(LevelData levelData)
+    public void Init(int level)
     {
-        TrySetLevel(levelData.Level);
+        TrySetLevel(level);
     }
 
     public void TrySetLevel(int value)

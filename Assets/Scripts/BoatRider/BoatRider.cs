@@ -44,7 +44,7 @@ public class BoatRider : MonoBehaviour
 
     public void Init(BoatRiderData boatRiderData)
     {
-        int? targetBoatInstanceId = boatRiderData.TargetBoatInstanceId;
+        Guid? targetBoatInstanceId = boatRiderData.TargetBoatInstanceId;
         if (targetBoatInstanceId != null) {
             var instance = InstancesManager.Instance.GetInstance(targetBoatInstanceId.Value);
 
@@ -56,7 +56,7 @@ public class BoatRider : MonoBehaviour
             }
         }
 
-        int? ridingBoatInstanceId = boatRiderData.RidingBoatInstanceId;
+        Guid? ridingBoatInstanceId = boatRiderData.RidingBoatInstanceId;
         if (ridingBoatInstanceId != null) {
             var instance = InstancesManager.Instance.GetInstance(ridingBoatInstanceId.Value);
 

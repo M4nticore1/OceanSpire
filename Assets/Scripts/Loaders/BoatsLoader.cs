@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class BoatsLoader : WorldLoader
 {
-    [SerializeField] private InstancesManager instancesManager;
     [SerializeField] private BuildingsManager buildingsManager;
     [SerializeField] private DockPointsManager dockPointsManager;
     [SerializeField] private BoatsList boatsList;
@@ -30,11 +29,10 @@ public class BoatsLoader : WorldLoader
 
     private void InitBoats()
     {
-        BoatIdEnum[] boatIds = startBoatIds;
+        var boatIds = startBoatIds;
 
         for (int i = 0; i < boatIds.Length; i++) {
             var id = (int)boatIds[i];
-            var instanceId = instancesManager.GetNextInstanceId();
             var prefab = boatsList.GetBoat(id);
 
             var pier = buildingsManager.PierBuilding.GetComponent<PierModule>();
@@ -43,12 +41,11 @@ public class BoatsLoader : WorldLoader
             var position = spawnTransform.DockTransform.position;
             var rotation = spawnTransform.DockTransform.rotation.eulerAngles;
 
-            var dockId = dockPointsManager.CitizenBoatDocks[i].InstanceId.GetId();
+            var dockId = dockPointsManager.CitizenBoatDocks[i].InstanceId.GetGuid();
 
             var boatData = new BoatData()
             {
                 Id = id,
-                InstanceId = instanceId,
                 Position = new Vector3Data(position),
                 Rotation = new Vector3Data(rotation),
                 DockInstanceId = dockId,

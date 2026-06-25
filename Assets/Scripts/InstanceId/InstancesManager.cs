@@ -1,65 +1,52 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class InstancesManager : MonoBehaviour
+public class InstancesManager
 {
-    public static InstancesManager Instance { get; private set; }
-
-    private List<int> instanceIds = new List<int>();
-    public IReadOnlyList<int> InstanceIds => instanceIds.AsReadOnly();
-
-    private Dictionary<int, InstanceId> instances = new();
-    private int maxId = 0;
-
-    private void Awake()
+    private static InstancesManager instance;
+    public static InstancesManager Instance
     {
-        if (Instance) {
-            Destroy(gameObject);
-            return;
-        }
+        get {
+            if (instance == null) {
+                instance = new InstancesManager();
+            }
 
-        Instance = this;
+            return instance;
+        }
     }
+
+    private InstancesManager()
+    {
+
+    }
+
+    private Dictionary<Guid, InstanceId> instances = new();
 
     public void RegisterInstance(InstanceId instance)
     {
-        int id = GetNextInstanceId();
-        RegisterInstance(id, instance);
-    }
+        var guid = instance.GetGuid();
+        if (instances.TryGetValue(guid, out var value)) return;
 
-    public void RegisterInstance(int id, InstanceId instance)
-    {
-        if (instances.ContainsKey(id)) {
-            Debug.Log($"Instance Id of {instance} is already registered as {id} by {GetInstance(id)}!");
-            instance.Register(GetNextInstanceId());
-            return;
-        }
-
-        instanceIds.Add(id);
-        instances.Add(id, instance);
-
-        maxId = id > maxId ? id : maxId;
+        instances.Add(guid, instance);
     }
 
     public void UnregisterInstance(InstanceId instance)
     {
-        instances.Remove(instance.GetId());
+        var guid = instance.GetGuid();
+        if (!instances.TryGetValue(guid, out var value)) return;
+
+        instances.Remove(instance.GetGuid());
     }
 
-    public InstanceId GetInstance(int id)
+    public InstanceId GetInstance(Guid guid)
     {
-        var instance = instances.GetValueOrDefault(id);
+        var instance = instances.GetValueOrDefault(guid);
 
         if (!instance) {
-            Debug.Log($"Instance by Id {id} does not exitst by!");
+            Debug.Log($"Instance by Id {guid} does not exitst by!");
         }
 
         return instance;
-    }
-
-    public int GetNextInstanceId()
-    {
-        return instanceIds.Count > 0 ? instanceIds.Max() + 1 : 0;
     }
 }

@@ -180,7 +180,6 @@ public class DriftingLootManager : MonoBehaviour
         var spawnRotation = Quaternion.Euler(0f, rotationAngle, 0f);
 
         var driftingLootData = prefab.CreateRandomData();
-        driftingLootData.InstanceId = InstancesManager.Instance.GetNextInstanceId();
         driftingLootData.Position = new Vector3Data(spawnPosition);
         driftingLootData.Rotation = new Vector3Data(Vector3.zero);
         driftingLootData.MeshRotation = new Vector3Data(spawnRotation.eulerAngles);

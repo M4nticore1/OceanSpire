@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -146,7 +147,7 @@ public class RaidManager : MonoBehaviour
 
     public float CalculateRandomCooldown()
     {
-        float cooldown = Random.Range(minRaidCooldown, maxRaidCooldown);
+        float cooldown = UnityEngine.Random.Range(minRaidCooldown, maxRaidCooldown);
         return cooldown;
     }
 
@@ -154,11 +155,11 @@ public class RaidManager : MonoBehaviour
     {
         int raidersAmount = GetRandomRaidersCount();
 
-        var dir = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
+        var dir = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0f, UnityEngine.Random.Range(-1f, 1f));
         dir.Normalize();
 
         for (int i = 0; i < raidersAmount; i++) {
-            float angle = Random.Range(minSpawnAngleOffset, maxSpawnAngleOffset);
+            float angle = UnityEngine.Random.Range(minSpawnAngleOffset, maxSpawnAngleOffset);
             dir = Quaternion.Euler(0f, angle, 0f) * dir;
 
             var position = dir * spawnDistance;
@@ -170,7 +171,7 @@ public class RaidManager : MonoBehaviour
                 continue;
             }
 
-            var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.GetId());
+            var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.GetGuid());
             if (!raider) {
                 Debug.LogError("raiedr is not valid");
                 continue;
@@ -303,14 +304,13 @@ public class RaidManager : MonoBehaviour
         return true;
     }
 
-    private Human CreateRaider(Vector3 position, Vector3 rotation, int boatInstanceId)
+    private Human CreateRaider(Vector3 position, Vector3 rotation, Guid boatInstanceId)
     {
         var prefab = raiderPrefabs[UnityEngine.Random.Range(0, raiderPrefabs.Length)] as Human;
 
         var data = new RaiderData()
         {
             Id = prefab.Definition.CreatureId,
-            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
 
@@ -350,10 +350,9 @@ public class RaidManager : MonoBehaviour
         var data = new BoatData()
         {
             Id = boatPrefab.Definition.BoatId,
-            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation.eulerAngles),
-            DockInstanceId = dockPoint.InstanceId.GetId(),
+            DockInstanceId = dockPoint.InstanceId.GetGuid(),
             Status = HumanStatusEnum.Raider
         };
 
@@ -369,7 +368,7 @@ public class RaidManager : MonoBehaviour
     private int GetRandomRaidersCount()
     {
         int floorsCount = BuildingsManager.Instance.BuiltFloors.Count;
-        int raidersCount = Random.Range((int)(floorsCount * minRaiderCountMultiplier), (int)(floorsCount * maxRaiderCountMultiplier));
+        int raidersCount = UnityEngine.Random.Range((int)(floorsCount * minRaiderCountMultiplier), (int)(floorsCount * maxRaiderCountMultiplier));
         return raidersCount;
     }
 }

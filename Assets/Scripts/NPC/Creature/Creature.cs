@@ -46,7 +46,7 @@ public abstract class Creature : MonoBehaviour
         transform.position = data.Position.Vector3();
         transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
 
-        instanceId.Register(data.InstanceId);
+        instanceId.SetGuid(data.InstanceId);
     }
 
     protected virtual void OnInitNextFrame()

@@ -1,12 +1,10 @@
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class BuildingsLoader : WorldLoader
 {
     public static BuildingsLoader Instance { get; private set; }
 
-    [SerializeField] private InstancesManager instancesManager;
     [SerializeField] private BuildingsManager buildingsManager;
 
     private void Awake()
@@ -104,7 +102,7 @@ public class BuildingsLoader : WorldLoader
         foreach (var data in elevatorCabinsData) {
             if (data == null) continue;
 
-            var instance = instancesManager.GetInstance(data.BuildingInstanceId);
+            var instance = InstancesManager.Instance.GetInstance(data.BuildingInstanceId);
             if (!instance) continue;
 
             var elevator = instance.GetComponent<ElevatorModule>();
@@ -133,8 +131,7 @@ public class BuildingsLoader : WorldLoader
             var buildingData = new BuildingData
             {
                 Id = building.BuildingData.BuildingId,
-                InstanceId = instancesManager.GetNextInstanceId(),
-                Level = LevelData.Create(building.LevelComponent),
+                Level = building.LevelComponent.Level,
                 Upgrade = UpgradeData.Create(building.UpgradeComponent),
                 Construction = ConstructionData.Create(building.ConstructionComponent),
                 Crafting = CraftingModuleData.Create(building.GetComponent<CraftingModule>()),
@@ -155,8 +152,7 @@ public class BuildingsLoader : WorldLoader
             var buildingData = new TowerBuildingData
             {
                 Id = building.BuildingData.BuildingId,
-                InstanceId = instancesManager.GetNextInstanceId(),
-                Level = LevelData.Create(building.LevelComponent),
+                Level = building.LevelComponent.Level,
                 Upgrade = UpgradeData.Create(building.UpgradeComponent),
                 Construction = ConstructionData.Create(building.ConstructionComponent),
                 Crafting = CraftingModuleData.Create(building.GetComponent<CraftingModule>()),
@@ -183,8 +179,7 @@ public class BuildingsLoader : WorldLoader
                 var buildingData = new TowerBuildingData
                 {
                     Id = building.BuildingData.BuildingId,
-                    InstanceId = instancesManager.GetNextInstanceId(),
-                    Level = LevelData.Create(building.LevelComponent),
+                    Level = building.LevelComponent.Level,
                     Upgrade = UpgradeData.Create(building.UpgradeComponent),
                     Construction = ConstructionData.Create(building.ConstructionComponent),
                     Crafting = CraftingModuleData.Default(),

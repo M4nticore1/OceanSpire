@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,26 +9,26 @@ public class BoatsManager : MonoBehaviour
     [SerializeField] private List<Boat> boats = new();
     public IReadOnlyList<Boat> Boats => boats;
 
-    private Dictionary<int, Boat> boatsDict = new();
-    public IReadOnlyDictionary<int, Boat> BoatsDict => boatsDict;
+    private Dictionary<Guid, Boat> boatsDict = new();
+    public IReadOnlyDictionary<Guid, Boat> BoatsDict => boatsDict;
 
     [SerializeField] private List<Boat> citizenBoats = new();
     public IReadOnlyList<Boat> CitizenBoats => citizenBoats;
 
-    private Dictionary<int, Boat> citizenBoatsDict = new();
-    public IReadOnlyDictionary<int, Boat> CitizenBoatsDict => citizenBoatsDict;
+    private Dictionary<Guid, Boat> citizenBoatsDict = new();
+    public IReadOnlyDictionary<Guid, Boat> CitizenBoatsDict => citizenBoatsDict;
 
     [SerializeField] private List<Boat> wandererBoats = new();
     public IReadOnlyList<Boat> WandererBoats => wandererBoats;
 
-    private Dictionary<int, Boat> wandererBoatsDict = new();
-    public IReadOnlyDictionary<int, Boat> WandererBoatsDict => wandererBoatsDict;
+    private Dictionary<Guid, Boat> wandererBoatsDict = new();
+    public IReadOnlyDictionary<Guid, Boat> WandererBoatsDict => wandererBoatsDict;
 
     [SerializeField] private List<Boat> raiderBoats = new();
     public IReadOnlyList<Boat> RaiderBoats => raiderBoats;
 
-    private Dictionary<int, Boat> raiderBoatsDict = new();
-    public IReadOnlyDictionary<int, Boat> RaiderBoatsDict => raiderBoatsDict;
+    private Dictionary<Guid, Boat> raiderBoatsDict = new();
+    public IReadOnlyDictionary<Guid, Boat> RaiderBoatsDict => raiderBoatsDict;
 
     private void Awake()
     {
@@ -112,23 +113,23 @@ public class BoatsManager : MonoBehaviour
         }
     }
 
-    public Boat GetBoat(int id)
+    public Boat GetBoat(Guid id)
     {
         boatsDict.TryGetValue(id, out var boat);
 
         return boat;
     }
 
-    private void RegisterBoat(Dictionary<int, Boat> boatsDict, Boat boat)
+    private void RegisterBoat(Dictionary<Guid, Boat> boatsDict, Boat boat)
     {
-        boatsDict.Add(boat.InstanceId.GetId(), boat);
-        this.boatsDict.Add(boat.InstanceId.GetId(), boat);
+        boatsDict.Add(boat.InstanceId.GetGuid(), boat);
+        this.boatsDict.Add(boat.InstanceId.GetGuid(), boat);
     }
 
-    private void UnregisterBoat(Dictionary<int, Boat> boatsDict, Boat boat)
+    private void UnregisterBoat(Dictionary<Guid, Boat> boatsDict, Boat boat)
     {
-        boatsDict.Remove(boat.InstanceId.GetId());
-        this.boatsDict.Remove(boat.InstanceId.GetId());
+        boatsDict.Remove(boat.InstanceId.GetGuid());
+        this.boatsDict.Remove(boat.InstanceId.GetGuid());
     }
 
     private void RegisterBoat(List<Boat> boatsList, Boat boat)

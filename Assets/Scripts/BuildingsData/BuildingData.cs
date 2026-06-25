@@ -5,8 +5,8 @@ using UnityEngine;
 public class BuildingData
 {
     public int Id = 0;
-    public int InstanceId = 0;
-    public LevelData Level;
+    public Guid InstanceId;
+    public int Level;
     public UpgradeData Upgrade;
     public ConstructionData Construction;
     public CraftingModuleData Crafting;
@@ -14,8 +14,8 @@ public class BuildingData
     protected void Fill(Building building)
     {
         Id = building.BuildingData.BuildingId;
-        InstanceId = building.InstanceId.GetId();
-        Level = LevelData.Create(building.LevelComponent);
+        InstanceId = building.InstanceId.GetGuid();
+        Level = building.LevelComponent.Level;
         Upgrade = UpgradeData.Create(building.UpgradeComponent);
         Construction = ConstructionData.Create(building.ConstructionComponent);
         Crafting = CraftingModuleData.Create(building.GetComponent<CraftingModule>());

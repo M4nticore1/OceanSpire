@@ -1,28 +1,53 @@
+using System;
 using UnityEngine;
 
 public class InstanceId : MonoBehaviour
 {
-    private int id = 0;
-    public bool IsRegistered { get; private set; } = false;
+    private Guid guid;
+    private bool isRegistered;
 
-    public void Register(int id)
+    private InstancesManager instancesManager => InstancesManager.Instance;
+
+    private void Awake()
     {
-        if (IsRegistered) {
-            Debug.Log($"Instance Id component of {this} is already registered as {this.id}!");
-            return;
+        if (guid == Guid.Empty) {
+            SetGuid(Guid.NewGuid());
         }
-
-        this.id = id;
-        InstancesManager.Instance.RegisterInstance(id, this);
-        IsRegistered = true;
     }
 
-    public int GetId()
+    private void OnDestroy()
     {
-        if (!IsRegistered) {
-            Debug.Log("You are trying to get an unregistered InstanceId");
+        Unregister();
+    }
+
+    public void SetGuid(Guid newGuid)
+    {
+        if (newGuid == Guid.Empty) return;
+        if (newGuid == guid) return;
+
+        if (isRegistered) {
+            Unregister();
         }
 
-        return id;
+        this.guid = newGuid;
+        Register();
+    }
+
+    private void Register()
+    {
+
+        instancesManager.RegisterInstance(this);
+        isRegistered = true;
+    }
+
+    private void Unregister()
+    {
+        instancesManager.UnregisterInstance(this);
+        isRegistered = false;
+    }
+
+    public Guid GetGuid()
+    {
+        return guid;
     }
 }

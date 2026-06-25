@@ -23,7 +23,7 @@ public class HumanData : CreatureData
     protected void FillHumanData(Human human)
     {
         Id = human.Definition.CreatureId;
-        InstanceId = human.InstanceId.GetId();
+        InstanceId = human.InstanceId.GetGuid();
         Position = new Vector3Data(human.transform.position);
         Rotation = new Vector3Data(human.transform.rotation.eulerAngles);
         Health = HealthData.Create(human.HealthComponent);

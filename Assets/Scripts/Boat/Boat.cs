@@ -105,7 +105,7 @@ public class Boat : MonoBehaviour, IClickable
 
         CurrentStatus = boatData.Status;
 
-        instanceId.Register(boatData.InstanceId);
+        instanceId.SetGuid(boatData.InstanceId);
         BoatsManager.Instance.RegisterBoat(this);
 
         var state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(boatData.StateId);

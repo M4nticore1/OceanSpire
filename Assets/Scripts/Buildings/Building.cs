@@ -159,7 +159,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected virtual void OnInit(BuildingData buildingData)
     {
-        instanceId.Register(buildingData.InstanceId);
+        instanceId.SetGuid(buildingData.InstanceId);
         UpdateStrategy();
         constructionComponent.Init(buildingData.Construction);
         upgradeComponent.Init(buildingData.Upgrade);
@@ -262,11 +262,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected void UpdateConstruction()
     {
-        if (!InstanceId.IsRegistered) {
-            Debug.Log($"Instance Id is not registrated at {name}");
-            return;
-        }
-
         var constructionToSpawn = GetConstructionToSpawn();
         if (!constructionToSpawn) return;
 
@@ -279,7 +274,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
         var data = new BuildingConstructionData()
         {
-            BuildingInstanceId = instanceId.GetId()
+            BuildingInstanceId = instanceId.GetGuid()
         };
 
         SpawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, transform, data);

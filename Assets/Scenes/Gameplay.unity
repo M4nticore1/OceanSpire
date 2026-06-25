@@ -693,7 +693,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WanderersManager
   creaturesManager: {fileID: 220072952}
   dockPointsManager: {fileID: 1711846142}
-  instancesManager: {fileID: 1081344388}
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
   boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
   humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
@@ -3702,7 +3701,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9da8f84ec1fc384438f1af0e22c18c4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatsLoader
-  instancesManager: {fileID: 1081344388}
   buildingsManager: {fileID: 455753200}
   dockPointsManager: {fileID: 1711846142}
   boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
@@ -11863,50 +11861,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdc00b00157af245b77247842f33de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InstanceId
---- !u!1 &1081344386
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1081344387}
-  - component: {fileID: 1081344388}
-  m_Layer: 0
-  m_Name: InstancesManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1081344387
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081344386}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1317929167}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1081344388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1081344386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 238ad85c4992ab24b97452084d8086ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InstancesManager
 --- !u!1001 &1081797043
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14028,7 +13982,6 @@ Transform:
   - {fileID: 1428861524}
   - {fileID: 1591262575}
   - {fileID: 2136275760}
-  - {fileID: 1081344387}
   - {fileID: 1711846141}
   - {fileID: 593505075}
   - {fileID: 1065889324}
@@ -18941,7 +18894,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 166521824b2b3c14f838c812990f7e1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingsLoader
-  instancesManager: {fileID: 1081344388}
   buildingsManager: {fileID: 455753200}
 --- !u!4 &1913660033 stripped
 Transform:
@@ -23754,7 +23706,7 @@ PrefabInstance:
     - target: {fileID: 8235288979815265429, guid: 30dcaba35a9e207489f55a3f312e4c54, type: 3}
       propertyPath: completeEventListener
       value: 
-      objectReference: {fileID: 1461528433}
+      objectReference: {fileID: 2116735581}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

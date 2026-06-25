@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -8,7 +9,6 @@ public class WanderersManager : MonoBehaviour
     [Header("Main")]
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private DockPointsManager dockPointsManager;
-    [SerializeField] private InstancesManager instancesManager;
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
     [SerializeField] private HumanNamesList humanNamesList;
@@ -71,7 +71,7 @@ public class WanderersManager : MonoBehaviour
 
     public float CalculateRandomCooldown()
     {
-        float cooldown = Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown);
+        float cooldown = UnityEngine.Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown);
         return cooldown;
     }
 
@@ -86,7 +86,7 @@ public class WanderersManager : MonoBehaviour
             return;
         }
 
-        var human = CreateWanderer(position, rotation, boat.InstanceId.GetId());
+        var human = CreateWanderer(position, rotation, boat.InstanceId.GetGuid());
     }
 
     private void ResetTimeToSpawn()
@@ -136,14 +136,13 @@ public class WanderersManager : MonoBehaviour
         }
     }
 
-    private Human CreateWanderer(Vector3 position, Vector3 rotation, int boatInstanceId)
+    private Human CreateWanderer(Vector3 position, Vector3 rotation, Guid boatInstanceId)
     {
         var prefab = wandererPrefabs[UnityEngine.Random.Range(0, wandererPrefabs.Length)] as Human;
 
         var data = new WandererData()
         {
             Id = prefab.Definition.CreatureId,
-            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
 
@@ -184,10 +183,9 @@ public class WanderersManager : MonoBehaviour
         var boatData = new BoatData()
         {
             Id = boatPrefab.Definition.BoatId,
-            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
-            DockInstanceId = dockPoint.InstanceId.GetId(),
+            DockInstanceId = dockPoint.InstanceId.GetGuid(),
             Status = HumanStatusEnum.Wanderer
         };
 

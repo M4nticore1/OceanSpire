@@ -103,8 +103,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         var buildingData = new TowerBuildingData()
         {
             Id = towerBuildingPrefab.BuildingData.BuildingId,
-            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
-            Level = LevelData.Create(towerBuildingPrefab.LevelComponent),
+            Level = towerBuildingPrefab.LevelComponent.Level,
             Upgrade = UpgradeData.Create(towerBuildingPrefab.UpgradeComponent),
 
             Construction = new ConstructionData()

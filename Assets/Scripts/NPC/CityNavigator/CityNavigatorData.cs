@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 public class CityNavigatorData
 {
-    public int? EnteredBuildingInstanceId = null;
-    public int? TargetBuildingInstanceId = null;
+    public Guid? EnteredBuildingInstanceId = null;
+    public Guid? TargetBuildingInstanceId = null;
 
     public ElevatorPassengerData ElevatorPassenger = ElevatorPassengerData.Default();
     public CreatureWaypointsComponentData Waypoints = CreatureWaypointsComponentData.Default();
@@ -17,8 +18,8 @@ public class CityNavigatorData
     {
         return new CityNavigatorData()
         {
-            EnteredBuildingInstanceId = cityNavigator.CurrentBuilding?.InstanceId.GetId(),
-            TargetBuildingInstanceId = cityNavigator.TargetBuilding?.InstanceId.GetId(),
+            EnteredBuildingInstanceId = cityNavigator.CurrentBuilding?.InstanceId.GetGuid(),
+            TargetBuildingInstanceId = cityNavigator.TargetBuilding?.InstanceId.GetGuid(),
             ElevatorPassenger = ElevatorPassengerData.Create(cityNavigator.ElevatorPassenger),
             Waypoints = CreatureWaypointsComponentData.Create(cityNavigator.WaypointsComponent)
         };

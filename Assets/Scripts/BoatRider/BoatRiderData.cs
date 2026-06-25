@@ -4,8 +4,8 @@ using UnityEngine;
 [Serializable]
 public class BoatRiderData
 {
-    public int? TargetBoatInstanceId = null;
-    public int? RidingBoatInstanceId = null;
+    public Guid? TargetBoatInstanceId;
+    public Guid? RidingBoatInstanceId;
 
     public static BoatRiderData Default()
     {
@@ -16,8 +16,8 @@ public class BoatRiderData
     {
         return new BoatRiderData()
         {
-            TargetBoatInstanceId = boatRider.TargetBoat?.InstanceId.GetId(),
-            RidingBoatInstanceId = boatRider.RidingBoat?.InstanceId.GetId(),
+            TargetBoatInstanceId = boatRider.TargetBoat?.InstanceId.GetGuid(),
+            RidingBoatInstanceId = boatRider.RidingBoat?.InstanceId.GetGuid(),
         };
     }
 }

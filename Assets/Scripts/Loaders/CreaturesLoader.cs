@@ -59,7 +59,6 @@ public class CreaturesLoader : WorldLoader
             var citizenData = new CitizenData()
             {
                 Id = citizenId,
-                InstanceId = InstancesManager.Instance.GetNextInstanceId(),
                 Position = new Vector3Data(finalPosition),
                 Rotation = new Vector3Data(rotation),
 

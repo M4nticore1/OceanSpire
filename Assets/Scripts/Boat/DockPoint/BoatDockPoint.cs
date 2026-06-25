@@ -16,7 +16,7 @@ public class BoatDockPoint : MonoBehaviour
 
     public void Init(BoatDockData data)
     {
-        instanceId.Register(data.InstanceId);
+        instanceId.SetGuid(data.InstanceId);
     }
 
     public void AddBoat(Boat boat)

@@ -33,7 +33,6 @@ public class PierModule : BuildingModule
     {
         if (!docksLoader.IsLoaded) return;
 
-        InitBoatDocks();
         UpdateBoatDocks();
     }
 
@@ -42,22 +41,9 @@ public class PierModule : BuildingModule
         if (!boatsLoader.IsLoaded) return;
         if (!docksLoader.IsLoaded) return;
 
-        InitBoatDocks();
         CreateBoats();
         UpdateBoatDocks();
         UpdateBoatPositions();
-    }
-
-    private void InitBoatDocks()
-    {
-        foreach (var boatDock in PierConstruction.BoatDocks) {
-            var boatDockData = new BoatDockData()
-            {
-                InstanceId = InstancesManager.Instance.GetNextInstanceId(),
-            };
-
-            boatDock.Init(boatDockData);
-        }
     }
 
     private void CreateBoats()
@@ -75,10 +61,9 @@ public class PierModule : BuildingModule
             var boatData = new BoatData()
             {
                 Id = citizenBoatPrefab.Definition.BoatId,
-                InstanceId = InstancesManager.Instance.GetNextInstanceId(),
                 Position = new Vector3Data(position),
                 Rotation = new Vector3Data(rotation.eulerAngles),
-                DockInstanceId = boatDock.InstanceId.GetId(),
+                DockInstanceId = boatDock.InstanceId.GetGuid(),
                 Status = HumanStatusEnum.Citizen
             };
 

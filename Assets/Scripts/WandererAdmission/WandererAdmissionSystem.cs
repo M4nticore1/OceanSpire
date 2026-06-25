@@ -53,7 +53,6 @@ public static class WandererAdmissionSystem
         var data = new CitizenData()
         {
             Id = creautereId,
-            InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Health = HealthData.Create(wanderer.HealthComponent),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotaton.eulerAngles),
