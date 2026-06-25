@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: skill_farming
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
   skillId: 1
-  bonusPerLevel: 0.2
-  xpGainRate: 0.1
+  bonusPerLevel: 0.05
+  xpGainRate: 0.01
   skillNameLocalization: {fileID: 11400000, guid: 56ac0ea1bb026a547ae892b7d05bee2b, type: 2}
   skillDescriptionLocalization: {fileID: 11400000, guid: 0b45ac4a30da4cf46b7d1188ce79b71a, type: 2}

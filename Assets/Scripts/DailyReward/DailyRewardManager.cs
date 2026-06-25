@@ -52,10 +52,11 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         long currentSecond = TimeManager.GetCurrentSecond();
         if (currentSecond < NextResetTime) return;
 
-        ResetRewards();
-        ResetNextResetTime();
         ResetRewardCollected();
         SetRewardViewed(false);
+        UpdateNextResetTime();
+        UpdateRewards();
+
         OnDailyRewardReset?.Invoke();
     }
 
@@ -73,9 +74,14 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         Init(newData);
     }
 
-    public void Init(DailyRewardData data)
+    public void Init(DailyRewardData dailyRewardData)
     {
-        foreach (var rewardData in data.Rewards) {
+        if (dailyRewardData == null) {
+            Debug.LogError("dailyRewardData is not valid");
+            return;
+        }
+
+        foreach (var rewardData in dailyRewardData.Rewards) {
             if (rewardData == null) {
                 Debug.Log($"Reward Data not found at {name}");
                 continue;
@@ -105,10 +111,10 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
             currentRewards.Add(reward);
         }
 
-        NextResetTime = data.NextResetTime;
-        FreeRewardCollected = data.FreeRewardCollected;
-        AdRewardCollected = data.AdRewardCollected;
-        SetRewardViewed(data.RewardViewed);
+        NextResetTime = dailyRewardData.NextResetTime;
+        FreeRewardCollected = dailyRewardData.FreeRewardCollected;
+        AdRewardCollected = dailyRewardData.AdRewardCollected;
+        SetRewardViewed(dailyRewardData.RewardViewed);
     }
 
     public void SetRewardViewed(bool value)
@@ -124,29 +130,35 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     public RewardInstanceData[] GetRandomRewardsData()
     {
-        List<RewardInstanceData> rewardsData = new();
-        List<AdRewardDefinition> availableRewards = new(rewards);
+        var rewardsData = new List<RewardInstanceData>();
+        var availableRewards = new List<AdRewardDefinition>(rewards);
 
         int count = Mathf.Min(maxRewardsCount, availableRewards.Count);
 
         for (int i = 0; i < count; i++) {
-            int index = UnityEngine.Random.Range(0, availableRewards.Count);
+            if (availableRewards.Count == 0) break;
 
+            int index = UnityEngine.Random.Range(0, availableRewards.Count);
             var definition = availableRewards[index];
+            availableRewards.RemoveAt(index);
+
             if (!definition) {
-                Debug.Log($"Reward Definition not found at {name} at index {index}");
+                Debug.LogWarning($"Reward Definition is null at index {index}");
                 continue;
             }
 
             int id = (int)definition.RewardId;
-
             var reward = TryCreateReward(id);
+
             if (reward == null) {
-                Debug.Log($"Reward not found at {name}");
+                Debug.LogWarning($"Reward with ID {id} could not be created");
+                continue;
             }
 
             var rewardData = reward.CreateData();
-            rewardsData.Add(rewardData);
+            if (rewardData != null) {
+                rewardsData.Add(rewardData);
+            }
         }
 
         return rewardsData.ToArray();
@@ -165,19 +177,27 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     {
         long minTargetSecond = updateRewardTimeOffset * 3600;
         long maxTargetSecond = (24 + updateRewardTimeOffset) * 3600;
-        long targetSecond = minTargetSecond - TimeManager.GetCurrentSecond() >= 0 ? minTargetSecond : maxTargetSecond;
+        long targetSecond = minTargetSecond - TimeManager.GetCurrentSecond() > 0 ? minTargetSecond : maxTargetSecond;
 
         return targetSecond;
     }
 
-    private void ResetRewards()
+    private void UpdateRewards()
     {
+        currentRewards.Clear();
+
         foreach (var rewardData in GetRandomRewardsData()) {
-            currentRewards.Add(rewardData.CreateReward());
+            var reward = rewardData.CreateReward();
+            if (reward == null) {
+                Debug.LogError("reward is not valid");
+                continue;
+            }
+
+            currentRewards.Add(reward);
         }
     }
 
-    private void ResetNextResetTime()
+    private void UpdateNextResetTime()
     {
         NextResetTime = CalculateNextResetTime();
     }

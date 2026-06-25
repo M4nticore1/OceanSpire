@@ -5,14 +5,9 @@ public class SkipConstructionRewardInstance : RewardInstance
 {
     private ConstructionComponent constructionComponent;
 
-    public SkipConstructionRewardInstance(ConstructionComponent constructionComponent)
+    public SkipConstructionRewardInstance(AdRewardDefinition definition, ConstructionComponent constructionComponent) : base(definition, 0)
     {
         this.constructionComponent = constructionComponent;
-    }
-
-    public override Dictionary<string, string> GetLocalization()
-    {
-        return new();
     }
 
     protected override void OnRewardRecieved()

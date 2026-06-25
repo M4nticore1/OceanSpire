@@ -3,14 +3,9 @@ using UnityEngine;
 
 public class UpdateDailyTasksAdRewardInstance : RewardInstance
 {
-    public UpdateDailyTasksAdRewardInstance(UpdateDailyTasksAdRewardDefinition definition) : base(definition)
+    public UpdateDailyTasksAdRewardInstance(UpdateDailyTasksAdRewardDefinition definition) : base(definition, 0)
     {
 
-    }
-
-    public override Dictionary<string, string> GetLocalization()
-    {
-        return null;
     }
 
     protected override void OnRewardRecieved()

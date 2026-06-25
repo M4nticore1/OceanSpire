@@ -35,7 +35,7 @@ public class DailyRewardWidget : UIBehaviour
             dailyRewardManager.OnDailyRewardRecieved += OnBonusChestRewardRecieved;
         }
         else
-            Debug.Log("dailyRewardManager is not valud", this);
+            Debug.Log("dailyRewardManager is not valid", this);
 
         collectButton.OnReleased.AddListener(OnTakeButtonClicked);
     }
@@ -47,8 +47,6 @@ public class DailyRewardWidget : UIBehaviour
         if (dailyRewardManager) {
             dailyRewardManager.OnDailyRewardRecieved -= OnBonusChestRewardRecieved;
         }
-        else
-            Debug.Log("dailyRewardManager is not valud", this);
 
         collectButton.OnReleased.RemoveListener(OnTakeButtonClicked);
     }
@@ -59,6 +57,9 @@ public class DailyRewardWidget : UIBehaviour
             Debug.LogError("reward is not valid", this);
             return;
         }
+
+        dailyRewardManager = DailyRewardManager.Instance;
+        rewardedAdsManager = RewardedAdsManager.Instance;
 
         this.reward = reward;
         UpdateButtonEnabled();
@@ -106,10 +107,8 @@ public class DailyRewardWidget : UIBehaviour
 
     private void UpdateRewardAmount()
     {
-        if (reward is ItemRewardInstance itemReward) {
-            rewardAmountText.SetText(itemReward.Amount.ToString());
-            rewardAmountText.UpdateText();
-        }
+        rewardAmountText.SetText(reward.Amount.ToString());
+        rewardAmountText.UpdateText();
     }
 
     private void OnTakeButtonClicked()

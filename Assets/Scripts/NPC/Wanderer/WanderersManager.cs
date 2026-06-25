@@ -81,6 +81,11 @@ public class WanderersManager : MonoBehaviour
         Vector3 rotation = Quaternion.LookRotation(-position.normalized).eulerAngles;
 
         var boat = CreateBoat(position, rotation);
+        if (!boat) {
+            Debug.LogError("boat is not valid");
+            return;
+        }
+
         var human = CreateWanderer(position, rotation, boat.InstanceId.GetId());
     }
 
@@ -170,13 +175,19 @@ public class WanderersManager : MonoBehaviour
 
     private Boat CreateBoat(Vector3 position, Vector3 rotation)
     {
+        var dockPoint = GetDockPoint();
+        if (!dockPoint) {
+            Debug.LogError("dockPoint is not valid");
+            return null;
+        }
+
         var boatData = new BoatData()
         {
             Id = boatPrefab.Definition.BoatId,
             InstanceId = InstancesManager.Instance.GetNextInstanceId(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
-            DockInstanceId = GetDockPoint().InstanceId.GetId(),
+            DockInstanceId = dockPoint.InstanceId.GetId(),
             Status = HumanStatusEnum.Wanderer
         };
 

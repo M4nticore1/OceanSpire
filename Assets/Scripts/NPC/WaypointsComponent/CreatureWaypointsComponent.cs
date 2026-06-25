@@ -3,13 +3,12 @@ using UnityEngine;
 
 public class CreatureWaypointsComponent : MonoBehaviour
 {
+    [SerializeField] private Movement movement;
     [SerializeField] private CreatureInteractComponent interactComponent;
     [SerializeField] private CreatureCityNavigator cityNavigator;
 
     public int CurrentWaypointIndex { get; private set; } = 0;
     public float CurrentWaypointTime { get; private set; } = 0f;
-
-    public event Action<BuildingActionWaypoint> OnWaypointChanged;
 
     private void OnEnable()
     {
@@ -29,13 +28,13 @@ public class CreatureWaypointsComponent : MonoBehaviour
 
     public void Tick()
     {
-        if (!interactComponent.InteractBuilding) return;
         if (!interactComponent.IsInteracting) return;
 
         CurrentWaypointTime += Time.deltaTime;
 
         if (!ShouldGoToNextWaypoint()) return;
 
+        UpdateWaypoint();
         GoToNextWaypoint();
     }
 
@@ -54,31 +53,37 @@ public class CreatureWaypointsComponent : MonoBehaviour
     {
         var interaction = GetCurrentBuildingInteraction();
         if (interaction == null) {
-            Debug.LogError("currentBuildingInteraction is not valid ", this);
+            Debug.LogError("currentBuildingInteraction is not valid");
             return null;
         }
 
         return interaction.GetWaypoint(CurrentWaypointIndex);
     }
 
-    private void GoToNextWaypoint()
+    private void UpdateWaypoint()
     {
         var interaction = GetCurrentBuildingInteraction();
         if (interaction == null) {
-            Debug.LogError("currentBuildingInteraction is not valid ", this);
+            Debug.LogError("currentBuildingInteraction is not valid");
             return;
         }
 
         var waypointsLength = interaction.Waypoints.Length;
         if (waypointsLength == 0) {
-            Debug.LogWarning("No waypoints in interaction", this);
+            Debug.LogWarning("No waypoints in interaction");
             return;
         }
 
         CurrentWaypointIndex = (CurrentWaypointIndex + 1) % waypointsLength;
         CurrentWaypointTime = 0;
+    }
 
-        OnWaypointChanged?.Invoke(GetCurrentWaypoint());
+    private void GoToNextWaypoint()
+    {
+        var waypoint = GetCurrentWaypoint();
+        if (waypoint == null) return;
+
+        movement.TryMoveTo(waypoint.Transform);
     }
 
     private void ResetWaypoint()

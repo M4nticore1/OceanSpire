@@ -4781,10 +4781,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: DailyRewardMenu
       objectReference: {fileID: 0}
-    - target: {fileID: 1838814168129062109, guid: 2c5d2965d3458284fb3b1e0c110e18bb, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6162328177944236312, guid: 2c5d2965d3458284fb3b1e0c110e18bb, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4863,6 +4859,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6162328177944236312, guid: 2c5d2965d3458284fb3b1e0c110e18bb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8398560936034956545, guid: 2c5d2965d3458284fb3b1e0c110e18bb, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -11,20 +11,32 @@ public class RewardInstanceData
 
     public virtual RewardInstance CreateReward()
     {
-        return null;
+        var rewardDefinition = RewardsList.Instance.GetRewardDefinition(Id);
+        if (!rewardDefinition)
+            return null;
+
+        var reward = new RewardInstance(rewardDefinition, Amount);
+
+        return reward;
     }
 
     public static RewardInstanceData[] CreateRewards(RewardInstance[] rewards)
     {
-        List<RewardInstanceData> rewardsList = new();
+        var rewardsList = new List<RewardInstanceData>();
 
         foreach (var reward in rewards) {
             if (reward == null) {
-                Debug.Log($"Daily Reward not found");
+                Debug.LogError($"reward is not valid");
                 continue;
             }
 
-            rewardsList.Add(reward.CreateData());
+            var rewardData = reward.CreateData();
+            if (rewardData == null) {
+                Debug.LogError($"rewardData is not valid");
+                continue;
+            }
+
+            rewardsList.Add(rewardData);
         }
 
         return rewardsList.ToArray();

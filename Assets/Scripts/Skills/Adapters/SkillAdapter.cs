@@ -78,6 +78,11 @@ public abstract class SkillAdapter : MonoBehaviour
             return;
         }
 
+        if (SkillComponents.Contains(skillsComponent)) {
+            Debug.LogError("SkillComponents is already contains skillcomponent");
+            return;
+        }
+
         SkillComponents.Add(skillsComponent);
 
         var skill = skillsComponent.GetSkill(skillId);

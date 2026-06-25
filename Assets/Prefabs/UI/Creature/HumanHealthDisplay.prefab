@@ -192,9 +192,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4bc9f867a8f8a44993f0d38bbbe227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthDisplay
-  healthComponent: {fileID: 0}
+  health: {fileID: 0}
   content: {fileID: 1730033437065506062}
-  healthText: {fileID: 0}
+  healthTextLocalizer: {fileID: 0}
   bar: {fileID: 9143142525070389757}
   barGradient:
     serializedVersion: 2
@@ -240,6 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4100a5b3f5727914bae9134f29e3d222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useParentRotation: 1
 --- !u!1 &5988400557423077277
 GameObject:
   m_ObjectHideFlags: 0

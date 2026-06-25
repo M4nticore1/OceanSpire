@@ -240,7 +240,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         var selectComponent = SelectManager.Instance.SelectedComponent;
         if (!selectComponent) return;
 
-        selectComponent.Click();
+        //selectComponent.Click();
     }
 
     private void CollectItem()

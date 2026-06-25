@@ -7,8 +7,8 @@ public class RaidComponent : MonoBehaviour
     private List<Raider> raiders = new();
     public IReadOnlyList<Raider> Raiders => raiders.AsReadOnly();
 
-    private List<Raider> enteredRaiders = new();
-    public IReadOnlyList<Raider> EnteredRaiders => enteredRaiders.AsReadOnly();
+    private List<Raider> currentRaiders = new();
+    public IReadOnlyList<Raider> CurrentRaiders => currentRaiders.AsReadOnly();
 
     public event Action<Raider> OnRaiderAdded;
     public event Action<Raider> OnRaiderRemoved;
@@ -31,13 +31,13 @@ public class RaidComponent : MonoBehaviour
 
     public void AddCurrentRaider(Raider raider)
     {
-        enteredRaiders.Add(raider);
+        currentRaiders.Add(raider);
         OnCurrentRaiderAdded?.Invoke(raider);
     }
 
     public void RemoveCurrentRaider(Raider raider)
     {
-        enteredRaiders.Remove(raider);
+        currentRaiders.Remove(raider);
         OnCurrentRaiderRemoved?.Invoke(raider);
     }
 }

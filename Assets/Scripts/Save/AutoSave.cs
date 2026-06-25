@@ -40,7 +40,8 @@ public class AutoSave : MonoBehaviour
         crrentSaveDataTime += Time.deltaTime;
         if (crrentSaveDataTime < autoSaveDataFrequency) return;
 
-        var worldData = WorldData.Create(WorldSaveManager.Instance,
+        var worldData = WorldData.Create(
+            WorldSaveManager.Instance,
             buildingsManager, elevatorCabinsManager,
             dockPointsManager,
             boatsManager,

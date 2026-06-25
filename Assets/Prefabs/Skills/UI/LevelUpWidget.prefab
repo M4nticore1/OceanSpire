@@ -88,7 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4100a5b3f5727914bae9134f29e3d222, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Billboard
-  useParentRotation: 0
+  useParentRotation: 1
 --- !u!1 &3378358381403698184
 GameObject:
   m_ObjectHideFlags: 0

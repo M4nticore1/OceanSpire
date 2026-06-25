@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class AttackComponent : MonoBehaviour
 {
@@ -52,7 +53,7 @@ public class AttackComponent : MonoBehaviour
     public void SetTarget(AttackComponent target)
     {
         currentTarget = target;
-        target.OnBecomeTarget(this);
+        target.AddAttacker(this);
     }
 
     public void RemoveTarget()
@@ -64,6 +65,11 @@ public class AttackComponent : MonoBehaviour
     public void AddAttacker(AttackComponent attacker)
     {
         currentAttackers.Add(attacker);
+
+        if (currentAttackers.Count > 1) return;
+
+        SetTarget(attacker);
+        MoveToTarget();
     }
 
     public void RemoveAttacker(AttackComponent attacker)
@@ -78,19 +84,10 @@ public class AttackComponent : MonoBehaviour
 
     public void AttackTarget()
     {
-        HealthComponent health = currentTarget.health;
+        var health = currentTarget.health;
 
         health.RemoveHealth(GetDamage());
         currentAttackTime = 0f;
-    }
-
-    public void OnBecomeTarget(AttackComponent target)
-    {
-        if (currentAttackers.Contains(target)) return;
-
-        AddAttacker(target);
-        SetTarget(target);
-        MoveToTarget();
     }
 
     public void OnStopBeingTarget(AttackComponent target)

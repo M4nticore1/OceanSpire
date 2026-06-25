@@ -14,7 +14,7 @@ public class DailyRewardData
     public static DailyRewardData Create(DailyRewardManager dailyRewardManager)
     {
         if (!dailyRewardManager) {
-            Debug.Log("Daily Reward Manager not found");
+            Debug.Log("Daily Reward Manager is not valid");
             return null;
         }
 

@@ -1,9 +1,11 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
-public class UpgradeSkillComponent : MonoBehaviour, IClickable
+public class UpgradeSkillsController : MonoBehaviour, IClickable
 {
     [SerializeField] private SkillsComponent skillComponent;
+    [SerializeField] private SelectComponent selectComponent;
     
     [SerializeField] private bool isClickable = false;
     public bool IsClickable => isClickable;
@@ -20,10 +22,16 @@ public class UpgradeSkillComponent : MonoBehaviour, IClickable
         skillComponent.OnSkillXpChanged -= OnSkillXpChanged;
     }
 
+    private void Start()
+    {
+        UpdateClickable();
+    }
+
     public void Click()
     {
         UpgradeLevels();
         UpdateClickable();
+        selectComponent.Deselect();
 
         OnClicked?.Invoke();
     }
@@ -35,7 +43,9 @@ public class UpgradeSkillComponent : MonoBehaviour, IClickable
 
     public bool ShouldClick()
     {
-        return isClickable;
+        if (!isClickable) return false;
+
+        return true;
     }
 
     private void UpgradeLevels()

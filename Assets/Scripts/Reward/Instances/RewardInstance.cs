@@ -1,29 +1,40 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-public abstract class RewardInstance : ILocalizable
+public class RewardInstance : ILocalizable
 {
     public AdRewardDefinition Definition { get; private set; }
     public bool IsCollected { get; private set; } = false;
+    public int Amount { get; private set; } = 0;
+
+    protected Dictionary<string, string> localizationDictionary = new();
 
     public static event Action<RewardInstance> onRewardReceived;
     public static event Action<RewardInstance> onRewardRemoved;
 
-    public RewardInstance()
-    {
-
-    }
-
-    public RewardInstance(AdRewardDefinition definition)
+    public RewardInstance(AdRewardDefinition definition, int amount)
     {
         Definition = definition;
+        Amount = amount;
     }
 
-    public abstract Dictionary<string, string> GetLocalization();
+    public Dictionary<string, string> GetLocalization()
+    {
+        localizationDictionary.Add("rewardName", LocalizationManager.Instance.GetText(Definition.RewardNameLocalization).ToLower());
+        localizationDictionary.Add("rewardAmount", Amount.ToString());
+
+        return localizationDictionary;
+    }
 
     protected virtual void OnRewardRecieved()
     {
         IsCollected = true;
+    }
+
+    public void SetAmount(int amount)
+    {
+        Amount = amount;
     }
 
     public void RecieveReward()

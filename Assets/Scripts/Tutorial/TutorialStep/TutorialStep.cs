@@ -7,6 +7,7 @@ public class TutorialStep : MonoBehaviour
 
     [SerializeField] private EventListener completeEventListener;
     [SerializeField] private InteractionToggler[] disabledInteractions;
+    [SerializeField] private bool blockCameraMovement = false;
 
     public bool IsCompleted { get; private set; } = false;
 
@@ -67,6 +68,9 @@ public class TutorialStep : MonoBehaviour
         foreach (var disabler in disabledInteractions) {
             disabler.DisableInteraction();
         }
+
+        if (blockCameraMovement)
+            InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     protected virtual void OnComplete()
@@ -76,6 +80,9 @@ public class TutorialStep : MonoBehaviour
         foreach (var disabler in disabledInteractions) {
             disabler.EnableInteraction();
         }
+
+        if (blockCameraMovement)
+            InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     private void OnCompleteEventListenerTriggered()

@@ -204,29 +204,8 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1862234772292438064}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5452299794892249143, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1437646023951441717}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
---- !u!1 &225444294769174946 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5452299794892249143, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
-  m_PrefabInstance: {fileID: 5227137252125454741}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1437646023951441717
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 225444294769174946}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1767a6d38c67cb64b9400acff12b39c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CoalGenetatorConstruction
-  smokeSpawnTransform: {fileID: 0}
 --- !u!4 &5486632833755438258 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}

@@ -198,12 +198,7 @@ public class Boat : MonoBehaviour, IClickable
 
     public void RemoveDockPoint()
     {
-        Debug.Log("RemoveDockPoint");
-
-        if (!DockPoint) {
-            Debug.Log($"DockPoint is already null at {name}");
-            return;
-        }
+        if (!DockPoint) return;
 
         DockPoint.RemoveBoat(this);
         DockPoint = null;

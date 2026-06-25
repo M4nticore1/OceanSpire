@@ -161,6 +161,7 @@ MonoBehaviour:
   content: {fileID: 6390121106355143851}
   completeEventListener: {fileID: 5503741663958555729}
   disabledInteractions: []
+  blockCameraMovement: 1
   dropdown: {fileID: 0}
 --- !u!114 &5503741663958555729 stripped
 MonoBehaviour:

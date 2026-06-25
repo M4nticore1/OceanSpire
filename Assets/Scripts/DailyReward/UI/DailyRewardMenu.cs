@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,24 +7,29 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private DailyRewardManager dailyRewardManager;
     [SerializeField] private DailyRewardWidget bonusChestRewardWidgetPrefab;
+
+    [SerializeField] private GameObject content;
     [SerializeField] private GridLayoutGroup layoutGroup;
     [SerializeField] private TextLocalizer resetTimeText;
+    [SerializeField] private CustomButton closeButton;
 
     private List<DailyRewardWidget> spawnedWidgets = new();
 
     private void OnEnable()
     {
-        DailyRewardManager.Instance.OnDailyRewardReset += OnDailyRewardReset;
+        dailyRewardManager.OnDailyRewardReset += OnDailyRewardReset;
+        closeButton.OnReleased.AddListener(OnCloseButtonClicked);
     }
 
     private void OnDisable()
     {
-        DailyRewardManager.Instance.OnDailyRewardReset -= OnDailyRewardReset;
+        dailyRewardManager.OnDailyRewardReset -= OnDailyRewardReset;
+        closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
     }
 
     private void Start()
     {
-        CreateRewardWidgets();
+        StartCoroutine(CreateWidgetsCoroutine());
     }
 
     private void Update()
@@ -31,36 +37,48 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
         resetTimeText.UpdateText();
     }
 
-    public void Open()
+    public void Display()
     {
-        gameObject.SetActive(true);
+        content.gameObject.SetActive(true);
         dailyRewardManager.SetRewardViewed(true);
     }
 
-    public void Close()
+    public void Hide()
     {
-        gameObject.SetActive(false);
+        content.gameObject.SetActive(false);
     }
 
     private void CreateRewardWidgets()
     {
-        foreach (var reward in DailyRewardManager.Instance.CurrentRewards) {
+        foreach (var reward in dailyRewardManager.CurrentRewards) {
             var widget = DailyRewardWidgetFactory.CreateWidget(bonusChestRewardWidgetPrefab, layoutGroup.transform, reward);
-
             spawnedWidgets.Add(widget);
         }
     }
 
-    private void ClearRewardWidgets()
+    private void DestroyRewardWidgets()
     {
-        for (int i = spawnedWidgets.Count; i >= 0; i--) {
+        for (int i = spawnedWidgets.Count - 1; i >= 0; i--) {
+            Destroy(spawnedWidgets[i].gameObject);
             spawnedWidgets.RemoveAt(i);
         }
     }
 
     private void OnDailyRewardReset()
     {
-        ClearRewardWidgets();
+        DestroyRewardWidgets();
+        CreateRewardWidgets();
+    }
+
+    private void OnCloseButtonClicked()
+    {
+        Hide();
+    }
+
+    private IEnumerator CreateWidgetsCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
         CreateRewardWidgets();
     }
 }

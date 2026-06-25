@@ -48,7 +48,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     public void Open()
     {
         OnOpen();
-        slidePanel.Open();
+        slidePanel.Display();
         AssignImage();
         AssignDescryption();
 
@@ -59,7 +59,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     public void Close()
     {
         OnClose();
-        slidePanel.Close();
+        slidePanel.Hide();
 
         InputStateManager.Instance.SetGameplayInputBlocked(false);
         isOpened = false;

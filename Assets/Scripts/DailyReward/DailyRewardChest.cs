@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class DailyRewardChest : MonoBehaviour, IClickable
 {
+    [SerializeField] private DailyRewardManager dailyRewardManager;
     [SerializeField] private DailyRewardMenu dailyRewardMenu;
     [SerializeField] private GameObject content;
 
@@ -12,19 +13,19 @@ public class DailyRewardChest : MonoBehaviour, IClickable
 
     private void OnEnable()
     {
-        DailyRewardManager.Instance.OnDailyRewardRecieved += OnDailyRewardRecieved;
-        DailyRewardManager.Instance.OnDailyRewardReset += OnDailyRewardsReset;
+        dailyRewardManager.OnDailyRewardRecieved += OnDailyRewardRecieved;
+        dailyRewardManager.OnDailyRewardReset += OnDailyRewardsReset;
     }
 
     private void OnDisable()
     {
-        DailyRewardManager.Instance.OnDailyRewardRecieved -= OnDailyRewardRecieved;
-        DailyRewardManager.Instance.OnDailyRewardReset -= OnDailyRewardsReset;
+        dailyRewardManager.OnDailyRewardRecieved -= OnDailyRewardRecieved;
+        dailyRewardManager.OnDailyRewardReset -= OnDailyRewardsReset;
     }
 
     public void Click()
     {
-        dailyRewardMenu.Open();
+        dailyRewardMenu.Display();
 
         OnClicked?.Invoke();
     }
@@ -43,7 +44,7 @@ public class DailyRewardChest : MonoBehaviour, IClickable
 
     private void OnDailyRewardRecieved(RewardInstance reward)
     {
-        if (!DailyRewardManager.Instance.AdRewardCollected) return;
+        if (!dailyRewardManager.AdRewardCollected) return;
 
         content.SetActive(false);
     }

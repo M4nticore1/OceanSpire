@@ -18,7 +18,7 @@ public class Movement : MonoBehaviour
     public bool UseTargetRotation { get; private set; } = false;
     public Quaternion TargetRotation { get; private set; } = Quaternion.identity;
 
-    public MovementMethod currentMovementMethod { get; private set; }
+    public MovementMethod CurrentMovementMethod { get; private set; }
 
     [Header("Speed")]
     [SerializeField] private float walkSpeed;
@@ -47,7 +47,7 @@ public class Movement : MonoBehaviour
     {
         if (!navAgent) return;
 
-        currentMovementMethod = method;
+        CurrentMovementMethod = method;
 
         switch (method) {
             case MovementMethod.Walk:
@@ -81,7 +81,6 @@ public class Movement : MonoBehaviour
     {
         if (!CanStartMoving()) return false;
 
-        IsMoving = true;
         TargetPosition = position;
         RemoveTargetRotation();
 
@@ -94,6 +93,7 @@ public class Movement : MonoBehaviour
         if (!navAgent.SetDestination(position))
             return false;
 
+        IsMoving = true;
         OnMovementStarted?.Invoke();
 
         return true;
@@ -105,9 +105,13 @@ public class Movement : MonoBehaviour
 
         navAgent.isStopped = true;
         navAgent.ResetPath();
+
+        var lastIsMoving = IsMoving;
         IsMoving = false;
 
-        OnMovementStopped?.Invoke();
+        if (lastIsMoving) {
+            OnMovementStopped?.Invoke();
+        }
 
         if (IsDestinationReached()) {
             OnReachedDestination?.Invoke();

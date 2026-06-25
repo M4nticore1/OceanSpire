@@ -14,11 +14,14 @@ public class CreatureCityNavigator : MonoBehaviour
     [SerializeField] private CreatureWaypointsComponent waypointsComponent;
     public CreatureWaypointsComponent WaypointsComponent => waypointsComponent;
 
+    [SerializeField] private HealthComponent healthComponent;
+    public HealthComponent HealthComponent => healthComponent;
+
     // Path
     [SerializeField] private List<Building> pathBuildings = new List<Building>();
     public IReadOnlyList<Building> PathBuildings => pathBuildings;
 
-    public Building CurrentBuilding { get; private set; }
+    [field: SerializeField] public Building CurrentBuilding { get; private set; }
     public TowerBuilding CurrentTowerBuilding { get; private set; }
 
     public Building LastPathBuilding { get; private set; }
@@ -532,6 +535,7 @@ public class CreatureCityNavigator : MonoBehaviour
         if (HasPath) return false;
         if (!elevatorPassenger.CurrentElevator) return false;
         if (!elevatorPassenger.CurrentElevator.IsPossibleToExit()) return false;
+        if (!healthComponent.IsAlive) return false;
 
         if (elevatorPassenger.IsRiding) return true;
         if (elevatorPassenger.IsGoingToRiding) return true;

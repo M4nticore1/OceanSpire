@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: skill_cooking
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
   skillId: 0
-  bonusPerLevel: 0.1
-  xpGainRate: 0.1
+  bonusPerLevel: 0.05
+  xpGainRate: 0.01
   skillNameLocalization: {fileID: 11400000, guid: 5dedda2481649014ea38b9f87be54b57, type: 2}
   skillDescriptionLocalization: {fileID: 11400000, guid: 51b7236cca2f28a44bd72c59f616f3fb, type: 2}

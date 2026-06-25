@@ -46,12 +46,12 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
-    public void Open()
+    public void Display()
     {
         Open(null);
     }
 
-    public void Close()
+    public void Hide()
     {
         gameObject.SetActive(false);
 
@@ -60,7 +60,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     private void OnCompleteButtonReleased()
     {
-        SkipConstructionRewardInstance reward = new SkipConstructionRewardInstance(building.ConstructionComponent);
+        var reward = new SkipConstructionRewardInstance(null, building.ConstructionComponent);
         RewardedAdsManager.Instance.SetCurrentReward(reward);
         RewardedAdsManager.Instance.ShowAd();
     }
@@ -69,6 +69,6 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     {
         if (building != this.building) return;
 
-        Close();
+        Hide();
     }
 }

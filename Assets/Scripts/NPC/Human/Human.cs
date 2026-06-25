@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public enum HumanStatusEnum
@@ -169,72 +170,86 @@ public abstract class Human : Creature, IClickable
         weaponComponent.Init(humanData.Weapon);
         boatRider.Init(humanData.BoatRider);
 
-        DetermineNextAction();
-
         OnHumanInited?.Invoke(this);
     }
 
-    protected override void OnInitedNextFrame()
+    protected override void OnInitNextFrame()
     {
-        base.OnInitedNextFrame();
+        base.OnInitNextFrame();
 
-        if (elevatorPassenger.IsRiding) return;
-        if (boatRider.RidingBoat) return;
+        if (!elevatorPassenger.IsRiding && !boatRider.RidingBoat) {
+            movement.SetAgentEnabled(true);
+            cityNavigator.FollowPath();
+        }
 
-        movement.SetAgentEnabled(true);
-        cityNavigator.FollowPath();
-
-        
+        DetermineNextAction();
     }
 
     // Action
     protected override void DetermineNextAction()
     {
         if (ShouldStartInteracting()) {
+            //Debug.Log("ShouldStartInteracting");
             StartInteracting();
             return;
         }
+        if (ShouldStopInteracting()) {
+            //Debug.Log("ShouldStopInteracting");
+            StopInteracting();
+            return;
+        }
         if (ShouldMoveToTargetBoat()) {
+            //Debug.Log("ShouldMoveToTargetBoat");
             MoveToTargetBoat();
             return;
         }
         if (ShouldStartEnteringBoat()) {
+            //Debug.Log("ShouldStartEnteringBoat");
             StartEnteringBoat();
             return;
         }
         if (ShouldStopEnteringBoat()) {
+            //Debug.Log("ShouldStopEnteringBoat");
             StopEnteringBoat();
             return;
         }
         if (ShouldStartExitingBoat()) {
+            //Debug.Log("ShouldStartExitingBoat");
             StartExitingBoat();
             return;
         }
         if (ShouldStopExitingBoat()) {
+            //Debug.Log("ShouldStopExitingBoat");
             StopExitingBoat();
             return;
         }
         if (ShouldBoatMoveToDock()) {
+            //Debug.Log("ShouldBoatMoveToDock");
             BoatMoveToDock();
             return;
         }
         if (ShouldBoatFindLoot()) {
+            //Debug.Log("ShouldBoatFindLoot");
             BoatFindLoot();
             return;
         }
         if (ShouldBoatFloatAway()) {
+            //Debug.Log("ShouldBoatFloatAway");
             BoatFloatAway();
             return;
         }
         if (ShouldStartAttacking()) {
+            //Debug.Log("ShouldStartAttacking");
             StartAttacking();
             return;
         }
         if (ShouldStopAttacking()) {
+            //Debug.Log("ShouldStopAttacking");
             StopAttacking();
             return;
         }
         if (ShouldFollowPath()) {
+            //Debug.Log("ShouldFollowPath");
             FollowPath();
             return;
         }
@@ -243,6 +258,12 @@ public abstract class Human : Creature, IClickable
     protected virtual void StartInteracting()
     {
         InteractComponent.TryStartInteracting();
+        UpdateIdle();
+    }
+
+    protected virtual void StopInteracting()
+    {
+        InteractComponent.TryStopInteracting();
         UpdateIdle();
     }
 
@@ -286,12 +307,6 @@ public abstract class Human : Creature, IClickable
         UpdateIdle();
     }
 
-    protected virtual void FollowPath()
-    {
-        cityNavigator.FollowPath();
-        UpdateIdle();
-    }
-
     protected virtual void BoatMoveToDock()
     {
         BoatRider.RidingBoat.SetState(BoatStateEnum.MovingToDock);
@@ -309,6 +324,12 @@ public abstract class Human : Creature, IClickable
         UpdateIdle();
     }
 
+    protected virtual void FollowPath()
+    {
+        cityNavigator.FollowPath();
+        UpdateIdle();
+    }
+
     protected virtual bool ShouldStartInteracting()
     {
         if (interactComponent.IsInteracting) return false;
@@ -318,6 +339,7 @@ public abstract class Human : Creature, IClickable
         if (cityNavigator.CurrentBuilding != interactComponent.InteractBuilding) return false;
         if (interactComponent.InteractBuilding.GetComponent<PierModule>()) return false;
         if (boatRider.RidingBoat) return false;
+        if (attackComponent.IsAttacking) return false;
 
         var waypoint = cityNavigator.WaypointsComponent.GetCurrentWaypoint();
         if (waypoint == null) {
@@ -326,16 +348,17 @@ public abstract class Human : Creature, IClickable
         }
 
         if (!boatRider.RidingBoat && !movement.IsReachedPosition(cityNavigator.WaypointsComponent.GetCurrentWaypoint().Transform.position)) return false;
-        if (attackComponent.IsAttacking) return false;
 
         return true;
     }
 
-    protected virtual bool ShouldFollowPath()
+    protected virtual bool ShouldStopInteracting()
     {
-        if (boatRider.RidingBoat) return false;
+        if (!interactComponent.IsInteracting) return false;
+        if (!interactComponent.InteractBuilding) return false;
+        if (attackComponent.IsAttacking) return true;
 
-        return true;
+        return false;
     }
 
     protected virtual bool ShouldMoveToTargetBoat()
@@ -345,6 +368,7 @@ public abstract class Human : Creature, IClickable
         if (boatRider.RidingBoat) return false;
         if (cityNavigator.FloorIndex > 0) return false;
         if (cityNavigator.TargetBuilding && cityNavigator.TargetBuilding != cityNavigator.CurrentBuilding) return false;
+        if (attackComponent.IsAttacking) return false;
         if (movement.IsReachedPosition(boatRider.TargetBoat.DockPoint.EntraceTransform.position)) return false;
 
         return true;
@@ -416,12 +440,24 @@ public abstract class Human : Creature, IClickable
 
     protected virtual bool ShouldStartAttacking()
     {
-        return false;
+        if (attackComponent.IsAttacking) return false;
+
+        return true;
     }
 
     protected virtual bool ShouldStopAttacking()
     {
-        return false;
+        if (!attackComponent.IsAttacking) return false;
+
+        return true;
+    }
+
+    protected virtual bool ShouldFollowPath()
+    {
+        if (boatRider.RidingBoat) return false;
+        if (attackComponent.IsAttacking) return false;
+
+        return true;
     }
 
     // IClickable
@@ -469,9 +505,8 @@ public abstract class Human : Creature, IClickable
 
     protected virtual void OnDied()
     {
-        var interactBuilding = interactComponent.InteractBuilding;
-        interactComponent.TryRemoveInteractBuilding();
-        interactComponent.TryStopInteracting(interactBuilding);
+        interactComponent.TryStopInteracting();
+        interactComponent.RemoveInteractBuilding();
 
         TryStopIdle();
         contextMenuTarget.SetShowContextMenu(false);
@@ -566,8 +601,8 @@ public abstract class Human : Creature, IClickable
     {
         var interactBuilding = interactComponent.InteractBuilding;
         if (interactBuilding && !interactBuilding.GetComponent<PierModule>()) {
+            interactComponent.TryStopInteracting();
             interactComponent.RemoveInteractBuilding();
-            interactComponent.TryStopInteracting(interactBuilding);
         }
 
         if (cityNavigator.CurrentBuilding && cityNavigator.CurrentBuilding as TowerBuilding) {
@@ -615,5 +650,12 @@ public abstract class Human : Creature, IClickable
     private void OnDeselected()
     {
         OnHumanDeselected?.Invoke(this);
+    }
+
+    private IEnumerator DetermineNextActionCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+        DetermineNextAction();
     }
 }

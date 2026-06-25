@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CreatureInteractComponent : MonoBehaviour
 {
-    public Building InteractBuilding { get; private set; }
+    [field: SerializeField] public Building InteractBuilding { get; private set; }
     public bool IsInteracting { get; private set; } = false;
 
     public event Action<Building> OnInteractBuildingSeted;
@@ -48,15 +48,10 @@ public class CreatureInteractComponent : MonoBehaviour
         OnInteractorInteractBuildingSeted?.Invoke(this);
     }
 
-    public void TryRemoveInteractBuilding()
+    public void RemoveInteractBuilding()
     {
         if (!InteractBuilding) return;
 
-        RemoveInteractBuilding();
-    }
-
-    public void RemoveInteractBuilding()
-    {
         var lastInteractBuilding = InteractBuilding;
         InteractBuilding = null;
 
@@ -66,16 +61,16 @@ public class CreatureInteractComponent : MonoBehaviour
 
     public void TryStartInteracting()
     {
-        if (!ShouldStartInteracting()) return;
+        if (!ShouldStartInteracting(InteractBuilding)) return;
 
         StartInteracting();
     }
 
-    public void TryStopInteracting(Building building)
+    public void TryStopInteracting()
     {
-        if (!ShouldStopInteracting()) return;
+        if (!ShouldStopInteracting(InteractBuilding)) return;
 
-        StopInteracting(building);
+        StopInteracting(InteractBuilding);
     }
 
     private void StartInteracting()
@@ -90,15 +85,17 @@ public class CreatureInteractComponent : MonoBehaviour
         OnInteractionStopped?.Invoke(building);
     }
 
-    private bool ShouldStartInteracting()
+    private bool ShouldStartInteracting(Building interactBuilding)
     {
+        if (!interactBuilding) return false;
         if (IsInteracting) return false;
 
         return true;
     }
 
-    private bool ShouldStopInteracting()
+    private bool ShouldStopInteracting(Building interactBuilding)
     {
+        if (!interactBuilding) return false;
         if (!IsInteracting) return false;
 
         return true;

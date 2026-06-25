@@ -43,7 +43,7 @@ public class SelectComponent : MonoBehaviour, IClickable
     {
         layers.Clear();
 
-        List<GameObject> objects = GameUtils.GetAllChildren(transform);
+        var objects = GameUtils.GetAllChildren(transform);
         objects.Add(gameObject);
 
         foreach (GameObject child in objects) {
@@ -67,7 +67,7 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     public void Deselect()
     {
-        List<GameObject> objects = GameUtils.GetAllChildren(transform);
+        var objects = GameUtils.GetAllChildren(transform);
         objects.Add(gameObject);
 
         foreach (GameObject child in objects) {

@@ -77,6 +77,10 @@ public class Citizen : Human
             BoatFloatAway();
             return;
         }
+        if (ShouldStartAttacking()) {
+            StartAttacking();
+            return;
+        }
 
         base.DetermineNextAction();
     }
@@ -92,6 +96,21 @@ public class Citizen : Human
         var boat = BoatRider.RidingBoat;
         boat.FloatAway(LeavePosition);
         boat.RemoveDockPoint();
+    }
+
+    protected override void StartAttacking()
+    {
+        var currentBuilding = CityNavigator.CurrentBuilding;
+        var currentRaiders = currentBuilding.RaidComponent.CurrentRaiders;
+
+        foreach (var raider in currentRaiders) {
+            if (!raider.HealthComponent.IsAlive) continue;
+            if (raider.IsRaidFinished) continue;
+
+            AttackComponent.SetTarget(raider.AttackComponent);
+            AttackComponent.MoveToTarget();
+            break;
+        }
     }
 
     protected override bool ShouldBoatMoveToDock()
@@ -122,6 +141,25 @@ public class Citizen : Human
         if (!InteractComponent.InteractBuilding.GetComponent<PierModule>()) return false;
 
         return true;
+    }
+
+    protected override bool ShouldStartAttacking()
+    {
+        if (!base.ShouldStartAttacking()) return false;
+
+        var currentBuilding = CityNavigator.CurrentBuilding;
+        if (!currentBuilding) return false;
+
+        if (currentBuilding != InteractComponent.InteractBuilding) return false;
+
+        var currentRaiders = currentBuilding.RaidComponent.CurrentRaiders;
+        foreach (var raider in currentRaiders) {
+            if (!raider.HealthComponent.IsAlive) continue;
+
+            return true;
+        }
+
+        return false;
     }
 
     protected override void OnInteractBuildingSeted(Building building)
@@ -156,8 +194,7 @@ public class Citizen : Human
     {
         base.OnDied();
 
-        var building = InteractComponent.InteractBuilding;
+        InteractComponent.TryStopInteracting();
         InteractComponent.RemoveInteractBuilding();
-        InteractComponent.TryStopInteracting(building);
     }
 }

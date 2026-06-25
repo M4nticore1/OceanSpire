@@ -47,16 +47,26 @@ public class HumanAnimation : MonoBehaviour
         human.HealthComponent.OnDied -= OnDied;
     }
 
-    private void DisableAllCondition()
+    private void UpdateParameters()
     {
-        foreach (var param in animator.parameters) {
-            var paramName = param.name;
+        UpdateWalking();
+        UpdateRunning();
+        UpdateWorking();
+    }
 
-            var paramType = param.type;
-            if (paramType != AnimatorControllerParameterType.Bool) return;
+    private void UpdateWalking()
+    {
+        animator.SetBool("isWalking", human.Movement.IsMoving && human.Movement.CurrentMovementMethod == MovementMethod.Walk);
+    }
 
-            animator.SetBool(paramName, false);
-        }
+    private void UpdateRunning()
+    {
+        animator.SetBool("isRunning", human.Movement.IsMoving && human.Movement.CurrentMovementMethod == MovementMethod.Run);
+    }
+
+    private void UpdateWorking()
+    {
+        animator.SetBool("isWorking", human.InteractComponent.IsInteracting && !human.Movement.IsMoving);
     }
 
     private void OnIdleStarted()
@@ -71,22 +81,12 @@ public class HumanAnimation : MonoBehaviour
 
     private void OnMovementStarted()
     {
-        switch (human.Movement.currentMovementMethod) {
-            case MovementMethod.Walk:
-                animator.SetBool("isWalking", true);
-                animator.SetBool("isRunning", false);
-                break;
-            case MovementMethod.Run:
-                animator.SetBool("isWalking", false);
-                animator.SetBool("isRunning", true);
-                break;
-        }
+        UpdateParameters();
     }
 
     private void OnMovementStopped()
     {
-        animator.SetBool("isWalking", false);
-        animator.SetBool("isRunning", false);
+        UpdateParameters();
     }
 
     private void OnBoatMovementStarted(Boat boat)
@@ -101,27 +101,35 @@ public class HumanAnimation : MonoBehaviour
 
     private void OnInteractionStarted(Building building)
     {
-        if (human.GetComponent<Citizen>()) {
-            animator.SetBool("isWorking", true);
-        }
-        else if (human.GetComponent<Raider>()) {
-            animator.SetBool("isRaiding", true);
-        }
+        UpdateParameters();
     }
 
     private void OnInteractionStopped(Building building)
     {
-        animator.SetBool("isWorking", false);
+        UpdateParameters();
     }
 
     private void OnStartedAttacking()
     {
-        animator.SetBool("isAttacking", true);
+        var weaponDefinition = human.WeaponComponent.EquipmentDefinition as WeaponDefinition;
+        if (!weaponDefinition) {
+            Debug.LogError("weaponDefinition is not valid");
+            return;
+        }
+
+        var animationName = weaponDefinition.AttackMethods == AttackMethod.Hands ? "isAttackingHands" :
+            weaponDefinition.AttackMethods == AttackMethod.Light ? "isAttackingLight" :
+            weaponDefinition.AttackMethods == AttackMethod.Heavy ? "isAttackingHeavy" :
+            "";
+
+        animator.SetBool(animationName, true);
     }
 
     private void OnStoppedAttacking()
     {
-        animator.SetBool("isAttacking", false);
+        animator.SetBool("isAttackingHands", false);
+        animator.SetBool("isAttackingLight", false);
+        animator.SetBool("isAttackingHeavy", false);
     }
 
     private void OnRevived()

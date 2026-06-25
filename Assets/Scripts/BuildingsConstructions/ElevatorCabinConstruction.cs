@@ -84,6 +84,8 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void SetTargetFloor(int floorIndex)
     {
         TargetFloor = floorIndex;
+
+        SetNextFloor(CalculateNextFloor());
     }
 
     public void SetNextFloor(int floorIndex)
@@ -215,7 +217,16 @@ public class ElevatorCabinConstruction : BuildingConstruction
     private void UpdateDestinationAndProceed()
     {
         if (IsMoving) {
-            SetTargetFloor(CalculateTargetFloor());
+            int targetFloor = 0;
+
+            if (ridingPassengers.Count > 0) {
+                targetFloor = CalculateTargetFloor();
+            }
+            else {
+                targetFloor = NextFloor;
+            }
+
+            SetTargetFloor(targetFloor);
             UpdateMoveDirection();
             StartMovingToTargetFloor();
         }

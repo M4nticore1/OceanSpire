@@ -36,7 +36,7 @@ public abstract class Creature : MonoBehaviour
 
     public void Init(CreatureData creatureData)
     {
-        StartCoroutine(InitNextFrame());
+        StartCoroutine(InitNextFrameCoroutine());
         OnInit(creatureData);
         UpdateIdle();
     }
@@ -49,7 +49,7 @@ public abstract class Creature : MonoBehaviour
         instanceId.Register(data.InstanceId);
     }
 
-    protected virtual void OnInitedNextFrame()
+    protected virtual void OnInitNextFrame()
     {
         
     }
@@ -106,10 +106,10 @@ public abstract class Creature : MonoBehaviour
         UpdateIdle();
     }
 
-    private IEnumerator InitNextFrame()
+    private IEnumerator InitNextFrameCoroutine()
     {
         yield return new WaitForEndOfFrame();
 
-        OnInitedNextFrame();
+        OnInitNextFrame();
     }
 }

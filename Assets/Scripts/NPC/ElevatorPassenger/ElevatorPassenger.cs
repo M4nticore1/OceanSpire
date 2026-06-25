@@ -16,6 +16,9 @@ public class ElevatorPassenger : MonoBehaviour
     [SerializeField] private CreatureCityNavigator cityNavigator;
     public CreatureCityNavigator CityNavigator => cityNavigator;
 
+    [SerializeField] private HealthComponent healthComponent;
+    public HealthComponent HealthComponent => healthComponent;
+
     public ElevatorModule CurrentElevator { get; private set; }
 
     [field: SerializeField] public ElevatorPassengerStateEnum CurrentStateEnum { get; private set; } = ElevatorPassengerStateEnum.None;
@@ -30,12 +33,14 @@ public class ElevatorPassenger : MonoBehaviour
     {
         cityNavigator.OnEnteredBuilding += OnEnteredBuilding;
         cityNavigator.OnExitedBuilding += OnExitedBuilding;
+        healthComponent.OnDied += OnDied;
     }
 
     private void OnDisable()
     {
         cityNavigator.OnEnteredBuilding -= OnEnteredBuilding;
         cityNavigator.OnExitedBuilding -= OnExitedBuilding;
+        healthComponent.OnDied -= OnDied;
     }
 
     public void Init(ElevatorPassengerData elevatorPassengerData)
@@ -109,5 +114,10 @@ public class ElevatorPassenger : MonoBehaviour
     private void OnExitedBuilding(Building building)
     {
         UpdateCurrentElevator();
+    }
+
+    private void OnDied()
+    {
+        SetState(ElevatorPassengerStateEnum.None);
     }
 }

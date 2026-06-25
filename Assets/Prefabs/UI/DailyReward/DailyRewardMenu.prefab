@@ -60,7 +60,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 874349842437166423}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -70,7 +70,7 @@ RectTransform:
   - {fileID: 1481129132361999158}
   - {fileID: 599351276579416095}
   - {fileID: 5638569134484699312}
-  m_Father: {fileID: 6162328177944236312}
+  m_Father: {fileID: 2551576567241238806}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -106,8 +106,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1533593089811541217}
-  - {fileID: 4068433144040277884}
+  - {fileID: 2551576567241238806}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -129,8 +128,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BonusChestMenu
   dailyRewardManager: {fileID: 0}
   bonusChestRewardWidgetPrefab: {fileID: 1590089733661164763, guid: 9c40c4cd8f11a514bb240150694bf687, type: 3}
+  content: {fileID: 8398560936034956545}
   layoutGroup: {fileID: 4337446185677126862}
   resetTimeText: {fileID: 401413543552266085}
+  closeButton: {fileID: 726734256753586023}
 --- !u!1 &2426214059955394919
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,12 +614,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6881200048416113229}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6162328177944236312}
+  m_Father: {fileID: 2551576567241238806}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -719,6 +720,43 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &8398560936034956545
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2551576567241238806}
+  m_Layer: 5
+  m_Name: Content
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2551576567241238806
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8398560936034956545}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1533593089811541217}
+  - {fileID: 4068433144040277884}
+  m_Father: {fileID: 6162328177944236312}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8944226510966325862
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,7 +915,7 @@ PrefabInstance:
       objectReference: {fileID: 7462972450478756611}
     - target: {fileID: 7772729926661117182, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7772729926661117182, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.size
@@ -936,6 +974,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
+--- !u!114 &726734256753586023 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7772729926661117182, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
+  m_PrefabInstance: {fileID: 7046911150852193177}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
 --- !u!224 &5638569134484699312 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}

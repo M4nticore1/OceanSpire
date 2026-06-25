@@ -37,7 +37,7 @@ public class ReviveMenu : UIBehaviour
     {
         if (!isOpened) return;
 
-        Human human = SelectManager.Instance.GetSelectedHuman();
+        var human = SelectManager.Instance.GetSelectedHuman();
         if (!human) return;
 
         float time = human.ReviveComponent.ReviveLimitTime - human.ReviveComponent.CurrentDiedTime;
@@ -46,8 +46,8 @@ public class ReviveMenu : UIBehaviour
 
     private void OnButtonClicked()
     {
-        Human human = SelectManager.Instance.GetSelectedHuman();
-        ReviveAdRewardInstance rewrad = new ReviveAdRewardInstance(human);
+        var human = SelectManager.Instance.GetSelectedHuman();
+        var rewrad = new ReviveAdRewardInstance(null, human);
 
         RewardedAdsManager.Instance.SetCurrentReward(rewrad);
         RewardedAdsManager.Instance.ShowAd();
@@ -56,13 +56,13 @@ public class ReviveMenu : UIBehaviour
     public void Open()
     {
         isOpened = true;
-        slidePanel.Open();
+        slidePanel.Display();
         InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     public void Close()
     {
-        slidePanel.Close();
+        slidePanel.Hide();
         AssignButtonEnabled();
         UpdateRemainingRevivesText();
     }

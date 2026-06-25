@@ -49,6 +49,10 @@ PrefabInstance:
       value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 4848831189876589187, guid: 6122d99c5a984f24a8223684cb29dd3c, type: 3}
+      propertyPath: blockCameraMovement
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4848831189876589187, guid: 6122d99c5a984f24a8223684cb29dd3c, type: 3}
       propertyPath: completeEventListener
       value: 
       objectReference: {fileID: 5503741663958555729}

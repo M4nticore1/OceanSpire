@@ -4,22 +4,9 @@ public class ReviveAdRewardInstance : RewardInstance
 {
     private Human human;
 
-    public ReviveAdRewardInstance(Human human) : base()
+    public ReviveAdRewardInstance(ReviveAdRewardDefinition definition, Human human) : base(definition, 0)
     {
         this.human = human;
-    }
-
-    public ReviveAdRewardInstance(ReviveAdRewardDefinition definition, Human human) : base(definition)
-    {
-        this.human = human;
-    }
-
-    public override Dictionary<string, string> GetLocalization()
-    {
-        return new Dictionary<string, string>()
-        {
-
-        };
     }
 
     protected override void OnRewardRecieved()

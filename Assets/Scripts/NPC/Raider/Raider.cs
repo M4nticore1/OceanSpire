@@ -8,7 +8,7 @@ public class Raider : Human, IProgressable
     private float currentRaidBuildingTime = 0f;
 
     public bool IsRaidFinished { get; private set; } = false;
-    private bool isRaidingBuilding = false;
+    public bool IsRaidingBuilding { get; private set; } = false;
 
     public Vector3 SpawnPosition { get; private set; } = Vector3.zero;
 
@@ -33,7 +33,7 @@ public class Raider : Human, IProgressable
     {
         base.Update();
 
-        if (!isRaidingBuilding) return;
+        if (!IsRaidingBuilding) return;
 
         currentRaidBuildingTime += Time.deltaTime;
         if (currentRaidBuildingTime < raidBuildingTime) return;
@@ -60,19 +60,23 @@ public class Raider : Human, IProgressable
     protected override void DetermineNextAction()
     {
         if (ShouldBoatMoveToDock()) {
+            Debug.Log("ShouldBoatMoveToDock");
             BoatMoveToDock();
             return;
         }
         if (ShouldBoatFloatAway()) {
+            Debug.Log("ShouldBoatFloatAway");
             BoatFloatAway();
             return;
         }
-        if (ShouldRaidBuilding()) {
-            StartRaidingBuilding();
+        if (ShouldStartAttacking()) {
+            Debug.Log("ShouldStartAttacking");
+            StartAttacking();
             return;
         }
-        if (ShouldAttackWorker()) {
-            AttackWorker();
+        if (ShouldRaidBuilding()) {
+            Debug.Log("ShouldRaidBuilding");
+            StartRaidingBuilding();
             return;
         }
 
@@ -88,21 +92,26 @@ public class Raider : Human, IProgressable
         boat.RemoveDockPoint();
     }
 
+    protected override void StartAttacking()
+    {
+        var currentBuilding = CityNavigator.CurrentBuilding;
+        var currentWorkers = currentBuilding.WorkComponent.CurrentWorkers;
+
+        foreach (var worker in currentWorkers) {
+            if (!worker.IsCitizenAvaliable()) continue;
+
+            AttackComponent.SetTarget(worker.AttackComponent);
+            AttackComponent.MoveToTarget();
+            break;
+        }
+    }
+
     protected virtual void StartRaidingBuilding()
     {
-        isRaidingBuilding = true;
+        IsRaidingBuilding = true;
         CityNavigator.FollowPath();
 
         OnRaidBuildingStarted?.Invoke(CityNavigator.CurrentBuilding);
-    }
-
-    protected virtual void AttackWorker()
-    {
-        var building = CityNavigator.CurrentBuilding;
-        var target = building.WorkComponent.CurrentWorkers[0].GetComponent<AttackComponent>();
-
-        AttackComponent.SetTarget(target);
-        AttackComponent.MoveToTarget();
     }
 
     protected override bool ShouldBoatMoveToDock()
@@ -121,6 +130,23 @@ public class Raider : Human, IProgressable
         return true;
     }
 
+    protected override bool ShouldStartAttacking()
+    {
+        var currentBuilding = CityNavigator.CurrentBuilding;
+        if (!currentBuilding) return false;
+
+        if (currentBuilding != InteractComponent.InteractBuilding) return false;
+
+        var currentWorkers = currentBuilding.WorkComponent.CurrentWorkers;
+        foreach (var worker in currentWorkers) {
+            if (!worker.IsCitizenAvaliable()) continue;
+
+            return true;
+        }
+
+        return false;
+    }
+
     protected virtual bool ShouldRaidBuilding()
     {
         if (IsRaidFinished) return false;
@@ -129,20 +155,6 @@ public class Raider : Human, IProgressable
         if (!currentBuilding) return false;
 
         if (currentBuilding != InteractComponent.InteractBuilding) return false;
-
-        return true;
-    }
-
-    protected virtual bool ShouldAttackWorker()
-    {
-        var currentBuilding = CityNavigator.CurrentBuilding;
-        if (!currentBuilding) return false;
-
-        if (currentBuilding != InteractComponent.InteractBuilding) return false;
-        if (currentBuilding.WorkComponent.CurrentWorkers.Count <= 0) return false;
-
-        var worker = currentBuilding.WorkComponent.CurrentWorkers[0];
-        if (!worker.HealthComponent.IsAlive) return false;
 
         return true;
     }
@@ -219,7 +231,7 @@ public class Raider : Human, IProgressable
 
     private void FinishRaidingBuilding()
     {
-        isRaidingBuilding = false;
+        IsRaidingBuilding = false;
         IsRaidFinished = true;
 
         OnRaidBuildingStopped?.Invoke(CityNavigator.CurrentBuilding);
