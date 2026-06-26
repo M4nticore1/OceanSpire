@@ -151,9 +151,9 @@ public abstract class Human : Creature, IClickable
         }
     }
 
-    protected virtual void Update()
+    public override void Tick()
     {
-
+        base.Tick();
     }
 
     protected override void OnInit(CreatureData creatureData)

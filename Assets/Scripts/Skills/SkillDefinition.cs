@@ -30,5 +30,5 @@ public class SkillDefinition : ScriptableObject
     [SerializeField] private LocalizationItem skillDescriptionLocalization;
     public LocalizationItem SkillDescriptionLocalization => skillDescriptionLocalization;
 
-    public const int maxSkillLevel = 10;
+    public const int MaxSkillLevel = 10;
 }

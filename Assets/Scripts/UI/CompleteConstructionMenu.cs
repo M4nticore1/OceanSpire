@@ -49,7 +49,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
-    public void Display()
+    public void Show()
     {
         Open(null);
     }

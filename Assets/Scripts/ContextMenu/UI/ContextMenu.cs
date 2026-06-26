@@ -33,7 +33,7 @@ public class ContextMenu : UIBehaviour
 
     private void Open()
     {
-        slidePanel.Display();
+        slidePanel.Show();
         onOpened?.Invoke();
     }
 

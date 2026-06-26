@@ -46,7 +46,7 @@ public class DailyTaskCompletedMenu : DailyTaskPanel
     {
         if (isOpened) return;
 
-        slidePanel.Display();
+        slidePanel.Show();
         isOpened = true;
     }
 

@@ -50,8 +50,7 @@ public class SkillWidget : MonoBehaviour
 
         Skill = skill;
         UpdateSkillName();
-        UpdateBonusText();
-        UpdateBonusColor();
+        UpdateBonusTextAndColor();
         UpdateProgress();
 
         skill.OnXpChanged += OnSkillXpChanged;
@@ -67,29 +66,20 @@ public class SkillWidget : MonoBehaviour
         skillName.UpdateText();
     }
 
-    private void UpdateBonusText()
+    private void UpdateBonusTextAndColor()
     {
         if (Skill == null) return;
 
-        float bonus = Skill.GetBonus() * 100;
-        string text = $"({GetBonusText()})";
-        skillBonus.SetText(text);
-    }
+        float bonusValue = Skill.GetBonus() * 100;
+        string bonusText = $"+{bonusValue}%";
 
-    private void UpdateBonusColor()
-    {
-        if (Skill == null) return;
-
-        float alpha = (float)(Skill.CurrentLevel - 1) / (SkillDefinition.maxSkillLevel / SkillsFactory.GetLevelsCount());
-
+        float alpha = (float)(Skill.CurrentLevel - 1) / (SkillDefinition.MaxSkillLevel / SkillsFactory.GetLevelsCount());
         var color = Color.Lerp(normalColor, highlightedColor, alpha);
-        string hex = ColorUtility.ToHtmlStringRGBA(color);
+        string hex = ColorUtility.ToHtmlStringRGB(color);
 
-        string bonus = GetBonusText();
-        string highlighted = $"<color=#{hex}>{bonus}</color>";
+        string finalString = $"<color=#{hex}>({bonusText})</color>";
 
-        string newText = skillBonus.text.Replace(bonus, highlighted);
-        skillBonus.SetText(newText);
+        skillBonus.SetText(finalString);
     }
 
     private void UpdateProgress()
@@ -117,17 +107,6 @@ public class SkillWidget : MonoBehaviour
 
     private void OnSkillLevelChanged(SkillInstance skill, int level)
     {
-        UpdateBonusText();
-        UpdateBonusColor();
-    }
-
-    private string GetBonusText()
-    {
-        if (Skill == null) return string.Empty;
-
-        string bonus = (Skill.GetBonus() * 100).ToString();
-        string text = $"+{bonus}%";
-
-        return text;
+        UpdateBonusTextAndColor();
     }
 }

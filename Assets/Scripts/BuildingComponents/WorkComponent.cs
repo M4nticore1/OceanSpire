@@ -25,6 +25,8 @@ public class WorkComponent : MonoBehaviour
     // Workers
     public void AddWorker(Citizen interactor)
     {
+        if (workers.Contains(interactor)) return;
+
         workers.Add(interactor);
         OnWorkerAdded?.Invoke(interactor);
         OnComponentWorkerAdded?.Invoke(this, interactor);
@@ -32,6 +34,8 @@ public class WorkComponent : MonoBehaviour
 
     public void RemoveWorker(Citizen interactor)
     {
+        if (!workers.Contains(interactor)) return;
+
         workers.Remove(interactor);
         OnWorkerRemoved?.Invoke(interactor);
         OnComponentWorkerRemoved?.Invoke(this, interactor);
@@ -39,6 +43,8 @@ public class WorkComponent : MonoBehaviour
 
     public void AddCurrentWorker(Citizen interactor)
     {
+        if (currentWorkers.Contains(interactor)) return;
+
         currentWorkers.Add(interactor);
         OnCurrentWorkerAdded?.Invoke(interactor);
         OnComponentCurrentWorkerAdded?.Invoke(this, interactor);
@@ -46,6 +52,8 @@ public class WorkComponent : MonoBehaviour
 
     public void RemoveCurrentWorker(Citizen interactor)
     {
+        if (!currentWorkers.Contains(interactor)) return;
+
         currentWorkers.Remove(interactor);
         OnCurrentWorkerRemoved?.Invoke(interactor);
         OnComponentCurrentWorkerRemoved?.Invoke(this, interactor);

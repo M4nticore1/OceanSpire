@@ -80,7 +80,7 @@ public abstract class BuildingMenu : UIBehaviour
             return;
         }
 
-        slidePanel.Display();
+        slidePanel.Show();
         OnOpened(building);
 
         ClearWidgets();

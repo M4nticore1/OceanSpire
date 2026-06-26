@@ -1003,7 +1003,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e884af40dc761244bb6a93d4e2b41254, type: 2}
   - {fileID: 11400000, guid: 259eb26487b2cf04fa104196bf934d7e, type: 2}
   maxRewardsCount: 4
-  updateRewardTimeOffset: 16
+  updateRewardTimeOffset: 0
 --- !u!114 &102002915 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3320796776946038933, guid: 1d4b6d91d77214c418442861ca8235ea, type: 3}
@@ -5902,7 +5902,7 @@ MonoBehaviour:
   firstFloorBuildingTransform: {fileID: 605651346}
   towerGate: {fileID: 2043061798}
   pierBuilding: {fileID: 2116735563}
-  maxFloorsCount: 5
+  maxFloorsCount: 25
 --- !u!1 &457173283
 GameObject:
   m_ObjectHideFlags: 0

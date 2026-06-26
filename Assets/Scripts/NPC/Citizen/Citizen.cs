@@ -78,6 +78,7 @@ public class Citizen : Human
             return;
         }
         if (ShouldStartAttacking()) {
+            Debug.Log("ShouldStartAttacking");
             StartAttacking();
             return;
         }
@@ -105,7 +106,7 @@ public class Citizen : Human
 
         foreach (var raider in currentRaiders) {
             if (!raider.HealthComponent.IsAlive) continue;
-            if (raider.IsRaidFinished) continue;
+            if (!raider.IsRaidingBuilding) continue;
 
             AttackComponent.SetTarget(raider.AttackComponent);
             AttackComponent.MoveToTarget();
@@ -153,6 +154,7 @@ public class Citizen : Human
         if (currentBuilding != InteractComponent.InteractBuilding) return false;
 
         var currentRaiders = currentBuilding.RaidComponent.CurrentRaiders;
+
         foreach (var raider in currentRaiders) {
             if (!raider.HealthComponent.IsAlive) continue;
 

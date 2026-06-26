@@ -2,6 +2,6 @@ using UnityEngine;
 
 public interface IOpenable
 {
-    public void Display();
+    public void Show();
     public void Hide();
 }

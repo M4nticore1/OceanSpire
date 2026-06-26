@@ -48,7 +48,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     public void Open()
     {
         OnOpen();
-        slidePanel.Display();
+        slidePanel.Show();
         AssignImage();
         AssignDescryption();
 

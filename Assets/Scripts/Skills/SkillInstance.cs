@@ -38,7 +38,7 @@ public class SkillInstance : ILocalizable
 
     public void SetLevel(int value)
     {
-        CurrentLevel = math.clamp(value, 1, SkillDefinition.maxSkillLevel);
+        CurrentLevel = math.clamp(value, 1, SkillDefinition.MaxSkillLevel + 1);
         OnLevelChanged?.Invoke(this, CurrentLevel);
     }
 
@@ -61,13 +61,16 @@ public class SkillInstance : ILocalizable
         };
     }
 
+    public bool ShouldLevelUp()
+    {
+        if (CurrentXp < 1f) return false;
+        if (CurrentLevel >= SkillDefinition.MaxSkillLevel) return false;
+
+        return true;
+    }
+
     private void ResetCurrentXp()
     {
         CurrentXp = 0f;
-    }
-
-    private bool ShouldLevelUp()
-    {
-        return CurrentXp >= 1f;
     }
 }

@@ -28,6 +28,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
 
     public void Tick()
     {
+        if (!interactComponent.InteractBuilding) return;
         if (!interactComponent.IsInteracting) return;
 
         CurrentWaypointTime += Time.deltaTime;

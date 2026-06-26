@@ -69,7 +69,7 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
 
     private void OnSkillXpChanged(SkillInstance skill, float xp)
     {
-        if (xp < 1f) return;
+        if (!skill.ShouldLevelUp()) return;
 
         SetClickable(true);
     }

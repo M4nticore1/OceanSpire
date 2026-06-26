@@ -34,6 +34,11 @@ public abstract class Creature : MonoBehaviour
         movement.OnMovementStopped -= OnMovementStopped;
     }
 
+    public virtual void Tick()
+    {
+
+    }
+
     public void Init(CreatureData creatureData)
     {
         StartCoroutine(InitNextFrameCoroutine());

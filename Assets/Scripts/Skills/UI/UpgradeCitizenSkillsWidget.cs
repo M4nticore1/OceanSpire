@@ -47,7 +47,7 @@ public class UpgradeCitizenSkillsWidget : MonoBehaviour
     
     private void OnSkillXpChanged(SkillInstance skill, float xp)
     {
-        if (xp < 1f) return;
+        if (!skill.ShouldLevelUp()) return;
 
         UpdateDisplayed();
     }
@@ -60,7 +60,7 @@ public class UpgradeCitizenSkillsWidget : MonoBehaviour
     private bool ShouldDisplay()
     {
         foreach (var skill in skillComponent.Skills.Values) {
-            if (skill.CurrentXp < 1f) continue;
+            if (!skill.ShouldLevelUp()) continue;
 
             return true;
         }

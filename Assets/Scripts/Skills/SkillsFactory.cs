@@ -41,7 +41,7 @@ public static class SkillsFactory
     public static int GetLevelsCount()
     {
         int skillsCount = SkillsList.Instance.SkillDefinitionsDict.Count;
-        int maxLevelsCount = skillsCount * SkillDefinition.maxSkillLevel;
+        int maxLevelsCount = skillsCount * SkillDefinition.MaxSkillLevel;
         int levelCount = (int)(maxLevelsCount * GameStageSystem.CalculateGameStagePercent());
 
         return levelCount;

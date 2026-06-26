@@ -56,7 +56,7 @@ public class ReviveMenu : UIBehaviour
     public void Open()
     {
         isOpened = true;
-        slidePanel.Display();
+        slidePanel.Show();
         InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 

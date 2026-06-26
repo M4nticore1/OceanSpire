@@ -8,7 +8,7 @@ public class DailyRewardLoader : WorldLoader
     {
         var dailyRewardData = worldData?.DailyReward;
 
-        if (dailyRewardData != null && dailyRewardData != null)
+        if (dailyRewardData != null)
             dailyRewardManager.Init(dailyRewardData);
         else
             dailyRewardManager.Init();

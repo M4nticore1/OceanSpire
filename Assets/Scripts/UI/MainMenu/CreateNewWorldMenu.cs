@@ -42,7 +42,7 @@ public class CreateNewWorldMenu : MonoBehaviour
     public void Open()
     {
         keyboardOffsetUI.SetClosable(false);
-        slidePanel.Display();
+        slidePanel.Show();
 
         inputField.text = "";
         string name = inputField.text;

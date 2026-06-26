@@ -6,6 +6,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private DailyTasksManager dailyTasksManager;
     [SerializeField] private DailyTaskWidget dailyTaskWidgetPrefab;
+    [SerializeField] private CustomButton openButton;
     [SerializeField] private LayoutGroup tasksLayoutGroup;
     [SerializeField] private TextLocalizer updateTasksText;
 
@@ -30,7 +31,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         updateTasksText.UpdateText();
     }
 
-    public void Display()
+    public void Show()
     {
         gameObject.SetActive(true);
 
@@ -88,6 +89,8 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
         dailyTasksManager.OnTasksInited += OnTasksInited;
         dailyTasksManager.OnTasksViewedChanged += OnTasksViewedChanged;
+        openButton.OnReleased.AddListener(OnOpenButtonClicked);
+
         isSubscribed = true;
     }
 
@@ -96,7 +99,14 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         if (!isSubscribed) return;
 
         dailyTasksManager.OnTasksViewedChanged -= OnTasksViewedChanged;
+        openButton.OnReleased.RemoveListener(OnOpenButtonClicked);
+
         isSubscribed = false;
+    }
+
+    private void OnOpenButtonClicked()
+    {
+        Show();
     }
 
     private void OnTasksInited()

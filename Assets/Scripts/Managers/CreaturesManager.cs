@@ -6,6 +6,9 @@ public class CreaturesManager : MonoBehaviour
 {
     public static CreaturesManager Instance { get; private set; }
 
+    private List<Creature> creatures = new();
+    public IReadOnlyList<Creature> Creatures => creatures;
+
     private List<Citizen> citizens = new();
     public IReadOnlyList<Citizen> Citizens => citizens;
 
@@ -34,15 +37,24 @@ public class CreaturesManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Update()
+    {
+        foreach (var creature in creatures) {
+            creature.Tick();
+        }
+    }
+
     // Citizen
     public void RegisterCitizen(Citizen human)
     {
+        creatures.Add(human);
         citizens.Add(human);
         onCitizenRegistered?.Invoke(human);
     }
 
     public void UnregisterCitizen(Citizen human)
     {
+        creatures.Remove(human);
         citizens.Remove(human);
         onCitizenUnregistered?.Invoke(human);
     }
@@ -50,12 +62,14 @@ public class CreaturesManager : MonoBehaviour
     // Wanderer
     public void RegisterWanderer(Wanderer human)
     {
+        creatures.Add(human);
         wanderers.Add(human);
         onWandererRegistered?.Invoke(human);
     }
 
     public void UnregisterWanderer(Wanderer human)
     {
+        creatures.Remove(human);
         wanderers.Remove(human);
         onWandererUnregistered?.Invoke(human);
     }
@@ -63,12 +77,14 @@ public class CreaturesManager : MonoBehaviour
     // Enemy
     public void RegisterRaider(Raider human)
     {
+        creatures.Add(human);
         raiders.Add(human);
         onRaiderRegistered?.Invoke(human);
     }
 
     public void UnregisterRaider(Raider human)
     {
+        creatures.Remove(human);
         raiders.Remove(human);
         onRaiderUnregistered?.Invoke(human);
     }

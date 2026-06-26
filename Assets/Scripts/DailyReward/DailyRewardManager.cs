@@ -83,7 +83,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
         foreach (var rewardData in dailyRewardData.Rewards) {
             if (rewardData == null) {
-                Debug.Log($"Reward Data not found at {name}");
+                Debug.LogError($"Reward Data not found at {name}");
                 continue;
             }
 
@@ -91,7 +91,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
             var reward = TryCreateReward(id);
             if (reward == null) {
-                Debug.Log($"Reward not found at {name}");
+                Debug.LogError($"Reward not found at {name}");
             }
 
             reward.SetCollected(rewardData.Collected);
@@ -105,7 +105,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         while (currentRewards.Count < maxRewardsCount) {
             var reward = TryCreateRandomReward();
             if (reward == null) {
-                Debug.Log($"Reward not found at {name}");
+                Debug.LogError($"Reward not found at {name}");
             }
 
             currentRewards.Add(reward);
@@ -175,11 +175,14 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     public long CalculateNextResetTime()
     {
-        long minTargetSecond = updateRewardTimeOffset * 3600;
-        long maxTargetSecond = (24 + updateRewardTimeOffset) * 3600;
-        long targetSecond = minTargetSecond - TimeManager.GetCurrentSecond() > 0 ? minTargetSecond : maxTargetSecond;
+        DateTime now = DateTime.UtcNow;
+        DateTime nextReset = new DateTime(now.Year, now.Month, now.Day, updateRewardTimeOffset, 0, 0, DateTimeKind.Utc);
 
-        return targetSecond;
+        if (nextReset <= now) {
+            nextReset = nextReset.AddDays(1);
+        }
+
+        return ((DateTimeOffset)nextReset).ToUnixTimeSeconds();
     }
 
     private void UpdateRewards()

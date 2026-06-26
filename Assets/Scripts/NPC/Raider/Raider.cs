@@ -29,9 +29,9 @@ public class Raider : Human, IProgressable
         CreaturesManager.Instance.UnregisterRaider(this);
     }
 
-    protected override void Update()
+    public override void Tick()
     {
-        base.Update();
+        base.Tick();
 
         if (!IsRaidingBuilding) return;
 
@@ -41,6 +41,7 @@ public class Raider : Human, IProgressable
         FinishRaidingBuilding();
         AddLoot();
         InteractComponent.RemoveInteractBuilding();
+        InteractComponent.TryStopInteracting();
         UpdateTargetBoat();
     }
 
@@ -59,6 +60,11 @@ public class Raider : Human, IProgressable
 
     protected override void DetermineNextAction()
     {
+        if (ShouldStartInteracting()) {
+            Debug.Log("ShouldRaidBuilding");
+            StartInteracting();
+            return;
+        }
         if (ShouldBoatMoveToDock()) {
             Debug.Log("ShouldBoatMoveToDock");
             BoatMoveToDock();
@@ -72,11 +78,6 @@ public class Raider : Human, IProgressable
         if (ShouldStartAttacking()) {
             Debug.Log("ShouldStartAttacking");
             StartAttacking();
-            return;
-        }
-        if (ShouldRaidBuilding()) {
-            Debug.Log("ShouldRaidBuilding");
-            StartRaidingBuilding();
             return;
         }
 
@@ -106,12 +107,28 @@ public class Raider : Human, IProgressable
         }
     }
 
-    protected virtual void StartRaidingBuilding()
+    protected override void StartInteracting()
     {
+        base.StartInteracting();
+
         IsRaidingBuilding = true;
         CityNavigator.FollowPath();
 
         OnRaidBuildingStarted?.Invoke(CityNavigator.CurrentBuilding);
+    }
+
+    protected override bool ShouldStartInteracting()
+    {
+        if (!base.ShouldStartInteracting()) return false;
+
+        if (IsRaidFinished) return false;
+
+        var currentBuilding = CityNavigator.CurrentBuilding;
+        if (!currentBuilding) return false;
+
+        if (currentBuilding != InteractComponent.InteractBuilding) return false;
+
+        return true;
     }
 
     protected override bool ShouldBoatMoveToDock()
@@ -132,6 +149,8 @@ public class Raider : Human, IProgressable
 
     protected override bool ShouldStartAttacking()
     {
+        if (!base.ShouldStartAttacking()) return false;
+
         var currentBuilding = CityNavigator.CurrentBuilding;
         if (!currentBuilding) return false;
 
@@ -145,18 +164,6 @@ public class Raider : Human, IProgressable
         }
 
         return false;
-    }
-
-    protected virtual bool ShouldRaidBuilding()
-    {
-        if (IsRaidFinished) return false;
-
-        var currentBuilding = CityNavigator.CurrentBuilding;
-        if (!currentBuilding) return false;
-
-        if (currentBuilding != InteractComponent.InteractBuilding) return false;
-
-        return true;
     }
 
     protected override void OnInteractBuildingSeted(Building building)

@@ -52,6 +52,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
             SetAdUpdateUsedSetTrue(false);
             SetUpdated(true);
             SetTasksViewed(false);
+
             OnTasksReset?.Invoke();
         }
         else {
@@ -61,7 +62,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     public void Init()
     {
-        DailyTasksData dailyTasksData = new DailyTasksData()
+        var dailyTasksData = new DailyTasksData()
         {
             Tasks = GetRandomTasksData(),
             NextResetTime = CalculateNextResetTime(),
@@ -171,11 +172,14 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     public long CalculateNextResetTime()
     {
-        long minTargetSecond = updateTasksTimeOffset * 3600;
-        long maxTargetSecond = (24 + updateTasksTimeOffset) * 3600;
-        long targetSecond = minTargetSecond - TimeManager.GetCurrentSecond() >= 0 ? minTargetSecond : maxTargetSecond;
+        DateTime now = DateTime.UtcNow;
+        DateTime nextReset = new DateTime(now.Year, now.Month, now.Day, updateTasksTimeOffset, 0, 0, DateTimeKind.Utc);
 
-        return targetSecond;
+        if (nextReset <= now) {
+            nextReset = nextReset.AddDays(1);
+        }
+
+        return ((DateTimeOffset)nextReset).ToUnixTimeSeconds();
     }
 
     public DailyTaskInstanceData[] GetRandomTasksData()

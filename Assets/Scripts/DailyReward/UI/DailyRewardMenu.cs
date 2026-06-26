@@ -9,21 +9,24 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     [SerializeField] private DailyRewardWidget bonusChestRewardWidgetPrefab;
 
     [SerializeField] private GameObject content;
+    [SerializeField] private CustomButton openButton;
+    [SerializeField] private CustomButton closeButton;
     [SerializeField] private GridLayoutGroup layoutGroup;
     [SerializeField] private TextLocalizer resetTimeText;
-    [SerializeField] private CustomButton closeButton;
 
     private List<DailyRewardWidget> spawnedWidgets = new();
 
     private void OnEnable()
     {
         dailyRewardManager.OnDailyRewardReset += OnDailyRewardReset;
+        openButton.OnReleased.AddListener(OnOpenButtonClicked);
         closeButton.OnReleased.AddListener(OnCloseButtonClicked);
     }
 
     private void OnDisable()
     {
         dailyRewardManager.OnDailyRewardReset -= OnDailyRewardReset;
+        openButton.OnReleased.RemoveListener(OnOpenButtonClicked);
         closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
     }
 
@@ -37,7 +40,7 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
         resetTimeText.UpdateText();
     }
 
-    public void Display()
+    public void Show()
     {
         content.gameObject.SetActive(true);
         dailyRewardManager.SetRewardViewed(true);
@@ -68,6 +71,11 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     {
         DestroyRewardWidgets();
         CreateRewardWidgets();
+    }
+
+    private void OnOpenButtonClicked()
+    {
+        Show();
     }
 
     private void OnCloseButtonClicked()

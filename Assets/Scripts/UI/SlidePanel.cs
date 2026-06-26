@@ -132,7 +132,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         content = GetComponentsInChildren<Transform>(true).ToList();
     }
 
-    public void Display()
+    public void Show()
     {
         openedPosition = CalculateOpenedPosition();
         targetPosition = openedPosition;

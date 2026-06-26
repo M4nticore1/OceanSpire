@@ -34,7 +34,7 @@ public class WandererAdmissionMenu : MonoBehaviour
     {
         isOpened = true;
 
-        slidePanel.Display();
+        slidePanel.Show();
         skillPanel.SetSkills(selectedWanderer.SkillsComponent);
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);

@@ -43,7 +43,7 @@ public class RecievedAdItemRewardMenu : MonoBehaviour
 
     private void Open()
     {
-        slidePanel.Display();
+        slidePanel.Show();
 
         currentShowTime = 0;
         isOpened = true;

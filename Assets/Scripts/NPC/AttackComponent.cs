@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class AttackComponent : MonoBehaviour
 {
@@ -9,7 +8,6 @@ public class AttackComponent : MonoBehaviour
     [SerializeField] private Movement movement;
     [SerializeField] private HealthComponent health;
 
-    [SerializeField] private float damage = 10f;
     [SerializeField] private float attackFrequency = 1f;
     private float currentAttackTime = 0f;
 
@@ -37,10 +35,10 @@ public class AttackComponent : MonoBehaviour
 
     private void Update()
     {
-        if (currentTarget) {
-            TryStopMoving();
-            CorrentRotation();
-        }
+        if (!currentTarget) return;
+
+        TryStopMoving();
+        CorrentRotation();
 
         if (!IsAttacking) return;
 
@@ -52,6 +50,11 @@ public class AttackComponent : MonoBehaviour
 
     public void SetTarget(AttackComponent target)
     {
+        if (!target) {
+            Debug.LogError("Attack target is not valid");
+            return;
+        }
+
         currentTarget = target;
         target.AddAttacker(this);
     }
@@ -114,10 +117,7 @@ public class AttackComponent : MonoBehaviour
 
     private void TryStopMoving()
     {
-        if (!movement.IsMoving) return;
-
-        float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
-        if (distance > stopMovingDistance) return;
+        if (!movement.IsReachedPosition(currentTarget.transform.position)) return;
 
         movement.TryStopMoving();
     }
