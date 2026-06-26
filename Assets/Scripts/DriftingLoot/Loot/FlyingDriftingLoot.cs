@@ -120,6 +120,7 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
         boxCollider.enabled = !value;
         rigidBody.useGravity = value;
         rigidBody.isKinematic = !value;
+        Movement.NavAgent.enabled = !value;
 
         if (value) {
             Destroy(balloons.gameObject);

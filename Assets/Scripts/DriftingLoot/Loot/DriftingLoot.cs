@@ -61,8 +61,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
     public virtual void Tick(float deltaTime)
     {
-        //Move(deltaTime);
-        //TryDestroy();
+        TryDestroy();
     }
 
     public abstract DriftingLootData CreateData();
@@ -127,6 +126,13 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
         var destination = WorldUtils.GetBorderPosition(dir);
         if (!movement.TryMoveTo(destination))
             Debug.Log(gameObject);
+    }
+
+    private void TryDestroy()
+    {
+        if (!movement.IsDestinationReached()) return;
+
+        Destroy(gameObject);
     }
 
     private void OnReachedDestination()

@@ -232,6 +232,8 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void ShowBuildingPlace(BuildingPlaceState buildingPlaceState)
     {
+        if (buildingType == BuildingType.FloorFrame && BuildingsManager.Instance.BuiltFloors.Count >= BuildingsManager.Instance.MaxFloorsCount) return;
+
         if (buildingZone) {
             buildingZone.SetActive(true);
         }

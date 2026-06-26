@@ -4984,6 +4984,10 @@ PrefabInstance:
       propertyPath: button
       value: 
       objectReference: {fileID: 1144660777}
+    - target: {fileID: 6470664847384849977, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: buildingsManager
+      value: 
+      objectReference: {fileID: 455753200}
     - target: {fileID: 6522717337632587435, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: selectComponent
       value: 
@@ -5231,6 +5235,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2796942886796955094, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+    - {fileID: 6582997665441193341, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
@@ -5897,7 +5902,7 @@ MonoBehaviour:
   firstFloorBuildingTransform: {fileID: 605651346}
   towerGate: {fileID: 2043061798}
   pierBuilding: {fileID: 2116735563}
-  maxFloorsCount: 25
+  maxFloorsCount: 5
 --- !u!1 &457173283
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
@@ -18,6 +19,8 @@ public class FloorFrameModule : BuildingModule
     public BuildingPlace FloorBuildingPlace => floorBuildingPlace;
 
     public Coroutine bakeNavMeshCoroutine { get; private set; } = null;
+
+    public static event Action<FloorFrameModule> OnFloorModuleInited;
 
     protected override void Subscribe()
     {
@@ -47,6 +50,8 @@ public class FloorFrameModule : BuildingModule
         BuildingsManager.Instance.RegisterFloorModule(this);
 
         InitBuildings();
+
+        OnFloorModuleInited?.Invoke(this);
     }
 
     private void OnDemolished()
