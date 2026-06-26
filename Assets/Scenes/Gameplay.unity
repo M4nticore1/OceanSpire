@@ -3393,6 +3393,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
   m_PrefabInstance: {fileID: 151065814}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &317569106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 317569107}
+  - component: {fileID: 317569108}
+  m_Layer: 0
+  m_Name: YandexRewardedAds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &317569107
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317569106}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1371871032}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &317569108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 317569106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb01c2b52d1fb44aa26ea474ceb6312, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YandexMobileAdsRewardedAdDemoScript
+  rewardedAdsManager: {fileID: 1925740697}
 --- !u!1001 &320546682
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5114,7 +5159,7 @@ PrefabInstance:
     - target: {fileID: 8498656696490118757, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: rewardedAdsButtonManager
       value: 
-      objectReference: {fileID: 939943841}
+      objectReference: {fileID: 0}
     - target: {fileID: 8923505795833260381, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: localizationTarget
       value: 
@@ -6425,17 +6470,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbecc5e062f1a248886e04d11eb4646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputListener
---- !u!114 &541437820 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8498656696490118757, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
-  m_PrefabInstance: {fileID: 383697685}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13288dc4a340ccc438ca36f52da63e73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RewardedAdButton
 --- !u!1 &550609596
 GameObject:
   m_ObjectHideFlags: 0
@@ -9540,7 +9574,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &815262697
 Transform:
   m_ObjectHideFlags: 0
@@ -9568,6 +9602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34a53848f2a527b40aa2ba8518f24382, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AppLovinMaxAds
+  rewardedAdsManager: {fileID: 1925740697}
 --- !u!1 &819861728
 GameObject:
   m_ObjectHideFlags: 0
@@ -10580,55 +10615,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2af2e65253d27349b98a064b04e4dc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPoint
---- !u!1 &939943839
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 939943840}
-  - component: {fileID: 939943841}
-  m_Layer: 0
-  m_Name: RewardedAdsButtonManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &939943840
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 939943839}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1371871032}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &939943841
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 939943839}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a48a76fd21b595c48b7747d7887c2414, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RewardedAdsManager
-  rewardDefinitions: []
-  appLovinMaxAds: {fileID: 815262698}
-  rewardedAdsButton: {fileID: 541437820}
-  adShowTime: 30
-  adCooldownTime: 2
 --- !u!4 &944025013 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7004005238512315999, guid: c7eb819811dfca54387a782dd5577df8, type: 3}
@@ -14414,8 +14400,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 815262697}
+  - {fileID: 317569107}
   - {fileID: 1925740696}
-  - {fileID: 939943840}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1388613265
@@ -19117,7 +19103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3424590aa6b689409aa881dd42c59b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RewardedAdsManager
-  adsSystem: {fileID: 815262698}
+  adsSystem: {fileID: 317569108}
 --- !u!1 &1926240060
 GameObject:
   m_ObjectHideFlags: 0

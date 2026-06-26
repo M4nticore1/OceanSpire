@@ -8,18 +8,21 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     [SerializeField] private TextLocalizer constructionTime;
     [SerializeField] private Image buildingImage;
     [SerializeField] private CustomButton completeButton;
+    [SerializeField] private CustomButton closeMenuButton;
     private Building building;
 
     private void OnEnable()
     {
         completeButton.OnReleased.AddListener(OnCompleteButtonReleased);
-        Building.OnBuildingLevelChanged += OnBuildingConstructionFinished;
+        closeMenuButton.OnReleased.AddListener(OnCloseMenuButtonClicked);
+        Building.OnBuildingConstructionCompleted += OnBuildingConstructionFinished;
     }
 
     private void OnDisable()
     {
         completeButton.OnReleased.RemoveListener(OnCompleteButtonReleased);
-        Building.OnBuildingLevelChanged -= OnBuildingConstructionFinished;
+        closeMenuButton.OnReleased.RemoveListener(OnCloseMenuButtonClicked);
+        Building.OnBuildingConstructionCompleted -= OnBuildingConstructionFinished;
     }
 
     private void Update()
@@ -63,6 +66,11 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         var reward = new SkipConstructionRewardInstance(null, building.ConstructionComponent);
         RewardedAdsManager.Instance.SetCurrentReward(reward);
         RewardedAdsManager.Instance.ShowAd();
+    }
+
+    private void OnCloseMenuButtonClicked()
+    {
+        Hide();
     }
 
     private void OnBuildingConstructionFinished(Building building)

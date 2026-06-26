@@ -1,0 +1,7 @@
+# Тотальный запрет на удаление и переименование всего, что связано с Яндексом
+-keep class com.yandex.mobile.ads.** { *; }
+-keep interface com.yandex.mobile.ads.** { *; }
+
+# Дополнительно защищаем внутренние утилиты разметки Яндекса (иногда нужно для кликов)
+-keep class com.yandex.mobile.component.** { *; }
+-keep interface com.yandex.component.** { *; }

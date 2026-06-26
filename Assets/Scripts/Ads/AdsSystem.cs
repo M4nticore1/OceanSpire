@@ -3,22 +3,27 @@ using UnityEngine;
 
 public abstract class AdsSystem : MonoBehaviour
 {
+    [SerializeField] private RewardedAdsManager rewardedAdsManager;
+
     public bool isAdDisplayed { get; private set; } = false;
 
-    public event Action onAdStarted;
+    public event Action OnAdShown;
     public event Action onAdCompleted;
 
     public abstract void ShowAd();
 
-    protected void OnAdStarted()
+    protected void HandleAdStarted()
     {
         isAdDisplayed = true;
-        onAdStarted?.Invoke();
+        OnAdShown?.Invoke();
     }
 
-    protected void OnAdCompleted()
+    protected void HandleAdCompleted()
     {
         isAdDisplayed = false;
+
+        rewardedAdsManager.ReceiveReward();
+
         onAdCompleted?.Invoke();
     }
 }

@@ -327,22 +327,22 @@ MonoBehaviour:
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
-  onPressed:
+  OnPressed:
     m_PersistentCalls:
       m_Calls: []
-  onReleased:
+  OnReleased:
     m_PersistentCalls:
       m_Calls: []
-  onSelected:
+  OnSelected:
     m_PersistentCalls:
       m_Calls: []
-  onDeselected:
+  OnDeselected:
     m_PersistentCalls:
       m_Calls: []
-  onHovered:
+  OnHovered:
     m_PersistentCalls:
       m_Calls: []
-  onUnhovered:
+  OnUnhovered:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &4722569193409516055
@@ -1084,22 +1084,22 @@ MonoBehaviour:
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
-  onPressed:
+  OnPressed:
     m_PersistentCalls:
       m_Calls: []
-  onReleased:
+  OnReleased:
     m_PersistentCalls:
       m_Calls: []
-  onSelected:
+  OnSelected:
     m_PersistentCalls:
       m_Calls: []
-  onDeselected:
+  OnDeselected:
     m_PersistentCalls:
       m_Calls: []
-  onHovered:
+  OnHovered:
     m_PersistentCalls:
       m_Calls: []
-  onUnhovered:
+  OnUnhovered:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &2964652348253668343
@@ -1281,7 +1281,7 @@ GameObject:
   - component: {fileID: 5026752779546459764}
   - component: {fileID: 1140441620112285382}
   m_Layer: 5
-  m_Name: SpeedUpConstructionMenu
+  m_Name: CompleteConstructionMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1325,6 +1325,7 @@ MonoBehaviour:
   constructionTime: {fileID: 284864158392684444}
   buildingImage: {fileID: 44960229895589134}
   completeButton: {fileID: 2537049091507604977}
+  closeMenuButton: {fileID: 0}
 --- !u!1 &8692807411874526124
 GameObject:
   m_ObjectHideFlags: 0
