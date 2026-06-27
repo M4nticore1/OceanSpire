@@ -17,7 +17,7 @@ public class GoingToWatingElevatorPassengerState : ElevatorPassengerState
             return;
         }
 
-        var currentElevator = elevatorPassenger.CurrentElevator;
+        var currentElevator = cityNavigator.CurrentElevator;
         if (!currentElevator) {
             Debug.LogError("currentElevator is not valid");
             return;
@@ -44,7 +44,7 @@ public class GoingToWatingElevatorPassengerState : ElevatorPassengerState
             return;
         }
 
-        var currentElevator = elevatorPassenger.CurrentElevator;
+        var currentElevator = cityNavigator.CurrentElevator;
         if (!currentElevator) {
             Debug.LogError("currentElevator is not valid");
             return;

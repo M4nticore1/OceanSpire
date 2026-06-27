@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ElevatorCabinConstruction : BuildingConstruction
 {
+    public ElevatorModule OwnedElevator => OwnedBuilding.GetComponent<ElevatorModule>();
+
     public int FloorIndex = 0;
     public int PlaceIndex = 0;
 
@@ -25,15 +27,17 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public int TargetFloor = 0;
     public int NextFloor = 0;
 
-    private float moveSpeed => ((OwnedBuilding.GetComponent<ElevatorModule>().LevelData) as ElevatorModuleLevelData).ElevatorMoveSpeed;
+    private float moveSpeed = 0f;
     private Vector3 moveDirection = Vector3.zero;
 
     private TimerHandle startMovingTimerHandle = new TimerHandle();
     private const float delayToStartMoving = 1f;
 
-    public ElevatorModule OwnedElevator => OwnedBuilding.GetComponent<ElevatorModule>();
-    public static event Action<ElevatorCabinConstruction> onElevatorPlatformStopped;
-    public static event Action<ElevatorCabinConstruction> onElevatorPlatformChangedFloor;
+    public event Action OnMovementStarted;
+    public event Action OnMovementStopped;
+    
+    public static event Action<ElevatorCabinConstruction> OnElevatorCabinStopped;
+    public static event Action<ElevatorCabinConstruction> OnElevatorCabinChangedFloor;
 
     private void Update()
     {
@@ -104,6 +108,8 @@ public class ElevatorCabinConstruction : BuildingConstruction
         foreach (var waiter in waitingPassengers.ToArray()) {
             waiter.OnElevatorStopped();
         }
+
+        OnMovementStopped?.Invoke();
     }
 
     // Waiting Passengers
@@ -191,6 +197,11 @@ public class ElevatorCabinConstruction : BuildingConstruction
         }
     }
 
+    public void SetMoveSpeed(float speed)
+    {
+        moveSpeed = speed;
+    }
+
     // Floor
     public bool TryMoveToFloor(int floor)
     {
@@ -248,6 +259,8 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
         SetIsMoving(true);
         StartFloorIndex = FloorIndex;
+
+        OnMovementStarted?.Invoke();
     }
 
     private void StartMovingToTargetFloorTimer()

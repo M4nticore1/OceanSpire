@@ -26,13 +26,13 @@ public class StarvationNotificationController : NotificationController
         return true;
     }
 
-    protected override bool ShouldCreateNotification()
+    protected override bool ShoulNotificate()
     {
         return item.Amount <= 0;
     }
 
     private void OnFoodAmountChanged(int amount)
     {
-        UpdateNotificationCreated();
+        UpdateNotification();
     }
 }

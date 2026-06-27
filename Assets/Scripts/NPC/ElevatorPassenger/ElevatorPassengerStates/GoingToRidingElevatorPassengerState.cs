@@ -10,7 +10,7 @@ public class GoingToRidingElevatorPassengerState : ElevatorPassengerState
     public override void Enter()
     {
         var cityNavigator = elevatorPassenger.CityNavigator;
-        var currentElevator = elevatorPassenger.CurrentElevator;
+        var currentElevator = cityNavigator.CurrentElevator;
 
         if (!currentElevator) {
             Debug.LogError("cityNavigator.CurrentElevator is not valid");
@@ -23,7 +23,9 @@ public class GoingToRidingElevatorPassengerState : ElevatorPassengerState
 
     public override void Exit()
     {
-        var currentElevator = elevatorPassenger.CurrentElevator;
+        var cityNavigator = elevatorPassenger.CityNavigator;
+        var currentElevator = cityNavigator.CurrentElevator;
+
         if (!currentElevator) {
             Debug.LogError("cityNavigator.CurrentElevator is not valid");
             return;

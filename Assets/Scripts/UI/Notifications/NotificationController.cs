@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class NotificationController : MonoBehaviour
@@ -9,6 +10,11 @@ public abstract class NotificationController : MonoBehaviour
 
     private GameObject spawnedNotification;
     private bool isSubscribed;
+
+    public bool IsNotificated { get; private set; } = false;
+
+    public event Action OnNotificated;
+    public event Action OnUnnotificated;
 
     private void OnEnable()
     {
@@ -42,36 +48,42 @@ public abstract class NotificationController : MonoBehaviour
         return false;
     }
 
-    protected abstract bool ShouldCreateNotification();
+    protected abstract bool ShoulNotificate();
 
-    protected void UpdateNotificationCreated()
+    protected void UpdateNotification()
     {
-        if (ShouldCreateNotification()) {
-            CreateNotification();
+        if (ShoulNotificate()) {
+            Notificate();
+            //CreateNotification();
         }
         else {
-            DestroyNotification();
+            Unnotificate();
+            //DestroyNotification();
         }
     }
 
     protected void TryCreateNotification()
     {
-        if (!ShouldCreateNotification()) return;
+        //if (!ShouldCreateNotification()) return;
 
-        CreateNotification();
+        //CreateNotification();
     }
 
-    protected void CreateNotification()
+    protected void Notificate()
     {
-        if (spawnedNotification) return;
+        IsNotificated = true;
+        OnNotificated?.Invoke();
+        //if (spawnedNotification) return;
 
-        spawnedNotification = NotificationFactory.CreateNotification(notificationPrefab, notificationsPanel.LayoutGroup.transform);
+        //spawnedNotification = NotificationFactory.CreateNotification(notificationPrefab, notificationsPanel.LayoutGroup.transform);
     }
 
-    protected void DestroyNotification()
+    protected void Unnotificate()
     {
-        if (!spawnedNotification) return;
+        IsNotificated = false;
+        OnUnnotificated?.Invoke();
+        //if (!spawnedNotification) return;
 
-        Destroy(spawnedNotification);
+        //Destroy(spawnedNotification);
     }
 }

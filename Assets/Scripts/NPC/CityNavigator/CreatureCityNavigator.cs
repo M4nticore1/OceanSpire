@@ -22,6 +22,7 @@ public class CreatureCityNavigator : MonoBehaviour
 
     [field: SerializeField] public Building CurrentBuilding { get; private set; }
     public TowerBuilding CurrentTowerBuilding { get; private set; }
+    public ElevatorModule CurrentElevator { get; private set; }
 
     public Building LastPathBuilding { get; private set; }
     public Building CurrentPathBuilding { get; private set; }
@@ -123,8 +124,8 @@ public class CreatureCityNavigator : MonoBehaviour
         TowerBuilding startTowerBuilding;
         BuildingPlace startPlace;
 
-        if (elevatorPassenger.IsRiding && elevatorPassenger.CurrentElevator.SpawnedElevatorCabin.IsMoving) {
-            int nextFloor = elevatorPassenger.CurrentElevator.SpawnedElevatorCabin.NextFloor;
+        if (elevatorPassenger.IsRiding && CurrentElevator.SpawnedElevatorCabin.IsMoving) {
+            int nextFloor = CurrentElevator.SpawnedElevatorCabin.NextFloor;
             startTowerBuilding = BuildingsManager.Instance.BuiltFloors[nextFloor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
             startPlace = startTowerBuilding ? startTowerBuilding.BuildingPlace : null;
         }
@@ -223,6 +224,7 @@ public class CreatureCityNavigator : MonoBehaviour
     private void AssignBuildings()
     {
         CurrentTowerBuilding = CurrentBuilding as TowerBuilding;
+        CurrentElevator = CurrentBuilding?.GetComponent<ElevatorModule>();
     }
 
     private void AssignTowerPlace()
@@ -478,7 +480,7 @@ public class CreatureCityNavigator : MonoBehaviour
         if (!CurrentPathBuilding) return false;
         if (PathProgress > pathBuildings.Count) return false;
         if (elevatorPassenger.IsRiding && CurrentPathTowerBuilding && CurrentPathTowerBuilding.NetworkWith(CurrentTowerBuilding)) return false;
-        if (elevatorPassenger.IsRiding && elevatorPassenger.CurrentElevator && !elevatorPassenger.CurrentElevator.IsPossibleToExit()) return false;
+        if (elevatorPassenger.IsRiding && CurrentElevator && !CurrentElevator.IsPossibleToExit()) return false;
 
         return true;
     }
@@ -512,7 +514,7 @@ public class CreatureCityNavigator : MonoBehaviour
         if (!ShouldUseElevator()) return false;
         if (!elevatorPassenger.IsGoingToRiding) return false;
 
-        var transform = elevatorPassenger.CurrentElevator.GetCabinRidingTransform(elevatorPassenger);
+        var transform = CurrentElevator.GetCabinRidingTransform(elevatorPassenger);
         if (!transform) return false;
 
         if (!movement.IsReachedPosition(transform.position)) return false;
@@ -524,7 +526,7 @@ public class CreatureCityNavigator : MonoBehaviour
     {
         if (!ShouldUseElevator()) return false;
         if (elevatorPassenger.IsRiding) return false;
-        if (!elevatorPassenger.CurrentElevator.IsPossibleToEnter()) return false;
+        if (!CurrentElevator.IsPossibleToEnter()) return false;
 
         return true;
     }
@@ -532,8 +534,8 @@ public class CreatureCityNavigator : MonoBehaviour
     private bool ShouldExitFromElevator()
     {
         if (HasPath) return false;
-        if (!elevatorPassenger.CurrentElevator) return false;
-        if (!elevatorPassenger.CurrentElevator.IsPossibleToExit()) return false;
+        if (!CurrentElevator) return false;
+        if (!CurrentElevator.IsPossibleToExit()) return false;
         if (!healthComponent.IsAlive) return false;
 
         if (elevatorPassenger.IsRiding) return true;
@@ -545,7 +547,7 @@ public class CreatureCityNavigator : MonoBehaviour
 
     private bool ShouldUseElevator()
     {
-        if (!elevatorPassenger.CurrentElevator) return false;
+        if (!CurrentElevator) return false;
         if (!CurrentPathTowerBuilding) return false;
         if (!CurrentPathTowerBuilding.NetworkWith(CurrentTowerBuilding)) return false;
         if (PathProgress >= pathBuildings.Count) return false;

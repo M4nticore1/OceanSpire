@@ -2,9 +2,21 @@ using UnityEngine;
 
 public class EnergyShortageNotificationController : NotificationController
 {
+    public static EnergyShortageNotificationController Instance { get; private set; }
+
     [SerializeField] private CityStorage cityStorage;
 
     private ItemInstance item;
+
+    private void Awake()
+    {
+        if (Instance) {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
 
     protected override bool TrySubscribe()
     {
@@ -26,13 +38,13 @@ public class EnergyShortageNotificationController : NotificationController
         return true;
     }
 
-    protected override bool ShouldCreateNotification()
+    protected override bool ShoulNotificate()
     {
         return item.Amount <= 0;
     }
 
     private void OnEnergyAmountChanged(int amount)
     {
-        UpdateNotificationCreated();
+        UpdateNotification();
     }
 }

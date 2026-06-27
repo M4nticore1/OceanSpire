@@ -19,8 +19,6 @@ public class ElevatorPassenger : MonoBehaviour
     [SerializeField] private HealthComponent healthComponent;
     public HealthComponent HealthComponent => healthComponent;
 
-    public ElevatorModule CurrentElevator { get; private set; }
-
     [field: SerializeField] public ElevatorPassengerStateEnum CurrentStateEnum { get; private set; } = ElevatorPassengerStateEnum.None;
     public ElevatorPassengerState CurrentState { get; private set; }
 
@@ -31,15 +29,11 @@ public class ElevatorPassenger : MonoBehaviour
 
     private void OnEnable()
     {
-        cityNavigator.OnEnteredBuilding += OnEnteredBuilding;
-        cityNavigator.OnExitedBuilding += OnExitedBuilding;
         healthComponent.OnDied += OnDied;
     }
 
     private void OnDisable()
     {
-        cityNavigator.OnEnteredBuilding -= OnEnteredBuilding;
-        cityNavigator.OnExitedBuilding -= OnExitedBuilding;
         healthComponent.OnDied -= OnDied;
     }
 
@@ -93,27 +87,6 @@ public class ElevatorPassenger : MonoBehaviour
     public void OnElevatorStopped()
     {
         cityNavigator.FollowPath();
-    }
-
-    private void UpdateCurrentElevator()
-    {
-        var currentBuilding = cityNavigator.CurrentBuilding;
-        if (currentBuilding) {
-            CurrentElevator = currentBuilding.GetComponent<ElevatorModule>();
-        }
-        else {
-            CurrentElevator = null;
-        }
-    }
-
-    private void OnEnteredBuilding(Building building)
-    {
-        UpdateCurrentElevator();
-    }
-
-    private void OnExitedBuilding(Building building)
-    {
-        UpdateCurrentElevator();
     }
 
     private void OnDied()
