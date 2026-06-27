@@ -43,7 +43,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         constructionTime.SetPlaceHolderLocalization(building);
         constructionTime.UpdateText();
 
-        buildingImage.sprite = building.BuildingData.ThumbImage;
+        buildingImage.sprite = building.NextLevelData.BuildingThumb;
         this.building = building;
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);

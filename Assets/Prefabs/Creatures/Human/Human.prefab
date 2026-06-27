@@ -95,6 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
+  <IsAlive>k__BackingField: 1
 --- !u!114 &2775210278879926879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,6 +187,7 @@ MonoBehaviour:
   TargetBoat: {fileID: 0}
   RidingBoat: {fileID: 0}
   movement: {fileID: -7493649843608556168}
+  healthComponent: {fileID: 4098557255172134659}
   useBoatTime: 1
 --- !u!114 &1015444410268524039
 MonoBehaviour:
@@ -217,7 +219,6 @@ MonoBehaviour:
   weaponComponent: {fileID: 8499683307490277393}
   movement: {fileID: -7493649843608556168}
   health: {fileID: 4098557255172134659}
-  damage: 10
   attackFrequency: 1.2
   stopMovingDistance: 1
   rotationSpeed: 1

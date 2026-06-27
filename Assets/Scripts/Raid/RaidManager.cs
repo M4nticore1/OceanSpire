@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public struct RaidEndedResult
@@ -26,6 +27,10 @@ public class RaidManager : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private Creature[] raiderPrefabs;
     [SerializeField] private Boat boatPrefab;
+
+    [Header("Weapon")]
+    [SerializeField] private WeaponDefinition[] weapons;
+    [SerializeField] private float weaponDamageThreshold = 0.1f;
 
     [Header("Cooldown")]
     [SerializeField] private float minRaidCooldown = 10f;
@@ -330,7 +335,11 @@ public class RaidManager : MonoBehaviour
                 RidingBoatInstanceId = boatInstanceId,
             },
 
-            Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId() + 1, WeaponsDataFactory.GetMaxWeaponDamage()),
+            Weapon = new EquipmentData()
+            {
+                EquipmentId = GetRandomWeaponDefinition()?.ItemId
+            },
+
             Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount()),
             SpawnPosition = new Vector3Data(position)
         };
@@ -363,6 +372,26 @@ public class RaidManager : MonoBehaviour
         }
 
         return boat;
+    }
+
+    private WeaponDefinition GetRandomWeaponDefinition()
+    {
+        var gameStage = GameStageSystem.CalculateGameStagePercent();
+        var minDamage = EquipmentUtils.GetMinDamage(weapons);
+        var maxDamage = EquipmentUtils.GetMaxDamage(weapons);
+
+        float targetPower = Mathf.Lerp(minDamage, maxDamage, gameStage);
+
+        var suitableWeapons = weapons.Where(w =>
+            w.Power >= Mathf.Lerp(minDamage, maxDamage, gameStage - weaponDamageThreshold) &&
+            w.Power <= Mathf.Lerp(minDamage, maxDamage, gameStage + weaponDamageThreshold)
+        ).ToList();
+
+        if (suitableWeapons.Count > 0) {
+            return suitableWeapons[UnityEngine.Random.Range(0, suitableWeapons.Count)];
+        }
+
+        return weapons.OrderBy(w => Mathf.Abs(w.Power - targetPower)).FirstOrDefault();
     }
 
     private int GetRandomRaidersCount()

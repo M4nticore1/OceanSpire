@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class ConstructionComponent : MonoBehaviour
 {
-    public float ConstructionTime { get; private set; } = 0f;
-    public float CurrentConstructionTime { get; private set; } = 0f;
+    public long ConstructionStartTime { get; private set; } = 0;
+    public long ConstructionFinishTime { get; private set; } = 0;
 
     [SerializeField] private bool isConstructable = true;
     public bool IsConstructable => isConstructable;
@@ -21,30 +21,33 @@ public class ConstructionComponent : MonoBehaviour
     {
         if (!IsUnderConstruction) return;
 
-        CurrentConstructionTime += Time.deltaTime;
-
         TryCompleteConstruction();
     }
 
     public void Init(ConstructionData data)
     {
         if (data != null) {
-            ConstructionTime = data.ConstructionTime;
-            CurrentConstructionTime = data.CurrentConstructionTime;
+            ConstructionStartTime = data.ConstructionStartTime;
+            ConstructionFinishTime = data.ConstructionFinishTime;
             IsUnderConstruction = data.IsUnderConstruction;
 
+            var constructionTime = ConstructionFinishTime - ConstructionStartTime;
+
             if (IsUnderConstruction) {
-                StartConstruction(data.ConstructionTime);
+                StartConstruction((int)constructionTime);
             }
         }
 
         TryCompleteConstruction();
     }
 
-    public void StartConstruction(float constructionTime)
+    public void StartConstruction(int constructionTime)
     {
-        ConstructionTime = constructionTime;
         IsUnderConstruction = true;
+
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        ConstructionStartTime = currentTime;
+        ConstructionFinishTime = currentTime + constructionTime;
 
         OnConstructionStarted?.Invoke();
         OnGlobalConstructionStarted?.Invoke(this);
@@ -54,12 +57,11 @@ public class ConstructionComponent : MonoBehaviour
     {
         if (!ShouldCompleteConstruction()) return;
 
-        CompleteConstruction();
+        FinishConstruction();
     }
 
-    public void CompleteConstruction()
+    public void FinishConstruction()
     {
-        CurrentConstructionTime = 0f;
         IsUnderConstruction = false;
 
         OnConstructionCompleted?.Invoke();
@@ -69,7 +71,9 @@ public class ConstructionComponent : MonoBehaviour
     private bool ShouldCompleteConstruction()
     {
         if (!IsUnderConstruction) return false;
-        if (CurrentConstructionTime < ConstructionTime) return false;
+
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        if (currentTime < ConstructionFinishTime) return false;
 
         return true;
     }

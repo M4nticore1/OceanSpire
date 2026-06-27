@@ -100,6 +100,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
             return;
         }
 
+        var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
         var buildingData = new TowerBuildingData()
         {
             Id = towerBuildingPrefab.BuildingData.BuildingId,
@@ -109,11 +110,10 @@ public class BuildingPlace : MonoBehaviour, IClickable
             Construction = new ConstructionData()
             {
                 IsUnderConstruction = true,
-                ConstructionTime = buildingPrefab.LevelData.UpgradeTime,
-                CurrentConstructionTime = 0
+                ConstructionStartTime = currentTime,
+                ConstructionFinishTime = currentTime + buildingPrefab.LevelData.UpgradeTime
             },
 
-            Crafting = CraftingModuleData.Create(towerBuildingPrefab.GetComponent<CraftingModule>()),
             FloorIndex = FloorIndex,
             PlaceIndex = placeIndex,
         };

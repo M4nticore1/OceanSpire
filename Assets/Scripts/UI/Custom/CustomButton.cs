@@ -50,6 +50,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     [Header("States")]
     [SerializeField] private CustomButtonState state;
+    public CustomButtonState State => state;
 
     public bool IsIdle => state == CustomButtonState.Idle;
     public bool IsHovered => state == CustomButtonState.Hovered;

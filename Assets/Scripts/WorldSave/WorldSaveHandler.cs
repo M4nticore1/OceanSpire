@@ -1,14 +1,14 @@
 using UnityEngine;
 
-public class WorldSaveManager
+public class WorldSaveHandler
 {
-    private static WorldSaveManager instance;
-    public static WorldSaveManager Instance
+    private static WorldSaveHandler instance;
+    public static WorldSaveHandler Instance
     {
         get
         {
             if (instance == null) {
-                instance = new WorldSaveManager();
+                instance = new WorldSaveHandler();
                 instance.Init();
             }
 
@@ -20,7 +20,7 @@ public class WorldSaveManager
     public WorldData CurrentWorldData { get; private set; }
     public string SaveWorldName { get; private set; }
 
-    private WorldSaveManager() { }
+    private WorldSaveHandler() { }
 
     private void Init()
     {

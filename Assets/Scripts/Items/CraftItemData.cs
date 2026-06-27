@@ -4,15 +4,15 @@ using UnityEngine;
 [Serializable]
 public class CraftItemData
 {
-    public int CurrentCraftingTime = 0;
+    public long? CraftingFinishTime = null;
     public bool CraftingInProgress = false;
 
     public static CraftItemData Create(CraftItemInstance item)
     {
         return new CraftItemData()
         {
-            CurrentCraftingTime = (int)item.CurrentCraftingTime,
-            CraftingInProgress = item.IsCrafting
+            CraftingFinishTime = item.CraftingFinishTime,
+            CraftingInProgress = item.CraftingInProgress
         };
     }
 

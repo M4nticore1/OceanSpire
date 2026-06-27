@@ -9,6 +9,10 @@ public class BoatRider : MonoBehaviour
     public Boat RidingBoat;
 
     [SerializeField] private Movement movement;
+    public Movement Movement => movement;
+
+    [SerializeField] private HealthComponent healthComponent;
+    public HealthComponent HealthComponent => healthComponent;
 
     [SerializeField] private float useBoatTime = 1;
     private TimerHandle useBoatTimerHandle = new TimerHandle();
@@ -35,11 +39,13 @@ public class BoatRider : MonoBehaviour
     private void OnEnable()
     {
         movement.OnMovementStopped += OnMovementStopped;
+        healthComponent.OnDied += OnDied;
     }
 
     private void OnDisable()
     {
         movement.OnMovementStopped -= OnMovementStopped;
+        healthComponent.OnDied -= OnDied;
     }
 
     public void Init(BoatRiderData boatRiderData)
@@ -241,11 +247,9 @@ public class BoatRider : MonoBehaviour
         WaitForBoatAndEnter();
     }
 
-    private bool ShouldMoveToBoat()
+    private void OnDied()
     {
-        if (TargetBoat) return false;
 
-        return true;
     }
 
     private bool ShouldStartEnteringBoat()

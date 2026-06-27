@@ -10,27 +10,23 @@ public class PlayerSettingsData
     public int FrameRateLimitType = 1;
     public bool ShowFrameRateCounter = false;
 
-    public static PlayerSettingsData Create(PlayerSettingsManager playerSettings)
-    {
-        return new PlayerSettingsData()
-        {
-            Language = playerSettings.Language,
-            SFXVolume = playerSettings.SFXVolume,
-            MusicVolume = playerSettings.MusicVolume,
-            FrameRateLimitType = playerSettings.FrameRateLimitType,
-            ShowFrameRateCounter = playerSettings.ShowFrameRateCounter
-        };
-    }
-
     public static PlayerSettingsData Default()
     {
         return new PlayerSettingsData()
         {
             Language = Application.systemLanguage,
-            SFXVolume = 0.5f,
-            MusicVolume = 0.5f,
-            FrameRateLimitType = 60,
-            ShowFrameRateCounter = true
+        };
+    }
+
+    public static PlayerSettingsData Create(PlayerSettingsManager playerSettingsManager)
+    {
+        return new PlayerSettingsData()
+        {
+            Language = playerSettingsManager.Language,
+            SFXVolume = playerSettingsManager.SFXVolume,
+            MusicVolume = playerSettingsManager.MusicVolume,
+            FrameRateLimitType = playerSettingsManager.FrameRateLimitType,
+            ShowFrameRateCounter = playerSettingsManager.ShowFrameRateCounter,
         };
     }
 }

@@ -978,6 +978,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3524498720993796254 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3525712505502648412, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
+  m_PrefabInstance: {fileID: 1214128106776770}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7205ac4fad86ba94297b293602807e86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonClickEventListener
 --- !u!114 &4519733121056334280 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4520771170804779274, guid: 500c9bf4de5be954ca9c1715c5a55029, type: 3}
@@ -1244,6 +1255,10 @@ PrefabInstance:
       propertyPath: button
       value: 
       objectReference: {fileID: 4519733121056334280}
+    - target: {fileID: 3847663418304343233, guid: 80dc2928365bacc48a3c85cc08337053, type: 3}
+      propertyPath: completeEventListener
+      value: 
+      objectReference: {fileID: 3524498720993796254}
     - target: {fileID: 6390121106355143851, guid: 80dc2928365bacc48a3c85cc08337053, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -4640,6 +4655,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1193120450388008432}
     m_Modifications:
+    - target: {fileID: 56828480321046143, guid: b8decfa6bc09b8e40bd2fdea659f0be0, type: 3}
+      propertyPath: content
+      value: 
+      objectReference: {fileID: 8291545848489941317}
+    - target: {fileID: 56828480321046143, guid: b8decfa6bc09b8e40bd2fdea659f0be0, type: 3}
+      propertyPath: openListButton
+      value: 
+      objectReference: {fileID: 8971962629013174467}
     - target: {fileID: 2778132464225699208, guid: 7b9184d8f016f6e40a363b09faff50ac, type: 3}
       propertyPath: managementMenu
       value: 
@@ -4736,14 +4759,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 56828480321046143, guid: b8decfa6bc09b8e40bd2fdea659f0be0, type: 3}
-      propertyPath: content
-      value: 
-      objectReference: {fileID: 8291545848489941317}
-    - target: {fileID: 56828480321046143, guid: b8decfa6bc09b8e40bd2fdea659f0be0, type: 3}
-      propertyPath: openListButton
-      value: 
-      objectReference: {fileID: 8971962629013174467}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5712,6 +5727,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7155900619449685442, guid: 222f7b978000d9b44a7fa3c198391b27, type: 3}
+      propertyPath: button
+      value: 
+      objectReference: {fileID: 8598593062647383582}
+    - target: {fileID: 7155900619449685442, guid: 222f7b978000d9b44a7fa3c198391b27, type: 3}
+      propertyPath: completeEventListener
+      value: 
+      objectReference: {fileID: 5321815130857470016}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

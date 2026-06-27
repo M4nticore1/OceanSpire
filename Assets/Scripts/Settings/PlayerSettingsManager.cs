@@ -14,7 +14,7 @@ public class PlayerSettingsManager : MonoBehaviour
     public int FrameRateLimitType { get; private set; }
     public bool ShowFrameRateCounter { get; private set; }
 
-    public event Action<PlayerSettingsData> OnSettingsChanged;
+    public event Action OnSettingsChanged;
 
     private void Awake()
     {
@@ -27,10 +27,17 @@ public class PlayerSettingsManager : MonoBehaviour
         Instance = this;
     }
 
+    public void Init()
+    {
+        var playerSettingsData = PlayerSettingsData.Default();
+        Init(playerSettingsData);
+    }
+
     public void Init(PlayerSettingsData playerSettingsData)
     {
         if (playerSettingsData == null) {
             Debug.LogError($"Player Settings Data is not valid at {name}");
+            Init();
             return;
         }
 
@@ -46,7 +53,7 @@ public class PlayerSettingsManager : MonoBehaviour
         LocalizationManager.Instance.SetLocalization(language);
         Language = LocalizationManager.Instance.CurrentLocalization.Language;
 
-        OnSettingsChanged?.Invoke(PlayerSettingsData.Create(this));
+        OnSettingsChanged?.Invoke();
     }
 
     public void SetSFXVolume(float alpha)
@@ -56,7 +63,7 @@ public class PlayerSettingsManager : MonoBehaviour
         float volume = GetVolumeFromAlpha(alpha);
         masterMixer.SetFloat("SFX", volume);
 
-        OnSettingsChanged?.Invoke(PlayerSettingsData.Create(this));
+        OnSettingsChanged?.Invoke();
     }
 
     public void SetMusicVolume(float alpha)
@@ -66,7 +73,7 @@ public class PlayerSettingsManager : MonoBehaviour
         float volume = GetVolumeFromAlpha(alpha);
         masterMixer.SetFloat("Music", volume);
 
-        OnSettingsChanged?.Invoke(PlayerSettingsData.Create(this));
+        OnSettingsChanged?.Invoke();
     }
 
     public void SetFrameRateLimit(int type)
@@ -74,7 +81,7 @@ public class PlayerSettingsManager : MonoBehaviour
         FrameRateLimitType = type;
         Application.targetFrameRate = type == 0 ? 30 : 60;
 
-        OnSettingsChanged?.Invoke(PlayerSettingsData.Create(this));
+        OnSettingsChanged?.Invoke();
     }
 
     public void SetShowFrameRateCounter(bool value)
@@ -82,15 +89,13 @@ public class PlayerSettingsManager : MonoBehaviour
         ShowFrameRateCounter = value;
         FPSCounterSystem.SetCounterEnabled(value);
 
-        OnSettingsChanged?.Invoke(PlayerSettingsData.Create(this));
+        OnSettingsChanged?.Invoke();
     }
 
     private float GetVolumeFromAlpha(float alpha)
     {
         alpha = Mathf.Max(0.0001f, alpha);
         alpha = Mathf.Log10(alpha) * 20;
-        //alpha = Mathf.Clamp01(alpha);
-        //float volume = Mathf.Lerp(minAudioVolume, maxAudioVolume, alpha);
 
         return alpha;
     }

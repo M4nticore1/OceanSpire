@@ -17,7 +17,7 @@ public abstract class Creature : MonoBehaviour
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
 
-    private bool isIdle = true;
+    public bool IsIdle { get; private set; } = true;
 
     public event Action OnIdleStarted;
     public event Action OnIdleStopped;
@@ -83,7 +83,7 @@ public abstract class Creature : MonoBehaviour
 
     protected void StartIdle()
     {
-        isIdle = true;
+        IsIdle = true;
         OnIdleStarted?.Invoke();
     }
 
@@ -96,7 +96,7 @@ public abstract class Creature : MonoBehaviour
 
     protected void StopIdle()
     {
-        isIdle = false;
+        IsIdle = false;
         OnIdleStopped?.Invoke();
     }
 

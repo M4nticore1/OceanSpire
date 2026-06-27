@@ -99,7 +99,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6844784322614023821}
-  - component: {fileID: 5704546012672728452}
+  - component: {fileID: 1918633935356658859}
   m_Layer: 0
   m_Name: PlayerSettingsSaver
   m_TagString: Untagged
@@ -122,7 +122,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9038951078048163618}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5704546012672728452
+--- !u!114 &1918633935356658859
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,10 +131,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7531388906181361545}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffd90730d480c2a469c772594b2a832d, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f4211ae6887bb54aaaa4304c7681fbf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerSettingsDataSaver
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsSaveController
+  playerSaveManager: {fileID: 0}
   playerSettingsManager: {fileID: 3329064454774493816}
+  playerSettingsLoader: {fileID: 7233647925478648499}
 --- !u!1 &8689663771130714752
 GameObject:
   m_ObjectHideFlags: 0

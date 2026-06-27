@@ -92,12 +92,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48
+  m_fontSize: 52
   m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 32
-  m_fontSizeMax: 48
+  m_fontSizeMax: 52
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -344,6 +344,7 @@ MonoBehaviour:
   resourceAmountText: {fileID: 8834238281448815289}
   resourceImage: {fileID: 1277891582841892986}
   resourceAmountBar: {fileID: 0}
+  changeColorType: 1
   useAmountColors: 1
-  enoughAmountColor: {r: 0.35000002, g: 1, b: 0.35000002, a: 1}
-  notEnoughAmountColor: {r: 1, g: 0.34901962, b: 0.34901962, a: 1}
+  enoughAmountColor: {r: 1, g: 0.34901965, b: 0.34901965, a: 1}
+  notEnoughAmountColor: {r: 0.34901962, g: 1, b: 0.34901962, a: 1}

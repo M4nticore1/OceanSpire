@@ -43,6 +43,12 @@ public class CameraMovement : MonoBehaviour
         ApplySquareMove();
     }
 
+    public void Init(Quaternion rotation)
+    {
+        transform.rotation = rotation;
+        ApplySquareMove();
+    }
+
     // Apply Velocity
     private void ApplyVelocity()
     {

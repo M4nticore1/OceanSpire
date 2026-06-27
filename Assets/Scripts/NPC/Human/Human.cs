@@ -441,6 +441,7 @@ public abstract class Human : Creature, IClickable
     protected virtual bool ShouldStartAttacking()
     {
         if (attackComponent.IsAttacking) return false;
+        if (!HealthComponent.IsAlive) return false;
 
         return true;
     }
@@ -497,20 +498,15 @@ public abstract class Human : Creature, IClickable
     // Health
     protected virtual void OnRevived()
     {
-        TryStartIdle();
+        DetermineNextAction();
         contextMenuTarget.SetShowContextMenu(true);
-
         OnHumanRevived?.Invoke(this);
     }
 
     protected virtual void OnDied()
     {
-        interactComponent.TryStopInteracting();
-        interactComponent.RemoveInteractBuilding();
-
-        TryStopIdle();
+        DetermineNextAction();
         contextMenuTarget.SetShowContextMenu(false);
-
         OnHumanDied?.Invoke(this);
     }
 

@@ -7,6 +7,8 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private CustomButton loadSaveButton = null;
     [SerializeField] private CustomButton deleteSaveButton = null;
 
+    private SaveSlotWidget lastSelectedSaveSlot;
+
     private void OnEnable()
     {
         loadSaveButton.OnReleased.AddListener(OnLoadWorldButtonClicked);
@@ -31,31 +33,29 @@ public class MainMenuManager : MonoBehaviour
 
     private void OnLoadWorldButtonClicked()
     {
-        var selectedSaveSlot = SaveSlotWidget.Selected;
-        if (!selectedSaveSlot) {
+        if (!lastSelectedSaveSlot) {
             Debug.LogError("Selected SaveSlotWidget not found");
             return;
         }
 
-        var data = selectedSaveSlot.WorldSaveData;
+        var data = lastSelectedSaveSlot.WorldSaveData;
         if (data == null) {
             Debug.Log($"WorldSaveData not found at {SaveSlotWidget.Selected}");
             return;
         }
 
-        WorldSaveManager.Instance.SetWorldData(data);
+        WorldSaveHandler.Instance.SetWorldData(data);
         SceneManager.LoadScene(1);
     }
 
     private void OnDeleteWorldButtonClicked()
     {
-        var selectedSaveSlot = SaveSlotWidget.Selected;
-        if (!selectedSaveSlot) {
+        if (!lastSelectedSaveSlot) {
             Debug.LogError("Selected SaveSlotWidget not found");
             return;
         }
 
-        var data = selectedSaveSlot.WorldSaveData;
+        var data = lastSelectedSaveSlot.WorldSaveData;
         if (data == null) {
             Debug.Log($"WorldSaveData not found at {SaveSlotWidget.Selected}");
             return;
@@ -64,12 +64,14 @@ public class MainMenuManager : MonoBehaviour
         string worldName = data.WorldName;
         WorldSaveSystem.RemoveSaveByWorldName(worldName);
 
-        WorldSaveManager.Instance.FindSavesData();
-        SaveSlotWidget.Selected.RemoveSaveData();
+        WorldSaveHandler.Instance.FindSavesData();
+        lastSelectedSaveSlot.RemoveSaveData();
     }
 
     private void OnSaveSlotSelected(SaveSlotWidget saveSlotWidget)
     {
+        lastSelectedSaveSlot = saveSlotWidget;
+
         loadSaveButton.SetState(CustomButtonState.Idle);
         deleteSaveButton.SetState(CustomButtonState.Idle);
     }
@@ -82,6 +84,8 @@ public class MainMenuManager : MonoBehaviour
     private IEnumerator DisableButtonsCoroutine()
     {
         yield return new WaitForEndOfFrame();
+
+        if (SaveSlotWidget.Selected) yield break;
 
         loadSaveButton.SetState(CustomButtonState.Disabled);
         deleteSaveButton.SetState(CustomButtonState.Disabled);

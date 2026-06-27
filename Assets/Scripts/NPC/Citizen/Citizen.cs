@@ -69,6 +69,10 @@ public class Citizen : Human
 
     protected override void DetermineNextAction()
     {
+        if (ShouldBoatMoveToDock()) {
+            BoatMoveToDock();
+            return;
+        }
         if (ShouldBoatFindLoot()) {
             BoatFindLoot();
             return;
@@ -126,8 +130,9 @@ public class Citizen : Human
     {
         if (!base.ShouldBoatFloatAway()) return false;
 
-        if (BoatRider.RidingBoat != BoatRider.TargetBoat) return false;
         if (!IsEvicted) return false;
+        if (!HealthComponent.IsAlive) return false;
+        if (BoatRider.RidingBoat != BoatRider.TargetBoat) return false;
 
         return true;
     }
@@ -137,6 +142,7 @@ public class Citizen : Human
         if (!base.ShouldBoatFindLoot()) return false;
 
         if (IsEvicted) return false;
+        if (!HealthComponent.IsAlive) return false;
         if (BoatRider.RidingBoat != BoatRider.TargetBoat) return false;
         if (!InteractComponent.InteractBuilding) return false;
         if (!InteractComponent.InteractBuilding.GetComponent<PierModule>()) return false;

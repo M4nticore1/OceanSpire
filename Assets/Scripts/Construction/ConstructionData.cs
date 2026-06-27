@@ -4,16 +4,21 @@ using UnityEngine;
 [Serializable]
 public class ConstructionData
 {
-    public float ConstructionTime = 0f;
-    public float CurrentConstructionTime = 0f;
+    public long ConstructionStartTime = 0;
+    public long ConstructionFinishTime = 0;
     public bool IsUnderConstruction = false;
+
+    public static ConstructionData Default()
+    {
+        return new ConstructionData();
+    }
 
     public static ConstructionData Create(ConstructionComponent construction)
     {
         return new ConstructionData()
         {
-            ConstructionTime = construction.ConstructionTime,
-            CurrentConstructionTime = construction.CurrentConstructionTime,
+            ConstructionStartTime = construction.ConstructionStartTime,
+            ConstructionFinishTime = construction.ConstructionFinishTime,
             IsUnderConstruction = construction.IsUnderConstruction
         };
     }

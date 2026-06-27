@@ -102,7 +102,14 @@ public class BuildingsManager : MonoBehaviour
     {
         if (builtFloors.Count <= 0) return;
 
-        CurrentCityHeight = builtFloors[builtFloors.Count - 1].transform.position.y + FloorHeight;
+        var index = builtFloors.Count - 1;
+
+        var floor = builtFloors[index];
+        if (!floor) {
+            Debug.LogError($"floor at index {index} is not valid");
+        }
+
+        CurrentCityHeight = floor.transform.position.y + FloorHeight;
     }
 
     private void InitEnterBuildingPlace()

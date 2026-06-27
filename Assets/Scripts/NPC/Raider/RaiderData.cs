@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -18,14 +19,25 @@ public class RaiderData : HumanData
         return raiderData;
     }
 
-    public static RaiderData[] Create(Raider[] wanderers)
+    public static RaiderData[] Create(Raider[] raiders)
     {
-        var wanderersData = new RaiderData[wanderers.Length];
+        var raidersData = new List<RaiderData>();
 
-        for (int i = 0; i < wanderersData.Length; i++) {
-            wanderersData[i] = Create(wanderers[i]);
+        foreach (var raider in raiders) {
+            if (!raider) {
+                Debug.LogError("Raider is not valid");
+                continue;
+            }
+
+            var data = RaiderData.Create(raider);
+            if (data == null) {
+                Debug.LogError("Raider data is not valid");
+                continue;
+            }
+
+            raidersData.Add(data);
         }
 
-        return wanderersData;
+        return raidersData.ToArray();
     }
 }

@@ -50,7 +50,7 @@ public class SaveSlotWidget : MonoBehaviour
 
     private void Start()
     {
-        var worldData = WorldSaveManager.Instance.AllSaveData;
+        var worldData = WorldSaveHandler.Instance.AllSaveData;
         if (worldData == null) return;
 
         if (worldData.Length > slotIndex) {
@@ -104,8 +104,6 @@ public class SaveSlotWidget : MonoBehaviour
 
     private void OnClicked()
     {
-        Selected = this;
-
         if (WorldSaveData == null) {
             createNewWorldMenu.Open();
             button.SetInteractable(false);
@@ -114,17 +112,20 @@ public class SaveSlotWidget : MonoBehaviour
 
     private void OnSelected()
     {
+        Selected = this;
         OnSaveSlotSelected?.Invoke(this);
     }
 
     private void OnDeselected()
     {
+        if (Selected == this)
+            Selected = null;
+
         OnSaveSlotDeselected?.Invoke(this);
     }
 
     private void OnCreateMenuClosed()
     {
-        Selected = null;
         button.SetInteractable(true);
         button.SetState(CustomButtonState.Idle);
     }

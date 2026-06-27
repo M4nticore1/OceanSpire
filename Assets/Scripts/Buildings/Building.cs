@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
@@ -224,7 +223,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         return resources;
     }
 
-    public float GetUpgradeTime()
+    public int GetUpgradeTime()
     {
         return NextLevelData.UpgradeTime;
     }
@@ -232,11 +231,15 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // ILocalizable
     public Dictionary<string, string> GetLocalization()
     {
+        var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        var currentConstructionTime = currentTime - constructionComponent.ConstructionStartTime;
+        var ConstructionTime = constructionComponent.ConstructionFinishTime - constructionComponent.ConstructionStartTime;
+
         return new Dictionary<string, string>()
         {
             { "name", LocalizationManager.Instance.GetText(buildingData.NameLocalizationItem) },
             { "level", levelComponent.Level.ToString() },
-            { "constructionTime", TimeFormatter.SecondsToMinuteTime((int)constructionComponent.CurrentConstructionTime).ToString() + "/" + TimeFormatter.SecondsToMinuteTime((int)constructionComponent.ConstructionTime).ToString() },
+            { "constructionTime", TimeFormatter.SecondsToMinuteTime((int)currentConstructionTime).ToString() + "/" + TimeFormatter.SecondsToMinuteTime((int)ConstructionTime).ToString() },
         };
     }
 

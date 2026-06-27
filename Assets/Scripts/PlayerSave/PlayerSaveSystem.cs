@@ -2,11 +2,11 @@ using Newtonsoft.Json;
 using System.IO;
 using UnityEngine;
 
-public static class PlayerSettingsSaveSystem
+public static class PlayerSaveSystem
 {
     private static string fileName = "Player.sav";
 
-    public static void SaveData(PlayerSettingsData playerSettingsData)
+    public static void SaveData(PlayerData playerSettingsData)
     {
         string folderPath = GetFolder();
         if (string.IsNullOrEmpty(folderPath)) {
@@ -22,7 +22,7 @@ public static class PlayerSettingsSaveSystem
         File.WriteAllText(filePath, json);
     }
 
-    public static PlayerSettingsData GetData()
+    public static PlayerData GetData()
     {
         string filePath = GetFile();
         if (!File.Exists(filePath)) return null;
@@ -34,7 +34,7 @@ public static class PlayerSettingsSaveSystem
             return null;
         }
 
-        var data = JsonUtility.FromJson<PlayerSettingsData>(json);
+        var data = JsonConvert.DeserializeObject<PlayerData>(json);
         return data;
     }
 

@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class BuildingWidget : MonoBehaviour
 {
-    private CityStorage cityStorage;
     public Building BuildingPrefab { get; private set; }
     [SerializeField] private ResourceWidget buildingResourceWidget;
     private List<ResourceWidget> spawnedBuildingResourceWidgets = new List<ResourceWidget>();
@@ -17,10 +16,14 @@ public class BuildingWidget : MonoBehaviour
     [SerializeField] private CustomButton informationButton;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup;
 
+    private CityStorage cityStorage => CityStorage.Instance;
+
     private void OnEnable()
     {
         buildButton.OnReleased.AddListener(OnBuildButtonCliked);
         informationButton.OnReleased.AddListener(OnInformationButtonClicked);
+
+        
     }
 
     private void OnDisable()
@@ -31,8 +34,6 @@ public class BuildingWidget : MonoBehaviour
 
     public void Init(Building prefab)
     {
-        cityStorage = FindAnyObjectByType<CityStorage>();
-
         BuildingPrefab = prefab;
 
         var building = prefab.GetComponentInChildren<Building>();
@@ -41,8 +42,7 @@ public class BuildingWidget : MonoBehaviour
             buildingNameTextLocalizer.SetLocalizationItem(building.BuildingData.NameLocalizationItem);
             buildingNameTextLocalizer.UpdateText();
 
-            if (building.BuildingData.ThumbImage)
-                buildingImage.sprite = building.BuildingData.ThumbImage;
+            buildingImage.sprite = building.LevelData.BuildingThumb;
         }
 
         CreateResourcesToBuild();
@@ -65,6 +65,11 @@ public class BuildingWidget : MonoBehaviour
 
             spawnedBuildingResourceWidgets.Add(resourceWidget);
         }
+    }
+
+    private void UpdateBuildButtonEnabled()
+    {
+
     }
 
     private void OnBuildButtonCliked()

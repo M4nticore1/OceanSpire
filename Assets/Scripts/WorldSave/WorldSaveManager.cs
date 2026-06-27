@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class AutoSave : MonoBehaviour
+public class WorldSaveManager : MonoBehaviour
 {
-    [Header("Managers")]
+    [SerializeField] private PlayerController playerController;
     [SerializeField] private BuildingsManager buildingsManager;
     [SerializeField] private ElevatorCabinsManager elevatorCabinsManager;
     [SerializeField] private DockPointsManager dockPointsManager;
@@ -17,31 +17,11 @@ public class AutoSave : MonoBehaviour
     [SerializeField] private TutorialManager tutorialManager;
     [SerializeField] private WindManager windManager;
 
-    [Header("Auto Save")]
-    [SerializeField] private float autoSaveDataFrequency = 5f;
-    [SerializeField] private float autoSaveThumbFrequency = 60f;
-
-    private float crrentSaveDataTime = 0f;
-    private float crrentSaveThumbTime = 0f;
-
-    private void Start()
+    public void SaveWorld()
     {
-        crrentSaveThumbTime = autoSaveThumbFrequency - autoSaveDataFrequency;
-    }
-
-    private void Update()
-    {
-        TickSaveData();
-        TickSaveScreeshot();
-    }
-
-    private void TickSaveData()
-    {
-        crrentSaveDataTime += Time.deltaTime;
-        if (crrentSaveDataTime < autoSaveDataFrequency) return;
-
         var worldData = WorldData.Create(
-            WorldSaveManager.Instance,
+            WorldSaveHandler.Instance,
+            playerController,
             buildingsManager, elevatorCabinsManager,
             dockPointsManager,
             boatsManager,
@@ -56,17 +36,6 @@ public class AutoSave : MonoBehaviour
             windManager);
 
         WorldSaveSystem.SaveWorld(worldData);
-        WorldSaveManager.Instance.SetWorldData(worldData);
-
-        crrentSaveDataTime = 0f;
-    }
-
-    private void TickSaveScreeshot()
-    {
-        crrentSaveThumbTime += Time.deltaTime;
-        if (crrentSaveThumbTime < autoSaveThumbFrequency) return;
-
-        WorldSaveSystem.SaveWorldThumb(WorldSaveManager.Instance.SaveWorldName);
-        crrentSaveThumbTime = 0f;
+        WorldSaveHandler.Instance.SetWorldData(worldData);
     }
 }

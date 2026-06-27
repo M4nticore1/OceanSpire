@@ -67,9 +67,6 @@ public class BuildingDefinition : ScriptableObject
     public BuildingStrategyEnum BuildingStrategy => buildingStrategy;
 
     [Header("Other")]
-    [SerializeField] private Sprite thumbImage = null;
-    public Sprite ThumbImage => thumbImage;
-
     [SerializeField] private bool isConstructable = false;
     public bool IsConstructable => isConstructable;
 

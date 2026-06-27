@@ -49,9 +49,17 @@ public class HumanAnimation : MonoBehaviour
 
     private void UpdateParameters()
     {
+        UpdateIdle();
         UpdateWalking();
         UpdateRunning();
         UpdateWorking();
+        UpdateFloating();
+        UpdateDied();
+    }
+
+    private void UpdateIdle()
+    {
+        animator.SetBool("isIdle", human.IsIdle);
     }
 
     private void UpdateWalking()
@@ -69,14 +77,24 @@ public class HumanAnimation : MonoBehaviour
         animator.SetBool("isWorking", human.InteractComponent.IsInteracting && !human.Movement.IsMoving);
     }
 
+    private void UpdateFloating()
+    {
+        animator.SetBool("isFloating", human.BoatRider.RidingBoat && human.BoatRider.RidingBoat.Movement.IsMoving && human.HealthComponent.IsAlive);
+    }
+
+    private void UpdateDied()
+    {
+        animator.SetBool("isDied", !human.HealthComponent.IsAlive);
+    }
+
     private void OnIdleStarted()
     {
-        animator.SetBool("isIdle", true);
+        UpdateParameters();
     }
 
     private void OnIdleStopped()
     {
-        animator.SetBool("isIdle", false);
+        UpdateParameters();
     }
 
     private void OnMovementStarted()
@@ -91,12 +109,12 @@ public class HumanAnimation : MonoBehaviour
 
     private void OnBoatMovementStarted(Boat boat)
     {
-        animator.SetBool("isFloating", true);
+        UpdateParameters();
     }
 
     private void OnBoatMovementStopped(Boat boat)
     {
-        animator.SetBool("isFloating", false);
+        UpdateParameters();
     }
 
     private void OnInteractionStarted(Building building)
@@ -134,11 +152,11 @@ public class HumanAnimation : MonoBehaviour
 
     private void OnRevived()
     {
-        animator.SetBool("isDied", false);
+        UpdateParameters();
     }
 
     private void OnDied()
     {
-        animator.SetBool("isDied", true);
+        UpdateParameters();
     }
 }

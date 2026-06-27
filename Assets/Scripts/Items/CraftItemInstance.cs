@@ -4,8 +4,11 @@ using UnityEngine;
 public class CraftItemInstance
 {
     public CraftItemDefinition Definition { get; private set; }
-    public float CurrentCraftingTime { get; private set; } = 0f;
-    public bool IsCrafting { get; private set; } = false;
+
+    public long? CraftingFinishTime { get; private set; } = 0;
+    public bool CraftingInProgress { get; private set; } = false;
+    public bool IsCraftSelected { get; private set; } = false;
+
     public float CraftingSpeedBonus { get; private set; } = 0f;
 
     public event Action<float> OnCraftingSpeedBonusChanged;
@@ -13,17 +16,41 @@ public class CraftItemInstance
     public CraftItemInstance(CraftItemDefinition definition, CraftItemData data)
     {
         Definition = definition;
-        CurrentCraftingTime = data.CurrentCraftingTime;
+        SetCraftingFinishTime(data.CraftingFinishTime);
+        SetCraftingInProgress(data.CraftingInProgress);
+
+        if (IsCraftingFinished()) {
+            SetCraftingInProgress(false);
+        }
     }
 
-    public void SetCurrentCraftingTime(float time)
+    public void ResetCraftingFinishTime()
     {
-        CurrentCraftingTime = time;
+        var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        var craftingTime = Definition.ProduceTime;
+        var finishTime = currentTime + craftingTime;
+
+        SetCraftingFinishTime(finishTime);
     }
 
-    public void SetIsCrafting(bool value)
+    public void RemoveCraftingFinishTime()
     {
-        IsCrafting = value;
+        SetCraftingFinishTime(null);
+    }
+
+    public void SetCraftingFinishTime(long? time)
+    {
+        CraftingFinishTime = time;
+    }
+
+    public void SetCraftingInProgress(bool value)
+    {
+        CraftingInProgress = value;
+    }
+
+    public void SetCraftSelected(bool value)
+    {
+        IsCraftSelected = value;
     }
 
     public void SetCraftingSpeedBonus(float value)
@@ -34,17 +61,20 @@ public class CraftItemInstance
 
     public bool IsCraftingFinished()
     {
-        if (CurrentCraftingTime < GetProduceTime()) return false;
+        if (CraftingFinishTime == null) return false;
+
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        if (currentTime < CraftingFinishTime.Value) return false;
 
         return true;
     }
 
-    public float GetProduceTime()
+    public int GetProduceTime()
     {
         var produceTime = Definition.ProduceTime;
         var bonusMultiplier = (1 - CraftingSpeedBonus);
         var bonusProduceTime = produceTime * bonusMultiplier;
 
-        return bonusProduceTime;
+        return (int)bonusProduceTime;
     }
 }

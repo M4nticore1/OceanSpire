@@ -1,12 +1,18 @@
 using UnityEngine;
 
-public class TutorialLoader : WorldLoader
+public class TutorialLoader : PlayerLoader
 {
     [SerializeField] private TutorialManager tutorialManager;
 
-    protected override void Load(WorldData worldData)
+    protected override void Load(PlayerData playerData)
     {
-        var tutorialData = worldData != null ? worldData.Tutorial : new TutorialData();
-        tutorialManager.Init(tutorialData);
+        var tutorialData = playerData?.Tutorial;
+
+        if (tutorialData != null) {
+            tutorialManager.Init(tutorialData);
+        }
+        else {
+            tutorialManager.Init();
+        }
     }
 }

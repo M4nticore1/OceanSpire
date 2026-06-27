@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerSettingsLoader : MonoBehaviour
+public class PlayerSettingsLoader : PlayerLoader
 {
     public static PlayerSettingsLoader Instance;
 
@@ -17,13 +17,15 @@ public class PlayerSettingsLoader : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
+    protected override void Load(PlayerData playerData)
     {
-        var playerSettingsData = PlayerSettingsSaveSystem.GetData();
-        if (playerSettingsData == null) {
-            playerSettingsData = PlayerSettingsData.Default();
-        }
+        var playerSettingsData = playerData?.Settings;
 
-        playerSettings.Init(playerSettingsData);
+        if (playerSettingsData != null) {
+            playerSettings.Init(playerSettingsData);
+        }
+        else {
+            playerSettings.Init();
+        }
     }
 }

@@ -70,7 +70,7 @@ public class CreateNewWorldMenu : MonoBehaviour
     {
         string worldName = inputField.text;
 
-        WorldSaveManager.Instance.SetSaveWorldName(worldName);
+        WorldSaveHandler.Instance.SetSaveWorldName(worldName);
         SceneManager.LoadScene(1);
     }
 
@@ -116,7 +116,7 @@ public class CreateNewWorldMenu : MonoBehaviour
 
     private bool IsWorldNameExist(string name)
     {
-        WorldData[] worldData = WorldSaveManager.Instance.AllSaveData;
+        var worldData = WorldSaveHandler.Instance.AllSaveData;
         if (worldData == null) return false;
 
         foreach (var data in worldData) {

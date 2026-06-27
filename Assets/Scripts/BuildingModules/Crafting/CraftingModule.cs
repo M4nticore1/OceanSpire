@@ -31,6 +31,8 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     public bool IsReadyToCollect => CurrentCraftItem != null && CurrentCraftItem.IsCraftingFinished();
     public float CraftingSpeedBonus { get; private set; } = 0f;
 
+    private CityStorage cityStorage => CityStorage.Instance;
+
     public event Action<CraftItemInstance> OnItemCrafted;
 
     public static event Action<CraftingModule, CraftItemInstance> OnModuleItemCrafted;
@@ -56,9 +58,16 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         if (craftingModuleData != null) {
             SetCraftingItemByIndex(craftingModuleData.CurrentCraftId);
 
-            if (craftingModuleData.CurrentCraft != null) {
-                SetCraftingTime(craftingModuleData.CurrentCraft.CurrentCraftingTime);
-                SetIsCrafting(craftingModuleData.CurrentCraft.CraftingInProgress);
+            var currentCraftData = craftingModuleData.CurrentCraft;
+            if (currentCraftData != null) {
+                SetCraftingFinishTime(currentCraftData.CraftingFinishTime);
+
+                if (CurrentCraftItem != null && CurrentCraftItem.IsCraftingFinished()) {
+                    SetCraftingInProgress(false);
+                }
+                else {
+                    SetCraftingInProgress(currentCraftData.CraftingInProgress);
+                }
             }
         }
         else {
@@ -71,8 +80,6 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     public void Tick()
     {
         if (!IsWorking) return;
-
-        AddCraftingTime();
         if (!TryCraftItem()) return;
 
         TryStopWorking();
@@ -101,10 +108,17 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         TryConsumeResources();
     }
 
+    protected override void OnWorkingStop()
+    {
+        base.OnWorkingStop();
+
+        RemoveCraftingFinishTime();
+    }
+
     protected override bool ShouldStartWorking()
     {
         if (!base.ShouldStartWorking()) return false;
-        if (!CityStorage.Instance) return false;
+        if (!cityStorage) return false;
         if (IsReadyToCollect) return false;
         if (!IsEnoughResources(CurrentCraftItem.Definition)) return false;
 
@@ -137,7 +151,19 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
             return;
         }
 
+        if (CurrentCraftItem != null) {
+            CurrentCraftItem.SetCraftSelected(false);
+        }
+
         CurrentCraftItem = craftItem;
+        CurrentCraftItem.SetCraftSelected(true);
+
+        if (IsWorking) {
+            ResetCraftingFinishTime();
+        }
+        else {
+            RemoveCraftingFinishTime();
+        }
     }
 
     public void SetCraftingItemByIndex(int index)
@@ -149,8 +175,8 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         }
 
         var craftItemsLength = CraftItems.Count;
-        if (craftItemsLength <= index) {
-            Debug.LogError("CraftItemIndex is over than CraftItems length!");
+        if (index < 0 || index >= CraftItems.Count) {
+            Debug.LogError($"Index {index} is out of range for CraftItems (Count: {CraftItems.Count})");
             return;
         }
 
@@ -163,29 +189,47 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         SetCraftingItem(craftItem);
     }
 
-    public void ResetProducedTime()
+    public void RemoveCraftignItem()
     {
-        SetCraftingTime(0f);
+        if (CurrentCraftItem != null) {
+            CurrentCraftItem.SetCraftSelected(false);
+        }
+
+        CurrentCraftItem = null;
     }
 
-    public void SetCraftingTime(float time)
+    public void ResetCraftingFinishTime()
+    {
+        if (CurrentCraftItem == null) return;
+
+        CurrentCraftItem.ResetCraftingFinishTime();
+    }
+
+    public void RemoveCraftingFinishTime()
+    {
+        if (CurrentCraftItem == null) return;
+
+        CurrentCraftItem.RemoveCraftingFinishTime();
+    }
+
+    public void SetCraftingFinishTime(long? time)
     {
         if (CurrentCraftItem == null) {
             Debug.LogError("CurrentCraftItem is not valid");
             return;
         }
 
-        CurrentCraftItem.SetCurrentCraftingTime(time);
+        CurrentCraftItem.SetCraftingFinishTime(time);
     }
 
-    public void SetIsCrafting(bool value)
+    public void SetCraftingInProgress(bool value)
     {
         if (CurrentCraftItem == null) {
             Debug.LogError("CurrentCraftItem is not valid");
             return;
         }
 
-        CurrentCraftItem.SetIsCrafting(value);
+        CurrentCraftItem.SetCraftingInProgress(value);
     }
 
     public void SetCraftingSpeedBonus(float value)
@@ -204,7 +248,12 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     public int GetIndexOfCurrentCraftItem()
     {
-        return CraftItems.IndexOf(CurrentCraftItem);
+        if (CraftItems.Contains(CurrentCraftItem)) {
+            return CraftItems.IndexOf(CurrentCraftItem);
+        }
+        else {
+            return 0;
+        }
     }
 
     public float GetElectricityConsumption()
@@ -233,7 +282,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         if (!TryCollectItem()) return;
 
         bool work = TryStartWorking();
-        SetIsCrafting(work);
+        SetCraftingInProgress(work);
 
         if (!SelectManager.Instance) return;
 
@@ -245,7 +294,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private void CollectItem()
     {
-        if (!CityStorage.Instance) return;
+        if (!cityStorage) return;
 
         if (CurrentCraftItem == null) {
             Debug.LogError("CurrentCraftItem is not valid");
@@ -266,15 +315,10 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
         int id = craftItemDefinition.ItemId;
         int amount = craftItem.Amount;
-        CityStorage.Instance.Inventory.AddItem(id, amount);
+        cityStorage.Inventory.AddItem(id, amount);
 
-        ResetProducedTime();
+        ResetCraftingFinishTime();
         AssignFlicking();
-    }
-
-    private void AddCraftingTime()
-    {
-        SetCraftingTime(CurrentCraftItem.CurrentCraftingTime + Time.deltaTime);
     }
 
     private void AssignFlicking()
@@ -326,7 +370,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         foreach (var resource in CurrentCraftItem.Definition.ConsumeResources) {
             int id = resource.Definition.ItemId;
             int amount = resource.Amount;
-            CityStorage.Instance.Inventory.AddItem(id, amount);
+            cityStorage.Inventory.AddItem(id, amount);
         }
 
         return true;
@@ -346,6 +390,11 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
             var craftItemData = CraftItemData.Default();
             var item = def.CreateInstance(craftItemData);
 
+            if (item == null) {
+                Debug.Log("Craft item is not valid");
+                continue;
+            }
+
             CraftItems.Add(item);
         }
     }
@@ -354,12 +403,16 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         if (!ShouldStartCrafting()) return false;
 
-        SetIsCrafting(true);
+        SetCraftingInProgress(true);
+        ResetCraftingFinishTime();
+
         return true;
     }
 
     private bool TryCraftItem()
     {
+        if (!IsWorking) return false;
+
         if (CurrentCraftItem == null) {
             Debug.LogError($"CurrentCraftItem is not valid at {name}");
             return false;
@@ -406,7 +459,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
             return false;
         }
 
-        if (CurrentCraftItem.IsCrafting) return false;
+        if (CurrentCraftItem.CraftingInProgress) return false;
         if (!IsEnoughResources(CurrentCraftItem.Definition)) return false;
 
         return true;
@@ -414,7 +467,8 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private bool ShouldRefundResources()
     {
-        if (!CityStorage.Instance) return false;
+        if (!cityStorage) return false;
+        if (CurrentCraftItem == null) return false;
         if (IsReadyToCollect) return false;
 
         return true;

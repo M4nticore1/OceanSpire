@@ -14,6 +14,6 @@ public class SkipConstructionRewardInstance : RewardInstance
     {
         base.OnRewardRecieved();
 
-        constructionComponent.CompleteConstruction();
+        constructionComponent.FinishConstruction();
     }
 }

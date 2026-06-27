@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,13 +27,13 @@ public class CraftItemPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        button.OnReleased.AddListener(OnClicked);
+        button.OnSelected.AddListener(OnSelected);
         button.OnDeselected.AddListener(OnDeselected);
     }
 
     private void OnDisable()
     {
-        button.OnReleased.RemoveListener(OnClicked);
+        button.OnSelected.RemoveListener(OnSelected);
         button.OnDeselected.RemoveListener(OnDeselected);
     }
 
@@ -74,24 +75,45 @@ public class CraftItemPanel : MonoBehaviour
         UpdateTimer();
         UpdateProgressBar();
 
+        UpdateSelected();
+
         craftItem.OnCraftingSpeedBonusChanged += OnCraftingSpeedBonusChanged;
     }
 
     public void Select()
     {
-        isSelected = true;
+        if (button.State == CustomButtonState.Selected) return;
 
         button.SetState(CustomButtonState.Selected);
         button.EndTransitionAnimation();
-        UpdateTimer();
-        UpdateProgressBar();
     }
 
     private void Deselect()
     {
-        isSelected = false;
-        UpdateTimer();
-        UpdateProgressBar();
+        if (button.State == CustomButtonState.Idle) return;
+
+        button.SetState(CustomButtonState.Idle);
+        button.EndTransitionAnimation();
+    }
+
+    private void UpdateSelected()
+    {
+        if (craftItem == null) {
+            Debug.LogError("CraftItem is not valid");
+            return;
+        }
+
+        if (!craftingModule) {
+            Debug.LogError("CraftingModule is not valid");
+            return;
+        }
+        
+        if (craftItem == craftingModule.CurrentCraftItem) {
+            Select();
+        }
+        else {
+            Deselect();
+        }
     }
 
     private void CreateProducedResourceWidget()
@@ -105,22 +127,37 @@ public class CraftItemPanel : MonoBehaviour
     {
         foreach (var resource in craftItem.Definition.ConsumeResources) {
             var widget = Instantiate(consumeResourceWidgetPrefab, consumedResourcesSlot.transform);
-            widget.SetItem(resource.Definition);
+            var definition = resource.Definition;
+
+            widget.SetItem(definition);
             widget.AddAmount(resource);
+            widget.SetLimit(CityStorage.Instance.Inventory.GetItemById(definition.ItemId));
+
+            Debug.Log("Storage " + CityStorage.Instance.Inventory.GetItemById(definition.ItemId).Amount);
         }
     }
 
     private void UpdateTimer()
     {
-        string text;
+        var text = "";
 
-        if (craftItem.IsCrafting) {
-            int currentTime = (int)craftItem.CurrentCraftingTime;
-            int targetTime = (int)craftItem.GetProduceTime();
-            text = TimeFormatter.SecondToTimer(currentTime, targetTime);
+        if (craftItem.IsCraftSelected) {
+            var craftTime = craftItem.GetProduceTime();
+            var finishTime = craftItem.CraftingFinishTime;
+
+            if (finishTime != null) {
+                var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+                var remainingTime = finishTime - currentTime;
+                var currentCraftingTime = craftTime - remainingTime;
+
+                text = TimeFormatter.SecondToTimer((int)currentCraftingTime, craftTime);
+            }
+            else {
+                text = TimeFormatter.SecondToTimer(0, craftTime);
+            }
         }
         else {
-            int targetTime = (int)craftItem.GetProduceTime();
+            var targetTime = craftItem.GetProduceTime();
             text = TimeFormatter.SecondsToMinuteTime(targetTime);
         }
 
@@ -134,14 +171,18 @@ public class CraftItemPanel : MonoBehaviour
 
     private void UpdateProgressBar()
     {
-        float currentTime = craftItem.CurrentCraftingTime;
-        float targetTime = craftItem.GetProduceTime();
+        var craftTime = craftItem.GetProduceTime();
+        var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        var finishTime = craftItem.CraftingFinishTime;
+        var remainingTime = finishTime - currentTime;
+        var currentCraftingTime = craftTime - remainingTime;
+
         float amount = 0f;
 
-        if (targetTime > 0 && isSelected) {
-            amount = currentTime / targetTime;
+        if (isSelected && currentCraftingTime != null && craftTime > 0) {
+            amount = currentCraftingTime.Value / craftTime;
 
-            if (currentTime >= targetTime)
+            if (currentCraftingTime >= craftTime)
                 flickingProgressBar.SetFlickingEnabled(true);
             else
                 flickingProgressBar.SetFlickingEnabled(false);
@@ -156,19 +197,30 @@ public class CraftItemPanel : MonoBehaviour
         UpdateProgressBar();
     }
 
-    private void OnClicked()
+    private void OnSelected()
     {
-        craftingModule.TryCollectItem();
-        craftingModule.TryRefundResources();
-        craftingModule.ResetProducedTime();
-        craftingModule.SetCraftingItem(craftItem);
-        craftingModule.TryConsumeResources();
+        isSelected = true;
 
-        Select();
+        if (craftingModule.CurrentCraftItem != craftItem) {
+            craftingModule.TryCollectItem();
+            craftingModule.TryRefundResources();
+            craftingModule.ResetCraftingFinishTime();
+            craftingModule.SetCraftingItem(craftItem);
+        }
+
+        UpdateTimer();
+        UpdateProgressBar();
     }
 
     private void OnDeselected()
     {
-        Deselect();
+        isSelected = false;
+
+        if (craftingModule.CurrentCraftItem == craftItem) {
+            craftingModule.RemoveCraftignItem();
+        }
+
+        UpdateTimer();
+        UpdateProgressBar();
     }
 }

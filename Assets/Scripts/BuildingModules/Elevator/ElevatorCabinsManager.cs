@@ -148,6 +148,6 @@ public class ElevatorCabinsManager : MonoBehaviour
 
     private bool ShouldIgnoreEvents()
     {
-        return !BuildingsLoader.Instance.IsLoaded && WorldSaveManager.Instance.CurrentWorldData != null;
+        return !BuildingsLoader.Instance.IsLoaded && WorldSaveHandler.Instance.CurrentWorldData != null;
     }
 }

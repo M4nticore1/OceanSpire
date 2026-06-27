@@ -6,7 +6,8 @@ using System.Collections.Generic;
 
 public enum ItemWidgetColorType
 {
-    LessThanMax,
+    GreaterOrEqual,
+    Greater,
     Zero
 }
 
@@ -28,7 +29,7 @@ public class ResourceWidget : UIBehaviour
     [SerializeField] private Image resourceAmountBar;
 
     [Header("Color")]
-    [SerializeField] private ItemWidgetColorType changeColorType = ItemWidgetColorType.LessThanMax;
+    [SerializeField] private ItemWidgetColorType changeColorType = ItemWidgetColorType.Greater;
     [SerializeField] private bool useAmountColors = false;
     [SerializeField] private Color enoughAmountColor = Color.green;
     [SerializeField] private Color notEnoughAmountColor = Color.red;
@@ -79,7 +80,7 @@ public class ResourceWidget : UIBehaviour
         if (Amounts == null) return;
 
         int amountsSum = CalculateAmountsSum();
-        if (Limit != null) {
+        if (useLimit && Limit != null) {
             SetAmountText(amountsSum, Limit.Amount);
         }
         else {
@@ -119,8 +120,6 @@ public class ResourceWidget : UIBehaviour
 
     public void SetLimit(IItemAmount amount)
     {
-        if (!useLimit) return;
-
         if (Limit != null) {
             Limit.OnAmountChanged -= OnLimitChanged;
         }
@@ -192,13 +191,7 @@ public class ResourceWidget : UIBehaviour
     {
         if (!useAmountColors) return;
 
-        int amountsSum = CalculateAmountsSum();
-
-        var enough = changeColorType == ItemWidgetColorType.LessThanMax ? Amounts == null || Limit == null || amountsSum >= Limit.Amount :
-            changeColorType == ItemWidgetColorType.Zero ? Amounts == null || Limit == null || amountsSum > 0 :
-            false;
-
-        SetColor(enough ? enoughAmountColor : notEnoughAmountColor);
+        SetColor(IsEnough() ? enoughAmountColor : notEnoughAmountColor);
     }
 
     private void OnAmountChanged(int amount)
@@ -211,5 +204,20 @@ public class ResourceWidget : UIBehaviour
     private void OnLimitChanged(int amount)
     {
         UpdateAmountAndLimit();
+    }
+
+    private bool IsEnough()
+    {
+        if (changeColorType == ItemWidgetColorType.GreaterOrEqual) {
+            return Amounts.Count <= 0 || Limit == null || CalculateAmountsSum() >= Limit.Amount;
+        }
+        else if (changeColorType == ItemWidgetColorType.Greater) {
+            return Amounts.Count <= 0 || Limit == null || CalculateAmountsSum() > Limit.Amount;
+        }
+        else if (changeColorType == ItemWidgetColorType.Zero) {
+            return Amounts.Count <= 0 || Limit == null || CalculateAmountsSum() > 0;
+        }
+
+        return false;
     }
 }

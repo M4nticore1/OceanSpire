@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e65e83ab08dfc0e48a34c6c7e30aef28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraMovement: {fileID: 2411408065692301716}
 --- !u!114 &4970948048436698858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -365,8 +366,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ac4eccb0d23e24f9cf6614b6f5575e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraHolderMovement
+  buildingsManager: {fileID: 0}
   playerInputHandler: {fileID: 4970948048436698858}
-  cameraVerticalBoundaryPadding: 10
+  cameraTopBoundaryPadding: 10
+  cameraBottomBoundaryPadding: 5
   cameraVerticalReturnSpeed: 5
   cameraMoveLerpSpeed: 12
   cameraStopMoveSpeed: 6

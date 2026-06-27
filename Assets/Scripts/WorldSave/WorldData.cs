@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
-using UnityEngine;
 
 public static class WorldDataMigrator
 {
@@ -38,7 +37,7 @@ public class WorldData
     public string WorldName = "";
     public long SaveTime = 0;
 
-    public PlayerData Player;
+    public PlayerControllerData Player;
     public BuildingData[] GroundBuildings;
     public TowerBuildingData[] FloorFrameBuildings;
     public TowerBuildingData[] TowerBuildings;
@@ -57,10 +56,10 @@ public class WorldData
     public DailyRewardData DailyReward;
     public RaidData Raid;
     public WanderersData WanderersSystem;
-    public TutorialData Tutorial;
     public WindData Wind;
 
-    public static WorldData Create(WorldSaveManager saveManager,
+    public static WorldData Create(WorldSaveHandler saveManager,
+        PlayerController playerController,
         BuildingsManager buildings,
         ElevatorCabinsManager elevatorCabins,
         DockPointsManager boatDocks,
@@ -78,6 +77,7 @@ public class WorldData
         return new WorldData() {
             WorldName = saveManager.SaveWorldName,
             SaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+            Player = PlayerControllerData.Create(playerController),
 
             GroundBuildings = BuildingData.Create(buildings.GroundBuildings().ToArray()),
             FloorFrameBuildings = TowerBuildingData.Create(buildings.BuiltFloors.Select(b => b.OwnedTowerBuilding).ToArray()),
@@ -102,7 +102,6 @@ public class WorldData
             DailyReward = DailyRewardData.Create(dailyReward),
             Raid = RaidData.Create(raid),
             WanderersSystem = WanderersData.Create(wanderers),
-            Tutorial = TutorialData.Create(tutorial),
             Wind = WindData.Create(wind)
         };
     }

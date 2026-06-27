@@ -7,7 +7,8 @@ public static class WeaponsDataFactory
 
     public static EquipmentData CreateRandomData(float minDamage, float maxDamage)
     {
-        int weaponId = GetRandomWeaponId(minDamage, maxDamage);
+        var weaponId = GetRandomWeaponId(minDamage, maxDamage);
+
         var data = new EquipmentData()
         {
             EquipmentId = weaponId,
@@ -46,13 +47,13 @@ public static class WeaponsDataFactory
         return maxDamage;
     }
 
-    private static int GetRandomWeaponId(float minDamage, float maxDamage)
+    private static int? GetRandomWeaponId(float minDamage, float maxDamage)
     {
         maxDamage = Mathf.Max(GetMinWeaponDamageId(), maxDamage);
-        List<WeaponDefinition> weapons = new();
+        var weapons = new List<WeaponDefinition>();
 
         foreach (var item in ItemsList.Instance.Items) {
-            WeaponDefinition weapon = item as WeaponDefinition;
+            var weapon = item as WeaponDefinition;
             if (!weapon) continue;
 
             if (weapon.Power < minDamage) continue;
@@ -60,6 +61,9 @@ public static class WeaponsDataFactory
 
             weapons.Add(weapon);
         }
+
+        if (weapons.Count == 0)
+            return null;
 
         int index = Random.Range(0, weapons.Count);
         int id = weapons[index].ItemId;

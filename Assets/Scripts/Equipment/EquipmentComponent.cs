@@ -16,11 +16,27 @@ public class EquipmentComponent : MonoBehaviour
     public event Action<Equipment> OnEquipmentEquiped;
     public static event Action<EquipmentComponent> OnEquipmentComponentEquiped;
 
-    public void Init(EquipmentData data)
+    public void Init()
     {
-        if (data.EquipmentId == null) return;
+        var equipmenData = new EquipmentData()
+        {
+            EquipmentId = defaultEquipment?.ItemId
+        };
 
-        int id = data.EquipmentId.Value;
+        Init(equipmenData);
+    }
+
+    public void Init(EquipmentData equipmentData)
+    {
+        if (equipmentData == null) {
+            Debug.LogError("Equipment Data is not valid");
+            Init();
+            return;
+        }
+
+        if (equipmentData.EquipmentId == null) return;
+
+        int id = equipmentData.EquipmentId.Value;
         var definition = ItemsList.Instance.GetItem(id) as EquipmentDefinition;
         SetEquipmentAndApply(definition);
     }

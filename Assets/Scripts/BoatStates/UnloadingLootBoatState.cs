@@ -27,11 +27,11 @@ public class UnloadingLootBoatState : BoatState, IProgressable
             ProcessStoreResources();
         }
         else {
-            if (ShouldExit()) {
-                boat.SetState(BoatStateEnum.Idle);
+            if (ShouldFindLoot()) {
+                boat.SetState(BoatStateEnum.FindingLoot);
             }
             else {
-                boat.SetState(BoatStateEnum.FindingLoot);
+                boat.SetState(BoatStateEnum.Idle);
             }
         }
     }
@@ -85,9 +85,10 @@ public class UnloadingLootBoatState : BoatState, IProgressable
         return boat.Inventory.CurrentWeight > 0;
     }
 
-    private bool ShouldExit()
+    private bool ShouldFindLoot()
     {
         if (!boat.CurrentRider) return false;
+        if (!boat.CurrentRider.HealthComponent.IsAlive) return false;
 
         return true;
     }
