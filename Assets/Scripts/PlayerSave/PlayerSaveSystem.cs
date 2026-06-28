@@ -10,8 +10,10 @@ public static class PlayerSaveSystem
     public static void SaveData(PlayerData playerSettingsData)
     {
         string folderPath = GetFolder();
-        if (string.IsNullOrEmpty(folderPath))
-            throw new Exception("FolderPath is null or empty!");
+        if (string.IsNullOrEmpty(folderPath)) {
+            Debug.LogError("FolderPath is null or empty!");
+            return;
+        }
 
         Directory.CreateDirectory(folderPath);
 
@@ -28,8 +30,10 @@ public static class PlayerSaveSystem
 
         string json = File.ReadAllText(filePath);
 
-        if (string.IsNullOrEmpty(json))
-            throw new Exception("Save file is empty");
+        if (string.IsNullOrEmpty(json)) {
+            Debug.LogError("Save file is empty");
+            return null;
+        }
 
         var data = JsonConvert.DeserializeObject<PlayerData>(json);
         return data;

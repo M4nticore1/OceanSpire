@@ -9874,6 +9874,7 @@ MonoBehaviour:
   dailyRewardManager: {fileID: 101393569}
   dailyRewardMenu: {fileID: 96441838}
   content: {fileID: 52221709}
+  movement: {fileID: 0}
 --- !u!65 &838616489
 BoxCollider:
   m_ObjectHideFlags: 0

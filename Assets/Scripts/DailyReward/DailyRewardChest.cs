@@ -12,6 +12,8 @@ public class DailyRewardChest : MonoBehaviour, IClickable
 
     public event Action OnClicked;
 
+    [SerializeField] private Movement movement;
+
     private void OnEnable()
     {
         dailyRewardManager.OnDailyRewardRecieved += OnDailyRewardRecieved;

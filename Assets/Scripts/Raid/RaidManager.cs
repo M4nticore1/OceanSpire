@@ -85,8 +85,10 @@ public class RaidManager : MonoBehaviour
 
     public void Init(RaidData raidData)
     {
-        if (raidData == null)
-            throw new Exception("raidData is not valid");
+        if (raidData == null) {
+            Debug.LogError("raidData is not valid");
+            return;
+        }
 
         IsRaidExist = raidData.RaidExist;
         CurrentRaidCooldown = raidData.RaidCooldown;
@@ -208,16 +210,16 @@ public class RaidManager : MonoBehaviour
     private void DestroyEmptyBoats()
     {
         for (int i = boatsManager.RaiderBoats.Count - 1; i >= 0; i--) {
-            var boat = boatsManager.RaiderBoats[i];
-            if (!boat) {
-                Debug.LogError($"Raider Boat not found at index {i}");
-                continue;
+            try {
+                var boat = boatsManager.RaiderBoats[i];
+                if (boat.CurrentRider) continue;
+
+                Destroy(boat.gameObject);
+                boatsManager.UnregisterRaiderBoat(boat);
             }
-
-            if (boat.CurrentRider) continue;
-
-            Destroy(boat.gameObject);
-            boatsManager.UnregisterRaiderBoat(boat);
+            catch (Exception e) {
+                Debug.LogError(e);
+            }
         }
     }
 
@@ -349,8 +351,10 @@ public class RaidManager : MonoBehaviour
     private Boat CreateBoat(Vector3 position, Quaternion rotation)
     {
         var dockPoint = BoatDockUtils.GetNearestFreeDockPoint(boatDocksManager.RaiderDockPoints, position);
-        if (!dockPoint)
-            throw new Exception($"NearestDockPoint not found using BoatDockUtils.GetNearestFreeDockPoint");
+        if (!dockPoint) {
+            Debug.LogError("dockPoint is not valid using BoatDockUtils.GetNearestFreeDockPoint");
+            return null;
+        }
 
         var data = new BoatData()
         {
@@ -362,8 +366,10 @@ public class RaidManager : MonoBehaviour
         };
 
         var boat = BoatFactory.CreateBoat(boatPrefab, position, rotation, data);
-        if (!boat)
-            throw new Exception($"BoatFactory failed to create boat with ID: {boatPrefab.Definition.BoatId}");
+        if (!boat) {
+            Debug.LogError("boat is not valid using BoatFactory.CreateBoat");
+            return null;
+        }
 
         return boat;
     }
