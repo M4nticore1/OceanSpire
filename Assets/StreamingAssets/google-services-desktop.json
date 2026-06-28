@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "839302959490",
+    "project_id": "ocean-spire-b20e9",
+    "storage_bucket": "ocean-spire-b20e9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839302959490:android:cfc18680586659dd9b3f9b",
+        "android_client_info": {
+          "package_name": "com.wismutgames.oceanspire"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVyMgjfRcUbk4oM7xfEpz7WVJ-DuvniQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

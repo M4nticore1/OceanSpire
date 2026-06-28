@@ -85,10 +85,8 @@ public class RaidManager : MonoBehaviour
 
     public void Init(RaidData raidData)
     {
-        if (raidData == null) {
-            Debug.LogError("raidData is not valid");
-            return;
-        }
+        if (raidData == null)
+            throw new Exception("raidData is not valid");
 
         IsRaidExist = raidData.RaidExist;
         CurrentRaidCooldown = raidData.RaidCooldown;
@@ -351,10 +349,8 @@ public class RaidManager : MonoBehaviour
     private Boat CreateBoat(Vector3 position, Quaternion rotation)
     {
         var dockPoint = BoatDockUtils.GetNearestFreeDockPoint(boatDocksManager.RaiderDockPoints, position);
-        if (!dockPoint) {
-            Debug.Log($"nearestDockPoint not found");
-            return null;
-        }
+        if (!dockPoint)
+            throw new Exception($"NearestDockPoint not found using BoatDockUtils.GetNearestFreeDockPoint");
 
         var data = new BoatData()
         {
@@ -366,10 +362,8 @@ public class RaidManager : MonoBehaviour
         };
 
         var boat = BoatFactory.CreateBoat(boatPrefab, position, rotation, data);
-        if (!boat) {
-            Debug.LogError("boat is not valid");
-            return null;
-        }
+        if (!boat)
+            throw new Exception($"BoatFactory failed to create boat with ID: {boatPrefab.Definition.BoatId}");
 
         return boat;
     }

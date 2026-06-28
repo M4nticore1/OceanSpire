@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -9,10 +10,8 @@ public static class PlayerSaveSystem
     public static void SaveData(PlayerData playerSettingsData)
     {
         string folderPath = GetFolder();
-        if (string.IsNullOrEmpty(folderPath)) {
-            Debug.LogError("FolderPath is null or empty!");
-            return;
-        }
+        if (string.IsNullOrEmpty(folderPath))
+            throw new Exception("FolderPath is null or empty!");
 
         Directory.CreateDirectory(folderPath);
 
@@ -29,10 +28,8 @@ public static class PlayerSaveSystem
 
         string json = File.ReadAllText(filePath);
 
-        if (string.IsNullOrEmpty(json)) {
-            Debug.LogWarning("Save file is empty");
-            return null;
-        }
+        if (string.IsNullOrEmpty(json))
+            throw new Exception("Save file is empty");
 
         var data = JsonConvert.DeserializeObject<PlayerData>(json);
         return data;

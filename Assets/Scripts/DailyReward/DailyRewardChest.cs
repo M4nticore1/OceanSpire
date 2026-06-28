@@ -1,3 +1,4 @@
+using Firebase.Crashlytics;
 using System;
 using UnityEngine;
 

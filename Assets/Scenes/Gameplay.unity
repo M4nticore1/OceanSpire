@@ -10239,6 +10239,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7675e8be26f5c4c84851479edb37ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialStep
+--- !u!1 &901460583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 901460584}
+  m_Layer: 0
+  m_Name: Firebase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &901460584
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901460583}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.53841, y: 1.17861, z: 19.08819}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1296867730}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &905860909 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8673097211342416700, guid: e51d997d0cfe8274ea0a75e835dd16ea, type: 3}
@@ -13781,6 +13813,68 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
+--- !u!1001 &1296867729
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 901460584}
+    m_Modifications:
+    - target: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4758121379743556827, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+      propertyPath: m_Name
+      value: FirebaseCrashlytics
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+--- !u!4 &1296867730 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 558778711854641133, guid: 8460e02c277710a47ad0de2a45a7b624, type: 3}
+  m_PrefabInstance: {fileID: 1296867729}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1298899211 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7877060323572382484, guid: 693a24886030b8a4aa85d9fe750467a5, type: 3}
@@ -24736,4 +24830,5 @@ SceneRoots:
   - {fileID: 11672049}
   - {fileID: 40920799}
   - {fileID: 1371871032}
+  - {fileID: 901460584}
   - {fileID: 1567701190}
