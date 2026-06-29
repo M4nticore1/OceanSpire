@@ -1,9 +1,9 @@
 using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
+using System.Linq;
 
 public class LocalizationManager
 {
@@ -41,8 +41,34 @@ public class LocalizationManager
 
     public string GetText(LocalizationItem item)
     {
-        string key = item.name;
-        return GetText(key);
+        if (!item) {
+            Debug.LogError("LocalizationItem is not valid");
+            return null;
+        }
+
+        return GetText(item.name);
+    }
+
+    public string GetText(LocalizationItem item, ILocalizable localizable)
+    {
+        var text = GetText(item);
+        if (text == null) return null;
+
+        if (localizable == null) {
+            Debug.LogError("localizable is not valid");
+            return text;
+        }
+
+        var dict = localizable.GetLocalization();
+        if (dict == null) return null;
+
+        foreach (var key in dict.Keys.ToArray()) {
+            string holder = "{" + key + "}";
+            string value = dict[key];
+            text = text.Replace(holder, value);
+        }
+
+        return text;
     }
 
     public string GetText(string key)

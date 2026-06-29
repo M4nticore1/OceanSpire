@@ -1,4 +1,3 @@
-using Firebase.Crashlytics;
 using System;
 using UnityEngine;
 
@@ -47,7 +46,7 @@ public class DailyRewardChest : MonoBehaviour, IClickable
 
     private void OnDailyRewardRecieved(RewardInstance reward)
     {
-        if (!dailyRewardManager.AdRewardCollected) return;
+        if (!dailyRewardManager.ExtraRewardCollected) return;
 
         content.SetActive(false);
     }

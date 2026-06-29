@@ -4,8 +4,8 @@ using UnityEngine;
 [Serializable]
 public class ConstructionData
 {
-    public long ConstructionStartTime = 0;
-    public long ConstructionFinishTime = 0;
+    public long? ConstructionStartTime = null;
+    public long? ConstructionFinishTime = null;
     public bool IsUnderConstruction = false;
 
     public static ConstructionData Default()

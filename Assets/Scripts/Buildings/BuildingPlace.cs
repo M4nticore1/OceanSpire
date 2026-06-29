@@ -265,18 +265,26 @@ public class BuildingPlace : MonoBehaviour, IClickable
         List<Building> path;
         var targetBuilding = BuildingsManager.Instance.EntranceBuildingPlace;
 
-        var left = neighborBuildingPlaces[Direction.Left];
-        if (left && PathFinder.TryFindTowerPath(left, targetBuilding, out path)) return true;
+        var leftPlace = neighborBuildingPlaces[Direction.Left];
+        if (leftPlace.placedBuilding) {
+            return true;
+        }
 
-        var right = neighborBuildingPlaces[Direction.Right];
-        if (right && PathFinder.TryFindTowerPath(right, targetBuilding, out path)) return true;
+        var rightPlace = neighborBuildingPlaces[Direction.Right];
+        if (rightPlace.placedBuilding) {
+            return true;
+        }
 
-        if (building.BuildingData.ConnectionType == ConnectionType.Vertical) {
-            var up = neighborBuildingPlaces[Direction.Up];
-            if (up && PathFinder.TryFindTowerPath(up, targetBuilding, out path)) return true;
+        if (building.GetComponent<ElevatorModule>()) {
+            var upPlace = neighborBuildingPlaces[Direction.Up];
+            if (upPlace && upPlace.placedBuilding && upPlace.placedBuilding.BuildingData == building.BuildingData) {
+                return true;
+            }
 
-            var down = neighborBuildingPlaces[Direction.Down];
-            if (down && PathFinder.TryFindTowerPath(down, targetBuilding, out path)) return true;
+            var downPlace = neighborBuildingPlaces[Direction.Down];
+            if (downPlace && downPlace.placedBuilding && downPlace.placedBuilding.BuildingData == building.BuildingData) {
+                return true;
+            }
         }
 
         return false;

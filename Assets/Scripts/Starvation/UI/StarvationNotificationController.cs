@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StarvationNotificationController : NotificationController
+public class StarvationNotificationController : GameNotificationController
 {
     [SerializeField] private CityStorage cityStorage;
 

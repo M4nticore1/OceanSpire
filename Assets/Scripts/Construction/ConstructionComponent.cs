@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class ConstructionComponent : MonoBehaviour
 {
-    public long ConstructionStartTime { get; private set; } = 0;
-    public long ConstructionFinishTime { get; private set; } = 0;
+    public long? ConstructionStartTime { get; private set; } = 0;
+    public long? ConstructionFinishTime { get; private set; } = 0;
 
     [SerializeField] private bool isConstructable = true;
     public bool IsConstructable => isConstructable;
@@ -15,30 +15,41 @@ public class ConstructionComponent : MonoBehaviour
     public event Action OnConstructionCompleted;
 
     public static event Action<ConstructionComponent> OnGlobalConstructionStarted;
-    public static event Action<ConstructionComponent> OnGlobalConstructionCompleted;
+    public static event Action<ConstructionComponent> OnGlobalConstructionFinished;
 
     private void Update()
     {
         if (!IsUnderConstruction) return;
 
-        TryCompleteConstruction();
+        TryFinishConstruction();
     }
 
-    public void Init(ConstructionData data)
+    public void Init()
     {
-        if (data != null) {
-            ConstructionStartTime = data.ConstructionStartTime;
-            ConstructionFinishTime = data.ConstructionFinishTime;
-            IsUnderConstruction = data.IsUnderConstruction;
+        var constructionData = ConstructionData.Default();
+        Init(constructionData);
+    }
 
-            var constructionTime = ConstructionFinishTime - ConstructionStartTime;
-
-            if (IsUnderConstruction) {
-                StartConstruction((int)constructionTime);
-            }
+    public void Init(ConstructionData constructionData)
+    {
+        if (constructionData == null) {
+            Debug.LogError("ConstructionData is not valid");
+            Init();
         }
 
-        TryCompleteConstruction();
+        ConstructionStartTime = constructionData.ConstructionStartTime;
+        ConstructionFinishTime = constructionData.ConstructionFinishTime;
+        IsUnderConstruction = constructionData.IsUnderConstruction;
+
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var constructionTime = ConstructionFinishTime - currentTime;
+
+        if (ShouldFinishConstruction()) {
+            FinishConstruction();
+        }
+        else if (IsUnderConstruction) {
+            StartConstruction((int)constructionTime);
+        }
     }
 
     public void StartConstruction(int constructionTime)
@@ -53,9 +64,9 @@ public class ConstructionComponent : MonoBehaviour
         OnGlobalConstructionStarted?.Invoke(this);
     }
 
-    public void TryCompleteConstruction()
+    public void TryFinishConstruction()
     {
-        if (!ShouldCompleteConstruction()) return;
+        if (!ShouldFinishConstruction()) return;
 
         FinishConstruction();
     }
@@ -65,12 +76,23 @@ public class ConstructionComponent : MonoBehaviour
         IsUnderConstruction = false;
 
         OnConstructionCompleted?.Invoke();
-        OnGlobalConstructionCompleted?.Invoke(this);
+        OnGlobalConstructionFinished?.Invoke(this);
     }
 
-    private bool ShouldCompleteConstruction()
+    public int? GetRemainingConstructionTime()
+    {
+        if (ConstructionFinishTime == null) return null;
+
+        var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        if (currentTime > ConstructionFinishTime) return null;
+
+        return (int?)(ConstructionFinishTime - currentTime);
+    }
+
+    private bool ShouldFinishConstruction()
     {
         if (!IsUnderConstruction) return false;
+        if (ConstructionFinishTime == null) return false;
 
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         if (currentTime < ConstructionFinishTime) return false;

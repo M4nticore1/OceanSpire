@@ -31,8 +31,6 @@ public class BuildingAudioSystem : MonoBehaviour
 
     private void OnBuildingUpgradeCompleted(Building building)
     {
-        if (!ShouldPlay()) return;
-
         AudioUtils.PlaySFX(buildingFinishedClips, mixerGroup);
     }
 

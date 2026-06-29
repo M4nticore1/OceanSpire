@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class NotificationController : MonoBehaviour
+public abstract class GameNotificationController : MonoBehaviour
 {
     [SerializeField] private GameObject notificationPrefab;
 

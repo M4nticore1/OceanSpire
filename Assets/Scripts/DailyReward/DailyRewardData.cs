@@ -7,8 +7,8 @@ public class DailyRewardData
 {
     public RewardInstanceData[] Rewards = null;
     public long NextResetTime = 0;
-    public bool FreeRewardCollected = false;
-    public bool AdRewardCollected = false;
+    public bool MainRewardCollected = false;
+    public bool ExtraRewardCollected = false;
     public bool RewardViewed = false;
 
     public static DailyRewardData Create(DailyRewardManager dailyRewardManager)
@@ -22,8 +22,8 @@ public class DailyRewardData
         {
             NextResetTime = dailyRewardManager.NextResetTime,
             Rewards = RewardInstanceData.CreateRewards(dailyRewardManager.CurrentRewards.ToArray()),
-            FreeRewardCollected = dailyRewardManager.FreeRewardCollected,
-            AdRewardCollected = dailyRewardManager.AdRewardCollected,
+            MainRewardCollected = dailyRewardManager.MainRewardCollected,
+            ExtraRewardCollected = dailyRewardManager.ExtraRewardCollected,
             RewardViewed = dailyRewardManager.IsRewardViewed,
         };
     }

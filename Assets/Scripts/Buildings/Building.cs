@@ -238,7 +238,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         return new Dictionary<string, string>()
         {
             { "name", LocalizationManager.Instance.GetText(buildingData.NameLocalizationItem) },
-            { "level", levelComponent.Level.ToString() },
+            { "currentLevel", levelComponent.Level.ToString() },
+            { "nextLevel", (levelComponent.Level + 1).ToString() },
             { "constructionTime", TimeFormatter.SecondsToMinuteTime((int)currentConstructionTime).ToString() + "/" + TimeFormatter.SecondsToMinuteTime((int)ConstructionTime).ToString() },
         };
     }

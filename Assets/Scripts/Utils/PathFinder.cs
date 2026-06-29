@@ -63,12 +63,12 @@ public static class PathFinder
         path = null;
 
         if (!startPlace) {
-            Debug.Log("StartPlace not found to find path");
+            Debug.LogError("StartPlace not found to find path");
             return false;
         }
 
         if (!targetPlace) {
-            Debug.Log("TargetPlace not found to find path");
+            Debug.LogError("TargetPlace not found to find path");
             return false;
         }
 

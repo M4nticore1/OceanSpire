@@ -76,7 +76,7 @@ public class DailyRewardWidget : UIBehaviour
             return;
         }
 
-        collectButton.SetState(dailyRewardManager.AdRewardCollected || reward.IsCollected ? CustomButtonState.Disabled : CustomButtonState.Idle);
+        collectButton.SetState(dailyRewardManager.ExtraRewardCollected || reward.IsCollected ? CustomButtonState.Disabled : CustomButtonState.Idle);
     }
 
     private void UpdateButtonText()
@@ -86,7 +86,7 @@ public class DailyRewardWidget : UIBehaviour
             return;
         }
 
-        var freeCollected = dailyRewardManager.FreeRewardCollected;
+        var freeCollected = dailyRewardManager.MainRewardCollected;
         var received = reward.IsCollected;
 
         freeRewardText.SetActive(!freeCollected && !received);
@@ -123,7 +123,7 @@ public class DailyRewardWidget : UIBehaviour
             return;
         }
 
-        if (dailyRewardManager.FreeRewardCollected) {
+        if (dailyRewardManager.MainRewardCollected) {
             rewardedAdsManager.SetCurrentReward(reward);
             rewardedAdsManager.ShowAd();
         }

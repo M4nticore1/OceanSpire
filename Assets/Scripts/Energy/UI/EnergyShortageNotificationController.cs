@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnergyShortageNotificationController : NotificationController
+public class EnergyShortageNotificationController : GameNotificationController
 {
     public static EnergyShortageNotificationController Instance { get; private set; }
 

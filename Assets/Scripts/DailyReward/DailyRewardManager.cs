@@ -15,8 +15,8 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     [SerializeField] private int updateRewardTimeOffset = 3;
 
-    public bool FreeRewardCollected { get; private set; } = false;
-    public bool AdRewardCollected { get; private set; } = false;
+    public bool MainRewardCollected { get; private set; } = false;
+    public bool ExtraRewardCollected { get; private set; } = false;
     public long NextResetTime { get; private set; } = 0;
     public bool IsRewardViewed { get; private set; } = false;
 
@@ -66,8 +66,8 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         {
             Rewards = GetRandomRewardsData(),
             NextResetTime = CalculateNextResetTime(),
-            FreeRewardCollected = false,
-            AdRewardCollected = false,
+            MainRewardCollected = false,
+            ExtraRewardCollected = false,
             RewardViewed = false,
         };
 
@@ -112,8 +112,8 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         }
 
         NextResetTime = dailyRewardData.NextResetTime;
-        FreeRewardCollected = dailyRewardData.FreeRewardCollected;
-        AdRewardCollected = dailyRewardData.AdRewardCollected;
+        MainRewardCollected = dailyRewardData.MainRewardCollected;
+        ExtraRewardCollected = dailyRewardData.ExtraRewardCollected;
         SetRewardViewed(dailyRewardData.RewardViewed);
     }
 
@@ -207,19 +207,19 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     private void ResetRewardCollected()
     {
-        FreeRewardCollected = false;
-        AdRewardCollected = false;
+        MainRewardCollected = false;
+        ExtraRewardCollected = false;
     }
 
     private void OnRewardRecieved(RewardInstance reward)
     {
         if (!currentRewards.Contains(reward)) return;
 
-        if (!FreeRewardCollected) {
-            FreeRewardCollected = true;
+        if (!MainRewardCollected) {
+            MainRewardCollected = true;
         }
         else {
-            AdRewardCollected = true;
+            ExtraRewardCollected = true;
         }
 
         OnDailyRewardRecieved?.Invoke(reward);

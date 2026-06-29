@@ -539,15 +539,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948dda070484eea44ac9c5089a182b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerBuilding
+  buildingData: {fileID: 11400000, guid: 7bdb47221b509ae4a8d761f7d061fd69, type: 2}
+  buildingLevelsData:
+  - {fileID: 11400000, guid: 900d1236c8a702a49b3effad3a42c5f0, type: 2}
+  isRuined: 0
   constructionComponent: {fileID: 5184340577209235502}
   levelComponent: {fileID: 3623753502408224289}
   upgradeComponent: {fileID: 1543726248379608248}
   instanceId: {fileID: 4146996725171637188}
   workAudioSource: {fileID: 0}
-  buildingData: {fileID: 11400000, guid: 7bdb47221b509ae4a8d761f7d061fd69, type: 2}
-  buildingLevelsData:
-  - {fileID: 11400000, guid: 900d1236c8a702a49b3effad3a42c5f0, type: 2}
-  isRuined: 0
+  SpawnedConstruction: {fileID: 0}
   FloorIndex: 0
   PlaceIndex: 0
 --- !u!114 &3416410043795393112
@@ -785,10 +786,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3728160677861581633}
     m_Modifications:
-    - target: {fileID: 3859439699844814488, guid: 763e3a0b94d94e94ab687f7f6584a801, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 126
-      objectReference: {fileID: 0}
     - target: {fileID: 6800332618568042191, guid: 763e3a0b94d94e94ab687f7f6584a801, type: 3}
       propertyPath: buildingType
       value: 2
