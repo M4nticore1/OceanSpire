@@ -16,7 +16,7 @@ public enum TextRole
 public class TextLocalizer : UIBehaviour
 {
     private TextMeshProUGUI textBlock;
-    private TextMeshProUGUI TextBlock => textBlock ? textBlock : GetComponent<TextMeshProUGUI>();
+    public TextMeshProUGUI TextBlock => textBlock ? textBlock : GetComponent<TextMeshProUGUI>();
 
     [SerializeField] private TextRole textRole = TextRole.Default;
     [SerializeField] private LocalizationItem item;

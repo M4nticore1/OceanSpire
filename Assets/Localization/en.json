@@ -35,6 +35,7 @@
   "ui_selected": "Selected",
   "ui_watch_ad": "Watch Ad",
   "none": "None",
+  "empty": "Empty",
   "name_level": "{name} (Level {currentLevel})",
   "toolbox": "Toolbox",
   "last_save": "Last save",
@@ -50,6 +51,7 @@
 
   "upgrade": "Upgrade",
   "upgrade_resources": "Upgrade resources",
+  "upgrade_finished": "{name} has been upgraded to level {currentLevel}",
 
   "raid": "Raid",
   "raid_under_raid": "Your city is under raid!",
@@ -66,11 +68,12 @@
   "construction": "Construction",
   "construction_build": "Build",
   "construction_floors": "Floors",
-  "construction_upgrade": "Upgrade",
   "construction_demolish": "Demolish",
   "construction_demolish_building": "Demolish building",
   "construction_under_construction": "Under construction ({constructionTime})",
-  "construction_complete_instantly": "You can complete construction instantly",
+  "construction_complete": "Complete construction",
+  "construction_complete_instantly": "Build right now",
+  "construction_finished": "{name} construction finished",
 
   "settings": "Settings",
   "settings_fps_counter": "FPS counter",
@@ -155,6 +158,11 @@
   "tutorial_daily_tasks": "Complete daily tasks and claim your rewards. New challenges await you every single day!",
   "tutorial_daily_reward": "Visit your city each day to claim a free reward.",
   "tutorial_pier": "The Pier opens the path to the ocean. Send your citizens to hunt for drifting resources - it's one of the main sources of wealth.",
+
+  "notification_body_construction_finished": "{name} construction finished",
+  "notification_body_construction_finished_all": "All buildings construction completed",
+  "notification_body_upgrade_finished": "{name} has been upgraded to level {nextLevel}",
+  "notification_body_daily_reward_reset": "Your daily reward is ready",
 
   "first_name_male_adam": "Adam",
   "first_name_male_daniel": "Daniel",

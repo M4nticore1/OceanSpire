@@ -71,10 +71,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public static event Action<Building> OnBuildingDemolished;
 
     public static event Action<Building> OnBuildingUpgradeStarted;
-    public static event Action<Building> OnBuildingUpgradeCompleted;
+    public static event Action<Building> OnBuildingUpgradeFinished;
 
     public static event Action<Building> OnBuildingConstructionStarted;
-    public static event Action<Building> OnBuildingConstructionCompleted;
+    public static event Action<Building> OnBuildingConstructionFinished;
 
     public static event Action<Building> OnBuildingLevelChanged;
 
@@ -96,7 +96,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         constructionComponent.OnConstructionCompleted += HandleConstructionCompleted;
 
         upgradeComponent.OnUpgradeStarted += HandleUpgradeStarted;
-        upgradeComponent.OnUpgradeCompleted += HandleUpgradeCompleted;
+        upgradeComponent.OnUpgradeFinished += HandleUpgradeFinished;
 
         WorkComponent.OnWorkerAdded += OnWorkerAdded;
         WorkComponent.OnWorkerRemoved += OnWorkerRemoved;
@@ -118,7 +118,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         constructionComponent.OnConstructionCompleted -= HandleConstructionCompleted;
 
         upgradeComponent.OnUpgradeStarted -= HandleUpgradeStarted;
-        upgradeComponent.OnUpgradeCompleted -= HandleUpgradeCompleted;
+        upgradeComponent.OnUpgradeFinished -= HandleUpgradeFinished;
 
         WorkComponent.OnWorkerAdded -= OnWorkerAdded;
         WorkComponent.OnWorkerRemoved -= OnWorkerRemoved;
@@ -372,7 +372,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private void HandleConstructionCompleted()
     {
-        OnBuildingConstructionCompleted?.Invoke(this);
+        OnBuildingConstructionFinished?.Invoke(this);
     }
 
     private void HandleUpgradeStarted()
@@ -388,7 +388,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         OnBuildingUpgradeStarted?.Invoke(this);
     }
 
-    private void HandleUpgradeCompleted()
+    private void HandleUpgradeFinished()
     {
         UpdateConstruction();
         OnConstructionComplete();
@@ -398,7 +398,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         }
 
         OnUpgradeCompleted?.Invoke();
-        OnBuildingUpgradeCompleted?.Invoke(this);
+        OnBuildingUpgradeFinished?.Invoke(this);
     }
 
     private void HandleLevelChanged()

@@ -9,7 +9,7 @@ public class StorageModule : BuildingModule
     {
         base.Subscribe();
 
-        OwnedBuilding.UpgradeComponent.OnUpgradeCompleted += OnUpgradeCompleted;
+        OwnedBuilding.UpgradeComponent.OnUpgradeFinished += OnUpgradeCompleted;
         OwnedBuilding.OnDemolished += OnDemolished;
     }
 
@@ -17,7 +17,7 @@ public class StorageModule : BuildingModule
     {
         base.Unsubscribe();
 
-        OwnedBuilding.UpgradeComponent.OnUpgradeCompleted -= OnUpgradeCompleted;
+        OwnedBuilding.UpgradeComponent.OnUpgradeFinished -= OnUpgradeCompleted;
         OwnedBuilding.OnDemolished -= OnDemolished;
     }
 

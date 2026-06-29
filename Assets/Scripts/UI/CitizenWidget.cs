@@ -57,11 +57,13 @@ public class CitizenWidget : MonoBehaviour
     private void ShowResidentMenu()
     {
         selectedResidentMenu.SetActive(true);
+        nonSelectedResidentMenu.SetActive(false);
     }
 
     private void HideResidentMenu()
     {
         selectedResidentMenu.SetActive(false);
+        nonSelectedResidentMenu.SetActive(true);
     }
 
     private void UpdateName()

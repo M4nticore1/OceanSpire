@@ -11,7 +11,7 @@ public class UpgradeComponent : MonoBehaviour
     public int NextLevel { get; private set; } = 1;
 
     public event Action OnUpgradeStarted;
-    public event Action OnUpgradeCompleted;
+    public event Action OnUpgradeFinished;
 
     public static event Action<UpgradeComponent> OnGlobalUpgradeStarted;
     public static event Action<UpgradeComponent> OnGlobalUpgradeCompleted;
@@ -59,7 +59,7 @@ public class UpgradeComponent : MonoBehaviour
         IsUnderUpgrade = false;
         levelComponent.TrySetLevel(NextLevel);
 
-        OnUpgradeCompleted?.Invoke();
+        OnUpgradeFinished?.Invoke();
         OnGlobalUpgradeCompleted?.Invoke(this);
     }
 }

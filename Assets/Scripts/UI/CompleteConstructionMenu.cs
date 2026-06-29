@@ -15,14 +15,14 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     {
         completeButton.OnReleased.AddListener(OnCompleteButtonReleased);
         closeMenuButton.OnReleased.AddListener(OnCloseMenuButtonClicked);
-        Building.OnBuildingConstructionCompleted += OnBuildingConstructionFinished;
+        Building.OnBuildingConstructionFinished += OnBuildingConstructionFinished;
     }
 
     private void OnDisable()
     {
         completeButton.OnReleased.RemoveListener(OnCompleteButtonReleased);
         closeMenuButton.OnReleased.RemoveListener(OnCloseMenuButtonClicked);
-        Building.OnBuildingConstructionCompleted -= OnBuildingConstructionFinished;
+        Building.OnBuildingConstructionFinished -= OnBuildingConstructionFinished;
     }
 
     private void Update()
@@ -32,6 +32,11 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     public void Open(Building building)
     {
+        if (!building) {
+            Debug.LogError("building is null to open Complete Construction Menu");
+            return;
+        }
+
         gameObject.SetActive(true);
 
         buildingName.SetLocalizationItem(building.BuildingData.NameLocalizationItem);
@@ -43,7 +48,8 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         constructionTime.SetPlaceHolderLocalization(building);
         constructionTime.UpdateText();
 
-        buildingImage.sprite = building.NextLevelData.BuildingThumb;
+        buildingImage.sprite = building.UpgradeComponent.IsUnderUpgrade ? building.NextLevelData.BuildingThumb : building.LevelData.BuildingThumb;
+
         this.building = building;
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);

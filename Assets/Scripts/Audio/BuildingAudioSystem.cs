@@ -11,14 +11,14 @@ public class BuildingAudioSystem : MonoBehaviour
     private void OnEnable()
     {
         Building.OnBuildingConstructionStarted += OnBuildingConstructionStarted;
-        Building.OnBuildingConstructionCompleted += OnBuildingUpgradeCompleted;
+        Building.OnBuildingConstructionFinished += OnBuildingUpgradeCompleted;
         Building.OnBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
         Building.OnBuildingConstructionStarted -= OnBuildingConstructionStarted;
-        Building.OnBuildingConstructionCompleted -= OnBuildingUpgradeCompleted;
+        Building.OnBuildingConstructionFinished -= OnBuildingUpgradeCompleted;
         Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 

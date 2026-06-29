@@ -28,8 +28,14 @@ public class ConstructionNotificationController : NotificationController
 
         if (buildingsUnderConstruction.Count == 1) {
             var building = buildingsUnderConstruction[0];
+            var time = building.ConstructionComponent.GetRemainingConstructionTime();
 
-            return building.ConstructionComponent.GetRemainingConstructionTime().Value;
+            if (time != null) {
+                return time.Value;
+            }
+            else {
+                return 0;
+            }
         }
         else if (buildingsUnderConstruction.Count > 1) {
             return GetMaxConstructionTimeBuilding(buildingsUnderConstruction).ConstructionComponent.GetRemainingConstructionTime().Value;
@@ -104,6 +110,11 @@ public class ConstructionNotificationController : NotificationController
             }
 
             if (!building.ConstructionComponent.IsUnderConstruction) continue;
+
+            if (building.ConstructionComponent.GetRemainingConstructionTime() == null) {
+                Debug.LogError("Building under construction has no construction remaining time");
+                continue;
+            }
 
             constructionBuilding.Add(building);
         }

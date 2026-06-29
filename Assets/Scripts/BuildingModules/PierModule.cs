@@ -18,7 +18,7 @@ public class PierModule : BuildingModule
         base.Subscribe();
 
         OwnedBuilding.UpgradeComponent.OnUpgradeStarted += OnUpgradeStarted;
-        OwnedBuilding.UpgradeComponent.OnUpgradeCompleted += OnUpgradeCompleted;
+        OwnedBuilding.UpgradeComponent.OnUpgradeFinished += OnUpgradeCompleted;
     }
 
     protected override void Unsubscribe()
@@ -26,7 +26,7 @@ public class PierModule : BuildingModule
         base.Unsubscribe();
 
         OwnedBuilding.UpgradeComponent.OnUpgradeStarted -= OnUpgradeStarted;
-        OwnedBuilding.UpgradeComponent.OnUpgradeCompleted -= OnUpgradeCompleted;
+        OwnedBuilding.UpgradeComponent.OnUpgradeFinished -= OnUpgradeCompleted;
     }
 
     private void OnUpgradeStarted()
@@ -103,15 +103,15 @@ public class PierModule : BuildingModule
                 continue;
             }
 
-            if (boat.CurrentStateEnum != BoatStateEnum.Idle && boat.CurrentStateEnum != BoatStateEnum.UnloadingLoot) continue;
+            if (boat.CurrentStateEnum == BoatStateEnum.Idle || boat.CurrentStateEnum == BoatStateEnum.UnloadingLoot) {
+                var dockPoint = boat.DockPoint;
+                if (!dockPoint) {
+                    Debug.LogError($"dockPoint is not valid by index {i}");
+                    continue;
+                }
 
-            var dockPoint = PierConstruction.BoatDocks[i];
-            if (!dockPoint) {
-                Debug.LogError($"dockPoint is not valid by index {i}");
-                continue;
+                boat.Movement.NavAgent.Warp(dockPoint.DockTransform.position);
             }
-
-            boat.Movement.NavAgent.Warp(dockPoint.DockTransform.position);
         }
     }
 }
