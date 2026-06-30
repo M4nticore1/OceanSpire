@@ -42,7 +42,6 @@ public class DailyTaskWidget : DailyTaskPanel
         LocalizationItem item = task.Definition.DescriptionLocalizationItem;
         descriptionText.SetLocalizationItem(item);
         descriptionText.SetPlaceHolderLocalization(task);
-        descriptionText.UpdateText();
     }
 
     private void OnProgressChanged()

@@ -26,9 +26,8 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     public SkillId SkillId => skillId;
 
     public List<CraftItemInstance> CraftItems { get; private set; } = new();
-    public CraftItemInstance CurrentCraftItem { get; private set; }
+    public CraftItemInstance SelectedCraftItem { get; private set; }
 
-    public bool IsReadyToCollect => CurrentCraftItem != null && CurrentCraftItem.IsCraftingFinished();
     public float CraftingSpeedBonus { get; private set; } = 0f;
 
     private CityStorage cityStorage => CityStorage.Instance;
@@ -51,30 +50,40 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         UnregisterModule();
     }
 
+    public void Init()
+    {
+        Init(CraftingModuleData.Default());
+    }
+
     public void Init(CraftingModuleData craftingModuleData)
     {
+        if (craftingModuleData == null) {
+            Debug.LogError("Crafting Module Data is not valid");
+            Init();
+            return;
+        }
+
         CreateCraftItems();
+        SetCraftingItemByIndex(craftingModuleData.CurrentCraftId);
 
-        if (craftingModuleData != null) {
-            SetCraftingItemByIndex(craftingModuleData.CurrentCraftId);
-
-            var currentCraftData = craftingModuleData.CurrentCraft;
-            if (currentCraftData != null) {
-                SetCraftingFinishTime(currentCraftData.CraftingFinishTime);
-
-                if (CurrentCraftItem != null && CurrentCraftItem.IsCraftingFinished()) {
-                    SetCraftingInProgress(false);
-                }
-                else {
-                    SetCraftingInProgress(currentCraftData.CraftingInProgress);
-                }
-            }
-        }
-        else {
-            SetCraftingItemByIndex(0);
+        if (SelectedCraftItem == null) {
+            Debug.LogError("selectedCraftItem is no valid");
+            return;
         }
 
-        TryCraftItem();
+        SetCraftingFinishTime(craftingModuleData.SelectedCraft.CraftingFinishTime);
+        SetCraftingInProgress(craftingModuleData.SelectedCraft.CraftingInProgress);
+
+        if (TryCraftItem()) {
+            SetCrafted(true);
+            TryStopWorking();
+            UpdateFlicking();
+            return;
+        }
+
+        if (SelectedCraftItem.CraftingInProgress) {
+            UpdateFlicking();
+        }
     }
 
     public void Tick()
@@ -82,7 +91,9 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         if (!IsWorking) return;
         if (!TryCraftItem()) return;
 
+        SetCrafted(true);
         TryStopWorking();
+        UpdateFlicking();
     }
 
     protected override void Subscribe()
@@ -103,6 +114,8 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         base.OnWorkingStart();
 
+        if (SelectedCraftItem != null && SelectedCraftItem.CraftingInProgress) return;
+
         if (!TryStartCrafting()) return;
 
         TryConsumeResources();
@@ -112,15 +125,20 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         base.OnWorkingStop();
 
-        RemoveCraftingFinishTime();
+        if (SelectedCraftItem != null && !SelectedCraftItem.IsCraftingFinished()) {
+            RemoveCraftingFinishTime();
+        }
     }
 
     protected override bool ShouldStartWorking()
     {
         if (!base.ShouldStartWorking()) return false;
         if (!cityStorage) return false;
-        if (IsReadyToCollect) return false;
-        if (!IsEnoughResources(CurrentCraftItem.Definition)) return false;
+        if (SelectedCraftItem == null) return false;
+        if (SelectedCraftItem.IsCrafted) return false;
+        if (SelectedCraftItem.CraftingInProgress) return true;
+
+        if (!IsEnoughResources(SelectedCraftItem.Definition)) return false;
 
         return true;
     }
@@ -129,14 +147,21 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         if (base.ShouldStopWorking()) return true;
 
-        if (CurrentCraftItem == null) {
+        if (SelectedCraftItem == null) {
             Debug.Log($"CurrentCraftItem is not valid at {name}");
             return true;
         }
 
-        if (CurrentCraftItem.IsCraftingFinished()) return true;
+        if (SelectedCraftItem.IsCraftingFinished()) return true;
 
         return false;
+    }
+
+    public void SetCrafted(bool value)
+    {
+        if (SelectedCraftItem == null) return;
+
+        SelectedCraftItem.SetCrafted(value);
     }
 
     public void SetCraftingItem(CraftItemInstance craftItem)
@@ -151,19 +176,12 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
             return;
         }
 
-        if (CurrentCraftItem != null) {
-            CurrentCraftItem.SetCraftSelected(false);
+        if (SelectedCraftItem != null) {
+            SelectedCraftItem.SetCraftSelected(false);
         }
 
-        CurrentCraftItem = craftItem;
-        CurrentCraftItem.SetCraftSelected(true);
-
-        if (IsWorking) {
-            ResetCraftingFinishTime();
-        }
-        else {
-            RemoveCraftingFinishTime();
-        }
+        SelectedCraftItem = craftItem;
+        SelectedCraftItem.SetCraftSelected(true);
     }
 
     public void SetCraftingItemByIndex(int index)
@@ -191,45 +209,45 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     public void RemoveCraftignItem()
     {
-        if (CurrentCraftItem != null) {
-            CurrentCraftItem.SetCraftSelected(false);
+        if (SelectedCraftItem != null) {
+            SelectedCraftItem.SetCraftSelected(false);
         }
 
-        CurrentCraftItem = null;
+        SelectedCraftItem = null;
     }
 
     public void ResetCraftingFinishTime()
     {
-        if (CurrentCraftItem == null) return;
+        if (SelectedCraftItem == null) return;
 
-        CurrentCraftItem.ResetCraftingFinishTime();
+        SelectedCraftItem.ResetCraftingFinishTime();
     }
 
     public void RemoveCraftingFinishTime()
     {
-        if (CurrentCraftItem == null) return;
+        if (SelectedCraftItem == null) return;
 
-        CurrentCraftItem.RemoveCraftingFinishTime();
+        SelectedCraftItem.SetCraftingFinishTime(null);
     }
 
     public void SetCraftingFinishTime(long? time)
     {
-        if (CurrentCraftItem == null) {
+        if (SelectedCraftItem == null) {
             Debug.LogError("CurrentCraftItem is not valid");
             return;
         }
 
-        CurrentCraftItem.SetCraftingFinishTime(time);
+        SelectedCraftItem.SetCraftingFinishTime(time);
     }
 
     public void SetCraftingInProgress(bool value)
     {
-        if (CurrentCraftItem == null) {
+        if (SelectedCraftItem == null) {
             Debug.LogError("CurrentCraftItem is not valid");
             return;
         }
 
-        CurrentCraftItem.SetCraftingInProgress(value);
+        SelectedCraftItem.SetCraftingInProgress(value);
     }
 
     public void SetCraftingSpeedBonus(float value)
@@ -248,8 +266,8 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     public int GetIndexOfCurrentCraftItem()
     {
-        if (CraftItems.Contains(CurrentCraftItem)) {
-            return CraftItems.IndexOf(CurrentCraftItem);
+        if (CraftItems.Contains(SelectedCraftItem)) {
+            return CraftItems.IndexOf(SelectedCraftItem);
         }
         else {
             return 0;
@@ -263,7 +281,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     public ItemInstance[] GetRaidLoot()
     {
-        var craftItemDefinition = CurrentCraftItem.Definition;
+        var craftItemDefinition = SelectedCraftItem.Definition;
         if (!craftItemDefinition) {
             Debug.LogError($"CraftItemDefinition is not valid at {name}");
             return null;
@@ -281,6 +299,10 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         if (!TryCollectItem()) return;
 
+        SetCrafted(false);
+        ResetCraftingFinishTime();
+        UpdateFlicking();
+
         bool work = TryStartWorking();
         SetCraftingInProgress(work);
 
@@ -288,20 +310,18 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
         var selectComponent = SelectManager.Instance.SelectedComponent;
         if (!selectComponent) return;
-
-        //selectComponent.Click();
     }
 
     private void CollectItem()
     {
         if (!cityStorage) return;
 
-        if (CurrentCraftItem == null) {
+        if (SelectedCraftItem == null) {
             Debug.LogError("CurrentCraftItem is not valid");
             return;
         }
 
-        var craftItem = CurrentCraftItem.Definition.ProduceItem;
+        var craftItem = SelectedCraftItem.Definition.ProduceItem;
         if (craftItem == null) {
             Debug.LogError("CraftItem is not valid");
             return;
@@ -316,14 +336,11 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         int id = craftItemDefinition.ItemId;
         int amount = craftItem.Amount;
         cityStorage.Inventory.AddItem(id, amount);
-
-        ResetCraftingFinishTime();
-        AssignFlicking();
     }
 
-    private void AssignFlicking()
+    private void UpdateFlicking()
     {
-        if (IsReadyToCollect) {
+        if (SelectedCraftItem != null && SelectedCraftItem.IsCrafted) {
             SetFlickingPower(1f);
         }
         else {
@@ -354,7 +371,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         if (!ShouldConsumeResources()) return false;
 
-        foreach (var resource in CurrentCraftItem.Definition.ConsumeResources) {
+        foreach (var resource in SelectedCraftItem.Definition.ConsumeResources) {
             int id = resource.Definition.ItemId;
             int amount = resource.Amount;
             CityStorage.Instance.Inventory.RemoveItem(id, amount);
@@ -367,7 +384,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         if (!ShouldRefundResources()) return false;
 
-        foreach (var resource in CurrentCraftItem.Definition.ConsumeResources) {
+        foreach (var resource in SelectedCraftItem.Definition.ConsumeResources) {
             int id = resource.Definition.ItemId;
             int amount = resource.Amount;
             cityStorage.Inventory.AddItem(id, amount);
@@ -386,6 +403,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private void CreateCraftItems()
     {
+        CraftItems.Clear();
         foreach (var def in ProductionLevelData.CraftItems) {
             var craftItemData = CraftItemData.Default();
             var item = def.CreateInstance(craftItemData);
@@ -413,25 +431,22 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         if (!IsWorking) return false;
 
-        if (CurrentCraftItem == null) {
+        if (SelectedCraftItem == null) {
             Debug.LogError($"CurrentCraftItem is not valid at {name}");
             return false;
         }
 
-        if (!CurrentCraftItem.IsCraftingFinished()) return false;
+        if (!SelectedCraftItem.IsCraftingFinished()) return false;
 
-        TryStopWorking();
-        AssignFlicking();
-
-        OnItemCrafted?.Invoke(CurrentCraftItem);
-        OnModuleItemCrafted?.Invoke(this, CurrentCraftItem);
+        OnItemCrafted?.Invoke(SelectedCraftItem);
+        OnModuleItemCrafted?.Invoke(this, SelectedCraftItem);
 
         return true;
     }
 
     private bool IsEnoughResources(CraftItemDefinition craftItemDefinition)
     {
-        if (!CityStorage.Instance) return false;
+        if (!cityStorage) return false;
 
         if (!craftItemDefinition) {
             Debug.LogError($"CraftDefinition is not valid");
@@ -441,7 +456,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         foreach (var resource in craftItemDefinition.ConsumeResources) {
             int id = resource.Definition.ItemId;
             int neededAmount = resource.Amount;
-            int storageAmount = CityStorage.Instance.Inventory.GetItemById(id).Amount;
+            int storageAmount = cityStorage.Inventory.GetItemById(id).Amount;
 
             if (neededAmount > storageAmount) return false;
         }
@@ -451,16 +466,16 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private bool ShouldConsumeResources()
     {
-        if (!CityStorage.Instance) return false;
+        if (!cityStorage) return false;
         if (!IsWorking) return false;
 
-        if (CurrentCraftItem == null) {
+        if (SelectedCraftItem == null) {
             Debug.LogError("CurrentCraftItem is not valid");
             return false;
         }
 
-        if (CurrentCraftItem.CraftingInProgress) return false;
-        if (!IsEnoughResources(CurrentCraftItem.Definition)) return false;
+        if (SelectedCraftItem.CraftingInProgress) return false;
+        if (!IsEnoughResources(SelectedCraftItem.Definition)) return false;
 
         return true;
     }
@@ -468,8 +483,8 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     private bool ShouldRefundResources()
     {
         if (!cityStorage) return false;
-        if (CurrentCraftItem == null) return false;
-        if (IsReadyToCollect) return false;
+        if (SelectedCraftItem == null) return false;
+        if (SelectedCraftItem.IsCrafted) return false;
 
         return true;
     }
@@ -483,7 +498,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private bool ShouldCollectItem()
     {
-        if (!IsReadyToCollect) return false;
+        if (SelectedCraftItem == null || !SelectedCraftItem.IsCrafted) return false;
 
         return true;
     }

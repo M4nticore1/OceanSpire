@@ -23,13 +23,11 @@ public class SkillDescriptionWidget : MonoBehaviour
     private void UpdateNameText()
     {
         skillNameText.SetLocalizationItem(Skill.SkillDefinition.SkillNameLocalization);
-        skillNameText.UpdateText();
     }
 
     private void UpdateDescriptionText()
     {
         skillDescriptionText.SetLocalizationItem(Skill.SkillDefinition.SkillDescriptionLocalization);
         skillDescriptionText.SetPlaceHolderLocalization(Skill);
-        skillDescriptionText.UpdateText();
     }
 }

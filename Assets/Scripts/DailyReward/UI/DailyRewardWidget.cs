@@ -102,13 +102,11 @@ public class DailyRewardWidget : UIBehaviour
     private void UpdateRewardName()
     {
         rewardNameText.SetLocalizationItem(reward.Definition.RewardNameLocalization);
-        rewardNameText.UpdateText();
     }
 
     private void UpdateRewardAmount()
     {
         rewardAmountText.SetText(reward.Amount.ToString());
-        rewardAmountText.UpdateText();
     }
 
     private void OnTakeButtonClicked()

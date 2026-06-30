@@ -7,6 +7,7 @@ public class WandererAdmissionMenu : MonoBehaviour
     [SerializeField] private SkillsPanel skillPanel;
     [SerializeField] private CustomButton acceptButton;
     [SerializeField] private CustomButton rejectButton;
+    [SerializeField] private TextLocalizer wandererNameText;
 
     private bool isOpened = false;
 
@@ -30,12 +31,19 @@ public class WandererAdmissionMenu : MonoBehaviour
         Boat.OnBoatDeselected -= OnBoatDeselected;
     }
 
-    public void Open()
+    public void Open(Wanderer wanderer)
     {
-        isOpened = true;
+        if (!wanderer) {
+            Debug.LogError("Wanderer is not valid");
+            return;
+        }
 
+        isOpened = true;
         slidePanel.Show();
-        skillPanel.SetSkills(selectedWanderer.SkillsComponent);
+        selectedWanderer = wanderer;
+
+        UpdateWandererNameText();
+        UpdateSkillsPanel();
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
@@ -53,6 +61,16 @@ public class WandererAdmissionMenu : MonoBehaviour
         isOpened = false;
         selectedWanderer.BoatRider.RidingBoat.SelectComponent.Deselect();
         InputStateManager.Instance.SetGameplayInputBlocked(false);
+    }
+
+    private void UpdateWandererNameText()
+    {
+        wandererNameText.SetPlaceHolderLocalization(selectedWanderer.NameComponent);
+    }
+
+    private void UpdateSkillsPanel()
+    {
+        skillPanel.SetSkills(selectedWanderer.SkillsComponent);
     }
 
     private void OnAcceptButtonClicked()
@@ -76,8 +94,7 @@ public class WandererAdmissionMenu : MonoBehaviour
 
         if (wanderer.IsRejected) return;
 
-        selectedWanderer = wanderer;
-        Open();
+        Open(wanderer);
     }
 
     private void OnBoatDeselected(Boat boat)

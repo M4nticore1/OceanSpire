@@ -11,7 +11,6 @@ public class StatsMenu : UIBehaviour
     public void OpenStatsMenu(Building building)
     {
         buildingName.SetLocalizationItem(building.BuildingData.NameLocalizationItem);
-        buildingName.UpdateText();
 
         string interactorsCountText = building.WorkComponent.CurrentWorkers.Count.ToString();
         string maxInteractorsCountText = building.LevelData.MaxHumansCount.ToString();

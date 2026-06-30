@@ -117,7 +117,6 @@ public class ReviveMenu : UIBehaviour
     private void UpdateCitizenNameText()
     {
         citizenNameText.SetPlaceHolderLocalization(citizen.NameComponent);
-        citizenNameText.UpdateText();
     }
 
     private void UpdateRemainingRevivesCountText()

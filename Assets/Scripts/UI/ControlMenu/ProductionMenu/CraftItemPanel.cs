@@ -69,13 +69,13 @@ public class CraftItemPanel : MonoBehaviour
         this.craftItem = craftItem;
         button.SetSelectGroup(selectGroup);
 
+        UpdateSelected();
+
         CreateProducedResourceWidget();
         CreateConsumedResourcesWidget();
 
         UpdateTimer();
         UpdateProgressBar();
-
-        UpdateSelected();
 
         craftItem.OnCraftingSpeedBonusChanged += OnCraftingSpeedBonusChanged;
     }
@@ -108,7 +108,7 @@ public class CraftItemPanel : MonoBehaviour
             return;
         }
         
-        if (craftItem == craftingModule.CurrentCraftItem) {
+        if (craftItem == craftingModule.SelectedCraftItem) {
             Select();
         }
         else {
@@ -132,8 +132,6 @@ public class CraftItemPanel : MonoBehaviour
             widget.SetItem(definition);
             widget.AddAmount(resource);
             widget.SetLimit(CityStorage.Instance.Inventory.GetItemById(definition.ItemId));
-
-            Debug.Log("Storage " + CityStorage.Instance.Inventory.GetItemById(definition.ItemId).Amount);
         }
     }
 
@@ -141,23 +139,19 @@ public class CraftItemPanel : MonoBehaviour
     {
         var text = "";
 
-        if (craftItem.IsCraftSelected) {
-            var craftTime = craftItem.GetProduceTime();
-            var finishTime = craftItem.CraftingFinishTime;
+        if (isSelected) {
+            var craftTime = craftItem.GetCraftTime();
+            var currentCraftingTime = craftItem.GetCurrentCraftingTime();
 
-            if (finishTime != null) {
-                var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                var remainingTime = finishTime - currentTime;
-                var currentCraftingTime = craftTime - remainingTime;
+            if (currentCraftingTime == null)
+                currentCraftingTime = 0;
 
-                text = TimeFormatter.SecondToTimer((int)currentCraftingTime, craftTime);
-            }
-            else {
-                text = TimeFormatter.SecondToTimer(0, craftTime);
-            }
+            currentCraftingTime = Mathf.Clamp(currentCraftingTime.Value, 0, craftTime);
+
+            text = TimeFormatter.SecondToTimer(currentCraftingTime.Value, craftTime);
         }
         else {
-            var targetTime = craftItem.GetProduceTime();
+            var targetTime = craftItem.GetCraftTime();
             text = TimeFormatter.SecondsToMinuteTime(targetTime);
         }
 
@@ -171,13 +165,10 @@ public class CraftItemPanel : MonoBehaviour
 
     private void UpdateProgressBar()
     {
-        var craftTime = craftItem.GetProduceTime();
-        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var finishTime = craftItem.CraftingFinishTime;
-        var remainingTime = finishTime - currentTime;
-        var currentCraftingTime = craftTime - remainingTime;
+        var craftTime = craftItem.GetCraftTime();
+        var currentCraftingTime = craftItem.GetCurrentCraftingTime();
 
-        float amount = 0f;
+        var amount = 0f;
 
         if (isSelected && currentCraftingTime != null && craftTime > 0) {
             amount = currentCraftingTime.Value / craftTime;
@@ -201,10 +192,17 @@ public class CraftItemPanel : MonoBehaviour
     {
         isSelected = true;
 
-        if (craftingModule.CurrentCraftItem != craftItem) {
+        if (craftingModule.SelectedCraftItem != craftItem) {
             craftingModule.TryCollectItem();
             craftingModule.TryRefundResources();
-            craftingModule.ResetCraftingFinishTime();
+
+            if (craftingModule.IsWorking) {
+                craftingModule.ResetCraftingFinishTime();
+            }
+            else {
+                craftingModule.RemoveCraftingFinishTime();
+            }
+
             craftingModule.SetCraftingItem(craftItem);
         }
 
@@ -216,7 +214,7 @@ public class CraftItemPanel : MonoBehaviour
     {
         isSelected = false;
 
-        if (craftingModule.CurrentCraftItem == craftItem) {
+        if (craftingModule.SelectedCraftItem == craftItem) {
             craftingModule.RemoveCraftignItem();
         }
 

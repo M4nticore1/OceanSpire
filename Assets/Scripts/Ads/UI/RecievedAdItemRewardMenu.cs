@@ -66,6 +66,5 @@ public class RecievedAdItemRewardMenu : MonoBehaviour
         ItemRewardInstance itemReward = RewardedAdsManager.Instance.currentReward as ItemRewardInstance;
         receiveText.SetLocalizationItem(itemReward.ItemRewardDefinition.ReceievedRewardLocalization);
         receiveText.SetPlaceHolderLocalization(itemReward);
-        receiveText.UpdateText();
     }
 }

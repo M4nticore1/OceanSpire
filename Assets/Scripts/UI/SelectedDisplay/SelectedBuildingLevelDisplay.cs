@@ -40,6 +40,5 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
         }
 
         localizer.SetPlaceHolderLocalization(localizable);
-        localizer.UpdateText();
     }
 }

@@ -53,7 +53,6 @@ public class EvictMenu : UIBehaviour
     private void UpdateCitizenName(Citizen citizen)
     {
         citizenNameText.SetPlaceHolderLocalization(citizen.NameComponent);
-        citizenNameText.UpdateText();
     }
 
     private void UpdateSkills(Citizen citizen)

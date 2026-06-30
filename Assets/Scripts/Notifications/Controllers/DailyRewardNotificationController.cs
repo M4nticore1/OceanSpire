@@ -29,7 +29,7 @@ public class DailyRewardNotificationController : NotificationController
 
             var fireTime = (int)(targetTime - currentTime);
 
-            NotificationsManager.SendNotification(GetNotificationLabel(),GetNotificationBodyText(), GetNotificationSubtitleText(), fireTime);
+            NotificationsManager.SendNotification(GetLabelText(),GetBodyText(), GetSubtitleText(), fireTime);
         }
     }
 

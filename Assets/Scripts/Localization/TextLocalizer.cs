@@ -55,11 +55,13 @@ public class TextLocalizer : UIBehaviour
     public void SetLocalizationItem(LocalizationItem item)
     {
         this.item = item;
+        UpdateText();
     }
 
     public void SetPlaceHolderLocalization(ILocalizable placeHolders)
     {
         LocalizationTarget = placeHolders;
+        UpdateText();
     }
 
     public void SetText(string text)

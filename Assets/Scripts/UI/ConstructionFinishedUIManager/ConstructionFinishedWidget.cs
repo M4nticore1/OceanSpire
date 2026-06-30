@@ -19,7 +19,6 @@ public class ConstructionFinishedWidget : MonoBehaviour
         Localizable = localizable;
 
         text.SetPlaceHolderLocalization(localizable);
-        text.UpdateText();
     }
 
     public void Tick()

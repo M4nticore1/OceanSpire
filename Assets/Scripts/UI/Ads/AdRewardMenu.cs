@@ -86,7 +86,6 @@ public abstract class AdRewardMenu : MonoBehaviour
 
         rewardDescryption.SetLocalizationItem(itemReward.Definition.RewardDescryptionLocalization);
         rewardDescryption.SetPlaceHolderLocalization(itemReward);
-        rewardDescryption.UpdateText();
     }
 
     //private void AssignProgressBarFill()

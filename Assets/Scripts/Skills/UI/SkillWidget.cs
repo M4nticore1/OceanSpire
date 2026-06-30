@@ -63,7 +63,6 @@ public class SkillWidget : MonoBehaviour
 
         var item = Skill.SkillDefinition.SkillNameLocalization;
         skillName.SetLocalizationItem(item);
-        skillName.UpdateText();
     }
 
     private void UpdateBonusTextAndColor()

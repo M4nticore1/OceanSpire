@@ -12,7 +12,7 @@ public class ConstructionNotificationController : NotificationController
 
     protected override void ApplyNotifications()
     {
-        NotificationsManager.SendNotification(GetNotificationLabel(), GetNotificationBodyText(), GetNotificationSubtitleText(), GetFireTimeInSeconds());
+        NotificationsManager.SendNotification(GetLabelText(), GetBodyText(), GetSubtitleText(), GetFireTimeInSeconds());
     }
 
     protected override bool ShouldSendNotification()
@@ -44,7 +44,7 @@ public class ConstructionNotificationController : NotificationController
         return 0;
     }
 
-    protected override string GetNotificationBodyText()
+    protected override string GetBodyText()
     {
         var localizationManager = LocalizationManager.Instance;
         if (localizationManager == null) {

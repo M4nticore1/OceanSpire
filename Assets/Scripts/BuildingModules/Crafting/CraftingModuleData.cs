@@ -5,7 +5,7 @@ using UnityEngine;
 public class CraftingModuleData
 {
     public int CurrentCraftId = 0;
-    public CraftItemData CurrentCraft = CraftItemData.Default();
+    public CraftItemData SelectedCraft = CraftItemData.Default();
 
     public static CraftingModuleData Create(CraftingModule craftingModule)
     {
@@ -14,7 +14,7 @@ public class CraftingModuleData
         return new CraftingModuleData()
         {
             CurrentCraftId = craftingModule.GetIndexOfCurrentCraftItem(),
-            CurrentCraft = craftingModule.CurrentCraftItem != null ? CraftItemData.Create(craftingModule.CurrentCraftItem) : CraftItemData.Default(),
+            SelectedCraft = craftingModule.SelectedCraftItem != null ? CraftItemData.Create(craftingModule.SelectedCraftItem) : CraftItemData.Default(),
         };
     }
 

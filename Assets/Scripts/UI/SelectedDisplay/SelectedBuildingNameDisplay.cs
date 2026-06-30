@@ -22,6 +22,5 @@ public class SelectedBuildingNameDisplay : SelectedDisplay
         var item = building.BuildingData.NameLocalizationItem;
 
         localizer.SetLocalizationItem(item);
-        localizer.UpdateText();
     }
 }

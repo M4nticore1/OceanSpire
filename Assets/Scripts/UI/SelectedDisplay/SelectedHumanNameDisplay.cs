@@ -21,6 +21,5 @@ public class SelectedHumanNameDisplay : SelectedDisplay
         var human = selectComponent.GetComponent<Human>();
 
         text.SetPlaceHolderLocalization(human.NameComponent);
-        text.UpdateText();
     }
 }

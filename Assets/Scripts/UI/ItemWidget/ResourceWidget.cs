@@ -184,7 +184,6 @@ public class ResourceWidget : UIBehaviour
         if (!itemDefinition) return;
 
         itemNameText.SetLocalizationItem(itemDefinition.NameLocalization);
-        itemNameText.UpdateText();
     }
 
     private void TryUpdateAmountColor()

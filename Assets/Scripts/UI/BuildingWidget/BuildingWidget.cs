@@ -40,7 +40,6 @@ public class BuildingWidget : MonoBehaviour
 
         if (building) {
             buildingNameTextLocalizer.SetLocalizationItem(building.BuildingData.NameLocalizationItem);
-            buildingNameTextLocalizer.UpdateText();
 
             buildingImage.sprite = building.LevelData.BuildingThumb;
         }

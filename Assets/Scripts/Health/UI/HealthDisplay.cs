@@ -143,7 +143,6 @@ public class HealthDisplay : MonoBehaviour
     private void UpdateHealthText()
     {
         healthTextLocalizer.SetPlaceHolderLocalization(health);
-        healthTextLocalizer.UpdateText();
     }
 
     private void UpdateHealthBar()

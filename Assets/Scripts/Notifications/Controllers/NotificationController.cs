@@ -30,7 +30,7 @@ public abstract class NotificationController : MonoBehaviour
 
     protected abstract int GetFireTimeInSeconds();
 
-    protected virtual string GetNotificationLabel()
+    protected virtual string GetLabelText()
     {
         if (!LabelLocalizationItem) return null;
 
@@ -43,7 +43,7 @@ public abstract class NotificationController : MonoBehaviour
         return localizationManager.GetText(LabelLocalizationItem);
     }
 
-    protected virtual string GetNotificationBodyText()
+    protected virtual string GetBodyText()
     {
         if (!bodyLocalizationItem) return null;
 
@@ -56,7 +56,7 @@ public abstract class NotificationController : MonoBehaviour
         return localizationManager.GetText(bodyLocalizationItem);
     }
 
-    protected virtual string GetNotificationSubtitleText()
+    protected virtual string GetSubtitleText()
     {
         if (!subtitleLocalizationItem) return null;
 

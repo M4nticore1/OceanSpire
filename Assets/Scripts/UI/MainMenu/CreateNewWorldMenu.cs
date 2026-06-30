@@ -90,7 +90,6 @@ public class CreateNewWorldMenu : MonoBehaviour
         if (!IsPossibleWorldName(name)) {
             incorrectWorkNameText.gameObject.SetActive(true);
             incorrectWorkNameText.SetLocalizationItem(incorrectWorldNameLocalization);
-            incorrectWorkNameText.UpdateText();
             createWorldButton.SetState(CustomButtonState.Disabled);
             return;
         }
@@ -98,7 +97,6 @@ public class CreateNewWorldMenu : MonoBehaviour
         if (IsWorldNameExist(name)) {
             incorrectWorkNameText.gameObject.SetActive(true);
             incorrectWorkNameText.SetLocalizationItem(existWorldNameLocalization);
-            incorrectWorkNameText.UpdateText();
             createWorldButton.SetState(CustomButtonState.Disabled);
             return;
         }

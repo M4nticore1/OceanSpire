@@ -195,27 +195,27 @@ public abstract class Human : Creature, IClickable
     protected override void DetermineNextAction()
     {
         if (ShouldStartInteracting()) {
-            Debug.Log("ShouldStartInteracting");
+            //Debug.Log("ShouldStartInteracting");
             StartInteracting();
             return;
         }
         if (ShouldStopInteracting()) {
-            Debug.Log("ShouldStopInteracting");
+            //Debug.Log("ShouldStopInteracting");
             StopInteracting();
             return;
         }
         if (ShouldMoveToTargetBoat()) {
-            Debug.Log("ShouldMoveToTargetBoat");
+            //Debug.Log("ShouldMoveToTargetBoat");
             MoveToTargetBoat();
             return;
         }
         if (ShouldStartEnteringBoat()) {
-            Debug.Log("ShouldStartEnteringBoat");
+            //Debug.Log("ShouldStartEnteringBoat");
             StartEnteringBoat();
             return;
         }
         if (ShouldStopEnteringBoat()) {
-            Debug.Log("ShouldStopEnteringBoat");
+            //Debug.Log("ShouldStopEnteringBoat");
             StopEnteringBoat();
             return;
         }

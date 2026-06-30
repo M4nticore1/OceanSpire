@@ -5,6 +5,7 @@ using UnityEngine;
 public class CraftItemData
 {
     public long? CraftingFinishTime = null;
+    public bool Crafted = false;
     public bool CraftingInProgress = false;
 
     public static CraftItemData Create(CraftItemInstance item)
@@ -12,6 +13,7 @@ public class CraftItemData
         return new CraftItemData()
         {
             CraftingFinishTime = item.CraftingFinishTime,
+            Crafted = item.IsCrafted,
             CraftingInProgress = item.CraftingInProgress
         };
     }
