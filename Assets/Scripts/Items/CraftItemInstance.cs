@@ -26,7 +26,7 @@ public class CraftItemInstance
 
     public void ResetCraftingFinishTime()
     {
-        var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var craftingTime = Definition.ProduceTime;
         var finishTime = currentTime + craftingTime;
 

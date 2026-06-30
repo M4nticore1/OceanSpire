@@ -70,7 +70,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     private void OnCompleteButtonReleased()
     {
         var reward = new SkipConstructionRewardInstance(null, building.ConstructionComponent);
-        RewardedAdsManager.Instance.SetCurrentReward(reward);
+        RewardedAdsManager.Instance.SetReward(reward);
         RewardedAdsManager.Instance.ShowAd();
     }
 

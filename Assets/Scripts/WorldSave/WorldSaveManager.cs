@@ -14,7 +14,7 @@ public class WorldSaveManager : MonoBehaviour
     [SerializeField] private DailyRewardManager dailyRewardManager;
     [SerializeField] private RaidManager raidManager;
     [SerializeField] private WanderersManager wanderersManager;
-    [SerializeField] private TutorialManager tutorialManager;
+    [SerializeField] private ReviveManager reviveManager;
     [SerializeField] private WindManager windManager;
 
     public void SaveWorld()
@@ -32,7 +32,7 @@ public class WorldSaveManager : MonoBehaviour
             dailyRewardManager,
             raidManager,
             wanderersManager,
-            tutorialManager,
+            reviveManager,
             windManager);
 
         WorldSaveSystem.SaveWorld(worldData);

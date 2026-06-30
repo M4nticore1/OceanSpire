@@ -56,6 +56,7 @@ public class WorldData
     public DailyRewardData DailyReward;
     public RaidData Raid;
     public WanderersData WanderersSystem;
+    public ReviveSystemData ReviveSystem;
     public WindData Wind;
 
     public static WorldData Create(WorldSaveHandler saveManager,
@@ -71,7 +72,7 @@ public class WorldData
         DailyRewardManager dailyReward,
         RaidManager raid,
         WanderersManager wanderers,
-        TutorialManager tutorial,
+        ReviveManager revive,
         WindManager wind)
     {
         return new WorldData() {
@@ -102,6 +103,7 @@ public class WorldData
             DailyReward = DailyRewardData.Create(dailyReward),
             Raid = RaidData.Create(raid),
             WanderersSystem = WanderersData.Create(wanderers),
+            ReviveSystem = ReviveSystemData.Create(revive),
             Wind = WindData.Create(wind)
         };
     }

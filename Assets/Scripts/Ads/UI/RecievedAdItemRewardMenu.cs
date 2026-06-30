@@ -14,12 +14,12 @@ public class RecievedAdItemRewardMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        RewardInstance.onRewardReceived += OnAdRewardRecieved;
+        RewardInstance.OnRewardReceived += OnAdRewardRecieved;
     }
 
     private void OnDisable()
     {
-        RewardInstance.onRewardReceived -= OnAdRewardRecieved;
+        RewardInstance.OnRewardReceived -= OnAdRewardRecieved;
     }
 
     private void Update()

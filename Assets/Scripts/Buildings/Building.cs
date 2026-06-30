@@ -231,7 +231,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // ILocalizable
     public Dictionary<string, string> GetLocalization()
     {
-        var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var currentConstructionTime = currentTime - constructionComponent.ConstructionStartTime;
         var ConstructionTime = constructionComponent.ConstructionFinishTime - constructionComponent.ConstructionStartTime;
 

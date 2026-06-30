@@ -7,13 +7,6 @@ public abstract class SelectedDisplay : UIBehaviour
 
     private bool isSubscribed = false;
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        TrySubscribe();
-    }
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -30,12 +23,20 @@ public abstract class SelectedDisplay : UIBehaviour
         TryUnsubscribe();
     }
 
+    protected override void Start()
+    {
+        base.Start();
+
+        TrySubscribe();
+    }
+
     private void TrySubscribe()
     {
         if (isSubscribed) return;
+        if (!SelectManager.Instance) return;
 
-        SelectManager.onComponentSelected += OnComponentSelected;
-        SelectManager.onComponentDeselected += OnComponentDeselected;
+        SelectManager.Instance.OnComponentSelected += OnComponentSelected;
+        SelectManager.Instance.OnComponentDeselected += OnComponentDeselected;
 
         isSubscribed = true;
     }
@@ -43,9 +44,10 @@ public abstract class SelectedDisplay : UIBehaviour
     private void TryUnsubscribe()
     {
         if (!isSubscribed) return;
+        if (!SelectManager.Instance) return;
 
-        SelectManager.onComponentSelected -= OnComponentSelected;
-        SelectManager.onComponentDeselected -= OnComponentDeselected;
+        SelectManager.Instance.OnComponentSelected -= OnComponentSelected;
+        SelectManager.Instance.OnComponentDeselected -= OnComponentDeselected;
 
         isSubscribed = false;
     }

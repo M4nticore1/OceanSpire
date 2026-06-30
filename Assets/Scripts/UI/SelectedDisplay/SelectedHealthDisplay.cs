@@ -22,7 +22,7 @@ public class SelectedHealthDisplay : SelectedDisplay
     {
         base.Hide(selectComponent);
 
-        healthDisplay.SetHealthComponent(null);
+        healthDisplay.RemoveHealthComponent();
     }
 
     protected override bool ShouldDisplay(SelectComponent selectComponent)

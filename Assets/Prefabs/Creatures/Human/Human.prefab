@@ -142,6 +142,7 @@ MonoBehaviour:
   healthComponent: {fileID: 4098557255172134659}
   pathBuildings: []
   <CurrentBuilding>k__BackingField: {fileID: 0}
+  <TargetBuilding>k__BackingField: {fileID: 0}
 --- !u!114 &1218019482049909420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -497,6 +498,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7287354125636601561, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
+      propertyPath: useParentRotation
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -515,6 +520,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5713810874044961763}
     m_Modifications:
+    - target: {fileID: 257222194975968431, guid: 7d160c7f4dfe31647b1ce6ec88223f34, type: 3}
+      propertyPath: useParentRotation
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 716265255989738794, guid: 7d160c7f4dfe31647b1ce6ec88223f34, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
@@ -631,6 +640,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1657309434744731797, guid: 63dac51a073a19c47bda824592f2b4c3, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2745904041505100106, guid: 63dac51a073a19c47bda824592f2b4c3, type: 3}
+      propertyPath: useParentRotation
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5170307472270884104, guid: 63dac51a073a19c47bda824592f2b4c3, type: 3}

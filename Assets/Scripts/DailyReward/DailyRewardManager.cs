@@ -39,12 +39,12 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     private void OnEnable()
     {
-        RewardInstance.onRewardReceived += OnRewardRecieved;
+        RewardInstance.OnRewardReceived += OnRewardRecieved;
     }
 
     private void OnDisable()
     {
-        RewardInstance.onRewardReceived -= OnRewardRecieved;
+        RewardInstance.OnRewardReceived -= OnRewardRecieved;
     }
 
     private void Update()

@@ -6,30 +6,21 @@ public class ReviveManager : MonoBehaviour
     private static ReviveManager instance;
     public static ReviveManager Instance => instance;
 
+    [SerializeField] private RewardedAdsManager rewardedAdsManager;
+
     [SerializeField] private ReviveAdRewardDefinition reviveRewardDefinition;
     public ReviveAdRewardDefinition ReviveRewardDefinition => reviveRewardDefinition;
-
-    [SerializeField] private ReviveMenu reviveRewardMenu;
 
     [SerializeField] private int maxRevivesCount = 3;
     public int MaxRevivesCount => maxRevivesCount;
 
-    [SerializeField] private float restoreReviveTime = 300f;
-    private float currentRestoreReviveTime = 0f;
+    [SerializeField] private int chargeReviveTimeInSeconds = 900;
+    public int ChargeReviveTimeInSeconds => chargeReviveTimeInSeconds;
 
     public int RemainingRevivesCount { get; private set; } = 0;
+    public long? NextChargeReviveTimeInSeconds { get; private set; } = null;
 
-    public event Action onRevivesCountChanged;
-
-    private void OnEnable()
-    {
-        SelectManager.onComponentSelected += OnComponentSelected;
-    }
-
-    private void OnDisable()
-    {
-        SelectManager.onComponentSelected -= OnComponentSelected;
-    }
+    public event Action<int> OnRevivesCountChanged;
 
     private void Awake()
     {
@@ -43,20 +34,69 @@ public class ReviveManager : MonoBehaviour
         instance = this;
     }
 
-    private void Start()
-    {
-        SetRevivesCount(maxRevivesCount);
-    }
-
     private void Update()
     {
         if (RemainingRevivesCount >= maxRevivesCount) return;
 
-        currentRestoreReviveTime += Time.deltaTime;
-        if (currentRestoreReviveTime < restoreReviveTime) return;
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        if (NextChargeReviveTimeInSeconds == null) {
+            Debug.LogError("NextChargeReviveTimeInSeconds is not valid to charge revives");
+            NextChargeReviveTimeInSeconds = currentTime + chargeReviveTimeInSeconds;
+        }
+
+        if (currentTime < NextChargeReviveTimeInSeconds) return;
 
         AddReviveCount();
-        ResetRestoreReviveTime();
+    }
+
+    public void Init()
+    {
+        var reviveData = new ReviveSystemData()
+        {
+            RemainingRevivesCount = maxRevivesCount,
+            NextReviveChargeTimes = Array.Empty<long>()
+        };
+
+        Init(reviveData);
+    }
+
+    public void Init(ReviveSystemData reviveData)
+    {
+        if (reviveData == null) {
+            Debug.LogError("reviveData is not valid");
+            Init();
+            return;
+        }
+
+        RemainingRevivesCount = Mathf.Min(reviveData.RemainingRevivesCount, maxRevivesCount);
+
+        if (RemainingRevivesCount >= maxRevivesCount) return;
+
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var nextReviveChargeTimes = reviveData.NextReviveChargeTimes;
+
+        if (nextReviveChargeTimes == null) {
+            Debug.LogError("nextReviveChargeTimes is not valid to recharge revives count");
+            RemainingRevivesCount = maxRevivesCount;
+            return;
+        }
+
+        foreach (var chargeTime in nextReviveChargeTimes) {
+            if (RemainingRevivesCount >= maxRevivesCount) break;
+
+            if (chargeTime > currentTime) break;
+
+            AddReviveCount();
+        }
+    }
+
+    public void CreateReward(Citizen citizen)
+    {
+        var reward = reviveRewardDefinition.CreateReward() as ReviveAdRewardInstance;
+        reward.SetHuman(citizen);
+
+        rewardedAdsManager.SetReward(reward);
     }
 
     public void RemoveReviveCount()
@@ -64,42 +104,31 @@ public class ReviveManager : MonoBehaviour
         SetRevivesCount(RemainingRevivesCount - 1);
     }
 
-    private void SetRevivesCount(int value)
-    {
-        if (RemainingRevivesCount == value) return;
-        int lastCount = RemainingRevivesCount;
-
-        RemainingRevivesCount = value;
-        onRevivesCountChanged?.Invoke();
-    }
-
     private void AddReviveCount()
     {
         SetRevivesCount(RemainingRevivesCount + 1);
     }
 
-    private void ResetRestoreReviveTime()
+    private void SetRevivesCount(int value)
     {
-        currentRestoreReviveTime = 0f;
+        if (value == RemainingRevivesCount) return;
+
+        RemainingRevivesCount = value;
+        UpdateNextChargeReviveTime();
+
+        OnRevivesCountChanged?.Invoke(RemainingRevivesCount);
     }
 
-    private void CreateReward(Human human)
+    private void UpdateNextChargeReviveTime()
     {
-        float time = human.ReviveComponent.ReviveLimitTime - human.ReviveComponent.CurrentDiedTime;
-        ReviveAdRewardInstance reward = reviveRewardDefinition.CreateReward() as ReviveAdRewardInstance;
-        reward.SetHuman(human);
+        if (RemainingRevivesCount >= maxRevivesCount) {
+            NextChargeReviveTimeInSeconds = null;
+        }
+        else {
+            var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            if (NextChargeReviveTimeInSeconds != null && NextChargeReviveTimeInSeconds.Value > currentTime && NextChargeReviveTimeInSeconds.Value - currentTime <= chargeReviveTimeInSeconds) return;
 
-        RewardedAdsManager.Instance.SetCurrentReward(reward);
-    }
-
-    private void OnComponentSelected(SelectComponent component)
-    {
-        Human human = SelectManager.Instance.GetSelectedHuman();
-        if (!human) return;
-
-        if (human.HealthComponent.IsAlive) return;
-
-        CreateReward(human);
-        reviveRewardMenu.Open();
+            NextChargeReviveTimeInSeconds = currentTime + chargeReviveTimeInSeconds;
+        }
     }
 }

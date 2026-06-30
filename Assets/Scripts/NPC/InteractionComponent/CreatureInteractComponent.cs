@@ -14,10 +14,16 @@ public class CreatureInteractComponent : MonoBehaviour
     public static event Action<CreatureInteractComponent> OnInteractorInteractBuildingSeted;
     public static event Action<CreatureInteractComponent> OnInteractorInteractBuildirngRemoved;
 
+    public void Init()
+    {
+        Init(InteractionComponentData.Default());
+    }
+
     public void Init(InteractionComponentData interactionData)
     {
         if (interactionData == null) {
-            Debug.LogError("interactionData is not valid", this);
+            Debug.LogError("interactionData is not valid");
+            Init();
             return;
         }
 

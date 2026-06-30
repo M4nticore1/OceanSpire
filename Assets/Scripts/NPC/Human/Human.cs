@@ -162,9 +162,15 @@ public abstract class Human : Creature, IClickable
 
         var humanData = creatureData as HumanData;
 
+        if (humanData == null) {
+            Debug.LogError("humanData is not valid");
+            humanData = HumanData.Default();
+        }
+
         nameComponent.Init(humanData.Name);
         skillsComponent.Init(humanData.Skills);
         healthComponent.Init(humanData.Health);
+        reviveComponent.Init(humanData.Revive);
         interactComponent.Init(humanData.Interaction);
         cityNavigator.Init(humanData.CityNavigator);
         weaponComponent.Init(humanData.Weapon);
@@ -189,27 +195,27 @@ public abstract class Human : Creature, IClickable
     protected override void DetermineNextAction()
     {
         if (ShouldStartInteracting()) {
-            //Debug.Log("ShouldStartInteracting");
+            Debug.Log("ShouldStartInteracting");
             StartInteracting();
             return;
         }
         if (ShouldStopInteracting()) {
-            //Debug.Log("ShouldStopInteracting");
+            Debug.Log("ShouldStopInteracting");
             StopInteracting();
             return;
         }
         if (ShouldMoveToTargetBoat()) {
-            //Debug.Log("ShouldMoveToTargetBoat");
+            Debug.Log("ShouldMoveToTargetBoat");
             MoveToTargetBoat();
             return;
         }
         if (ShouldStartEnteringBoat()) {
-            //Debug.Log("ShouldStartEnteringBoat");
+            Debug.Log("ShouldStartEnteringBoat");
             StartEnteringBoat();
             return;
         }
         if (ShouldStopEnteringBoat()) {
-            //Debug.Log("ShouldStopEnteringBoat");
+            Debug.Log("ShouldStopEnteringBoat");
             StopEnteringBoat();
             return;
         }
@@ -293,7 +299,12 @@ public abstract class Human : Creature, IClickable
 
     protected virtual void MoveToTargetBoat()
     {
-        movement.TryMoveTo(boatRider.TargetBoat.DockPoint.EntraceTransform.position);
+        if (!movement.TryMoveTo(boatRider.TargetBoat.DockPoint.EntraceTransform.position)) {
+            cityNavigator.SetTargetBuilding(BuildingsManager.Instance.TowerGate);
+            cityNavigator.TryFindPathToTargetBuilding();
+            cityNavigator.FollowPath();
+        }
+
         UpdateIdle();
     }
 
@@ -367,7 +378,6 @@ public abstract class Human : Creature, IClickable
         if (!boatRider.TargetBoat.DockPoint) return false;
         if (boatRider.RidingBoat) return false;
         if (cityNavigator.FloorIndex > 0) return false;
-        if (cityNavigator.TargetBuilding && cityNavigator.TargetBuilding != cityNavigator.CurrentBuilding) return false;
         if (attackComponent.IsAttacking) return false;
         if (movement.IsReachedPosition(boatRider.TargetBoat.DockPoint.EntraceTransform.position)) return false;
 

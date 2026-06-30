@@ -218,7 +218,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ElevatorSpeedController
   elevatorCabin: {fileID: -3511474536858047956}
   normalSpeed: 1
-  raidSpeed: 3
+  raidSpeed: 2
   energyShortageSpeedMultiplier: 0.5
 --- !u!4 &5486632833755438258 stripped
 Transform:

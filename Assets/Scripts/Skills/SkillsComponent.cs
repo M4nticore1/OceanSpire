@@ -20,19 +20,19 @@ public class SkillsComponent : MonoBehaviour
 
     public void Init()
     {
-        var skillsData = SkillsData.Default();
-        Init(skillsData);
+        Init(SkillsData.Default());
     }
 
     public void Init(SkillsData skillsData)
     {
         if (skillsData == null) {
             Debug.Log("data is not valid");
-            skillsData = SkillsData.Default();
+            Init();
+            return;
         }
 
         foreach (var saved in skillsData.Skills) { 
-            var def = SkillsList.Instance.GetSkillDefinition((SkillId)saved.Id);
+            var def = SkillsList.Instance.GetSkillDefinition(saved.Id);
 
             var skillId = def.SkillId;
             var skill = new SkillInstance(def);

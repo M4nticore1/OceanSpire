@@ -10,8 +10,8 @@ public class RewardInstance : ILocalizable
 
     protected Dictionary<string, string> localizationDictionary = new();
 
-    public static event Action<RewardInstance> onRewardReceived;
-    public static event Action<RewardInstance> onRewardRemoved;
+    public static event Action<RewardInstance> OnRewardReceived;
+    public static event Action<RewardInstance> OnRewardRemoved;
 
     public RewardInstance(AdRewardDefinition definition, int amount)
     {
@@ -40,7 +40,7 @@ public class RewardInstance : ILocalizable
     public void RecieveReward()
     {
         OnRewardRecieved();
-        onRewardReceived?.Invoke(this);
+        OnRewardReceived?.Invoke(this);
     }
 
     public void SetCollected(bool value)

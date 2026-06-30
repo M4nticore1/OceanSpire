@@ -61,18 +61,22 @@ public class Raider : Human, IProgressable
     protected override void DetermineNextAction()
     {
         if (ShouldStartInteracting()) {
+            Debug.Log("StartInteracting");
             StartInteracting();
             return;
         }
         if (ShouldBoatMoveToDock()) {
+            Debug.Log("BoatMoveToDock");
             BoatMoveToDock();
             return;
         }
         if (ShouldBoatFloatAway()) {
+            Debug.Log("BoatFloatAway");
             BoatFloatAway();
             return;
         }
         if (ShouldStartAttacking()) {
+            Debug.Log("StartAttacking");
             StartAttacking();
             return;
         }

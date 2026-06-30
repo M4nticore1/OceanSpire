@@ -11,10 +11,21 @@ public class NameComponent : MonoBehaviour, ILocalizable
     private LocalizationItem firstName;
     private LocalizationItem lastName;
     
-    public void Init(NameData data)
+    public void Init()
     {
-        SetFirstNameId(data.FirstNameId, genderComponent.IsMale);
-        SetLastNameId(data.LastNameId, genderComponent.IsMale);
+        Init(NameData.Default());
+    }
+
+    public void Init(NameData nameData)
+    {
+        if (nameData == null) {
+            Debug.LogError("data is not valid");
+            Init();
+            return;
+        }
+
+        SetFirstNameId(nameData.FirstNameId, genderComponent.IsMale);
+        SetLastNameId(nameData.LastNameId, genderComponent.IsMale);
     }
 
     public string GetName()

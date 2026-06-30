@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9490196, g: 0.69043356, b: 0.42705882, a: 1}
+  m_Color: {r: 0.9490196, g: 0.73169935, b: 0.42745093, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -254,19 +254,19 @@ MonoBehaviour:
   stateTransitionTime: 0.2
   state: 0
   idleState:
-    bodyColor: {r: 0.9490196, g: 0.69043356, b: 0.42705882, a: 1}
+    bodyColor: {r: 0.9490196, g: 0.73169935, b: 0.42745093, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 0}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    bodyColor: {r: 1, g: 0.7272727, b: 0.45041317, a: 1}
+    bodyColor: {r: 1, g: 0.77124184, b: 0.45098042, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    bodyColor: {r: 1, g: 0.77500004, b: 0.55, a: 1}
+    bodyColor: {r: 1, g: 0.8120915, b: 0.54901963, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
@@ -278,7 +278,7 @@ MonoBehaviour:
     contentColorHolder: {fileID: 0}
     scale: 1.05
   disabledState:
-    bodyColor: {r: 0.6, g: 0.52500004, b: 0.45000002, a: 1}
+    bodyColor: {r: 0.6, g: 0.5379085, b: 0.4509804, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}

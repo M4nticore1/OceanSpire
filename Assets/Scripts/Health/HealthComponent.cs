@@ -13,10 +13,16 @@ public class HealthComponent : MonoBehaviour, ILocalizable
     public event Action OnHealthChanged;
     public event Action OnDied;
 
+    public void Init()
+    {
+        Init(HealthData.Default());
+    }
+
     public void Init(HealthData healthData)
     {
         if (healthData == null) {
             Debug.LogError("healthData is not valid", this);
+            Init();
             return;
         }
 

@@ -146,7 +146,7 @@ public class CraftItemPanel : MonoBehaviour
             var finishTime = craftItem.CraftingFinishTime;
 
             if (finishTime != null) {
-                var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+                var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 var remainingTime = finishTime - currentTime;
                 var currentCraftingTime = craftTime - remainingTime;
 
@@ -172,7 +172,7 @@ public class CraftItemPanel : MonoBehaviour
     private void UpdateProgressBar()
     {
         var craftTime = craftItem.GetProduceTime();
-        var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var finishTime = craftItem.CraftingFinishTime;
         var remainingTime = finishTime - currentTime;
         var currentCraftingTime = craftTime - remainingTime;

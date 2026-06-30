@@ -124,7 +124,7 @@ public class DailyRewardWidget : UIBehaviour
         }
 
         if (dailyRewardManager.MainRewardCollected) {
-            rewardedAdsManager.SetCurrentReward(reward);
+            rewardedAdsManager.SetReward(reward);
             rewardedAdsManager.ShowAd();
         }
         else {

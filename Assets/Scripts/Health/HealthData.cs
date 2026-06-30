@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HealthData
 {
-    public float CurrentHealth;
+    public float CurrentHealth = 0;
 
     public static HealthData Default()
     {

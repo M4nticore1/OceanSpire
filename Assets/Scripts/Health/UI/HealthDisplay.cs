@@ -26,17 +26,16 @@ public class HealthDisplay : MonoBehaviour
     {
         if (!ShouldSubscribe()) return;
 
-        Subscribe();
+        TrySubscribe();
     }
 
     private void OnDisable()
     {
-        Unsubscribe();
+        TryUnsubscribe();
     }
 
     private void Start()
     {
-        if (!content) return;
         if (!health) return;
 
         float currentHealth = health.CurrentHealth;
@@ -53,26 +52,27 @@ public class HealthDisplay : MonoBehaviour
 
     private void Update()
     {
-        if (!content) return;
+        if (visibilityTime <= 0) return;
 
-        if (isDisplayed) {
-            currentVisibilityTime += Time.deltaTime;
+        currentVisibilityTime += Time.deltaTime;
+        if (currentVisibilityTime < visibilityTime) return;
 
-            if (currentVisibilityTime > visibilityTime) {
-                Hide();
-            }
-        }
+        Hide();
     }
 
     public void SetHealthComponent(HealthComponent health)
     {
-        Unsubscribe();
+        TryUnsubscribe();
 
         this.health = health;
 
-        if (ShouldSubscribe()) {
-            Subscribe();
-        }
+        TrySubscribe();
+    }
+
+    public void RemoveHealthComponent()
+    {
+        TryUnsubscribe();
+        health = null;
     }
 
     private void OnHealthChanged()
@@ -101,14 +101,18 @@ public class HealthDisplay : MonoBehaviour
         return false;
     }
 
-    private void Display()
+    public void Display()
     {
+        if (!content) return;
+
         content.SetActive(true);
         isDisplayed = true;
     }
 
-    private void Hide()
+    public void Hide()
     {
+        if (!content) return;
+
         content.SetActive(false);
         isDisplayed = false;
     }
@@ -153,8 +157,9 @@ public class HealthDisplay : MonoBehaviour
         bar.color = color;
     }
 
-    private void Subscribe()
+    private void TrySubscribe()
     {
+        if (isSubscribed) return;
         if (!health) return;
 
         health.OnHealthChanged += OnHealthChanged;
@@ -162,8 +167,9 @@ public class HealthDisplay : MonoBehaviour
         isSubscribed = true;
     }
 
-    private void Unsubscribe()
+    private void TryUnsubscribe()
     {
+        if (!isSubscribed) return;
         if (!health) return;
 
         health.OnHealthChanged -= OnHealthChanged;

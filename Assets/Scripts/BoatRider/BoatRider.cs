@@ -48,8 +48,19 @@ public class BoatRider : MonoBehaviour
         healthComponent.OnDied -= OnDied;
     }
 
+    public void Init()
+    {
+        Init(BoatRiderData.Default());
+    }
+
     public void Init(BoatRiderData boatRiderData)
     {
+        if (boatRiderData == null) {
+            Debug.LogError("boatRiderData is not valid");
+            Init();
+            return;
+        }
+
         Guid? targetBoatInstanceId = boatRiderData.TargetBoatInstanceId;
         if (targetBoatInstanceId != null) {
             var instance = InstancesManager.Instance.GetInstance(targetBoatInstanceId.Value);

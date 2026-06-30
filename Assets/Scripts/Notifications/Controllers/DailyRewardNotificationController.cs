@@ -19,7 +19,7 @@ public class DailyRewardNotificationController : NotificationController
         foreach (var day in notificationDays) {
             if (day == 0 && dailyRewardManager.ExtraRewardCollected) continue;
 
-            var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+            var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var targetTime = GetRewardResetDate().AddHours(notificationTimeInHours).ToUnixTimeSeconds() + day * 86400;
 
             if (targetTime < currentTime) {

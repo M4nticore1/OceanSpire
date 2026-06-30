@@ -10,8 +10,8 @@ public class SelectManager : MonoBehaviour
 
     private bool isSubscribed = false;
 
-    public static event Action<SelectComponent> onComponentSelected;
-    public static event Action<SelectComponent> onComponentDeselected;
+    public event Action<SelectComponent> OnComponentSelected;
+    public event Action<SelectComponent> OnComponentDeselected;
 
     private void Awake()
     {
@@ -55,18 +55,18 @@ public class SelectManager : MonoBehaviour
         return SelectedComponent.GetComponent<Human>();
     }
 
-    private void OnComponentSelected(SelectComponent component)
+    private void HandleComponentSelected(SelectComponent component)
     {
         SetSelectedComponent(component);
-        onComponentSelected?.Invoke(SelectedComponent);
+        OnComponentSelected?.Invoke(SelectedComponent);
     }
 
-    private void OnComponentDeselected(SelectComponent component)
+    private void HandleComponentDeselected(SelectComponent component)
     {
         if (component != SelectedComponent) return;
 
         SetSelectedComponent(null);;
-        onComponentDeselected?.Invoke(component);
+        OnComponentDeselected?.Invoke(component);
     }
 
     private void SetSelectedComponent(SelectComponent selected)
@@ -78,8 +78,8 @@ public class SelectManager : MonoBehaviour
     {
         if (isSubscribed) return;
 
-        SelectComponent.OnComponentSelected += OnComponentSelected;
-        SelectComponent.OnComponentDeselected += OnComponentDeselected;
+        SelectComponent.OnComponentSelected += HandleComponentSelected;
+        SelectComponent.OnComponentDeselected += HandleComponentDeselected;
 
         isSubscribed = true;
     }
@@ -88,8 +88,8 @@ public class SelectManager : MonoBehaviour
     {
         if (!isSubscribed) return;
 
-        SelectComponent.OnComponentSelected -= OnComponentSelected;
-        SelectComponent.OnComponentDeselected -= OnComponentDeselected;
+        SelectComponent.OnComponentSelected -= HandleComponentSelected;
+        SelectComponent.OnComponentDeselected -= HandleComponentDeselected;
 
         isSubscribed = false;
     }

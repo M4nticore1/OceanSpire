@@ -100,7 +100,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
             return;
         }
 
-        var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var buildingData = new TowerBuildingData()
         {
             Id = towerBuildingPrefab.BuildingData.BuildingId,

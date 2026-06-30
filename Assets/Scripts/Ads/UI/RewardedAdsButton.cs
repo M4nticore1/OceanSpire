@@ -59,6 +59,6 @@ public class RewardedAdsButton : UIBehaviour
 
     private void OnButtonReleased()
     {
-        rewardedAdsManager.SetCurrentReward(rewardedAdsButtonManager.currentReward);
+        rewardedAdsManager.SetReward(rewardedAdsButtonManager.currentReward);
     }
 }

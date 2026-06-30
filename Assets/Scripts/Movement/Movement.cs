@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -77,30 +78,56 @@ public class Movement : MonoBehaviour
         return true;
     }
 
+    private Coroutine moveCoroutine;
+
     public bool TryMoveTo(Vector3 position)
     {
         if (!CanStartMoving()) return false;
 
-        TargetPosition = position;
-        RemoveTargetRotation();
-
-        if (IsDestinationReached()) {
-            OnReachedDestination?.Invoke();
-            return true;
+        if (moveCoroutine != null) {
+            StopCoroutine(moveCoroutine);
+            moveCoroutine = null;
         }
 
-        navAgent.isStopped = false;
-        if (!navAgent.SetDestination(position))
-            return false;
-
-        IsMoving = true;
-        OnMovementStarted?.Invoke();
+        moveCoroutine = StartCoroutine(ApplyMovementAtEndOfFrame(position));
 
         return true;
     }
 
+    private IEnumerator ApplyMovementAtEndOfFrame(Vector3 position)
+    {
+        yield return new WaitForEndOfFrame();
+
+        moveCoroutine = null;
+
+        if (IsReachedPosition(position)) {
+            TargetPosition = position;
+            navAgent.ResetPath();
+            IsMoving = false;
+            OnReachedDestination?.Invoke();
+            yield break;
+        }
+
+        TargetPosition = position;
+        RemoveTargetRotation();
+
+        navAgent.isStopped = false;
+        if (navAgent.SetDestination(position)) {
+            IsMoving = true;
+            OnMovementStarted?.Invoke();
+        }
+        else {
+            Debug.Log("Failed to set destination to: " + position);
+        }
+    }
+
     public bool TryStopMoving()
     {
+        if (moveCoroutine != null) {
+            StopCoroutine(moveCoroutine);
+            moveCoroutine = null;
+        }
+
         if (!CanStopMoving()) return false;
 
         navAgent.isStopped = true;
@@ -130,9 +157,9 @@ public class Movement : MonoBehaviour
 
     public bool CanStopMoving()
     {
+        if (!IsMoving) return false;
         if (!navAgent.enabled) return false;
         if (!navAgent.isOnNavMesh) return false;
-        if (!IsMoving) return false;
 
         return true;
     }

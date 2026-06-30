@@ -10,8 +10,8 @@ public class RewardedAdsManager : MonoBehaviour
     public RewardInstance currentReward { get; private set; }
 
     public static event Action<RewardInstance> onRewardSeted;
-    public static event Action<RewardInstance> onRewardRemoved;
-    public static event Action<RewardInstance> onRewardReceived;
+    public static event Action<RewardInstance> OnRewardRemoved;
+    public static event Action<RewardInstance> OnRewardReceived;
 
     private void Awake()
     {
@@ -33,40 +33,52 @@ public class RewardedAdsManager : MonoBehaviour
         adsSystem.onAdCompleted -= OnAdCompleted;
     }
 
-    public void SetCurrentReward(AdRewardDefinition definition)
+    public void SetReward(AdRewardDefinition definition)
     {
-        SetCurrentReward(definition.CreateReward());
+        SetReward(definition.CreateReward());
     }
 
-    public void SetCurrentReward(RewardInstance reward)
+    public void SetReward(RewardInstance reward)
     {
-        RewardInstance lastReward = currentReward;
+        if (reward == null) {
+            Debug.LogError("reward is not valid to set current reward");
+            return;
+        }
+
+        var lastReward = currentReward;
         currentReward = reward;
 
         if (currentReward != null) {
             onRewardSeted?.Invoke(currentReward);
         }
         else {
-            onRewardRemoved?.Invoke(lastReward);
+            OnRewardRemoved?.Invoke(lastReward);
         }
     }
 
-    public void RemoveCurrentReward()
+    public void RemoveReward()
     {
-        RewardInstance reward = currentReward;
+        if (currentReward == null) return;
 
+        var reward = currentReward;
         currentReward = null;
-        onRewardRemoved?.Invoke(reward);
+
+        OnRewardRemoved?.Invoke(reward);
     }
 
     public void ReceiveReward()
     {
-        RewardInstance reward = currentReward;
+        if (currentReward == null) {
+            Debug.LogError("currentReward is not valid to receive");
+            return;
+        }
+
+        var reward = currentReward;
 
         currentReward.RecieveReward();
         currentReward = null;
 
-        onRewardReceived?.Invoke(reward);
+        OnRewardReceived?.Invoke(reward);
     }
 
     public void ShowAd()
@@ -76,6 +88,6 @@ public class RewardedAdsManager : MonoBehaviour
 
     private void OnAdCompleted()
     {
-        RemoveCurrentReward();
+        RemoveReward();
     }
 }

@@ -83,7 +83,7 @@ public class ConstructionComponent : MonoBehaviour
     {
         if (ConstructionFinishTime == null) return null;
 
-        var currentTime = DateTimeOffset.Now.ToUnixTimeSeconds();
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         if (currentTime > ConstructionFinishTime) return null;
 
         return (int?)(ConstructionFinishTime - currentTime);

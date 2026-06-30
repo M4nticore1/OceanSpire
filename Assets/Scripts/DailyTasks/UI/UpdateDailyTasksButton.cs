@@ -19,7 +19,7 @@ public class UpdateDailyTasksButton : MonoBehaviour
 
     private void OnClicked()
     {
-        RewardedAdsManager.Instance.SetCurrentReward(rewardDefinition);
+        RewardedAdsManager.Instance.SetReward(rewardDefinition);
         RewardedAdsManager.Instance.ShowAd();
     }
 

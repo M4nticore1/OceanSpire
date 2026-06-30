@@ -33,7 +33,7 @@ public class CreatureCityNavigator : MonoBehaviour
     public ElevatorModule LastPathElevator { get; private set; }
     public ElevatorModule CurrentPathElevator { get; private set; }
 
-    public Building TargetBuilding { get; private set; }
+    [field: SerializeField] public Building TargetBuilding { get; private set; }
     public int PathProgress { get; private set; } = 0;
     public bool HasPath => pathBuildings.Count > 0;
     public bool IsFollowingPath { get; private set; } = false;
@@ -60,10 +60,16 @@ public class CreatureCityNavigator : MonoBehaviour
         Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 
+    public void Init()
+    {
+        Init(CityNavigatorData.Default());
+    }
+
     public void Init(CityNavigatorData cityNavigatorData)
     {
         if (cityNavigatorData == null) {
             Debug.LogError("cityNavigatorData is not valid", this);
+            Init();
             return;
         }
 

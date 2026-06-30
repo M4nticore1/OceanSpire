@@ -4217,6 +4217,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 392062727911311385, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: reviveManager
+      value: 
+      objectReference: {fileID: 1918364871}
+    - target: {fileID: 392062727911311385, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: selectManager
+      value: 
+      objectReference: {fileID: 593505076}
+    - target: {fileID: 392062727911311385, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: rewardedAdsManager
+      value: 
+      objectReference: {fileID: 1925740697}
     - target: {fileID: 421847181042054861, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_Pivot.y
       value: 1
@@ -5180,17 +5192,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
---- !u!114 &383697686 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9166915020847353468, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
-  m_PrefabInstance: {fileID: 383697685}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77ada63999d0b7c488c2ded78133bf88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ReviveRewardMenu
 --- !u!114 &383697687 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1921971047925935194, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
@@ -11582,7 +11583,7 @@ MonoBehaviour:
   dailyRewardManager: {fileID: 101393569}
   raidManager: {fileID: 2047238980}
   wanderersManager: {fileID: 53266519}
-  tutorialManager: {fileID: 1693113622}
+  reviveManager: {fileID: 1918364871}
   windManager: {fileID: 954540110}
 --- !u!4 &1040276942
 Transform:
@@ -12467,7 +12468,7 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: 835a6104ce5e3cf4c87e14e7c279b46a, type: 2}
     amount: 100
   - definition: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
-    amount: 100
+    amount: 0
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     amount: 10000
   - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
@@ -13454,6 +13455,7 @@ Transform:
   - {fileID: 1400426564}
   - {fileID: 1013778940}
   - {fileID: 178192283}
+  - {fileID: 2136544710}
   - {fileID: 512418805}
   - {fileID: 1616675883}
   - {fileID: 1445600141}
@@ -14353,7 +14355,6 @@ Transform:
   - {fileID: 593505075}
   - {fileID: 1065889324}
   - {fileID: 1290112043}
-  - {fileID: 1918364870}
   - {fileID: 1262348146}
   - {fileID: 1030270321}
   - {fileID: 723582994}
@@ -17618,6 +17619,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 948dda070484eea44ac9c5089a182b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerBuilding
+--- !u!1 &1691702502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1691702503}
+  - component: {fileID: 1691702504}
+  m_Layer: 0
+  m_Name: ReviveLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1691702503
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691702502}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2136544710}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1691702504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691702502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 079b6d8e58cf8984da4d1273e7193807, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReviveLoader
+  reviveManager: {fileID: 1918364871}
 --- !u!1 &1693113620
 GameObject:
   m_ObjectHideFlags: 0
@@ -19360,12 +19406,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1918364869}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1317929167}
+  m_Father: {fileID: 2136544710}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1918364871
 MonoBehaviour:
@@ -19379,10 +19425,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a23b45418b5451e44808d4991d80a4c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReviveCitizenManager
+  rewardedAdsManager: {fileID: 1925740697}
   reviveRewardDefinition: {fileID: 11400000, guid: 7b7d3511133f39a41b08683e20ab9b61, type: 2}
-  reviveRewardMenu: {fileID: 383697686}
   maxRevivesCount: 3
-  restoreReviveTime: 300
+  chargeReviveTimeInSeconds: 900
 --- !u!1001 &1920737906
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20898,8 +20944,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9087a9d3cb79f42448f4d331faafc574, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HungerManager
-  damagePerSecond: 5
-  damageFrequence: 1
+  damagePerSecond: 0.0125
+  damageFrequence: 8
 --- !u!1 &2055893609
 GameObject:
   m_ObjectHideFlags: 0
@@ -21844,6 +21890,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cbf83b37b7ae6745ac69cc093b3eca3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputStateManager
+--- !u!1 &2136544709
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2136544710}
+  m_Layer: 0
+  m_Name: ReviveSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2136544710
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136544709}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1918364870}
+  - {fileID: 1691702503}
+  m_Father: {fileID: 1238355532}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2147388477
 PrefabInstance:
   m_ObjectHideFlags: 0
