@@ -1,21 +1,21 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class BuildingAudioSystem : MonoBehaviour
+public class BuildingAudioSystem : AudioSystem
 {
     [SerializeField] private AudioMixerGroup mixerGroup;
     [SerializeField] private AudioClip[] buildingStartedClips;
     [SerializeField] private AudioClip[] buildingFinishedClips;
     [SerializeField] private AudioClip[] buildingDemolishedClips;
 
-    private void OnEnable()
+    protected override void Subscribe()
     {
         Building.OnBuildingConstructionStarted += OnBuildingConstructionStarted;
         Building.OnBuildingConstructionFinished += OnBuildingUpgradeCompleted;
         Building.OnBuildingDemolished += OnBuildingDemolished;
     }
 
-    private void OnDisable()
+    protected override void Unsubscribe()
     {
         Building.OnBuildingConstructionStarted -= OnBuildingConstructionStarted;
         Building.OnBuildingConstructionFinished -= OnBuildingUpgradeCompleted;
@@ -43,6 +43,8 @@ public class BuildingAudioSystem : MonoBehaviour
 
     private bool ShouldPlay()
     {
-        return BuildingsLoader.Instance.IsLoaded;
+        //if (!buildingsLoader.IsLoaded) return false;
+
+        return true;
     }
 }

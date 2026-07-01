@@ -12,6 +12,6 @@ public class GroundBuilding : Building
     {
         var levelData = LevelData as GroundBuildingLevelData;
 
-        return constructionComponent.IsUnderConstruction && levelData.ConstructionFrame ? levelData.ConstructionFrame : levelData.Construction;
+        return constructionComponent.GetUnderConstruction() && levelData.ConstructionFrame ? levelData.ConstructionFrame : levelData.Construction;
     }
 }

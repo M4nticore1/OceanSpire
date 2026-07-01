@@ -109,7 +109,6 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
             Construction = new ConstructionData()
             {
-                IsUnderConstruction = true,
                 ConstructionStartTime = currentTime,
                 ConstructionFinishTime = currentTime + buildingPrefab.LevelData.UpgradeTime
             },
@@ -262,16 +261,15 @@ public class BuildingPlace : MonoBehaviour, IClickable
         if (placedBuilding) return false;
         if (buildingType != BuildingType.Room) return true;
 
-        List<Building> path;
-        var targetBuilding = BuildingsManager.Instance.EntranceBuildingPlace;
+        var entranceBuildingPlace = BuildingsManager.Instance.EntranceBuildingPlace;
 
         var leftPlace = neighborBuildingPlaces[Direction.Left];
-        if (leftPlace.placedBuilding) {
+        if (leftPlace.placedBuilding || leftPlace == entranceBuildingPlace) {
             return true;
         }
 
         var rightPlace = neighborBuildingPlaces[Direction.Right];
-        if (rightPlace.placedBuilding) {
+        if (rightPlace.placedBuilding || rightPlace == entranceBuildingPlace) {
             return true;
         }
 

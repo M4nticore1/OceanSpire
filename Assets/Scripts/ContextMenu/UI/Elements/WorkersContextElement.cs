@@ -19,7 +19,7 @@ public class WorkersContextElement : ContextElement
         Building building = target.GetComponent<Building>();
         if (!building) return false;
 
-        if (building.ConstructionComponent.IsUnderConstruction) return false;
+        if (building.ConstructionComponent.GetUnderConstruction()) return false;
         if (!building.BuildingData.IsWorkable) return false;
 
         return true;

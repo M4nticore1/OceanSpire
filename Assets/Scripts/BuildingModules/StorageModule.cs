@@ -25,7 +25,7 @@ public class StorageModule : BuildingModule
     {
         base.OnInit();
 
-        if (OwnedBuilding.UpgradeComponent.NextLevel == 1 && OwnedBuilding.ConstructionComponent.IsUnderConstruction) return;
+        if (OwnedBuilding.UpgradeComponent.NextLevel == 1 && OwnedBuilding.ConstructionComponent.GetUnderConstruction()) return;
 
         AddLimit(StorageLevelData);
     }

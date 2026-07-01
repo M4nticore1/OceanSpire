@@ -6,7 +6,6 @@ public class ConstructionData
 {
     public long? ConstructionStartTime = null;
     public long? ConstructionFinishTime = null;
-    public bool IsUnderConstruction = false;
 
     public static ConstructionData Default()
     {
@@ -19,7 +18,6 @@ public class ConstructionData
         {
             ConstructionStartTime = construction.ConstructionStartTime,
             ConstructionFinishTime = construction.ConstructionFinishTime,
-            IsUnderConstruction = construction.IsUnderConstruction
         };
     }
 }

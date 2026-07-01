@@ -20,7 +20,7 @@ public class CompleteConstructionContextElement : ContextElement
         building = target.GetComponent<Building>();
         if (!building) return false;
 
-        if (!building.ConstructionComponent.IsUnderConstruction) return false;
+        if (!building.ConstructionComponent.GetUnderConstruction()) return false;
 
         return true;
     }

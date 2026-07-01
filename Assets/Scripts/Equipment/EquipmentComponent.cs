@@ -18,6 +18,10 @@ public class EquipmentComponent : MonoBehaviour
 
     public void Init()
     {
+        if (!defaultEquipment) {
+            Debug.LogError($"DefaultEquipment is not valid at {name}");
+        }
+
         var equipmenData = new EquipmentData()
         {
             EquipmentId = defaultEquipment?.ItemId

@@ -139,6 +139,7 @@ public class WanderersManager : MonoBehaviour
     private Human CreateWanderer(Vector3 position, Vector3 rotation, Guid boatInstanceId)
     {
         var prefab = wandererPrefabs[UnityEngine.Random.Range(0, wandererPrefabs.Length)] as Human;
+        var levelsCount = Mathf.Max(1, SkillsFactory.GetLevelsCount());
 
         var data = new WandererData()
         {
@@ -162,8 +163,8 @@ public class WanderersManager : MonoBehaviour
                 RidingBoatInstanceId = boatInstanceId,
             },
 
-            Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId(), WeaponsDataFactory.GetMaxWeaponDamage()),
-            Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount()),
+            Weapon = EquipmentData.Default(),
+            Skills = SkillsFactory.CreateRandomSkillsData(levelsCount),
             SpawnPosition = new Vector3Data(position)
         };
 

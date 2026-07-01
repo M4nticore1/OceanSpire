@@ -1,17 +1,17 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class UIAudioSystem : MonoBehaviour
+public class UIAudioSystem : AudioSystem
 {
     [SerializeField] private AudioMixerGroup mixerGroup;
     [SerializeField] private AudioClip[] releaseClips;
 
-    private void OnEnable()
+    protected override void Subscribe()
     {
         CustomButton.onButtonReleased.AddListener(OnButtonReleased);
     }
 
-    private void OnDisable()
+    protected override void Unsubscribe()
     {
         CustomButton.onButtonReleased.RemoveListener(OnButtonReleased);
     }

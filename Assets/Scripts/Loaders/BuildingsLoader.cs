@@ -132,9 +132,9 @@ public class BuildingsLoader : WorldLoader
             {
                 Id = building.BuildingData.BuildingId,
                 Level = building.LevelComponent.Level,
-                Upgrade = UpgradeData.Create(building.UpgradeComponent),
-                Construction = ConstructionData.Create(building.ConstructionComponent),
-                Crafting = CraftingModuleData.Create(building.GetComponent<CraftingModule>()),
+                Upgrade = UpgradeData.Default(),
+                Construction = ConstructionData.Default(),
+                Crafting = CraftingModuleData.Default(),
             };
 
             building.Init(buildingData);
@@ -153,9 +153,9 @@ public class BuildingsLoader : WorldLoader
             {
                 Id = building.BuildingData.BuildingId,
                 Level = building.LevelComponent.Level,
-                Upgrade = UpgradeData.Create(building.UpgradeComponent),
-                Construction = ConstructionData.Create(building.ConstructionComponent),
-                Crafting = CraftingModuleData.Create(building.GetComponent<CraftingModule>()),
+                Upgrade = UpgradeData.Default(),
+                Construction = ConstructionData.Default(),
+                Crafting = CraftingModuleData.Default(),
                 FloorIndex = i,
             };
 
@@ -180,8 +180,8 @@ public class BuildingsLoader : WorldLoader
                 {
                     Id = building.BuildingData.BuildingId,
                     Level = building.LevelComponent.Level,
-                    Upgrade = UpgradeData.Create(building.UpgradeComponent),
-                    Construction = ConstructionData.Create(building.ConstructionComponent),
+                    Upgrade = UpgradeData.Default(),
+                    Construction = ConstructionData.Default(),
                     Crafting = CraftingModuleData.Default(),
                     FloorIndex = i,
                     PlaceIndex = j

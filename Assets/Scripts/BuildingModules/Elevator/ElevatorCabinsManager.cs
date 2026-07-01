@@ -29,7 +29,7 @@ public class ElevatorCabinsManager : MonoBehaviour
     private void OnBuildingInited(Building building)
     {
         if (ShouldIgnoreEvents()) return;
-        if (building.ConstructionComponent.IsUnderConstruction) return;
+        if (building.ConstructionComponent.ConstructionFinishTime != null) return;
 
         UpdateElevatorCabin(building);
     }

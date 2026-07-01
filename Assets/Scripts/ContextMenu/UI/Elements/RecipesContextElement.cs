@@ -20,7 +20,7 @@ public class RecipesContextElement : ContextElement
         if (!building) return false;
 
         if (!building.GetComponent<CraftingModule>()) return false;
-        if (building.ConstructionComponent.IsUnderConstruction) return false;
+        if (building.ConstructionComponent.GetUnderConstruction()) return false;
 
         return true;
     }

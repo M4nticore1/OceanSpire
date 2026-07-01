@@ -18,8 +18,9 @@ public class ConstructionNotificationController : NotificationController
     protected override bool ShouldSendNotification()
     {
         var buildingsUnderConstruction = GetBuildingsUnderConstruction();
+        if (buildingsUnderConstruction.Count == 0) return false;
 
-        return buildingsUnderConstruction.Count >= 1;
+        return true;
     }
 
     protected override int GetFireTimeInSeconds()
@@ -106,10 +107,11 @@ public class ConstructionNotificationController : NotificationController
 
         foreach (var building in buildings) {
             if (!building) {
-                Debug.LogError("buildin is not valid");
+                Debug.LogError("Building is not valid");
+                continue;
             }
 
-            if (!building.ConstructionComponent.IsUnderConstruction) continue;
+            if (!building.ConstructionComponent.GetUnderConstruction()) continue;
 
             if (building.ConstructionComponent.GetRemainingConstructionTime() == null) {
                 Debug.LogError("Building under construction has no construction remaining time");

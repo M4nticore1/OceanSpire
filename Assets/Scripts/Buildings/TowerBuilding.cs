@@ -105,7 +105,7 @@ public class TowerBuilding : Building
         BuildingConstruction construction = null;
 
         if (LevelData is TowerBuildingLevelData levelData) {
-            if (ConstructionComponent.IsUnderConstruction) {
+            if (ConstructionComponent.GetUnderConstruction()) {
                 if (BuildingPosition == BuildingPosition.Straight) {
                     construction = levelData.ConstructionStraightFrame;
                 }
@@ -220,7 +220,7 @@ public class TowerBuilding : Building
         if (!target) return false;
         if (target.buildingData.BuildingId != buildingData.BuildingId) return false;
         if (target.levelComponent.Level != levelComponent.Level) return false;
-        if (target.constructionComponent.IsUnderConstruction) return false;
+        if (target.constructionComponent.GetUnderConstruction()) return false;
 
         return true;
     }
@@ -297,7 +297,7 @@ public class TowerBuilding : Building
 
     private void UpdateConnectedBuildings()
     {
-        if (constructionComponent.IsUnderConstruction) return;
+        if (constructionComponent.GetUnderConstruction()) return;
 
         connectedBuildings.Clear();
 

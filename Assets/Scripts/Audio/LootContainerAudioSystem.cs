@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class LootContainerAudioSystem : MonoBehaviour
+public class LootContainerAudioSystem : AudioSystem
 {
     [SerializeField] private AudioMixerGroup mixerGroup;
 
@@ -12,14 +12,14 @@ public class LootContainerAudioSystem : MonoBehaviour
     [SerializeField] private float minDistance;
     [SerializeField] private float maxDistance;
 
-    private void OnEnable()
+    protected override void Subscribe()
     {
         SwimmingDriftingLoot.OnContainerTaken += OnContainerTaked;
         FlyingDriftingLoot.OnFlyingLootStartedFalling += OnContainerStartedFalling;
         FlyingDriftingLoot.onContainerLanded += OnContainerFalled;
     }
 
-    private void OnDisable()
+    protected override void Unsubscribe()
     {
         SwimmingDriftingLoot.OnContainerTaken -= OnContainerTaked;
         FlyingDriftingLoot.OnFlyingLootStartedFalling -= OnContainerStartedFalling;

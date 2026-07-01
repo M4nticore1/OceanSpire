@@ -11,7 +11,7 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
     private void Update()
     {
         if (!building) return;
-        if (!building.ConstructionComponent.IsUnderConstruction) return;
+        if (!building.ConstructionComponent.GetUnderConstruction()) return;
 
         localizer.UpdateText();
     }
@@ -32,7 +32,7 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
 
         ILocalizable localizable = building.GetComponent<ILocalizable>();
 
-        if (building.ConstructionComponent.IsUnderConstruction) {
+        if (building.ConstructionComponent.GetUnderConstruction()) {
             localizer.SetLocalizationItem(constructionLocalization);
         }
         else {

@@ -131,7 +131,7 @@ public class RaidManager : MonoBehaviour
         if (PathFinder.TryFindBuildingPath(null,
             b => b.BuildingData.IsRaidable &&
             b.RaidComponent.Raiders.Count < b.LevelData.MaxHumansCount &&
-            !b.ConstructionComponent.IsUnderConstruction,
+            !b.ConstructionComponent.GetUnderConstruction(),
             out path)) {
             int index = path.Count - 1;
             if (index >= 0)
@@ -140,7 +140,7 @@ public class RaidManager : MonoBehaviour
 
         if (!building && PathFinder.TryFindBuildingPath(null,
             b => b.BuildingData.IsRaidable &&
-            !b.ConstructionComponent.IsUnderConstruction,
+            !b.ConstructionComponent.GetUnderConstruction(),
             out path)) {
             int index = path.Count - 1;
             if (index >= 0)

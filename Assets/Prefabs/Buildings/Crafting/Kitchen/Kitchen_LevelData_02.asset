@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
+  m_Name: Kitchen_LevelData_02
+  m_EditorClassIdentifier: 
+  resourcesToBuild:
+  - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 4500
+  - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    amount: 300
+  - definition: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+    amount: 600
+  maxResidentsCount: 1
+  constructionTime: 300
+  buildingThumb: {fileID: 21300000, guid: 28be3b81121e92e4085b378bc9fe3951, type: 3}
+  constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
+  constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}
+  constructionStraight: {fileID: 3395891878762895499, guid: 366789279dba7c84a822d3dc6a457141, type: 3}
+  constructionCorner: {fileID: 3395891878762895499, guid: 64ca4e71b72ce424bb30c6cb4515c199, type: 3}
+  constructionStraightLeft: {fileID: 3395891878762895499, guid: 01191bc08b3cce34ba2ea564d8e7be43, type: 3}
+  constructionStraightRight: {fileID: 3395891878762895499, guid: 01569ee6dad84f3419d93e19685965f8, type: 3}
+  constructionStraightLeftRight: {fileID: 3395891878762895499, guid: 874b8774690bb624fb17064e4f2a7f49, type: 3}
+  constructionCornerLeft: {fileID: 3395891878762895499, guid: 45a620bc327672d438d85e04cfdbeb7a, type: 3}
+  constructionCornerRight: {fileID: 3395891878762895499, guid: 7ef1d0d3f31dbf146913e6652ab58230, type: 3}
+  constructionCornerLeftRight: {fileID: 3395891878762895499, guid: 15aa7c1dc2e2baf49a49e6bda265d50d, type: 3}
+  constructionStraightUp: {fileID: 0}
+  constructionStraightDown: {fileID: 0}
+  constructionStraightUpDown: {fileID: 0}
+  constructionCornerUp: {fileID: 0}
+  constructionCornerDown: {fileID: 0}
+  constructionCornerUpDown: {fileID: 0}

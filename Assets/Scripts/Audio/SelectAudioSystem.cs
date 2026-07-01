@@ -1,19 +1,19 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class SelectAudioSystem : MonoBehaviour
+public class SelectAudioSystem : AudioSystem
 {
     [SerializeField] private AudioMixerGroup mixerGroup;
     [SerializeField] private AudioClip[] selectAudioClips;
 
-    private void OnEnable()
+    protected override void Subscribe()
     {
         Building.OnBuildingSelected += OnBuildingSelected;
         Boat.OnBoatSelected += OnBoatSelected;
         Human.OnHumanSelected += OnHumanSelected;
     }
 
-    private void OnDisable()
+    protected override void Unsubscribe()
     {
         Building.OnBuildingSelected -= OnBuildingSelected;
         Boat.OnBoatSelected -= OnBoatSelected;
