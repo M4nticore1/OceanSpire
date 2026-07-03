@@ -18,15 +18,15 @@ public class LocalizationsList : ScriptableObject
     [SerializeField] private LocalizationTable[] localizations = null;
     public LocalizationTable[] Localizations => localizations;
 
-    private Dictionary<SystemLanguage, LocalizationTable> localizationsDict;
-    public Dictionary<SystemLanguage, LocalizationTable> LocalizationsDict
+    private Dictionary<string, LocalizationTable> localizationsDict;
+    public Dictionary<string, LocalizationTable> LocalizationsDict
     {
         get {
             if (localizationsDict == null) {
                 localizationsDict = new();
 
                 foreach (var localization in localizations) {
-                    localizationsDict.Add(localization.Language, localization);
+                    localizationsDict.Add(localization.LanguageCode, localization);
                 }
             }
 
@@ -34,9 +34,11 @@ public class LocalizationsList : ScriptableObject
         }
     }
 
-    public LocalizationTable GetLocalization(SystemLanguage language)
+    public LocalizationTable GetLocalization(string languageCode)
     {
-        if (!localizationsDict.TryGetValue(language, out var localization)) return null;
+        if (languageCode == null) return null;
+        if (languageCode == string.Empty) return null;
+        if (!LocalizationsDict.TryGetValue(languageCode, out var localization)) return null;
 
         return localization;
     }

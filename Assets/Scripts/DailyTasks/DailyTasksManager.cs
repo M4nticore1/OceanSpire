@@ -20,7 +20,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     [Header("Update Tasks")]
     [SerializeField] private int updateTasksTimeOffset = 0;
 
-    public long NextRestTime { get; private set; } = 0;
+    public long NextResetTime { get; private set; } = 0;
     public bool IsAdUpdateUsed { get; private set; } = false;
     public bool IsDailyTasksViewed { get; private set; } = false;
     private bool isUpdated = false;
@@ -45,7 +45,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     private void Update()
     {
-        if (TimeManager.GetCurrentSecond() >= NextRestTime) {
+        if (TimeManager.GetCurrentSecond() >= NextResetTime) {
             if (!TryResetTasks()) return;
 
             UpdateNextResetTime();
@@ -103,7 +103,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     {
         return new Dictionary<string, string>()
         {
-            {"updateTime", GetUpdateTime()},
+            {"resetTime", TimeFormatter.SecondsToHourTimer(GetRemainingResetTime())},
         };
     }
 
@@ -150,7 +150,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     private void SetNextUpdateTime(long seconds)
     {
-        NextRestTime = seconds;
+        NextResetTime = seconds;
     }
 
     private bool TryResetTasks()
@@ -161,13 +161,12 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         return true;
     }
 
-    private string GetUpdateTime()
+    private int GetRemainingResetTime()
     {
-        int remainingSeconds = (int)(CalculateNextResetTime() - TimeManager.GetCurrentSecond());
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var remainingSeconds = (int)(NextResetTime - currentTime);
 
-        string timer = TimeFormatter.SecondsToHourTime(remainingSeconds);
-
-        return timer;
+        return remainingSeconds;
     }
 
     public long CalculateNextResetTime()

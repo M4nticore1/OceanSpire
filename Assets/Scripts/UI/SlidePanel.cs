@@ -123,7 +123,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         List<RaycastResult> results = new List<RaycastResult>();
         PointerUtils.GetRaycastUIResults(results);
         if (IsClickedOutsideMenu(results)) {
-            Hide();
+            Close();
         }
     }
 
@@ -132,7 +132,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         content = GetComponentsInChildren<Transform>(true).ToList();
     }
 
-    public void Show()
+    public void Open()
     {
         openedPosition = CalculateOpenedPosition();
         targetPosition = openedPosition;
@@ -153,7 +153,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         OnOpened?.Invoke();
     }
 
-    public void Hide()
+    public void Close()
     {
         closedPosition = CalculateClosedPosition();
         targetPosition = closedPosition;

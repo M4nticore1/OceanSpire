@@ -69,7 +69,7 @@ public class ReviveMenu : UIBehaviour
         this.citizen = citizen;
 
         isOpened = true;
-        slidePanel.Show();
+        slidePanel.Open();
 
         skillsPanel.SetSkills(citizen.SkillsComponent);
         UpdateCitizenNameText();
@@ -79,7 +79,7 @@ public class ReviveMenu : UIBehaviour
 
     public void Close()
     {
-        slidePanel.Hide();
+        slidePanel.Close();
         UpdateButtonEnabled();
     }
 
@@ -147,7 +147,7 @@ public class ReviveMenu : UIBehaviour
             var remainingTime = chargeTime.Value - currentTime;
 
             nextReviveChargeText.gameObject.SetActive(true);
-            nextReviveChargeTimeText.SetText(TimeFormatter.SecondsToMinuteTime((int)remainingTime));
+            nextReviveChargeTimeText.SetText(TimeFormatter.SecondsToMinuteTimer((int)remainingTime));
         }
         else {
             nextReviveChargeText.gameObject.SetActive(false);

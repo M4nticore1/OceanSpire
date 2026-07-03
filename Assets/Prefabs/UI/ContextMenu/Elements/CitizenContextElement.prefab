@@ -10,19 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 300
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 300
-      objectReference: {fileID: 0}
-    - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 1484420911169693740, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Name

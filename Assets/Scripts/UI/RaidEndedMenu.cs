@@ -82,13 +82,13 @@ public class RaidEndedMenu : UIBehaviour
 
     private void Open()
     {
-        slidePanel.Show();
+        slidePanel.Open();
         isOpened = true;
     }
 
     private void Close()
     {
-        slidePanel.Hide();
+        slidePanel.Close();
         isOpened = false;
     }
 

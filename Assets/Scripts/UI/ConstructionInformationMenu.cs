@@ -36,7 +36,7 @@ public class ConstructionInformationMenu : MonoBehaviour
         }
         spawnedBuildingCharacteristicWidgets.Clear();
 
-        slidePanel.Show();
+        slidePanel.Open();
 
         //Building building = construction.GetComponent<Building>();
 
@@ -68,7 +68,7 @@ public class ConstructionInformationMenu : MonoBehaviour
 
     public void Close()
     {
-        slidePanel.Hide();
+        slidePanel.Close();
     }
 
     private void CreateCharacteristicWidget(string characteristicName, int characteristicValueText)

@@ -116,8 +116,8 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 150, y: 150}
-  m_Spacing: {x: 0, y: 25}
+  m_CellSize: {x: 140, y: 140}
+  m_Spacing: {x: 0, y: 20}
   m_Constraint: 1
   m_ConstraintCount: 1
 --- !u!1 &3469002200474347093
@@ -467,7 +467,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 900}
+  m_SizeDelta: {x: 0, y: 830}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1001 &295832631828004077
 PrefabInstance:
@@ -977,7 +977,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8307739286538277425, guid: 4c069ed7813208d49bd1d9bd098800e8, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.data[5].m_CallState
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8307739286538277425, guid: 4c069ed7813208d49bd1d9bd098800e8, type: 3}
       propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.data[0].m_CallState

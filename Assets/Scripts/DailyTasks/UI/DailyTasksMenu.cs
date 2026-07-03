@@ -31,7 +31,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         updateTasksText.UpdateText();
     }
 
-    public void Show()
+    public void Open()
     {
         gameObject.SetActive(true);
 
@@ -39,7 +39,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         TryCreateWidgets();
     }
 
-    public void Hide()
+    public void Close()
     {
         gameObject.SetActive(false);
     }
@@ -106,7 +106,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
     private void OnOpenButtonClicked()
     {
-        Show();
+        Open();
     }
 
     private void OnTasksInited()

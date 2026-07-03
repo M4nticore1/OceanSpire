@@ -39,7 +39,7 @@ public class WandererAdmissionMenu : MonoBehaviour
         }
 
         isOpened = true;
-        slidePanel.Show();
+        slidePanel.Open();
         selectedWanderer = wanderer;
 
         UpdateWandererNameText();
@@ -50,7 +50,7 @@ public class WandererAdmissionMenu : MonoBehaviour
 
     private void Close()
     {
-        slidePanel.Hide();
+        slidePanel.Close();
         OnClosed();
     }
 

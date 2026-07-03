@@ -14,6 +14,7 @@ public class WorldSaveManager : MonoBehaviour
     [SerializeField] private DailyRewardManager dailyRewardManager;
     [SerializeField] private RaidManager raidManager;
     [SerializeField] private WanderersManager wanderersManager;
+    [SerializeField] private BuilderEnergyManager constructionEnergyManager;
     [SerializeField] private ReviveManager reviveManager;
     [SerializeField] private WindManager windManager;
 
@@ -32,6 +33,7 @@ public class WorldSaveManager : MonoBehaviour
             dailyRewardManager,
             raidManager,
             wanderersManager,
+            constructionEnergyManager,
             reviveManager,
             windManager);
 

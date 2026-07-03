@@ -242,7 +242,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
             { "name", LocalizationManager.Instance.GetText(buildingData.NameLocalizationItem) },
             { "currentLevel", levelComponent.Level.ToString() },
             { "nextLevel", (levelComponent.Level + 1).ToString() },
-            { "constructionTime", TimeFormatter.SecondsToMinuteTime((int)currentConstructionTime).ToString() + "/" + TimeFormatter.SecondsToMinuteTime((int)ConstructionTime).ToString() },
+            { "constructionTime", TimeFormatter.SecondsToMinuteTimer((int)currentConstructionTime).ToString() + "/" + TimeFormatter.SecondsToMinuteTimer((int)ConstructionTime).ToString() },
         };
     }
 

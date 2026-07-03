@@ -23,30 +23,38 @@ public class LocalizationManager
     public LocalizationTable CurrentLocalization { get; private set; }
     private Dictionary<string, string> deserializedLocalization;
 
-    public event Action<LocalizationTable> OnLocalizationChanged;
+    public event Action OnLocalizationChanged;
 
-    private LocalizationManager() { }
-
-    public void SetLocalization(SystemLanguage language)
+    private LocalizationManager()
     {
-        if (!LocalizationsList.Instance.LocalizationsDict.ContainsKey(language)) {
-            SetLocalization(SystemLanguage.English);
+        SetLocalization("en-US");
+    }
+
+    public void SetLocalization(string languageCoded)
+    {
+        var localizationTable = LocalizationsList.Instance.GetLocalization(languageCoded);
+        if (!localizationTable) {
+            SetLocalization("en-US");
             return;
         }
 
-        CurrentLocalization = LocalizationsList.Instance.GetLocalization(language);
+        CurrentLocalization = localizationTable;
         deserializedLocalization = JsonConvert.DeserializeObject<Dictionary<string, string>>(CurrentLocalization.LocalizationAsset.text);
-        OnLocalizationChanged?.Invoke(CurrentLocalization);
+        OnLocalizationChanged?.Invoke();
     }
 
-    public string GetText(LocalizationItem item)
+    public string GetText(LocalizationItem item, string languageCode = null)
     {
         if (!item) {
             Debug.LogError("LocalizationItem is not valid");
             return null;
         }
 
-        return GetText(item.name);
+        if (languageCode == null) {
+            languageCode = CurrentLocalization.LanguageCode;
+        }
+
+        return GetText(item.name, languageCode);
     }
 
     public string GetText(LocalizationItem item, ILocalizable localizable)
@@ -71,13 +79,21 @@ public class LocalizationManager
         return text;
     }
 
-    public string GetText(string key)
+    public string GetText(string key, string languageCode = null)
     {
-        if (deserializedLocalization == null) return null;
+        if (languageCode == null) {
+            languageCode = CurrentLocalization.LanguageCode;
+        }
 
-        if (!deserializedLocalization.TryGetValue(key, out var text)) {
-            Debug.LogWarning($"Localization key not found: '{key}'");
-            return key;
+        var localization = GetDeserializedLocalization(languageCode);
+        if (localization == null) {
+            Debug.LogError($"Can not get deserialized localization of {localization}");
+            return GetText(key, "en-US");
+        }
+
+        if (!localization.TryGetValue(key, out var text)) {
+            Debug.LogError($"Localization {languageCode} key not found: '{key}'");
+            return GetText(key, "en-US");
         }
 
         return text;
@@ -93,11 +109,19 @@ public class LocalizationManager
         return font;
     }
 
-    public string GetLanguageNameByLocalization(SystemLanguage language)
+    public string GetLanguageNameByLocalization(string languageCode)
     {
-        var textAsset = LocalizationsList.Instance.GetLocalization(language).LocalizationAsset;
+        var textAsset = LocalizationsList.Instance.GetLocalization(languageCode).LocalizationAsset;
         var localiations = JsonConvert.DeserializeObject<Dictionary<string, string>>(textAsset.text);
-        string text = localiations["language_name"];
-        return text;
+
+        return localiations["language_name"];
+    }
+
+    private Dictionary<string, string> GetDeserializedLocalization(string languageCode)
+    {
+        var localizationTable = LocalizationsList.Instance.GetLocalization(languageCode);
+        if (!localizationTable) return null;
+
+        return JsonConvert.DeserializeObject<Dictionary<string, string>>(localizationTable.LocalizationAsset.text);
     }
 }

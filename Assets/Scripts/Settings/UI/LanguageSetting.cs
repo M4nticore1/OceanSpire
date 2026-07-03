@@ -7,6 +7,7 @@ public class LanguageSetting : MonoBehaviour
     [SerializeField] private SelectLanguageMenu languageMenu;
     [SerializeField] private CustomButton button;
     [SerializeField] private TextMeshProUGUI languageName;
+    [SerializeField] private LocalizationItem languageNameLocalizationItem;
 
     private void OnEnable()
     {
@@ -23,7 +24,7 @@ public class LanguageSetting : MonoBehaviour
 
     private void UpdateLanguageName()
     {
-        string text = LanguageNameTranslater.GetNativeLanguageName(playerSettingsManager.Language);
+        string text = LocalizationManager.Instance.GetText(languageNameLocalizationItem, playerSettingsManager.LanguageCode);
         languageName.SetText(text);
     }
 
@@ -32,7 +33,7 @@ public class LanguageSetting : MonoBehaviour
         languageMenu.Show();
     }
 
-    private void OnLocalizationCahanged(LocalizationTable localizationTable)
+    private void OnLocalizationCahanged()
     {
         UpdateLanguageName();
     }

@@ -187,10 +187,10 @@ RectTransform:
   - {fileID: 1556928868931172324}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -195, y: -110}
-  m_SizeDelta: {x: 350, y: 100}
+  m_SizeDelta: {x: 320, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2468726478414758696
 CanvasRenderer:
@@ -250,7 +250,7 @@ MonoBehaviour:
   isScalable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectableGroupIndex: -1
+  selectGroup: {fileID: 0}
   stateTransitionTime: 0.3
   state: 0
   idleState:
@@ -283,3 +283,21 @@ MonoBehaviour:
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnReleased:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHovered:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUnhovered:
+    m_PersistentCalls:
+      m_Calls: []

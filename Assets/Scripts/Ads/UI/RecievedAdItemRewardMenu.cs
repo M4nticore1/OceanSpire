@@ -43,7 +43,7 @@ public class RecievedAdItemRewardMenu : MonoBehaviour
 
     private void Open()
     {
-        slidePanel.Show();
+        slidePanel.Open();
 
         currentShowTime = 0;
         isOpened = true;
@@ -51,19 +51,19 @@ public class RecievedAdItemRewardMenu : MonoBehaviour
 
     private void Close()
     {
-        slidePanel.Hide();
+        slidePanel.Close();
         isOpened = false;
     }
 
     private void AssignImage(RewardInstance reward)
     {
-        ItemRewardInstance itemReward = RewardedAdsManager.Instance.currentReward as ItemRewardInstance;
+        ItemRewardInstance itemReward = RewardedAdsManager.Instance.CurrentReward as ItemRewardInstance;
         rewardImage.sprite = itemReward.ItemRewardDefinition.RewardIcon;
     }
 
     private void AssignText(RewardInstance reward)
     {
-        ItemRewardInstance itemReward = RewardedAdsManager.Instance.currentReward as ItemRewardInstance;
+        ItemRewardInstance itemReward = RewardedAdsManager.Instance.CurrentReward as ItemRewardInstance;
         receiveText.SetLocalizationItem(itemReward.ItemRewardDefinition.ReceievedRewardLocalization);
         receiveText.SetPlaceHolderLocalization(itemReward);
     }

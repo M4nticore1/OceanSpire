@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class PlayerSettingsData
 {
-    public SystemLanguage Language = SystemLanguage.English;
+    public string Language = "en-US";
     public float SFXVolume = 0.5f;
     public float MusicVolume = 0.5f;
     public int FrameRateLimitType = 1;
@@ -14,7 +14,7 @@ public class PlayerSettingsData
     {
         return new PlayerSettingsData()
         {
-            Language = Application.systemLanguage,
+            Language = LanguageDetector.GetSystemGameLanguage(),
         };
     }
 
@@ -22,7 +22,7 @@ public class PlayerSettingsData
     {
         return new PlayerSettingsData()
         {
-            Language = playerSettingsManager.Language,
+            Language = playerSettingsManager.LanguageCode,
             SFXVolume = playerSettingsManager.SFXVolume,
             MusicVolume = playerSettingsManager.MusicVolume,
             FrameRateLimitType = playerSettingsManager.FrameRateLimitType,

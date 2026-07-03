@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '1000/1000
+  m_text: '10000/10000
 
 '
   m_isRightToLeft: 0
@@ -94,12 +94,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
+  m_fontSize: 26.45
   m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 32
-  m_fontSizeMax: 40
+  m_fontSizeMin: 16
+  m_fontSizeMax: 42
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
@@ -133,7 +133,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 25, y: 0, z: 0, w: 0}
+  m_margin: {x: 10, y: 0, z: 10, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -343,12 +343,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ResourceWidget
   itemDefinition: {fileID: 0}
   useLimit: 1
-  amount: 0
-  limit: 0
   itemNameText: {fileID: 0}
   resourceAmountText: {fileID: 8834238281448815289}
   resourceImage: {fileID: 1277891582841892986}
   resourceAmountBar: {fileID: 0}
+  changeColorType: 1
   useAmountColors: 1
   enoughAmountColor: {r: 0, g: 1, b: 0, a: 1}
   notEnoughAmountColor: {r: 1, g: 0, b: 0, a: 1}

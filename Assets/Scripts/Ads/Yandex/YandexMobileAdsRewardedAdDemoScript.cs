@@ -124,5 +124,6 @@ public class YandexMobileAdsRewardedAdDemoScript : AdsSystem
         // Called when the user can be rewarded with {args.type} and {args.amount}.
 
         HandleAdCompleted();
+        RequestRewardedAd();
     }
 }

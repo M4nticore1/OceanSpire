@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class LanguageSwitcher : MonoBehaviour
 {
-    private SystemLanguage language;
+    private string languageCode;
     [SerializeField] private CustomButton button;
     [SerializeField] private TextMeshProUGUI languageName;
+    [SerializeField] private LocalizationItem languageNameLocalizationItem;
 
     private void OnEnable()
     {
@@ -17,23 +18,25 @@ public class LanguageSwitcher : MonoBehaviour
         button.OnReleased.RemoveListener(OnButtonClicked);
     }
 
-    public void Init(SystemLanguage language, SelectGroup selectGroup)
+    public void Init(string languageCode, SelectGroup selectGroup)
     {
-        this.language = language;
-        UpdateLanguageName(language);
+        this.languageCode = languageCode;
+        UpdateLanguageName(languageCode);
         SetSelectGroup(selectGroup);
-        UpdateSelected(language);
+        UpdateSelected(languageCode);
     }
 
-    private void UpdateLanguageName(SystemLanguage language)
+    private void UpdateLanguageName(string languageCode)
     {
-        string text = LanguageNameTranslater.GetNativeLanguageName(language);
+        Debug.LogError($"UpdateLanguageName {languageCode}");
+        string text = LocalizationManager.Instance.GetText(languageNameLocalizationItem, languageCode);
+        Debug.LogError($"UpdateLanguageName {text}");
         languageName.SetText(text);
     }
 
-    private void UpdateSelected(SystemLanguage language)
+    private void UpdateSelected(string languageCode)
     {
-        if (PlayerSettingsManager.Instance.Language != language) return;
+        if (LocalizationManager.Instance.CurrentLocalization.LanguageCode != languageCode) return;
 
         button.SetState(CustomButtonState.Selected);
     }
@@ -45,6 +48,6 @@ public class LanguageSwitcher : MonoBehaviour
 
     private void OnButtonClicked()
     {
-        PlayerSettingsManager.Instance.SetLanguage(language);
+        PlayerSettingsManager.Instance.SetLanguage(languageCode);
     }
 }

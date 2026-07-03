@@ -129,9 +129,10 @@ MonoBehaviour:
   dailyRewardManager: {fileID: 0}
   bonusChestRewardWidgetPrefab: {fileID: 1590089733661164763, guid: 9c40c4cd8f11a514bb240150694bf687, type: 3}
   content: {fileID: 8398560936034956545}
+  openButton: {fileID: 0}
+  closeButton: {fileID: 726734256753586023}
   layoutGroup: {fileID: 4337446185677126862}
   resetTimeText: {fileID: 401413543552266085}
-  closeButton: {fileID: 726734256753586023}
 --- !u!1 &2426214059955394919
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,7 +146,7 @@ GameObject:
   - component: {fileID: 4847912695997001870}
   - component: {fileID: 401413543552266085}
   m_Layer: 5
-  m_Name: BonusChestDescrition
+  m_Name: BonusChestResetTimeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -448,7 +449,7 @@ GameObject:
   - component: {fileID: 2179995979155456978}
   - component: {fileID: 1489827663473253670}
   m_Layer: 5
-  m_Name: BonusChestLabel
+  m_Name: BonusChestLabelText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

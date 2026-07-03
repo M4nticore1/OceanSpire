@@ -106,9 +106,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62f137ba4275b6e4d919720d5d28dff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanguageSettings
+  playerSettingsManager: {fileID: 0}
   languageMenu: {fileID: 0}
   button: {fileID: 6005713165677960199}
   languageName: {fileID: 6677466990824559512}
+  languageNameLocalizationItem: {fileID: 11400000, guid: 61bae148c34817a4ea7cb082954ef2a8, type: 2}
 --- !u!1 &4570525168383766395
 GameObject:
   m_ObjectHideFlags: 0

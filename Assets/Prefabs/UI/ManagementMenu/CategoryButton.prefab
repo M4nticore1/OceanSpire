@@ -112,7 +112,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: -50}
-  m_SizeDelta: {x: 200, y: 100}
+  m_SizeDelta: {x: 180, y: 90}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &226441856106884038
 CanvasRenderer:
@@ -205,21 +205,21 @@ MonoBehaviour:
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
-  onPressed:
+  OnPressed:
     m_PersistentCalls:
       m_Calls: []
-  onReleased:
+  OnReleased:
     m_PersistentCalls:
       m_Calls: []
-  onSelected:
+  OnSelected:
     m_PersistentCalls:
       m_Calls: []
-  onDeselected:
+  OnDeselected:
     m_PersistentCalls:
       m_Calls: []
-  onHovered:
+  OnHovered:
     m_PersistentCalls:
       m_Calls: []
-  onUnhovered:
+  OnUnhovered:
     m_PersistentCalls:
       m_Calls: []

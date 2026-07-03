@@ -40,13 +40,13 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
         resetTimeText.UpdateText();
     }
 
-    public void Show()
+    public void Open()
     {
         content.gameObject.SetActive(true);
         dailyRewardManager.SetRewardViewed(true);
     }
 
-    public void Hide()
+    public void Close()
     {
         content.gameObject.SetActive(false);
     }
@@ -75,12 +75,12 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
 
     private void OnOpenButtonClicked()
     {
-        Show();
+        Open();
     }
 
     private void OnCloseButtonClicked()
     {
-        Hide();
+        Close();
     }
 
     private IEnumerator CreateWidgetsCoroutine()

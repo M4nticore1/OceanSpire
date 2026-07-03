@@ -16,11 +16,11 @@ public class StatsMenu : UIBehaviour
         string maxInteractorsCountText = building.LevelData.MaxHumansCount.ToString();
         interactorsCount.SetText(interactorsCountText + "/" + maxInteractorsCountText);
 
-        slidePanel.Show();
+        slidePanel.Open();
     }
 
     public void CloseStatsMenu()
     {
-        slidePanel.Hide();
+        slidePanel.Close();
     }
 }

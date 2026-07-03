@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ConstructionComponent : MonoBehaviour
@@ -8,6 +9,8 @@ public class ConstructionComponent : MonoBehaviour
 
     public long? ConstructionStartTime { get; private set; } = null;
     public long? ConstructionFinishTime { get; private set; } = null;
+
+    public float ConstructionTimeReduction { get; private set; } = 0f;
 
     public event Action OnConstructionStarted;
     public event Action OnConstructionCompleted;
@@ -38,6 +41,7 @@ public class ConstructionComponent : MonoBehaviour
 
         ConstructionStartTime = constructionData.ConstructionStartTime;
         ConstructionFinishTime = constructionData.ConstructionFinishTime;
+        SetConstructionSpeedBonus(constructionData.ConstructionTimeReduction);
 
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var constructionTime = ConstructionFinishTime - currentTime;
@@ -75,6 +79,25 @@ public class ConstructionComponent : MonoBehaviour
 
         OnConstructionCompleted?.Invoke();
         OnGlobalConstructionFinished?.Invoke(this);
+    }
+
+    public void SetConstructionSpeedBonus(float value)
+    {
+        ConstructionTimeReduction = Mathf.Clamp01(value);
+    }
+
+    public void ApplyConstructionSpeedBonus()
+    {
+        var remainingTime = GetRemainingConstructionTime();
+        if (remainingTime == null) return;
+
+        ConstructionTimeReduction = Mathf.Clamp01(ConstructionTimeReduction);
+
+        int newRemainingTime = (int)(remainingTime * (1f - ConstructionTimeReduction));
+        newRemainingTime = Mathf.Max(1, newRemainingTime);
+
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        ConstructionFinishTime = currentTime + newRemainingTime;
     }
 
     public int? GetRemainingConstructionTime()

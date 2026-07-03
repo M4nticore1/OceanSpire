@@ -38,7 +38,7 @@ public class SelectLanguageMenu : MonoBehaviour
     {
         foreach (var localization in localizationsList.Localizations) {
             var widget = Instantiate(languageSwitcherPrefab, layoutGroup.transform);
-            widget.Init(localization.Language, selectGroup);
+            widget.Init(localization.LanguageCode, selectGroup);
         }
     }
 

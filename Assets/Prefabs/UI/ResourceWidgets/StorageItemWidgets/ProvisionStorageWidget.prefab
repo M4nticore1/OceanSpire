@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 50, y: 0}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 70, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &712738654273166301
 CanvasRenderer:
@@ -185,8 +185,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 125, y: -60}
-  m_SizeDelta: {x: 500, y: 100}
+  m_AnchoredPosition: {x: 120, y: -60}
+  m_SizeDelta: {x: 460, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6932965197611991669
 GameObject:
@@ -280,8 +280,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60
-  m_fontSizeBase: 60
+  m_fontSize: 58
+  m_fontSizeBase: 58
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -334,71 +334,11 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_Pivot.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 800
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 300
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}
@@ -473,6 +413,7 @@ MonoBehaviour:
   resourceAmountText: {fileID: 2166235261024142464}
   resourceImage: {fileID: 910127770057095628}
   resourceAmountBar: {fileID: 0}
+  changeColorType: 1
   useAmountColors: 0
   enoughAmountColor: {r: 0, g: 1, b: 0, a: 1}
   notEnoughAmountColor: {r: 1, g: 0, b: 0, a: 1}

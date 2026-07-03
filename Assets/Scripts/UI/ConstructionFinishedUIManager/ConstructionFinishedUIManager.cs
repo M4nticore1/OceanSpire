@@ -40,6 +40,8 @@ public class ConstructionFinishedUIManager : MonoBehaviour
             return;
         }
 
+        if (!ShouldCreateWidget(building)) return;
+
         if (!constructionFinishedWidget) {
             Debug.LogError("constructionFinishedWidget is not valid");
             return;
@@ -62,6 +64,8 @@ public class ConstructionFinishedUIManager : MonoBehaviour
             return;
         }
 
+        if (!ShouldCreateWidget(building)) return;
+
         if (!upgradeFinishedWidget) {
             Debug.LogError("upgradeFinishedWidget is not valid");
             return;
@@ -79,5 +83,16 @@ public class ConstructionFinishedUIManager : MonoBehaviour
     private void OnWidgetDestroyed(ConstructionFinishedWidget widget)
     {
         spawnedWidget.Remove(widget);
+    }
+
+    private bool ShouldCreateWidget(Building building)
+    {
+        var constructionComponent = building.ConstructionComponent;
+        var startTime = constructionComponent.ConstructionStartTime;
+        var finishTime = constructionComponent.ConstructionStartTime;
+
+        if (startTime != null && finishTime != null && startTime <= finishTime) return false;
+
+        return true;
     }
 }

@@ -12,7 +12,7 @@ public class DailyTasksData
         return new DailyTasksData()
         {
             Tasks = DailyTasksSaveSystem.SaveTasks(manager),
-            NextResetTime = manager.NextRestTime,
+            NextResetTime = manager.NextResetTime,
             AdUpdateUsed = manager.IsAdUpdateUsed,
             TasksViewed = manager.IsDailyTasksViewed,
         };

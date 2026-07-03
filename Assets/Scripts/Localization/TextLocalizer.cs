@@ -104,7 +104,7 @@ public class TextLocalizer : UIBehaviour
         TextBlock.font = font;
     }
 
-    private void OnLocalizationChanged(LocalizationTable localizationTable)
+    private void OnLocalizationChanged()
     {
         UpdateText();
     }

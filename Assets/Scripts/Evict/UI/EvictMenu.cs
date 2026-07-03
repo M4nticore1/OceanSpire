@@ -35,7 +35,7 @@ public class EvictMenu : UIBehaviour
 
     public void Open()
     {
-        slidePanel.Show();
+        slidePanel.Open();
 
         var citizen = SelectManager.Instance.GetSelectedHuman() as Citizen;
         SelectedCitizen = citizen;
@@ -47,7 +47,7 @@ public class EvictMenu : UIBehaviour
 
     private void Close()
     {
-        slidePanel.Hide();
+        slidePanel.Close();
     }
 
     private void UpdateCitizenName(Citizen citizen)

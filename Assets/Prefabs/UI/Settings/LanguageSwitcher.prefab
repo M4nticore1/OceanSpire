@@ -199,6 +199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LanguageButton
   button: {fileID: 8975385310414704572}
   languageName: {fileID: 7038101250209992489}
+  languageNameLocalizationItem: {fileID: 11400000, guid: 61bae148c34817a4ea7cb082954ef2a8, type: 2}
 --- !u!1 &6917858982682606574
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,12 +1,16 @@
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "LocalizationTable", menuName = "Localization/LocalizationDictionary")]
 public class LocalizationTable : ScriptableObject
 {
-    [SerializeField] private SystemLanguage language;
-    public SystemLanguage Language => language;
+    public string LanguageCode
+    {
+        get {
+            Debug.Log(name);
+            return name;
+        }
+    }
 
     [SerializeField] private TextAsset localizationAsset;
     public TextAsset LocalizationAsset => localizationAsset;

@@ -48,7 +48,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     public void Open()
     {
         OnOpen();
-        slidePanel.Show();
+        slidePanel.Open();
         AssignImage();
         AssignDescryption();
 
@@ -59,7 +59,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     public void Close()
     {
         OnClose();
-        slidePanel.Hide();
+        slidePanel.Close();
 
         InputStateManager.Instance.SetGameplayInputBlocked(false);
         isOpened = false;
@@ -67,7 +67,7 @@ public abstract class AdRewardMenu : MonoBehaviour
 
     private void AssignImage()
     {
-        RewardInstance itemReward = RewardedAdsManager.Instance.currentReward;
+        RewardInstance itemReward = RewardedAdsManager.Instance.CurrentReward;
         if (itemReward == null) {
             Debug.Log("Current ad reward is not valid!");
             return;
@@ -78,7 +78,7 @@ public abstract class AdRewardMenu : MonoBehaviour
 
     private void AssignDescryption()
     {
-        RewardInstance itemReward = RewardedAdsManager.Instance.currentReward;
+        RewardInstance itemReward = RewardedAdsManager.Instance.CurrentReward;
         if (itemReward == null) {
             Debug.Log("Current ad reward is not valid!");
             return;

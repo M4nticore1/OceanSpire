@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class DailyRewardManager : MonoBehaviour, ILocalizable
@@ -78,6 +77,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     {
         if (dailyRewardData == null) {
             Debug.LogError("dailyRewardData is not valid");
+            Init();
             return;
         }
 
@@ -168,8 +168,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     {
         return new Dictionary<string, string>()
         {
-            { "remainingHours", GetRemainingResetHours() },
-            { "remainingMinutes", GetRemainingResetMinutes()}
+            { "resetTime", TimeFormatter.SecondsToHourTimer(GetRemainingTime()) }
         };
     }
 
@@ -225,27 +224,11 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         OnDailyRewardRecieved?.Invoke(reward);
     }
 
-    private string GetRemainingResetHours()
+    private int GetRemainingTime()
     {
-        long currentSeconds = TimeManager.GetCurrentSecond();
-        long remainingTime = NextResetTime - currentSeconds;
+        long currentSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-        int hours = (int)((float)remainingTime / 3600);
-        string text = hours.ToString();
-
-        return text;
-    }
-
-    private string GetRemainingResetMinutes()
-    {
-        long currentSeconds = TimeManager.GetCurrentSecond();
-        long remainingTime = NextResetTime - currentSeconds;
-
-        float hours = (float)remainingTime / 3600;
-        int minutes = (int)((hours - (int)hours) * 60);
-        string text = minutes.ToString();
-
-        return text;
+        return (int)(NextResetTime - currentSeconds);
     }
 
     private RewardInstance TryCreateRandomReward()

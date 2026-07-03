@@ -7,7 +7,7 @@ public class RewardedAdsManager : MonoBehaviour
 
     [SerializeField] private AdsSystem adsSystem;
 
-    public RewardInstance currentReward { get; private set; }
+    public RewardInstance CurrentReward { get; private set; }
 
     public static event Action<RewardInstance> onRewardSeted;
     public static event Action<RewardInstance> OnRewardRemoved;
@@ -35,6 +35,11 @@ public class RewardedAdsManager : MonoBehaviour
 
     public void SetReward(AdRewardDefinition definition)
     {
+        if (!definition) {
+            Debug.LogError("RewardDefinition is not valid");
+            return;
+        }
+
         SetReward(definition.CreateReward());
     }
 
@@ -45,11 +50,11 @@ public class RewardedAdsManager : MonoBehaviour
             return;
         }
 
-        var lastReward = currentReward;
-        currentReward = reward;
+        var lastReward = CurrentReward;
+        CurrentReward = reward;
 
-        if (currentReward != null) {
-            onRewardSeted?.Invoke(currentReward);
+        if (CurrentReward != null) {
+            onRewardSeted?.Invoke(CurrentReward);
         }
         else {
             OnRewardRemoved?.Invoke(lastReward);
@@ -58,36 +63,50 @@ public class RewardedAdsManager : MonoBehaviour
 
     public void RemoveReward()
     {
-        if (currentReward == null) return;
+        if (CurrentReward == null) return;
 
-        var reward = currentReward;
-        currentReward = null;
+        var reward = CurrentReward;
+        CurrentReward = null;
 
         OnRewardRemoved?.Invoke(reward);
     }
 
     public void ReceiveReward()
     {
-        if (currentReward == null) {
+        if (CurrentReward == null) {
             Debug.LogError("currentReward is not valid to receive");
             return;
         }
 
-        var reward = currentReward;
+        var reward = CurrentReward;
 
-        currentReward.RecieveReward();
-        currentReward = null;
+        CurrentReward.RecieveReward();
+        CurrentReward = null;
 
         OnRewardReceived?.Invoke(reward);
     }
 
     public void ShowAd()
     {
+        if (!adsSystem) {
+            Debug.LogError("Ads System is not assigned in an inspector!");
+            return;
+        }
+
+        if (!ShouldShowAd()) return;
+
         adsSystem.ShowAd();
     }
 
     private void OnAdCompleted()
     {
         RemoveReward();
+    }
+
+    private bool ShouldShowAd()
+    {
+        if (CurrentReward == null) return false;
+
+        return true;
     }
 }

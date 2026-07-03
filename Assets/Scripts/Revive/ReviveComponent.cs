@@ -74,7 +74,7 @@ public class ReviveComponent : MonoBehaviour, ILocalizable
 
         return new Dictionary<string, string>()
         {
-            { "remainingTime", DieTime != null ? TimeFormatter.SecondsToMinuteTime((int)(DieTime - currentTime)) : TimeFormatter.SecondsToMinuteTime(0) }
+            { "remainingTime", DieTime != null ? TimeFormatter.SecondsToMinuteTimer((int)(DieTime - currentTime)) : TimeFormatter.SecondsToMinuteTimer(0) }
         };
     }
 

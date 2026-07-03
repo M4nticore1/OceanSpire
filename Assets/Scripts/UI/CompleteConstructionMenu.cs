@@ -50,12 +50,12 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
-    public void Show()
+    public void Open()
     {
         Open(null);
     }
 
-    public void Hide()
+    public void Close()
     {
         gameObject.SetActive(false);
 
@@ -71,13 +71,13 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     private void OnCloseMenuButtonClicked()
     {
-        Hide();
+        Close();
     }
 
     private void OnBuildingConstructionFinished(Building building)
     {
         if (building != this.building) return;
 
-        Hide();
+        Close();
     }
 }

@@ -53,7 +53,7 @@ MonoBehaviour:
   closeMethod: 1
   slideTransitionSpeed: 10
   contentRoot: {fileID: 5328956741746265796}
-  hideWhenClosed: 0
+  hideWhenClosed: 1
   openedScreenPositionAlpha: {x: 0, y: 0.5}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: 0, y: 0.5}

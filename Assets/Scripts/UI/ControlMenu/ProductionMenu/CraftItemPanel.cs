@@ -148,11 +148,11 @@ public class CraftItemPanel : MonoBehaviour
 
             currentCraftingTime = Mathf.Clamp(currentCraftingTime.Value, 0, craftTime);
 
-            text = TimeFormatter.SecondToTimer(currentCraftingTime.Value, craftTime);
+            text = TimeFormatter.SecondToFractionalTimer(currentCraftingTime.Value, craftTime);
         }
         else {
             var targetTime = craftItem.GetCraftTime();
-            text = TimeFormatter.SecondsToMinuteTime(targetTime);
+            text = TimeFormatter.SecondsToMinuteTimer(targetTime);
         }
 
         var bonusColorHex = ColorUtility.ToHtmlStringRGB(bonusColor);

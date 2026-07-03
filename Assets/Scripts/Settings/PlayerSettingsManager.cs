@@ -8,7 +8,7 @@ public class PlayerSettingsManager : MonoBehaviour
 
     [SerializeField] private AudioMixer masterMixer;
 
-    public SystemLanguage Language { get; private set; }
+    public string LanguageCode { get; private set; }
     public float SFXVolume { get; private set; }
     public float MusicVolume { get; private set; }
     public int FrameRateLimitType { get; private set; }
@@ -48,10 +48,10 @@ public class PlayerSettingsManager : MonoBehaviour
         SetShowFrameRateCounter(playerSettingsData.ShowFrameRateCounter);
     }
 
-    public void SetLanguage(SystemLanguage language)
+    public void SetLanguage(string languageCode)
     {
-        LocalizationManager.Instance.SetLocalization(language);
-        Language = LocalizationManager.Instance.CurrentLocalization.Language;
+        LocalizationManager.Instance.SetLocalization(languageCode);
+        LanguageCode = LocalizationManager.Instance.CurrentLocalization.LanguageCode;
 
         OnSettingsChanged?.Invoke();
     }

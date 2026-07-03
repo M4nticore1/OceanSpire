@@ -441,8 +441,8 @@ MonoBehaviour:
   conditionAmount: {fileID: 7132843842305124250}
   rewardAmount: {fileID: 3422588663239097173}
   progressText: {fileID: 6442416341555175809}
-  descriptionText: {fileID: 8820324001406821316}
   completedPanel: {fileID: 5942597508359027899}
+  descriptionText: {fileID: 8820324001406821316}
 --- !u!1 &4423720899428467496
 GameObject:
   m_ObjectHideFlags: 0
@@ -501,7 +501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.21000002, g: 0.40317756, b: 0.6, a: 1}
+  m_Color: {r: 0.29960784, g: 0.5617648, b: 0.7490196, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
