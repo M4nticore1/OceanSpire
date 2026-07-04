@@ -438,7 +438,7 @@ MonoBehaviour:
   isScalable: 0
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectableGroupIndex: -1
+  selectGroup: {fileID: 0}
   stateTransitionTime: 0.2
   state: 0
   idleState:
@@ -471,6 +471,24 @@ MonoBehaviour:
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.95
+  OnPressed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnReleased:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeselected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHovered:
+    m_PersistentCalls:
+      m_Calls: []
+  OnUnhovered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6003434234227895232
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,7 +735,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}

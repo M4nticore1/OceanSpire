@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8509804, g: 0.6392157, b: 0.42745098, a: 1}
+  m_Color: {r: 0.9019608, g: 0.6539216, b: 0.40588236, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -95,24 +95,24 @@ MonoBehaviour:
   isSelectable: 1
   isScalable: 1
   deselectOnOutsideClick: 0
-  cancelPressWhenMoving: 0
+  cancelPressWhenMoving: 1
   selectGroup: {fileID: 0}
   stateTransitionTime: 0.2
   state: 0
   idleState:
-    bodyColor: {r: 0.8509804, g: 0.6392157, b: 0.42745098, a: 1}
+    bodyColor: {r: 0.9019608, g: 0.6539216, b: 0.40588236, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    bodyColor: {r: 0.9019608, g: 0.6764706, b: 0.4509804, a: 1}
+    bodyColor: {r: 0.9490196, g: 0.6880392, b: 0.42705882, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    bodyColor: {r: 0.9490196, g: 0.7137255, b: 0.47843137, a: 1}
+    bodyColor: {r: 1, g: 0.725, b: 0.45, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanguageButton
   button: {fileID: 8975385310414704572}
-  languageName: {fileID: 7038101250209992489}
+  languageNameText: {fileID: 7038101250209992489}
   languageNameLocalizationItem: {fileID: 11400000, guid: 61bae148c34817a4ea7cb082954ef2a8, type: 2}
 --- !u!1 &6917858982682606574
 GameObject:
@@ -267,8 +267,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: LanguageName
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 45e9a87402ef85e4e881a12d0325e218, type: 2}
-  m_sharedMaterial: {fileID: -4880579785796880096, guid: 45e9a87402ef85e4e881a12d0325e218, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -292,12 +292,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 41.75
+  m_fontSize: 43.05
   m_fontSizeBase: 56
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 32
-  m_fontSizeMax: 72
+  m_fontSizeMin: 16
+  m_fontSizeMax: 64
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512

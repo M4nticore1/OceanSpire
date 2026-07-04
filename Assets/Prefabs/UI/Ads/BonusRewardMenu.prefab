@@ -12,6 +12,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: BonusRewardMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 1621133238144025803, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
+      propertyPath: m_fontSize
+      value: 52
+      objectReference: {fileID: 0}
+    - target: {fileID: 1621133238144025803, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
+      propertyPath: m_margin.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1621133238144025803, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
+      propertyPath: m_margin.z
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1621133238144025803, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 52
+      objectReference: {fileID: 0}
+    - target: {fileID: 1621133238144025803, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4418269895620078227, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
+      propertyPath: m_margin.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4418269895620078227, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
+      propertyPath: m_margin.x
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4418269895620078227, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
+      propertyPath: m_margin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4418269895620078227, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
+      propertyPath: m_margin.z
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 7847576234982883063, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -100,17 +136,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1861736919271258801}
   m_SourcePrefab: {fileID: 100100000, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
---- !u!114 &491031555673750731 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5068307857180163185, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
-  m_PrefabInstance: {fileID: 4649475948381175994}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &1303680501560314107 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5949777650571577409, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
@@ -143,8 +168,6 @@ MonoBehaviour:
   watchButton: {fileID: 6983401014482516234}
   rewardImage: {fileID: 5143677277580058156}
   rewardDescryption: {fileID: 5444696356602730815}
-  remainingTimeProgressBar: {fileID: 6120375799043873210}
-  remainingTimeText: {fileID: 491031555673750731}
   lowTimeThreshold: 10
   enoughTimeColor: {r: 1, g: 1, b: 1, a: 1}
   lowTimeColor: {r: 1, g: 1, b: 1, a: 1}
@@ -170,17 +193,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
---- !u!114 &6120375799043873210 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1470901233846049024, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}
-  m_PrefabInstance: {fileID: 4649475948381175994}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
 --- !u!114 &6983401014482516234 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2336320941890386352, guid: 63808e36e5236694b83cd0aef1d7635a, type: 3}

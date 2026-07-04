@@ -4,13 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "LocalizationTable", menuName = "Localization/LocalizationDictionary")]
 public class LocalizationTable : ScriptableObject
 {
-    public string LanguageCode
-    {
-        get {
-            Debug.Log(name);
-            return name;
-        }
-    }
+    public string LanguageCode => name;
 
     [SerializeField] private TextAsset localizationAsset;
     public TextAsset LocalizationAsset => localizationAsset;

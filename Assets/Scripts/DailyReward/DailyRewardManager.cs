@@ -168,7 +168,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     {
         return new Dictionary<string, string>()
         {
-            { "resetTime", TimeFormatter.SecondsToHourTimer(GetRemainingTime()) }
+            { "remainingTime", TimeFormatter.SecondsToHourTimer(GetRemainingTime()) }
         };
     }
 

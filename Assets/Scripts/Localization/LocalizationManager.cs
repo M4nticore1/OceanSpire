@@ -99,12 +99,14 @@ public class LocalizationManager
         return text;
     }
 
-    public TMP_FontAsset GetFont(TextRole role)
+    public TMP_FontAsset GetFont(TextRole role, string languageCode = null)
     {
-        if (!CurrentLocalization) return null;
+        if (languageCode == null) {
+            languageCode = CurrentLocalization.LanguageCode;
+        }
 
-        int fontIndex = (int)role;
-        var font = CurrentLocalization.Fonts[fontIndex];
+        var fontIndex = (int)role;
+        var font = LocalizationsList.Instance.GetLocalization(languageCode).Fonts[fontIndex];
 
         return font;
     }

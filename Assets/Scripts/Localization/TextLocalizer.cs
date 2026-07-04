@@ -19,7 +19,10 @@ public class TextLocalizer : UIBehaviour
     public TextMeshProUGUI TextBlock => textBlock ? textBlock : GetComponent<TextMeshProUGUI>();
 
     [SerializeField] private TextRole textRole = TextRole.Default;
+    public TextRole TextRole => textRole;
+
     [SerializeField] private LocalizationItem item;
+    public LocalizationItem Item => item;
 
     [SerializeField] private MonoBehaviour localizationTarget;
     private ILocalizable LocalizationTarget = null;

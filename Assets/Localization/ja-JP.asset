@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fffffff0d7dc7b0428afdbb288a4e1f3, type: 3}
+  m_Name: ja-JP
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizationDictionary
+  localizationAsset: {fileID: 4900000, guid: 25ee17d5fd4335d4fbe21cbe75d2a9af, type: 3}
+  fonts:
+  - {fileID: 11400000, guid: f1f455c1ad1078e428d3a173e030b80b, type: 2}
+  - {fileID: 11400000, guid: 80cf40868fd887b458e5f64951eaa603, type: 2}

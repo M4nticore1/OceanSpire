@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class LanguageSwitcher : MonoBehaviour
 {
-    private string languageCode;
+    private string languageCode = string.Empty;
     [SerializeField] private CustomButton button;
-    [SerializeField] private TextMeshProUGUI languageName;
+    [SerializeField] private TextMeshProUGUI languageNameText;
     [SerializeField] private LocalizationItem languageNameLocalizationItem;
 
     private void OnEnable()
     {
         button.OnReleased.AddListener(OnButtonClicked);
+        UpdateSelected(languageCode);
     }
 
     private void OnDisable()
@@ -28,14 +29,16 @@ public class LanguageSwitcher : MonoBehaviour
 
     private void UpdateLanguageName(string languageCode)
     {
-        Debug.LogError($"UpdateLanguageName {languageCode}");
-        string text = LocalizationManager.Instance.GetText(languageNameLocalizationItem, languageCode);
-        Debug.LogError($"UpdateLanguageName {text}");
-        languageName.SetText(text);
+        var text = LocalizationManager.Instance.GetText(languageNameLocalizationItem, languageCode);
+        var font = LocalizationManager.Instance.GetFont(TextRole.Default, languageCode);
+
+        languageNameText.SetText(text);
+        languageNameText.font = font;
     }
 
     private void UpdateSelected(string languageCode)
     {
+        if (languageCode == string.Empty) return;
         if (LocalizationManager.Instance.CurrentLocalization.LanguageCode != languageCode) return;
 
         button.SetState(CustomButtonState.Selected);
