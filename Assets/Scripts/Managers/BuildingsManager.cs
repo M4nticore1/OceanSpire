@@ -36,12 +36,6 @@ public class BuildingsManager : MonoBehaviour
 
     public List<List<ElevatorModule>> elevatorGroups { get; private set; } = new List<List<ElevatorModule>>();
 
-    public IEnumerable<GroundBuilding> GroundBuildings()
-    {
-        yield return towerGate;
-        yield return pierBuilding;
-    }
-
     private void Awake()
     {
         if (Instance) {
@@ -88,6 +82,28 @@ public class BuildingsManager : MonoBehaviour
         if (PlaceIndex >= RoomsCountPerFloor) return null;
 
         return builtFloors[floorIndex].RoomBuildingPlaces[PlaceIndex];
+    }
+
+    public IEnumerable<GroundBuilding> GerGroundBuildings()
+    {
+        yield return towerGate;
+        yield return pierBuilding;
+    }
+
+    public List<TowerBuilding> GetTowerBuildings()
+    {
+        var buildings = new List<TowerBuilding>();
+
+        foreach (var floor in BuiltFloors) {
+            foreach (var roomPlace in floor.RoomBuildingPlaces) {
+                var building = roomPlace.PlacedBuilding;
+                if (!building) continue;
+
+                buildings.Add(building);
+            }
+        }
+
+        return buildings;
     }
 
     public static int GetFloorIndexByHeight(float height)

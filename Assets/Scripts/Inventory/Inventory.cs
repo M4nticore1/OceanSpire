@@ -45,6 +45,30 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    public void Init()
+    {
+        Init(InventoryData.Default() ?? new InventoryData());
+    }
+
+    public void Init(InventoryData inventoryData)
+    {
+        if (inventoryData == null) {
+            Debug.LogError("InventoryData is not valid");
+            Init();
+            return;
+        }
+
+        foreach (var itemData in inventoryData.Items) {
+            var item = ItemInstance.Create(itemData);
+            AddItem(item);
+        }
+    }
+
+    public void AddItem(ItemInstance item)
+    {
+        AddItem(item.Definition.ItemId, item.Amount);
+    }
+
     public void AddItem(int id, int amount)
     {
         var item = GetItemById(id);
@@ -71,7 +95,7 @@ public class Inventory : MonoBehaviour
     public void RemoveItem(int id, int amount)
     {
         var item = GetItemById(id);
-        amount = math.clamp(amount, 0, item.Amount);
+        amount = Mathf.Max(0, amount);
 
         item.RemoveAmount(amount);
 

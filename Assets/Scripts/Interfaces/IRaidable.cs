@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public interface IRaidable
 {
-    public ItemInstance[] GetRaidLoot();
+    public List<ItemInstance> GetRaidLoot();
+    public bool CanBeRaided();
 }

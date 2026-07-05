@@ -279,20 +279,46 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         return ElectricityConsumption;
     }
 
-    public ItemInstance[] GetRaidLoot()
+    public List<ItemInstance> GetRaidLoot()
     {
+        var items = new List<ItemInstance>();
+
         var craftItemDefinition = SelectedCraftItem.Definition;
         if (!craftItemDefinition) {
             Debug.LogError($"CraftItemDefinition is not valid at {name}");
-            return null;
+            return items;
         }
 
-        var items = new List<ItemInstance>();
-        foreach (var item in craftItemDefinition.ConsumeResources) {
+        var cityStorage = CityStorage.Instance;
+        if (!cityStorage) return items;
+
+        foreach (var consumeItem in craftItemDefinition.ConsumeResources) {
+            var cityItem = cityStorage.Inventory.GetItemById(consumeItem.Definition.ItemId);
+            var cityAmount = cityItem.Amount;
+
+            var amount = Mathf.Min(cityAmount, consumeItem.Amount);
+            if (amount <= 0) continue;
+
+            var item = new ItemInstance(consumeItem.Definition);
+            item.SetAmount(amount);
             items.Add(item);
         }
 
-        return items.ToArray();
+        //if (SelectedCraftItem.IsCrafted) {
+        //    items.Add(craftItemDefinition.ProduceItem);
+        //    SetCrafted(false);
+        //    UpdateFlicking();
+        //}
+
+        return items;
+    }
+
+    public bool CanBeRaided()
+    {
+        if (!OwnedBuilding.BuildingData.IsRaidable) return false;
+        if (!IsWorking) return false;
+
+        return true;
     }
 
     private void OnBuildingClicked()

@@ -18,8 +18,7 @@ MonoBehaviour:
   buildingCategory: 3
   connectionType: 1
   buildingStrategy: 0
-  thumbImage: {fileID: 21300000, guid: 2c8035d4b542f5b469b24b9f05a28e55, type: 3}
   isConstructable: 0
   isWorkable: 1
   isDemolishable: 1
-  isRaidable: 1
+  isRaidable: 0

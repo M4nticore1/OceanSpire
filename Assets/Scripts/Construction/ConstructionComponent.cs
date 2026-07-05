@@ -74,6 +74,8 @@ public class ConstructionComponent : MonoBehaviour
 
     public void FinishConstruction()
     {
+        if (ConstructionFinishTime == null) return;
+
         ConstructionStartTime = null;
         ConstructionFinishTime = null;
 

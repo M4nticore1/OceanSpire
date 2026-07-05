@@ -13,6 +13,7 @@ public class RaidManager : MonoBehaviour
     public static RaidManager Instance;
 
     [Header("Main")]
+    [SerializeField] private BuildingsManager buildingsManager;
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private BoatsManager boatsManager;
     [SerializeField] private DockPointsManager boatDocksManager;
@@ -25,7 +26,7 @@ public class RaidManager : MonoBehaviour
     public Inventory Inventory => inventory;
 
     [Header("Prefabs")]
-    [SerializeField] private Creature[] raiderPrefabs;
+    [SerializeField] private Raider[] raiderPrefabs;
     [SerializeField] private Boat boatPrefab;
 
     [Header("Weapon")]
@@ -35,12 +36,14 @@ public class RaidManager : MonoBehaviour
     [Header("Cooldown")]
     [SerializeField] private float minRaidCooldown = 10f;
     [SerializeField] private float maxRaidCooldown = 20f;
+    [SerializeField] private float tryFindNextBuildingFrequency = 60f;
     public float CurrentRaidCooldown { get; private set; } = 0f;
     public float CurrentRaidCooldownTime { get; private set; } = 0f;
+    public float CurrentTryFindNextBuildingTime { get; private set; } = 0f;
 
     [Header("Spawn")]
-    [SerializeField] private float minRaiderCountMultiplier = 0.5f;
-    [SerializeField] private float maxRaiderCountMultiplier = 1f;
+    [SerializeField] private int maxRaidersCount = 25;
+    [SerializeField] private int raidersCountPerFloor = 2;
     [SerializeField] private float minSpawnAngleOffset = 5f;
     [SerializeField] private float maxSpawnAngleOffset = 10f;
     [SerializeField] private float spawnDistance = 145f;
@@ -48,8 +51,8 @@ public class RaidManager : MonoBehaviour
     public bool IsRaidExist { get; private set; } = false;
     public bool IsUnderRaid { get; private set; } = false;
 
-    public event System.Action OnRaidStarted;
-    public event System.Action<RaidEndedResult> OnRaidEnded;
+    public event Action OnRaidStarted;
+    public event Action<RaidEndedResult> OnRaidEnded;
 
     private void Awake()
     {
@@ -73,6 +76,11 @@ public class RaidManager : MonoBehaviour
         Human.OnHumanDied -= OnHumanDied;
         Human.OnEnteredBoat -= OnEnteredBoat;
         Human.OnExitedBoat -= OnExitedBoat;
+    }
+
+    private void Start()
+    {
+        CurrentTryFindNextBuildingTime = tryFindNextBuildingFrequency;
     }
 
     public void Init()
@@ -108,19 +116,24 @@ public class RaidManager : MonoBehaviour
 
         if (CurrentRaidCooldownTime < CurrentRaidCooldown) return;
 
-        ResetCurrentRaidTime();
-        ApplyRandomCooldown();
+        CurrentTryFindNextBuildingTime += Time.deltaTime;
+        if (CurrentTryFindNextBuildingTime < tryFindNextBuildingFrequency) return;
 
-        if (!CalculateNextRaidBuilding()) return;
+        if (!CalculateNextRaidBuilding()) {
+            CurrentTryFindNextBuildingTime = 0f;
+            return;
+        }
+
+        CurrentRaidCooldownTime = 0;
+        CurrentRaidCooldown = CalculateRandomCooldown();
+        CurrentTryFindNextBuildingTime = tryFindNextBuildingFrequency;
 
         CreateRaid();
     }
 
-    public void AddLose(ItemInstance lose)
-    {
-        int id = lose.Definition.ItemId;
-        int amount = lose.Amount;
-        inventory.AddItem(id, amount);
+    public void AddLose(ItemInstance item)
+    { 
+        inventory.AddItem(item);
     }
 
     public Building CalculateNextRaidBuilding()
@@ -129,7 +142,7 @@ public class RaidManager : MonoBehaviour
         List<Building> path;
 
         if (PathFinder.TryFindBuildingPath(null,
-            b => b.BuildingData.IsRaidable &&
+            b => b.GetComponents<IRaidable>().Any(raidable => raidable.CanBeRaided()) &&
             b.RaidComponent.Raiders.Count < b.LevelData.MaxHumansCount &&
             !b.ConstructionComponent.GetUnderConstruction(),
             out path)) {
@@ -139,7 +152,7 @@ public class RaidManager : MonoBehaviour
         }
 
         if (!building && PathFinder.TryFindBuildingPath(null,
-            b => b.BuildingData.IsRaidable &&
+            b => b.GetComponents<IRaidable>().Any(raidable => raidable.CanBeRaided()) &&
             !b.ConstructionComponent.GetUnderConstruction(),
             out path)) {
             int index = path.Count - 1;
@@ -158,12 +171,13 @@ public class RaidManager : MonoBehaviour
 
     private void CreateRaid()
     {
-        int raidersAmount = GetRandomRaidersCount();
+        var raidersCount = GetRandomRaidersCount();
+        if (raidersCount <= 0) return;
 
         var dir = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0f, UnityEngine.Random.Range(-1f, 1f));
         dir.Normalize();
 
-        for (int i = 0; i < raidersAmount; i++) {
+        for (int i = 0; i < raidersCount; i++) {
             float angle = UnityEngine.Random.Range(minSpawnAngleOffset, maxSpawnAngleOffset);
             dir = Quaternion.Euler(0f, angle, 0f) * dir;
 
@@ -215,7 +229,6 @@ public class RaidManager : MonoBehaviour
                 if (boat.CurrentRider) continue;
 
                 Destroy(boat.gameObject);
-                boatsManager.UnregisterRaiderBoat(boat);
             }
             catch (Exception e) {
                 Debug.LogError(e);
@@ -226,12 +239,12 @@ public class RaidManager : MonoBehaviour
     private void RemoveCityLoot()
     {
         for (int i = 0; i < inventory.Items.Count; i++) {
-            ItemInstance item = inventory.TryGetItemByIndex(i);
+            var item = inventory.TryGetItemByIndex(i);
 
             int id = item.Definition.ItemId;
             int amount = item.Amount;
 
-            CityStorage.Instance.Inventory.RemoveItem(id, amount);
+            cityStorage.Inventory.RemoveItem(id, amount);
         }
     }
 
@@ -245,16 +258,6 @@ public class RaidManager : MonoBehaviour
 
             inventory.RemoveItem(id, amount);
         }
-    }
-
-    private void ApplyRandomCooldown()
-    {
-        CurrentRaidCooldown = CalculateRandomCooldown();
-    }
-
-    private void ResetCurrentRaidTime()
-    {
-        CurrentRaidCooldownTime = 0;
     }
 
     private void OnEnteredBoat(Human human)
@@ -311,7 +314,7 @@ public class RaidManager : MonoBehaviour
 
     private Human CreateRaider(Vector3 position, Vector3 rotation, Guid boatInstanceId)
     {
-        var prefab = raiderPrefabs[UnityEngine.Random.Range(0, raiderPrefabs.Length)] as Human;
+        var prefab = raiderPrefabs[UnityEngine.Random.Range(0, raiderPrefabs.Length)];
 
         var data = new RaiderData()
         {
@@ -396,8 +399,9 @@ public class RaidManager : MonoBehaviour
 
     private int GetRandomRaidersCount()
     {
-        int floorsCount = BuildingsManager.Instance.BuiltFloors.Count;
-        int raidersCount = UnityEngine.Random.Range((int)(floorsCount * minRaiderCountMultiplier), (int)(floorsCount * maxRaiderCountMultiplier));
-        return raidersCount;
+        var floorRaidersCount = buildingsManager.BuiltFloors.Count * raidersCountPerFloor;
+        var targetCount = Mathf.Min(floorRaidersCount, maxRaidersCount);
+
+        return targetCount;
     }
 }

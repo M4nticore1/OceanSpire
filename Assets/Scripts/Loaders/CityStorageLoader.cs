@@ -1,11 +1,10 @@
 using UnityEngine;
 
-public class ItemsLoader : WorldLoader
+public class CityStorageLoader : WorldLoader
 {
-    public static ItemsLoader Instance { get; private set; }
+    public static CityStorageLoader Instance { get; private set; }
 
     [SerializeField] private CityStorage cityStorage;
-
     [SerializeField] private StartItems startItems;
 
     private void Awake()
@@ -21,9 +20,12 @@ public class ItemsLoader : WorldLoader
 
     protected override void Load(WorldData data)
     {
-        if (data != null && data.CityInventory != null) {
-            for (int i = 0; i < data.CityInventory.Length; i++) {
-                ItemData itemData = data.CityInventory[i];
+        var cityStorageData = data?.CityStorage;
+
+        if (cityStorageData != null) {
+            var items = data.CityStorage.Items;
+
+            foreach (var itemData in items) {
                 cityStorage.Inventory.AddItem(itemData.Id, itemData.Amount);
             }
         }

@@ -93,7 +93,7 @@ public class LocalizationManager
 
         if (!localization.TryGetValue(key, out var text)) {
             Debug.LogError($"Localization {languageCode} key not found: '{key}'");
-            return GetText(key, "en-US");
+            return key;
         }
 
         return text;

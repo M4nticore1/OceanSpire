@@ -6,7 +6,6 @@ using UnityEngine;
 public class SwimmingDriftingLoot : DriftingLoot
 {
     public SwimmingDriftingLootDefinition SwimmingDefinition => Definition as SwimmingDriftingLootDefinition;
-    private ItemInstance[] containedLoot;
 
     public static event Action<DriftingLoot> OnContainerTaken;
 
@@ -27,21 +26,15 @@ public class SwimmingDriftingLoot : DriftingLoot
             return;
         }
 
-        SetContainedLoot(ItemInstance.Create(swimmingDriftingLootData.Items != null ? swimmingDriftingLootData.Items : CreateRandomLootData()));
         DriftingLootManager.Instance.RegisterSwimmingDriftingLoot(this);
     }
 
-    public ItemInstance[] TakeItems()
+    public List<ItemInstance> TakeItems()
     {
         Destroy(gameObject);
         OnContainerTaken?.Invoke(this);
 
-        return containedLoot;
-    }
-
-    public ItemInstance[] GetContainedLoot()
-    {
-        return containedLoot.ToArray();
+        return CreateRandomLoot();
     }
 
     public override DriftingLootData CreateData()
@@ -62,32 +55,27 @@ public class SwimmingDriftingLoot : DriftingLoot
             Position = new Vector3Data(transform.position),
             Rotation = new Vector3Data(transform.rotation.eulerAngles),
             MeshId = MeshId,
-            Items = CreateRandomLootData()
         };
     }
 
-    private void SetContainedLoot(ItemInstance[] items)
+    private List<ItemInstance> CreateRandomLoot()
     {
-        containedLoot = items;
-    }
-
-    private ItemData[] CreateRandomLootData()
-    {
-        var containedLoot = new List<ItemData>();
+        var containedLoot = new List<ItemInstance>();
         var lootTable = SwimmingDefinition.LootTable;
 
         for (int i = 0; i < lootTable.Length; i++) {
-            int chance = UnityEngine.Random.Range(0, 100);
+            var chance = UnityEngine.Random.Range(0f, 1f);
+            var loot = lootTable[i];
 
-            if (chance > lootTable[i].dropChance) continue;
+            if (chance > loot.dropChance) continue;
 
-            int itemAmount = UnityEngine.Random.Range(lootTable[i].minAmount, lootTable[i].maxAmount);
-            var item = new ItemInstance(lootTable[i].itemData);
+            int itemAmount = UnityEngine.Random.Range(loot.minAmount, loot.maxAmount + 1);
+            var item = new ItemInstance(loot.itemData);
             item.SetAmount(itemAmount);
 
-            containedLoot.Add(ItemData.Create(item));
+            containedLoot.Add(item);
         }
 
-        return containedLoot.ToArray();
+        return containedLoot;
     }
 }

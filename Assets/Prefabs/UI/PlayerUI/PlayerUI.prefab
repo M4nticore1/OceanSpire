@@ -5329,7 +5329,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 848859100641501343, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
       propertyPath: m_fontSize
-      value: 29.3
+      value: 25.4
       objectReference: {fileID: 0}
     - target: {fileID: 1222584910654512513, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5940,7 +5940,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 848859100641501343, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
       propertyPath: m_fontSize
-      value: 29.3
+      value: 25.4
       objectReference: {fileID: 0}
     - target: {fileID: 1011011194214973529, guid: 47382b08cf83f7b4b91247516c6cc89a, type: 3}
       propertyPath: m_FillAmount
@@ -6594,7 +6594,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6753358622275851253, guid: d581204b42a00b547bc8151e2a3aa57a, type: 3}
       propertyPath: m_Name
-      value: RaidFinishedMenu
+      value: RaidEndedMenu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

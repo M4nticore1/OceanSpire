@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
 public struct LootTableData
 {
     public ItemDefinition itemData;
-    public int dropChance;
+    public float dropChance;
     public int minAmount;
     public int maxAmount;
 }

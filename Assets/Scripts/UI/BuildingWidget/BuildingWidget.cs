@@ -56,7 +56,6 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
         UpdateBildingImage();
     }
 
-
     public Dictionary<string, string> GetLocalization()
     {
         var buildTime = "";

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: 5
   movementSpeed: 0.4
   stopMovingSpeed: 10
-  minSpawnTime: 10
+  minSpawnTime: 0
   maxSpawnTime: 60
   meshes:
   - {fileID: 919132149155446097, guid: 359859985b88c3e4bbbcad29c3102f4f, type: 3}

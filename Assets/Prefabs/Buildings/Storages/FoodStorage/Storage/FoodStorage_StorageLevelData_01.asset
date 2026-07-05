@@ -17,5 +17,4 @@ MonoBehaviour:
     amount: 100
   - stackEnum: 7
     amount: 25
-  storageItems: []
-  storageItemCategories: []
+  raidLossRate: 0.25

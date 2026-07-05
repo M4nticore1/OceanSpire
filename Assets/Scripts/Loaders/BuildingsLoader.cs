@@ -49,7 +49,7 @@ public class BuildingsLoader : WorldLoader
 
     private void LoadGroundBuildings(BuildingData[] buildingsData)
     {
-        var buildings = buildingsManager.GroundBuildings().ToArray();
+        var buildings = buildingsManager.GerGroundBuildings().ToArray();
 
         for (int i = 0; i < buildings.Length; i++) {
             if (buildingsData.Length <= i) return;
@@ -123,7 +123,7 @@ public class BuildingsLoader : WorldLoader
 
     private void InitGroundBuildins()
     {
-        var buildings = buildingsManager.GroundBuildings().ToArray();
+        var buildings = buildingsManager.GerGroundBuildings().ToArray();
 
         for (int i = 0; i < buildings.Length; i++) {
             var building = buildings[i];

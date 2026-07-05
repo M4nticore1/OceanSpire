@@ -41,7 +41,6 @@ public class ItemStack : IItemAmount
 
     public void RemoveLimit(int value)
     {
-        value = Mathf.Clamp(value, 0, amount);
         SetLimit(amount - value);
     }
 
@@ -69,6 +68,7 @@ public class ItemStack : IItemAmount
 
     private void SetLimit(int value)
     {
+        value = Mathf.Max(0, value);
         amount = value;
         OnAmountChanged?.Invoke(value);
     }

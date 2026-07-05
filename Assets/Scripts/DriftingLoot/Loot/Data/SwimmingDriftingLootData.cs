@@ -5,13 +5,13 @@ using UnityEngine;
 [Serializable]
 public class SwimmingDriftingLootData : DriftingLootData
 {
-    public ItemData[] Items;
+    //public ItemData[] Items;
 
     public static SwimmingDriftingLootData Create(SwimmingDriftingLoot driftingLoot)
     {
         var data = new SwimmingDriftingLootData()
         {
-            Items = ItemData.Create(driftingLoot.GetContainedLoot())
+            //Items = ItemData.Create(driftingLoot.GetContainedLoot())
         };
 
         data.Fill(driftingLoot);

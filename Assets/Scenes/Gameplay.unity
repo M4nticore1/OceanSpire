@@ -751,8 +751,8 @@ MonoBehaviour:
   - {fileID: 8411686280589987336, guid: 649b0985789fc6c42bd0c217a9a1f0d5, type: 3}
   - {fileID: 7660346723931557201, guid: 301f8de32aed5d94f9a8a91d01f584c2, type: 3}
   boatPrefab: {fileID: 8804275003585880861, guid: d0ad1226837183441b6e694aa3c9279b, type: 3}
-  minWandererSpawnCooldown: 10
-  maxWandererSpawnCooldown: 10
+  minWandererSpawnCooldown: 300
+  maxWandererSpawnCooldown: 900
 --- !u!4 &61009885 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
@@ -1336,7 +1336,7 @@ GameObject:
   - component: {fileID: 128358827}
   - component: {fileID: 128358828}
   m_Layer: 0
-  m_Name: ItemsLoader
+  m_Name: CityStorageLoader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1366,7 +1366,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 128358826}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac63c26435142b940b21b075b10ba575, type: 3}
+  m_Script: {fileID: 11500000, guid: a83d4f4c04eb1874eb35061b3a0f074b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemsLoader
   cityStorage: {fileID: 1388613268}
@@ -4887,6 +4887,10 @@ PrefabInstance:
     - target: {fileID: 5151676920224931170, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5223611055522796064, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_fontSize
+      value: 44
       objectReference: {fileID: 0}
     - target: {fileID: 5273186473725321851, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
@@ -12331,15 +12335,15 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
     amount: 100
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 10000
+    amount: 2500
   - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
-    amount: 10000
+    amount: 500
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-    amount: 10000
+    amount: 0
   - definition: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
-    amount: 10000
+    amount: 0
   - definition: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
-    amount: 4
+    amount: 0
   - definition: {fileID: 11400000, guid: e6e0b672836d93b44bbc0c0b39214e20, type: 2}
     amount: 0
   - definition: {fileID: 11400000, guid: 6009cc6eba9fcf9489b14353fb2b3c9c, type: 2}
@@ -16881,6 +16885,38 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4806550018059111172, guid: 6c5e90268744ad847ad81e73907eda27, type: 3}
   m_PrefabInstance: {fileID: 1563194886}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1634320635
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1634320636}
+  m_Layer: 0
+  m_Name: Editor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1634320636
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634320635}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.23, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2109934043}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1635530770 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6838095890116239261, guid: c9ca0f298cb6b9146a09c23469074ca3, type: 3}
@@ -20209,6 +20245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5d4f9c2695e6744e8083b3e2ac960c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaidManager
+  buildingsManager: {fileID: 455753200}
   creaturesManager: {fileID: 220072952}
   boatsManager: {fileID: 1934078805}
   boatDocksManager: {fileID: 1711846142}
@@ -20230,10 +20267,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f06fe61b7098b2146a7f57b9763df44e, type: 2}
   - {fileID: 11400000, guid: cab8b74954853c24480473f9ce175af9, type: 2}
   weaponDamageThreshold: 0.1
-  minRaidCooldown: 10
-  maxRaidCooldown: 10
-  minRaiderCountMultiplier: 1
-  maxRaiderCountMultiplier: 1
+  minRaidCooldown: 900
+  maxRaidCooldown: 1800
+  tryFindNextBuildingFrequency: 60
+  maxRaidersCount: 25
+  raidersCountPerFloor: 2
   minSpawnAngleOffset: 5
   maxSpawnAngleOffset: 10
   spawnDistance: 145
@@ -20907,6 +20945,53 @@ MonoBehaviour:
   dailyRewardManager: {fileID: 101393569}
   notificationTimeInHours: 12
   notificationDays: 000000000200000006000000
+--- !u!1 &2109934042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2109934043}
+  - component: {fileID: 2109934044}
+  m_Layer: 0
+  m_Name: EditorInstanceConstruction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2109934043
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109934042}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1634320636}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2109934044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109934042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df3c793db03df524eaeb19022edad7b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditorInstantConstruction
+  buildingsManager: {fileID: 455753200}
+  buildingCostSystem: {fileID: 1523508187}
+  testMode: 0
 --- !u!1001 &2116735562
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24479,4 +24564,5 @@ SceneRoots:
   - {fileID: 901460584}
   - {fileID: 1964602098}
   - {fileID: 117670937}
+  - {fileID: 1634320636}
   - {fileID: 1567701190}

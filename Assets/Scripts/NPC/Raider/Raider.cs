@@ -38,8 +38,8 @@ public class Raider : Human, IProgressable
         currentRaidBuildingTime += Time.deltaTime;
         if (currentRaidBuildingTime < raidBuildingTime) return;
 
-        FinishRaidingBuilding();
         AddLoot();
+        FinishRaidingBuilding();
         InteractComponent.RemoveInteractBuilding();
         InteractComponent.TryStopInteracting();
         UpdateTargetBoat();

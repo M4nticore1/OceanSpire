@@ -58,7 +58,6 @@ public class ConstructionFinishedUIManager : MonoBehaviour
 
     private void OnBuildingUpgradeFinished(Building building)
     {
-        Debug.Log("UpgradeFinished");
         if (!building) {
             Debug.LogError("building is not valid");
             return;

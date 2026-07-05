@@ -83,7 +83,7 @@ public class ConstructionNotificationController : NotificationController
     private List<Building> GetBuildingsUnderConstruction()
     {
         var constructionBuilding = new List<Building>();
-        var groundBuildings = buildingsManager.GroundBuildings().Cast<Building>().ToList();
+        var groundBuildings = buildingsManager.GerGroundBuildings().Cast<Building>().ToList();
 
         var towerBuildings = new List<Building>();
         foreach (var floor in buildingsManager.BuiltFloors) {

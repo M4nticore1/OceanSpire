@@ -51,7 +51,7 @@ public class WorldData
     public WandererData[] Wanderers;
     public RaiderData[] Raiders;
     public DriftingLootSystemData DriftingLoot;
-    public ItemData[] CityInventory;
+    public InventoryData CityStorage;
     public DailyTasksData DailyTasks;
     public DailyRewardData DailyReward;
     public RaidData Raid;
@@ -82,7 +82,7 @@ public class WorldData
             SaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             Player = PlayerControllerData.Create(playerController),
 
-            GroundBuildings = BuildingData.Create(buildings.GroundBuildings().ToArray()),
+            GroundBuildings = BuildingData.Create(buildings.GerGroundBuildings().ToArray()),
             FloorFrameBuildings = TowerBuildingData.Create(buildings.BuiltFloors.Select(b => b.OwnedTowerBuilding).ToArray()),
             TowerBuildings = TowerBuildingData.Create(buildings.BuiltFloors.SelectMany(b => b.RoomBuildingPlaces).Select(p => p.PlacedBuilding).Where(b => b != null).ToArray()),
             ElevatorCabins = ElevatorCabinData.Create(elevatorCabins.ElevatorCabins.ToArray()),
@@ -99,7 +99,7 @@ public class WorldData
             Raiders = RaiderData.Create(creatures.Raiders.ToArray()),
 
             DriftingLoot = DriftingLootSystemData.Create(driftingLoot),
-            CityInventory = ItemData.Create(cityInventory.Items.ToArray()),
+            CityStorage = InventoryData.Create(cityInventory),
 
             DailyTasks = DailyTasksData.Create(dailyTasks),
             DailyReward = DailyRewardData.Create(dailyReward),

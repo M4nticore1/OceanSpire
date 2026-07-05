@@ -11,6 +11,20 @@ public abstract class ManagementMenu : UIBehaviour
 
     protected int lastOpenedBuildingsListCategory = 0;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        EventBus.OnConstructionStarted += OnConstructionStarted;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        EventBus.OnConstructionStarted -= OnConstructionStarted;
+    }
+
     protected override void Start()
     {
         base.Start();
@@ -28,12 +42,14 @@ public abstract class ManagementMenu : UIBehaviour
         gameObject.SetActive(true);
 
         ResetScrollRects();
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     public void Close()
     {
         managementMenu.SetActive(false);
         gameObject.SetActive(false);
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     public void ResetOpenedList()
@@ -96,5 +112,10 @@ public abstract class ManagementMenu : UIBehaviour
         foreach (var list in lists) {
             list.ScrollRect.verticalNormalizedPosition = 1f;
         }
+    }
+
+    private void OnConstructionStarted(Building building)
+    {
+        Close();
     }
 }
