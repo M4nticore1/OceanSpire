@@ -24,7 +24,8 @@ public class LanguageSetting : MonoBehaviour
 
     private void UpdateLanguageName()
     {
-        string text = LocalizationManager.Instance.GetText(languageNameLocalizationItem, playerSettingsManager.LanguageCode);
+        var languaeCodee = LocalizationManager.Instance.CurrentLocalization.LanguageCode;
+        var text = LocalizationManager.Instance.GetText(languageNameLocalizationItem, languaeCodee);
         languageName.SetText(text);
     }
 
