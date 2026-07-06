@@ -14,7 +14,6 @@ public class CraftItemData
         {
             CraftingFinishTime = item.CraftingFinishTime,
             Crafted = item.IsCrafted,
-            CraftingInProgress = item.CraftingInProgress
         };
     }
 

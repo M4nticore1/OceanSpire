@@ -7,7 +7,8 @@ public class SwimmingDriftingLoot : DriftingLoot
 {
     public SwimmingDriftingLootDefinition SwimmingDefinition => Definition as SwimmingDriftingLootDefinition;
 
-    public static event Action<DriftingLoot> OnContainerTaken;
+    public event Action OnCollected;
+    public static event Action<SwimmingDriftingLoot> OnGlobalCollected;
 
     protected override void OnDisable()
     {
@@ -32,7 +33,9 @@ public class SwimmingDriftingLoot : DriftingLoot
     public List<ItemInstance> TakeItems()
     {
         Destroy(gameObject);
-        OnContainerTaken?.Invoke(this);
+
+        OnCollected?.Invoke();
+        OnGlobalCollected?.Invoke(this);
 
         return CreateRandomLoot();
     }

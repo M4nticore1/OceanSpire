@@ -6,27 +6,29 @@ using UnityEngine;
 public class DailyTaskInstance : ILocalizable
 {
     public DailyTaskDefinition Definition { get; private set; }
+    public int Id { get; private set; } = 0;
     public int Progress { get; private set; } = 0;
     public bool IsCompleted { get; private set; } = false;
 
-    public event Action onProgressChanged;
-    public event Action onTaskRemoved;
+    public event Action OnProgressChanged;
+    public event Action OnTaskRemoved;
     public static event Action<DailyTaskInstance, int> onTaskProgressAdded;
     public static event Action<DailyTaskInstance> onTaskCompleted;
 
-    public DailyTaskInstance(DailyTaskDefinition definition, int progress, bool completed)
+    public DailyTaskInstance(DailyTaskDefinition definition, int id, int progress, bool completed)
     {
         Definition = definition;
+        Id = id;
         Progress = progress;
         IsCompleted = completed;
 
-        DailyTaskCondition.onProgressChanged += OnProgressChanged;
+        DailyTaskCondition.OnProgressChanged += HandleProgressChanged;
     }
 
     public void RemoveTask()
     {
-        DailyTaskCondition.onProgressChanged -= OnProgressChanged;
-        onTaskRemoved?.Invoke();
+        DailyTaskCondition.OnProgressChanged -= HandleProgressChanged;
+        OnTaskRemoved?.Invoke();
     }
 
     public Dictionary<string, string> GetLocalization()
@@ -45,7 +47,7 @@ public class DailyTaskInstance : ILocalizable
         onTaskProgressAdded?.Invoke(this, value);
     }
 
-    private void OnProgressChanged(DailyTaskCondition condition, int value)
+    private void HandleProgressChanged(DailyTaskCondition condition, int value)
     {
         if (IsCompleted) return;
         if (!condition.Definitions.Contains(Definition)) return;
@@ -56,7 +58,7 @@ public class DailyTaskInstance : ILocalizable
             ReceiveReward();
         }
 
-        onProgressChanged?.Invoke();
+        OnProgressChanged?.Invoke();
     }
 
     private bool TryComplete()

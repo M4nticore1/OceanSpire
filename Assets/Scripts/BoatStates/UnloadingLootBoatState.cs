@@ -24,7 +24,7 @@ public class UnloadingLootBoatState : BoatState, IProgressable
     public override void Tick()
     {
         if (ShouldUnload()) {
-            ProcessStoreResources();
+            ProcessUnloadResources();
         }
         else {
             if (ShouldFindLoot()) {
@@ -50,39 +50,49 @@ public class UnloadingLootBoatState : BoatState, IProgressable
     {
         if (boat.MaxWeight == 0) return 0f;
 
-        return boat.CurrentWeight / boat.MaxWeight;
+        return 1f - (boat.CurrentWeight / boat.MaxWeight);
     }
 
-    private void ProcessStoreResources()
+    private void ProcessUnloadResources()
     {
         if (boat.Inventory.Items.Count == 0) {
-            Debug.LogError("items count is 0.");
+            currentWeightToUnload = 0f;
             return;
         }
 
-        // Item
-        ItemInstance loot = boat.TryGetItemToUnload();
-        ItemDefinition data = loot.Definition;
+        var loot = boat.TryGetItemToUnload();
+        if (loot == null) return;
+
+        var data = loot.Definition;
         int lootId = data.ItemId;
         float lootWeight = data.Weight;
 
-        // Weight
+        if (lootWeight <= 0f) {
+            int allAmount = loot.Amount;
+            boat.Inventory.RemoveItem(lootId, allAmount);
+            EventBus.InvokeBoatUnloadedItem(lootId, allAmount);
+            currentWeightToUnload = 0f;
+            return;
+        }
+
         float weightToUnload = UnloadSpeed * Time.deltaTime;
         currentWeightToUnload += weightToUnload;
-        int amountToUnload = math.min((int)(currentWeightToUnload / lootWeight), loot.Amount);
 
+        int amountToUnload = math.min((int)(currentWeightToUnload / lootWeight), loot.Amount);
         if (amountToUnload == 0) return;
 
-        // Spend Item
         boat.Inventory.RemoveItem(lootId, amountToUnload);
-        currentWeightToUnload = 0f;
+        currentWeightToUnload -= amountToUnload * lootWeight;
 
         EventBus.InvokeBoatUnloadedItem(lootId, amountToUnload);
     }
 
     private bool ShouldUnload()
     {
-        return boat.Inventory.CurrentWeight > 0;
+        if (boat.Inventory.CurrentWeight <= 0f) return false;
+        if (boat.Inventory.Items.Count == 0) return false;
+
+        return true;
     }
 
     private bool ShouldFindLoot()

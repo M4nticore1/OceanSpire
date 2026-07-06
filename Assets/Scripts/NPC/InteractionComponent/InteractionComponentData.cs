@@ -12,9 +12,11 @@ public class InteractionComponentData
 
     public static InteractionComponentData Create(CreatureInteractComponent interactionComponent)
     {
+        var interactBuilding = interactionComponent.InteractBuilding;
+
         return new InteractionComponentData()
         {
-            InteractBuildingInstanceId = interactionComponent.InteractBuilding?.InstanceId.GetGuid()
+            InteractBuildingInstanceId = interactBuilding ? interactBuilding.InstanceId.GetGuid() : null
         };
     }
 }

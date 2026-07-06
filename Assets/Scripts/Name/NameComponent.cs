@@ -13,7 +13,7 @@ public class NameComponent : MonoBehaviour, ILocalizable
     
     public void Init()
     {
-        Init(NameData.Default());
+        Init(NameData.Default() ?? new NameData());
     }
 
     public void Init(NameData nameData)

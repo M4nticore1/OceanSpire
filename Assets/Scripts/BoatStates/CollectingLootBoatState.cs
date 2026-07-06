@@ -34,7 +34,6 @@ public class CollectingLootBoatState : BoatState, IProgressable
         TryStopDriftingLoot();
 
         currentCollectingTime += Time.deltaTime;
-
         if (currentCollectingTime <= collectLootTime) return;
 
         TryCollectLoot();
@@ -82,7 +81,7 @@ public class CollectingLootBoatState : BoatState, IProgressable
         var collectedLoot = boat.TargetDriftingLoot.TakeItems();
 
         foreach (var loot in collectedLoot) {
-            if (boat.Inventory.RemainingWeight <= 0) break;
+            if (boat.Inventory.RemainingWeight <= 0f) break;
 
             boat.Inventory.AddItem(loot.Definition.ItemId, loot.Amount);
         }

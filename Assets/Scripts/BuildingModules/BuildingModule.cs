@@ -132,16 +132,6 @@ public abstract class BuildingModule : MonoBehaviour
         return true;
     }
 
-    protected void SetFlickingPower(float multiplier)
-    {
-        if (!BuildingConstruction) {
-            Debug.Log("BuildingConstruction is not valid");
-            return;
-        }
-
-        BuildingConstruction.SetFlickingPower(multiplier);
-    }
-
     private void OnWorkerAdded(Citizen citizen)
     {
         TryStartWorking();

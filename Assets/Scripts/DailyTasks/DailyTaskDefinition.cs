@@ -19,8 +19,8 @@ public enum DailyTaskId
 [CreateAssetMenu(fileName = "DailyTaskDefinition", menuName = "Daily Tasks/DailyTaskDefinition")]
 public class DailyTaskDefinition : ScriptableObject
 {
-    [SerializeField] private DailyTaskId taskId;
-    public DailyTaskId TaskId => taskId;
+    //[SerializeField] private DailyTaskId taskId;
+    //public DailyTaskId TaskId => taskId;
 
     [Header("Condition")]
     [SerializeField] private int conditionAmount = 0;

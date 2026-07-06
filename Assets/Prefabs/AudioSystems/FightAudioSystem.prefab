@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6522174325105471430
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3419078009725385685}
+  - component: {fileID: -7042970910672202971}
+  m_Layer: 0
+  m_Name: FightAudioSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3419078009725385685
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6522174325105471430}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7042970910672202971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6522174325105471430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1309f7fee613f9843a617a18f93b1a07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FightAudioSystem
+  mixerGroup: {fileID: -5464991957138809496, guid: 6d04f55806270354e929cb51e5741f66, type: 2}
+  hitAudioClips:
+  - {fileID: 8300000, guid: 9fd838cb0f5960248a86a4c7bb54c7a0, type: 3}
+  - {fileID: 8300000, guid: 3797595ada8d43c4c972a39ffe9fbc3b, type: 3}
+  - {fileID: 8300000, guid: f090679385e8c354eb786b9eac1a45b1, type: 3}
+  - {fileID: 8300000, guid: 413cb0bdca2dec44b9bc582ba39ce315, type: 3}
+  - {fileID: 8300000, guid: da90352ed0f3efa4b8356a18b7193458, type: 3}
+  - {fileID: 8300000, guid: da6dd3d5a8c97514687f03d352ab6d1b, type: 3}
+  - {fileID: 8300000, guid: fa65f569fed10f242b3b9751c6d0db9b, type: 3}
+  - {fileID: 8300000, guid: 21ff2ec7007c63f4f93cea28b1fb3c4d, type: 3}
+  - {fileID: 8300000, guid: bdc1379fcd07a264ebef246303412e46, type: 3}
+  - {fileID: 8300000, guid: 9230aea30756a2840ba49037a0582678, type: 3}
+  - {fileID: 8300000, guid: f35e359d0cbb3804eafd75370e72ae94, type: 3}
+  - {fileID: 8300000, guid: de0ad55582902d74798cbaf28202ce61, type: 3}
+  - {fileID: 8300000, guid: 2a19bc6277847a84baf121ba852a8291, type: 3}
+  - {fileID: 8300000, guid: 2db2b203770ba934e80226df017c2fb9, type: 3}
+  - {fileID: 8300000, guid: 37842776e8beafb4ea1b736804062c37, type: 3}
+  - {fileID: 8300000, guid: 6ce1b7ac90fe40e4ea01a1d3383d07f7, type: 3}
+  - {fileID: 8300000, guid: 5171321458c55e74c8e97ae6f6b96bc4, type: 3}
+  - {fileID: 8300000, guid: aab057a110eb2de479517c103ebfe475, type: 3}
+  - {fileID: 8300000, guid: 9a5e3c061feee624da6fe40d63f26917, type: 3}
+  - {fileID: 8300000, guid: 86e475018d80f82419eeedd65d8b61b3, type: 3}
+  maleHurtAudioClips:
+  - {fileID: 8300000, guid: 346786c40a5630947ac1c4e5e14d331a, type: 3}
+  - {fileID: 8300000, guid: 0197a9ad303a9d447a2ced5ad494d1b1, type: 3}
+  - {fileID: 8300000, guid: d196e25f78a31a6479e6cea9248e1a0b, type: 3}
+  - {fileID: 8300000, guid: 686c33eac97e3be41abb18005b4aca85, type: 3}
+  - {fileID: 8300000, guid: dc5b28e3dcdad964d9f6bd6d983ca6e6, type: 3}
+  - {fileID: 8300000, guid: 64ffecc55bc737146917305d57ac8b0f, type: 3}
+  femaleHurtAudioClips:
+  - {fileID: 8300000, guid: b4a2a6d321524994588c92d27a927900, type: 3}
+  - {fileID: 8300000, guid: fc57bd2e835afd64cafcc04ddc0d3897, type: 3}
+  - {fileID: 8300000, guid: feb23b2126af81a4c8359e7209a23503, type: 3}
+  - {fileID: 8300000, guid: 634ae64bb175bc345b9cea1118218425, type: 3}
+  - {fileID: 8300000, guid: 52a43d5649acfab46bf9dd601942627e, type: 3}
+  minDistance: 10
+  maxDistance: 40

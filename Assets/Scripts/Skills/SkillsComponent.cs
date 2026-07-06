@@ -20,7 +20,7 @@ public class SkillsComponent : MonoBehaviour
 
     public void Init()
     {
-        Init(SkillsData.Default());
+        Init(SkillsData.Default() ?? new SkillsData());
     }
 
     public void Init(SkillsData skillsData)

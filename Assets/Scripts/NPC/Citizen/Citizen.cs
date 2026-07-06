@@ -28,6 +28,11 @@ public class Citizen : Human
         LeavePosition = leavePosition;
         BoatRider.TrySetTargetBoat(boat);
 
+        AttackComponent.RemoveTarget();
+        AttackComponent.RemoveAllAttackers();
+
+        HealthComponent.SetCurrentHealth(HealthComponent.MaxHealth);
+
         OnCitizenEvicted?.Invoke(this);
     }
 
@@ -202,7 +207,8 @@ public class Citizen : Human
     {
         base.OnDied();
 
-        InteractComponent.TryStopInteracting();
+        var interactBuilding = InteractComponent.InteractBuilding;
         InteractComponent.RemoveInteractBuilding();
+        InteractComponent.TryStopInteracting(interactBuilding);
     }
 }

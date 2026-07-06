@@ -5,7 +5,6 @@ public class CityNavigatorData
 {
     public Guid? EnteredBuildingInstanceId = null;
     public Guid? TargetBuildingInstanceId = null;
-
     public ElevatorPassengerData ElevatorPassenger = ElevatorPassengerData.Default();
     public CreatureWaypointsComponentData Waypoints = CreatureWaypointsComponentData.Default();
 

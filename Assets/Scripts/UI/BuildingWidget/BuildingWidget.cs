@@ -31,7 +31,9 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
     {
         buildButton.OnReleased.AddListener(OnBuildButtonCliked);
         informationButton.OnReleased.AddListener(OnInformationButtonClicked);
+        cityStorage.Inventory.OnAddedItemAmount += OnCityItemAdded;
 
+        UpdateBuildButtonEnabled();
         UpdateBuildTime();
     }
 
@@ -39,6 +41,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
     {
         buildButton.OnReleased.RemoveListener(OnBuildButtonCliked);
         informationButton.OnReleased.RemoveListener(OnInformationButtonClicked);
+        cityStorage.Inventory.OnAddedItemAmount -= OnCityItemAdded;
     }
 
     public void Init(Building building)
@@ -51,6 +54,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
         BuildingPrefab = building;
 
         CreateResourcesToBuild();
+        UpdateBuildButtonEnabled();
         UpdateBuildTime();
         UpdateBuildName();
         UpdateBildingImage();
@@ -91,9 +95,8 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
             var storageItem = cityStorage.Inventory.GetItemById(id);
 
             resourceWidget.SetItem(buildResource.Definition);
-            resourceWidget.AddAmount(buildResource);
-            //resourceWidget.AddAmount(storageItem);
-            //resourceWidget.SetLimit(buildResource);
+            resourceWidget.AddAmount(storageItem);
+            resourceWidget.SetLimit(buildResource);
 
             spawnedBuildingResourceWidgets.Add(resourceWidget);
         }
@@ -102,6 +105,22 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
     private void UpdateBuildName()
     {
         buildingNameText.SetLocalizationItem(BuildingPrefab.BuildingData.NameLocalizationItem);
+    }
+
+    private void UpdateBuildButtonEnabled()
+    {
+        if (!BuildingPrefab) return;
+
+        foreach (var buildItem in BuildingPrefab.LevelData.ResourcesToBuild) {
+            var storageItem = cityStorage.Inventory.GetItemById(buildItem.Definition.ItemId);
+
+            if (buildItem.Amount <= storageItem.Amount) continue;
+
+            BuildButton.SetState(CustomButtonState.Disabled);
+            return;
+        }
+
+        BuildButton.SetState(CustomButtonState.Idle);
     }
 
     private void UpdateBuildTime()
@@ -124,5 +143,10 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
     private void OnInformationButtonClicked()
     {
         EventBus.InvokeBuildingWidgetInformationClicked(this);
+    }
+
+    private void OnCityItemAdded(ItemInstance itemInstance)
+    {
+        UpdateBuildButtonEnabled();
     }
 }

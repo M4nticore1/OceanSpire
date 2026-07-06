@@ -9,14 +9,14 @@ public class StorageManagementList : ManagementList
 
     private void OnEnable()
     {
-        CityStorage.Instance.Inventory.onItemAmountChanged += OnItemAmountChanged;
+        CityStorage.Instance.Inventory.OnItemAmountChanged += OnItemAmountChanged;
 
         TryUpdateStack();
     }
 
     private void OnDisable()
     {
-        CityStorage.Instance.Inventory.onItemAmountChanged -= OnItemAmountChanged;
+        CityStorage.Instance.Inventory.OnItemAmountChanged -= OnItemAmountChanged;
     }
 
     protected override void CreateWidgets()

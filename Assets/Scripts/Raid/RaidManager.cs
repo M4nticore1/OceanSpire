@@ -147,6 +147,7 @@ public class RaidManager : MonoBehaviour
             !b.ConstructionComponent.GetUnderConstruction(),
             out path)) {
             int index = path.Count - 1;
+
             if (index >= 0)
                 building = path[index];
         }
@@ -156,10 +157,12 @@ public class RaidManager : MonoBehaviour
             !b.ConstructionComponent.GetUnderConstruction(),
             out path)) {
             int index = path.Count - 1;
+
             if (index >= 0)
                 building = path[index];
         }
 
+        Debug.Log(building);
         return building;
     }
 

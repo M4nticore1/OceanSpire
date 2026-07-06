@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "DailyTasksList", menuName = "Lists/Daily Tasks List")]
@@ -18,6 +19,7 @@ public class DailyTasksList : ScriptableObject
     }
 
     [SerializeField] private DailyTaskDefinition[] dailyTaskDefinitions;
+    public DailyTaskDefinition[] DailyTaskDefinitions => dailyTaskDefinitions;
 
     private Dictionary<int, DailyTaskDefinition> dailyTaskDefinitionsDict;
 
@@ -29,7 +31,12 @@ public class DailyTasksList : ScriptableObject
                 dailyTaskDefinitionsDict = new();
 
                 foreach (var task in dailyTaskDefinitions) {
-                    dailyTaskDefinitionsDict.Add((int)task.TaskId, task);
+                    if (dailyTaskDefinitionsDict.Values.Contains(task)) {
+                        Debug.LogError($"{task} is already in the dictionary");
+                        continue;
+                    }
+
+                    dailyTaskDefinitionsDict.Add(dailyTaskDefinitions.ToList().IndexOf(task), task);
                 }
             }
 

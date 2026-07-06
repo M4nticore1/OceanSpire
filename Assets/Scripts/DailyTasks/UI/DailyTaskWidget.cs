@@ -55,7 +55,7 @@ public class DailyTaskWidget : DailyTaskPanel
         if (isSubscribed) return;
         if (task == null) return;
 
-        task.onProgressChanged += OnProgressChanged;
+        task.OnProgressChanged += OnProgressChanged;
         isSubscribed = true;
     }
 
@@ -64,7 +64,7 @@ public class DailyTaskWidget : DailyTaskPanel
         if (!isSubscribed) return;
         if (task == null) return;
 
-        task.onProgressChanged -= OnProgressChanged;
+        task.OnProgressChanged -= OnProgressChanged;
         isSubscribed = false;
     }
 

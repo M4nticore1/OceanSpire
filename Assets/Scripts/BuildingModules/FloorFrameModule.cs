@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class FloorFrameModule : BuildingModule
 {
@@ -29,6 +30,8 @@ public class FloorFrameModule : BuildingModule
         OwnedBuilding.OnDemolished += OnDemolished;
 
         Building.OnBuildingInited += OnBuildingInited;
+        Building.OnBuildingConstructionFinished += OnBuildingConstructionFinished;
+        Building.OnBuildingLevelChanged += OnBuildingUpgraded;
         Building.OnBuildingDemolished += OnBuildingDemolished;
     }
 
@@ -39,6 +42,8 @@ public class FloorFrameModule : BuildingModule
         OwnedBuilding.OnDemolished -= OnDemolished;
 
         Building.OnBuildingInited -= OnBuildingInited;
+        Building.OnBuildingConstructionFinished -= OnBuildingConstructionFinished;
+        Building.OnBuildingLevelChanged -= OnBuildingUpgraded;
         Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 
@@ -64,14 +69,24 @@ public class FloorFrameModule : BuildingModule
     {
         if (!ShouldBake(building)) return;
 
-        StartBaking();
+        TryBake(building);
     }
 
     private void OnBuildingDemolished(Building building)
     {
         if (!ShouldBake(building)) return;
 
-        StartBaking();
+        TryBake(building);
+    }
+
+    private void OnBuildingConstructionFinished(Building building)
+    {
+        TryBake(building);
+    }
+
+    private void OnBuildingUpgraded(Building building)
+    {
+        TryBake(building);
     }
 
     private void InitBuildings()
@@ -99,6 +114,13 @@ public class FloorFrameModule : BuildingModule
         }
     }
 
+    private void TryBake(Building building)
+    {
+        if (!ShouldBake(building)) return;
+
+        StartBaking();
+    }
+
     private void StartBaking()
     {
         bakeNavMeshCoroutine = StartCoroutine(BakeNavMeshSurfaceCoroutine());
@@ -119,7 +141,7 @@ public class FloorFrameModule : BuildingModule
     {
         if (OwnedTowerBuilding.FloorIndex <= 0) return false;
 
-        TowerBuilding towerBuilding = building as TowerBuilding;
+        var towerBuilding = building as TowerBuilding;
         if (!towerBuilding) return false;
 
         if (towerBuilding.FloorIndex != OwnedTowerBuilding.FloorIndex) return false;

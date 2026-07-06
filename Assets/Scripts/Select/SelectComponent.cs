@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.Rendering.DebugUI;
 
 public class SelectComponent : MonoBehaviour, IClickable
 {
@@ -113,6 +114,7 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     public void SetClickable(bool value)
     {
+        Debug.Log($"SetClickable {value}");
         isClickable = value;
     }
 

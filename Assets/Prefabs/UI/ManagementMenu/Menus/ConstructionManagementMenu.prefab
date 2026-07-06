@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3101719261188020017}
     m_Modifications:
+    - target: {fileID: 2920521819000491983, guid: cdeef5135ba472d45a1640f4af0fbcf3, type: 3}
+      propertyPath: m_fontSize
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 3357540646070603106, guid: cdeef5135ba472d45a1640f4af0fbcf3, type: 3}
       propertyPath: m_Name
       value: ComingSoonWidget
@@ -1002,7 +1006,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 135813892895700500, guid: b8decfa6bc09b8e40bd2fdea659f0be0, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 760
+      value: 850
       objectReference: {fileID: 0}
     - target: {fileID: 2173394167426618672, guid: b8decfa6bc09b8e40bd2fdea659f0be0, type: 3}
       propertyPath: m_SizeDelta.x

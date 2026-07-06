@@ -56,6 +56,8 @@ public class CreaturesLoader : WorldLoader
             int citizenId = (int)citizenIds[Random.Range(0, citizenIds.Length)];
             var prefab = creaturesList.GetCreature(citizenId) as Citizen;
 
+            var skillsCount = Mathf.Max(1, SkillsFactory.GetLevelsCount());
+
             var citizenData = new CitizenData()
             {
                 Id = citizenId,
@@ -73,10 +75,9 @@ public class CreaturesLoader : WorldLoader
                     LastNameId = prefab.GenderComponent.IsMale ? humanNamesList.GetRandomMaleLastNameId() : humanNamesList.GetRandomFemaleLastNameId(),
                 },
 
-                BoatRider = new BoatRiderData(),
-
+                BoatRider = BoatRiderData.Default(),
                 Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId(), WeaponsDataFactory.GetMinWeaponDamageId()),
-                Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount()),
+                Skills = SkillsFactory.CreateRandomSkillsData(skillsCount),
             };
 
             var citizen = CreatureFactory.CreateHuman(prefab, finalPosition, Quaternion.Euler(rotation), citizenData);

@@ -50,7 +50,7 @@ public class BoatRider : MonoBehaviour
 
     public void Init()
     {
-        Init(BoatRiderData.Default());
+        Init(BoatRiderData.Default() ?? new BoatRiderData());
     }
 
     public void Init(BoatRiderData boatRiderData)

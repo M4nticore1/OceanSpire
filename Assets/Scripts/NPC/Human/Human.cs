@@ -171,8 +171,8 @@ public abstract class Human : Creature, IClickable
         skillsComponent.Init(humanData.Skills);
         healthComponent.Init(humanData.Health);
         reviveComponent.Init(humanData.Revive);
-        interactComponent.Init(humanData.Interaction);
         cityNavigator.Init(humanData.CityNavigator);
+        interactComponent.Init(humanData.Interaction);
         weaponComponent.Init(humanData.Weapon);
         boatRider.Init(humanData.BoatRider);
 
@@ -269,7 +269,8 @@ public abstract class Human : Creature, IClickable
 
     protected virtual void StopInteracting()
     {
-        InteractComponent.TryStopInteracting();
+        var interactBuilding = InteractComponent.InteractBuilding;
+        InteractComponent.TryStopInteracting(interactBuilding);
         UpdateIdle();
     }
 
@@ -350,6 +351,7 @@ public abstract class Human : Creature, IClickable
         if (cityNavigator.CurrentBuilding != interactComponent.InteractBuilding) return false;
         if (interactComponent.InteractBuilding.GetComponent<PierModule>()) return false;
         if (boatRider.RidingBoat) return false;
+        if(!healthComponent.IsAlive) return false;
         if (attackComponent.IsAttacking) return false;
 
         var waypoint = cityNavigator.WaypointsComponent.GetCurrentWaypoint();
@@ -367,6 +369,7 @@ public abstract class Human : Creature, IClickable
     {
         if (!interactComponent.IsInteracting) return false;
         if (!interactComponent.InteractBuilding) return false;
+        if (!healthComponent.IsAlive) return true;
         if (attackComponent.IsAttacking) return true;
 
         return false;
@@ -607,8 +610,8 @@ public abstract class Human : Creature, IClickable
     {
         var interactBuilding = interactComponent.InteractBuilding;
         if (interactBuilding && !interactBuilding.GetComponent<PierModule>()) {
-            interactComponent.TryStopInteracting();
             interactComponent.RemoveInteractBuilding();
+            interactComponent.TryStopInteracting(interactBuilding);
         }
 
         if (cityNavigator.CurrentBuilding && cityNavigator.CurrentBuilding as TowerBuilding) {

@@ -15,7 +15,7 @@ public class HealthComponent : MonoBehaviour, ILocalizable
 
     public void Init()
     {
-        Init(HealthData.Default());
+        Init(HealthData.Default() ?? new HealthData());
     }
 
     public void Init(HealthData healthData)

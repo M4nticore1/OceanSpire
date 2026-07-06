@@ -89,8 +89,8 @@ public class CitizenWidget : MonoBehaviour
         var interactBuilding = Human.InteractComponent.InteractBuilding;
 
         if (interactBuilding) {
-            interactComponent.TryStopInteracting();
             interactComponent.RemoveInteractBuilding();
+            interactComponent.TryStopInteracting(interactBuilding);
         }
 
         var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();

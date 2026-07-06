@@ -142,7 +142,7 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
         if (CurrentEnergy >= 1f) {
             NextChargeTime = null;
         }
-        else if (NextChargeTime == null) {
+        else {
             var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             NextChargeTime = currentTime + chargeEnergyFrequency;
         }

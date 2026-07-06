@@ -7,14 +7,16 @@ public class IslandNavMeshSurfaceBuilder : MonoBehaviour
     private void OnEnable()
     {
         Building.OnBuildingInited += OnBuildingInited;
-        Building.OnBuildingLevelChanged += OnBuildingConstructionFinished;
+        Building.OnBuildingConstructionFinished += OnBuildingConstructionFinished;
+        Building.OnBuildingLevelChanged += OnBuildingUpgraded;
         Building.OnBuildingDemolished += OnBuildingDemolished;
     }
 
     private void OnDisable()
     {
         Building.OnBuildingInited -= OnBuildingInited;
-        Building.OnBuildingLevelChanged -= OnBuildingConstructionFinished;
+        Building.OnBuildingConstructionFinished -= OnBuildingConstructionFinished;
+        Building.OnBuildingLevelChanged -= OnBuildingUpgraded;
         Building.OnBuildingDemolished -= OnBuildingDemolished;
     }
 
@@ -24,6 +26,11 @@ public class IslandNavMeshSurfaceBuilder : MonoBehaviour
     }
 
     private void OnBuildingConstructionFinished(Building building)
+    {
+        TryBake(building);
+    }
+
+    private void OnBuildingUpgraded(Building building)
     {
         TryBake(building);
     }

@@ -62,7 +62,7 @@ public class CreatureCityNavigator : MonoBehaviour
 
     public void Init()
     {
-        Init(CityNavigatorData.Default());
+        Init(CityNavigatorData.Default() ?? new CityNavigatorData());
     }
 
     public void Init(CityNavigatorData cityNavigatorData)
@@ -76,17 +76,23 @@ public class CreatureCityNavigator : MonoBehaviour
         var currentBuildingInstanceId = cityNavigatorData.EnteredBuildingInstanceId;
         if (currentBuildingInstanceId != null) {
             var instance = InstancesManager.Instance.GetInstance(currentBuildingInstanceId.Value);
-            var building = instance?.GetComponent<Building>();
-            EnterBuilding(building);
+
+            if (instance) {
+                var building = instance.GetComponent<Building>();
+                EnterBuilding(building);
+            }
         }
 
         var targetBuildingInstanceId = cityNavigatorData.TargetBuildingInstanceId;
         if (targetBuildingInstanceId != null) {
             var instance = InstancesManager.Instance.GetInstance(targetBuildingInstanceId.Value);
-            var building = instance?.GetComponent<Building>();
-            SetTargetBuilding(building);
-            TryFindPathToTargetBuilding();
-            FollowPath();
+
+            if (instance) {
+                var building = instance.GetComponent<Building>();
+                SetTargetBuilding(building);
+                TryFindPathToTargetBuilding();
+                FollowPath();
+            }
         }
 
         elevatorPassenger.Init(cityNavigatorData.ElevatorPassenger);
@@ -451,11 +457,16 @@ public class CreatureCityNavigator : MonoBehaviour
     {
         if (!TargetBuilding) return;
 
-        if (TryFindPathToTargetBuilding()) {
-            FollowPath();
+        if (building == TargetBuilding) {
+            RemovePath();
         }
         else {
-            StopFollowingPath();
+            if (TryFindPathToTargetBuilding()) {
+                FollowPath();
+            }
+            else {
+                StopFollowingPath();
+            }
         }
     }
 

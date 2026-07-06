@@ -20,6 +20,11 @@ public class AttackComponent : MonoBehaviour
 
     public event Action OnAttackStarted;
     public event Action OnAttackStopped;
+    public event Action OnAttacked;
+
+    public static event Action<AttackComponent> OnGlobalAttackStarted;
+    public static event Action<AttackComponent> OnGlobalAttackStopped;
+    public static event Action<AttackComponent> OnGlobalAttacked;
 
     private void OnEnable()
     {
@@ -75,9 +80,21 @@ public class AttackComponent : MonoBehaviour
         MoveToTarget();
     }
 
+    public void RemoveAllAttackers()
+    {
+        foreach (var attacker in currentAttackers) {
+            RemoveAttacker(attacker);
+        }
+    }
+
     public void RemoveAttacker(AttackComponent attacker)
     {
         currentAttackers.Remove(attacker);
+
+        var attackerTarget = attacker.currentTarget;
+        if (attackerTarget && attackerTarget == this) {
+            attacker.RemoveTarget();
+        }
     }
 
     public void MoveToTarget()
@@ -91,6 +108,9 @@ public class AttackComponent : MonoBehaviour
 
         health.RemoveHealth(GetDamage());
         currentAttackTime = 0f;
+
+        OnAttacked?.Invoke();
+        OnGlobalAttacked?.Invoke(this);
     }
 
     public void OnStopBeingTarget(AttackComponent target)
@@ -106,13 +126,17 @@ public class AttackComponent : MonoBehaviour
     private void StartAtacking()
     {
         IsAttacking = true;
+
         OnAttackStarted?.Invoke();
+        OnGlobalAttackStarted?.Invoke(this);
     }
 
     private void StopAtacking()
     {
         IsAttacking = false;
+
         OnAttackStopped?.Invoke();
+        OnGlobalAttackStopped?.Invoke(this);
     }
 
     private void TryStopMoving()

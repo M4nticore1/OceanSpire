@@ -8,12 +8,12 @@ public class UIAudioSystem : AudioSystem
 
     protected override void Subscribe()
     {
-        CustomButton.onButtonReleased.AddListener(OnButtonReleased);
+        CustomButton.OnButtonReleased += OnButtonReleased;
     }
 
     protected override void Unsubscribe()
     {
-        CustomButton.onButtonReleased.RemoveListener(OnButtonReleased);
+        CustomButton.OnButtonReleased += OnButtonReleased;
     }
 
     private void OnButtonReleased(CustomButton button)

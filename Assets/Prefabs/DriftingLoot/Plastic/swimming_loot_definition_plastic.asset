@@ -21,7 +21,6 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: d51a42afd4a57c64d899a1fc49f5d508, type: 3}
   lootTable:
   - itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
-    dropChance1: 1
     dropChance: 1
     minAmount: 5
-    maxAmount: 20
+    maxAmount: 25

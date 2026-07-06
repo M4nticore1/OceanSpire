@@ -25,7 +25,7 @@ public class CraftModuleSkillProgress : SkillProgress
     {
         if (!base.TrySubscribe()) return false;
 
-        CraftingModule.OnModuleItemCrafted += OnItemCrafted;
+        CraftingModule.OnModuleItemCraftEnded += OnItemCrafted;
         return true;
     }
 
@@ -33,7 +33,7 @@ public class CraftModuleSkillProgress : SkillProgress
     {
         if (!base.TryUnsubscribe()) return false;
 
-        CraftingModule.OnModuleItemCrafted -= OnItemCrafted;
+        CraftingModule.OnModuleItemCraftEnded -= OnItemCrafted;
         return true;
     }
 

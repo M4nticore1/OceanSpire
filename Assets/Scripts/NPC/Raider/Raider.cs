@@ -39,9 +39,13 @@ public class Raider : Human, IProgressable
         if (currentRaidBuildingTime < raidBuildingTime) return;
 
         AddLoot();
-        FinishRaidingBuilding();
+        StopRaidingBuilding();
+        FinishRaid();
+
+        var interactBuilding = InteractComponent.InteractBuilding;
+        InteractComponent.TryStopInteracting(interactBuilding);
         InteractComponent.RemoveInteractBuilding();
-        InteractComponent.TryStopInteracting();
+
         UpdateTargetBoat();
     }
 
@@ -111,10 +115,7 @@ public class Raider : Human, IProgressable
     {
         base.StartInteracting();
 
-        IsRaidingBuilding = true;
         CityNavigator.FollowPath();
-
-        OnRaidBuildingStarted?.Invoke(CityNavigator.CurrentBuilding);
     }
 
     protected override bool ShouldStartInteracting()
@@ -183,6 +184,7 @@ public class Raider : Human, IProgressable
     protected override void OnInteractionStarted(Building building)
     {
         building.RaidComponent.AddCurrentRaider(this);
+        StartRaidingBuilding();
 
         base.OnInteractionStarted(building);
     }
@@ -190,6 +192,7 @@ public class Raider : Human, IProgressable
     protected override void OnInteractionStopped(Building building)
     {
         building.RaidComponent.RemoveCurrentRaider(this);
+        StopRaidingBuilding();
 
         base.OnInteractionStopped(building);
     }
@@ -231,17 +234,34 @@ public class Raider : Human, IProgressable
         CityNavigator.RemovePath();
     }
 
+    protected override void OnAttackStarted()
+    {
+        base.OnAttackStarted();
+
+        StopRaidingBuilding();
+    }
+
     public override bool ShouldClick()
     {
         return false;
     }
 
-    private void FinishRaidingBuilding()
+    private void StartRaidingBuilding()
+    {
+        IsRaidingBuilding = true;
+        currentRaidBuildingTime = 0f;
+        OnRaidBuildingStarted?.Invoke(CityNavigator.CurrentBuilding);
+    }
+
+    private void StopRaidingBuilding()
     {
         IsRaidingBuilding = false;
-        IsRaidFinished = true;
-
         OnRaidBuildingStopped?.Invoke(CityNavigator.CurrentBuilding);
+    }
+
+    private void FinishRaid()
+    {
+        IsRaidFinished = true;
     }
 
     private void AddLoot()

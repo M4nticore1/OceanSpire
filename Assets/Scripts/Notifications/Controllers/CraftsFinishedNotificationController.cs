@@ -71,8 +71,7 @@ public class CraftsFinishedNotificationController : NotificationController
                     continue;
                 }
 
-                var isInProgress = selectedCraft.CraftingInProgress;
-                if (!isInProgress) continue;
+                if (selectedCraft.CraftingFinishTime == null) continue;
 
                 var finishTime = selectedCraft.CraftingFinishTime;
                 if (finishTime == null) continue;

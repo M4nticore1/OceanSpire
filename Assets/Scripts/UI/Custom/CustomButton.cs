@@ -106,9 +106,11 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     public UnityEvent OnHovered = new();
     public UnityEvent OnUnhovered = new();
 
-    public static UnityEvent<CustomButton> onStateChanged = new();
-    public static UnityEvent<CustomButton> onButtonPressed = new();
-    public static UnityEvent<CustomButton> onButtonReleased = new();
+    public event Action OnStateChanged;
+
+    public static event Action<CustomButton> OnButtonStateChanged;
+    public static event Action<CustomButton> OnButtonPressed;
+    public static event Action<CustomButton> OnButtonReleased;
 
     public event Action OnTutorialInteracted;
 
@@ -284,7 +286,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         UpdateContentTargetColor();
         pressedButtonPosition = transform.position;
         OnPressed?.Invoke();
-        onButtonPressed?.Invoke(this);
+        OnButtonPressed?.Invoke(this);
     }
 
     // Release
@@ -334,7 +336,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!PointerUtils.IsUIHovered(gameObject)) return;
 
         OnReleased?.Invoke();
-        onButtonReleased?.Invoke(this);
+        OnButtonReleased?.Invoke(this);
         OnTutorialInteracted?.Invoke();
     }
 
@@ -366,7 +368,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         state = newState;
         EnterState(state);
 
-        OnStateChanged();
+        HandleStateChanged();
     }
 
     private void EnterState(CustomButtonState state)
@@ -405,7 +407,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
-    private void OnStateChanged()
+    private void HandleStateChanged()
     {
         if (gameObject.activeInHierarchy && gameObject.activeSelf) {
             ResetTransitionAnimation();
@@ -414,7 +416,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
             EndTransitionAnimation();
         }
 
-        onStateChanged?.Invoke(this);
+        OnButtonStateChanged?.Invoke(this);
     }
 
     // Interaction

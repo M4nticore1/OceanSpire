@@ -1,5 +1,8 @@
+using System;
+using System.Linq;
 using UnityEngine;
 
+[Serializable]
 public class DailyTasksData
 {
     public DailyTaskInstanceData[] Tasks = null;
@@ -11,24 +14,10 @@ public class DailyTasksData
     {
         return new DailyTasksData()
         {
-            Tasks = DailyTasksSaveSystem.SaveTasks(manager),
+            Tasks = DailyTaskInstanceData.Create(manager.CurrentTasks.ToArray()).ToArray(),
             NextResetTime = manager.NextResetTime,
             AdUpdateUsed = manager.IsAdUpdateUsed,
             TasksViewed = manager.IsDailyTasksViewed,
         };
-    }
-}
-
-public static class DailyTasksSaveSystem
-{
-    public static DailyTaskInstanceData[] SaveTasks(DailyTasksManager manager)
-    {
-        DailyTaskInstanceData[] tasks = new DailyTaskInstanceData[manager.CurrentTasks.Count];
-
-        for (int i = 0; i < tasks.Length; i++) {
-            tasks[i] = DailyTaskInstanceData.Create(manager.CurrentTasks[i]);
-        }
-
-        return tasks;
     }
 }

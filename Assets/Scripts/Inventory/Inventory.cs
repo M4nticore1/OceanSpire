@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Inventory : MonoBehaviour
 {
@@ -13,10 +14,10 @@ public class Inventory : MonoBehaviour
     [SerializeField] private bool useWeightLimit = false;
     public bool UseWeightLimit => useWeightLimit;
 
-    [SerializeField] private float weightLimit = 0;
+    [SerializeField] private float weightLimit = 0f;
     public float WeightLimit => weightLimit;
 
-    private float currentWeight = 0;
+    [SerializeField] private float currentWeight = 0f;
     public float CurrentWeight => currentWeight;
 
     public float RemainingWeight => WeightLimit - CurrentWeight;
@@ -27,14 +28,14 @@ public class Inventory : MonoBehaviour
     private Dictionary<int, ItemInstance> itemsDict = new();
     private Dictionary<ItemStackEnum, ItemStack> itemStacks = new();
 
-    public event Action<ItemInstance> onAddedItemAmount;
-    public event Action<ItemInstance> onRemovedItemAmount;
+    public event Action<ItemInstance> OnAddedItemAmount;
+    public event Action<ItemInstance> OnRemovedItemAmount;
 
-    public event Action<StorageItem> onAddedMaxItemAmount;
-    public event Action<StorageItem> onRemovedMaxItemAmount;
+    public event Action<StorageItem> OnAddedMaxItemAmount;
+    public event Action<StorageItem> OnRemovedMaxItemAmount;
 
-    public event Action<ItemInstance> onItemAmountChanged;
-    public event Action<StorageItem> onChangedItemMaxAmount;
+    public event Action<ItemInstance> OnItemAmountChanged;
+    public event Action<StorageItem> OnChangedItemMaxAmount;
 
     private void Awake()
     {
@@ -89,7 +90,7 @@ public class Inventory : MonoBehaviour
         item.AddAmount(amount);
         stack.AddItemAmount(item);
 
-        currentWeight += amount * item.Definition.Weight;
+        AddWeight(amount * item.Definition.Weight);
     }
 
     public void RemoveItem(int id, int amount)
@@ -103,7 +104,7 @@ public class Inventory : MonoBehaviour
             RemoveItem(id);
         }
 
-        currentWeight -= amount * item.Definition.Weight;
+        RemoveWeight(amount * item.Definition.Weight);
     }
 
     public void AddLimit(ItemStackEnum stack, int amount)
@@ -161,5 +162,20 @@ public class Inventory : MonoBehaviour
         itemsDict.Remove(id);
 
         return item;
+    }
+
+    private void AddWeight(float weight)
+    {
+        currentWeight += weight;
+    }
+
+    private void RemoveWeight(float weight)
+    {
+        if (items.Count > 0) {
+            currentWeight -= weight;
+        }
+        else {
+            currentWeight = 0f;
+        }
     }
 }

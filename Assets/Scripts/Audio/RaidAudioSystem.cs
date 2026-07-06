@@ -1,24 +1,25 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class RaidAudioSystem : AudioSystem
 {
-    [SerializeField] private AudioSource raidAlarmSource;
+    [SerializeField] private RaidManager raidManager;
 
-    private bool isSubscribed = false;
+    [SerializeField] private AudioMixerGroup mixerGroup;
+    [SerializeField] private AudioSource raidAlarmSource;
+    [SerializeField] private AudioClip raidRandedVictory;
+    [SerializeField] private AudioClip raidRandedDefeat;
 
     protected override void Subscribe()
     {
-        TrySubscribe();
+        raidManager.OnRaidStarted += OnRaidStarted;
+        raidManager.OnRaidEnded += OnRaidEnded;
     }
 
     protected override void Unsubscribe()
     {
-        TryUnsubscribe();
-    }
-
-    private void Start()
-    {
-        TrySubscribe();
+        raidManager.OnRaidStarted -= OnRaidStarted;
+        raidManager.OnRaidEnded -= OnRaidEnded;
     }
 
     private void OnRaidStarted()
@@ -29,27 +30,12 @@ public class RaidAudioSystem : AudioSystem
     private void OnRaidEnded(RaidEndedResult result)
     {
         raidAlarmSource.Stop();
-    }
 
-    private void TrySubscribe()
-    {
-        if (isSubscribed) return;
-        if (!RaidManager.Instance) return;
-
-        RaidManager.Instance.OnRaidStarted += OnRaidStarted;
-        RaidManager.Instance.OnRaidEnded += OnRaidEnded;
-
-        isSubscribed = true;
-    }
-
-    private void TryUnsubscribe()
-    {
-        if (!isSubscribed) return;
-        if (!RaidManager.Instance) return;
-
-        RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
-        RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
-
-        isSubscribed = false;
+        if (result.IsRepeled) {
+            AudioUtils.PlaySFX(raidRandedVictory, mixerGroup);
+        }
+        else {
+            AudioUtils.PlaySFX(raidRandedDefeat, mixerGroup);
+        }
     }
 }

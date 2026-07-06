@@ -108,15 +108,15 @@ public class CreatureWaypointsComponent : MonoBehaviour
 
     private BuildingAction GetCurrentBuildingInteraction()
     {
-        var interactBuilding = interactComponent.InteractBuilding;
-        if (!interactBuilding) {
-            Debug.LogError("interactBuilding is not valid ", this);
+        var targetBuilding = cityNavigator.TargetBuilding;
+        if (!targetBuilding) {
+            Debug.LogError("TargetBuilding is not valid ", this);
             return null;
         }
 
-        var construction = interactBuilding.SpawnedConstruction;
+        var construction = targetBuilding.SpawnedConstruction;
         if (!construction) {
-            Debug.LogError("construction is not valid ", this);
+            Debug.LogError("Construction is not valid ", this);
             return null;
         }
 

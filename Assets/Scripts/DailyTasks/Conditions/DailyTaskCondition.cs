@@ -3,12 +3,13 @@ using UnityEngine;
 
 public abstract class DailyTaskCondition : MonoBehaviour
 {
+    [Header("Task Condition")]
     [SerializeField] private DailyTaskDefinition[] definitions;
     public DailyTaskDefinition[] Definitions => definitions;
 
     private bool isSubscribed = false;
 
-    public static event Action<DailyTaskCondition, int> onProgressChanged;
+    public static event Action<DailyTaskCondition, int> OnProgressChanged;
 
     private void OnEnable()
     {
@@ -46,6 +47,6 @@ public abstract class DailyTaskCondition : MonoBehaviour
 
     protected void InvokeProgressChanged(int value)
     {
-        onProgressChanged?.Invoke(this, value);
+        OnProgressChanged?.Invoke(this, value);
     }
 }

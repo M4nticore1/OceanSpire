@@ -3,6 +3,7 @@ using UnityEngine.Audio;
 
 public class BuildingAudioSystem : AudioSystem
 {
+    [SerializeField] private BuildingsLoader buildingsLoader;
     [SerializeField] private AudioMixerGroup mixerGroup;
     [SerializeField] private AudioClip[] buildingStartedClips;
     [SerializeField] private AudioClip[] buildingFinishedClips;
@@ -43,7 +44,7 @@ public class BuildingAudioSystem : AudioSystem
 
     private bool ShouldPlay()
     {
-        //if (!buildingsLoader.IsLoaded) return false;
+        if (!buildingsLoader.IsLoaded) return false;
 
         return true;
     }

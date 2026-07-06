@@ -14,9 +14,19 @@ public class CreatureInteractComponent : MonoBehaviour
     public static event Action<CreatureInteractComponent> OnInteractorInteractBuildingSeted;
     public static event Action<CreatureInteractComponent> OnInteractorInteractBuildirngRemoved;
 
+    private void OnEnable()
+    {
+        Building.OnBuildingDemolished += OnBuildingDemolished;
+    }
+
+    private void OnDisable()
+    {
+        Building.OnBuildingDemolished -= OnBuildingDemolished;
+    }
+
     public void Init()
     {
-        Init(InteractionComponentData.Default());
+        Init(InteractionComponentData.Default() ?? new InteractionComponentData());
     }
 
     public void Init(InteractionComponentData interactionData)
@@ -31,9 +41,11 @@ public class CreatureInteractComponent : MonoBehaviour
         if (instanceId == null) return;
 
         var instance = InstancesManager.Instance.GetInstance(instanceId.Value);
-        var interactBuilding = instance?.GetComponent<Building>();
 
-        SetInteractBuilding(interactBuilding);
+        if (instance) {
+            var interactBuilding = instance.GetComponent<Building>();
+            SetInteractBuilding(interactBuilding);
+        }
     }
 
     public void SetInteractBuilding(Building building)
@@ -72,11 +84,11 @@ public class CreatureInteractComponent : MonoBehaviour
         StartInteracting();
     }
 
-    public void TryStopInteracting()
+    public void TryStopInteracting(Building building)
     {
-        if (!ShouldStopInteracting(InteractBuilding)) return;
+        if (!ShouldStopInteracting(building)) return;
 
-        StopInteracting(InteractBuilding);
+        StopInteracting(building);
     }
 
     private void StartInteracting()
@@ -87,21 +99,29 @@ public class CreatureInteractComponent : MonoBehaviour
 
     private void StopInteracting(Building building)
     {
+        Debug.Log("StopInteracting");
         IsInteracting = false;
         OnInteractionStopped?.Invoke(building);
     }
 
-    private bool ShouldStartInteracting(Building interactBuilding)
+    private void OnBuildingDemolished(Building building)
     {
-        if (!interactBuilding) return false;
+        if (building != InteractBuilding) return;
+
+        RemoveInteractBuilding();
+    }
+
+    private bool ShouldStartInteracting(Building building)
+    {
+        if (!building) return false;
         if (IsInteracting) return false;
 
         return true;
     }
 
-    private bool ShouldStopInteracting(Building interactBuilding)
+    private bool ShouldStopInteracting(Building building)
     {
-        if (!interactBuilding) return false;
+        if (!building) return false;
         if (!IsInteracting) return false;
 
         return true;

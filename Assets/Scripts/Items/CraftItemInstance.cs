@@ -7,7 +7,6 @@ public class CraftItemInstance
 
     public long? CraftingFinishTime { get; private set; } = 0;
     public bool IsCrafted { get; private set; } = false;
-    public bool CraftingInProgress { get; private set; } = false;
     public bool IsCraftSelected { get; private set; } = false;
 
     public float CraftingSpeedBonus { get; private set; } = 0f;
@@ -18,11 +17,6 @@ public class CraftItemInstance
     {
         Definition = definition;
         SetCraftingFinishTime(data.CraftingFinishTime);
-        SetCraftingInProgress(data.CraftingInProgress);
-
-        if (IsCraftingFinished()) {
-            SetCraftingInProgress(false);
-        }
     }
 
     public void ResetCraftingFinishTime()
@@ -44,11 +38,6 @@ public class CraftItemInstance
         IsCrafted = value;
     }
 
-    public void SetCraftingInProgress(bool value)
-    {
-        CraftingInProgress = value;
-    }
-
     public void SetCraftSelected(bool value)
     {
         IsCraftSelected = value;
@@ -60,7 +49,7 @@ public class CraftItemInstance
         OnCraftingSpeedBonusChanged?.Invoke(value);
     }
 
-    public bool IsCraftingFinished()
+    public bool IsCraftingTimeFinished()
     {
         return GetRemainingCraftingTime() <= 0;
     }

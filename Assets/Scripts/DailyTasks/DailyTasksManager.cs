@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -129,7 +130,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         }
 
         var def = dailyTasksList.GetTaskDefinition(data.Id);
-        var task = new DailyTaskInstance(def, data.Progress, data.Completed);
+        var task = new DailyTaskInstance(def, dailyTasksList.DailyTaskDefinitions.ToList().IndexOf(def), data.Progress, data.Completed);
 
         currentTasks.Add(task);
     }
@@ -188,7 +189,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         for (int i = 0; i < tasksData.Length; i++) {
             tasksData[i] = new DailyTaskInstanceData()
             {
-                Id = (int)taskDefinitions[i].taskDefinitions[UnityEngine.Random.Range(0, taskDefinitions[i].taskDefinitions.Length)].TaskId,
+                Id = dailyTasksList.DailyTaskDefinitions.ToList().IndexOf(taskDefinitions[i].taskDefinitions[UnityEngine.Random.Range(0, taskDefinitions[i].taskDefinitions.Length)]),
                 Progress = 0
             };
         }

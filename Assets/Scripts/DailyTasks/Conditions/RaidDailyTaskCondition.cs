@@ -22,7 +22,7 @@ public class RaidDailyTaskCondition : DailyTaskCondition
 
     private void OnRaidEnded(RaidEndedResult result)
     {
-        if (!result.IsRepeled) return;
+        //if (!result.IsRepeled) return;
 
         InvokeProgressChanged(1);
     }

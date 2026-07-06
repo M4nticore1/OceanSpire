@@ -12,6 +12,7 @@ public class RaidDisablerButton : MonoBehaviour
 
         RaidManager.Instance.OnRaidStarted += OnRaidStarted;
         RaidManager.Instance.OnRaidEnded += OnRaidEnded;
+        button.OnStateChanged += OnButtonStateChanged;
     }
 
     private void OnDisable()
@@ -20,6 +21,7 @@ public class RaidDisablerButton : MonoBehaviour
 
         RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
         RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
+        button.OnStateChanged += OnButtonStateChanged;
     }
 
     private void UpdateButtonEnabled()
@@ -35,6 +37,11 @@ public class RaidDisablerButton : MonoBehaviour
     }
 
     private void OnRaidEnded(RaidEndedResult raidResult)
+    {
+        UpdateButtonEnabled();
+    }
+
+    private void OnButtonStateChanged()
     {
         UpdateButtonEnabled();
     }
