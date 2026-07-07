@@ -20,14 +20,18 @@ public class InstanceId : MonoBehaviour
 
     public void SetGuid(Guid newGuid)
     {
-        if (newGuid == Guid.Empty) return;
+        if (newGuid == Guid.Empty) {
+            Debug.LogError("New guid to set is empty!");
+            return;
+        }
+
         if (newGuid == guid) return;
 
         if (isRegistered) {
             Unregister();
         }
 
-        this.guid = newGuid;
+        guid = newGuid;
         Register();
     }
 

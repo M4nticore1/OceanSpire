@@ -136,7 +136,7 @@ public class BuildingsLoader : WorldLoader
         foreach (var data in elevatorCabinsData) {
             if (data == null) continue;
 
-            var instance = InstancesManager.Instance.GetInstance(data.BuildingInstanceId);
+            var instance = InstancesManager.Instance.GetInstance(data.OwnedBuildingInstanceId);
             if (!instance) continue;
 
             var elevator = instance.GetComponent<ElevatorModule>();

@@ -90,7 +90,7 @@ public class BuildingConstruction : MonoBehaviour, IClickable
             return;
         }
 
-        var building = InstancesManager.Instance.GetInstance(data.BuildingInstanceId).GetComponent<Building>();
+        var building = InstancesManager.Instance.GetInstance(data.OwnedBuildingInstanceId).GetComponent<Building>();
         if (building == null) {
             Debug.LogError($"[{nameof(BuildingConstruction)}] Instance Id is not building!");
             return;

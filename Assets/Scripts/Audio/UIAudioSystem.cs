@@ -22,7 +22,6 @@ public class UIAudioSystem : AudioSystem
 
     private void OnButtonReleased(CustomButton button)
     {
-        Debug.Log($"Released {gameObject}");
         AudioUtils.PlaySFX(releaseClips, mixerGroup);
     }
 }

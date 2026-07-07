@@ -65,9 +65,6 @@ PrefabInstance:
       addedObject: {fileID: 2504490325117585013}
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4861895784817728235}
-    - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 8771001662528522482}
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
@@ -167,19 +164,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8ad608757b0f86b429e2ba27842d356f, type: 2}
   electricityConsumption: 0.1
   skillId: 0
---- !u!114 &4861895784817728235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8673097211342416700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2bc8a39ae8e4f3342a6d537c17163014, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CraftingModuleSkillAdapter
-  skillId: 1
 --- !u!114 &8771001662528522482
 MonoBehaviour:
   m_ObjectHideFlags: 0

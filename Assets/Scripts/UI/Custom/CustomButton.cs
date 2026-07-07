@@ -296,7 +296,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!IsInteractable) return;
         //if (!IsPressed && !deselectOnOutsideClick) return;
 
-        Debug.Log("OnPointerReleased");
 
         if (IsPressed) {
             if (IsSelectable)
@@ -337,7 +336,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (!PointerUtils.IsUIHovered(gameObject)) return;
 
-        Debug.Log("ButtonReleased");
         OnReleased?.Invoke();
         OnButtonReleased?.Invoke(this);
         OnTutorialInteracted?.Invoke();

@@ -127,7 +127,7 @@ public class ElevatorCabinsManager : MonoBehaviour
 
         var data = new BuildingConstructionData()
         {
-            BuildingInstanceId = elevator.OwnedTowerBuilding.InstanceId.GetGuid()
+            OwnedBuildingInstanceId = elevator.OwnedTowerBuilding.InstanceId.GetGuid()
         };
 
         var cabin = ConstructionFactory.CreateConstruction(elevator.GetCabinConstructionPrefab(), elevator.OwnedTowerBuilding.transform, data);

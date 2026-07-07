@@ -80,4 +80,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 634ae64bb175bc345b9cea1118218425, type: 3}
   - {fileID: 8300000, guid: 52a43d5649acfab46bf9dd601942627e, type: 3}
   minDistance: 10
-  maxDistance: 40
+  maxDistance: 30

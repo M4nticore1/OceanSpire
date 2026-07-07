@@ -10727,9 +10727,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LootManager
   driftingLootList: {fileID: 11400000, guid: 3b08c49927a65294e8c781da28c52aa3, type: 2}
   buildingsManager: {fileID: 455753200}
+  updatePositionFrequency: 0.05
+  spawnFrequency: 0.5
   SpawnedSwimmingDriftingLoot: []
   SpawnedFlyingDriftingLoot: []
-  updatePositionFrequency: 0.05
 --- !u!1001 &917191811
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12579,7 +12580,7 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
     amount: 0
   - definition: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
-    amount: 0
+    amount: 10
   - definition: {fileID: 11400000, guid: e6e0b672836d93b44bbc0c0b39214e20, type: 2}
     amount: 0
   - definition: {fileID: 11400000, guid: 6009cc6eba9fcf9489b14353fb2b3c9c, type: 2}

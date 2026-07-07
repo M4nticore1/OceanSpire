@@ -280,7 +280,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
         var data = new BuildingConstructionData()
         {
-            BuildingInstanceId = instanceId.GetGuid()
+            OwnedBuildingInstanceId = instanceId.GetGuid()
         };
 
         SpawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, transform, data);
