@@ -19,9 +19,9 @@ public class BoatsList : ScriptableObject
 
     [SerializeField] private Boat[] boats;
 
-    private Dictionary<int, Boat> boatsDict;
+    private Dictionary<BoatIdEnum, Boat> boatsDict;
 
-    public Boat GetBoat(int id)
+    public Boat GetBoat(BoatIdEnum id)
     {
         TryInitDictionary(boats, ref boatsDict);
 
@@ -30,7 +30,7 @@ public class BoatsList : ScriptableObject
         return boat;
     }
 
-    private void TryInitDictionary(Boat[] boats, ref Dictionary<int, Boat> boatsDict)
+    private void TryInitDictionary(Boat[] boats, ref Dictionary<BoatIdEnum, Boat> boatsDict)
     {
         if (boatsDict != null) return;
 

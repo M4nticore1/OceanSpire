@@ -12,7 +12,7 @@ public class SkillInstanceData
 [Serializable]
 public class SkillsData
 {
-    public SkillInstanceData[] Skills;
+    public SkillInstanceData[] Skills = null;
 
     public static SkillsData Default()
     {

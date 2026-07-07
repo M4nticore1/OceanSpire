@@ -4,8 +4,8 @@ using UnityEngine;
 [Serializable]
 public class BoatRiderData
 {
-    public Guid? TargetBoatInstanceId;
-    public Guid? RidingBoatInstanceId;
+    public Guid? TargetBoatInstanceId = null;
+    public Guid? RidingBoatInstanceId = null;
 
     public static BoatRiderData Default()
     {

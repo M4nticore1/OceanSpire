@@ -9,6 +9,7 @@ public class WorldSaveManager : MonoBehaviour
     [SerializeField] private BoatsManager boatsManager;
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private DriftingLootManager driftingLootManager;
+    [SerializeField] private LootContainersList driftingLootList;
     [SerializeField] private CityStorage cityStorgae;
     [SerializeField] private DailyTasksManager dailyTasksManager;
     [SerializeField] private DailyRewardManager dailyRewardManager;
@@ -28,6 +29,7 @@ public class WorldSaveManager : MonoBehaviour
             boatsManager,
             creaturesManager,
             driftingLootManager,
+            driftingLootList,
             cityStorgae.Inventory,
             dailyTasksManager,
             dailyRewardManager,

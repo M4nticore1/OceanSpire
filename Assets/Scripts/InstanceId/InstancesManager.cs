@@ -25,6 +25,8 @@ public class InstancesManager
 
     public void RegisterInstance(InstanceId instance)
     {
+        if (instance == null) return;
+
         var guid = instance.GetGuid();
         if (instances.TryGetValue(guid, out var value)) return;
 
@@ -33,6 +35,8 @@ public class InstancesManager
 
     public void UnregisterInstance(InstanceId instance)
     {
+        if (instance == null) return;
+
         var guid = instance.GetGuid();
         if (!instances.TryGetValue(guid, out var value)) return;
 

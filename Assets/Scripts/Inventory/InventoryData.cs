@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class InventoryData
 {
-    public ItemData[] Items;
+    public ItemData[] Items = new ItemData[0];
 
     public static InventoryData Default()
     {

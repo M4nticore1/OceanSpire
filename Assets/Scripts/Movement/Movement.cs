@@ -1,3 +1,4 @@
+using AppLovinMax.Scripts.IntegrationManager.Editor;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -175,6 +176,19 @@ public class Movement : MonoBehaviour
     public bool IsReachedPosition(Vector3 position)
     {
         return Vector3.Distance(transform.position, position) <= navAgent.stoppingDistance;
+    }
+
+    public bool CanAgentReachTarget(Vector3 targetPosition)
+    {
+        var path = new NavMeshPath();
+
+        if (navAgent.CalculatePath(targetPosition, path)) {
+            if (path.status == NavMeshPathStatus.PathComplete) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public float GetTargetPositionDistance()

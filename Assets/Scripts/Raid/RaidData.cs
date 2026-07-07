@@ -6,7 +6,7 @@ public class RaidData
 {
     public bool RaidExist = false;
     public bool UnderRaid = false;
-    public int RaidCooldown = 0;
+    public int RaidCooldownTime = 0;
     public int TimeSinceLastRaid = 0;
 
     public static RaidData Default()
@@ -20,8 +20,8 @@ public class RaidData
         {
             RaidExist = raidManager.IsRaidExist,
             UnderRaid = raidManager.IsUnderRaid,
-            RaidCooldown = (int)raidManager.CurrentRaidCooldown,
-            TimeSinceLastRaid = (int)raidManager.CurrentRaidCooldownTime,
+            RaidCooldownTime = (int)raidManager.RaidCooldownTime,
+            TimeSinceLastRaid = (int)raidManager.TimeSinceLastRaid,
         };
     }
 }

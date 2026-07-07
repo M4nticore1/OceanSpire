@@ -20,21 +20,28 @@ public class BuildingsLoader : WorldLoader
 
     protected override void Load(WorldData worldData)
     {
+        // 1. Загрузка или инициализация наземных зданий
         if (worldData?.GroundBuildings != null) {
             LoadGroundBuildings(worldData.GroundBuildings);
         }
         else {
-            InitGroundBuildins();
+            InitGroundBuildings();
         }
 
+        // 2. Очистка и загрузка каркасов башни
         if (worldData?.FloorFrameBuildings != null) {
-            ClearTowerBuildinds();
+            ClearTowerBuildings();
             LoadFloorFrames(worldData.FloorFrameBuildings);
         }
         else {
-            InitFloorBuildinds();
+            InitFloorBuildings();
         }
 
+        // КРИТИЧЕСКИЙ СДВИГ: Убедитесь, что BuildingsManager принудительно обновил 
+        // свои списки этажей после вызова LoadFloorFrames, иначе последующие методы не увидят этажи!
+        // Пример: buildingsManager.RefreshFloorsList();
+
+        // 3. Загрузка внутренних комнат башни
         if (worldData?.TowerBuildings != null) {
             LoadTowerBuildings(worldData.TowerBuildings);
         }
@@ -42,6 +49,7 @@ public class BuildingsLoader : WorldLoader
             InitTowerBuildings();
         }
 
+        // 4. Загрузка лифтов (зависит от уже созданных зданий)
         if (worldData?.ElevatorCabins != null) {
             LoadElevatorCabins(worldData.ElevatorCabins);
         }
@@ -49,14 +57,21 @@ public class BuildingsLoader : WorldLoader
 
     private void LoadGroundBuildings(BuildingData[] buildingsData)
     {
-        var buildings = buildingsManager.GerGroundBuildings().ToArray();
+        var buildings = buildingsManager.GerGroundBuildings();
+        if (buildings == null) return;
 
-        for (int i = 0; i < buildings.Length; i++) {
-            if (buildingsData.Length <= i) return;
-            var building = buildings[i];
-            var buildingData = buildingsData[i];
+        int index = 0;
+        foreach (var building in buildings) {
+            if (building == null) continue;
 
-            building.Init(buildingData);
+            // Если в сохранении меньше зданий, чем на сцене, просто выходим из цикла, не прерывая весь метод Load!
+            if (index >= buildingsData.Length) break;
+
+            var buildingData = buildingsData[index];
+            if (buildingData != null) {
+                building.Init(buildingData);
+            }
+            index++;
         }
     }
 
@@ -64,16 +79,31 @@ public class BuildingsLoader : WorldLoader
     {
         for (int i = 0; i < floorFrameBuildingsData.Length; i++) {
             var floorFrameData = floorFrameBuildingsData[i];
+            if (floorFrameData == null) continue;
+
             var prefab = BuildingsList.Instance.GetBuilding(floorFrameData.Id) as TowerBuilding;
+            if (prefab == null) {
+                Debug.LogError($"TowerBuilding prefab with ID {floorFrameData.Id} not found!");
+                continue;
+            }
 
-            Transform transform;
+            Transform spawnTransform;
 
-            if (i > 0)
-                transform = buildingsManager.GetFloorFrameBuilding(i - 1)?.FloorBuildingPlace.transform;
-            else
-                transform = buildingsManager.FirstFloorBuildingTransform;
+            if (i > 0) {
+                var previousFloor = buildingsManager.GetFloorFrameBuilding(i - 1);
+                if (previousFloor == null || previousFloor.FloorBuildingPlace == null) {
+                    Debug.LogError($"Previous floor frame at index {i - 1} is missing placement place!");
+                    continue;
+                }
+                spawnTransform = previousFloor.FloorBuildingPlace.transform;
+            }
+            else {
+                spawnTransform = buildingsManager.FirstFloorBuildingTransform;
+            }
 
-            BuildingFactory.CreateBuilding(prefab, transform, floorFrameData);
+            if (spawnTransform != null) {
+                BuildingFactory.CreateBuilding(prefab, spawnTransform, floorFrameData);
+            }
         }
     }
 
@@ -81,9 +111,13 @@ public class BuildingsLoader : WorldLoader
     {
         foreach (var towerBuildingData in towerBuildingsData) {
             if (towerBuildingData == null) continue;
-            if (towerBuildingData.FloorIndex >= buildingsManager.BuiltFloors.Count) continue;
-            if (towerBuildingData.PlaceIndex < 0) continue;
-            if (towerBuildingData.PlaceIndex >= BuildingsManager.RoomsCountPerFloor) continue;
+
+            if (buildingsManager.BuiltFloors == null || towerBuildingData.FloorIndex >= buildingsManager.BuiltFloors.Count) {
+                Debug.LogWarning($"Floor index {towerBuildingData.FloorIndex} from save data is out of built floors bounds.");
+                continue;
+            }
+
+            if (towerBuildingData.PlaceIndex < 0 || towerBuildingData.PlaceIndex >= BuildingsManager.RoomsCountPerFloor) continue;
 
             var prefab = BuildingsList.Instance.GetBuilding(towerBuildingData.Id) as TowerBuilding;
             if (!prefab) continue;
@@ -109,24 +143,31 @@ public class BuildingsLoader : WorldLoader
             if (!elevator) continue;
 
             var prefab = elevator.GetCabinConstructionPrefab();
-            ConstructionFactory.CreateConstruction(prefab, elevator.transform, data);
+            if (prefab != null) {
+                ConstructionFactory.CreateConstruction(prefab, elevator.transform, data);
+            }
         }
     }
 
-    private void ClearTowerBuildinds()
+    private void ClearTowerBuildings()
     {
+        if (buildingsManager.BuiltFloors == null) return;
+
         for (int i = buildingsManager.BuiltFloors.Count - 1; i >= 0; i--) {
             var floor = buildingsManager.BuiltFloors[i];
-            floor.OwnedBuilding.Demolish();
+            if (floor != null && floor.OwnedBuilding != null) {
+                floor.OwnedBuilding.Demolish();
+            }
         }
     }
 
-    private void InitGroundBuildins()
+    private void InitGroundBuildings()
     {
-        var buildings = buildingsManager.GerGroundBuildings().ToArray();
+        var buildings = buildingsManager.GerGroundBuildings();
+        if (buildings == null) return;
 
-        for (int i = 0; i < buildings.Length; i++) {
-            var building = buildings[i];
+        foreach (var building in buildings) {
+            if (building == null || building.BuildingData == null || building.LevelComponent == null) continue;
 
             var buildingData = new BuildingData
             {
@@ -141,13 +182,17 @@ public class BuildingsLoader : WorldLoader
         }
     }
 
-    private void InitFloorBuildinds()
+    private void InitFloorBuildings()
     {
+        if (buildingsManager.BuiltFloors == null) return;
         int floorsCount = buildingsManager.BuiltFloors.Count;
 
         for (int i = 0; i < floorsCount; i++) {
             var floor = buildingsManager.BuiltFloors[i];
+            if (floor == null || floor.OwnedBuilding == null) continue;
+
             var building = floor.OwnedBuilding as TowerBuilding;
+            if (building == null || building.BuildingData == null || building.LevelComponent == null) continue;
 
             var buildingData = new TowerBuildingData
             {
@@ -165,16 +210,21 @@ public class BuildingsLoader : WorldLoader
 
     private void InitTowerBuildings()
     {
+        if (buildingsManager.BuiltFloors == null) return;
         int floorsCount = buildingsManager.BuiltFloors.Count;
 
         for (int i = 0; i < floorsCount; i++) {
             var floor = buildingsManager.BuiltFloors[i];
+            if (floor == null || floor.RoomBuildingPlaces == null) continue;
 
             for (int j = 0; j < BuildingsManager.RoomsCountPerFloor; j++) {
+                if (j >= floor.RoomBuildingPlaces.Count) break;
+
                 var roomPlace = floor.RoomBuildingPlaces[j];
+                if (roomPlace == null) continue;
 
                 var building = roomPlace.PlacedBuilding;
-                if (!building) continue;
+                if (!building || building.BuildingData == null || building.LevelComponent == null) continue;
 
                 var buildingData = new TowerBuildingData
                 {

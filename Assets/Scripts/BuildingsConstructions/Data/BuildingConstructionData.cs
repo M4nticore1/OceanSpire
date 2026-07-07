@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BuildingConstructionData
 {
-    public Guid BuildingInstanceId;
+    public Guid BuildingInstanceId = Guid.Empty;
 
     public static BuildingConstructionData Create(BuildingConstruction construction)
     {

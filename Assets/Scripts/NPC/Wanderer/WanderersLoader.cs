@@ -6,26 +6,13 @@ public class WanderersLoader : WorldLoader
 
     protected override void Load(WorldData worldData)
     {
-        if (worldData != null && worldData.WanderersSystem != null) {
-            LoadWanderers(worldData.WanderersSystem);
+        var wanderersData = worldData?.WanderersSystem;
+
+        if (wanderersData != null) {
+            wanderersManager.Init(wanderersData);
         }
         else {
-            InitWanderers();
+            wanderersManager.Init();
         }
-    }
-
-    private void LoadWanderers(WanderersData wanderersData)
-    {
-        wanderersManager.Init(wanderersData);
-    }
-
-    private void InitWanderers()
-    {
-        WanderersData wanderersData = new WanderersData() {
-            Cooldown = (int)wanderersManager.CalculateRandomCooldown(),
-            TimeSinceLastSpawn = 0,
-        };
-
-        wanderersManager.Init(wanderersData);
     }
 }

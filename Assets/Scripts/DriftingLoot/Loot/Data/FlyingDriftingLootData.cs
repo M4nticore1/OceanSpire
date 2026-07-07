@@ -7,6 +7,11 @@ public class FlyingDriftingLootData : DriftingLootData
 {
     public bool IsFalling = false;
 
+    public static FlyingDriftingLootData Default()
+    {
+        return new FlyingDriftingLootData();
+    }
+
     public static FlyingDriftingLootData Create(FlyingDriftingLoot driftingLoot)
     {
         var data = new FlyingDriftingLootData()
@@ -19,11 +24,13 @@ public class FlyingDriftingLootData : DriftingLootData
         return data;
     }
 
-    public static FlyingDriftingLootData[] Create(FlyingDriftingLoot[] driftingLoot)
+    public static FlyingDriftingLootData[] Create(IReadOnlyList<FlyingDriftingLoot> driftingLoot)
     {
         List<FlyingDriftingLootData> lootData = new();
 
         foreach (var loot in driftingLoot) {
+            if (loot == null) continue;
+
             lootData.Add(Create(loot));
         }
 

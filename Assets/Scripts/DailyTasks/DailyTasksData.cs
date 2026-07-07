@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class DailyTasksData
 {
-    public DailyTaskInstanceData[] Tasks = null;
+    public DailyTaskInstanceData[] Tasks = new DailyTaskInstanceData[0];
     public long NextResetTime = 0;
     public bool AdUpdateUsed = false;
     public bool TasksViewed = false;

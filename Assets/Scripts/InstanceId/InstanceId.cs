@@ -8,16 +8,14 @@ public class InstanceId : MonoBehaviour
 
     private InstancesManager instancesManager => InstancesManager.Instance;
 
-    private void Awake()
-    {
-        if (guid == Guid.Empty) {
-            SetGuid(Guid.NewGuid());
-        }
-    }
-
     private void OnDestroy()
     {
         Unregister();
+    }
+
+    public void NewGuid()
+    {
+        SetGuid(Guid.NewGuid());
     }
 
     public void SetGuid(Guid newGuid)

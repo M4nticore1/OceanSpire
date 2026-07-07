@@ -30,10 +30,10 @@ public class TimeManager : MonoBehaviour
         Instance = this;
     }
 
-    public static long GetCurrentSecond()
-    {
-        return DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
-    }
+    //public static long GetCurrentSecond()
+    //{
+    //    return DateTime.Now.Hour * 3600 + DateTime.Now.Minute * 60 + DateTime.Now.Second;
+    //}
 
     private void UpdateYear()
     {

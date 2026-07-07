@@ -85,7 +85,17 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
     protected virtual void OnInited(BuildingConstructionData data)
     {
+        if (data == null) {
+            Debug.LogError($"[{nameof(BuildingConstruction)}] BuildingConstruction is not vaid!");
+            return;
+        }
+
         var building = InstancesManager.Instance.GetInstance(data.BuildingInstanceId).GetComponent<Building>();
+        if (building == null) {
+            Debug.LogError($"[{nameof(BuildingConstruction)}] Instance Id is not building!");
+            return;
+        }
+
         SetOwnedBuilding(building);
 
         UpdateWorkerInteractionTransforms();

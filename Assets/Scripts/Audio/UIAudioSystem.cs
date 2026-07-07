@@ -8,16 +8,21 @@ public class UIAudioSystem : AudioSystem
 
     protected override void Subscribe()
     {
+        base.Subscribe();
+
         CustomButton.OnButtonReleased += OnButtonReleased;
     }
 
     protected override void Unsubscribe()
     {
-        CustomButton.OnButtonReleased += OnButtonReleased;
+        base.Unsubscribe();
+
+        CustomButton.OnButtonReleased -= OnButtonReleased;
     }
 
     private void OnButtonReleased(CustomButton button)
     {
+        Debug.Log($"Released {gameObject}");
         AudioUtils.PlaySFX(releaseClips, mixerGroup);
     }
 }

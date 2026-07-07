@@ -12,6 +12,15 @@ public class NameData
         return new NameData();
     }
 
+    public static NameData Random(GenderComponent genderComponent, HumanNamesList namesList)
+    {
+        return new NameData()
+        {
+            FirstNameId = genderComponent.IsMale ? namesList.GetRandomMaleFirstNameId() : namesList.GetRandomFemaleFirstNameId(),
+            LastNameId = genderComponent.IsMale ? namesList.GetRandomMaleLastNameId() : namesList.GetRandomFemaleLastNameId()
+        };
+    }
+
     public static NameData Create(NameComponent nameComponent)
     {
         return new NameData()

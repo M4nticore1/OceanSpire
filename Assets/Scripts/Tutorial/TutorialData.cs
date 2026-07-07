@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class TutorialData
 {
-    public TutorialSequenceData[] TutorialSequences; 
+    public TutorialSequenceData[] TutorialSequences = null;
 
     public static TutorialData Create(TutorialManager tutorialManager)
     {

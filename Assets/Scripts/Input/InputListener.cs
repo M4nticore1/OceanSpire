@@ -5,8 +5,8 @@ using UnityEngine.InputSystem;
 public class InputListener : MonoBehaviour
 {
     public static InputListener Instance { get; private set; }
-    public event Action onPressed;
-    public event Action onReleased;
+    public event Action OnPressed;
+    public event Action OnReleased;
 
     public GameObject startPressedObject { get; private set; }
     public Vector2 startPosition { get; private set; }
@@ -25,22 +25,9 @@ public class InputListener : MonoBehaviour
 
     private void Update()
     {
-        if (Touchscreen.current != null) {
-            bool wasPressed = Touchscreen.current.primaryTouch.press.wasPressedThisFrame;
-            bool wasReleased = Touchscreen.current.primaryTouch.press.wasReleasedThisFrame;
-
-            if (wasPressed) {
-                HandlePress();
-            }
-
-            if (wasReleased) {
-                HandleRelease();
-            }
-        }
-
-        if (Mouse.current != null) {
-            bool wasPressed = Mouse.current.leftButton.wasPressedThisFrame;
-            bool wasReleased = Mouse.current.leftButton.wasReleasedThisFrame;
+        if (Pointer.current != null) {
+            bool wasPressed = Pointer.current.press.wasPressedThisFrame;
+            bool wasReleased = Pointer.current.press.wasReleasedThisFrame;
 
             if (wasPressed) {
                 HandlePress();
@@ -56,12 +43,12 @@ public class InputListener : MonoBehaviour
     {
         startPressedObject = PointerUtils.GetRaycastUIResult().gameObject;
         startPosition = PointerUtils.GetCurrentInputPosition();
-        onPressed?.Invoke();
+        OnPressed?.Invoke();
     }
 
     private void HandleRelease()
     {
-        onReleased?.Invoke();
+        OnReleased?.Invoke();
         lastPosition = PointerUtils.GetCurrentInputPosition();
         startPressedObject = null;
     }

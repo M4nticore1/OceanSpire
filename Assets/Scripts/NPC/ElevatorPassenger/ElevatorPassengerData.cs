@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class ElevatorPassengerData
 {
-    public ElevatorPassengerStateEnum PassengerState = ElevatorPassengerStateEnum.None;
+    public ElevatorPassengerStateEnum State = ElevatorPassengerStateEnum.None;
 
     public static ElevatorPassengerData Default()
     {
@@ -15,7 +15,7 @@ public class ElevatorPassengerData
     {
         return new ElevatorPassengerData()
         {
-            PassengerState = elevatorPassenger.CurrentStateEnum,
+            State = elevatorPassenger.CurrentStateEnum,
         };
     }
 }

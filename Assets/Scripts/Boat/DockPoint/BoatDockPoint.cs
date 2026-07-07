@@ -14,9 +14,20 @@ public class BoatDockPoint : MonoBehaviour
     [SerializeField] private Transform entranceTransform;
     public Transform EntraceTransform => entranceTransform;
 
-    public void Init(BoatDockData data)
+    public void Init()
     {
-        instanceId.SetGuid(data.InstanceId);
+        instanceId.NewGuid();
+    }
+
+    public void Init(BoatDockData boatDockData)
+    {
+        if (boatDockData == null) {
+            Debug.LogError($"[{nameof(BoatDockPoint)}] Boat Dock Data is not valid!");
+            Init();
+            return;
+        }
+
+        instanceId.SetGuid(boatDockData.InstanceId);
     }
 
     public void AddBoat(Boat boat)

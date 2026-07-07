@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DockPointsLoader : WorldLoader
@@ -6,31 +7,73 @@ public class DockPointsLoader : WorldLoader
 
     protected override void Load(WorldData worldData)
     {
-        if (worldData != null && worldData.CitizenBoatDocks != null) {
-            LoadDocks(dockPointsManager.CitizenBoatDocks.ToArray(), worldData?.CitizenBoatDocks);
+        if (dockPointsManager == null) {
+            Debug.LogError($"[{nameof(DockPointsLoader)}] DockPointsManager reference is missing!");
+            return;
         }
 
-        if (worldData != null && worldData.WandererBoatDocks != null) {
-            LoadDocks(dockPointsManager.WandererDockPoints, worldData?.WandererBoatDocks);
+        var citizenDocksData = worldData?.CitizenBoatDocks;
+        var citizenDocks = dockPointsManager.CitizenBoatDocks;
+
+        if (citizenDocksData != null && citizenDocks != null) {
+            LoadDocks(citizenDocks, citizenDocksData);
+        }
+        else {
+            InitDocks(citizenDocks);
         }
 
-        if (worldData != null && worldData.RaiderBoatDocks != null) {
-            LoadDocks(dockPointsManager.RaiderDockPoints, worldData?.RaiderBoatDocks);
+        var wandererDocksData = worldData?.WandererBoatDocks;
+        var wandererDocks = dockPointsManager.WandererDockPoints;
+
+        if (wandererDocksData != null && wandererDocks != null) {
+            LoadDocks(wandererDocks, wandererDocksData);
+        }
+        else {
+            InitDocks(wandererDocks);
         }
 
-        if (worldData != null && worldData.EvictBoatDocks != null) {
-            LoadDocks(dockPointsManager.EvictDockPoints, worldData?.EvictBoatDocks);
+        var raiderDocksData = worldData?.RaiderBoatDocks;
+        var raiderDocks = dockPointsManager.RaiderDockPoints;
+
+        if (raiderDocksData != null && raiderDocks != null) {
+            LoadDocks(raiderDocks, raiderDocksData);
+        }
+        else {
+            InitDocks(raiderDocks);
+        }
+
+        var evictDocksData = worldData?.EvictBoatDocks;
+        var evictDocks = dockPointsManager.EvictDockPoints;
+
+        if (evictDocksData != null && evictDocks != null) {
+            LoadDocks(evictDocks, evictDocksData);
+        }
+        else {
+            InitDocks(evictDocks);
         }
     }
 
-    private void LoadDocks(BoatDockPoint[] docks, BoatDockData[] docksData)
+    private void InitDocks(IReadOnlyList<BoatDockPoint> docks)
     {
-        for (int i = 0; i < docks.Length; i++) {
-            if (i >= docksData.Length) return;
+        foreach (var dock in docks) {
+            dock.Init();
+        }
+    }
+
+    private void LoadDocks(IReadOnlyList<BoatDockPoint> docks, BoatDockData[] docksData)
+    {
+        for (int i = 0; i < docks.Count; i++) {
+            if (i >= docksData.Length) break;
 
             var data = docksData[i];
+            if (data == null) {
+                Debug.LogWarning($"[{nameof(DockPointsLoader)}] Dock data at index {i} is null! Create default.");
+                data = BoatDockData.Default();
+            }
 
-            docks[i].Init(data);
+            if (docks[i] != null) {
+                docks[i].Init(data);
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ public static class WandererAdmissionSystem
             return;
         }
 
-        int creautereId = wanderer.GenderComponent.IsMale ? (int)CreatureIdEnum.HumanCitizenMale : (int)CreatureIdEnum.HumanCitizenFemale;
+        var creautereId = wanderer.GenderComponent.IsMale ? CreatureIdEnum.HumanCitizenMale : CreatureIdEnum.HumanCitizenFemale;
         var citizenPrefab = CreaturesList.Instance.GetCreature(creautereId);
 
         if (!citizenPrefab) {

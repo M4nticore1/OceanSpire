@@ -4,12 +4,12 @@ using UnityEngine;
 [Serializable]
 public class BoatData
 {
-    public int Id = 0;
-    public Guid InstanceId;
+    public BoatIdEnum Id = 0;
+    public Guid InstanceId = Guid.NewGuid();
     public Vector3Data Position = Vector3Data.Zero();
     public Vector3Data Rotation = Vector3Data.Zero();
-    public int StateId = 0;
-    public Guid? DockInstanceId;
+    public BoatStateEnum State = BoatStateEnum.Idle;
+    public Guid? DockInstanceId = null;
     public HumanStatusEnum Status = HumanStatusEnum.Citizen; 
 
     public static BoatData Create(Boat boat)
@@ -20,7 +20,7 @@ public class BoatData
             InstanceId = boat.InstanceId.GetGuid(),
             Position = new Vector3Data(boat.transform.position),
             Rotation = new Vector3Data(boat.transform.rotation.eulerAngles),
-            StateId = (int)boat.CurrentStateEnum,
+            State = boat.CurrentStateEnum,
             DockInstanceId = boat.DockPoint?.InstanceId.GetGuid(),
             Status = boat.CurrentStatus
         };

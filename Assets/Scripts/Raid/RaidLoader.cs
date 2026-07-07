@@ -4,10 +4,12 @@ public class RaidLoader : WorldLoader
 {
     [SerializeField] private RaidManager raidManager;
 
-    protected override void Load(WorldData data)
+    protected override void Load(WorldData worldData)
     {
-        if (data != null && data.Raid != null) {
-            raidManager.Init(data.Raid);
+        var raidData = worldData?.Raid;
+
+        if (raidData != null) {
+            raidManager.Init(raidData);
         }
         else {
             raidManager.Init();

@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class DailyRewardData
 {
-    public RewardInstanceData[] Rewards = null;
+    public RewardInstanceData[] Rewards = new RewardInstanceData[0];
     public long NextResetTime = 0;
     public bool MainRewardCollected = false;
     public bool ExtraRewardCollected = false;

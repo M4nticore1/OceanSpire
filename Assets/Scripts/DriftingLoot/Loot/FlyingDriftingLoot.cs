@@ -27,6 +27,11 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
         DriftingLootManager.Instance.UnregisterFlyingDriftingLoot(this);
     }
 
+    protected override void OnInit()
+    {
+        OnInit(FlyingDriftingLootData.Default() ?? new FlyingDriftingLootData());
+    }
+
     protected override void OnInit(DriftingLootData driftingLootData)
     {
         base.OnInit(driftingLootData);
@@ -69,7 +74,7 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
     {
         return new FlyingDriftingLootData()
         {
-            Id = (int)Definition.Id,
+            Id = Definition.Id,
             MeshId = UnityEngine.Random.Range(0, Definition.Meshes.Length),
         };
     }
@@ -100,7 +105,7 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
 
         var driftingLootData = new SwimmingDriftingLootData()
         {
-            Id = (int)prefab.Definition.Id,
+            Id = prefab.Definition.Id,
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation.eulerAngles),
         };

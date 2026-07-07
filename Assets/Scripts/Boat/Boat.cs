@@ -108,8 +108,7 @@ public class Boat : MonoBehaviour, IClickable
         instanceId.SetGuid(boatData.InstanceId);
         BoatsManager.Instance.RegisterBoat(this);
 
-        var state = (BoatStateEnum)Enum.GetValues(typeof(BoatStateEnum)).GetValue(boatData.StateId);
-        SetState(state);
+        SetState(boatData.State);
 
         transform.position = boatData.Position.Vector3();
         transform.rotation = Quaternion.Euler(boatData.Rotation.Vector3());

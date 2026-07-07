@@ -48,7 +48,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     private void Update()
     {
-        long currentSecond = TimeManager.GetCurrentSecond();
+        long currentSecond = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         if (currentSecond < NextResetTime) return;
 
         ResetRewardCollected();
@@ -92,6 +92,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
             var reward = TryCreateReward(id);
             if (reward == null) {
                 Debug.LogError($"Reward not found at {name}");
+                continue;
             }
 
             reward.SetCollected(rewardData.Collected);

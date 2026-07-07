@@ -1,6 +1,6 @@
 using UnityEngine;
 
-enum CreatureIdEnum
+public enum CreatureIdEnum
 {
     HumanCitizenMale,
     HumanCitizenFemale,
@@ -14,5 +14,5 @@ enum CreatureIdEnum
 public class CreatureDefinition : ScriptableObject
 {
     [SerializeField] private CreatureIdEnum creatureId = CreatureIdEnum.HumanCitizenMale;
-    public int CreatureId => (int)creatureId;
+    public CreatureIdEnum CreatureId => creatureId;
 }

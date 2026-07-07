@@ -18,19 +18,15 @@ public class CityStorageLoader : WorldLoader
         Instance = this;
     }
 
-    protected override void Load(WorldData data)
+    protected override void Load(WorldData worldData)
     {
-        var cityStorageData = data?.CityStorage;
+        var cityStorageData = worldData?.CityStorage;
 
         if (cityStorageData != null) {
-            var items = data.CityStorage.Items;
-
-            foreach (var itemData in items) {
-                cityStorage.Inventory.AddItem(itemData.Id, itemData.Amount);
-            }
+            cityStorage.Init(cityStorageData);
         }
         else {
             startItems.CollectItems();
-        }
+        }      
     }
 }

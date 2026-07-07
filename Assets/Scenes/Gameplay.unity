@@ -6872,7 +6872,6 @@ Transform:
   - {fileID: 1390484530}
   - {fileID: 582308150}
   - {fileID: 1479335646}
-  - {fileID: 756253618}
   - {fileID: 1476504963}
   - {fileID: 1865861195}
   - {fileID: 265976988}
@@ -8764,68 +8763,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
---- !u!1001 &756253617
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 575860145}
-    m_Modifications:
-    - target: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 9.47131
-      objectReference: {fileID: 0}
-    - target: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.16007
-      objectReference: {fileID: 0}
-    - target: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 20.24829
-      objectReference: {fileID: 0}
-    - target: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6933359292978716805, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-      propertyPath: m_Name
-      value: DriftingLootAudioSystem
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
---- !u!4 &756253618 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3658833355218071117, guid: e6cb2ebed8559114388b9b447eca6ef3, type: 3}
-  m_PrefabInstance: {fileID: 756253617}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &759244084
 GameObject:
   m_ObjectHideFlags: 0
@@ -11377,10 +11314,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1542763785}
     m_Modifications:
-    - target: {fileID: -7511558181221131132, guid: 32b03b49a3f64194ab80e7657b994c71, type: 3}
-      propertyPath: m_CastShadows
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3687494267303527126, guid: 897b915ca734e144d851305937d2addc, type: 3}
       propertyPath: m_Name
       value: Rock_Medium_04 (1)
@@ -11436,6 +11369,10 @@ PrefabInstance:
     - target: {fileID: 7634529172933479113, guid: 897b915ca734e144d851305937d2addc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 32b03b49a3f64194ab80e7657b994c71, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11813,6 +11750,7 @@ MonoBehaviour:
   boatsManager: {fileID: 1934078805}
   creaturesManager: {fileID: 220072952}
   driftingLootManager: {fileID: 916931150}
+  driftingLootList: {fileID: 11400000, guid: 3b08c49927a65294e8c781da28c52aa3, type: 2}
   cityStorgae: {fileID: 1388613268}
   dailyTasksManager: {fileID: 1366684462}
   dailyRewardManager: {fileID: 101393569}
@@ -17084,10 +17022,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1542763785}
     m_Modifications:
-    - target: {fileID: -7511558181221131132, guid: 32b03b49a3f64194ab80e7657b994c71, type: 3}
-      propertyPath: m_CastShadows
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3687494267303527126, guid: 897b915ca734e144d851305937d2addc, type: 3}
       propertyPath: m_Name
       value: Rock_Medium_04
@@ -17143,6 +17077,10 @@ PrefabInstance:
     - target: {fileID: 7634529172933479113, guid: 897b915ca734e144d851305937d2addc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 32b03b49a3f64194ab80e7657b994c71, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -24116,7 +24054,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6522174325105471430, guid: 0b5ba59b2b38dca4ca7735bf315ae542, type: 3}
       propertyPath: m_Name
-      value: LootContainerAudioSystem
+      value: DriftingLootAudioSystem
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

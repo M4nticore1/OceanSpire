@@ -59,9 +59,12 @@ public class Inventory : MonoBehaviour
             return;
         }
 
-        foreach (var itemData in inventoryData.Items) {
-            var item = ItemInstance.Create(itemData);
-            AddItem(item);
+        var items = inventoryData.Items;
+
+        if (items != null) {
+            foreach (var itemData in inventoryData.Items) {
+                AddItem(itemData.Id, itemData.Amount);
+            }
         }
     }
 
@@ -166,16 +169,21 @@ public class Inventory : MonoBehaviour
 
     private void AddWeight(float weight)
     {
-        currentWeight += weight;
+        SetWeight(currentWeight + weight);
     }
 
     private void RemoveWeight(float weight)
     {
-        if (items.Count > 0) {
-            currentWeight -= weight;
+        if (items.Count > 0f) {
+            SetWeight(currentWeight - weight);
         }
         else {
-            currentWeight = 0f;
+            SetWeight(0f);
         }
+    }
+
+    private void SetWeight(float weight)
+    {
+        currentWeight = Mathf.Max(0f, weight);
     }
 }

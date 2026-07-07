@@ -58,14 +58,14 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     private void OnEnable()
     {
-        InputListener.Instance.onPressed += OnPress;
-        InputListener.Instance.onReleased += OnRelease;
+        InputListener.Instance.OnPressed += OnPress;
+        InputListener.Instance.OnReleased += OnRelease;
     }
 
     private void OnDisable()
     {
-        InputListener.Instance.onPressed -= OnPress;
-        InputListener.Instance.onReleased -= OnRelease;
+        InputListener.Instance.OnPressed -= OnPress;
+        InputListener.Instance.OnReleased -= OnRelease;
     }
 
     private void Start()

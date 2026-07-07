@@ -10,14 +10,14 @@ public class TouchscreenKeyboardManager : MonoBehaviour
     {
         if (!TouchScreenKeyboard.isSupported) return;
 
-        InputListener.Instance.onReleased += OnPointerReleased;
+        InputListener.Instance.OnReleased += OnPointerReleased;
     }
 
     private void OnDisable()
     {
         if (!TouchScreenKeyboard.isSupported) return;
 
-        InputListener.Instance.onReleased -= OnPointerReleased;
+        InputListener.Instance.OnReleased -= OnPointerReleased;
     }
 
     private void Start()

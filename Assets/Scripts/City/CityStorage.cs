@@ -30,7 +30,22 @@ public class CityStorage : MonoBehaviour
         EventBus.OnBoatUnloadedItem -= OnBoatUnloadedItem;
     }
 
-    // Inventory
+    public void Init()
+    {
+        Init(InventoryData.Default() ?? new InventoryData());
+    }
+
+    public void Init(InventoryData inventoryData)
+    {
+        if (inventoryData == null) {
+            Debug.LogError("[CityStorage] InventoryData is not valid");
+            Init();
+            return;
+        }
+
+        inventory.Init(inventoryData);
+    }
+
     private void OnItemAmountChanged(ItemInstance item)
     {
         EventBus.InvokeMainStorageAmountChanged(item);

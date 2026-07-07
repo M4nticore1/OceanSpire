@@ -4,29 +4,21 @@ using UnityEngine;
 [Serializable]
 public abstract class DriftingLootData
 {
-    public int Id = 0;
-    public int InstanceId = 0;
-    public Vector3Data Position;
-    public Vector3Data Rotation;
-    public Vector3Data MeshRotation;
+    public DriftingLootId Id = 0;
+    public Guid InstanceId = Guid.NewGuid();
+    public Vector3Data Position = Vector3Data.Zero();
+    public Vector3Data Rotation = Vector3Data.Zero();
+    public Vector3Data Destination = Vector3Data.Zero();
+    public Vector3Data MeshRotation = Vector3Data.Zero();
     public int MeshId = 0;
-
-    public static DriftingLootData Create(DriftingLoot driftingLoot)
-    {
-        return null;
-    }
-
-    public static DriftingLootData[] Create(DriftingLoot[] driftingLoot)
-    {
-        return null;
-    }
 
     protected void Fill(DriftingLoot driftingLoot)
     {
-        Id = (int)driftingLoot.Definition.Id;
-        InstanceId = driftingLoot.InstanceId.GetInstanceID();
+        Id = driftingLoot.Definition.Id;
+        InstanceId = driftingLoot.InstanceId.GetGuid();
         Position = new Vector3Data(driftingLoot.transform.position);
         Rotation = new Vector3Data(driftingLoot.transform.rotation.eulerAngles);
+        Destination = new Vector3Data(driftingLoot.Destination);
         MeshId = driftingLoot.MeshId;
     }
 }

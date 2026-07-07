@@ -12,10 +12,4 @@ public class ElevatorModuleLevelData : BuildingModuleLevelData
     [Header("Elevator")]
     [SerializeField] private float elevatorMoveSpeed = 0.0f;
     public float ElevatorMoveSpeed => elevatorMoveSpeed;
-
-    //public BuildingConstruction elevator;
-    //public BuildingConstruction elevatorButtom;
-    //public BuildingConstruction elevatorTop;
-    //public BuildingConstruction elevatorTopButtom;
-    //public BuildingConstruction elevatorPlatform;
 }

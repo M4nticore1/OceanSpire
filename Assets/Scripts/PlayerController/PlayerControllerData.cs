@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class PlayerControllerData
 {
-    public Vector3Data cameraRotation;
+    public Vector3Data cameraRotation = Vector3Data.Zero();
 
     public static PlayerControllerData Create(PlayerController playerController)
     {

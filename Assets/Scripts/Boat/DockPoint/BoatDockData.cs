@@ -3,7 +3,12 @@ using UnityEngine;
 
 public class BoatDockData
 {
-    public Guid InstanceId;
+    public Guid InstanceId = Guid.NewGuid();
+
+    public static BoatDockData Default()
+    {
+        return new BoatDockData();
+    }
 
     public static BoatDockData Create(BoatDockPoint boatDock)
     {

@@ -24,6 +24,8 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
     [SerializeField] private Transform meshSpawnTransform;
 
+    public Vector3 Destination { get; private set; } = Vector3.zero;
+
     public int MeshId { get; private set; } = 0;
     public GameObject SpawnedMesh { get; private set; }
 
@@ -44,8 +46,16 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
     public void Init(DriftingLootData driftingLootData)
     {
-        OnInit(driftingLootData);
+        if (driftingLootData != null) {
+            OnInit(driftingLootData);
+        }
+        else {
+            Debug.LogError($"[{nameof(DriftingLoot)}] Drifting Loot Data is not valid");
+            OnInit();
+        }
     }
+
+    protected abstract void OnInit();
 
     protected virtual void OnInit(DriftingLootData driftingLootData)
     {
@@ -54,11 +64,23 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
             return;
         }
 
+        if (driftingLootData.Destination.Vector3() == Vector3.zero) {
+            Destroy(gameObject);
+            return;
+        }
+
+        if (!movement.CanAgentReachTarget(driftingLootData.Destination.Vector3())) {
+            Destroy(gameObject);
+            return;
+        }
+
+        instanceId.SetGuid(driftingLootData.InstanceId);
         movement.NavAgent.Warp(transform.position);
 
+        Destination = driftingLootData.Destination.Vector3();
+        movement.TryMoveTo(Destination);
+
         CreateMesh(driftingLootData);
-        UpdateDestination();
-        //UpdateMovementDirection();
     }
 
     public virtual void Tick(float deltaTime)
@@ -84,7 +106,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
     public void StartMoving()
     {
-        UpdateDestination();
+        movement.TryMoveTo(Destination);
     }
 
     public void StopMoving()
@@ -120,15 +142,6 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
         var rotation = Quaternion.Euler(driftingLootData.MeshRotation.Vector3());
         SpawnedMesh.transform.rotation = rotation;
-    }
-
-    private void UpdateDestination()
-    {
-        var windDir = WindManager.Instance.WindDirection;
-        var dir = new Vector3(windDir.x, 0, windDir.z).normalized;
-        var destination = WorldUtils.GetBorderPosition(dir);
-        if (!movement.TryMoveTo(destination))
-            Debug.Log(gameObject);
     }
 
     private void TryDestroy()

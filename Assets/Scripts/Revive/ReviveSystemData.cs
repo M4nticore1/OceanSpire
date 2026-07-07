@@ -5,7 +5,7 @@ using UnityEngine;
 public class ReviveSystemData
 {
     public int RemainingRevivesCount = 0;
-    public long[] NextReviveChargeTimes = Array.Empty<long>();
+    public long[] NextReviveChargeTimes = new long[0];
 
     public static ReviveSystemData Default()
     {

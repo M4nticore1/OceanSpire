@@ -19,9 +19,9 @@ public class LootContainersList : ScriptableObject
     [SerializeField] private DriftingLoot[] lootContainers;
     public DriftingLoot[] LootContainers => lootContainers;
 
-    private Dictionary<int, DriftingLoot> driftingLootDict;
+    private Dictionary<DriftingLootId, DriftingLoot> driftingLootDict;
 
-    public DriftingLoot GetDriftingLoot(int id)
+    public DriftingLoot GetDriftingLoot(DriftingLootId id)
     {
         TryInitDictionary();
 
@@ -35,7 +35,7 @@ public class LootContainersList : ScriptableObject
         driftingLootDict = new();
 
         foreach (var loot in lootContainers) {
-            driftingLootDict.Add((int)loot.Definition.Id, loot);
+            driftingLootDict.Add(loot.Definition.Id, loot);
         }
     }
 }

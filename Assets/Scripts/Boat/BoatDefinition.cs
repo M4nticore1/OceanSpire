@@ -11,7 +11,7 @@ public enum BoatIdEnum
 public class BoatDefinition : ScriptableObject
 {
     [SerializeField] private BoatIdEnum boatId = BoatIdEnum.BasicBoat;
-    public int BoatId => (int)boatId;
+    public BoatIdEnum BoatId => boatId;
 
     [SerializeField] private string boatIdName = "";
     public string BoatIdName => boatIdName;

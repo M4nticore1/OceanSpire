@@ -9,7 +9,7 @@ public class PlayerControllerLoader : WorldLoader
         var playerControllerData = worldData?.Player;
 
         if (playerControllerData != null) {
-            playerController?.Init(playerControllerData);
+            playerController.Init(playerControllerData);
         }
         else {
             playerController.Init();

@@ -131,8 +131,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         CustomUIManager.Instance.RegisterCustomButton(this);
 
-        InputListener.Instance.onPressed += OnPointerPressed;
-        InputListener.Instance.onReleased += OnPointerReleased;
+        InputListener.Instance.OnPressed += OnPointerPressed;
+        InputListener.Instance.OnReleased += OnPointerReleased;
 
         EndTransitionAnimation();
     }
@@ -143,8 +143,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         CustomUIManager.Instance.UnregisterCustomButton(this);
 
-        InputListener.Instance.onPressed -= OnPointerPressed;
-        InputListener.Instance.onReleased -= OnPointerReleased;
+        InputListener.Instance.OnPressed -= OnPointerPressed;
+        InputListener.Instance.OnReleased -= OnPointerReleased;
     }
 
     protected override void OnDestroy()
@@ -296,6 +296,8 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!IsInteractable) return;
         //if (!IsPressed && !deselectOnOutsideClick) return;
 
+        Debug.Log("OnPointerReleased");
+
         if (IsPressed) {
             if (IsSelectable)
                 SetState(CustomButtonState.Selected);
@@ -335,6 +337,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (!PointerUtils.IsUIHovered(gameObject)) return;
 
+        Debug.Log("ButtonReleased");
         OnReleased?.Invoke();
         OnButtonReleased?.Invoke(this);
         OnTutorialInteracted?.Invoke();

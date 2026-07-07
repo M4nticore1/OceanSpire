@@ -44,7 +44,7 @@ public class ElevatorPassenger : MonoBehaviour
             return;
         }
 
-        SetState(elevatorPassengerData.PassengerState);
+        SetState(elevatorPassengerData.State);
     }
 
     public void SetState(ElevatorPassengerStateEnum state)

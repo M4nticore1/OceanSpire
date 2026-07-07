@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,21 +9,18 @@ public class DriftingLootManager : MonoBehaviour
     [SerializeField] private LootContainersList driftingLootList;
     [SerializeField] private BuildingsManager buildingsManager;
 
+    [SerializeField] private const float spawnMaxOffsetYaw = 60.0f;
+    [SerializeField] private float updatePositionFrequency = 0.05f;
+    [SerializeField] private float spawnFrequency = 0.5f;
+
     public List<SwimmingDriftingLoot> SpawnedSwimmingDriftingLoot = new();
     public List<FlyingDriftingLoot> SpawnedFlyingDriftingLoot = new();
 
-    public float[] CurrentSpawnTime { get; private set; }
-    public float[] NextSpawnTime { get; private set; }
+    public Dictionary<DriftingLootId, float> CurrentSpawnTime { get; private set; } = new();
+    public Dictionary<DriftingLootId, float> NextSpawnTime { get; private set; } = new();
 
-    // Spawn Time
     private float lastSpawnTime = 0f;
-    private const float spawnFrequency = 0.5f;
-
-    // Update Time
-    [SerializeField] private float updatePositionFrequency = 0.05f;
     private float currentUpdatePositionTime = 0f;
-
-    private const float spawnMaxOffsetYaw = 60.0f;
 
     private void Awake()
     {
@@ -40,152 +38,174 @@ public class DriftingLootManager : MonoBehaviour
         UpdateLootContainers();
     }
 
+    public void Init()
+    {
+        Init(DriftingLootSystemData.Default() ?? new DriftingLootSystemData());
+    }
+
     public void Init(DriftingLootSystemData driftingLootData)
     {
-        var lootContainer = driftingLootList.LootContainers;
-        int count = lootContainer.Length;
-        NextSpawnTime = new float[count];
-        CurrentSpawnTime = new float[count];
-
-        if (driftingLootData != null) {
-            SetSpawnTime(driftingLootData.NextSpawnTime);
-            SetCurrentSpawnTime(driftingLootData.CurrentSpawnTime);
-            SpawnDriftingLoot(driftingLootData.SwimmingDriftingLoot);
-            SpawnDriftingLoot(driftingLootData.FlyingDriftingLoot);
+        if (driftingLootList == null || driftingLootList.LootContainers == null) {
+            Debug.LogError($"[{nameof(DriftingLootManager)}] LootContainersList or its containers are not assigned!");
+            Init();
+            return;
         }
-        else {
-            for (int i = 0; i < lootContainer.Length; i++) {
-                float spawnTime = UnityEngine.Random.Range(lootContainer[i].Definition.MinSpawnTime, lootContainer[i].Definition.MaxSpawnTime);
-                NextSpawnTime[i] = spawnTime;
+
+        CurrentSpawnTime.Clear();
+        NextSpawnTime.Clear();
+
+        var lootContainers = driftingLootList.LootContainers;
+
+        SetSpawnTime(driftingLootData.NextSpawnTime);
+        SetCurrentSpawnTime(driftingLootData.CurrentSpawnTime);
+        SpawnDriftingLoot(driftingLootData.SwimmingDriftingLoot);
+        SpawnDriftingLoot(driftingLootData.FlyingDriftingLoot);
+
+        foreach (var container in lootContainers) {
+            if (container == null) continue;
+
+            var id = container.Definition.Id;
+
+            if (!NextSpawnTime.ContainsKey(id)) {
+                float randomSpawnTime = UnityEngine.Random.Range(container.Definition.MinSpawnTime, container.Definition.MaxSpawnTime);
+                NextSpawnTime[id] = randomSpawnTime;
+            }
+
+            if (!CurrentSpawnTime.ContainsKey(id)) {
+                CurrentSpawnTime[id] = 0f;
             }
         }
     }
 
     public void RegisterSwimmingDriftingLoot(SwimmingDriftingLoot driftingLoot)
     {
-        SpawnedSwimmingDriftingLoot.Add(driftingLoot);
+        if (driftingLoot != null && !SpawnedSwimmingDriftingLoot.Contains(driftingLoot)) {
+            SpawnedSwimmingDriftingLoot.Add(driftingLoot);
+        }
     }
 
     public void UnregisterSwimmingDriftingLoot(SwimmingDriftingLoot driftingLoot)
     {
-        if (!SpawnedSwimmingDriftingLoot.Contains(driftingLoot)) {
-            Debug.Log($"SpawnedSwimmingDriftingLoot is already does not contain {driftingLoot}");
-            return;
-        }
-
+        if (driftingLoot == null) return;
         SpawnedSwimmingDriftingLoot.Remove(driftingLoot);
     }
 
     public void RegisterFlyingDriftingLoot(FlyingDriftingLoot driftingLoot)
     {
-        SpawnedFlyingDriftingLoot.Add(driftingLoot);
+        if (driftingLoot != null && !SpawnedFlyingDriftingLoot.Contains(driftingLoot)) {
+            SpawnedFlyingDriftingLoot.Add(driftingLoot);
+        }
     }
 
     public void UnregisterFlyingDriftingLoot(FlyingDriftingLoot driftingLoot)
     {
-        if (!SpawnedFlyingDriftingLoot.Contains(driftingLoot)) {
-            Debug.Log($"SpawnedFlyingDriftingLoot is already does not contain {driftingLoot}");
-            return;
-        }
-
+        if (driftingLoot == null) return;
         SpawnedFlyingDriftingLoot.Remove(driftingLoot);
     }
 
     private void SetSpawnTime(float[] values)
     {
-        if (values == null) {
-            Debug.Log($"Spawn Time array not fount at {name}");
-            return;
-        }
+        if (values == null) return;
 
+        var containers = driftingLootList.LootContainers;
         for (int i = 0; i < values.Length; i++) {
-            if (NextSpawnTime.Length <= i) break;
-            float value = values[i];
+            if (i >= containers.Length) break;
+            if (containers[i] == null) continue;
 
-            NextSpawnTime[i] = value;
+            var id = containers[i].Definition.Id;
+            NextSpawnTime[id] = values[i];
         }
     }
 
     private void SetCurrentSpawnTime(float[] values)
     {
-        if (values == null) {
-            Debug.Log($"Current Spawn Time array not fount at {name}");
-            return;
-        }
+        if (values == null) return;
 
+        var containers = driftingLootList.LootContainers;
         for (int i = 0; i < values.Length; i++) {
-            if (CurrentSpawnTime.Length <= i) break;
-            float value = values[i];
+            if (i >= containers.Length) break;
+            if (containers[i] == null) continue;
 
-            CurrentSpawnTime[i] = value;
+            var id = containers[i].Definition.Id;
+            CurrentSpawnTime[id] = values[i];
         }
     }
 
     private void SpawnDriftingLoot(DriftingLootData[] driftingLootData)
     {
-        if (driftingLootData == null) {
-            Debug.Log($"driftingLootData not fount at {name}");
-            return;
-        }
+        if (driftingLootData == null) return;
 
         foreach (var data in driftingLootData) {
-            var prefab = driftingLootList.GetDriftingLoot(data.Id);
+            if (data == null) continue;
 
-            DriftingLootFactory.CreateDriftingLoot(prefab, data);
+            var prefab = driftingLootList.GetDriftingLoot(data.Id);
+            if (prefab != null) {
+                DriftingLootFactory.CreateDriftingLoot(prefab, data);
+            }
         }
     }
 
-    private void AddSpawnTime(int id)
+    private void AddSpawnTime(DriftingLootId id)
     {
+        if (!CurrentSpawnTime.ContainsKey(id)) {
+            CurrentSpawnTime[id] = 0f;
+        }
         CurrentSpawnTime[id] += spawnFrequency;
     }
 
-    private void UpdateNextSpawnTime(DriftingLoot driftingLootPrefab, int index)
+    private void UpdateNextSpawnTime(DriftingLoot driftingLootPrefab, DriftingLootId id)
     {
-        NextSpawnTime[index] = UnityEngine.Random.Range(driftingLootPrefab.Definition.MinSpawnTime, driftingLootPrefab.Definition.MaxSpawnTime);
-        CurrentSpawnTime[index] = 0f;
+        NextSpawnTime[id] = UnityEngine.Random.Range(driftingLootPrefab.Definition.MinSpawnTime, driftingLootPrefab.Definition.MaxSpawnTime);
+        CurrentSpawnTime[id] = 0f;
     }
 
-    private bool TrySpawnLootContainer(int id)
+    private bool TrySpawnLootContainer(DriftingLoot containerPrefab)
     {
-        var prefab = driftingLootList.GetDriftingLoot(id);
+        if (containerPrefab == null) return false;
+        var id = containerPrefab.Definition.Id;
 
-        if (!ShouldSpawnLootContainer(prefab, id)) return false;
+        if (!ShouldSpawnLootContainer(containerPrefab, id)) return false;
 
-        var windDir = WindManager.Instance.WindDirection;
-        var baseDir = new Vector2(windDir.x, windDir.z).normalized;
+        Vector3 windDir = WindManager.Instance != null ? WindManager.Instance.WindDirection : Vector3.forward;
+        windDir = new Vector3(windDir.x, 0f, windDir.z).normalized;
 
-        float rotationOffsetYaw = UnityEngine.Random.Range(-spawnMaxOffsetYaw / 2f, spawnMaxOffsetYaw / 2f);
-        float radians = rotationOffsetYaw * Mathf.Deg2Rad;
+        Vector3 sideDir = new Vector3(-windDir.z, 0f, windDir.x).normalized;
 
-        var rotatedDir = new Vector2(
-            baseDir.x * Mathf.Cos(radians) - baseDir.y * Mathf.Sin(radians),
-            baseDir.x * Mathf.Sin(radians) + baseDir.y * Mathf.Cos(radians)
-        );
+        Vector3 baseSpawnPos = -windDir * WorldUtils.SpawnDistance;
+        Vector3 baseDestinationPos = windDir * WorldUtils.SpawnDistance;
 
-        var flyingDriftingLootPrefab = prefab as FlyingDriftingLoot;
+        float maxSideOffset = 40f;
+        float randomSideOffset = UnityEngine.Random.Range(-maxSideOffset, maxSideOffset);
+
+        Vector3 finalBaseSpawn = baseSpawnPos + sideDir * randomSideOffset;
+        Vector3 finalBaseDest = baseDestinationPos + sideDir * randomSideOffset;
+
+        var flyingDriftingLootPrefab = containerPrefab as FlyingDriftingLoot;
         float positionY = 0;
 
-        if (flyingDriftingLootPrefab) {
+        if (flyingDriftingLootPrefab && buildingsManager != null) {
             int minFloorNumber = flyingDriftingLootPrefab.FlyingDefinition.MinSpawnFloor;
-            int maxFloorNumber = Mathf.Max(minFloorNumber, flyingDriftingLootPrefab.FlyingDefinition.MaxSpawnFloor > 0 ? flyingDriftingLootPrefab.FlyingDefinition.MaxSpawnFloor : flyingDriftingLootPrefab.FlyingDefinition.MinSpawnFloor > 0 ? buildingsManager.BuiltFloors.Count : 0);
+            int maxFloorNumber = Mathf.Max(minFloorNumber, flyingDriftingLootPrefab.FlyingDefinition.MaxSpawnFloor > 0
+                ? flyingDriftingLootPrefab.FlyingDefinition.MaxSpawnFloor
+                : buildingsManager.BuiltFloors.Count);
 
             float spawnFloorNumber = UnityEngine.Random.Range((float)minFloorNumber, maxFloorNumber);
             positionY = spawnFloorNumber * BuildingsManager.FloorHeight + BuildingsManager.FirstFloorHeight;
         }
 
-        var spawnPosition = new Vector3(-rotatedDir.x * WorldUtils.SpawnDistance, positionY, -rotatedDir.y * WorldUtils.SpawnDistance);
+        Vector3 spawnPosition = new Vector3(finalBaseSpawn.x, positionY, finalBaseSpawn.z);
+        Vector3 destinationPosition = new Vector3(finalBaseDest.x, positionY, finalBaseDest.z);
 
         float rotationAngle = UnityEngine.Random.Range(0f, 360f);
         var spawnRotation = Quaternion.Euler(0f, rotationAngle, 0f);
 
-        var driftingLootData = prefab.CreateRandomData();
+        var driftingLootData = containerPrefab.CreateRandomData();
         driftingLootData.Position = new Vector3Data(spawnPosition);
+        driftingLootData.Destination = new Vector3Data(destinationPosition);
         driftingLootData.Rotation = new Vector3Data(Vector3.zero);
         driftingLootData.MeshRotation = new Vector3Data(spawnRotation.eulerAngles);
 
-        var driftingLoot = DriftingLootFactory.CreateDriftingLoot(prefab, driftingLootData);
-
+        DriftingLootFactory.CreateDriftingLoot(containerPrefab, driftingLootData);
         return true;
     }
 
@@ -194,12 +214,16 @@ public class DriftingLootManager : MonoBehaviour
         if (Time.time < lastSpawnTime + spawnFrequency)
             return;
 
-        for (int i = 0; i < driftingLootList.LootContainers.Length; i++) {
-            AddSpawnTime(i);
+        var containers = driftingLootList.LootContainers;
+        for (int i = 0; i < containers.Length; i++) {
+            if (containers[i] == null) continue;
 
-            if (!TrySpawnLootContainer(i)) continue;
+            DriftingLootId id = containers[i].Definition.Id;
+            AddSpawnTime(id);
 
-            UpdateNextSpawnTime(driftingLootList.LootContainers[i], i);
+            if (!TrySpawnLootContainer(containers[i])) continue;
+
+            UpdateNextSpawnTime(containers[i], id);
         }
 
         lastSpawnTime = Time.time;
@@ -209,55 +233,43 @@ public class DriftingLootManager : MonoBehaviour
     {
         currentUpdatePositionTime += Time.deltaTime;
 
-        while (currentUpdatePositionTime >= updatePositionFrequency) {
-            TickDriftingLoot(SpawnedSwimmingDriftingLoot.ToArray());
-            TickDriftingLoot(SpawnedFlyingDriftingLoot.ToArray());
+        if (currentUpdatePositionTime > 1.0f) {
+            currentUpdatePositionTime = updatePositionFrequency;
+        }
+
+        while (currentUpdatePositionTime >= updatePositionFrequency && updatePositionFrequency > 0) {
+            const float tickStep = 1f;
+
+            for (int i = SpawnedSwimmingDriftingLoot.Count - 1; i >= 0; i--) {
+                if (SpawnedSwimmingDriftingLoot[i] != null) {
+                    SpawnedSwimmingDriftingLoot[i].Tick(tickStep);
+                }
+            }
+
+            for (int i = SpawnedFlyingDriftingLoot.Count - 1; i >= 0; i--) {
+                if (SpawnedFlyingDriftingLoot[i] != null) {
+                    SpawnedFlyingDriftingLoot[i].Tick(tickStep);
+                }
+            }
 
             currentUpdatePositionTime -= updatePositionFrequency;
         }
     }
 
-    private void TickDriftingLoot(DriftingLoot[] driftingLoot)
+    private bool ShouldSpawnLootContainer(DriftingLoot driftingLootPrefab, DriftingLootId id)
     {
-        foreach (var loot in driftingLoot) {
-            loot.Tick(Time.deltaTime / updatePositionFrequency);
-        }
-    }
-
-    private bool ShouldSpawnLootContainer(DriftingLoot driftingLootPrefab, int index)
-    {
-        if (CurrentSpawnTime[index] < NextSpawnTime[index])
+        if (!CurrentSpawnTime.TryGetValue(id, out float currentTime) || !NextSpawnTime.TryGetValue(id, out float nextTime)) {
             return false;
+        }
+
+        if (currentTime < nextTime) return false;
 
         var flyingLootPrefab = driftingLootPrefab as FlyingDriftingLoot;
-        if (flyingLootPrefab) {
-            if (flyingLootPrefab.FlyingDefinition.FloorsToSpawn > buildingsManager.BuiltFloors.Count) return false;
+        if (flyingLootPrefab && buildingsManager != null) {
+            if (flyingLootPrefab.FlyingDefinition.FloorsToSpawn > buildingsManager.BuiltFloors.Count)
+                return false;
         }
 
         return true;
     }
-
-    //private void SpawnInitialLoot()
-    //{
-    //    for (int i = 0; i < lootContainerPrefabs.Count; i++) {
-    //        LootContainer loot = lootContainerPrefabs[i];
-    //        float minTime = loot.spawnMinTime;
-    //        float maxTime = loot.spawnMaxTime;
-    //        float rotationOffsetYaw = UnityEngine.Random.Range(-lootContainersSpawnOffsetYaw, lootContainersSpawnOffsetYaw);
-
-    //        //float awerage = loot.spawnMaxTime - ((loot.spawnMaxTime - loot.spawnMinTime) / 2);
-    //        float spawnChange = math.lerp(minTime, maxTime, initialSpawnChanceMultiplier);
-
-    //        //Debug.Log(spawnChange);
-
-    //        float chance = UnityEngine.Random.Range(minTime, maxTime);
-    //        //Debug.Log(chance);
-    //        while (chance < spawnChange) {
-    //            int side = UnityEngine.Random.Range(0, 2);
-    //            float alpha = UnityEngine.Random.Range(side == 0 ? 0f : 0.6f, side == 0 ? 0.4f : 1f);
-    //            SpawnLootContainer(i, alpha);
-    //            chance = UnityEngine.Random.Range(minTime, maxTime);
-    //        }
-    //    }
-    //}
 }

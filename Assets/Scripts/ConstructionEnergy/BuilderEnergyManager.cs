@@ -82,8 +82,13 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
                     float energyGained = totalTicksGained * chargeEnergyPower;
                     SetEnergy(Mathf.Min(1f, CurrentEnergy + energyGained));
 
-                    long remainderSeconds = overdueTime % chargeEnergyFrequency;
-                    NextChargeTime = currentTime + (chargeEnergyFrequency - remainderSeconds);
+                    if (CurrentEnergy >= 1f) {
+                        NextChargeTime = null;
+                    }
+                    else {
+                        long remainingSeconds = overdueTime % chargeEnergyFrequency;
+                        NextChargeTime = currentTime + (chargeEnergyFrequency - remainingSeconds);
+                    }
                 }
                 else {
                     NextChargeTime = nextChargeTime;
@@ -142,7 +147,7 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
         if (CurrentEnergy >= 1f) {
             NextChargeTime = null;
         }
-        else {
+        else if (NextChargeTime == null) {
             var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             NextChargeTime = currentTime + chargeEnergyFrequency;
         }

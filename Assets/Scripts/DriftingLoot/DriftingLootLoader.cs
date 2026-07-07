@@ -6,6 +6,13 @@ public class DriftingLootLoader : WorldLoader
 
     protected override void Load(WorldData worldData)
     {
-        driftingLootManager.Init(worldData != null ? worldData.DriftingLoot : null);
+        var data = worldData?.DriftingLoot;
+
+        if (data != null) {
+            driftingLootManager.Init(data);
+        }
+        else {
+            driftingLootManager.Init();
+        }
     }
 }

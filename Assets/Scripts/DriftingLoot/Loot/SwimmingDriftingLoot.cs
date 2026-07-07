@@ -15,6 +15,11 @@ public class SwimmingDriftingLoot : DriftingLoot
         DriftingLootManager.Instance.UnregisterSwimmingDriftingLoot(this);
     }
 
+    protected override void OnInit()
+    {
+        OnInit(SwimmingDriftingLootData.Default() ?? new SwimmingDriftingLootData());
+    }
+
     protected override void OnInit(DriftingLootData driftingLootData)
     {
         base.OnInit(driftingLootData);
@@ -54,7 +59,7 @@ public class SwimmingDriftingLoot : DriftingLoot
 
         return new SwimmingDriftingLootData()
         {
-            Id = (int)Definition.Id,
+            Id = Definition.Id,
             Position = new Vector3Data(transform.position),
             Rotation = new Vector3Data(transform.rotation.eulerAngles),
             MeshId = MeshId,

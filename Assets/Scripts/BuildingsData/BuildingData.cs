@@ -5,7 +5,7 @@ using UnityEngine;
 public class BuildingData
 {
     public int Id = 0;
-    public Guid InstanceId;
+    public Guid InstanceId = Guid.NewGuid();
     public int Level = 1;
     public UpgradeData Upgrade = UpgradeData.Default();
     public ConstructionData Construction = ConstructionData.Default();

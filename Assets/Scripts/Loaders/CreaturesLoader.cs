@@ -33,7 +33,7 @@ public class CreaturesLoader : WorldLoader
         foreach (var data in humansData) {
             if (data == null) {
                 Debug.Log("Save human data is null");
-                return;
+                continue;
             }
 
             var prefab = creaturesList.GetCreature(data.Id);
@@ -53,8 +53,13 @@ public class CreaturesLoader : WorldLoader
 
             var finalPosition = new Vector3(x, y, z);
 
-            int citizenId = (int)citizenIds[Random.Range(0, citizenIds.Length)];
+            var citizenId = citizenIds[Random.Range(0, citizenIds.Length)];
+
             var prefab = creaturesList.GetCreature(citizenId) as Citizen;
+            if (!prefab) {
+                Debug.LogError("Citizen prefab is not valid");
+                continue;
+            }
 
             var skillsCount = Mathf.Max(1, SkillsFactory.GetLevelsCount());
 

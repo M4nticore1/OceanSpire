@@ -27,7 +27,7 @@ public class CustomDropdown : UIBehaviour
         base.OnEnable();
 
         button.OnReleased.AddListener(OnButtonClicked);
-        InputListener.Instance.onReleased += OnPointerReleased;
+        InputListener.Instance.OnReleased += OnPointerReleased;
     }
 
     protected override void OnDisable()
@@ -35,7 +35,7 @@ public class CustomDropdown : UIBehaviour
         base.OnDisable();
 
         button.OnReleased.RemoveListener(OnButtonClicked);
-        InputListener.Instance.onReleased -= OnPointerReleased;
+        InputListener.Instance.OnReleased -= OnPointerReleased;
     }
 
     protected override void Start()

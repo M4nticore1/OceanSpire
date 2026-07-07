@@ -55,7 +55,7 @@ public class WorldData
     public DailyTasksData DailyTasks;
     public DailyRewardData DailyReward;
     public RaidData Raid;
-    public WanderersData WanderersSystem;
+    public WandererSystemData WanderersSystem;
     public BuilderEnergyData BuilderEnergy;
     public ReviveSystemData ReviveSystem;
     public WindData Wind;
@@ -68,6 +68,7 @@ public class WorldData
         BoatsManager boats,
         CreaturesManager creatures,
         DriftingLootManager driftingLoot,
+        LootContainersList driftingLootList,
         Inventory cityInventory,
         DailyTasksManager dailyTasks,
         DailyRewardManager dailyReward,
@@ -98,13 +99,13 @@ public class WorldData
             Wanderers = WandererData.Create(creatures.Wanderers.ToArray()),
             Raiders = RaiderData.Create(creatures.Raiders.ToArray()),
 
-            DriftingLoot = DriftingLootSystemData.Create(driftingLoot),
+            DriftingLoot = DriftingLootSystemData.Create(driftingLoot, driftingLootList),
             CityStorage = InventoryData.Create(cityInventory),
 
             DailyTasks = DailyTasksData.Create(dailyTasks),
             DailyReward = DailyRewardData.Create(dailyReward),
             Raid = RaidData.Create(raid),
-            WanderersSystem = WanderersData.Create(wanderers),
+            WanderersSystem = WandererSystemData.Create(wanderers),
             ReviveSystem = ReviveSystemData.Create(revive),
             BuilderEnergy = BuilderEnergyData.Create(constructionEnergy),
             Wind = WindData.Create(wind)
