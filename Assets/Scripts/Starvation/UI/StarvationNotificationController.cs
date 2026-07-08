@@ -8,7 +8,7 @@ public class StarvationNotificationController : GameNotificationController
 
     protected override bool TrySubscribe()
     {
-        item = cityStorage.Inventory.GetItemById((int)ItemID.Food);
+        item = cityStorage.Inventory.GetItemById(ItemID.Food);
         if (item == null) return false;
 
         if (!base.TrySubscribe()) return false;

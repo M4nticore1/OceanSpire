@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class EquipmentData
 {
-    public int? EquipmentId = null;
+    public ItemID? EquipmentId = null;
 
     public static EquipmentData Default()
     {

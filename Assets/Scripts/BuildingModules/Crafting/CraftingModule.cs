@@ -356,8 +356,8 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
             return;
         }
 
-        int id = craftItemDefinition.ItemId;
-        int amount = craftItem.Amount;
+        var id = craftItemDefinition.ItemId;
+        var amount = craftItem.Amount;
         cityStorage.Inventory.AddItem(id, amount);
 
         OnItemCollected?.Invoke(SelectedCraftItem);
@@ -369,8 +369,8 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         if (!ShouldConsumeResources()) return false;
 
         foreach (var resource in SelectedCraftItem.Definition.ConsumeResources) {
-            int id = resource.Definition.ItemId;
-            int amount = resource.Amount;
+            var id = resource.Definition.ItemId;
+            var amount = resource.Amount;
             CityStorage.Instance.Inventory.RemoveItem(id, amount);
         }
 
@@ -382,8 +382,8 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         if (!ShouldRefundResources()) return false;
 
         foreach (var resource in SelectedCraftItem.Definition.ConsumeResources) {
-            int id = resource.Definition.ItemId;
-            int amount = resource.Amount;
+            var id = resource.Definition.ItemId;
+            var amount = resource.Amount;
             cityStorage.Inventory.AddItem(id, amount);
         }
 
@@ -447,9 +447,9 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         }
 
         foreach (var resource in craftItemDefinition.ConsumeResources) {
-            int id = resource.Definition.ItemId;
-            int neededAmount = resource.Amount;
-            int storageAmount = cityStorage.Inventory.GetItemById(id).Amount;
+            var id = resource.Definition.ItemId;
+            var neededAmount = resource.Amount;
+            var storageAmount = cityStorage.Inventory.GetItemById(id).Amount;
 
             if (neededAmount > storageAmount) return false;
         }

@@ -25,7 +25,7 @@ public class Inventory : MonoBehaviour
     [SerializeField] private List<ItemInstance> items = new();
     public IReadOnlyList<ItemInstance> Items => items;
 
-    private Dictionary<int, ItemInstance> itemsDict = new();
+    private Dictionary<ItemID, ItemInstance> itemsDict = new();
     private Dictionary<ItemStackEnum, ItemStack> itemStacks = new();
 
     public event Action<ItemInstance> OnAddedItemAmount;
@@ -73,7 +73,7 @@ public class Inventory : MonoBehaviour
         AddItem(item.Definition.ItemId, item.Amount);
     }
 
-    public void AddItem(int id, int amount)
+    public void AddItem(ItemID id, int amount)
     {
         var item = GetItemById(id);
         if (item == null) {
@@ -96,7 +96,7 @@ public class Inventory : MonoBehaviour
         AddWeight(amount * item.Definition.Weight);
     }
 
-    public void RemoveItem(int id, int amount)
+    public void RemoveItem(ItemID id, int amount)
     {
         var item = GetItemById(id);
         amount = Mathf.Max(0, amount);
@@ -130,7 +130,7 @@ public class Inventory : MonoBehaviour
         return itemStacks[stack];
     }
 
-    public ItemInstance GetItemById(int id)
+    public ItemInstance GetItemById(ItemID id)
     {
         itemsDict.TryGetValue(id, out var item);
 
@@ -144,7 +144,7 @@ public class Inventory : MonoBehaviour
         return items[index];
     }
 
-    private ItemInstance AddItem(int id)
+    private ItemInstance AddItem(ItemID id)
     {
         var definition = ItemsList.Instance.GetItem(id);
         var item = new ItemInstance(definition);
@@ -158,7 +158,7 @@ public class Inventory : MonoBehaviour
         return item;
     }
 
-    private ItemInstance RemoveItem(int id)
+    private ItemInstance RemoveItem(ItemID id)
     {
         ItemInstance item = GetItemById(id);
         items.Remove(item);

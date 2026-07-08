@@ -91,7 +91,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
             var resourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);
 
             var buildResource = buildResources[i];
-            int id = buildResource.Definition.ItemId;
+            var id = buildResource.Definition.ItemId;
             var storageItem = cityStorage.Inventory.GetItemById(id);
 
             resourceWidget.SetItem(buildResource.Definition);
@@ -109,7 +109,18 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
 
     private void UpdateBuildButtonEnabled()
     {
-        if (!BuildingPrefab) return;
+        if (!BuildingPrefab) {
+            BuildButton.SetState(CustomButtonState.Disabled);
+            BuildButton.EndTransitionAnimation();
+            return;
+        }
+
+        if (!cityStorage) {
+            Debug.LogError($"[{nameof(BuildingWidget)}] CityStorage is not valid!");
+            BuildButton.SetState(CustomButtonState.Disabled);
+            BuildButton.EndTransitionAnimation();
+            return;
+        }
 
         foreach (var buildItem in BuildingPrefab.LevelData.ResourcesToBuild) {
             var storageItem = cityStorage.Inventory.GetItemById(buildItem.Definition.ItemId);
@@ -117,10 +128,12 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
             if (buildItem.Amount <= storageItem.Amount) continue;
 
             BuildButton.SetState(CustomButtonState.Disabled);
+            BuildButton.EndTransitionAnimation();
             return;
         }
 
         BuildButton.SetState(CustomButtonState.Idle);
+        BuildButton.EndTransitionAnimation();
     }
 
     private void UpdateBuildTime()

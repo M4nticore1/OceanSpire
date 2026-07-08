@@ -16,7 +16,6 @@ public static class EventBus
 
     // Boats
     public static event Action<Boat> OnBoatUnloaded;
-    public static event Action<int, int> OnBoatUnloadedItem;
 
     // Loot
     public static event Action<ItemInstance> OnMainStorageItemAmountChanged;
@@ -68,11 +67,6 @@ public static class EventBus
     public static void InvokeBoatExitedUnloadingState(Boat boat)
     {
         OnBoatUnloaded?.Invoke(boat);
-    }
-
-    public static void InvokeBoatUnloadedItem(int id, int amount)
-    {
-        OnBoatUnloadedItem?.Invoke(id, amount);
     }
 
     // Loot

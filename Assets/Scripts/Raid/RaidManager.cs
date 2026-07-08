@@ -348,7 +348,7 @@ public class RaidManager : MonoBehaviour
         if (prefab == null) return null;
 
         var weaponDef = GetRandomWeaponDefinition();
-        int? weaponId = weaponDef != null ? weaponDef.ItemId : null;
+        ItemID? weaponId = weaponDef != null ? weaponDef.ItemId : null;
 
         var data = new RaiderData()
         {

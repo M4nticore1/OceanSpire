@@ -40,7 +40,7 @@ public class Citizen : Human
     {
         if (!base.ShouldClick()) return false;
         if (IsEvicted) return false;
-        if (BoatRider.RidingBoat && BoatRider.RidingBoat.CurrentStateEnum != BoatStateEnum.Idle) return false;
+        //if (BoatRider.RidingBoat && BoatRider.RidingBoat.CurrentStateEnum != BoatStateEnum.Idle) return false;
 
         return true;
     }

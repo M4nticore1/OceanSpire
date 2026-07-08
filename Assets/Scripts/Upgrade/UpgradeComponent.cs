@@ -27,12 +27,12 @@ public class UpgradeComponent : MonoBehaviour
 
     private void OnEnable()
     {
-        constructionComponent.OnConstructionCompleted += OnConstructionCompleted;
+        constructionComponent.OnConstructionFinished += OnConstructionCompleted;
     }
 
     private void OnDisable()
     {
-        constructionComponent.OnConstructionCompleted -= OnConstructionCompleted;
+        constructionComponent.OnConstructionFinished -= OnConstructionCompleted;
     }
 
     public void Init(UpgradeData upgradeData)

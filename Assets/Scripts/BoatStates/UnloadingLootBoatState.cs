@@ -64,13 +64,12 @@ public class UnloadingLootBoatState : BoatState, IProgressable
         if (loot == null) return;
 
         var data = loot.Definition;
-        int lootId = data.ItemId;
+        var lootId = data.ItemId;
         float lootWeight = data.Weight;
 
         if (lootWeight <= 0f) {
             int allAmount = loot.Amount;
             boat.Inventory.RemoveItem(lootId, allAmount);
-            EventBus.InvokeBoatUnloadedItem(lootId, allAmount);
             currentWeightToUnload = 0f;
             return;
         }
@@ -83,8 +82,6 @@ public class UnloadingLootBoatState : BoatState, IProgressable
 
         boat.Inventory.RemoveItem(lootId, amountToUnload);
         currentWeightToUnload -= amountToUnload * lootWeight;
-
-        EventBus.InvokeBoatUnloadedItem(lootId, amountToUnload);
     }
 
     private bool ShouldUnload()
@@ -97,7 +94,11 @@ public class UnloadingLootBoatState : BoatState, IProgressable
 
     private bool ShouldFindLoot()
     {
-        if (!boat.CurrentRider) return false;
+        var rider = boat.CurrentRider;
+        if (!rider) return false;
+        if (!rider.TargetBoat) return false;
+        if (rider.TargetBoat != boat) return false;
+        if (!rider.RidingBoat) return false;
         if (!boat.CurrentRider.HealthComponent.IsAlive) return false;
 
         return true;

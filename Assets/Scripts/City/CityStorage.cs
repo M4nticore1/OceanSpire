@@ -20,14 +20,12 @@ public class CityStorage : MonoBehaviour
     {
         inventory.OnItemAmountChanged += OnItemAmountChanged;
         inventory.OnChangedItemMaxAmount += OnItemMaxAmountChanged;
-        EventBus.OnBoatUnloadedItem += OnBoatUnloadedItem;
     }
 
     private void OnDisable()
     {
         inventory.OnItemAmountChanged -= OnItemAmountChanged;
         inventory.OnChangedItemMaxAmount -= OnItemMaxAmountChanged;
-        EventBus.OnBoatUnloadedItem -= OnBoatUnloadedItem;
     }
 
     public void Init()
@@ -54,10 +52,5 @@ public class CityStorage : MonoBehaviour
     private void OnItemMaxAmountChanged(StorageItem item)
     {
         EventBus.InvokeMainStorageMaxAmountChanged(item);
-    }
-
-    private void OnBoatUnloadedItem(int id, int amount)
-    {
-        inventory.AddItem(id, amount);
     }
 }

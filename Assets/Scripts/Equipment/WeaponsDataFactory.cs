@@ -25,7 +25,7 @@ public static class WeaponsDataFactory
 
     public static float GetMinWeaponDamageId()
     {
-        int id = 0;
+        ItemID id = 0;
         float maxDamage = 0;
         bool writed = false;
 
@@ -47,7 +47,7 @@ public static class WeaponsDataFactory
         return maxDamage;
     }
 
-    private static int? GetRandomWeaponId(float minDamage, float maxDamage)
+    private static ItemID? GetRandomWeaponId(float minDamage, float maxDamage)
     {
         maxDamage = Mathf.Max(GetMinWeaponDamageId(), maxDamage);
         var weapons = new List<WeaponDefinition>();
@@ -65,8 +65,8 @@ public static class WeaponsDataFactory
         if (weapons.Count == 0)
             return null;
 
-        int index = Random.Range(0, weapons.Count);
-        int id = weapons[index].ItemId;
+        var index = Random.Range(0, weapons.Count);
+        var id = weapons[index].ItemId;
 
         return id;
     }

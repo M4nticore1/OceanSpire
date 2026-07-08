@@ -58,7 +58,8 @@ public abstract class Human : Creature, IClickable
     [SerializeField] private ContextMenuTarget contextMenuTarget;
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
-    public bool IsClickable { get; private set; } = true;
+    [SerializeField] private bool isClickable = true;
+    public bool IsClickable => isClickable;
 
     public event Action OnClicked;
 
@@ -195,22 +196,22 @@ public abstract class Human : Creature, IClickable
     protected override void DetermineNextAction()
     {
         if (ShouldStartInteracting()) {
-            //Debug.Log("ShouldStartInteracting");
+            Debug.Log("ShouldStartInteracting");
             StartInteracting();
             return;
         }
         if (ShouldStopInteracting()) {
-            //Debug.Log("ShouldStopInteracting");
+            Debug.Log("ShouldStopInteracting");
             StopInteracting();
             return;
         }
         if (ShouldMoveToTargetBoat()) {
-            //Debug.Log("ShouldMoveToTargetBoat");
+            Debug.Log("ShouldMoveToTargetBoat");
             MoveToTargetBoat();
             return;
         }
-        if (ShouldStartEnteringBoat()) {
-            //Debug.Log("ShouldStartEnteringBoat");
+        if (ShouldWaitForEnteringBoat()) {
+            Debug.Log("ShouldStartEnteringBoat");
             StartEnteringBoat();
             return;
         }
@@ -276,7 +277,7 @@ public abstract class Human : Creature, IClickable
 
     protected virtual void StartEnteringBoat()
     {
-        boatRider.TryStartEnteringBoat(boatRider.TargetBoat);
+        boatRider.WaitForBoatAndEnter();
         UpdateIdle();
     }
 
@@ -387,10 +388,9 @@ public abstract class Human : Creature, IClickable
         return true;
     }
 
-    protected virtual bool ShouldStartEnteringBoat()
+    protected virtual bool ShouldWaitForEnteringBoat()
     {
         if (!boatRider.TargetBoat) return false;
-        if (boatRider.TargetBoat.CurrentStateEnum != BoatStateEnum.Idle) return false;
         if (!movement.IsReachedPosition(boatRider.TargetBoat.DockPoint.EntraceTransform.position)) return false;
 
         return true;
@@ -489,7 +489,8 @@ public abstract class Human : Creature, IClickable
 
     public void SetClickable(bool value)
     {
-        IsClickable = value;
+        Debug.Log($"SetCliacable {value}");
+        isClickable = value;
     }
 
     public virtual bool ShouldClick()
@@ -568,10 +569,8 @@ public abstract class Human : Creature, IClickable
 
     protected virtual void OnInteractBuildingRemoved(Building building)
     {
-        if (building == cityNavigator.TargetBuilding) {
-            cityNavigator.RemoveTargetBuilding();
-            cityNavigator.RemovePath();
-        }
+        cityNavigator.RemoveTargetBuilding();
+        cityNavigator.RemovePath();
 
         DetermineNextAction();
     }

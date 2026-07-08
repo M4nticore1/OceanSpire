@@ -13,7 +13,7 @@ public class ConstructionComponent : MonoBehaviour
     public float ConstructionTimeReduction { get; private set; } = 0f;
 
     public event Action OnConstructionStarted;
-    public event Action OnConstructionCompleted;
+    public event Action OnConstructionFinished;
 
     public static event Action<ConstructionComponent> OnGlobalConstructionStarted;
     public static event Action<ConstructionComponent> OnGlobalConstructionFinished;
@@ -79,7 +79,7 @@ public class ConstructionComponent : MonoBehaviour
         ConstructionStartTime = null;
         ConstructionFinishTime = null;
 
-        OnConstructionCompleted?.Invoke();
+        OnConstructionFinished?.Invoke();
         OnGlobalConstructionFinished?.Invoke(this);
     }
 

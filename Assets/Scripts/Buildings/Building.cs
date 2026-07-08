@@ -59,8 +59,11 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public event Action<CreatureCityNavigator> onEnterBuilding;
     public event Action<CreatureCityNavigator> onExitBuilding;
 
+    public event Action OnConstructionStarted;
+    public event Action OnConstructionFinished;
+
     public event Action OnUpgradeStarted;
-    public event Action OnUpgradeCompleted;
+    public event Action OnUpgradeFinished;
 
     public event Action OnLevelChanged;
     public event Action OnDemolished;
@@ -93,7 +96,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         levelComponent.OnLevelChanged += HandleLevelChanged;
 
         constructionComponent.OnConstructionStarted += HandleConstructionStarted;
-        constructionComponent.OnConstructionCompleted += HandleConstructionCompleted;
+        constructionComponent.OnConstructionFinished += HandleConstructionFinished;
 
         upgradeComponent.OnUpgradeStarted += HandleUpgradeStarted;
         upgradeComponent.OnUpgradeFinished += HandleUpgradeFinished;
@@ -115,7 +118,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         levelComponent.OnLevelChanged -= HandleLevelChanged;
 
         constructionComponent.OnConstructionStarted -= HandleConstructionStarted;
-        constructionComponent.OnConstructionCompleted -= HandleConstructionCompleted;
+        constructionComponent.OnConstructionFinished -= HandleConstructionFinished;
 
         upgradeComponent.OnUpgradeStarted -= HandleUpgradeStarted;
         upgradeComponent.OnUpgradeFinished -= HandleUpgradeFinished;
@@ -254,7 +257,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         SpawnedConstruction.UpdateInteractTransforms();
     }
 
-    protected virtual void OnConstructionComplete()
+    protected virtual void HandleConstructionComplete()
     {
         if (!SpawnedConstruction) return;
 
@@ -369,38 +372,40 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private void HandleConstructionStarted()
     {
+        RefreshConstructionState();
+        OnConstructionStarted?.Invoke();
         OnBuildingConstructionStarted?.Invoke(this);
     }
 
-    private void HandleConstructionCompleted()
+    private void HandleConstructionFinished()
     {
+        RefreshConstructionState();
+        OnConstructionFinished?.Invoke();
         OnBuildingConstructionFinished?.Invoke(this);
     }
 
     private void HandleUpgradeStarted()
     {
-        UpdateConstruction();
-        OnConstructionComplete();
-
-        if (SelectComponent.IsSelected) {
-            SelectComponent.Select();
-        }
-
+        RefreshConstructionState();
         OnUpgradeStarted?.Invoke();
         OnBuildingUpgradeStarted?.Invoke(this);
     }
 
     private void HandleUpgradeFinished()
     {
+        RefreshConstructionState();
+        OnUpgradeFinished?.Invoke();
+        OnBuildingUpgradeFinished?.Invoke(this);
+    }
+
+    private void RefreshConstructionState()
+    {
         UpdateConstruction();
-        OnConstructionComplete();
+        HandleConstructionComplete();
 
         if (SelectComponent.IsSelected) {
             SelectComponent.Select();
         }
-
-        OnUpgradeCompleted?.Invoke();
-        OnBuildingUpgradeFinished?.Invoke(this);
     }
 
     private void HandleLevelChanged()

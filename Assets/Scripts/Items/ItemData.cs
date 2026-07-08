@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class ItemData
 {
-    public int Id = 0;
+    public ItemID Id = 0;
     public int Amount = 0;
 
     public static ItemData Create(ItemInstance item)

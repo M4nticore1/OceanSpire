@@ -647,7 +647,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3848970161265473435, guid: 691e342e94372754bbd9de28e01e070e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 700
+      value: 750
       objectReference: {fileID: 0}
     - target: {fileID: 3848970161265473435, guid: 691e342e94372754bbd9de28e01e070e, type: 3}
       propertyPath: m_SizeDelta.y
@@ -681,6 +681,10 @@ PrefabInstance:
       propertyPath: skillWidgetPrefab
       value: 
       objectReference: {fileID: 8915270229867174409, guid: 221b4b93096fb154bbd7efc53b09038c, type: 3}
+    - target: {fileID: 8511627876216079483, guid: 691e342e94372754bbd9de28e01e070e, type: 3}
+      propertyPath: m_fontSize
+      value: 64
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

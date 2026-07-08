@@ -14,7 +14,7 @@ public class ItemRewardInstance : RewardInstance
     {
         base.OnRewardRecieved();
 
-        int id = ItemRewardDefinition.Definition.ItemId;
+        var id = ItemRewardDefinition.Definition.ItemId;
         CityStorage.Instance.Inventory.AddItem(id, Amount);
     }
 

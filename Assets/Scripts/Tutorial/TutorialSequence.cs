@@ -52,8 +52,8 @@ public class TutorialSequence : MonoBehaviour
         }
 
         SetCurrentStep(tutorialSequenceData.CurrentStep);
-        SetInProgress(!tutorialSequenceData.InProgress);
-        SetCompleted(tutorialSequenceData.InProgress || tutorialSequenceData.Completed);
+        SetInProgress(IsInProgress);
+        SetCompleted(tutorialSequenceData.Completed || (tutorialSequenceData.InProgress && CurrentStep <= 0));
         TryShowStep(tutorialSequenceData.CurrentStep);
     }
 

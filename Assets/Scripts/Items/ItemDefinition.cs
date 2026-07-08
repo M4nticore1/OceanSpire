@@ -38,7 +38,7 @@ public enum ItemCategory
 public class ItemDefinition : ScriptableObject
 {
     [SerializeField] private ItemID itemId = ItemID.Population;
-    public int ItemId => (int)itemId;
+    public ItemID ItemId => itemId;
 
     [SerializeField] private ItemCategory itemCategory = ItemCategory.Society;
     public ItemCategory ItemCategory => itemCategory;

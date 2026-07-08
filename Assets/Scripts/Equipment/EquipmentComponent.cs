@@ -40,7 +40,7 @@ public class EquipmentComponent : MonoBehaviour
 
         if (equipmentData.EquipmentId == null) return;
 
-        int id = equipmentData.EquipmentId.Value;
+        var id = equipmentData.EquipmentId.Value;
         var definition = ItemsList.Instance.GetItem(id) as EquipmentDefinition;
         SetEquipmentAndApply(definition);
     }

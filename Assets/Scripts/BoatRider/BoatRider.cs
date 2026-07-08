@@ -88,7 +88,7 @@ public class BoatRider : MonoBehaviour
 
     public bool TryStartEnteringBoat(Boat boat)
     {
-        if (IsEnteringBoat) return false;
+        if (!ShouldStartEnteringBoat()) return false;
 
         TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, () => EnterBoat(boat));
         IsEnteringBoat = true;
@@ -120,6 +120,8 @@ public class BoatRider : MonoBehaviour
 
     public void WaitForBoatAndEnter()
     {
+        if (!ShouldStartEnteringBoat()) return;
+
         waitingBoatCoroutine = StartCoroutine(WaitForBoatAndEnterCoroutine(TargetBoat));
     }
 
@@ -265,14 +267,15 @@ public class BoatRider : MonoBehaviour
 
     private bool ShouldStartEnteringBoat()
     {
+        if (IsEnteringBoat) return false;
         if (!TargetBoat) return false;
 
         if (!TargetBoat.DockPoint) {
-            Debug.Log($"Boat Dock not found at {TargetBoat}");
+            Debug.LogError($"BoatDock not found at {TargetBoat}");
             return false;
         }
 
-        if (Vector3.Distance(transform.position, TargetBoat.DockPoint.EntraceTransform.position) > movement.NavAgent.stoppingDistance) return false;
+        if (!movement.IsReachedPosition(TargetBoat.DockPoint.EntraceTransform.position)) return false;
 
         return true;
     }

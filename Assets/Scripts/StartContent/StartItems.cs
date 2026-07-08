@@ -8,8 +8,8 @@ public class StartItems : MonoBehaviour
     public void CollectItems()
     {
         foreach (var item in startItems) {
-            int id = item.Definition.ItemId;
-            int amount = item.Amount;
+            var id = item.Definition.ItemId;
+            var amount = item.Amount;
             cityStorage.Inventory.AddItem(id, amount);
         }
     }

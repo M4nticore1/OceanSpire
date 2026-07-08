@@ -17,8 +17,12 @@ public class WandererAdmissionMenu : MonoBehaviour
         acceptButton.OnReleased.AddListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.AddListener(OnRejectButtonClicked);
 
+        Human.OnHumanDied += OnHumanDied;
+
         Boat.OnBoatSelected += OnBoatSelected;
         Boat.OnBoatDeselected += OnBoatDeselected;
+
+        UpdateAcceptButtonEnabled();
     }
 
     private void OnDisable()
@@ -26,6 +30,8 @@ public class WandererAdmissionMenu : MonoBehaviour
         slidePanel.OnClosed -= OnClosed;
         acceptButton.OnReleased.RemoveListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.RemoveListener(OnRejectButtonClicked);
+
+        Human.OnHumanDied -= OnHumanDied;
 
         Boat.OnBoatSelected -= OnBoatSelected;
         Boat.OnBoatDeselected -= OnBoatDeselected;
@@ -73,6 +79,12 @@ public class WandererAdmissionMenu : MonoBehaviour
         skillPanel.SetSkills(selectedWanderer.SkillsComponent);
     }
 
+    private void UpdateAcceptButtonEnabled()
+    {
+        var currentPopulation = CreaturesManager.Instance.Citizens.Count;
+        var maxPopulation = CityStorage.Instance.Inventory.GetItemById(ItemID.Population);
+    }
+
     private void OnAcceptButtonClicked()
     {
         WandererAdmissionSystem.AcceptWanderer(selectedWanderer);
@@ -83,6 +95,14 @@ public class WandererAdmissionMenu : MonoBehaviour
     {
         WandererAdmissionSystem.RejectWanderer(selectedWanderer);
         Close();
+    }
+
+    private void OnHumanDied(Human human)
+    {
+        var citizen = human as Citizen;
+        if (citizen == null) return;
+
+        UpdateAcceptButtonEnabled();
     }
 
     private void OnBoatSelected(Boat boat)

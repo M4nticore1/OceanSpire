@@ -175,9 +175,9 @@ public class TowerBuilding : Building
         return construction;
     }
 
-    protected override void OnConstructionComplete()
+    protected override void HandleConstructionComplete()
     {
-        base.OnConstructionComplete();
+        base.HandleConstructionComplete();
 
         UpdateConnectedBuildings();
     }

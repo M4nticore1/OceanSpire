@@ -77,8 +77,8 @@ public class DailyTaskInstance : ILocalizable
 
     private void ReceiveReward()
     {
-        int id = Definition.Reward.Definition.ItemId;
-        int amount = Definition.Reward.Amount;
+        var id = Definition.Reward.Definition.ItemId;
+        var amount = Definition.Reward.Amount;
 
         CityStorage.Instance.Inventory.AddItem(id, amount);
     }

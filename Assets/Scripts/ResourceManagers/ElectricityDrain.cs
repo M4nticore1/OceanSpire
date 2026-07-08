@@ -31,13 +31,13 @@ public class ElectricityDrain : MonoBehaviour
 
         if (currentElectricityToDrain < 1) return;
 
-        int amount = (int)currentElectricityToDrain;
+        var amount = (int)currentElectricityToDrain;
         SpendElectricity(amount);
     }
 
     private void SpendElectricity(int amoount)
     {
-        int id = (int)ItemID.Electricity;
+        var id = ItemID.Electricity;
         CityStorage.Instance.Inventory.RemoveItem(id, amoount);
         currentElectricityToDrain = 0f;
     }

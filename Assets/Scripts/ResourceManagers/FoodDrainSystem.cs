@@ -30,8 +30,8 @@ public class FoodDrainSystem : MonoBehaviour
     {
         if (drainAmount < 1f) return;
 
-        int id = (int)ItemID.Food;
-        int amount = (int)drainAmount;
+        var id = ItemID.Food;
+        var amount = (int)drainAmount;
 
         cityStorage.Inventory.RemoveItem(id, amount);
         drainAmount -= amount;
