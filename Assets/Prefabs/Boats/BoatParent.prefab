@@ -175,6 +175,7 @@ MonoBehaviour:
   useAmountLimit: 0
   useWeightLimit: 1
   weightLimit: 100
+  currentWeight: 0
   items: []
 --- !u!114 &4575534088428067244
 MonoBehaviour:
@@ -214,7 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ContextMenuTarget
   selectComponent: {fileID: 6306187827067608498}
-  showContextMenu: 1
+  showContextMenu: 0
 --- !u!114 &8122635706453091689
 MonoBehaviour:
   m_ObjectHideFlags: 0

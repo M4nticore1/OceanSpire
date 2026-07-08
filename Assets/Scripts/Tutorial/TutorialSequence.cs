@@ -20,7 +20,7 @@ public class TutorialSequence : MonoBehaviour
             showEventListener.OnTriggered += OnShowEventListenerTriggered;
         }
         else {
-            Debug.Log($"eventListener not found at {name}");
+            Debug.Log($"[{nameof(TutorialSequence)}] EventListener not found at {name}");
         }
 
         TutorialStep.OnTutorialStepCompleted += OnTutorialStepCompleted;
@@ -28,14 +28,32 @@ public class TutorialSequence : MonoBehaviour
 
     private void OnDisable()
     {
+        if (showEventListener) {
+            showEventListener.OnTriggered -= OnShowEventListenerTriggered;
+        }
+        else {
+            Debug.Log($"[{nameof(TutorialSequence)}] EventListener not found at {name}");
+        }
+
         TutorialStep.OnTutorialStepCompleted -= OnTutorialStepCompleted;
+    }
+
+    public void Init()
+    {
+        Init(TutorialSequenceData.Default() ?? new TutorialSequenceData());
     }
 
     public void Init(TutorialSequenceData tutorialSequenceData)
     {
+        if (tutorialSequenceData == null) {
+            Debug.LogError($"[{nameof(TutorialSequence)}] TutorialSequenceData is not valid!");
+            Init();
+            return;
+        }
+
         SetCurrentStep(tutorialSequenceData.CurrentStep);
-        SetCompleted(tutorialSequenceData.InProgress ? true : tutorialSequenceData.Completed);
-        SetInProgress(tutorialSequenceData.InProgress);
+        SetInProgress(!tutorialSequenceData.InProgress);
+        SetCompleted(tutorialSequenceData.InProgress || tutorialSequenceData.Completed);
         TryShowStep(tutorialSequenceData.CurrentStep);
     }
 
@@ -53,7 +71,7 @@ public class TutorialSequence : MonoBehaviour
     {
         IsCompleted = value;
 
-        if (IsCompleted) {
+        if (value) {
             CompleteAllSteps();
             OnCompleted?.Invoke();
         }
@@ -76,12 +94,9 @@ public class TutorialSequence : MonoBehaviour
 
     private void TryShowStep(int tutorialStepIndex)
     {
-        if (!IsInProgress) return;
-        if (IsCompleted) return;
-        if (tutorialStepIndex >= tutorialSteps.Length) return;
+        if (!ShouldShowStep(tutorialStepIndex)) return;
 
-        var tutorialStep = tutorialSteps[tutorialStepIndex];
-        tutorialStep.Show();
+        tutorialSteps[tutorialStepIndex].Show();
     }
 
     private void CompleteAllSteps()
@@ -117,6 +132,15 @@ public class TutorialSequence : MonoBehaviour
         TryShowStep(CurrentStep);
     }
 
+    private bool ShouldShowStep(int stepIndex)
+    {
+        if (!IsInProgress) return false;
+        if (IsCompleted) return false;
+        if (stepIndex >= tutorialSteps.Length) return false;
+
+        return true;
+    }
+
     private bool ShouldShowNextStep(TutorialStep tutorialStep)
     {
         if (!IsInProgress) return false;
@@ -130,7 +154,6 @@ public class TutorialSequence : MonoBehaviour
     private bool ShouldStartSequence()
     {
         if (IsCompleted) return false;
-        if (IsInProgress) return false;
 
         return true;
     }

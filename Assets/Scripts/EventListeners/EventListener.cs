@@ -5,7 +5,7 @@ public abstract class EventListener : MonoBehaviour
 {
     public event Action OnTriggered;
 
-    private void Start()
+    private void OnEnable()
     {
         Subscribe();
     }

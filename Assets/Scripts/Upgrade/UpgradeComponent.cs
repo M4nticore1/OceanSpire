@@ -14,7 +14,7 @@ public class UpgradeComponent : MonoBehaviour
     public event Action OnUpgradeFinished;
 
     public static event Action<UpgradeComponent> OnGlobalUpgradeStarted;
-    public static event Action<UpgradeComponent> OnGlobalUpgradeCompleted;
+    public static event Action<UpgradeComponent> OnGlobalUpgradeFinished;
 
     private void Awake()
     {
@@ -56,10 +56,12 @@ public class UpgradeComponent : MonoBehaviour
 
     private void OnConstructionCompleted()
     {
+        if (!IsUnderUpgrade) return;
+
         IsUnderUpgrade = false;
         levelComponent.TrySetLevel(NextLevel);
 
         OnUpgradeFinished?.Invoke();
-        OnGlobalUpgradeCompleted?.Invoke(this);
+        OnGlobalUpgradeFinished?.Invoke(this);
     }
 }

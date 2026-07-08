@@ -24,9 +24,9 @@ public class LanguageSetting : MonoBehaviour
 
     private void UpdateLanguageName()
     {
-        var languaeCodee = LocalizationManager.Instance.CurrentLocalization.LanguageCode;
-        var text = LocalizationManager.Instance.GetText(languageNameLocalizationItem, languaeCodee);
-        languageName.SetText(text);
+        var languaeCode = LocalizationManager.Instance.CurrentLocalization.LanguageCode;
+        languageName.text = LocalizationManager.Instance.GetText(languageNameLocalizationItem, languaeCode);
+        languageName.font = LocalizationManager.Instance.GetFont(TextRole.Default, languaeCode);
     }
 
     private void OnButtonClicked()

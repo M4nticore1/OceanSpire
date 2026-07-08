@@ -11,14 +11,14 @@ public class PierNavObstacle : MonoBehaviour
     {
         Building.OnBuildingInited += OnBuildingInited;
         ConstructionComponent.OnGlobalConstructionFinished += OnConstructionCompleted;
-        UpgradeComponent.OnGlobalUpgradeCompleted += OnUpgradeCompleted;
+        UpgradeComponent.OnGlobalUpgradeFinished += OnUpgradeCompleted;
     }
 
     private void OnDisable()
     {
         Building.OnBuildingInited -= OnBuildingInited;
         ConstructionComponent.OnGlobalConstructionFinished -= OnConstructionCompleted;
-        UpgradeComponent.OnGlobalUpgradeCompleted -= OnUpgradeCompleted;
+        UpgradeComponent.OnGlobalUpgradeFinished -= OnUpgradeCompleted;
     }
 
     private void OnBuildingInited(Building building)

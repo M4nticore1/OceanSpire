@@ -99,7 +99,6 @@ public class CreatureInteractComponent : MonoBehaviour
 
     private void StopInteracting(Building building)
     {
-        Debug.Log("StopInteracting");
         IsInteracting = false;
         OnInteractionStopped?.Invoke(building);
     }

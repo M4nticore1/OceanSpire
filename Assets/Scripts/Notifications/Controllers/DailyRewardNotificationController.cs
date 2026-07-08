@@ -22,10 +22,7 @@ public class DailyRewardNotificationController : NotificationController
             var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var targetTime = GetRewardResetDate().AddHours(notificationTimeInHours).ToUnixTimeSeconds() + day * 86400;
 
-            if (targetTime < currentTime) {
-                Debug.LogError("Target daily reward notification time is less than current time");
-                continue;
-            }
+            if (targetTime < currentTime) continue;
 
             var fireTime = (int)(targetTime - currentTime);
 

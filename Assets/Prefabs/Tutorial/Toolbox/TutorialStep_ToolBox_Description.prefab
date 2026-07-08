@@ -42,11 +42,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2130107675366517027, guid: 6122d99c5a984f24a8223684cb29dd3c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -150
+      value: -120
       objectReference: {fileID: 0}
     - target: {fileID: 2130107675366517027, guid: 6122d99c5a984f24a8223684cb29dd3c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 150
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 4848831189876589187, guid: 6122d99c5a984f24a8223684cb29dd3c, type: 3}
       propertyPath: blockCameraMovement

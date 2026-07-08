@@ -20,7 +20,12 @@ public class TimeFormatterSymbolsController : MonoBehaviour
         LocalizationManager.Instance.OnLocalizationChanged -= OnLocalizationChanged;
     }
 
-    private void OnLocalizationChanged()
+    private void Start()
+    {
+        UpdateSymbols();
+    }
+
+    private void UpdateSymbols()
     {
         var symbols = new TimeSymbols()
         {
@@ -30,5 +35,10 @@ public class TimeFormatterSymbolsController : MonoBehaviour
         };
 
         TimeFormatter.SetSymbols(symbols);
+    }
+
+    private void OnLocalizationChanged()
+    {
+        UpdateSymbols();
     }
 }

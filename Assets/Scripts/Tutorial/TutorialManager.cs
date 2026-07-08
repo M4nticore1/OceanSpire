@@ -8,8 +8,7 @@ public class TutorialManager : MonoBehaviour
 
     public void Init()
     {
-        var tutorialData = TutorialData.Create(this);
-        Init(tutorialData);
+        Init(TutorialData.Create(this));
     }
 
     public void Init(TutorialData tutorialData)
@@ -23,19 +22,20 @@ public class TutorialManager : MonoBehaviour
         for (int i = 0; i < tutorialData.TutorialSequences.Length; i++) {
             if (i >= tutorialSequences.Length) break;
 
-            var sequenceData = tutorialData.TutorialSequences[i];
-            if (sequenceData == null) {
-                Debug.LogError("SequenceData is not valid");
-                continue;
-            }
-
             var sequence = tutorialSequences[i];
             if (!sequence) {
                 Debug.LogError("Sequence is not valid");
                 continue;
             }
 
-            sequence.Init(sequenceData);
+            var sequenceData = tutorialData.TutorialSequences[i];
+            if (sequenceData != null) {
+                sequence.Init(sequenceData);
+            }
+            else {
+                Debug.LogError($"[{nameof(TutorialManager)}] SequenceData is not valid");
+                sequence.Init();
+            }
         }
     }
 }

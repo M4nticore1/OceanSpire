@@ -96,7 +96,7 @@ public class ConstructionComponent : MonoBehaviour
         ConstructionTimeReduction = Mathf.Clamp01(ConstructionTimeReduction);
 
         int newRemainingTime = (int)(remainingTime * (1f - ConstructionTimeReduction));
-        newRemainingTime = Mathf.Max(1, newRemainingTime);
+        newRemainingTime = Mathf.Max(0, newRemainingTime);
 
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         ConstructionFinishTime = currentTime + newRemainingTime;

@@ -9,6 +9,11 @@ public class TutorialSequenceData
     public bool InProgress = false;
     public bool Completed = false;
 
+    public static TutorialSequenceData Default()
+    {
+        return new TutorialSequenceData();
+    }
+
     public static TutorialSequenceData Create(TutorialSequence tutorialSequence)
     {
         return new TutorialSequenceData()

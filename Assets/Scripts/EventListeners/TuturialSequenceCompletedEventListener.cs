@@ -15,7 +15,7 @@ public class TuturialSequenceCompletedEventListener : EventListener
     {
         base.Unsubscribe();
 
-        tutorialSequence.OnCompleted += OnCompleted;
+        tutorialSequence.OnCompleted -= OnCompleted;
     }
 
     private void OnCompleted()
