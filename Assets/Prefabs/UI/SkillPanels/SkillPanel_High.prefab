@@ -10,11 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5076506519082766742, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 700
+      value: 750
       objectReference: {fileID: 0}
     - target: {fileID: 5076506519082766742, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1000
+      value: 1200
       objectReference: {fileID: 0}
     - target: {fileID: 5076506519082766742, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -37,8 +37,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5536079228016182018, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
+      propertyPath: m_Spacing.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5536079228016182018, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_Spacing.y
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5536079228016182018, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_CellSize.x
@@ -46,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5536079228016182018, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_CellSize.y
-      value: 80
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5536079228016182018, guid: b91eaab5c1f2beb4bbbebcfcd10aedd4, type: 3}
       propertyPath: m_ConstraintCount
