@@ -283,7 +283,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         if (!cityStorage) return items;
 
         foreach (var consumeItem in craftItemDefinition.ConsumeResources) {
-            var cityItem = cityStorage.Inventory.GetItemById(consumeItem.Definition.ItemId);
+            var cityItem = cityStorage.Inventory.GetItem(consumeItem.Definition.ItemId);
             var cityAmount = cityItem.Amount;
 
             var amount = Mathf.Min(cityAmount, consumeItem.Amount);
@@ -449,7 +449,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         foreach (var resource in craftItemDefinition.ConsumeResources) {
             var id = resource.Definition.ItemId;
             var neededAmount = resource.Amount;
-            var storageAmount = cityStorage.Inventory.GetItemById(id).Amount;
+            var storageAmount = cityStorage.Inventory.GetItem(id).Amount;
 
             if (neededAmount > storageAmount) return false;
         }
@@ -486,7 +486,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         if (SelectedCraftItem == null || !SelectedCraftItem.IsCrafted) return false;
 
-        var storageItem = cityStorage.Inventory.GetItemById(SelectedCraftItem.Definition.ProduceItem.Definition.ItemId);
+        var storageItem = cityStorage.Inventory.GetItem(SelectedCraftItem.Definition.ProduceItem.Definition.ItemId);
         if (storageItem.Amount >= storageItem.Stack.Amount) return false;
 
         return true;

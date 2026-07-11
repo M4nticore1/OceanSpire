@@ -67,10 +67,11 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
 
         if (constructionTime > 0) {
             var speedBonus = BuilderEnergyManager.Instance.CurrentEnergy;
+            var speedBonusText = speedBonus.ToString("F0");
             var timeWithBonus = (int)(constructionTime * (1f - speedBonus));
 
             var constructionTimeText = TimeFormatter.SecondsToTimer(timeWithBonus);
-            var bonusText = $"(-{speedBonus * 100}%)";
+            var bonusText = $"(-{speedBonusText}%)";
             buildTime = speedBonus > 0 ? $"<color=green>{constructionTimeText} {bonusText}</color>" : constructionTimeText;
         }
         else {
@@ -92,7 +93,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
 
             var buildResource = buildResources[i];
             var id = buildResource.Definition.ItemId;
-            var storageItem = cityStorage.Inventory.GetItemById(id);
+            var storageItem = cityStorage.Inventory.GetItem(id);
 
             resourceWidget.SetItem(buildResource.Definition);
             resourceWidget.AddAmount(storageItem);
@@ -123,7 +124,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
         }
 
         foreach (var buildItem in BuildingPrefab.LevelData.ResourcesToBuild) {
-            var storageItem = cityStorage.Inventory.GetItemById(buildItem.Definition.ItemId);
+            var storageItem = cityStorage.Inventory.GetItem(buildItem.Definition.ItemId);
 
             if (buildItem.Amount <= storageItem.Amount) continue;
 

@@ -121,13 +121,8 @@ public class Raider : Human, IProgressable
     protected override bool ShouldStartInteracting()
     {
         if (!base.ShouldStartInteracting()) return false;
-
         if (IsRaidFinished) return false;
-
-        var currentBuilding = CityNavigator.CurrentBuilding;
-        if (!currentBuilding) return false;
-
-        if (currentBuilding != InteractComponent.InteractBuilding) return false;
+        if (IsRaidingBuilding) return false;
 
         return true;
     }

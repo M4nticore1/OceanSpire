@@ -339,12 +339,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceWidget
   itemDefinition: {fileID: 0}
-  useLimit: 0
+  useLimit: 1
   itemNameText: {fileID: 0}
   resourceAmountText: {fileID: 8834238281448815289}
   resourceImage: {fileID: 1277891582841892986}
   resourceAmountBar: {fileID: 0}
-  changeColorType: 1
+  changeColorType: 0
   useAmountColors: 1
-  enoughAmountColor: {r: 1, g: 0.34901965, b: 0.34901965, a: 1}
-  notEnoughAmountColor: {r: 0.34901962, g: 1, b: 0.34901962, a: 1}
+  enoughAmountColor: {r: 0.3, g: 1, b: 0.3, a: 1}
+  notEnoughAmountColor: {r: 1, g: 0.3, b: 0.3, a: 1}

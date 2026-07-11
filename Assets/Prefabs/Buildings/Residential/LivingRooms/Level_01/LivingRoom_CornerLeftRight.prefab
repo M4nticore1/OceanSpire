@@ -122,6 +122,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LivingRoom_CornerLeftRight
       objectReference: {fileID: 0}
+    - target: {fileID: 8712712631989154949, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -640752954443632005, guid: fc09e6eea98381443a812b9df2b24b3f, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

@@ -20,6 +20,9 @@ public class WanderersManager : MonoBehaviour
     [SerializeField] private int minWandererSpawnCooldown = 300;
     [SerializeField] private int maxWandererSpawnCooldown = 900;
 
+    [Header("Accept")]
+    [SerializeField] private SpawnArea spawnArea;
+
     public long? NextWandererTime { get; private set; } = null;
 
     private void Awake()
@@ -106,6 +109,8 @@ public class WanderersManager : MonoBehaviour
     private void OnWandererAccepted(Human human)
     {
         UpdateDockPoints();
+
+        human.transform.position = spawnArea.GetRandomSpawnPosition();
     }
 
     private void OnWandererRejected(Human human)
@@ -156,7 +161,7 @@ public class WanderersManager : MonoBehaviour
             return null;
         }
 
-        var levelsCount = Mathf.Max(1, SkillsFactory.GetLevelsCount());
+        var levelsCount = Mathf.Max(1, SkillsData.GetLevelsCountByGameStage());
 
         var data = new WandererData()
         {
@@ -181,7 +186,7 @@ public class WanderersManager : MonoBehaviour
             },
 
             Weapon = EquipmentData.Default(),
-            Skills = SkillsFactory.CreateRandomSkillsData(levelsCount),
+            Skills = SkillsData.CreateByLevelsCount(levelsCount),
             SpawnPosition = new Vector3Data(position)
         };
 

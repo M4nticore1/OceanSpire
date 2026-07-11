@@ -43,11 +43,14 @@ public class EvictMenu : UIBehaviour
         UpdateCitizenName(citizen);
         UpdateSkills(citizen);
         UpdateEvictButtonEnabled(citizen);
+
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     private void Close()
     {
         slidePanel.Close();
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     private void UpdateCitizenName(Citizen citizen)

@@ -34,7 +34,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     [Header("Background")]
     [SerializeField] Image background;
-    [SerializeField] float openedBackgroundAlpha = 0.9f;
+    [SerializeField] float openedBackgroundAlpha = 0.5f;
     [SerializeField] float alphaTransitionSpeed = 10f;
 
     public bool isOpened { get; private set; } = false;

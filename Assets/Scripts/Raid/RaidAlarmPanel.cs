@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class RaidMenu : UIBehaviour
+public class RaidAlarmPanel : UIBehaviour
 {
+    [SerializeField] private RaidManager raidManager;
     [SerializeField] private GameObject contentRoot;
 
     private bool isSubscribed = false;
@@ -52,10 +53,9 @@ public class RaidMenu : UIBehaviour
     private void TrySubscribe()
     {
         if (isSubscribed) return;
-        if (!RaidManager.Instance) return;
 
-        RaidManager.Instance.OnRaidStarted += OnRaidStarted;
-        RaidManager.Instance.OnRaidEnded += OnRaidEnded;
+        raidManager.OnRaidStarted += OnRaidStarted;
+        raidManager.OnRaidEnded += OnRaidEnded;
 
         isSubscribed = true;
     }
@@ -63,10 +63,9 @@ public class RaidMenu : UIBehaviour
     private void TryUnsubscribe()
     {
         if (!isSubscribed) return;
-        if (!RaidManager.Instance) return;
 
-        RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
-        RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
+        raidManager.OnRaidStarted -= OnRaidStarted;
+        raidManager.OnRaidEnded -= OnRaidEnded;
 
         isSubscribed = false;
     }

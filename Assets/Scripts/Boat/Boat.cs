@@ -54,7 +54,8 @@ public class Boat : MonoBehaviour, IClickable
     [SerializeField] private Transform seatSlot;
     public Transform SeatSlot => seatSlot;
 
-    public bool IsClickable { get; private set; } = true;
+    [SerializeField] private bool isClickable = true;
+    public bool IsClickable => isClickable;
 
     public event Action OnClicked;
 
@@ -97,21 +98,24 @@ public class Boat : MonoBehaviour, IClickable
         CurrentState.Tick();
     }
 
+    public void Init()
+    {
+        Init(BoatData.Default() ?? new BoatData());
+    }
+
     public void Init(BoatData boatData)
     {
         if (boatData == null) {
-            Debug.LogError("boatData is not valid");
+            Debug.LogError($"[{nameof(Boat)}] BoatData is not valid");
+            Init();
+            return;
         }
 
         CurrentStatus = boatData.Status;
 
         instanceId.SetGuid(boatData.InstanceId);
-        BoatsManager.Instance.RegisterBoat(this);
-
+        inventory.Init(boatData.InventoryData);
         SetState(boatData.State);
-
-        transform.position = boatData.Position.Vector3();
-        transform.rotation = Quaternion.Euler(boatData.Rotation.Vector3());
 
         if (boatData.DockInstanceId != null) {
             var boatDockInstance = InstancesManager.Instance.GetInstance(boatData.DockInstanceId.Value);
@@ -122,11 +126,15 @@ public class Boat : MonoBehaviour, IClickable
                 if (boatDock)
                     SetDockPoint(boatDock);
                 else
-                    Debug.LogError($"dockPoint is not valid by instance {boatDockInstance}");
+                    Debug.LogError($"[{nameof(Boat)}] DockPoint is not valid by instance {boatDockInstance}");
             }
         }
 
+        transform.position = boatData.Position.Vector3();
+        transform.rotation = Quaternion.Euler(boatData.Rotation.Vector3());
+
         movement.NavAgent.speed = Definition.BoatSpeed;
+        BoatsManager.Instance.RegisterBoat(this);
     }
 
     public void OnReturnedToDock()
@@ -209,11 +217,6 @@ public class Boat : MonoBehaviour, IClickable
         TargetDriftingLoot = driftingLoot;
     }
 
-    public ItemInstance TryGetItemToUnload()
-    {
-        return inventory.TryGetItemByIndex(0);
-    }
-
     // State
     public void SetState(BoatStateEnum state)
     {
@@ -251,6 +254,7 @@ public class Boat : MonoBehaviour, IClickable
                 break;
         }
 
+        Debug.Log($"Enter state {state}");
         CurrentStateEnum = state;
         CurrentState.Enter();
 
@@ -270,12 +274,12 @@ public class Boat : MonoBehaviour, IClickable
     public void Click()
     {
         selectComponent.Click();
+        OnClicked?.Invoke();
     }
 
     public void SetClickable(bool value)
     {
-        IsClickable = value;
-        OnClicked?.Invoke();
+        isClickable = value;
     }
 
     public bool ShouldClick()

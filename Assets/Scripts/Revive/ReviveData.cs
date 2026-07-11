@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class ReviveData
 {
-    public long? DieTime = null;
+    public long? DeathTime = null;
 
     public static ReviveData Default()
     {
@@ -20,7 +20,7 @@ public class ReviveData
 
         return new ReviveData()
         {
-            DieTime = reviveComponent.DieTime,
+            DeathTime = reviveComponent.DieTime,
         };
     }
 }

@@ -579,8 +579,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 40920799}
+  - component: {fileID: 40920800}
   m_Layer: 0
-  m_Name: NPCSpawnPositions
+  m_Name: SpawnArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -595,15 +596,25 @@ Transform:
   m_GameObject: {fileID: 40920798}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 24}
+  m_LocalPosition: {x: 0, y: 1, z: 24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1408795208}
-  - {fileID: 1702202552}
-  - {fileID: 310042639}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &40920800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 40920798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5311586c522a86f4a8836050f8667b29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnArea
+  areaSize: {x: 18, y: 6}
 --- !u!1001 &42863128
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -751,8 +762,9 @@ MonoBehaviour:
   - {fileID: 8411686280589987336, guid: 649b0985789fc6c42bd0c217a9a1f0d5, type: 3}
   - {fileID: 7660346723931557201, guid: 301f8de32aed5d94f9a8a91d01f584c2, type: 3}
   boatPrefab: {fileID: 8804275003585880861, guid: d0ad1226837183441b6e694aa3c9279b, type: 3}
-  minWandererSpawnCooldown: 300
-  maxWandererSpawnCooldown: 900
+  minWandererSpawnCooldown: 900
+  maxWandererSpawnCooldown: 3600
+  spawnArea: {fileID: 0}
 --- !u!4 &61009885 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
@@ -981,7 +993,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e884af40dc761244bb6a93d4e2b41254, type: 2}
   - {fileID: 11400000, guid: 259eb26487b2cf04fa104196bf934d7e, type: 2}
   maxRewardsCount: 4
-  updateRewardTimeOffset: 0
+  updateRewardTimeOffset: 3
 --- !u!1001 &110245413
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1589,9 +1601,8 @@ MonoBehaviour:
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
   humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
   citizenIds: 0000000001000000
-  startResidentsCount: 2
-  entitySpawnPosition: {fileID: 40920799}
-  maxSpawnRange: 4
+  startResidentsCount: 4
+  spawnArea: {fileID: 40920800}
 --- !u!1 &146585201
 GameObject:
   m_ObjectHideFlags: 0
@@ -3447,37 +3458,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
   m_PrefabInstance: {fileID: 306449613}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &310042638
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 310042639}
-  m_Layer: 0
-  m_Name: NPCSpawnPosition_03
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!4 &310042639
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 310042638}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 40920799}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &317366360 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
@@ -3730,6 +3710,53 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
   m_PrefabInstance: {fileID: 1202815808}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &335281644
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 335281645}
+  - component: {fileID: 335281646}
+  m_Layer: 0
+  m_Name: EditorItemsFill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &335281645
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335281644}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1634320636}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &335281646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335281644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df3c793db03df524eaeb19022edad7b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditorInstantConstruction
+  buildingsManager: {fileID: 455753200}
+  buildingCostSystem: {fileID: 1523508187}
+  testMode: 1
 --- !u!1 &342273252
 GameObject:
   m_ObjectHideFlags: 0
@@ -4310,6 +4337,10 @@ PrefabInstance:
       propertyPath: tutorialManager
       value: 
       objectReference: {fileID: 1693113622}
+    - target: {fileID: 1393138751504490006, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: raidManager
+      value: 
+      objectReference: {fileID: 2047238980}
     - target: {fileID: 1412979276657768449, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: cityStorage
       value: 
@@ -4598,6 +4629,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.00024414062
       objectReference: {fileID: 0}
+    - target: {fileID: 3236756525047239169, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: rewardedAdsManager
+      value: 
+      objectReference: {fileID: 1925740697}
     - target: {fileID: 3252033114757556854, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: itemDefinition
       value: 
@@ -4638,6 +4673,14 @@ PrefabInstance:
       propertyPath: playerSettingsManager
       value: 
       objectReference: {fileID: 1458649859}
+    - target: {fileID: 3761790546474035319, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: cityStorage
+      value: 
+      objectReference: {fileID: 1388613268}
+    - target: {fileID: 3761790546474035319, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: creaturesManager
+      value: 
+      objectReference: {fileID: 220072952}
     - target: {fileID: 3830277698611465684, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: inputStateManager
       value: 
@@ -8360,7 +8403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodDrain
   creaturesManager: {fileID: 220072952}
   cityStorage: {fileID: 1388613268}
-  drainPerSecond: 0.01
+  drainPerSecond: 0.005
   drainFrequency: 10
 --- !u!1001 &725010069
 PrefabInstance:
@@ -15200,37 +15243,6 @@ Transform:
   - {fileID: 2055893610}
   m_Father: {fileID: 1238355532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1408795207
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1408795208}
-  m_Layer: 0
-  m_Name: NPCSpawnPosition_01
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!4 &1408795208
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1408795207}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 40920799}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1419229722 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6838095890116239261, guid: c9ca0f298cb6b9146a09c23469074ca3, type: 3}
@@ -17150,7 +17162,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1634320636
 Transform:
   m_ObjectHideFlags: 0
@@ -17165,6 +17177,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2109934043}
+  - {fileID: 335281645}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1635530770 stripped
@@ -17624,37 +17637,6 @@ MonoBehaviour:
   tutorialSequences:
   - {fileID: 1461528432}
   - {fileID: 196139474}
---- !u!1 &1702202551
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1702202552}
-  m_Layer: 0
-  m_Name: NPCSpawnPosition_02
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
---- !u!4 &1702202552
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1702202551}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 40920799}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1710163120
 GameObject:
   m_ObjectHideFlags: 0
@@ -20524,6 +20506,8 @@ MonoBehaviour:
   minRaidCooldown: 1800
   maxRaidCooldown: 3600
   tryFindNextBuildingFrequency: 60
+  <RaidCooldownTime>k__BackingField: 0
+  <TimeSinceLastRaid>k__BackingField: 0
   maxRaidersCount: 25
   raidersCountPerFloor: 2
   minSpawnAngleOffset: 5
@@ -21241,12 +21225,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2109934042}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df3c793db03df524eaeb19022edad7b1, type: 3}
+  m_Script: {fileID: 11500000, guid: 362f857ffa9095849b359a183c56d7b0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EditorInstantConstruction
-  buildingsManager: {fileID: 455753200}
-  buildingCostSystem: {fileID: 1523508187}
-  testMode: 1
+  m_EditorClassIdentifier: Assembly-CSharp::EditorResourcesFill
+  CityStorage: {fileID: 1388613268}
 --- !u!1001 &2116735562
 PrefabInstance:
   m_ObjectHideFlags: 0

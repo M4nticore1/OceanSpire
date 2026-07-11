@@ -6,7 +6,7 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class SelectComponent : MonoBehaviour, IClickable
 {
-    public bool IsSelected { get; private set; } = false;
+    [field: SerializeField] public bool IsSelected { get; private set; } = false;
     private Dictionary<GameObject, int> layers = new Dictionary<GameObject, int>();
 
     [SerializeField] private bool isClickable = true;

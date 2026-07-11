@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CraftModuleSkillProgress : SkillProgress
+public class CraftingModuleSkillProgress : SkillProgress
 {
     [SerializeField] private float gainXpFrequency = 10f;
 
@@ -47,6 +47,7 @@ public class CraftModuleSkillProgress : SkillProgress
     private bool ShouldAddXp(SkillsComponent skillsComponent)
     {
         var interactComponent = skillsComponent.GetComponent<CreatureInteractComponent>();
+        if (!interactComponent) return false;
 
         var interactBuilding = interactComponent.InteractBuilding;
         if (!interactBuilding) return false;
@@ -54,6 +55,7 @@ public class CraftModuleSkillProgress : SkillProgress
         var craftBuilding = interactBuilding.GetComponent<CraftingModule>();
         if (!craftBuilding) return false;
 
+        if (!craftBuilding.IsWorking) return false;
         if (craftBuilding.SkillId != SkillAdapter.SkillId) return false;
 
         return true;

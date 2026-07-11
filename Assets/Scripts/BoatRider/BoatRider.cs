@@ -80,8 +80,9 @@ public class BoatRider : MonoBehaviour
             if (instance) {
                 var boat = instance.GetComponent<Boat>();
 
-                if (boat)
+                if (boat) {
                     EnterBoat(boat);
+                }
             }
         }
     }

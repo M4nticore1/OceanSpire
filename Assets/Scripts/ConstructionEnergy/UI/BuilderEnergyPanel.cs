@@ -25,8 +25,8 @@ public class BuilderEnergyPanel : MonoBehaviour
 
     private void UpdateBonusText()
     {
-        var bonus = builderEnergyManager.CurrentEnergy;
-        bonusText.SetText($"{bonus * 100}%");
+        var bonus = (builderEnergyManager.CurrentEnergy * 100).ToString("F0");
+        bonusText.SetText($"{bonus}%");
     }
 
     private void OnEnergyChanged(float value)

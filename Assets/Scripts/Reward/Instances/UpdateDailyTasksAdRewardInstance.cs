@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class UpdateDailyTasksAdRewardInstance : RewardInstance
 {
+    public UpdateDailyTasksAdRewardInstance()
+    {
+
+    }
+
     public UpdateDailyTasksAdRewardInstance(UpdateDailyTasksAdRewardDefinition definition) : base(definition, 0)
     {
 

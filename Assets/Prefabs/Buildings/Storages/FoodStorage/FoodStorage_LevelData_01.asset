@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerBuildingLevelData
   resourcesToBuild:
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 2500
+    amount: 2600
   - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
     amount: 800
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-    amount: 150
+    amount: 100
   - definition: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
-    amount: 300
+    amount: 200
   maxResidentsCount: 1
   constructionTime: 300
   buildingThumb: {fileID: 21300000, guid: 0c9923c1c14efea4ead12e9fe52ea6fa, type: 3}

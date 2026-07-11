@@ -50,6 +50,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3960c87c5d6224b4088bae877cccf1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WandererAdmissionMenu
+  cityStorage: {fileID: 0}
+  creaturesManager: {fileID: 0}
   slidePanel: {fileID: 5016164376599019989}
   skillPanel: {fileID: 6733137667863063234}
   acceptButton: {fileID: 3563609097003125334}
@@ -624,10 +626,6 @@ PrefabInstance:
     - target: {fileID: 1568916400784018248, guid: 691e342e94372754bbd9de28e01e070e, type: 3}
       propertyPath: m_Name
       value: SkillPanel_High
-      objectReference: {fileID: 0}
-    - target: {fileID: 3848970161265473435, guid: 691e342e94372754bbd9de28e01e070e, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 3848970161265473435, guid: 691e342e94372754bbd9de28e01e070e, type: 3}
       propertyPath: m_LocalPosition.x

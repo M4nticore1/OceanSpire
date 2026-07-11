@@ -44,7 +44,7 @@ public class ReviveComponent : MonoBehaviour, ILocalizable
 
         var reviveData = new ReviveData()
         {
-            DieTime = health.IsAlive ? null : currentTime + reviveLimitTime
+            DeathTime = health.IsAlive ? null : currentTime + reviveLimitTime
         };
 
         Init(reviveData);
@@ -57,7 +57,7 @@ public class ReviveComponent : MonoBehaviour, ILocalizable
             return;
         }
 
-        DieTime = reviveData.DieTime;
+        DieTime = reviveData.DeathTime;
     }
 
     public void Revive()

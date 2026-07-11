@@ -62,7 +62,7 @@ public class ReviveMenu : UIBehaviour
     public void Open(Citizen citizen)
     {
         if (!citizen) {
-            Debug.LogError("Citizen to open revive menu is not valid");
+            Debug.LogError($"[{nameof(ReviveMenu)}] Citizen to open revive menu is not valid");
             return;
         }
 
@@ -146,12 +146,10 @@ public class ReviveMenu : UIBehaviour
         if (chargeTime != null && chargeTime.Value > currentTime) {
             var remainingTime = chargeTime.Value - currentTime;
 
-            nextReviveChargeText.gameObject.SetActive(true);
             nextReviveChargeTimeText.SetText(TimeFormatter.SecondsToMinuteTimer((int)remainingTime));
         }
         else {
-            nextReviveChargeText.gameObject.SetActive(false);
-            nextReviveChargeTimeText.SetText(string.Empty);
+            nextReviveChargeTimeText.SetText("-");
         }
     }
 
@@ -174,7 +172,7 @@ public class ReviveMenu : UIBehaviour
     {
         if (!citizen) return;
 
-        reviveManager.CreateReward(citizen);
+        reviveManager.CreateRewardAndApply(citizen);
         rewardedAdsManager.ShowAd();
     }
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class Inventory : MonoBehaviour
 {
@@ -75,7 +74,7 @@ public class Inventory : MonoBehaviour
 
     public void AddItem(ItemID id, int amount)
     {
-        var item = GetItemById(id);
+        var item = GetItem(id);
         if (item == null) {
             item = AddItem(id);
         }
@@ -98,7 +97,7 @@ public class Inventory : MonoBehaviour
 
     public void RemoveItem(ItemID id, int amount)
     {
-        var item = GetItemById(id);
+        var item = GetItem(id);
         amount = Mathf.Max(0, amount);
 
         item.RemoveAmount(amount);
@@ -130,7 +129,7 @@ public class Inventory : MonoBehaviour
         return itemStacks[stack];
     }
 
-    public ItemInstance GetItemById(ItemID id)
+    public ItemInstance GetItem(ItemID id)
     {
         itemsDict.TryGetValue(id, out var item);
 
@@ -160,7 +159,7 @@ public class Inventory : MonoBehaviour
 
     private ItemInstance RemoveItem(ItemID id)
     {
-        ItemInstance item = GetItemById(id);
+        ItemInstance item = GetItem(id);
         items.Remove(item);
         itemsDict.Remove(id);
 

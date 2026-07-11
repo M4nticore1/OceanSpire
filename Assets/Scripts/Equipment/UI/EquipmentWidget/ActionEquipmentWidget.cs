@@ -76,7 +76,7 @@ public class ActionEquipmentWidget : EquipmentWidget
         if (!definition) return;
 
         var selectedCitizen = SelectManager.Instance.GetSelectedHuman();
-        int amount = CityStorage.Instance.Inventory.GetItemById(definition.ItemId).Amount;
+        int amount = CityStorage.Instance.Inventory.GetItem(definition.ItemId).Amount;
 
         foreach (var citizen in CreaturesManager.Instance.Citizens) {
             if (citizen == selectedCitizen) continue;

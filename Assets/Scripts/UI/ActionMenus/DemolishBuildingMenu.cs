@@ -34,11 +34,13 @@ public class DemolishBuildingMenu : BuildingMenu
         int resourcesCount = resourcesToBuild.Length;
 
         for (int i = 0; i < resourcesCount; i++) {
-            var resource = resourcesToBuild[i];
+            var item = resourcesToBuild[i];
 
             var widget = Instantiate(ResourceWidgetPrefab, LayoutGroup.transform);
             spawnedResourceWidgets.Add(widget);
-            spawnedResourceWidgets[i].AddAmount(resource);
+
+            widget.SetItem(item.Definition);
+            widget.AddAmount(item);
         }
     }
 

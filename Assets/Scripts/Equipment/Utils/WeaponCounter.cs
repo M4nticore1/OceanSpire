@@ -4,7 +4,7 @@ public class WeaponCounter : EquipmentCounter<WeaponDefinition>
 {
     public override int GetUsedCount(WeaponDefinition definition)
     {
-        int amount = CityStorage.Instance.Inventory.GetItemById(definition.ItemId).Amount;
+        int amount = CityStorage.Instance.Inventory.GetItem(definition.ItemId).Amount;
 
         foreach (Citizen citizen in CreaturesList.Instance.Creatures) {
             if (!citizen) continue;

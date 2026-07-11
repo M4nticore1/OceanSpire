@@ -163,7 +163,7 @@ MonoBehaviour:
   levelsData:
   - {fileID: 11400000, guid: bc0404d1ffc60f943bdfdfab45378f01, type: 2}
   electricityConsumption: 0.1
-  skillId: 0
+  skillId: 3
 --- !u!114 &7924408945519643689
 MonoBehaviour:
   m_ObjectHideFlags: 0

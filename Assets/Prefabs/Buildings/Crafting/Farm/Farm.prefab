@@ -162,8 +162,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionModule
   levelsData:
   - {fileID: 11400000, guid: 8ad608757b0f86b429e2ba27842d356f, type: 2}
-  electricityConsumption: 0.1
-  skillId: 0
+  electricityConsumption: 0.02
+  skillId: 1
 --- !u!114 &8771001662528522482
 MonoBehaviour:
   m_ObjectHideFlags: 0

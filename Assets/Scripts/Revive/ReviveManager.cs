@@ -91,7 +91,7 @@ public class ReviveManager : MonoBehaviour
         }
     }
 
-    public void CreateReward(Citizen citizen)
+    public void CreateRewardAndApply(Citizen citizen)
     {
         var reward = reviveRewardDefinition.CreateReward() as ReviveAdRewardInstance;
         reward.SetHuman(citizen);

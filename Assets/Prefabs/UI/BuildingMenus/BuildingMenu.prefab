@@ -1573,7 +1573,7 @@ MonoBehaviour:
   openedPanelPositionAlpha: {x: 0, y: 0.5}
   closedPanelPositionAlpha: {x: 0, y: 0}
   background: {fileID: 2486504370363985332}
-  openedBackgroundAlpha: 0.9
+  openedBackgroundAlpha: 0.5
   alphaTransitionSpeed: 10
 --- !u!1 &8526246887706664177
 GameObject:

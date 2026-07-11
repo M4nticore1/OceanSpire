@@ -24,8 +24,7 @@ public class BoatsLoader : WorldLoader
     {
         foreach (var boatData in boatsData) {
             var boatPrefab = boatsList.GetBoat(boatData.Id);
-
-            var boat = BoatFactory.CreateBoat(boatPrefab, boatData.Position.Vector3(), Quaternion.Euler(boatData.Rotation.Vector3()), boatData);
+            BoatFactory.CreateBoat(boatPrefab, boatData.Position.Vector3(), Quaternion.Euler(boatData.Rotation.Vector3()), boatData);
         }
     }
 

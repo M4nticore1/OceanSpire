@@ -17,11 +17,13 @@ public class PlayerSettingsMenu : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     public void Hide()
     {
         gameObject.SetActive(false);
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     private void OnCloseButtonClicked()

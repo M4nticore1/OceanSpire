@@ -182,36 +182,34 @@ public abstract class Human : Creature, IClickable
 
     protected override void OnInitNextFrame()
     {
-        base.OnInitNextFrame();
-
         if (!elevatorPassenger.IsRiding && !boatRider.RidingBoat) {
             movement.SetAgentEnabled(true);
             cityNavigator.FollowPath();
         }
 
-        DetermineNextAction();
+        base.OnInitNextFrame();
     }
 
     // Action
     protected override void DetermineNextAction()
     {
         if (ShouldStartInteracting()) {
-            Debug.Log("ShouldStartInteracting");
+            //Debug.Log("ShouldStartInteracting");
             StartInteracting();
             return;
         }
         if (ShouldStopInteracting()) {
-            Debug.Log("ShouldStopInteracting");
+            //Debug.Log("ShouldStopInteracting");
             StopInteracting();
             return;
         }
         if (ShouldMoveToTargetBoat()) {
-            Debug.Log("ShouldMoveToTargetBoat");
+            //Debug.Log("ShouldMoveToTargetBoat");
             MoveToTargetBoat();
             return;
         }
         if (ShouldWaitForEnteringBoat()) {
-            Debug.Log("ShouldStartEnteringBoat");
+            //Debug.Log("ShouldStartEnteringBoat");
             StartEnteringBoat();
             return;
         }
@@ -346,22 +344,24 @@ public abstract class Human : Creature, IClickable
     protected virtual bool ShouldStartInteracting()
     {
         if (interactComponent.IsInteracting) return false;
-        if (!interactComponent.InteractBuilding) return false;
-        if (!cityNavigator.TargetBuilding) return false;
+
+        var interactBuilding = interactComponent.InteractBuilding;
+        if (!interactBuilding) return false;
         if (!cityNavigator.CurrentBuilding) return false;
-        if (cityNavigator.CurrentBuilding != interactComponent.InteractBuilding) return false;
-        if (interactComponent.InteractBuilding.GetComponent<PierModule>()) return false;
+        if (cityNavigator.CurrentBuilding != interactBuilding) return false;
+        if (interactBuilding.GetComponent<PierModule>()) return false;
+
         if (boatRider.RidingBoat) return false;
         if(!healthComponent.IsAlive) return false;
         if (attackComponent.IsAttacking) return false;
 
         var waypoint = cityNavigator.WaypointsComponent.GetCurrentWaypoint();
-        if (waypoint == null) {
-            Debug.LogError("waypoint is not valid", this);
+        if (waypoint == null || !waypoint.Transform) {
+            Debug.LogError("waypoint or its transform is not valid", this);
             return false;
         }
 
-        if (!boatRider.RidingBoat && !movement.IsReachedPosition(cityNavigator.WaypointsComponent.GetCurrentWaypoint().Transform.position)) return false;
+        if (!movement.IsReachedPosition(waypoint.Transform.position)) return false;
 
         return true;
     }
@@ -378,20 +378,26 @@ public abstract class Human : Creature, IClickable
 
     protected virtual bool ShouldMoveToTargetBoat()
     {
-        if (!boatRider.TargetBoat) return false;
-        if (!boatRider.TargetBoat.DockPoint) return false;
+        var targetBoat = boatRider.TargetBoat;
+        if (!targetBoat) return false;
+        if (!targetBoat.DockPoint) return false;
+        if (!targetBoat.DockPoint.EntraceTransform) return false;
+
         if (boatRider.RidingBoat) return false;
         if (cityNavigator.FloorIndex > 0) return false;
         if (attackComponent.IsAttacking) return false;
-        if (movement.IsReachedPosition(boatRider.TargetBoat.DockPoint.EntraceTransform.position)) return false;
+        if (movement.IsReachedPosition(targetBoat.DockPoint.EntraceTransform.position)) return false;
 
         return true;
     }
 
     protected virtual bool ShouldWaitForEnteringBoat()
     {
-        if (!boatRider.TargetBoat) return false;
-        if (!movement.IsReachedPosition(boatRider.TargetBoat.DockPoint.EntraceTransform.position)) return false;
+        var targetBoat = boatRider.TargetBoat;
+        if (!targetBoat) return false;
+        if (!targetBoat.DockPoint) return false;
+        if (!targetBoat.DockPoint.EntraceTransform) return false;
+        if (!movement.IsReachedPosition(targetBoat.DockPoint.EntraceTransform.position)) return false;
 
         return true;
     }
@@ -399,7 +405,7 @@ public abstract class Human : Creature, IClickable
     protected virtual bool ShouldStopEnteringBoat()
     {
         if (boatRider.TargetBoat) return false;
-        if (!BoatRider.IsEnteringBoat) return false;
+        if (!boatRider.IsEnteringBoat) return false;
 
         return true;
     }
@@ -426,12 +432,11 @@ public abstract class Human : Creature, IClickable
     protected virtual bool ShouldBoatMoveToDock()
     {
         var ridingBoat = boatRider.RidingBoat;
-        if (!ridingBoat) return false;
-        if (!ridingBoat.DockPoint) return false;
+        if (ridingBoat == null) return false;
+        if (ridingBoat.DockPoint == null) return false;
         if (ridingBoat.CurrentStateEnum == BoatStateEnum.MovingToDock) return false;
         if (ridingBoat.CurrentStateEnum == BoatStateEnum.Idle) return false;
         if (boatRider.IsExitingBoat) return false;
-        //if (ridingBoat.Movement.IsReachedPosition(ridingBoat.DockPoint.DockTransform.position)) return false;
 
         return true;
     }
@@ -454,7 +459,7 @@ public abstract class Human : Creature, IClickable
     protected virtual bool ShouldStartAttacking()
     {
         if (attackComponent.IsAttacking) return false;
-        if (!HealthComponent.IsAlive) return false;
+        if (!healthComponent.IsAlive) return false;
 
         return true;
     }
@@ -477,25 +482,24 @@ public abstract class Human : Creature, IClickable
     // IClickable
     public void Click()
     {
-        if (boatRider.RidingBoat) {
-            BoatRider.RidingBoat.SelectComponent.Click();
-        }
-        else {
-            selectComponent.Click();
-        }
-
+        OnClick();
         OnClicked?.Invoke();
     }
 
     public void SetClickable(bool value)
     {
-        Debug.Log($"SetCliacable {value}");
+        Debug.Log($"Human SetCliacable {value}");
         isClickable = value;
     }
 
     public virtual bool ShouldClick()
     {
         return true;
+    }
+
+    protected virtual void OnClick()
+    {
+
     }
 
     protected override bool ShouldStartIdle()
@@ -560,6 +564,7 @@ public abstract class Human : Creature, IClickable
         DetermineNextAction();
     }
 
+    // Interaction Building
     protected virtual void OnInteractBuildingSeted(Building building)
     {
         cityNavigator.SetTargetBuilding(building);
@@ -575,6 +580,7 @@ public abstract class Human : Creature, IClickable
         DetermineNextAction();
     }
 
+    // Interaction
     protected virtual void OnInteractionStarted(Building building)
     {
         DetermineNextAction();

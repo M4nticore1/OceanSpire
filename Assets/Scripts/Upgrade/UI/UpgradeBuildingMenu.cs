@@ -22,7 +22,7 @@ public class UpgradeBuildingMenu : BuildingMenu
             var widget = ResourceWidgetFactory.CreateResourceWidget(ResourceWidgetPrefab, LayoutGroup.transform);
             spawnedResourceWidgets.Add(widget);
 
-            widget.AddAmount(cityStorage.Inventory.GetItemById(item.Definition.ItemId));
+            widget.AddAmount(cityStorage.Inventory.GetItem(item.Definition.ItemId));
             widget.SetLimit(item);
         }
     }

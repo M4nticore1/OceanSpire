@@ -34,12 +34,12 @@ public class WorkersControlMenu : ControlMenu
 
     protected override void OnOpen()
     {
-       
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     protected override void OnClose()
     {
-
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     protected override void UpdateMenu()

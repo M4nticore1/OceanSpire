@@ -13,6 +13,11 @@ public class RewardInstance : ILocalizable
     public static event Action<RewardInstance> OnRewardReceived;
     public static event Action<RewardInstance> OnRewardRemoved;
 
+    public RewardInstance()
+    {
+
+    }
+
     public RewardInstance(AdRewardDefinition definition, int amount)
     {
         Definition = definition;

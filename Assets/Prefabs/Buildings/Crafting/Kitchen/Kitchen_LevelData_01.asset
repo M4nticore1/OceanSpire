@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourcesToBuild:
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 2000
+    amount: 1000
   - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
-    amount: 400
+    amount: 300
   maxResidentsCount: 1
   constructionTime: 300
   buildingThumb: {fileID: 21300000, guid: b0f80605934413e42ac5166d2d17bffa, type: 3}

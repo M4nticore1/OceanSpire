@@ -30,7 +30,7 @@ public static class TimeFormatter
     {
         float hours = (float)totalSeconds / 3600;
         int minutes = (int)((hours - (int)hours) * 60);
-        string time = $"{(int)hours:D2}{symbols.Hour} {minutes:D2}{symbols.Minute}";
+        string time = $"{(int)hours}{symbols.Hour} {minutes}{symbols.Minute}";
 
         return time;
     }
@@ -39,7 +39,7 @@ public static class TimeFormatter
     {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
-        string time = $"{minutes:D2}{symbols.Minute} {seconds:D2}{symbols.Second}";
+        string time = $"{minutes}{symbols.Minute} {seconds}{symbols.Second}";
 
         return time;
     }
@@ -47,7 +47,7 @@ public static class TimeFormatter
     public static string SecondsToSecondTimer(int totalSeconds)
     {
         int seconds = totalSeconds % 60;
-        string time = $"{seconds:D1}{symbols.Second}";
+        string time = $"{seconds}{symbols.Second}";
 
         return time;
     }

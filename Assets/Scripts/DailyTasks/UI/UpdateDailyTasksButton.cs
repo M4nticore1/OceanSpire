@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class UpdateDailyTasksButton : MonoBehaviour
 {
-    [SerializeField] private UpdateDailyTasksAdRewardDefinition rewardDefinition;
+    [SerializeField] private RewardedAdsManager rewardedAdsManager;
     [SerializeField] private CustomButton button;
 
     private void OnEnable()
@@ -19,8 +19,8 @@ public class UpdateDailyTasksButton : MonoBehaviour
 
     private void OnClicked()
     {
-        RewardedAdsManager.Instance.SetReward(rewardDefinition);
-        RewardedAdsManager.Instance.ShowAd();
+        rewardedAdsManager.SetReward(new UpdateDailyTasksAdRewardInstance());
+        rewardedAdsManager.ShowAd();
     }
 
     private void OnUpdateSetedTrue(bool value)

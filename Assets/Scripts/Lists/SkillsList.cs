@@ -5,6 +5,8 @@ using UnityEngine;
 public class SkillsList : ScriptableObject
 {
     [SerializeField] private SkillDefinition[] skillDefinitions;
+    public SkillDefinition[] SkillDefinitions => skillDefinitions;
+
     public Dictionary<SkillId, SkillDefinition> SkillDefinitionsDict = new();
 
     private static SkillsList _instance;

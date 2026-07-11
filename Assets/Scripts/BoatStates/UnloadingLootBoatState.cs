@@ -55,39 +55,49 @@ public class UnloadingLootBoatState : BoatState, IProgressable
 
     private void ProcessUnloadResources()
     {
-        if (boat.Inventory.Items.Count == 0) {
-            currentWeightToUnload = 0f;
-            return;
-        }
-
-        var loot = boat.TryGetItemToUnload();
+        var loot = GetItemToUnload();
         if (loot == null) return;
 
-        var data = loot.Definition;
-        var lootId = data.ItemId;
-        float lootWeight = data.Weight;
+        var lootAmount = loot.Amount;
+        var lootData = loot.Definition;
+        var lootId = lootData.ItemId;
+        var lootWeight = lootData.Weight;
+
+        int amountToUnload;
 
         if (lootWeight <= 0f) {
-            int allAmount = loot.Amount;
-            boat.Inventory.RemoveItem(lootId, allAmount);
-            currentWeightToUnload = 0f;
-            return;
+            amountToUnload = lootAmount;
+        }
+        else {
+            var weightToUnload = UnloadSpeed * Time.deltaTime;
+            currentWeightToUnload += weightToUnload;
+
+            amountToUnload = Mathf.Min((int)(currentWeightToUnload / lootWeight), lootAmount);
+            if (amountToUnload < 1) return;
+
+            currentWeightToUnload -= amountToUnload * lootWeight;
         }
 
-        float weightToUnload = UnloadSpeed * Time.deltaTime;
-        currentWeightToUnload += weightToUnload;
-
-        int amountToUnload = math.min((int)(currentWeightToUnload / lootWeight), loot.Amount);
-        if (amountToUnload == 0) return;
-
         boat.Inventory.RemoveItem(lootId, amountToUnload);
-        currentWeightToUnload -= amountToUnload * lootWeight;
+        CityStorage.Instance.Inventory.AddItem(lootId, amountToUnload);
+    }
+
+    private ItemInstance GetItemToUnload()
+    {
+        foreach (var loot in boat.Inventory.Items) {
+            if (loot == null) continue;
+            if (loot.Amount <= 0) continue;
+
+            return loot;
+        }
+
+        return null;
     }
 
     private bool ShouldUnload()
     {
         if (boat.Inventory.CurrentWeight <= 0f) return false;
-        if (boat.Inventory.Items.Count == 0) return false;
+        if (GetItemToUnload() == null) return false;
 
         return true;
     }

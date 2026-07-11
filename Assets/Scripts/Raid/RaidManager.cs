@@ -37,8 +37,8 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private float maxRaidCooldown = 20f;
     [SerializeField] private float tryFindNextBuildingFrequency = 60f;
 
-    public float RaidCooldownTime { get; private set; } = 0f;
-    public float TimeSinceLastRaid { get; private set; } = 0f;
+    [field: SerializeField] public float RaidCooldownTime { get; private set; } = 0f;
+    [field: SerializeField] public float TimeSinceLastRaid { get; private set; } = 0f;
     public float CurrentTryFindNextBuildingTime { get; private set; } = 0f;
 
     [Header("Spawn")]
@@ -377,7 +377,7 @@ public class RaidManager : MonoBehaviour
                 EquipmentId = weaponId
             },
 
-            Skills = SkillsFactory.CreateRandomSkillsData(SkillsFactory.GetLevelsCount()),
+            Skills = SkillsData.CreateByLevelsCount(SkillsData.GetLevelsCountByGameStage()),
             SpawnPosition = new Vector3Data(position)
         };
 

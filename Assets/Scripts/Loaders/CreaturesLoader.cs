@@ -7,8 +7,7 @@ public class CreaturesLoader : WorldLoader
     [SerializeField] private CreatureIdEnum[] citizenIds;
 
     [SerializeField] private int startResidentsCount = 2;
-    [SerializeField] private Transform entitySpawnPosition;
-    [SerializeField] public float maxSpawnRange = 5f;
+    [SerializeField] private SpawnArea spawnArea;
 
     protected override void Load(WorldData data)
     {
@@ -32,41 +31,36 @@ public class CreaturesLoader : WorldLoader
     {
         foreach (var data in humansData) {
             if (data == null) {
-                Debug.Log("Save human data is null");
+                Debug.LogError($"[{nameof(CreaturesLoader)}] Save human data is null");
                 continue;
             }
 
             var prefab = creaturesList.GetCreature(data.Id);
-            var citizen = CreatureFactory.CreateHuman(prefab, data.Position.Vector3(), Quaternion.Euler(data.Rotation.Vector3()), data);
+            CreatureFactory.CreateHuman(prefab, data.Position.Vector3(), Quaternion.Euler(data.Rotation.Vector3()), data);
         }
     }
 
     private void InitCitizens()
     {
-        var position = entitySpawnPosition.position;
-        var rotation = entitySpawnPosition.rotation.eulerAngles;
 
         for (int i = 0; i < startResidentsCount; i++) {
-            float x = Random.Range(position.x - maxSpawnRange, position.x + maxSpawnRange);
-            float y = position.y;
-            float z = Random.Range(position.z - maxSpawnRange, position.z + maxSpawnRange);
-
-            var finalPosition = new Vector3(x, y, z);
+            var position = spawnArea.GetRandomSpawnPosition();
+            var rotation = spawnArea.transform.rotation.eulerAngles;
 
             var citizenId = citizenIds[Random.Range(0, citizenIds.Length)];
 
             var prefab = creaturesList.GetCreature(citizenId) as Citizen;
             if (!prefab) {
-                Debug.LogError("Citizen prefab is not valid");
+                Debug.LogError($"[{nameof(CreaturesLoader)}] Citizen prefab is not valid");
                 continue;
             }
 
-            var skillsCount = Mathf.Max(1, SkillsFactory.GetLevelsCount());
+            var levelsCount = Mathf.Max(1, SkillsData.GetLevelsCountByGameStage());
 
             var citizenData = new CitizenData()
             {
                 Id = citizenId,
-                Position = new Vector3Data(finalPosition),
+                Position = new Vector3Data(position),
                 Rotation = new Vector3Data(rotation),
 
                 Health = new HealthData()
@@ -82,10 +76,10 @@ public class CreaturesLoader : WorldLoader
 
                 BoatRider = BoatRiderData.Default(),
                 Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId(), WeaponsDataFactory.GetMinWeaponDamageId()),
-                Skills = SkillsFactory.CreateRandomSkillsData(skillsCount),
+                Skills = SkillsData.CreateByLevelsCount(levelsCount),
             };
 
-            var citizen = CreatureFactory.CreateHuman(prefab, finalPosition, Quaternion.Euler(rotation), citizenData);
+            var citizen = CreatureFactory.CreateHuman(prefab, position, Quaternion.Euler(rotation), citizenData);
         }
     }
 }

@@ -44,11 +44,13 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     {
         content.gameObject.SetActive(true);
         dailyRewardManager.SetRewardViewed(true);
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     public void Close()
     {
         content.gameObject.SetActive(false);
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     private void CreateRewardWidgets()

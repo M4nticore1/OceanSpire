@@ -22,10 +22,19 @@ public class GooglePlayInAppUpdate : MonoBehaviour
         yield return appUpdateInfoOperation;
 
         if (appUpdateInfoOperation.IsSuccessful) {
-            var appUpdateInforResult = appUpdateInfoOperation.GetResult();
-            var appUpdateOptions = AppUpdateOptions.ImmediateAppUpdateOptions();
+            var appUpdateInfoResult = appUpdateInfoOperation.GetResult();
+            int availability = (int)appUpdateInfoResult.UpdateAvailability;
 
-            StartCoroutine(StartImmediateUpdate(appUpdateInforResult, appUpdateOptions));
+            if (appUpdateInfoResult.UpdateAvailability == UpdateAvailability.UpdateAvailable) {
+                var appUpdateOptions = AppUpdateOptions.ImmediateAppUpdateOptions();
+                StartCoroutine(StartImmediateUpdate(appUpdateInfoResult, appUpdateOptions));
+            }
+            else {
+                Debug.Log($"[{nameof(GooglePlayInAppUpdate)}] Обновление недоступно для данного устройства/аккаунта.");
+            }
+        }
+        else {
+            Debug.Log($"[{nameof(GooglePlayInAppUpdate)}] Ошибка проверки обновления: {appUpdateInfoOperation.Error}");
         }
     }
 

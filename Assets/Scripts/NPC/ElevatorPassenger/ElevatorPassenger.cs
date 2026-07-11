@@ -19,6 +19,9 @@ public class ElevatorPassenger : MonoBehaviour
     [SerializeField] private HealthComponent healthComponent;
     public HealthComponent HealthComponent => healthComponent;
 
+    [SerializeField] private int priority = 0;
+    public int Priority => priority;
+
     [field: SerializeField] public ElevatorPassengerStateEnum CurrentStateEnum { get; private set; } = ElevatorPassengerStateEnum.None;
     public ElevatorPassengerState CurrentState { get; private set; }
 

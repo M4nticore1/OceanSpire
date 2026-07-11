@@ -56,7 +56,7 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void OnInitNextFrame()
     {
-        
+        DetermineNextAction();
     }
 
     protected abstract void DetermineNextAction();

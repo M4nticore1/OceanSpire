@@ -37,11 +37,14 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
         TryRemoveWidgets();
         TryCreateWidgets();
+
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
     public void Close()
     {
         gameObject.SetActive(false);
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     private void TryCreateWidgets()

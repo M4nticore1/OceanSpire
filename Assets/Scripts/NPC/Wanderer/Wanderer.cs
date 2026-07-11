@@ -53,13 +53,6 @@ public class Wanderer : Human
         BoatRider.RidingBoat.FloatAway(SpawnPosition);
     }
 
-    protected override void HandleEnteredBoat(Boat boat)
-    {
-        base.HandleEnteredBoat(boat);
-
-        boat.ContextMenuTarget.SetShowContextMenu(false);
-    }
-
     protected override bool ShouldBoatMoveToDock()
     {
         if (!base.ShouldBoatMoveToDock()) return false;
@@ -81,12 +74,39 @@ public class Wanderer : Human
         return false;
     }
 
+    protected override void HandleEnteredBoat(Boat boat)
+    {
+        base.HandleEnteredBoat(boat);
+
+        UpdateRidingBoatClickable();
+        boat.ContextMenuTarget.SetShowContextMenu(false);
+    }
+
+    protected override void OnBoatSetedIdle(Boat boat)
+    {
+        base.OnBoatSetedIdle(boat);
+
+        UpdateRidingBoatClickable();
+    }
+
     public override bool ShouldClick()
     {
         if (!base.ShouldClick()) return false;
         if (BoatRider.RidingBoat.Movement.IsMoving) return false;
 
         return true;
+    }
+
+    protected override void OnClick()
+    {
+        base.OnClick();
+
+        if (BoatRider.RidingBoat) {
+            BoatRider.RidingBoat.SelectComponent.Click();
+        }
+        else {
+            SelectComponent.Click();
+        }
     }
 
     public void Accept()
@@ -111,5 +131,14 @@ public class Wanderer : Human
         }
 
         ridingBoat.RemoveDockPoint();
+    }
+
+    private void UpdateRidingBoatClickable()
+    {
+        var ridingBoat = BoatRider.RidingBoat;
+        if (ridingBoat == null) return;
+        if (ridingBoat.CurrentStateEnum != BoatStateEnum.Idle) return;
+
+        ridingBoat.SetClickable(true);
     }
 }

@@ -45,12 +45,11 @@ public class Citizen : Human
         return true;
     }
 
-    public bool IsCitizenAvaliable()
+    protected override void OnClick()
     {
-        if (IsEvicted) return false;
-        if (!HealthComponent.IsAlive) return false;
+        base.OnClick();
 
-        return true;
+        SelectComponent.Click();
     }
 
     protected override void OnInit(CreatureData creatureData)
@@ -148,9 +147,16 @@ public class Citizen : Human
 
         if (IsEvicted) return false;
         if (!HealthComponent.IsAlive) return false;
-        if (BoatRider.RidingBoat != BoatRider.TargetBoat) return false;
-        if (!InteractComponent.InteractBuilding) return false;
-        if (!InteractComponent.InteractBuilding.GetComponent<PierModule>()) return false;
+
+        var ridingBoat = BoatRider.RidingBoat;
+        if (ridingBoat != BoatRider.TargetBoat) return false;
+
+        var boatState = ridingBoat.CurrentStateEnum;
+        if (boatState == BoatStateEnum.UnloadingLoot) return false;
+
+        var interactBuilding = InteractComponent.InteractBuilding;
+        if (!interactBuilding) return false;
+        if (!interactBuilding.GetComponent<PierModule>()) return false;
 
         return true;
     }
@@ -203,6 +209,13 @@ public class Citizen : Human
         base.OnInteractionStopped(building);
     }
 
+    protected override void HandleEnteredBoat(Boat boat)
+    {
+        base.HandleEnteredBoat(boat);
+
+        boat.SetClickable(false);
+    }
+
     protected override void OnDied()
     {
         base.OnDied();
@@ -210,5 +223,13 @@ public class Citizen : Human
         var interactBuilding = InteractComponent.InteractBuilding;
         InteractComponent.RemoveInteractBuilding();
         InteractComponent.TryStopInteracting(interactBuilding);
+    }
+
+    public bool IsCitizenAvaliable()
+    {
+        if (IsEvicted) return false;
+        if (!HealthComponent.IsAlive) return false;
+
+        return true;
     }
 }

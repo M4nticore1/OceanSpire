@@ -2,7 +2,11 @@ using UnityEngine;
 
 public class WandererAdmissionMenu : MonoBehaviour
 {
-    private Wanderer selectedWanderer;
+    [Header("Main")]
+    [SerializeField] private CityStorage cityStorage;
+    [SerializeField] private CreaturesManager creaturesManager;
+
+    [Header("UI")]
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private SkillsPanel skillPanel;
     [SerializeField] private CustomButton acceptButton;
@@ -10,6 +14,7 @@ public class WandererAdmissionMenu : MonoBehaviour
     [SerializeField] private TextLocalizer wandererNameText;
 
     private bool isOpened = false;
+    private Wanderer selectedWanderer;
 
     private void OnEnable()
     {
@@ -81,8 +86,8 @@ public class WandererAdmissionMenu : MonoBehaviour
 
     private void UpdateAcceptButtonEnabled()
     {
-        var currentPopulation = CreaturesManager.Instance.Citizens.Count;
-        var maxPopulation = CityStorage.Instance.Inventory.GetItemById(ItemID.Population);
+        var currentPopulation = creaturesManager.Citizens.Count;
+        var maxPopulation = cityStorage.Inventory.GetItem(ItemID.Population);
     }
 
     private void OnAcceptButtonClicked()

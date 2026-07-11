@@ -36,7 +36,7 @@ public class RewardedAdsManager : MonoBehaviour
     public void SetReward(AdRewardDefinition definition)
     {
         if (!definition) {
-            Debug.LogError("RewardDefinition is not valid");
+            Debug.LogError($"[{nameof(RewardedAdsManager)}] RewardDefinition is not valid");
             return;
         }
 
@@ -46,7 +46,7 @@ public class RewardedAdsManager : MonoBehaviour
     public void SetReward(RewardInstance reward)
     {
         if (reward == null) {
-            Debug.LogError("reward is not valid to set current reward");
+            Debug.LogError($"[{nameof(RewardedAdsManager)}] Reward is not valid to set current reward");
             return;
         }
 
@@ -74,7 +74,7 @@ public class RewardedAdsManager : MonoBehaviour
     public void ReceiveReward()
     {
         if (CurrentReward == null) {
-            Debug.LogError("currentReward is not valid to receive");
+            Debug.LogError($"[{nameof(RewardedAdsManager)}] CurrentReward is not valid to receive");
             return;
         }
 
@@ -89,7 +89,7 @@ public class RewardedAdsManager : MonoBehaviour
     public void ShowAd()
     {
         if (!adsSystem) {
-            Debug.LogError("Ads System is not assigned in an inspector!");
+            Debug.LogError($"[{nameof(RewardedAdsManager)}] Ads System is not assigned in an inspector!");
             return;
         }
 

@@ -20,6 +20,11 @@ public class BoatProgressDisplayController : ProgressDisplayController
 
     private void Update()
     {
+        UpdateProgress();
+    }
+
+    private void UpdateProgress()
+    {
         if (currentProgressable == null) return;
 
         ProgressDisplay.SetProgress(currentProgressable.GetProgress());
@@ -30,6 +35,7 @@ public class BoatProgressDisplayController : ProgressDisplayController
         if (state is IProgressable progressable) {
             currentProgressable = progressable;
             ProgressDisplay.Display();
+            UpdateProgress();
         }
     }
 

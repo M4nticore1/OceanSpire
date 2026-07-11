@@ -57,14 +57,14 @@ public class CraftingControlMenu : ControlMenu
             var craftItem = craftItems[i];
             var craftDefinition = craftDefinitions[i];
 
-            var spawned = Instantiate(producedResourcePanelPrefab, layoutGroup.transform);
-            spawned.Init(module, craftItem, selectGroup);
+            var spawnedPanel = Instantiate(producedResourcePanelPrefab, layoutGroup.transform);
+            spawnedPanel.Init(module, craftItem, selectGroup);
 
-            spawnedCraftResourcePanels.Add(spawned);
+            spawnedCraftResourcePanels.Add(spawnedPanel);
 
             if (i != module.GetIndexOfCurrentCraftItem()) continue;
 
-            spawned.Select();
+            spawnedPanel.Select();
         }
     }
 

@@ -7,7 +7,7 @@ public class HudItemWidget : MonoBehaviour
 
     private void Start()
     {
-        var item = cityStorage.Inventory.GetItemById(itemWidget.ItemDefinition.ItemId);
+        var item = cityStorage.Inventory.GetItem(itemWidget.ItemDefinition.ItemId);
         var limit = item.Stack;
         itemWidget.AddAmount(item);
         itemWidget.SetLimit(limit);

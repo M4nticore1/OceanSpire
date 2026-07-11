@@ -72,7 +72,7 @@ public class SkillWidget : MonoBehaviour
         float bonusValue = Skill.GetBonus() * 100;
         string bonusText = $"+{bonusValue}%";
 
-        float alpha = (float)(Skill.CurrentLevel - 1) / (SkillDefinition.MaxSkillLevel / SkillsFactory.GetLevelsCount());
+        float alpha = (float)(Skill.CurrentLevel - 1) / (SkillDefinition.MaxSkillLevel / SkillsData.GetLevelsCountByGameStage());
         var color = Color.Lerp(normalColor, highlightedColor, alpha);
         string hex = ColorUtility.ToHtmlStringRGB(color);
 
