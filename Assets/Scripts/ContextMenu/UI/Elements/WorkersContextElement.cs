@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class WorkersContextElement : ContextElement
 {
+    [Header("Workers")]
     [SerializeField] private WorkersControlMenu workersMenu;
 
     protected override void OnShowed()

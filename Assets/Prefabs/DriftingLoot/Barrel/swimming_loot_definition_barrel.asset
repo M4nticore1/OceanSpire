@@ -21,19 +21,19 @@ MonoBehaviour:
   - {fileID: 919132149155446097, guid: 503bcebd757819b429a1eed03cbde6a0, type: 3}
   lootTable:
   - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    dropChance: 0.05
+    dropChance: 1
     minAmount: 10
     maxAmount: 50
   - itemData: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
-    dropChance: 0.05
+    dropChance: 0.2
     minAmount: 10
     maxAmount: 30
   - itemData: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-    dropChance: 0.3
+    dropChance: 0.2
     minAmount: 5
     maxAmount: 20
   - itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
-    dropChance: 0.3
+    dropChance: 0.2
     minAmount: 15
     maxAmount: 40
   - itemData: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}

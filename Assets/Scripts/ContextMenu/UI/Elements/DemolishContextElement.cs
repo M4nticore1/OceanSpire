@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DemolishContextElement : ContextElement
 {
+    [Header("Demolish")]
     [SerializeField] private DemolishBuildingMenu demolishMenu;
     private Building building;
 

@@ -30,8 +30,8 @@ public class NameComponent : MonoBehaviour, ILocalizable
 
     public string GetName()
     {
-        string firstName = LocalizationManager.Instance.GetText(this.firstName);
-        string lastName = LocalizationManager.Instance.GetText(this.lastName);
+        string firstName = LocalizationManager.Instance.GetLocalizedText(this.firstName);
+        string lastName = LocalizationManager.Instance.GetLocalizedText(this.lastName);
         string name = firstName + " " + lastName;
 
         return name;
@@ -41,6 +41,7 @@ public class NameComponent : MonoBehaviour, ILocalizable
     {
         return new Dictionary<string, string>()
         {
+            { "name", $"{GetFirstNameText()} {GetLastNameText()}" },
             { "firstName", GetFirstNameText() },
             { "lastName", GetLastNameText() },
         };
@@ -60,11 +61,11 @@ public class NameComponent : MonoBehaviour, ILocalizable
 
     private string GetFirstNameText()
     {
-        return LocalizationManager.Instance.GetText(firstName);
+        return LocalizationManager.Instance.GetLocalizedText(firstName);
     }
 
     private string GetLastNameText()
     {
-        return LocalizationManager.Instance.GetText(lastName);
+        return LocalizationManager.Instance.GetLocalizedText(lastName);
     }
 }

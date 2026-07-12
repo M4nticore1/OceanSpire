@@ -5,7 +5,10 @@ public class ContextMenuManager : MonoBehaviour
 {
     public static ContextMenuManager Instance { get; private set; }
 
-    public event Action<ContextMenuTarget> onContextMenuTargetSelected;
+    public ContextMenuTarget ContextMenuTarget { get; private set; }
+
+    public event Action<ContextMenuTarget> OnContextMenuTargetSelected;
+    public event Action<ContextMenuTarget> OnContextMenuTargetDeselected;
 
     private void Awake()
     {
@@ -18,16 +21,28 @@ public class ContextMenuManager : MonoBehaviour
 
     private void OnEnable()
     {
-        ContextMenuTarget.onTargetSelected += OnContextTargetSelected;
+        ContextMenuTarget.OnTargetSelected += HandleContextTargetSelected;
+        ContextMenuTarget.OnTargetDeselected += HandleContextTargetDeselected;
     }
 
     private void OnDisable()
     {
-        ContextMenuTarget.onTargetSelected -= OnContextTargetSelected;
+        ContextMenuTarget.OnTargetSelected -= HandleContextTargetSelected;
+        ContextMenuTarget.OnTargetDeselected -= HandleContextTargetDeselected;
     }
 
-    private void OnContextTargetSelected(ContextMenuTarget target)
+    private void HandleContextTargetSelected(ContextMenuTarget target)
     {
-        onContextMenuTargetSelected?.Invoke(target);
+        ContextMenuTarget = target;
+        OnContextMenuTargetSelected?.Invoke(target);
+    }
+
+    private void HandleContextTargetDeselected(ContextMenuTarget target)
+    {
+        if (target == ContextMenuTarget) {
+            ContextMenuTarget = null;
+        }
+
+        OnContextMenuTargetDeselected?.Invoke(target);
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum HumanStatusEnum
@@ -16,7 +17,7 @@ public enum HumanActivity
     Raiding
 }
 
-public abstract class Human : Creature, IClickable
+public abstract class Human : Creature, IClickable, ILocalizable
 {
     [Header("Human")]
     [SerializeField] private GenderComponent genderComponent;
@@ -511,6 +512,15 @@ public abstract class Human : Creature, IClickable
         if (!healthComponent.IsAlive) return false;
 
         return true;
+    }
+
+    // ILocalizable
+    public Dictionary<string, string> GetLocalization()
+    {
+        return new Dictionary<string, string>()
+        {
+            { "name",  nameComponent.GetLocalization()["name"]}
+        };
     }
 
     // Health

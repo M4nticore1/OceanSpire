@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 
 public abstract class ContextElement : UIBehaviour
 {
+    [Header("Main")]
     [SerializeField] private GameObject content;
     [SerializeField] protected CustomButton button;
 
@@ -27,7 +28,7 @@ public abstract class ContextElement : UIBehaviour
         base.Start();
 
         TrySubscribe();
-        ContextMenuManager.Instance.onContextMenuTargetSelected += OnSelected;
+        ContextMenuManager.Instance.OnContextMenuTargetSelected += OnTargetSelected;
     }
 
     protected virtual bool Subscribe()
@@ -61,7 +62,7 @@ public abstract class ContextElement : UIBehaviour
         gameObject.SetActive(false);
     }
 
-    protected void OnSelected(ContextMenuTarget target)
+    protected void OnTargetSelected(ContextMenuTarget target)
     {
         if (!target) return;
 

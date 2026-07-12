@@ -31,7 +31,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
     {
         buildButton.OnReleased.AddListener(OnBuildButtonCliked);
         informationButton.OnReleased.AddListener(OnInformationButtonClicked);
-        cityStorage.Inventory.OnAddedItemAmount += OnCityItemAdded;
+        cityStorage.Inventory.OnItemAmountAdded += OnCityItemAdded;
 
         UpdateBuildButtonEnabled();
         UpdateBuildTime();
@@ -41,7 +41,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
     {
         buildButton.OnReleased.RemoveListener(OnBuildButtonCliked);
         informationButton.OnReleased.RemoveListener(OnInformationButtonClicked);
-        cityStorage.Inventory.OnAddedItemAmount -= OnCityItemAdded;
+        cityStorage.Inventory.OnItemAmountAdded -= OnCityItemAdded;
     }
 
     public void Init(Building building)
@@ -75,7 +75,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
             buildTime = speedBonus > 0 ? $"<color=green>{constructionTimeText} {bonusText}</color>" : constructionTimeText;
         }
         else {
-            buildTime = LocalizationManager.Instance.GetText(instantlyLocalization);
+            buildTime = LocalizationManager.Instance.GetLocalizedText(instantlyLocalization);
         }
 
         return new Dictionary<string, string>()

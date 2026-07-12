@@ -6,9 +6,9 @@ public class TimeFormatterSymbolsController : MonoBehaviour
     [SerializeField] private LocalizationItem minuteShortNameLocalization;
     [SerializeField] private LocalizationItem hourShortNameLocalization;
 
-    private string HourShortName => LocalizationManager.Instance.GetText(hourShortNameLocalization);
-    private string MinutehortName => LocalizationManager.Instance.GetText(minuteShortNameLocalization);
-    private string SecondShortName => LocalizationManager.Instance.GetText(secondShortNameLocalization);
+    private string HourShortName => LocalizationManager.Instance.GetLocalizedText(hourShortNameLocalization);
+    private string MinutehortName => LocalizationManager.Instance.GetLocalizedText(minuteShortNameLocalization);
+    private string SecondShortName => LocalizationManager.Instance.GetLocalizedText(secondShortNameLocalization);
 
     private void OnEnable()
     {

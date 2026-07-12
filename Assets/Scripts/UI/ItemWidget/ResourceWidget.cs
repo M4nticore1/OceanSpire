@@ -11,7 +11,7 @@ public enum ItemWidgetColorType
     Zero
 }
 
-public class ResourceWidget : UIBehaviour
+public class ResourceWidget : MonoBehaviour
 {
     [Header("Main")]
     [SerializeField] private ItemDefinition itemDefinition;
@@ -34,10 +34,8 @@ public class ResourceWidget : UIBehaviour
     [SerializeField] private Color enoughAmountColor = Color.green;
     [SerializeField] private Color notEnoughAmountColor = Color.red;
 
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
-
         UpdateItemName();
         UpdateIcon();
         UpdateAmountAndLimit();
@@ -45,22 +43,25 @@ public class ResourceWidget : UIBehaviour
         TryUpdateAmountColor();
     }
 
-    protected override void OnDestroy()
+    private void OnDestroy()
     {
-        base.OnDestroy();
-
-        foreach (var amount in Amounts) {
-            amount.OnAmountChanged -= OnAmountChanged;
+        if (Amounts != null) {
+            for (int i = Amounts.Count - 1; i >= 0; i--) {
+                if (Amounts[i] != null) {
+                    Amounts[i].OnAmountChanged -= OnAmountChanged;
+                }
+            }
+            Amounts.Clear();
         }
 
-        if (Limit != null)
+        if (Limit != null) {
             Limit.OnAmountChanged -= OnLimitChanged;
+            Limit = null;
+        }
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
         UpdateItemName();
         UpdateIcon();
         UpdateAmountAndLimit();

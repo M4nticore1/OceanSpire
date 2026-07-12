@@ -2,10 +2,8 @@ using UnityEngine;
 
 public class PopulationItemWidget : ResourceWidget
 {
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
-
         CreaturesManager.onCitizenRegistered += OnHumanAdded;
         CreaturesManager.onCitizenUnregistered += OnHumanRemoved;
 
@@ -17,10 +15,8 @@ public class PopulationItemWidget : ResourceWidget
         UpdateAmountAndLimit();
     }
 
-    protected override void OnDisable()
+    private void OnDisable()
     {
-        base.OnDisable();
-
         CreaturesManager.onCitizenRegistered -= OnHumanAdded;
         CreaturesManager.onCitizenUnregistered -= OnHumanRemoved;
 
@@ -30,10 +26,8 @@ public class PopulationItemWidget : ResourceWidget
         Citizen.OnCitizenEvicted -= OnCitizenEvicted;
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
         UpdateAmountAndLimit();
     }
 

@@ -36,6 +36,7 @@
   "coming_soon": "Prósimu",
   "level_up": "Subi Nivel",
   "instantly": "Imediatamente",
+  "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",
   "time_minute_short": "m",

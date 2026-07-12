@@ -26,7 +26,7 @@ public class RewardInstance : ILocalizable
 
     public Dictionary<string, string> GetLocalization()
     {
-        localizationDictionary.Add("rewardName", LocalizationManager.Instance.GetText(Definition.RewardNameLocalization).ToLower());
+        localizationDictionary.Add("rewardName", LocalizationManager.Instance.GetLocalizedText(Definition.RewardNameLocalization).ToLower());
         localizationDictionary.Add("rewardAmount", Amount.ToString());
 
         return localizationDictionary;

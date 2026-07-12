@@ -40,7 +40,7 @@ public abstract class NotificationController : MonoBehaviour
             return null;
         }
 
-        return localizationManager.GetText(LabelLocalizationItem);
+        return localizationManager.GetLocalizedText(LabelLocalizationItem);
     }
 
     protected virtual string GetBodyText()
@@ -53,7 +53,7 @@ public abstract class NotificationController : MonoBehaviour
             return null;
         }
 
-        return localizationManager.GetText(bodyLocalizationItem);
+        return localizationManager.GetLocalizedText(bodyLocalizationItem);
     }
 
     protected virtual string GetSubtitleText()
@@ -66,7 +66,7 @@ public abstract class NotificationController : MonoBehaviour
             return null;
         }
 
-        return localizationManager.GetText(subtitleLocalizationItem);
+        return localizationManager.GetLocalizedText(subtitleLocalizationItem);
     }
 
     private void OnNotificationsCanceled()

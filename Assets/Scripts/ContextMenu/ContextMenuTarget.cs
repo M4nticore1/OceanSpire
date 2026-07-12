@@ -6,9 +6,9 @@ public class ContextMenuTarget : MonoBehaviour
     [SerializeField] private SelectComponent selectComponent;
     [SerializeField] private bool showContextMenu = true;
 
-    public static event Action<ContextMenuTarget> onTargetSelected;
-    public static event Action<ContextMenuTarget> onTargetDelected;
-    public static event Action<ContextMenuTarget> onTargetDestroyed;
+    public static event Action<ContextMenuTarget> OnTargetSelected;
+    public static event Action<ContextMenuTarget> OnTargetDeselected;
+    public static event Action<ContextMenuTarget> OnTargetDisabled;
 
     private void OnEnable()
     {
@@ -20,7 +20,7 @@ public class ContextMenuTarget : MonoBehaviour
     {
         selectComponent.OnSelected -= OnComponentSelected;
         selectComponent.OnDeselected -= OnComponentDeselected;
-        onTargetDestroyed?.Invoke(this);
+        OnTargetDisabled?.Invoke(this);
     }
 
     public void SetShowContextMenu(bool value)
@@ -37,12 +37,12 @@ public class ContextMenuTarget : MonoBehaviour
 
     private void Select()
     {
-        onTargetSelected?.Invoke(this);
+        OnTargetSelected?.Invoke(this);
     }
 
     private void Deselect()
     {
-        onTargetDelected?.Invoke(this);
+        OnTargetDeselected?.Invoke(this);
     }
 
     private void OnComponentSelected()

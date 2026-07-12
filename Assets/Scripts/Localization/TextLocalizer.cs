@@ -75,7 +75,7 @@ public class TextLocalizer : UIBehaviour
     public void UpdateText()
     {
         if (item) {
-            string text = LocalizationManager.Instance.GetText(item);
+            string text = LocalizationManager.Instance.GetLocalizedText(item);
             if (text == null) return;
             if (text == "") return;
 

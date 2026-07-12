@@ -13,9 +13,6 @@ public class BoatDefinition : ScriptableObject
     [SerializeField] private BoatIdEnum boatId = BoatIdEnum.BasicBoat;
     public BoatIdEnum BoatId => boatId;
 
-    [SerializeField] private string boatIdName = "";
-    public string BoatIdName => boatIdName;
-
     [SerializeField] private float boatSpeed = 1;
     public float BoatSpeed => boatSpeed;
 

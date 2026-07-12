@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CompleteConstructionContextElement : ContextElement
 {
+    [Header("Construction")]
     [SerializeField] private CompleteConstructionMenu speedUpConstructionMenu;
     private Building building;
 

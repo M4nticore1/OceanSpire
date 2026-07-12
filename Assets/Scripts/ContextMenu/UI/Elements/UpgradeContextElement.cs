@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class UpgradeContextElement : ContextElement
 {
+    [Header("Upgrade")]
     [SerializeField] private UpgradeBuildingMenu upgradeMenu;
     private Building building;
 

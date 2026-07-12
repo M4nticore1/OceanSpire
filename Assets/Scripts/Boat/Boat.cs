@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum BoatStateEnum
@@ -13,7 +14,7 @@ public enum BoatStateEnum
     Demolished
 }
 
-public class Boat : MonoBehaviour, IClickable
+public class Boat : MonoBehaviour, IClickable, ILocalizable
 {
     [SerializeField] private BoatDefinition boatData;
     public BoatDefinition Definition => boatData;
@@ -134,6 +135,10 @@ public class Boat : MonoBehaviour, IClickable
         transform.rotation = Quaternion.Euler(boatData.Rotation.Vector3());
 
         movement.NavAgent.speed = Definition.BoatSpeed;
+
+        UpdateClickable();
+        UpdateContextMenuTarget();
+
         BoatsManager.Instance.RegisterBoat(this);
     }
 
@@ -254,7 +259,6 @@ public class Boat : MonoBehaviour, IClickable
                 break;
         }
 
-        Debug.Log($"Enter state {state}");
         CurrentStateEnum = state;
         CurrentState.Enter();
 
@@ -291,6 +295,15 @@ public class Boat : MonoBehaviour, IClickable
         return true;
     }
 
+    // ILocalizable
+    public Dictionary<string, string> GetLocalization()
+    {
+        return new Dictionary<string, string>()
+        {
+            { "name", LocalizationManager.Instance.GetLocalizedText(Definition.NameLocalization) }
+        };
+    }
+
     // Movement
     private void OnMovementStarted()
     {
@@ -317,5 +330,15 @@ public class Boat : MonoBehaviour, IClickable
     private void OnDeselected()
     {
         OnBoatDeselected?.Invoke(this);
+    }
+
+    private void UpdateClickable()
+    {
+        SetClickable(CurrentStatus == HumanStatusEnum.Citizen || CurrentStatus == HumanStatusEnum.Wanderer || CurrentStatus != HumanStatusEnum.Raider);
+    }
+
+    private void UpdateContextMenuTarget()
+    {
+        contextMenuTarget.SetShowContextMenu(CurrentStatus == HumanStatusEnum.Citizen);
     }
 }

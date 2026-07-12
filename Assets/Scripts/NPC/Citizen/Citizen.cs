@@ -209,13 +209,6 @@ public class Citizen : Human
         base.OnInteractionStopped(building);
     }
 
-    protected override void HandleEnteredBoat(Boat boat)
-    {
-        base.HandleEnteredBoat(boat);
-
-        boat.SetClickable(false);
-    }
-
     protected override void OnDied()
     {
         base.OnDied();

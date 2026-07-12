@@ -67,10 +67,10 @@ public class ConstructionNotificationController : NotificationController
         }
         else if (buildingsUnderConstruction.Count > 1) {
          
-            return localizationManager.GetText(BodyLocalizationItem);
+            return localizationManager.GetLocalizedText(BodyLocalizationItem);
         }
 
-        return localizationManager.GetText(BodyLocalizationItem);
+        return localizationManager.GetLocalizedText(BodyLocalizationItem);
     }
 
     private Building GetMaxConstructionTimeBuilding(List<Building> buildings)

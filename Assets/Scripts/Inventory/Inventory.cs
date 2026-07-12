@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+public class Inventory : MonoBehaviour, ILocalizable
 {
     [SerializeField] private bool autoCleaning = false;
 
@@ -27,14 +27,18 @@ public class Inventory : MonoBehaviour
     private Dictionary<ItemID, ItemInstance> itemsDict = new();
     private Dictionary<ItemStackEnum, ItemStack> itemStacks = new();
 
-    public event Action<ItemInstance> OnAddedItemAmount;
-    public event Action<ItemInstance> OnRemovedItemAmount;
 
-    public event Action<StorageItem> OnAddedMaxItemAmount;
-    public event Action<StorageItem> OnRemovedMaxItemAmount;
+    public event Action<ItemInstance> OnItemAdded;
+    public event Action<ItemInstance> OnItemRemoved;
+
+    public event Action<ItemInstance> OnItemAmountAdded;
+    public event Action<ItemInstance> OnItemAmountRemoved;
+
+    public event Action<StorageItem> OnItemLimitAdded;
+    public event Action<StorageItem> OnItemLimitRemoved;
 
     public event Action<ItemInstance> OnItemAmountChanged;
-    public event Action<StorageItem> OnChangedItemMaxAmount;
+    public event Action<StorageItem> OnItemLimitChanged;
 
     private void Awake()
     {
@@ -89,16 +93,34 @@ public class Inventory : MonoBehaviour
             amount = math.clamp(amount, 0, (int)(remainingWeight / item.Definition.Weight));
         }
 
+        var startAmount = item.Amount;
+
         item.AddAmount(amount);
         stack.AddItemAmount(item);
 
         AddWeight(amount * item.Definition.Weight);
+
+        if (amount != startAmount) {
+            if (amount > startAmount)
+                OnItemAmountAdded?.Invoke(item);
+            else
+                OnItemAmountRemoved?.Invoke(item);
+
+            OnItemAmountChanged?.Invoke(item);
+        }
+    }
+
+    public void RemoveItem(ItemInstance item)
+    {
+        RemoveItem(item.Definition.ItemId, item.Amount);
     }
 
     public void RemoveItem(ItemID id, int amount)
     {
         var item = GetItem(id);
         amount = Mathf.Max(0, amount);
+
+        var startAmount = item.Amount;
 
         item.RemoveAmount(amount);
 
@@ -107,6 +129,15 @@ public class Inventory : MonoBehaviour
         }
 
         RemoveWeight(amount * item.Definition.Weight);
+
+        if (amount != startAmount) {
+            if (amount > startAmount)
+                OnItemAmountAdded?.Invoke(item);
+            else
+                OnItemAmountRemoved?.Invoke(item);
+
+            OnItemAmountChanged?.Invoke(item);
+        }
     }
 
     public void AddLimit(ItemStackEnum stack, int amount)
@@ -143,6 +174,15 @@ public class Inventory : MonoBehaviour
         return items[index];
     }
 
+    public Dictionary<string, string> GetLocalization()
+    {
+        return new Dictionary<string, string>()
+        {
+            { "weight", Mathf.RoundToInt(currentWeight).ToString("F0") },
+            { "maxWeight", Mathf.RoundToInt(weightLimit).ToString("F0") }
+        };
+    }
+
     private ItemInstance AddItem(ItemID id)
     {
         var definition = ItemsList.Instance.GetItem(id);
@@ -154,6 +194,8 @@ public class Inventory : MonoBehaviour
             items.Add(item);
         }
 
+        OnItemAdded?.Invoke(item);
+
         return item;
     }
 
@@ -162,6 +204,8 @@ public class Inventory : MonoBehaviour
         ItemInstance item = GetItem(id);
         items.Remove(item);
         itemsDict.Remove(id);
+
+        OnItemRemoved?.Invoke(item);
 
         return item;
     }

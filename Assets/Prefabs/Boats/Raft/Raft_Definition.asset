@@ -15,4 +15,4 @@ MonoBehaviour:
   boatId: 1
   boatIdName: Simple Boat
   boatSpeed: 2.5
-  nameLocalization: {fileID: 0}
+  nameLocalization: {fileID: 11400000, guid: a88fcd6bc833bf04d8b7eb392846862f, type: 2}

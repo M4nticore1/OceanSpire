@@ -43,7 +43,7 @@ public class LocalizationManager
         OnLocalizationChanged?.Invoke();
     }
 
-    public string GetText(LocalizationItem item, string languageCode = null)
+    public string GetLocalizedText(LocalizationItem item, string languageCode = null)
     {
         if (!item) {
             Debug.LogError("LocalizationItem is not valid");
@@ -59,7 +59,7 @@ public class LocalizationManager
 
     public string GetText(LocalizationItem item, ILocalizable localizable)
     {
-        var text = GetText(item);
+        var text = GetLocalizedText(item);
         if (text == null) return null;
 
         if (localizable == null) {

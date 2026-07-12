@@ -19,13 +19,13 @@ public class CityStorage : MonoBehaviour
     private void OnEnable()
     {
         inventory.OnItemAmountChanged += OnItemAmountChanged;
-        inventory.OnChangedItemMaxAmount += OnItemMaxAmountChanged;
+        inventory.OnItemLimitChanged += OnItemMaxAmountChanged;
     }
 
     private void OnDisable()
     {
         inventory.OnItemAmountChanged -= OnItemAmountChanged;
-        inventory.OnChangedItemMaxAmount -= OnItemMaxAmountChanged;
+        inventory.OnItemLimitChanged -= OnItemMaxAmountChanged;
     }
 
     public void Init()

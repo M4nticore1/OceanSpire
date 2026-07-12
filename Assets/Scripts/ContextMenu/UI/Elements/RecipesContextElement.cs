@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class RecipesContextElement : ContextElement
 {
+    [Header("Crafting")]
     [SerializeField] private CraftingControlMenu recipesMenu;
 
     protected override void OnShowed()

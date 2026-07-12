@@ -29,7 +29,7 @@ public class LanguageSwitcher : MonoBehaviour
 
     private void UpdateLanguageName(string languageCode)
     {
-        var text = LocalizationManager.Instance.GetText(languageNameLocalizationItem, languageCode);
+        var text = LocalizationManager.Instance.GetLocalizedText(languageNameLocalizationItem, languageCode);
         var font = LocalizationManager.Instance.GetFont(TextRole.Default, languageCode);
 
         languageNameText.SetText(text);

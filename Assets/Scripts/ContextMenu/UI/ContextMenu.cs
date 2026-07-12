@@ -17,18 +17,18 @@ public class ContextMenu : UIBehaviour
     {
         base.OnEnable();
 
-        ContextMenuTarget.onTargetSelected += OnTargetSelected;
-        ContextMenuTarget.onTargetDelected += OnTargetDeselected;
-        ContextMenuTarget.onTargetDestroyed += OnTargetDestroyed;
+        ContextMenuTarget.OnTargetSelected += OnTargetSelected;
+        ContextMenuTarget.OnTargetDeselected += OnTargetDeselected;
+        ContextMenuTarget.OnTargetDisabled += OnTargetDestroyed;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        ContextMenuTarget.onTargetSelected -= OnTargetSelected;
-        ContextMenuTarget.onTargetDelected -= OnTargetDeselected;
-        ContextMenuTarget.onTargetDestroyed -= OnTargetDestroyed;
+        ContextMenuTarget.OnTargetSelected -= OnTargetSelected;
+        ContextMenuTarget.OnTargetDeselected -= OnTargetDeselected;
+        ContextMenuTarget.OnTargetDisabled -= OnTargetDestroyed;
     }
 
     private void Open()

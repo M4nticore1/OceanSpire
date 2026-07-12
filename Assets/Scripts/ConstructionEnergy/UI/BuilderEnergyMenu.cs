@@ -48,12 +48,12 @@ public class BuilderEnergyMenu : MonoBehaviour
     public void Hide()
     {
         slidePanel.Close();
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     private void OnHide()
     {
         isShowed = false;
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
     }
 
     private void OnCloseButtonClicked()

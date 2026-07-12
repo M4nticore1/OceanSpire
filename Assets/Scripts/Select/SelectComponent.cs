@@ -114,7 +114,6 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     public void SetClickable(bool value)
     {
-        Debug.Log($"SelectSetCliacable {value}");
         isClickable = value;
     }
 

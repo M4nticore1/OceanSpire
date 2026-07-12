@@ -9,14 +9,14 @@ public class ExtractionDailyTaskCondition : DailyTaskCondition
 
     protected override bool Subscribe()
     {
-        cityStorage.Inventory.OnAddedItemAmount += OnAddedItemAmount;
+        cityStorage.Inventory.OnItemAmountAdded += OnAddedItemAmount;
 
         return true;
     }
 
     protected override bool Unsubscribe()
     {
-        cityStorage.Inventory.OnAddedItemAmount -= OnAddedItemAmount;
+        cityStorage.Inventory.OnItemAmountAdded -= OnAddedItemAmount;
 
         return true;
     }

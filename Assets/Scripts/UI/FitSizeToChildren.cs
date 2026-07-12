@@ -1,24 +1,30 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class FitSizeToChildren : UIBehaviour
+public class FitSizeToChildren : MonoBehaviour
 {
     [SerializeField] private float minHeight = 0f;
     [SerializeField] private float extraHeight = 0f;
 
     private RectTransform rect;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         rect = GetComponent<RectTransform>();
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
+        UpdateSize();
+    }
 
+    private void OnEnable()
+    {
+        UpdateSize();
+    }
+
+    private void OnTransformChildrenChanged()
+    {
         UpdateSize();
     }
 
