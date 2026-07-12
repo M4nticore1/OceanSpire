@@ -26,27 +26,35 @@ public class SkillsComponent : MonoBehaviour
     public void Init(SkillsData skillsData)
     {
         if (skillsData == null) {
-            Debug.Log("data is not valid");
+            Debug.Log($"[{nameof(SkillsComponent)}] SkillsData is not valid");
             Init();
             return;
         }
 
-        foreach (var saved in skillsData.Skills) { 
+        foreach (var skill in skills.Values) {
+            skill.OnXpChanged -= OnXpChanged;
+            skill.OnLevelChanged -= OnLevelChanged;
+        }
+        skills.Clear();
+
+        foreach (var saved in skillsData.Skills) {
             var def = SkillsList.Instance.GetSkillDefinition(saved.Id);
-
-            var skillId = def.SkillId;
             var skill = new SkillInstance(def);
-
-            AddSkill(skill);
 
             skill.SetXp(saved.Xp);
             skill.SetLevel(saved.Level);
+
+            var skillId = def.SkillId;
+            skills.Add(skillId, skill);
+
+            skill.OnXpChanged += OnXpChanged;
+            skill.OnLevelChanged += OnLevelChanged;
         }
     }
 
-    public void AddExperience(SkillId id, float xp)
+    public void AddXP(SkillId id, float xp)
     {
-        GetSkill(id).AddXp(xp);
+        GetSkill(id)?.AddXp(xp);
     }
 
     public SkillInstance GetSkill(SkillId id)

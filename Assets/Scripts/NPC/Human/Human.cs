@@ -489,7 +489,6 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     public void SetClickable(bool value)
     {
-        Debug.Log($"Human SetCliacable {value}");
         isClickable = value;
     }
 

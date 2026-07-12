@@ -274,7 +274,16 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     public bool ShouldFindLoot()
     {
         if (!CurrentRider) return false;
-        if (!CurrentRider.GetComponent<Citizen>()) return false;
+
+        var citizen = CurrentRider.GetComponent<Citizen>();
+        if (!citizen) return false;
+
+        var interactBuilding = citizen.InteractComponent.InteractBuilding;
+        if (!interactBuilding) return false;
+
+        var pier = interactBuilding.GetComponent<PierModule>();
+        if (!pier) return false;
+
         if (inventory.RemainingWeight <= 0) return false;
 
         return true;

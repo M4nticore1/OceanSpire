@@ -6,7 +6,7 @@ using UnityEngine;
 public class SkillInstanceData
 {
     public SkillId Id = 0;
-    public int Level = 0;
+    public int Level = 1;
     public float Xp = 0;
 }
 
@@ -57,9 +57,12 @@ public class SkillsData
         levelsCount = Mathf.Min(levelsCount, maxLevelsCount);
 
         var skillsData = CreateFilledSkillsData();
+        if (skillsData.Skills == null || skillsData.Skills.Length != skillsCount) {
+            Debug.LogError("SkillsData.Skills length mismatch with SkillDefinitions!");
+            return skillsData;
+        }
 
         List<int> availableSkillIndices = new List<int>(maxLevelsCount);
-
         for (int i = 0; i < skillsCount; i++) {
             for (int j = 0; j < maxSkillLevel; j++) {
                 availableSkillIndices.Add(i);
@@ -94,7 +97,7 @@ public class SkillsData
 
     public static int GetLevelsCountByGameStage()
     {
-        int skillsCount = SkillsList.Instance.SkillDefinitionsDict.Count;
+        int skillsCount = SkillsList.Instance.SkillDefinitions.Length;
         int maxLevelsCount = skillsCount * SkillDefinition.MaxSkillLevel;
         int levelCount = (int)(maxLevelsCount * GameStageSystem.CalculateGameStagePercent());
 

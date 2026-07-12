@@ -67,11 +67,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5263c662ef3d28e4eb01171ff37f04ef, type: 3}
   - {fileID: 8300000, guid: 7644d6c1f6779694ca0e77c0faac1bdf, type: 3}
   containerLandedClips:
-  - {fileID: 8300000, guid: bc8bbfbcfdfb88e4ab85eff2d9081bf1, type: 3}
-  - {fileID: 8300000, guid: 3306af7159b82c14b8e9b16f26a17f2c, type: 3}
-  - {fileID: 8300000, guid: 14081b599e6789c469fef2f7943bd34b, type: 3}
-  - {fileID: 8300000, guid: 7351bed41b8e985488b94d04d311ed26, type: 3}
-  - {fileID: 8300000, guid: aa160e3623ef1c347ac07104647babf3, type: 3}
-  - {fileID: 8300000, guid: 3dd597c11387577449bbe6fa1eec4493, type: 3}
-  flyingMinDistance: 100
-  flyingMaxDistance: 300
+  - {fileID: 8300000, guid: e320b95c78232304e81f13390622cf49, type: 3}
+  - {fileID: 8300000, guid: 026706e5920d4584280cd77caeb054d2, type: 3}
+  - {fileID: 8300000, guid: fb21be47b00732d458681045c2c920c7, type: 3}
+  - {fileID: 8300000, guid: c20eb6d06129aef47a3cfff4d77c14ed, type: 3}
+  flyingMinDistance: 50
+  flyingMaxDistance: 200

@@ -32,11 +32,10 @@ public class FindLootContextElement : ContextElement
         boat = target.GetComponent<Boat>();
         if (!boat) return false;
 
-        var citizen = boat.CurrentRider?.GetComponent<Citizen>();
-        if (!citizen) return false;
-        if (!citizen.ShouldBoatFindLoot()) return false;
+        if (!boat.ShouldFindLoot()) return false;
 
-        if (boat.CurrentStateEnum == BoatStateEnum.MovingToDock) return true;
+        var state = boat.CurrentStateEnum;
+        if (state == BoatStateEnum.MovingToDock) return true;
 
         return false;
     }

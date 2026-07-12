@@ -100,7 +100,7 @@ public class Inventory : MonoBehaviour, ILocalizable
 
         AddWeight(amount * item.Definition.Weight);
 
-        if (amount != startAmount) {
+        if (item.Amount != startAmount) {
             if (amount > startAmount)
                 OnItemAmountAdded?.Invoke(item);
             else
@@ -130,7 +130,7 @@ public class Inventory : MonoBehaviour, ILocalizable
 
         RemoveWeight(amount * item.Definition.Weight);
 
-        if (amount != startAmount) {
+        if (item.Amount != startAmount) {
             if (amount > startAmount)
                 OnItemAmountAdded?.Invoke(item);
             else

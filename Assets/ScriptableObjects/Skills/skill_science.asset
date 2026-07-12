@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: skill_science
   m_EditorClassIdentifier: Assembly-CSharp::SkillDefinition
   skillId: 6
-  bonusPerLevel: 0.1
+  bonusPerLevel: 0.05
   xpGainRate: 0.01
   skillNameLocalization: {fileID: 11400000, guid: d7e534cc0163f364ba3ed24d06d0a13d, type: 2}
   skillDescriptionLocalization: {fileID: 11400000, guid: 5f92ee0f810802f40aa9d24b7be28347, type: 2}

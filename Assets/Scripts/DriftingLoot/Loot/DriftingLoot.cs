@@ -64,12 +64,8 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
             return;
         }
 
-        if (driftingLootData.Destination.Vector3() == Vector3.zero) {
-            Destroy(gameObject);
-            return;
-        }
-
         if (!movement.CanAgentReachTarget(driftingLootData.Destination.Vector3())) {
+            Debug.Log($"[{nameof(DriftingLoot)}] Drifting Loot {name} can't reach position {driftingLootData.Destination.Vector3()} from position {transform.position}");
             Destroy(gameObject);
             return;
         }

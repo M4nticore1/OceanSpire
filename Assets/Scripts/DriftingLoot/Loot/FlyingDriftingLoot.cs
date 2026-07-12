@@ -108,6 +108,7 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
             Id = prefab.Definition.Id,
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation.eulerAngles),
+            Destination = new Vector3Data(DriftingLootManager.Instance.GetDestinationPosition()),
         };
 
         var container = DriftingLootFactory.CreateDriftingLoot(prefab, driftingLootData);

@@ -103,6 +103,53 @@ public class DriftingLootManager : MonoBehaviour
         SpawnedFlyingDriftingLoot.Remove(driftingLoot);
     }
 
+    public Vector3 GetSpawnPosition(DriftingLoot containerPrefab)
+    {
+        Vector3 windDir = WindManager.Instance != null ? WindManager.Instance.WindDirection : Vector3.forward;
+        windDir = new Vector3(windDir.x, 0f, windDir.z).normalized;
+        Vector3 sideDir = new Vector3(-windDir.z, 0f, windDir.x).normalized;
+
+        Vector3 baseSpawnPos = -windDir * WorldUtils.SpawnDistance;
+        float maxSideOffset = 40f;
+        float randomSideOffset = UnityEngine.Random.Range(-maxSideOffset, maxSideOffset);
+        Vector3 finalBaseSpawn = baseSpawnPos + sideDir * randomSideOffset;
+
+        float positionY = 0f;
+        var flyingDriftingLootPrefab = containerPrefab as FlyingDriftingLoot;
+
+        if (flyingDriftingLootPrefab && buildingsManager != null) {
+            int minFloorNumber = flyingDriftingLootPrefab.FlyingDefinition.MinSpawnFloor;
+            int maxFloorNumber = Mathf.Max(minFloorNumber, flyingDriftingLootPrefab.FlyingDefinition.MaxSpawnFloor > 0
+                ? flyingDriftingLootPrefab.FlyingDefinition.MaxSpawnFloor
+                : buildingsManager.BuiltFloors.Count);
+
+            float spawnFloorNumber = UnityEngine.Random.Range((float)minFloorNumber, maxFloorNumber);
+            positionY = spawnFloorNumber * BuildingsManager.FloorHeight + BuildingsManager.FirstFloorHeight;
+        }
+
+        return new Vector3(finalBaseSpawn.x, positionY, finalBaseSpawn.z);
+    }
+
+    public Vector3 GetDestinationPosition()
+    {
+        Vector3 windDir = WindManager.Instance != null ? WindManager.Instance.WindDirection : Vector3.forward;
+        windDir = new Vector3(windDir.x, 0f, windDir.z).normalized;
+        Vector3 sideDir = new Vector3(-windDir.z, 0f, windDir.x).normalized;
+
+        Vector3 baseDestinationPos = windDir * WorldUtils.SpawnDistance;
+        float maxSideOffset = 40f;
+        float randomSideOffset = UnityEngine.Random.Range(-maxSideOffset, maxSideOffset);
+        Vector3 finalBaseDest = baseDestinationPos + sideDir * randomSideOffset;
+
+        return new Vector3(finalBaseDest.x, 0f, finalBaseDest.z);
+    }
+
+    public Quaternion GetSpawnRotation()
+    {
+        float rotationAngle = UnityEngine.Random.Range(0f, 360f);
+        return Quaternion.Euler(0f, rotationAngle, 0f);
+    }
+
     private void SetSpawnTime(float[] values)
     {
         if (values == null) return;
@@ -166,38 +213,9 @@ public class DriftingLootManager : MonoBehaviour
 
         if (!ShouldSpawnLootContainer(containerPrefab, id)) return false;
 
-        Vector3 windDir = WindManager.Instance != null ? WindManager.Instance.WindDirection : Vector3.forward;
-        windDir = new Vector3(windDir.x, 0f, windDir.z).normalized;
-
-        Vector3 sideDir = new Vector3(-windDir.z, 0f, windDir.x).normalized;
-
-        Vector3 baseSpawnPos = -windDir * WorldUtils.SpawnDistance;
-        Vector3 baseDestinationPos = windDir * WorldUtils.SpawnDistance;
-
-        float maxSideOffset = 40f;
-        float randomSideOffset = UnityEngine.Random.Range(-maxSideOffset, maxSideOffset);
-
-        Vector3 finalBaseSpawn = baseSpawnPos + sideDir * randomSideOffset;
-        Vector3 finalBaseDest = baseDestinationPos + sideDir * randomSideOffset;
-
-        var flyingDriftingLootPrefab = containerPrefab as FlyingDriftingLoot;
-        float positionY = 0;
-
-        if (flyingDriftingLootPrefab && buildingsManager != null) {
-            int minFloorNumber = flyingDriftingLootPrefab.FlyingDefinition.MinSpawnFloor;
-            int maxFloorNumber = Mathf.Max(minFloorNumber, flyingDriftingLootPrefab.FlyingDefinition.MaxSpawnFloor > 0
-                ? flyingDriftingLootPrefab.FlyingDefinition.MaxSpawnFloor
-                : buildingsManager.BuiltFloors.Count);
-
-            float spawnFloorNumber = UnityEngine.Random.Range((float)minFloorNumber, maxFloorNumber);
-            positionY = spawnFloorNumber * BuildingsManager.FloorHeight + BuildingsManager.FirstFloorHeight;
-        }
-
-        Vector3 spawnPosition = new Vector3(finalBaseSpawn.x, positionY, finalBaseSpawn.z);
-        Vector3 destinationPosition = new Vector3(finalBaseDest.x, positionY, finalBaseDest.z);
-
-        float rotationAngle = UnityEngine.Random.Range(0f, 360f);
-        var spawnRotation = Quaternion.Euler(0f, rotationAngle, 0f);
+        Vector3 spawnPosition = GetSpawnPosition(containerPrefab);
+        Vector3 destinationPosition = GetDestinationPosition();
+        Quaternion spawnRotation = GetSpawnRotation();
 
         var driftingLootData = containerPrefab.CreateRandomData();
         driftingLootData.Position = new Vector3Data(spawnPosition);

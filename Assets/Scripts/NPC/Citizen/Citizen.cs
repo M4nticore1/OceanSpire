@@ -152,7 +152,9 @@ public class Citizen : Human
         if (ridingBoat != BoatRider.TargetBoat) return false;
 
         var boatState = ridingBoat.CurrentStateEnum;
+        if (boatState == BoatStateEnum.FindingLoot) return false;
         if (boatState == BoatStateEnum.UnloadingLoot) return false;
+        if (boatState == BoatStateEnum.MovingToDock) return false;
 
         var interactBuilding = InteractComponent.InteractBuilding;
         if (!interactBuilding) return false;
