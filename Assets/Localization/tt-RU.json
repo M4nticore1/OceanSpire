@@ -16,6 +16,8 @@
   "complete": "Тәмамлау",
   "speed_up": "Тизләтергә",
   "level": "{currentLevel} дәрәҗәсе",
+  "to_pier": "Пирска",
+  "gather": "Җыю",
   "weight": "Ауырлык",
   "weight_current": "Ауырлык: {weight}",
   "weight_current_max": "Ауырлык: {weight}/{maxWeight}",

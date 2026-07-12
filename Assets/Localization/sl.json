@@ -16,6 +16,8 @@
   "complete": "Zaključi",
   "speed_up": "Pospešiti",
   "level": "Raven {currentLevel}",
+  "to_pier": "K pristanišču",
+  "gather": "Zberi",
   "weight": "Teža",
   "weight_current": "Teža: {weight}",
   "weight_current_max": "Teža: {weight}/{maxWeight}",

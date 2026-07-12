@@ -5,11 +5,6 @@ public class InventoryContextElement : ContextElement
     [Header("Inventory")]
     [SerializeField] private InventoryMenu inventoryMenu;
 
-    protected override void OnShowed()
-    {
-        
-    }
-
     protected override void OnButtonClicked()
     {
         var contextMenuManager = ContextMenuManager.Instance;

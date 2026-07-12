@@ -16,6 +16,8 @@
   "complete": "ಪೂರ್ಣಗೊಳಿಸಿ",
   "speed_up": "ವೇಗಗೊಳಿಸಿ",
   "level": "ಮಟ್ಟ {currentLevel}",
+  "to_pier": "ಪಿಯರ್ಗೆ",
+  "gather": "ಸಂಗ್ರಹ",
   "weight": "ತೂಕ",
   "weight_current": "ತೂಕ: {weight}",
   "weight_current_max": "ತೂಕ: {weight}/{maxWeight}",

@@ -16,6 +16,8 @@
   "complete": "ສຳເລັດ",
   "speed_up": "ເລັ່ງ",
   "level": "ລະດັບ {currentLevel}",
+  "to_pier": "ໄປທ່າ",
+  "gather": "ເກັບ",
   "weight": "ນ້ຳໜັກ",
   "weight_current": "ນ້ຳໜັກ: {weight}",
   "weight_current_max": "ນ້ຳໜັກ: {weight}/{maxWeight}",

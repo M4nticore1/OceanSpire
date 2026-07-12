@@ -16,6 +16,8 @@
   "complete": "සම්පූර්ණ කරන්න",
   "speed_up": "වේගවත් කරන්න",
   "level": "මට්ටම {currentLevel}",
+  "to_pier": "තොටුපළට",
+  "gather": "ගන්න",
   "weight": "බර",
   "weight_current": "බර: {weight}",
   "weight_current_max": "බර: {weight}/{maxWeight}",

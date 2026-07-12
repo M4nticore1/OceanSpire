@@ -44,12 +44,12 @@ public class SelectComponent : MonoBehaviour, IClickable
     {
         layers.Clear();
 
-        var objects = GameUtils.GetAllChildren(transform);
-        objects.Add(gameObject);
+        var objects = GameUtils.GetAllChildren(transform, ShouldInteract);
+        if (ShouldInteract(gameObject)) {
+            objects.Add(gameObject);
+        }
 
-        foreach (GameObject child in objects) {
-            if (!ShouldInteract(child)) continue;
-
+        foreach (var child in objects) {
             layers.Add(child, child.layer);
             child.layer = LayerMask.NameToLayer("Outlined");
         }
@@ -68,13 +68,11 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     public void Deselect()
     {
-        var objects = GameUtils.GetAllChildren(transform);
+        var objects = GameUtils.GetAllChildren(transform, ShouldInteract);
         objects.Add(gameObject);
 
-        foreach (GameObject child in objects) {
-            if (!ShouldInteract(child)) continue;
-
-            if (layers.ContainsKey(child)) {
+        foreach (var child in objects) {
+            if (layers.ContainsKey(child) && layers[child] != LayerMask.NameToLayer("Outlined")) {
                 child.layer = layers[child];
             }
             else {
@@ -130,6 +128,9 @@ public class SelectComponent : MonoBehaviour, IClickable
         if (transform.GetComponent<UIBehaviour>()) return false;
         if (transform.GetComponent<ParticleSystem>()) return false;
         if (transform.GetComponent<IgnoreSelect>()) return false;
+
+        var selectComponent = transform.GetComponent<SelectComponent>();
+        if (selectComponent && selectComponent != this) return false;
 
         return true;
     }

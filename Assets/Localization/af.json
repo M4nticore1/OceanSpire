@@ -16,6 +16,8 @@
   "complete": "Voltooi",
   "speed_up": "Spoed op",
   "level": "Vlak {currentLevel}",
+  "to_pier": "Pier toe",
+  "gather": "Gader",
   "weight": "Gewig",
   "weight_current": "Gewig: {weight}",
   "weight_current_max": "Gewig: {weight}/{maxWeight}",

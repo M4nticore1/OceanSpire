@@ -16,6 +16,8 @@
   "complete": "पूरा करें",
   "speed_up": "तेज करें",
   "level": "स्तर {currentLevel}",
+  "to_pier": "पियर की ओर",
+  "gather": "लो",
   "weight": "वजन",
   "weight_current": "वजन: {weight}",
   "weight_current_max": "वजन: {weight}/{maxWeight}",

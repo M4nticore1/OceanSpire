@@ -59,13 +59,51 @@ PrefabInstance:
     - target: {fileID: 8394769679750841849, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: item
       value: 
-      objectReference: {fileID: 11400000, guid: ff5bdac5266519b47a846f10c6749715, type: 2}
+      objectReference: {fileID: 11400000, guid: 9c6fe8024ba23a944a2a46dfb5d6a639, type: 2}
     - target: {fileID: 9002625106314974428, guid: d8047c7188674a64091d30f2a0797166, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 5927a948f4fc5554cab60f9467328c18, type: 3}
+      objectReference: {fileID: 21300000, guid: 2ca91248d1d57a74f9493e1bb1f4eb32, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3529243078444971508}
   m_SourcePrefab: {fileID: 100100000, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+--- !u!114 &2772769166129994013 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8611809006126050843, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+  m_PrefabInstance: {fileID: 5906911215454697222}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &8345193435831927673 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2461645195626525823, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+  m_PrefabInstance: {fileID: 5906911215454697222}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8503180665579953796 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2880278148441598338, guid: d8047c7188674a64091d30f2a0797166, type: 3}
+  m_PrefabInstance: {fileID: 5906911215454697222}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3529243078444971508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503180665579953796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32f185f613606e648a78fc1162f02a6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ToPierContextElement
+  content: {fileID: 8345193435831927673}
+  button: {fileID: 2772769166129994013}

@@ -16,6 +16,8 @@
   "complete": "مکمل کریں",
   "speed_up": "تیز کریں",
   "level": "لیول {currentLevel}",
+  "to_pier": "پیر کی طرف",
+  "gather": "لو",
   "weight": "وزن",
   "weight_current": "وزن: {weight}",
   "weight_current_max": "وزن: {weight}/{maxWeight}",

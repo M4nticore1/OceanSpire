@@ -6,10 +6,12 @@ public class UpgradeContextElement : ContextElement
     [SerializeField] private UpgradeBuildingMenu upgradeMenu;
     private Building building;
 
-    protected override void OnShowed()
+    protected override bool ShouldEnableButton()
     {
-        button.SetState(building.NextLevelData ? CustomButtonState.Idle : CustomButtonState.Disabled);
-        button.EndTransitionAnimation();
+        if (!base.ShouldEnableButton()) return false;
+        if (!building.NextLevelData) return false;
+
+        return true;
     }
 
     protected override void OnButtonClicked()

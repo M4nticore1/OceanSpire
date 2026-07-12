@@ -16,6 +16,8 @@
   "complete": "Finalizează",
   "speed_up": "Accelerează",
   "level": "Nivelul {currentLevel}",
+  "to_pier": "La debarcader",
+  "gather": "Adună",
   "weight": "Greutate",
   "weight_current": "Greutate: {weight}",
   "weight_current_max": "Greutate: {weight}/{maxWeight}",

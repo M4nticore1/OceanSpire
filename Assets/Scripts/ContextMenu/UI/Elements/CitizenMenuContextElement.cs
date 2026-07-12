@@ -5,11 +5,6 @@ public class CitizenMenuContextElement : ContextElement
     [Header("Citizen")]
     [SerializeField] private CitizenMenu citizenMenu;
 
-    protected override void OnShowed()
-    {
-        
-    }
-
     protected override void OnButtonClicked()
     {
         citizenMenu.Open();

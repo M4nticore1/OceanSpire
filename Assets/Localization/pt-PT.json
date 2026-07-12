@@ -16,6 +16,8 @@
   "complete": "Concluir",
   "speed_up": "Acelerar",
   "level": "Nível {currentLevel}",
+  "to_pier": "Ao cais",
+  "gather": "Coletar",
   "weight": "Peso",
   "weight_current": "Peso: {weight}",
   "weight_current_max": "Peso: {weight}/{maxWeight}",

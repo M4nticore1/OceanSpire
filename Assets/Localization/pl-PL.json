@@ -16,6 +16,8 @@
   "complete": "Ukończ",
   "speed_up": "Przyspiesz",
   "level": "Poziom {currentLevel}",
+  "to_pier": "Do mola",
+  "gather": "Zbierz",
   "weight": "Waga",
   "weight_current": "Waga: {weight}",
   "weight_current_max": "Waga: {weight}/{maxWeight}",

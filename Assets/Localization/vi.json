@@ -16,6 +16,8 @@
   "complete": "Hoàn thành",
   "speed_up": "Tăng tốc",
   "level": "Cấp {currentLevel}",
+  "to_pier": "Đến cầu tàu",
+  "gather": "Lấy",
   "weight": "Cân nặng",
   "weight_current": "Cân nặng: {weight}",
   "weight_current_max": "Cân nặng: {weight}/{maxWeight}",

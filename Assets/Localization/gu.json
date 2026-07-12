@@ -16,6 +16,8 @@
   "complete": "પૂર્ણ કરો",
   "speed_up": "ઝડપી બનાવો",
   "level": "સ્તર {currentLevel}",
+  "to_pier": "પિયર તરફ",
+  "gather": "લો",
   "weight": "વજન",
   "weight_current": "વજન: {weight}",
   "weight_current_max": "વજન: {weight}/{maxWeight}",

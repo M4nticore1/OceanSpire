@@ -16,6 +16,8 @@
   "complete": "Kumpletuhin",
   "speed_up": "Pabilisin",
   "level": "Antas {currentLevel}",
+  "to_pier": "Sa pantalan",
+  "gather": "Kumuha",
   "weight": "Timbang",
   "weight_current": "Timbang: {weight}",
   "weight_current_max": "Timbang: {weight}/{maxWeight}",

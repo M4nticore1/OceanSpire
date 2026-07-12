@@ -16,6 +16,8 @@
   "complete": "Completar",
   "speed_up": "Acelerar",
   "level": "Nivel {currentLevel}",
+  "to_pier": "Al muelle",
+  "gather": "Recoger",
   "weight": "Peso",
   "weight_current": "Peso: {weight}",
   "weight_current_max": "Peso: {weight}/{maxWeight}",

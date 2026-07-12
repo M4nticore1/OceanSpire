@@ -16,6 +16,8 @@
   "complete": "Voltooien",
   "speed_up": "Versnellen",
   "level": "Niveau {currentLevel}",
+  "to_pier": "Naar pier",
+  "gather": "Verzamel",
   "weight": "Gewicht",
   "weight_current": "Gewicht: {weight}",
   "weight_current_max": "Gewicht: {weight}/{maxWeight}",

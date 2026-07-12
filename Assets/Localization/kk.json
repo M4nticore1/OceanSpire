@@ -16,6 +16,8 @@
   "complete": "Аяқтау",
   "speed_up": "Жылдамдату",
   "level": "Деңгей {currentLevel}",
+  "to_pier": "Айлаққа",
+  "gather": "Жинау",
   "weight": "Салмақ",
   "weight_current": "Салмақ: {weight}",
   "weight_current_max": "Салмақ: {weight}/{maxWeight}",

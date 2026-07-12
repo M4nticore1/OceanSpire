@@ -16,6 +16,8 @@
   "complete": "Suorita",
   "speed_up": "Nopeuta",
   "level": "Taso {currentLevel}",
+  "to_pier": "Laiturille",
+  "gather": "Kerää",
   "weight": "Paino",
   "weight_current": "Paino: {weight}",
   "weight_current_max": "Paino: {weight}/{maxWeight}",

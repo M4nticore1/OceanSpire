@@ -16,6 +16,8 @@
   "complete": "Completa",
   "speed_up": "Accelera",
   "level": "Livello {currentLevel}",
+  "to_pier": "Al molo",
+  "gather": "Raccogli",
   "weight": "Peso",
   "weight_current": "Peso: {weight}",
   "weight_current_max": "Peso: {weight}/{maxWeight}",

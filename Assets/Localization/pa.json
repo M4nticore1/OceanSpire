@@ -16,6 +16,8 @@
   "complete": "ਮੁਕੰਮਲ ਕਰੋ",
   "speed_up": "ਤੇਜ਼ ਕਰੋ",
   "level": "ਪੱਧਰ {currentLevel}",
+  "to_pier": "ਪੀਅਰ ਨੂੰ",
+  "gather": "ਲੈ",
   "weight": "ਭਾਰ",
   "weight_current": "ਭਾਰ: {weight}",
   "weight_current_max": "ਭਾਰ: {weight}/{maxWeight}",

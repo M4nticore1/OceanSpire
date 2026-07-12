@@ -16,6 +16,8 @@
   "complete": "Ավարտել",
   "speed_up": "Արագացնել",
   "level": "{currentLevel} մակարդակ",
+  "to_pier": "Դեպի նավամատույց",
+  "gather": "Հավաքել",
   "weight": "Քաշ",
   "weight_current": "Քաշ: {weight}",
   "weight_current_max": "Քաշ: {weight}/{maxWeight}",

@@ -16,6 +16,8 @@
   "complete": "إكمال",
   "speed_up": "تسريع",
   "level": "المستوى {currentLevel}",
+  "to_pier": "للرصيف",
+  "gather": "جمع",
   "weight": "وزن",
   "weight_current": "الوزن: {weight}",
   "weight_current_max": "الوزن: {weight}/{maxWeight}",

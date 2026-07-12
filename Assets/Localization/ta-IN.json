@@ -16,6 +16,8 @@
   "complete": "முடிக்கவும்",
   "speed_up": "வேகமாக்கு",
   "level": "நிலை {currentLevel}",
+  "to_pier": "பியருக்கு",
+  "gather": "சேகரி",
   "weight": "எடை",
   "weight_current": "எடை: {weight}",
   "weight_current_max": "எடை: {weight}/{maxWeight}",

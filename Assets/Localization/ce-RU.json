@@ -16,6 +16,8 @@
   "complete": "Чекхйаккха",
   "speed_up": "Таттаха",
   "level": "{currentLevel} тӀегӀан",
+  "to_pier": "Пирсе",
+  "gather": "Схьаэца",
   "weight": "Йозалла",
   "weight_current": "Йозалла: {weight}",
   "weight_current_max": "Дозалла: {weight}/{maxWeight}",

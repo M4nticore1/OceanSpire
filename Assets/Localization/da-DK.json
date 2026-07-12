@@ -16,6 +16,8 @@
   "complete": "Færdigør",
   "speed_up": "Fremskynd",
   "level": "Niveau {currentLevel}",
+  "to_pier": "Til kajen",
+  "gather": "Saml",
   "weight": "Vægt",
   "weight_current": "Vægt: {weight}",
   "weight_current_max": "Vægt: {weight}/{maxWeight}",

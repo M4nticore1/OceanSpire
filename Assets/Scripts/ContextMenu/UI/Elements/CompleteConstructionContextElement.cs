@@ -6,11 +6,6 @@ public class CompleteConstructionContextElement : ContextElement
     [SerializeField] private CompleteConstructionMenu speedUpConstructionMenu;
     private Building building;
 
-    protected override void OnShowed()
-    {
-        
-    }
-
     protected override void OnButtonClicked()
     {
         speedUpConstructionMenu.Open(building);

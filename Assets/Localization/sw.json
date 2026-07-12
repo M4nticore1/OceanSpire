@@ -16,6 +16,8 @@
   "complete": "Kamilisha",
   "speed_up": "Harakisha",
   "level": "Kiwango {currentLevel}",
+  "to_pier": "Kwa gati",
+  "gather": "Kusanya",
   "weight": "Uzito",
   "weight_current": "Uzito: {weight}",
   "weight_current_max": "Uzito: {weight}/{maxWeight}",

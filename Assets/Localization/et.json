@@ -16,6 +16,8 @@
   "complete": "Lõpeta",
   "speed_up": "Kiirenda",
   "level": "Tase {currentLevel}",
+  "to_pier": "Muulile",
+  "gather": "Kogu",
   "weight": "Kaal",
   "weight_current": "Kaal: {weight}",
   "weight_current_max": "Kaal: {weight}/{maxWeight}",

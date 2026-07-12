@@ -16,6 +16,8 @@
   "complete": "പൂർത്തിയാക്കുക",
   "speed_up": "വേഗത്തിലാക്കുക",
   "level": "ലെവൽ {currentLevel}",
+  "to_pier": "പിയറിലേക്ക്",
+  "gather": "എടുക്കുക",
   "weight": "ഭാരം",
   "weight_current": "ഭാരം: {weight}",
   "weight_current_max": "ഭാരം: {weight}/{maxWeight}",

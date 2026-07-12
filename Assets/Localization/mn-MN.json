@@ -16,6 +16,8 @@
   "complete": "Дуусгах",
   "speed_up": "Хурдасгах",
   "level": "Түвшин {currentLevel}",
+  "to_pier": "Зогсоол руу",
+  "gather": "Авах",
   "weight": "Жин",
   "weight_current": "Жин: {weight}",
   "weight_current_max": "Жин: {weight}/{maxWeight}",

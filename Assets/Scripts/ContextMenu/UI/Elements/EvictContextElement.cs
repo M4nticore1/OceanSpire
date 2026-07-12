@@ -5,11 +5,6 @@ public class EvictContextElement : ContextElement
     [Header("Evict")]
     [SerializeField] private EvictMenu evictMenu;
 
-    protected override void OnShowed()
-    {
-
-    }
-
     protected override void OnButtonClicked()
     {
         evictMenu.Open();

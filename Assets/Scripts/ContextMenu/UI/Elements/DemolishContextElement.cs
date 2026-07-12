@@ -6,11 +6,6 @@ public class DemolishContextElement : ContextElement
     [SerializeField] private DemolishBuildingMenu demolishMenu;
     private Building building;
 
-    protected override void OnShowed()
-    {
-
-    }
-
     protected override void OnButtonClicked()
     {
         demolishMenu.Open(building);

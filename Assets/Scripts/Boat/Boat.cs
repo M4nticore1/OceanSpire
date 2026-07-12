@@ -66,6 +66,9 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     public event Action<BoatState> OnStateEntered;
     public event Action<BoatState> OnStateExited;
 
+    public static event Action<Boat> OnBoatStateEntered;
+    public static event Action<Boat> OnBoatStateExited;
+
     public static event Action<Boat> OnBoatSelected;
     public static event Action<Boat> OnBoatDeselected;
     public static event Action<Boat> OnBoatDestroyed;
@@ -229,7 +232,9 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         if (CurrentState != null) {
             CurrentState.Exit();
+
             OnStateExited?.Invoke(CurrentState);
+            OnBoatStateExited?.Invoke(this);
         }
 
         switch (state) {
@@ -263,6 +268,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         CurrentState.Enter();
 
         OnStateEntered?.Invoke(CurrentState);
+        OnBoatStateEntered?.Invoke(this);
     }
 
     public bool ShouldFindLoot()

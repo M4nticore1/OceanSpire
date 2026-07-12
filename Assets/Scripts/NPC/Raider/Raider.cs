@@ -118,7 +118,7 @@ public class Raider : Human, IProgressable
         CityNavigator.FollowPath();
     }
 
-    protected override bool ShouldStartInteracting()
+    public override bool ShouldStartInteracting()
     {
         if (!base.ShouldStartInteracting()) return false;
         if (IsRaidFinished) return false;
@@ -127,7 +127,7 @@ public class Raider : Human, IProgressable
         return true;
     }
 
-    protected override bool ShouldBoatMoveToDock()
+    public override bool ShouldBoatMoveToDock()
     {
         if (!base.ShouldBoatMoveToDock()) return false;
         if (IsRaidFinished) return false;
@@ -135,7 +135,7 @@ public class Raider : Human, IProgressable
         return true;
     }
 
-    protected override bool ShouldBoatFloatAway()
+    public override bool ShouldBoatFloatAway()
     {
         if (!base.ShouldBoatFloatAway()) return false;
         if (!IsRaidFinished) return false;
@@ -143,7 +143,7 @@ public class Raider : Human, IProgressable
         return true;
     }
 
-    protected override bool ShouldStartAttacking()
+    public override bool ShouldStartAttacking()
     {
         if (!base.ShouldStartAttacking()) return false;
 

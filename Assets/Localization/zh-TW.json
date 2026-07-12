@@ -16,6 +16,8 @@
   "complete": "完成",
   "speed_up": "加速",
   "level": "等級{currentLevel}",
+  "to_pier": "去碼頭",
+  "gather": "收集",
   "weight": "重量",
   "weight_current": "重量：{weight}",
   "weight_current_max": "重量：{weight}/{maxWeight}",

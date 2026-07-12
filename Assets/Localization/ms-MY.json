@@ -16,6 +16,8 @@
   "complete": "Selesaikan",
   "speed_up": "Percepat",
   "level": "Tahap {currentLevel}",
+  "to_pier": "Ke dermaga",
+  "gather": "Kumpul",
   "weight": "Berat",
   "weight_current": "Berat: {weight}",
   "weight_current_max": "Berat: {weight}/{maxWeight}",

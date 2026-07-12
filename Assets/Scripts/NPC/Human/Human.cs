@@ -342,7 +342,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         UpdateIdle();
     }
 
-    protected virtual bool ShouldStartInteracting()
+    public virtual bool ShouldStartInteracting()
     {
         if (interactComponent.IsInteracting) return false;
 
@@ -367,7 +367,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         return true;
     }
 
-    protected virtual bool ShouldStopInteracting()
+    public virtual bool ShouldStopInteracting()
     {
         if (!interactComponent.IsInteracting) return false;
         if (!interactComponent.InteractBuilding) return false;
@@ -377,7 +377,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         return false;
     }
 
-    protected virtual bool ShouldMoveToTargetBoat()
+    public virtual bool ShouldMoveToTargetBoat()
     {
         var targetBoat = boatRider.TargetBoat;
         if (!targetBoat) return false;
@@ -392,7 +392,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         return true;
     }
 
-    protected virtual bool ShouldWaitForEnteringBoat()
+    public virtual bool ShouldWaitForEnteringBoat()
     {
         var targetBoat = boatRider.TargetBoat;
         if (!targetBoat) return false;
@@ -403,7 +403,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         return true;
     }
 
-    protected virtual bool ShouldStopEnteringBoat()
+    public virtual bool ShouldStopEnteringBoat()
     {
         if (boatRider.TargetBoat) return false;
         if (!boatRider.IsEnteringBoat) return false;
@@ -411,7 +411,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         return true;
     }
 
-    protected virtual bool ShouldStartExitingBoat()
+    public virtual bool ShouldStartExitingBoat()
     {
         if (!boatRider.RidingBoat) return false;
         if (boatRider.TargetBoat && boatRider.TargetBoat == BoatRider.RidingBoat) return false;
@@ -421,7 +421,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         return true;
     }
 
-    protected virtual bool ShouldStopExitingBoat()
+    public virtual bool ShouldStopExitingBoat()
     {
         if (!boatRider.RidingBoat) return false;
         if (!boatRider.IsExitingBoat) return false;
@@ -430,7 +430,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         return true;
     }
 
-    protected virtual bool ShouldBoatMoveToDock()
+    public virtual bool ShouldBoatMoveToDock()
     {
         var ridingBoat = boatRider.RidingBoat;
         if (ridingBoat == null) return false;
@@ -442,7 +442,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         return true;
     }
 
-    protected virtual bool ShouldBoatFindLoot()
+    public virtual bool ShouldBoatFindLoot()
     {
         if (!boatRider.RidingBoat) return false;
         if (!boatRider.RidingBoat.ShouldFindLoot()) return false;
@@ -450,14 +450,14 @@ public abstract class Human : Creature, IClickable, ILocalizable
         return true;
     }
 
-    protected virtual bool ShouldBoatFloatAway()
+    public virtual bool ShouldBoatFloatAway()
     {
         if (!boatRider.RidingBoat) return false;
 
         return true;
     }
 
-    protected virtual bool ShouldStartAttacking()
+    public virtual bool ShouldStartAttacking()
     {
         if (attackComponent.IsAttacking) return false;
         if (!healthComponent.IsAlive) return false;
@@ -465,14 +465,14 @@ public abstract class Human : Creature, IClickable, ILocalizable
         return true;
     }
 
-    protected virtual bool ShouldStopAttacking()
+    public virtual bool ShouldStopAttacking()
     {
         if (!attackComponent.IsAttacking) return false;
 
         return true;
     }
 
-    protected virtual bool ShouldFollowPath()
+    public virtual bool ShouldFollowPath()
     {
         if (boatRider.RidingBoat) return false;
         if (attackComponent.IsAttacking) return false;

@@ -7,6 +7,7 @@ public abstract class ContextElement : UIBehaviour
     [SerializeField] private GameObject content;
     [SerializeField] protected CustomButton button;
 
+    public bool IsOpened { get; protected set; } = false;
     private bool isSubscribed = false;
 
     protected override void OnEnable()
@@ -28,41 +29,43 @@ public abstract class ContextElement : UIBehaviour
         base.Start();
 
         TrySubscribe();
+    }
+
+    protected virtual void Subscribe()
+    {
+        button.OnReleased.AddListener(OnButtonClicked);
         ContextMenuManager.Instance.OnContextMenuTargetSelected += OnTargetSelected;
     }
 
-    protected virtual bool Subscribe()
-    {
-        button.OnReleased.AddListener(OnButtonClicked);
-
-        return true;
-    }
-
-    protected virtual bool Unsubscribe()
+    protected virtual void Unsubscribe()
     {
         button.OnReleased.RemoveListener(OnButtonClicked);
-
-        return true;
+        ContextMenuManager.Instance.OnContextMenuTargetSelected -= OnTargetSelected;
     }
 
-    protected abstract void OnShowed();
+    protected virtual void Show()
+    {
+        gameObject.SetActive(true);
+        UpdateButtonEnabled();
+        IsOpened = true;
+    }
+
+    protected virtual void Hide()
+    {
+        gameObject.SetActive(false);
+        IsOpened = false;
+    }
+
+    protected virtual bool ShouldEnableButton()
+    {
+        return true;
+    }
 
     protected abstract void OnButtonClicked();
 
     protected abstract bool ShouldShow(ContextMenuTarget target);
 
-    protected void Show()
-    {
-        gameObject.SetActive(true);
-        OnShowed();
-    }
-
-    protected void Hide()
-    {
-        gameObject.SetActive(false);
-    }
-
-    protected void OnTargetSelected(ContextMenuTarget target)
+    protected void UpdateActive(ContextMenuTarget target)
     {
         if (!target) return;
 
@@ -74,19 +77,35 @@ public abstract class ContextElement : UIBehaviour
         }
     }
 
-    private void TrySubscribe()
+    protected void UpdateButtonEnabled()
     {
-        if (isSubscribed) return;
-        if (!Subscribe()) return;
-
-        isSubscribed = true;
+        button.SetState(ShouldEnableButton() ? CustomButtonState.Idle : CustomButtonState.Disabled);
     }
 
-    private void TryUnsubscribe()
+    private void OnTargetSelected(ContextMenuTarget target)
     {
-        if (!isSubscribed) return;
-        if (!Unsubscribe()) return;
+        UpdateActive(target);
+    }
 
+    private bool TrySubscribe()
+    {
+        if (isSubscribed) return false;
+        if (!ContextMenuManager.Instance) return false;
+
+        Subscribe();
+        isSubscribed = true;
+
+        return true;
+    }
+
+    private bool TryUnsubscribe()
+    {
+        if (!isSubscribed) return false;
+        if (!ContextMenuManager.Instance) return false;
+
+        Subscribe();
         isSubscribed = false;
+
+        return true;
     }
 }

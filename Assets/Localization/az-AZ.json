@@ -16,6 +16,8 @@
   "complete": "Tamamla",
   "speed_up": "Sürətləndir",
   "level": "Səviyyə {currentLevel}",
+  "to_pier": "İskeləyə",
+  "gather": "Topla",
   "weight": "Çəki",
   "weight_current": "Çəki: {weight}",
   "weight_current_max": "Çəki: {weight}/{maxWeight}",

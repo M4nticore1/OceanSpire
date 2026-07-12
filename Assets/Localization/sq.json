@@ -16,6 +16,8 @@
   "complete": "Përfundo",
   "speed_up": "Shpejto",
   "level": "Niveli {currentLevel}",
+  "to_pier": "Në skelë",
+  "gather": "Mblidh",
   "weight": "Pesha",
   "weight_current": "Pesha: {weight}",
   "weight_current_max": "Pesha: {weight}/{maxWeight}",

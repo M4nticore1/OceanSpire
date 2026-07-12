@@ -16,6 +16,8 @@
   "complete": "Završi",
   "speed_up": "Ubrzaj",
   "level": "Razina {currentLevel}",
+  "to_pier": "K pristaništu",
+  "gather": "Skupi",
   "weight": "Težina",
   "weight_current": "Težina: {weight}",
   "weight_current_max": "Težina: {weight}/{maxWeight}",

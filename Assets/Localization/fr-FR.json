@@ -16,6 +16,8 @@
   "complete": "Terminer",
   "speed_up": "Accélérer",
   "level": "Niveau {currentLevel}",
+  "to_pier": "Au quai",
+  "gather": "Ramasse",
   "weight": "Poids",
   "weight_current": "Poids: {weight}",
   "weight_current_max": "Poids: {weight}/{maxWeight}",

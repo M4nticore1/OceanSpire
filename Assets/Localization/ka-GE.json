@@ -16,6 +16,8 @@
   "complete": "დასრულება",
   "speed_up": "დაჩქარება",
   "level": "დონე {currentLevel}",
+  "to_pier": "ნავმისადგომთან",
+  "gather": "აიღე",
   "weight": "წონა",
   "weight_current": "წონა: {weight}",
   "weight_current_max": "წონა: {weight}/{maxWeight}",

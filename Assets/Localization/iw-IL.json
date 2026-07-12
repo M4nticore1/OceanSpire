@@ -16,6 +16,8 @@
   "complete": "השלם",
   "speed_up": "האץ",
   "level": "רמה {currentLevel}",
+  "to_pier": "לרציף",
+  "gather": "לאסוף",
   "weight": "משקל",
   "weight_current": "משקל: {weight}",
   "weight_current_max": "משקל: {weight}/{maxWeight}",

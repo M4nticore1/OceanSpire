@@ -16,6 +16,8 @@
   "complete": "Pabeigt",
   "speed_up": "Paātrināt",
   "level": "Līmenis {currentLevel}",
+  "to_pier": "Uz piestātni",
+  "gather": "Vāc",
   "weight": "Svars",
   "weight_current": "Svars: {weight}",
   "weight_current_max": "Svars: {weight}/{maxWeight}",

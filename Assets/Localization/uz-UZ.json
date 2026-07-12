@@ -16,6 +16,8 @@
   "complete": "Tugallash",
   "speed_up": "Tezlashtirish",
   "level": "Daraja {currentLevel}",
+  "to_pier": "Pirgga",
+  "gather": "Yig'ish",
   "weight": "Ogʻirlik",
   "weight_current": "Ogʻirlik: {weight}",
   "weight_current_max": "Ogʻirlik: {weight}/{maxWeight}",

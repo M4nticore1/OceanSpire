@@ -16,6 +16,8 @@
   "complete": "పూర్తి చేయి",
   "speed_up": "వేగవంతం చేయి",
   "level": "స్థాయి {currentLevel}",
+  "to_pier": "పియర్ కు",
+  "gather": "తీసుకో",
   "weight": "బరువు",
   "weight_current": "బరువు: {weight}",
   "weight_current_max": "బరువు: {weight}/{maxWeight}",

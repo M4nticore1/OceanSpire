@@ -16,6 +16,8 @@
   "complete": "Complete",
   "speed_up": "Speed up",
   "level": "Level {currentLevel}",
+  "to_pier": "To pier",
+  "gather": "Gather",
   "weight": "Weight",
   "weight_current": "Weight: {weight}",
   "weight_current_max": "Weight: {weight}/{maxWeight}",

@@ -16,6 +16,8 @@
   "complete": "Ljúka",
   "speed_up": "Flýta",
   "level": "Stig {currentLevel}",
+  "to_pier": "Að bryggju",
+  "gather": "Safna",
   "weight": "Þyngd",
   "weight_current": "Þyngd: {weight}",
   "weight_current_max": "Þyngd: {weight}/{maxWeight}",

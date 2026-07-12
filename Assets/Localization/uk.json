@@ -16,6 +16,8 @@
   "complete": "Завершити",
   "speed_up": "Прискорити",
   "level": "Рівень {currentLevel}",
+  "to_pier": "До пірса",
+  "gather": "Збирай",
   "weight": "Вага",
   "weight_current": "Вага: {weight}",
   "weight_current_max": "Вага: {weight}/{maxWeight}",

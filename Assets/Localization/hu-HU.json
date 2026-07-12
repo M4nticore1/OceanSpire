@@ -16,6 +16,8 @@
   "complete": "Befejez",
   "speed_up": "Gyorsítás",
   "level": "Szint {currentLevel}",
+  "to_pier": "Mólóhoz",
+  "gather": "Szedj",
   "weight": "Súly",
   "weight_current": "Súly: {weight}",
   "weight_current_max": "Súly: {weight}/{maxWeight}",

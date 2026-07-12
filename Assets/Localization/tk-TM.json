@@ -16,6 +16,8 @@
   "complete": "Tamamla",
   "speed_up": "Tizleşdir",
   "level": "Dereje {currentLevel}",
+  "to_pier": "Pirsä",
+  "gather": "Topla",
   "weight": "Agyrlyk",
   "weight_current": "Agyrlyk: {weight}",
   "weight_current_max": "Agyrlyk: {weight}/{maxWeight}",

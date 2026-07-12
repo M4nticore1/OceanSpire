@@ -16,6 +16,8 @@
   "complete": "Fullfør",
   "speed_up": "Skynd",
   "level": "Nivå {currentLevel}",
+  "to_pier": "Til kaien",
+  "gather": "Samle",
   "weight": "Vekt",
   "weight_current": "Vekt: {weight}",
   "weight_current_max": "Vekt: {weight}/{maxWeight}",

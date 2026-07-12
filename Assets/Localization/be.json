@@ -16,6 +16,8 @@
   "complete": "Завяршыць",
   "speed_up": "Паскорыць",
   "level": "Узровень {currentLevel}",
+  "to_pier": "Да пірса",
+  "gather": "Збіраць",
   "weight": "Вага",
   "weight_current": "Вага: {weight}",
   "weight_current_max": "Вага: {weight}/{maxWeight}",

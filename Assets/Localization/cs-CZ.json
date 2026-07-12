@@ -16,6 +16,8 @@
   "complete": "Dokončit",
   "speed_up": "Zrychlit",
   "level": "Úroveň {currentLevel}",
+  "to_pier": "K přístavišti",
+  "gather": "Seber",
   "weight": "Hmotnost",
   "weight_current": "Hmotnost: {weight}",
   "weight_current_max": "Hmotnost: {weight}/{maxWeight}",

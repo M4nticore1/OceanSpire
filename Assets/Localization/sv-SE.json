@@ -16,6 +16,8 @@
   "complete": "Slutför",
   "speed_up": "Snabba upp",
   "level": "Nivå {currentLevel}",
+  "to_pier": "Till kajen",
+  "gather": "Samla",
   "weight": "Vikt",
   "weight_current": "Vikt: {weight}",
   "weight_current_max": "Vikt: {weight}/{maxWeight}",

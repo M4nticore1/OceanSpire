@@ -16,6 +16,8 @@
   "complete": "पूर्ण करा",
   "speed_up": "वेगवान करा",
   "level": "स्तर {currentLevel}",
+  "to_pier": "पियरकडे",
+  "gather": "घ्या",
   "weight": "वजन",
   "weight_current": "वजन: {weight}",
   "weight_current_max": "वजन: {weight}/{maxWeight}",

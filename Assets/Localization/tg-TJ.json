@@ -16,6 +16,8 @@
   "complete": "Ба анҷом расонед",
   "speed_up": "Тез кунед",
   "level": "Сатҳи {currentLevel}",
+  "to_pier": "Ба пирс",
+  "gather": "Ҷамъ",
   "weight": "Вазн",
   "weight_current": "Вазн: {weight}",
   "weight_current_max": "Вазн: {weight}/{maxWeight}",

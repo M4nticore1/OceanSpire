@@ -16,6 +16,8 @@
   "complete": "Заврши",
   "speed_up": "Забрзај",
   "level": "Ниво {currentLevel}",
+  "to_pier": "Кон пристаништето",
+  "gather": "Собери",
   "weight": "Тежина",
   "weight_current": "Тежина: {weight}",
   "weight_current_max": "Тежина: {weight}/{maxWeight}",

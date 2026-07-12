@@ -1,16 +1,19 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameUtils
 {
-    public static List<GameObject> GetAllChildren(Transform parent)
+    public static List<GameObject> GetAllChildren(Transform parent, Predicate<GameObject> shouldInclude = null)
     {
-        List<GameObject> children = new List<GameObject>();
+        var children = new List<GameObject>();
 
-        foreach (Transform child in parent)
-        {
-            children.Add(child.gameObject);
-            children.AddRange(GetAllChildren(child));
+        foreach (Transform child in parent) {
+            var childGO = child.gameObject;
+            if (shouldInclude != null && !shouldInclude(childGO)) continue;
+
+            children.Add(childGO);
+            children.AddRange(GetAllChildren(child, shouldInclude));
         }
 
         return children;

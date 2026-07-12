@@ -16,6 +16,8 @@
   "complete": "Бүтүрүү",
   "speed_up": "Тездетүү",
   "level": "Деңгээл {currentLevel}",
+  "to_pier": "Пристаньга",
+  "gather": "Жыйноо",
   "weight": "Салмак",
   "weight_current": "Салмак: {weight}",
   "weight_current_max": "Салмак: {weight}/{maxWeight}",

@@ -16,6 +16,8 @@
   "complete": "បញ្ចប់",
   "speed_up": "បង្កើនល្បឿន",
   "level": "កម្រិត {currentLevel}",
+  "to_pier": "ទៅផែ",
+  "gather": "ប្រមូល",
   "weight": "ទំងន់",
   "weight_current": "ទំងន់: {weight}",
   "weight_current_max": "ទំងន់: {weight}/{maxWeight}",

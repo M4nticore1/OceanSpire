@@ -53,7 +53,7 @@ public class Wanderer : Human
         BoatRider.RidingBoat.FloatAway(SpawnPosition);
     }
 
-    protected override bool ShouldBoatMoveToDock()
+    public override bool ShouldBoatMoveToDock()
     {
         if (!base.ShouldBoatMoveToDock()) return false;
         if (IsRejected) return false;
@@ -61,7 +61,7 @@ public class Wanderer : Human
         return true;
     }
 
-    protected override bool ShouldBoatFloatAway()
+    public override bool ShouldBoatFloatAway()
     {
         if (!base.ShouldBoatFloatAway()) return false;
         if (!IsRejected) return false;
@@ -69,7 +69,7 @@ public class Wanderer : Human
         return true;
     }
 
-    protected override bool ShouldStartExitingBoat()
+    public override bool ShouldStartExitingBoat()
     {
         return false;
     }

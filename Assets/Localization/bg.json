@@ -16,6 +16,8 @@
   "complete": "Завършване",
   "speed_up": "Ускоряване",
   "level": "Ниво {currentLevel}",
+  "to_pier": "Long pier",
+  "gather": "Kolekt",
   "weight": "Тегло",
   "weight_current": "Тегло: {weight}",
   "weight_current_max": "Hevi: {weight}/{maxWeight}",

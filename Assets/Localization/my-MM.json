@@ -16,6 +16,8 @@
   "complete": "ပြီးမြောက်ပါ",
   "speed_up": "အရှိန်မြှင့်ပါ",
   "level": "အဆင့် {currentLevel}",
+  "to_pier": "ဆိပ်ခံသို့",
+  "gather": "စုဆောင်း",
   "weight": "အလေးချိန်",
   "weight_current": "အလေးချိန်: {weight}",
   "weight_current_max": "အလေးချိန်: {weight}/{maxWeight}",

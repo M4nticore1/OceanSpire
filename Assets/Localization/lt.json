@@ -16,6 +16,8 @@
   "complete": "Užbaigti",
   "speed_up": "Pagreitinti",
   "level": "Lygis {currentLevel}",
+  "to_pier": "Prie prieplaukos",
+  "gather": "Rinkti",
   "weight": "Svoris",
   "weight_current": "Svoris: {weight}",
   "weight_current_max": "Svoris: {weight}/{maxWeight}",

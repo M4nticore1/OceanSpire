@@ -16,6 +16,8 @@
   "complete": "Qedela",
   "speed_up": "Shubulula",
   "level": "Izinga {currentLevel}",
+  "to_pier": "Esikhumulweni",
+  "gather": "Qoqa",
   "weight": "Isisindo",
   "weight_current": "Isisindo: {weight}",
   "weight_current_max": "Isisindo: {weight}/{maxWeight}",

@@ -16,6 +16,8 @@
   "complete": "Tamamla",
   "speed_up": "Hızlandır",
   "level": "Seviye {currentLevel}",
+  "to_pier": "İskeleye",
+  "gather": "Topla",
   "weight": "Ağırlık",
   "weight_current": "Ağırlık: {weight}",
   "weight_current_max": "Ağırlık: {weight}/{maxWeight}",

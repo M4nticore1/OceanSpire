@@ -16,6 +16,8 @@
   "complete": "完了",
   "speed_up": "高速化",
   "level": "レベル{currentLevel}",
+  "to_pier": "桟橋へ",
+  "gather": "収集",
   "weight": "重量",
   "weight_current": "重量: {weight}",
   "weight_current_max": "重量: {weight}/{maxWeight}",

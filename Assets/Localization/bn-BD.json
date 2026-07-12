@@ -16,6 +16,8 @@
   "complete": "সম্পূর্ণ করুন",
   "speed_up": "দ্রুত করুন",
   "level": "{currentLevel} লেভেল",
+  "to_pier": "পিয়ারে",
+  "gather": "সংগ্রহ",
   "weight": "ওজন",
   "weight_current": "ওজন: {weight}",
   "weight_current_max": "ওজন: {weight}/{maxWeight}",

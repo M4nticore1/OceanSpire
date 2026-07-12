@@ -16,6 +16,8 @@
   "complete": "አጠናቅቅ",
   "speed_up": "አፋጥን",
   "level": "ደረጃ {currentLevel}",
+  "to_pier": "ወደ ማደሪያ",
+  "gather": "ሰብስብ",
   "weight": "ክብደት",
   "weight_current": "ክብደት: {weight}",
   "weight_current_max": "ክብደት: {weight}/{maxWeight}",

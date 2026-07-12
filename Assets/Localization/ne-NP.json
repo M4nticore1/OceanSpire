@@ -16,6 +16,8 @@
   "complete": "सम्पन्न गर्नुहोस्",
   "speed_up": "छिटो बनाउनुहोस्",
   "level": "स्तर {currentLevel}",
+  "to_pier": "पियरतिर",
+  "gather": "लिनु",
   "weight": "तौल",
   "weight_current": "तौल: {weight}",
   "weight_current_max": "तौल: {weight}/{maxWeight}",

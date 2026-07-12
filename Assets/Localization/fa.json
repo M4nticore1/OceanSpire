@@ -16,6 +16,8 @@
   "complete": "تکمیل",
   "speed_up": "سرعت",
   "level": "سطح {currentLevel}",
+  "to_pier": "به اسکله",
+  "gather": "جمع",
   "weight": "وزن",
   "weight_current": "وزن: {weight}",
   "weight_current_max": "وزن: {weight}/{maxWeight}",

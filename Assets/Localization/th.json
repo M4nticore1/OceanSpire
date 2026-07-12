@@ -16,6 +16,8 @@
   "complete": "เสร็จสิ้น",
   "speed_up": "เร่งความเร็ว",
   "level": "ระดับ {currentLevel}",
+  "to_pier": "ไปท่า",
+  "gather": "เก็บ",
   "weight": "น้ำหนัก",
   "weight_current": "น้ำหนัก: {weight}",
   "weight_current_max": "น้ำหนัก: {weight}/{maxWeight}",

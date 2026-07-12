@@ -5,11 +5,6 @@ public class WorkersContextElement : ContextElement
     [Header("Workers")]
     [SerializeField] private WorkersControlMenu workersMenu;
 
-    protected override void OnShowed()
-    {
-
-    }
-
     protected override void OnButtonClicked()
     {
         workersMenu.Open();

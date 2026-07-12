@@ -16,6 +16,8 @@
   "complete": "Ολοκλήρωση",
   "speed_up": "Επιτάχυνση",
   "level": "Επίπεδο {currentLevel}",
+  "to_pier": "Στην προβλήτα",
+  "gather": "Μάζεψε",
   "weight": "Βάρος",
   "weight_current": "Βάρος: {weight}",
   "weight_current_max": "Βάρος: {weight}/{maxWeight}",

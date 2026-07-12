@@ -122,7 +122,7 @@ public class Citizen : Human
         }
     }
 
-    protected override bool ShouldBoatMoveToDock()
+    public override bool ShouldBoatMoveToDock()
     {
         if (!base.ShouldBoatMoveToDock()) return false;
         if (InteractComponent.InteractBuilding && InteractComponent.InteractBuilding.GetComponent<PierModule>()) return false;
@@ -130,7 +130,7 @@ public class Citizen : Human
         return true;
     }
 
-    protected override bool ShouldBoatFloatAway()
+    public override bool ShouldBoatFloatAway()
     {
         if (!base.ShouldBoatFloatAway()) return false;
 
@@ -141,7 +141,7 @@ public class Citizen : Human
         return true;
     }
 
-    protected override bool ShouldBoatFindLoot()
+    public override bool ShouldBoatFindLoot()
     {
         if (!base.ShouldBoatFindLoot()) return false;
 
@@ -161,7 +161,7 @@ public class Citizen : Human
         return true;
     }
 
-    protected override bool ShouldStartAttacking()
+    public override bool ShouldStartAttacking()
     {
         if (!base.ShouldStartAttacking()) return false;
 

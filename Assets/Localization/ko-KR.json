@@ -16,6 +16,8 @@
   "complete": "완료",
   "speed_up": "가속화",
   "level": "레벨 {currentLevel}",
+  "to_pier": "부두로",
+  "gather": "수집",
   "weight": "무게",
   "weight_current": "무게: {weight}",
   "weight_current_max": "무게: {weight}/{maxWeight}",
