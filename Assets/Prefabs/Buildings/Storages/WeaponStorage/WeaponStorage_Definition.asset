@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingId: 12
   localizationItem: {fileID: 11400000, guid: 0ee1eb74074633b488fa24765e426408, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 7b5761c23ae66804a978172ecf43806b, type: 2}
   buildingType: 0
   buildingCategory: 3
   connectionType: 1
   buildingStrategy: 0
-  thumbImage: {fileID: 21300000, guid: a4fabf5495e68f14bad3e187b3e17d57, type: 3}
   isConstructable: 0
   isWorkable: 1
   isDemolishable: 1

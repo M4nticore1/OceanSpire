@@ -16,7 +16,7 @@ public class WorkersContextElement : ContextElement
         if (!building) return false;
 
         if (building.ConstructionComponent.GetUnderConstruction()) return false;
-        if (!building.BuildingData.IsWorkable) return false;
+        if (!building.Definition.IsWorkable) return false;
 
         return true;
     }

@@ -10,7 +10,6 @@ public static class EventBus
     public static event Action OnNavMeshBaked;
 
     // Buildings
-    public static event Action<BuildingWidget> OnBuildingWidgetInformationClicked;
     public static event Action<Building> OnConstructionStarted;
     public static event Action OnConstructionStopped;
 
@@ -48,11 +47,6 @@ public static class EventBus
     }
 
     // Buildings
-    public static void InvokeBuildingWidgetInformationClicked(BuildingWidget widget)
-    {
-        OnBuildingWidgetInformationClicked?.Invoke(widget);
-    }
-
     public static void InvokeBuildingPlacingStarted(Building building)
     {
         OnConstructionStarted?.Invoke(building);

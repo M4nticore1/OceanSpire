@@ -26,7 +26,7 @@ public class BuildingsList : ScriptableObject
     private void Init()
     {
         foreach (Building building in buildings) {
-            buildingsDict.Add(building.BuildingData.BuildingId, building);
+            buildingsDict.Add(building.Definition.BuildingId, building);
         }
     }
 

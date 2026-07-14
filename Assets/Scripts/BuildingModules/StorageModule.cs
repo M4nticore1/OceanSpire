@@ -69,7 +69,7 @@ public class StorageModule : BuildingModule, IRaidable
 
     public bool CanBeRaided()
     {
-        if (!OwnedBuilding.BuildingData.IsRaidable) return false;
+        if (!OwnedBuilding.Definition.IsRaidable) return false;
 
         return true;
     }

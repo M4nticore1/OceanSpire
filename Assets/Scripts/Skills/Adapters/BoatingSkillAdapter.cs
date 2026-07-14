@@ -48,6 +48,7 @@ public class BoatingSkillAdapter : SkillAdapter
         if (!citizen) return;
 
         var skillsComponent = citizen.SkillsComponent;
+        if (!skillsComponent) return;
 
         AddSkillsComponent(skillsComponent);
         AddBonus(boat, GetBonus(skillsComponent));

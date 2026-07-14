@@ -39,11 +39,11 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
         gameObject.SetActive(true);
 
-        buildingName.SetLocalizationItem(building.BuildingData.NameLocalizationItem);
+        buildingName.SetLocalizationItem(building.Definition.NameLocalizationItem);
         buildingLevel.SetPlaceHolderLocalization(building);
         constructionTime.SetPlaceHolderLocalization(building);
 
-        buildingImage.sprite = building.UpgradeComponent.IsUnderUpgrade ? building.NextLevelData.BuildingThumb : building.LevelData.BuildingThumb;
+        buildingImage.sprite = building.UpgradeComponent.IsUnderUpgrade ? building.NextLevelData.BuildingThumb : building.LevelDefinition.BuildingThumb;
 
         this.building = building;
 

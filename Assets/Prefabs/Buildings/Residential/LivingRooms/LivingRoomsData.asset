@@ -13,14 +13,13 @@ MonoBehaviour:
   m_Name: LivingRoomsData
   m_EditorClassIdentifier: 
   buildingId: 4
-  buildingName: Living Rooms
   localizationItem: {fileID: 11400000, guid: 94c55751ce6192b43a4c61a2d688f13d, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 28c3b80635f3a4a49892b030c1e6dc33, type: 2}
   buildingType: 0
   buildingCategory: 1
   connectionType: 1
   buildingStrategy: 0
-  detailsWindowVariant: 0
-  instantConstruction: 0
-  thumbImage: {fileID: 21300000, guid: 198ac3d9d3301d44bbd04ca385d822f9, type: 3}
+  isConstructable: 0
+  isWorkable: 0
   isDemolishable: 1
   isRaidable: 0

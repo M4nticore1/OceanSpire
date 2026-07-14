@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,8 +24,9 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
     [SerializeField] private Image buildingImage;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup;
 
-    private CityStorage cityStorage => CityStorage.Instance;
+    public static event Action<BuildingWidget> OnWidgetInformationClicked;
 
+    private CityStorage cityStorage => CityStorage.Instance;
     public Building BuildingPrefab { get; private set; }
 
     private void OnEnable()
@@ -63,11 +65,11 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
     public Dictionary<string, string> GetLocalization()
     {
         var buildTime = "";
-        var constructionTime = BuildingPrefab.LevelData.UpgradeTime;
+        var constructionTime = BuildingPrefab.LevelDefinition.UpgradeTime;
 
         if (constructionTime > 0) {
             var speedBonus = BuilderEnergyManager.Instance.CurrentEnergy;
-            var speedBonusText = speedBonus.ToString("F0");
+            var speedBonusText = (speedBonus * 100).ToString("F0");
             var timeWithBonus = (int)(constructionTime * (1f - speedBonus));
 
             var constructionTimeText = TimeFormatter.SecondsToTimer(timeWithBonus);
@@ -86,7 +88,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
 
     private void CreateResourcesToBuild()
     {
-        var buildResources = BuildingPrefab.LevelData.ResourcesToBuild;
+        var buildResources = BuildingPrefab.LevelDefinition.ResourcesToBuild;
 
         for (int i = 0; i < buildResources.Length; i++) {
             var resourceWidget = Instantiate(buildingResourceWidget, resourcesToBuildLayoutGroup.transform);
@@ -105,7 +107,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
 
     private void UpdateBuildName()
     {
-        buildingNameText.SetLocalizationItem(BuildingPrefab.BuildingData.NameLocalizationItem);
+        buildingNameText.SetLocalizationItem(BuildingPrefab.Definition.NameLocalizationItem);
     }
 
     private void UpdateBuildButtonEnabled()
@@ -123,7 +125,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
             return;
         }
 
-        foreach (var buildItem in BuildingPrefab.LevelData.ResourcesToBuild) {
+        foreach (var buildItem in BuildingPrefab.LevelDefinition.ResourcesToBuild) {
             var storageItem = cityStorage.Inventory.GetItem(buildItem.Definition.ItemId);
 
             if (buildItem.Amount <= storageItem.Amount) continue;
@@ -146,7 +148,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
 
     private void UpdateBildingImage()
     {
-        buildingImage.sprite = BuildingPrefab.LevelData.BuildingThumb;
+        buildingImage.sprite = BuildingPrefab.LevelDefinition.BuildingThumb;
     }
 
     private void OnBuildButtonCliked()
@@ -156,7 +158,7 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
 
     private void OnInformationButtonClicked()
     {
-        EventBus.InvokeBuildingWidgetInformationClicked(this);
+        OnWidgetInformationClicked?.Invoke(this);
     }
 
     private void OnCityItemAdded(ItemInstance itemInstance)

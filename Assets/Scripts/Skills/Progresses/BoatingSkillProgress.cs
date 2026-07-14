@@ -37,7 +37,11 @@ public class BoatingSkillProgress : SkillProgress
 
     private bool ShouldAddXp(SkillsComponent skillsComponent)
     {
+        if (!skillsComponent) return false;
+
         var boatRider = skillsComponent.GetComponent<BoatRider>();
+        if (!boatRider) return false;
+
         if (!boatRider.RidingBoat) return false;
 
         return true;

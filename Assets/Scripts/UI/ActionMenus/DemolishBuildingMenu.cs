@@ -46,6 +46,6 @@ public class DemolishBuildingMenu : BuildingMenu
 
     protected override void UpdateIcon(Building building)
     {
-        BuildingImage.sprite = building.LevelData.BuildingThumb;
+        BuildingImage.sprite = building.LevelDefinition.BuildingThumb;
     }
 }

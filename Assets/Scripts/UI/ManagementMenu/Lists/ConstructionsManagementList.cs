@@ -17,13 +17,13 @@ public class ConstructionsManagementList : ManagementList
     protected override void CreateWidgets()
     {
         foreach (var building in BuildingsList.Instance.Buildings) {
-            if (building.BuildingData.BuildingCategory != buildingCategory) continue;
-            if (!building.BuildingData.IsDemolishable) continue;
+            if (building.Definition.BuildingCategory != buildingCategory) continue;
+            if (!building.Definition.IsDemolishable) continue;
 
             var widget = Instantiate(BuildingWidgetPrefab, LayoutGroup.transform);
             widget.Init(building);
 
-            spawnedWidgets.Add(building.BuildingData.BuildingId, widget);
+            spawnedWidgets.Add(building.Definition.BuildingId, widget);
         }
     }
 }

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingId: 0
   localizationItem: {fileID: 11400000, guid: 39d875ff042ac144da1daa20578e0b30, type: 2}
-  buildingName: Floor Frame
+  descriptionLocalizationItem: {fileID: 11400000, guid: ab3c5e179dbc20145842c56c0f33eeeb, type: 2}
   buildingType: 2
   buildingCategory: 0
   connectionType: 0
   buildingStrategy: 0
-  detailsWindowVariant: 0
-  instantConstruction: 0
-  thumbImage: {fileID: 21300000, guid: b413064dcdf1c3f4f9110c82066f1101, type: 3}
+  isConstructable: 0
+  isWorkable: 0
   isDemolishable: 1
+  isRaidable: 0

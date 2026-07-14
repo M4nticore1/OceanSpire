@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingId: 11
   localizationItem: {fileID: 11400000, guid: cf5c11cdc2841a142a1b7200b93d25e5, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 455de0cf31c43df4aae9b6dcdced976e, type: 2}
   buildingType: 0
   buildingCategory: 3
   connectionType: 1

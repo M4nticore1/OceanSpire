@@ -91,7 +91,7 @@ public class ElevatorModule : BuildingModule, IElectricible
     {
         if (SpawnedElevatorCabin.IsMoving) return false;
         if (SpawnedElevatorCabin.OwnedElevator.OwnedTowerBuilding.FloorIndex != OwnedTowerBuilding.FloorIndex) return false;
-        if (SpawnedElevatorCabin.RidingPassengers.Count + SpawnedElevatorCabin.GoingToRidingPassengers.Count >= OwnedBuilding.LevelData.MaxHumansCount) return false;
+        if (SpawnedElevatorCabin.RidingPassengers.Count + SpawnedElevatorCabin.GoingToRidingPassengers.Count >= OwnedBuilding.LevelDefinition.MaxHumansCount) return false;
 
         return true;
     }

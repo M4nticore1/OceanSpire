@@ -167,11 +167,11 @@ public class BuildingsLoader : WorldLoader
         if (buildings == null) return;
 
         foreach (var building in buildings) {
-            if (building == null || building.BuildingData == null || building.LevelComponent == null) continue;
+            if (building == null || building.Definition == null || building.LevelComponent == null) continue;
 
             var buildingData = new BuildingData
             {
-                Id = building.BuildingData.BuildingId,
+                Id = building.Definition.BuildingId,
                 Level = building.LevelComponent.Level,
                 Upgrade = UpgradeData.Default(),
                 Construction = ConstructionData.Default(),
@@ -192,11 +192,11 @@ public class BuildingsLoader : WorldLoader
             if (floor == null || floor.OwnedBuilding == null) continue;
 
             var building = floor.OwnedBuilding as TowerBuilding;
-            if (building == null || building.BuildingData == null || building.LevelComponent == null) continue;
+            if (building == null || building.Definition == null || building.LevelComponent == null) continue;
 
             var buildingData = new TowerBuildingData
             {
-                Id = building.BuildingData.BuildingId,
+                Id = building.Definition.BuildingId,
                 Level = building.LevelComponent.Level,
                 Upgrade = UpgradeData.Default(),
                 Construction = ConstructionData.Default(),
@@ -224,11 +224,11 @@ public class BuildingsLoader : WorldLoader
                 if (roomPlace == null) continue;
 
                 var building = roomPlace.PlacedBuilding;
-                if (!building || building.BuildingData == null || building.LevelComponent == null) continue;
+                if (!building || building.Definition == null || building.LevelComponent == null) continue;
 
                 var buildingData = new TowerBuildingData
                 {
-                    Id = building.BuildingData.BuildingId,
+                    Id = building.Definition.BuildingId,
                     Level = building.LevelComponent.Level,
                     Upgrade = UpgradeData.Default(),
                     Construction = ConstructionData.Default(),

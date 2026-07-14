@@ -5536,6 +5536,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+--- !u!114 &383697686 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2172047472771393578, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+  m_PrefabInstance: {fileID: 383697685}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6bbe2cd1a1e497468ca849c0a3908c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingInformationMenu
 --- !u!114 &383697687 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1921971047925935194, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
@@ -11518,6 +11529,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1542763785}
     m_Modifications:
+    - target: {fileID: -7511558181221131132, guid: 32b03b49a3f64194ab80e7657b994c71, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3687494267303527126, guid: 897b915ca734e144d851305937d2addc, type: 3}
       propertyPath: m_Name
       value: Rock_Medium_04 (1)
@@ -11573,10 +11588,6 @@ PrefabInstance:
     - target: {fileID: 7634529172933479113, guid: 897b915ca734e144d851305937d2addc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: 32b03b49a3f64194ab80e7657b994c71, type: 3}
-      propertyPath: m_CastShadows
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14658,6 +14669,7 @@ Transform:
   - {fileID: 1220750728}
   - {fileID: 2079402389}
   - {fileID: 1455395273}
+  - {fileID: 2095963074}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1322718665
@@ -17098,6 +17110,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1542763785}
     m_Modifications:
+    - target: {fileID: -7511558181221131132, guid: 32b03b49a3f64194ab80e7657b994c71, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3687494267303527126, guid: 897b915ca734e144d851305937d2addc, type: 3}
       propertyPath: m_Name
       value: Rock_Medium_04
@@ -17153,10 +17169,6 @@ PrefabInstance:
     - target: {fileID: 7634529172933479113, guid: 897b915ca734e144d851305937d2addc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: -7511558181221131132, guid: 32b03b49a3f64194ab80e7657b994c71, type: 3}
-      propertyPath: m_CastShadows
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21300,6 +21312,51 @@ MonoBehaviour:
   dailyRewardManager: {fileID: 101393569}
   notificationTimeInHours: 12
   notificationDays: 000000000200000006000000
+--- !u!1 &2095963073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2095963074}
+  - component: {fileID: 2095963075}
+  m_Layer: 0
+  m_Name: InformationMenuManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2095963074
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095963073}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2095963075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095963073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823a22c729229cf42be1f109273714e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InformationMenuManager
+  buildingInformationMenu: {fileID: 383697686}
 --- !u!1 &2109934042
 GameObject:
   m_ObjectHideFlags: 0

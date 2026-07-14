@@ -53,6 +53,9 @@ public class BuildingDefinition : ScriptableObject
     [SerializeField] private LocalizationItem localizationItem = null;
     public LocalizationItem NameLocalizationItem => localizationItem;
 
+    [SerializeField] private LocalizationItem descriptionLocalizationItem = null;
+    public LocalizationItem DescriptionLocalizationItem => descriptionLocalizationItem;
+
     [Header("Enums")]
     [SerializeField] private BuildingType buildingType = BuildingType.Room;
     public BuildingType BuildingType => buildingType;

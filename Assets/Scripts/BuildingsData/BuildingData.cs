@@ -13,7 +13,7 @@ public class BuildingData
 
     protected void Fill(Building building)
     {
-        Id = building.BuildingData.BuildingId;
+        Id = building.Definition.BuildingId;
         InstanceId = building.InstanceId.GetGuid();
         Level = building.LevelComponent.Level;
         Upgrade = UpgradeData.Create(building.UpgradeComponent);

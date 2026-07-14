@@ -15,7 +15,7 @@ public class DemolishContextElement : ContextElement
     {
         building = target.GetComponent<Building>();
         if (!building) return false;
-        if (!building.BuildingData.IsDemolishable) return false;
+        if (!building.Definition.IsDemolishable) return false;
 
         return true;
     }

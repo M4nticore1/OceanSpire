@@ -322,7 +322,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
             return goingToRidingPassengers[0].CityNavigator.FloorIndex;
 
         int currentFloor = FloorIndex;
-        int freeSpace = OwnedBuilding.LevelData.MaxHumansCount - ridingPassengers.Count;
+        int freeSpace = OwnedBuilding.LevelDefinition.MaxHumansCount - ridingPassengers.Count;
         var possibleFloors = new List<int>();
 
         possibleFloors.AddRange(ridingPassengers

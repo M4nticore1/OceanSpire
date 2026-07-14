@@ -50,7 +50,7 @@ public class WorkersControlMenu : ControlMenu
             return;
         }
 
-        int maxWorkersCount = selectedBuilding.LevelData.MaxHumansCount;
+        int maxWorkersCount = selectedBuilding.LevelDefinition.MaxHumansCount;
 
         buildingWorkersMenu.ClearWidgets();
         employedCitizensMenu.ClearWidgets();

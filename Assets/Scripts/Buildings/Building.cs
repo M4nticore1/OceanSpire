@@ -6,12 +6,12 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 {
     [Header("Data")]
     [SerializeField] protected BuildingDefinition buildingData;
-    public BuildingDefinition BuildingData => buildingData;
+    public BuildingDefinition Definition => buildingData;
 
     [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
     public IReadOnlyList<BuildingLevelData> LevelsData => buildingLevelsData;
 
-    public BuildingLevelData LevelData => LevelsData.Count > levelComponent.Level - 1 ? LevelsData[levelComponent.Level - 1] : null;
+    public BuildingLevelData LevelDefinition => LevelsData.Count > levelComponent.Level - 1 ? LevelsData[levelComponent.Level - 1] : null;
     public BuildingLevelData NextLevelData => LevelsData.Count > levelComponent.Level ? LevelsData[levelComponent.Level] : null;
 
     [SerializeField] private bool isRuined = false;
@@ -204,16 +204,16 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     // Cost
     public ItemInstance[] GetResourcesToBuild()
     {
-        return LevelData.ResourcesToBuild;
+        return LevelDefinition.ResourcesToBuild;
     }
 
     public ItemInstance[] GetResourcesToRefund()
     {
-        int count = LevelData.ResourcesToBuild.Length;
+        int count = LevelDefinition.ResourcesToBuild.Length;
         var resources = new ItemInstance[count];
 
         for (int i = 0; i < count; i++) {
-            var resource = LevelData.ResourcesToBuild[i];
+            var resource = LevelDefinition.ResourcesToBuild[i];
             var data = resource.Definition;
             int amount = (int)(resource.Amount * DemolishionResourcesRefundPercent);
 

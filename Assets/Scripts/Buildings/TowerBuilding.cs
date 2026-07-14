@@ -104,7 +104,7 @@ public class TowerBuilding : Building
     {
         BuildingConstruction construction = null;
 
-        if (LevelData is TowerBuildingLevelData levelData) {
+        if (LevelDefinition is TowerBuildingLevelData levelData) {
             if (ConstructionComponent.GetUnderConstruction()) {
                 if (BuildingPosition == BuildingPosition.Straight) {
                     construction = levelData.ConstructionStraightFrame;
@@ -256,15 +256,15 @@ public class TowerBuilding : Building
         IReadOnlyList<FloorFrameModule> floors = BuildingsManager.Instance.BuiltFloors;
         BuildingPlace place = null;
 
-        if (BuildingData.BuildingType == BuildingType.Room) {
+        if (Definition.BuildingType == BuildingType.Room) {
             place = BuildingsManager.Instance.GetRoomPlace(floorIndex, placeIndex);
             transform.SetParent(place.transform);
         }
-        else if (BuildingData.BuildingType == BuildingType.Hall) {
+        else if (Definition.BuildingType == BuildingType.Hall) {
             place = floors[floorIndex].HallBuildingPlace;
             transform.SetParent(place.transform);
         }
-        else if (BuildingData.BuildingType == BuildingType.FloorFrame) {
+        else if (Definition.BuildingType == BuildingType.FloorFrame) {
             place = BuildingsManager.Instance.GetFloorFrameBuilding(floorIndex - 1)?.FloorBuildingPlace;
             transform.SetParent(place ? null : BuildingsManager.Instance.FirstFloorBuildingTransform);
         }

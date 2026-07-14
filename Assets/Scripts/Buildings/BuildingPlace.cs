@@ -103,14 +103,14 @@ public class BuildingPlace : MonoBehaviour, IClickable
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var buildingData = new TowerBuildingData()
         {
-            Id = towerBuildingPrefab.BuildingData.BuildingId,
+            Id = towerBuildingPrefab.Definition.BuildingId,
             Level = towerBuildingPrefab.LevelComponent.Level,
             Upgrade = UpgradeData.Default(),
 
             Construction = new ConstructionData()
             {
                 ConstructionStartTime = currentTime,
-                ConstructionFinishTime = currentTime + buildingPrefab.LevelData.UpgradeTime
+                ConstructionFinishTime = currentTime + buildingPrefab.LevelDefinition.UpgradeTime
             },
 
             FloorIndex = FloorIndex,
@@ -188,7 +188,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
     {
         if (!ShouldShow(building)) return;
 
-        if (building.BuildingData.BuildingType != buildingType) {
+        if (building.Definition.BuildingType != buildingType) {
             HideBuildingPlace();
         }
         else {
@@ -204,7 +204,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         }
 
         if (placedBuilding && building != placedBuilding) return;
-        if (building.BuildingData.BuildingType != buildingType) return;
+        if (building.Definition.BuildingType != buildingType) return;
 
         HideBuildingPlace();
     }
@@ -275,12 +275,12 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
         if (building.GetComponent<ElevatorModule>()) {
             var upPlace = neighborBuildingPlaces[Direction.Up];
-            if (upPlace && upPlace.placedBuilding && upPlace.placedBuilding.BuildingData == building.BuildingData) {
+            if (upPlace && upPlace.placedBuilding && upPlace.placedBuilding.Definition == building.Definition) {
                 return true;
             }
 
             var downPlace = neighborBuildingPlaces[Direction.Down];
-            if (downPlace && downPlace.placedBuilding && downPlace.placedBuilding.BuildingData == building.BuildingData) {
+            if (downPlace && downPlace.placedBuilding && downPlace.placedBuilding.Definition == building.Definition) {
                 return true;
             }
         }

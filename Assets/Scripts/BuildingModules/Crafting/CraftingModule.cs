@@ -299,7 +299,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     public bool CanBeRaided()
     {
-        if (!OwnedBuilding.BuildingData.IsRaidable) return false;
+        if (!OwnedBuilding.Definition.IsRaidable) return false;
         //if (!IsWorking) return false;
 
         return true;

@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingId: 3
   localizationItem: {fileID: 11400000, guid: 9850b7345e235194dad8773d17db521d, type: 2}
-  buildingName: Basic Elevator
+  descriptionLocalizationItem: {fileID: 11400000, guid: 321898f53b4800446bdeb1b26887542a, type: 2}
   buildingType: 0
   buildingCategory: 0
   connectionType: 2
   buildingStrategy: 0
-  detailsWindowVariant: 0
-  instantConstruction: 0
-  thumbImage: {fileID: 21300000, guid: 01114f81df3cb954c84f28fe58b481ca, type: 3}
+  isConstructable: 0
+  isWorkable: 0
   isDemolishable: 1
+  isRaidable: 0

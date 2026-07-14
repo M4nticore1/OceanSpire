@@ -10,10 +10,10 @@ public class StatsMenu : UIBehaviour
 
     public void OpenStatsMenu(Building building)
     {
-        buildingName.SetLocalizationItem(building.BuildingData.NameLocalizationItem);
+        buildingName.SetLocalizationItem(building.Definition.NameLocalizationItem);
 
         string interactorsCountText = building.WorkComponent.CurrentWorkers.Count.ToString();
-        string maxInteractorsCountText = building.LevelData.MaxHumansCount.ToString();
+        string maxInteractorsCountText = building.LevelDefinition.MaxHumansCount.ToString();
         interactorsCount.SetText(interactorsCountText + "/" + maxInteractorsCountText);
 
         slidePanel.Open();

@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fffffff0d7dc7b0428afdbb288a4e1f3, type: 3}
   m_Name: pt-BR
-  m_EditorClassIdentifier: Assembly-CSharp::LocalizationDictionary
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizationTable
   localizationAsset: {fileID: 4900000, guid: 8d51f0492bf0903428595a827cc1b6e7, type: 3}
   fonts:
   - {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}

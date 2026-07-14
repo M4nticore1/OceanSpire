@@ -4,31 +4,34 @@ public class RaidDisablerButton : MonoBehaviour
 {
     [SerializeField] private CustomButton button;
 
+    private RaidManager raidManager => RaidManager.Instance;
+
     private void OnEnable()
     {
-        if (!RaidManager.Instance) return;
+        if (!raidManager) return;
 
         UpdateButtonEnabled();
 
-        RaidManager.Instance.OnRaidStarted += OnRaidStarted;
-        RaidManager.Instance.OnRaidEnded += OnRaidEnded;
+        raidManager.OnRaidStarted += OnRaidStarted;
+        raidManager.OnRaidEnded += OnRaidEnded;
         button.OnStateChanged += OnButtonStateChanged;
     }
 
     private void OnDisable()
     {
-        if (!RaidManager.Instance) return;
+        if (!raidManager) return;
 
-        RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
-        RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
+        raidManager.OnRaidStarted -= OnRaidStarted;
+        raidManager.OnRaidEnded -= OnRaidEnded;
         button.OnStateChanged += OnButtonStateChanged;
     }
 
     private void UpdateButtonEnabled()
     {
-        if (!RaidManager.Instance) return;
+        if (!raidManager) return;
+        if (button.State == CustomButtonState.Disabled) return;
 
-        button.SetState(RaidManager.Instance.IsUnderRaid ? CustomButtonState.Disabled : CustomButtonState.Idle);
+        button.SetState(raidManager.IsUnderRaid ? CustomButtonState.Disabled : CustomButtonState.Idle);
     }
 
     private void OnRaidStarted()

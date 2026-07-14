@@ -11,7 +11,7 @@ public abstract class SelectedDisplay : UIBehaviour
     {
         base.OnEnable();
 
-        TrySubscribe();
+        Subscribe();
         TryDisplay(SelectManager.Instance?.SelectedComponent);
         TryHide(SelectManager.Instance?.SelectedComponent);
     }
@@ -20,20 +20,19 @@ public abstract class SelectedDisplay : UIBehaviour
     {
         base.OnDisable();
 
-        TryUnsubscribe();
+        Unsubscribe();
     }
 
     protected override void Start()
     {
         base.Start();
 
-        TrySubscribe();
+        Subscribe();
     }
 
-    private void TrySubscribe()
+    protected virtual void Subscribe()
     {
-        if (isSubscribed) return;
-        if (!SelectManager.Instance) return;
+        if (!ShouldSubscribe()) return;
 
         SelectManager.Instance.OnComponentSelected += OnComponentSelected;
         SelectManager.Instance.OnComponentDeselected += OnComponentDeselected;
@@ -41,10 +40,9 @@ public abstract class SelectedDisplay : UIBehaviour
         isSubscribed = true;
     }
 
-    private void TryUnsubscribe()
+    protected virtual void Unsubscribe()
     {
-        if (!isSubscribed) return;
-        if (!SelectManager.Instance) return;
+        if (!ShouldUnsubscribe()) return;
 
         SelectManager.Instance.OnComponentSelected -= OnComponentSelected;
         SelectManager.Instance.OnComponentDeselected -= OnComponentDeselected;
@@ -52,7 +50,21 @@ public abstract class SelectedDisplay : UIBehaviour
         isSubscribed = false;
     }
 
-    protected abstract bool ShouldDisplay(SelectComponent selectComponent);
+    protected virtual bool ShouldSubscribe()
+    {
+        if (isSubscribed) return false;
+        if (!SelectManager.Instance) return false;
+
+        return true;
+    }
+
+    protected virtual bool ShouldUnsubscribe()
+    {
+        if (!isSubscribed) return false;
+        if (!SelectManager.Instance) return false;
+
+        return true;
+    }
 
     protected virtual void Display(SelectComponent selectComponent)
     {
@@ -67,6 +79,8 @@ public abstract class SelectedDisplay : UIBehaviour
             content.SetActive(false);
         }
     }
+
+    protected abstract bool ShouldDisplay(SelectComponent selectComponent);
 
     private void TryDisplay(SelectComponent selectComponent)
     {

@@ -10,7 +10,7 @@ public class GroundBuilding : Building
 
     protected override BuildingConstruction GetConstructionToSpawn()
     {
-        var levelData = LevelData as GroundBuildingLevelData;
+        var levelData = LevelDefinition as GroundBuildingLevelData;
 
         return constructionComponent.GetUnderConstruction() && levelData.ConstructionFrame ? levelData.ConstructionFrame : levelData.Construction;
     }

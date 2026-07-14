@@ -13,14 +13,13 @@ MonoBehaviour:
   m_Name: TowerGate_Data
   m_EditorClassIdentifier: 
   buildingId: 1
-  buildingName: Tower Gate
   localizationItem: {fileID: 11400000, guid: e40cd370f2c16d247a760fbd07bae0af, type: 2}
+  descriptionLocalizationItem: {fileID: 0}
   buildingType: 1
   buildingCategory: 0
   connectionType: 0
   buildingStrategy: 0
-  detailsWindowVariant: 0
-  instantConstruction: 0
-  thumbImage: {fileID: 0}
+  isConstructable: 0
+  isWorkable: 0
   isDemolishable: 0
   isRaidable: 1

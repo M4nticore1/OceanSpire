@@ -13,15 +13,13 @@ MonoBehaviour:
   m_Name: Pier_Data
   m_EditorClassIdentifier: 
   buildingId: 2
-  buildingName: Dock
   localizationItem: {fileID: 11400000, guid: c6898d13d64429d4c9ba3cc5c393f4e3, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 210555a76cd3b6e4f833c600718b12d5, type: 2}
   buildingType: 3
   buildingCategory: 2
   connectionType: 0
   buildingStrategy: 1
-  detailsWindowVariant: 0
-  instantConstruction: 0
-  thumbImage: {fileID: 0}
+  isConstructable: 0
   isWorkable: 1
   isDemolishable: 0
   isRaidable: 0

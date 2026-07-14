@@ -13,15 +13,13 @@ MonoBehaviour:
   m_Name: Farm_Data
   m_EditorClassIdentifier: 
   buildingId: 6
-  buildingName: Farm
   localizationItem: {fileID: 11400000, guid: 4b1ea2c3bdd680c45bac76df466ebe4c, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 069a4a616e7a71144b93dbdd8183c35f, type: 2}
   buildingType: 0
   buildingCategory: 2
   connectionType: 1
   buildingStrategy: 0
-  detailsWindowVariant: 0
-  instantConstruction: 0
-  thumbImage: {fileID: 21300000, guid: 027349861b5ac6349a3638e12f68c3df, type: 3}
+  isConstructable: 0
   isWorkable: 1
   isDemolishable: 1
   isRaidable: 1

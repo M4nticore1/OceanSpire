@@ -1,0 +1,82 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class InformationMenu : MonoBehaviour
+{
+    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private TextLocalizer nameText;
+    [SerializeField] private TextLocalizer descriptionText;
+    [SerializeField] private Image thumbImage;
+    [SerializeField] private CustomButton closeButton;
+
+    private Building building;
+
+    private void OnEnable()
+    {
+        closeButton.OnReleased.AddListener(OnCloseButtonClicked);
+    }
+
+    private void OnDisable()
+    {
+        closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
+    }
+
+    public void Show(Building building)
+    {
+        if (!building) {
+            Debug.LogError($"[{nameof(InformationMenu)}] Building is not valid!");
+            return;
+        }
+
+        if (!building.Definition) return;
+        if (!building.Definition.NameLocalizationItem) return;
+        if (!building.Definition.DescriptionLocalizationItem) return;
+
+        this.building = building;
+        slidePanel.Open();
+
+        UpdateNameText();
+        UpdateDescriptionText();
+        UpdateImage();
+    }
+
+    public void Hide()
+    {
+        slidePanel.Close();
+    }
+
+    private void UpdateNameText()
+    {
+        if (!building) return;
+
+        var definition = building.Definition;
+        if (!definition) return;
+
+        nameText.SetLocalizationItem(definition.NameLocalizationItem);
+    }
+
+    private void UpdateDescriptionText()
+    {
+        if (!building) return;
+
+        var definition = building.Definition;
+        if (!definition) return;
+
+        descriptionText.SetLocalizationItem(definition.DescriptionLocalizationItem);
+    }
+
+    private void UpdateImage()
+    {
+        if (!building) return;
+
+        var definition = building.LevelDefinition;
+        if (!definition) return;
+
+        thumbImage.sprite = definition.BuildingThumb;
+    }
+
+    private void OnCloseButtonClicked()
+    {
+        Hide();
+    }
+}
