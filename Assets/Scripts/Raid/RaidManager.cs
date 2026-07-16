@@ -452,6 +452,8 @@ public class RaidManager : MonoBehaviour
         if (buildingsManager == null || buildingsManager.BuiltFloors == null) return 1;
 
         var floorRaidersCount = buildingsManager.BuiltFloors.Count * raidersCountPerFloor;
-        return Mathf.Min(floorRaidersCount, maxRaidersCount);
+        var buildingRaidersCount = buildingsManager.GetTowerBuildings().Count;
+
+        return Mathf.Min(floorRaidersCount, buildingRaidersCount, maxRaidersCount);
     }
 }

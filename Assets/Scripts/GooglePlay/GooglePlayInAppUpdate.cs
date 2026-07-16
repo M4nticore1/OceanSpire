@@ -5,44 +5,41 @@ using System.Collections;
 
 public class GooglePlayInAppUpdate : MonoBehaviour
 {
+    [Header("Update Settings")]
+    [Tooltip("True for Flexible (background download), False for Immediate (forced full-screen)")]
+    [SerializeField] private bool useFlexibleUpdate = false;
+    [SerializeField] private int minUpdatePriority = 0;
+
     private AppUpdateManager appUpdateManager;
+    private AppUpdateInfo appUpdateInfoResult;
     private bool isUpdateChecked = false;
+    private bool isUpdateInProgress = false;
 
     private void Start()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
         appUpdateManager = new AppUpdateManager();
-        StartCoroutine(CheckForUpdateWithDelay());
+        StartCoroutine(CheckForUpdate());
 #endif
     }
 
-    void OnApplicationPause(bool pauseStatus)
+    private void OnApplicationPause(bool pauseStatus)
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
-        if (pauseStatus)
+        if (appUpdateManager == null || isUpdateInProgress) return;
+
+        if (!pauseStatus)
         {
-            // Обнуляем ссылку при сворачивании, чтобы предотвратить вызов NullPointerException во внутреннем коде плагина
-            appUpdateManager = null;
-        }
-        else
-        {
-            if (appUpdateManager == null)
+            if (useFlexibleUpdate)
             {
-                appUpdateManager = new AppUpdateManager();
-                
-                if (!isUpdateChecked)
-                {
-                    StartCoroutine(CheckForUpdateWithDelay());
-                }
+                StartCoroutine(ResumeInProgressUpdate());
+            }
+            else if (!isUpdateChecked)
+            {
+                StartCoroutine(CheckForUpdate());
             }
         }
 #endif
-    }
-
-    IEnumerator CheckForUpdateWithDelay()
-    {
-        yield return new WaitForSeconds(3f);
-        yield return StartCoroutine(CheckForUpdate());
     }
 
     private IEnumerator CheckForUpdate()
@@ -50,32 +47,120 @@ public class GooglePlayInAppUpdate : MonoBehaviour
         if (appUpdateManager == null) yield break;
 
         PlayAsyncOperation<AppUpdateInfo, AppUpdateErrorCode> appUpdateInfoOperation = appUpdateManager.GetAppUpdateInfo();
-
         yield return appUpdateInfoOperation;
 
         if (appUpdateInfoOperation.IsSuccessful) {
             isUpdateChecked = true;
-            var appUpdateInfoResult = appUpdateInfoOperation.GetResult();
+            appUpdateInfoResult = appUpdateInfoOperation.GetResult();
 
             if (appUpdateInfoResult.UpdateAvailability == UpdateAvailability.UpdateAvailable) {
-                var appUpdateOptions = AppUpdateOptions.FlexibleAppUpdateOptions();
-                StartCoroutine(StartImmediateUpdate(appUpdateInfoResult, appUpdateOptions));
-                Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] The update is available");
-            }
-            else {
-                Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] The update is not available for this device/account..");
+                int updatePriority = appUpdateInfoResult.UpdatePriority;
+
+                if (updatePriority >= minUpdatePriority) {
+                    if (useFlexibleUpdate) {
+                        if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.FlexibleAppUpdateOptions())) {
+                            StartCoroutine(StartFlexibleUpdate());
+                        }
+                        else {
+                            Debug.LogWarning("[PlayUpdate] Flexible update not allowed, trying immediate...");
+                            if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.ImmediateAppUpdateOptions())) {
+                                StartCoroutine(StartImmediateUpdate());
+                            }
+                        }
+                    }
+                    else {
+                        if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.ImmediateAppUpdateOptions())) {
+                            StartCoroutine(StartImmediateUpdate());
+                        }
+                    }
+                }
             }
         }
         else {
-            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Update verification error: {appUpdateInfoOperation.Error}");
+            Debug.LogError($"[PlayUpdate] Check failed: {appUpdateInfoOperation.Error}");
         }
     }
 
-    private IEnumerator StartImmediateUpdate(AppUpdateInfo appUpdateInfo, AppUpdateOptions appUpdateOptions)
+    private IEnumerator StartFlexibleUpdate()
     {
-        if (appUpdateManager == null) yield break;
+        isUpdateInProgress = true;
+        var appUpdateOptions = AppUpdateOptions.FlexibleAppUpdateOptions();
+        var startUpdateRequest = appUpdateManager.StartUpdate(appUpdateInfoResult, appUpdateOptions);
 
-        var startUpdateRequest = appUpdateManager.StartUpdate(appUpdateInfo, appUpdateOptions);
+        while (!startUpdateRequest.IsDone) {
+            yield return null;
+        }
+
+        if (startUpdateRequest.Error == AppUpdateErrorCode.NoError) {
+            yield return StartCoroutine(CompleteFlexibleUpdate());
+        }
+        else {
+            Debug.LogError($"[PlayUpdate] Flexible update failed: {startUpdateRequest.Error}");
+            isUpdateInProgress = false;
+        }
+    }
+
+    private IEnumerator CompleteFlexibleUpdate()
+    {
+        var completeUpdateOperation = appUpdateManager.CompleteUpdate();
+        yield return completeUpdateOperation;
+
+        if (completeUpdateOperation.Error != AppUpdateErrorCode.NoError) {
+            Debug.LogError($"[PlayUpdate] CompleteUpdate failed: {completeUpdateOperation.Error}");
+            isUpdateInProgress = false;
+        }
+    }
+
+    private IEnumerator StartImmediateUpdate()
+    {
+        isUpdateInProgress = true;
+        var appUpdateOptions = AppUpdateOptions.ImmediateAppUpdateOptions();
+        var startUpdateRequest = appUpdateManager.StartUpdate(appUpdateInfoResult, appUpdateOptions);
+
         yield return startUpdateRequest;
+
+        if (startUpdateRequest.Error != AppUpdateErrorCode.NoError) {
+            Debug.LogError($"[PlayUpdate] Immediate update failed: {startUpdateRequest.Error}");
+            isUpdateInProgress = false;
+        }
+    }
+
+    private IEnumerator ResumeInProgressUpdate()
+    {
+        PlayAsyncOperation<AppUpdateInfo, AppUpdateErrorCode> appUpdateInfoOperation = appUpdateManager.GetAppUpdateInfo();
+        yield return appUpdateInfoOperation;
+
+        if (appUpdateInfoOperation.IsSuccessful) {
+            var result = appUpdateInfoOperation.GetResult();
+
+            if (result.UpdateAvailability == UpdateAvailability.UpdateAvailable &&
+                result.AppUpdateStatus == AppUpdateStatus.Downloaded) {
+                yield return StartCoroutine(CompleteFlexibleUpdate());
+            }
+        }
+    }
+
+    public void CheckForUpdateManually()
+    {
+        if (!isUpdateChecked && !isUpdateInProgress) {
+            StartCoroutine(CheckForUpdate());
+        }
+    }
+
+    public bool IsUpdateAvailable()
+    {
+        return appUpdateInfoResult != null &&
+               appUpdateInfoResult.UpdateAvailability == UpdateAvailability.UpdateAvailable;
+    }
+
+    public int GetUpdatePriority()
+    {
+        return appUpdateInfoResult != null ? appUpdateInfoResult.UpdatePriority : 0;
+    }
+
+    public int GetClientStalenessDays()
+    {
+        if (appUpdateInfoResult == null) return -1;
+        return appUpdateInfoResult.ClientVersionStalenessDays ?? 0;
     }
 }
