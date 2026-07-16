@@ -12,7 +12,7 @@ public enum ResidentWidgetState
 
 public class CitizenWidget : MonoBehaviour
 {
-    public Human Human { get; private set; }
+    public Citizen Citizen { get; private set; }
     public int WidgetIndex { get; private set; } = 0;
 
     [SerializeField] private SkillsPanel skillsPanel;
@@ -35,7 +35,7 @@ public class CitizenWidget : MonoBehaviour
         button.onClick.RemoveListener(OnClicked);
     }
 
-    public void Init(Human citizen)
+    public void Init(Citizen citizen)
     {
         if (citizen) {
             SetCitizen(citizen);
@@ -49,9 +49,9 @@ public class CitizenWidget : MonoBehaviour
         }
     }
 
-    private void SetCitizen(Human human)
+    private void SetCitizen(Citizen citizen)
     {
-        Human = human;
+        Citizen = citizen;
     }
 
     private void ShowResidentMenu()
@@ -68,25 +68,25 @@ public class CitizenWidget : MonoBehaviour
 
     private void UpdateName()
     {
-        citizenNameText.SetText(Human.NameComponent.GetName());
+        citizenNameText.SetText(Citizen.NameComponent.GetName());
     }
 
     private void UpdateSkills()
     {
-        skillsPanel.SetSkills(Human.SkillsComponent);
+        skillsPanel.SetSkills(Citizen.SkillsComponent);
     }
 
     private void UpdateGender()
     {
-        genderImage.sprite = Human.GenderComponent.IsMale ? maleIcon : femaleIcon;
+        genderImage.sprite = Citizen.GenderComponent.IsMale ? maleIcon : femaleIcon;
     }
 
     private void OnClicked()
     {
-        if (!Human) return;
+        if (!Citizen) return;
 
-        var interactComponent = Human.InteractComponent;
-        var interactBuilding = Human.InteractComponent.InteractBuilding;
+        var interactComponent = Citizen.InteractComponent;
+        var interactBuilding = Citizen.InteractComponent.InteractBuilding;
 
         if (interactBuilding) {
             interactComponent.RemoveInteractBuilding();

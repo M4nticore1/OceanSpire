@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class SelectEquipmentMenu : UIBehaviour
 {
+    [SerializeField] private GameObject content;
     [SerializeField] private ActionEquipmentWidget equipmentWidgetPrefab;
     [SerializeField] private GridLayoutGroup layoutGroup;
     [SerializeField] private SelectGroup selectGroup;
@@ -14,7 +15,7 @@ public class SelectEquipmentMenu : UIBehaviour
 
     public void Open(EquipmentCategory category)
     {
-        gameObject.SetActive(true);
+        content.SetActive(true);
 
         equipmentCategory = category;
         UpdateMenu(category);
@@ -22,7 +23,7 @@ public class SelectEquipmentMenu : UIBehaviour
 
     public void Close()
     {
-        gameObject.SetActive(false);
+        content.SetActive(false);
     }
 
     private void UpdateMenu(EquipmentCategory category)

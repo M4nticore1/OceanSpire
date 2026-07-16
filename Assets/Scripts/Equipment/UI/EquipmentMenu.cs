@@ -7,10 +7,8 @@ public class EquipmentMenu : ControlMenu
     [SerializeField] private EquipmentItemWidget equipmentWidget;
     [SerializeField] private LayoutGroup layoutGroup;
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
         CreateWidgets();
     }
 

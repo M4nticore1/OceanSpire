@@ -5230,7 +5230,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2116735570}
     - target: {fileID: 6570371576780054930, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: selectManager
+      value: 
+      objectReference: {fileID: 593505076}
+    - target: {fileID: 6570371576780054930, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: entitiesManager
+      value: 
+      objectReference: {fileID: 220072952}
+    - target: {fileID: 6570371576780054930, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: creaturesManager
       value: 
       objectReference: {fileID: 220072952}
     - target: {fileID: 6677795084975017079, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}

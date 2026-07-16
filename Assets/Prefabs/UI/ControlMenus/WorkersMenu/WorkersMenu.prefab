@@ -661,6 +661,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c23ecb36f9aa00247b789d9f8b987a26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkersControlMenu
+  content: {fileID: 8246289435958774333}
+  creaturesManager: {fileID: 0}
+  selectManager: {fileID: 0}
+  citizenWidgetPrefab: {fileID: 4805816691179792696, guid: b1a163b079b78b042a9dd451beb4d620, type: 3}
   buildingWorkersMenu: {fileID: 8104197365160454166}
   unemployedCitizensMenu: {fileID: 3235917991513759199}
   employedCitizensMenu: {fileID: 8696446309502264944}
@@ -685,6 +689,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SelectedBuildingNameDisplay
   content: {fileID: 9076834615059646614}
   localizer: {fileID: 3763178691551498956}
+--- !u!1 &8246289435958774333 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9054847388078206404, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
+  m_PrefabInstance: {fileID: 1142211388075632633}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &9076834615059646614 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8227680460663091055, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}

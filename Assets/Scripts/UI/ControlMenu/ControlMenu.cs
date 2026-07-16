@@ -1,13 +1,25 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public abstract class ControlMenu : UIBehaviour
+public abstract class ControlMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject content;
+
     protected bool isOpened = false;
+
+    private void OnEnable()
+    {
+        
+    }
+
+    private void OnDisable()
+    {
+        
+    }
 
     public void Open()
     {
-        gameObject.SetActive(true);
+        content.SetActive(true);
         UpdateMenu();
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);
@@ -18,9 +30,8 @@ public abstract class ControlMenu : UIBehaviour
 
     public void Close()
     {
-        gameObject.SetActive(false);
+        content.SetActive(false);
 
-        EventBus.InvokeWorkersMenuClosed();
         InputStateManager.Instance.SetGameplayInputBlocked(false);
 
         isOpened = false;
@@ -30,4 +41,24 @@ public abstract class ControlMenu : UIBehaviour
     protected abstract void OnOpen();
     protected abstract void OnClose();
     protected abstract void UpdateMenu();
+
+    protected virtual void Subscribe()
+    {
+
+    }
+
+    protected virtual void Unsubscribe()
+    {
+
+    }
+
+    protected virtual bool ShouldSubscribe()
+    {
+        return true;
+    }
+
+    protected virtual bool ShouldUnsubscribe()
+    {
+        return true;
+    }
 }

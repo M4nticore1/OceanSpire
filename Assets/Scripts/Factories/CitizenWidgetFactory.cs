@@ -2,9 +2,9 @@ using UnityEngine;
 
 public static class CitizenWidgetFactory
 {
-    public static CitizenWidget CreateWidget(CitizenWidget prefab, Transform transform, Human human)
+    public static CitizenWidget CreateWidget(CitizenWidget prefab, Transform transform, Citizen human)
     {
-        CitizenWidget widget = GameObject.Instantiate(prefab, transform);
+        var widget = GameObject.Instantiate(prefab, transform);
         widget.Init(human);
 
         return widget;

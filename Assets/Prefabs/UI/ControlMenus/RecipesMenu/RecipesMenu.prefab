@@ -918,6 +918,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a954451a4a50ffe4ea5ca9c940c0e1f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProductionControlMenu
+  content: {fileID: 8246289435958774333}
   producedResourcePanelPrefab: {fileID: 5968302294432705402, guid: 29184d8a9adf1db45b7c71598dce4862, type: 3}
   layoutGroup: {fileID: 4896204670629501784}
   scrollRect: {fileID: 6165497256048796172}
@@ -942,6 +943,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SelectedBuildingNameDisplay
   content: {fileID: 9076834615059646614}
   localizer: {fileID: 3763178691551498956}
+--- !u!1 &8246289435958774333 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9054847388078206404, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
+  m_PrefabInstance: {fileID: 1142211388075632633}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &9076834615059646614 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8227680460663091055, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
