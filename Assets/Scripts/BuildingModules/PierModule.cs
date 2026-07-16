@@ -41,8 +41,8 @@ public class PierModule : BuildingModule
         if (!boatsLoader.IsLoaded) return;
         if (!docksLoader.IsLoaded) return;
 
-        CreateBoats();
         UpdateBoatDocks();
+        CreateBoats();
         UpdateBoatPositions();
     }
 

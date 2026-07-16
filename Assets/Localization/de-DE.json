@@ -92,6 +92,7 @@
   "workers_no_unemployed": "In der Stadt gibt es keine arbeitslosen Bewohner",
   "build_resources": "Baumaterialien",
   "build_time": "Bauzeit: {buildTime}",
+  "build_time_instantly": "Bauzeit: Sofort",
   "builder_energy": "Bauerenergie",
   "builder_energy_description": "Mit jedem neuen Bauwerk sinkt die Effizienz Ihrer Bauarbeiter. Geben Sie ihnen Zeit zur Erholung, und sie werden mit voller Leistung zurückkehren!",
   "builder_energy_current": "Aktuelle Energie: {currentEnergy}",

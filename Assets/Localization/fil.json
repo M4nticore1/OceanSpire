@@ -92,6 +92,7 @@
   "workers_no_unemployed": "Walang walang trabahong residente sa lungsod",
   "build_resources": "Mga mapagkukunan para sa pagtatayo",
   "build_time": "Oras ng pagtatayo: {buildTime}",
+  "build_time_instantly": "Oras ng pagtatayo: Agad-agad",
   "builder_energy": "Enerhiya ng mga tagabuo",
   "builder_energy_description": "Sa bawat bagong istraktura, bumababa ang kahusayan ng iyong mga tagabuo. Bigyan sila ng oras upang magpahinga, at babalik sila sa trabaho nang buong kapasidad!",
   "builder_energy_current": "Kasalukuyang enerhiya: {currentEnergy}",

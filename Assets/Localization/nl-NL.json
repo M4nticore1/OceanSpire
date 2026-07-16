@@ -92,6 +92,7 @@
   "workers_no_unemployed": "Er zijn geen werkloze bewoners in de stad",
   "build_resources": "Bouwmiddelen",
   "build_time": "Bouwtijd: {buildTime}",
+  "build_time_instantly": "Bouwtijd: Direct",
   "builder_energy": "Bouwerenergie",
   "builder_energy_description": "Met elke nieuwe structuur daalt de efficiëntie van uw bouwvakkers. Geef ze tijd om te rusten en ze komen terug met volledige capaciteit!",
   "builder_energy_current": "Huidige energie: {currentEnergy}",

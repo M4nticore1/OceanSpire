@@ -51,8 +51,7 @@ public class ConstructionFinishedUIManager : MonoBehaviour
             if (spawnedWidget.Localizable == building as ILocalizable)
                 return;
         }
-
-        Debug.Log("ConstructionFinished");
+        
         var widget = ConstructionFinishedWidgetFactory.CreateWidget(constructionFinishedWidget, layoutGroup.transform, building);
         spawnedWidget.Add(widget);
     }
@@ -76,7 +75,6 @@ public class ConstructionFinishedUIManager : MonoBehaviour
                 return;
         }
 
-        Debug.Log("UpgradeFinished");
         var widget = ConstructionFinishedWidgetFactory.CreateWidget(upgradeFinishedWidget, layoutGroup.transform, building);
         spawnedWidget.Add(widget);
     }

@@ -1,5 +1,6 @@
 <dependencies>
   <packages>
+    <package>androidx.activity:activity:1.6.0</package>
     <package>androidx.lifecycle:lifecycle-process:2.4.1</package>
     <package>androidx.recyclerview:recyclerview:1.2.1</package>
     <package>com.applovin.mediation:mintegral-adapter:17.1.11.0</package>

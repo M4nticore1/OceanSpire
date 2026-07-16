@@ -92,6 +92,7 @@
   "workers_no_unemployed": "Det finns inga arbetslösa invånare i staden",
   "build_resources": "Byggresurser",
   "build_time": "Byggtid: {buildTime}",
+  "build_time_instantly": "Byggtid: Omedelbart",
   "builder_energy": "Byggar energi",
   "builder_energy_description": "För varje ny struktur sjunker dina byggares effektivitet. Ge dem tid att vila, så återvänder de till arbetet med full kapacitet!",
   "builder_energy_current": "Aktuell energi: {currentEnergy}",

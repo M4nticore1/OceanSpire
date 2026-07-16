@@ -3721,7 +3721,7 @@ GameObject:
   - component: {fileID: 335281645}
   - component: {fileID: 335281646}
   m_Layer: 0
-  m_Name: EditorItemsFill
+  m_Name: EditorInstanceConstruction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4325,6 +4325,10 @@ PrefabInstance:
       propertyPath: cityStorage
       value: 
       objectReference: {fileID: 1388613268}
+    - target: {fileID: 1174018588952433737, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_fontSize
+      value: 38.9
+      objectReference: {fileID: 0}
     - target: {fileID: 1234945985404272695, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -4837,6 +4841,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4188216706798375610, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_fontSize
+      value: 38.9
+      objectReference: {fileID: 0}
     - target: {fileID: 4250377236931291004, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -5201,6 +5209,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.00024414062
       objectReference: {fileID: 0}
+    - target: {fileID: 6341606787356673023, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_fontSize
+      value: 38.9
+      objectReference: {fileID: 0}
     - target: {fileID: 6429209848955281615, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -5408,6 +5420,10 @@ PrefabInstance:
     - target: {fileID: 8162760946134102376, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238370757902337292, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_fontSize
+      value: 38.9
       objectReference: {fileID: 0}
     - target: {fileID: 8279558782033676583, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: dailyRewardManager
@@ -10941,6 +10957,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LootManager
   driftingLootList: {fileID: 11400000, guid: 3b08c49927a65294e8c781da28c52aa3, type: 2}
   buildingsManager: {fileID: 455753200}
+  spawnMaxOffsetYaw: 90
   updatePositionFrequency: 0.05
   spawnFrequency: 0.5
   SpawnedSwimmingDriftingLoot: []
@@ -21368,7 +21385,7 @@ GameObject:
   - component: {fileID: 2109934043}
   - component: {fileID: 2109934044}
   m_Layer: 0
-  m_Name: EditorInstanceConstruction
+  m_Name: EditroItemsFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -92,6 +92,7 @@
   "workers_no_unemployed": "There are no unemployed residents in the city",
   "build_resources": "Resources to build",
   "build_time": "Build time: {buildTime}",
+  "build_time_instantly": "Build time: Instantly",
   "builder_energy": "Builder energy",
   "builder_energy_description": "With every new structure, your builders' efficiency drops. Give them time to rest, and they’ll get back to work at full capacity!",
   "builder_energy_current": "Current energy: {currentEnergy}",

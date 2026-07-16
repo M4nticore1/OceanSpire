@@ -92,6 +92,7 @@
   "workers_no_unemployed": "Tiada penduduk yang menganggur di bandar",
   "build_resources": "Sumber untuk bina",
   "build_time": "Masa bina: {buildTime}",
+  "build_time_instantly": "Masa pembinaan: Serta-merta",
   "builder_energy": "Tenaga pembina",
   "builder_energy_description": "Dengan setiap struktur baharu, kecekapan pembina anda menurun. Beri mereka masa untuk berehat, dan mereka akan kembali bekerja dengan kapasiti penuh!",
   "builder_energy_current": "Tenaga semasa: {currentEnergy}",

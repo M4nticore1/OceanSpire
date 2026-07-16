@@ -136,9 +136,10 @@ MonoBehaviour:
   informationButton: {fileID: 42081283019150995}
   buildingNameText: {fileID: 9025228998122799740}
   buildTimeText: {fileID: 2401812343082775857}
-  instantlyLocalization: {fileID: 11400000, guid: 6c132add1db3ed840918ea0398a0eeb3, type: 2}
   buildingImage: {fileID: 5005537298302894448}
   resourcesToBuildLayoutGroup: {fileID: 5228974229580240534}
+  buildTimeLocalization: {fileID: 11400000, guid: 3da98b3fea8564c468a87f9dc4b66d34, type: 2}
+  instantlyBuildLocalization: {fileID: 11400000, guid: 7728ea6139429ec48ab5d72cefb9c75f, type: 2}
 --- !u!1 &321294314731222651
 GameObject:
   m_ObjectHideFlags: 0

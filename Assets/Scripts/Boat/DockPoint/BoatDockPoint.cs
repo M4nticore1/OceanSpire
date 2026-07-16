@@ -16,7 +16,7 @@ public class BoatDockPoint : MonoBehaviour
 
     public void Init()
     {
-        instanceId.NewGuid();
+        Init(BoatDockData.Default());
     }
 
     public void Init(BoatDockData boatDockData)

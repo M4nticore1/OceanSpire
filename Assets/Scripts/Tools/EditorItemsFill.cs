@@ -1,4 +1,5 @@
 # if UNITY_EDITOR
+using System.Collections;
 using UnityEngine;
 
 public class EditorItemsFill : MonoBehaviour
@@ -7,12 +8,12 @@ public class EditorItemsFill : MonoBehaviour
 
     private void OnEnable()
     {
-        FillItems();
+        StartCoroutine(FillItemCoroutine());
     }
 
     private void Start()
     {
-        FillItems();
+        StartCoroutine(FillItemCoroutine());
     }
 
     private void FillItems()
@@ -20,6 +21,13 @@ public class EditorItemsFill : MonoBehaviour
         foreach (var item in CityStorage.Inventory.Items) {
             item.SetAmount(item.Stack.Amount);
         }
+    }
+
+    private IEnumerator FillItemCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+        FillItems();
     }
 }
 #endif

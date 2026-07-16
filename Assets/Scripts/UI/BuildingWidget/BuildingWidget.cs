@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BuildingWidget : MonoBehaviour, ILocalizable
+public class BuildingWidget : MonoBehaviour
 {
     [Header("Prfabs")]
     [SerializeField] private ResourceWidget buildingResourceWidget;
@@ -18,11 +18,14 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
     [Header("Texts")]
     [SerializeField] private TextLocalizer buildingNameText;
     [SerializeField] private TextLocalizer buildTimeText;
-    [SerializeField] private LocalizationItem instantlyLocalization;
 
     [Header("Other")]
     [SerializeField] private Image buildingImage;
     [SerializeField] private LayoutGroup resourcesToBuildLayoutGroup;
+
+    [Header("Localization")]
+    [SerializeField] private LocalizationItem buildTimeLocalization;
+    [SerializeField] private LocalizationItem instantlyBuildLocalization;
 
     public static event Action<BuildingWidget> OnWidgetInformationClicked;
 
@@ -60,30 +63,6 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
         UpdateBuildTime();
         UpdateBuildName();
         UpdateBildingImage();
-    }
-
-    public Dictionary<string, string> GetLocalization()
-    {
-        var buildTime = "";
-        var constructionTime = BuildingPrefab.LevelDefinition.UpgradeTime;
-
-        if (constructionTime > 0) {
-            var speedBonus = BuilderEnergyManager.Instance.CurrentEnergy;
-            var speedBonusText = (speedBonus * 100).ToString("F0");
-            var timeWithBonus = (int)(constructionTime * (1f - speedBonus));
-
-            var constructionTimeText = TimeFormatter.SecondsToTimer(timeWithBonus);
-            var bonusText = $"(-{speedBonusText}%)";
-            buildTime = speedBonus > 0 ? $"<color=green>{constructionTimeText} {bonusText}</color>" : constructionTimeText;
-        }
-        else {
-            buildTime = LocalizationManager.Instance.GetLocalizedText(instantlyLocalization);
-        }
-
-        return new Dictionary<string, string>()
-        {
-            { "buildTime", $"{buildTime}" }
-        };
     }
 
     private void CreateResourcesToBuild()
@@ -142,8 +121,15 @@ public class BuildingWidget : MonoBehaviour, ILocalizable
     private void UpdateBuildTime()
     {
         if (!BuildingPrefab) return;
+        if (!BuildingPrefab.LevelDefinition) return;
 
-        buildTimeText.SetPlaceHolderLocalization(this);
+        if (BuildingPrefab.LevelDefinition.UpgradeTime > 0) {
+            buildTimeText.SetLocalizationItem(buildTimeLocalization);
+            buildTimeText.SetPlaceHolderLocalization(BuildingPrefab.LevelDefinition);
+        }
+        else {
+            buildTimeText.SetLocalizationItem(instantlyBuildLocalization);
+        }
     }
 
     private void UpdateBildingImage()

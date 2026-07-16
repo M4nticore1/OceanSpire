@@ -92,6 +92,7 @@
   "workers_no_unemployed": "В городе нет безработных жителей",
   "build_resources": "Ресурсы для постройки",
   "build_time": "Время стройки: {buildTime}",
+  "build_time_instantly": "Время стройки: Мгновенно",
   "builder_energy": "Энергия строителей",
   "builder_energy_description": "С каждой новой постройкой эффективность ваших строителей падает. Дайте им время на отдых, и они снова вернутся к работе с полной отдачей!",
   "builder_energy_current": "Текущая энергия: {currentEnergy}",

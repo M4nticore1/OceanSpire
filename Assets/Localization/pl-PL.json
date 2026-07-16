@@ -92,6 +92,7 @@
   "workers_no_unemployed": "W mieście nie ma bezrobotnych mieszkańców",
   "build_resources": "Zasoby budowy",
   "build_time": "Czas budowy: {buildTime}",
+  "build_time_instantly": "Czas budowy: Natychmiast",
   "builder_energy": "Energia budowniczych",
   "builder_energy_description": "Z każdą nową konstrukcją wydajność twoich budowniczych spada. Daj im czas na odpoczynek, a wrócą do pracy z pełną wydajnością!",
   "builder_energy_current": "Obecna energia: {currentEnergy}",

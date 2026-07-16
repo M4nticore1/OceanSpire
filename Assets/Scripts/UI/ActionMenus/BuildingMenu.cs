@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public abstract class BuildingMenu : UIBehaviour
 {
+    [Header("Building Menu")]
     [SerializeField] private ResourceWidget resourceWidgetPrefab;
     protected ResourceWidget ResourceWidgetPrefab => resourceWidgetPrefab;
 
@@ -25,6 +26,7 @@ public abstract class BuildingMenu : UIBehaviour
 
     protected List<ResourceWidget> spawnedResourceWidgets = new();
 
+    protected Building building { get; private set; }
     private bool isSubscribed = false;
 
     protected override void OnEnable()
@@ -32,6 +34,7 @@ public abstract class BuildingMenu : UIBehaviour
         base.OnEnable();
 
         TrySubscribe();
+        UpdateBuildButtonEnabled();
     }
 
     protected override void OnDisable()
@@ -80,12 +83,15 @@ public abstract class BuildingMenu : UIBehaviour
             return;
         }
 
+        this.building = building;
+
         slidePanel.Open();
         OnOpened(building);
 
         ClearWidgets();
         CreateWidgets(building);
         UpdateIcon(building);
+        UpdateBuildButtonEnabled();
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
@@ -104,11 +110,30 @@ public abstract class BuildingMenu : UIBehaviour
 
     protected abstract void UpdateIcon(Building building);
 
+    protected virtual bool ShouldEnableButton()
+    {
+        if (!building) return false;
+
+        return true;
+    }
+
     protected void ClearWidgets()
     {
         for (int i = spawnedResourceWidgets.Count - 1; i >= 0; i--) {
             Destroy(spawnedResourceWidgets[i].gameObject);
             spawnedResourceWidgets.RemoveAt(i);
+        }
+    }
+
+    private void UpdateBuildButtonEnabled()
+    {
+        if (ShouldEnableButton()) {
+            actionButton.SetState(CustomButtonState.Idle);
+            actionButton.EndTransitionAnimation();
+        }
+        else {
+            actionButton.SetState(CustomButtonState.Disabled);
+            actionButton.EndTransitionAnimation();
         }
     }
 

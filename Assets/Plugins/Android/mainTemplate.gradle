@@ -6,6 +6,7 @@ apply from: '../shared/common.gradle'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
+    implementation 'androidx.activity:activity:1.6.0' // Assets/GooglePlayPlugins/com.google.play.appupdate/Editor/Dependencies.xml:4
     implementation 'androidx.lifecycle:lifecycle-process:2.4.1' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:12
     implementation 'androidx.recyclerview:recyclerview:1.2.1' // Packages/com.applovin.mediation.adapters.mintegral.android/Editor/Dependencies.xml:9
     implementation 'com.applovin.mediation:mintegral-adapter:17.1.11.0' // Packages/com.applovin.mediation.adapters.mintegral.android/Editor/Dependencies.xml:8

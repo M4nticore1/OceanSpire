@@ -139,6 +139,7 @@ MonoBehaviour:
   buildingData: {fileID: 11400000, guid: 9f3b464f4b9d26d49b79a2aa5e566168, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: 390af1cede006e844ac0d3d0444b8de1, type: 2}
+  - {fileID: 11400000, guid: b98d29a97f5c15448ade4334c756682e, type: 2}
   isRuined: 0
   constructionComponent: {fileID: 5184340577209235502}
   levelComponent: {fileID: 3623753502408224289}
@@ -162,6 +163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionModule
   levelsData:
   - {fileID: 11400000, guid: b38be2c152827054986d4c5c46e8e27b, type: 2}
+  - {fileID: 11400000, guid: 8182fe76c24f579479037a0231914e6f, type: 2}
   electricityConsumption: 0.02
   skillId: 0
 --- !u!114 &4680174761880465184

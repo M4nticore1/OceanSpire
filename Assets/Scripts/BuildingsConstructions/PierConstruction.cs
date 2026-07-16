@@ -23,6 +23,7 @@ public class PierConstruction : BuildingConstruction
     private void RegisterBoatDocks()
     {
         foreach (var dock in boatDocks) {
+            dock.Init();
             DockPointsManager.Instance.RegisterCitizenDockPoint(dock);
         }
     }

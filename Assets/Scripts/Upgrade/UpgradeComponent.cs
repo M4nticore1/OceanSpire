@@ -46,6 +46,10 @@ public class UpgradeComponent : MonoBehaviour
 
     public void StartUpgrading()
     {
+        if (upgradable == null) return;
+        if (!levelComponent) return;
+        if (!constructionComponent) return;
+
         IsUnderUpgrade = true;
         NextLevel = levelComponent.Level + 1;
         constructionComponent.StartConstruction(upgradable.GetUpgradeTime());

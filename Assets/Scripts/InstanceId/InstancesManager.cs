@@ -48,7 +48,7 @@ public class InstancesManager
         var instance = instances.GetValueOrDefault(guid);
 
         if (!instance) {
-            Debug.Log($"Instance by Id {guid} does not exitst by!");
+            Debug.LogError($"Instance by Id {guid} does not exitst by!");
         }
 
         return instance;

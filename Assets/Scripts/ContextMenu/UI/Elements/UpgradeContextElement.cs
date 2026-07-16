@@ -9,7 +9,7 @@ public class UpgradeContextElement : ContextElement
     protected override bool ShouldEnableButton()
     {
         if (!base.ShouldEnableButton()) return false;
-        if (!building.NextLevelData) return false;
+        if (!building.NextLevelDefinition) return false;
 
         return true;
     }

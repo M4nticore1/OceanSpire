@@ -12,7 +12,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     public IReadOnlyList<BuildingLevelData> LevelsData => buildingLevelsData;
 
     public BuildingLevelData LevelDefinition => LevelsData.Count > levelComponent.Level - 1 ? LevelsData[levelComponent.Level - 1] : null;
-    public BuildingLevelData NextLevelData => LevelsData.Count > levelComponent.Level ? LevelsData[levelComponent.Level] : null;
+    public BuildingLevelData NextLevelDefinition => LevelsData.Count > levelComponent.Level ? LevelsData[levelComponent.Level] : null;
 
     [SerializeField] private bool isRuined = false;
     public bool IsRuined => isRuined;
@@ -228,7 +228,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     public int GetUpgradeTime()
     {
-        return NextLevelData.UpgradeTime;
+        if (!NextLevelDefinition) return 0;
+
+        return NextLevelDefinition.UpgradeTime;
     }
 
     // ILocalizable
@@ -245,7 +247,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
             { "name", LocalizationManager.Instance.GetLocalizedText(buildingData.NameLocalizationItem) },
             { "currentLevel", levelComponent.Level.ToString() },
             { "nextLevel", (levelComponent.Level + 1).ToString() },
-            { "constructionTime", TimeFormatter.SecondsToMinuteTimer((int)currentConstructionTime).ToString() + "/" + TimeFormatter.SecondsToMinuteTimer((int)ConstructionTime).ToString() },
+            { "constructionTime", TimeFormatter.SecondsToTimer((int)currentConstructionTime).ToString() + "/" + TimeFormatter.SecondsToTimer((int)ConstructionTime).ToString() },
         };
     }
 

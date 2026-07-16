@@ -92,6 +92,7 @@
   "workers_no_unemployed": "Der er ingen arbejdsløse beboere i byen",
   "build_resources": "Byggematerialer",
   "build_time": "Byggetid: {buildTime}",
+  "build_time_instantly": "Byggetid: Øjeblikkeligt",
   "builder_energy": "Byggherrernes energi",
   "builder_energy_description": "Med hver ny struktur falder dine bygherrers effektivitet. Giv dem tid til at hvile, og de vender tilbage til arbejdet med fuld kapacitet!",
   "builder_energy_current": "Nuværende energi: {currentEnergy}",

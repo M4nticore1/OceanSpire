@@ -92,6 +92,7 @@
   "workers_no_unemployed": "Tidak ada penduduk yang menganggur di kota",
   "build_resources": "Sumber daya bangunan",
   "build_time": "Waktu pembangunan: {buildTime}",
+  "build_time_instantly": "Waktu pembangunan: Instan",
   "builder_energy": "Energi pembangun",
   "builder_energy_description": "Dengan setiap struktur baru, efisiensi pembangun Anda menurun. Beri mereka waktu untuk beristirahat, dan mereka akan kembali bekerja dengan kapasitas penuh!",
   "builder_energy_current": "Energi saat ini: {currentEnergy}",

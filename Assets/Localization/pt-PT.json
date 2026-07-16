@@ -92,6 +92,7 @@
   "workers_no_unemployed": "Não há residentes desempregados na cidade",
   "build_resources": "Recursos de construção",
   "build_time": "Tempo de construção: {buildTime}",
+  "build_time_instantly": "Tempo de construção: Instantáneo",
   "builder_energy": "Energia dos construtores",
   "builder_energy_description": "Com cada nova estrutura, a eficiência dos seus construtores diminui. Dê-lhes tempo para descansar e eles voltarão ao trabalho com capacidade total!",
   "builder_energy_current": "Energia atual: {currentEnergy}",

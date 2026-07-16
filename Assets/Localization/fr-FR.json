@@ -92,6 +92,7 @@
   "workers_no_unemployed": "Il n'y a pas de chômeurs dans la ville",
   "build_resources": "Ressources de construction",
   "build_time": "Temps de construction: {buildTime}",
+  "build_time_instantly": "Temps de construction : Immédiat",
   "builder_energy": "Énergie des bâtisseurs",
   "builder_energy_description": "Avec chaque nouvelle structure, l'efficacité de vos bâtisseurs diminue. Donnez-leur du temps pour se reposer, et ils reviendront travailler à pleine capacité !",
   "builder_energy_current": "Énergie actuelle: {currentEnergy}",

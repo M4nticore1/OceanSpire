@@ -9,7 +9,7 @@ public class DriftingLootManager : MonoBehaviour
     [SerializeField] private LootContainersList driftingLootList;
     [SerializeField] private BuildingsManager buildingsManager;
 
-    [SerializeField] private const float spawnMaxOffsetYaw = 60.0f;
+    [SerializeField] private float spawnMaxOffsetYaw = 90.0f;
     [SerializeField] private float updatePositionFrequency = 0.05f;
     [SerializeField] private float spawnFrequency = 0.5f;
 
@@ -107,12 +107,9 @@ public class DriftingLootManager : MonoBehaviour
     {
         Vector3 windDir = WindManager.Instance != null ? WindManager.Instance.WindDirection : Vector3.forward;
         windDir = new Vector3(windDir.x, 0f, windDir.z).normalized;
-        Vector3 sideDir = new Vector3(-windDir.z, 0f, windDir.x).normalized;
-
         Vector3 baseSpawnPos = -windDir * WorldUtils.SpawnDistance;
-        float maxSideOffset = 40f;
-        float randomSideOffset = UnityEngine.Random.Range(-maxSideOffset, maxSideOffset);
-        Vector3 finalBaseSpawn = baseSpawnPos + sideDir * randomSideOffset;
+        float randomYawAngle = UnityEngine.Random.Range(-spawnMaxOffsetYaw / 2, spawnMaxOffsetYaw / 2);
+        Vector3 finalBaseSpawn = Quaternion.Euler(0f, randomYawAngle, 0f) * baseSpawnPos;
 
         float positionY = 0f;
         var flyingDriftingLootPrefab = containerPrefab as FlyingDriftingLoot;
@@ -134,12 +131,9 @@ public class DriftingLootManager : MonoBehaviour
     {
         Vector3 windDir = WindManager.Instance != null ? WindManager.Instance.WindDirection : Vector3.forward;
         windDir = new Vector3(windDir.x, 0f, windDir.z).normalized;
-        Vector3 sideDir = new Vector3(-windDir.z, 0f, windDir.x).normalized;
-
         Vector3 baseDestinationPos = windDir * WorldUtils.SpawnDistance;
-        float maxSideOffset = 40f;
-        float randomSideOffset = UnityEngine.Random.Range(-maxSideOffset, maxSideOffset);
-        Vector3 finalBaseDest = baseDestinationPos + sideDir * randomSideOffset;
+        float randomYawAngle = UnityEngine.Random.Range(-spawnMaxOffsetYaw / 2, spawnMaxOffsetYaw / 2);
+        Vector3 finalBaseDest = Quaternion.Euler(0f, randomYawAngle, 0f) * baseDestinationPos;
 
         return new Vector3(finalBaseDest.x, 0f, finalBaseDest.z);
     }

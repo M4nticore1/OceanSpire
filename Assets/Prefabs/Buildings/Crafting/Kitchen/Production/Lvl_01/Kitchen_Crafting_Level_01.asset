@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6ada3316b484b749b58ea57c530f988, type: 3}
-  m_Name: Kitchen_Production_Level_01
+  m_Name: Kitchen_Crafting_Level_01
   m_EditorClassIdentifier: 
   craftItems:
   - {fileID: 11400000, guid: 84d95cc42add00c49bfe0b339db4e294, type: 2}

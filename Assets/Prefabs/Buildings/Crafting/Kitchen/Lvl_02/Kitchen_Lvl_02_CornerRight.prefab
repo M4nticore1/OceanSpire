@@ -116,7 +116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5452299794892249143, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Name
-      value: Kitchen_Level_01_CornerRight
+      value: Kitchen_Lvl_02_CornerRight
       objectReference: {fileID: 0}
     - target: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: buildingInteractions.Array.size
@@ -153,7 +153,7 @@ PrefabInstance:
     - target: {fileID: 8712712631989154949, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 2714699593691404204, guid: 14749345600d4174b9611438a1a2a504, type: 3}
+      objectReference: {fileID: 7037976054599838752, guid: ff9d5585a082ce344808b88a280ab845, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

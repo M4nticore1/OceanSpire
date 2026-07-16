@@ -16,7 +16,7 @@ MonoBehaviour:
   movementSpeed: 0.4
   stopMovingSpeed: 10
   minSpawnTime: 0
-  maxSpawnTime: 90
+  maxSpawnTime: 60
   meshes:
   - {fileID: 919132149155446097, guid: 94b68724e31bbf44cbb4c2fd9566c466, type: 3}
   lootTable:

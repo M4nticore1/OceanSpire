@@ -92,6 +92,7 @@
   "workers_no_unemployed": "Ve městě nejsou žádní nezaměstnaní obyvatelé",
   "build_resources": "Zdroje na stavbu",
   "build_time": "Čas stavby: {buildTime}",
+  "build_time_instantly": "Doba výstavby: Okamžitě",
   "builder_energy": "Energie stavitelů",
   "builder_energy_description": "S každou novou stavbou klesá efektivita vašich stavebních dělníků. Dejte jim čas na odpočinek a vrátí se do práce na plný výkon!",
   "builder_energy_current": "Aktuální energie: {currentEnergy}",

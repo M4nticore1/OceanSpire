@@ -43,7 +43,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         buildingLevel.SetPlaceHolderLocalization(building);
         constructionTime.SetPlaceHolderLocalization(building);
 
-        buildingImage.sprite = building.UpgradeComponent.IsUnderUpgrade ? building.NextLevelData.BuildingThumb : building.LevelDefinition.BuildingThumb;
+        buildingImage.sprite = building.UpgradeComponent.IsUnderUpgrade ? building.NextLevelDefinition.BuildingThumb : building.LevelDefinition.BuildingThumb;
 
         this.building = building;
 

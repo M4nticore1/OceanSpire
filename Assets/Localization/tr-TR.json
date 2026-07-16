@@ -92,6 +92,7 @@
   "workers_no_unemployed": "Şehirde işsiz sakin yok",
   "build_resources": "İnşaat kaynakları",
   "build_time": "İnşaat süresi: {buildTime}",
+  "build_time_instantly": "İnşaat süresi: Anında",
   "builder_energy": "İnşaatçı enerjisi",
   "builder_energy_description": "Her yeni yapıyla birlikte inşaatçılarınızın verimliliği düşer. Onlara dinlenmeleri için zaman verin, tam kapasiteyle işe geri döneceklerdir!",
   "builder_energy_current": "Mevcut enerji: {currentEnergy}",
