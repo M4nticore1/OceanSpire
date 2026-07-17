@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ElevatorCabinsManager : MonoBehaviour
 {
+    [SerializeField] private BuildingsLoader buildingsLoader;
+
     private List<ElevatorCabinConstruction> elevatorCabins = new();
     public IReadOnlyList<ElevatorCabinConstruction> ElevatorCabins => elevatorCabins;
 
@@ -13,6 +15,7 @@ public class ElevatorCabinsManager : MonoBehaviour
         Building.OnBuildingInited += OnBuildingInited;
         Building.OnBuildingUpgradeFinished += OnBuildingConstructionFinished;
         Building.OnBuildingDemolished += OnBuildingDemolished;
+
         BuildingConstruction.OnBuildingConstructionInited += OnBuildingConstructionInited;
         BuildingConstruction.OnBuildingConstructionDemolished += OnBuildingConstructionDemolished;
     }
@@ -22,6 +25,7 @@ public class ElevatorCabinsManager : MonoBehaviour
         Building.OnBuildingInited -= OnBuildingInited;
         Building.OnBuildingUpgradeFinished -= OnBuildingConstructionFinished;
         Building.OnBuildingDemolished -= OnBuildingDemolished;
+
         BuildingConstruction.OnBuildingConstructionInited -= OnBuildingConstructionInited;
         BuildingConstruction.OnBuildingConstructionDemolished -= OnBuildingConstructionDemolished;
     }
@@ -29,6 +33,7 @@ public class ElevatorCabinsManager : MonoBehaviour
     private void OnBuildingInited(Building building)
     {
         if (ShouldIgnoreEvents()) return;
+        if (!building) return;
         if (building.ConstructionComponent.ConstructionFinishTime != null) return;
 
         UpdateElevatorCabin(building);
@@ -44,6 +49,8 @@ public class ElevatorCabinsManager : MonoBehaviour
     private void OnBuildingDemolished(Building building)
     {
         if (ShouldIgnoreEvents()) return;
+
+        if (!building) return;
 
         var elevator = building.GetComponent<ElevatorModule>();
         if (!elevator) return;
@@ -73,6 +80,11 @@ public class ElevatorCabinsManager : MonoBehaviour
 
     private void UpdateElevatorCabin(Building building)
     {
+        if (!building) {
+            Debug.LogError($"[{nameof(ElevatorCabinsManager)}] Building is not valid!");
+            return;
+        }
+
         var elevator = building.GetComponent<ElevatorModule>();
         if (!elevator) return;
 
@@ -92,7 +104,10 @@ public class ElevatorCabinsManager : MonoBehaviour
         var cabinConstruction = buildingConstruction as ElevatorCabinConstruction;
         if (!cabinConstruction) return;
 
-        var elevator = cabinConstruction.OwnedBuilding.GetComponent<ElevatorModule>();
+        var ownedBuilding = cabinConstruction.OwnedBuilding;
+        if (!ownedBuilding) return;
+
+        var elevator = ownedBuilding.GetComponent<ElevatorModule>();
         if (!elevator) return;
 
         elevator.SetCabin(cabinConstruction);
@@ -112,7 +127,16 @@ public class ElevatorCabinsManager : MonoBehaviour
     public void UpdateElevatorNetworkCabins(ElevatorModule elevator)
     {
         foreach (var networkBuilding in elevator.OwnedTowerBuilding.GetNetworkBuildings()) {
+            if (!networkBuilding) {
+                Debug.LogError($"[{nameof(ElevatorCabinsManager)}] Network Building is not valid!");
+                continue;
+            }
+
             var networkElevator = networkBuilding.GetComponent<ElevatorModule>();
+            if (!networkElevator) {
+                Debug.LogError($"[{nameof(ElevatorCabinsManager)}] Network Elevator is not valid!");
+                continue;
+            }
 
             if (networkElevator.SpawnedElevatorCabin && networkElevator.SpawnedElevatorCabin != elevator.SpawnedElevatorCabin)
                 networkElevator.SpawnedElevatorCabin.Demolish();
@@ -137,7 +161,17 @@ public class ElevatorCabinsManager : MonoBehaviour
     private ElevatorCabinConstruction TryGetNetworkCabin(ElevatorModule elevator)
     {
         foreach (var connected in elevator.OwnedTowerBuilding.ConnectedBuildingsEnumerable().Reverse()) {
+            if (!connected) {
+                Debug.LogError($"[{nameof(ElevatorCabinsManager)}] Connected Building is not valid!");
+                continue;
+            }
+
             var connectedElevator = connected.GetComponent<ElevatorModule>();
+            if (!connectedElevator) {
+                Debug.LogError($"[{nameof(ElevatorCabinsManager)}] Connected Elevator is not valid!");
+                continue;
+            }
+
             if (!connectedElevator.SpawnedElevatorCabin) continue;
 
             return connectedElevator.SpawnedElevatorCabin;
@@ -148,6 +182,8 @@ public class ElevatorCabinsManager : MonoBehaviour
 
     private bool ShouldIgnoreEvents()
     {
-        return !BuildingsLoader.Instance.IsLoaded && WorldSaveHandler.Instance.CurrentWorldData != null;
+        if (WorldSaveHandler.Instance == null) return false;
+
+        return !buildingsLoader.IsLoaded && WorldSaveHandler.Instance.CurrentWorldData != null;
     }
 }

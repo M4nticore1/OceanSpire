@@ -25,7 +25,7 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
     private void Awake()
     {
         if (Instance) {
-            Debug.Log("Another ConstructionEnergyManager is on the scene");
+            Debug.Log("Another ConstructionEnergyManager is on the scene!");
             Destroy(gameObject);
             return;
         }

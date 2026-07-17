@@ -10,11 +10,6 @@ public class FakeLightManager : MonoBehaviour
         propertyBlock = new MaterialPropertyBlock();
     }
 
-    private void Start()
-    {
-        //SetLightMultiplier(0);
-    }
-
     public void SetLightMultiplier(float value)
     {
         propertyBlock.SetFloat("_LightMultiplier", value);

@@ -21,6 +21,11 @@ public class CreatureWaypointsManager : MonoBehaviour
     private void Update()
     {
         foreach (var component in waypointsComponents) {
+            if (!component) {
+                Debug.LogError($"[{nameof(CreatureWaypointsManager)}] Waypoint Component is not valid!");
+                continue;
+            }
+
             component.Tick();
         }
     }

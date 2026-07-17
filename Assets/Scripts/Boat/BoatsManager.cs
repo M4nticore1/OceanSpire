@@ -47,53 +47,20 @@ public class BoatsManager : MonoBehaviour
         }
     }
 
-    public void RegisterCitizenBoat(Boat boat)
-    {
-        RegisterBoat(citizenBoats, boat);
-        RegisterBoat(citizenBoatsDict, boat);
-    }
-
-    public void UnregisterCitizenBoat(Boat boat)
-    {
-        UnregisterBoat(citizenBoats, boat);
-        UnregisterBoat(citizenBoatsDict, boat);
-    }
-
-    public void RegisterWandererBoat(Boat boat)
-    {
-        RegisterBoat(wandererBoats, boat);
-        RegisterBoat(wandererBoatsDict, boat);
-    }
-
-    public void UnregisterWandererBoat(Boat boat)
-    {
-        UnregisterBoat(wandererBoats, boat);
-        UnregisterBoat(wandererBoatsDict, boat);
-    }
-
-    public void RegisterRaiderBoat(Boat boat)
-    {
-        RegisterBoat(raiderBoats, boat);
-        RegisterBoat(raiderBoatsDict, boat);
-    }
-
-    public void UnregisterRaiderBoat(Boat boat)
-    {
-        UnregisterBoat(raiderBoats, boat);
-        UnregisterBoat(raiderBoatsDict, boat);
-    }
-
     public void RegisterBoat(Boat boat)
     {
         switch (boat.CurrentStatus) {
             case HumanStatusEnum.Citizen:
-                RegisterCitizenBoat(boat);
+                RegisterBoat(citizenBoats, boat);
+                RegisterBoat(citizenBoatsDict, boat);
                 break;
             case HumanStatusEnum.Wanderer:
-                RegisterWandererBoat(boat);
+                RegisterBoat(wandererBoats, boat);
+                RegisterBoat(wandererBoatsDict, boat);
                 break;
             case HumanStatusEnum.Raider:
-                RegisterRaiderBoat(boat);
+                RegisterBoat(raiderBoats, boat);
+                RegisterBoat(raiderBoatsDict, boat);
                 break;
         }
     }
@@ -102,13 +69,16 @@ public class BoatsManager : MonoBehaviour
     {
         switch (boat.CurrentStatus) {
             case HumanStatusEnum.Citizen:
-                UnregisterCitizenBoat(boat);
+                UnregisterBoat(citizenBoats, boat);
+                UnregisterBoat(citizenBoatsDict, boat);
                 break;
             case HumanStatusEnum.Wanderer:
-                UnregisterWandererBoat(boat);
+                UnregisterBoat(wandererBoats, boat);
+                UnregisterBoat(wandererBoatsDict, boat);
                 break;
             case HumanStatusEnum.Raider:
-                UnregisterRaiderBoat(boat);
+                UnregisterBoat(raiderBoats, boat);
+                UnregisterBoat(raiderBoatsDict, boat);
                 break;
         }
     }
@@ -122,25 +92,41 @@ public class BoatsManager : MonoBehaviour
 
     private void RegisterBoat(Dictionary<Guid, Boat> boatsDict, Boat boat)
     {
-        boatsDict.Add(boat.InstanceId.GetGuid(), boat);
-        this.boatsDict.Add(boat.InstanceId.GetGuid(), boat);
+        var guid = boat.InstanceId.GetGuid();
+        if (boatsDict.ContainsKey(guid)) return;
+
+        boatsDict.Add(guid, boat);
+        this.boatsDict.Add(guid, boat);
     }
 
     private void UnregisterBoat(Dictionary<Guid, Boat> boatsDict, Boat boat)
     {
-        boatsDict.Remove(boat.InstanceId.GetGuid());
-        this.boatsDict.Remove(boat.InstanceId.GetGuid());
+        var guid = boat.InstanceId.GetGuid();
+        if (!boatsDict.ContainsKey(guid)) return;
+
+        boatsDict.Remove(guid);
+        this.boatsDict.Remove(guid);
     }
 
     private void RegisterBoat(List<Boat> boatsList, Boat boat)
     {
-        boatsList.Add(boat);
-        boats.Add(boat);
+        if (!boatsList.Contains(boat)) {
+            boatsList.Add(boat);
+        }
+
+        if (!boats.Contains(boat)) {
+            boats.Add(boat);
+        }
     }
 
     private void UnregisterBoat(List<Boat> boatsList, Boat boat)
     {
-        boatsList.Remove(boat);
-        boats.Remove(boat);
+        if (boatsList.Contains(boat)) {
+            boatsList.Remove(boat);
+        }
+
+        if (boats.Contains(boat)) {
+            boats.Remove(boat);
+        }
     }
 }

@@ -16,12 +16,12 @@ public class InstancesManager
         }
     }
 
+    private Dictionary<Guid, InstanceId> instances = new();
+
     private InstancesManager()
     {
 
     }
-
-    private Dictionary<Guid, InstanceId> instances = new();
 
     public void RegisterInstance(InstanceId instance)
     {

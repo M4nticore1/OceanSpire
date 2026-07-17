@@ -24,7 +24,7 @@ public class TimerManager : MonoBehaviour
     private void Update()
     {
         for (int i = 0; i < timers.Count; i++) {
-            TimerHandle timer = timers[i];
+            var timer = timers[i];
             timer.Tick();
 
             if (!timer.isRunning) {
@@ -37,13 +37,18 @@ public class TimerManager : MonoBehaviour
 
     public void StartTimer(float delay, Action callback)
     {
-        TimerHandle timerHandle = new TimerHandle();
+        var timerHandle = new TimerHandle();
         timerHandle.StartTimer(delay, callback);
         timers.Add(timerHandle);
     }
 
     public void StartTimer(TimerHandle timerHandle, float delay, Action callback)
     {
+        if (timerHandle == null) {
+            Debug.LogError($"[{nameof(TimerManager)}] Timer Handle is not valid!");
+            return;
+        }
+
         timerHandle.StartTimer(delay, callback);
 
         if (!timers.Contains(timerHandle)) {
@@ -53,6 +58,7 @@ public class TimerManager : MonoBehaviour
 
     public void RemoveTimer(TimerHandle timerHandle)
     {
+        if (timerHandle == null) return;
         if (!timers.Contains(timerHandle)) return;
 
         timers.Remove(timerHandle);
@@ -61,6 +67,7 @@ public class TimerManager : MonoBehaviour
 
     public void ResetTimer(TimerHandle timerHandle)
     {
+        if (timerHandle == null) return;
         if (!timers.Contains(timerHandle)) return;
 
         timerHandle.ResetTimer();

@@ -33,7 +33,7 @@ public class TutorialManager : MonoBehaviour
                 sequence.Init(sequenceData);
             }
             else {
-                Debug.LogError($"[{nameof(TutorialManager)}] SequenceData is not valid!");
+                Debug.LogError($"[{nameof(TutorialManager)}] Sequence Data is not valid!");
                 sequence.Init();
             }
         }

@@ -35,6 +35,26 @@ public class SelectManager : MonoBehaviour
         TryUnsubscribe();
     }
 
+    private void TrySubscribe()
+    {
+        if (isSubscribed) return;
+
+        SelectComponent.OnComponentSelected += HandleComponentSelected;
+        SelectComponent.OnComponentDeselected += HandleComponentDeselected;
+
+        isSubscribed = true;
+    }
+
+    private void TryUnsubscribe()
+    {
+        if (!isSubscribed) return;
+
+        SelectComponent.OnComponentSelected -= HandleComponentSelected;
+        SelectComponent.OnComponentDeselected -= HandleComponentDeselected;
+
+        isSubscribed = false;
+    }
+
     public void Deselect()
     {
         SelectedComponent.Deselect();
@@ -57,12 +77,15 @@ public class SelectManager : MonoBehaviour
 
     private void HandleComponentSelected(SelectComponent component)
     {
+        if (!component) return;
+
         SetSelectedComponent(component);
         OnComponentSelected?.Invoke(SelectedComponent);
     }
 
     private void HandleComponentDeselected(SelectComponent component)
     {
+        if (!component) return;
         if (component != SelectedComponent) return;
 
         SetSelectedComponent(null);;
@@ -72,25 +95,5 @@ public class SelectManager : MonoBehaviour
     private void SetSelectedComponent(SelectComponent selected)
     {
         SelectedComponent = selected;
-    }
-
-    private void TrySubscribe()
-    {
-        if (isSubscribed) return;
-
-        SelectComponent.OnComponentSelected += HandleComponentSelected;
-        SelectComponent.OnComponentDeselected += HandleComponentDeselected;
-
-        isSubscribed = true;
-    }
-
-    private void TryUnsubscribe()
-    {
-        if (!isSubscribed) return;
-
-        SelectComponent.OnComponentSelected -= HandleComponentSelected;
-        SelectComponent.OnComponentDeselected -= HandleComponentDeselected;
-
-        isSubscribed = false;
     }
 }

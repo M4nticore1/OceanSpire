@@ -48,7 +48,7 @@ public class BuildingsManager : MonoBehaviour
 
     private void Start()
     {
-        InitEnterBuildingPlace();
+        UpdateEnterBuildingPlace();
     }
 
     public void RegisterFloorModule(FloorFrameModule floorModule)
@@ -116,20 +116,33 @@ public class BuildingsManager : MonoBehaviour
 
     private void UpdateCityHeight()
     {
-        if (builtFloors.Count <= 0) return;
+        if (builtFloors.Count > 0) {
+            var index = builtFloors.Count - 1;
 
-        var index = builtFloors.Count - 1;
+            var floor = builtFloors[index];
+            if (!floor) {
+                Debug.LogError($"[{nameof(BuildingsManager)}] Floor at index {index} is not valid");
+            }
 
-        var floor = builtFloors[index];
-        if (!floor) {
-            Debug.LogError($"floor at index {index} is not valid");
+            CurrentCityHeight = floor.transform.position.y + FloorHeight;
         }
-
-        CurrentCityHeight = floor.transform.position.y + FloorHeight;
+        else {
+            CurrentCityHeight = FirstFloorHeight;
+        }
     }
 
-    private void InitEnterBuildingPlace()
+    private void UpdateEnterBuildingPlace()
     {
-        EntranceBuildingPlace = builtFloors[FirstBuildingFloor].RoomBuildingPlaces[FirstBuildingPlace];
+        if (builtFloors.Count <= FirstBuildingFloor) return;
+
+        var floor = builtFloors[FirstBuildingFloor];
+        if (!floor) return;
+
+        if (floor.RoomBuildingPlaces.Count <= FirstBuildingPlace) return;
+
+        var place = floor.RoomBuildingPlaces[FirstBuildingPlace];
+        if (!place) return;
+
+        EntranceBuildingPlace = place;
     }
 }

@@ -21,7 +21,7 @@ public class SkillDescriptionManager : MonoBehaviour
     private void OnSkillWidgetSelected(SkillWidget skillWidget)
     {
         if (!skillWidget) {
-            Debug.LogError("skillWidget is not valid");
+            Debug.LogError($"[{nameof(SkillDescriptionManager)}] Skill Widget is not valid");
             return;
         }
         
@@ -35,6 +35,9 @@ public class SkillDescriptionManager : MonoBehaviour
 
     private void OnSkillWidgetDeselected(SkillWidget skillWidget)
     {
+        if (!skillWidget) return;
+        if (skillWidget.Skill == null) return;
+
         if (!spawnedSkillDescriptionWidget) return;
         if (spawnedSkillDescriptionWidget.Skill != skillWidget.Skill) return;
 
@@ -44,6 +47,9 @@ public class SkillDescriptionManager : MonoBehaviour
 
     private void SpawnDescriptionWidget(SkillWidget skillWidget)
     {
+        if (!skillWidget) return;
+        if (skillWidget.Skill == null) return;
+
         var skill = skillWidget.Skill;
         var targetTransform = skillWidget.DescriptionTransform;
 

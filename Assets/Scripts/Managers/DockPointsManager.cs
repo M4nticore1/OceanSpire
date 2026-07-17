@@ -28,6 +28,8 @@ public class DockPointsManager : MonoBehaviour
 
     public void RegisterCitizenDockPoint(BoatDockPoint dockPoint)
     {
+        if (CitizenBoatDocks.Contains(dockPoint)) return;
+
         CitizenBoatDocks.Add(dockPoint);
     }
 

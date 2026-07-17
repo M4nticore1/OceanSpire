@@ -50,7 +50,6 @@ public class WanderersManager : MonoBehaviour
     private void Update()
     {
         if (NextWandererTime == null) return;
-
         if (!CanSpawn()) return;
 
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -91,8 +90,8 @@ public class WanderersManager : MonoBehaviour
 
     private void SpawnWanderer()
     {
-        Vector3 position = WorldUtils.GetRandomBorderPosition();
-        Vector3 rotation = Quaternion.LookRotation(-position.normalized).eulerAngles;
+        var position = WorldUtils.GetRandomBorderPosition();
+        var rotation = Quaternion.LookRotation(-position.normalized).eulerAngles;
 
         var boat = CreateBoat(position, rotation);
         if (!boat) {
@@ -120,25 +119,28 @@ public class WanderersManager : MonoBehaviour
 
     private void UpdateDockPoints()
     {
-        if (creaturesManager == null || creaturesManager.Wanderers == null) return;
-        if (dockPointsManager == null || dockPointsManager.WandererDockPoints == null) return;
+        if (!creaturesManager) return;
+        if (creaturesManager.Wanderers == null) return;
+        if (!dockPointsManager) return;
+        if (dockPointsManager.WandererDockPoints == null) return;
 
         var wanderers = creaturesManager.Wanderers;
         int dockIndex = 0;
         int maxDocks = dockPointsManager.WandererDockPoints.Length;
 
         for (int i = 0; i < wanderers.Count; i++) {
-            var wanderer = wanderers[i];
-
-            if (!wanderer) continue;
-            if (wanderer.IsAccepted || wanderer.IsRejected) continue;
-
             if (dockIndex >= maxDocks) {
                 Debug.LogWarning($"[{nameof(WanderersManager)}] More active wanderers than available dock points!");
                 break;
             }
 
-            if (wanderer.BoatRider == null) continue;
+            var wanderer = wanderers[i];
+            if (!wanderer) continue;
+
+            if (wanderer.IsAccepted) continue;
+            if (wanderer.IsRejected) continue;
+            if (!wanderer.BoatRider) continue;
+
             var ridingBoat = wanderer.BoatRider.RidingBoat;
             if (!ridingBoat) continue;
 
@@ -201,7 +203,7 @@ public class WanderersManager : MonoBehaviour
             return null;
         }
 
-        if (boatPrefab == null) {
+        if (!boatPrefab) {
             Debug.LogError($"[{nameof(WanderersManager)}] Boat prefab is missing!");
             return null;
         }
@@ -220,7 +222,7 @@ public class WanderersManager : MonoBehaviour
 
     private BoatDockPoint GetFirstAvailableDockPoint()
     {
-        if (dockPointsManager == null) return null;
+        if (!dockPointsManager) return null;
         if (dockPointsManager.WandererDockPoints == null) return null;
 
         int activeWanderersCount = 0;

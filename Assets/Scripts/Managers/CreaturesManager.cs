@@ -18,14 +18,14 @@ public class CreaturesManager : MonoBehaviour
     private List<Raider> raiders = new();
     public IReadOnlyList<Raider> Raiders => raiders;
 
-    public static event Action<Human> onCitizenRegistered;
-    public static event Action<Human> onCitizenUnregistered;
+    public static event Action<Human> OnCitizenRegistered;
+    public static event Action<Human> OnCitizenUnregistered;
 
-    public static event Action<Human> onWandererRegistered;
-    public static event Action<Human> onWandererUnregistered;
+    public static event Action<Human> OnWandererRegistered;
+    public static event Action<Human> OnWandererUnregistered;
 
-    public static event Action<Human> onRaiderRegistered;
-    public static event Action<Human> onRaiderUnregistered;
+    public static event Action<Human> OnRaiderRegistered;
+    public static event Action<Human> OnRaiderUnregistered;
 
     private void Awake()
     {
@@ -49,14 +49,14 @@ public class CreaturesManager : MonoBehaviour
     {
         creatures.Add(human);
         citizens.Add(human);
-        onCitizenRegistered?.Invoke(human);
+        OnCitizenRegistered?.Invoke(human);
     }
 
     public void UnregisterCitizen(Citizen human)
     {
         creatures.Remove(human);
         citizens.Remove(human);
-        onCitizenUnregistered?.Invoke(human);
+        OnCitizenUnregistered?.Invoke(human);
     }
 
     // Wanderer
@@ -64,14 +64,14 @@ public class CreaturesManager : MonoBehaviour
     {
         creatures.Add(human);
         wanderers.Add(human);
-        onWandererRegistered?.Invoke(human);
+        OnWandererRegistered?.Invoke(human);
     }
 
     public void UnregisterWanderer(Wanderer human)
     {
         creatures.Remove(human);
         wanderers.Remove(human);
-        onWandererUnregistered?.Invoke(human);
+        OnWandererUnregistered?.Invoke(human);
     }
 
     // Enemy
@@ -79,13 +79,13 @@ public class CreaturesManager : MonoBehaviour
     {
         creatures.Add(human);
         raiders.Add(human);
-        onRaiderRegistered?.Invoke(human);
+        OnRaiderRegistered?.Invoke(human);
     }
 
     public void UnregisterRaider(Raider human)
     {
         creatures.Remove(human);
         raiders.Remove(human);
-        onRaiderUnregistered?.Invoke(human);
+        OnRaiderUnregistered?.Invoke(human);
     }
 }

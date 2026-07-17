@@ -11,7 +11,7 @@ public class CraftingModulesManager : MonoBehaviour
     private void Awake()
     {
         if (Instance) {
-            Debug.Log("Another CraftingModulesManager is already on the scene.");
+            Debug.Log($"[{nameof(CraftingModulesManager)}] Another CraftingModulesManager is already on the scene.");
             Destroy(gameObject);
             return;
         }
@@ -28,6 +28,8 @@ public class CraftingModulesManager : MonoBehaviour
 
     public void UnregisterCraftingModule(CraftingModule craftingModule)
     {
+        if (!craftingModules.Contains(craftingModule)) return;
+
         craftingModules.Remove(craftingModule);
     }
 

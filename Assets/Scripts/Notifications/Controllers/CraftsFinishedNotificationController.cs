@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CraftsFinishedNotificationController : NotificationController
 {
+    [Header("Crafts")]
     [SerializeField] private BuildingsManager buildingsManager;
 
     protected override void ApplyNotifications()

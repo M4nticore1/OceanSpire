@@ -12,7 +12,9 @@ public class ContextMenuManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null) {
+        if (Instance) {
+            Debug.Log("Another ContextMenuManager is on the scene!");
+            Destroy(gameObject);
             return;
         }
 
@@ -33,12 +35,16 @@ public class ContextMenuManager : MonoBehaviour
 
     private void HandleContextTargetSelected(ContextMenuTarget target)
     {
+        if (!target) return;
+
         ContextMenuTarget = target;
         OnContextMenuTargetSelected?.Invoke(target);
     }
 
     private void HandleContextTargetDeselected(ContextMenuTarget target)
     {
+        if (!target) return;
+
         if (target == ContextMenuTarget) {
             ContextMenuTarget = null;
         }

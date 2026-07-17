@@ -16,6 +16,8 @@ public class InformationMenuManager : MonoBehaviour
 
     private void OnBuildingWidgetInformationClicked(BuildingWidget widget)
     {
+        if (!widget) return;
+
         var building = widget.BuildingPrefab;
         if (!building) return;
 

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public abstract class NotificationController : MonoBehaviour
 {
+    [Header("Notifications")]
     [SerializeField] private NotificationsManager notificationsManager;
     public NotificationsManager NotificationsManager => notificationsManager;
 

@@ -16376,6 +16376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeff066db5bbba24c96ae59e4f4638a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ElevatorCabinsManager
+  buildingsLoader: {fileID: 1911230802}
 --- !u!1 &1523508185
 GameObject:
   m_ObjectHideFlags: 0
@@ -17313,7 +17314,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1634320636
 Transform:
   m_ObjectHideFlags: 0

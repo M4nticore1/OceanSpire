@@ -14,6 +14,8 @@ public class EvictManager : MonoBehaviour
 
     private void Evict(Citizen citizen)
     {
+        if (!citizen) return;
+
         var boat = CreateBoat();
         if (!boat) {
             Debug.LogError("EvictBoat is not valid");

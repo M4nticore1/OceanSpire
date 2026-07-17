@@ -21,17 +21,27 @@ public class PlayerClickShakeManager : MonoBehaviour
     private void Update()
     {
         foreach (var shaker in shakers) {
+            if (!shaker) {
+                Debug.LogError($"[{nameof(CreatureWaypointsManager)}] Shaker is not valid!");
+                continue;
+            }
+
             shaker.Tick();
         }
     }
 
     public void RegisterShaker(PlayerClickShaker shaker)
     {
+        if (shakers.Contains(shaker)) return;
+
         shakers.Add(shaker);
     }
 
     public void UnregisterShaker(PlayerClickShaker shaker)
     {
+        if (!shaker) return;
+        if (!shakers.Contains(shaker)) return;
+
         shakers.Remove(shaker);
     }
 }

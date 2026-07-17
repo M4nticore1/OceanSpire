@@ -1240,7 +1240,7 @@ MonoBehaviour:
   m_fontSizeBase: 112
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
+  m_fontSizeMin: 56
   m_fontSizeMax: 112
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -1253,7 +1253,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -1612,7 +1612,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15ee2926fc46c294d95763a61a0a6c5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldSaveSlot
-  slotIndex: 0
   button: {fileID: 7259844161047167963}
   createWorldMenu: {fileID: 3268859366891405461}
   loadWorldMenu: {fileID: 5857018434578971776}

@@ -77,7 +77,7 @@ public class ReviveManager : MonoBehaviour
         var nextReviveChargeTimes = reviveData.NextReviveChargeTimes;
 
         if (nextReviveChargeTimes == null) {
-            Debug.LogError("nextReviveChargeTimes is not valid to recharge revives count");
+            Debug.LogError($"[{nameof(ReviveManager)}] Next Revive Charge Times is not valid to recharge revives count");
             RemainingRevivesCount = maxRevivesCount;
             return;
         }

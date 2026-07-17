@@ -14,6 +14,7 @@ public class MainMenuManager : MonoBehaviour
     {
         loadSaveButton.OnReleased.AddListener(OnLoadWorldButtonClicked);
         deleteSaveButton.OnReleased.AddListener(OnDeleteWorldButtonClicked);
+
         SaveSlotWidget.OnSaveSlotReleased += OnSaveSlotReleased;
         SaveSlotWidget.OnSaveSlotDeselected += OnSaveSlotDeselected;
     }
@@ -22,6 +23,7 @@ public class MainMenuManager : MonoBehaviour
     {
         loadSaveButton.OnReleased.RemoveListener(OnLoadWorldButtonClicked);
         deleteSaveButton.OnReleased.RemoveListener(OnDeleteWorldButtonClicked);
+
         SaveSlotWidget.OnSaveSlotReleased -= OnSaveSlotReleased;
         SaveSlotWidget.OnSaveSlotDeselected -= OnSaveSlotDeselected;
     }
