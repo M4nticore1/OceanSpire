@@ -4,11 +4,15 @@ public class SFXSetting : SoundSetting
 {
     protected override void OnSliderValueChanged(float value)
     {
-        PlayerSettingsManager.SetSFXVolume(value);
+        if (!playerSettingsManager) return;
+
+        playerSettingsManager.SetSFXVolume(value);
     }
 
     protected override float GetVolumeAlpha()
     {
-        return PlayerSettingsManager.SFXVolume;
+        if (!playerSettingsManager) return 0.5f;
+
+        return playerSettingsManager.SFXVolume;
     }
 }

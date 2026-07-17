@@ -15,12 +15,11 @@ public class SaveSlotWidget : MonoBehaviour
 {
     public static SaveSlotWidget Selected { get; private set; }
 
-    [SerializeField] private CreateNewWorldMenu createNewWorldMenu;
-
-    public WorldData WorldSaveData { get; private set; } = null;
-    [SerializeField] private int slotIndex = 0;
+    public WorldData WorldSaveData { get; private set; }
 
     [SerializeField] private CustomButton button;
+    public CustomButton Button => button;
+
     [SerializeField] private GameObject createWorldMenu;
     [SerializeField] private GameObject loadWorldMenu;
     [SerializeField] private TextMeshProUGUI worldNameText;
@@ -29,45 +28,34 @@ public class SaveSlotWidget : MonoBehaviour
     [SerializeField] private TextMeshProUGUI lastSaveDataText;
     [SerializeField] private Image worldThumbImage;
 
-    public static event System.Action<SaveSlotWidget> OnSaveSlotSelected;
-    public static event System.Action<SaveSlotWidget> OnSaveSlotDeselected;
+    public static event Action<SaveSlotWidget> OnWorldDataSeted;
+    public static event Action<SaveSlotWidget> OnWorldDataRemoved;
+
+    public static event Action<SaveSlotWidget> OnSaveSlotReleased;
+    public static event Action<SaveSlotWidget> OnSaveSlotSelected;
+    public static event Action<SaveSlotWidget> OnSaveSlotDeselected;
 
     private void OnEnable()
     {
-        button.OnReleased.AddListener(OnClicked);
+        button.OnReleased.AddListener(OnReleased);
         button.OnSelected.AddListener(OnSelected);
         button.OnDeselected.AddListener(OnDeselected);
-        createNewWorldMenu.onClosed += OnCreateMenuClosed;
     }
 
     private void OnDisable()
     {
-        button.OnReleased.RemoveListener(OnClicked);
+        button.OnReleased.RemoveListener(OnReleased);
         button.OnSelected.RemoveListener(OnSelected);
         button.OnDeselected.RemoveListener(OnDeselected);
-        createNewWorldMenu.onClosed -= OnCreateMenuClosed;
-    }
-
-    private void Start()
-    {
-        var worldData = WorldSaveHandler.Instance.AllSaveData;
-        if (worldData == null) return;
-
-        if (worldData.Length > slotIndex) {
-            if (worldData.Length <= slotIndex) {
-                Debug.Log("A length of worldData array is less than slot index.");
-                return;
-            }
-
-            WorldData data = worldData[slotIndex];
-            if (data != null) {
-                SetSaveData(data);
-            }
-        }
     }
 
     public void SetSaveData(WorldData worldData)
     {
+        if (worldData == null) {
+            RemoveSaveData();
+            return;
+        }
+
         WorldSaveData = worldData;
 
         createWorldMenu.SetActive(false);
@@ -91,23 +79,26 @@ public class SaveSlotWidget : MonoBehaviour
         else {
             Debug.LogWarning("Save thumb is not found!");
         }
+
+        OnWorldDataSeted?.Invoke(this);
     }
 
     public void RemoveSaveData()
     {
+        if (WorldSaveData == null) return;
+
         WorldSaveData = null;
 
         button.SetState(CustomButtonState.Idle);
         createWorldMenu.SetActive(true);
         loadWorldMenu.SetActive(false);
+
+        OnWorldDataRemoved?.Invoke(this);
     }
 
-    private void OnClicked()
+    private void OnReleased()
     {
-        if (WorldSaveData == null) {
-            createNewWorldMenu.Open();
-            button.SetInteractable(false);
-        }
+        OnSaveSlotReleased?.Invoke(this);
     }
 
     private void OnSelected()
@@ -122,11 +113,5 @@ public class SaveSlotWidget : MonoBehaviour
             Selected = null;
 
         OnSaveSlotDeselected?.Invoke(this);
-    }
-
-    private void OnCreateMenuClosed()
-    {
-        button.SetInteractable(true);
-        button.SetState(CustomButtonState.Idle);
     }
 }

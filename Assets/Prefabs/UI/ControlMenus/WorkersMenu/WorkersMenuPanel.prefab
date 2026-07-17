@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bfcd816596521b4a89bc09fc866f1e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkersMenu
-  citizenWidgetPrefab: {fileID: 4805816691179792696, guid: b1a163b079b78b042a9dd451beb4d620, type: 3}
+  rectTransform: {fileID: 5096182534854453995}
   layoutGroup: {fileID: 3747797077880568880}
   haveNoCitizensText: {fileID: 5177592703943442077}
 --- !u!1 &3798309038442213724

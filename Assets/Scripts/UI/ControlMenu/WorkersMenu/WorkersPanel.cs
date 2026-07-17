@@ -2,33 +2,37 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class WorkersPanel : UIBehaviour
+public class WorkersPanel : MonoBehaviour
 {
-    private RectTransform rectTransform;
+    [SerializeField] private RectTransform rectTransform;
 
     [SerializeField] private GridLayoutGroup layoutGroup;
     public GridLayoutGroup LayoutGroup => layoutGroup;
 
     [SerializeField] private GameObject haveNoCitizensText;
 
-    private Vector2 startSize;
+    private Vector2? startSize = null;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
-        rectTransform = GetComponent<RectTransform>();
         startSize = rectTransform.sizeDelta;
+    }
+
+    private void Start()
+    {
+        UpdateMenu();
     }
 
     public void UpdateMenu()
     {
+        if (startSize == null) return;
+
         if (layoutGroup.transform.childCount == 0) {
-            rectTransform.sizeDelta = startSize;
+            rectTransform.sizeDelta = startSize.Value;
         }
         else {
             layoutGroup.GetComponent<RectTransform>().ForceUpdateRectTransforms();
-            float ySize = startSize.y + (LayoutGroupUtils.GetRowsCount(layoutGroup) * layoutGroup.cellSize.y);
+            float ySize = startSize.Value.y + (LayoutGroupUtils.GetRowsCount(layoutGroup) * layoutGroup.cellSize.y);
             rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, ySize);
         }
 

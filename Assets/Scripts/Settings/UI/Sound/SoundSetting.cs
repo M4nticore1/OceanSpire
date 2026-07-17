@@ -2,11 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class SoundSetting : MonoBehaviour
+public abstract class SoundSetting : SettingWidget
 {
-    [SerializeField] private PlayerSettingsManager playerSettingsManager;
-    public PlayerSettingsManager PlayerSettingsManager => playerSettingsManager;
-
     [SerializeField] private Slider slider;
 
     private void OnEnable()

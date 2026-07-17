@@ -2,6 +2,7 @@ using UnityEngine;
 
 public abstract class PlayerSaveController : MonoBehaviour
 {
+    [Header("Player Save")]
     [SerializeField] private PlayerSaveManager playerSaveManager;
 
     private bool isSubscribed = false;
@@ -45,10 +46,10 @@ public abstract class PlayerSaveController : MonoBehaviour
         return true;
     }
 
-    protected void SavePlayer()
-    {
-        playerSaveManager.SavePlayer();
-    }
+    //protected void SavePlayer()
+    //{
+    //    playerSaveManager.SavePlayer();
+    //}
 
     private void TrySubscribe()
     {

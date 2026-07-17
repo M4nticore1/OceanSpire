@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [SerializeField] private CreateNewWorldMenu createNewWorldMenu = null;
     [SerializeField] private CustomButton loadSaveButton = null;
     [SerializeField] private CustomButton deleteSaveButton = null;
 
@@ -13,7 +14,7 @@ public class MainMenuManager : MonoBehaviour
     {
         loadSaveButton.OnReleased.AddListener(OnLoadWorldButtonClicked);
         deleteSaveButton.OnReleased.AddListener(OnDeleteWorldButtonClicked);
-        SaveSlotWidget.OnSaveSlotSelected += OnSaveSlotSelected;
+        SaveSlotWidget.OnSaveSlotReleased += OnSaveSlotReleased;
         SaveSlotWidget.OnSaveSlotDeselected += OnSaveSlotDeselected;
     }
 
@@ -21,7 +22,7 @@ public class MainMenuManager : MonoBehaviour
     {
         loadSaveButton.OnReleased.RemoveListener(OnLoadWorldButtonClicked);
         deleteSaveButton.OnReleased.RemoveListener(OnDeleteWorldButtonClicked);
-        SaveSlotWidget.OnSaveSlotSelected -= OnSaveSlotSelected;
+        SaveSlotWidget.OnSaveSlotReleased -= OnSaveSlotReleased;
         SaveSlotWidget.OnSaveSlotDeselected -= OnSaveSlotDeselected;
     }
 
@@ -68,12 +69,17 @@ public class MainMenuManager : MonoBehaviour
         lastSelectedSaveSlot.RemoveSaveData();
     }
 
-    private void OnSaveSlotSelected(SaveSlotWidget saveSlotWidget)
+    private void OnSaveSlotReleased(SaveSlotWidget saveSlotWidget)
     {
         lastSelectedSaveSlot = saveSlotWidget;
 
-        loadSaveButton.SetState(CustomButtonState.Idle);
-        deleteSaveButton.SetState(CustomButtonState.Idle);
+        if (saveSlotWidget.WorldSaveData != null) {
+            loadSaveButton.SetState(CustomButtonState.Idle);
+            deleteSaveButton.SetState(CustomButtonState.Idle);
+        }
+        else {
+            createNewWorldMenu.Open();
+        }
     }
 
     private void OnSaveSlotDeselected(SaveSlotWidget saveSlotWidget)

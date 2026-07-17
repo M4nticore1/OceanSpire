@@ -32,10 +32,10 @@ RectTransform:
   - {fileID: 4775791918179684642}
   m_Father: {fileID: 4552877164563702785}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -90}
-  m_SizeDelta: {x: -120, y: -300}
+  m_SizeDelta: {x: 1000, y: -300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &690064987225264410
 GameObject:
@@ -73,7 +73,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -300, y: -50}
+  m_SizeDelta: {x: 0, y: -50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6196622025062993864
 CanvasRenderer:
@@ -197,7 +197,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7379438452882263729}
-  - component: {fileID: 3588786842140152972}
+  - component: {fileID: 5351990892133534827}
   - component: {fileID: 5327401213388970600}
   - component: {fileID: 1351549828884310136}
   m_Layer: 5
@@ -226,7 +226,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &3588786842140152972
+--- !u!114 &5351990892133534827
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,21 +235,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 2122078871668583083}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
   m_Padding:
     m_Left: 0
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_StartCorner: 0
-  m_StartAxis: 1
-  m_CellSize: {x: 600, y: 150}
-  m_Spacing: {x: 0, y: 25}
-  m_Constraint: 1
-  m_ConstraintCount: 1
+  m_Spacing: 25
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!114 &5327401213388970600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -438,8 +440,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 240}
+  m_AnchoredPosition: {x: 0, y: -100}
+  m_SizeDelta: {x: 0, y: 140}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1138563570831256691
 CanvasRenderer:
@@ -513,7 +515,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -752,7 +754,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LanguageMenu
   languageSwitcherPrefab: {fileID: 3212485326861313111, guid: 8f101bbfa4397754bac5bf06bb7224ae, type: 3}
   localizationsList: {fileID: 11400000, guid: 3def6f2555afb4f49b6ad79900927eea, type: 2}
-  layoutGroup: {fileID: 3588786842140152972}
+  layoutGroup: {fileID: 5351990892133534827}
   selectGroup: {fileID: 5327401213388970600}
   closeButton: {fileID: 968900372488439481}
 --- !u!1001 &7398413007694713415
@@ -833,7 +835,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -120
+      value: -170
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

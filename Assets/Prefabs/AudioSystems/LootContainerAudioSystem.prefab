@@ -57,7 +57,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 5d9f392c3a1e2ed43a3722b1b615407d, type: 3}
   - {fileID: 8300000, guid: 1b81765d69c4830459ceb1c588d7fbfb, type: 3}
   - {fileID: 8300000, guid: f5a3af5ef93f5d14dadeaa3a4a969bf9, type: 3}
-  swimmingMinDistance: 0
+  swimmingMinDistance: 10
   swimmingMaxDistance: 40
   containerFallStartClips:
   - {fileID: 8300000, guid: 8c6b2cbd4f10e6b4c97c9c2b5e511180, type: 3}

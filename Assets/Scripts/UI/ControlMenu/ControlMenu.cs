@@ -9,12 +9,12 @@ public abstract class ControlMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        Subscribe();
     }
 
     private void OnDisable()
     {
-        
+        Unsubscribe();
     }
 
     public void Open()

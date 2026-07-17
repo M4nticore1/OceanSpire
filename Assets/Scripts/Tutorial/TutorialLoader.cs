@@ -8,7 +8,7 @@ public class TutorialLoader : PlayerLoader
     {
         var tutorialData = playerData?.Tutorial;
 
-        if (tutorialData != null) {
+        if (tutorialData != null && tutorialData.TutorialSequences != null) {
             tutorialManager.Init(tutorialData);
         }
         else {

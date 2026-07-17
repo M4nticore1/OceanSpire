@@ -32,7 +32,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
     public bool IsClickable { get; private set; } = true;
 
     public event Action OnClicked;
-    public static event Action<DriftingLoot> OnGlobalClicked;
+    public static event Action<DriftingLoot> OnLootClicked;
 
     protected virtual void OnEnable()
     {
@@ -115,7 +115,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
         OnClick();
 
         OnClicked?.Invoke();
-        OnGlobalClicked?.Invoke(this);
+        OnLootClicked?.Invoke(this);
     }
 
     public void SetClickable(bool value)

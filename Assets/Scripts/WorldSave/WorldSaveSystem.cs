@@ -38,7 +38,6 @@ public static class WorldSaveSystem
 
         try {
             Directory.Delete(path, true);
-            Debug.Log("The save has been deleted!");
         }
         catch (IOException ex) {
             Debug.LogError($"Couldn't delete save: {ex.Message}");

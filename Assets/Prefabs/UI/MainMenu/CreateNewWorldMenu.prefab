@@ -346,7 +346,7 @@ MonoBehaviour:
   keyboardOffsetUI: {fileID: 3060599765947082064}
   createWorldButton: {fileID: 733242751195489888}
   cancelButton: {fileID: 4866917801281884083}
-  incorrectWorkNameText: {fileID: 4559947192268922217}
+  incorrectWorldNameText: {fileID: 4559947192268922217}
   existWorldNameLocalization: {fileID: 11400000, guid: 97da75c006d2fe947ba13fedeaacc718, type: 2}
   incorrectWorldNameLocalization: {fileID: 11400000, guid: ac2fd3a7fe37a3540936079cc3bbce83, type: 2}
 --- !u!1 &2724965579999750775

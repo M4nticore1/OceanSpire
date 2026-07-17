@@ -1,14 +1,16 @@
 using UnityEngine;
 
-public class FrameRateCounterSetting : MonoBehaviour
+public class FrameRateCounterSetting : SettingWidget
 {
-    [SerializeField] private PlayerSettingsManager playerSettingsManager;
     [SerializeField] private CustomToggle toggle;
 
     private void OnEnable()
     {
         toggle.OnValueChanged += OnToggleValueChanged;
-        UpdateCounterEnabled(playerSettingsManager.ShowFrameRateCounter);
+
+        if (playerSettingsManager) {
+            UpdateCounterEnabled(playerSettingsManager.ShowFrameRateCounter);
+        }
     }
 
     private void OnDisable()
@@ -18,6 +20,8 @@ public class FrameRateCounterSetting : MonoBehaviour
 
     private void UpdateCounterEnabled(bool value)
     {
+        if (!playerSettingsManager) return;
+
         playerSettingsManager.SetShowFrameRateCounter(value);
         toggle.SetOn(value);
     }

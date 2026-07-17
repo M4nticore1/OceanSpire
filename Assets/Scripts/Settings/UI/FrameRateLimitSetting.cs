@@ -1,14 +1,16 @@
 using UnityEngine;
 
-public class FrameRateLimitSetting : MonoBehaviour
+public class FrameRateLimitSetting : SettingWidget
 {
-    [SerializeField] private PlayerSettingsManager playerSettingsManager;
     [SerializeField] private CustomToggle toggle;
 
     private void OnEnable()
     {
         toggle.OnValueChanged += OnToggleValueChanged;
-        UpdateLimit(playerSettingsManager.FrameRateLimitType);
+
+        if (playerSettingsManager) {
+            UpdateLimit(playerSettingsManager.FrameRateLimitType);
+        }
     }
 
     private void OnDisable()
@@ -18,6 +20,8 @@ public class FrameRateLimitSetting : MonoBehaviour
 
     private void UpdateLimit(int value)
     {
+        if (!playerSettingsManager) return;
+
         playerSettingsManager.SetFrameRateLimit(value);
         toggle.SetOn(value == 0 ? false : true);
     }

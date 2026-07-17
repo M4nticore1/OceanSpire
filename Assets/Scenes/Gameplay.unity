@@ -4623,7 +4623,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2603145085813127118, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_fontSize
-      value: 41.5
+      value: 36.7
       objectReference: {fileID: 0}
     - target: {fileID: 2698017856457038692, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: cityStorage
@@ -4867,10 +4867,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4304867870686759735, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: useCityStorage
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4363691148903793459, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
-      propertyPath: m_ScreenMatchMode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4363787726656235776, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
@@ -5183,7 +5179,7 @@ PrefabInstance:
       objectReference: {fileID: 383697687}
     - target: {fileID: 5886395933711480083, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0009765625
+      value: -0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 5949276174874593411, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -6345,6 +6341,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialPlayerSaveController
   playerSaveManager: {fileID: 1154321261}
+  tutorialManager: {fileID: 1693113622}
   tutorialLoader: {fileID: 693301046}
 --- !u!4 &464823395 stripped
 Transform:
@@ -15021,11 +15018,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1351440063}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36d137829c23ec94c819947fad41aa7b, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f4211ae6887bb54aaaa4304c7681fbf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialPlayerSaveController
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsSaveController
   playerSaveManager: {fileID: 1154321261}
-  tutorialLoader: {fileID: 693301046}
+  playerSettingsManager: {fileID: 1458649859}
+  playerSettingsLoader: {fileID: 1311395510253690879}
 --- !u!4 &1352185852 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
@@ -22302,6 +22300,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 832db7892f1c7104a8a0fc9124ae1486, type: 3}
+--- !u!114 &1311395510253690879 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7233647925478648499, guid: 832db7892f1c7104a8a0fc9124ae1486, type: 3}
+  m_PrefabInstance: {fileID: 1311395510253690878}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fa409dd73cebf94c8027ffa065274a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSettingsLoader
 --- !u!4 &1384403151375108774 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5540969039051565317, guid: bcf68310d5e89f24e9db513d064a0b3d, type: 3}

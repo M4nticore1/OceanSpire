@@ -177,8 +177,6 @@ public class WorkersControlMenu : ControlMenu
 
     private void UpdateMenus()
     {
-        if (!isOpened) return;
-
         buildingWorkersMenu.UpdateMenu();
         employedCitizensMenu.UpdateMenu();
         unemployedCitizensMenu.UpdateMenu();

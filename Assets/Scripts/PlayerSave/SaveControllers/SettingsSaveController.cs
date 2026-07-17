@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class SettingsSaveController : PlayerSaveController
 {
+    [Header("Settings")]
     [SerializeField] private PlayerSettingsManager playerSettingsManager;
     [SerializeField] private PlayerSettingsLoader playerSettingsLoader;
 
@@ -23,6 +24,12 @@ public class SettingsSaveController : PlayerSaveController
     {
         if (!playerSettingsLoader.IsLoaded) return;
 
-        SavePlayer();
+        var currentData = PlayerSaveSystem.GetData();
+        if (currentData == null) {
+            currentData = PlayerData.Default();
+        }
+
+        currentData.Settings = PlayerSettingsData.Create(playerSettingsManager);
+        PlayerSaveSystem.SaveData(currentData);
     }
 }

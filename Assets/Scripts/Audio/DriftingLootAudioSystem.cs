@@ -24,7 +24,7 @@ public class DriftingLootAudioSystem : AudioSystem
         SwimmingDriftingLoot.OnGlobalCollected += OnDriftingLootCollected;
         FlyingDriftingLoot.OnFlyingLootStartedFalling += OnContainerStartedFalling;
         FlyingDriftingLoot.onContainerLanded += OnContainerFalled;
-        DriftingLoot.OnGlobalClicked += OnDriftingLootClicked;
+        DriftingLoot.OnLootClicked += OnDriftingLootClicked;
     }
 
     protected override void Unsubscribe()
@@ -32,7 +32,7 @@ public class DriftingLootAudioSystem : AudioSystem
         SwimmingDriftingLoot.OnGlobalCollected -= OnDriftingLootCollected;
         FlyingDriftingLoot.OnFlyingLootStartedFalling -= OnContainerStartedFalling;
         FlyingDriftingLoot.onContainerLanded -= OnContainerFalled;
-        DriftingLoot.OnGlobalClicked -= OnDriftingLootClicked;
+        DriftingLoot.OnLootClicked -= OnDriftingLootClicked;
     }
 
     private void OnDriftingLootCollected(DriftingLoot container)

@@ -1,32 +1,42 @@
 using TMPro;
 using UnityEngine;
 
-public class LanguageSetting : MonoBehaviour
+public class LanguageSetting : SettingWidget
 {
-    [SerializeField] private PlayerSettingsManager playerSettingsManager;
     [SerializeField] private SelectLanguageMenu languageMenu;
     [SerializeField] private CustomButton button;
     [SerializeField] private TextMeshProUGUI languageName;
     [SerializeField] private LocalizationItem languageNameLocalizationItem;
 
+    private LocalizationManager localizationManager => LocalizationManager.Instance;
+
     private void OnEnable()
     {
         button.OnReleased.AddListener(OnButtonClicked);
-        LocalizationManager.Instance.OnLocalizationChanged += OnLocalizationCahanged;
+
+        if (localizationManager != null) {
+            localizationManager.OnLocalizationChanged += OnLocalizationCahanged;
+        }
+
         UpdateLanguageName();
     }
 
     private void OnDisable()
     {
         button.OnReleased.RemoveListener(OnButtonClicked);
-        LocalizationManager.Instance.OnLocalizationChanged -= OnLocalizationCahanged;
+
+        if (localizationManager != null) {
+            localizationManager.OnLocalizationChanged -= OnLocalizationCahanged;
+        }
     }
 
     private void UpdateLanguageName()
     {
-        var languaeCode = LocalizationManager.Instance.CurrentLocalization.LanguageCode;
-        languageName.text = LocalizationManager.Instance.GetLocalizedText(languageNameLocalizationItem, languaeCode);
-        languageName.font = LocalizationManager.Instance.GetFont(TextRole.Default, languaeCode);
+        if (localizationManager == null) return;
+
+        var languaeCode = localizationManager.CurrentLocalization.LanguageCode;
+        languageName.text = localizationManager.GetLocalizedText(languageNameLocalizationItem, languaeCode);
+        languageName.font = localizationManager.GetFont(TextRole.Default, languaeCode);
     }
 
     private void OnButtonClicked()

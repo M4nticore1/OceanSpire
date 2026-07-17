@@ -16,11 +16,11 @@ public class CreateNewWorldMenu : MonoBehaviour
     [SerializeField] private LocalizationItem existWorldNameLocalization;
     [SerializeField] private LocalizationItem incorrectWorldNameLocalization;
 
-    public event Action onClosed;
+    public event Action OnClosed;
 
     private void OnEnable()
     {
-        slidePanel.OnClosed += OnClosed;
+        slidePanel.OnClosed += HandleClosed;
         inputField.onValueChanged.AddListener(OnWorldNameInputFieldChangeValue);
         createWorldButton.OnReleased.AddListener(OnCreateWorldButtonClicked);
         cancelButton.OnReleased.AddListener(OnCancelButtonClicked);
@@ -28,7 +28,7 @@ public class CreateNewWorldMenu : MonoBehaviour
 
     private void OnDisable()
     {
-        slidePanel.OnClosed -= OnClosed;
+        slidePanel.OnClosed -= HandleClosed;
         inputField.onValueChanged.RemoveListener(OnWorldNameInputFieldChangeValue);
         createWorldButton.OnReleased.RemoveListener(OnCreateWorldButtonClicked);
         cancelButton.OnReleased.RemoveListener(OnCancelButtonClicked);
@@ -52,13 +52,13 @@ public class CreateNewWorldMenu : MonoBehaviour
     public void Close()
     {
         slidePanel.Close();
-        OnClosed();
+        HandleClosed();
     }
 
-    private void OnClosed()
+    private void HandleClosed()
     {
         keyboardOffsetUI.SetClosable(true);
-        onClosed?.Invoke();
+        OnClosed?.Invoke();
     }
 
     private void OnWorldNameInputFieldChangeValue(string value)

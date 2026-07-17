@@ -13,8 +13,8 @@ public class TutorialManager : MonoBehaviour
 
     public void Init(TutorialData tutorialData)
     {
-        if (tutorialData == null) {
-            Debug.LogError("Tutorial Data is not valid");
+        if (tutorialData == null || tutorialData.TutorialSequences == null) {
+            Debug.LogError($"[{nameof(TutorialManager)}] Tutorial Data or Tutorial Sequences is not valid!");
             Init();
             return;
         }
@@ -24,7 +24,7 @@ public class TutorialManager : MonoBehaviour
 
             var sequence = tutorialSequences[i];
             if (!sequence) {
-                Debug.LogError("Sequence is not valid");
+                Debug.LogError($"[{nameof(TutorialManager)}] Sequence is not valid!");
                 continue;
             }
 
@@ -33,7 +33,7 @@ public class TutorialManager : MonoBehaviour
                 sequence.Init(sequenceData);
             }
             else {
-                Debug.LogError($"[{nameof(TutorialManager)}] SequenceData is not valid");
+                Debug.LogError($"[{nameof(TutorialManager)}] SequenceData is not valid!");
                 sequence.Init();
             }
         }

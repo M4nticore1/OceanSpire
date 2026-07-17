@@ -8,13 +8,14 @@ public class PlayerData
     public PlayerSettingsData Settings = PlayerSettingsData.Default();
     public TutorialData Tutorial;
 
-    public static PlayerData Create(PlayerSettingsManager playerSettings, TutorialManager tutorial)
+    public void UpdateSettings(PlayerSettingsManager playerSettings)
     {
-        return new PlayerData()
-        {
-            Settings = PlayerSettingsData.Create(playerSettings),
-            Tutorial = TutorialData.Create(tutorial)
-        };
+        Settings = PlayerSettingsData.Create(playerSettings);
+    }
+
+    public void UpdateTutorial(TutorialManager tutorial)
+    {
+        Tutorial = TutorialData.Create(tutorial);
     }
 
     public static PlayerData Default()

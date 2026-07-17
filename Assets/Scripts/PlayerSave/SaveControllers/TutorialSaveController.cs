@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class TutorialSaveController : PlayerSaveController
 {
+    [Header("Tutorial")]
+    [SerializeField] private TutorialManager tutorialManager;
     [SerializeField] private TutorialLoader tutorialLoader;
 
     protected override void OnSubscribe()
@@ -22,6 +24,12 @@ public class TutorialSaveController : PlayerSaveController
     {
         if (!tutorialLoader.IsLoaded) return;
 
-        SavePlayer();
+        var currentData = PlayerSaveSystem.GetData();
+        if (currentData == null) {
+            currentData = PlayerData.Default();
+        }
+
+        currentData.Tutorial = TutorialData.Create(tutorialManager);
+        PlayerSaveSystem.SaveData(currentData);
     }
 }

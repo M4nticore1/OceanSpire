@@ -1,8 +1,7 @@
 using UnityEngine;
 
-public class VSyncSetting : MonoBehaviour
+public class VSyncSetting : SettingWidget
 {
-    [SerializeField] private PlayerSettingsManager playerSettingsManager;
     [SerializeField] private CustomToggle toggle;
 
     private void OnEnable()
