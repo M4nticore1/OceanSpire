@@ -459,6 +459,50 @@ MonoBehaviour:
   playerSaveManager: {fileID: 552854749}
   playerSettingsManager: {fileID: 402430243}
   playerSettingsLoader: {fileID: 1087080111}
+--- !u!1 &525850907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 525850908}
+  - component: {fileID: 525850909}
+  m_Layer: 0
+  m_Name: TMPPreWarming
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &525850908
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525850907}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 604121251}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &525850909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 525850907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0ae57338958d72488b192a3a5f6fbf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TMPPreWarming
 --- !u!1 &552854748
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,6 +616,7 @@ Transform:
   - {fileID: 552854750}
   - {fileID: 1425271179}
   - {fileID: 1210908827}
+  - {fileID: 525850908}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &718117923
@@ -1135,10 +1180,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3306548868657905846, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: playerSettingsManager
+      value: 
+      objectReference: {fileID: 402430243}
+    - target: {fileID: 3513212658406958598, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: playerSettingsManager
+      value: 
+      objectReference: {fileID: 402430243}
     - target: {fileID: 3682776464709977342, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_Name
       value: MainMenuCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 7240504305424072805, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: playerSettingsManager
+      value: 
+      objectReference: {fileID: 402430243}
+    - target: {fileID: 7636622798185439268, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: playerSettingsManager
+      value: 
+      objectReference: {fileID: 402430243}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
