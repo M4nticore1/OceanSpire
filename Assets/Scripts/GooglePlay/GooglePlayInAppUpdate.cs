@@ -12,41 +12,65 @@ public class GooglePlayInAppUpdate : MonoBehaviour
 
     private AppUpdateManager appUpdateManager;
     private AppUpdateInfo appUpdateInfoResult;
+
     private bool isUpdateChecked = false;
     private bool isUpdateInProgress = false;
+    private bool isInitialized = false;
 
     private void Start()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
-        appUpdateManager = new AppUpdateManager();
-        StartCoroutine(CheckForUpdate());
+        StartCoroutine(InitializeWithDelay());
 #endif
+    }
+
+    private IEnumerator InitializeWithDelay()
+    {
+        yield return new WaitForEndOfFrame();
+
+        appUpdateManager = new AppUpdateManager();
+        isInitialized = true;
+
+        StartCoroutine(CheckForUpdate());
     }
 
     private void OnApplicationPause(bool pauseStatus)
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
-        if (appUpdateManager == null || isUpdateInProgress) return;
+        if (!isInitialized || appUpdateManager == null) return;
 
-        if (!pauseStatus)
-        {
-            if (useFlexibleUpdate)
-            {
-                StartCoroutine(ResumeInProgressUpdate());
-            }
-            else if (!isUpdateChecked)
-            {
-                StartCoroutine(CheckForUpdate());
-            }
+        if (!pauseStatus) {
+            StartCoroutine(DelayedUpdateCheck());
         }
 #endif
+    }
+
+    private void OnDestroy()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        appUpdateManager = null;
+#endif
+    }
+
+    private IEnumerator DelayedUpdateCheck()
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (appUpdateManager == null || isUpdateInProgress) yield break;
+
+        if (useFlexibleUpdate) {
+            yield return StartCoroutine(ResumeInProgressUpdate());
+        }
+        else if (!isUpdateChecked) {
+            yield return StartCoroutine(CheckForUpdate());
+        }
     }
 
     private IEnumerator CheckForUpdate()
     {
         if (appUpdateManager == null) yield break;
 
-        PlayAsyncOperation<AppUpdateInfo, AppUpdateErrorCode> appUpdateInfoOperation = appUpdateManager.GetAppUpdateInfo();
+        var appUpdateInfoOperation = appUpdateManager.GetAppUpdateInfo();
         yield return appUpdateInfoOperation;
 
         if (appUpdateInfoOperation.IsSuccessful) {
@@ -87,9 +111,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
         var appUpdateOptions = AppUpdateOptions.FlexibleAppUpdateOptions();
         var startUpdateRequest = appUpdateManager.StartUpdate(appUpdateInfoResult, appUpdateOptions);
 
-        while (!startUpdateRequest.IsDone) {
-            yield return null;
-        }
+        yield return startUpdateRequest;
 
         if (startUpdateRequest.Error == AppUpdateErrorCode.NoError) {
             yield return StartCoroutine(CompleteFlexibleUpdate());
@@ -127,7 +149,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
 
     private IEnumerator ResumeInProgressUpdate()
     {
-        PlayAsyncOperation<AppUpdateInfo, AppUpdateErrorCode> appUpdateInfoOperation = appUpdateManager.GetAppUpdateInfo();
+        var appUpdateInfoOperation = appUpdateManager.GetAppUpdateInfo();
         yield return appUpdateInfoOperation;
 
         if (appUpdateInfoOperation.IsSuccessful) {
@@ -149,8 +171,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
 
     public bool IsUpdateAvailable()
     {
-        return appUpdateInfoResult != null &&
-               appUpdateInfoResult.UpdateAvailability == UpdateAvailability.UpdateAvailable;
+        return appUpdateInfoResult != null && appUpdateInfoResult.UpdateAvailability == UpdateAvailability.UpdateAvailable;
     }
 
     public int GetUpdatePriority()
@@ -161,6 +182,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
     public int GetClientStalenessDays()
     {
         if (appUpdateInfoResult == null) return -1;
+
         return appUpdateInfoResult.ClientVersionStalenessDays ?? 0;
     }
 }

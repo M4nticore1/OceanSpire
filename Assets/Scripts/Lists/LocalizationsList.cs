@@ -34,7 +34,7 @@ public class LocalizationsList : ScriptableObject
         }
     }
 
-    public LocalizationTable GetLocalization(string languageCode)
+    public LocalizationTable GetLocalizationTable(string languageCode)
     {
         if (languageCode == null) return null;
         if (languageCode == string.Empty) return null;

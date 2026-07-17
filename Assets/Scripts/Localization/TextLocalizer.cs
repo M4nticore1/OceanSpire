@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 [Serializable]
 public enum TextRole
@@ -13,7 +10,7 @@ public enum TextRole
     Title
 }
 
-public class TextLocalizer : UIBehaviour
+public class TextLocalizer : MonoBehaviour
 {
     private TextMeshProUGUI textBlock;
     public TextMeshProUGUI TextBlock => textBlock ? textBlock : GetComponent<TextMeshProUGUI>();
@@ -27,12 +24,10 @@ public class TextLocalizer : UIBehaviour
     [SerializeField] private MonoBehaviour localizationTarget;
     private ILocalizable LocalizationTarget = null;
 
-    private bool updateText = false;
+    private LocalizationManager localizationManager => LocalizationManager.Instance;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         textBlock = GetComponent<TextMeshProUGUI>();
 
         if (localizationTarget) {
@@ -40,19 +35,20 @@ public class TextLocalizer : UIBehaviour
         }
     }
 
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
+        if (localizationManager != null) {
+            localizationManager.OnLocalizationChanged += OnLocalizationChanged;
+        }
 
-        LocalizationManager.Instance.OnLocalizationChanged += OnLocalizationChanged;
         UpdateText();
     }
 
-    protected override void OnDisable()
+    private void OnDisable()
     {
-        base.OnDisable();
-
-        LocalizationManager.Instance.OnLocalizationChanged -= OnLocalizationChanged;
+        if (localizationManager != null) {
+            localizationManager.OnLocalizationChanged -= OnLocalizationChanged;
+        }
     }
 
     public void SetLocalizationItem(LocalizationItem item)
@@ -74,8 +70,10 @@ public class TextLocalizer : UIBehaviour
 
     public void UpdateText()
     {
+        if (localizationManager == null) return;
+
         if (item) {
-            string text = LocalizationManager.Instance.GetLocalizedText(item);
+            string text = localizationManager.GetLocalizedText(item);
             if (text == null) return;
             if (text == "") return;
 
@@ -98,12 +96,19 @@ public class TextLocalizer : UIBehaviour
 
     private void UpdateFont()
     {
-        var font = LocalizationManager.Instance.GetFont(textRole);
+        if (localizationManager == null) return;
+
+        var font = localizationManager.GetFont(textRole);
         SetFont(font);
     }
 
     private void SetFont(TMP_FontAsset font)
     {
+        if (!font) {
+            Debug.LogError($"[{nameof(TextLocalizer)}] Font is not valid!");
+            return;
+        }
+
         TextBlock.font = font;
     }
 

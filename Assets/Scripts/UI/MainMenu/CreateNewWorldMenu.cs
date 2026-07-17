@@ -12,7 +12,7 @@ public class CreateNewWorldMenu : MonoBehaviour
     [SerializeField] private CustomButton cancelButton;
 
     [Header("World Name")]
-    [SerializeField] private TextLocalizer incorrectWorkNameText;
+    [SerializeField] private TextLocalizer incorrectWorldNameText;
     [SerializeField] private LocalizationItem existWorldNameLocalization;
     [SerializeField] private LocalizationItem incorrectWorldNameLocalization;
 
@@ -82,26 +82,26 @@ public class CreateNewWorldMenu : MonoBehaviour
     private void CheckWorldName(string name)
     {
         if (!IsPossibleWorldNameLength(name)) {
-            incorrectWorkNameText.gameObject.SetActive(false);
+            incorrectWorldNameText.gameObject.SetActive(false);
             createWorldButton.SetState(CustomButtonState.Disabled);
             return;
         }
 
         if (!IsPossibleWorldName(name)) {
-            incorrectWorkNameText.gameObject.SetActive(true);
-            incorrectWorkNameText.SetLocalizationItem(incorrectWorldNameLocalization);
+            incorrectWorldNameText.gameObject.SetActive(true);
+            incorrectWorldNameText.SetLocalizationItem(incorrectWorldNameLocalization);
             createWorldButton.SetState(CustomButtonState.Disabled);
             return;
         }
 
         if (IsWorldNameExist(name)) {
-            incorrectWorkNameText.gameObject.SetActive(true);
-            incorrectWorkNameText.SetLocalizationItem(existWorldNameLocalization);
+            incorrectWorldNameText.gameObject.SetActive(true);
+            incorrectWorldNameText.SetLocalizationItem(existWorldNameLocalization);
             createWorldButton.SetState(CustomButtonState.Disabled);
             return;
         }
 
-        incorrectWorkNameText.gameObject.SetActive(false);
+        incorrectWorldNameText.gameObject.SetActive(false);
         createWorldButton.SetState(CustomButtonState.Idle);
     }
 

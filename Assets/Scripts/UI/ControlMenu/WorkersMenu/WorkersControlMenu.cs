@@ -45,6 +45,7 @@ public class WorkersControlMenu : ControlMenu
 
     protected override void OnOpen()
     {
+        UpdateMenus();
         InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
