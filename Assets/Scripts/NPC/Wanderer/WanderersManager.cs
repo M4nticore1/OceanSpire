@@ -83,7 +83,7 @@ public class WanderersManager : MonoBehaviour
     public long GetRandomNextWandererTime()
     {
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var cooldown = UnityEngine.Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown);
+        var cooldown = UnityEngine.Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown + 1);
 
         return currentTime + cooldown;
     }
@@ -158,7 +158,7 @@ public class WanderersManager : MonoBehaviour
 
         var selectedPrefab = wandererPrefabs[UnityEngine.Random.Range(0, wandererPrefabs.Length)];
         var prefab = selectedPrefab as Human;
-        if (prefab == null) {
+        if (!prefab) {
             Debug.LogError($"[{nameof(WanderersManager)}] Selected prefab is not a Human type!");
             return null;
         }
@@ -229,10 +229,11 @@ public class WanderersManager : MonoBehaviour
         if (creaturesManager && creaturesManager.Wanderers != null) {
             for (int i = 0; i < creaturesManager.Wanderers.Count; i++) {
                 var wanderer = creaturesManager.Wanderers[i];
+                if (!wanderer) continue;
+                if (wanderer.IsAccepted) continue;
+                if (wanderer.IsRejected) continue;
 
-                if (wanderer && !wanderer.IsAccepted && !wanderer.IsRejected) {
-                    activeWanderersCount++;
-                }
+                activeWanderersCount++;
             }
         }
 
@@ -253,12 +254,16 @@ public class WanderersManager : MonoBehaviour
 
         int activeWanderersCount = 0;
         for (int i = 0; i < creaturesManager.Wanderers.Count; i++) {
-            var w = creaturesManager.Wanderers[i];
-            if (w != null && !w.IsAccepted && !w.IsRejected) {
-                activeWanderersCount++;
-            }
+            var wanderer = creaturesManager.Wanderers[i];
+            if (!wanderer) continue;
+            if (wanderer.IsAccepted) continue;
+            if (wanderer.IsRejected) continue;
+
+            activeWanderersCount++;
         }
 
-        return activeWanderersCount < dockPointsManager.WandererDockPoints.Length;
+        if (activeWanderersCount >= dockPointsManager.WandererDockPoints.Length) return false;
+
+        return true;
     }
 }

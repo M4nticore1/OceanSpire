@@ -9,7 +9,6 @@ public class ToPierContextElement : ContextElement
         base.Subscribe();
 
         Boat.OnBoatStateEntered += OnBoatStateEntered;
-        Boat.OnBoatStateExited += OnBoatStateEntered;
     }
 
     protected override void Unsubscribe()
@@ -17,7 +16,6 @@ public class ToPierContextElement : ContextElement
         base.Unsubscribe();
 
         Boat.OnBoatStateEntered -= OnBoatStateEntered;
-        Boat.OnBoatStateExited -= OnBoatStateEntered;
     }
 
     protected override void OnButtonClicked()
@@ -35,6 +33,8 @@ public class ToPierContextElement : ContextElement
         if (boat.CurrentStateEnum == BoatStateEnum.Idle) return false;
         if (boat.CurrentStateEnum == BoatStateEnum.MovingToDock) return false;
         if (boat.CurrentStateEnum == BoatStateEnum.UnloadingLoot) return false;
+        if (boat.CurrentStateEnum == BoatStateEnum.FloatingAway) return false;
+        if (boat.CurrentStateEnum == BoatStateEnum.Demolished) return false;
 
         return true;
     }

@@ -60,6 +60,13 @@ public class FindingLootBoatState : BoatState
     {
         if (!driftingLoot) return false;
 
-        return true;
+        var swimmingDefinition = driftingLoot.Definition as SwimmingDriftingLootDefinition;
+        if (!swimmingDefinition) return false;
+
+        foreach (var item in swimmingDefinition.LootTable) {
+            if (item.itemData.Weight < boat.Inventory.RemainingWeight) return true;
+        }
+
+        return false;
     }
 }

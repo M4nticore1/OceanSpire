@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using YandexMobileAds.Base;
 
 public class BannerAdsManager : MonoBehaviour
 {
@@ -56,7 +57,7 @@ public class BannerAdsManager : MonoBehaviour
         if (!bannerAds) return;
 
         if (activeWindowsCount == 1) {
-            bannerAds.ShowAd();
+            bannerAds.ShowAd(AdPosition.BottomCenter);
         }
     }
 

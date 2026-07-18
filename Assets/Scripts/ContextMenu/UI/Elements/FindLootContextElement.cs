@@ -9,7 +9,6 @@ public class FindLootContextElement : ContextElement
         base.Subscribe();
 
         Boat.OnBoatStateEntered += OnBoatStateEntered;
-        Boat.OnBoatStateExited += OnBoatStateEntered;
     }
 
     protected override void Unsubscribe()
@@ -17,12 +16,12 @@ public class FindLootContextElement : ContextElement
         base.Unsubscribe();
 
         Boat.OnBoatStateEntered -= OnBoatStateEntered;
-        Boat.OnBoatStateExited -= OnBoatStateEntered;
     }
 
     protected override void OnButtonClicked()
     {
         if (!boat) return;
+        if (boat.CurrentStateEnum != BoatStateEnum.MovingToDock) return;
 
         boat.SetState(BoatStateEnum.FindingLoot);
     }

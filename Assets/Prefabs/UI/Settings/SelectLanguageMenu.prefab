@@ -277,7 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FitSizeToChildren
   minHeight: 0
-  extraHeight: 0
+  extraHeight: 300
 --- !u!1 &3205250813123137782
 GameObject:
   m_ObjectHideFlags: 0

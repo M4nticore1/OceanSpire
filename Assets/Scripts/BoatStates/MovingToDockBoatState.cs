@@ -40,9 +40,12 @@ public class MovingToDockBoatState : BoatState
     private void UpdateMovement()
     {
         if (boat.DockPoint) {
-            boat.Movement.TryMoveTo(boat.DockPoint.DockTransform.position);
+            if (!boat.Movement.TryMoveTo(boat.DockPoint.DockTransform.position)) {
+                Debug.LogError($"[{nameof(MovingToDockBoatState)}] Boat can't move to its dock!");
+            }
         }
         else {
+            Debug.LogError($"[{nameof(MovingToDockBoatState)}] Boat Dock is not valid!");
             boat.Movement.TryStopMoving();
         }
     }

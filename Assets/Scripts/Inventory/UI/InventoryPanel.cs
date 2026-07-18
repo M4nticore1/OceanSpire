@@ -69,6 +69,7 @@ public class InventoryPanel : MonoBehaviour
     {
         foreach (var item in inventory.Items) {
             if (item == null) continue;
+            if (item.Amount <= 0) continue;
 
             CreateWidget(item);
         }
@@ -77,6 +78,11 @@ public class InventoryPanel : MonoBehaviour
     private void RemoveWidgets()
     {
         foreach (var widget in spawnedResourceWidgets.Values) {
+            if (!widget) {
+                Debug.LogError($"[{nameof(InventoryPanel)}] Spawned Widget is not valid!");
+                continue;
+            }
+
             Destroy(widget.gameObject);
         }
 
@@ -85,6 +91,9 @@ public class InventoryPanel : MonoBehaviour
 
     private void CreateWidget(ItemInstance item)
     {
+        if (item == null) return;
+        if (item.Amount <= 0) return;
+
         var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
         widget.SetItem(item.Definition);
         widget.AddAmount(item);
@@ -94,7 +103,10 @@ public class InventoryPanel : MonoBehaviour
 
     private void RemoveWidget(ItemInstance item)
     {
-        Destroy(spawnedResourceWidgets[item.Definition].gameObject);
+        if (item == null) return;
+
+        var widget = spawnedResourceWidgets[item.Definition];
+        Destroy(widget.gameObject);
         spawnedResourceWidgets.Remove(item.Definition);
     }
 

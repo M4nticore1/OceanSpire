@@ -20,6 +20,7 @@ public class Inventory : MonoBehaviour, ILocalizable
     public float CurrentWeight => currentWeight;
 
     public float RemainingWeight => WeightLimit - CurrentWeight;
+    public int RemainingWeightInt => Mathf.RoundToInt(WeightLimit) - Mathf.RoundToInt(CurrentWeight);
 
     [SerializeField] private List<ItemInstance> items = new();
     public IReadOnlyList<ItemInstance> Items => items;

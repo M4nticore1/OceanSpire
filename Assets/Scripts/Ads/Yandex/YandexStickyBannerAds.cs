@@ -9,6 +9,7 @@ public class YandexStickyBannerAds : BannerAds
     private Banner banner;
     private float retryDelay = 3f;
 
+    private AdPosition lastAdPosition = AdPosition.BottomCenter;
     private Coroutine retryCoroutine;
 
     private void Start()
@@ -24,8 +25,13 @@ public class YandexStickyBannerAds : BannerAds
 
     public override void ShowAd()
     {
+        ShowAd(AdPosition.BottomCenter);
+    }
+
+    public override void ShowAd(AdPosition adPosition)
+    {
         HideAd();
-        RequestBanner();
+        RequestBanner(adPosition);
     }
 
     public override void HideAd()
@@ -42,6 +48,7 @@ public class YandexStickyBannerAds : BannerAds
         banner.OnAdClicked -= HandleAdClicked;
         banner.OnImpression -= HandleImpression;
 
+        banner.Hide();
         banner.Destroy();
         banner = null;
     }
@@ -52,18 +59,19 @@ public class YandexStickyBannerAds : BannerAds
         return ScreenUtils.ConvertPixelsToDp(screenWidth);
     }
 
-    private void RequestBanner()
+    private void RequestBanner(AdPosition adPosition)
     {
         try {
-            BannerAdSize bannerSize = BannerAdSize.Sticky(GetScreenWidthDp());
-            banner = new Banner(bannerSize, AdPosition.BottomCenter);
+            var bannerSize = BannerAdSize.Sticky(GetScreenWidthDp());
+            banner = new Banner(bannerSize, adPosition);
+            lastAdPosition = adPosition;
 
             banner.OnAdLoaded += HandleAdLoaded;
             banner.OnAdFailedToLoad += HandleAdFailedToLoad;
             banner.OnAdClicked += HandleAdClicked;
             banner.OnImpression += HandleImpression;
 
-            AdRequest request = new AdRequest(AdUnitId.AdUnitId);
+            var request = new AdRequest(AdUnitId.AdUnitId);
             banner.LoadAd(request);
         }
         catch (Exception e) {
@@ -89,7 +97,7 @@ public class YandexStickyBannerAds : BannerAds
             StopCoroutine(retryCoroutine);
         }
 
-        retryCoroutine = StartCoroutine(RequestBannerDelay());
+        retryCoroutine = StartCoroutine(RequestBannerDelay(lastAdPosition));
     }
 
     private void HandleLeftApplication(object sender, EventArgs args)
@@ -113,12 +121,12 @@ public class YandexStickyBannerAds : BannerAds
         Debug.Log($"Banner Impression: {data}");
     }
     
-    private IEnumerator RequestBannerDelay()
+    private IEnumerator RequestBannerDelay(AdPosition adPosition)
     {
         yield return new WaitForSeconds(retryDelay);
 
         if (banner == null) {
-            RequestBanner();
+            RequestBanner(adPosition);
         }
 
         retryCoroutine = null;

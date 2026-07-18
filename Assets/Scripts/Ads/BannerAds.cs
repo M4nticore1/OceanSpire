@@ -1,4 +1,5 @@
 using UnityEngine;
+using YandexMobileAds.Base;
 
 public abstract class BannerAds : AdsSystem
 {
@@ -15,4 +16,6 @@ public abstract class BannerAds : AdsSystem
 
         Instance = this;
     }
+
+    public abstract void ShowAd(AdPosition adPosition);
 }

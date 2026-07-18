@@ -2542,7 +2542,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5695414477847804069, guid: 72666ef9ab3e3ef41ae26c2d202c9dbc, type: 3}
       propertyPath: m_fontSize
-      value: 37.1
+      value: 36.7
       objectReference: {fileID: 0}
     - target: {fileID: 7720671429132974585, guid: 72666ef9ab3e3ef41ae26c2d202c9dbc, type: 3}
       propertyPath: builderEnergyMenu
@@ -4149,7 +4149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8174643467390729369, guid: d9f55c993166b1142ae6adf2a6d52176, type: 3}
       propertyPath: m_Name
-      value: LanguageMenu
+      value: SelectLanguageMenu
       objectReference: {fileID: 0}
     - target: {fileID: 8174643467390729369, guid: d9f55c993166b1142ae6adf2a6d52176, type: 3}
       propertyPath: m_IsActive
