@@ -374,7 +374,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         if (CurrentStatus == HumanStatusEnum.Citizen) {
             var targetCitizen = TargetRider?.GetComponent<Citizen>();
             var ridingCitizen = CurrentRider?.GetComponent<Citizen>();
-            SetClickable(CurrentStatus == HumanStatusEnum.Citizen && targetCitizen ? !targetCitizen.IsEvicted : false && ridingCitizen ? !ridingCitizen.IsEvicted : false);
+            SetClickable(CurrentStatus == HumanStatusEnum.Citizen && targetCitizen ? !targetCitizen.IsEvicted : true && ridingCitizen ? !ridingCitizen.IsEvicted : true);
         }
         else if (CurrentStatus == HumanStatusEnum.Wanderer) {
             SetClickable(!movement.IsMoving);
@@ -387,8 +387,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     private void UpdateContextMenuTarget()
     {
         var targetCitizen = TargetRider?.GetComponent<Citizen>();
-        var citizen = CurrentStatus == HumanStatusEnum.Citizen && targetCitizen ? !targetCitizen.IsEvicted : true;
-
-        contextMenuTarget.SetShowContextMenu(citizen);
+        var ridingCitizen = CurrentRider?.GetComponent<Citizen>();
+        contextMenuTarget.SetShowContextMenu(CurrentStatus == HumanStatusEnum.Citizen && targetCitizen ? !targetCitizen.IsEvicted : true && ridingCitizen ? !ridingCitizen.IsEvicted : true);
     }
 }

@@ -88,7 +88,6 @@ public class GooglePlayInAppUpdate : MonoBehaviour
             isUpdateChecked = true;
             appUpdateInfoResult = appUpdateInfoOperation.GetResult();
 
-
             if (appUpdateInfoResult.UpdateAvailability == UpdateAvailability.UpdateAvailable) {
                 int updatePriority = appUpdateInfoResult.UpdatePriority;
 
@@ -97,11 +96,8 @@ public class GooglePlayInAppUpdate : MonoBehaviour
                         if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.FlexibleAppUpdateOptions())) {
                             StartCoroutine(StartFlexibleUpdate());
                         }
-                        else {
-                            Debug.LogWarning("[PlayUpdate] Flexible update not allowed, trying immediate...");
-                            if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.ImmediateAppUpdateOptions())) {
-                                StartCoroutine(StartImmediateUpdate());
-                            }
+                        else if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.ImmediateAppUpdateOptions())) {
+                            StartCoroutine(StartImmediateUpdate());
                         }
                     }
                     else {
@@ -113,7 +109,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
             }
         }
         else {
-            Debug.LogError($"[PlayUpdate] Check failed: {appUpdateInfoOperation.Error}");
+            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Check updates failed: {appUpdateInfoOperation.Error}");
         }
     }
 
@@ -133,25 +129,23 @@ public class GooglePlayInAppUpdate : MonoBehaviour
             startUpdateRequest = appUpdateManager.StartUpdate(appUpdateInfoResult, appUpdateOptions);
         }
         catch (System.Exception ex) {
-            Debug.LogError($"[PlayUpdate] Native crash on starting Flexible update: {ex.Message}");
+            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Native crash on starting Flexible update: {ex.Message}");
             isUpdateInProgress = false;
             yield break;
         }
 
         if (startUpdateRequest == null) {
-            Debug.LogError("[PlayUpdate] Failed to create StartUpdate operation");
+            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Failed to create StartUpdate operation");
             isUpdateInProgress = false;
             yield break;
         }
 
         while (!startUpdateRequest.IsDone) {
             if (startUpdateRequest.Error != AppUpdateErrorCode.NoError) {
-                Debug.LogError($"[PlayUpdate] Error during download process: {startUpdateRequest.Error}");
+                Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Error during download process: {startUpdateRequest.Error}");
                 isUpdateInProgress = false;
                 yield break;
             }
-
-            float progress = startUpdateRequest.DownloadProgress;
 
             yield return null;
         }
@@ -160,7 +154,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
             yield return StartCoroutine(CompleteFlexibleUpdate());
         }
         else {
-            Debug.LogError($"[PlayUpdate] Download finished with unexpected status: {startUpdateRequest.Status}");
+            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Download finished with unexpected status: {startUpdateRequest.Status}");
             isUpdateInProgress = false;
         }
     }
@@ -168,7 +162,6 @@ public class GooglePlayInAppUpdate : MonoBehaviour
     private IEnumerator CompleteFlexibleUpdate()
     {
         if (appUpdateInfoResult.AppUpdateStatus != AppUpdateStatus.Downloaded) {
-            Debug.LogWarning("Update not downloaded yet");
             isUpdateInProgress = false;
             yield break;
         }
@@ -177,7 +170,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
         yield return completeUpdateOperation;
 
         if (completeUpdateOperation.Error != AppUpdateErrorCode.NoError) {
-            Debug.LogError($"Complete update failed: {completeUpdateOperation.Error}");
+            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Complete update failed: {completeUpdateOperation.Error}");
         }
 
         isUpdateInProgress = false;
@@ -193,7 +186,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
             startUpdateRequest = appUpdateManager.StartUpdate(appUpdateInfoResult, appUpdateOptions);
         }
         catch (AndroidJavaException ex) {
-            Debug.LogError($"[PlayUpdate] Native crah Google Play Core at the start: {ex.Message}");
+            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Native crash Google Play Core at the start: {ex.Message}");
             isUpdateInProgress = false;
             yield break;
         }
@@ -201,7 +194,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
         yield return startUpdateRequest;
 
         if (startUpdateRequest.Error != AppUpdateErrorCode.NoError) {
-            Debug.LogError($"[PlayUpdate] Immediate update failed: {startUpdateRequest.Error}");
+            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Immediate update failed: {startUpdateRequest.Error}");
             isUpdateInProgress = false;
         }
     }

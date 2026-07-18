@@ -390,7 +390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 171a1f0ca56a4694e8292c44b7ef7aac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpdateDailyTasksButton
-  rewardDefinition: {fileID: 0}
+  rewardedAdsManager: {fileID: 0}
   button: {fileID: 2690994561326218846}
 --- !u!1 &4579722025366605427
 GameObject:
@@ -448,8 +448,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DailyTasksMenu
   dailyTasksManager: {fileID: 0}
   dailyTaskWidgetPrefab: {fileID: -606132579456798986, guid: 4a7a3372462a015459b20af8ebb23098, type: 3}
-  openButton: {fileID: 0}
   tasksLayoutGroup: {fileID: 3783775697745519361}
+  closeButton: {fileID: 4280855259189230599}
   updateTasksText: {fileID: 4760923479840068564}
 --- !u!1 &4910345980983127460
 GameObject:
@@ -485,8 +485,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -200}
-  m_SizeDelta: {x: 900, y: -600}
+  m_AnchoredPosition: {x: 0, y: -240}
+  m_SizeDelta: {x: 900, y: -640}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &5260243657007812757
 GameObject:
@@ -523,8 +523,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -430, y: 200}
+  m_AnchoredPosition: {x: 0, y: -100}
+  m_SizeDelta: {x: -430, y: 140}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &1428775374066770825
 CanvasRenderer:
@@ -1287,11 +1287,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -140
+      value: -130
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -120
+      value: -170
       objectReference: {fileID: 0}
     - target: {fileID: 3425990940567372585, guid: f36ba4bd57bb7f347a6347a511d41390, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

@@ -49,7 +49,6 @@ public class CameraMovement : MonoBehaviour
         ApplySquareMove();
     }
 
-    // Apply Velocity
     private void ApplyVelocity()
     {
         cameraMoveVelocity = Vector2.Lerp(cameraMoveVelocity, new Vector2(playerInputHandler.CameraMoveInput.x, playerInputHandler.CameraMoveInput.y * GetVerticalMoveMultiplier()), cameraMoveLerpSpeed * Time.deltaTime);
@@ -64,6 +63,7 @@ public class CameraMovement : MonoBehaviour
     {
         float multiplier = 1f;
         float cameraHeight = math.abs(transform.position.y);
+
         if (transform.position.y > buildingsManager.CurrentCityHeight && cameraMoveVelocity.y > 0f)
             multiplier = 1f - math.clamp((cameraHeight - buildingsManager.CurrentCityHeight) / cameraTopBoundaryPadding, 0f, 1f);
         else if (transform.position.y < 0f && cameraMoveVelocity.y < 0f)
@@ -72,12 +72,11 @@ public class CameraMovement : MonoBehaviour
         return multiplier;
     }
 
-    // Return Vertical Position
     private void ReturnVerticalPosition()
     {
         if (playerInputHandler.cameraMoveIA.IsPressed()) return;
 
-        Vector3 cameraPosition = transform.position;
+        var cameraPosition = transform.position;
         float targetHeight = transform.position.y > buildingsManager.CurrentCityHeight ? buildingsManager.CurrentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
 
         transform.position = math.lerp(transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
@@ -88,7 +87,7 @@ public class CameraMovement : MonoBehaviour
         transform.position += new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime;
         transform.position = new Vector3(transform.position.x, math.clamp(transform.position.y, -cameraBottomBoundaryPadding, buildingsManager.CurrentCityHeight + cameraTopBoundaryPadding), transform.position.z);
 
-        Vector3 eulers = transform.eulerAngles;
+        var eulers = transform.eulerAngles;
         eulers.y += cameraMoveVelocity.x * Time.deltaTime;
         transform.eulerAngles = eulers;
     }
@@ -100,7 +99,6 @@ public class CameraMovement : MonoBehaviour
         transform.position = new Vector3(pos.x, transform.position.y, pos.y);
     }
 
-    // Square Move
     private Vector2 GetSquareLoop(float t, float fullSize, float corner)
     {
         t = Mathf.Repeat(t, 1f);
@@ -135,15 +133,12 @@ public class CameraMovement : MonoBehaviour
     {
         if (InputStateManager.Instance.isGameplayInputBlocked) return false;
         if (playerInputHandler.CameraMoveInput.sqrMagnitude <= 0) return false;
-        if (InDeadZone()) return false;
 
-        if (!inDeadZone) {
-            Vector2 resolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
-            float startScreenPercent = (startPressPosition / resolution).sqrMagnitude;
-            float currentScreenPercent = (playerInputHandler.primaryInteractionPosition / resolution).sqrMagnitude;
-
-            if (Mathf.Abs(startScreenPercent - currentScreenPercent) < movingThreshold) {
-                inDeadZone = true;
+        if (inDeadZone) {
+            if (CheckIfExitedDeadZone()) {
+                inDeadZone = false;
+            }
+            else {
                 return false;
             }
         }
@@ -151,23 +146,16 @@ public class CameraMovement : MonoBehaviour
         return true;
     }
 
-    private bool InDeadZone()
+    private bool CheckIfExitedDeadZone()
     {
-        if (!playerInputHandler.isPrimaryInteractionPressed) return false;
-        if (!inDeadZone) return false;
+        if (!playerInputHandler.isPrimaryInteractionPressed) return true;
 
-        Vector2 delta = playerInputHandler.primaryInteractionPosition - startPressPosition;
-        Vector2 normalizedDelta = new Vector2(delta.x / Screen.width, delta.y / Screen.height);
+        var delta = playerInputHandler.primaryInteractionPosition - startPressPosition;
+        var normalizedDelta = new Vector2(delta.x / Screen.width, delta.y / Screen.height);
 
-        if (normalizedDelta.sqrMagnitude >= movingThreshold) {
-            inDeadZone = false;
-            return false;
-        }
-
-        return true;
+        return normalizedDelta.sqrMagnitude >= movingThreshold;
     }
 
-    // Events
     private void OnPrimaryInteractionPressed()
     {
         startPressPosition = playerInputHandler.primaryInteractionPosition;

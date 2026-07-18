@@ -11,6 +11,7 @@ public class YandexStickyBannerAds : BannerAds
 
     private AdPosition lastAdPosition = AdPosition.BottomCenter;
     private Coroutine retryCoroutine;
+    private bool isAdEnabled = false;
 
     private void Start()
     {
@@ -19,8 +20,9 @@ public class YandexStickyBannerAds : BannerAds
 
     private void OnDestroy()
     {
-        HideAd();
-        CancelInvoke();
+        isAdEnabled = false;
+        CleanUpBanner();
+        if (retryCoroutine != null) StopCoroutine(retryCoroutine);
     }
 
     public override void ShowAd()
@@ -30,17 +32,31 @@ public class YandexStickyBannerAds : BannerAds
 
     public override void ShowAd(AdPosition adPosition)
     {
+        isAdEnabled = true;
+
+        if (retryCoroutine != null) {
+            StopCoroutine(retryCoroutine);
+            retryCoroutine = null;
+        }
+
         HideAd();
         RequestBanner(adPosition);
     }
 
     public override void HideAd()
     {
+        isAdEnabled = false;
+
         if (retryCoroutine != null) {
             StopCoroutine(retryCoroutine);
             retryCoroutine = null;
         }
 
+        CleanUpBanner();
+    }
+
+    private void CleanUpBanner()
+    {
         if (banner == null) return;
 
         banner.OnAdLoaded -= HandleAdLoaded;
@@ -48,7 +64,6 @@ public class YandexStickyBannerAds : BannerAds
         banner.OnAdClicked -= HandleAdClicked;
         banner.OnImpression -= HandleImpression;
 
-        banner.Hide();
         banner.Destroy();
         banner = null;
     }
@@ -61,6 +76,8 @@ public class YandexStickyBannerAds : BannerAds
 
     private void RequestBanner(AdPosition adPosition)
     {
+        if (!isAdEnabled) return;
+
         try {
             var bannerSize = BannerAdSize.Sticky(GetScreenWidthDp());
             banner = new Banner(bannerSize, adPosition);
@@ -81,17 +98,21 @@ public class YandexStickyBannerAds : BannerAds
 
     private void HandleAdLoaded(object sender, EventArgs args)
     {
+        if (!isAdEnabled) {
+            CleanUpBanner();
+            return;
+        }
+
         if (banner != null) {
             banner.Show();
-        }
-        else {
-            Debug.LogError("Banner is null in HandleAdLoaded");
         }
     }
 
     private void HandleAdFailedToLoad(object sender, AdFailureEventArgs args)
     {
         Debug.Log($"Banner AdFailedToLoad: {args.Message}");
+
+        if (!isAdEnabled) return;
 
         if (retryCoroutine != null) {
             StopCoroutine(retryCoroutine);
@@ -100,14 +121,15 @@ public class YandexStickyBannerAds : BannerAds
         retryCoroutine = StartCoroutine(RequestBannerDelay(lastAdPosition));
     }
 
-    private void HandleLeftApplication(object sender, EventArgs args)
+    private IEnumerator RequestBannerDelay(AdPosition adPosition)
     {
-        Debug.Log("Banner LeftApplication");
-    }
+        yield return new WaitForSeconds(retryDelay);
 
-    private void HandleReturnedToApplication(object sender, EventArgs args)
-    {
-        Debug.Log("Banner ReturnedToApplication");
+        if (isAdEnabled && banner == null) {
+            RequestBanner(adPosition);
+        }
+
+        retryCoroutine = null;
     }
 
     private void HandleAdClicked(object sender, EventArgs args)
@@ -117,18 +139,6 @@ public class YandexStickyBannerAds : BannerAds
 
     private void HandleImpression(object sender, ImpressionData impressionData)
     {
-        var data = impressionData == null ? "null" : impressionData.rawData;
-        Debug.Log($"Banner Impression: {data}");
-    }
-    
-    private IEnumerator RequestBannerDelay(AdPosition adPosition)
-    {
-        yield return new WaitForSeconds(retryDelay);
-
-        if (banner == null) {
-            RequestBanner(adPosition);
-        }
-
-        retryCoroutine = null;
+        Debug.Log("Banner Impression");
     }
 }

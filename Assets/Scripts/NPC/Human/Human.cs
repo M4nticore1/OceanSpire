@@ -434,8 +434,14 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         var ridingBoat = boatRider.RidingBoat;
         if (!ridingBoat) return false;
-        if (!ridingBoat.DockPoint) return false;
-        if (ridingBoat.CurrentStateEnum == BoatStateEnum.MovingToDock) return false;
+
+        var dockPoint = ridingBoat.DockPoint;
+        if (!dockPoint) return false;
+
+        var boatState = ridingBoat.CurrentStateEnum;
+        if (boatState == BoatStateEnum.MovingToDock) return false;
+        if (boatState == BoatStateEnum.Idle && ridingBoat.Movement.IsReachedPosition(dockPoint.DockTransform.position)) return false;
+
         if (boatRider.IsExitingBoat) return false;
 
         return true;

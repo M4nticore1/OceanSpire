@@ -19,6 +19,11 @@ public class InventoryPanel : MonoBehaviour
 
     private bool isSubscribed = false;
 
+    private void OnDestroy()
+    {
+        TryUnsubscribe(inventory);
+    }
+
     private void TrySubscribe(Inventory inventory)
     {
         if (isSubscribed) return;
@@ -50,9 +55,9 @@ public class InventoryPanel : MonoBehaviour
             return;
         }
 
-        TryUnsubscribe(inventory);
-
+        TryUnsubscribe(this.inventory);
         this.inventory = inventory;
+        TrySubscribe(inventory);
 
         RemoveWidgets();
         CreateWidgets();
@@ -61,8 +66,6 @@ public class InventoryPanel : MonoBehaviour
         UpdateWeightText();
         UpdateEmptyTextActive();
         ResetScroll();
-
-        TrySubscribe(inventory);
     }
 
     private void CreateWidgets()
@@ -105,9 +108,12 @@ public class InventoryPanel : MonoBehaviour
     {
         if (item == null) return;
 
-        var widget = spawnedResourceWidgets[item.Definition];
+        var definition = item.Definition;
+        if (!spawnedResourceWidgets.ContainsKey(definition)) return;
+
+        var widget = spawnedResourceWidgets[definition];
         Destroy(widget.gameObject);
-        spawnedResourceWidgets.Remove(item.Definition);
+        spawnedResourceWidgets.Remove(definition);
     }
 
     private void UpdateWeightText()

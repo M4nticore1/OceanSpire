@@ -8,6 +8,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
     [SerializeField] private DailyTasksManager dailyTasksManager;
     [SerializeField] private DailyTaskWidget dailyTaskWidgetPrefab;
     [SerializeField] private LayoutGroup tasksLayoutGroup;
+    [SerializeField] private CustomButton closeButton;
     [SerializeField] private TextLocalizer updateTasksText;
 
     private List<DailyTaskWidget> widgets = new();
@@ -20,12 +21,16 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
     private void OnEnable()
     {
+        closeButton.OnReleased.AddListener(OnCloseButtonClicked);
+
         dailyTasksManager.SetTasksViewed(true);
         TrySubscribe();
     }
 
     private void OnDisable()
     {
+        closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
+
         TryUnsubscribe();
     }
 
@@ -114,6 +119,11 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
     {
         RemoveTaskWidgets();
         CreateTaskWidgets();
+    }
+
+    private void OnCloseButtonClicked()
+    {
+        Hide();
     }
 
     private void OnTasksViewedChanged(bool value)
