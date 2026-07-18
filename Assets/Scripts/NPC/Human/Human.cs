@@ -433,10 +433,9 @@ public abstract class Human : Creature, IClickable, ILocalizable
     public virtual bool ShouldBoatMoveToDock()
     {
         var ridingBoat = boatRider.RidingBoat;
-        if (ridingBoat == null) return false;
-        if (ridingBoat.DockPoint == null) return false;
+        if (!ridingBoat) return false;
+        if (!ridingBoat.DockPoint) return false;
         if (ridingBoat.CurrentStateEnum == BoatStateEnum.MovingToDock) return false;
-        if (ridingBoat.CurrentStateEnum == BoatStateEnum.Idle) return false;
         if (boatRider.IsExitingBoat) return false;
 
         return true;

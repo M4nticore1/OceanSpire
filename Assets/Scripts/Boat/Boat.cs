@@ -20,10 +20,10 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     [SerializeField] private BoatDefinition boatData;
     public BoatDefinition Definition => boatData;
 
-    public BoatStateEnum CurrentStateEnum { get; private set; }
+    [field: SerializeField] public BoatStateEnum CurrentStateEnum { get; private set; }
     public BoatState CurrentState { get; private set; }
 
-    public HumanStatusEnum CurrentStatus { get; private set; }
+    [field: SerializeField] public HumanStatusEnum CurrentStatus { get; private set; }
 
     public BoatRider CurrentRider;
     public BoatRider TargetRider;
@@ -46,7 +46,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     [SerializeField] private BoatShaker boatShake;
 
     // Dock
-    public BoatDockPoint DockPoint;
+    [field: SerializeField] public BoatDockPoint DockPoint { get; private set; }
     public SwimmingDriftingLoot TargetDriftingLoot { get; private set; }
 
     // Weight
