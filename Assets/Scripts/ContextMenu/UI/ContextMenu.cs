@@ -33,13 +33,13 @@ public class ContextMenu : UIBehaviour
 
     private void Open()
     {
-        slidePanel.Open();
+        slidePanel.Show();
         onOpened?.Invoke();
     }
 
     private void Close()
     {
-        slidePanel.Close();
+        slidePanel.Hide();
     }
 
     private void SetSelectedTarget(ContextMenuTarget target)

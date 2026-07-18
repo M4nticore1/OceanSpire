@@ -1,7 +1,8 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InformationMenu : MonoBehaviour
+public class InformationMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private TextLocalizer nameText;
@@ -11,6 +12,9 @@ public class InformationMenu : MonoBehaviour
 
     private Building building;
 
+    public event Action OnShown;
+    public event Action OnHidden;
+
     private void OnEnable()
     {
         closeButton.OnReleased.AddListener(OnCloseButtonClicked);
@@ -19,6 +23,11 @@ public class InformationMenu : MonoBehaviour
     private void OnDisable()
     {
         closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
+    }
+
+    public void Show()
+    {
+        OnShown?.Invoke();
     }
 
     public void Show(Building building)
@@ -33,16 +42,20 @@ public class InformationMenu : MonoBehaviour
         if (!building.Definition.DescriptionLocalizationItem) return;
 
         this.building = building;
-        slidePanel.Open();
+        slidePanel.Show();
 
         UpdateNameText();
         UpdateDescriptionText();
         UpdateImage();
+
+        Show();
     }
 
     public void Hide()
     {
-        slidePanel.Close();
+        slidePanel.Hide();
+
+        OnHidden?.Invoke();
     }
 
     private void UpdateNameText()

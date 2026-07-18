@@ -8,7 +8,7 @@ public class CompleteConstructionContextElement : ContextElement
 
     protected override void OnButtonClicked()
     {
-        speedUpConstructionMenu.Open(building);
+        speedUpConstructionMenu.Show(building);
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)

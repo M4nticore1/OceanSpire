@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class WandererAdmissionMenu : MonoBehaviour
+public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 {
     [Header("Main")]
     [SerializeField] private CityStorage cityStorage;
@@ -16,9 +17,12 @@ public class WandererAdmissionMenu : MonoBehaviour
     private bool isOpened = false;
     private Wanderer selectedWanderer;
 
+    public event Action OnShown;
+    public event Action OnHidden;
+
     private void OnEnable()
     {
-        slidePanel.OnClosed += OnClosed;
+        slidePanel.OnHidden += OnClosed;
         acceptButton.OnReleased.AddListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.AddListener(OnRejectButtonClicked);
 
@@ -32,7 +36,7 @@ public class WandererAdmissionMenu : MonoBehaviour
 
     private void OnDisable()
     {
-        slidePanel.OnClosed -= OnClosed;
+        slidePanel.OnHidden -= OnClosed;
         acceptButton.OnReleased.RemoveListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.RemoveListener(OnRejectButtonClicked);
 
@@ -42,7 +46,12 @@ public class WandererAdmissionMenu : MonoBehaviour
         Boat.OnBoatDeselected -= OnBoatDeselected;
     }
 
-    public void Open(Wanderer wanderer)
+    public void Show()
+    {
+        OnShown?.Invoke();
+    }
+
+    public void Show(Wanderer wanderer)
     {
         if (!wanderer) {
             Debug.LogError("Wanderer is not valid");
@@ -50,19 +59,23 @@ public class WandererAdmissionMenu : MonoBehaviour
         }
 
         isOpened = true;
-        slidePanel.Open();
+        slidePanel.Show();
         selectedWanderer = wanderer;
 
         UpdateWandererNameText();
         UpdateSkillsPanel();
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);
+
+        Show();
     }
 
-    private void Close()
+    public void Hide()
     {
-        slidePanel.Close();
+        slidePanel.Hide();
         OnClosed();
+
+        OnHidden?.Invoke();
     }
 
     private void OnClosed()
@@ -93,13 +106,13 @@ public class WandererAdmissionMenu : MonoBehaviour
     private void OnAcceptButtonClicked()
     {
         WandererAdmissionSystem.AcceptWanderer(selectedWanderer);
-        Close();
+        Hide();
     }
 
     private void OnRejectButtonClicked()
     {
         WandererAdmissionSystem.RejectWanderer(selectedWanderer);
-        Close();
+        Hide();
     }
 
     private void OnHumanDied(Human human)
@@ -119,13 +132,13 @@ public class WandererAdmissionMenu : MonoBehaviour
 
         if (wanderer.IsRejected) return;
 
-        Open(wanderer);
+        Show(wanderer);
     }
 
     private void OnBoatDeselected(Boat boat)
     {
         if (selectedWanderer) return;
 
-        Close();
+        Hide();
     }
 }

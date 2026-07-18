@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class BuilderEnergyMenu : MonoBehaviour
+public class BuilderEnergyMenu : MonoBehaviour, IOpenable
 {
     [Header("Main")]
     [SerializeField] private BuilderEnergyManager constructionEnergyManager;
@@ -13,15 +14,18 @@ public class BuilderEnergyMenu : MonoBehaviour
 
     private bool isShowed;
 
+    public event Action OnShown;
+    public event Action OnHidden;
+
     private void OnEnable()
     {
-        slidePanel.OnClosed += OnHide;
+        slidePanel.OnHidden += OnHide;
         closeButton.OnReleased.AddListener(OnCloseButtonClicked);
     }
 
     private void OnDisable()
     {
-        slidePanel.OnClosed -= OnHide;
+        slidePanel.OnHidden -= OnHide;
         closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
     }
 
@@ -41,13 +45,17 @@ public class BuilderEnergyMenu : MonoBehaviour
     public void Show()
     {
         isShowed = true;
-        slidePanel.Open();
+        slidePanel.Show();
         InputStateManager.Instance.SetGameplayInputBlocked(true);
+
+        OnShown?.Invoke();
     }
 
     public void Hide()
     {
-        slidePanel.Close();
+        slidePanel.Hide();
+
+        OnHidden?.Invoke();
     }
 
     private void OnHide()

@@ -45,8 +45,10 @@ public class DriftingLootManager : MonoBehaviour
 
     public void Init(DriftingLootSystemData driftingLootData)
     {
-        if (driftingLootData == null || driftingLootList || driftingLootList.LootContainers == null) {
-            Debug.LogError($"[{nameof(DriftingLootManager)}] Data or LootContainersList or its Containers are not assigned!");
+        if (!driftingLootList) return;
+
+        if (driftingLootData == null) {
+            Debug.LogError($"[{nameof(DriftingLootManager)}] Drifting Loot Data are not assigned!");
             Init();
             return;
         }

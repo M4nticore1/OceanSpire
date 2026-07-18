@@ -21,16 +21,16 @@ public abstract class AdRewardMenu : MonoBehaviour
     {
         RewardedAdsManager.OnRewardReceived += OnRewardReceived;
         watchButton.OnReleased.AddListener(OnWatchAdButtonClicked);
-        slidePanel.OnOpened += OnOpen;
-        slidePanel.OnClosed += OnClose;
+        slidePanel.OnShown += OnOpen;
+        slidePanel.OnHidden += OnClose;
     }
 
     protected virtual void OnDisable()
     {
         RewardedAdsManager.OnRewardReceived -= OnRewardReceived;
         watchButton.OnReleased.RemoveListener(OnWatchAdButtonClicked);
-        slidePanel.OnOpened -= OnOpen;
-        slidePanel.OnClosed -= OnClose;
+        slidePanel.OnShown -= OnOpen;
+        slidePanel.OnHidden -= OnClose;
     }
 
     //private void Update()
@@ -48,7 +48,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     public void Open()
     {
         OnOpen();
-        slidePanel.Open();
+        slidePanel.Show();
         AssignImage();
         AssignDescryption();
 
@@ -59,7 +59,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     public void Close()
     {
         OnClose();
-        slidePanel.Close();
+        slidePanel.Hide();
 
         InputStateManager.Instance.SetGameplayInputBlocked(false);
         isOpened = false;

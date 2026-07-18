@@ -1,7 +1,7 @@
+using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class EvictMenu : UIBehaviour
+public class EvictMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] EvictManager evictManager;
 
@@ -15,29 +15,30 @@ public class EvictMenu : UIBehaviour
 
     private Citizen SelectedCitizen;
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
+    public event Action OnShown;
+    public event Action OnHidden;
 
+    private void OnEnable()
+    {
         evictButton.OnReleased.AddListener(OnEvictButtonClicked);
         closeButton.OnReleased.AddListener(OnCloseButtonClicked);
         Human.OnHumanDied += OnHumanDied;
     }
 
-    protected override void OnDisable()
+    private void OnDisable()
     {
-        base.OnDisable();
-
         evictButton.OnReleased.RemoveListener(OnEvictButtonClicked);
         closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
         Human.OnHumanDied -= OnHumanDied;
     }
 
-    public void Open()
+    public void Show()
     {
-        slidePanel.Open();
+        slidePanel.Show();
 
         var citizen = SelectManager.Instance.GetSelectedHuman() as Citizen;
+        if (!citizen) return;
+
         SelectedCitizen = citizen;
 
         UpdateCitizenName(citizen);
@@ -45,12 +46,16 @@ public class EvictMenu : UIBehaviour
         UpdateEvictButtonEnabled(citizen);
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);
+
+        OnShown?.Invoke();
     }
 
-    private void Close()
+    public void Hide()
     {
-        slidePanel.Close();
+        slidePanel.Hide();
         InputStateManager.Instance.SetGameplayInputBlocked(false);
+
+        OnHidden?.Invoke();
     }
 
     private void UpdateCitizenName(Citizen citizen)
@@ -72,12 +77,12 @@ public class EvictMenu : UIBehaviour
     private void OnEvictButtonClicked()
     {
         evictManager.TryEvict(SelectedCitizen);
-        Close();
+        Hide();
     }
 
     private void OnCloseButtonClicked()
     {
-        Close();
+        Hide();
     }
 
     private void OnHumanDied(Human human)

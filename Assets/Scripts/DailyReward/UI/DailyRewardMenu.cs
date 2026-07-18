@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,9 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     [SerializeField] private TextLocalizer resetTimeText;
 
     private List<DailyRewardWidget> spawnedWidgets = new();
+
+    public event Action OnShown;
+    public event Action OnHidden;
 
     private void OnEnable()
     {
@@ -40,17 +44,21 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
         resetTimeText.UpdateText();
     }
 
-    public void Open()
+    public void Show()
     {
         content.gameObject.SetActive(true);
         dailyRewardManager.SetRewardViewed(true);
         InputStateManager.Instance.SetGameplayInputBlocked(true);
+
+        OnShown?.Invoke();
     }
 
-    public void Close()
+    public void Hide()
     {
         content.gameObject.SetActive(false);
         InputStateManager.Instance.SetGameplayInputBlocked(false);
+
+        OnHidden?.Invoke();
     }
 
     private void CreateRewardWidgets()
@@ -77,12 +85,12 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
 
     private void OnOpenButtonClicked()
     {
-        Open();
+        Show();
     }
 
     private void OnCloseButtonClicked()
     {
-        Close();
+        Hide();
     }
 
     private IEnumerator CreateWidgetsCoroutine()

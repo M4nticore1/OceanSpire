@@ -48,8 +48,9 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
     private Vector2 pressPossition;
     private Vector2 releasePossition;
     private int openedFrame = 0;
-    public event Action OnOpened;
-    public event Action OnClosed;
+
+    public event Action OnShown;
+    public event Action OnHidden;
 
     private void Awake()
     {
@@ -123,7 +124,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         List<RaycastResult> results = new List<RaycastResult>();
         PointerUtils.GetRaycastUIResults(results);
         if (IsClickedOutsideMenu(results)) {
-            Close();
+            Hide();
         }
     }
 
@@ -132,7 +133,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         content = GetComponentsInChildren<Transform>(true).ToList();
     }
 
-    public void Open()
+    public void Show()
     {
         openedPosition = CalculateOpenedPosition();
         targetPosition = openedPosition;
@@ -150,10 +151,11 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
         isOpened = true;
         isMoving = true;
-        OnOpened?.Invoke();
+
+        OnShown?.Invoke();
     }
 
-    public void Close()
+    public void Hide()
     {
         closedPosition = CalculateClosedPosition();
         targetPosition = closedPosition;
@@ -164,7 +166,8 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
         isOpened = false;
         isMoving = true;
-        OnClosed?.Invoke();
+
+        OnHidden?.Invoke();
     }
 
     private void SetMoving(bool value)

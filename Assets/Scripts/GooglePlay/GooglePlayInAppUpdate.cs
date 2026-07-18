@@ -45,6 +45,17 @@ public class GooglePlayInAppUpdate : MonoBehaviour
 #endif
     }
 
+    private void OnApplicationFocus(bool hasFocus)
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+    if (!isInitialized || appUpdateManager == null) return;
+
+    if (hasFocus) {
+        StartCoroutine(DelayedUpdateCheck());
+    }
+#endif
+    }
+
     private void OnDestroy()
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -77,6 +88,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
             isUpdateChecked = true;
             appUpdateInfoResult = appUpdateInfoOperation.GetResult();
 
+
             if (appUpdateInfoResult.UpdateAvailability == UpdateAvailability.UpdateAvailable) {
                 int updatePriority = appUpdateInfoResult.UpdatePriority;
 
@@ -108,36 +120,83 @@ public class GooglePlayInAppUpdate : MonoBehaviour
     private IEnumerator StartFlexibleUpdate()
     {
         isUpdateInProgress = true;
+
+        if (appUpdateInfoResult.AppUpdateStatus == AppUpdateStatus.Downloaded) {
+            yield return StartCoroutine(CompleteFlexibleUpdate());
+            yield break;
+        }
+
         var appUpdateOptions = AppUpdateOptions.FlexibleAppUpdateOptions();
-        var startUpdateRequest = appUpdateManager.StartUpdate(appUpdateInfoResult, appUpdateOptions);
+        AppUpdateRequest startUpdateRequest = null;
 
-        yield return startUpdateRequest;
+        try {
+            startUpdateRequest = appUpdateManager.StartUpdate(appUpdateInfoResult, appUpdateOptions);
+        }
+        catch (System.Exception ex) {
+            Debug.LogError($"[PlayUpdate] Native crash on starting Flexible update: {ex.Message}");
+            isUpdateInProgress = false;
+            yield break;
+        }
 
-        if (startUpdateRequest.Error == AppUpdateErrorCode.NoError) {
+        if (startUpdateRequest == null) {
+            Debug.LogError("[PlayUpdate] Failed to create StartUpdate operation");
+            isUpdateInProgress = false;
+            yield break;
+        }
+
+        while (!startUpdateRequest.IsDone) {
+            if (startUpdateRequest.Error != AppUpdateErrorCode.NoError) {
+                Debug.LogError($"[PlayUpdate] Error during download process: {startUpdateRequest.Error}");
+                isUpdateInProgress = false;
+                yield break;
+            }
+
+            float progress = startUpdateRequest.DownloadProgress;
+
+            yield return null;
+        }
+
+        if (startUpdateRequest.Status == AppUpdateStatus.Downloaded) {
             yield return StartCoroutine(CompleteFlexibleUpdate());
         }
         else {
-            Debug.LogError($"[PlayUpdate] Flexible update failed: {startUpdateRequest.Error}");
+            Debug.LogError($"[PlayUpdate] Download finished with unexpected status: {startUpdateRequest.Status}");
             isUpdateInProgress = false;
         }
     }
 
     private IEnumerator CompleteFlexibleUpdate()
     {
+        if (appUpdateInfoResult.AppUpdateStatus != AppUpdateStatus.Downloaded) {
+            Debug.LogWarning("Update not downloaded yet");
+            isUpdateInProgress = false;
+            yield break;
+        }
+
         var completeUpdateOperation = appUpdateManager.CompleteUpdate();
         yield return completeUpdateOperation;
 
         if (completeUpdateOperation.Error != AppUpdateErrorCode.NoError) {
-            Debug.LogError($"[PlayUpdate] CompleteUpdate failed: {completeUpdateOperation.Error}");
-            isUpdateInProgress = false;
+            Debug.LogError($"Complete update failed: {completeUpdateOperation.Error}");
         }
+
+        isUpdateInProgress = false;
     }
 
     private IEnumerator StartImmediateUpdate()
     {
         isUpdateInProgress = true;
         var appUpdateOptions = AppUpdateOptions.ImmediateAppUpdateOptions();
-        var startUpdateRequest = appUpdateManager.StartUpdate(appUpdateInfoResult, appUpdateOptions);
+        AppUpdateRequest startUpdateRequest = null;
+
+        try {
+            startUpdateRequest = appUpdateManager.StartUpdate(appUpdateInfoResult, appUpdateOptions);
+        }
+        catch (AndroidJavaException ex) {
+            Debug.LogError($"[PlayUpdate] Native crah Google Play Core at the start: {ex.Message}");
+            isUpdateInProgress = false;
+            yield break;
+        }
 
         yield return startUpdateRequest;
 

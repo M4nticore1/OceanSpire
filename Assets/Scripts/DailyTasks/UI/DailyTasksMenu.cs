@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +7,6 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private DailyTasksManager dailyTasksManager;
     [SerializeField] private DailyTaskWidget dailyTaskWidgetPrefab;
-    [SerializeField] private CustomButton openButton;
     [SerializeField] private LayoutGroup tasksLayoutGroup;
     [SerializeField] private TextLocalizer updateTasksText;
 
@@ -14,6 +14,9 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
     private bool isSubscribed = false;
     private bool areWidgetsSpawned = false;
+
+    public event Action OnShown;
+    public event Action OnHidden;
 
     private void OnEnable()
     {
@@ -31,20 +34,22 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         updateTasksText.UpdateText();
     }
 
-    public void Open()
+    public void Show()
     {
         gameObject.SetActive(true);
-
         TryRemoveWidgets();
         TryCreateWidgets();
-
         InputStateManager.Instance.SetGameplayInputBlocked(true);
+
+        OnShown?.Invoke();
     }
 
-    public void Close()
+    public void Hide()
     {
         gameObject.SetActive(false);
         InputStateManager.Instance.SetGameplayInputBlocked(false);
+
+        OnHidden?.Invoke();
     }
 
     private void TryCreateWidgets()
@@ -92,7 +97,6 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
         dailyTasksManager.OnTasksInited += OnTasksInited;
         dailyTasksManager.OnTasksViewedChanged += OnTasksViewedChanged;
-        openButton.OnReleased.AddListener(OnOpenButtonClicked);
 
         isSubscribed = true;
     }
@@ -102,14 +106,8 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         if (!isSubscribed) return;
 
         dailyTasksManager.OnTasksViewedChanged -= OnTasksViewedChanged;
-        openButton.OnReleased.RemoveListener(OnOpenButtonClicked);
 
         isSubscribed = false;
-    }
-
-    private void OnOpenButtonClicked()
-    {
-        Open();
     }
 
     private void OnTasksInited()

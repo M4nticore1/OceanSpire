@@ -81,7 +81,8 @@ public class WorldSavesMenu : MonoBehaviour
     private void RemoveExtraSaveSlots()
     {
         var saves = WorldSaveSystem.GetAllSaveData();
-        var extraSlotsCount = Mathf.Abs(spawnedWidgets.Count - saves.Length - 1);
+        var extraSlotsCount = Mathf.Abs(spawnedWidgets.Count - 1 - (saves != null ? saves.Length : 0));
+        extraSlotsCount = Mathf.Clamp(extraSlotsCount, 0, extraSlotsCount);
 
         for (int i = 0; i < extraSlotsCount; i++) {
             var index = spawnedWidgets.Count - i - 1;

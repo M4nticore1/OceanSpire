@@ -142,7 +142,9 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
     private void TryDestroy()
     {
-        if (!movement.IsDestinationReached()) return;
+        var currentPosition = new Vector3(transform.position.x, 0, transform.position.z);
+        var targetPosition = new Vector3(movement.TargetPosition.x, 0, movement.TargetPosition.z);
+        if (Vector3.Distance(currentPosition, targetPosition) > movement.NavAgent.stoppingDistance) return;
 
         Destroy(gameObject);
     }

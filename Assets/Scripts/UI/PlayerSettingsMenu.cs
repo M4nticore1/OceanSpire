@@ -1,8 +1,12 @@
+using System;
 using UnityEngine;
 
-public class PlayerSettingsMenu : MonoBehaviour
+public class PlayerSettingsMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private CustomButton closeButton;
+
+    public event Action OnShown;
+    public event Action OnHidden;
 
     private void OnEnable()
     {
@@ -18,12 +22,16 @@ public class PlayerSettingsMenu : MonoBehaviour
     {
         gameObject.SetActive(true);
         InputStateManager.Instance.SetGameplayInputBlocked(true);
+
+        OnShown?.Invoke();
     }
 
     public void Hide()
     {
         gameObject.SetActive(false);
         InputStateManager.Instance.SetGameplayInputBlocked(false);
+
+        OnHidden?.Invoke();
     }
 
     private void OnCloseButtonClicked()

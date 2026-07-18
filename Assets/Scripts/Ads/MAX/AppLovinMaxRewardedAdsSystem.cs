@@ -23,6 +23,11 @@ public class AppLovinMaxRewardedAdsSystem : AdsSystem
         }
     }
 
+    public override void HideAd()
+    {
+        
+    }
+
     private void InitializeRewardedAds()
     {
         // Attach callback

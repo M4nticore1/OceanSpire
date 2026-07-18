@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class BuildingMenu : UIBehaviour
+public abstract class BuildingMenu : UIBehaviour, IOpenable
 {
     [Header("Building Menu")]
     [SerializeField] private ResourceWidget resourceWidgetPrefab;
@@ -28,6 +29,9 @@ public abstract class BuildingMenu : UIBehaviour
 
     protected Building building { get; private set; }
     private bool isSubscribed = false;
+
+    public event Action OnShown;
+    public event Action OnHidden;
 
     protected override void OnEnable()
     {
@@ -57,7 +61,7 @@ public abstract class BuildingMenu : UIBehaviour
 
         actionButton.OnReleased.AddListener(OnClickedActionButton);
         closeButton.OnReleased.AddListener(OnClickedCloseButton);
-        slidePanel.OnClosed += OnClosed;
+        slidePanel.OnHidden += OnClosed;
 
         isSubscribed = true;
         return true;
@@ -69,23 +73,28 @@ public abstract class BuildingMenu : UIBehaviour
 
         actionButton.OnReleased.RemoveListener(OnClickedActionButton);
         closeButton.OnReleased.RemoveListener(OnClickedCloseButton);
-        slidePanel.OnClosed -= OnClosed;
+        slidePanel.OnHidden -= OnClosed;
 
         isSubscribed = false;
         return true;
+    }
+
+    public void Show()
+    {
+        OnShown?.Invoke();
     }
 
     // IOpenable
     public void Open(Building building)
     {
         if (!building) {
-            Debug.Log($"Building not found at {name}");
+            Debug.Log($"[{nameof(BuildingMenu)}] Building is not valid!");
             return;
         }
 
         this.building = building;
 
-        slidePanel.Open();
+        slidePanel.Show();
         OnOpened(building);
 
         ClearWidgets();
@@ -94,12 +103,16 @@ public abstract class BuildingMenu : UIBehaviour
         UpdateBuildButtonEnabled();
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);
+
+        Show();
     }
 
-    public void Close()
+    public void Hide()
     {
-        slidePanel.Close();
+        slidePanel.Hide();
         OnClosed();
+
+        OnHidden?.Invoke();
     }
 
     protected abstract void OnOpened(Building building);
@@ -153,11 +166,11 @@ public abstract class BuildingMenu : UIBehaviour
     private void OnClickedActionButton()
     {
         Action();
-        Close();
+        Hide();
     }
 
     private void OnClickedCloseButton()
     {
-        Close();
+        Hide();
     }
 }

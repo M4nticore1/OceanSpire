@@ -34,6 +34,7 @@ public class ToPierContextElement : ContextElement
 
         if (boat.CurrentStateEnum == BoatStateEnum.Idle) return false;
         if (boat.CurrentStateEnum == BoatStateEnum.MovingToDock) return false;
+        if (boat.CurrentStateEnum == BoatStateEnum.UnloadingLoot) return false;
 
         return true;
     }

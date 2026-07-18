@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,9 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     [SerializeField] private CustomButton completeButton;
     [SerializeField] private CustomButton closeMenuButton;
     private Building building;
+
+    public event Action OnShown;
+    public event Action OnHidden;
 
     private void OnEnable()
     {
@@ -30,7 +34,12 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         constructionTime.UpdateText();
     }
 
-    public void Open(Building building)
+    public void Show()
+    {
+        Show(null);
+    }
+
+    public void Show(Building building)
     {
         if (!building) {
             Debug.LogError("building is null to open Complete Construction Menu");
@@ -46,20 +55,17 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         buildingImage.sprite = building.UpgradeComponent.IsUnderUpgrade ? building.NextLevelDefinition.BuildingThumb : building.LevelDefinition.BuildingThumb;
 
         this.building = building;
-
         InputStateManager.Instance.SetGameplayInputBlocked(true);
+
+        OnShown?.Invoke();
     }
 
-    public void Open()
-    {
-        Open(null);
-    }
-
-    public void Close()
+    public void Hide()
     {
         gameObject.SetActive(false);
-
         InputStateManager.Instance.SetGameplayInputBlocked(false);
+
+        OnHidden?.Invoke();
     }
 
     private void OnCompleteButtonReleased()
@@ -71,13 +77,13 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     private void OnCloseMenuButtonClicked()
     {
-        Close();
+        Hide();
     }
 
     private void OnBuildingConstructionFinished(Building building)
     {
         if (building != this.building) return;
 
-        Close();
+        Hide();
     }
 }

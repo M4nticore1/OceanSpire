@@ -1,168 +1,133 @@
-/*
- * This file is a part of the Yandex Advertising Network
- *
- * Version for Android (C) 2023 YANDEX
- *
- * You may not use this file except in compliance with the License.
- * You may obtain a copy of the License at https://legal.yandex.com/partner_ch/
- */
-
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using YandexMobileAds;
 using YandexMobileAds.Base;
 
 public class YandexRewardedAds : AdsSystem
 {
-    private String message = "";
-
     private RewardedAdLoader rewardedAdLoader;
     private RewardedAd rewardedAd;
 
-    public void Awake()
+    private void Awake()
     {
-        this.rewardedAdLoader = new RewardedAdLoader();
-    }
-
-    public void OnGUI()
-    {
-        var fontSize = (int)(0.05f * Math.Min(Screen.width, Screen.height));
-
-        var labelStyle = GUI.skin.GetStyle("label");
-        labelStyle.fontSize = fontSize;
-
-        var buttonStyle = GUI.skin.GetStyle("button");
-        buttonStyle.fontSize = fontSize;
-
-#if UNITY_EDITOR
-        this.message = "Mobile ads SDK is not available in editor. Only Android and iOS environments are supported";
-#else
-            if (GUILayout.Button("Request Rewarded Ad", buttonStyle, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height / 8)))
-            {
-                this.RequestRewardedAd();
-            }
-
-            if (this.rewardedAd != null) {
-                if (GUILayout.Button("Show Rewarded Ad", buttonStyle, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height / 8)))
-                {
-                    this.ShowRewardedAd();
-                }
-            }
-            if (this.rewardedAd != null)
-            {
-                if (GUILayout.Button("Destroy Rewarded Ad", buttonStyle, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height / 8)))
-                {
-                    this.rewardedAd.Destroy();
-                }
-            }
-#endif
-
-        GUILayout.Label(this.message, labelStyle);
+        SetupLoader();
+        RequestRewardedAd();
+        DontDestroyOnLoad(gameObject);
     }
 
     public override void ShowAd()
     {
-        RequestRewardedAd();
+        if (rewardedAd != null) {
+            ShowRewardedAd();
+        }
+        else {
+            Debug.LogWarning("Реклама не готова в памяти. Загружаем заново...");
+            RequestRewardedAd(true);
+        }
     }
 
-    private void RequestRewardedAd()
+    public override void HideAd()
     {
-        this.DisplayMessage("RewardedAd is not ready yet");
-        //Sets COPPA restriction for user age under 13
+
+    }
+
+    private void SetupLoader()
+    {
+        rewardedAdLoader = new RewardedAdLoader();
+    }
+
+    private async void RequestRewardedAd(bool showAfterLoad = false)
+    {
         YandexAds.SetAgeRestricted(true);
 
-        if (this.rewardedAd != null) {
-            this.rewardedAd.Destroy();
+        if (rewardedAd != null) {
+            rewardedAd.Destroy();
+            rewardedAd = null;
         }
 
-        // Replace demo Unit ID 'demo-rewarded-yandex' with actual Ad Unit ID
-        string adUnitId = "demo-rewarded-yandex";
+        try {
+            rewardedAd = await rewardedAdLoader.LoadAd(new AdRequest(AdUnitId.AdUnitId));
 
-        this.rewardedAdLoader.LoadAd(
-            this.CreateAdRequest(adUnitId),
-            onLoaded: this.HandleAdLoaded,
-            onFailed: this.HandleAdFailedToLoad);
-        this.DisplayMessage("Rewarded Ad is requested");
+            rewardedAd.OnAdClicked += HandleAdClicked;
+            rewardedAd.OnAdShown += HandleAdShown;
+            rewardedAd.OnAdFailedToShow += HandleAdFailedToShow;
+            rewardedAd.OnAdImpression += HandleImpression;
+            rewardedAd.OnAdDismissed += HandleAdDismissed;
+            rewardedAd.OnRewarded += HandleRewarded;
+
+            if (showAfterLoad) {
+                ShowRewardedAd();
+            }
+        }
+        catch (AdLoadingException e) {
+            Debug.Log(e);
+            // Ad failed to load with {e.Message}
+            // Attempting to load a new ad from catch block is strongly discouraged.
+        }
     }
 
     private void ShowRewardedAd()
     {
-        if (this.rewardedAd == null) {
-            this.DisplayMessage("RewardedAd is not ready yet");
+        if (rewardedAd == null) {
+            Debug.Log("rewardedAd is not valid");
             return;
         }
 
-        this.rewardedAd.OnAdClicked += this.HandleAdClicked;
-        this.rewardedAd.OnAdShown += this.HandleAdShown;
-        this.rewardedAd.OnAdFailedToShow += this.HandleAdFailedToShow;
-        this.rewardedAd.OnAdImpression += this.HandleImpression;
-        this.rewardedAd.OnAdDismissed += this.HandleAdDismissed;
-        this.rewardedAd.OnRewarded += this.HandleRewarded;
-
-        this.rewardedAd.Show();
+        rewardedAd.Show();
     }
 
-    private AdRequest CreateAdRequest(string adUnitId)
+    public void DestroyRewardedAd()
     {
-        return new AdRequest(adUnitId);
-    }
-
-    private void DisplayMessage(String message)
-    {
-        this.message = message + (this.message.Length == 0 ? "" : "\n--------\n" + this.message);
-        MonoBehaviour.print(message);
-    }
-
-    #region Rewarded Ad callback handlers
-
-    public void HandleAdLoaded(RewardedAd rewardedAd)
-    {
-        this.DisplayMessage("HandleAdLoaded event received");
-        this.rewardedAd = rewardedAd;
-    }
-
-    public void HandleAdFailedToLoad(AdFailedToLoadEventArgs args)
-    {
-        this.DisplayMessage(
-            $"HandleAdFailedToLoad event received with message: {args.Message}");
+        if (rewardedAd != null) {
+            rewardedAd.Destroy();
+            rewardedAd = null;
+        }
     }
 
     public void HandleAdClicked(object sender, EventArgs args)
     {
-        this.DisplayMessage("HandleAdClicked event received");
+        // Called when a click is recorded for rewarded ad.
     }
 
     public void HandleAdShown(object sender, EventArgs args)
     {
-        this.DisplayMessage("HandleAdShown event received");
-    }
+        // Called when an ad is shown.
 
-    public void HandleAdDismissed(object sender, EventArgs args)
-    {
-        this.DisplayMessage("HandleAdDismissed event received");
-
-        this.rewardedAd.Destroy();
-        this.rewardedAd = null;
-    }
-
-    public void HandleImpression(object sender, ImpressionData impressionData)
-    {
-        var data = impressionData == null ? "null" : impressionData.rawData;
-        this.DisplayMessage($"HandleImpression event received with data: {data}");
-    }
-
-    public void HandleRewarded(object sender, Reward args)
-    {
-        this.DisplayMessage($"HandleRewarded event received: amout = {args.amount}, type = {args.type}");
+        HandleAdStarted();
     }
 
     public void HandleAdFailedToShow(object sender, AdFailureEventArgs args)
     {
-        this.DisplayMessage(
-            $"HandleAdFailedToShow event received with message: {args.Message}");
+        // Called when an ad failed to show.
+
+        // Clear resources after an ad dismissed.
+        DestroyRewardedAd();
+
+        // Now you can preload the next rewarded ad.
+        RequestRewardedAd();
     }
 
-    #endregion
+    public void HandleAdDismissed(object sender, EventArgs args)
+    {
+        // Called when an ad is dismissed.
+
+        // Clear resources after an ad dismissed.
+        DestroyRewardedAd();
+
+        // Now you can preload the next rewarded ad.
+        RequestRewardedAd();
+    }
+
+    public void HandleImpression(object sender, ImpressionData impressionData)
+    {
+        // Called when an impression is recorded for an ad.
+    }
+
+    public void HandleRewarded(object sender, Reward args)
+    {
+        // Called when the user can be rewarded with {args.type} and {args.amount}.
+
+        HandleAdCompleted();
+        RequestRewardedAd();
+    }
 }

@@ -1,9 +1,8 @@
 using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class ReviveMenu : UIBehaviour
+public class ReviveMenu : MonoBehaviour, IOpenable
 {
     [Header("Managers")]
     [SerializeField] private ReviveManager reviveManager;
@@ -27,23 +26,22 @@ public class ReviveMenu : UIBehaviour
     private Citizen citizen;
     private bool isOpened = false;
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
+    public event Action OnShown;
+    public event Action OnHidden;
 
+    private void OnEnable()
+    {
         button.OnReleased.AddListener(OnButtonClicked);
-        slidePanel.OnClosed += OnClosed;
+        slidePanel.OnHidden += OnClosed;
         reviveManager.OnRevivesCountChanged += OnRemainingRevivesCountChanged;
         selectManager.OnComponentSelected += OnComponentSelected;
         ReviveComponent.OnGlobalRevived += OnRevived;
     }
 
-    protected override void OnDisable()
+    private void OnDisable()
     {
-        base.OnDisable();
-
         button.OnReleased.RemoveListener(OnButtonClicked);
-        slidePanel.OnClosed -= OnClosed;
+        slidePanel.OnHidden -= OnClosed;
         reviveManager.OnRevivesCountChanged -= OnRemainingRevivesCountChanged;
         selectManager.OnComponentSelected -= OnComponentSelected;
         ReviveComponent.OnGlobalRevived -= OnRevived;
@@ -59,7 +57,12 @@ public class ReviveMenu : UIBehaviour
         UpdateNextChargeTimeText();
     }
 
-    public void Open(Citizen citizen)
+    public void Show()
+    {
+        OnShown?.Invoke();
+    }
+
+    public void Show(Citizen citizen)
     {
         if (!citizen) {
             Debug.LogError($"[{nameof(ReviveMenu)}] Citizen to open revive menu is not valid");
@@ -69,18 +72,22 @@ public class ReviveMenu : UIBehaviour
         this.citizen = citizen;
 
         isOpened = true;
-        slidePanel.Open();
+        slidePanel.Show();
 
         skillsPanel.SetSkills(citizen.SkillsComponent);
         UpdateCitizenNameText();
 
         InputStateManager.Instance.SetGameplayInputBlocked(true);
+
+        Show();
     }
 
-    public void Close()
+    public void Hide()
     {
-        slidePanel.Close();
+        slidePanel.Hide();
         UpdateButtonEnabled();
+
+        OnHidden?.Invoke();
     }
 
     private void OnClosed()
@@ -97,7 +104,7 @@ public class ReviveMenu : UIBehaviour
 
         if (remainingTimeToDie > 0) return;
 
-        Close();
+        Hide();
         UpdateButtonEnabled();
     }
 
@@ -165,7 +172,7 @@ public class ReviveMenu : UIBehaviour
         if (!citizen) return;
         if (reviveComponent != citizen.ReviveComponent) return;
 
-        Close();
+        Hide();
     }
 
     private void OnButtonClicked()
@@ -183,6 +190,6 @@ public class ReviveMenu : UIBehaviour
 
         if (citizen.HealthComponent.IsAlive) return;
 
-        Open(citizen);
+        Show(citizen);
     }
 }

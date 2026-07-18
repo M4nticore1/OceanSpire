@@ -27,7 +27,7 @@ public class DailyRewardChest : MonoBehaviour, IClickable
 
     public void Click()
     {
-        dailyRewardMenu.Open();
+        dailyRewardMenu.Show();
 
         OnClicked?.Invoke();
     }

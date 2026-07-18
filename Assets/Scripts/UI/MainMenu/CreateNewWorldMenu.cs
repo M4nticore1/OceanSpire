@@ -20,7 +20,7 @@ public class CreateNewWorldMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        slidePanel.OnClosed += HandleClosed;
+        slidePanel.OnHidden += HandleClosed;
         inputField.onValueChanged.AddListener(OnWorldNameInputFieldChangeValue);
         createWorldButton.OnReleased.AddListener(OnCreateWorldButtonClicked);
         cancelButton.OnReleased.AddListener(OnCancelButtonClicked);
@@ -28,7 +28,7 @@ public class CreateNewWorldMenu : MonoBehaviour
 
     private void OnDisable()
     {
-        slidePanel.OnClosed -= HandleClosed;
+        slidePanel.OnHidden -= HandleClosed;
         inputField.onValueChanged.RemoveListener(OnWorldNameInputFieldChangeValue);
         createWorldButton.OnReleased.RemoveListener(OnCreateWorldButtonClicked);
         cancelButton.OnReleased.RemoveListener(OnCancelButtonClicked);
@@ -42,7 +42,7 @@ public class CreateNewWorldMenu : MonoBehaviour
     public void Open()
     {
         keyboardOffsetUI.SetClosable(false);
-        slidePanel.Open();
+        slidePanel.Show();
 
         inputField.text = "";
         string name = inputField.text;
@@ -51,7 +51,7 @@ public class CreateNewWorldMenu : MonoBehaviour
 
     public void Close()
     {
-        slidePanel.Close();
+        slidePanel.Hide();
         HandleClosed();
     }
 

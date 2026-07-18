@@ -7,7 +7,7 @@ public class EvictContextElement : ContextElement
 
     protected override void OnButtonClicked()
     {
-        evictMenu.Open();
+        evictMenu.Show();
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)
