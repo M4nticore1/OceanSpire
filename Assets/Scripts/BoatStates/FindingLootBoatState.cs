@@ -8,6 +8,8 @@ public class FindingLootBoatState : BoatState
     public DriftingLoot currentTarget { get; private set; } = null;
     public bool isCollectingLoot { get; private set; } = false;
 
+    DriftingLootFocusManager focusedLootManager = DriftingLootFocusManager.Instance;
+
     public FindingLootBoatState(Boat boat) : base(boat)
     {
 
@@ -15,12 +17,14 @@ public class FindingLootBoatState : BoatState
 
     public override void Enter()
     {
-
+        boat.Movement.StopMoving();
+        boat.RemoveTargetLoot();
+        TryUpdateTarget();
     }
 
     public override void Exit()
     {
-        boat.SetTargetLoot(null);
+
     }
 
     public override void Tick()
@@ -43,30 +47,12 @@ public class FindingLootBoatState : BoatState
 
     private void TryUpdateTarget()
     {
-        var target = DriftingLootFinder.TryFindNearestSwimmingDriftingLoot(DriftingLootManager.Instance, boat.transform.position);
-
-        TrySetTarget(target);
-    }
-
-    private void TrySetTarget(SwimmingDriftingLoot driftingLoot)
-    {
-        if (!ShouldSetTarget(driftingLoot)) return;
-
-        boat.SetTargetLoot(driftingLoot);
-        boat.SetState(BoatStateEnum.MovingToLoot);
-    }
-
-    private bool ShouldSetTarget(SwimmingDriftingLoot driftingLoot)
-    {
-        if (!driftingLoot) return false;
-
-        var swimmingDefinition = driftingLoot.Definition as SwimmingDriftingLootDefinition;
-        if (!swimmingDefinition) return false;
-
-        foreach (var item in swimmingDefinition.LootTable) {
-            if (item.itemData.Weight < boat.Inventory.RemainingWeight) return true;
+        var nearestFocusedLoot = focusedLootManager ? focusedLootManager.GetNearestAvaliableFocusedDriftingLoot(boat) : null;
+        if (nearestFocusedLoot && boat.TrySetTargetLoot(nearestFocusedLoot)) {
+            return;
         }
 
-        return false;
+        var nearestLoot = DriftingLootFinder.TryFindNearestSwimmingDriftingLoot(DriftingLootManager.Instance, boat);
+        boat.TrySetTargetLoot(nearestLoot);
     }
 }

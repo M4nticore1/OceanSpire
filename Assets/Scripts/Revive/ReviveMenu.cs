@@ -180,7 +180,6 @@ public class ReviveMenu : MonoBehaviour, IOpenable
         if (!citizen) return;
 
         reviveManager.CreateRewardAndApply(citizen);
-        rewardedAdsManager.ShowAd();
     }
 
     private void OnComponentSelected(SelectComponent component)

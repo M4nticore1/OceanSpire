@@ -19,7 +19,13 @@ public class UpdateDailyTasksButton : MonoBehaviour
 
     private void OnClicked()
     {
-        rewardedAdsManager.SetReward(new UpdateDailyTasksAdRewardInstance());
+        var reward = new UpdateDailyTasksAdRewardInstance();
+        if (reward == null) {
+            Debug.Log($"[{nameof(UpdateDailyTasksButton)}] Update Daily Tasks Reward is not valid!");
+            return;
+        }
+
+        rewardedAdsManager.SetReward(reward);
         rewardedAdsManager.ShowAd();
     }
 

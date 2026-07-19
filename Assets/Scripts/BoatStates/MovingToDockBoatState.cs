@@ -9,6 +9,8 @@ public class MovingToDockBoatState : BoatState
 
     public override void Enter()
     {
+        boat.RemoveTargetLoot();
+
         if (IsReachedDock()) {
             boat.OnReturnedToDock();
             return;
@@ -46,7 +48,7 @@ public class MovingToDockBoatState : BoatState
         }
         else {
             Debug.LogError($"[{nameof(MovingToDockBoatState)}] Boat Dock is not valid!");
-            boat.Movement.TryStopMoving();
+            boat.Movement.StopMoving();
         }
     }
 

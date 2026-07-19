@@ -47,7 +47,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
     // Dock
     [field: SerializeField] public BoatDockPoint DockPoint { get; private set; }
-    public SwimmingDriftingLoot TargetDriftingLoot { get; private set; }
+    [field: SerializeField] public SwimmingDriftingLoot TargetDriftingLoot { get; private set; }
 
     // Weight
     public float CurrentWeight => inventory.CurrentWeight;
@@ -183,6 +183,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         UpdateClickable();
         UpdateContextMenuTarget();
+        UpdateState();
 
         OnRiderAdded?.Invoke(rider);
     }
@@ -244,12 +245,82 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         }
     }
 
-    public void SetTargetLoot(SwimmingDriftingLoot driftingLoot)
+    // Target Loot
+    public bool TrySetTargetLoot(SwimmingDriftingLoot driftingLoot)
     {
+        if (!ShouldSetTargetLoot(driftingLoot)) return false;
+
+        if (TargetDriftingLoot) {
+            RemoveTargetLoot();
+        }
+
         TargetDriftingLoot = driftingLoot;
+        driftingLoot.SetTargetBoat(this);
+
+        UpdateState();
+        return true;
+    }
+
+    public void RemoveTargetLoot()
+    {
+        if (!TargetDriftingLoot) return;
+
+        var lastLoot = TargetDriftingLoot;
+        TargetDriftingLoot = null;
+        lastLoot.RemoveTargetBoat(this);
+    }
+
+    public bool ShouldSetTargetLoot(SwimmingDriftingLoot driftingLoot)
+    {
+        if (!driftingLoot) return false;
+        //if (driftingLoot == TargetDriftingLoot) return false;
+
+        var targetBoat = driftingLoot.TargetBoat;
+        if (targetBoat && targetBoat != this) return false;
+
+        //if (TargetDriftingLoot && TargetDriftingLoot.FocusComponent.IsFocused && !driftingLoot.FocusComponent.IsFocused) return false;
+
+        var swimmingDefinition = driftingLoot.Definition as SwimmingDriftingLootDefinition;
+        if (!swimmingDefinition) return false;
+
+        if (!movement.CanReachPosition(driftingLoot.transform.position)) return false;
+
+        foreach (var item in swimmingDefinition.LootTable) {
+            if (item.itemData.Weight < Inventory.RemainingWeight) return true;
+        }
+
+        return false;
     }
 
     // State
+    public void UpdateState()
+    {
+        if (ShouldIdle()) {
+            SetState(BoatStateEnum.Idle);
+            return;
+        }
+        if (ShouldMovingToLoot()) {
+            SetState(BoatStateEnum.MovingToLoot);
+            return;
+        }
+        if (ShouldMovingToDock()) {
+            SetState(BoatStateEnum.MovingToDock);
+            return;
+        }
+        if (ShouldUnloadingLoot()) {
+            SetState(BoatStateEnum.UnloadingLoot);
+            return;
+        }
+        if (ShouldFloatAway()) {
+            SetState(BoatStateEnum.FloatingAway);
+            return;
+        }
+        if (ShouldFindLoot()) {
+            SetState(BoatStateEnum.FindingLoot);
+            return;
+        }
+    }
+
     public void SetState(BoatStateEnum state)
     {
         if (CurrentState != null) {
@@ -283,9 +354,6 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
             case BoatStateEnum.FloatingAway:
                 CurrentState = new FloatingAwayBoatState(this);
                 break;
-            case BoatStateEnum.Demolished:
-                CurrentState = new DemolishBoatState(this);
-                break;
         }
 
         CurrentStateEnum = state;
@@ -295,8 +363,16 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         OnBoatStateEntered?.Invoke(this);
     }
 
+    public bool ShouldIdle()
+    {
+        return false;
+    }
+
     public bool ShouldFindLoot()
     {
+        if (CurrentStateEnum == BoatStateEnum.CollectingLoot) return false;
+        if (CurrentState as FindingLootBoatState != null) return false;
+
         if (!CurrentRider) return false;
 
         var citizen = CurrentRider.GetComponent<Citizen>();
@@ -308,6 +384,43 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         var pier = interactBuilding.GetComponent<PierModule>();
         if (!pier) return false;
 
+        return IsEnoughWeight();
+    }
+
+    public bool ShouldCollectLoot()
+    {
+        return false;
+    }
+
+    public bool ShouldMovingToLoot()
+    {
+        if (!TargetDriftingLoot) return false;
+        if (!CurrentRider) return false;
+        if (CurrentStateEnum == BoatStateEnum.CollectingLoot) return false;
+        if (CurrentStateEnum == BoatStateEnum.UnloadingLoot) return false;
+
+        return true;
+    }
+
+    public bool ShouldMovingToDock()
+    {
+        return false;
+    }
+
+    public bool ShouldUnloadingLoot()
+    {
+        return false;
+    }
+
+    public bool ShouldFloatAway()
+    {
+        if (!CurrentRider) return false;
+
+        return false;
+    }
+
+    public bool IsEnoughWeight()
+    {
         return inventory.RemainingWeight > findLootMaxWeightThreshold;
     }
 

@@ -12,6 +12,7 @@ public class IdleBoatState : BoatState
 
     public override void Enter()
     {
+        boat.RemoveTargetLoot();
         boat.Movement.SetAgentEnabled(false);
 
         if (boat.CurrentRider) {

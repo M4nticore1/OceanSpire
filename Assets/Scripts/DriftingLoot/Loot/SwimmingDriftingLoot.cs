@@ -7,6 +7,12 @@ public class SwimmingDriftingLoot : DriftingLoot
 {
     public SwimmingDriftingLootDefinition SwimmingDefinition => Definition as SwimmingDriftingLootDefinition;
 
+    [Header("Swimming")]
+    [SerializeField] private FocusComponent focusComponent;
+    public FocusComponent FocusComponent => focusComponent;
+
+    [field: SerializeField] public Boat TargetBoat {  get; private set; }
+
     public event Action OnCollected;
     public static event Action<SwimmingDriftingLoot> OnGlobalCollected;
 
@@ -25,24 +31,14 @@ public class SwimmingDriftingLoot : DriftingLoot
         base.OnInit(driftingLootData);
 
         var swimmingDriftingLootData = driftingLootData as SwimmingDriftingLootData;
-
         if (swimmingDriftingLootData == null) {
-            Debug.Log($"swimmingDriftingLootData not found at {name}");
+            Debug.Log($"[{nameof(SwimmingDriftingLoot)}] Swimming Drifting Loot Data not found!");
             Destroy(gameObject);
             return;
         }
 
+        focusComponent.SetFocused(swimmingDriftingLootData.Focused);
         DriftingLootManager.Instance.RegisterSwimmingDriftingLoot(this);
-    }
-
-    public List<ItemInstance> TakeItems()
-    {
-        Destroy(gameObject);
-
-        OnCollected?.Invoke();
-        OnGlobalCollected?.Invoke(this);
-
-        return CreateRandomLoot();
     }
 
     public override DriftingLootData CreateData()
@@ -53,7 +49,7 @@ public class SwimmingDriftingLoot : DriftingLoot
     public override DriftingLootData CreateRandomData()
     {
         if (!SwimmingDefinition) {
-            Debug.Log($"SwimmingDefinition not found at {gameObject}");
+            Debug.Log($"[{nameof(SwimmingDriftingLoot)}] Swimming Definition not found!");
             return null;
         }
 
@@ -64,6 +60,31 @@ public class SwimmingDriftingLoot : DriftingLoot
             Rotation = new Vector3Data(transform.rotation.eulerAngles),
             MeshId = MeshId,
         };
+    }
+
+    public void SetTargetBoat(Boat boat)
+    {
+        if (!boat) return;
+
+        TargetBoat = boat;
+    }
+
+    public void RemoveTargetBoat(Boat boat)
+    {
+        if (!boat) return;
+        if (boat != TargetBoat) return;
+
+        TargetBoat = null;
+    }
+
+    public List<ItemInstance> TakeItems()
+    {
+        Destroy(gameObject);
+
+        OnCollected?.Invoke();
+        OnGlobalCollected?.Invoke(this);
+
+        return CreateRandomLoot();
     }
 
     private List<ItemInstance> CreateRandomLoot()

@@ -143,7 +143,7 @@ public class AttackComponent : MonoBehaviour
     {
         if (!movement.IsReachedPosition(currentTarget.transform.position)) return;
 
-        movement.TryStopMoving();
+        movement.StopMoving();
     }
 
     private void CorrentRotation()

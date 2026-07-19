@@ -94,9 +94,15 @@ public class ReviveManager : MonoBehaviour
     public void CreateRewardAndApply(Citizen citizen)
     {
         var reward = reviveRewardDefinition.CreateReward() as ReviveAdRewardInstance;
+        if (reward == null) {
+            Debug.Log($"[{nameof(ReviveManager)}] Revive Reward is not valid!");
+            return;
+        }
+
         reward.SetHuman(citizen);
 
         rewardedAdsManager.SetReward(reward);
+        rewardedAdsManager.ShowAd();
     }
 
     public void RemoveReviveCount()

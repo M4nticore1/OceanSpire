@@ -112,12 +112,17 @@ public class DailyRewardWidget : UIBehaviour
     private void OnTakeButtonClicked()
     {
         if (!dailyRewardManager) {
-            Debug.Log("dailyRewardManager is not valid", this);
+            Debug.Log($"[{nameof(DailyRewardWidget)}] Daily Reward Manager is not valid!");
             return;
         }
 
         if (!rewardedAdsManager) {
-            Debug.Log("rewardedAdsManager is not valid", this);
+            Debug.Log($"[{nameof(DailyRewardWidget)}] Rewarded Ads Manager is not valid!");
+            return;
+        }
+
+        if (reward == null) {
+            Debug.Log($"[{nameof(DailyRewardWidget)}] Daily Reward is not valid!");
             return;
         }
 

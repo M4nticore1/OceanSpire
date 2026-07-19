@@ -21,9 +21,8 @@ public class FindLootContextElement : ContextElement
     protected override void OnButtonClicked()
     {
         if (!boat) return;
-        if (boat.CurrentStateEnum != BoatStateEnum.MovingToDock) return;
-
-        boat.SetState(BoatStateEnum.FindingLoot);
+        
+        boat.UpdateState();
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)
@@ -37,6 +36,20 @@ public class FindLootContextElement : ContextElement
         if (state == BoatStateEnum.MovingToDock) return true;
 
         return false;
+    }
+
+    protected override bool ShouldEnableButton()
+    {
+        if (!boat) return false;
+
+        var rider = boat.CurrentRider;
+        if (!rider) return false;
+
+        var citizen = rider.GetComponent<Citizen>();
+        if (!citizen) return false;
+        if (!citizen.IsCitizenAvaliable()) return false;
+
+        return true;
     }
 
     private void OnBoatStateEntered(Boat boat)

@@ -311,7 +311,7 @@ public class CreatureCityNavigator : MonoBehaviour
 
     private void StopFollowingPath()
     {
-        Movement.TryStopMoving();
+        Movement.StopMoving();
 
         var currentBuilding = CurrentBuilding;
         if (!currentBuilding) return;

@@ -12,7 +12,7 @@ public class UnloadingLootBoatState : BoatState, IProgressable
 
     public override void Enter()
     {
-
+        boat.RemoveTargetLoot();
     }
 
     public override void Exit()

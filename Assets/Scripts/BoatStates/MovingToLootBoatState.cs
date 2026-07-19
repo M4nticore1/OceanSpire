@@ -14,11 +14,6 @@ public class MovingToLootBoatState : FindingLootBoatState
         TryStartMovingToTarget();
     }
 
-    public override void Exit()
-    {
-        base.Exit();
-    }
-
     public override void Tick()
     {
         base.Tick();

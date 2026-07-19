@@ -17,6 +17,7 @@ public class WorldSaveManager : MonoBehaviour
     [SerializeField] private WanderersManager wanderersManager;
     [SerializeField] private BuilderEnergyManager constructionEnergyManager;
     [SerializeField] private ReviveManager reviveManager;
+    [SerializeField] private FocusManager focusManager;
     [SerializeField] private WindManager windManager;
 
     public void SaveWorld()
@@ -37,6 +38,7 @@ public class WorldSaveManager : MonoBehaviour
             wanderersManager,
             constructionEnergyManager,
             reviveManager,
+            focusManager,
             windManager);
 
         WorldSaveSystem.SaveWorld(worldData);

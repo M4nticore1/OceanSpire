@@ -22,7 +22,10 @@ public class YandexStickyBannerAds : BannerAds
     {
         isAdEnabled = false;
         CleanUpBanner();
-        if (retryCoroutine != null) StopCoroutine(retryCoroutine);
+
+        if (retryCoroutine != null) {
+            StopCoroutine(retryCoroutine);
+        }
     }
 
     public override void ShowAd()

@@ -39,6 +39,20 @@ public class ToPierContextElement : ContextElement
         return true;
     }
 
+    protected override bool ShouldEnableButton()
+    {
+        if (!boat) return false;
+
+        var rider = boat.CurrentRider;
+        if (!rider) return false;
+
+        var citizen = rider.GetComponent<Citizen>();
+        if (!citizen) return false;
+        if (!citizen.IsCitizenAvaliable()) return false;
+
+        return true;
+    }
+
     private void OnBoatStateEntered(Boat boat)
     {
         if (!boat) return;

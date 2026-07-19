@@ -5,6 +5,8 @@ public class CollectingLootBoatState : BoatState, IProgressable
     private float currentCollectingTime = 0f;
     private float collectLootTime = 2f;
 
+    private SwimmingDriftingLoot driftingLoot;
+
     public CollectingLootBoatState(Boat boat) : base(boat)
     {
 
@@ -13,12 +15,17 @@ public class CollectingLootBoatState : BoatState, IProgressable
     public override void Enter()
     {
         if (!boat.TargetDriftingLoot) {
-            boat.SetTargetLoot(DriftingLootFinder.TryFindNearestSwimmingDriftingLoot(DriftingLootManager.Instance, boat.transform.position));
+            boat.SetState(BoatStateEnum.FindingLoot);
+            return;
         }
 
-        if (!TryStopDriftingLoot()) {
+        driftingLoot = boat.TargetDriftingLoot;
+        if (!driftingLoot) {
             boat.SetState(BoatStateEnum.FindingLoot);
+            return;
         }
+
+        driftingLoot.StopMoving();
     }
 
     public override void Exit()
@@ -30,9 +37,7 @@ public class CollectingLootBoatState : BoatState, IProgressable
     }
 
     public override void Tick()
-    {
-        TryStopDriftingLoot();
-
+    { 
         currentCollectingTime += Time.deltaTime;
         if (currentCollectingTime <= collectLootTime) return;
 
@@ -65,20 +70,11 @@ public class CollectingLootBoatState : BoatState, IProgressable
         }
     }
 
-    private bool TryStopDriftingLoot()
-    {
-        if (!boat) return false;
-        if (!boat.TargetDriftingLoot) return false;
-
-        boat.TargetDriftingLoot.StopMoving();
-        return true;
-    }
-
     private bool TryCollectLoot()
     {
         if (!ShouldCollectLoot()) return false;
 
-        var collectedLoot = boat.TargetDriftingLoot.TakeItems();
+        var collectedLoot = driftingLoot.TakeItems();
 
         foreach (var loot in collectedLoot) {
             if (boat.Inventory.RemainingWeight <= 0f) break;
@@ -91,8 +87,7 @@ public class CollectingLootBoatState : BoatState, IProgressable
 
     private bool ShouldCollectLoot()
     {
-        if (!boat) return false;
-        if (!boat.TargetDriftingLoot) return false;
+        if (!driftingLoot) return false;
 
         return true;
     }

@@ -36,7 +36,7 @@ public class Movement : MonoBehaviour
         if (!IsMoving) return;
         if (!IsDestinationReached()) return;
 
-        TryStopMoving();
+        StopMoving();
     }
 
     public void Move(Vector3 direction, float speed)
@@ -121,7 +121,7 @@ public class Movement : MonoBehaviour
         }
     }
 
-    public bool TryStopMoving()
+    public bool StopMoving()
     {
         if (moveCoroutine != null) {
             StopCoroutine(moveCoroutine);
@@ -177,7 +177,7 @@ public class Movement : MonoBehaviour
         return Vector3.Distance(transform.position, position) <= navAgent.stoppingDistance;
     }
 
-    public bool CanAgentReachTarget(Vector3 targetPosition)
+    public bool CanReachPosition(Vector3 targetPosition)
     {
         var path = new NavMeshPath();
 

@@ -71,6 +71,10 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     private void OnCompleteButtonReleased()
     {
         var reward = new SkipConstructionRewardInstance(null, building.ConstructionComponent);
+        if (reward == null) {
+            Debug.LogError($"[{nameof(CompleteConstructionMenu)}] Complete reward is not valid!");
+        }
+
         RewardedAdsManager.Instance.SetReward(reward);
         RewardedAdsManager.Instance.ShowAd();
     }

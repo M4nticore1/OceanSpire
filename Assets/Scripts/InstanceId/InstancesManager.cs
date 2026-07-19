@@ -25,7 +25,7 @@ public class InstancesManager
 
     public void RegisterInstance(InstanceId instance)
     {
-        if (instance == null) return;
+        if (!instance) return;
 
         var guid = instance.GetGuid();
         if (instances.TryGetValue(guid, out var value)) return;
@@ -35,7 +35,7 @@ public class InstancesManager
 
     public void UnregisterInstance(InstanceId instance)
     {
-        if (instance == null) return;
+        if (!instance) return;
 
         var guid = instance.GetGuid();
         if (!instances.TryGetValue(guid, out var value)) return;
@@ -45,10 +45,12 @@ public class InstancesManager
 
     public InstanceId GetInstance(Guid guid)
     {
+        if (guid == Guid.Empty) return null;
+
         var instance = instances.GetValueOrDefault(guid);
 
         if (!instance) {
-            Debug.LogError($"Instance by Id {guid} does not exitst by!");
+            Debug.LogError($"[{nameof(InstancesManager)}] Instance by Id {guid} does not exitst!");
         }
 
         return instance;

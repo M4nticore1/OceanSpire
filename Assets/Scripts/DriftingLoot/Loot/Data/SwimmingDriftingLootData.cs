@@ -5,6 +5,8 @@ using UnityEngine;
 [Serializable]
 public class SwimmingDriftingLootData : DriftingLootData
 {
+    public bool Focused = false;
+
     public static SwimmingDriftingLootData Default()
     {
         return new SwimmingDriftingLootData();
@@ -15,6 +17,8 @@ public class SwimmingDriftingLootData : DriftingLootData
         var data = new SwimmingDriftingLootData();
         data.Fill(driftingLoot);
 
+        data.Focused = driftingLoot.FocusComponent.IsFocused;
+
         return data;
     }
 
@@ -23,7 +27,7 @@ public class SwimmingDriftingLootData : DriftingLootData
         List<SwimmingDriftingLootData> lootData = new();
 
         foreach (var loot in driftingLoot) {
-            if (loot == null) continue;
+            if (!loot) continue;
 
             lootData.Add(Create(loot));
         }

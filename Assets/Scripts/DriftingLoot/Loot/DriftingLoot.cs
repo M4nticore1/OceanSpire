@@ -34,6 +34,8 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
     public event Action OnClicked;
     public static event Action<DriftingLoot> OnLootClicked;
 
+    public static event Action<DriftingLoot> OnLootDestroyed;
+
     protected virtual void OnEnable()
     {
         movement.OnReachedDestination += OnReachedDestination;
@@ -42,6 +44,11 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
     protected virtual void OnDisable()
     {
         movement.OnReachedDestination -= OnReachedDestination;
+    }
+
+    protected virtual void OnDestroy()
+    {
+        OnLootDestroyed?.Invoke(this);
     }
 
     public void Init(DriftingLootData driftingLootData)
@@ -64,7 +71,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
             return;
         }
 
-        if (!movement.CanAgentReachTarget(driftingLootData.Destination.Vector3())) {
+        if (!movement.CanReachPosition(driftingLootData.Destination.Vector3())) {
             Debug.Log($"[{nameof(DriftingLoot)}] Drifting Loot {name} can't reach position {driftingLootData.Destination.Vector3()} from position {transform.position}");
             Destroy(gameObject);
             return;
@@ -107,7 +114,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
     public void StopMoving()
     {
-        movement.TryStopMoving();
+        movement.StopMoving();
     }
 
     public void Click()

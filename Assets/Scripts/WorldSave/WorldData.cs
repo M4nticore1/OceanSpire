@@ -51,6 +51,7 @@ public class WorldData
     public WandererData[] Wanderers;
     public RaiderData[] Raiders;
     public DriftingLootSystemData DriftingLoot;
+    public FocusSystemData FocusSystem;
     public InventoryData CityStorage;
     public DailyTasksData DailyTasks;
     public DailyRewardData DailyReward;
@@ -76,6 +77,7 @@ public class WorldData
         WanderersManager wanderers,
         BuilderEnergyManager constructionEnergy,
         ReviveManager revive,
+        FocusManager focusManager,
         WindManager wind)
     {
         return new WorldData() {
@@ -108,7 +110,8 @@ public class WorldData
             WanderersSystem = WandererSystemData.Create(wanderers),
             ReviveSystem = ReviveSystemData.Create(revive),
             BuilderEnergy = BuilderEnergyData.Create(constructionEnergy),
-            Wind = WindData.Create(wind)
+            FocusSystem = FocusSystemData.Create(focusManager),
+            Wind = WindData.Create(wind),
         };
     }
 }
