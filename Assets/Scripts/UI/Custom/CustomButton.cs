@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using static UnityEngine.CullingGroup;
 
 public enum CustomButtonState
 {
@@ -106,7 +107,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     public UnityEvent OnHovered = new();
     public UnityEvent OnUnhovered = new();
 
-    public event Action OnStateChanged;
+    public event Action<CustomButtonState> OnStateChanged;
 
     public static event Action<CustomButton> OnButtonStateChanged;
     public static event Action<CustomButton> OnButtonPressed;
@@ -363,7 +364,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void SetState(CustomButtonState newState)
     {
         if (newState == state) return;
-        //if (!IsInteractable) return;
 
         ExitState(state);
         state = newState;
@@ -417,6 +417,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
             EndTransitionAnimation();
         }
 
+        OnStateChanged?.Invoke(state);
         OnButtonStateChanged?.Invoke(this);
     }
 

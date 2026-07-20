@@ -6,6 +6,7 @@ public class WanderersManager : MonoBehaviour
     public static WanderersManager Instance;
 
     [Header("Main")]
+    [SerializeField] private WandererAdmissionManager wandererAdmissionManager;
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private DockPointsManager dockPointsManager;
     [SerializeField] private CreaturesList creaturesList;
@@ -37,31 +38,32 @@ public class WanderersManager : MonoBehaviour
 
     private void OnEnable()
     {
-        WandererAdmissionSystem.OnWandererAccepted += OnWandererAccepted;
-        WandererAdmissionSystem.OnWandererRejected += OnWandererRejected;
+        wandererAdmissionManager.OnWandererAccepted += OnWandererAccepted;
+        wandererAdmissionManager.OnWandererRejected += OnWandererRejected;
     }
 
     private void OnDisable()
     {
-        WandererAdmissionSystem.OnWandererAccepted -= OnWandererAccepted;
-        WandererAdmissionSystem.OnWandererRejected -= OnWandererRejected;
+        wandererAdmissionManager.OnWandererAccepted -= OnWandererAccepted;
+        wandererAdmissionManager.OnWandererRejected -= OnWandererRejected;
     }
 
     private void OnApplicationFocus(bool focus)
     {
-        if (focus == false) return;
-
-        if (TrySpawnAllWanderers()) {
-            WarpAllWanderers();
+        if (focus) {
+            OnPlayerReturned();
         }
+    }
 
-        UpdateNextWanderersTime();
+    private void OnApplicationPause(bool pause)
+    {
+        if (!pause) {
+            OnPlayerReturned();
+        }
     }
 
     private void Update()
     {
-        Debug.Log(NextWandererTime != null ? NextWandererTime - DateTimeOffset.UtcNow.ToUnixTimeSeconds() : null);
-
         if (NextWandererTime == null) return;
 
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -225,6 +227,15 @@ public class WanderersManager : MonoBehaviour
             ridingBoat.SetDockPoint(dockPointsManager.WandererDockPoints[dockIndex]);
             dockIndex++;
         }
+    }
+
+    private void OnPlayerReturned()
+    {
+        if (TrySpawnAllWanderers()) {
+            WarpAllWanderers();
+        }
+
+        UpdateNextWanderersTime();
     }
 
     private void OnWandererAccepted(Human human)

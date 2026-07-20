@@ -688,6 +688,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3264082960243944127, guid: 56a9005df137a8e4088488a174eade01, type: 3}
   m_PrefabInstance: {fileID: 42863128}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &48500145
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 48500146}
+  - component: {fileID: 48500147}
+  m_Layer: 0
+  m_Name: CitizensManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &48500146
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48500145}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &48500147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48500145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14b9a13f89f42d645977abd4927ff62e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CitizensManager
+  creaturesManager: {fileID: 220072952}
 --- !u!1 &52221709
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +809,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf39201c3bdef74b8ca471d3bf0dbd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WanderersManager
+  wandererAdmissionManager: {fileID: 624742860}
   creaturesManager: {fileID: 220072952}
   dockPointsManager: {fileID: 1711846142}
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
@@ -773,8 +819,8 @@ MonoBehaviour:
   - {fileID: 8411686280589987336, guid: 649b0985789fc6c42bd0c217a9a1f0d5, type: 3}
   - {fileID: 7660346723931557201, guid: 301f8de32aed5d94f9a8a91d01f584c2, type: 3}
   boatPrefab: {fileID: 8804275003585880861, guid: d0ad1226837183441b6e694aa3c9279b, type: 3}
-  minWandererSpawnCooldown: 18
-  maxWandererSpawnCooldown: 36
+  minWandererSpawnCooldown: 1800
+  maxWandererSpawnCooldown: 3600
   spawnArea: {fileID: 40920800}
 --- !u!4 &61009885 stripped
 Transform:
@@ -4775,6 +4821,10 @@ PrefabInstance:
       propertyPath: creaturesManager
       value: 
       objectReference: {fileID: 220072952}
+    - target: {fileID: 3761790546474035319, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: wandererAdmissionManager
+      value: 
+      objectReference: {fileID: 624742860}
     - target: {fileID: 3830277698611465684, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: inputStateManager
       value: 
@@ -7694,6 +7744,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2af2e65253d27349b98a064b04e4dc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPoint
+--- !u!1 &624742858
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 624742859}
+  - component: {fileID: 624742860}
+  m_Layer: 0
+  m_Name: WandererAdmissionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &624742859
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624742858}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &624742860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624742858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb811b353f56dba478095234be881466, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WandererAdmissionManager
+  creaturesManager: {fileID: 220072952}
+  citizensManager: {fileID: 48500147}
+  cityStorage: {fileID: 1388613268}
 --- !u!1001 &629938280
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14884,6 +14981,8 @@ Transform:
   - {fileID: 2079402389}
   - {fileID: 1455395273}
   - {fileID: 2095963074}
+  - {fileID: 624742859}
+  - {fileID: 48500146}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1322718665

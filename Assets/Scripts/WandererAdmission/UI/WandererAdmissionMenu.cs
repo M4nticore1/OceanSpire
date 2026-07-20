@@ -4,8 +4,7 @@ using UnityEngine;
 public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 {
     [Header("Main")]
-    [SerializeField] private CityStorage cityStorage;
-    [SerializeField] private CreaturesManager creaturesManager;
+    [SerializeField] private WandererAdmissionManager wandererAdmissionManager;
 
     [Header("UI")]
     [SerializeField] private SlidePanel slidePanel;
@@ -23,6 +22,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
     private void OnEnable()
     {
         slidePanel.OnHidden += OnClosed;
+        acceptButton.OnStateChanged += OnAcceptButtonStateChanged;
         acceptButton.OnReleased.AddListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.AddListener(OnRejectButtonClicked);
 
@@ -30,13 +30,12 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 
         Boat.OnBoatSelected += OnBoatSelected;
         Boat.OnBoatDeselected += OnBoatDeselected;
-
-        UpdateAcceptButtonEnabled();
     }
 
     private void OnDisable()
     {
         slidePanel.OnHidden -= OnClosed;
+        acceptButton.OnStateChanged -= OnAcceptButtonStateChanged;
         acceptButton.OnReleased.RemoveListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.RemoveListener(OnRejectButtonClicked);
 
@@ -48,6 +47,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
+        UpdateAcceptButtonEnabled();
         OnShown?.Invoke();
     }
 
@@ -99,20 +99,26 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 
     private void UpdateAcceptButtonEnabled()
     {
-        var currentPopulation = creaturesManager.Citizens.Count;
-        var maxPopulation = cityStorage.Inventory.GetItem(ItemID.Population);
+        acceptButton.SetState(wandererAdmissionManager.CanAcceptWanderer(selectedWanderer) ? CustomButtonState.Idle : CustomButtonState.Disabled);
     }
 
     private void OnAcceptButtonClicked()
     {
-        WandererAdmissionSystem.AcceptWanderer(selectedWanderer);
+        wandererAdmissionManager.AcceptWanderer(selectedWanderer);
         Hide();
     }
 
     private void OnRejectButtonClicked()
     {
-        WandererAdmissionSystem.RejectWanderer(selectedWanderer);
+        wandererAdmissionManager.RejectWanderer(selectedWanderer);
         Hide();
+    }
+
+    private void OnAcceptButtonStateChanged(CustomButtonState state)
+    {
+        if (state == CustomButtonState.Disabled) {
+            UpdateAcceptButtonEnabled();
+        }
     }
 
     private void OnHumanDied(Human human)

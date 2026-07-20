@@ -44,7 +44,7 @@ public class RaidDisablerButton : MonoBehaviour
         UpdateButtonEnabled();
     }
 
-    private void OnButtonStateChanged()
+    private void OnButtonStateChanged(CustomButtonState state)
     {
         UpdateButtonEnabled();
     }
