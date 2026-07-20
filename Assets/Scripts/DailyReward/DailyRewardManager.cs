@@ -76,40 +76,50 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     public void Init(DailyRewardData dailyRewardData)
     {
         if (dailyRewardData == null) {
-            Debug.LogError("dailyRewardData is not valid");
+            Debug.LogError($"[{nameof(DailyRewardManager)}] Daily Reward Data is not valid");
             Init();
             return;
         }
 
         foreach (var rewardData in dailyRewardData.Rewards) {
-            if (rewardData == null) {
-                Debug.LogError($"Reward Data not found at {name}");
-                continue;
-            }
+            if (rewardData == null) continue;
 
             int id = rewardData.Id;
-
             var reward = TryCreateReward(id);
-            if (reward == null) {
-                Debug.LogError($"Reward not found at {name}");
-                continue;
-            }
+            if (reward == null) continue;
 
             reward.SetCollected(rewardData.Collected);
             currentRewards.Add(reward);
         }
 
-        while (currentRewards.Count > maxRewardsCount) {
-            currentRewards.RemoveAt(currentRewards.Count - 1);
-        }
-
-        while (currentRewards.Count < maxRewardsCount) {
-            var reward = TryCreateRandomReward();
-            if (reward == null) {
-                Debug.LogError($"Reward not found at {name}");
+        if (currentRewards.Count < maxRewardsCount) {
+            var existingIds = new HashSet<RewardId>();
+            foreach (var r in currentRewards) {
+                existingIds.Add(r.Definition.RewardId);
             }
 
-            currentRewards.Add(reward);
+            var availablePool = new List<AdRewardDefinition>(rewards);
+
+            while (currentRewards.Count < maxRewardsCount && availablePool.Count > 0) {
+                int index = UnityEngine.Random.Range(0, availablePool.Count);
+                var definition = availablePool[index];
+                availablePool.RemoveAt(index);
+
+                if (!definition) continue;
+                if (existingIds.Contains(definition.RewardId)) {
+                    continue;
+                }
+
+                var reward = TryCreateReward((int)definition.RewardId);
+                if (reward != null) {
+                    currentRewards.Add(reward);
+                    existingIds.Add(definition.RewardId);
+                }
+            }
+        }
+
+        while (currentRewards.Count > maxRewardsCount) {
+            currentRewards.RemoveAt(currentRewards.Count - 1);
         }
 
         NextResetTime = dailyRewardData.NextResetTime;
@@ -152,7 +162,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
             var reward = TryCreateReward(id);
 
             if (reward == null) {
-                Debug.LogWarning($"Reward with ID {id} could not be created");
+                Debug.LogWarning($"[{nameof(DailyRewardManager)}] Reward with ID {id} could not be created");
                 continue;
             }
 
@@ -192,7 +202,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         foreach (var rewardData in GetRandomRewardsData()) {
             var reward = rewardData.CreateReward();
             if (reward == null) {
-                Debug.LogError("reward is not valid");
+                Debug.LogError($"[{nameof(DailyRewardManager)}] Reward is not valid");
                 continue;
             }
 
@@ -245,13 +255,13 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     {
         var definition = rewardsList.GetRewardDefinition(id);
         if (!definition) {
-            Debug.Log($"Reward Definition not found at {name}");
+            Debug.Log($"[{nameof(DailyRewardManager)}] Reward Definition not found at {name}");
             return null;
         }
 
         var reward = definition.CreateReward();
         if (reward == null) {
-            Debug.Log($"Reward not found at {name}");
+            Debug.Log($"[{nameof(DailyRewardManager)}] Reward not found at {name}");
             return null;
         }
 

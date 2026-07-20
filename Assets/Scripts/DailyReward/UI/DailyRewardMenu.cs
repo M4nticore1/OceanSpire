@@ -69,17 +69,21 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
         }
     }
 
-    private void DestroyRewardWidgets()
+    private void RemoveRewardWidgets()
     {
         for (int i = spawnedWidgets.Count - 1; i >= 0; i--) {
-            Destroy(spawnedWidgets[i].gameObject);
+            var widget = spawnedWidgets[i];
+            if (widget) {
+                Destroy(widget.gameObject);
+            }
+            
             spawnedWidgets.RemoveAt(i);
         }
     }
 
     private void OnDailyRewardReset()
     {
-        DestroyRewardWidgets();
+        RemoveRewardWidgets();
         CreateRewardWidgets();
     }
 
@@ -97,6 +101,7 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     {
         yield return new WaitForEndOfFrame();
 
+        RemoveRewardWidgets();
         CreateRewardWidgets();
     }
 }

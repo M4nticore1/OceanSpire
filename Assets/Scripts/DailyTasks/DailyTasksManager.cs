@@ -25,6 +25,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     public event Action OnTasksInited;
     public event Action OnTasksReset;
+
     public event Action<bool> OnAdUpdateUsedSetTrue;
     public event Action<bool> OnTasksViewedChanged;
 
@@ -46,6 +47,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
             SetAdUpdateUsedSetTrue(false);
             SetTasksViewed(false);
+
             OnTasksReset?.Invoke();
         }
     }
@@ -93,6 +95,38 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     {
         IsDailyTasksViewed = value;
         OnTasksViewedChanged?.Invoke(value);
+    }
+
+    public DailyTaskInstanceData[] GetRandomTasksData()
+    {
+        var tasksData = new DailyTaskInstanceData[taskDefinitions.Length];
+
+        for (int i = 0; i < tasksData.Length; i++) {
+            int subTasksCount = taskDefinitions[i].taskDefinitions.Length;
+            var randomDef = taskDefinitions[i].taskDefinitions[UnityEngine.Random.Range(0, subTasksCount)];
+
+            int defIndex = Array.IndexOf(dailyTasksList.DailyTaskDefinitions, randomDef);
+
+            tasksData[i] = new DailyTaskInstanceData()
+            {
+                Id = defIndex,
+                Progress = 0
+            };
+        }
+
+        return tasksData;
+    }
+
+    public long CalculateNextResetTime()
+    {
+        DateTime now = DateTime.UtcNow;
+        DateTime nextReset = new DateTime(now.Year, now.Month, now.Day, updateTasksTimeOffset, 0, 0, DateTimeKind.Utc);
+
+        if (nextReset <= now) {
+            nextReset = nextReset.AddDays(1);
+        }
+
+        return ((DateTimeOffset)nextReset).ToUnixTimeSeconds();
     }
 
     public Dictionary<string, string> GetLocalization()
@@ -149,37 +183,5 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     {
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         return (int)(NextResetTime - currentTime);
-    }
-
-    public long CalculateNextResetTime()
-    {
-        DateTime now = DateTime.UtcNow;
-        DateTime nextReset = new DateTime(now.Year, now.Month, now.Day, updateTasksTimeOffset, 0, 0, DateTimeKind.Utc);
-
-        if (nextReset <= now) {
-            nextReset = nextReset.AddDays(1);
-        }
-
-        return ((DateTimeOffset)nextReset).ToUnixTimeSeconds();
-    }
-
-    public DailyTaskInstanceData[] GetRandomTasksData()
-    {
-        var tasksData = new DailyTaskInstanceData[taskDefinitions.Length];
-
-        for (int i = 0; i < tasksData.Length; i++) {
-            int subTasksCount = taskDefinitions[i].taskDefinitions.Length;
-            var randomDef = taskDefinitions[i].taskDefinitions[UnityEngine.Random.Range(0, subTasksCount)];
-
-            int defIndex = Array.IndexOf(dailyTasksList.DailyTaskDefinitions, randomDef);
-
-            tasksData[i] = new DailyTaskInstanceData()
-            {
-                Id = defIndex,
-                Progress = 0
-            };
-        }
-
-        return tasksData;
     }
 }
