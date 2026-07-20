@@ -23,7 +23,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     private List<DailyTaskInstance> currentTasks = new();
     public IReadOnlyList<DailyTaskInstance> CurrentTasks => currentTasks.AsReadOnly();
 
-    public event Action OnTasksInited;
+    public event Action OnTasksCreated;
     public event Action OnTasksReset;
 
     public event Action<bool> OnAdUpdateUsedSetTrue;
@@ -67,12 +67,13 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     public void Init(DailyTasksData data)
     {
-        if (data == null || data.Tasks == null) {
-            Debug.LogError("DailyTasksData or Tasks array is null! Creating defaults.");
+        if (data == null || data.Tasks == null || data.Tasks.Length < taskDefinitions.Length) {
+            Debug.LogError($"[{nameof(DailyTasksManager)}] DailyTasksData or Tasks array is null! Creating defaults.");
             Init();
             return;
         }
 
+        RemoveTasks();
         CreateTasks(data.Tasks);
         SetNextUpdateTime(data.NextResetTime);
         SetAdUpdateUsedSetTrue(data.AdUpdateUsed);
@@ -143,13 +144,13 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
             CreateTask(data);
         }
 
-        OnTasksInited?.Invoke();
+        OnTasksCreated?.Invoke();
     }
 
     private void CreateTask(DailyTaskInstanceData data)
     {
         if (data == null) {
-            Debug.LogError("DailyTaskData is not valid");
+            Debug.LogError($"[{nameof(DailyTasksManager)}] DailyTaskData is not valid");
             return;
         }
 

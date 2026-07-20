@@ -100,7 +100,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
     {
         if (isSubscribed) return;
 
-        dailyTasksManager.OnTasksInited += OnTasksInited;
+        dailyTasksManager.OnTasksCreated += OnTasksInited;
         dailyTasksManager.OnTasksViewedChanged += OnTasksViewedChanged;
 
         isSubscribed = true;

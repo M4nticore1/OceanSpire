@@ -773,8 +773,8 @@ MonoBehaviour:
   - {fileID: 8411686280589987336, guid: 649b0985789fc6c42bd0c217a9a1f0d5, type: 3}
   - {fileID: 7660346723931557201, guid: 301f8de32aed5d94f9a8a91d01f584c2, type: 3}
   boatPrefab: {fileID: 8804275003585880861, guid: d0ad1226837183441b6e694aa3c9279b, type: 3}
-  minWandererSpawnCooldown: 1800
-  maxWandererSpawnCooldown: 3600
+  minWandererSpawnCooldown: 18
+  maxWandererSpawnCooldown: 36
   spawnArea: {fileID: 40920800}
 --- !u!4 &61009885 stripped
 Transform:

@@ -17,8 +17,8 @@ public class WanderersManager : MonoBehaviour
     [SerializeField] private Boat boatPrefab;
 
     [Header("Cooldown")]
-    [SerializeField] private int minWandererSpawnCooldown = 300;
-    [SerializeField] private int maxWandererSpawnCooldown = 900;
+    [SerializeField] private int minWandererSpawnCooldown = 1800;
+    [SerializeField] private int maxWandererSpawnCooldown = 3600;
 
     [Header("Accept")]
     [SerializeField] private SpawnArea spawnArea;
@@ -47,16 +47,33 @@ public class WanderersManager : MonoBehaviour
         WandererAdmissionSystem.OnWandererRejected -= OnWandererRejected;
     }
 
+    private void OnApplicationFocus(bool focus)
+    {
+        if (focus == false) return;
+
+        if (TrySpawnAllWanderers()) {
+            WarpAllWanderers();
+        }
+
+        UpdateNextWanderersTime();
+    }
+
     private void Update()
     {
+        Debug.Log(NextWandererTime != null ? NextWandererTime - DateTimeOffset.UtcNow.ToUnixTimeSeconds() : null);
+
         if (NextWandererTime == null) return;
-        if (!CanSpawn()) return;
 
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         if (currentTime < NextWandererTime) return;
 
-        SpawnWanderer();
-        NextWandererTime = GetRandomNextWandererTime();
+        if (!CanSpawnWanderer()) {
+            NextWandererTime = null;
+            return;
+        }
+
+        TrySpawnAllWanderers();
+        UpdateNextWanderersTime();
     }
 
     public void Init()
@@ -78,6 +95,10 @@ public class WanderersManager : MonoBehaviour
         }
 
         NextWandererTime = wanderersData.NextWandererTime;
+
+        TrySpawnAllWanderers();
+        WarpAllWanderers();
+        UpdateNextWanderersTime();
     }
 
     public long GetRandomNextWandererTime()
@@ -86,6 +107,31 @@ public class WanderersManager : MonoBehaviour
         var cooldown = UnityEngine.Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown + 1);
 
         return currentTime + cooldown;
+    }
+
+    private bool TrySpawnAllWanderers()
+    {
+        if (NextWandererTime == null) return false;
+        if (!CanSpawnWanderer()) return false;
+
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        long simulatedTime = NextWandererTime.Value;
+        bool spawnedAny = false;
+
+        while (currentTime >= simulatedTime && CanSpawnWanderer()) {
+            SpawnWanderer();
+            spawnedAny = true;
+
+            var cooldown = UnityEngine.Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown + 1);
+            simulatedTime += cooldown;
+        }
+
+        if (spawnedAny) {
+            NextWandererTime = simulatedTime;
+        }
+
+        return spawnedAny;
     }
 
     private void SpawnWanderer()
@@ -105,16 +151,48 @@ public class WanderersManager : MonoBehaviour
         }
     }
 
-    private void OnWandererAccepted(Human human)
+    private void UpdateNextWanderersTime()
     {
-        UpdateDockPoints();
+        if (!CanSpawnWanderer()) {
+            NextWandererTime = null;
+            return;
+        }
 
-        human.transform.position = spawnArea.GetRandomSpawnPosition();
+        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        if (NextWandererTime != null && NextWandererTime.Value > currentTime) {
+            return;
+        }
+
+        if (NextWandererTime == null) {
+            NextWandererTime = GetRandomNextWandererTime();
+            return;
+        }
+
+        long timeDelta = NextWandererTime.Value - currentTime;
+        var cooldown = UnityEngine.Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown + 1);
+        NextWandererTime = currentTime + cooldown + timeDelta;
     }
 
-    private void OnWandererRejected(Human human)
+    private void WarpAllWanderers()
     {
-        UpdateDockPoints();
+        foreach (var wanderer in creaturesManager.Wanderers) {
+            if (!wanderer) continue;
+
+            var boat = wanderer.BoatRider.RidingBoat;
+            if (!boat) continue;
+
+            var dockPoint = boat.DockPoint;
+            if (!dockPoint) continue;
+
+            var position = dockPoint.DockTransform.position;
+            var rotation = dockPoint.DockTransform.rotation;
+
+            boat.transform.position = position;
+            boat.transform.rotation = rotation;
+
+            boat.Movement.NavAgent.Warp(position);
+        }
     }
 
     private void UpdateDockPoints()
@@ -147,6 +225,20 @@ public class WanderersManager : MonoBehaviour
             ridingBoat.SetDockPoint(dockPointsManager.WandererDockPoints[dockIndex]);
             dockIndex++;
         }
+    }
+
+    private void OnWandererAccepted(Human human)
+    {
+        human.transform.position = spawnArea.GetRandomSpawnPosition();
+
+        UpdateDockPoints();
+        UpdateNextWanderersTime();
+    }
+
+    private void OnWandererRejected(Human human)
+    {
+        UpdateDockPoints();
+        UpdateNextWanderersTime();
     }
 
     private Human CreateWanderer(Vector3 position, Vector3 rotation, Guid boatInstanceId)
@@ -244,13 +336,12 @@ public class WanderersManager : MonoBehaviour
         return null;
     }
 
-    private bool CanSpawn()
+    private bool CanSpawnWanderer()
     {
         if (!creaturesManager) return false;
         if (creaturesManager.Wanderers == null) return false;
         if (!dockPointsManager) return false;
         if (dockPointsManager.WandererDockPoints == null) return false;
-        if (NextWandererTime == null) return false;
 
         int activeWanderersCount = 0;
         for (int i = 0; i < creaturesManager.Wanderers.Count; i++) {

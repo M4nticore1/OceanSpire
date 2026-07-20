@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public abstract class SelectedDisplay : UIBehaviour
+public abstract class SelectedDisplay : MonoBehaviour
 {
     [SerializeField] private GameObject content;
 
@@ -12,10 +12,8 @@ public abstract class SelectedDisplay : UIBehaviour
     public event Action<SelectedDisplay> OnShowed;
     public event Action<SelectedDisplay> OnHidden;
 
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
-
         Subscribe();
 
         if (selectManager) {
@@ -24,17 +22,13 @@ public abstract class SelectedDisplay : UIBehaviour
         }
     }
 
-    protected override void OnDisable()
+    private void OnDisable()
     {
-        base.OnDisable();
-
         Unsubscribe();
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
         Subscribe();
     }
 
@@ -68,8 +62,8 @@ public abstract class SelectedDisplay : UIBehaviour
     {
         if (!ShouldSubscribe()) return;
 
-        SelectManager.Instance.OnComponentSelected += OnComponentSelected;
-        SelectManager.Instance.OnComponentDeselected += OnComponentDeselected;
+        selectManager.OnComponentSelected += OnComponentSelected;
+        selectManager.OnComponentDeselected += OnComponentDeselected;
 
         isSubscribed = true;
     }
@@ -78,8 +72,8 @@ public abstract class SelectedDisplay : UIBehaviour
     {
         if (!ShouldUnsubscribe()) return;
 
-        SelectManager.Instance.OnComponentSelected -= OnComponentSelected;
-        SelectManager.Instance.OnComponentDeselected -= OnComponentDeselected;
+        selectManager.OnComponentSelected -= OnComponentSelected;
+        selectManager.OnComponentDeselected -= OnComponentDeselected;
 
         isSubscribed = false;
     }
@@ -87,7 +81,7 @@ public abstract class SelectedDisplay : UIBehaviour
     protected virtual bool ShouldSubscribe()
     {
         if (isSubscribed) return false;
-        if (!SelectManager.Instance) return false;
+        if (!selectManager) return false;
 
         return true;
     }
@@ -95,7 +89,7 @@ public abstract class SelectedDisplay : UIBehaviour
     protected virtual bool ShouldUnsubscribe()
     {
         if (!isSubscribed) return false;
-        if (!SelectManager.Instance) return false;
+        if (!selectManager) return false;
 
         return true;
     }
@@ -118,16 +112,12 @@ public abstract class SelectedDisplay : UIBehaviour
 
     private void OnComponentSelected(SelectComponent selectComponent)
     {
-        if (!selectComponent) return;
-
         TryHide(selectComponent);
         TryDisplay(selectComponent);
     }
 
     private void OnComponentDeselected(SelectComponent selectComponentd)
     {
-        if (!selectComponentd) return;
-
         TryHide(selectComponentd);
     }
 }

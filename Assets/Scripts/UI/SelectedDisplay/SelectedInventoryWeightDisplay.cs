@@ -34,6 +34,13 @@ public class SelectedInventoryWeightDisplay : SelectedDisplay
         textLocalizer.SetPlaceHolderLocalization(inventory);
     }
 
+    protected override void OnHide(SelectComponent selectComponent)
+    {
+        base.OnHide(selectComponent);
+
+        SetInventory(null);
+    }
+
     protected override bool ShouldDisplay(SelectComponent selectComponent)
     {
         if (!selectComponent) {
@@ -41,9 +48,10 @@ public class SelectedInventoryWeightDisplay : SelectedDisplay
             return false;
         }
 
-        var newInventory = selectComponent.GetComponent<Inventory>();
-        SetInventory(newInventory);
-        return true;
+        var inventory = selectComponent.GetComponent<Inventory>();
+        SetInventory(inventory);
+
+        return inventory != null;
     }
 
     private void SetInventory(Inventory inventory)
