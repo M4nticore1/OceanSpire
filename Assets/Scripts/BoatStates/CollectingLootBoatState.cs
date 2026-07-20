@@ -62,11 +62,11 @@ public class CollectingLootBoatState : BoatState, IProgressable
 
     private void UpdateState()
     {
-        if (boat.Inventory.RemainingWeightInt > boat.FindLootMaxWeightThreshold) {
-            boat.SetState(BoatStateEnum.FindingLoot);
+        if (boat.IsOverweight()) {
+            boat.SetState(BoatStateEnum.MovingToDock);
         }
         else {
-            boat.SetState(BoatStateEnum.MovingToDock);
+            boat.SetState(BoatStateEnum.FindingLoot);
         }
     }
 

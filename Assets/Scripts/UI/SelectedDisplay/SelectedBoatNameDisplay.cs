@@ -5,9 +5,9 @@ public class SelectedBoatNameDisplay : SelectedDisplay
     [Header("Boat Name")]
     [SerializeField] private TextLocalizer textLocalizer;
 
-    protected override void Display(SelectComponent selectComponent)
+    protected override void OnShow(SelectComponent selectComponent)
     {
-        base.Display(selectComponent);
+        base.OnShow(selectComponent);
 
         var boat = selectComponent.GetComponent<Boat>();
         if (!boat) return;

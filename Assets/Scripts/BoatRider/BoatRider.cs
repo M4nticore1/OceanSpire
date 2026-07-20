@@ -141,7 +141,12 @@ public class BoatRider : MonoBehaviour
     public void EnterBoat(Boat boat)
     {
         if (!boat) {
-            Debug.LogError($"Boat not found at {name}");
+            Debug.LogError($"[{nameof(BoatRider)}] Boat not found at {name}");
+            return;
+        }
+
+        if (boat.CurrentRider) {
+            Debug.LogError($"[{nameof(BoatRider)}] Boat already has another rider!");
             return;
         }
 

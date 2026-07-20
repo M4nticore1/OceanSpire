@@ -7,9 +7,9 @@ public class SelectedNameDisplay : SelectedDisplay
 
     private ILocalizable localizable;
 
-    protected override void Display(SelectComponent selectComponent)
+    protected override void OnShow(SelectComponent selectComponent)
     {
-        base.Display(selectComponent);
+        base.OnShow(selectComponent);
         
         textLocalizer.SetPlaceHolderLocalization(localizable);
     }

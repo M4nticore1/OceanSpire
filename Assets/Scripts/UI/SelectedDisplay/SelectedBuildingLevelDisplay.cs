@@ -16,19 +16,9 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
         localizer.UpdateText();
     }
 
-    protected override bool ShouldDisplay(SelectComponent selectComponent)
+    protected override void OnShow(SelectComponent selectComponent)
     {
-        if (!selectComponent) return false;
-
-        building = selectComponent.GetComponent<Building>();
-        if (!building) return false;
-
-        return true;
-    }
-
-    protected override void Display(SelectComponent selectComponent)
-    {
-        base.Display(selectComponent);
+        base.OnShow(selectComponent);
 
         ILocalizable localizable = building.GetComponent<ILocalizable>();
 
@@ -40,5 +30,15 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
         }
 
         localizer.SetPlaceHolderLocalization(localizable);
+    }
+
+    protected override bool ShouldDisplay(SelectComponent selectComponent)
+    {
+        if (!selectComponent) return false;
+
+        building = selectComponent.GetComponent<Building>();
+        if (!building) return false;
+
+        return true;
     }
 }

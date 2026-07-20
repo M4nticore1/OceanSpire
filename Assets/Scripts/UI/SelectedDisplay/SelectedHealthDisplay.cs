@@ -4,9 +4,9 @@ public class SelectedHealthDisplay : SelectedDisplay
 {
     [SerializeField] private HealthDisplay healthDisplay;
 
-    protected override void Display(SelectComponent selectComponent)
+    protected override void OnShow(SelectComponent selectComponent)
     {
-        base.Display(selectComponent);
+        base.OnShow(selectComponent);
 
         var health = selectComponent.GetComponent<HealthComponent>();
         if (!health) {
@@ -18,9 +18,9 @@ public class SelectedHealthDisplay : SelectedDisplay
         healthDisplay.UpdateHealth();
     }
 
-    protected override void Hide(SelectComponent selectComponent)
+    protected override void OnHide(SelectComponent selectComponent)
     {
-        base.Hide(selectComponent);
+        base.OnHide(selectComponent);
 
         healthDisplay.RemoveHealthComponent();
     }

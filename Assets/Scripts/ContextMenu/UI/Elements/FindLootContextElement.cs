@@ -30,10 +30,9 @@ public class FindLootContextElement : ContextElement
         boat = target.GetComponent<Boat>();
         if (!boat) return false;
 
-        if (!boat.ShouldFindLoot()) return false;
-
         var state = boat.CurrentStateEnum;
         if (state == BoatStateEnum.MovingToDock) return true;
+        if (state == BoatStateEnum.UnloadingLoot) return true;
 
         return false;
     }
@@ -41,6 +40,10 @@ public class FindLootContextElement : ContextElement
     protected override bool ShouldEnableButton()
     {
         if (!boat) return false;
+        if (!boat.ShouldFindLoot()) return false;
+
+        var state = boat.CurrentStateEnum;
+        if (state == BoatStateEnum.UnloadingLoot) return false;
 
         var rider = boat.CurrentRider;
         if (!rider) return false;

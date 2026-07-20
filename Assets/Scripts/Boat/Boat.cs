@@ -384,7 +384,9 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         var pier = interactBuilding.GetComponent<PierModule>();
         if (!pier) return false;
 
-        return IsEnoughWeight();
+        if (IsOverweight()) return false;
+
+        return true;
     }
 
     public bool ShouldCollectLoot()
@@ -409,7 +411,10 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
     public bool ShouldUnloadingLoot()
     {
-        return false;
+        if (inventory.RemainingWeightInt <= 0) return false;
+        if (CurrentStateEnum != BoatStateEnum.UnloadingLoot) return false;
+
+        return true;
     }
 
     public bool ShouldFloatAway()
@@ -419,9 +424,9 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         return false;
     }
 
-    public bool IsEnoughWeight()
+    public bool IsOverweight()
     {
-        return inventory.RemainingWeight > findLootMaxWeightThreshold;
+        return inventory.RemainingWeightInt <= findLootMaxWeightThreshold;
     }
 
     // IClickable

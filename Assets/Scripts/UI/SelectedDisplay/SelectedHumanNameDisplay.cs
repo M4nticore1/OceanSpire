@@ -4,6 +4,15 @@ public class SelectedHumanNameDisplay : SelectedDisplay
 {
     [SerializeField] private TextLocalizer text;
 
+    protected override void OnShow(SelectComponent selectComponent)
+    {
+        base.OnShow(selectComponent);
+
+        var human = selectComponent.GetComponent<Human>();
+
+        text.SetPlaceHolderLocalization(human.NameComponent);
+    }
+
     protected override bool ShouldDisplay(SelectComponent selectComponent)
     {
         if (!selectComponent) return false;
@@ -12,14 +21,5 @@ public class SelectedHumanNameDisplay : SelectedDisplay
         if (!human) return false;
 
         return true;
-    }
-
-    protected override void Display(SelectComponent selectComponent)
-    {
-        base.Display(selectComponent);
-
-        var human = selectComponent.GetComponent<Human>();
-
-        text.SetPlaceHolderLocalization(human.NameComponent);
     }
 }

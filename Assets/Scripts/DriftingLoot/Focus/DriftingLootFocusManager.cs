@@ -58,8 +58,10 @@ public class DriftingLootFocusManager : MonoBehaviour
             }
 
             var currentBoatSqrDistance = (loot.transform.position - boat.transform.position).sqrMagnitude;
-            if (loot.TargetBoat) {
-                var targetBoatSqrDistance = (loot.transform.position - loot.TargetBoat.transform.position).sqrMagnitude;
+
+            var targetBoat = loot.TargetBoat;
+            if (targetBoat) {
+                var targetBoatSqrDistance = (loot.transform.position - targetBoat.transform.position).sqrMagnitude;
                 if (currentBoatSqrDistance > targetBoatSqrDistance) continue;
             }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -5,15 +6,22 @@ public abstract class SelectedDisplay : UIBehaviour
 {
     [SerializeField] private GameObject content;
 
+    private SelectManager selectManager => SelectManager.Instance;
     private bool isSubscribed = false;
+
+    public event Action<SelectedDisplay> OnShowed;
+    public event Action<SelectedDisplay> OnHidden;
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
         Subscribe();
-        TryDisplay(SelectManager.Instance?.SelectedComponent);
-        TryHide(SelectManager.Instance?.SelectedComponent);
+
+        if (selectManager) {
+            TryDisplay(selectManager.SelectedComponent);
+            TryHide(selectManager.SelectedComponent);
+        }
     }
 
     protected override void OnDisable()
@@ -28,6 +36,32 @@ public abstract class SelectedDisplay : UIBehaviour
         base.Start();
 
         Subscribe();
+    }
+
+    public void Display(SelectComponent selectComponent)
+    {
+        OnShow(selectComponent);
+        OnShowed?.Invoke(this);
+    }
+
+    public void Hide(SelectComponent selectComponent)
+    {
+         OnHide(selectComponent);
+         OnHidden?.Invoke(this);
+    }
+
+    protected virtual void OnShow(SelectComponent selectComponent)
+    {
+        if (content) {
+            content.SetActive(true);
+        }
+    }
+
+    protected virtual void OnHide(SelectComponent selectComponent)
+    {
+        if (content) {
+            content.SetActive(false);
+        }
     }
 
     protected virtual void Subscribe()
@@ -66,20 +100,6 @@ public abstract class SelectedDisplay : UIBehaviour
         return true;
     }
 
-    protected virtual void Display(SelectComponent selectComponent)
-    {
-        if (content) {
-            content.SetActive(true);
-        }
-    }
-
-    protected virtual void Hide(SelectComponent selectComponent)
-    {
-        if (content) {
-            content.SetActive(false);
-        }
-    }
-
     protected abstract bool ShouldDisplay(SelectComponent selectComponent);
 
     private void TryDisplay(SelectComponent selectComponent)
@@ -98,12 +118,16 @@ public abstract class SelectedDisplay : UIBehaviour
 
     private void OnComponentSelected(SelectComponent selectComponent)
     {
+        if (!selectComponent) return;
+
         TryHide(selectComponent);
         TryDisplay(selectComponent);
     }
 
-    private void OnComponentDeselected(SelectComponent selectselectComponentd)
+    private void OnComponentDeselected(SelectComponent selectComponentd)
     {
-        TryHide(selectselectComponentd);
+        if (!selectComponentd) return;
+
+        TryHide(selectComponentd);
     }
 }
