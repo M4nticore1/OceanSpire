@@ -33,14 +33,6 @@ public abstract class AdRewardMenu : MonoBehaviour
         slidePanel.OnHidden -= OnClose;
     }
 
-    //private void Update()
-    //{
-    //    if (!isOpened && !slidePanel.isMoving) return;
-
-    //    AssignProgressBarFill();
-    //    AssignRemainingTime();
-    //}
-
     protected abstract void OnButtonClicked();
     protected abstract void OnOpen();
     protected abstract void OnClose();

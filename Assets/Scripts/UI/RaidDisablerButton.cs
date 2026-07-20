@@ -46,6 +46,8 @@ public class RaidDisablerButton : MonoBehaviour
 
     private void OnButtonStateChanged(CustomButtonState state)
     {
-        UpdateButtonEnabled();
+        if (state == CustomButtonState.Idle) {
+            UpdateButtonEnabled();
+        }
     }
 }

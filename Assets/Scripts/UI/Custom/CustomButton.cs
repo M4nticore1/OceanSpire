@@ -297,7 +297,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (!IsInteractable) return;
         //if (!IsPressed && !deselectOnOutsideClick) return;
 
-
         if (IsPressed) {
             if (IsSelectable)
                 SetState(CustomButtonState.Selected);
@@ -361,13 +360,13 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
 
     // Set State
-    public void SetState(CustomButtonState newState)
+    public void SetState(CustomButtonState state)
     {
-        if (newState == state) return;
-
-        ExitState(state);
-        state = newState;
-        EnterState(state);
+        if (state == this.state) return;
+        
+        ExitState(this.state);
+        this.state = state;
+        EnterState(this.state);
 
         HandleStateChanged();
     }

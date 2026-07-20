@@ -19,11 +19,6 @@ public class WindManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Update()
-    {
-        //ChangingWind();
-    }
-
     public void Init(WindData windData)
     {
         if (windData != null) {

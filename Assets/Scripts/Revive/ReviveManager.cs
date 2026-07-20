@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ReviveManager : MonoBehaviour
 {
-    private static ReviveManager instance;
-    public static ReviveManager Instance => instance;
+    public static ReviveManager Instance { get; private set; }
 
     [SerializeField] private RewardedAdsManager rewardedAdsManager;
 
@@ -17,6 +17,8 @@ public class ReviveManager : MonoBehaviour
     [SerializeField] private int chargeReviveTimeInSeconds = 900;
     public int ChargeReviveTimeInSeconds => chargeReviveTimeInSeconds;
 
+    private HashSet<ReviveComponent> reviveComponents = new();
+
     public int RemainingRevivesCount { get; private set; } = 0;
     public long? NextChargeReviveTimeInSeconds { get; private set; } = null;
 
@@ -24,17 +26,22 @@ public class ReviveManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance) {
-            Debug.Log("There's an extra ReviveCitizenManager on the scene!");
+        if (Instance) {
+            Debug.LogError($"[{nameof(ReviveManager)}] Another instance already exists in the scene! Destroying this.");
             Destroy(gameObject);
-
             return;
         }
 
-        instance = this;
+        Instance = this;
     }
 
     private void Update()
+    {
+        UpdateManager();
+        UpdateComponents();
+    }
+
+    private void UpdateManager()
     {
         if (RemainingRevivesCount >= maxRevivesCount) return;
 
@@ -48,6 +55,13 @@ public class ReviveManager : MonoBehaviour
         if (currentTime < NextChargeReviveTimeInSeconds) return;
 
         AddReviveCount();
+    }
+
+    private void UpdateComponents()
+    {
+        foreach (var component in reviveComponents) {
+            component.Tick();
+        }
     }
 
     public void Init()
@@ -89,6 +103,20 @@ public class ReviveManager : MonoBehaviour
 
             AddReviveCount();
         }
+    }
+
+    public void RegisterReviveComponent(ReviveComponent component)
+    {
+        if (!component) return;
+
+        reviveComponents.Add(component);
+    }
+
+    public void UnregisterReviveComponent(ReviveComponent component)
+    {
+        if (!component) return;
+
+        reviveComponents.Remove(component);
     }
 
     public void CreateRewardAndApply(Citizen citizen)

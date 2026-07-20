@@ -84,7 +84,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         healthComponent.OnDied += OnDied;
 
         reviveComponent.OnRevived += OnRevived;
-        reviveComponent.onLimitTimeOvered += OnReviveLimitTimeOvered;
+        reviveComponent.OnLimitTimeOvered += OnReviveLimitTimeOvered;
 
         attackComponent.OnAttackStarted += OnAttackStarted;
         attackComponent.OnAttackStopped += OnAttackStopped;
@@ -123,7 +123,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         healthComponent.OnDied -= OnDied;
 
         reviveComponent.OnRevived -= OnRevived;
-        reviveComponent.onLimitTimeOvered -= OnReviveLimitTimeOvered;
+        reviveComponent.OnLimitTimeOvered -= OnReviveLimitTimeOvered;
 
         attackComponent.OnAttackStarted -= OnAttackStarted;
         attackComponent.OnAttackStopped -= OnAttackStopped;

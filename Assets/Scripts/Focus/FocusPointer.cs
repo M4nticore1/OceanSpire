@@ -16,7 +16,17 @@ public class FocusPointer : MonoBehaviour
     [SerializeField] private float maxCircleScale = 1.5f;
     [SerializeField] private float scaleCircleSpeed = 1f;
 
-    private void Update()
+    private void OnEnable()
+    {
+        FocusManager.Instance.RegisterPointer(this);
+    }
+
+    private void OnDisable()
+    {
+        FocusManager.Instance.UnregisterPointer(this);
+    }
+
+    public void Tick()
     {
         UpdateArrowPosition();
         UpdateArrowScale();

@@ -18,7 +18,17 @@ public class ConstructionComponent : MonoBehaviour
     public static event Action<ConstructionComponent> OnGlobalConstructionStarted;
     public static event Action<ConstructionComponent> OnGlobalConstructionFinished;
 
-    private void Update()
+    private void OnEnable()
+    {
+        ConstructionManager.Instance.Register(this);
+    }
+
+    private void OnDisable()
+    {
+        ConstructionManager.Instance.Unregister(this);
+    }
+
+    public void Tick()
     {
         if (ConstructionFinishTime == null) return;
 

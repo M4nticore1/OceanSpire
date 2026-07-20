@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class FocusManager : MonoBehaviour
 {
-    private List<FocusPointer> focusPointersList = new();
-    public IReadOnlyList<FocusPointer> FocusPointersList => focusPointersList;
+    public static FocusManager Instance { get; private set; }
+
+    private HashSet<FocusPointer> focusPointers = new();
+    public IReadOnlyCollection<FocusPointer> FocusPointersList => focusPointers;
 
     private List<FocusComponent> focusComponentsList = new();
     public IReadOnlyList<FocusComponent> FocusComponentsList => focusComponentsList;
@@ -23,6 +25,24 @@ public class FocusManager : MonoBehaviour
     {
         FocusComponent.OnFocusedChanged -= OnFocusedChanged;
         FocusComponent.OnComponentDestroyed -= OnFocusComponentDestroyed;
+    }
+
+    private void Awake()
+    {
+        if (Instance) {
+            Debug.LogError($"[{nameof(FocusManager)}] Another instance already exists in the scene! Destroying this.");
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
+    private void Update()
+    {
+        foreach (var pointer in focusPointers) {
+            pointer.Tick();
+        }
     }
 
     public void Init()
@@ -53,6 +73,20 @@ public class FocusManager : MonoBehaviour
         }
     }
 
+    public void RegisterPointer(FocusPointer pointer)
+    {
+        if (!pointer) return;
+
+        focusPointers.Add(pointer);
+    }
+
+    public void UnregisterPointer(FocusPointer pointer)
+    {
+        if (!pointer) return;
+
+        focusPointers.Remove(pointer);
+    }
+
     private void CreateFocusPointer(FocusComponent focusComponent)
     {
         if (!focusComponent) return;
@@ -60,7 +94,7 @@ public class FocusManager : MonoBehaviour
         var pointer = FocusPointerFactory.CreatePointer(focusComponent.FocusPointerPrefab, focusComponent.transform);
         if (!pointer) return;
 
-        focusPointersList.Add(pointer);
+        focusPointers.Add(pointer);
         focusPointersDict.Add(focusComponent, pointer);
     }
 
@@ -70,7 +104,7 @@ public class FocusManager : MonoBehaviour
         if (!focusPointersDict.TryGetValue(focusComponent, out var pointer)) return;
 
         Destroy(pointer.gameObject);
-        focusPointersList.Remove(pointer);
+        focusPointers.Remove(pointer);
         focusPointersDict.Remove(focusComponent);
     }
 

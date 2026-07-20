@@ -13,21 +13,25 @@ public class ReviveComponent : MonoBehaviour, ILocalizable
     public long? DieTime { get; private set; } = null;
 
     public event Action OnRevived;
-    public event Action onLimitTimeOvered;
+    public event Action OnLimitTimeOvered;
 
     public static event Action<ReviveComponent> OnGlobalRevived;
 
     private void OnEnable()
     {
+        ReviveManager.Instance?.RegisterReviveComponent(this);
+
         health.OnDied += OnDied;
     }
 
     private void OnDisable()
     {
+        ReviveManager.Instance?.UnregisterReviveComponent(this);
+
         health.OnDied -= OnDied;
     }
 
-    private void Update()
+    public void Tick()
     {
         if (health.IsAlive) return;
         if (DieTime == null) return;
@@ -91,7 +95,7 @@ public class ReviveComponent : MonoBehaviour, ILocalizable
 
     private void OnLimitTimeUp()
     {
-        onLimitTimeOvered?.Invoke();
+        OnLimitTimeOvered?.Invoke();
     }
 
     private float GetReviveHealth()
