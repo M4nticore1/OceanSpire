@@ -1,9 +1,14 @@
+using System;
 using UnityEngine;
 
 public class UnloadingLootBoatState : BoatState, IProgressable
 {
     public const float UnloadSpeed = 20f;
-    private float currentWeightToUnload = 0f;
+    private float stackedWeightToUnload = 0f;
+
+    private CityStorage cityStorage = CityStorage.Instance;
+
+    public static event Action<ItemID, int> OnLootUnloaded;
 
     public UnloadingLootBoatState(Boat boat) : base(boat)
     {
@@ -54,6 +59,8 @@ public class UnloadingLootBoatState : BoatState, IProgressable
 
     private void ProcessUnloadResources()
     {
+        if (!cityStorage) return;
+
         var loot = GetItemToUnload();
         if (loot == null) return;
 
@@ -69,16 +76,19 @@ public class UnloadingLootBoatState : BoatState, IProgressable
         }
         else {
             var weightToUnload = UnloadSpeed * Time.deltaTime;
-            currentWeightToUnload += weightToUnload;
+            stackedWeightToUnload += weightToUnload;
 
-            amountToUnload = Mathf.Min((int)(currentWeightToUnload / lootWeight), lootAmount);
-            if (amountToUnload < 1) return;
+            amountToUnload = Mathf.Min((int)(stackedWeightToUnload / lootWeight), lootAmount);
+            if (amountToUnload <= 0) return;
 
-            currentWeightToUnload -= amountToUnload * lootWeight;
+            stackedWeightToUnload -= amountToUnload * lootWeight;
         }
 
+        if (amountToUnload <= 0) return;
+
         boat.Inventory.RemoveItem(lootId, amountToUnload);
-        CityStorage.Instance.Inventory.AddItem(lootId, amountToUnload);
+        cityStorage.Inventory.AddItem(lootId, amountToUnload);
+        OnLootUnloaded?.Invoke(lootId, amountToUnload);
     }
 
     private ItemInstance GetItemToUnload()

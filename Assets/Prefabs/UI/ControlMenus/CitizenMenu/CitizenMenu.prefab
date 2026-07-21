@@ -38,7 +38,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 79b5ed15285eaf945b5b2b769eb6da57, type: 2}
     - target: {fileID: 5588598354278059917, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5588598354278059917, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
       propertyPath: onReleased.m_PersistentCalls.m_Calls.Array.size
@@ -217,6 +217,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+--- !u!114 &4780363898441492596 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5588598354278059917, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
+  m_PrefabInstance: {fileID: 1142211388075632633}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
 --- !u!1 &5547891556668468624 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4839085701762615913, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
@@ -235,6 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CitizenMenu
   content: {fileID: 8246289435958774333}
+  closeButton: {fileID: 4780363898441492596}
   skillsPanel: {fileID: 2215212452621636395}
   equipmentPanel: {fileID: 505815509678335736}
 --- !u!1 &5682756847848722927 stripped

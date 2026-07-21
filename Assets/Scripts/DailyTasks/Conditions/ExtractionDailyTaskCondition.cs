@@ -9,23 +9,22 @@ public class ExtractionDailyTaskCondition : DailyTaskCondition
 
     protected override bool Subscribe()
     {
-        cityStorage.Inventory.OnItemAmountAdded += OnAddedItemAmount;
+        UnloadingLootBoatState.OnLootUnloaded += OnAddedItemAmount;
 
         return true;
     }
 
     protected override bool Unsubscribe()
     {
-        cityStorage.Inventory.OnItemAmountAdded -= OnAddedItemAmount;
+        UnloadingLootBoatState.OnLootUnloaded += OnAddedItemAmount;
 
         return true;
     }
 
-    private void OnAddedItemAmount(ItemInstance item)
+    private void OnAddedItemAmount(ItemID id, int amount)
     {
-        if (!cityStorageLoader.IsLoaded) return;
-        if (item.Definition != conditionItem) return;
+        if (id != conditionItem.ItemId) return;
 
-        InvokeProgressChanged(item.Amount);
+        InvokeProgressChanged(amount);
     }
 }

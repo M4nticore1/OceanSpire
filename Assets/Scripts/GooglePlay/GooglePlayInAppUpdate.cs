@@ -48,11 +48,11 @@ public class GooglePlayInAppUpdate : MonoBehaviour
     private void OnApplicationFocus(bool hasFocus)
     {
 #if UNITY_ANDROID && !UNITY_EDITOR
-    if (!isInitialized || appUpdateManager == null) return;
+        if (!isInitialized || appUpdateManager == null) return;
 
-    if (hasFocus) {
-        StartCoroutine(DelayedUpdateCheck());
-    }
+        if (hasFocus) {
+            StartCoroutine(DelayedUpdateCheck());
+        }
 #endif
     }
 
@@ -84,32 +84,30 @@ public class GooglePlayInAppUpdate : MonoBehaviour
         var appUpdateInfoOperation = appUpdateManager.GetAppUpdateInfo();
         yield return appUpdateInfoOperation;
 
-        if (appUpdateInfoOperation.IsSuccessful) {
-            isUpdateChecked = true;
-            appUpdateInfoResult = appUpdateInfoOperation.GetResult();
+        // Если проверка не удалась (нет сети, нет GMS и т.д.) — тихо выходим
+        if (!appUpdateInfoOperation.IsSuccessful) yield break;
 
-            if (appUpdateInfoResult.UpdateAvailability == UpdateAvailability.UpdateAvailable) {
-                int updatePriority = appUpdateInfoResult.UpdatePriority;
+        isUpdateChecked = true;
+        appUpdateInfoResult = appUpdateInfoOperation.GetResult();
 
-                if (updatePriority >= minUpdatePriority) {
-                    if (useFlexibleUpdate) {
-                        if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.FlexibleAppUpdateOptions())) {
-                            StartCoroutine(StartFlexibleUpdate());
-                        }
-                        else if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.ImmediateAppUpdateOptions())) {
-                            StartCoroutine(StartImmediateUpdate());
-                        }
+        if (appUpdateInfoResult.UpdateAvailability == UpdateAvailability.UpdateAvailable) {
+            int updatePriority = appUpdateInfoResult.UpdatePriority;
+
+            if (updatePriority >= minUpdatePriority) {
+                if (useFlexibleUpdate) {
+                    if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.FlexibleAppUpdateOptions())) {
+                        StartCoroutine(StartFlexibleUpdate());
                     }
-                    else {
-                        if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.ImmediateAppUpdateOptions())) {
-                            StartCoroutine(StartImmediateUpdate());
-                        }
+                    else if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.ImmediateAppUpdateOptions())) {
+                        StartCoroutine(StartImmediateUpdate());
+                    }
+                }
+                else {
+                    if (appUpdateInfoResult.IsUpdateTypeAllowed(AppUpdateOptions.ImmediateAppUpdateOptions())) {
+                        StartCoroutine(StartImmediateUpdate());
                     }
                 }
             }
-        }
-        else {
-            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Check updates failed: {appUpdateInfoOperation.Error}");
         }
     }
 
@@ -135,6 +133,7 @@ public class GooglePlayInAppUpdate : MonoBehaviour
         }
 
         if (startUpdateRequest == null) {
+            // Ошибка вызова API SDK
             Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Failed to create StartUpdate operation");
             isUpdateInProgress = false;
             yield break;
@@ -142,7 +141,6 @@ public class GooglePlayInAppUpdate : MonoBehaviour
 
         while (!startUpdateRequest.IsDone) {
             if (startUpdateRequest.Error != AppUpdateErrorCode.NoError) {
-                Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Error during download process: {startUpdateRequest.Error}");
                 isUpdateInProgress = false;
                 yield break;
             }
@@ -154,7 +152,6 @@ public class GooglePlayInAppUpdate : MonoBehaviour
             yield return StartCoroutine(CompleteFlexibleUpdate());
         }
         else {
-            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Download finished with unexpected status: {startUpdateRequest.Status}");
             isUpdateInProgress = false;
         }
     }
@@ -168,10 +165,6 @@ public class GooglePlayInAppUpdate : MonoBehaviour
 
         var completeUpdateOperation = appUpdateManager.CompleteUpdate();
         yield return completeUpdateOperation;
-
-        if (completeUpdateOperation.Error != AppUpdateErrorCode.NoError) {
-            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Complete update failed: {completeUpdateOperation.Error}");
-        }
 
         isUpdateInProgress = false;
     }
@@ -194,7 +187,6 @@ public class GooglePlayInAppUpdate : MonoBehaviour
         yield return startUpdateRequest;
 
         if (startUpdateRequest.Error != AppUpdateErrorCode.NoError) {
-            Debug.LogError($"[{nameof(GooglePlayInAppUpdate)}] Immediate update failed: {startUpdateRequest.Error}");
             isUpdateInProgress = false;
         }
     }

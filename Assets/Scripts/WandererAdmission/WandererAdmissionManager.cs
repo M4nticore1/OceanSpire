@@ -41,8 +41,8 @@ public class WandererAdmissionManager : MonoBehaviour
             return;
         }
 
-        if (cityStorage.Inventory.GetItem(ItemID.Population).Amount <= creaturesManager.Citizens.Count) {
-            Debug.LogError($"[{nameof(WandererAdmissionManager)}] The number of citizens exceeds the maximum number of the population");
+        if (!CanAcceptWanderer(wanderer)) {
+            Debug.LogError($"[{nameof(WandererAdmissionManager)}] You are trying to accept wanderer, but it's not possible");
             return;
         }
 
@@ -90,20 +90,6 @@ public class WandererAdmissionManager : MonoBehaviour
 
     public bool CanAcceptWanderer(Wanderer wanderer)
     {
-        if (!wanderer) return false;
-
-        var boatRider = wanderer.BoatRider;
-        if (!boatRider) return false;
-
-        var ridingBoat = boatRider.RidingBoat;
-        if (!ridingBoat) return false;
-
-        var dockPoint = ridingBoat.DockPoint;
-        if (!dockPoint) return false;
-
-        var entranceTransform = dockPoint.EntraceTransform;
-        if (!entranceTransform) return false;
-
         if (citizensManager.GetAvaliableCitizensCount() >= cityStorage.Inventory.GetItem(ItemID.Population).Stack.Amount) return false;
 
         return true;

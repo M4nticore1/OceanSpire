@@ -29,6 +29,9 @@ public abstract class Human : Creature, IClickable, ILocalizable
     [SerializeField] private HealthComponent healthComponent;
     public HealthComponent HealthComponent => healthComponent;
 
+    [SerializeField] private HealthDisplay healthDisplay;
+    public HealthDisplay HealthDisplay => healthDisplay;
+
     [SerializeField] private ReviveComponent reviveComponent;
     public ReviveComponent ReviveComponent => reviveComponent;
 

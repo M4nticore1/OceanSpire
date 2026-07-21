@@ -171,7 +171,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -70, y: -60}
+  m_AnchoredPosition: {x: -90, y: -60}
   m_SizeDelta: {x: 80, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7962490139341140447
@@ -248,8 +248,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 350, y: -60}
-  m_SizeDelta: {x: 350, y: 120}
+  m_AnchoredPosition: {x: 370, y: -60}
+  m_SizeDelta: {x: 400, y: 120}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &5754483360979932796
 CanvasRenderer:
@@ -465,8 +465,8 @@ MonoBehaviour:
   resourceAmountBar: {fileID: 2374835830659957067}
   changeColorType: 1
   useAmountColors: 0
-  enoughAmountColor: {r: 0, g: 1, b: 0, a: 1}
-  notEnoughAmountColor: {r: 1, g: 0, b: 0, a: 1}
+  enoughAmountColor: {r: 0.25, g: 1, b: 0.25, a: 1}
+  notEnoughAmountColor: {r: 1, g: 0.25, b: 0.25, a: 1}
 --- !u!224 &8563614998751166425 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1222584910654512513, guid: 872e1a5b0e9dabd40afe9098cf7ba87f, type: 3}

@@ -146,6 +146,10 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         InputListener.Instance.OnPressed -= OnPointerPressed;
         InputListener.Instance.OnReleased -= OnPointerReleased;
+
+        if (state == CustomButtonState.Hovered) {
+            SetState(CustomButtonState.Idle);
+        }
     }
 
     protected override void OnDestroy()

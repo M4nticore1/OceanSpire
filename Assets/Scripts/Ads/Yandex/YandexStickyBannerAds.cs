@@ -6,26 +6,23 @@ using YandexMobileAds.Base;
 
 public class YandexStickyBannerAds : BannerAds
 {
+    [SerializeField] private float retryDelay = 1f;
     private Banner banner;
-    private float retryDelay = 3f;
 
     private AdPosition lastAdPosition = AdPosition.BottomCenter;
     private Coroutine retryCoroutine;
     private bool isAdEnabled = false;
 
-    private void Start()
-    {
-        YandexAds.SetAgeRestricted(true);
-    }
-
     private void OnDestroy()
     {
         isAdEnabled = false;
-        CleanUpBanner();
 
         if (retryCoroutine != null) {
             StopCoroutine(retryCoroutine);
+            retryCoroutine = null;
         }
+
+        CleanUpBanner();
     }
 
     public override void ShowAd()
@@ -42,7 +39,7 @@ public class YandexStickyBannerAds : BannerAds
             retryCoroutine = null;
         }
 
-        HideAd();
+        CleanUpBanner();
         RequestBanner(adPosition);
     }
 
@@ -67,6 +64,7 @@ public class YandexStickyBannerAds : BannerAds
         banner.OnAdClicked -= HandleAdClicked;
         banner.OnImpression -= HandleImpression;
 
+        banner.Hide();
         banner.Destroy();
         banner = null;
     }
@@ -106,15 +104,11 @@ public class YandexStickyBannerAds : BannerAds
             return;
         }
 
-        if (banner != null) {
-            banner.Show();
-        }
+        banner?.Show();
     }
 
     private void HandleAdFailedToLoad(object sender, AdFailureEventArgs args)
     {
-        Debug.Log($"Banner AdFailedToLoad: {args.Message}");
-
         if (!isAdEnabled) return;
 
         if (retryCoroutine != null) {
@@ -128,7 +122,8 @@ public class YandexStickyBannerAds : BannerAds
     {
         yield return new WaitForSeconds(retryDelay);
 
-        if (isAdEnabled && banner == null) {
+        if (isAdEnabled) {
+            CleanUpBanner();
             RequestBanner(adPosition);
         }
 
@@ -137,11 +132,11 @@ public class YandexStickyBannerAds : BannerAds
 
     private void HandleAdClicked(object sender, EventArgs args)
     {
-        Debug.Log("Banner AdClicked");
+
     }
 
     private void HandleImpression(object sender, ImpressionData impressionData)
     {
-        Debug.Log("Banner Impression");
+
     }
 }

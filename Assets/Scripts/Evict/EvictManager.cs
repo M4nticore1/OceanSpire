@@ -5,14 +5,14 @@ public class EvictManager : MonoBehaviour
     [SerializeField] private DockPointsManager boatDocksManager;
     [SerializeField] private Boat evictBoatPrefab;
 
-    public void TryEvict(Citizen citizen)
+    public void TryEvictCitizen(Citizen citizen)
     {
         if (!ShouldEvict(citizen)) return;
 
-        Evict(citizen);
+        EvictCitizen(citizen);
     }
 
-    private void Evict(Citizen citizen)
+    private void EvictCitizen(Citizen citizen)
     {
         if (!citizen) return;
 

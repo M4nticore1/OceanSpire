@@ -397,8 +397,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -60}
-  m_SizeDelta: {x: 225, y: 100}
+  m_AnchoredPosition: {x: -10, y: -60}
+  m_SizeDelta: {x: 240, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5301494521504100942
 GameObject:
@@ -510,8 +510,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 237.5, y: -60}
-  m_SizeDelta: {x: 225, y: 100}
+  m_AnchoredPosition: {x: 250, y: -60}
+  m_SizeDelta: {x: 240, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6932965197611991669
 GameObject:
@@ -743,8 +743,8 @@ MonoBehaviour:
   resourceAmountBar: {fileID: 0}
   changeColorType: 1
   useAmountColors: 0
-  enoughAmountColor: {r: 0, g: 1, b: 0, a: 1}
-  notEnoughAmountColor: {r: 1, g: 0, b: 0, a: 1}
+  enoughAmountColor: {r: 0.25, g: 1, b: 0.25, a: 1}
+  notEnoughAmountColor: {r: 1, g: 0.25, b: 0.25, a: 1}
   powerText: {fileID: 6338001520001165169}
 --- !u!224 &8563614998751166425 stripped
 RectTransform:

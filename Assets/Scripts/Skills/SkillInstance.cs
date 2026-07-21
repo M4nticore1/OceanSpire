@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class SkillInstance : ILocalizable
@@ -38,7 +37,7 @@ public class SkillInstance : ILocalizable
 
     public void SetLevel(int value)
     {
-        CurrentLevel = math.clamp(value, 1, SkillDefinition.MaxSkillLevel + 1);
+        CurrentLevel = Mathf.Clamp(value, 1, SkillDefinition.MaxSkillLevel);
         OnLevelChanged?.Invoke(this, CurrentLevel);
     }
 

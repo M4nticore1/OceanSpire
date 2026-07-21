@@ -32,6 +32,9 @@ public class Citizen : Human
         AttackComponent.RemoveAllAttackers();
 
         HealthComponent.SetCurrentHealth(HealthComponent.MaxHealth);
+        HealthDisplay.Hide();
+
+        SelectComponent.Deselect();
 
         OnCitizenEvicted?.Invoke(this);
     }

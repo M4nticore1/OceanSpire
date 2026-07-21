@@ -13,12 +13,12 @@ public class CraftingControlMenu : ControlMenu
     [SerializeField] private SelectGroup selectGroup;
     [SerializeField] private FitSizeToChildren fitSizeToChildren;
 
-    protected override void OnOpen()
+    protected override void OnShow()
     {
 
     }
 
-    protected override void OnClose()
+    protected override void OnHide()
     {
 
     }

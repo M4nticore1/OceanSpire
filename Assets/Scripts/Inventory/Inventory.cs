@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour, ILocalizable
@@ -86,12 +85,12 @@ public class Inventory : MonoBehaviour, ILocalizable
 
         var stack = GetStack(item.Definition.Stack);
         if (useAmountLimit) {
-            amount = math.clamp(amount, 0, stack.Amount - stack.GetItemAmountsSum());
+            amount = Mathf.Clamp(amount, 0, stack.Amount - stack.GetItemAmountsSum());
         }
 
         if (useWeightLimit) {
             float remainingWeight = weightLimit - currentWeight;
-            amount = math.clamp(amount, 0, (int)(remainingWeight / item.Definition.Weight));
+            amount = Mathf.Clamp(amount, 0, (int)(remainingWeight / item.Definition.Weight));
         }
 
         var startAmount = item.Amount;

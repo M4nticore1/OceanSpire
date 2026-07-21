@@ -1,11 +1,15 @@
+using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public abstract class ControlMenu : MonoBehaviour
+public abstract class ControlMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private GameObject content;
+    [SerializeField] private CustomButton closeButton;
 
     protected bool isOpened = false;
+
+    public event Action OnShown;
+    public event Action OnHidden;
 
     private void OnEnable()
     {
@@ -17,39 +21,14 @@ public abstract class ControlMenu : MonoBehaviour
         Unsubscribe();
     }
 
-    public void Open()
-    {
-        content.SetActive(true);
-        UpdateMenu();
-
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
-
-        isOpened = true;
-        OnOpen();
-    }
-
-    public void Close()
-    {
-        content.SetActive(false);
-
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
-
-        isOpened = false;
-        OnClose();
-    }
-
-    protected abstract void OnOpen();
-    protected abstract void OnClose();
-    protected abstract void UpdateMenu();
-
     protected virtual void Subscribe()
     {
-
+        closeButton.OnReleased.AddListener(OnCloseButtonClicked);
     }
 
     protected virtual void Unsubscribe()
     {
-
+        closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
     }
 
     protected virtual bool ShouldSubscribe()
@@ -60,5 +39,39 @@ public abstract class ControlMenu : MonoBehaviour
     protected virtual bool ShouldUnsubscribe()
     {
         return true;
+    }
+
+    public void Show()
+    {
+        isOpened = true;
+        content.SetActive(true);
+        UpdateMenu();
+
+        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        OnShow();
+
+        OnShown?.Invoke();
+    }
+
+    public void Hide()
+    {
+        isOpened = false;
+        content.SetActive(false);
+
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        OnHide();
+
+        OnHidden?.Invoke();
+    }
+
+    protected abstract void OnShow();
+
+    protected abstract void OnHide();
+
+    protected abstract void UpdateMenu();
+
+    private void OnCloseButtonClicked()
+    {
+        Hide();
     }
 }

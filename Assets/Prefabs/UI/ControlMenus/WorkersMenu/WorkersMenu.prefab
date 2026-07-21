@@ -644,6 +644,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b208fde309f9a2141b5e47d7cd37f9af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
+--- !u!114 &4780363898441492596 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5588598354278059917, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
+  m_PrefabInstance: {fileID: 1142211388075632633}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
 --- !u!1 &5547891556668468624 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4839085701762615913, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
@@ -662,6 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkersControlMenu
   content: {fileID: 8246289435958774333}
+  closeButton: {fileID: 4780363898441492596}
   creaturesManager: {fileID: 0}
   selectManager: {fileID: 0}
   citizenWidgetPrefab: {fileID: 4805816691179792696, guid: b1a163b079b78b042a9dd451beb4d620, type: 3}

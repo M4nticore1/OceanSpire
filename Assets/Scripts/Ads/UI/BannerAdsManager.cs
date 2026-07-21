@@ -66,8 +66,7 @@ public class BannerAdsManager : MonoBehaviour
 
     private void OnHidden()
     {
-        activeWindowsCount--;
-        activeWindowsCount = Mathf.Clamp(activeWindowsCount, 0, activeWindowsCount);
+        activeWindowsCount = Mathf.Max(0, activeWindowsCount - 1);
 
         if (!bannerAds) {
             Debug.LogError($"[{nameof(BannerAdsManager)}] Banner Ads is not on the scene!");

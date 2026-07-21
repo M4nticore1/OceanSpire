@@ -19,7 +19,7 @@ public class EditorItemsFill : MonoBehaviour
     private void FillItems()
     {
         foreach (var item in CityStorage.Inventory.Items) {
-            item.SetAmount(item.Stack.Amount);
+            CityStorage.Inventory.AddItem(item.Definition.ItemId, item.Stack.Amount);
         }
     }
 

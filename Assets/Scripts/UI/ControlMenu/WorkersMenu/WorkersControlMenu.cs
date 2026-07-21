@@ -43,13 +43,13 @@ public class WorkersControlMenu : ControlMenu
         CreatureInteractComponent.OnInteractorInteractBuildirngRemoved -= OnCitizenWorkRemoved;
     }
 
-    protected override void OnOpen()
+    protected override void OnShow()
     {
         UpdateMenus();
         InputStateManager.Instance.SetGameplayInputBlocked(true);
     }
 
-    protected override void OnClose()
+    protected override void OnHide()
     {
         InputStateManager.Instance.SetGameplayInputBlocked(false);
     }

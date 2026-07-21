@@ -76,7 +76,7 @@ public class EvictMenu : MonoBehaviour, IOpenable
 
     private void OnEvictButtonClicked()
     {
-        evictManager.TryEvict(SelectedCitizen);
+        evictManager.TryEvictCitizen(SelectedCitizen);
         Hide();
     }
 

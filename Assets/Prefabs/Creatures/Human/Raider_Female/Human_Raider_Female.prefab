@@ -293,6 +293,7 @@ MonoBehaviour:
   genderComponent: {fileID: 8328271919694642245}
   nameComponent: {fileID: 374115513058551452}
   healthComponent: {fileID: 7719323413831070654}
+  healthDisplay: {fileID: 8760509714274860151}
   reviveComponent: {fileID: 8449329797804703458}
   cityNavigator: {fileID: 5590457673492052500}
   elevatorPassenger: {fileID: 4838781242632844817}
@@ -303,6 +304,7 @@ MonoBehaviour:
   skillsComponent: {fileID: 1368942810633588043}
   selectComponent: {fileID: 2870980040640394751}
   contextMenuTarget: {fileID: 3668612473584063623}
+  isClickable: 1
   raidBuildingTime: 10
 --- !u!114 &715190593776507752 stripped
 MonoBehaviour:
@@ -476,6 +478,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cc3cd9bfb9a09a4ab9f8bc56e55b5d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReviveHandler
+--- !u!114 &8760509714274860151 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3049533498409162954, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
+  m_PrefabInstance: {fileID: 6035258515464070333}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da4bc9f867a8f8a44993f0d38bbbe227, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthDisplay
 --- !u!1001 &6424272722053990317
 PrefabInstance:
   m_ObjectHideFlags: 0

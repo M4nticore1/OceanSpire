@@ -5,7 +5,7 @@ public class CitizenMenu : ControlMenu
     [SerializeField] private SkillsPanel skillsPanel;
     [SerializeField] private EquipmentPanel equipmentPanel;
 
-    protected override void OnOpen()
+    protected override void OnShow()
     {
         var selectedCitizen = SelectManager.Instance.GetSelectedHuman();
         if (!selectedCitizen) return;
@@ -13,7 +13,7 @@ public class CitizenMenu : ControlMenu
         skillsPanel.SetSkills(selectedCitizen.SkillsComponent);
     }
 
-    protected override void OnClose()
+    protected override void OnHide()
     {
 
     }

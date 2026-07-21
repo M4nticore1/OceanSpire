@@ -7,7 +7,7 @@ public class CitizenMenuContextElement : ContextElement
 
     protected override void OnButtonClicked()
     {
-        citizenMenu.Open();
+        citizenMenu.Show();
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)

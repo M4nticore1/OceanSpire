@@ -7,7 +7,7 @@ public class RecipesContextElement : ContextElement
 
     protected override void OnButtonClicked()
     {
-        recipesMenu.Open();
+        recipesMenu.Show();
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)

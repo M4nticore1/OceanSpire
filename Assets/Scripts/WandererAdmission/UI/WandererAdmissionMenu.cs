@@ -124,7 +124,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
     private void OnHumanDied(Human human)
     {
         var citizen = human as Citizen;
-        if (citizen == null) return;
+        if (!citizen) return;
 
         UpdateAcceptButtonEnabled();
     }

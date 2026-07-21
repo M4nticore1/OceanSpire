@@ -57,7 +57,7 @@ public class InformationMenu : MonoBehaviour, IOpenable
     {
         slidePanel.Hide();
 
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.SetGameplayInputBlocked(false);
 
         OnHidden?.Invoke();
     }

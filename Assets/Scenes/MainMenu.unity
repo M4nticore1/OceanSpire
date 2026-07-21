@@ -1044,7 +1044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46ef7d90c353c374e8ad4a82aebe44c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GooglePlayInAppUpdate
-  useFlexibleUpdate: 1
+  useFlexibleUpdate: 0
   minUpdatePriority: 0
 --- !u!4 &1546888464
 Transform:

@@ -17,7 +17,7 @@ MonoBehaviour:
     amount: 1
   consumeResources:
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 700
+    amount: 300
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-    amount: 500
+    amount: 130
   produceTime: 480

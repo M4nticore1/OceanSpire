@@ -12,12 +12,12 @@ public class EquipmentMenu : ControlMenu
         CreateWidgets();
     }
 
-    protected override void OnOpen()
+    protected override void OnShow()
     {
 
     }
 
-    protected override void OnClose()
+    protected override void OnHide()
     {
 
     }

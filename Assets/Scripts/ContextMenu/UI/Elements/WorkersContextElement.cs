@@ -7,7 +7,7 @@ public class WorkersContextElement : ContextElement
 
     protected override void OnButtonClicked()
     {
-        workersMenu.Open();
+        workersMenu.Show();
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)
