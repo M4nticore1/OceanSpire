@@ -42,14 +42,14 @@ public abstract class ManagementMenu : UIBehaviour
         gameObject.SetActive(true);
 
         ResetScrollRects();
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
     }
 
     public void Close()
     {
         managementMenu.SetActive(false);
         gameObject.SetActive(false);
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
     }
 
     public void ResetOpenedList()

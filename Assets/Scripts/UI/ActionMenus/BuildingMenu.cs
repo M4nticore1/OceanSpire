@@ -102,7 +102,7 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
         UpdateIcon(building);
         UpdateBuildButtonEnabled();
 
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         Show();
     }
@@ -152,7 +152,7 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
 
     private void OnClosed()
     {
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
     }
 
     private void Action()

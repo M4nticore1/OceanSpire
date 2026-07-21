@@ -77,7 +77,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
         skillsPanel.SetSkills(citizen.SkillsComponent);
         UpdateCitizenNameText();
 
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         Show();
     }
@@ -93,7 +93,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     private void OnClosed()
     {
         isOpened = false;
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
     }
 
     private void UpdateMenuShowed()

@@ -31,7 +31,7 @@ public class InventoryMenu : MonoBehaviour, IOpenable
     {
         slidePanel.Show();
         inventoryPanel.SetInventoryAndApply(inventory);
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         Show();
     }
@@ -44,7 +44,7 @@ public class InventoryMenu : MonoBehaviour, IOpenable
 
     private void OnHide()
     {
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
     }
 
     private void OnCloseButtonClicked()

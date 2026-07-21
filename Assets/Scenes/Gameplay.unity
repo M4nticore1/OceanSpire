@@ -6828,6 +6828,7 @@ MonoBehaviour:
   - {fileID: 1310088125}
   - {fileID: 1620267202}
   - {fileID: 96441838}
+  - {fileID: 1547912306}
   - {fileID: 383697690}
 --- !u!4 &507966076 stripped
 Transform:
@@ -17129,6 +17130,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
   m_PrefabInstance: {fileID: 153750281}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1547912306 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6695948279195503795, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+  m_PrefabInstance: {fileID: 383697685}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 378120c1445d69f4bbc7fb45f7fb0d1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DailyTasksMenu
 --- !u!1 &1549214498
 GameObject:
   m_ObjectHideFlags: 0

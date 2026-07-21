@@ -48,7 +48,7 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     {
         content.gameObject.SetActive(true);
         dailyRewardManager.SetRewardViewed(true);
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         OnShown?.Invoke();
     }
@@ -56,7 +56,7 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     public void Hide()
     {
         content.gameObject.SetActive(false);
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
 
         OnHidden?.Invoke();
     }

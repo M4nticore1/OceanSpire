@@ -45,7 +45,7 @@ public class EvictMenu : MonoBehaviour, IOpenable
         UpdateSkills(citizen);
         UpdateEvictButtonEnabled(citizen);
 
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         OnShown?.Invoke();
     }
@@ -53,7 +53,7 @@ public class EvictMenu : MonoBehaviour, IOpenable
     public void Hide()
     {
         slidePanel.Hide();
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
 
         OnHidden?.Invoke();
     }

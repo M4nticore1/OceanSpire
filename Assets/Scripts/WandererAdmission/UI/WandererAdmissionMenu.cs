@@ -65,7 +65,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
         UpdateWandererNameText();
         UpdateSkillsPanel();
 
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         Show();
     }
@@ -84,7 +84,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 
         isOpened = false;
         selectedWanderer.BoatRider.RidingBoat.SelectComponent.Deselect();
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
     }
 
     private void UpdateWandererNameText()

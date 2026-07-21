@@ -44,7 +44,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         gameObject.SetActive(true);
         TryRemoveWidgets();
         TryCreateWidgets();
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         OnShown?.Invoke();
     }
@@ -52,7 +52,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
     public void Hide()
     {
         gameObject.SetActive(false);
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
 
         OnHidden?.Invoke();
     }

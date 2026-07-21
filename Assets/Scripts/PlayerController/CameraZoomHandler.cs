@@ -55,7 +55,7 @@ public class CameraZoomHandler : MonoBehaviour
 
     private void AddZoomVelocity(float value)
     {
-        if (inputStateManager.isGameplayInputBlocked) return;
+        if (inputStateManager.IsGameplayInputBlocked) return;
 
         float multiplier = 1f;
 
@@ -129,7 +129,7 @@ public class CameraZoomHandler : MonoBehaviour
     {
         if (!inputHandler.isPrimaryInteractionPressed) return false;
         if (!inputHandler.isSecondaryInteractionPressed) return false;
-        if (inputStateManager.isGameplayInputBlocked) return false;
+        if (inputStateManager.IsGameplayInputBlocked) return false;
 
         return true;
     }

@@ -21,7 +21,7 @@ public class PlayerSettingsMenu : MonoBehaviour, IOpenable
     public void Show()
     {
         gameObject.SetActive(true);
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         OnShown?.Invoke();
     }
@@ -29,7 +29,7 @@ public class PlayerSettingsMenu : MonoBehaviour, IOpenable
     public void Hide()
     {
         gameObject.SetActive(false);
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
 
         OnHidden?.Invoke();
     }

@@ -55,7 +55,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         buildingImage.sprite = building.UpgradeComponent.IsUnderUpgrade ? building.NextLevelDefinition.BuildingThumb : building.LevelDefinition.BuildingThumb;
 
         this.building = building;
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         OnShown?.Invoke();
     }
@@ -63,7 +63,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     public void Hide()
     {
         gameObject.SetActive(false);
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
 
         OnHidden?.Invoke();
     }

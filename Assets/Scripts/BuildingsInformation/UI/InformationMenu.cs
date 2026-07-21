@@ -47,8 +47,7 @@ public class InformationMenu : MonoBehaviour, IOpenable
         UpdateNameText();
         UpdateDescriptionText();
         UpdateImage();
-
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         Show();
     }
@@ -56,8 +55,7 @@ public class InformationMenu : MonoBehaviour, IOpenable
     public void Hide()
     {
         slidePanel.Hide();
-
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
 
         OnHidden?.Invoke();
     }

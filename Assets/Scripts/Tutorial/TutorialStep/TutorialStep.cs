@@ -70,7 +70,7 @@ public class TutorialStep : MonoBehaviour
         }
 
         if (blockCameraMovement)
-            InputStateManager.Instance.SetGameplayInputBlocked(true);
+            InputStateManager.Instance.AddBlockTarget();
     }
 
     protected virtual void OnComplete()
@@ -82,7 +82,7 @@ public class TutorialStep : MonoBehaviour
         }
 
         if (blockCameraMovement)
-            InputStateManager.Instance.SetGameplayInputBlocked(false);
+            InputStateManager.Instance.RemoveBlockTarget();
     }
 
     private void OnCompleteEventListenerTriggered()

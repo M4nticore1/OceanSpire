@@ -47,7 +47,7 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
         content.SetActive(true);
         UpdateMenu();
 
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
         OnShow();
 
         OnShown?.Invoke();
@@ -58,7 +58,7 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
         isOpened = false;
         content.SetActive(false);
 
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
         OnHide();
 
         OnHidden?.Invoke();

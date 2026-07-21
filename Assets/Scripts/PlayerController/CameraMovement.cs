@@ -131,7 +131,7 @@ public class CameraMovement : MonoBehaviour
 
     private bool ShouldMove()
     {
-        if (InputStateManager.Instance.isGameplayInputBlocked) return false;
+        if (InputStateManager.Instance.IsGameplayInputBlocked) return false;
         if (playerInputHandler.CameraMoveInput.sqrMagnitude <= 0) return false;
 
         if (inDeadZone) {

@@ -46,7 +46,7 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
     {
         isShowed = true;
         slidePanel.Show();
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
 
         OnShown?.Invoke();
     }
@@ -61,7 +61,7 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
     private void OnHide()
     {
         isShowed = false;
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
     }
 
     private void OnCloseButtonClicked()

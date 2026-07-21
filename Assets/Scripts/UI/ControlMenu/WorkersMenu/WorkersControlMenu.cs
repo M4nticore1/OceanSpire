@@ -46,12 +46,12 @@ public class WorkersControlMenu : ControlMenu
     protected override void OnShow()
     {
         UpdateMenus();
-        InputStateManager.Instance.SetGameplayInputBlocked(true);
+        InputStateManager.Instance.AddBlockTarget();
     }
 
     protected override void OnHide()
     {
-        InputStateManager.Instance.SetGameplayInputBlocked(false);
+        InputStateManager.Instance.RemoveBlockTarget();
     }
 
     private void TryUpdateMenu(Human human)
