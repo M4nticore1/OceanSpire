@@ -16762,6 +16762,7 @@ MonoBehaviour:
   focusPointerPrefab: {fileID: 7107070857234032566, guid: 7380ea1ec1c0bdb4c9a6b3854677de30, type: 3}
   focusManager: {fileID: 1382970734}
   boatsManager: {fileID: 1934078805}
+  boatDocksManager: {fileID: 1711846142}
   maxClusterDistance: 15
 --- !u!1001 &1510976772
 PrefabInstance:
