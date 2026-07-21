@@ -9,6 +9,7 @@ public class DriftingLootFocusManager : MonoBehaviour
     [SerializeField] private FocusPointer focusPointerPrefab;
     [SerializeField] private FocusManager focusManager;
     [SerializeField] private BoatsManager boatsManager;
+    [SerializeField] private DockPointsManager boatDocksManager;
 
     [Header("Other")]
     [SerializeField] private float maxClusterDistance = 10f;
@@ -97,10 +98,10 @@ public class DriftingLootFocusManager : MonoBehaviour
         var nearestDriftingLoot = GetNearestDriftingLoot(newFocusedDriftingLoot);
 
         if (nearestDriftingLoot) {
-            float sqrMaxDistance = maxClusterDistance * maxClusterDistance;
-            float currentSqrDistance = (nearestDriftingLoot.transform.position - newFocusedDriftingLoot.transform.position).sqrMagnitude;
+            float maxClusterDistance = this.maxClusterDistance * this.maxClusterDistance;
+            float lootSqrDistance = (nearestDriftingLoot.transform.position - newFocusedDriftingLoot.transform.position).sqrMagnitude;
 
-            if (currentSqrDistance <= sqrMaxDistance) {
+            if (lootSqrDistance <= maxClusterDistance) {
                 nearestDriftingLoot.FocusComponent.SetFocused(false);
                 return;
             }
@@ -167,6 +168,18 @@ public class DriftingLootFocusManager : MonoBehaviour
         if (!boatsManager) return 1;
         if (boatsManager.CitizenBoats == null) return 1;
 
-        return boatsManager.CitizenBoats.Count;
+        var count = 0;
+        foreach (var boat in boatsManager.CitizenBoats) {
+            if (!boat) continue;
+
+            var dockPoint = boat.DockPoint;
+            if (!dockPoint) continue;
+
+            if (!boatDocksManager.CitizenBoatDocks.Contains(dockPoint)) continue;
+
+            count++;
+        }
+
+        return count;
     }
 }
