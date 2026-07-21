@@ -32,6 +32,22 @@ public abstract class SelectedDisplay : MonoBehaviour
         Subscribe();
     }
 
+    private void Subscribe()
+    {
+        if (!ShouldSubscribe()) return;
+
+        OnSubscribe();
+        isSubscribed = true;
+    }
+
+    private void Unsubscribe()
+    {
+        if (!ShouldUnsubscribe()) return;
+
+        OnUnsubscribe();
+        isSubscribed = false;
+    }
+
     public void Display(SelectComponent selectComponent)
     {
         OnShow(selectComponent);
@@ -58,24 +74,16 @@ public abstract class SelectedDisplay : MonoBehaviour
         }
     }
 
-    protected virtual void Subscribe()
+    protected virtual void OnSubscribe()
     {
-        if (!ShouldSubscribe()) return;
-
         selectManager.OnComponentSelected += OnComponentSelected;
         selectManager.OnComponentDeselected += OnComponentDeselected;
-
-        isSubscribed = true;
     }
 
-    protected virtual void Unsubscribe()
+    protected virtual void OnUnsubscribe()
     {
-        if (!ShouldUnsubscribe()) return;
-
         selectManager.OnComponentSelected -= OnComponentSelected;
         selectManager.OnComponentDeselected -= OnComponentDeselected;
-
-        isSubscribed = false;
     }
 
     protected virtual bool ShouldSubscribe()

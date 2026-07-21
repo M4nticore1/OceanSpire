@@ -12,7 +12,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     [SerializeField] private CustomButton closeMenuButton;
     private Building building;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -57,7 +57,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         this.building = building;
         InputStateManager.Instance.AddBlockTarget();
 
-        OnShown?.Invoke();
+        OnShowed?.Invoke();
     }
 
     public void Hide()

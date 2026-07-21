@@ -14,7 +14,7 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
 
     private bool isShowed;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -48,7 +48,7 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
         slidePanel.Show();
         InputStateManager.Instance.AddBlockTarget();
 
-        OnShown?.Invoke();
+        OnShowed?.Invoke();
     }
 
     public void Hide()

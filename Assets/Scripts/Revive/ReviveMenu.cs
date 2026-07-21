@@ -26,7 +26,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     private Citizen citizen;
     private bool isOpened = false;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -59,7 +59,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        OnShown?.Invoke();
+        OnShowed?.Invoke();
     }
 
     public void Show(Citizen citizen)

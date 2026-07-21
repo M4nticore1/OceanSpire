@@ -5,7 +5,7 @@ public class PlayerSettingsMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private CustomButton closeButton;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -23,7 +23,7 @@ public class PlayerSettingsMenu : MonoBehaviour, IOpenable
         gameObject.SetActive(true);
         InputStateManager.Instance.AddBlockTarget();
 
-        OnShown?.Invoke();
+        OnShowed?.Invoke();
     }
 
     public void Hide()

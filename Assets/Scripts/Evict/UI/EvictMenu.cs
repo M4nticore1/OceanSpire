@@ -15,7 +15,7 @@ public class EvictMenu : MonoBehaviour, IOpenable
 
     private Citizen SelectedCitizen;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -47,7 +47,7 @@ public class EvictMenu : MonoBehaviour, IOpenable
 
         InputStateManager.Instance.AddBlockTarget();
 
-        OnShown?.Invoke();
+        OnShowed?.Invoke();
     }
 
     public void Hide()

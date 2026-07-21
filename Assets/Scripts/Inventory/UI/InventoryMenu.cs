@@ -7,7 +7,7 @@ public class InventoryMenu : MonoBehaviour, IOpenable
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private CustomButton closeButton;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -24,7 +24,7 @@ public class InventoryMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        OnShown?.Invoke();
+        OnShowed?.Invoke();
     }
 
     public void Show(Inventory inventory)

@@ -16,7 +16,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
     private bool isSubscribed = false;
     private bool areWidgetsSpawned = false;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -46,7 +46,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         TryCreateWidgets();
         InputStateManager.Instance.AddBlockTarget();
 
-        OnShown?.Invoke();
+        OnShowed?.Invoke();
     }
 
     public void Hide()

@@ -12,7 +12,7 @@ public class InformationMenu : MonoBehaviour, IOpenable
 
     private Building building;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -27,7 +27,14 @@ public class InformationMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        OnShown?.Invoke();
+        slidePanel.Show();
+
+        UpdateNameText();
+        UpdateDescriptionText();
+        UpdateImage();
+        InputStateManager.Instance.AddBlockTarget();
+
+        OnShowed?.Invoke();
     }
 
     public void Show(Building building)
@@ -42,13 +49,6 @@ public class InformationMenu : MonoBehaviour, IOpenable
         if (!building.Definition.DescriptionLocalizationItem) return;
 
         this.building = building;
-        slidePanel.Show();
-
-        UpdateNameText();
-        UpdateDescriptionText();
-        UpdateImage();
-        InputStateManager.Instance.AddBlockTarget();
-
         Show();
     }
 

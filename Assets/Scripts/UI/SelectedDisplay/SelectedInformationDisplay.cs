@@ -8,16 +8,16 @@ public class SelectedInformationDisplay : SelectedDisplay
 
     private Building building;
 
-    protected override void Subscribe()
+    protected override void OnSubscribe()
     {
-        base.Subscribe();
+        base.OnSubscribe();
 
         button.OnReleased.AddListener(OnButtonClicked);
     }
 
-    protected override void Unsubscribe()
+    protected override void OnUnsubscribe()
     {
-        base.Unsubscribe();
+        base.OnUnsubscribe();
 
         button.OnReleased.RemoveListener(OnButtonClicked);
     }

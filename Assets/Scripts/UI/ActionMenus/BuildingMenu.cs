@@ -30,7 +30,7 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
     protected Building building { get; private set; }
     private bool isSubscribed = false;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     protected override void OnEnable()
@@ -81,7 +81,7 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
 
     public void Show()
     {
-        OnShown?.Invoke();
+        OnShowed?.Invoke();
     }
 
     // IOpenable

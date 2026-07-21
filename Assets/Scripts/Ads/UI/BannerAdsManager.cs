@@ -29,7 +29,7 @@ public class BannerAdsManager : MonoBehaviour
                 continue;
             }
 
-            target.OnShown += OnShown;
+            target.OnShowed += OnShown;
             target.OnHidden += OnHidden;
         }
     }
@@ -39,7 +39,7 @@ public class BannerAdsManager : MonoBehaviour
         foreach (var target in ShowBannerTargets) {
             if (target == null) continue;
 
-            target.OnShown -= OnShown;
+            target.OnShowed -= OnShown;
             target.OnHidden -= OnHidden;
         }
 

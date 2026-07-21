@@ -5,22 +5,23 @@ using UnityEngine.InputSystem;
 public class InputListener : MonoBehaviour
 {
     public static InputListener Instance { get; private set; }
-    public event Action OnPressed;
-    public event Action OnReleased;
 
     public GameObject startPressedObject { get; private set; }
     public Vector2 startPosition { get; private set; }
     public Vector2 lastPosition { get; private set; }
 
+    public event Action OnPressed;
+    public event Action OnReleased;
+
     private void Awake()
     {
         if (Instance) {
-            Debug.LogWarning("Another InputListener is already in the scene!");
+            Debug.LogError("Another InputListener is already in the scene!");
             Destroy(gameObject);
+            return;
         }
-        else {
-            Instance = this;
-        }
+
+        Instance = this;
     }
 
     private void Update()
@@ -43,12 +44,14 @@ public class InputListener : MonoBehaviour
     {
         startPressedObject = PointerUtils.GetRaycastUIResult().gameObject;
         startPosition = PointerUtils.GetCurrentInputPosition();
+
         OnPressed?.Invoke();
     }
 
     private void HandleRelease()
     {
         OnReleased?.Invoke();
+
         lastPosition = PointerUtils.GetCurrentInputPosition();
         startPressedObject = null;
     }

@@ -16,7 +16,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
     private bool isOpened = false;
     private Wanderer selectedWanderer;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -48,7 +48,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
     public void Show()
     {
         UpdateAcceptButtonEnabled();
-        OnShown?.Invoke();
+        OnShowed?.Invoke();
     }
 
     public void Show(Wanderer wanderer)

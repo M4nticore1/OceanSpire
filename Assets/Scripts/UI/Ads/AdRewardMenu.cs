@@ -21,7 +21,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     {
         RewardedAdsManager.OnRewardReceived += OnRewardReceived;
         watchButton.OnReleased.AddListener(OnWatchAdButtonClicked);
-        slidePanel.OnShown += OnOpen;
+        slidePanel.OnShowed += OnOpen;
         slidePanel.OnHidden += OnClose;
     }
 
@@ -29,7 +29,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     {
         RewardedAdsManager.OnRewardReceived -= OnRewardReceived;
         watchButton.OnReleased.RemoveListener(OnWatchAdButtonClicked);
-        slidePanel.OnShown -= OnOpen;
+        slidePanel.OnShowed -= OnOpen;
         slidePanel.OnHidden -= OnClose;
     }
 

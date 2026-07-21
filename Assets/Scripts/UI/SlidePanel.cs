@@ -49,7 +49,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
     private Vector2 releasePossition;
     private int openedFrame = 0;
 
-    public event Action OnShown;
+    public event Action OnShowed;
     public event Action OnHidden;
 
     private void Awake()
@@ -152,7 +152,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         isOpened = true;
         isMoving = true;
 
-        OnShown?.Invoke();
+        OnShowed?.Invoke();
     }
 
     public void Hide()

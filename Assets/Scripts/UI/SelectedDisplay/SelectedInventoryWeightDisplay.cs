@@ -20,9 +20,9 @@ public class SelectedInventoryWeightDisplay : SelectedDisplay
         inventory.OnItemAmountChanged -= OnItemAmountChanged;
     }
 
-    protected override void Unsubscribe()
+    protected override void OnUnsubscribe()
     {
-        base.Unsubscribe();
+        base.OnUnsubscribe();
 
         SetInventory(null);
     }
