@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class InstanceId : MonoBehaviour
 {
-    private Guid guid;
+    private Guid guid = Guid.Empty;
     private bool isRegistered;
 
     private InstancesManager instancesManager => InstancesManager.Instance;

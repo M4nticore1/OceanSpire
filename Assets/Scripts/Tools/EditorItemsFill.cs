@@ -34,6 +34,8 @@ public class EditorItemsFill : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         FillItems();
+#else
+        yield break;
 #endif
     }
 }

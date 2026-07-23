@@ -45,12 +45,15 @@ public class InstancesManager
 
     public InstanceId GetInstance(Guid guid)
     {
-        if (guid == Guid.Empty) return null;
+        if (guid == Guid.Empty) {
+            Debug.LogError($"[{nameof(InstancesManager)}] Guid to get instance is empty!");
+            return null;
+        }
 
         var instance = instances.GetValueOrDefault(guid);
-
         if (!instance) {
             Debug.LogError($"[{nameof(InstancesManager)}] Instance by Id {guid} does not exitst!");
+            return null;
         }
 
         return instance;

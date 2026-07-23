@@ -36,7 +36,7 @@ public class CreaturesLoader : WorldLoader
             }
 
             var prefab = creaturesList.GetCreature(data.Id);
-            CreatureFactory.CreateHuman(prefab, data.Position.Vector3(), Quaternion.Euler(data.Rotation.Vector3()), data);
+            CreatureFactory.CreateHuman(prefab, data);
         }
     }
 
@@ -79,7 +79,7 @@ public class CreaturesLoader : WorldLoader
                 Skills = SkillsData.CreateByLevelsCount(levelsCount),
             };
 
-            var citizen = CreatureFactory.CreateHuman(prefab, position, Quaternion.Euler(rotation), citizenData);
+            var citizen = CreatureFactory.CreateHuman(prefab, citizenData);
         }
     }
 }

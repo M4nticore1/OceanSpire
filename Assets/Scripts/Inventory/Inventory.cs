@@ -27,7 +27,6 @@ public class Inventory : MonoBehaviour, ILocalizable
     private Dictionary<ItemID, ItemInstance> itemsDict = new();
     private Dictionary<ItemStackEnum, ItemStack> itemStacks = new();
 
-
     public event Action<ItemInstance> OnItemAdded;
     public event Action<ItemInstance> OnItemRemoved;
 
@@ -124,7 +123,7 @@ public class Inventory : MonoBehaviour, ILocalizable
 
         item.RemoveAmount(amount);
 
-        if (autoCleaning && item.Amount <= 0) {
+        if (item.Amount <= 0 && autoCleaning) {
             RemoveItem(id);
         }
 

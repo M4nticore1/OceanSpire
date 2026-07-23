@@ -12,7 +12,7 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
     [SerializeField] private TextLocalizer currentEnergyText;
     [SerializeField] private TextLocalizer nextChargeText;
 
-    private bool isShowed;
+    public bool IsShowed { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -37,16 +37,16 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
 
     private void Update()
     {
-        if (!isShowed) return;
+        if (!IsShowed) return;
 
         nextChargeText.UpdateText();
     }
 
     public void Show()
     {
-        isShowed = true;
+        IsShowed = true;
         slidePanel.Show();
-        InputStateManager.Instance.AddBlockTarget();
+        InputStateManager.Instance.AddBlockTarget(this);
 
         OnShowed?.Invoke();
     }
@@ -60,8 +60,8 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
 
     private void OnHide()
     {
-        isShowed = false;
-        InputStateManager.Instance.RemoveBlockTarget();
+        IsShowed = false;
+        InputStateManager.Instance.RemoveBlockTarget(this);
     }
 
     private void OnCloseButtonClicked()

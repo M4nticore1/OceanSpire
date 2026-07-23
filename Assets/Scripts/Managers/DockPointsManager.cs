@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DockPointsManager : MonoBehaviour
+public class BoatDocksManager : MonoBehaviour
 {
-    public static DockPointsManager Instance;
+    public static BoatDocksManager Instance;
 
     public List<BoatDockPoint> CitizenBoatDocks { get; private set; } = new List<BoatDockPoint>();
 
@@ -28,6 +28,7 @@ public class DockPointsManager : MonoBehaviour
 
     public void RegisterCitizenDockPoint(BoatDockPoint dockPoint)
     {
+        if (!dockPoint) return;
         if (CitizenBoatDocks.Contains(dockPoint)) return;
 
         CitizenBoatDocks.Add(dockPoint);
@@ -35,6 +36,7 @@ public class DockPointsManager : MonoBehaviour
 
     public void UnregisterCitizenDockPoint(BoatDockPoint dockPoint)
     {
+        if (!dockPoint) return;
         if (!CitizenBoatDocks.Contains(dockPoint)) return;
 
         CitizenBoatDocks.Remove(dockPoint);

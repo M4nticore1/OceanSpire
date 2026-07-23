@@ -6,6 +6,8 @@ public class PierConstruction : BuildingConstruction
     [SerializeField] private List<BoatDockPoint> boatDocks = new List<BoatDockPoint>();
     public List<BoatDockPoint> BoatDocks => boatDocks;
 
+    BoatDocksManager boatDocksManager => BoatDocksManager.Instance;
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -23,15 +25,33 @@ public class PierConstruction : BuildingConstruction
     private void RegisterBoatDocks()
     {
         foreach (var dock in boatDocks) {
+            if (!dock) {
+                Debug.LogError($"[{nameof(PierConstruction)}] Dock is not valid at {name}!");
+            }
+
             dock.Init();
-            DockPointsManager.Instance.RegisterCitizenDockPoint(dock);
+
+            if (boatDocksManager) {
+                boatDocksManager.RegisterCitizenDockPoint(dock);
+                continue;
+            }
+            else {
+                Debug.LogError($"[{nameof(PierConstruction)}] Boat Docks Manager is not valid!");
+            }
         }
     }
 
     private void UnregisterBoatDocks()
     {
         foreach (var dock in boatDocks) {
-            DockPointsManager.Instance.UnregisterCitizenDockPoint(dock);
+            if (!dock) {
+                Debug.LogError($"[{nameof(PierConstruction)}] Dock is not valid at {name}!");
+                continue;
+            }
+
+            if (boatDocksManager) {
+                boatDocksManager.UnregisterCitizenDockPoint(dock);
+            }
         }
     }
 }

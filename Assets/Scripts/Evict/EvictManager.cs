@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EvictManager : MonoBehaviour
 {
-    [SerializeField] private DockPointsManager boatDocksManager;
+    [SerializeField] private BoatDocksManager boatDocksManager;
     [SerializeField] private Boat evictBoatPrefab;
 
     public void TryEvictCitizen(Citizen citizen)

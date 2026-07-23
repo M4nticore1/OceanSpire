@@ -46,12 +46,11 @@ public class WorkersControlMenu : ControlMenu
     protected override void OnShow()
     {
         UpdateMenus();
-        InputStateManager.Instance.AddBlockTarget();
     }
 
     protected override void OnHide()
     {
-        InputStateManager.Instance.RemoveBlockTarget();
+
     }
 
     private void TryUpdateMenu(Human human)
@@ -219,7 +218,7 @@ public class WorkersControlMenu : ControlMenu
     private bool ShouldUpdateMenu(Human human)
     {
         if (!human) return false;
-        if (!isOpened) return false;
+        if (!IsShowed) return false;
 
         var citizen = human as Citizen;
         if (!citizen) return false;

@@ -5,7 +5,7 @@ public class WorldSaveManager : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private BuildingsManager buildingsManager;
     [SerializeField] private ElevatorCabinsManager elevatorCabinsManager;
-    [SerializeField] private DockPointsManager dockPointsManager;
+    [SerializeField] private BoatDocksManager dockPointsManager;
     [SerializeField] private BoatsManager boatsManager;
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private DriftingLootManager driftingLootManager;

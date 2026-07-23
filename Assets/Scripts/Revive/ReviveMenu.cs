@@ -24,7 +24,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     [SerializeField] private TextMeshProUGUI nextReviveChargeText;
 
     private Citizen citizen;
-    private bool isOpened = false;
+    public bool IsShowed { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -50,7 +50,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     private void Update()
     {
         if (!citizen) return;
-        if (!isOpened) return;
+        if (!IsShowed) return;
 
         UpdateMenuShowed();
         UpdateTimeToDie();
@@ -71,13 +71,13 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
         this.citizen = citizen;
 
-        isOpened = true;
+        IsShowed = true;
         slidePanel.Show();
 
         skillsPanel.SetSkills(citizen.SkillsComponent);
         UpdateCitizenNameText();
 
-        InputStateManager.Instance.AddBlockTarget();
+        InputStateManager.Instance.AddBlockTarget(this);
 
         Show();
     }
@@ -92,8 +92,8 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
     private void OnClosed()
     {
-        isOpened = false;
-        InputStateManager.Instance.RemoveBlockTarget();
+        IsShowed = false;
+        InputStateManager.Instance.RemoveBlockTarget(this);
     }
 
     private void UpdateMenuShowed()

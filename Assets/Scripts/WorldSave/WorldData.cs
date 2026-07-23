@@ -65,7 +65,7 @@ public class WorldData
         PlayerController playerController,
         BuildingsManager buildings,
         ElevatorCabinsManager elevatorCabins,
-        DockPointsManager boatDocks,
+        BoatDocksManager boatDocks,
         BoatsManager boats,
         CreaturesManager creatures,
         DriftingLootManager driftingLoot,

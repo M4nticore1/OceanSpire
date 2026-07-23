@@ -10,6 +10,11 @@ public class TimeFormatterSymbolsController : MonoBehaviour
     private string MinutehortName => LocalizationManager.Instance.GetLocalizedText(minuteShortNameLocalization);
     private string SecondShortName => LocalizationManager.Instance.GetLocalizedText(secondShortNameLocalization);
 
+    private void Awake()
+    {
+        UpdateSymbols();
+    }
+
     private void OnEnable()
     {
         LocalizationManager.Instance.OnLocalizationChanged += OnLocalizationChanged;

@@ -13,8 +13,9 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
     [SerializeField] private CustomButton rejectButton;
     [SerializeField] private TextLocalizer wandererNameText;
 
-    private bool isOpened = false;
     private Wanderer selectedWanderer;
+
+    public bool IsShowed { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -58,14 +59,14 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
             return;
         }
 
-        isOpened = true;
+        IsShowed = true;
         slidePanel.Show();
         selectedWanderer = wanderer;
 
         UpdateWandererNameText();
         UpdateSkillsPanel();
 
-        InputStateManager.Instance.AddBlockTarget();
+        InputStateManager.Instance.AddBlockTarget(this);
 
         Show();
     }
@@ -80,11 +81,11 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 
     private void OnClosed()
     {
-        if (!isOpened) return;
+        if (!IsShowed) return;
 
-        isOpened = false;
+        IsShowed = false;
         selectedWanderer.BoatRider.RidingBoat.SelectComponent.Deselect();
-        InputStateManager.Instance.RemoveBlockTarget();
+        InputStateManager.Instance.RemoveBlockTarget(this);
     }
 
     private void UpdateWandererNameText()

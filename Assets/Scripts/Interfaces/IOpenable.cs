@@ -3,6 +3,8 @@ using UnityEngine;
 
 public interface IOpenable
 {
+    public bool IsShowed { get; }
+
     public void Show();
     public void Hide();
 

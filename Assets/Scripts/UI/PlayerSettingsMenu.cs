@@ -5,6 +5,8 @@ public class PlayerSettingsMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private CustomButton closeButton;
 
+    public bool IsShowed { get; private set; } = false;
+
     public event Action OnShowed;
     public event Action OnHidden;
 
@@ -20,16 +22,18 @@ public class PlayerSettingsMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
+        IsShowed = true;
         gameObject.SetActive(true);
-        InputStateManager.Instance.AddBlockTarget();
+        InputStateManager.Instance.AddBlockTarget(this);
 
         OnShowed?.Invoke();
     }
 
     public void Hide()
     {
+        IsShowed = false;
         gameObject.SetActive(false);
-        InputStateManager.Instance.RemoveBlockTarget();
+        InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
     }

@@ -15,7 +15,7 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private BuildingsManager buildingsManager;
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private BoatsManager boatsManager;
-    [SerializeField] private DockPointsManager boatDocksManager;
+    [SerializeField] private BoatDocksManager boatDocksManager;
     [SerializeField] private CityStorage cityStorage;
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
@@ -386,7 +386,7 @@ public class RaidManager : MonoBehaviour
             SpawnPosition = new Vector3Data(position)
         };
 
-        return CreatureFactory.CreateHuman(prefab, position, Quaternion.Euler(rotation), data);
+        return CreatureFactory.CreateHuman(prefab, data);
     }
 
     private Boat CreateBoat(Vector3 position, Quaternion rotation)

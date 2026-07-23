@@ -35,7 +35,10 @@ public class ContextMenuManager : MonoBehaviour
 
     private void HandleContextTargetSelected(ContextMenuTarget target)
     {
-        if (!target) return;
+        if (!target) {
+            Debug.LogError($"[{nameof(ContextMenuManager)}] Selected Context Target is not valid!");
+            return;
+        }
 
         ContextMenuTarget = target;
         OnContextMenuTargetSelected?.Invoke(target);
@@ -43,7 +46,10 @@ public class ContextMenuManager : MonoBehaviour
 
     private void HandleContextTargetDeselected(ContextMenuTarget target)
     {
-        if (!target) return;
+        if (!target) {
+            Debug.LogError($"[{nameof(ContextMenuManager)}] Deselected Context Target is not valid!");
+            return;
+        }
 
         if (target == ContextMenuTarget) {
             ContextMenuTarget = null;

@@ -9,7 +9,7 @@ public class DriftingLootFocusManager : MonoBehaviour
     [SerializeField] private FocusPointer focusPointerPrefab;
     [SerializeField] private FocusManager focusManager;
     [SerializeField] private BoatsManager boatsManager;
-    [SerializeField] private DockPointsManager boatDocksManager;
+    [SerializeField] private BoatDocksManager boatDocksManager;
 
     [Header("Other")]
     [SerializeField] private float maxClusterDistance = 10f;

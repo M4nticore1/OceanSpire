@@ -9,7 +9,6 @@ public class SelectedHumanNameDisplay : SelectedDisplay
         base.OnShow(selectComponent);
 
         var human = selectComponent.GetComponent<Human>();
-
         text.SetPlaceHolderLocalization(human.NameComponent);
     }
 

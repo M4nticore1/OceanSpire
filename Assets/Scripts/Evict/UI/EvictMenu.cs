@@ -15,6 +15,8 @@ public class EvictMenu : MonoBehaviour, IOpenable
 
     private Citizen SelectedCitizen;
 
+    public bool IsShowed { get; private set; } = false;
+
     public event Action OnShowed;
     public event Action OnHidden;
 
@@ -34,6 +36,7 @@ public class EvictMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
+        IsShowed = true;
         slidePanel.Show();
 
         var citizen = SelectManager.Instance.GetSelectedHuman() as Citizen;
@@ -45,15 +48,16 @@ public class EvictMenu : MonoBehaviour, IOpenable
         UpdateSkills(citizen);
         UpdateEvictButtonEnabled(citizen);
 
-        InputStateManager.Instance.AddBlockTarget();
+        InputStateManager.Instance.AddBlockTarget(this);
 
         OnShowed?.Invoke();
     }
 
     public void Hide()
     {
+        IsShowed = false;
         slidePanel.Hide();
-        InputStateManager.Instance.RemoveBlockTarget();
+        InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
     }

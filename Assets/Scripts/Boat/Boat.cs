@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum BoatStateEnum
 {
@@ -63,6 +65,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     [SerializeField] private bool isClickable = true;
     public bool IsClickable => isClickable;
 
+    public bool SentToPier { get; private set; } = false;
+
     public event Action OnClicked;
 
     public event Action<BoatRider> OnRiderAdded;
@@ -85,6 +89,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         selectComponent.OnSelected += OnSelected;
         selectComponent.OnDeselected += OnDeselected;
+
+        BoatsManager.Instance.RegisterBoat(this);
     }
 
     private void OnDisable()
@@ -137,6 +143,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
             }
         }
 
+        FixDockPoint();
         SetState(boatData.State);
 
         transform.position = boatData.Position.Vector3();
@@ -146,8 +153,6 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         UpdateClickable();
         UpdateContextMenuTarget();
-
-        BoatsManager.Instance.RegisterBoat(this);
     }
 
     public void OnReturnedToDock()
@@ -242,6 +247,28 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         if (CurrentState != null) {
             CurrentState.OnBoatDockChanged(null);
+        }
+    }
+
+    private void FixDockPoint()
+    {
+        if (DockPoint != null) return;
+        if (CurrentStateEnum == BoatStateEnum.FloatingAway) return;
+
+        int index = 0;
+
+        switch (CurrentStatus) {
+            case HumanStatusEnum.Citizen:
+                index = BoatsManager.Instance.CitizenBoats.ToList().IndexOf(this);
+                SetDockPoint(BoatDocksManager.Instance.CitizenBoatDocks[index]);
+                break;
+            case HumanStatusEnum.Wanderer:
+                index = BoatsManager.Instance.WandererBoats.ToList().IndexOf(this);
+                SetDockPoint(BoatDocksManager.Instance.WandererDockPoints[index]);
+                break;
+            case HumanStatusEnum.Raider:
+                SetDockPoint(BoatDockUtils.GetNearestFreeDockPoint(BoatDocksManager.Instance.RaiderDockPoints, transform.position));
+                break;
         }
     }
 
@@ -371,12 +398,19 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     public bool ShouldFindLoot()
     {
         if (CurrentStateEnum == BoatStateEnum.CollectingLoot) return false;
+        if (CurrentStateEnum == BoatStateEnum.UnloadingLoot) return false;
         if (CurrentState as FindingLootBoatState != null) return false;
 
         if (!CurrentRider) return false;
 
+        var targetBoat = CurrentRider.TargetBoat;
+        if (targetBoat && targetBoat != this) return false;
+
         var citizen = CurrentRider.GetComponent<Citizen>();
         if (!citizen) return false;
+
+        if (citizen.IsEvicted) return false;
+        if (!citizen.HealthComponent.IsAlive) return false;
 
         var interactBuilding = citizen.InteractComponent.InteractBuilding;
         if (!interactBuilding) return false;

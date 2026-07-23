@@ -9,13 +9,15 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     [SerializeField] private DailyRewardManager dailyRewardManager;
     [SerializeField] private DailyRewardWidget bonusChestRewardWidgetPrefab;
 
-    [SerializeField] private GameObject content;
+    [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private CustomButton openButton;
     [SerializeField] private CustomButton closeButton;
     [SerializeField] private GridLayoutGroup layoutGroup;
     [SerializeField] private TextLocalizer resetTimeText;
 
     private List<DailyRewardWidget> spawnedWidgets = new();
+
+    public bool IsShowed { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -46,17 +48,19 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        content.gameObject.SetActive(true);
+        IsShowed = true;
+        slidePanel.Show();
         dailyRewardManager.SetRewardViewed(true);
-        InputStateManager.Instance.AddBlockTarget();
+        InputStateManager.Instance.AddBlockTarget(this);
 
         OnShowed?.Invoke();
     }
 
     public void Hide()
     {
-        content.gameObject.SetActive(false);
-        InputStateManager.Instance.RemoveBlockTarget();
+        IsShowed = false;
+        slidePanel.Hide();
+        InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
     }

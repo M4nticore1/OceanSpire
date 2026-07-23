@@ -30,6 +30,12 @@ public class Wanderer : Human
         SelectComponent.SetClickable(false);
 
         base.OnInit(data);
+
+        var ridingBoat = BoatRider.RidingBoat;
+        if (!ridingBoat) {
+            Debug.LogError($"[{nameof(Wanderer)}] Riding Boat is not valid!");
+            Destroy(gameObject);
+        }
     }
 
     protected override void DetermineNextAction()
@@ -92,7 +98,11 @@ public class Wanderer : Human
     public override bool ShouldClick()
     {
         if (!base.ShouldClick()) return false;
-        if (BoatRider.RidingBoat.Movement.IsMoving) return false;
+
+        var ridingBoat = BoatRider.RidingBoat;
+        if (!ridingBoat) return false;
+
+        if (ridingBoat.Movement.IsMoving) return false;
 
         return true;
     }
@@ -101,8 +111,10 @@ public class Wanderer : Human
     {
         base.OnClick();
 
-        if (BoatRider.RidingBoat) {
-            BoatRider.RidingBoat.SelectComponent.Click();
+        var ridingBoat = BoatRider.RidingBoat;
+
+        if (ridingBoat) {
+            ridingBoat.SelectComponent.Click();
         }
         else {
             SelectComponent.Click();

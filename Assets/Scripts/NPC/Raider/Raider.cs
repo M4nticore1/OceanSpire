@@ -47,6 +47,12 @@ public class Raider : Human, IProgressable
         InteractComponent.RemoveInteractBuilding();
 
         UpdateTargetBoat();
+
+        var ridingBoat = BoatRider.RidingBoat;
+        if (!ridingBoat) {
+            Debug.LogError($"[{nameof(Wanderer)}] Riding Boat is not valid!");
+            Destroy(gameObject);
+        }
     }
 
     protected override void OnInit(CreatureData data)
@@ -60,6 +66,12 @@ public class Raider : Human, IProgressable
         SelectComponent.SetClickable(false);
 
         base.OnInit(data);
+
+        var ridingBoat = BoatRider.RidingBoat;
+        if (!ridingBoat) {
+            Debug.LogError($"[{nameof(Wanderer)}] Riding Boat is not valid!");
+            Destroy(gameObject);
+        }
     }
 
     protected override void DetermineNextAction()
@@ -295,7 +307,7 @@ public class Raider : Human, IProgressable
             return;
         }
 
-        Debug.LogError("No free raid boats available");
+        Debug.LogError($"[{nameof(Raider)}] No free raid boats available");
     }
 
     public float GetProgress()

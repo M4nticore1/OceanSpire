@@ -72,7 +72,7 @@ public class InventoryPanel : MonoBehaviour
     {
         foreach (var item in inventory.Items) {
             if (item == null) continue;
-            if (item.Amount <= 0) continue;
+            //if (item.Amount <= 0) continue;
 
             CreateWidget(item);
         }
@@ -95,7 +95,7 @@ public class InventoryPanel : MonoBehaviour
     private void CreateWidget(ItemInstance item)
     {
         if (item == null) return;
-        if (item.Amount <= 0) return;
+        //if (item.Amount <= 0) return;
 
         var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
         widget.SetItem(item.Definition);

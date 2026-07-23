@@ -10,7 +10,7 @@ public class PierModule : BuildingModule
     [SerializeField] private DockPointsLoader docksLoader;
 
     [SerializeField] private BoatsManager boatsManager;
-    [SerializeField] private DockPointsManager boatDocksManager;
+    [SerializeField] private BoatDocksManager boatDocksManager;
     [SerializeField] private Boat citizenBoatPrefab;
 
     protected override void Subscribe()
@@ -78,13 +78,13 @@ public class PierModule : BuildingModule
         for (int i = 0; i < boats.Count; i++) {
             var boat = boats[i];
             if (!boat) {
-                Debug.LogError($"boat is not valid by index {i}");
+                Debug.LogError($"[{nameof(PierModule)}] Boat is not valid by index {i}");
                 continue;
             }
 
             var dockPoint = PierConstruction.BoatDocks[i];
             if (!dockPoint) {
-                Debug.LogError($"dockPoint is not valid by index {i}");
+                Debug.LogError($"[{nameof(PierModule)}] Dock Point is not valid by index {i}");
                 continue;
             }
 

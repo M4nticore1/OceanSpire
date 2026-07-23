@@ -44,7 +44,7 @@ public abstract class AdRewardMenu : MonoBehaviour
         AssignImage();
         AssignDescryption();
 
-        InputStateManager.Instance.AddBlockTarget();
+        InputStateManager.Instance.AddBlockTarget(this);
         isOpened = true;
     }
 
@@ -53,7 +53,7 @@ public abstract class AdRewardMenu : MonoBehaviour
         OnClose();
         slidePanel.Hide();
 
-        InputStateManager.Instance.RemoveBlockTarget();
+        InputStateManager.Instance.RemoveBlockTarget(this);
         isOpened = false;
     }
 

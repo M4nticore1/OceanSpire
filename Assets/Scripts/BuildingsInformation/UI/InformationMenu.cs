@@ -12,6 +12,8 @@ public class InformationMenu : MonoBehaviour, IOpenable
 
     private Building building;
 
+    public bool IsShowed { get; private set; } = false;
+
     public event Action OnShowed;
     public event Action OnHidden;
 
@@ -27,12 +29,13 @@ public class InformationMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
+        IsShowed = true;
         slidePanel.Show();
 
         UpdateNameText();
         UpdateDescriptionText();
         UpdateImage();
-        InputStateManager.Instance.AddBlockTarget();
+        InputStateManager.Instance.AddBlockTarget(this);
 
         OnShowed?.Invoke();
     }
@@ -54,8 +57,9 @@ public class InformationMenu : MonoBehaviour, IOpenable
 
     public void Hide()
     {
+        IsShowed = false;
         slidePanel.Hide();
-        InputStateManager.Instance.RemoveBlockTarget();
+        InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
     }

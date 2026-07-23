@@ -70,7 +70,7 @@ public class TutorialStep : MonoBehaviour
         }
 
         if (blockCameraMovement)
-            InputStateManager.Instance.AddBlockTarget();
+            InputStateManager.Instance.AddBlockTarget(this);
     }
 
     protected virtual void OnComplete()
@@ -82,7 +82,7 @@ public class TutorialStep : MonoBehaviour
         }
 
         if (blockCameraMovement)
-            InputStateManager.Instance.RemoveBlockTarget();
+            InputStateManager.Instance.RemoveBlockTarget(this);
     }
 
     private void OnCompleteEventListenerTriggered()

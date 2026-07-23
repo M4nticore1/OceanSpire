@@ -6,7 +6,7 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
     [SerializeField] private GameObject content;
     [SerializeField] private CustomButton closeButton;
 
-    protected bool isOpened = false;
+    public bool IsShowed { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -43,11 +43,11 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        isOpened = true;
+        IsShowed = true;
         content.SetActive(true);
         UpdateMenu();
 
-        InputStateManager.Instance.AddBlockTarget();
+        InputStateManager.Instance.AddBlockTarget(this);
         OnShow();
 
         OnShowed?.Invoke();
@@ -55,10 +55,10 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
 
     public void Hide()
     {
-        isOpened = false;
+        IsShowed = false;
         content.SetActive(false);
 
-        InputStateManager.Instance.RemoveBlockTarget();
+        InputStateManager.Instance.RemoveBlockTarget(this);
         OnHide();
 
         OnHidden?.Invoke();

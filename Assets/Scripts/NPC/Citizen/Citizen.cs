@@ -89,7 +89,6 @@ public class Citizen : Human
             return;
         }
         if (ShouldStartAttacking()) {
-            Debug.Log("ShouldStartAttacking");
             StartAttacking();
             return;
         }
@@ -144,27 +143,16 @@ public class Citizen : Human
         return true;
     }
 
-    public override bool ShouldBoatFindLoot()
-    {
-        if (!base.ShouldBoatFindLoot()) return false;
+    //public override bool ShouldBoatFindLoot()
+    //{
+    //    if (!base.ShouldBoatFindLoot()) return false;
 
-        if (IsEvicted) return false;
-        if (!HealthComponent.IsAlive) return false;
+    //    //var ridingBoat = BoatRider.RidingBoat;
+    //    //if (ridingBoat != BoatRider.TargetBoat) return false;
+    //    //if (!ridingBoat.ShouldFindLoot()) return false;
 
-        var ridingBoat = BoatRider.RidingBoat;
-        if (ridingBoat != BoatRider.TargetBoat) return false;
-
-        var boatState = ridingBoat.CurrentStateEnum;
-        if (boatState == BoatStateEnum.FindingLoot) return false;
-        if (boatState == BoatStateEnum.UnloadingLoot) return false;
-        //if (boatState == BoatStateEnum.MovingToDock) return false;
-
-        var interactBuilding = InteractComponent.InteractBuilding;
-        if (!interactBuilding) return false;
-        if (!interactBuilding.GetComponent<PierModule>()) return false;
-
-        return true;
-    }
+    //    //return true;
+    //}
 
     public override bool ShouldStartAttacking()
     {

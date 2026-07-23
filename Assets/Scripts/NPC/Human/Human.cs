@@ -455,7 +455,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         if (!boatRider.RidingBoat) return false;
         if (!boatRider.RidingBoat.ShouldFindLoot()) return false;
 
-        return true;
+        return false;
     }
 
     public virtual bool ShouldBoatFloatAway()

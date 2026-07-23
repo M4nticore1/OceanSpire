@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DockPointsLoader : WorldLoader
 {
-    [SerializeField] private DockPointsManager dockPointsManager;
+    [SerializeField] private BoatDocksManager dockPointsManager;
 
     protected override void Load(WorldData worldData)
     {
@@ -67,7 +67,7 @@ public class DockPointsLoader : WorldLoader
 
             var data = docksData[i];
             if (data == null) {
-                Debug.LogWarning($"[{nameof(DockPointsLoader)}] Dock data at index {i} is null! Create default.");
+                Debug.LogError($"[{nameof(DockPointsLoader)}] Dock data at index {i} is null! Create default.");
                 data = BoatDockData.Default();
             }
 

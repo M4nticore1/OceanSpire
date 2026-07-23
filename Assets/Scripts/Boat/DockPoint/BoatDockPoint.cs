@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,6 +24,12 @@ public class BoatDockPoint : MonoBehaviour
     {
         if (boatDockData == null) {
             Debug.LogError($"[{nameof(BoatDockPoint)}] Boat Dock Data is not valid!");
+            Init();
+            return;
+        }
+
+        if (boatDockData.InstanceId == Guid.Empty) {
+            Debug.LogError($"[{nameof(BoatDockPoint)}] Guid is empty!");
             Init();
             return;
         }

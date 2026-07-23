@@ -93,24 +93,24 @@ public class PierBuildingStrategy : BuildingStrategy
         for (int i = 0; i < building.WorkComponent.Workers.Count; i++) {
             var worker = building.WorkComponent.Workers[i];
             if (!worker) {
-                Debug.Log($"Worker not found at {building.name}");
+                Debug.LogError($"Worker not found at {building.name}");
                 continue;
             }
 
             var boatRider = worker.GetComponent<BoatRider>();
             if (!boatRider) {
-                Debug.Log($"Boat Rider not found at {worker.name}");
+                Debug.LogError($"Boat Rider not found at {worker.name}");
                 continue;
             }
 
             if (BoatsManager.Instance.CitizenBoats.Count <= i) {
-                Debug.Log($"Citizen Boats count is less than worker index {i}");
+                Debug.LogError($"Citizen Boats count is less than worker index {i}");
                 continue;
             }
 
             var boat = BoatsManager.Instance.CitizenBoats[i];
             if (!boat) {
-                Debug.Log($"Citizen Boat not found at {BoatsManager.Instance.name}");
+                Debug.LogError($"Citizen Boat not found at {BoatsManager.Instance.name}");
                 continue;
             }
 

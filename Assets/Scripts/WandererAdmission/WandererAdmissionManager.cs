@@ -72,7 +72,7 @@ public class WandererAdmissionManager : MonoBehaviour
         };
 
         GameObject.Destroy(ridingBoat.gameObject);
-        var citizen = CreatureFactory.CreateHuman(citizenPrefab, position, rotaton, data);
+        var citizen = CreatureFactory.CreateHuman(citizenPrefab, data);
 
         OnWandererAccepted?.Invoke(citizen);
     }

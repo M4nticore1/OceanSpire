@@ -8,7 +8,7 @@ public class WanderersManager : MonoBehaviour
     [Header("Main")]
     [SerializeField] private WandererAdmissionManager wandererAdmissionManager;
     [SerializeField] private CreaturesManager creaturesManager;
-    [SerializeField] private DockPointsManager dockPointsManager;
+    [SerializeField] private BoatDocksManager dockPointsManager;
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
     [SerializeField] private HumanNamesList humanNamesList;
@@ -295,7 +295,7 @@ public class WanderersManager : MonoBehaviour
             SpawnPosition = new Vector3Data(position)
         };
 
-        return CreatureFactory.CreateHuman(prefab, position, Quaternion.Euler(rotation), data);
+        return CreatureFactory.CreateHuman(prefab, data);
     }
 
     private Boat CreateBoat(Vector3 position, Vector3 rotation)

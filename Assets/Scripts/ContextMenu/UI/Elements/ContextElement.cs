@@ -1,59 +1,98 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public abstract class ContextElement : UIBehaviour
+public abstract class ContextElement : MonoBehaviour, IOpenable
 {
     [Header("Main")]
     [SerializeField] private GameObject content;
+
+    [SerializeField] private int siblingIndex = 0;
+    public int SiblingIndex => siblingIndex;
+
     [SerializeField] protected CustomButton button;
 
-    public bool IsOpened { get; protected set; } = false;
+    private ContextMenuManager contextMenuManager => ContextMenuManager.Instance;
+
+    public bool IsShowed { get; protected set; } = false;
     private bool isSubscribed = false;
 
-    protected override void OnEnable()
-    {
-        base.OnEnable();
+    public event Action OnShowed;
+    public event Action OnHidden;
 
+    public static event Action<ContextElement> OnElementShowed;
+    public static event Action<ContextElement> OnElementHidden;
+
+    private void OnEnable()
+    {
         TrySubscribe();
     }
 
-    protected override void OnDisable()
+    private void OnDisable()
     {
-        base.OnDisable();
-
         TryUnsubscribe();
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
         TrySubscribe();
     }
 
     protected virtual void Subscribe()
     {
-        button.OnReleased.AddListener(OnButtonClicked);
-        ContextMenuManager.Instance.OnContextMenuTargetSelected += OnTargetSelected;
+        if (button)
+            button.OnReleased.AddListener(OnButtonClicked);
+        else
+            Debug.LogError($"[{nameof(ContextElement)}] Button is not valid at {name}!");
+
+        if (contextMenuManager)
+            contextMenuManager.OnContextMenuTargetSelected += OnTargetSelected;
+        else
+            Debug.LogError($"[{nameof(ContextElement)}] Context Menu Manager is not valid at {name}!");
     }
 
     protected virtual void Unsubscribe()
     {
-        button.OnReleased.RemoveListener(OnButtonClicked);
-        ContextMenuManager.Instance.OnContextMenuTargetSelected -= OnTargetSelected;
+        if (button)
+            button.OnReleased.RemoveListener(OnButtonClicked);
+        else
+            Debug.LogError($"[{nameof(ContextElement)}] Button is not valid at {name}!");
+
+        if (contextMenuManager)
+            contextMenuManager.OnContextMenuTargetSelected -= OnTargetSelected;
+        else
+            Debug.LogError($"[{nameof(ContextElement)}] Context Menu Manager is not valid at {name}!");
     }
 
-    protected virtual void Show()
+    public void Show()
     {
-        gameObject.SetActive(true);
+        if (IsShowed) return;
+
+        OnShow();
+
+        OnShowed?.Invoke();
+        OnElementShowed?.Invoke(this);
+    }
+
+    public void Hide()
+    {
+        OnHide();
+
+        OnHidden?.Invoke();
+        OnElementHidden?.Invoke(this);
+    }
+
+    protected virtual void OnShow()
+    {
+        IsShowed = true;
+        content.SetActive(true);
         UpdateButtonEnabled();
-        IsOpened = true;
     }
 
-    protected virtual void Hide()
+    protected virtual void OnHide()
     {
-        gameObject.SetActive(false);
-        IsOpened = false;
+        IsShowed = false;
+        content.SetActive(false);
     }
 
     protected virtual bool ShouldEnableButton()
@@ -84,6 +123,8 @@ public abstract class ContextElement : UIBehaviour
 
     private void OnTargetSelected(ContextMenuTarget target)
     {
+        if (!target) return;
+
         UpdateActive(target);
     }
 
@@ -94,7 +135,6 @@ public abstract class ContextElement : UIBehaviour
 
         Subscribe();
         isSubscribed = true;
-
         return true;
     }
 
@@ -103,9 +143,8 @@ public abstract class ContextElement : UIBehaviour
         if (!isSubscribed) return false;
         if (!ContextMenuManager.Instance) return false;
 
-        Subscribe();
+        Unsubscribe();
         isSubscribed = false;
-
         return true;
     }
 }

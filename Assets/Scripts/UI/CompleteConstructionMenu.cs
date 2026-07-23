@@ -12,6 +12,8 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     [SerializeField] private CustomButton closeMenuButton;
     private Building building;
 
+    public bool IsShowed { get; private set; } = false;
+
     public event Action OnShowed;
     public event Action OnHidden;
 
@@ -36,7 +38,11 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        Show(null);
+        IsShowed = true;
+        gameObject.SetActive(true);
+        InputStateManager.Instance.AddBlockTarget(this);
+
+        OnShowed?.Invoke();
     }
 
     public void Show(Building building)
@@ -46,24 +52,20 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
             return;
         }
 
-        gameObject.SetActive(true);
-
+        this.building = building;
         buildingName.SetLocalizationItem(building.Definition.NameLocalizationItem);
         buildingLevel.SetPlaceHolderLocalization(building);
         constructionTime.SetPlaceHolderLocalization(building);
 
         buildingImage.sprite = building.UpgradeComponent.IsUnderUpgrade ? building.NextLevelDefinition.BuildingThumb : building.LevelDefinition.BuildingThumb;
-
-        this.building = building;
-        InputStateManager.Instance.AddBlockTarget();
-
-        OnShowed?.Invoke();
+        Show();
     }
 
     public void Hide()
     {
+        IsShowed = false;
         gameObject.SetActive(false);
-        InputStateManager.Instance.RemoveBlockTarget();
+        InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
     }

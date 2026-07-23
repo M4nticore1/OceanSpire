@@ -37,7 +37,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
     [SerializeField] float openedBackgroundAlpha = 0.5f;
     [SerializeField] float alphaTransitionSpeed = 10f;
 
-    public bool isOpened { get; private set; } = false;
+    public bool IsShowed { get; private set; } = false;
     public bool isMoving { get; private set; } = false;
     private List<Transform> content = new List<Transform>();
 
@@ -106,7 +106,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     public void OnRelease()
     {
-        if (!isOpened) return;
+        if (!IsShowed) return;
         if (Time.frameCount == openedFrame) return;
 
         if (closeMethod == CloseMethod.None) return;
@@ -149,7 +149,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
             SetContentRootEnabled(true);
         }
 
-        isOpened = true;
+        IsShowed = true;
         isMoving = true;
 
         OnShowed?.Invoke();
@@ -164,7 +164,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
             background.raycastTarget = false;
         }
 
-        isOpened = false;
+        IsShowed = false;
         isMoving = true;
 
         OnHidden?.Invoke();
@@ -190,7 +190,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
     {
         Color color = background.color;
 
-        if (isOpened) {
+        if (IsShowed) {
             color.a = math.lerp(color.a, openedBackgroundAlpha, alphaTransitionSpeed * Time.deltaTime);
         }
         else {

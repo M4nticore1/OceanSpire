@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class InputStateManager : MonoBehaviour
 {
     public static InputStateManager Instance;
     public bool IsGameplayInputBlocked { get; private set; } = false;
-    private int blockTargetsCount = 0;
+    private List<MonoBehaviour> blockTargets = new();
 
     private void Awake()
     {
@@ -13,25 +14,28 @@ public class InputStateManager : MonoBehaviour
         Instance = this;
     }
 
-    public void AddBlockTarget()
+    public void AddBlockTarget(MonoBehaviour blockTarget)
     {
-        SetTargetsCount(blockTargetsCount + 1);
+        if (!blockTarget) return;
+        if (blockTargets.Contains(blockTarget)) {
+            Debug.LogError($"[{nameof(InputStateManager)}] Manager already contains {blockTarget}!");
+            return;
+        }
+
+        blockTargets.Add(blockTarget);
         UpdateInputBlocked();
     }
 
-    public void RemoveBlockTarget()
+    public void RemoveBlockTarget(MonoBehaviour blockTarget)
     {
-        SetTargetsCount(blockTargetsCount - 1);
-        UpdateInputBlocked();
-    }
+        if (!blockTarget) return;
 
-    private void SetTargetsCount(int value)
-    {
-        blockTargetsCount = Mathf.Max(0, value);
+        blockTargets.Remove(blockTarget);
+        UpdateInputBlocked();
     }
 
     private void UpdateInputBlocked()
     {
-        IsGameplayInputBlocked = blockTargetsCount > 0;
+        IsGameplayInputBlocked = blockTargets.Count > 0;
     }
 }
