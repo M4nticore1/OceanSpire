@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ConstructionFrame_Corner
       objectReference: {fileID: 0}
+    - target: {fileID: 8712712631989154949, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -2634337276057625909, guid: d751d1591df5fee4b9543f81d883603c, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
