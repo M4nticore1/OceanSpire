@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 767c8597b44008e4baa8a4f3f4fcb144
+guid: 93b4d82eb8d249c40ac322bfd6d6656a
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,18 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Plaster_White
-    second: {fileID: 2100000, guid: 17a05b3a120207c4c808d9c1cf125778, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Stone_Tiles
-    second: {fileID: 2100000, guid: 6de42b58460dcbd44becb0b644a0764c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Wood_Brown
-    second: {fileID: 2100000, guid: e92b0caa584b16a4aa5893b444a5c9bf, type: 2}
+      name: Palette
+    second: {fileID: 2100000, guid: d8c1c545c9324484a96dfc9242dce52b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -49,7 +39,7 @@ ModelImporter:
   meshes:
     lODScreenPercentages: []
     globalScale: 1
-    meshCompression: 2
+    meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1

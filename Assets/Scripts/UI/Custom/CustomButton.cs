@@ -26,7 +26,7 @@ public class CustomSelectableStateEntry
     public float scale;
 }
 
-public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     [SerializeField] public Graphic targetGraphic;
     [SerializeField] public Graphic[] contentGraphics = null;
@@ -132,7 +132,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         CustomUIManager.Instance.RegisterCustomButton(this);
 
-        InputListener.Instance.OnPressed += OnPointerPressed;
+        //InputListener.Instance.OnPressed += OnPointerPressed;
         InputListener.Instance.OnReleased += OnPointerReleased;
 
         EndTransitionAnimation();
@@ -144,7 +144,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         CustomUIManager.Instance.UnregisterCustomButton(this);
 
-        InputListener.Instance.OnPressed -= OnPointerPressed;
+        //InputListener.Instance.OnPressed -= OnPointerPressed;
         InputListener.Instance.OnReleased -= OnPointerReleased;
 
         if (state == CustomButtonState.Hovered) {
@@ -275,7 +275,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
 
     // Press
-    private void OnPointerPressed()
+    public void OnPointerDown(PointerEventData eventData)
     {
         if (!IsEnabled) return;
         if (!IsInteractable) return;
@@ -367,7 +367,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void SetState(CustomButtonState state)
     {
         if (state == this.state) return;
-        
+
         ExitState(this.state);
         this.state = state;
         EnterState(this.state);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -18,12 +19,17 @@ public class WandererData : HumanData
         return wandererData;
     }
 
-    public static WandererData[] Create(Wanderer[] wanderers)
+    public static List<WandererData> Create(IReadOnlyList<Wanderer> wanderers)
     {
-        var wanderersData = new WandererData[wanderers.Length];
+        var wanderersData = new List<WandererData>();
 
-        for (int i = 0; i < wanderersData.Length; i++) {
-            wanderersData[i] = Create(wanderers[i]);
+        foreach (var wanderer in wanderers) {
+            if (!wanderer) continue;
+
+            var data = Create(wanderer);
+            if (data == null) continue;
+
+            wanderersData.Add(data);
         }
 
         return wanderersData;

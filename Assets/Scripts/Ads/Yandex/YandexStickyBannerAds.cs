@@ -25,6 +25,15 @@ public class YandexStickyBannerAds : BannerAds
         CleanUpBanner();
     }
 
+    private void Update()
+    {
+        if (!isAdEnabled && banner != null) {
+            banner.Hide();
+            banner.Destroy();
+            banner = null;
+        }
+    }
+
     public override void ShowAd()
     {
         ShowAd(AdPosition.BottomCenter);
@@ -64,9 +73,14 @@ public class YandexStickyBannerAds : BannerAds
         banner.OnAdClicked -= HandleAdClicked;
         banner.OnImpression -= HandleImpression;
 
-        banner.Hide();
-        banner.Destroy();
-        banner = null;
+        try {
+            banner.Hide();
+            banner.Destroy();
+            banner = null;
+        }
+        catch (Exception e) {
+            Debug.LogError($"Exception during banner cleanup: {e.Message}");
+        }
     }
 
     private int GetScreenWidthDp()

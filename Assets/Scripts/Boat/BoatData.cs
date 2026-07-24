@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -33,12 +34,17 @@ public class BoatData
         };
     }
 
-    public static BoatData[] Create(Boat[] boats)
+    public static List<BoatData> Create(IReadOnlyList<Boat> boats)
     {
-        var boatsData = new BoatData[boats.Length];
+        var boatsData = new List<BoatData>();
 
-        for (int i = 0; i < boats.Length; i++) {
-            boatsData[i] = Create(boats[i]);
+        foreach (var boat in boats) {
+            if (!boat) continue;
+
+            var data = Create(boat);
+            if (data == null) continue;
+
+            boatsData.Add(data);
         }
 
         return boatsData;

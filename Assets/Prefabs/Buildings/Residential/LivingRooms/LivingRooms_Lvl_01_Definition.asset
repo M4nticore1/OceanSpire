@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
-  m_Name: LivingRoomsLevelData_01
+  m_Name: LivingRooms_Lvl_01_Definition
   m_EditorClassIdentifier: 
   resourcesToBuild:
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     amount: 1500
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
     amount: 100
-  maxResidentsCount: 4
+  maxResidentsCount: 0
   constructionTime: 300
   buildingThumb: {fileID: 21300000, guid: 198ac3d9d3301d44bbd04ca385d822f9, type: 3}
   constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}

@@ -6891,8 +6891,6 @@ MonoBehaviour:
   showBannerTargets:
   - {fileID: 383697687}
   - {fileID: 1360282425}
-  - {fileID: 905826862}
-  - {fileID: 2021508161}
   - {fileID: 383697686}
   - {fileID: 10072051}
   - {fileID: 755075643}
@@ -11344,17 +11342,6 @@ Transform:
   - {fileID: 1296867730}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &905826862 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2698017856457038692, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
-  m_PrefabInstance: {fileID: 383697685}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccd9e212319384f48944d849810bef1b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UpgradeMenu
 --- !u!1 &905860909 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8673097211342416700, guid: e51d997d0cfe8274ea0a75e835dd16ea, type: 3}
@@ -21080,17 +21067,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27296c086a07a014698466e1003aaf2b, type: 3}
---- !u!114 &2021508161 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1456585662485150543, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
-  m_PrefabInstance: {fileID: 383697685}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2f91ea4b85a1f04ab901451cecb227f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DemolishBuildingMenu
 --- !u!1001 &2030844432
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22097,7 +22073,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2109934042}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 362f857ffa9095849b359a183c56d7b0, type: 3}
   m_Name: 

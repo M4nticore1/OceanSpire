@@ -60,10 +60,10 @@ public class DockPointsLoader : WorldLoader
         }
     }
 
-    private void LoadDocks(IReadOnlyList<BoatDockPoint> docks, BoatDockData[] docksData)
+    private void LoadDocks(IReadOnlyList<BoatDockPoint> docks, List<BoatDockData> docksData)
     {
         for (int i = 0; i < docks.Count; i++) {
-            if (i >= docksData.Length) break;
+            if (i >= docksData.Count) break;
 
             var data = docksData[i];
             if (data == null) {

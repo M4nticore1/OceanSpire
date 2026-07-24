@@ -62,10 +62,10 @@ public class SaveSlotWidget : MonoBehaviour
         loadWorldMenu.SetActive(true);
 
         worldNameText.SetText(worldData.WorldName);
-        floorsCountText.SetText(worldData.FloorFrameBuildings.Length.ToString());
+        floorsCountText.SetText(worldData.FloorFrameBuildings.Count.ToString());
 
         if (worldData.Citizens != null) {
-            residentsCountText.SetText(worldData.Citizens.Length.ToString());
+            residentsCountText.SetText(worldData.Citizens.Count.ToString());
         }
 
         var date = DateTimeOffset.FromUnixTimeSeconds(worldData.SaveTime).DateTime;

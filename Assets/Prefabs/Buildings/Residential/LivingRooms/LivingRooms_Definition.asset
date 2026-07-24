@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
-  m_Name: LivingRoomsData
+  m_Name: LivingRooms_Definition
   m_EditorClassIdentifier: 
   buildingId: 4
   localizationItem: {fileID: 11400000, guid: 94c55751ce6192b43a4c61a2d688f13d, type: 2}

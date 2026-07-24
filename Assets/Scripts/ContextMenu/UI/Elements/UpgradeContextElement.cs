@@ -9,6 +9,8 @@ public class UpgradeContextElement : ContextElement
     protected override bool ShouldEnableButton()
     {
         if (!base.ShouldEnableButton()) return false;
+
+        if (!building) return false;
         if (!building.NextLevelDefinition) return false;
 
         return true;
@@ -24,6 +26,8 @@ public class UpgradeContextElement : ContextElement
 
     protected override bool ShouldShow(ContextMenuTarget target)
     {
+        if (!target) return false;
+
         building = target.GetComponent<Building>();
         if (!building) return false;
         if (building.ConstructionComponent.GetUnderConstruction()) return false;

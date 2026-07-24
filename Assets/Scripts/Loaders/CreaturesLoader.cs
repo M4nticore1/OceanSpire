@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CreaturesLoader : WorldLoader
@@ -12,22 +14,22 @@ public class CreaturesLoader : WorldLoader
     protected override void Load(WorldData data)
     {
         if (data != null && data.Citizens != null) {
-            LoadHumans(data.Citizens);
+            LoadHumans(data.Citizens.Cast<HumanData>().ToList());
         }
         else {
             InitCitizens();
         }
 
         if (data != null && data.Wanderers != null) {
-            LoadHumans(data.Wanderers);
+            LoadHumans(data.Wanderers.Cast<HumanData>().ToList());
         }
 
         if (data != null && data.Raiders != null) {
-            LoadHumans(data.Raiders);
+            LoadHumans(data.Raiders.Cast<HumanData>().ToList());
         }
     }
 
-    private void LoadHumans(HumanData[] humansData)
+    private void LoadHumans(List<HumanData> humansData)
     {
         foreach (var data in humansData) {
             if (data == null) {

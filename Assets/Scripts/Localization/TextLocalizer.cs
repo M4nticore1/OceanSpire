@@ -109,7 +109,11 @@ public class TextLocalizer : MonoBehaviour
             return;
         }
 
-        TextBlock.font = font;
+        if (TextBlock.font != font) {
+            TextBlock.font = font;
+            TextBlock.SetAllDirty();
+            TextBlock.ForceMeshUpdate();
+        }
     }
 
     private void OnLocalizationChanged()

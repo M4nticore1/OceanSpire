@@ -248,7 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9, g: 0.78749996, b: 0.63, a: 1}
+  m_Color: {r: 0.9019608, g: 0.769281, b: 0.5862745, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8509804, g: 0.78039217, b: 0.6784314, a: 1}
+  m_Color: {r: 0.8509804, g: 0.7639483, b: 0.63823533, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -456,19 +456,19 @@ MonoBehaviour:
   stateTransitionTime: 0.2
   state: 0
   idleState:
-    bodyColor: {r: 0.8509804, g: 0.78039217, b: 0.6784314, a: 1}
+    bodyColor: {r: 0.8509804, g: 0.7639483, b: 0.63823533, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    bodyColor: {r: 0.9, g: 0.8253456, b: 0.71751153, a: 1}
+    bodyColor: {r: 0.9019608, g: 0.8060075, b: 0.6764706, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    bodyColor: {r: 1, g: 0.91735536, b: 0.79752064, a: 1}
+    bodyColor: {r: 1, g: 0.89903843, b: 0.75, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}

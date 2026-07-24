@@ -88,7 +88,8 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         if (isMoving) {
             ProcessMoving();
 
-            if (rectTransform.anchoredPosition == targetPosition) {
+            if (Vector2.SqrMagnitude(rectTransform.anchoredPosition - targetPosition) < 0.0025f) {
+                rectTransform.anchoredPosition = targetPosition;
                 AssignContentRootEnabled();
                 SetMoving(false);
             }
@@ -108,7 +109,6 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
     {
         if (!IsShowed) return;
         if (Time.frameCount == openedFrame) return;
-
         if (closeMethod == CloseMethod.None) return;
 
         releasePossition = PointerUtils.GetCurrentInputPosition();
@@ -177,7 +177,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     private void ProcessMoving()
     {
-        float t = math.clamp(slideTransitionSpeed * Time.deltaTime, 0f, 1f);
+        float t = 1f - math.exp(-slideTransitionSpeed * Time.deltaTime);
         rectTransform.anchoredPosition = math.lerp(rectTransform.anchoredPosition, targetPosition, t);
 
         Vector2 min = math.min(openedPosition, closedPosition);

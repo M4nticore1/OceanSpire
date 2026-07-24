@@ -19,7 +19,7 @@ public class RaiderData : HumanData
         return raiderData;
     }
 
-    public static RaiderData[] Create(Raider[] raiders)
+    public static List<RaiderData> Create(IReadOnlyList<Raider> raiders)
     {
         var raidersData = new List<RaiderData>();
 
@@ -38,6 +38,6 @@ public class RaiderData : HumanData
             raidersData.Add(data);
         }
 
-        return raidersData.ToArray();
+        return raidersData;
     }
 }

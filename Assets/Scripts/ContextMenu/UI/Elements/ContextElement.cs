@@ -84,6 +84,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
 
     protected virtual void OnShow()
     {
+        Debug.Log("OnShow");
         IsShowed = true;
         content.SetActive(true);
         UpdateButtonEnabled();

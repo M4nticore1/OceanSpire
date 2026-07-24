@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public static class WorldDataMigrator
@@ -38,18 +39,18 @@ public class WorldData
     public long SaveTime = 0;
 
     public PlayerControllerData Player;
-    public BuildingData[] GroundBuildings;
-    public TowerBuildingData[] FloorFrameBuildings;
-    public TowerBuildingData[] TowerBuildings;
-    public ElevatorCabinData[] ElevatorCabins;
-    public BoatDockData[] CitizenBoatDocks;
-    public BoatDockData[] WandererBoatDocks;
-    public BoatDockData[] RaiderBoatDocks;
-    public BoatDockData[] EvictBoatDocks;
-    public BoatData[] Boats;
-    public CitizenData[] Citizens;
-    public WandererData[] Wanderers;
-    public RaiderData[] Raiders;
+    public List<BuildingData> GroundBuildings;
+    public List<TowerBuildingData> FloorFrameBuildings;
+    public List<TowerBuildingData> TowerBuildings;
+    public List<ElevatorCabinData> ElevatorCabins;
+    public List<BoatDockData> CitizenBoatDocks;
+    public List<BoatDockData> WandererBoatDocks;
+    public List<BoatDockData> RaiderBoatDocks;
+    public List<BoatDockData> EvictBoatDocks;
+    public List<BoatData> Boats;
+    public List<CitizenData> Citizens;
+    public List<WandererData> Wanderers;
+    public List<RaiderData> Raiders;
     public DriftingLootSystemData DriftingLoot;
     public FocusSystemData FocusSystem;
     public InventoryData CityStorage;
@@ -88,18 +89,18 @@ public class WorldData
             GroundBuildings = BuildingData.Create(buildings.GerGroundBuildings().ToArray()),
             FloorFrameBuildings = TowerBuildingData.Create(buildings.BuiltFloors.Select(b => b.OwnedTowerBuilding).ToArray()),
             TowerBuildings = TowerBuildingData.Create(buildings.BuiltFloors.SelectMany(b => b.RoomBuildingPlaces).Select(p => p.PlacedBuilding).Where(b => b != null).ToArray()),
-            ElevatorCabins = ElevatorCabinData.Create(elevatorCabins.ElevatorCabins.ToArray()),
+            ElevatorCabins = ElevatorCabinData.Create(elevatorCabins.ElevatorCabins),
 
-            CitizenBoatDocks = BoatDockData.Create(boatDocks.CitizenBoatDocks.ToArray()),
-            WandererBoatDocks = BoatDockData.Create(boatDocks.WandererDockPoints.ToArray()),
-            RaiderBoatDocks = BoatDockData.Create(boatDocks.RaiderDockPoints.ToArray()),
-            EvictBoatDocks = BoatDockData.Create(boatDocks.EvictDockPoints.ToArray()),
+            CitizenBoatDocks = BoatDockData.Create(boatDocks.CitizenBoatDocks),
+            WandererBoatDocks = BoatDockData.Create(boatDocks.WandererDockPoints),
+            RaiderBoatDocks = BoatDockData.Create(boatDocks.RaiderDockPoints),
+            EvictBoatDocks = BoatDockData.Create(boatDocks.EvictDockPoints),
 
             Boats = BoatData.Create(boats.BoatsDict.Values.ToArray()),
 
-            Citizens = CitizenData.Create(creatures.Citizens.ToArray()),
-            Wanderers = WandererData.Create(creatures.Wanderers.ToArray()),
-            Raiders = RaiderData.Create(creatures.Raiders.ToArray()),
+            Citizens = CitizenData.Create(creatures.Citizens),
+            Wanderers = WandererData.Create(creatures.Wanderers),
+            Raiders = RaiderData.Create(creatures.Raiders),
 
             DriftingLoot = DriftingLootSystemData.Create(driftingLoot, driftingLootList),
             CityStorage = InventoryData.Create(cityInventory),

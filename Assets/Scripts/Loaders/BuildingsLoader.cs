@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -55,17 +56,17 @@ public class BuildingsLoader : WorldLoader
         }
     }
 
-    private void LoadGroundBuildings(BuildingData[] buildingsData)
+    private void LoadGroundBuildings(List<BuildingData> buildingsData)
     {
         var buildings = buildingsManager.GerGroundBuildings();
         if (buildings == null) return;
 
         int index = 0;
         foreach (var building in buildings) {
-            if (building == null) continue;
+            if (!building) continue;
 
             // ≈сли в сохранении меньше зданий, чем на сцене, просто выходим из цикла, не прерыва€ весь метод Load!
-            if (index >= buildingsData.Length) break;
+            if (index >= buildingsData.Count) break;
 
             var buildingData = buildingsData[index];
             if (buildingData != null) {
@@ -75,9 +76,9 @@ public class BuildingsLoader : WorldLoader
         }
     }
 
-    private void LoadFloorFrames(TowerBuildingData[] floorFrameBuildingsData)
+    private void LoadFloorFrames(List<TowerBuildingData> floorFrameBuildingsData)
     {
-        for (int i = 0; i < floorFrameBuildingsData.Length; i++) {
+        for (int i = 0; i < floorFrameBuildingsData.Count; i++) {
             var floorFrameData = floorFrameBuildingsData[i];
             if (floorFrameData == null) continue;
 
@@ -107,7 +108,7 @@ public class BuildingsLoader : WorldLoader
         }
     }
 
-    private void LoadTowerBuildings(TowerBuildingData[] towerBuildingsData)
+    private void LoadTowerBuildings(List<TowerBuildingData> towerBuildingsData)
     {
         foreach (var towerBuildingData in towerBuildingsData) {
             if (towerBuildingData == null) continue;
@@ -131,7 +132,7 @@ public class BuildingsLoader : WorldLoader
         }
     }
 
-    private void LoadElevatorCabins(ElevatorCabinData[] elevatorCabinsData)
+    private void LoadElevatorCabins(List<ElevatorCabinData> elevatorCabinsData)
     {
         foreach (var data in elevatorCabinsData) {
             if (data == null) continue;

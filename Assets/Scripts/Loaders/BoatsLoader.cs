@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BoatsLoader : WorldLoader
@@ -20,7 +21,7 @@ public class BoatsLoader : WorldLoader
         }
     }
 
-    private void LoadBoats(BoatData[] boatsData)
+    private void LoadBoats(List<BoatData> boatsData)
     {
         foreach (var boatData in boatsData) {
             if (boatData == null) {

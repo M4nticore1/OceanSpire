@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BoatDockData
@@ -18,12 +19,17 @@ public class BoatDockData
         };
     }
 
-    public static BoatDockData[] Create(BoatDockPoint[] boatDocks)
+    public static List<BoatDockData> Create(IReadOnlyList<BoatDockPoint> boatDocks)
     {
-        var boatDocksData = new BoatDockData[boatDocks.Length];
+        var boatDocksData = new List<BoatDockData>();
 
-        for (int i = 0; i < boatDocks.Length; i++) {
-            boatDocksData[i] = Create(boatDocks[i]);
+        foreach (var boatDock in boatDocks) {
+            if (!boatDock) continue;
+
+            var data = Create(boatDock);
+            if (data == null) continue;
+
+            boatDocksData.Add(data);
         }
 
         return boatDocksData;

@@ -19,16 +19,19 @@ public class TowerBuildingData : BuildingData
         return data;
     }
 
-    public static TowerBuildingData[] Create(TowerBuilding[] buildings)
+    public static List<TowerBuildingData> Create(IReadOnlyList<TowerBuilding> buildings)
     {
-        List<TowerBuildingData> buildingsData = new();
+        var buildingsData = new List<TowerBuildingData>();
 
         foreach (var building in buildings) {
             if (!building) continue;
 
-            buildingsData.Add(Create(building));
+            var data = Create(building);
+            if (data == null) continue;
+
+            buildingsData.Add(data);
         }
 
-        return buildingsData.ToArray();
+        return buildingsData;
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -16,12 +17,17 @@ public class CitizenData : HumanData
         return citizenData;
     }
 
-    public static CitizenData[] Create(Citizen[] citizens)
+    public static List<CitizenData> Create(IReadOnlyList<Citizen> citizens)
     {
-        var citizenData = new CitizenData[citizens.Length];
+        var citizenData = new List<CitizenData>();
 
-        for (int i = 0; i < citizenData.Length; i++) {
-            citizenData[i] = Create(citizens[i]);
+        foreach (var citizen in citizens) {
+            if (!citizen) continue;
+
+            var data = Create(citizen);
+            if (data == null) continue;
+
+            citizenData.Add(Create(citizen));
         }
 
         return citizenData;

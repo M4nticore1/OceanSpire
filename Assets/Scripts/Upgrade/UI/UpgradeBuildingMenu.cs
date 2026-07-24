@@ -24,7 +24,23 @@ public class UpgradeBuildingMenu : BuildingMenu
 
     protected override void CreateWidgets(Building building)
     {
-        foreach (var buildItem in building.NextLevelDefinition.ResourcesToBuild) {
+        if (!building) {
+            Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Building is not valid!");
+            return;
+        }
+
+        var nextLevel = building.NextLevelDefinition;
+        if (!nextLevel) {
+            Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Next Level is not valid at {building}!");
+            return;
+        }
+
+        foreach (var buildItem in nextLevel.ResourcesToBuild) {
+            if (buildItem == null) {
+                Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Upgrade Resource is not valid at {building}!");
+                continue;
+            }
+
             var widget = ResourceWidgetFactory.CreateResourceWidget(ResourceWidgetPrefab, LayoutGroup.transform);
             spawnedResourceWidgets.Add(widget);
 
@@ -38,12 +54,34 @@ public class UpgradeBuildingMenu : BuildingMenu
 
     protected override void UpdateIcon(Building building)
     {
+        if (!building) {
+            Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Building is not valid!");
+            return;
+        }
+
+        var nextLevel = building.NextLevelDefinition;
+        if (!nextLevel) {
+            Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Next Level is not valid at {building}!");
+            return;
+        }
+
         BuildingImage.sprite = building.NextLevelDefinition.BuildingThumb;
     }
 
     protected override bool ShouldEnableButton()
     {
         if (!base.ShouldEnableButton()) return false;
+
+        if (!building) {
+            Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Building is not valid!");
+            return false;
+        }
+
+        var nextLevel = building.NextLevelDefinition;
+        if (!nextLevel) {
+            Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Next Level is not valid at {building}!");
+            return false;
+        }
 
         var cityStorage = CityStorage.Instance;
         if (!cityStorage) return false;

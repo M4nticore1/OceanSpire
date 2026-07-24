@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
+  m_Name: LivingRooms_Lvl_02_Definition
+  m_EditorClassIdentifier: 
+  resourcesToBuild:
+  - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 2700
+  - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+    amount: 1200
+  - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    amount: 200
+  maxResidentsCount: 0
+  constructionTime: 900
+  buildingThumb: {fileID: 21300000, guid: ccb5da66e4879354fbddd4c4adabcfe7, type: 3}
+  constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
+  constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}
+  constructionStraight: {fileID: 5679400671839550813, guid: 392505623c3975f4cb8da35867c75531, type: 3}
+  constructionCorner: {fileID: 5679400671839550813, guid: feb912bbe1b187344ac104da417db4d6, type: 3}
+  constructionStraightLeft: {fileID: 5679400671839550813, guid: b10e4141fe6b14f419174a34319c67e1, type: 3}
+  constructionStraightRight: {fileID: 5679400671839550813, guid: fce43146d4cff0f49871bf5eff7a2718, type: 3}
+  constructionStraightLeftRight: {fileID: 5679400671839550813, guid: b21a2788d9e18fa4480944da609f1405, type: 3}
+  constructionCornerLeft: {fileID: 5679400671839550813, guid: c0b2f96e361c23e43957a4397a13198a, type: 3}
+  constructionCornerRight: {fileID: 5679400671839550813, guid: 8f8f7b3fb968da24c99d248043881c58, type: 3}
+  constructionCornerLeftRight: {fileID: 5679400671839550813, guid: 56c1fbf060ce6ba45be4ae2f9a5cd458, type: 3}
+  constructionStraightUp: {fileID: 0}
+  constructionStraightDown: {fileID: 0}
+  constructionStraightUpDown: {fileID: 0}
+  constructionCornerUp: {fileID: 0}
+  constructionCornerDown: {fileID: 0}
+  constructionCornerUpDown: {fileID: 0}

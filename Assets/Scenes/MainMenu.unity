@@ -1353,6 +1353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::YandexStickyBannerAds
   rewardedAdsManager: {fileID: 0}
   adUnitId: {fileID: 11400000, guid: a4bab7e1689c42e4093d8e3b0ca9d06f, type: 2}
+  retryDelay: 1
 --- !u!4 &1960358835 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9038951078048163618, guid: 832db7892f1c7104a8a0fc9124ae1486, type: 3}
@@ -1478,6 +1479,10 @@ PrefabInstance:
       propertyPath: playerSettingsManager
       value: 
       objectReference: {fileID: 402430243}
+    - target: {fileID: 7847633182026764260, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: 1acbfe1649dd8a64e98f40769e9f03ea, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

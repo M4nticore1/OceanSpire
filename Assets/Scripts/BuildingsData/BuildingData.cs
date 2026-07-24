@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -29,12 +30,17 @@ public class BuildingData
         return data;
     }
 
-    public static BuildingData[] Create(Building[] buildings)
+    public static List<BuildingData> Create(IReadOnlyList<Building> buildings)
     {
-        var buildingsData = new BuildingData[buildings.Length];
+        var buildingsData = new List<BuildingData>();
 
-        for (int i = 0; i < buildings.Length; i++) {
-            buildingsData[i] = Create(buildings[i]);
+        foreach (var building in buildings) {
+            if (!building) continue;
+
+            var data = Create(building);
+            if (data == null) continue;
+
+            buildingsData.Add(data);
         }
 
         return buildingsData;

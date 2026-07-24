@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,6 +26,7 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     private void OnEnable()
     {
         dailyRewardManager.OnDailyRewardReset += OnDailyRewardReset;
+        slidePanel.OnHidden += HandleHidden;
         openButton.OnReleased.AddListener(OnOpenButtonClicked);
         closeButton.OnReleased.AddListener(OnCloseButtonClicked);
     }
@@ -32,6 +34,7 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     private void OnDisable()
     {
         dailyRewardManager.OnDailyRewardReset -= OnDailyRewardReset;
+        slidePanel.OnHidden -= HandleHidden;
         openButton.OnReleased.RemoveListener(OnOpenButtonClicked);
         closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
     }
@@ -57,6 +60,11 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
     }
 
     public void Hide()
+    {
+        HandleHidden();
+    }
+
+    private void HandleHidden()
     {
         IsShowed = false;
         slidePanel.Hide();

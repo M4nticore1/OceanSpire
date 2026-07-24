@@ -21,16 +21,19 @@ public class ElevatorCabinData : BuildingConstructionData
         };
     }
 
-    public static ElevatorCabinData[] Create(ElevatorCabinConstruction[] constructions)
+    public static List<ElevatorCabinData> Create(IReadOnlyList<ElevatorCabinConstruction> constructions)
     {
-        List<ElevatorCabinData> cabins = new();
+        var cabins = new List<ElevatorCabinData>();
 
         foreach (var cabin in constructions) {
             if (!cabin) continue;
 
-            cabins.Add(Create(cabin));
+            var data = Create(cabin);
+            if (data == null) continue;
+
+            cabins.Add(data);
         }
 
-        return cabins.ToArray();
+        return cabins;
     }
 }

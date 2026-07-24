@@ -18,7 +18,7 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
     amount: 10000
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-    amount: 1500
+    amount: 2000
   maxResidentsCount: 4
   constructionTime: 18000
   buildingThumb: {fileID: 21300000, guid: b2e5b8846a32cff43b4a564d5cd81190, type: 3}
