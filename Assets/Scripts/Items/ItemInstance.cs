@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[System.Serializable]
+[Serializable]
 public class ItemCategoryData
 {
     [SerializeField] private ItemCategory itemCategory;
@@ -14,7 +14,7 @@ public class ItemCategoryData
     public int Amount => amount;
 }
 
-[System.Serializable]
+[Serializable]
 public class ItemInstance : IItemAmount
 {
     [SerializeField, FormerlySerializedAs("itemData")] private ItemDefinition definition;
@@ -34,7 +34,7 @@ public class ItemInstance : IItemAmount
 
     public int SetAmount(int amount)
     {
-        this.amount = amount;
+        this.amount = Mathf.Max(0, amount);
         OnAmountChanged?.Invoke(amount);
 
         return this.amount;

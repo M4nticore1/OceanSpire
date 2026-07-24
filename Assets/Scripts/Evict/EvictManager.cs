@@ -42,7 +42,7 @@ public class EvictManager : MonoBehaviour
             DockInstanceId = dockPoint.InstanceId.GetGuid()
         };
 
-        var boat = BoatFactory.CreateBoat(evictBoatPrefab, dockPoint.transform.position, dockPoint.transform.rotation, boatData);
+        var boat = BoatFactory.CreateBoat(evictBoatPrefab, boatData);
 
         return boat;
     }

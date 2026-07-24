@@ -314,13 +314,14 @@ public class WanderersManager : MonoBehaviour
         var boatData = new BoatData()
         {
             Id = boatPrefab.Definition.BoatId,
+            InstanceId = Guid.NewGuid(),
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
             DockInstanceId = dockPoint.InstanceId.GetGuid(),
             Status = HumanStatusEnum.Wanderer
         };
 
-        return BoatFactory.CreateBoat(boatPrefab, position, Quaternion.Euler(rotation), boatData);
+        return BoatFactory.CreateBoat(boatPrefab, boatData);
     }
 
     private BoatDockPoint GetFirstAvailableDockPoint()

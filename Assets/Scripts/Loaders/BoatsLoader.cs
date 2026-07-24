@@ -30,7 +30,12 @@ public class BoatsLoader : WorldLoader
             }
 
             var boatPrefab = boatsList.GetBoat(boatData.Id);
-            BoatFactory.CreateBoat(boatPrefab, boatData.Position.Vector3(), Quaternion.Euler(boatData.Rotation.Vector3()), boatData);
+            if (!boatPrefab) {
+                Debug.LogError($"[{nameof(BoatsLoader)}] Boat Prefab is not valid!");
+                continue;
+            }
+
+            BoatFactory.CreateBoat(boatPrefab, boatData);
         }
     }
 
@@ -94,7 +99,7 @@ public class BoatsLoader : WorldLoader
                 Status = HumanStatusEnum.Citizen
             };
 
-            BoatFactory.CreateBoat(prefab, position, Quaternion.Euler(rotation), boatData);
+            BoatFactory.CreateBoat(prefab, boatData);
         }
     }
 }

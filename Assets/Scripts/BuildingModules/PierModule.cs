@@ -67,7 +67,7 @@ public class PierModule : BuildingModule
                 Status = HumanStatusEnum.Citizen
             };
 
-            var boat = BoatFactory.CreateBoat(citizenBoatPrefab, position, rotation, boatData);
+            var boat = BoatFactory.CreateBoat(citizenBoatPrefab, boatData);
         }
     }
 

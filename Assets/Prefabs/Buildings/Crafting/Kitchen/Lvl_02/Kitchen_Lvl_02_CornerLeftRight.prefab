@@ -231,7 +231,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a3e84499264244b478681d8b617ff635, type: 3}
       propertyPath: m_Name
-      value: Kitchen_Level_01_CornerLeftRight
+      value: Kitchen_Lvl_02_Corner_LeftRight
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

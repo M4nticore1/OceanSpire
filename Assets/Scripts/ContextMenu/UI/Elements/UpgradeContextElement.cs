@@ -18,15 +18,17 @@ public class UpgradeContextElement : ContextElement
 
     protected override void OnButtonClicked()
     {
-        var selectedBuilding = SelectManager.Instance.SelectedComponent.GetComponent<Building>();
-        if (!selectedBuilding) return;
+        if (!building) return;
 
-        upgradeMenu.Open(selectedBuilding);
+        upgradeMenu.Open(building);
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)
     {
-        if (!target) return false;
+        if (!target) {
+            building = null;
+            return false;
+        }
 
         building = target.GetComponent<Building>();
         if (!building) return false;

@@ -406,7 +406,7 @@ public class RaidManager : MonoBehaviour
             Status = HumanStatusEnum.Raider
         };
 
-        return BoatFactory.CreateBoat(boatPrefab, position, rotation, data);
+        return BoatFactory.CreateBoat(boatPrefab, data);
     }
 
     private WeaponDefinition GetRandomWeaponDefinition()

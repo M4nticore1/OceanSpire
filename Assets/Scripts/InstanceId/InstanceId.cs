@@ -21,7 +21,7 @@ public class InstanceId : MonoBehaviour
     public void SetGuid(Guid newGuid)
     {
         if (newGuid == Guid.Empty) {
-            Debug.LogError("New guid to set is empty!");
+            Debug.LogError($"[{nameof(InstanceId)}] New guid you want to set is empty at {name}!");
             return;
         }
 
@@ -37,7 +37,6 @@ public class InstanceId : MonoBehaviour
 
     private void Register()
     {
-
         instancesManager.RegisterInstance(this);
         isRegistered = true;
     }

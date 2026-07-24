@@ -93,10 +93,13 @@ public class BoatsManager : MonoBehaviour
     private void RegisterBoat(Dictionary<Guid, Boat> boatsDict, Boat boat)
     {
         var guid = boat.InstanceId.GetGuid();
-        if (boatsDict.ContainsKey(guid)) return;
+        if (!boatsDict.ContainsKey(guid)) {
+            boatsDict.Add(guid, boat);
+        }
 
-        boatsDict.Add(guid, boat);
-        this.boatsDict.Add(guid, boat);
+        if (!this.boatsDict.ContainsKey(guid)) {
+            this.boatsDict.Add(guid, boat);
+        }
     }
 
     private void UnregisterBoat(Dictionary<Guid, Boat> boatsDict, Boat boat)

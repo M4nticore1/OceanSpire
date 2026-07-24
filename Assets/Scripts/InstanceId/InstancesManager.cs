@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class InstancesManager
@@ -26,6 +27,10 @@ public class InstancesManager
     public void RegisterInstance(InstanceId instance)
     {
         if (!instance) return;
+
+        if (instances.Values.Contains(instance)) {
+            Debug.LogError($"[{nameof(InstancesManager)}] Manager already contains an instance {instance}!");
+        }
 
         var guid = instance.GetGuid();
         if (instances.TryGetValue(guid, out var value)) return;

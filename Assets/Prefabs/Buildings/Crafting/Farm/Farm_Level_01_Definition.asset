@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
+  m_Name: Farm_Level_01_Definition
+  m_EditorClassIdentifier: 
+  resourcesToBuild:
+  - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 1300
+  - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    amount: 150
+  maxResidentsCount: 1
+  constructionTime: 300
+  buildingThumb: {fileID: 21300000, guid: 027349861b5ac6349a3638e12f68c3df, type: 3}
+  constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
+  constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}
+  constructionStraight: {fileID: 3395891878762895499, guid: 4044f67ac0fe3ff40bd22638b5571d77, type: 3}
+  constructionCorner: {fileID: 3395891878762895499, guid: f1aa1b666045eed4985559f59e783b61, type: 3}
+  constructionStraightLeft: {fileID: 3395891878762895499, guid: a2b0ef13dad1c9e44a501cc2be2fcc04, type: 3}
+  constructionStraightRight: {fileID: 3395891878762895499, guid: 85e1b54c83da7a0498fd893338ef2555, type: 3}
+  constructionStraightLeftRight: {fileID: 3395891878762895499, guid: 2a239cf4dda3d42448496d3552ed7cce, type: 3}
+  constructionCornerLeft: {fileID: 3395891878762895499, guid: 6eb92c4000d3afd44886ea8c798bb0e7, type: 3}
+  constructionCornerRight: {fileID: 3395891878762895499, guid: 8e5f3bb14c076b8499fbaaaf01ccf245, type: 3}
+  constructionCornerLeftRight: {fileID: 3395891878762895499, guid: e78505723f33cef48a7ee826839ec449, type: 3}
+  constructionStraightUp: {fileID: 0}
+  constructionStraightDown: {fileID: 0}
+  constructionStraightUpDown: {fileID: 0}
+  constructionCornerUp: {fileID: 0}
+  constructionCornerDown: {fileID: 0}
+  constructionCornerUpDown: {fileID: 0}
