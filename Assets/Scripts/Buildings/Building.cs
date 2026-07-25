@@ -293,7 +293,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     protected void UpdateConstruction()
     {
         var constructionToSpawn = GetConstructionToSpawn();
-        if (!constructionToSpawn) return;
+        if (!constructionToSpawn && buildingData.BuildingId != BuildingIdEnum.FloorFrame) {
+            Debug.LogError($"[{nameof(Building)}] Construction To Spawn is not valid at {name}");
+            return;
+        }
 
         if (constructionToSpawn == SpawnedConstruction) return;
 

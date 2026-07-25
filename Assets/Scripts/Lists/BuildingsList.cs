@@ -21,7 +21,7 @@ public class BuildingsList : ScriptableObject
     [SerializeField] private Building[] buildings = null;
     public Building[] Buildings => buildings;
 
-    private Dictionary<int, Building> buildingsDict = new Dictionary<int, Building>();
+    private Dictionary<BuildingIdEnum, Building> buildingsDict = new();
 
     private void Init()
     {
@@ -30,7 +30,7 @@ public class BuildingsList : ScriptableObject
         }
     }
 
-    public Building GetBuilding(int id)
+    public Building GetBuilding(BuildingIdEnum id)
     {
         buildingsDict.TryGetValue(id, out var building);
 

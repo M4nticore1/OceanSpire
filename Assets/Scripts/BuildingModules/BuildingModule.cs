@@ -9,26 +9,42 @@ public abstract class BuildingModule : MonoBehaviour
 
     [SerializeField] protected BuildingModuleLevelData[] levelsData = { };
     public BuildingModuleLevelData[] LevelsData => levelsData;
-    public BuildingModuleLevelData LevelData
+
+    public BuildingModuleLevelData LastLevelData
     {
-        get
-        {
+        get {
             if (!ownedBuilding) {
-                Debug.LogError("OwnedBuilding is not valid ", this);
+                Debug.LogError($"[{nameof(BuildingModule)}] Owned Building is not valid!");
                 return null;
             }
 
-            int level = ownedBuilding.LevelComponent.Level - 1;
+            int index = ownedBuilding.LevelComponent.Level - 2;
+            if (index >= 0 && index < LevelsData.Length) {
+                return LevelsData[index];
+            }
 
-            if (level < LevelsData.Length) {
-                return LevelsData[level];
-            }
-            else {
-                Debug.LogError(ownedBuilding.Definition.BuildingId.ToString() + $" has no level data by index {level}");
-                return null;
-            }
+            return null;
         }
     }
+
+    public BuildingModuleLevelData LevelData
+    {
+        get {
+            if (!ownedBuilding) {
+                Debug.LogError($"[{nameof(BuildingModule)}] Owned Building is not valid on {name}!");
+                return null;
+            }
+
+            int index = ownedBuilding.LevelComponent.Level - 1;
+            if (index >= 0 && index < LevelsData.Length) {
+                return LevelsData[index];
+            }
+
+            Debug.LogError($"[{nameof(BuildingModule)}] Has no level data at index {index}!");
+            return null;
+        }
+    }
+
     protected BuildingConstruction BuildingConstruction => ownedBuilding.SpawnedConstruction;
 
     protected bool IsInited { get; private set; } = false;
@@ -80,7 +96,6 @@ public abstract class BuildingModule : MonoBehaviour
     protected virtual bool ShouldSubscribe()
     {
         if (isSubscribed) return false;
-        if (!ownedBuilding) return false;
 
         return true;
     }
@@ -88,7 +103,6 @@ public abstract class BuildingModule : MonoBehaviour
     protected virtual bool ShouldUnsubscribe()
     {
         if (!isSubscribed) return false;
-        if (!ownedBuilding) return false;
 
         return true;
     }

@@ -10,6 +10,7 @@ public class EditorConstructionTestController : MonoBehaviour
     {
 #if UNITY_EDITOR
         ConstructionComponent.OnGlobalConstructionStarted += OnConstructionStarted;
+        FinishAllContructions();
 #endif
     }
 
@@ -38,13 +39,14 @@ public class EditorConstructionTestController : MonoBehaviour
     {
 #if UNITY_EDITOR
         if (testMode) {
-            FinishAllContructions();
-            if (buildingCostSystem != null) {
+            if (buildingCostSystem) {
                 buildingCostSystem.gameObject.SetActive(false);
             }
+
+            FinishAllContructions();
         }
         else {
-            if (buildingCostSystem != null) {
+            if (buildingCostSystem) {
                 buildingCostSystem.gameObject.SetActive(true);
             }
         }
@@ -54,7 +56,7 @@ public class EditorConstructionTestController : MonoBehaviour
     private void FinishAllContructions()
     {
 #if UNITY_EDITOR
-        if (buildingsManager == null) return;
+        if (!buildingsManager) return;
 
         foreach (var building in buildingsManager.GerGroundBuildings()) {
             building.ConstructionComponent.FinishConstruction();

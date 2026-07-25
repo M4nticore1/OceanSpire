@@ -8,6 +8,6 @@ public class BuildTutorialStep : TutorialStep
     {
         base.OnShow();
 
-        constructionMenu.GetBuildingWidget((int)BuildingIdEnum.CoalGenerator).BuildButton.enabled = true;
+        constructionMenu.GetBuildingWidget(BuildingIdEnum.CoalGenerator).BuildButton.enabled = true;
     }
 }

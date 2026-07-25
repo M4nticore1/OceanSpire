@@ -35,12 +35,25 @@ public class UpgradeComponent : MonoBehaviour
         constructionComponent.OnConstructionFinished -= OnConstructionCompleted;
     }
 
+    public void Init()
+    {
+        Init(UpgradeData.Default());
+    }
+
     public void Init(UpgradeData upgradeData)
     {
+        if (upgradeData == null) {
+            Debug.LogError($"[{nameof(UpgradeComponent)}] Upgrade Data is not valid!");
+            upgradeData = UpgradeData.Default();
+        }
+
         NextLevel = upgradeData.NextLevel;
 
         if (upgradeData.UnderUpgrade) {
-            StartUpgrading();
+            IsUnderUpgrade = true;
+
+            OnUpgradeStarted?.Invoke();
+            OnGlobalUpgradeStarted?.Invoke(this);
         }
     }
 

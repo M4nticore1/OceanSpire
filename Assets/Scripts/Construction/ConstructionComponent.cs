@@ -37,14 +37,13 @@ public class ConstructionComponent : MonoBehaviour
 
     public void Init()
     {
-        var constructionData = ConstructionData.Default();
-        Init(constructionData ?? new ConstructionData());
+        Init(ConstructionData.Default() ?? new ConstructionData());
     }
 
     public void Init(ConstructionData constructionData)
     {
         if (constructionData == null) {
-            Debug.LogError("ConstructionData is not valid");
+            Debug.LogError($"[{nameof(ConstructionComponent)}] Construction Data is not valid");
             Init();
             return;
         }
@@ -67,6 +66,7 @@ public class ConstructionComponent : MonoBehaviour
 
     public void StartConstruction(int constructionTime)
     {
+        Debug.Log($"StartConstruction {constructionTime}");
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         ConstructionStartTime = currentTime;
         ConstructionFinishTime = currentTime + constructionTime;
@@ -84,8 +84,10 @@ public class ConstructionComponent : MonoBehaviour
 
     public void FinishConstruction()
     {
+        Debug.Log("TryFinishConstruction");
         if (ConstructionFinishTime == null) return;
 
+        Debug.Log("FinishConstruction");
         ConstructionStartTime = null;
         ConstructionFinishTime = null;
 

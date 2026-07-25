@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class BuildingData
 {
-    public int Id = 0;
+    public BuildingIdEnum Id = 0;
     public Guid InstanceId = Guid.NewGuid();
     public int Level = 1;
     public UpgradeData Upgrade = UpgradeData.Default();

@@ -31,13 +31,8 @@ public class CraftItemInstance
         return Mathf.Max(0, (int)(Definition.ProduceTime * (1f - safeBonus)));
     }
 
-    /// <summary>
-    /// Честный остаток времени ДО ЗАВЕРШЕНИЯ (в реальных секундах)
-    /// </summary>
     public int GetRemainingCraftingTime()
     {
-        if (FinishTime == null) return 0;
-
         return GetCraftTimeWithBonus() - CraftingTime;
     }
 

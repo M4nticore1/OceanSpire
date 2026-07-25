@@ -48,7 +48,7 @@ public class BuildingDefinition : ScriptableObject
 {
     [Header("Id")]
     [SerializeField] private BuildingIdEnum buildingId = BuildingIdEnum.TowerGate;
-    public int BuildingId { get { return (int)buildingId; } }
+    public BuildingIdEnum BuildingId => buildingId;
 
     [SerializeField] private LocalizationItem localizationItem = null;
     public LocalizationItem NameLocalizationItem => localizationItem;

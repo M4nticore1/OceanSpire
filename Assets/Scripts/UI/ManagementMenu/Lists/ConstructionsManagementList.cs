@@ -6,10 +6,10 @@ public class ConstructionsManagementList : ManagementList
     [SerializeField] private BuildingWidget BuildingWidgetPrefab;
     [SerializeField] private BuildingCategory buildingCategory;
 
-    private Dictionary<int, BuildingWidget> spawnedWidgets = new();
-    public IReadOnlyDictionary<int, BuildingWidget> SpawnedWidgets => spawnedWidgets;
+    private Dictionary<BuildingIdEnum, BuildingWidget> spawnedWidgets = new();
+    public IReadOnlyDictionary<BuildingIdEnum, BuildingWidget> SpawnedWidgets => spawnedWidgets;
 
-    public BuildingWidget GetBuildingWidget(int buildingId)
+    public BuildingWidget GetBuildingWidget(BuildingIdEnum buildingId)
     {
         return spawnedWidgets[buildingId];
     }

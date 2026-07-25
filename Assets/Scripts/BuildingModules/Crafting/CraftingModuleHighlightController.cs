@@ -33,10 +33,18 @@ public class CraftingModuleHighlightController : MonoBehaviour
 
     private void UpdateHighlight()
     {
+        if (!craftingModule) return;
+
+        var ownedBuilding = craftingModule.OwnedBuilding;
+        if (!ownedBuilding) return;
+
+        var spawnedConstruction = ownedBuilding.SpawnedConstruction;
+        if (!spawnedConstruction) return;
+
         var craft = craftingModule.SelectedCraftItem;
         var power = craft != null && craft.IsCraftingFinished() ? 1f : 0f;
 
-        craftingModule.OwnedBuilding.SpawnedConstruction.SetFlickingPower(power);
+        spawnedConstruction.SetFlickingPower(power);
     }
 
     private void OnInited()

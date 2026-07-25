@@ -1,17 +1,20 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("BuildingModules/Storage Building Module")]
 public class StorageModule : BuildingModule, IRaidable
 {
+    public StorageModuleLevelData LastStorageLevelData => LastLevelData as StorageModuleLevelData;
     public StorageModuleLevelData StorageLevelData => LevelData as StorageModuleLevelData;
+
+    private bool IsLimitAdded = false;
 
     protected override void Subscribe()
     {
         base.Subscribe();
 
-        OwnedBuilding.UpgradeComponent.OnUpgradeFinished += OnUpgradeCompleted;
+        OwnedBuilding.ConstructionComponent.OnConstructionFinished += OnConstructionFinished;
+        OwnedBuilding.UpgradeComponent.OnUpgradeFinished += OnUpgradeFinished;
         OwnedBuilding.OnDemolished += OnDemolished;
     }
 
@@ -19,7 +22,8 @@ public class StorageModule : BuildingModule, IRaidable
     {
         base.Unsubscribe();
 
-        OwnedBuilding.UpgradeComponent.OnUpgradeFinished -= OnUpgradeCompleted;
+        OwnedBuilding.ConstructionComponent.OnConstructionFinished -= OnConstructionFinished;
+        OwnedBuilding.UpgradeComponent.OnUpgradeFinished -= OnUpgradeFinished;
         OwnedBuilding.OnDemolished -= OnDemolished;
     }
 
@@ -27,7 +31,7 @@ public class StorageModule : BuildingModule, IRaidable
     {
         base.OnInit();
 
-        if (OwnedBuilding.UpgradeComponent.NextLevel == 1 && OwnedBuilding.ConstructionComponent.GetUnderConstruction()) return;
+        if (OwnedBuilding.ConstructionComponent.GetUnderConstruction() && !OwnedBuilding.UpgradeComponent.IsUnderUpgrade) return;
 
         AddLimit(StorageLevelData);
     }
@@ -74,9 +78,21 @@ public class StorageModule : BuildingModule, IRaidable
         return true;
     }
 
-    private void OnUpgradeCompleted()
+    private void OnConstructionFinished()
     {
-        RemoveLimit(LevelsData[OwnedBuilding.LevelComponent.Level - 1] as StorageModuleLevelData);
+        if (LastStorageLevelData) {
+            RemoveLimit(LastStorageLevelData);
+        }
+
+        AddLimit(StorageLevelData);
+    }
+
+    private void OnUpgradeFinished()
+    {
+        if (LastStorageLevelData) {
+            RemoveLimit(LastStorageLevelData);
+        }
+
         AddLimit(StorageLevelData);
     }
 
@@ -87,17 +103,25 @@ public class StorageModule : BuildingModule, IRaidable
 
     private void AddLimit(StorageModuleLevelData levelData)
     {
+        if (!levelData) return;
+        if (IsLimitAdded) return;
+
         foreach (var stack in levelData.Stacks) {
             CityStorage.Instance.Inventory.AddLimit(stack.StackEnum, stack.Amount);
         }
+
+        IsLimitAdded = true;
     }
 
     private void RemoveLimit(StorageModuleLevelData levelData)
     {
-        if (!IsInited) return;
+        if (!levelData) return;
+        if (!IsLimitAdded) return;
 
         foreach (var stack in levelData.Stacks) {
             CityStorage.Instance.Inventory.RemoveLimit(stack.StackEnum, stack.Amount);
         }
+
+        IsLimitAdded = false;
     }
 }

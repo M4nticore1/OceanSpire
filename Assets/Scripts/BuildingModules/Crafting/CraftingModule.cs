@@ -7,14 +7,19 @@ using UnityEngine;
 public class CraftingModule : BuildingModule, IElectricible, IRaidable
 {
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
+
     public ProductionModuleLevelData ProductionLevelData
     {
         get {
-            int levelIndex = OwnedBuilding.LevelComponent.Level - 1;
-            if (levelIndex >= 0 && levelIndex < ProductionLevelsData.Length)
-                return ProductionLevelsData[levelIndex];
+            if (!OwnedBuilding) return null;
+            if (levelsData == null) return null;
 
-            Debug.LogError($"Invalid level {OwnedBuilding.LevelComponent.Level}", this);
+            int levelIndex = OwnedBuilding.LevelComponent.Level - 1;
+            if (levelIndex >= 0 && levelIndex < levelsData.Length) {
+                return levelsData[levelIndex] as ProductionModuleLevelData;
+            }
+
+            Debug.LogError($"Invalid level {OwnedBuilding.LevelComponent.Level} on {name}", this);
             return null;
         }
     }
@@ -66,22 +71,36 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         OwnedBuilding.OnClicked -= HandleBuildingClicked;
     }
 
-    public void Init(CraftingModuleData craftingModuleData = null)
+    public void Init()
     {
-        craftingModuleData ??= CraftingModuleData.Default() ?? new CraftingModuleData();
+        Init(CraftingModuleData.Default());
+    }
+
+    public void Init(CraftingModuleData craftingModuleData)
+    {
+        if (craftingModuleData == null) {
+            Debug.LogError($"[{nameof(CraftingModule)}] Crafting Module Data is not valid!");
+            craftingModuleData = CraftingModuleData.Default();
+            return;
+        }
 
         CreateCraftItems();
         SetCraftingItemByIndex(craftingModuleData.CurrentCraftId);
 
-        if (SelectedCraftItem == null) {
+        if (SelectedCraftItem == null && CraftItems.Count > 0) {
             SetCraftingItemByIndex(0);
         }
 
         if (craftingModuleData.SelectedCraft != null) {
-            SetCraftingFinishTime(craftingModuleData.SelectedCraft.CraftingFinishTime);
+            SelectedCraftItem?.SetFinishTime(craftingModuleData.SelectedCraft.CraftingFinishTime);
         }
 
-        TryCraftItem();
+        if (SelectedCraftItem != null && SelectedCraftItem.IsCraftingFinished()) {
+            TryCraftItem();
+        }
+        else {
+            TryStartWorking();
+        }
     }
 
     public void Tick()
@@ -101,11 +120,15 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
     {
         base.OnWorkingStart();
 
-        // Запуск нового крафта с нуля
-        if (SelectedCraftItem != null && SelectedCraftItem.FinishTime == null) {
+        if (SelectedCraftItem == null) return;
+
+        if (SelectedCraftItem.FinishTime == null && !SelectedCraftItem.IsCraftingFinished()) {
             if (TryConsumeResources()) {
                 SetCraftingTime(0);
                 ResetFinishTime();
+            }
+            else {
+                TryStopWorking();
             }
         }
     }
@@ -156,13 +179,21 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     public void SetCraftingItem(CraftItemInstance craftItem)
     {
-        if (craftItem == null || !CraftItems.Contains(craftItem)) return;
+        if (craftItem == null) {
+            Debug.LogError($"[{nameof(CraftingModule)}] Craft Item is not valid!");
+            return;
+        }
+
+        if (!CraftItems.Contains(craftItem)) return;
+
         SelectedCraftItem = craftItem;
     }
 
     public void SetCraftingItemByIndex(int index)
     {
-        if (index < 0 || index >= CraftItems.Count) return;
+        if (index < 0) return;
+        if (index >= CraftItems.Count) return;
+
         SetCraftingItem(CraftItems[index]);
     }
 
@@ -212,7 +243,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         if (TryCollectItem()) {
             SetCraftingTime(0);
             SetCraftingFinishTime(null);
-            TryStartWorking(); // Пробуем запустить новый цикл крафта
+            TryStartWorking();
         }
 
         OnClicked?.Invoke();
@@ -248,8 +279,14 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         if (SelectedCraftItem == null) return false;
         if (!SelectedCraftItem.IsCraftingFinished()) return false;
 
-        var storageItem = cityStorage.Inventory.GetItem(SelectedCraftItem.Definition.ProduceItem.Definition.ItemId);
-        if (storageItem.Stack.GetItemAmountsSum() >= storageItem.Stack.Amount) return false;
+        var produceItem = SelectedCraftItem.Definition?.ProduceItem;
+        if (produceItem == null) return false;
+        if (!produceItem.Definition) return false;
+
+        var storageItem = cityStorage.Inventory.GetItem(produceItem.Definition.ItemId);
+        if (storageItem != null && storageItem.Stack != null) {
+            if (storageItem.Stack.GetItemAmountsSum() >= storageItem.Stack.Amount) return false;
+        }
 
         return true;
     }
@@ -319,10 +356,15 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     private bool IsEnoughResources(CraftItemDefinition craftItemDefinition)
     {
-        if (!cityStorage || !craftItemDefinition) return false;
+        if (!cityStorage) return false;
+        if (!craftItemDefinition) return false;
 
         foreach (var resource in craftItemDefinition.ConsumeResources) {
-            var storageAmount = cityStorage.Inventory.GetItem(resource.Definition.ItemId).Amount;
+            if (resource == null) continue;
+            if (!resource.Definition) continue;
+
+            var item = cityStorage.Inventory.GetItem(resource.Definition.ItemId);
+            var storageAmount = item != null ? item.Amount : 0;
             if (resource.Amount > storageAmount) return false;
         }
 

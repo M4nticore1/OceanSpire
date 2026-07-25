@@ -107,7 +107,8 @@ public class TowerBuilding : Building
         BuildingConstruction construction = null;
 
         if (constructionComponent.GetUnderConstruction()) {
-            var levelData = UpgradeComponent.IsUnderUpgrade ? LevelDefinition as TowerBuildingLevelData : NextLevelDefinition as TowerBuildingLevelData;
+            var levelData = UpgradeComponent.IsUnderUpgrade ? NextLevelDefinition as TowerBuildingLevelData : LevelDefinition as TowerBuildingLevelData;
+
             if (levelData) {
                 if (BuildingPosition == BuildingPosition.Straight) {
                     construction = levelData.ConstructionStraightFrame;
@@ -115,6 +116,9 @@ public class TowerBuilding : Building
                 else if (BuildingPosition == BuildingPosition.Corner) {
                     construction = levelData.ConstructionCornerFrame;
                 }
+            }
+            else {
+                Debug.LogError($"[{nameof(TowerBuilding)}] Level Data is not TowerBuildingLevelData at {name}!");
             }
         }
         else if (LevelDefinition is TowerBuildingLevelData levelData) {
