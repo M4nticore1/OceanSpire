@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class BuildingModule : MonoBehaviour
 {
-    private Building ownedBuilding = null;
+    private Building ownedBuilding;
     public Building OwnedBuilding => ownedBuilding ? ownedBuilding : GetComponent<Building>();
     public TowerBuilding OwnedTowerBuilding => OwnedBuilding as TowerBuilding;
 
@@ -33,7 +33,9 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected bool IsInited { get; private set; } = false;
     private bool isSubscribed = false;
-    public bool IsWorking { get; private set; } = false;
+    [field: SerializeField] public bool IsWorking { get; private set; } = false;
+
+    public event Action OnInited;
 
     public event Action OnWorkingStarted;
     public event Action OnWorkingStopped;
@@ -55,35 +57,24 @@ public abstract class BuildingModule : MonoBehaviour
 
     protected virtual void Subscribe()
     {
-        ownedBuilding.OnInited += OnInit;
-        ownedBuilding.WorkComponent.OnWorkerAdded += OnWorkerAdded;
-        ownedBuilding.WorkComponent.OnWorkerRemoved += OnWorkerRemoved;
-        ownedBuilding.WorkComponent.OnCurrentWorkerAdded += OnCurrentWorkerAdded;
-        ownedBuilding.WorkComponent.OnCurrentWorkerRemoved += OnCurrentWorkerRemoved;
+        ownedBuilding.OnInited += Init;
+        OwnedBuilding.UpgradeComponent.OnUpgradeFinished += HandleUpgradeFinished;
+
+        ownedBuilding.WorkComponent.OnWorkerAdded += HandleWorkerAdded;
+        ownedBuilding.WorkComponent.OnWorkerRemoved += HandleWorkerRemoved;
+        ownedBuilding.WorkComponent.OnCurrentWorkerAdded += HandleCurrentWorkerAdded;
+        ownedBuilding.WorkComponent.OnCurrentWorkerRemoved += HandleCurrentWorkerRemoved;
     }
 
     protected virtual void Unsubscribe()
     {
         ownedBuilding.OnInited -= OnInit;
-        ownedBuilding.WorkComponent.OnWorkerAdded -= OnWorkerAdded;
-        ownedBuilding.WorkComponent.OnWorkerRemoved -= OnWorkerRemoved;
-        ownedBuilding.WorkComponent.OnCurrentWorkerAdded -= OnCurrentWorkerAdded;
-        ownedBuilding.WorkComponent.OnCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
-    }
+        OwnedBuilding.UpgradeComponent.OnUpgradeFinished -= HandleUpgradeFinished;
 
-    protected virtual void OnInit()
-    {
-        IsInited = true;
-    }
-
-    protected virtual void OnWorkingStart()
-    {
-
-    }
-
-    protected virtual void OnWorkingStop()
-    {
-
+        ownedBuilding.WorkComponent.OnWorkerAdded -= HandleWorkerAdded;
+        ownedBuilding.WorkComponent.OnWorkerRemoved -= HandleWorkerRemoved;
+        ownedBuilding.WorkComponent.OnCurrentWorkerAdded -= HandleCurrentWorkerAdded;
+        ownedBuilding.WorkComponent.OnCurrentWorkerRemoved -= HandleCurrentWorkerRemoved;
     }
 
     protected virtual bool ShouldSubscribe()
@@ -100,6 +91,33 @@ public abstract class BuildingModule : MonoBehaviour
         if (!ownedBuilding) return false;
 
         return true;
+    }
+
+    private void Init()
+    {
+        OnInit();
+        IsInited = true;
+        OnInited?.Invoke();
+    }
+
+    protected virtual void OnInit()
+    {
+
+    }
+
+    protected virtual void HandleUpgradeFinished()
+    {
+        TryStartWorking();
+    }
+
+    protected virtual void OnWorkingStart()
+    {
+
+    }
+
+    protected virtual void OnWorkingStop()
+    {
+
     }
 
     protected virtual bool ShouldStartWorking()
@@ -132,22 +150,22 @@ public abstract class BuildingModule : MonoBehaviour
         return true;
     }
 
-    private void OnWorkerAdded(Citizen citizen)
+    private void HandleWorkerAdded(Citizen citizen)
     {
         TryStartWorking();
     }
 
-    private void OnWorkerRemoved(Citizen citizen)
+    private void HandleWorkerRemoved(Citizen citizen)
     {
         TryStopWorking();
     }
 
-    private void OnCurrentWorkerAdded(Citizen citizen)
+    private void HandleCurrentWorkerAdded(Citizen citizen)
     {
         TryStartWorking();
     }
 
-    private void OnCurrentWorkerRemoved(Citizen citizen)
+    private void HandleCurrentWorkerRemoved(Citizen citizen)
     {
         TryStopWorking();
     }

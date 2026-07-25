@@ -42,7 +42,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
     public void Init(CreatureWaypointsComponentData waypointsData)
     {
         if (waypointsData == null) {
-            Debug.LogError("waypointsData is not valid", this);
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Waypoints Data is not valid!");
             return;
         }
 
@@ -54,7 +54,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
     {
         var interaction = GetCurrentBuildingInteraction();
         if (interaction == null) {
-            Debug.LogError("currentBuildingInteraction is not valid");
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Building Interaction is not valid at building {cityNavigator.CurrentBuilding}!");
             return null;
         }
 
@@ -65,13 +65,13 @@ public class CreatureWaypointsComponent : MonoBehaviour
     {
         var interaction = GetCurrentBuildingInteraction();
         if (interaction == null) {
-            Debug.LogError("currentBuildingInteraction is not valid");
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Building Interaction is not valid at building {cityNavigator.CurrentBuilding}!");
             return;
         }
 
         var waypointsLength = interaction.Waypoints.Length;
         if (waypointsLength == 0) {
-            Debug.LogWarning("No waypoints in interaction");
+            Debug.LogWarning($"[{nameof(CreatureWaypointsComponent)}] No waypoints in interaction at building {cityNavigator.CurrentBuilding}!");
             return;
         }
 
@@ -97,7 +97,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
     {
         var waypoint = GetCurrentWaypoint();
         if (waypoint == null) {
-            Debug.LogError("CurrentWaypoint is not valid");
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Waypoint is not valid at building {cityNavigator.CurrentBuilding}!");
             return false;
         }
 
@@ -110,7 +110,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
     {
         var targetBuilding = cityNavigator.TargetBuilding;
         if (!targetBuilding) {
-            Debug.LogError("TargetBuilding is not valid ", this);
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] TargetBuilding is not valid!");
             return null;
         }
 

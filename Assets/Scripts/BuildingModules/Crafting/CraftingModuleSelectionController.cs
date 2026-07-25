@@ -16,6 +16,7 @@ public class CraftingModuleSelectionController : MonoBehaviour
 
     private void OnItemCollected(CraftItemInstance craftItem)
     {
+        Debug.Log("Collected");
         craftingModule.OwnedBuilding.SelectComponent.Deselect();
     }
 }

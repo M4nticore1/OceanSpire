@@ -168,7 +168,26 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         levelComponent.Init(buildingData.Level);
     }
 
-    protected abstract void OnDemolish();
+    protected virtual void OnDemolish()
+    {
+        for (int i = workComponent.Workers.Count - 1; i >= 0; i--) {
+            var worker = workComponent.Workers[i];
+            if (!worker) continue;
+
+            var building = worker.InteractComponent.InteractBuilding;
+            worker.InteractComponent.RemoveInteractBuilding();
+            worker.InteractComponent.TryStopInteracting(building);
+        }
+
+        for (int i = workComponent.CurrentWorkers.Count - 1; i >= 0; i--) {
+            var worker = workComponent.CurrentWorkers[i];
+            if (!worker) continue;
+
+            var building = worker.InteractComponent.InteractBuilding;
+            worker.InteractComponent.RemoveInteractBuilding();
+            worker.InteractComponent.TryStopInteracting(building);
+        }
+    }
 
     protected abstract BuildingConstruction GetConstructionToSpawn();
 
@@ -396,6 +415,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     private void HandleUpgradeFinished()
     {
         RefreshConstructionState();
+
         OnUpgradeFinished?.Invoke();
         OnBuildingUpgradeFinished?.Invoke(this);
     }

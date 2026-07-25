@@ -89,8 +89,6 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         selectComponent.OnSelected += OnSelected;
         selectComponent.OnDeselected += OnDeselected;
-
-        BoatsManager.Instance.RegisterBoat(this);
     }
 
     private void OnDisable()
@@ -100,7 +98,10 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         selectComponent.OnSelected -= OnSelected;
         selectComponent.OnDeselected -= OnDeselected;
+    }
 
+    private void OnDestroy()
+    {
         BoatsManager.Instance.UnregisterBoat(this);
     }
 
@@ -126,8 +127,10 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
             return;
         }
 
-        instanceId.SetGuid(boatData.InstanceId);
         CurrentStatus = boatData.Status;
+        BoatsManager.Instance.RegisterBoat(this);
+
+        instanceId.SetGuid(boatData.InstanceId);
         inventory.Init(boatData.InventoryData);
 
         if (boatData.DockInstanceId != null) {

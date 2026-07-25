@@ -21,9 +21,9 @@ MonoBehaviour:
     amount: 300
   maxResidentsCount: 1
   constructionTime: 900
-  buildingThumb: {fileID: 21300000, guid: 027349861b5ac6349a3638e12f68c3df, type: 3}
-  constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
-  constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}
+  buildingThumb: {fileID: 21300000, guid: 3113829e7bd092f48b1043e67bcb9ef5, type: 3}
+  constructionStraightFrame: {fileID: 3395891878762895499, guid: 4044f67ac0fe3ff40bd22638b5571d77, type: 3}
+  constructionCornerFrame: {fileID: 3395891878762895499, guid: f1aa1b666045eed4985559f59e783b61, type: 3}
   constructionStraight: {fileID: 3395891878762895499, guid: c9155c794856b584182a1047a9ba6f05, type: 3}
   constructionCorner: {fileID: 3395891878762895499, guid: cf44c5fd46b1b354d80c0e5b85bbb8f2, type: 3}
   constructionStraightLeft: {fileID: 3395891878762895499, guid: 53d6af202db32d043b2c6d53aecef238, type: 3}

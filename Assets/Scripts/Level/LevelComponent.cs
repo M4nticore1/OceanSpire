@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LevelComponent : MonoBehaviour
 {
-    public int Level { get; private set; } = 1;
+    [field: SerializeField] public int Level { get; private set; } = 1;
 
     public event Action OnLevelChanged;
 

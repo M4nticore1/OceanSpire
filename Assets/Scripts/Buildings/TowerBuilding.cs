@@ -93,6 +93,8 @@ public class TowerBuilding : Building
 
     protected override void OnDemolish()
     {
+        base.OnDemolish();
+
         if (BuildingPlace) {
             BuildingPlace.RemovePlacedBuilding();
         }
@@ -104,7 +106,18 @@ public class TowerBuilding : Building
     {
         BuildingConstruction construction = null;
 
-        if (LevelDefinition is TowerBuildingLevelData levelData) {
+        if (constructionComponent.GetUnderConstruction()) {
+            var levelData = UpgradeComponent.IsUnderUpgrade ? LevelDefinition as TowerBuildingLevelData : NextLevelDefinition as TowerBuildingLevelData;
+            if (levelData) {
+                if (BuildingPosition == BuildingPosition.Straight) {
+                    construction = levelData.ConstructionStraightFrame;
+                }
+                else if (BuildingPosition == BuildingPosition.Corner) {
+                    construction = levelData.ConstructionCornerFrame;
+                }
+            }
+        }
+        else if (LevelDefinition is TowerBuildingLevelData levelData) {
             if (ConstructionComponent.GetUnderConstruction()) {
                 if (BuildingPosition == BuildingPosition.Straight) {
                     construction = levelData.ConstructionStraightFrame;
@@ -169,7 +182,7 @@ public class TowerBuilding : Building
             }
         }
         else {
-            Debug.LogError("LevelData is not TowerBuildingLevelData");
+            Debug.LogError($"[{nameof(TowerBuilding)}] LevelData is not TowerBuildingLevelData at {name}!");
         }
 
         return construction;

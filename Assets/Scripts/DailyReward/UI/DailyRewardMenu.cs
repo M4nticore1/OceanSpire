@@ -60,13 +60,12 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
 
     public void Hide()
     {
-        HandleHidden();
+        slidePanel.Hide();
     }
 
     private void HandleHidden()
     {
         IsShowed = false;
-        slidePanel.Hide();
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();

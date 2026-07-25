@@ -45,19 +45,17 @@ public class CraftingModuleSkillAdapter : SkillAdapter
     private void AddBonus(CraftingModule module, float bonus)
     {
         var currentBonus = module.CraftingSpeedBonus;
-        var skillBonus = bonus;
-        var finalBonus = currentBonus + skillBonus;
+        var finalBonus = currentBonus + bonus;
 
-        module.SetCraftingSpeedBonus(bonus);
+        module.SetCraftingSpeedBonus(finalBonus);
     }
 
     private void RemoveBonus(CraftingModule module, float bonus)
     {
         var currentBonus = module.CraftingSpeedBonus;
-        var skillBonus = bonus;
-        var finalBonus = currentBonus - skillBonus;
+        var finalBonus = currentBonus - bonus;
 
-        module.SetCraftingSpeedBonus(bonus);
+        module.SetCraftingSpeedBonus(finalBonus);
     }
 
     private void OnCurrentWorkerAdded(WorkComponent workComponent, Citizen citizen)
@@ -69,7 +67,6 @@ public class CraftingModuleSkillAdapter : SkillAdapter
 
         var skillsComponent = citizen.GetComponent<SkillsComponent>();
         AddBonus(craftingModule, GetBonus(skillsComponent));
-
         AddSkillsComponent(skillsComponent);
     }
 
@@ -82,7 +79,6 @@ public class CraftingModuleSkillAdapter : SkillAdapter
 
         var skillsComponent = citizen.GetComponent<SkillsComponent>();
         RemoveBonus(craftingModule, GetBonus(skillsComponent));
-
         RemoveSkillsComponent(skillsComponent);
     }
 }

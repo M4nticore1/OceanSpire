@@ -39,7 +39,14 @@ public class CreaturesManager : MonoBehaviour
 
     private void Update()
     {
-        foreach (var creature in creatures) {
+        for (int i = creatures.Count - 1; i >= 0; i--) {
+            var creature = creatures[i];
+
+            if (!creature) {
+                creatures.RemoveAt(i);
+                continue;
+            }
+
             creature.Tick();
         }
     }

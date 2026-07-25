@@ -48,9 +48,9 @@ public class Raider : Human, IProgressable
 
         UpdateTargetBoat();
 
-        var ridingBoat = BoatRider.RidingBoat;
-        if (!ridingBoat) {
-            Debug.LogError($"[{nameof(Wanderer)}] Riding Boat is not valid!");
+        var targetBoat = BoatRider.TargetBoat;
+        if (!targetBoat) {
+            Debug.LogError($"[{nameof(Raider)}] Target Boat is not valid!");
             Destroy(gameObject);
         }
     }
@@ -66,12 +66,6 @@ public class Raider : Human, IProgressable
         SelectComponent.SetClickable(false);
 
         base.OnInit(data);
-
-        var ridingBoat = BoatRider.RidingBoat;
-        if (!ridingBoat) {
-            Debug.LogError($"[{nameof(Wanderer)}] Riding Boat is not valid!");
-            Destroy(gameObject);
-        }
     }
 
     protected override void DetermineNextAction()
@@ -294,20 +288,20 @@ public class Raider : Human, IProgressable
         for (int i = 0; i < raiderBoats.Count; i++) {
             var boat = raiderBoats[i];
             if (!boat) {
-                Debug.LogError($"Raider Boat not fount at index {i}");
+                Debug.LogError($"[{nameof(Raider)}] Raider Boat is not valid at index {i}");
                 continue;
             }
 
             if (boat.CurrentRider) continue;
 
-            var targetRidget = boat.TargetRider;
-            if (targetRidget && targetRidget != BoatRider) continue;
+            var targetRidet = boat.TargetRider;
+            if (targetRidet && targetRidet != BoatRider) continue;
 
             BoatRider.TrySetTargetBoat(boat);
             return;
         }
 
-        Debug.LogError($"[{nameof(Raider)}] No free raid boats available");
+        Debug.LogError($"[{nameof(Raider)}] No free raid boats available of {raiderBoats.Count} boats!");
     }
 
     public float GetProgress()

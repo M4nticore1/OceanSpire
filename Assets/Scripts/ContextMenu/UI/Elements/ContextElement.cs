@@ -69,7 +69,6 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
         if (IsShowed) return;
 
         OnShow();
-
         OnShowed?.Invoke();
         OnElementShowed?.Invoke(this);
     }
@@ -84,10 +83,8 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
 
     protected virtual void OnShow()
     {
-        Debug.Log("OnShow");
         IsShowed = true;
         content.SetActive(true);
-        UpdateButtonEnabled();
     }
 
     protected virtual void OnHide()
@@ -120,6 +117,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
     protected void UpdateButtonEnabled()
     {
         button.SetState(ShouldEnableButton() ? CustomButtonState.Idle : CustomButtonState.Disabled);
+        button.EndTransitionAnimation();
     }
 
     private void OnTargetSelected(ContextMenuTarget target)
@@ -127,6 +125,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
         if (!target) return;
 
         UpdateActive(target);
+        UpdateButtonEnabled();
     }
 
     private bool TrySubscribe()

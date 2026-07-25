@@ -351,12 +351,12 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
         var interactBuilding = interactComponent.InteractBuilding;
         if (!interactBuilding) return false;
-        if (!cityNavigator.CurrentBuilding) return false;
         if (cityNavigator.CurrentBuilding != interactBuilding) return false;
         if (interactBuilding.GetComponent<PierModule>()) return false;
 
+        if (!cityNavigator.CurrentBuilding) return false;
         if (boatRider.RidingBoat) return false;
-        if(!healthComponent.IsAlive) return false;
+        if (!healthComponent.IsAlive) return false;
         if (attackComponent.IsAttacking) return false;
 
         var waypoint = cityNavigator.WaypointsComponent.GetCurrentWaypoint();

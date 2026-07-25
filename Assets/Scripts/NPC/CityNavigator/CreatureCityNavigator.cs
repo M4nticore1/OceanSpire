@@ -68,7 +68,7 @@ public class CreatureCityNavigator : MonoBehaviour
     public void Init(CityNavigatorData cityNavigatorData)
     {
         if (cityNavigatorData == null) {
-            Debug.LogError("cityNavigatorData is not valid", this);
+            Debug.LogError($"[{nameof(CreatureCityNavigator)}] City Navigator Data is not valid");
             Init();
             return;
         }
@@ -103,7 +103,7 @@ public class CreatureCityNavigator : MonoBehaviour
     public void SetTargetBuilding(Building target)
     {
         if (!target) {
-            Debug.LogError("targetBuilding is not valid");
+            Debug.LogError($"[{nameof(CreatureCityNavigator)}] Target Building is not valid");
             return;
         }
 
@@ -124,7 +124,7 @@ public class CreatureCityNavigator : MonoBehaviour
     public bool TryFindPathToTargetBuilding()
     {
         if (!TargetBuilding) {
-            Debug.Log($"TargetBuilding not found at {name}");
+            Debug.Log($"[{nameof(CreatureCityNavigator)}] Target Building not found at {name}");
             return false;
         }
 
@@ -277,7 +277,7 @@ public class CreatureCityNavigator : MonoBehaviour
     {
         var targetBuilding = TargetBuilding;
         if (!targetBuilding) {
-            Debug.LogError("targetBuilding is not valid");
+            Debug.LogError($"[{nameof(CreatureCityNavigator)}] TargetBuilding is not valid");
             return;
         }
 
@@ -285,7 +285,7 @@ public class CreatureCityNavigator : MonoBehaviour
         if (currentBuilding == targetBuilding) {
             var construction = currentBuilding.SpawnedConstruction;
             if (!construction) {
-                Debug.LogError("construction is not valid");
+                Debug.LogError($"[{nameof(CreatureCityNavigator)}] Construction is not valid");
                 return;
             }
 
@@ -293,7 +293,7 @@ public class CreatureCityNavigator : MonoBehaviour
 
             var waypoint = WaypointsComponent.GetCurrentWaypoint();
             if (waypoint == null) {
-                Debug.LogError("waypoint is not valid", this);
+                Debug.LogError($"[{nameof(CreatureCityNavigator)}] Waypoint is not valid", this);
                 return;
             }
 
@@ -301,7 +301,7 @@ public class CreatureCityNavigator : MonoBehaviour
         }
         else {
             if (!CurrentPathBuilding) {
-                Debug.LogError("cityNavigator.CurrentPathBuilding is not valid");
+                Debug.LogError($"[{nameof(CreatureCityNavigator)}] City Navigator.CurrentPathBuilding is not valid");
                 return;
             }
 
@@ -318,7 +318,7 @@ public class CreatureCityNavigator : MonoBehaviour
 
         var construction = currentBuilding.SpawnedConstruction;
         if (!construction) {
-            Debug.LogError("construction is not valid");
+            Debug.LogError($"[{nameof(CreatureCityNavigator)}] Construction is not valid");
             return;
         }
 
@@ -345,7 +345,7 @@ public class CreatureCityNavigator : MonoBehaviour
         for (int i = pathBuildings.Count - 2; i >= 0; i--) {
             var building = pathBuildings[i];
             if (!building) {
-                Debug.Log($"Building not found on path at {name}");
+                Debug.Log($"[{nameof(CreatureCityNavigator)}] Building not found on path at {name}");
                 continue;
             }
 

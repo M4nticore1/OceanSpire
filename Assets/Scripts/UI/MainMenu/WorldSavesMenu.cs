@@ -16,86 +16,67 @@ public class WorldSavesMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        createNewWorldMenu.OnClosed += OnCreateMenuClosed;
+        if (createNewWorldMenu) createNewWorldMenu.OnClosed += OnCreateMenuClosed;
         SaveSlotWidget.OnWorldDataRemoved += OnWorldDataRemoved;
     }
 
     private void OnDisable()
     {
-        createNewWorldMenu.OnClosed -= OnCreateMenuClosed;
+        if (createNewWorldMenu) createNewWorldMenu.OnClosed -= OnCreateMenuClosed;
         SaveSlotWidget.OnWorldDataRemoved -= OnWorldDataRemoved;
     }
 
     private void Start()
     {
-        CreateWidgets();
+        RebuildUI();
     }
 
-    private void UpdateSaveSlotsData()
+    private void RebuildUI()
     {
+        ClearWidgets();
+
+        var validSaves = new List<WorldData>();
         var saves = WorldSaveSystem.GetAllSaveData();
 
-        for (int i = 0; i < spawnedWidgets.Count; i++) {
-            var widget = spawnedWidgets[i];
-            if (!widget) {
-                Debug.LogError($"[{nameof(WorldSavesMenu)}] Spawned Widget is not valid at index {i}!");
-                continue;
-            }
-
-            if (saves != null && i < saves.Length && saves[i] != null) {
-                widget.SetSaveData(saves[i]);
-            }
-            else {
-                widget.RemoveSaveData();
-            }
-        }
-    }
-
-    private void CreateWidgets()
-    {
-        var worldSaves = new List<WorldData>();
-
-        var saves = WorldSaveSystem.GetAllSaveData();
         if (saves != null) {
             foreach (var worldSave in saves) {
-                if (worldSave == null) continue;
-
-                worldSaves.Add(worldSave);
+                if (worldSave != null) validSaves.Add(worldSave);
             }
         }
 
-        var widgetsCount = worldSaves.Count + 1;
+        int widgetsCount = validSaves.Count + 1;
 
         for (int i = 0; i < widgetsCount; i++) {
             var widget = Instantiate(saveSlotWidgetPrefab, layoutGroup.transform);
-            widget.Button.SetSelectGroup(selectGroup);
 
-            if (i < worldSaves.Count) {
-                widget.SetSaveData(worldSaves[i]);
+            if (widget.Button) {
+                widget.Button.SetSelectGroup(selectGroup);
+            }
+
+            if (i < validSaves.Count) {
+                widget.SetSaveData(validSaves[i]);
+            }
+            else {
+                widget.RemoveSaveData();
             }
 
             spawnedWidgets.Add(widget);
         }
     }
 
-    private void RemoveExtraSaveSlots()
+    private void ClearWidgets()
     {
-        var saves = WorldSaveSystem.GetAllSaveData();
-        var extraSlotsCount = Mathf.Abs(spawnedWidgets.Count - 1 - (saves != null ? saves.Length : 0));
-        extraSlotsCount = Mathf.Clamp(extraSlotsCount, 0, extraSlotsCount);
-
-        for (int i = 0; i < extraSlotsCount; i++) {
-            var index = spawnedWidgets.Count - i - 1;
-            var widget = spawnedWidgets[index];
-            Destroy(widget.gameObject);
-            spawnedWidgets.RemoveAt(index);
+        foreach (var widget in spawnedWidgets) {
+            if (widget) Destroy(widget.gameObject);
         }
+        spawnedWidgets.Clear();
     }
 
     private void OnCreateMenuClosed()
     {
         foreach (var widget in spawnedWidgets) {
             if (!widget) continue;
+            if (!widget.Button) continue;
 
             widget.Button.SetInteractable(true);
             widget.Button.SetState(CustomButtonState.Idle);
@@ -104,7 +85,6 @@ public class WorldSavesMenu : MonoBehaviour
 
     private void OnWorldDataRemoved(SaveSlotWidget widget)
     {
-        RemoveExtraSaveSlots();
-        UpdateSaveSlotsData();
+        RebuildUI();
     }
 }

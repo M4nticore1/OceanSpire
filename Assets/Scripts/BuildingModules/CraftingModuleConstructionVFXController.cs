@@ -61,7 +61,7 @@ public class CraftingModuleConstructionVFXController : MonoBehaviour
 
     private void UpdatePlay()
     {
-        if (craftingModule == null) return;
+        if (!craftingModule) return;
 
         if (craftingModule.IsWorking) {
             PlayVFX();

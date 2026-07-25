@@ -22,6 +22,23 @@ public class WorkComponent : MonoBehaviour
     public static event Action<WorkComponent, Citizen> OnComponentCurrentWorkerAdded;
     public static event Action<WorkComponent, Citizen> OnComponentCurrentWorkerRemoved;
 
+    //private void OnDestroy()
+    //{
+    //    for (int i = workers.Count - 1; i >= 0; i--) {
+    //        var worker = workers[i];
+    //        if (!worker) continue;
+
+    //        RemoveWorker(worker);
+    //    }
+
+    //    for (int i = currentWorkers.Count - 1; i >= 0; i--) {
+    //        var worker = currentWorkers[i];
+    //        if (!worker) continue;
+
+    //        RemoveCurrentWorker(worker);
+    //    }
+    //}
+
     // Workers
     public void AddWorker(Citizen interactor)
     {

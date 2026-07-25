@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class GroundBuilding : Building
 {
-    protected override void OnDemolish()
-    {
-        
-    }
-
     protected override BuildingConstruction GetConstructionToSpawn()
     {
         var levelData = LevelDefinition as GroundBuildingLevelData;

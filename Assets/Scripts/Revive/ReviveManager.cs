@@ -17,7 +17,7 @@ public class ReviveManager : MonoBehaviour
     [SerializeField] private int chargeReviveTimeInSeconds = 900;
     public int ChargeReviveTimeInSeconds => chargeReviveTimeInSeconds;
 
-    private HashSet<ReviveComponent> reviveComponents = new();
+    private List<ReviveComponent> reviveComponents = new();
 
     public int RemainingRevivesCount { get; private set; } = 0;
     public long? NextChargeReviveTimeInSeconds { get; private set; } = null;
@@ -59,8 +59,15 @@ public class ReviveManager : MonoBehaviour
 
     private void UpdateComponents()
     {
-        foreach (var component in reviveComponents) {
-            component.Tick();
+        for (int i = reviveComponents.Count - 1; i >= 0; i--) {
+            var reviveComponent = reviveComponents[i];
+
+            if (!reviveComponent) {
+                reviveComponents.RemoveAt(i);
+                continue;
+            }
+
+            reviveComponent.Tick();
         }
     }
 

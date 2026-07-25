@@ -4,7 +4,7 @@ using UnityEngine;
 public class CreatureInteractComponent : MonoBehaviour
 {
     [field: SerializeField] public Building InteractBuilding { get; private set; }
-    public bool IsInteracting { get; private set; } = false;
+    [field: SerializeField] public bool IsInteracting { get; private set; } = false;
 
     public event Action<Building> OnInteractBuildingSeted;
     public event Action<Building> OnInteractBuildingRemoved;
@@ -112,17 +112,25 @@ public class CreatureInteractComponent : MonoBehaviour
 
     private bool ShouldStartInteracting(Building building)
     {
+        Debug.Log("ShouldStopInteracting");
         if (!building) return false;
+
+        Debug.Log("ShouldStopInteracting1");
         if (IsInteracting) return false;
 
+        Debug.Log("ShouldStopInteracting2");
         return true;
     }
 
     private bool ShouldStopInteracting(Building building)
     {
+        Debug.Log("ShouldStopInteracting");
         if (!building) return false;
+
+        Debug.Log("ShouldStopInteracting1");
         if (!IsInteracting) return false;
 
+        Debug.Log("ShouldStopInteracting2");
         return true;
     }
 }

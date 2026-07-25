@@ -19,7 +19,7 @@ public class CraftsFinishedNotificationController : NotificationController
     protected override bool ShouldSendNotification()
     {
         if (!buildingsManager) {
-            Debug.LogError("buildingsManager is not valid");
+            Debug.LogError($"[{nameof(CraftsFinishedNotificationController)}] Buildings Manager is not valid");
             return false;
         }
 
@@ -35,11 +35,9 @@ public class CraftsFinishedNotificationController : NotificationController
 
         foreach (var craft in GetCurrentCrafts()) {
             var remainingTime = craft.GetRemainingCraftingTime();
-
-            if (remainingTime == null) continue;
             if (remainingTime < maxFireTime) continue;
 
-            maxFireTime = (int)remainingTime.Value;
+            maxFireTime = remainingTime;
         }
 
         return maxFireTime;
@@ -51,13 +49,13 @@ public class CraftsFinishedNotificationController : NotificationController
 
         foreach (var floor in buildingsManager.BuiltFloors) {
             if (!floor) {
-                Debug.LogError("Floor is not valid");
+                Debug.LogError($"[{nameof(CraftsFinishedNotificationController)}] Floor is not valid");
                 continue;
             }
 
             foreach (var place in floor.RoomBuildingPlaces) {
                 if (!place) {
-                    Debug.LogError("Building Place is not valid");
+                    Debug.LogError($"[{nameof(CraftsFinishedNotificationController)}] Building Place is not valid");
                     continue;
                 }
 
@@ -68,13 +66,13 @@ public class CraftsFinishedNotificationController : NotificationController
 
                 var selectedCraft = craftingModule.SelectedCraftItem;
                 if (selectedCraft == null) {
-                    Debug.LogError($"SelectedCraft is not valid at module {craftingModule}");
+                    Debug.LogError($"[{nameof(CraftsFinishedNotificationController)}] Selected Craft is not valid at module {craftingModule}");
                     continue;
                 }
 
-                if (selectedCraft.CraftingFinishTime == null) continue;
+                if (selectedCraft.FinishTime == null) continue;
 
-                var finishTime = selectedCraft.CraftingFinishTime;
+                var finishTime = selectedCraft.FinishTime;
                 if (finishTime == null) continue;
 
                 craftItems.Add(selectedCraft);

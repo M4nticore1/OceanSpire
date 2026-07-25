@@ -7,7 +7,6 @@ public class RecipesContextElement : ContextElement
 
     protected override void OnButtonClicked()
     {
-        Debug.Log("Clicked");
         recipesMenu.Show();
     }
 

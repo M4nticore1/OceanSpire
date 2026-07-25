@@ -62,13 +62,24 @@ public class SelectEquipmentMenu : UIBehaviour
     private void ClearWidgets()
     {
         for (int i = spawnedWidgets.Count - 1; i >= 0; i--) {
+            var widget = spawnedWidgets[i];
+            if (!widget) {
+                spawnedWidgets.RemoveAt(i);
+                continue;
+            }
+
             Destroy(spawnedWidgets[i].gameObject);
             spawnedWidgets.RemoveAt(i);
+        }
+
+        foreach (Transform child in layoutGroup.transform) {
+            Destroy(child.gameObject);
         }
     }
 
     private bool ShouldCreateWidget(EquipmentCategory category, ItemInstance item)
     {
+        if (item == null) return false;
         if (item.Amount <= 0) return false;
 
         var definition = item.Definition as EquipmentDefinition;
