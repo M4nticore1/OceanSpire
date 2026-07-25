@@ -170,23 +170,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     protected virtual void OnDemolish()
     {
-        for (int i = workComponent.Workers.Count - 1; i >= 0; i--) {
-            var worker = workComponent.Workers[i];
-            if (!worker) continue;
-
-            var building = worker.InteractComponent.InteractBuilding;
-            worker.InteractComponent.RemoveInteractBuilding();
-            worker.InteractComponent.TryStopInteracting(building);
-        }
-
-        for (int i = workComponent.CurrentWorkers.Count - 1; i >= 0; i--) {
-            var worker = workComponent.CurrentWorkers[i];
-            if (!worker) continue;
-
-            var building = worker.InteractComponent.InteractBuilding;
-            worker.InteractComponent.RemoveInteractBuilding();
-            worker.InteractComponent.TryStopInteracting(building);
-        }
+        RemoveWorkers();
     }
 
     protected abstract BuildingConstruction GetConstructionToSpawn();
@@ -314,6 +298,27 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
     }
 
     // Work
+    public void RemoveWorkers()
+    {
+        for (int i = workComponent.CurrentWorkers.Count - 1; i >= 0; i--) {
+            var worker = workComponent.CurrentWorkers[i];
+            if (!worker) continue;
+
+            var building = worker.InteractComponent.InteractBuilding;
+            worker.InteractComponent.RemoveInteractBuilding();
+            worker.InteractComponent.TryStopInteracting(building);
+        }
+
+        for (int i = workComponent.Workers.Count - 1; i >= 0; i--) {
+            var worker = workComponent.Workers[i];
+            if (!worker) continue;
+
+            var building = worker.InteractComponent.InteractBuilding;
+            worker.InteractComponent.RemoveInteractBuilding();
+            worker.InteractComponent.TryStopInteracting(building);
+        }
+    }
+
     private void OnWorkerAdded(Citizen citizen)
     {
         //UpdateWorkerInteractionTransforms();
@@ -396,7 +401,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
     private void HandleConstructionStarted()
     {
+        RemoveWorkers();
         RefreshConstructionState();
+
         OnConstructionStarted?.Invoke();
         OnBuildingConstructionStarted?.Invoke(this);
     }

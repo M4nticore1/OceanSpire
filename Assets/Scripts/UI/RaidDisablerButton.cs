@@ -23,13 +23,12 @@ public class RaidDisablerButton : MonoBehaviour
 
         raidManager.OnRaidStarted -= OnRaidStarted;
         raidManager.OnRaidEnded -= OnRaidEnded;
-        button.OnStateChanged += OnButtonStateChanged;
+        button.OnStateChanged -= OnButtonStateChanged;
     }
 
     private void UpdateButtonEnabled()
     {
         if (!raidManager) return;
-        if (button.State == CustomButtonState.Disabled) return;
 
         button.SetState(raidManager.IsUnderRaid ? CustomButtonState.Disabled : CustomButtonState.Idle);
     }

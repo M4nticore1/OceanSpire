@@ -66,7 +66,6 @@ public class ConstructionComponent : MonoBehaviour
 
     public void StartConstruction(int constructionTime)
     {
-        Debug.Log($"StartConstruction {constructionTime}");
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         ConstructionStartTime = currentTime;
         ConstructionFinishTime = currentTime + constructionTime;
@@ -84,10 +83,8 @@ public class ConstructionComponent : MonoBehaviour
 
     public void FinishConstruction()
     {
-        Debug.Log("TryFinishConstruction");
         if (ConstructionFinishTime == null) return;
 
-        Debug.Log("FinishConstruction");
         ConstructionStartTime = null;
         ConstructionFinishTime = null;
 

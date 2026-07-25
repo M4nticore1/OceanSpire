@@ -17,9 +17,15 @@ public abstract class BuildingStrategy
 
     public abstract void OnEntityEnter(CreatureCityNavigator navigator);
     public abstract void OnEntityExit(CreatureCityNavigator navigator);
+
     public abstract void OnInteractBuildingSet(CreatureInteractComponent navigator);
     public abstract void OnInteractBuildingRemove(CreatureInteractComponent navigator);
+
     public abstract void OnStartedInteracting(CreatureInteractComponent interactor);
     public abstract void OnStoppedInteracting(CreatureInteractComponent interactor);
+
     public abstract void OnInteracting(CreatureInteractComponent interactor);
+
+    public abstract void OnConstructionStarted();
+    public abstract void OnConstructionFinished();
 }

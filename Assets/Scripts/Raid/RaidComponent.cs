@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class RaidComponent : MonoBehaviour
 {
-    private List<Raider> raiders = new();
+    [field: SerializeField] private List<Raider> raiders = new();
     public IReadOnlyList<Raider> Raiders => raiders.AsReadOnly();
 
-    private List<Raider> currentRaiders = new();
+    [field: SerializeField] private List<Raider> currentRaiders = new();
     public IReadOnlyList<Raider> CurrentRaiders => currentRaiders.AsReadOnly();
 
     public event Action<Raider> OnRaiderAdded;

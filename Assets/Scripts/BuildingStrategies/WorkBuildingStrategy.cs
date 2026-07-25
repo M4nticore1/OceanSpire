@@ -39,23 +39,16 @@ public class WorkBuildingStrategy : BuildingStrategy
 
     public override void OnInteracting(CreatureInteractComponent interactor)
     {
-        //if (interactBuilding.spawnedConstruction.BuildingInteractions.Length > interactorIndex) {
-        //    BuildingAction buildingAction = interactBuilding.spawnedConstruction.BuildingInteractions[interactorIndex];
 
-        //    if (buildingAction.actionTimes[currentActionIndex] > 0) {
-        //        currentActionTime += Time.deltaTime;
-        //        if (currentActionTime >= buildingAction.actionTimes[currentActionIndex]) {
-        //            if (currentActionIndex < buildingAction.actionTimes.Length - 1)
-        //                currentActionIndex++;
-        //            else
-        //                currentActionIndex = 0;
+    }
 
-        //            currentActionTime = 0;
+    public override void OnConstructionStarted()
+    {
+        building.RemoveWorkers();
+    }
 
-        //            Vector3 position = buildingAction.waypoints[currentActionIndex].position;
-        //            movement.MoveTo(position);
-        //        }
-        //    }
-        //}
+    public override void OnConstructionFinished()
+    {
+
     }
 }

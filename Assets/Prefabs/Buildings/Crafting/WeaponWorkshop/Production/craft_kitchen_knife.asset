@@ -20,4 +20,4 @@ MonoBehaviour:
     amount: 300
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
     amount: 70
-  produceTime: 30
+  produceTime: 400

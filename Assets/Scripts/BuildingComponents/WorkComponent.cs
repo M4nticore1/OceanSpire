@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class WorkComponent : MonoBehaviour
 {
-    private List<Citizen> workers = new();
+    [field: SerializeField] private List<Citizen> workers = new();
     public IReadOnlyList<Citizen> Workers => workers.AsReadOnly();
 
-    private List<Citizen> currentWorkers = new();
+    [field: SerializeField] private List<Citizen> currentWorkers = new();
     public IReadOnlyList<Citizen> CurrentWorkers => currentWorkers.AsReadOnly();
 
     public event Action<Citizen> OnWorkerAdded;
@@ -22,28 +22,12 @@ public class WorkComponent : MonoBehaviour
     public static event Action<WorkComponent, Citizen> OnComponentCurrentWorkerAdded;
     public static event Action<WorkComponent, Citizen> OnComponentCurrentWorkerRemoved;
 
-    //private void OnDestroy()
-    //{
-    //    for (int i = workers.Count - 1; i >= 0; i--) {
-    //        var worker = workers[i];
-    //        if (!worker) continue;
-
-    //        RemoveWorker(worker);
-    //    }
-
-    //    for (int i = currentWorkers.Count - 1; i >= 0; i--) {
-    //        var worker = currentWorkers[i];
-    //        if (!worker) continue;
-
-    //        RemoveCurrentWorker(worker);
-    //    }
-    //}
-
     // Workers
     public void AddWorker(Citizen interactor)
     {
         if (workers.Contains(interactor)) return;
 
+        Debug.Log("AddWorker");
         workers.Add(interactor);
         OnWorkerAdded?.Invoke(interactor);
         OnComponentWorkerAdded?.Invoke(this, interactor);
@@ -53,6 +37,7 @@ public class WorkComponent : MonoBehaviour
     {
         if (!workers.Contains(interactor)) return;
 
+        Debug.Log("RemoveWorker");
         workers.Remove(interactor);
         OnWorkerRemoved?.Invoke(interactor);
         OnComponentWorkerRemoved?.Invoke(this, interactor);

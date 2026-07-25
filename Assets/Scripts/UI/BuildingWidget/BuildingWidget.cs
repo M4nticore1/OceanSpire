@@ -52,7 +52,7 @@ public class BuildingWidget : MonoBehaviour
     public void Init(Building building)
     {
         if (!building) {
-            Debug.LogError("Building is not valid");
+            Debug.LogError($"[{nameof(BuildingWidget)}] Building is not valid");
             return;
         }
 
@@ -98,7 +98,13 @@ public class BuildingWidget : MonoBehaviour
         }
 
         if (!cityStorage) {
-            Debug.LogError($"[{nameof(BuildingWidget)}] CityStorage is not valid!");
+            Debug.LogError($"[{nameof(BuildingWidget)}] City Storage is not valid!");
+            BuildButton.SetState(CustomButtonState.Disabled);
+            BuildButton.EndTransitionAnimation();
+            return;
+        }
+
+        if (RaidManager.Instance && RaidManager.Instance.IsUnderRaid) {
             BuildButton.SetState(CustomButtonState.Disabled);
             BuildButton.EndTransitionAnimation();
             return;
@@ -106,8 +112,7 @@ public class BuildingWidget : MonoBehaviour
 
         foreach (var buildItem in BuildingPrefab.LevelDefinition.ResourcesToBuild) {
             var storageItem = cityStorage.Inventory.GetItem(buildItem.Definition.ItemId);
-
-            if (buildItem.Amount <= storageItem.Amount) continue;
+            if (storageItem.Amount >= buildItem.Amount) continue;
 
             BuildButton.SetState(CustomButtonState.Disabled);
             BuildButton.EndTransitionAnimation();

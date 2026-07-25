@@ -346,7 +346,7 @@ MonoBehaviour:
   resourceAmountText: {fileID: 8834238281448815289}
   resourceImage: {fileID: 1277891582841892986}
   resourceAmountBar: {fileID: 0}
-  changeColorType: 1
+  changeColorType: 0
   useAmountColors: 1
   enoughAmountColor: {r: 0.19999999, g: 1, b: 0.19999999, a: 1}
   notEnoughAmountColor: {r: 1, g: 0.19999999, b: 0.19999999, a: 1}

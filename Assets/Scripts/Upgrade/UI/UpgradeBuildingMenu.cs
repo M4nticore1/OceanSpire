@@ -84,7 +84,14 @@ public class UpgradeBuildingMenu : BuildingMenu
         }
 
         var cityStorage = CityStorage.Instance;
-        if (!cityStorage) return false;
+        if (!cityStorage) {
+            Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] City Storage is not valid!");
+            return false;
+        }
+
+        if (RaidManager.Instance && RaidManager.Instance.IsUnderRaid) {
+            return false;
+        }
 
         foreach (var buildItem in building.NextLevelDefinition.ResourcesToBuild) {
             var storageItem = cityStorage.Inventory.GetItem(buildItem.Definition.ItemId);

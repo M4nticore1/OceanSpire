@@ -88,6 +88,16 @@ public class PierBuildingStrategy : BuildingStrategy
         
     }
 
+    public override void OnConstructionStarted()
+    {
+
+    }
+
+    public override void OnConstructionFinished()
+    {
+
+    }
+
     private void UpdateTargetBoats()
     {
         for (int i = 0; i < building.WorkComponent.Workers.Count; i++) {
