@@ -3,7 +3,7 @@ using UnityEngine;
 public class RewardedAdsButtonManager : MonoBehaviour
 {
     [SerializeField] private AdRewardDefinition[] rewardDefinitions;
-    [SerializeField] private AppLovinMaxRewardedAdsSystem appLovinMaxAds;
+    //[SerializeField] private AppLovinMaxRewardedAdsSystem appLovinMaxAds;
     [SerializeField] private RewardedAdsButton rewardedAdsButton;
 
     [SerializeField] private float adShowTime = 30f;
