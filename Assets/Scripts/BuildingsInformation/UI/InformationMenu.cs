@@ -20,11 +20,13 @@ public class InformationMenu : MonoBehaviour, IOpenable
     private void OnEnable()
     {
         closeButton.OnReleased.AddListener(OnCloseButtonClicked);
+        slidePanel.OnHidden += HandleHidden;
     }
 
     private void OnDisable()
     {
         closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
+        slidePanel.OnHidden -= HandleHidden;
     }
 
     public void Show()
@@ -57,8 +59,12 @@ public class InformationMenu : MonoBehaviour, IOpenable
 
     public void Hide()
     {
-        IsShowed = false;
         slidePanel.Hide();
+    }
+
+    private void HandleHidden()
+    {
+        IsShowed = false;
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
