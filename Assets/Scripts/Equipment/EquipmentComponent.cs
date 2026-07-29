@@ -87,10 +87,12 @@ public class EquipmentComponent : MonoBehaviour
 
     private void SetWeaponDefinition(EquipmentDefinition definition)
     {
-        EquipmentDefinition = definition;
-        if (definition) return;
-
-        EquipmentDefinition = defaultEquipment;
+        if (definition) {
+            EquipmentDefinition = definition;
+        }
+        else {
+            EquipmentDefinition = defaultEquipment;
+        }
     }
 
     private void TrySpawnEquipment(EquipmentDefinition definition)

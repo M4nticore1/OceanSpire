@@ -36,7 +36,7 @@ public class EquipmentMenu : ControlMenu
             if (weapon.EquipmentCategory != equipmentCategory) return;
 
             var widget = Instantiate(equipmentWidget, layoutGroup.transform);
-            widget.SetItem(weapon);
+            widget.SetItemDefinition(weapon);
             widget.AddAmount(item);
             widget.SetLimit(item.Stack);
         }

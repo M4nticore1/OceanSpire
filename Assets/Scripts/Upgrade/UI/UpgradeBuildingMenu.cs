@@ -46,7 +46,7 @@ public class UpgradeBuildingMenu : BuildingMenu
 
             var item = cityStorage.Inventory.GetItem(buildItem.Definition.ItemId);
 
-            widget.SetItem(item.Definition);
+            widget.SetItemDefinition(item.Definition);
             widget.AddAmount(item);
             widget.SetLimit(buildItem);
         }

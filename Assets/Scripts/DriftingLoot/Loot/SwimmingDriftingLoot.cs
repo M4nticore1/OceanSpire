@@ -99,7 +99,9 @@ public class SwimmingDriftingLoot : DriftingLoot
             if (chance > loot.dropChance) continue;
 
             int itemAmount = UnityEngine.Random.Range(loot.minAmount, loot.maxAmount + 1);
-            var item = new ItemInstance(loot.itemData);
+
+            var definition = loot.itemData;
+            var item = definition.CreateInstance();
             item.SetAmount(itemAmount);
 
             containedLoot.Add(item);

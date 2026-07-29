@@ -59,7 +59,7 @@ public abstract class EquipmentWidget : UIBehaviour
     {
         if (!definition) return;
 
-        nameText.SetLocalizationItem(definition.NameLocalization);
+        nameText.SetLocalizationItem(definition.NameLocalizationItem);
     }
 
     private void UpdatePowerText(EquipmentDefinition definition)

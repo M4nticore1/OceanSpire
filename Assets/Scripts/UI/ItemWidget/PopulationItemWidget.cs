@@ -26,8 +26,10 @@ public class PopulationItemWidget : ResourceWidget
         Citizen.OnCitizenEvicted -= OnCitizenEvicted;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         UpdateAmountAndLimit();
     }
 

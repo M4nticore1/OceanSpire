@@ -397,11 +397,12 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         if (SelectedCraftItem == null || !cityStorage) return items;
 
         foreach (var consumeItem in SelectedCraftItem.Definition.ConsumeResources) {
+            var definition = consumeItem.Definition;
             var cityAmount = cityStorage.Inventory.GetItem(consumeItem.Definition.ItemId).Amount;
             var amount = Mathf.Min(cityAmount, consumeItem.Amount);
             if (amount <= 0) continue;
 
-            var item = new ItemInstance(consumeItem.Definition);
+            var item = definition.CreateInstance();
             item.SetAmount(amount);
             items.Add(item);
         }

@@ -161,6 +161,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7190729374403614039}
   m_SourcePrefab: {fileID: 100100000, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
+--- !u!114 &1634427749595216612 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1429227799627896206, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
+  m_PrefabInstance: {fileID: 394914324864757610}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
 --- !u!114 &2440711555690162416 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2640272965829953434, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
@@ -189,18 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5006ab6d95b370e4ea8339081d68393c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConstructionsManagementList
-  layoutGroup: {fileID: 6674187875224405745}
+  layoutGroup: {fileID: 1634427749595216612}
   scrollRect: {fileID: 2440711555690162416}
   BuildingWidgetPrefab: {fileID: 4936279183464857374, guid: fed55f7ae730fde45ae18812d6a1b8f5, type: 3}
   buildingCategory: 0
---- !u!114 &6674187875224405745 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6477441796283476379, guid: 0fe77029eeada254e97b15a1e6a008fe, type: 3}
-  m_PrefabInstance: {fileID: 394914324864757610}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

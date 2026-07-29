@@ -16,11 +16,12 @@ MonoBehaviour:
   itemCategory: 3
   stack: 8
   weight: 3
-  localizationItem: {fileID: 11400000, guid: 4d08b1625cbbeba4d9ecd451069a6e16, type: 2}
+  nameLocalizationItem: {fileID: 11400000, guid: 4d08b1625cbbeba4d9ecd451069a6e16, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 22f3056f62a7af24cb474c2bdb0ae7b4, type: 2}
   itemIcon: {fileID: 21300000, guid: b3b509bba87ed9846b6a570141497f90, type: 3}
   showInStorage: 1
   equipmentCategory: 0
   equipmentPrefab: {fileID: 7020424732878029919, guid: f543d11d2e1346c4da3ca1d819b24a0a, type: 3}
   power: 19
   defaultEquipment: 0
-  attackMethods: 2
+  attackMethod: 2

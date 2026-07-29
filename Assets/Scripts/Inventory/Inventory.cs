@@ -185,7 +185,7 @@ public class Inventory : MonoBehaviour, ILocalizable
     private ItemInstance AddItem(ItemID id)
     {
         var definition = ItemsList.Instance.GetItem(id);
-        var item = new ItemInstance(definition);
+        var item = definition.CreateInstance();
 
         item.SetStack(GetStack(item.Definition.Stack));
 

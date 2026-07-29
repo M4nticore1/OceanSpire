@@ -16,12 +16,12 @@ MonoBehaviour:
   itemCategory: 3
   stack: 8
   weight: 3
-  localizationItem: {fileID: 0}
+  nameLocalizationItem: {fileID: 0}
+  descriptionLocalizationItem: {fileID: 0}
   itemIcon: {fileID: 0}
   showInStorage: 0
   equipmentCategory: 0
+  equipmentPrefab: {fileID: 0}
   power: 3
   defaultEquipment: 1
-  weaponPrefab: {fileID: 0}
-  damage: 3
-  attackMethods: 0
+  attackMethod: 0

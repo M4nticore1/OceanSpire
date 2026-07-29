@@ -19,10 +19,13 @@ public class ResourceWidget : MonoBehaviour
 
     [SerializeField] private bool useLimit = false;
 
+    public ItemInstance Item {  get; private set; }
+
     public List<IItemAmount> Amounts { get; private set; } = new();
     public IItemAmount Limit { get; private set; }
 
     [Header("UI")]
+    [SerializeField] private CustomButton infoButton;
     [SerializeField] private TextLocalizer itemNameText;
     [SerializeField] private TextMeshProUGUI resourceAmountText;
     [SerializeField] private Image resourceImage;
@@ -34,13 +37,26 @@ public class ResourceWidget : MonoBehaviour
     [SerializeField] private Color enoughAmountColor = Color.green;
     [SerializeField] private Color notEnoughAmountColor = Color.red;
 
+    private CityStorage cityStorage => CityStorage.Instance;
+
     private void OnEnable()
     {
+        if (infoButton) {
+            infoButton.OnReleased.AddListener(OnInfoButtonClicked);
+        }
+
         UpdateItemName();
         UpdateIcon();
         UpdateAmountAndLimit();
         TryUpdateResourceBar();
         TryUpdateAmountColor();
+    }
+
+    private void OnDisable()
+    {
+        if (infoButton) {
+            infoButton.OnReleased.RemoveListener(OnInfoButtonClicked);
+        }
     }
 
     private void OnDestroy()
@@ -60,8 +76,9 @@ public class ResourceWidget : MonoBehaviour
         }
     }
 
-    private void Start()
+    protected virtual void Start()
     {
+        UpdateItem();
         UpdateItemName();
         UpdateIcon();
         UpdateAmountAndLimit();
@@ -69,9 +86,16 @@ public class ResourceWidget : MonoBehaviour
         TryUpdateAmountColor();
     }
 
-    public virtual void SetItem(ItemDefinition definition)
+    public virtual void SetItem(ItemInstance itemInstance)
+    {
+        Item = itemInstance;
+    }
+
+    public virtual void SetItemDefinition(ItemDefinition definition)
     {
         itemDefinition = definition;
+
+        UpdateItem();
         UpdateItemName();
         UpdateIcon();
     }
@@ -155,6 +179,14 @@ public class ResourceWidget : MonoBehaviour
         TryUpdateAmountColor();
     }
 
+    private void UpdateItem()
+    {
+        if (!cityStorage) return;
+        if (!itemDefinition) return;
+
+        SetItem(cityStorage.Inventory.GetItem(itemDefinition.ItemId));
+    }
+
     private void UpdateIcon()
     {
         if (!itemDefinition) return;
@@ -184,7 +216,7 @@ public class ResourceWidget : MonoBehaviour
         if (!itemNameText) return;
         if (!itemDefinition) return;
 
-        itemNameText.SetLocalizationItem(itemDefinition.NameLocalization);
+        itemNameText.SetLocalizationItem(itemDefinition.NameLocalizationItem);
     }
 
     private void TryUpdateAmountColor()
@@ -204,6 +236,14 @@ public class ResourceWidget : MonoBehaviour
     private void OnLimitChanged(int amount)
     {
         UpdateAmountAndLimit();
+    }
+
+    private void OnInfoButtonClicked()
+    {
+        var informationMenu = ItemInformationMenu.Instance;
+        if (!informationMenu) return;
+
+        informationMenu.Show(Item);
     }
 
     private bool IsEnough()

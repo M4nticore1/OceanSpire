@@ -63,7 +63,8 @@ public class StorageModule : BuildingModule, IRaidable
 
             if (amount <= 0) continue;
 
-            var item = new ItemInstance(cityItem.Definition);
+            var definition = cityItem.Definition;
+            var item = definition.CreateInstance();
             item.SetAmount(amount);
             items.Add(item);
         }

@@ -135,9 +135,9 @@ public class HumanAnimation : MonoBehaviour
             return;
         }
 
-        var animationName = weaponDefinition.AttackMethods == AttackMethod.Hands ? "isAttackingHands" :
-            weaponDefinition.AttackMethods == AttackMethod.Light ? "isAttackingLight" :
-            weaponDefinition.AttackMethods == AttackMethod.Heavy ? "isAttackingHeavy" :
+        var animationName = weaponDefinition.AttackMethod == AttackMethod.Hands ? "isAttackingHands" :
+            weaponDefinition.AttackMethod == AttackMethod.Light ? "isAttackingLight" :
+            weaponDefinition.AttackMethod == AttackMethod.Heavy ? "isAttackingHeavy" :
             "";
 
         animator.SetBool(animationName, true);

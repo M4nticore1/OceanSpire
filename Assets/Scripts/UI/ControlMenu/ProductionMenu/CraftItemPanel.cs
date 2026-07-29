@@ -117,7 +117,7 @@ public class CraftItemPanel : MonoBehaviour
         if (!craftResourceWidgetPrefab || !producedResourceSlot) return;
 
         var widget = Instantiate(craftResourceWidgetPrefab, producedResourceSlot.transform);
-        widget.SetItem(craftItem.Definition.ProduceItem.Definition);
+        widget.SetItemDefinition(craftItem.Definition.ProduceItem.Definition);
         widget.AddAmount(craftItem.Definition.ProduceItem);
     }
 
@@ -129,7 +129,7 @@ public class CraftItemPanel : MonoBehaviour
             var widget = Instantiate(consumeResourceWidgetPrefab, consumedResourcesSlot.transform);
             var definition = resource.Definition;
 
-            widget.SetItem(definition);
+            widget.SetItemDefinition(definition);
             widget.AddAmount(CityStorage.Instance.Inventory.GetItem(definition.ItemId));
             widget.SetLimit(resource);
         }

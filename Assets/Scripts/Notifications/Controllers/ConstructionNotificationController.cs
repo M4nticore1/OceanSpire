@@ -59,10 +59,10 @@ public class ConstructionNotificationController : NotificationController
             var building = buildingsUnderConstruction[0];
 
             if (building.UpgradeComponent.IsUnderUpgrade) {
-                return localizationManager.GetText(upgradeFinishedBodyLocalizationItem, building);
+                return localizationManager.GetLocalizedText(upgradeFinishedBodyLocalizationItem, building);
             }
             else {
-                return localizationManager.GetText(constructionFinishedBodyLocalizationItem, building);
+                return localizationManager.GetLocalizedText(constructionFinishedBodyLocalizationItem, building);
             }
         }
         else if (buildingsUnderConstruction.Count > 1) {

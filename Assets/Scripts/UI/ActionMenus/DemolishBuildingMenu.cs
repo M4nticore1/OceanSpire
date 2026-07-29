@@ -47,7 +47,7 @@ public class DemolishBuildingMenu : BuildingMenu
             var widget = Instantiate(ResourceWidgetPrefab, LayoutGroup.transform);
             spawnedResourceWidgets.Add(widget);
 
-            widget.SetItem(item.Definition);
+            widget.SetItemDefinition(item.Definition);
             widget.AddAmount(item);
         }
     }

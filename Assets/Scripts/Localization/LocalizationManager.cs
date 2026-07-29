@@ -66,7 +66,7 @@ public class LocalizationManager
         return GetText(item.name, languageCode);
     }
 
-    public string GetText(LocalizationItem item, ILocalizable localizable)
+    public string GetLocalizedText(LocalizationItem item, ILocalizable localizable)
     {
         var text = GetLocalizedText(item);
         if (text == null) return null;

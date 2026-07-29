@@ -27,8 +27,6 @@ public class BuildingWidget : MonoBehaviour
     [SerializeField] private LocalizationItem buildTimeLocalization;
     [SerializeField] private LocalizationItem instantlyBuildLocalization;
 
-    public static event Action<BuildingWidget> OnWidgetInformationClicked;
-
     private CityStorage cityStorage => CityStorage.Instance;
     public Building BuildingPrefab { get; private set; }
 
@@ -76,7 +74,7 @@ public class BuildingWidget : MonoBehaviour
             var id = buildResource.Definition.ItemId;
             var storageItem = cityStorage.Inventory.GetItem(id);
 
-            resourceWidget.SetItem(buildResource.Definition);
+            resourceWidget.SetItemDefinition(buildResource.Definition);
             resourceWidget.AddAmount(storageItem);
             resourceWidget.SetLimit(buildResource);
 
@@ -149,7 +147,10 @@ public class BuildingWidget : MonoBehaviour
 
     private void OnInformationButtonClicked()
     {
-        OnWidgetInformationClicked?.Invoke(this);
+        var informationMenu = BuildingInformationMenu.Instance;
+        if (!informationMenu) return;
+
+        informationMenu.Show(BuildingPrefab);
     }
 
     private void OnCityItemAdded(ItemInstance itemInstance)

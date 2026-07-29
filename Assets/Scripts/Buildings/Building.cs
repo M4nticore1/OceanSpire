@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
+public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInformationable
 {
     [Header("Data")]
     [SerializeField] protected BuildingDefinition buildingData;
@@ -217,10 +217,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
 
         for (int i = 0; i < count; i++) {
             var resource = LevelDefinition.ResourcesToBuild[i];
-            var data = resource.Definition;
+            var definition = resource.Definition;
             int amount = (int)(resource.Amount * DemolishionResourcesRefundPercent);
 
-            var item = new ItemInstance(data);
+            var item = definition.CreateInstance();
             item.SetAmount(amount);
 
             resources[i] = item;
@@ -236,7 +236,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
         return NextLevelDefinition.UpgradeTime;
     }
 
-    // ILocalizable
+    // Localization
     public Dictionary<string, string> GetLocalization()
     {
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -252,6 +252,28 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable
             { "nextLevel", (levelComponent.Level + 1).ToString() },
             { "constructionTime", TimeFormatter.SecondsToTimer((int)currentConstructionTime).ToString() + "/" + TimeFormatter.SecondsToTimer((int)ConstructionTime).ToString() },
         };
+    }
+
+    // Information
+    public LocalizationItem GetInformationName()
+    {
+        if (!Definition) return null;
+
+        return Definition.NameLocalizationItem;
+    }
+
+    public LocalizationItem GetInformationDescription()
+    {
+        if (!Definition) return null;
+
+        return Definition.DescriptionLocalizationItem;
+    }
+
+    public Sprite GetInformationImage()
+    {
+        if (!LevelDefinition) return null;
+
+        return LevelDefinition.BuildingThumb;
     }
 
     // Construction
