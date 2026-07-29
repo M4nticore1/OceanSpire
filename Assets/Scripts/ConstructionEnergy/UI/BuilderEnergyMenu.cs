@@ -54,14 +54,14 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
     public void Hide()
     {
         slidePanel.Hide();
-
-        OnHidden?.Invoke();
     }
 
     private void OnHide()
     {
         IsShowed = false;
         InputStateManager.Instance.RemoveBlockTarget(this);
+
+        OnHidden?.Invoke();
     }
 
     private void OnCloseButtonClicked()

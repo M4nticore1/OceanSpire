@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class SelectedInformationDisplay : SelectedDisplay
+public class SelectedBuildingInformationDisplay : SelectedDisplay
 {
     [Header("Information")]
-    [SerializeField] private InformationMenu informationMenu;
+    [SerializeField] private BuildingInformationMenu buildingInformationMenu;
     [SerializeField] private CustomButton button;
 
     private Building building;
@@ -36,6 +36,6 @@ public class SelectedInformationDisplay : SelectedDisplay
     {
         if (!building) return;
 
-        informationMenu.Show(building);
+        buildingInformationMenu.Show(building);
     }
 }

@@ -3146,6 +3146,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2117843957883114285}
     m_Modifications:
+    - target: {fileID: 112657424338185551, guid: 20a17be85a1d76748911c70e19266abe, type: 3}
+      propertyPath: buildingInformationMenu
+      value: 
+      objectReference: {fileID: 3182125257737839626}
     - target: {fileID: 1416526838949663250, guid: 20a17be85a1d76748911c70e19266abe, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -5617,6 +5621,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 59cb81d5b4913fa4bac7ef951badecc1, type: 3}
+--- !u!114 &3182125257737839626 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8201759742251179540, guid: 59cb81d5b4913fa4bac7ef951badecc1, type: 3}
+  m_PrefabInstance: {fileID: 6772198913907112478}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cbd1057aaae1764fa104852cd3969eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingInformationMenu
 --- !u!224 &4127320821592690403 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7258851948686947581, guid: 59cb81d5b4913fa4bac7ef951badecc1, type: 3}

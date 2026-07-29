@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
 public enum ItemWidgetColorType
@@ -17,6 +16,7 @@ public class ResourceWidget : MonoBehaviour
     [SerializeField] private ItemDefinition itemDefinition;
     public ItemDefinition ItemDefinition => itemDefinition;
 
+    [SerializeField] private bool isCityItem = false;
     [SerializeField] private bool useLimit = false;
 
     public ItemInstance Item {  get; private set; }
@@ -78,7 +78,7 @@ public class ResourceWidget : MonoBehaviour
 
     protected virtual void Start()
     {
-        UpdateItem();
+        UpdateItemFromCityStorage();
         UpdateItemName();
         UpdateIcon();
         UpdateAmountAndLimit();
@@ -95,7 +95,7 @@ public class ResourceWidget : MonoBehaviour
     {
         itemDefinition = definition;
 
-        UpdateItem();
+        UpdateItemFromCityStorage();
         UpdateItemName();
         UpdateIcon();
     }
@@ -179,8 +179,14 @@ public class ResourceWidget : MonoBehaviour
         TryUpdateAmountColor();
     }
 
-    private void UpdateItem()
+    public void SetIsCityItem(bool value)
     {
+        isCityItem = value;
+    }
+
+    private void UpdateItemFromCityStorage()
+    {
+        if (!isCityItem) return;
         if (!cityStorage) return;
         if (!itemDefinition) return;
 

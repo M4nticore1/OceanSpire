@@ -24,6 +24,10 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 
     public ItemStack Stack { get; private set; }
 
+    public event Action<ItemInstance, int> OnItemAmountAdded;
+    public event Action<ItemInstance, int> OnItemAmountRemoved;
+
+    public event Action<ItemInstance> OnItemAmountChanged;
     public event Action<int> OnAmountChanged;
 
     public ItemInstance(ItemDefinition definition)
@@ -33,8 +37,23 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 
     public virtual void SetAmount(int amount)
     {
-        this.amount = Mathf.Max(0, amount);
-        OnAmountChanged?.Invoke(amount);
+        var newAmount = Mathf.Max(0, amount);
+        if (this.amount == newAmount) return;
+
+        var lastAmount = this.amount;
+        this.amount = newAmount;
+
+        var difference = Mathf.Abs(newAmount - lastAmount);
+
+        if (newAmount > lastAmount) {
+            OnItemAmountAdded?.Invoke(this, difference);
+        }
+        else {
+            OnItemAmountRemoved?.Invoke(this, difference);
+        }
+
+        OnAmountChanged?.Invoke(this.amount);
+        OnItemAmountChanged?.Invoke(this);
     }
 
     public virtual void AddAmount(int amount)

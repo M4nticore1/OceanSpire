@@ -27,7 +27,6 @@ public class WorkComponent : MonoBehaviour
     {
         if (workers.Contains(interactor)) return;
 
-        Debug.Log("AddWorker");
         workers.Add(interactor);
         OnWorkerAdded?.Invoke(interactor);
         OnComponentWorkerAdded?.Invoke(this, interactor);
@@ -37,7 +36,6 @@ public class WorkComponent : MonoBehaviour
     {
         if (!workers.Contains(interactor)) return;
 
-        Debug.Log("RemoveWorker");
         workers.Remove(interactor);
         OnWorkerRemoved?.Invoke(interactor);
         OnComponentWorkerRemoved?.Invoke(this, interactor);

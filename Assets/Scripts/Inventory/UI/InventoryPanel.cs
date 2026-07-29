@@ -59,7 +59,7 @@ public class InventoryPanel : MonoBehaviour
         this.inventory = inventory;
         TrySubscribe(inventory);
 
-        RemoveWidgets();
+        DestroyWidgets();
         CreateWidgets();
 
         UpdateLayoutGroupSize();
@@ -72,13 +72,12 @@ public class InventoryPanel : MonoBehaviour
     {
         foreach (var item in inventory.Items) {
             if (item == null) continue;
-            //if (item.Amount <= 0) continue;
 
             CreateWidget(item);
         }
     }
 
-    private void RemoveWidgets()
+    private void DestroyWidgets()
     {
         foreach (var widget in spawnedResourceWidgets.Values) {
             if (!widget) {
@@ -95,16 +94,17 @@ public class InventoryPanel : MonoBehaviour
     private void CreateWidget(ItemInstance item)
     {
         if (item == null) return;
-        //if (item.Amount <= 0) return;
 
         var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
+        widget.SetItem(item);
         widget.SetItemDefinition(item.Definition);
         widget.AddAmount(item);
+        widget.SetIsCityItem(false);
 
         spawnedResourceWidgets.Add(item.Definition, widget);
     }
 
-    private void RemoveWidget(ItemInstance item)
+    private void DestroyWidget(ItemInstance item)
     {
         if (item == null) return;
 
@@ -150,7 +150,7 @@ public class InventoryPanel : MonoBehaviour
 
     private void OnItemRemoved(ItemInstance item)
     {
-        RemoveWidget(item);
+        DestroyWidget(item);
         UpdateLayoutGroupSize();
         UpdateWeightText();
         UpdateEmptyTextActive();

@@ -26,7 +26,6 @@ public class InventoryMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        Debug.Log("Show");
         IsShowed = true;
         slidePanel.Show();
         InputStateManager.Instance.AddBlockTarget(this);
@@ -42,7 +41,6 @@ public class InventoryMenu : MonoBehaviour, IOpenable
 
     public void Hide()
     {
-        Debug.Log("Hide");
         slidePanel.Hide();
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -48,6 +49,13 @@ public class Inventory : MonoBehaviour, ILocalizable
         }
     }
 
+    private void OnDestroy()
+    {
+        foreach (var item in items) {
+            UnsubscribeItem(item);
+        }
+    }
+
     public void Init()
     {
         Init(InventoryData.Default() ?? new InventoryData());
@@ -61,10 +69,10 @@ public class Inventory : MonoBehaviour, ILocalizable
             return;
         }
 
-        var items = inventoryData.Items;
+        var itemsData = inventoryData.Items;
 
-        if (items != null) {
-            foreach (var itemData in inventoryData.Items) {
+        if (itemsData != null) {
+            foreach (var itemData in itemsData) {
                 AddItem(itemData.Id, itemData.Amount);
             }
         }
@@ -77,36 +85,22 @@ public class Inventory : MonoBehaviour, ILocalizable
 
     public void AddItem(ItemID id, int amount)
     {
-        var item = GetItem(id);
-        if (item == null) {
-            item = AddItem(id);
-        }
+        var item = GetItem(id) ?? CreateAndRegisterItem(id);
 
         var stack = GetStack(item.Definition.Stack);
+
         if (useAmountLimit) {
             amount = Mathf.Clamp(amount, 0, stack.Amount - stack.GetItemAmountsSum());
         }
 
-        if (useWeightLimit) {
+        if (useWeightLimit && item.Definition.Weight > 0) {
             float remainingWeight = weightLimit - currentWeight;
             amount = Mathf.Clamp(amount, 0, (int)(remainingWeight / item.Definition.Weight));
         }
 
-        var startAmount = item.Amount;
+        if (amount <= 0) return;
 
         item.AddAmount(amount);
-        stack.AddItemAmount(item);
-
-        AddWeight(amount * item.Definition.Weight);
-
-        if (item.Amount != startAmount) {
-            if (amount > startAmount)
-                OnItemAmountAdded?.Invoke(item);
-            else
-                OnItemAmountRemoved?.Invoke(item);
-
-            OnItemAmountChanged?.Invoke(item);
-        }
     }
 
     public void RemoveItem(ItemInstance item)
@@ -117,26 +111,9 @@ public class Inventory : MonoBehaviour, ILocalizable
     public void RemoveItem(ItemID id, int amount)
     {
         var item = GetItem(id);
-        amount = Mathf.Max(0, amount);
+        if (item == null) return;
 
-        var startAmount = item.Amount;
-
-        item.RemoveAmount(amount);
-
-        if (item.Amount <= 0 && autoCleaning) {
-            RemoveItem(id);
-        }
-
-        RemoveWeight(amount * item.Definition.Weight);
-
-        if (item.Amount != startAmount) {
-            if (amount > startAmount)
-                OnItemAmountAdded?.Invoke(item);
-            else
-                OnItemAmountRemoved?.Invoke(item);
-
-            OnItemAmountChanged?.Invoke(item);
-        }
+        item.RemoveAmount(Mathf.Max(0, amount));
     }
 
     public void AddLimit(ItemStackEnum stack, int amount)
@@ -162,14 +139,12 @@ public class Inventory : MonoBehaviour, ILocalizable
     public ItemInstance GetItem(ItemID id)
     {
         itemsDict.TryGetValue(id, out var item);
-
         return item;
     }
 
     public ItemInstance TryGetItemByIndex(int index)
     {
-        if (index >= items.Count) return null;
-
+        if (index < 0 || index >= items.Count) return null;
         return items[index];
     }
 
@@ -182,11 +157,34 @@ public class Inventory : MonoBehaviour, ILocalizable
         };
     }
 
-    private ItemInstance AddItem(ItemID id)
+    private void UnregisterItem(ItemInstance item)
+    {
+        UnsubscribeItem(item);
+
+        items.Remove(item);
+        itemsDict.Remove(item.Definition.ItemId);
+
+        OnItemRemoved?.Invoke(item);
+    }
+
+    private void SubscribeItem(ItemInstance item)
+    {
+        item.OnItemAmountAdded += HandleItemAmountAdded;
+        item.OnItemAmountRemoved += HandleItemAmountRemoved;
+    }
+
+    private void UnsubscribeItem(ItemInstance item)
+    {
+        item.OnItemAmountAdded -= HandleItemAmountAdded;
+        item.OnItemAmountRemoved -= HandleItemAmountRemoved;
+    }
+
+    private ItemInstance CreateAndRegisterItem(ItemID id)
     {
         var definition = ItemsList.Instance.GetItem(id);
         var item = definition.CreateInstance();
 
+        SubscribeItem(item);
         item.SetStack(GetStack(item.Definition.Stack));
 
         if (itemsDict.TryAdd(id, item)) {
@@ -194,18 +192,6 @@ public class Inventory : MonoBehaviour, ILocalizable
         }
 
         OnItemAdded?.Invoke(item);
-
-        return item;
-    }
-
-    private ItemInstance RemoveItem(ItemID id)
-    {
-        ItemInstance item = GetItem(id);
-        items.Remove(item);
-        itemsDict.Remove(id);
-
-        OnItemRemoved?.Invoke(item);
-
         return item;
     }
 
@@ -216,7 +202,7 @@ public class Inventory : MonoBehaviour, ILocalizable
 
     private void RemoveWeight(float weight)
     {
-        if (items.Count > 0f) {
+        if (items.Count > 0) {
             SetWeight(currentWeight - weight);
         }
         else {
@@ -227,5 +213,31 @@ public class Inventory : MonoBehaviour, ILocalizable
     private void SetWeight(float weight)
     {
         currentWeight = Mathf.Max(0f, weight);
+    }
+
+    private void HandleItemAmountAdded(ItemInstance item, int amount)
+    {
+        AddWeight(amount * item.Definition.Weight);
+
+        var stack = GetStack(item.Definition.Stack);
+        stack.AddItemAmount(item);
+
+        OnItemAmountAdded?.Invoke(item);
+        OnItemAmountChanged?.Invoke(item);
+    }
+
+    private void HandleItemAmountRemoved(ItemInstance item, int amount)
+    {
+        RemoveWeight(amount * item.Definition.Weight);
+
+        var stack = GetStack(item.Definition.Stack);
+        stack.RemoveItemAmount(item);
+
+        OnItemAmountRemoved?.Invoke(item);
+        OnItemAmountChanged?.Invoke(item);
+
+        if (item.Amount <= 0 && autoCleaning) {
+            UnregisterItem(item);
+        }
     }
 }

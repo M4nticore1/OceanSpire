@@ -5396,6 +5396,10 @@ PrefabInstance:
       propertyPath: speedUpConstructionMenu
       value: 
       objectReference: {fileID: 383697687}
+    - target: {fileID: 5840152694156119904, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: informationMenu
+      value: 
+      objectReference: {fileID: 2136690196}
     - target: {fileID: 5886395933711480083, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -0.000061035156
@@ -22297,6 +22301,17 @@ Transform:
   - {fileID: 1691702503}
   m_Father: {fileID: 1238355532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2136690196 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6489005403471413986, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+  m_PrefabInstance: {fileID: 383697685}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cbd1057aaae1764fa104852cd3969eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingInformationMenu
 --- !u!1001 &2147388477
 PrefabInstance:
   m_ObjectHideFlags: 0

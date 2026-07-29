@@ -29,6 +29,7 @@ public class StorageManagementList : ManagementList
             widget.SetItemDefinition(item.Definition);
             widget.AddAmount(item);
             widget.SetLimit(item.Stack);
+            widget.SetIsCityItem(true);
         }
     }
 

@@ -16,7 +16,7 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
     [SerializeField] private float startDiscardPercent = 0.1f;
 
     private ItemInstance item;
-    private int amountToRemove = 0;
+    private int amountToDiscard = 0;
 
     public bool IsShowed { get; private set; }
 
@@ -41,6 +41,11 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
         closeButton.OnReleased.RemoveListener(Hide);
     }
 
+    private void OnDestroy()
+    {
+        UnsubscribeItem(item);
+    }
+
     public void Show(ItemInstance itemInstance)
     {
         if (itemInstance == null) {
@@ -48,13 +53,17 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
             return;
         }
 
+        UnsubscribeItem(item);
         item = itemInstance;
+        SubscribeItem(item);
+
         Show();
     }
 
     public void Show()
     {
         if (IsShowed) return;
+        if (item == null) return;
 
         IsShowed = true;
         slidePanel.Show();
@@ -82,6 +91,20 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
         OnHidden?.Invoke();
     }
 
+    private void SubscribeItem(ItemInstance item)
+    {
+        if (item == null) return;
+
+        item.OnItemAmountChanged += HandleItemAmountChanged;
+    }
+
+    private void UnsubscribeItem(ItemInstance item)
+    {
+        if (item == null) return;
+
+        item.OnItemAmountChanged -= HandleItemAmountChanged;
+    }
+
     private void DiscardItem()
     {
         if (item == null) {
@@ -89,17 +112,17 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
             return;
         }
 
-        item.RemoveAmount(amountToRemove);
+        item.RemoveAmount(amountToDiscard);
     }
 
     private void SetAmountToRemove(int value)
     {
         if (item == null || item.Amount <= 0) {
-            amountToRemove = 0;
+            amountToDiscard = 0;
             return;
         }
 
-        amountToRemove = Mathf.Clamp(value, 0, item.Amount);
+        amountToDiscard = Mathf.Clamp(value, 0, item.Amount);
     }
 
     private void UpdateItemName()
@@ -118,26 +141,26 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
 
     private void UpdateDiscardButtonEnabled()
     {
-        discardButton.SetState(amountToRemove > 0 ? CustomButtonState.Idle : CustomButtonState.Disabled);
+        discardButton.SetState(amountToDiscard > 0 ? CustomButtonState.Idle : CustomButtonState.Disabled);
     }
 
-    private void UpdateInputFieldValue()
+    private void UpdateInputFieldValue(bool force = false)
     {
-        if (amountInputField.isFocused) return;
+        if (!force && amountInputField.isFocused) return;
 
-        amountInputField.SetTextWithoutNotify(amountToRemove.ToString());
+        amountInputField.SetTextWithoutNotify(amountToDiscard.ToString());
     }
 
-    private void UpdateSliderValue()
+    private void UpdateSliderValue(bool force = false)
     {
-        if (EventSystem.current && EventSystem.current.currentSelectedGameObject == amountSlider.gameObject) return;
+        if (!force && EventSystem.current && EventSystem.current.currentSelectedGameObject == amountSlider.gameObject) return;
 
         if (item == null || item.Amount <= 0) {
             amountSlider.value = 0;
             return;
         }
 
-        amountSlider.value = (float)amountToRemove / item.Amount;
+        amountSlider.value = (float)amountToDiscard / item.Amount;
     }
 
     private void OnDiscardInputFieldValueChanged(string value)
@@ -150,8 +173,8 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
         else if (int.TryParse(value, out var parsedValue)) {
             SetAmountToRemove(parsedValue);
 
-            if (parsedValue != amountToRemove) {
-                amountInputField.SetTextWithoutNotify(amountToRemove.ToString());
+            if (parsedValue != amountToDiscard) {
+                amountInputField.SetTextWithoutNotify(amountToDiscard.ToString());
             }
         }
         else {
@@ -168,7 +191,7 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
         if (item == null) return;
         if (EventSystem.current && EventSystem.current.currentSelectedGameObject != amountSlider.gameObject) return;
 
-        SetAmountToRemove(Mathf.RoundToInt(Mathf.Lerp(0, item.Amount, value)));
+        SetAmountToRemove((int)(Mathf.Lerp(0, item.Amount, value)));
         UpdateInputFieldValue();
         UpdateDiscardButtonEnabled();
     }
@@ -179,10 +202,23 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
         Hide();
     }
 
+    private void HandleItemAmountChanged(ItemInstance item)
+    {
+        amountToDiscard = Mathf.Clamp(amountToDiscard, 0, item.Amount);
+        SetAmountToRemove(amountToDiscard);
+
+        UpdateItemName();
+        UpdateInputFieldValue(true);
+        UpdateSliderValue(true);
+        UpdateDiscardButtonEnabled();
+    }
+
     private int GetStartAmount()
     {
         if (item == null) return 0;
+        if (item.Amount <= 0) return 0;
 
-        return Mathf.RoundToInt(item.Amount * startDiscardPercent);
+        var amount = (int)(item.Amount * startDiscardPercent);
+        return Mathf.Clamp(amount, 1, item.Amount);
     }
 }

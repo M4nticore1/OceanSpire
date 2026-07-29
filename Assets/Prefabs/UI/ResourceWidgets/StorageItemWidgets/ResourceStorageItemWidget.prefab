@@ -469,6 +469,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceWidget
   itemDefinition: {fileID: 0}
+  isCityItem: 0
   useLimit: 1
   infoButton: {fileID: 7035004678727766584}
   itemNameText: {fileID: 8090444364484852471}
