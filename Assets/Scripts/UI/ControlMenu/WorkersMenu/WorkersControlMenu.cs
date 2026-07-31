@@ -51,7 +51,7 @@ public class WorkersControlMenu : ControlMenu
     {
         selectedBuilding = selectManager.SelectedComponent?.GetComponent<Building>();
 
-        UpdateMenus();
+        UpdateMenu();
         UpdateWidgetsSort();
         UpdateWidgetsHighlight();
     }
@@ -61,13 +61,6 @@ public class WorkersControlMenu : ControlMenu
 
     }
 
-    private void TryUpdateMenu(Human human)
-    {
-        if (!ShouldUpdateMenu(human)) return;
-
-        UpdateMenu();
-    }
-
     protected override void UpdateMenu()
     {
         if (!creaturesManager) return;
@@ -75,12 +68,13 @@ public class WorkersControlMenu : ControlMenu
 
         var selectedBuilding = selectManager.GetSelectedBuilding();
         if (!selectedBuilding) {
-            Debug.LogError("[{nameof(WorkersControlMenu)}] SelectedBuilding is not valid");
+            Debug.LogError($"[{nameof(WorkersControlMenu)}] SelectedBuilding is not valid");
             return;
         }
 
         int maxWorkersCount = selectedBuilding.LevelDefinition.MaxHumansCount;
 
+        // 1. Очищаем пустые виджеты
         for (int i = spawnedEmptyWidgets.Count - 1; i >= 0; i--) {
             var widget = spawnedEmptyWidgets[i];
             if (!widget) {
@@ -91,6 +85,7 @@ public class WorkersControlMenu : ControlMenu
             RemoveWidget(widget);
         }
 
+        // 2. Перемещаем виджеты и ГАРАНТИРОВАННО синхронизируем их со списками панелей
         foreach (var widget in spawnedWidgets.Values) {
             if (!widget) {
                 Debug.LogError($"[{nameof(WorkersControlMenu)}] Spawned Widget is not valid!");
@@ -103,18 +98,32 @@ public class WorkersControlMenu : ControlMenu
             if (!citizen.IsCitizenAvaliable()) continue;
 
             var interactBuilding = citizen.InteractComponent.InteractBuilding;
+            WorkersPanel targetPanel;
 
             if (interactBuilding == selectedBuilding) {
-                widget.transform.SetParent(buildingWorkersMenu.LayoutGroup.transform);
+                targetPanel = buildingWorkersMenu;
             }
             else if (interactBuilding) {
-                widget.transform.SetParent(employedCitizensMenu.LayoutGroup.transform);
+                targetPanel = employedCitizensMenu;
             }
             else {
-                widget.transform.SetParent(unemployedCitizensMenu.LayoutGroup.transform);
+                targetPanel = unemployedCitizensMenu;
+            }
+
+            // Переносим UI элемент и удаляем/добавляем в соответствующие списки списки панелей
+            if (widget.transform.parent != targetPanel.LayoutGroup.transform) {
+                // Убираем со ВСЕХ панелей на случай рассинхрона
+                buildingWorkersMenu.RemoveWidget(widget);
+                employedCitizensMenu.RemoveWidget(widget);
+                unemployedCitizensMenu.RemoveWidget(widget);
+
+                // Ставим нового родителя и добавляем в список целевой панели
+                widget.transform.SetParent(targetPanel.LayoutGroup.transform);
+                targetPanel.AddWidget(widget);
             }
         }
 
+        // 3. Создаем пустые слоты
         while (buildingWorkersMenu.LayoutGroup.transform.childCount < maxWorkersCount) {
             CreateWidget();
         }
@@ -152,7 +161,7 @@ public class WorkersControlMenu : ControlMenu
             foreach (var skillWidget in citizenWidget.SkillsPanel.SpawnedSkillWidgets) {
                 if (!skillWidget) continue;
 
-                skillWidget.SetHighlighted(skillWidget.Skill.SkillDefinition.SkillId == buildingSkillId ? true : false);
+                skillWidget.SetHighlighted(skillWidget.Skill.SkillDefinition.SkillId == buildingSkillId);
             }
         }
     }
@@ -161,6 +170,7 @@ public class WorkersControlMenu : ControlMenu
     {
         var widget = CitizenWidgetFactory.CreateWidget(citizenWidgetPrefab, buildingWorkersMenu.LayoutGroup.transform, null);
         spawnedEmptyWidgets.Add(widget);
+        buildingWorkersMenu.AddWidget(widget);
     }
 
     private void CreateWidget(Citizen citizen)
@@ -190,23 +200,39 @@ public class WorkersControlMenu : ControlMenu
 
         var widget = CitizenWidgetFactory.CreateWidget(citizenWidgetPrefab, menu.LayoutGroup.transform, citizen);
         spawnedWidgets.Add(citizen, widget);
+
         menu.AddWidget(widget);
+        menu.SortWidgets();
     }
 
     private void RemoveWidget(Citizen citizen)
     {
-        if (!spawnedWidgets.TryGetValue(citizen, out var widget)) return;
+        if (!citizen) return;
+        if (!spawnedWidgets.TryGetValue(citizen, out var citizenWidget)) return;
 
-        RemoveWidget(widget);
+        RemoveWidget(citizenWidget);
     }
 
     private void RemoveWidget(CitizenWidget citizenWidget)
     {
         if (!citizenWidget) return;
 
-        Destroy(citizenWidget.gameObject);
-        citizenWidget.transform.SetParent(null);
+        var citizen = citizenWidget.Citizen;
+
+        if (citizen != null) {
+            spawnedWidgets.Remove(citizen);
+        }
+
         spawnedEmptyWidgets.Remove(citizenWidget);
+
+        buildingWorkersMenu.RemoveWidget(citizenWidget);
+        employedCitizensMenu.RemoveWidget(citizenWidget);
+        unemployedCitizensMenu.RemoveWidget(citizenWidget);
+
+        citizenWidget.transform.SetParent(null);
+        Destroy(citizenWidget.gameObject);
+
+        UpdateWidgetsSort();
     }
 
     private void UpdateMenus()
@@ -218,12 +244,18 @@ public class WorkersControlMenu : ControlMenu
 
     private void OnCitizenWorkSeted(CreatureInteractComponent interactor)
     {
-        TryUpdateMenu(interactor.GetComponent<Human>());
+        var human = interactor.GetComponent<Human>();
+        if (TryUpdateMenu(human)) {
+            UpdateWidgetsSort();
+        }
     }
 
     private void OnCitizenWorkRemoved(CreatureInteractComponent interactor)
     {
-        TryUpdateMenu(interactor.GetComponent<Human>());
+        var human = interactor.GetComponent<Human>();
+        if (TryUpdateMenu(human)) {
+            UpdateWidgetsSort();
+        }
     }
 
     private void OnHumanInited(Human human)
@@ -248,6 +280,14 @@ public class WorkersControlMenu : ControlMenu
     {
         CreateWidget(citizen);
         UpdateMenus();
+    }
+
+    private bool TryUpdateMenu(Human human)
+    {
+        if (!ShouldUpdateMenu(human)) return false;
+
+        UpdateMenu();
+        return true;
     }
 
     private bool ShouldUpdateMenu(Human human)

@@ -88,6 +88,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2430878040155571105, guid: b76f5bd1f948e0340b4176f8f77c0b76, type: 3}
+      propertyPath: highlightedColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2430878040155571105, guid: b76f5bd1f948e0340b4176f8f77c0b76, type: 3}
+      propertyPath: highlightedColor.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4401002619368793444, guid: b76f5bd1f948e0340b4176f8f77c0b76, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -95,10 +103,6 @@ PrefabInstance:
     - target: {fileID: 6679481996557297315, guid: b76f5bd1f948e0340b4176f8f77c0b76, type: 3}
       propertyPath: m_Name
       value: CitizenWidgetSkillWidget
-      objectReference: {fileID: 0}
-    - target: {fileID: 8619100889430030830, guid: b76f5bd1f948e0340b4176f8f77c0b76, type: 3}
-      propertyPath: m_Color.a
-      value: 0.2509804
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

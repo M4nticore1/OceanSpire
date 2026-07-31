@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -99,18 +100,19 @@ public class PierModule : BuildingModule
         for (int i = 0; i < boats.Count; i++) {
             var boat = boats[i];
             if (!boat) {
-                Debug.LogError($"boat is not valid by index {i}");
+                Debug.LogError($"[{nameof(PierModule)}] Boat is not valid by index {i}");
                 continue;
             }
 
             if (boat.CurrentStateEnum == BoatStateEnum.Idle || boat.CurrentStateEnum == BoatStateEnum.UnloadingLoot) {
                 var dockPoint = boat.DockPoint;
                 if (!dockPoint) {
-                    Debug.LogError($"dockPoint is not valid by index {i}");
+                    Debug.LogError($"[{nameof(PierModule)}] Dock Point is not valid by index {i}");
                     continue;
                 }
 
                 boat.Movement.NavAgent.Warp(dockPoint.DockTransform.position);
+                boat.transform.rotation = dockPoint.DockTransform.rotation;
             }
         }
     }

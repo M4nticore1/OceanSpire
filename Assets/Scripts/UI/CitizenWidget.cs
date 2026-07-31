@@ -22,19 +22,19 @@ public class CitizenWidget : MonoBehaviour
     [SerializeField] private GameObject nonSelectedResidentMenu;
     [SerializeField] private TextMeshProUGUI citizenNameText;
     [SerializeField] private LayoutGroup skillsLayoutGroup;
-    [SerializeField] private Button button;
+    [SerializeField] private CustomButton button;
     [SerializeField] private Image genderImage;
     [SerializeField] private Sprite maleIcon;
     [SerializeField] private Sprite femaleIcon;
 
     private void OnEnable()
     {
-        button.onClick.AddListener(OnClicked);
+        button.OnReleased.AddListener(OnClicked);
     }
 
     private void OnDisable()
     {
-        button.onClick.RemoveListener(OnClicked);
+        button.OnReleased.RemoveListener(OnClicked);
     }
 
     public void Init(Citizen citizen)

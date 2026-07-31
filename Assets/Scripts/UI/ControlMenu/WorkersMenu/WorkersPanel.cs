@@ -45,13 +45,16 @@ public class WorkersPanel : MonoBehaviour
 
     public void SortWidgets()
     {
+        if (!gameObject.activeSelf) return;
+        if (!gameObject.activeInHierarchy) return;
+
         var selectedBuilding = SelectManager.Instance.SelectedComponent?.GetComponent<Building>();
         if (!selectedBuilding) {
             Debug.LogError($"[{nameof(WorkersPanel)}] Selected Building is not valid!");
             return;
         }
 
-        var sortedWidgets = spawnedWidgets.Where(w => w).OrderByDescending(w => w.Citizen?.SkillsComponent?.GetSkill(selectedBuilding.SkillId)?.CurrentLevel ?? 0).ToList();
+        var sortedWidgets = spawnedWidgets.Where(w => w && w.Citizen).OrderByDescending(w => w.Citizen.SkillsComponent?.GetSkill(selectedBuilding.SkillId)?.CurrentLevel ?? 0).ToList();
         for (int i = 0; i < sortedWidgets.Count; i++) {
             sortedWidgets[i].transform.SetSiblingIndex(i);
         }

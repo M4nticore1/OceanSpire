@@ -16,7 +16,6 @@ public class SkillWidget : MonoBehaviour
 
     [Header("Highlight")]
     [SerializeField] private Image skillHighlight;
-    [SerializeField] private float highlightPower = 0.25f;
 
     [Header("Description")]
     [SerializeField] private RectTransform descriptionTransform;
@@ -74,8 +73,7 @@ public class SkillWidget : MonoBehaviour
 
     public void SetHighlighted(bool highlighted)
     {
-        var color = skillHighlight.color;
-        skillHighlight.color = new Color(color.r, color.g, color.b, highlighted ? highlightPower : 0);
+        skillHighlight.gameObject.SetActive(highlighted);
     }
 
     private void UpdateSkillName()

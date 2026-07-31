@@ -21,6 +21,6 @@ MonoBehaviour:
     amount: 2000
   maxResidentsCount: 4
   constructionTime: 18000
-  buildingThumb: {fileID: 21300000, guid: b2e5b8846a32cff43b4a564d5cd81190, type: 3}
+  buildingThumb: {fileID: 21300000, guid: 3467e0421f6285442ab763854a61c3f6, type: 3}
   construction: {fileID: 4629692952556708248, guid: c36d301691c9d8a46bc13344361b943b, type: 3}
   constructionFrame: {fileID: 0}
