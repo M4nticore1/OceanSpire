@@ -144,6 +144,7 @@ MonoBehaviour:
   levelComponent: {fileID: 3623753502408224289}
   upgradeComponent: {fileID: 1543726248379608248}
   instanceId: {fileID: 4146996725171637188}
+  skillId: 3
   workAudioSource: {fileID: 2175774227416732871}
   SpawnedConstruction: {fileID: 0}
   FloorIndex: 0
@@ -162,6 +163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionModule
   levelsData:
   - {fileID: 11400000, guid: bc0404d1ffc60f943bdfdfab45378f01, type: 2}
+  <IsWorking>k__BackingField: 0
   electricityConsumption: 0.1
   skillId: 3
 --- !u!114 &7924408945519643689

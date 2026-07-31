@@ -289,7 +289,9 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         UpdateBodyTargetColor();
         UpdateContentTargetColor();
+
         pressedButtonPosition = transform.position;
+
         OnPressed?.Invoke();
         OnButtonPressed?.Invoke(this);
     }

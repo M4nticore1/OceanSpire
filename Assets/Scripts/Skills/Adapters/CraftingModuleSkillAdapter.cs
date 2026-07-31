@@ -63,7 +63,7 @@ public class CraftingModuleSkillAdapter : SkillAdapter
         var craftingModule = workComponent.GetComponent<CraftingModule>();
         if (!craftingModule) return;
 
-        if (craftingModule.SkillId != SkillId) return;
+        if (craftingModule.OwnedBuilding.SkillId != SkillId) return;
 
         var skillsComponent = citizen.GetComponent<SkillsComponent>();
         AddBonus(craftingModule, GetBonus(skillsComponent));
@@ -75,7 +75,7 @@ public class CraftingModuleSkillAdapter : SkillAdapter
         var craftingModule = workComponent.GetComponent<CraftingModule>();
         if (!craftingModule) return;
 
-        if (craftingModule.SkillId != SkillId) return;
+        if (craftingModule.OwnedBuilding.SkillId != SkillId) return;
 
         var skillsComponent = citizen.GetComponent<SkillsComponent>();
         RemoveBonus(craftingModule, GetBonus(skillsComponent));

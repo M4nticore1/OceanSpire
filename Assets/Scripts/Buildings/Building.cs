@@ -36,6 +36,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
 
+    [SerializeField] private SkillId skillId;
+    public SkillId SkillId => skillId;
+
     public SelectComponent SelectComponent { get; private set; }
 
     [Header("Audio")]

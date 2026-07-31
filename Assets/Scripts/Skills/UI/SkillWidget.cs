@@ -7,16 +7,30 @@ public class SkillWidget : MonoBehaviour
 {
     public SkillInstance Skill { get; private set; }
 
+    [Header("Main")]
     [SerializeField] private CustomButton button;
     [SerializeField] private TextLocalizer skillName;
-    [SerializeField] private TextMeshProUGUI skillBonus;
+
+    [Header("Progress")]
     [SerializeField] private Image skillProgress;
 
+    [Header("Highlight")]
+    [SerializeField] private Image skillHighlight;
+    [SerializeField] private float highlightPower = 0.25f;
+
+    [Header("Description")]
     [SerializeField] private RectTransform descriptionTransform;
     public RectTransform DescriptionTransform => descriptionTransform;
 
+    [Header("Bonus")]
+    [SerializeField] private TextMeshProUGUI skillBonus;
     [SerializeField] private Color normalColor;
     [SerializeField] private Color highlightedColor;
+
+    [Header("Background")]
+    [SerializeField] private Image background;
+    [SerializeField] private Color evenBackgroundColor = Color.white;
+    [SerializeField] private Color oddBackgroundColor = Color.white;
 
     public static event Action<SkillWidget> OnSkillWidgetSelected;
     public static event Action<SkillWidget> OnSkillWidgetDeselected;
@@ -52,9 +66,16 @@ public class SkillWidget : MonoBehaviour
         UpdateSkillName();
         UpdateBonusTextAndColor();
         UpdateProgress();
+        UpdateBackgroundColor();
 
         skill.OnXpChanged += OnSkillXpChanged;
         skill.OnLevelChanged += OnSkillLevelChanged;
+    }
+
+    public void SetHighlighted(bool highlighted)
+    {
+        var color = skillHighlight.color;
+        skillHighlight.color = new Color(color.r, color.g, color.b, highlighted ? highlightPower : 0);
     }
 
     private void UpdateSkillName()
@@ -97,6 +118,11 @@ public class SkillWidget : MonoBehaviour
 
         var fillAmount = Skill.CurrentXp;
         skillProgress.fillAmount = fillAmount;
+    }
+
+    private void UpdateBackgroundColor()
+    {
+        background.color = (int)Skill.SkillDefinition.SkillId % 2 == 0 ? evenBackgroundColor : oddBackgroundColor;
     }
 
     private void OnButtonSelected()

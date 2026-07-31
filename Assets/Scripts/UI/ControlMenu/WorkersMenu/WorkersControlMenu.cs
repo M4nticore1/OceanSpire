@@ -10,14 +10,18 @@ public class WorkersControlMenu : ControlMenu
 
     [Header("UI")]
     [SerializeField] private CitizenWidget citizenWidgetPrefab;
+
     [SerializeField] private WorkersPanel buildingWorkersMenu;
     [SerializeField] private WorkersPanel unemployedCitizensMenu;
     [SerializeField] private WorkersPanel employedCitizensMenu;
+
     [SerializeField] private RectTransform scrollRectContent;
     [SerializeField] private FitSizeToChildren fitSizeToChildren;
 
     private Dictionary<Citizen, CitizenWidget> spawnedWidgets = new();
     private List<CitizenWidget> spawnedEmptyWidgets = new();
+
+    private Building selectedBuilding;
 
     protected override void Subscribe()
     {
@@ -45,7 +49,11 @@ public class WorkersControlMenu : ControlMenu
 
     protected override void OnShow()
     {
+        selectedBuilding = selectManager.SelectedComponent?.GetComponent<Building>();
+
         UpdateMenus();
+        UpdateWidgetsSort();
+        UpdateWidgetsHighlight();
     }
 
     protected override void OnHide()
@@ -122,6 +130,33 @@ public class WorkersControlMenu : ControlMenu
         fitSizeToChildren.UpdateSize();
     }
 
+    private void UpdateWidgetsSort()
+    {
+        buildingWorkersMenu.SortWidgets();
+        employedCitizensMenu.SortWidgets();
+        unemployedCitizensMenu.SortWidgets();
+    }
+
+    private void UpdateWidgetsHighlight()
+    {
+        if (!selectedBuilding) {
+            Debug.LogError($"[{nameof(WorkersControlMenu)}] Selected Building is not valid!");
+            return;
+        }
+
+        var buildingSkillId = selectedBuilding.SkillId;
+
+        foreach (var citizenWidget in spawnedWidgets.Values) {
+            if (!citizenWidget) continue;
+
+            foreach (var skillWidget in citizenWidget.SkillsPanel.SpawnedSkillWidgets) {
+                if (!skillWidget) continue;
+
+                skillWidget.SetHighlighted(skillWidget.Skill.SkillDefinition.SkillId == buildingSkillId ? true : false);
+            }
+        }
+    }
+
     private void CreateWidget()
     {
         var widget = CitizenWidgetFactory.CreateWidget(citizenWidgetPrefab, buildingWorkersMenu.LayoutGroup.transform, null);
@@ -134,27 +169,35 @@ public class WorkersControlMenu : ControlMenu
         if (!citizen.IsCitizenAvaliable()) return;
 
         var selectedBuilding = selectManager.GetSelectedBuilding();
-        Transform widgetTransform = null;
+        WorkersPanel menu = null;
 
         if (selectedBuilding) {
             var interactBuilding = citizen.InteractComponent.InteractBuilding;
 
             if (interactBuilding == selectedBuilding) {
-                widgetTransform = buildingWorkersMenu.LayoutGroup.transform;
+                menu = buildingWorkersMenu;
             }
             else if (interactBuilding) {
-                widgetTransform = employedCitizensMenu.LayoutGroup.transform;
+                menu = employedCitizensMenu;
             }
             else {
-                widgetTransform = unemployedCitizensMenu.LayoutGroup.transform;
+                menu = unemployedCitizensMenu;
             }
         }
         else {
-            widgetTransform = unemployedCitizensMenu.LayoutGroup.transform;
+            menu = unemployedCitizensMenu;
         }
 
-        var widget = CitizenWidgetFactory.CreateWidget(citizenWidgetPrefab, widgetTransform, citizen);
+        var widget = CitizenWidgetFactory.CreateWidget(citizenWidgetPrefab, menu.LayoutGroup.transform, citizen);
         spawnedWidgets.Add(citizen, widget);
+        menu.AddWidget(widget);
+    }
+
+    private void RemoveWidget(Citizen citizen)
+    {
+        if (!spawnedWidgets.TryGetValue(citizen, out var widget)) return;
+
+        RemoveWidget(widget);
     }
 
     private void RemoveWidget(CitizenWidget citizenWidget)
@@ -164,14 +207,6 @@ public class WorkersControlMenu : ControlMenu
         Destroy(citizenWidget.gameObject);
         citizenWidget.transform.SetParent(null);
         spawnedEmptyWidgets.Remove(citizenWidget);
-    }
-
-    private void RemoveWidget(Citizen citizen)
-    {
-        if (!spawnedWidgets.TryGetValue(citizen, out var widget)) return;
-
-        Destroy(widget.gameObject);
-        spawnedWidgets.Remove(citizen);
     }
 
     private void UpdateMenus()

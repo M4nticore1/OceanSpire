@@ -16,6 +16,8 @@ public class CitizenWidget : MonoBehaviour
     public int WidgetIndex { get; private set; } = 0;
 
     [SerializeField] private SkillsPanel skillsPanel;
+    public SkillsPanel SkillsPanel => skillsPanel;
+
     [SerializeField] private GameObject selectedResidentMenu;
     [SerializeField] private GameObject nonSelectedResidentMenu;
     [SerializeField] private TextMeshProUGUI citizenNameText;

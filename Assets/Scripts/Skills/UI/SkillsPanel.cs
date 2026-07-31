@@ -7,7 +7,9 @@ public class SkillsPanel : MonoBehaviour
     [SerializeField] private SkillWidget skillWidgetPrefab;
 
     [SerializeField] private LayoutGroup layoutGroup;
+
     private List<SkillWidget> spawnedSkillWidgets = new();
+    public IReadOnlyList<SkillWidget> SpawnedSkillWidgets => spawnedSkillWidgets;
 
     public void SetSkills(SkillsComponent skillsComponent)
     {

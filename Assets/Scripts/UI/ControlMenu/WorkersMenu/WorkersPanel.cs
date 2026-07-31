@@ -1,5 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class WorkersPanel : MonoBehaviour
@@ -12,6 +13,7 @@ public class WorkersPanel : MonoBehaviour
     [SerializeField] private GameObject haveNoCitizensText;
 
     private Vector2? startSize = null;
+    private List<CitizenWidget> spawnedWidgets = new();
 
     private void Awake()
     {
@@ -39,5 +41,29 @@ public class WorkersPanel : MonoBehaviour
         if (haveNoCitizensText) {
             haveNoCitizensText.SetActive(layoutGroup.transform.childCount == 0);
         }
+    }
+
+    public void SortWidgets()
+    {
+        var selectedBuilding = SelectManager.Instance.SelectedComponent?.GetComponent<Building>();
+        if (!selectedBuilding) {
+            Debug.LogError($"[{nameof(WorkersPanel)}] Selected Building is not valid!");
+            return;
+        }
+
+        var sortedWidgets = spawnedWidgets.Where(w => w).OrderByDescending(w => w.Citizen?.SkillsComponent?.GetSkill(selectedBuilding.SkillId)?.CurrentLevel ?? 0).ToList();
+        for (int i = 0; i < sortedWidgets.Count; i++) {
+            sortedWidgets[i].transform.SetSiblingIndex(i);
+        }
+    }
+
+    public void AddWidget(CitizenWidget widget)
+    {
+        spawnedWidgets.Add(widget);
+    }
+
+    public void RemoveWidget(CitizenWidget widget)
+    {
+        spawnedWidgets.Remove(widget);
     }
 }

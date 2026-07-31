@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 100}
+  m_SizeDelta: {x: 0, y: 120}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &3282463695784072519
 CanvasRenderer:
@@ -268,6 +268,18 @@ PrefabInstance:
     - target: {fileID: 8162965232528523999, guid: 7279f399ae8409843ae7e180f209cac9, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8687776044093762510, guid: 7279f399ae8409843ae7e180f209cac9, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8687776044093762510, guid: 7279f399ae8409843ae7e180f209cac9, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8687776044093762510, guid: 7279f399ae8409843ae7e180f209cac9, type: 3}
+      propertyPath: m_Color.r
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -39,7 +39,7 @@ public class CraftingModuleSkillProgress : SkillProgress
 
     private void OnItemCrafted(CraftingModule module, CraftItemInstance craftItem)
     {
-        if (module.SkillId != SkillAdapter.SkillId) return;
+        if (module.OwnedBuilding.SkillId != SkillAdapter.SkillId) return;
 
         AddXp(XpGain);
     }
@@ -56,7 +56,7 @@ public class CraftingModuleSkillProgress : SkillProgress
         if (!craftBuilding) return false;
 
         if (!craftBuilding.IsWorking) return false;
-        if (craftBuilding.SkillId != SkillAdapter.SkillId) return false;
+        if (craftBuilding.OwnedBuilding.SkillId != SkillAdapter.SkillId) return false;
 
         return true;
     }
