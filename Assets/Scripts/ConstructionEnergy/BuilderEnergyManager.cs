@@ -25,7 +25,7 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
     private void Awake()
     {
         if (Instance) {
-            Debug.Log("Another ConstructionEnergyManager is on the scene!");
+            Debug.Log($"[{nameof(BuilderEnergyManager)}] Another BuilderEnergyManager is on the scene!");
             Destroy(gameObject);
             return;
         }
@@ -48,10 +48,17 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
         if (NextChargeTime == null) return;
 
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        if (currentTime < NextChargeTime) return;
 
-        ChargeEnergy();
-        UpdateNextChargeTime();
+        while (NextChargeTime != null && currentTime >= NextChargeTime.Value) {
+            ChargeEnergy();
+
+            if (CurrentEnergy >= 1f) {
+                NextChargeTime = null;
+                break;
+            }
+
+            NextChargeTime += chargeEnergyFrequency;
+        }
     }
 
     public void Init()
@@ -62,42 +69,45 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
     public void Init(BuilderEnergyData data)
     {
         if (data == null) {
-            Debug.LogError("constructionEnergyData is not valid");
+            Debug.LogError($"[{nameof(BuilderEnergyManager)}] Builder Energy Data is not valid! Initializing with defaults.");
             Init();
             return;
         }
 
         SetEnergy(data.CurrentEnergy);
 
-        if (CurrentEnergy < 1f) {
-            if (data.NextChargeTime != null) {
-                long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                long nextChargeTime = data.NextChargeTime.Value;
+        if (CurrentEnergy >= 1f) {
+            NextChargeTime = null;
+            return;
+        }
 
-                if (currentTime >= nextChargeTime) {
-                    long overdueTime = currentTime - nextChargeTime;
-                    long additionalTicks = overdueTime / chargeEnergyFrequency;
-                    long totalTicksGained = 1 + additionalTicks;
+        if (data.NextChargeTime == null) {
+            long currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            NextChargeTime = currentTime + chargeEnergyFrequency;
+            return;
+        }
 
-                    float energyGained = totalTicksGained * chargeEnergyPower;
-                    SetEnergy(Mathf.Min(1f, CurrentEnergy + energyGained));
+        long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        long targetTime = data.NextChargeTime.Value;
 
-                    if (CurrentEnergy >= 1f) {
-                        NextChargeTime = null;
-                    }
-                    else {
-                        long remainingSeconds = overdueTime % chargeEnergyFrequency;
-                        NextChargeTime = currentTime + (chargeEnergyFrequency - remainingSeconds);
-                    }
-                }
-                else {
-                    NextChargeTime = nextChargeTime;
-                }
+        if (now >= targetTime) {
+            long overdueSeconds = now - targetTime;
+
+            long additionalTicks = overdueSeconds / chargeEnergyFrequency;
+            long totalTicksGained = 1 + additionalTicks;
+
+            float energyGained = totalTicksGained * chargeEnergyPower;
+            SetEnergy(CurrentEnergy + energyGained);
+
+            if (CurrentEnergy >= 1f) {
+                NextChargeTime = null;
             }
             else {
-                Debug.LogError("Energy is not full, but full charge time is not valid");
-                SetEnergy(1f);
+                NextChargeTime = targetTime + (totalTicksGained * chargeEnergyFrequency);
             }
+        }
+        else {
+            NextChargeTime = targetTime;
         }
     }
 
@@ -107,9 +117,9 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
 
         return new Dictionary<string, string>()
         {
-            { "currentEnergy", CurrentEnergy > 0 ? $"<color=green>{CurrentEnergy * 100}%</color>" : $"{CurrentEnergy * 100}%" },
-            { "chargePower", (chargeEnergyPower * 100).ToString() },
-            { "chargeRemainingTime", remainingTime > 0 ? TimeFormatter.SecondsToTimer(GetRemainingChargeTime()) : "-" },
+            { "currentEnergy", CurrentEnergy > 0 ? $"<color=green>{CurrentEnergy * 100:0}%</color>" : $"<color=red>{CurrentEnergy * 100:0}%</color>" },
+            { "chargePower", (chargeEnergyPower * 100).ToString("0") },
+            { "chargeRemainingTime", remainingTime > 0 ? TimeFormatter.SecondsToTimer(remainingTime) : "-" },
         };
     }
 
@@ -121,7 +131,6 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
         constructionComponent.ApplyConstructionSpeedBonus();
 
         SpendEnergy();
-        UpdateNextChargeTime();
     }
 
     private void ChargeEnergy()
@@ -132,6 +141,11 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
     private void SpendEnergy()
     {
         SetEnergy(CurrentEnergy - energySpend);
+
+        if (CurrentEnergy < 1f && NextChargeTime == null) {
+            var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            NextChargeTime = currentTime + chargeEnergyFrequency;
+        }
     }
 
     private void SetEnergy(float value)
@@ -142,20 +156,9 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
         OnEnergyChanged?.Invoke(value);
     }
 
-    private void UpdateNextChargeTime()
-    {
-        if (CurrentEnergy >= 1f) {
-            NextChargeTime = null;
-        }
-        else if (NextChargeTime == null) {
-            var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            NextChargeTime = currentTime + chargeEnergyFrequency;
-        }
-    }
-
     private bool ShouldApplyBonus()
     {
-        if (!buildingsLoader.IsLoaded) return false;
+        if (!buildingsLoader || !buildingsLoader.IsLoaded) return false;
         if (CurrentEnergy <= 0f) return false;
 
         return true;
@@ -166,6 +169,6 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
         if (NextChargeTime == null) return 0;
 
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        return (int)(NextChargeTime.Value - currentTime);
+        return (int)Mathf.Max(0, NextChargeTime.Value - currentTime);
     }
 }

@@ -11502,7 +11502,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ConstructionEnergyManager
   buildingsLoader: {fileID: 1911230802}
   chargeEnergyPower: 0.1
-  chargeEnergyFrequency: 1800
+  chargeEnergyFrequency: 18
   energySpend: 0.3
 --- !u!4 &853076772
 Transform:

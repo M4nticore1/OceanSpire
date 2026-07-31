@@ -21,12 +21,14 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
     {
         slidePanel.OnHidden += OnHide;
         closeButton.OnReleased.AddListener(OnCloseButtonClicked);
+        constructionEnergyManager.OnEnergyChanged += OnEnergyChanged;
     }
 
     private void OnDisable()
     {
         slidePanel.OnHidden -= OnHide;
         closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
+        constructionEnergyManager.OnEnergyChanged -= OnEnergyChanged;
     }
 
     private void Start()
@@ -48,6 +50,8 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
         slidePanel.Show();
         InputStateManager.Instance.AddBlockTarget(this);
 
+        currentEnergyText.UpdateText();
+
         OnShowed?.Invoke();
     }
 
@@ -62,6 +66,11 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
+    }
+
+    private void OnEnergyChanged(float energy)
+    {
+        currentEnergyText.UpdateText();
     }
 
     private void OnCloseButtonClicked()
