@@ -117,7 +117,7 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
 
         return new Dictionary<string, string>()
         {
-            { "currentEnergy", CurrentEnergy > 0 ? $"<color=green>{CurrentEnergy * 100:0}%</color>" : $"<color=red>{CurrentEnergy * 100:0}%</color>" },
+            { "currentEnergy", $"{CurrentEnergy * 100:0}%" },
             { "chargePower", (chargeEnergyPower * 100).ToString("0") },
             { "chargeRemainingTime", remainingTime > 0 ? TimeFormatter.SecondsToTimer(remainingTime) : "-" },
         };
