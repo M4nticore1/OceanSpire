@@ -21,10 +21,15 @@ public class ExtractionDailyTaskCondition : DailyTaskCondition
         return true;
     }
 
-    private void OnAddedItemAmount(ItemID id, int amount)
+    private void OnAddedItemAmount(Boat boat, ItemInstance item)
     {
-        if (id != conditionItem.ItemId) return;
+        if (item == null) return;
 
-        InvokeProgressChanged(amount);
+        var definition = item.Definition;
+        if (!definition) return;
+
+        if (definition.ItemId != conditionItem.ItemId) return;
+
+        InvokeProgressChanged(item.Amount);
     }
 }

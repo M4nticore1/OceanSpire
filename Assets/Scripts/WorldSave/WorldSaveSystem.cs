@@ -25,24 +25,32 @@ public static class WorldSaveSystem
 
     public static void RemoveSaveByWorldName(string worldName)
     {
-        string path = GetSaveFolderPathByName(worldName);
-
-        if (!Directory.Exists(path)) {
-            Debug.Log("Save folder not found: " + path);
+        if (string.IsNullOrWhiteSpace(worldName)) {
+            Debug.LogError($"[{nameof(WorldSaveSystem)}] Attempt to delete a world with an empty name was cancelled!");
             return;
         }
 
-        foreach (var file in Directory.GetFiles(path)) {
-            File.Delete(file);
+        string path = GetSaveFolderPathByName(worldName);
+        string rootSavesPath = Path.GetFullPath(GetSavesFolderPath()).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        string targetWorldPath = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+        if (string.Equals(rootSavesPath, targetWorldPath, System.StringComparison.OrdinalIgnoreCase)) {
+            Debug.LogError($"[{nameof(WorldSaveSystem)}] CRITICAL ERROR: Attempt to delete the root saves folder was blocked!");
+            return;
+        }
+
+        if (!Directory.Exists(targetWorldPath)) {
+            Debug.LogWarning($"[{nameof(WorldSaveSystem)}] World folder not found: " + targetWorldPath);
+            return;
         }
 
         try {
-            Directory.Delete(path, true);
+            Directory.Delete(targetWorldPath, true);
+            Debug.Log($"[{nameof(WorldSaveSystem)}] World folder successfully deleted: {worldName}");
         }
-        catch (IOException ex) {
-            Debug.LogError($"Couldn't delete save: {ex.Message}");
+        catch (System.Exception ex) {
+            Debug.LogError($"[{nameof(WorldSaveSystem)}] Failed to delete world folder '{worldName}': {ex.Message}");
         }
-
     }
 
     public static void SaveWorldThumb(string worldName)

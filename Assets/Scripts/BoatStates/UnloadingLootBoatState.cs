@@ -8,7 +8,7 @@ public class UnloadingLootBoatState : BoatState, IProgressable
 
     private CityStorage cityStorage = CityStorage.Instance;
 
-    public static event Action<ItemID, int> OnLootUnloaded;
+    public static event Action<Boat, ItemInstance> OnLootUnloaded;
 
     public UnloadingLootBoatState(Boat boat) : base(boat)
     {
@@ -86,9 +86,17 @@ public class UnloadingLootBoatState : BoatState, IProgressable
 
         if (amountToUnload <= 0) return;
 
-        boat.Inventory.RemoveItem(lootId, amountToUnload);
-        cityStorage.Inventory.AddItem(lootId, amountToUnload);
-        OnLootUnloaded?.Invoke(lootId, amountToUnload);
+        var itemData = new ItemData()
+        {
+            Id = lootId,
+            Amount = amountToUnload
+        };
+
+        var item = ItemInstance.Create(itemData);
+
+        boat.Inventory.RemoveItem(item);
+        cityStorage.Inventory.AddItem(item);
+        OnLootUnloaded?.Invoke(boat, item);
     }
 
     private ItemInstance GetItemToUnload()

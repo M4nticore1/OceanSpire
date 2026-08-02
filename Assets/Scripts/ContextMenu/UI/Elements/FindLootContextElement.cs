@@ -61,5 +61,6 @@ public class FindLootContextElement : ContextElement
         if (boat != this.boat) return;
 
         UpdateActive(boat.ContextMenuTarget);
+        UpdateButtonEnabled();
     }
 }

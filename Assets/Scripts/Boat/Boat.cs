@@ -51,9 +51,12 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     [field: SerializeField] public BoatDockPoint DockPoint { get; private set; }
     [field: SerializeField] public SwimmingDriftingLoot TargetDriftingLoot { get; private set; }
 
-    // Weight
-    public float CurrentWeight => inventory.CurrentWeight;
-    public float MaxWeight => inventory.WeightLimit;
+    [Header("UI")]
+    [SerializeField] private Canvas canvas;
+    public Canvas Canvas => canvas;
+
+    [SerializeField] private HarvestEffectPositionHandler harvestEffectPositionHandler;
+    public HarvestEffectPositionHandler HarvestEffectPositionHandler => harvestEffectPositionHandler;
 
     [Header("Other")]
     [SerializeField] private int findLootMaxWeightThreshold = 5;
@@ -65,7 +68,9 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     [SerializeField] private bool isClickable = true;
     public bool IsClickable => isClickable;
 
-    public bool SentToPier { get; private set; } = false;
+    // Weight
+    public float CurrentWeight => inventory.CurrentWeight;
+    public float MaxWeight => inventory.WeightLimit;
 
     public event Action OnClicked;
 

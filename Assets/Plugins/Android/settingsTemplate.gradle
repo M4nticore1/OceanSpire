@@ -24,9 +24,6 @@ dependencyResolutionManagement {
         maven {
             url "https://maven.google.com/" // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:7, Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:12, Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:17
         }
-        maven {
-            url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" // Packages/com.applovin.mediation.adapters.mintegral.android/Editor/Dependencies.xml:8
-        }
         mavenLocal()
 // Android Resolver Repos End
         flatDir {

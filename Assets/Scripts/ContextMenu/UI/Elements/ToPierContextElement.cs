@@ -42,6 +42,7 @@ public class ToPierContextElement : ContextElement
     protected override bool ShouldEnableButton()
     {
         if (!boat) return false;
+        if (boat.Inventory.Items.Count <= 0) return false;
 
         var rider = boat.CurrentRider;
         if (!rider) return false;
@@ -59,5 +60,6 @@ public class ToPierContextElement : ContextElement
         if (boat != this.boat) return;
 
         UpdateActive(boat.ContextMenuTarget);
+        UpdateButtonEnabled();
     }
 }

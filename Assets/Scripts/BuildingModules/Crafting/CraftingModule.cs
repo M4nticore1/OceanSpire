@@ -92,11 +92,14 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
             SelectedCraftItem?.SetFinishTime(craftingModuleData.SelectedCraft.CraftingFinishTime);
         }
 
-        if (SelectedCraftItem != null && SelectedCraftItem.IsCraftingFinished()) {
-            TryCraftItem();
-        }
-        else {
-            TryStartWorking();
+        if (SelectedCraftItem != null) {
+            if (SelectedCraftItem.IsCraftingFinished()) {
+                OnItemCraftEnded?.Invoke(SelectedCraftItem);
+                OnModuleItemCraftEnded?.Invoke(this, SelectedCraftItem);
+            }
+            else {
+                TryStartWorking();
+            }
         }
     }
 
