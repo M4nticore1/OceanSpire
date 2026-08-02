@@ -18,4 +18,4 @@ MonoBehaviour:
   consumeResources:
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     amount: 120
-  produceTime: 23
+  produceTime: 230

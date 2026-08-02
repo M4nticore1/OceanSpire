@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,10 @@ public class CraftingModuleHarvestEffectManager : HarvestItemEffectManager
     [Header("Transforms")]
     [SerializeField] private RectTransform generalTargetTransform;
     [SerializeField] private HarvestEffectStruct[] customTargetTransforms;
+
+    [Header("Multi Spawn")]
+    [SerializeField] private float spawnMultiWidgetsFrequency = 0.1f;
+    [SerializeField] private int maxMultiWidgetsCount = 5;
 
     private Dictionary<ItemDefinition, RectTransform> customTargetTransformsDict = new();
 
@@ -64,7 +69,7 @@ public class CraftingModuleHarvestEffectManager : HarvestItemEffectManager
         var targetPos = GetTargetPosition(item);
         targetPos.z = 0f;
 
-        TryCreateWidget(item, playerCanvas.transform, screenSpawnPos, targetPos);
+        StartCoroutine(CreateWidgetsCoroutine(item, screenSpawnPos, targetPos));
     }
 
     private Vector3 GetTargetPosition(ItemInstance itemInstance)
@@ -79,6 +84,16 @@ public class CraftingModuleHarvestEffectManager : HarvestItemEffectManager
         }
         else {
             return generalTargetTransform.position;
+        }
+    }
+
+    private IEnumerator CreateWidgetsCoroutine(ItemInstance item, Vector3 startPosition, Vector3 targetPosition)
+    {
+        var count = Mathf.Min(item.Amount, maxMultiWidgetsCount);
+        for (int i = 0; i < count; i++) {
+            yield return new WaitForSeconds(spawnMultiWidgetsFrequency);
+
+            TryCreateWidget(item, playerCanvas.transform, startPosition, targetPosition);
         }
     }
 }
