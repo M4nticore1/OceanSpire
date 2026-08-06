@@ -206,7 +206,7 @@ public class WanderersManager : MonoBehaviour
 
         var wanderers = creaturesManager.Wanderers;
         int dockIndex = 0;
-        int maxDocks = dockPointsManager.WandererDockPoints.Length;
+        int maxDocks = dockPointsManager.WandererDockPoints.Count;
 
         for (int i = 0; i < wanderers.Count; i++) {
             if (dockIndex >= maxDocks) {
@@ -224,7 +224,7 @@ public class WanderersManager : MonoBehaviour
             var ridingBoat = wanderer.BoatRider.RidingBoat;
             if (!ridingBoat) continue;
 
-            ridingBoat.SetDockPoint(dockPointsManager.WandererDockPoints[dockIndex]);
+            ridingBoat.SetDockPoint(dockPointsManager.GetWandererBoatDock(dockIndex));
             dockIndex++;
         }
     }
@@ -290,7 +290,7 @@ public class WanderersManager : MonoBehaviour
                 RidingBoatInstanceId = boatInstanceId,
             },
 
-            Weapon = EquipmentData.Default(),
+            Weapon = WeaponsDataFactory.CreateRandomData(WeaponsDataFactory.GetMinWeaponDamageId(), WeaponsDataFactory.GetMinWeaponDamageId()),
             Skills = SkillsData.CreateByLevelsCount(levelsCount),
             SpawnPosition = new Vector3Data(position)
         };
@@ -341,11 +341,7 @@ public class WanderersManager : MonoBehaviour
             }
         }
 
-        if (activeWanderersCount < dockPointsManager.WandererDockPoints.Length) {
-            return dockPointsManager.WandererDockPoints[activeWanderersCount];
-        }
-
-        return null;
+        return dockPointsManager.GetWandererBoatDock(activeWanderersCount);
     }
 
     private bool CanSpawnWanderer()
@@ -365,7 +361,7 @@ public class WanderersManager : MonoBehaviour
             activeWanderersCount++;
         }
 
-        if (activeWanderersCount >= dockPointsManager.WandererDockPoints.Length) return false;
+        if (activeWanderersCount >= dockPointsManager.WandererDockPoints.Count) return false;
 
         return true;
     }

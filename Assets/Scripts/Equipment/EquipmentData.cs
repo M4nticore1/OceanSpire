@@ -14,7 +14,7 @@ public class EquipmentData
     public static EquipmentData Create(EquipmentComponent equipment)
     {
         if (!equipment) {
-            Debug.LogError("EquipmentComponent is not valid");
+            Debug.LogError($"[{nameof(EquipmentComponent)}] Equipment Component is not valid");
             return Default();
         }
 

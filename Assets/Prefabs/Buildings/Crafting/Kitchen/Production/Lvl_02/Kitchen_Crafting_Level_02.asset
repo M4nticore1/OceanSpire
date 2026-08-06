@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   craftItems:
   - {fileID: 11400000, guid: 4f9ace13e827f1a4fbada3343ae39425, type: 2}
-  - {fileID: 11400000, guid: 252aabe841364e44ba996906193e6476, type: 2}
   - {fileID: 11400000, guid: 9195694f4a552cf4e8820f565fd6a3b4, type: 2}
+  - {fileID: 11400000, guid: 252aabe841364e44ba996906193e6476, type: 2}
   - {fileID: 11400000, guid: 7feb5773fb36ba44aa6bba1b8de075c0, type: 2}
   - {fileID: 11400000, guid: d90b229433feb154ab8368c1f4c67f73, type: 2}

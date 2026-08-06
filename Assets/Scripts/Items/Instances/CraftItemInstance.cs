@@ -5,14 +5,13 @@ public class CraftItemInstance
 {
     public CraftItemDefinition Definition { get; private set; }
 
-    public int CraftingTime { get; private set; } = 0;
-
-    /// <summary>
-    /// Эталонное время окончания БЕЗ бонусов (UtcNow + ProduceTime)
-    /// </summary>
+    public int CurrentCraftingTime { get; private set; } = 0;
     public long? FinishTime { get; private set; } = null;
+    public bool IsResourcesSpent { get; private set; } = false;
 
-    public float SpeedBonus { get; private set; } = 0f;
+    public float CraftingSpeedMultiplier { get; private set; } = 1f;
+
+    private CityStorage cityStorage => CityStorage.Instance;
 
     public event Action<float> OnSpeedBonusChanged;
 
@@ -22,56 +21,45 @@ public class CraftItemInstance
         SetFinishTime(data.CraftingFinishTime);
     }
 
-    /// <summary>
-    /// Сколько ВСЕГО секунд должен длиться крафт с текущим бонусом
-    /// </summary>
     public int GetCraftTimeWithBonus()
     {
-        float safeBonus = Mathf.Clamp01(SpeedBonus);
-        return Mathf.Max(0, (int)(Definition.ProduceTime * (1f - safeBonus)));
+        return Mathf.Max(0, (int)(Definition.ProduceTime / CraftingSpeedMultiplier));
     }
 
-    public int GetRemainingCraftingTime()
+    public int GetRemainingCraftingTimeByCraftingTime()
     {
-        return GetCraftTimeWithBonus() - CraftingTime;
+        return GetCraftTimeWithBonus() - CurrentCraftingTime;
     }
 
     public bool IsCraftingFinished()
     {
-        return GetRemainingCraftingTime() <= 0;
+        return CurrentCraftingTime >= GetCraftTimeWithBonus();
     }
 
-    public void UpdateCraftingTime()
+    public void UpdateCraftingTimeByFinishTime()
     {
         if (FinishTime == null) {
-            SetCraftingTime(0);
+            SetCraftingTime(CurrentCraftingTime);
             return;
         }
 
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        long startTime = FinishTime.Value - Definition.ProduceTime;
-        long passedBaseSeconds = currentTime - startTime;
+        var startTime = FinishTime.Value - Definition.ProduceTime;
+        var passedBaseSeconds = currentTime - startTime;
+        var calculatedCraftingTime = (int)Mathf.Clamp(passedBaseSeconds, 0, Definition.ProduceTime);
 
-        if (passedBaseSeconds <= 0) {
-            SetCraftingTime(0);
-            return;
-        }
-
-        int calculatedCraftingTime = (int)Mathf.Clamp(passedBaseSeconds, 0, Definition.ProduceTime);
         SetCraftingTime(calculatedCraftingTime);
     }
 
     public void SetCraftingTime(int time)
     {
-        CraftingTime = Mathf.Clamp(time, 0, Definition.ProduceTime);
+        CurrentCraftingTime = Mathf.Clamp(time, 0, Definition.ProduceTime);
     }
 
-    public void ResetFinishTime()
+    public void ResetFinishTimeByCurrentCraftingTime()
     {
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-        // Сколько базовых секунд ещё осталось скрафтить
-        int remainingBaseTime = Definition.ProduceTime - CraftingTime;
+        var remainingBaseTime = Definition.ProduceTime - CurrentCraftingTime;
 
         SetFinishTime(currentTime + remainingBaseTime);
     }
@@ -81,17 +69,48 @@ public class CraftItemInstance
         FinishTime = seconds;
     }
 
-    public void SetSpeedBonus(float value)
+    public void SetCraftingSpeedMultiplier(float multiplier)
     {
-        SpeedBonus = value;
-        OnSpeedBonusChanged?.Invoke(value);
+        CraftingSpeedMultiplier = Mathf.Max(0, multiplier);
+        OnSpeedBonusChanged?.Invoke(multiplier);
+    }
+
+    public void SetResourcesSpent(bool value)
+    {
+        IsResourcesSpent = value;
+    }
+
+    public bool TrySpendResources()
+    {
+        if (IsResourcesSpent) return false;
+        if (!cityStorage) return false;
+
+        foreach (var resource in Definition.ConsumeResources) {
+            cityStorage.Inventory.RemoveItem(resource.Definition.ItemId, resource.Amount);
+        }
+
+        SetResourcesSpent(true);
+        return true;
+    }
+
+    public bool TryRefundResources()
+    {
+        if (!IsResourcesSpent) return false;
+        if (!cityStorage) return false;
+
+        foreach (var resource in Definition.ConsumeResources) {
+            cityStorage.Inventory.AddItem(resource.Definition.ItemId, resource.Amount);
+        }
+
+        SetResourcesSpent(false);
+        return true;
     }
 
     public long? GetFinishTimeWithBonus()
     {
         if (FinishTime == null) return null;
 
-        float safeBonus = Mathf.Clamp01(SpeedBonus);
+        float safeBonus = Mathf.Clamp01(CraftingSpeedMultiplier);
         int discountSeconds = (int)(Definition.ProduceTime * safeBonus);
 
         return FinishTime.Value - discountSeconds;

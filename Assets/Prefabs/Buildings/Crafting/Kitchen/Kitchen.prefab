@@ -145,6 +145,7 @@ MonoBehaviour:
   levelComponent: {fileID: 3623753502408224289}
   upgradeComponent: {fileID: 1543726248379608248}
   instanceId: {fileID: 4146996725171637188}
+  skillId: 0
   workAudioSource: {fileID: 2175774227416732871}
   SpawnedConstruction: {fileID: 0}
   FloorIndex: 0
@@ -164,8 +165,8 @@ MonoBehaviour:
   levelsData:
   - {fileID: 11400000, guid: b38be2c152827054986d4c5c46e8e27b, type: 2}
   - {fileID: 11400000, guid: 8182fe76c24f579479037a0231914e6f, type: 2}
-  electricityConsumption: 0.02
-  skillId: 0
+  <IsWorking>k__BackingField: 0
+  electricityConsumption: 0.005
 --- !u!114 &4680174761880465184
 MonoBehaviour:
   m_ObjectHideFlags: 0

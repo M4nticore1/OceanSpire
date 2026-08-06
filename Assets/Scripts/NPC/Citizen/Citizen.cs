@@ -55,11 +55,11 @@ public class Citizen : Human
         SelectComponent.Click();
     }
 
-    protected override void OnInit(CreatureData creatureData)
+    protected override void HandleInit(CreatureData creatureData)
     {
         var citizenData = creatureData as CitizenData;
         if (citizenData == null) {
-            Debug.Log($"citizenData is not valid", this);
+            Debug.Log($"Citizen Data is not valid", this);
             return;
         }
 
@@ -68,10 +68,15 @@ public class Citizen : Human
             LeavePosition = citizenData.EvictData.LeavePosition.Vector3();
         }
         else {
-            Debug.LogError("EvictData is not valid", this);
+            Debug.LogError("Evict Data is not valid", this);
         }
 
-        base.OnInit(creatureData);
+        base.HandleInit(creatureData);
+    }
+
+    protected override CreatureData GetDefaultData()
+    {
+        return CitizenData.Default();
     }
 
     protected override void DetermineNextAction()
@@ -112,13 +117,16 @@ public class Citizen : Human
     protected override void StartAttacking()
     {
         var currentBuilding = CityNavigator.CurrentBuilding;
-        var currentRaiders = currentBuilding.RaidComponent.CurrentRaiders;
+        var currentRaiders = currentBuilding.RaidersHandler.CurrentInteractors;
 
-        foreach (var raider in currentRaiders) {
-            if (!raider.HealthComponent.IsAlive) continue;
+        foreach (var interactor in currentRaiders) {
+            if (!interactor.HealthComponent.IsAlive) continue;
+
+            var raider = interactor as Raider;
+            if (!raider) continue;
             if (!raider.IsRaidingBuilding) continue;
 
-            AttackComponent.SetTarget(raider.AttackComponent);
+            AttackComponent.SetTarget(interactor.AttackComponent);
             AttackComponent.MoveToTarget();
             break;
         }
@@ -163,9 +171,9 @@ public class Citizen : Human
 
         if (currentBuilding != InteractComponent.InteractBuilding) return false;
 
-        var currentRaiders = currentBuilding.RaidComponent.CurrentRaiders;
-
+        var currentRaiders = currentBuilding.RaidersHandler.CurrentInteractors;
         foreach (var raider in currentRaiders) {
+            if (!raider) continue;
             if (!raider.HealthComponent.IsAlive) continue;
 
             return true;
@@ -176,28 +184,28 @@ public class Citizen : Human
 
     protected override void OnInteractBuildingSeted(Building building)
     {
-        building.WorkComponent.AddWorker(this);
+        building.CitizensHandler.AddInteractor(this);
 
         base.OnInteractBuildingSeted(building);
     }
 
     protected override void OnInteractBuildingRemoved(Building building)
     {
-        building.WorkComponent.RemoveWorker(this);
+        building.CitizensHandler.RemoveInteractor(this);
 
         base.OnInteractBuildingRemoved(building);
     }
 
     protected override void OnInteractionStarted(Building building)
     {
-        building.WorkComponent.AddCurrentWorker(this);
+        building.CitizensHandler.AddCurrentInteractor(this);
 
         base.OnInteractionStarted(building);
     }
 
     protected override void OnInteractionStopped(Building building)
     {
-        building.WorkComponent.RemoveCurrentWorker(this);
+        building.CitizensHandler.RemoveCurrentInteractor(this);
 
         base.OnInteractionStopped(building);
     }

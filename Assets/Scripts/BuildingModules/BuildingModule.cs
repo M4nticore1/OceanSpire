@@ -71,15 +71,20 @@ public abstract class BuildingModule : MonoBehaviour
         TryUnsubscribe();
     }
 
+    protected virtual void Start()
+    {
+
+    }
+
     protected virtual void Subscribe()
     {
         ownedBuilding.OnInited += Init;
         OwnedBuilding.UpgradeComponent.OnUpgradeFinished += HandleUpgradeFinished;
 
-        ownedBuilding.WorkComponent.OnWorkerAdded += HandleWorkerAdded;
-        ownedBuilding.WorkComponent.OnWorkerRemoved += HandleWorkerRemoved;
-        ownedBuilding.WorkComponent.OnCurrentWorkerAdded += HandleCurrentWorkerAdded;
-        ownedBuilding.WorkComponent.OnCurrentWorkerRemoved += HandleCurrentWorkerRemoved;
+        ownedBuilding.CitizensHandler.OnInteractorAdded += HandleWorkerAdded;
+        ownedBuilding.CitizensHandler.OnInteractorRemoved += HandleWorkerRemoved;
+        ownedBuilding.CitizensHandler.OnCurrentInteractorAdded += HandleCurrentWorkerAdded;
+        ownedBuilding.CitizensHandler.OnCurrentInteractorRemoved += HandleCurrentWorkerRemoved;
     }
 
     protected virtual void Unsubscribe()
@@ -87,10 +92,10 @@ public abstract class BuildingModule : MonoBehaviour
         ownedBuilding.OnInited -= OnInit;
         OwnedBuilding.UpgradeComponent.OnUpgradeFinished -= HandleUpgradeFinished;
 
-        ownedBuilding.WorkComponent.OnWorkerAdded -= HandleWorkerAdded;
-        ownedBuilding.WorkComponent.OnWorkerRemoved -= HandleWorkerRemoved;
-        ownedBuilding.WorkComponent.OnCurrentWorkerAdded -= HandleCurrentWorkerAdded;
-        ownedBuilding.WorkComponent.OnCurrentWorkerRemoved -= HandleCurrentWorkerRemoved;
+        ownedBuilding.CitizensHandler.OnInteractorAdded -= HandleWorkerAdded;
+        ownedBuilding.CitizensHandler.OnInteractorRemoved -= HandleWorkerRemoved;
+        ownedBuilding.CitizensHandler.OnCurrentInteractorAdded -= HandleCurrentWorkerAdded;
+        ownedBuilding.CitizensHandler.OnCurrentInteractorRemoved -= HandleCurrentWorkerRemoved;
     }
 
     protected virtual bool ShouldSubscribe()
@@ -124,31 +129,33 @@ public abstract class BuildingModule : MonoBehaviour
         TryStartWorking();
     }
 
-    protected virtual void OnWorkingStart()
+    protected virtual void HandleWorkingStart()
     {
 
     }
 
-    protected virtual void OnWorkingStop()
+    protected virtual void HandleWorkingStop()
     {
 
     }
 
     protected virtual bool ShouldStartWorking()
     {
-        if (ownedBuilding.WorkComponent.CurrentWorkers.Count <= 0) return false;
+        if (IsWorking) return false;
+        if (ownedBuilding.CitizensHandler.CurrentInteractors.Count <= 0) return false;
 
         return true;
     }
 
     protected virtual bool ShouldStopWorking()
     {
-        if (OwnedBuilding.WorkComponent.CurrentWorkers.Count <= 0) return true;
+        if (!IsWorking) return false;
+        if (OwnedBuilding.CitizensHandler.CurrentInteractors.Count <= 0) return true;
 
         return false;
     }
 
-    protected bool TryStartWorking()
+    public bool TryStartWorking()
     {
         if (!ShouldStartWorking()) return false;
 
@@ -156,7 +163,7 @@ public abstract class BuildingModule : MonoBehaviour
         return true;
     }
 
-    protected bool TryStopWorking()
+    public bool TryStopWorking()
     {
         if (!ShouldStopWorking()) return false;
 
@@ -164,22 +171,22 @@ public abstract class BuildingModule : MonoBehaviour
         return true;
     }
 
-    private void HandleWorkerAdded(Citizen citizen)
+    private void HandleWorkerAdded(Human human)
     {
         TryStartWorking();
     }
 
-    private void HandleWorkerRemoved(Citizen citizen)
+    private void HandleWorkerRemoved(Human human)
     {
         TryStopWorking();
     }
 
-    private void HandleCurrentWorkerAdded(Citizen citizen)
+    private void HandleCurrentWorkerAdded(Human human)
     {
         TryStartWorking();
     }
 
-    private void HandleCurrentWorkerRemoved(Citizen citizen)
+    private void HandleCurrentWorkerRemoved(Human human)
     {
         TryStopWorking();
     }
@@ -206,19 +213,17 @@ public abstract class BuildingModule : MonoBehaviour
 
     private void StartWorking()
     {
-        if (IsWorking) return;
-
         IsWorking = true;
-        OnWorkingStart();
+        HandleWorkingStart();
+
         OnWorkingStarted?.Invoke();
     }
 
     private void StopWorking()
     {
-        if (!IsWorking) return;
-
         IsWorking = false;
-        OnWorkingStop();
+        HandleWorkingStop();
+
         OnWorkingStopped?.Invoke();
     }
 }

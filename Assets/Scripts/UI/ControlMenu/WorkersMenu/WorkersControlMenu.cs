@@ -73,8 +73,6 @@ public class WorkersControlMenu : ControlMenu
         }
 
         int maxWorkersCount = selectedBuilding.LevelDefinition.MaxHumansCount;
-
-        // 1. Очищаем пустые виджеты
         for (int i = spawnedEmptyWidgets.Count - 1; i >= 0; i--) {
             var widget = spawnedEmptyWidgets[i];
             if (!widget) {
@@ -85,7 +83,6 @@ public class WorkersControlMenu : ControlMenu
             RemoveWidget(widget);
         }
 
-        // 2. Перемещаем виджеты и ГАРАНТИРОВАННО синхронизируем их со списками панелей
         foreach (var widget in spawnedWidgets.Values) {
             if (!widget) {
                 Debug.LogError($"[{nameof(WorkersControlMenu)}] Spawned Widget is not valid!");
@@ -110,20 +107,16 @@ public class WorkersControlMenu : ControlMenu
                 targetPanel = unemployedCitizensMenu;
             }
 
-            // Переносим UI элемент и удаляем/добавляем в соответствующие списки списки панелей
             if (widget.transform.parent != targetPanel.LayoutGroup.transform) {
-                // Убираем со ВСЕХ панелей на случай рассинхрона
                 buildingWorkersMenu.RemoveWidget(widget);
                 employedCitizensMenu.RemoveWidget(widget);
                 unemployedCitizensMenu.RemoveWidget(widget);
 
-                // Ставим нового родителя и добавляем в список целевой панели
                 widget.transform.SetParent(targetPanel.LayoutGroup.transform);
                 targetPanel.AddWidget(widget);
             }
         }
 
-        // 3. Создаем пустые слоты
         while (buildingWorkersMenu.LayoutGroup.transform.childCount < maxWorkersCount) {
             CreateWidget();
         }
@@ -141,7 +134,7 @@ public class WorkersControlMenu : ControlMenu
 
     private void UpdateWidgetsSort()
     {
-        buildingWorkersMenu.SortWidgets();
+        //buildingWorkersMenu.SortWidgets();
         employedCitizensMenu.SortWidgets();
         unemployedCitizensMenu.SortWidgets();
     }

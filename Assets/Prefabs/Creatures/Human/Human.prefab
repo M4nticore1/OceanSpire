@@ -95,6 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Health
   maxHealth: 100
+  currentHealth: 0
   <IsAlive>k__BackingField: 1
 --- !u!114 &2775210278879926879
 MonoBehaviour:
@@ -124,6 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCBuildingInteractor
   <InteractBuilding>k__BackingField: {fileID: 0}
+  <IsInteracting>k__BackingField: 0
 --- !u!114 &2185582854232776361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,6 +145,8 @@ MonoBehaviour:
   pathBuildings: []
   <CurrentBuilding>k__BackingField: {fileID: 0}
   <TargetBuilding>k__BackingField: {fileID: 0}
+  <PathProgress>k__BackingField: 0
+  <IsFollowingPath>k__BackingField: 0
 --- !u!114 &1218019482049909420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ElevatorPassenger
   cityNavigator: {fileID: 2185582854232776361}
   healthComponent: {fileID: 4098557255172134659}
+  priority: 0
   <CurrentStateEnum>k__BackingField: 0
 --- !u!114 &7048535748943796013
 MonoBehaviour:
@@ -290,6 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
+  <IsSelected>k__BackingField: 0
   isClickable: 0
 --- !u!114 &7000859086802169914
 MonoBehaviour:

@@ -6,12 +6,12 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInputHandler.onPrimaryInteractionReleased += OnPrimaryInteractionReleased;
+        playerInputHandler.OnPrimaryInteractionReleased += OnPrimaryInteractionReleased;
     }
 
     private void OnDisable()
     {
-        playerInputHandler.onPrimaryInteractionReleased -= OnPrimaryInteractionReleased;
+        playerInputHandler.OnPrimaryInteractionReleased -= OnPrimaryInteractionReleased;
     }
 
     private void Interact(Vector2 interactionPosition)

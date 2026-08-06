@@ -88,11 +88,23 @@ public class ResourceWidget : MonoBehaviour
 
     public virtual void SetItem(ItemInstance itemInstance)
     {
+        if (itemInstance == null) {
+            Debug.LogError($"[{nameof(ResourceWidget)}] Item Instance is not valid!");
+            return;
+        }
+
         Item = itemInstance;
+        SetItemDefinition(Item.Definition);
     }
 
     public virtual void SetItemDefinition(ItemDefinition definition)
     {
+        if (!definition) {
+            Debug.LogError($"[{nameof(ResourceWidget)}] Item Definition is not valid!");
+            return;
+        }
+
+        if (itemDefinition == definition) return;
         itemDefinition = definition;
 
         UpdateItemFromCityStorage();

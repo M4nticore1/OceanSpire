@@ -6,8 +6,8 @@ public class CraftingModuleSkillAdapter : SkillAdapter
     {
         if (!base.TrySubscribe()) return false;
 
-        WorkComponent.OnComponentCurrentWorkerAdded += OnCurrentWorkerAdded;
-        WorkComponent.OnComponentCurrentWorkerRemoved += OnCurrentWorkerRemoved;
+        BuildingInteractorsHandler.OnComponentCurrentInteractorAdded += OnCurrentWorkerAdded;
+        BuildingInteractorsHandler.OnComponentCurrentInteractorRemoved += OnCurrentWorkerRemoved;
 
         return true;
     }
@@ -16,8 +16,8 @@ public class CraftingModuleSkillAdapter : SkillAdapter
     {
         if (!base.TryUnsubscribe()) return false;
 
-        WorkComponent.OnComponentCurrentWorkerAdded -= OnCurrentWorkerAdded;
-        WorkComponent.OnComponentCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
+        BuildingInteractorsHandler.OnComponentCurrentInteractorAdded -= OnCurrentWorkerAdded;
+        BuildingInteractorsHandler.OnComponentCurrentInteractorRemoved -= OnCurrentWorkerRemoved;
 
         return true;
     }
@@ -44,22 +44,21 @@ public class CraftingModuleSkillAdapter : SkillAdapter
 
     private void AddBonus(CraftingModule module, float bonus)
     {
-        var currentBonus = module.CraftingSpeedBonus;
-        var finalBonus = currentBonus + bonus;
-
-        module.SetCraftingSpeedBonus(finalBonus);
+        var currentBonus = module.CraftingSpeedMultiplier;
+        module.SetCraftingSpeedBonus(currentBonus + bonus);
     }
 
     private void RemoveBonus(CraftingModule module, float bonus)
     {
-        var currentBonus = module.CraftingSpeedBonus;
-        var finalBonus = currentBonus - bonus;
-
-        module.SetCraftingSpeedBonus(finalBonus);
+        var currentBonus = module.CraftingSpeedMultiplier;
+        module.SetCraftingSpeedBonus(currentBonus - bonus);
     }
 
-    private void OnCurrentWorkerAdded(WorkComponent workComponent, Citizen citizen)
+    private void OnCurrentWorkerAdded(BuildingInteractorsHandler workComponent, Human human)
     {
+        var citizen = human as Citizen;
+        if (!citizen) return;
+
         var craftingModule = workComponent.GetComponent<CraftingModule>();
         if (!craftingModule) return;
 
@@ -70,8 +69,11 @@ public class CraftingModuleSkillAdapter : SkillAdapter
         AddSkillsComponent(skillsComponent);
     }
 
-    private void OnCurrentWorkerRemoved(WorkComponent workComponent, Citizen citizen)
+    private void OnCurrentWorkerRemoved(BuildingInteractorsHandler workComponent, Human human)
     {
+        var citizen = human as Citizen;
+        if (!citizen) return;
+
         var craftingModule = workComponent.GetComponent<CraftingModule>();
         if (!craftingModule) return;
 

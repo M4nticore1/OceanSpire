@@ -34,7 +34,7 @@ public class CraftsFinishedNotificationController : NotificationController
         var maxFireTime = 0;
 
         foreach (var craft in GetCurrentCrafts()) {
-            var remainingTime = craft.GetRemainingCraftingTime();
+            var remainingTime = craft.GetRemainingCraftingTimeByCraftingTime();
             if (remainingTime < maxFireTime) continue;
 
             maxFireTime = remainingTime;

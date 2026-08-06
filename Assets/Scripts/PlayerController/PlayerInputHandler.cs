@@ -17,10 +17,11 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction secondaryTouchPositionIA = null;
     private InputAction secondaryTouchDeltaIA = null;
 
-    public InputAction cameraMoveIA { get; private set; } = null;
-    private InputAction cameraZoomIA = null;
+    public InputAction cameraMoveIA { get; private set; }
+    public InputAction cameraZoomIA { get; private set; }
 
     public Vector2 CameraMoveInput => cameraMoveIA.ReadValue<Vector2>();
+    public float CameraZoomInput => cameraZoomIA.ReadValue<float>();
 
     // Primary Interaction Delta
     public Vector2 primaryInteractionStartPosition { get; private set; } = Vector2.zero;
@@ -32,12 +33,12 @@ public class PlayerInputHandler : MonoBehaviour
     public Vector2 secondaryInteractionPosition => secondaryTouchPositionIA.ReadValue<Vector2>();
     public Vector2 secondaryInteractionDelta => primaryTouchDeltaIA.ReadValue<Vector2>();
 
-    public event Action onPrimaryInteractionPressed; 
-    public event Action onPrimaryInteractionReleased;
-    public event Action onCameraMovePerformed;
-    public event Action onSecondaryInteractionPressed; 
-    public event Action onSecondaryInteractionReleased;
-    public event Action<float> onCameraZoomPerformed;
+    public event Action OnPrimaryInteractionPressed; 
+    public event Action OnPrimaryInteractionReleased;
+    public event Action OnCameraMovePerformed;
+    public event Action OnSecondaryInteractionPressed; 
+    public event Action OnSecondaryInteractionReleased;
+    public event Action<float> OnCameraZoomPerformed;
 
     private void Awake()
     {
@@ -49,16 +50,16 @@ public class PlayerInputHandler : MonoBehaviour
         touchInputActionMap.Enable();
 
         // Primary Interaction
-        primaryTouchPressIA.performed += OnPrimaryTouchPressed;
-        primaryTouchPressIA.canceled += OnPrimaryTouchReleased;
+        primaryTouchPressIA.performed += HandlePrimaryTouchPressed;
+        primaryTouchPressIA.canceled += HandlePrimaryTouchReleased;
 
         // Secondary Interaction
-        secondaryTouchPressIA.performed += OnSecondaryTouchPressed;
-        secondaryTouchPressIA.canceled += OnSecondaryTouchReleased;
+        secondaryTouchPressIA.performed += HandleSecondaryTouchPressed;
+        secondaryTouchPressIA.canceled += HandleSecondaryTouchReleased;
 
         // Camera
-        cameraMoveIA.performed += OnCameraMovePerformed;
-        cameraZoomIA.performed += OnCameraZoomPerformed;
+        cameraMoveIA.performed += HandleCameraMovePerformed;
+        cameraZoomIA.performed += HandleCameraZoomPerformed;
     }
 
     private void OnDisable()
@@ -66,16 +67,16 @@ public class PlayerInputHandler : MonoBehaviour
         touchInputActionMap.Disable();
 
         // Primary Interaction
-        primaryTouchPressIA.performed -= OnPrimaryTouchPressed;
-        primaryTouchPressIA.canceled -= OnPrimaryTouchReleased;
+        primaryTouchPressIA.performed -= HandlePrimaryTouchPressed;
+        primaryTouchPressIA.canceled -= HandlePrimaryTouchReleased;
 
         // Secondary Interaction
-        secondaryTouchPressIA.performed -= OnSecondaryTouchPressed;
-        secondaryTouchPressIA.canceled -= OnSecondaryTouchReleased;
+        secondaryTouchPressIA.performed -= HandleSecondaryTouchPressed;
+        secondaryTouchPressIA.canceled -= HandleSecondaryTouchReleased;
 
         // Camera
-        cameraMoveIA.performed -= OnCameraMovePerformed;
-        cameraZoomIA.performed -= OnCameraZoomPerformed;
+        cameraMoveIA.performed -= HandleCameraMovePerformed;
+        cameraZoomIA.performed -= HandleCameraZoomPerformed;
     }
 
     private void SetInputSystem()
@@ -96,50 +97,50 @@ public class PlayerInputHandler : MonoBehaviour
                 cameraMoveIA = touchInputActionMap.FindAction("CameraMove");
             }
             else
-                Debug.Log("void PlayerController : SetInputSystem() touchInputActionMap is NULL");
+                Debug.LogError("void PlayerController : SetInputSystem() touchInputActionMap is NULL");
         }
         else
-            Debug.Log("void PlayerController : SetInputSystem() inputActions is NULL");
+            Debug.LogError("void PlayerController : SetInputSystem() inputActions is NULL");
     }
 
     // Primary Touch
-    private void OnPrimaryTouchPressed(InputAction.CallbackContext context)
+    private void HandlePrimaryTouchPressed(InputAction.CallbackContext context)
     {
         isPrimaryInteractionPressed = true;
         primaryInteractionStartPosition = primaryTouchPositionIA.ReadValue<Vector2>();
-        onPrimaryInteractionPressed?.Invoke();
+        OnPrimaryInteractionPressed?.Invoke();
     }
 
-    private void OnPrimaryTouchReleased(InputAction.CallbackContext context)
+    private void HandlePrimaryTouchReleased(InputAction.CallbackContext context)
     {
         isPrimaryInteractionPressed = false;
-        onPrimaryInteractionReleased?.Invoke();
+        OnPrimaryInteractionReleased?.Invoke();
     }
 
     // Secondary Touch
-    private void OnSecondaryTouchPressed(InputAction.CallbackContext context)
+    private void HandleSecondaryTouchPressed(InputAction.CallbackContext context)
     {
         isSecondaryInteractionPressed = true;
         secondaryInteractionStartPosition = secondaryTouchPositionIA.ReadValue<Vector2>();
-        onSecondaryInteractionPressed?.Invoke();
+        OnSecondaryInteractionPressed?.Invoke();
     }
 
-    private void OnSecondaryTouchReleased(InputAction.CallbackContext context)
+    private void HandleSecondaryTouchReleased(InputAction.CallbackContext context)
     {
         isSecondaryInteractionPressed = false;
-        onSecondaryInteractionReleased?.Invoke();
+        OnSecondaryInteractionReleased?.Invoke();
     }
 
     // Camera Move
-    private void OnCameraMovePerformed(InputAction.CallbackContext context)
+    private void HandleCameraMovePerformed(InputAction.CallbackContext context)
     {
-        onCameraMovePerformed?.Invoke();
+        OnCameraMovePerformed?.Invoke();
     }
 
     // Camera Zoom
-    private void OnCameraZoomPerformed(InputAction.CallbackContext context)
+    private void HandleCameraZoomPerformed(InputAction.CallbackContext context)
     {
         float value = context.ReadValue<float>();
-        onCameraZoomPerformed?.Invoke(value);
+        OnCameraZoomPerformed?.Invoke(value);
     }
 }

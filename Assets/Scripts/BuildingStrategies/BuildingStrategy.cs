@@ -12,6 +12,11 @@ public abstract class BuildingStrategy
 
     public BuildingStrategy(Building building)
     {
+        if (!building) {
+            Debug.LogError($"[{nameof(BuildingStrategy)}] Building is not valid!");
+            return;
+        }
+
         this.building = building;
     }
 
@@ -28,4 +33,6 @@ public abstract class BuildingStrategy
 
     public abstract void OnConstructionStarted();
     public abstract void OnConstructionFinished();
+
+    public abstract BuildingAction GetInteractPoint(Human human);
 }

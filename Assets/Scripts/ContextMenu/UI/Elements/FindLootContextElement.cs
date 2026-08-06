@@ -42,16 +42,6 @@ public class FindLootContextElement : ContextElement
         if (!boat) return false;
         if (!boat.ShouldFindLoot()) return false;
 
-        var state = boat.CurrentStateEnum;
-        if (state == BoatStateEnum.UnloadingLoot) return false;
-
-        var rider = boat.CurrentRider;
-        if (!rider) return false;
-
-        var citizen = rider.GetComponent<Citizen>();
-        if (!citizen) return false;
-        if (!citizen.IsCitizenAvaliable()) return false;
-
         return true;
     }
 

@@ -4,8 +4,8 @@ public class PopulationItemWidget : ResourceWidget
 {
     private void OnEnable()
     {
-        CreaturesManager.OnCitizenRegistered += OnHumanAdded;
-        CreaturesManager.OnCitizenUnregistered += OnHumanRemoved;
+        CreaturesManager.Instance.OnCitizenRegistered += OnHumanAdded;
+        CreaturesManager.Instance.OnCitizenUnregistered += OnHumanRemoved;
 
         Human.OnHumanRevived += OnHumanRevived;
         Human.OnHumanDied += OnHumanDied;
@@ -17,8 +17,8 @@ public class PopulationItemWidget : ResourceWidget
 
     private void OnDisable()
     {
-        CreaturesManager.OnCitizenRegistered -= OnHumanAdded;
-        CreaturesManager.OnCitizenUnregistered -= OnHumanRemoved;
+        CreaturesManager.Instance.OnCitizenRegistered -= OnHumanAdded;
+        CreaturesManager.Instance.OnCitizenUnregistered -= OnHumanRemoved;
 
         Human.OnHumanRevived -= OnHumanRevived;
         Human.OnHumanDied -= OnHumanDied;

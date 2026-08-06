@@ -32,8 +32,8 @@ public class EquipmentComponent : MonoBehaviour
 
     public void Init(EquipmentData equipmentData)
     {
-        if (equipmentData == null) {
-            Debug.LogError("Equipment Data is not valid");
+        if (equipmentData == null || equipmentData.EquipmentId == null) {
+            Debug.LogError($"[{nameof(EquipmentComponent)}] Equipment Data or Equipment Id is not valid");
             Init();
             return;
         }
@@ -42,14 +42,16 @@ public class EquipmentComponent : MonoBehaviour
 
         var id = equipmentData.EquipmentId.Value;
         var definition = ItemsList.Instance.GetItem(id) as EquipmentDefinition;
-        SetEquipmentAndApply(definition);
+        SetEquipmentAndApply(definition ? definition : defaultEquipment);
     }
 
     public void SetEquipmentAndApply(EquipmentDefinition definition)
     {
-        SetWeaponDefinition(definition);
+        var targetDefinition = definition ? definition : defaultEquipment;
+
+        SetWeaponDefinition(targetDefinition);
         TryDestroyEquipment();
-        TrySpawnEquipment(definition);
+        TrySpawnEquipment(targetDefinition);
 
         OnEquipmentComponentEquiped?.Invoke(this);
     }
@@ -73,6 +75,11 @@ public class EquipmentComponent : MonoBehaviour
 
     public float GetPower()
     {
+        if (!EquipmentDefinition) {
+            Debug.LogError($"[{nameof(EquipmentComponent)}] Equipment Defintion is not valid!");
+            return defaultEquipment ? defaultEquipment.Power : 1;
+        }
+
         var power = EquipmentDefinition.Power;
         var bonusMultiplier = 1 + powerBonus;
         var powerWithBonus = power * bonusMultiplier;
@@ -93,11 +100,18 @@ public class EquipmentComponent : MonoBehaviour
         else {
             EquipmentDefinition = defaultEquipment;
         }
+
+        if (!EquipmentDefinition) {
+            Debug.LogError($"[{nameof(EquipmentComponent)}] Equipment Defintion is not valid!");
+        }
     }
 
     private void TrySpawnEquipment(EquipmentDefinition definition)
     {
-        if (!definition) return;
+        if (!definition) {
+            Debug.LogError($"[{nameof(EquipmentComponent)}] Equipment Defintion is not valid!");
+            return;
+        }
 
         var prefab = definition.EquipmentPrefab;
         if (!prefab) return;

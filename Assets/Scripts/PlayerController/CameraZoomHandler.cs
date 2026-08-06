@@ -26,12 +26,12 @@ public class CameraZoomHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        inputHandler.onCameraZoomPerformed += OnCameraZoomPerformed;
+        inputHandler.OnCameraZoomPerformed += HandleCameraZoomPerformed;
     }
 
     private void OnDisable()
     {
-        inputHandler.onCameraZoomPerformed -= OnCameraZoomPerformed;
+        inputHandler.OnCameraZoomPerformed -= HandleCameraZoomPerformed;
     }
 
     private void Start()
@@ -41,6 +41,8 @@ public class CameraZoomHandler : MonoBehaviour
 
     private void Update()
     {
+        ProcessKeyboardMouseZoom();
+
         if (ShouldMove()) {
             ProcessTouchscreenZoom();
         }
@@ -69,12 +71,19 @@ public class CameraZoomHandler : MonoBehaviour
         zoomVelocity = value * multiplier;
     }
 
+    private void ProcessKeyboardMouseZoom()
+    {
+        if (!inputHandler.cameraZoomIA.IsPressed()) return;
+
+        AddZoomVelocity(inputHandler.CameraZoomInput);
+    }
+
     private void ProcessTouchscreenZoom()
     {
         if (Touchscreen.current == null) return;
 
-        TouchControl primaryTouch = Touchscreen.current.touches[0];
-        TouchControl secondaryTouch = Touchscreen.current.touches[1];
+        var primaryTouch = Touchscreen.current.touches[0];
+        var secondaryTouch = Touchscreen.current.touches[1];
 
         if (!primaryTouch.press.isPressed || !secondaryTouch.press.isPressed) {
             ResetPitch();
@@ -120,7 +129,7 @@ public class CameraZoomHandler : MonoBehaviour
         lastPitch = 0;
     }
 
-    private void OnCameraZoomPerformed(float value)
+    private void HandleCameraZoomPerformed(float value)
     {
         AddZoomVelocity(value);
     }

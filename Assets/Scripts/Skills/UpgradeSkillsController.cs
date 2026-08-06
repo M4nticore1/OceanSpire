@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class UpgradeSkillsController : MonoBehaviour, IClickable
@@ -11,6 +10,8 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
     public bool IsClickable => isClickable;
 
     public event Action OnClicked;
+
+    public static event Action<UpgradeSkillsController> OnSkillsUpgraded;
 
     private void OnEnable()
     {
@@ -29,10 +30,11 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
 
     public void Click()
     {
-        UpgradeLevels();
+        TryUpgradeLevels();
         UpdateClickable();
         selectComponent.Deselect();
 
+        OnSkillsUpgraded?.Invoke(this);
         OnClicked?.Invoke();
     }
 
@@ -48,11 +50,16 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
         return true;
     }
 
-    private void UpgradeLevels()
+    private bool TryUpgradeLevels()
     {
+        bool upgraded = false;
         foreach (var skill in skillComponent.Skills.Values) {
-            skill.TryLevelUp();
+            if (!skill.TryLevelUp()) continue;
+
+            upgraded = true;
         }
+
+        return upgraded;
     }
 
     private void UpdateClickable()

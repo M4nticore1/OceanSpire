@@ -12,11 +12,12 @@ public class WorkersContextElement : ContextElement
 
     protected override bool ShouldShow(ContextMenuTarget target)
     {
-        Building building = target.GetComponent<Building>();
+        var building = target.GetComponent<Building>();
         if (!building) return false;
-
-        if (building.ConstructionComponent.GetUnderConstruction()) return false;
         if (!building.Definition.IsWorkable) return false;
+
+        var pierModule = building.GetComponent<PierModule>();
+        if (building.ConstructionComponent.GetUnderConstruction() && !pierModule) return false;
 
         return true;
     }

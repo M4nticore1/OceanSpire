@@ -4,5 +4,4 @@ using UnityEngine;
 public interface IRaidable
 {
     public List<ItemInstance> GetRaidLoot();
-    public bool CanBeRaided();
 }

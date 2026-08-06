@@ -42,14 +42,16 @@ public class PierModule : BuildingModule
         if (!boatsLoader.IsLoaded) return;
         if (!docksLoader.IsLoaded) return;
 
-        UpdateBoatDocks();
         CreateBoats();
+        UpdateBoatDocks();
         UpdateBoatPositions();
     }
 
     private void CreateBoats()
     {
-        int count = PierConstruction.BoatDocks.Count - boatsManager.CitizenBoatsDict.Count;
+        if (!boatsLoader.IsLoaded) return;
+
+        int count = PierConstruction.BoatDocks.Count - boatsManager.CitizenBoats.Count;
 
         for (int i = 0; i < count; i++) {
             var dockIndex = PierConstruction.BoatDocks.Count - count + i;
@@ -104,7 +106,8 @@ public class PierModule : BuildingModule
                 continue;
             }
 
-            if (boat.CurrentStateEnum == BoatStateEnum.Idle || boat.CurrentStateEnum == BoatStateEnum.UnloadingLoot) {
+            var state = boat.CurrentStateEnum;
+            if (state == BoatStateEnum.Idle || state == BoatStateEnum.UnloadingLoot || (state == BoatStateEnum.MovingToDock && !boat.CurrentRider)) {
                 var dockPoint = boat.DockPoint;
                 if (!dockPoint) {
                     Debug.LogError($"[{nameof(PierModule)}] Dock Point is not valid by index {i}");

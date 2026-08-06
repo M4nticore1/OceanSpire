@@ -22,7 +22,10 @@ public class HealSystem : MonoBehaviour
 
     private void HealCitizens()
     {
-        foreach (var citizen in creaturesManager.Citizens) {
+        for (int i = creaturesManager.Citizens.Count - 1; i >= 0; i--) {
+            var citizen = creaturesManager.Citizens[i];
+            if (!citizen) continue;
+
             if (!ShouldHeal(citizen)) continue;
 
             var healthAmount = healPerSecond * healFrequence;

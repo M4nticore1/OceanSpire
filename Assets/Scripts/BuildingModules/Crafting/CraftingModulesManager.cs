@@ -35,7 +35,13 @@ public class CraftingModulesManager : MonoBehaviour
 
     private void Update()
     {
-        foreach (var module in craftingModules) {
+        for (int i = craftingModules.Count - 1; i >= 0; i--) {
+            var module = craftingModules[i];
+            if (!module) {
+                craftingModules.RemoveAt(i);
+                continue;
+            }
+
             module.Tick();
         }
     }

@@ -231,11 +231,11 @@ GameObject:
   - component: {fileID: 6868078582365200528}
   - component: {fileID: 3091725272005031583}
   - component: {fileID: 994804609152676870}
-  - component: {fileID: 3562289357403366483}
-  - component: {fileID: 8263521835559686969}
   - component: {fileID: 2391196798673474426}
   - component: {fileID: 3291799388632510304}
   - component: {fileID: -8414172596779904026}
+  - component: {fileID: 8577389799235868350}
+  - component: {fileID: 9031327330320175662}
   m_Layer: 0
   m_Name: Building
   m_TagString: Untagged
@@ -402,6 +402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelComponent
+  <Level>k__BackingField: 1
 --- !u!114 &994804609152676870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -416,30 +417,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeComponent
   levelComponent: {fileID: 3091725272005031583}
   constructionComponent: {fileID: 6868078582365200528}
---- !u!114 &3562289357403366483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6989354260929803138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db861ccdaeef2164ba0ebba76c2e97dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorkComponent
---- !u!114 &8263521835559686969
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6989354260929803138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a47b443484cb57945943c2d69bc23bda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RaidComponent
 --- !u!114 &2391196798673474426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,6 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5603e2e7f0f2adf4db588bc32c5e4ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectComponent
+  <IsSelected>k__BackingField: 0
   isClickable: 0
 --- !u!114 &-8414172596779904026
 MonoBehaviour:
@@ -479,3 +457,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ContextMenuTarget
   selectComponent: {fileID: 3291799388632510304}
   showContextMenu: 1
+--- !u!114 &8577389799235868350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6989354260929803138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32fbcdfadf0da044c9e3ee8f3b480208, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingCitizensHandler
+  interactors: []
+  currentInteractors: []
+--- !u!114 &9031327330320175662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6989354260929803138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac332bd5661d91848bb5b6b6c3cb623a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingRaidersHandler
+  interactors: []
+  currentInteractors: []

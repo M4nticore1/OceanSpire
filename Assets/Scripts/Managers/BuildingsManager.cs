@@ -95,6 +95,11 @@ public class BuildingsManager : MonoBehaviour
         var buildings = new List<TowerBuilding>();
 
         foreach (var floor in BuiltFloors) {
+            if (!floor) {
+                Debug.LogError($"[{nameof(BuildingsManager)}] Floor is not valid!");
+                continue;
+            }
+
             foreach (var roomPlace in floor.RoomBuildingPlaces) {
                 var building = roomPlace.PlacedBuilding;
                 if (!building) continue;
@@ -104,6 +109,28 @@ public class BuildingsManager : MonoBehaviour
         }
 
         return buildings;
+    }
+
+    public List<TowerBuilding> GetAvalableRaidableBuildings()
+    {
+        var raidableBuildings = new List<TowerBuilding>();
+
+        foreach (var floor in BuiltFloors) {
+            if (!floor) {
+                Debug.LogError($"[{nameof(BuildingsManager)}] Floor is not valid!");
+                continue;
+            }
+
+            foreach (var roomPlace in floor.RoomBuildingPlaces) {
+                var building = roomPlace.PlacedBuilding;
+                if (!building) continue;
+                if (!building.CanBeRaided()) continue;
+
+                raidableBuildings.Add(building);
+            }
+        }
+
+        return raidableBuildings;
     }
 
     public static int GetFloorIndexByHeight(float height)

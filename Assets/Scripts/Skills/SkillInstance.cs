@@ -22,11 +22,12 @@ public class SkillInstance : ILocalizable
         OnXpChanged?.Invoke(this, CurrentXp);
     }
 
-    public void TryLevelUp()
+    public bool TryLevelUp()
     {
-        if (CurrentXp < 1f) return;
+        if (CurrentXp < 1f) return false;
 
         LevelUp();
+        return true;
     }
 
     public void LevelUp()

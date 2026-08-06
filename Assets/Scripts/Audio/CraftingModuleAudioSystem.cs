@@ -30,13 +30,23 @@ public class CraftingModuleAudioSystem : AudioSystem
 
     private void OnCraftingEnded(CraftingModule craftingModule, CraftItemInstance craftItem)
     {
-        if (!buildingsLoader.IsLoaded) return;
+        if (!ShouldPlay()) return;
 
         AudioUtils.PlaySFXAtPosition(craftingEndedSFX, craftingModule.transform.position, minDistance, maxDistance, mixerGroup);
     }
 
     private void OnItemCollected(CraftingModule craftingModule, CraftItemInstance craftItem)
     {
+        if (!ShouldPlay()) return;
+
         AudioUtils.PlaySFXAtPosition(itemCollectedSFX, craftingModule.transform.position, minDistance, maxDistance, mixerGroup);
+    }
+
+    private bool ShouldPlay()
+    {
+        if (!buildingsLoader.IsLoaded) return false;
+        if (Time.time <= 1f) return false;
+
+        return true;
     }
 }

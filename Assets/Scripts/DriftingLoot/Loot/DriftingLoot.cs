@@ -38,12 +38,12 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
     protected virtual void OnEnable()
     {
-        movement.OnReachedDestination += OnReachedDestination;
+        movement.OnDestinationReached += OnReachedDestination;
     }
 
     protected virtual void OnDisable()
     {
-        movement.OnReachedDestination -= OnReachedDestination;
+        movement.OnDestinationReached -= OnReachedDestination;
     }
 
     protected virtual void OnDestroy()

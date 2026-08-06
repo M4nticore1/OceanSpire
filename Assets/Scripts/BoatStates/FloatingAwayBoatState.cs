@@ -10,7 +10,6 @@ public class FloatingAwayBoatState : BoatState
     public override void Enter()
     {
         boat.RemoveTargetLoot();
-        boat.Movement.SetAgentEnabled(true);
     }
 
     public override void Exit()

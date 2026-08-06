@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,16 +6,16 @@ public class BoatDocksManager : MonoBehaviour
 {
     public static BoatDocksManager Instance;
 
-    public List<BoatDockPoint> CitizenBoatDocks { get; private set; } = new List<BoatDockPoint>();
+    public List<BoatDockPoint> CitizenBoatDocks { get; private set; } = new();
 
     [SerializeField] private BoatDockPoint[] wandererDockPoints;
-    public BoatDockPoint[] WandererDockPoints => wandererDockPoints;
+    public IReadOnlyList<BoatDockPoint> WandererDockPoints => wandererDockPoints;
 
     [SerializeField] private BoatDockPoint[] raiderDockPoints;
-    public BoatDockPoint[] RaiderDockPoints => raiderDockPoints;
+    public IReadOnlyList<BoatDockPoint> RaiderDockPoints => raiderDockPoints;
 
     [SerializeField] private BoatDockPoint[] evictDockPoints;
-    public BoatDockPoint[] EvictDockPoints => evictDockPoints;
+    public IReadOnlyList<BoatDockPoint> EvictDockPoints => evictDockPoints;
 
     private void Awake()
     {
@@ -40,5 +41,39 @@ public class BoatDocksManager : MonoBehaviour
         if (!CitizenBoatDocks.Contains(dockPoint)) return;
 
         CitizenBoatDocks.Remove(dockPoint);
+    }
+
+    public BoatDockPoint GetCitizenBoatDock(int index)
+    {
+        return GetBoatDOckPoint(CitizenBoatDocks, index);
+    }
+
+    public BoatDockPoint GetWandererBoatDock(int index)
+    {
+        return GetBoatDOckPoint(wandererDockPoints, index);
+    }
+
+    public BoatDockPoint GetRaiderBoatDock(int index)
+    {
+        return GetBoatDOckPoint(raiderDockPoints, index);
+    }
+
+    public BoatDockPoint GetEvictBoatDock(int index)
+    {
+        return GetBoatDOckPoint(evictDockPoints, index);
+    }
+
+    private BoatDockPoint GetBoatDOckPoint(IReadOnlyList<BoatDockPoint> docksList, int index)
+    {
+        if (index < 0) {
+            Debug.LogError($"[{nameof(BoatDocksManager)}] Index is less than 0!");
+            return null;
+        }
+        if (docksList.Count <= index) {
+            Debug.LogError($"[{nameof(BoatDocksManager)}] {nameof(docksList)} count is {docksList.Count} but index is greater or equal ({index})!");
+            return null;
+        }
+
+        return docksList[index];
     }
 }

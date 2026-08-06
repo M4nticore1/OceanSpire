@@ -20,7 +20,7 @@ public class Wanderer : Human
         CreaturesManager.Instance.UnregisterWanderer(this);
     }
 
-    protected override void OnInit(CreatureData data)
+    protected override void HandleInit(CreatureData data)
     {
         var wandererData = data as WandererData;
 
@@ -29,13 +29,18 @@ public class Wanderer : Human
 
         SelectComponent.SetClickable(false);
 
-        base.OnInit(data);
+        base.HandleInit(data);
 
         var ridingBoat = BoatRider.RidingBoat;
         if (!ridingBoat) {
             Debug.LogError($"[{nameof(Wanderer)}] Riding Boat is not valid!");
             Destroy(gameObject);
         }
+    }
+
+    protected override CreatureData GetDefaultData()
+    {
+        return WandererData.Default();
     }
 
     protected override void DetermineNextAction()
@@ -124,14 +129,14 @@ public class Wanderer : Human
     public void Accept()
     {
         IsAccepted = true;
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     public void Reject()
     {
         IsRejected = true;
         RemoveBoatDock();
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     private void RemoveBoatDock()

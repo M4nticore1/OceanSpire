@@ -33,29 +33,29 @@ public class Raider : Human, IProgressable
     {
         base.Tick();
 
-        if (!IsRaidingBuilding) return;
+        if (IsRaidingBuilding) {
+            currentRaidBuildingTime += Time.deltaTime;
+            if (currentRaidBuildingTime < raidBuildingTime) return;
 
-        currentRaidBuildingTime += Time.deltaTime;
-        if (currentRaidBuildingTime < raidBuildingTime) return;
+            AddLoot();
+            StopRaidingBuilding();
+            FinishRaid();
 
-        AddLoot();
-        StopRaidingBuilding();
-        FinishRaid();
+            var interactBuilding = InteractComponent.InteractBuilding;
+            InteractComponent.TryStopInteracting(interactBuilding);
+            InteractComponent.RemoveInteractBuilding();
 
-        var interactBuilding = InteractComponent.InteractBuilding;
-        InteractComponent.TryStopInteracting(interactBuilding);
-        InteractComponent.RemoveInteractBuilding();
+            UpdateTargetBoat();
 
-        UpdateTargetBoat();
-
-        var targetBoat = BoatRider.TargetBoat;
-        if (!targetBoat) {
-            Debug.LogError($"[{nameof(Raider)}] Target Boat is not valid!");
-            Destroy(gameObject);
+            var targetBoat = BoatRider.TargetBoat;
+            if (!targetBoat) {
+                Debug.LogError($"[{nameof(Raider)}] Target Boat is not valid!");
+                Destroy(gameObject);
+            }
         }
     }
 
-    protected override void OnInit(CreatureData data)
+    protected override void HandleInit(CreatureData data)
     {
         var raiderData = data as RaiderData;
 
@@ -65,28 +65,33 @@ public class Raider : Human, IProgressable
         Movement.SetMovementMethod(MovementMethod.Run);
         SelectComponent.SetClickable(false);
 
-        base.OnInit(data);
+        base.HandleInit(data);
+    }
+
+    protected override CreatureData GetDefaultData()
+    {
+        return RaiderData.Default();
     }
 
     protected override void DetermineNextAction()
     {
         if (ShouldStartInteracting()) {
-            //Debug.Log("StartInteracting");
+            Debug.Log($"{name} StartInteracting");
             StartInteracting();
             return;
         }
         if (ShouldBoatMoveToDock()) {
-            //Debug.Log("BoatMoveToDock");
+            Debug.Log($"{name} BoatMoveToDock");
             BoatMoveToDock();
             return;
         }
         if (ShouldBoatFloatAway()) {
-            //Debug.Log("BoatFloatAway");
+            Debug.Log($"{name} BoatFloatAway");
             BoatFloatAway();
             return;
         }
         if (ShouldStartAttacking()) {
-            //Debug.Log("StartAttacking");
+            Debug.Log($"{name} StartAttacking");
             StartAttacking();
             return;
         }
@@ -106,10 +111,12 @@ public class Raider : Human, IProgressable
     protected override void StartAttacking()
     {
         var currentBuilding = CityNavigator.CurrentBuilding;
-        var currentWorkers = currentBuilding.WorkComponent.CurrentWorkers;
+        var currentWorkers = currentBuilding.CitizensHandler.CurrentInteractors;
 
         foreach (var worker in currentWorkers) {
-            if (!worker.IsCitizenAvaliable()) continue;
+            var citizen = worker as Citizen;
+            if (!citizen) continue;
+            if (!citizen.IsCitizenAvaliable()) continue;
 
             AttackComponent.SetTarget(worker.AttackComponent);
             AttackComponent.MoveToTarget();
@@ -158,9 +165,11 @@ public class Raider : Human, IProgressable
 
         if (currentBuilding != InteractComponent.InteractBuilding) return false;
 
-        var currentWorkers = currentBuilding.WorkComponent.CurrentWorkers;
+        var currentWorkers = currentBuilding.CitizensHandler.CurrentInteractors;
         foreach (var worker in currentWorkers) {
-            if (!worker.IsCitizenAvaliable()) continue;
+            var citizen = worker as Citizen;
+            if (!citizen) continue;
+            if (!citizen.IsCitizenAvaliable()) continue;
 
             return true;
         }
@@ -170,21 +179,21 @@ public class Raider : Human, IProgressable
 
     protected override void OnInteractBuildingSeted(Building building)
     {
-        building.RaidComponent.AddRaider(this);
+        building.RaidersHandler.AddInteractor(this);
 
         base.OnInteractBuildingSeted(building);
     }
 
     protected override void OnInteractBuildingRemoved(Building building)
     {
-        building.RaidComponent.RemoveRaider(this);
+        building.RaidersHandler.RemoveInteractor(this);
 
         base.OnInteractBuildingRemoved(building);
     }
 
     protected override void OnInteractionStarted(Building building)
     {
-        building.RaidComponent.AddCurrentRaider(this);
+        building.RaidersHandler.AddCurrentInteractor(this);
         StartRaidingBuilding();
 
         base.OnInteractionStarted(building);
@@ -192,7 +201,7 @@ public class Raider : Human, IProgressable
 
     protected override void OnInteractionStopped(Building building)
     {
-        building.RaidComponent.RemoveCurrentRaider(this);
+        building.RaidersHandler.RemoveCurrentInteractor(this);
         StopRaidingBuilding();
 
         base.OnInteractionStopped(building);

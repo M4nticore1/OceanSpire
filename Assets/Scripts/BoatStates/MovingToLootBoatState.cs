@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class MovingToLootBoatState : FindingLootBoatState
 {
+    private float updateDestinationFrequency = 0.5f;
+    private float updateDestinationTime = 0.0f;
+
     public MovingToLootBoatState(Boat boat) : base(boat)
     {
 
@@ -18,7 +21,12 @@ public class MovingToLootBoatState : FindingLootBoatState
     {
         base.Tick();
 
-        TryStartMovingToTarget();
+        updateDestinationTime += Time.deltaTime;
+
+        if (updateDestinationTime > updateDestinationFrequency) {
+            TryStartMovingToTarget();
+            updateDestinationTime = 0;
+        }
     }
 
     public override void OnReachedPath()

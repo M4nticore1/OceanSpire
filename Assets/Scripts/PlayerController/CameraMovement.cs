@@ -16,17 +16,17 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float cameraMoveLerpSpeed = 10.0f;
     [SerializeField] private float cameraStopMoveSpeed = 6.0f;
 
-    [SerializeField] private float movingThreshold = 0.01f;
+    [SerializeField] private float movingThreshold = 0.0005f;
     private bool inDeadZone = false;
 
     private void OnEnable()
     {
-        playerInputHandler.onPrimaryInteractionPressed += OnPrimaryInteractionPressed;
+        playerInputHandler.OnPrimaryInteractionPressed += OnPrimaryInteractionPressed;
     }
 
     private void OnDisable()
     {
-        playerInputHandler.onPrimaryInteractionPressed -= OnPrimaryInteractionPressed;
+        playerInputHandler.OnPrimaryInteractionPressed -= OnPrimaryInteractionPressed;
     }
 
     private void Update()

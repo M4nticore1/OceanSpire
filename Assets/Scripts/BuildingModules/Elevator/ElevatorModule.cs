@@ -80,7 +80,7 @@ public class ElevatorModule : BuildingModule, IElectricible
     private bool CanGetSpawnedCabin()
     {
         if (!SpawnedElevatorCabin) {
-            Debug.LogError("SpawnedElevatorCabin is not valid");
+            Debug.LogError($"[{nameof(ElevatorModule)}] Spawned Elevator Cabin is not valid!");
             return false;
         }
 
@@ -98,6 +98,11 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     public bool IsPossibleToExit()
     {
+        if (!SpawnedElevatorCabin) {
+            Debug.LogError($"[{nameof(ElevatorModule)}] Spawned Elevator Cabin is not valid!");
+            return false;
+        }
+
         if (SpawnedElevatorCabin.IsMoving) return false;
 
         return true;
@@ -123,15 +128,15 @@ public class ElevatorModule : BuildingModule, IElectricible
     {
         if (!CanGetSpawnedCabin()) return null;
 
-        var interaction = SpawnedElevatorCabin.GetInteraction(elevatorPassenger.CityNavigator);
+        var interaction = SpawnedElevatorCabin.GetInteractPoint(elevatorPassenger.CityNavigator);
         if (interaction == null) {
-            Debug.LogError("interaction is not valid", this);
+            Debug.LogError($"[{nameof(ElevatorModule)}] Interaction is not valid", this);
             return null;
         }
 
         var waypoint = interaction.GetWaypoint(0);
         if (waypoint == null) {
-            Debug.LogError("waypoint is not valid", this);
+            Debug.LogError($"[{nameof(ElevatorModule)}] Waypoint is not valid", this);
             return null;
         }
 
@@ -150,9 +155,12 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     public void SetCabin(ElevatorCabinConstruction cabin)
     {
-        if (!cabin) return;
-        if (cabin == SpawnedElevatorCabin) return;
+        if (!cabin) {
+            Debug.LogError($"[{nameof(ElevatorModule)}] Cabin Construction is not valid!");
+            return;
+        }
 
+        if (cabin == SpawnedElevatorCabin) return;
         SpawnedElevatorCabin = cabin;
     }
 

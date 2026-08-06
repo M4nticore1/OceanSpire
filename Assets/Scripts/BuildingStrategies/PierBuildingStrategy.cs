@@ -1,4 +1,7 @@
+using Cysharp.Threading.Tasks.Triggers;
+using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class PierBuildingStrategy : BuildingStrategy
@@ -22,6 +25,13 @@ public class PierBuildingStrategy : BuildingStrategy
 
     public override void OnInteractBuildingSet(CreatureInteractComponent interactor)
     {
+        if (!interactor) return;
+
+        var boatRider = interactor.GetComponent<BoatRider>();
+        if (!boatRider) return;
+
+        TryAssignFreeBoat(boatRider);
+
         //if (!BoatsManager.Instance) {
         //    Debug.Log("BoatManager is not on the scene.");
         //    return;
@@ -61,8 +71,6 @@ public class PierBuildingStrategy : BuildingStrategy
         //        boatRider.TargetBoat.SetState(BoatStateEnum.FindingLoot);
         //    }
         //}
-
-        UpdateTargetBoats();
     }
 
     public override void OnInteractBuildingRemove(CreatureInteractComponent interactor)
@@ -70,7 +78,7 @@ public class PierBuildingStrategy : BuildingStrategy
         var boatRider = interactor.GetComponent<BoatRider>();
         boatRider.RemoveTargetBoat();
 
-        UpdateTargetBoats();
+        //UpdateTargetBoats();
     }
 
     public override void OnStartedInteracting(CreatureInteractComponent interactor)
@@ -98,10 +106,47 @@ public class PierBuildingStrategy : BuildingStrategy
 
     }
 
+    public override BuildingAction GetInteractPoint(Human human)
+    {
+        var boatRider = human.GetComponent<BoatRider>();
+        if (!boatRider) {
+            Debug.LogError($"[{nameof(PierBuildingStrategy)}] Boat Rider is not valid!");
+            return null;
+        }
+
+        var index = GetFirstFreeBoatIndex();
+
+        var targetBoat = boatRider.TargetBoat;
+        if (targetBoat) {
+            index = BoatsManager.Instance.CitizenBoats.ToList().IndexOf(targetBoat);
+        }
+        else {
+            index = GetFirstFreeBoatIndex();
+            if (index == null) {
+                Debug.LogError($"[{nameof(PierBuildingStrategy)}] Not free boats fount at {building}!");
+                return null;
+            }
+        }
+
+        var construction = building.SpawnedConstruction;
+        if (!construction) {
+            Debug.LogError($"[{nameof(PierBuildingStrategy)}] Construction is not valid at {building}!");
+            return null;
+        }
+
+        var interaction = construction.GetInteractPoint(index.Value);
+        if (interaction == null) {
+            Debug.LogError($"[{nameof(PierBuildingStrategy)}] Interaction is not valid at index {index.Value}!");
+            return null;
+        }
+
+        return interaction;
+    }
+
     private void UpdateTargetBoats()
     {
-        for (int i = 0; i < building.WorkComponent.Workers.Count; i++) {
-            var worker = building.WorkComponent.Workers[i];
+        for (int i = 0; i < building.CitizensHandler.Interactors.Count; i++) {
+            var worker = building.CitizensHandler.Interactors[i];
             if (!worker) {
                 Debug.LogError($"Worker not found at {building.name}");
                 continue;
@@ -128,5 +173,46 @@ public class PierBuildingStrategy : BuildingStrategy
 
             boatRider.TryStopEnteringBoat();
         }
+    }
+
+    private void TryAssignFreeBoat(BoatRider boatRider)
+    {
+        if (!boatRider) return;
+
+        var ridingBoat = boatRider.RidingBoat;
+        if (ridingBoat) {
+            boatRider.TrySetTargetBoat(ridingBoat);
+            Debug.Log("RidingBoat");
+        }
+        else {
+            Debug.Log("FirstBoat");
+            var boat = GetFirstFreeBoat();
+            if (!boat) return;
+
+            boatRider.TrySetTargetBoat(boat);
+        }
+    }
+
+    private Boat GetFirstFreeBoat()
+    {
+        var index = GetFirstFreeBoatIndex();
+        if (index == null) return null;
+
+        return BoatsManager.Instance.CitizenBoats[index.Value];
+    }
+
+    private int? GetFirstFreeBoatIndex()
+    {
+        var citizenBoats = BoatsManager.Instance.CitizenBoats;
+        for (int i = 0; i < citizenBoats.Count; i++) {
+            var boat = citizenBoats[i];
+            if (!boat) continue;
+            if (boat.TargetRider) continue;
+            if (boat.CurrentRider) continue;
+
+            return i;
+        }
+
+        return null;
     }
 }

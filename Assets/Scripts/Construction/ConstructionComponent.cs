@@ -11,6 +11,7 @@ public class ConstructionComponent : MonoBehaviour
     public long? ConstructionFinishTime { get; private set; } = null;
 
     public float ConstructionTimeReduction { get; private set; } = 0f;
+    public bool IsUnderConstruction => ConstructionFinishTime != null;
 
     public event Action OnConstructionStarted;
     public event Action OnConstructionFinished;

@@ -100,8 +100,8 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void StopMoving()
     {
         SetIsMoving(false);
+        RemoveMovingToFloorTimer();
 
-        // Stop entities riding
         foreach (var rider in ridingPassengers.ToArray()) {
             rider.OnElevatorStopped();
         }
@@ -267,6 +267,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     {
         if (TargetFloor == FloorIndex) return;
 
+        RemoveMovingToFloorTimer();
         TimerManager.Instance.StartTimer(startMovingTimerHandle, delayToStartMoving, StartMovingToTargetFloor);
     }
 

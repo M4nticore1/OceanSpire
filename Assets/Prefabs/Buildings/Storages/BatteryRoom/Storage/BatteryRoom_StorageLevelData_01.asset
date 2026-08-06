@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: BatteryRoom_StorageLevelData_01
   m_EditorClassIdentifier: 
   stacks:
-  - stackEnum: 2
+  - stackEnum: 1
     amount: 100
-  - stackEnum: 7
-    amount: 25
-  storageItems: []
-  storageItemCategories: []
+  raidLossRate: 0.1

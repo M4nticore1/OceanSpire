@@ -29,14 +29,13 @@ public class Movement : MonoBehaviour
 
     public event Action OnMovementStarted;
     public event Action OnMovementStopped;
-    public event Action OnReachedDestination;
+    public event Action OnDestinationReached;
 
     private void Update()
     {
-        if (!IsMoving) return;
-        if (!IsDestinationReached()) return;
-
-        StopMoving();
+        if (IsMoving && IsDestinationReached()) {
+            StopMoving();
+        }
     }
 
     public void Move(Vector3 direction, float speed)
@@ -68,7 +67,7 @@ public class Movement : MonoBehaviour
     public bool TryMoveTo(Transform transform)
     {
         if (!transform) {
-            Debug.LogError("Transform is not valid!");
+            Debug.LogError($"[{nameof(Movement)}] Transform is not valid!");
             return false;
         }
 
@@ -78,61 +77,37 @@ public class Movement : MonoBehaviour
         return true;
     }
 
-    private Coroutine moveCoroutine;
-
-    public bool TryMoveTo(Vector3 position)
+    public bool TryMoveTo(Vector3 position, bool useReachedPosition = true)
     {
         if (!CanStartMoving()) return false;
+        if (!useReachedPosition && IsReachedPosition(position)) return false;
 
-        if (moveCoroutine != null) {
-            StopCoroutine(moveCoroutine);
-            moveCoroutine = null;
-        }
-
-        moveCoroutine = StartCoroutine(ApplyMovementAtEndOfFrame(position));
-
-        return true;
-    }
-
-    private IEnumerator ApplyMovementAtEndOfFrame(Vector3 position)
-    {
-        yield return new WaitForEndOfFrame();
-
-        moveCoroutine = null;
-
-        if (IsReachedPosition(position)) {
-            TargetPosition = position;
-            navAgent.ResetPath();
-            IsMoving = false;
-            OnReachedDestination?.Invoke();
-            yield break;
-        }
+        //navAgent.ResetPath();
+        //navAgent.Warp(transform.position);
 
         TargetPosition = position;
         RemoveTargetRotation();
 
-        navAgent.isStopped = false;
+        if (IsReachedPosition(position)) {
+            IsMoving = false;
+            OnDestinationReached?.Invoke();
+            return true;
+        }
+
         if (navAgent.SetDestination(position)) {
             IsMoving = true;
             OnMovementStarted?.Invoke();
+            return true;
         }
-        else {
-            Debug.Log("Failed to set destination to: " + position);
-        }
+
+        return false;
     }
 
     public bool StopMoving()
     {
-        if (moveCoroutine != null) {
-            StopCoroutine(moveCoroutine);
-            moveCoroutine = null;
-        }
-
         if (!CanStopMoving()) return false;
 
-        navAgent.isStopped = true;
         navAgent.ResetPath();
-
         var lastIsMoving = IsMoving;
         IsMoving = false;
 
@@ -141,7 +116,7 @@ public class Movement : MonoBehaviour
         }
 
         if (IsDestinationReached()) {
-            OnReachedDestination?.Invoke();
+            OnDestinationReached?.Invoke();
         }
 
         return true;
@@ -149,8 +124,14 @@ public class Movement : MonoBehaviour
 
     public bool CanStartMoving()
     {
-        if (!navAgent.enabled) return false;
-        if (!navAgent.isOnNavMesh) return false;
+        if (!navAgent.enabled) {
+            //Debug.LogError($"[{nameof(Movement)}] Nav Agent is not enabled! Movement blocked.");
+            return false;
+        }
+        if (!navAgent.isOnNavMesh) {
+            //Debug.LogError($"[{nameof(Movement)}] Nav Agent is not on nav mesh! Movement blocked.");
+            return false;
+        }
 
         return true;
     }
@@ -167,7 +148,6 @@ public class Movement : MonoBehaviour
     public bool IsDestinationReached()
     {
         if (IsReachedPosition(TargetPosition)) return true;
-        //if (navAgent.pathStatus == NavMeshPathStatus.PathComplete) return true;
 
         return false;
     }

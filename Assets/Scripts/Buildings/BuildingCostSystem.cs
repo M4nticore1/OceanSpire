@@ -7,29 +7,51 @@ public class BuildingCostSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        Building.OnBuildingInited += OnBuildingInited;
-        Building.OnBuildingDemolished += OnBuildingDemolished;
+        Building.OnBuildingInited += HandleBuildingInited;
+        Building.OnBuildingDemolished += HandleBuildingDemolished;
+        UpgradeComponent.OnGlobalUpgradeStarted += HandleUpgradeStarted;
     }
 
     private void OnDisable()
     {
-        Building.OnBuildingInited -= OnBuildingInited;
-        Building.OnBuildingDemolished -= OnBuildingDemolished;
+        Building.OnBuildingInited -= HandleBuildingInited;
+        Building.OnBuildingDemolished -= HandleBuildingDemolished;
+        UpgradeComponent.OnGlobalUpgradeStarted -= HandleUpgradeStarted;
     }
 
-    private void OnBuildingInited(Building building)
+    private void HandleBuildingInited(Building building)
     {
         if (!ShouldWork()) return;
 
+        SpendResources(building);
+    }
+
+    private void HandleUpgradeStarted(UpgradeComponent component)
+    {
+        if (!ShouldWork()) return;
+
+        var building = component.GetComponent<Building>();
+        if (!building) return;
+
+        SpendResources(building);
+    }
+
+    private void HandleBuildingDemolished(Building building)
+    {
+        if (!ShouldWork()) return;
+
+        RefundResources(building);
+    }
+
+    private void SpendResources(Building building)
+    {
         foreach (var resource in building.GetResourcesToBuild()) {
             cityStorage.Inventory.RemoveItem(resource.Definition.ItemId, resource.Amount);
         }
     }
 
-    private void OnBuildingDemolished(Building building)
+    private void RefundResources(Building building)
     {
-        if (!ShouldWork()) return;
-
         foreach (var resource in building.GetResourcesToRefund()) {
             cityStorage.Inventory.AddItem(resource.Definition.ItemId, resource.Amount);
         }

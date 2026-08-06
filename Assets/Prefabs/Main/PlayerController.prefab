@@ -374,8 +374,8 @@ MonoBehaviour:
   cameraBottomBoundaryPadding: 5
   cameraVerticalReturnSpeed: 5
   cameraMoveLerpSpeed: 12
-  cameraStopMoveSpeed: 6
-  movingThreshold: 0.001
+  cameraStopMoveSpeed: 7.5
+  movingThreshold: 0.0005
 --- !u!82 &7934789100966676524
 AudioSource:
   m_ObjectHideFlags: 0
@@ -874,6 +874,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5303370841661534003, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303370841661534003, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303370841661534003, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5323392907551205864, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -920,6 +932,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5699937759903658623, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5773771831091139581, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5773771831091139581, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5857975137450295554, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
@@ -1116,6 +1136,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7952587764401400754, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8657972594845066358, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8675918793925499717, guid: 3c2c78b2e9db1224e8acd8b3e636f2f5, type: 3}

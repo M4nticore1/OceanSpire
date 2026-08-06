@@ -7,7 +7,9 @@ public class HealthComponent : MonoBehaviour, ILocalizable
     [SerializeField] private float maxHealth = 100f;
     public float MaxHealth => maxHealth;
 
-    public float CurrentHealth { get; private set; } = 0;
+    [SerializeField] private float currentHealth = 0;
+    public float CurrentHealth => currentHealth;
+
     [field: SerializeField] public bool IsAlive { get; private set; } = true;
 
     public event Action OnHealthChanged;
@@ -50,7 +52,7 @@ public class HealthComponent : MonoBehaviour, ILocalizable
 
     public void SetCurrentHealth(float value)
     {
-        CurrentHealth = value;
+        currentHealth = value;
         OnHealthChanged?.Invoke();
 
         if (ShouldDie()) {

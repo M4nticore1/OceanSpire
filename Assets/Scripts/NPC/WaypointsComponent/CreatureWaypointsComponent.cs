@@ -26,19 +26,6 @@ public class CreatureWaypointsComponent : MonoBehaviour
         CreatureWaypointsManager.Instance.UnregisterComponent(this);
     }
 
-    public void Tick()
-    {
-        if (!interactComponent.InteractBuilding) return;
-        if (!interactComponent.IsInteracting) return;
-
-        CurrentWaypointTime += Time.deltaTime;
-
-        if (!ShouldGoToNextWaypoint()) return;
-
-        UpdateWaypoint();
-        GoToNextWaypoint();
-    }
-
     public void Init(CreatureWaypointsComponentData waypointsData)
     {
         if (waypointsData == null) {
@@ -50,9 +37,24 @@ public class CreatureWaypointsComponent : MonoBehaviour
         CurrentWaypointTime = waypointsData.CurrentWaypointTime;
     }
 
+    public void Tick()
+    {
+        if (!interactComponent.InteractBuilding) return;
+        if (!interactComponent.IsInteracting) return;
+
+        var interaction = GetCurrentInteractionPoint();
+        if (interaction.GetWaypoint(CurrentWaypointIndex).ActionTime <= 0) return;
+
+        CurrentWaypointTime += Time.deltaTime;
+        if (!ShouldGoToNextWaypoint()) return;
+
+        UpdateWaypoint();
+        GoToNextWaypoint();
+    }
+
     public BuildingActionWaypoint GetCurrentWaypoint()
     {
-        var interaction = GetCurrentBuildingInteraction();
+        var interaction = GetCurrentInteractionPoint();
         if (interaction == null) {
             Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Building Interaction is not valid at building {cityNavigator.CurrentBuilding}!");
             return null;
@@ -63,7 +65,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
 
     private void UpdateWaypoint()
     {
-        var interaction = GetCurrentBuildingInteraction();
+        var interaction = GetCurrentInteractionPoint();
         if (interaction == null) {
             Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Building Interaction is not valid at building {cityNavigator.CurrentBuilding}!");
             return;
@@ -106,21 +108,21 @@ public class CreatureWaypointsComponent : MonoBehaviour
         return true;
     }
 
-    private BuildingAction GetCurrentBuildingInteraction()
+    private BuildingAction GetCurrentInteractionPoint()
     {
         var targetBuilding = cityNavigator.TargetBuilding;
         if (!targetBuilding) {
-            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] TargetBuilding is not valid!");
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Target Building is not valid!");
             return null;
         }
 
-        var construction = targetBuilding.SpawnedConstruction;
-        if (!construction) {
-            Debug.LogError("Construction is not valid ", this);
+        var human = GetComponent<Human>();
+        if (!human) {
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Human is not valid!");
             return null;
         }
 
-        return construction.GetInteraction(cityNavigator);
+        return targetBuilding.GetInteractPoint(human);
     }
 
     private void OnInteractionStarted(Building building)

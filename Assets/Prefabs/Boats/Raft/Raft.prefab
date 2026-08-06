@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: boatData
       value: 
       objectReference: {fileID: 11400000, guid: 2296cf1ef18c45345ac7d3385c2c5d6b, type: 2}
+    - target: {fileID: 8520330495291878649, guid: 679b2165b2bee36439352713bb868b16, type: 3}
+      propertyPath: <CurrentStatus>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9149124761615220950, guid: 679b2165b2bee36439352713bb868b16, type: 3}
       propertyPath: m_Size.x
       value: 4

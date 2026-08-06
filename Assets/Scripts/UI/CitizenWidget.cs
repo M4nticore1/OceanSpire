@@ -99,7 +99,7 @@ public class CitizenWidget : MonoBehaviour
 
         if (!selectedBuilding) return;
         if (selectedBuilding == interactBuilding) return;
-        if (selectedBuilding.WorkComponent.Workers.Count >= selectedBuilding.LevelDefinition.MaxHumansCount) return;
+        if (selectedBuilding.CitizensHandler.Interactors.Count >= selectedBuilding.LevelDefinition.MaxHumansCount) return;
 
         interactComponent.SetInteractBuilding(selectedBuilding);
     }

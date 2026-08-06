@@ -18,14 +18,14 @@ public class CreaturesManager : MonoBehaviour
     private List<Raider> raiders = new();
     public IReadOnlyList<Raider> Raiders => raiders;
 
-    public static event Action<Human> OnCitizenRegistered;
-    public static event Action<Human> OnCitizenUnregistered;
+    public event Action<Human> OnCitizenRegistered;
+    public event Action<Human> OnCitizenUnregistered;
 
-    public static event Action<Human> OnWandererRegistered;
-    public static event Action<Human> OnWandererUnregistered;
+    public event Action<Human> OnWandererRegistered;
+    public event Action<Human> OnWandererUnregistered;
 
-    public static event Action<Human> OnRaiderRegistered;
-    public static event Action<Human> OnRaiderUnregistered;
+    public event Action<Human> OnRaiderRegistered;
+    public event Action<Human> OnRaiderUnregistered;
 
     private void Awake()
     {

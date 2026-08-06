@@ -166,8 +166,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f4628f6f977b2c64e9f84c1f5930052d, type: 2}
   - {fileID: 11400000, guid: 8ad608757b0f86b429e2ba27842d356f, type: 2}
   <IsWorking>k__BackingField: 0
-  electricityConsumption: 0.02
-  skillId: 1
+  electricityConsumption: 0.005
 --- !u!114 &8771001662528522482
 MonoBehaviour:
   m_ObjectHideFlags: 0

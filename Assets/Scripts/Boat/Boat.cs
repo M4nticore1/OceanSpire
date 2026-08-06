@@ -27,8 +27,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
     [field: SerializeField] public HumanStatusEnum CurrentStatus { get; private set; }
 
-    public BoatRider CurrentRider;
-    public BoatRider TargetRider;
+    [field: SerializeField] public BoatRider CurrentRider { get; private set; }
+    [field: SerializeField] public BoatRider TargetRider { get; private set; }
 
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
@@ -72,6 +72,9 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     public float CurrentWeight => inventory.CurrentWeight;
     public float MaxWeight => inventory.WeightLimit;
 
+    private BoatsManager boatsManager => BoatsManager.Instance;
+    private BoatDocksManager boatDocksManager => BoatDocksManager.Instance;
+
     public event Action OnClicked;
 
     public event Action<BoatRider> OnRiderAdded;
@@ -90,23 +93,22 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     private void OnEnable()
     {
         movement.OnMovementStarted += OnMovementStarted;
-        movement.OnReachedDestination += OnReachedPath;
+        movement.OnDestinationReached += OnReachedPath;
 
         selectComponent.OnSelected += OnSelected;
         selectComponent.OnDeselected += OnDeselected;
+
+        BoatsManager.Instance.RegisterBoat(this);
     }
 
     private void OnDisable()
     {
         movement.OnMovementStarted -= OnMovementStarted;
-        movement.OnReachedDestination -= OnReachedPath;
+        movement.OnDestinationReached -= OnReachedPath;
 
         selectComponent.OnSelected -= OnSelected;
         selectComponent.OnDeselected -= OnDeselected;
-    }
 
-    private void OnDestroy()
-    {
         BoatsManager.Instance.UnregisterBoat(this);
     }
 
@@ -115,7 +117,6 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         boatShake.Tick();
 
         if (CurrentState == null) return;
-
         CurrentState.Tick();
     }
 
@@ -133,7 +134,6 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         }
 
         CurrentStatus = boatData.Status;
-        BoatsManager.Instance.RegisterBoat(this);
 
         instanceId.SetGuid(boatData.InstanceId);
         inventory.Init(boatData.InventoryData);
@@ -161,6 +161,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         UpdateClickable();
         UpdateContextMenuTarget();
+        TryDestroyBoat();
+        UpdateState();
     }
 
     public void OnReturnedToDock()
@@ -183,7 +185,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     public void SetCurrentRider(BoatRider rider)
     {
         if (!rider) {
-            Debug.LogError("rider is not valid", this);
+            Debug.LogError("Rider is not valid");
             return;
         }
 
@@ -232,7 +234,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     public void SetDockPoint(BoatDockPoint dockPoint)
     {
         if (!dockPoint) {
-            Debug.Log($"[{nameof(Boat)}] DockPoint is not valid. Use RemoveDockPoint method to remove it insteod of this.");
+            Debug.LogError($"[{nameof(Boat)}] DockPoint is not valid. Use RemoveDockPoint method to remove it insteod of this.");
             return;
         }
 
@@ -260,24 +262,49 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
     private void FixDockPoint()
     {
-        if (DockPoint != null) return;
+        if (DockPoint) return;
         if (CurrentStateEnum == BoatStateEnum.FloatingAway) return;
 
         int index = 0;
+        BoatDockPoint dock;
 
-        switch (CurrentStatus) {
-            case HumanStatusEnum.Citizen:
-                index = BoatsManager.Instance.CitizenBoats.ToList().IndexOf(this);
-                SetDockPoint(BoatDocksManager.Instance.CitizenBoatDocks[index]);
-                break;
-            case HumanStatusEnum.Wanderer:
-                index = BoatsManager.Instance.WandererBoats.ToList().IndexOf(this);
-                SetDockPoint(BoatDocksManager.Instance.WandererDockPoints[index]);
-                break;
-            case HumanStatusEnum.Raider:
-                SetDockPoint(BoatDockUtils.GetNearestFreeDockPoint(BoatDocksManager.Instance.RaiderDockPoints, transform.position));
-                break;
+        if (CurrentStatus == HumanStatusEnum.Citizen) {
+            index = Array.IndexOf(boatsManager.CitizenBoats.ToArray(), this);
+            dock = boatDocksManager.GetCitizenBoatDock(index);
+            if (dock) {
+                SetDockPoint(dock);
+            }
         }
+        else if (CurrentStatus == HumanStatusEnum.Wanderer) {
+            index = Array.IndexOf(boatsManager.WandererBoats.ToArray(), this);
+            dock = boatDocksManager.GetWandererBoatDock(index);
+            if (dock) {
+                SetDockPoint(dock);
+            }
+        }
+        else if (CurrentStatus == HumanStatusEnum.Raider) {
+            dock = BoatDockUtils.GetNearestFreeDockPoint(boatDocksManager.RaiderDockPoints, transform.position);
+            if (dock) {
+                SetDockPoint(dock);
+            }
+        }
+    }
+
+    private void TryDestroyBoat()
+    {
+        if (!ShouldDestroyBoat()) return;
+
+        Destroy(gameObject);
+    }
+
+    private bool ShouldDestroyBoat()
+    {
+        if (CurrentStatus == HumanStatusEnum.Citizen && !DockPoint) {
+            var currentCitizen = CurrentRider?.GetComponent<Citizen>();
+            if (!currentCitizen || !currentCitizen.IsEvicted) return true;
+        }
+
+        return false;
     }
 
     // Target Loot
@@ -416,9 +443,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         var citizen = CurrentRider.GetComponent<Citizen>();
         if (!citizen) return false;
-
-        if (citizen.IsEvicted) return false;
-        if (!citizen.HealthComponent.IsAlive) return false;
+        if (!citizen.IsCitizenAvaliable()) return false;
 
         var interactBuilding = citizen.InteractComponent.InteractBuilding;
         if (!interactBuilding) return false;
@@ -448,6 +473,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
     public bool ShouldMovingToDock()
     {
+        if (!CurrentRider && CurrentStateEnum != BoatStateEnum.Idle) return true;
+
         return false;
     }
 

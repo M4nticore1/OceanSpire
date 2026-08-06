@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class BoatDockUtils
 {
-    public static BoatDockPoint GetNearestFreeDockPoint(BoatDockPoint[] boatDocks, Vector3 position)
+    public static BoatDockPoint GetNearestFreeDockPoint(IReadOnlyList<BoatDockPoint> boatDocks, Vector3 position)
     {
         BoatDockPoint bestDockPoint = null;
         float bestSqr = float.MaxValue;
@@ -11,7 +12,7 @@ public static class BoatDockUtils
         int minBoatCount = int.MaxValue;
         float leastBusyBestSqr = float.MaxValue;
 
-        for (int i = 0; i < boatDocks.Length; i++) {
+        for (int i = 0; i < boatDocks.Count; i++) {
             var dockPoint = boatDocks[i];
             int currentBoatCount = dockPoint.Boats.Count;
             float sqr = (position - dockPoint.transform.position).sqrMagnitude;

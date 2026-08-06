@@ -37,15 +37,15 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 
     public virtual void SetAmount(int amount)
     {
-        var newAmount = Mathf.Max(0, amount);
-        if (this.amount == newAmount) return;
+        amount = Mathf.Clamp(amount, 0, Stack != null ? Stack.Amount : amount);    
+        if (this.amount == amount) return;
 
         var lastAmount = this.amount;
-        this.amount = newAmount;
+        this.amount = amount;
 
-        var difference = Mathf.Abs(newAmount - lastAmount);
+        var difference = Mathf.Abs(amount - lastAmount);
 
-        if (newAmount > lastAmount) {
+        if (amount > lastAmount) {
             OnItemAmountAdded?.Invoke(this, difference);
         }
         else {

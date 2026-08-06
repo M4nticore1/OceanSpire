@@ -11,7 +11,7 @@ public class CraftingModuleHighlightController : MonoBehaviour
         craftingModule.OnWorkingStarted += OnWorkingStarted;
         craftingModule.OnWorkingStarted += OnWorkingStopped;
 
-        craftingModule.OnItemCraftEnded += OnItemCraftEnded;
+        craftingModule.OnItemCraftFinished += OnItemCraftFinished;
         craftingModule.OnClicked += OnClicked;
     }
 
@@ -22,7 +22,7 @@ public class CraftingModuleHighlightController : MonoBehaviour
         craftingModule.OnWorkingStarted -= OnWorkingStarted;
         craftingModule.OnWorkingStarted -= OnWorkingStopped;
 
-        craftingModule.OnItemCraftEnded -= OnItemCraftEnded;
+        craftingModule.OnItemCraftFinished -= OnItemCraftFinished;
         craftingModule.OnClicked -= OnClicked;
     }
 
@@ -62,7 +62,7 @@ public class CraftingModuleHighlightController : MonoBehaviour
         UpdateHighlight();
     }
 
-    private void OnItemCraftEnded(CraftItemInstance craftItem)
+    private void OnItemCraftFinished(CraftItemInstance craftItem)
     {
         UpdateHighlight();
     }

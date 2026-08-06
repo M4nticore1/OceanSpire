@@ -26,6 +26,7 @@ public class NameComponent : MonoBehaviour, ILocalizable
 
         SetFirstNameId(nameData.FirstNameId, genderComponent.IsMale);
         SetLastNameId(nameData.LastNameId, genderComponent.IsMale);
+        UpdateEditorName();
     }
 
     public string GetName()
@@ -57,6 +58,13 @@ public class NameComponent : MonoBehaviour, ILocalizable
     {
         LastNameId = id;
         lastName = isMale ? HumanNamesList.Instance.GetMaleLastName(id) : HumanNamesList.Instance.GetFemaleLastName(id);
+    }
+
+    private void UpdateEditorName()
+    {
+#if UNITY_EDITOR
+        name += $" {GetName()}";
+#endif
     }
 
     private string GetFirstNameText()

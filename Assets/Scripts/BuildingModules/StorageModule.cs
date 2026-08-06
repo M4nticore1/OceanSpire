@@ -9,6 +9,8 @@ public class StorageModule : BuildingModule, IRaidable
 
     private bool IsLimitAdded = false;
 
+    private CityStorage cityStorage => CityStorage.Instance;
+
     protected override void Subscribe()
     {
         base.Subscribe();
@@ -72,13 +74,6 @@ public class StorageModule : BuildingModule, IRaidable
         return items;
     }
 
-    public bool CanBeRaided()
-    {
-        if (!OwnedBuilding.Definition.IsRaidable) return false;
-
-        return true;
-    }
-
     private void OnConstructionFinished()
     {
         if (LastStorageLevelData) {
@@ -106,9 +101,10 @@ public class StorageModule : BuildingModule, IRaidable
     {
         if (!levelData) return;
         if (IsLimitAdded) return;
+        if (!cityStorage) return;
 
         foreach (var stack in levelData.Stacks) {
-            CityStorage.Instance.Inventory.AddLimit(stack.StackEnum, stack.Amount);
+            cityStorage.Inventory.AddLimit(stack.StackEnum, stack.Amount);
         }
 
         IsLimitAdded = true;
@@ -118,9 +114,10 @@ public class StorageModule : BuildingModule, IRaidable
     {
         if (!levelData) return;
         if (!IsLimitAdded) return;
+        if (!cityStorage) return;
 
         foreach (var stack in levelData.Stacks) {
-            CityStorage.Instance.Inventory.RemoveLimit(stack.StackEnum, stack.Amount);
+            cityStorage.Inventory.RemoveLimit(stack.StackEnum, stack.Amount);
         }
 
         IsLimitAdded = false;

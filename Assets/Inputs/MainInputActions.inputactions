@@ -273,11 +273,33 @@
                     "isPartOfComposite": false
                 },
                 {
+                    "name": "",
+                    "id": "d2547fd3-6895-4ff7-bdab-442bc33579fa",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "Scale(factor=0.25)",
+                    "groups": "",
+                    "action": "CameraZoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "90873fd2-307c-48b1-95d5-3c28e6e9c294",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "Invert,Scale(factor=0.25)",
+                    "groups": "",
+                    "action": "CameraZoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "2D Vector",
                     "id": "8ff2c7ea-3dd9-4447-b577-e4f4d5e712cb",
                     "path": "2DVector",
                     "interactions": "",
-                    "processors": "InvertVector2(invertY=false),ScaleVector2(x=100,y=60)",
+                    "processors": "InvertVector2(invertY=false),ScaleVector2(x=40,y=15)",
                     "groups": "",
                     "action": "CameraMove",
                     "isComposite": true,

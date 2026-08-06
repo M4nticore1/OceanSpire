@@ -21,12 +21,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     [SerializeField] protected ConstructionComponent constructionComponent;
     public ConstructionComponent ConstructionComponent => constructionComponent;
 
-    private WorkComponent workComponent;
-    public WorkComponent WorkComponent => workComponent ? workComponent : GetComponent<WorkComponent>();
-
-    private RaidComponent raidComponent;
-    public RaidComponent RaidComponent => raidComponent ? raidComponent : GetComponent<RaidComponent>();
-
     [SerializeField] protected LevelComponent levelComponent;
     public LevelComponent LevelComponent => levelComponent;
 
@@ -39,12 +33,18 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     [SerializeField] private SkillId skillId;
     public SkillId SkillId => skillId;
 
+    private BuildingCitizensHandler citizensHandler;
+    public BuildingCitizensHandler CitizensHandler => citizensHandler ? citizensHandler : GetComponent<BuildingCitizensHandler>();
+
+    private BuildingRaidersHandler raidersHandler;
+    public BuildingRaidersHandler RaidersHandler => raidersHandler ? raidersHandler : GetComponent<BuildingRaidersHandler>();
+
     public SelectComponent SelectComponent { get; private set; }
 
     [Header("Audio")]
     [SerializeField] protected AudioSource workAudioSource;
 
-    private BuildingStrategy strategy;
+    private BuildingStrategy buildingStrategy;
 
     public bool isWorking { get; private set; } = false;
     public bool IsDemolished { get; private set; } = false;
@@ -87,11 +87,11 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     public static event Action<Building> OnBuildingSelected;
     public static event Action<Building> OnBuildingDeselected;
 
-    private void Awake()
+    protected virtual void Awake()
     {
+        citizensHandler = GetComponent<BuildingCitizensHandler>();
+        raidersHandler = GetComponent<BuildingRaidersHandler>();
         SelectComponent = GetComponent<SelectComponent>();
-        workComponent = GetComponent<WorkComponent>();
-        raidComponent = GetComponent<RaidComponent>();
     }
 
     protected virtual void OnEnable()
@@ -104,13 +104,13 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         upgradeComponent.OnUpgradeStarted += HandleUpgradeStarted;
         upgradeComponent.OnUpgradeFinished += HandleUpgradeFinished;
 
-        WorkComponent.OnWorkerAdded += OnWorkerAdded;
-        WorkComponent.OnWorkerRemoved += OnWorkerRemoved;
-        WorkComponent.OnCurrentWorkerAdded += OnCurrentWorkerAdded;
-        WorkComponent.OnCurrentWorkerRemoved += OnCurrentWorkerRemoved;
+        CitizensHandler.OnInteractorAdded += OnWorkerAdded;
+        CitizensHandler.OnInteractorRemoved += OnWorkerRemoved;
+        CitizensHandler.OnCurrentInteractorAdded += OnCurrentWorkerAdded;
+        CitizensHandler.OnCurrentInteractorRemoved += OnCurrentWorkerRemoved;
 
-        RaidComponent.OnRaiderAdded += OnRaiderAdded;
-        RaidComponent.OnRaiderRemoved += OnRaiderRemoved;
+        RaidersHandler.OnInteractorAdded += OnRaiderAdded;
+        RaidersHandler.OnInteractorAdded += OnRaiderRemoved;
 
         SelectComponent.OnSelected += OnSelected;
         SelectComponent.OnDeselected += OnDeselected;
@@ -126,13 +126,13 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         upgradeComponent.OnUpgradeStarted -= HandleUpgradeStarted;
         upgradeComponent.OnUpgradeFinished -= HandleUpgradeFinished;
 
-        WorkComponent.OnWorkerAdded -= OnWorkerAdded;
-        WorkComponent.OnWorkerRemoved -= OnWorkerRemoved;
-        WorkComponent.OnCurrentWorkerAdded -= OnCurrentWorkerAdded;
-        WorkComponent.OnCurrentWorkerRemoved -= OnCurrentWorkerRemoved;
+        CitizensHandler.OnInteractorAdded -= OnWorkerAdded;
+        CitizensHandler.OnInteractorRemoved -= OnWorkerRemoved;
+        CitizensHandler.OnCurrentInteractorAdded -= OnCurrentWorkerAdded;
+        CitizensHandler.OnCurrentInteractorRemoved -= OnCurrentWorkerRemoved;
 
-        RaidComponent.OnRaiderAdded -= OnRaiderAdded;
-        RaidComponent.OnRaiderRemoved -= OnRaiderRemoved;
+        RaidersHandler.OnInteractorAdded -= OnRaiderAdded;
+        RaidersHandler.OnInteractorAdded -= OnRaiderRemoved;
 
         SelectComponent.OnSelected -= OnSelected;
         SelectComponent.OnDeselected -= OnDeselected;
@@ -181,13 +181,13 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     // Residents Management
     public void EnterBuilding(CreatureCityNavigator navigator)
     {
-        strategy.OnEntityEnter(navigator);
+        buildingStrategy.OnEntityEnter(navigator);
         onEnterBuilding?.Invoke(navigator);
     }
 
     public void ExitBuilding(CreatureCityNavigator navigator)
     {
-        strategy.OnEntityExit(navigator);
+        buildingStrategy.OnEntityExit(navigator);
         onExitBuilding?.Invoke(navigator);
     }
 
@@ -325,8 +325,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     // Work
     public void RemoveWorkers()
     {
-        for (int i = workComponent.CurrentWorkers.Count - 1; i >= 0; i--) {
-            var worker = workComponent.CurrentWorkers[i];
+        for (int i = citizensHandler.CurrentInteractors.Count - 1; i >= 0; i--) {
+            var worker = citizensHandler.CurrentInteractors[i];
             if (!worker) continue;
 
             var building = worker.InteractComponent.InteractBuilding;
@@ -334,8 +334,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
             worker.InteractComponent.TryStopInteracting(building);
         }
 
-        for (int i = workComponent.Workers.Count - 1; i >= 0; i--) {
-            var worker = workComponent.Workers[i];
+        for (int i = citizensHandler.Interactors.Count - 1; i >= 0; i--) {
+            var worker = citizensHandler.Interactors[i];
             if (!worker) continue;
 
             var building = worker.InteractComponent.InteractBuilding;
@@ -344,43 +344,81 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         }
     }
 
-    private void OnWorkerAdded(Citizen citizen)
+    public BuildingAction GetInteractPoint(int index)
+    {
+        if (!SpawnedConstruction) {
+            Debug.LogError($"[{nameof(Building)}] Spawned Construction is not valid at {this}!");
+            return null;
+        }
+
+        return SpawnedConstruction.GetInteractPoint(index);
+    }
+
+    public BuildingAction GetInteractPoint(Human human)
+    {
+        if (!human) {
+            Debug.LogError($"[{nameof(Building)}] Human is not valid!");
+            return null;
+        }
+        if (buildingStrategy == null) {
+            Debug.LogError($"[{nameof(Building)}] Building Strategy is not valid!");
+            return null;
+        }
+
+        return buildingStrategy.GetInteractPoint(human);
+    }
+
+    private void OnWorkerAdded(Human human)
+    {
+        Debug.Log("OnWorkerAdded");
+        //UpdateWorkerInteractionTransforms();
+
+        buildingStrategy.OnInteractBuildingSet(human.InteractComponent);
+    }
+
+    private void OnWorkerRemoved(Human human)
     {
         //UpdateWorkerInteractionTransforms();
 
-        strategy.OnInteractBuildingSet(citizen.InteractComponent);
+        buildingStrategy.OnInteractBuildingRemove(human.InteractComponent);
     }
 
-    private void OnWorkerRemoved(Citizen citizen)
+    private void OnCurrentWorkerAdded(Human human)
     {
-        //UpdateWorkerInteractionTransforms();
-
-        strategy.OnInteractBuildingRemove(citizen.InteractComponent);
-    }
-
-    private void OnCurrentWorkerAdded(Citizen citizen)
-    {
-        if (WorkComponent.CurrentWorkers.Count == 1)
+        if (CitizensHandler.CurrentInteractors.Count == 1)
             StartWorking();
 
-        strategy.OnStartedInteracting(citizen.InteractComponent);
+        buildingStrategy.OnStartedInteracting(human.InteractComponent);
     }
 
-    private void OnCurrentWorkerRemoved(Citizen citizen)
+    private void OnCurrentWorkerRemoved(Human human)
     {
-        if (WorkComponent.CurrentWorkers.Count == 0)
+        if (CitizensHandler.CurrentInteractors.Count == 0)
             StopWorking();
 
-        strategy.OnStoppedInteracting(citizen.InteractComponent);
+        buildingStrategy.OnStoppedInteracting(human.InteractComponent);
     }
 
     // Raid
-    private void OnRaiderAdded(Raider raider)
+    public bool CanBeRaided()
+    {
+        if (!Definition) {
+            Debug.LogError($"[{nameof(Building)}] Definition is not valid at {name}");
+            return false;
+        }
+
+        if (!Definition.IsRaidable) return false;
+        if (constructionComponent.IsUnderConstruction) return false;
+
+        return true;
+    }
+
+    private void OnRaiderAdded(Human human)
     {
         //UpdateRaiderInteractionTransforms();
     }
 
-    private void OnRaiderRemoved(Raider raider)
+    private void OnRaiderRemoved(Human human)
     {
         //UpdateRaiderInteractionTransforms();
     }
@@ -416,17 +454,16 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     {
         switch (buildingData.BuildingStrategy) {
             case BuildingStrategyEnum.WorkBuilding:
-                strategy = new WorkBuildingStrategy(this);
+                buildingStrategy = new WorkBuildingStrategy(this);
                 break;
             case BuildingStrategyEnum.Pier:
-                strategy = new PierBuildingStrategy(this);
+                buildingStrategy = new PierBuildingStrategy(this);
                 break;
         }
     }
 
     private void HandleConstructionStarted()
     {
-        RemoveWorkers();
         RefreshConstructionState();
 
         OnConstructionStarted?.Invoke();

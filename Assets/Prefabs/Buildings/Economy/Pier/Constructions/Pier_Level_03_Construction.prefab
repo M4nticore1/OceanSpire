@@ -389,7 +389,7 @@ MonoBehaviour:
     - transform: {fileID: 5434992826118720399}
       actionTime: 0
   - waypoints:
-    - transform: {fileID: 872754913549918724}
+    - transform: {fileID: 1111884825752848150}
       actionTime: 0
   boatDocks:
   - {fileID: 6964030646355368549}

@@ -105,10 +105,16 @@ public class ElevatorCabinsManager : MonoBehaviour
         if (!cabinConstruction) return;
 
         var ownedBuilding = cabinConstruction.OwnedBuilding;
-        if (!ownedBuilding) return;
+        if (!ownedBuilding) {
+            Debug.LogError($"[{nameof(ElevatorCabinsManager)}] COwned Building is not valid!");
+            return;
+        }
 
         var elevator = ownedBuilding.GetComponent<ElevatorModule>();
-        if (!elevator) return;
+        if (!elevator) {
+            Debug.LogError($"[{nameof(ElevatorCabinsManager)}] Elevator Module is not valid!");
+            return;
+        }
 
         elevator.SetCabin(cabinConstruction);
         UpdateElevatorNetworkCabins(elevator);

@@ -75,9 +75,11 @@ public abstract class Human : Creature, IClickable, ILocalizable
     public static event Action<Human> OnEnteredBoat;
     public static event Action<Human> OnExitedBoat;
 
-    private void Awake()
+    protected override void Awake()
     {
-        movement.NavAgent.enabled = false;
+        base.Awake();
+
+        movement.SetAgentEnabled(false);
     }
 
     protected override void OnEnable()
@@ -161,9 +163,9 @@ public abstract class Human : Creature, IClickable, ILocalizable
         base.Tick();
     }
 
-    protected override void OnInit(CreatureData creatureData)
+    protected override void HandleInit(CreatureData creatureData)
     {
-        base.OnInit(creatureData);
+        base.HandleInit(creatureData);
 
         var humanData = creatureData as HumanData;
 
@@ -176,89 +178,94 @@ public abstract class Human : Creature, IClickable, ILocalizable
         skillsComponent.Init(humanData.Skills);
         healthComponent.Init(humanData.Health);
         reviveComponent.Init(humanData.Revive);
-        cityNavigator.Init(humanData.CityNavigator);
         interactComponent.Init(humanData.Interaction);
         weaponComponent.Init(humanData.Weapon);
         boatRider.Init(humanData.BoatRider);
+        cityNavigator.Init(humanData.CityNavigator);
 
         OnHumanInited?.Invoke(this);
     }
 
-    protected override void OnInitNextFrame()
+    protected override void HandleInitNextFrame()
     {
         if (!elevatorPassenger.IsRiding && !boatRider.RidingBoat) {
             movement.SetAgentEnabled(true);
             cityNavigator.FollowPath();
         }
 
-        base.OnInitNextFrame();
+        base.HandleInitNextFrame();
+    }
+
+    protected override CreatureData GetDefaultData()
+    {
+        return HumanData.Default();
     }
 
     // Action
     protected override void DetermineNextAction()
     {
         if (ShouldStartInteracting()) {
-            //Debug.Log("ShouldStartInteracting");
+            //Debug.Log($"{name} ShouldStartInteracting");
             StartInteracting();
             return;
         }
         if (ShouldStopInteracting()) {
-            //Debug.Log("ShouldStopInteracting");
+            //Debug.Log($"{name} ShouldStopInteracting");
             StopInteracting();
             return;
         }
         if (ShouldMoveToTargetBoat()) {
-            //Debug.Log("ShouldMoveToTargetBoat");
+            //Debug.Log($"{name} ShouldMoveToTargetBoat");
             MoveToTargetBoat();
             return;
         }
         if (ShouldWaitForEnteringBoat()) {
-            //Debug.Log("ShouldStartEnteringBoat");
+            //Debug.Log($"{name} ShouldStartEnteringBoat");
             StartEnteringBoat();
             return;
         }
         if (ShouldStopEnteringBoat()) {
-            //Debug.Log("ShouldStopEnteringBoat");
+            //Debug.Log($"{name} ShouldStopEnteringBoat");
             StopEnteringBoat();
             return;
         }
         if (ShouldStartExitingBoat()) {
-            //Debug.Log("ShouldStartExitingBoat");
+            //Debug.Log($"{name} ShouldStartExitingBoat");
             StartExitingBoat();
             return;
         }
         if (ShouldStopExitingBoat()) {
-            //Debug.Log("ShouldStopExitingBoat");
+            //Debug.Log($"{name} ShouldStopExitingBoat");
             StopExitingBoat();
             return;
         }
         if (ShouldBoatMoveToDock()) {
-            //Debug.Log("ShouldBoatMoveToDock");
+            //Debug.Log($"{name} ShouldBoatMoveToDock");
             BoatMoveToDock();
             return;
         }
         if (ShouldBoatFindLoot()) {
-            //Debug.Log("ShouldBoatFindLoot");
+            //Debug.Log($"{name} ShouldBoatFindLoot");
             BoatFindLoot();
             return;
         }
         if (ShouldBoatFloatAway()) {
-            //Debug.Log("ShouldBoatFloatAway");
+            //Debug.Log($"{name} ShouldBoatFloatAway");
             BoatFloatAway();
             return;
         }
         if (ShouldStartAttacking()) {
-            //Debug.Log("ShouldStartAttacking");
+            //Debug.Log($"{name} ShouldStartAttacking");
             StartAttacking();
             return;
         }
         if (ShouldStopAttacking()) {
-            //Debug.Log("ShouldStopAttacking");
+            //Debug.Log($"{name} ShouldStopAttacking");
             StopAttacking();
             return;
         }
         if (ShouldFollowPath()) {
-            //Debug.Log("ShouldFollowPath");
+            //Debug.Log($"{name} ShouldFollowPath");
             FollowPath();
             return;
         }
@@ -303,11 +310,8 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     protected virtual void MoveToTargetBoat()
     {
-        if (!movement.TryMoveTo(boatRider.TargetBoat.DockPoint.EntraceTransform.position)) {
-            cityNavigator.SetTargetBuilding(BuildingsManager.Instance.TowerGate);
-            cityNavigator.TryFindPathToTargetBuilding();
-            cityNavigator.FollowPath();
-        }
+        var position = boatRider.TargetBoat.DockPoint.EntraceTransform.position;
+        movement.TryMoveTo(position);
 
         UpdateIdle();
     }
@@ -382,15 +386,26 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     public virtual bool ShouldMoveToTargetBoat()
     {
-        var targetBoat = boatRider.TargetBoat;
-        if (!targetBoat) return false;
-        if (!targetBoat.DockPoint) return false;
-        if (!targetBoat.DockPoint.EntraceTransform) return false;
-
         if (boatRider.RidingBoat) return false;
         if (cityNavigator.FloorIndex > 0) return false;
         if (attackComponent.IsAttacking) return false;
-        if (movement.IsReachedPosition(targetBoat.DockPoint.EntraceTransform.position)) return false;
+
+        var targetBoat = boatRider.TargetBoat;
+        if (!targetBoat) return false;
+
+        var dockPoint = targetBoat.DockPoint;
+        if (!dockPoint) {
+            Debug.LogError($"[{nameof(Human)}] Target Boat Dock Point is not valid!");
+            return false;
+        }
+
+        var entranceTransform = dockPoint.EntraceTransform;
+        if (!entranceTransform) {
+            Debug.LogError($"[{nameof(Human)}] Entrance Transform is not valid!");
+            return false;
+        }
+
+        if (movement.IsReachedPosition(entranceTransform.position)) return false;
 
         return true;
     }
@@ -455,7 +470,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         if (!boatRider.RidingBoat) return false;
         if (!boatRider.RidingBoat.ShouldFindLoot()) return false;
 
-        return false;
+        return true;
     }
 
     public virtual bool ShouldBoatFloatAway()
@@ -482,9 +497,13 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     public virtual bool ShouldFollowPath()
     {
+        Debug.Log($"{name} ShouldFollowPath");
         if (boatRider.RidingBoat) return false;
+
+        Debug.Log($"{name} ShouldFollowPath1");
         if (attackComponent.IsAttacking) return false;
 
+        Debug.Log($"{name} ShouldFollowPath2");
         return true;
     }
 
@@ -533,14 +552,14 @@ public abstract class Human : Creature, IClickable, ILocalizable
     // Health
     protected virtual void OnRevived()
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
         contextMenuTarget.SetShowContextMenu(true);
         OnHumanRevived?.Invoke(this);
     }
 
     protected virtual void OnDied()
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
         contextMenuTarget.SetShowContextMenu(false);
         OnHumanDied?.Invoke(this);
     }
@@ -556,29 +575,29 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         base.OnMovementStopped();
 
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     // Attack
     protected virtual void OnAttackStarted()
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     protected virtual void OnAttackStopped()
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     // Entrance
     protected virtual void OnEnteredBuilding(Building building)
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     protected virtual void OnExitedBuilding(Building building)
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     // Interaction Building
@@ -586,7 +605,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         cityNavigator.SetTargetBuilding(building);
         cityNavigator.TryFindPathToTargetBuilding();
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     protected virtual void OnInteractBuildingRemoved(Building building)
@@ -594,38 +613,38 @@ public abstract class Human : Creature, IClickable, ILocalizable
         cityNavigator.RemoveTargetBuilding();
         cityNavigator.RemovePath();
 
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     // Interaction
     protected virtual void OnInteractionStarted(Building building)
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     protected virtual void OnInteractionStopped(Building building)
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     // Boat
     protected virtual void HandleEnteredBoat(Boat boat)
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
 
         OnEnteredBoat?.Invoke(this);
     }
 
     protected virtual void HandleExitedBoat(Boat boat)
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
 
         OnExitedBoat?.Invoke(this);
     }
 
     protected virtual void OnBoatSetedIdle(Boat boat)
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     private void OnTargetBoatSeted(Boat boat)
@@ -644,12 +663,12 @@ public abstract class Human : Creature, IClickable, ILocalizable
             }
         }
 
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     private void OnTargetBoatRemoved(Boat boat)
     {
-        DetermineNextAction();
+        StartCoroutine(DetermineNextActionCoroutine());
     }
 
     private void OnBoatMovementStarted(Boat boat)
@@ -681,12 +700,5 @@ public abstract class Human : Creature, IClickable, ILocalizable
     private void OnDeselected()
     {
         OnHumanDeselected?.Invoke(this);
-    }
-
-    private IEnumerator DetermineNextActionCoroutine()
-    {
-        yield return new WaitForEndOfFrame();
-
-        DetermineNextAction();
     }
 }

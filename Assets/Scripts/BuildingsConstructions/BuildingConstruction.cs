@@ -140,7 +140,7 @@ public class BuildingConstruction : MonoBehaviour, IClickable
         if (interactionsDict.ContainsKey(navigator))
             return;
 
-        interactionsDict.Add(navigator, GetInteraction(interactionsDict.Count));
+        interactionsDict.Add(navigator, GetInteractPoint(interactionsDict.Count));
     }
 
     public void RemoveInteract(CreatureCityNavigator navigator)
@@ -153,8 +153,8 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
     public void UpdateWorkerInteractionTransforms()
     {
-        for (int i = 0; i < OwnedBuilding.WorkComponent.Workers.Count; i++) {
-            var worker = OwnedBuilding.WorkComponent.Workers[i];
+        for (int i = 0; i < OwnedBuilding.CitizensHandler.Interactors.Count; i++) {
+            var worker = OwnedBuilding.CitizensHandler.Interactors[i];
             var navigator = worker.CityNavigator;
 
             AssignInteract(navigator);
@@ -163,8 +163,10 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
     public void UpdateRaiderInteractionTransforms()
     {
-        for (int i = 0; i < OwnedBuilding.RaidComponent.Raiders.Count; i++) {
-            var raider = OwnedBuilding.RaidComponent.Raiders[i];
+        for (int i = 0; i < OwnedBuilding.RaidersHandler.Interactors.Count; i++) {
+            var raider = OwnedBuilding.RaidersHandler.Interactors[i];
+            if (!raider) continue;
+
             var navigator = raider.CityNavigator;
 
             AssignInteract(navigator);
@@ -185,15 +187,7 @@ public class BuildingConstruction : MonoBehaviour, IClickable
         }
     }
 
-    public BuildingAction GetInteraction(CreatureCityNavigator navigator)
-    {
-        if (!interactionsDict.ContainsKey(navigator))
-            return null;
-
-        return interactionsDict[navigator];
-    }
-
-    public BuildingAction GetInteraction(int index)
+    public BuildingAction GetInteractPoint(int index)
     {
         var actions = BuildingInteractions;
 
@@ -204,6 +198,14 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
         index %= actions.Length;
         return actions[index];
+    }
+
+    public BuildingAction GetInteractPoint(CreatureCityNavigator navigator)
+    {
+        if (!interactionsDict.ContainsKey(navigator))
+            return null;
+
+        return interactionsDict[navigator];
     }
 
     // IClickable

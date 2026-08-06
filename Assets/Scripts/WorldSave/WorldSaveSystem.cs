@@ -26,7 +26,7 @@ public static class WorldSaveSystem
     public static void RemoveSaveByWorldName(string worldName)
     {
         if (string.IsNullOrWhiteSpace(worldName)) {
-            Debug.LogError($"[{nameof(WorldSaveSystem)}] Attempt to delete a world with an empty name was cancelled!");
+            File.Delete(GetSaveFilePathByName(worldName));
             return;
         }
 
@@ -35,7 +35,7 @@ public static class WorldSaveSystem
         string targetWorldPath = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
         if (string.Equals(rootSavesPath, targetWorldPath, System.StringComparison.OrdinalIgnoreCase)) {
-            Debug.LogError($"[{nameof(WorldSaveSystem)}] CRITICAL ERROR: Attempt to delete the root saves folder was blocked!");
+            Debug.LogError($"[{nameof(WorldSaveSystem)}] CRITICAL ERROR: Attempt to delete the root saves folder was blocked by path {targetWorldPath}!");
             return;
         }
 

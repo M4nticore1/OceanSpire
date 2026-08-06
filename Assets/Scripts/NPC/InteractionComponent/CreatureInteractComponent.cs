@@ -51,12 +51,12 @@ public class CreatureInteractComponent : MonoBehaviour
     public void SetInteractBuilding(Building building)
     {
         if (!building) {
-            Debug.Log("Building not found. Use RemoveInteractBuilding method instead of SetInteractBuilding.");
+            Debug.LogError($"[{nameof(CreatureInteractComponent)}] Building not found. Use RemoveInteractBuilding method instead of SetInteractBuilding.");
             return;
         }
 
         if (building == InteractBuilding) {
-            Debug.Log($"Building {building} is already interact building");
+            Debug.LogError($"[{nameof(CreatureInteractComponent)}] Building {building} is already interact building");
             return;
         }
 

@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class RaidEndedMenu : UIBehaviour
+public class RaidEndedMenu : MonoBehaviour
 {
+    [Header("Main")]
     [SerializeField] private ResourceWidget resourceWidgetPrefab;
+    [SerializeField] private RaidManager raidManager;
 
+    [Header("UI")]
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private TextMeshProUGUI noLossesText;
     [SerializeField] private LayoutGroup layoutGroup;
@@ -19,57 +21,25 @@ public class RaidEndedMenu : UIBehaviour
     private bool isOpened = false;
     private List<ResourceWidget> spawnedResourceWidgets = new();
 
-    private bool isSubscribed = false;
-
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
-
-        TrySubscribe();
+        raidManager.OnRaidEnded += OnRaidEnded;
     }
 
-    protected override void OnDisable()
+    private void OnDisable()
     {
-        base.OnDisable();
-
-        TryUnsubscribe();
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-
-        TrySubscribe();
+        raidManager.OnRaidEnded -= OnRaidEnded;
     }
 
     private void Update()
     {
-        if (!isOpened) return;
-        if (!RaidManager.Instance) return;
+        if (isOpened) {
+            currentVisibilityTime += Time.deltaTime;
 
-        currentVisibilityTime += Time.deltaTime;
-        if (currentVisibilityTime < visibilityTime) return;
-
-        Close();
-    }
-
-    private void TrySubscribe()
-    {
-        if (isSubscribed) return;
-        if (!RaidManager.Instance) return;
-
-        RaidManager.Instance.OnRaidEnded += OnRaidEnded;
-
-        isSubscribed = true;
-    }
-
-    private void TryUnsubscribe()
-    {
-        if (!isSubscribed) return;
-
-        RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
-
-        isSubscribed = false;
+            if (currentVisibilityTime >= visibilityTime) {
+                Close();
+            }
+        }
     }
 
     private void OnRaidEnded(RaidEndedResult result)
@@ -77,24 +47,24 @@ public class RaidEndedMenu : UIBehaviour
         Open();
         RemoveLosses();
         CreateLosses();
-        currentVisibilityTime = 0f;
     }
 
     private void Open()
     {
-        slidePanel.Show();
         isOpened = true;
+        slidePanel.Show();
     }
 
     private void Close()
     {
-        slidePanel.Hide();
         isOpened = false;
+        slidePanel.Hide();
+        currentVisibilityTime = 0f;
     }
 
     private void CreateLosses()
     {
-        int lossesCount = RaidManager.Instance.Inventory.Items.Count;
+        int lossesCount = raidManager.Inventory.Items.Count;
 
         if (lossesCount == 0) {
             noLossesText.gameObject.SetActive(true);
@@ -105,7 +75,8 @@ public class RaidEndedMenu : UIBehaviour
             for (int i = 0; i < lossesCount; i++) {
                 var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
 
-                var item = RaidManager.Instance.Inventory.TryGetItemByIndex(i);
+                var item = raidManager.Inventory.TryGetItemByIndex(i);
+                widget.SetItem(item);
                 widget.AddAmount(item);
                 widget.SetColor(loseColor);
                 spawnedResourceWidgets.Add(widget);

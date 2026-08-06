@@ -31,7 +31,7 @@ public class GoingToWatingElevatorPassengerState : ElevatorPassengerState
 
         construction.AssignInteract(cityNavigator);
         currentElevator.AddGoingToWaitingPassenger(elevatorPassenger);
-        cityNavigator.Movement.TryMoveTo(construction.GetInteraction(cityNavigator).GetWaypoint(0).Transform);
+        cityNavigator.Movement.TryMoveTo(construction.GetInteractPoint(cityNavigator).GetWaypoint(0).Transform);
     }
 
     public override void Exit()

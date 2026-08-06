@@ -85,8 +85,9 @@ public class Inventory : MonoBehaviour, ILocalizable
 
     public void AddItem(ItemID id, int amount)
     {
-        var item = GetItem(id) ?? CreateAndRegisterItem(id);
+        if (!ShouldAddItem(id, amount)) return;
 
+        var item = GetItem(id) ?? CreateAndRegisterItem(id);
         var stack = GetStack(item.Definition.Stack);
 
         if (useAmountLimit) {
@@ -97,8 +98,6 @@ public class Inventory : MonoBehaviour, ILocalizable
             float remainingWeight = weightLimit - currentWeight;
             amount = Mathf.Clamp(amount, 0, (int)(remainingWeight / item.Definition.Weight));
         }
-
-        if (amount <= 0) return;
 
         item.AddAmount(amount);
     }
@@ -239,5 +238,13 @@ public class Inventory : MonoBehaviour, ILocalizable
         if (item.Amount <= 0 && autoCleaning) {
             UnregisterItem(item);
         }
+    }
+
+    private bool ShouldAddItem(ItemID id, int amount)
+    {
+        var item = GetItem(id);
+        if (((item != null ? item.Amount : 0) + amount) <= 0 && autoCleaning) return false;
+
+        return true;
     }
 }
