@@ -1,3 +1,4 @@
+using System.Data;
 using UnityEngine;
 
 public class FindingLootBoatState : BoatState
@@ -17,8 +18,15 @@ public class FindingLootBoatState : BoatState
 
     public override void Enter()
     {
-        boat.Movement.StopMoving();
+        if (!boat.CurrentRider) {
+            boat.SetState(BoatStateEnum.MovingToDock);
+            return;
+        }
+
+        boat.Movement.TryStopMoving();
         boat.RemoveTargetLoot();
+
+        TryStopExitingBoat();
         TryUpdateTarget();
     }
 
@@ -29,10 +37,11 @@ public class FindingLootBoatState : BoatState
 
     public override void Tick()
     {
-        if (Time.timeAsDouble < lastUpdateDestinationTime + updateDestinationRate) return;
-
-        TryUpdateTarget();
-        lastUpdateDestinationTime = Time.timeAsDouble;
+        if (Time.timeAsDouble >= lastUpdateDestinationTime + updateDestinationRate) {
+            TryUpdateTarget();
+            UpdateState();
+            lastUpdateDestinationTime = Time.timeAsDouble;
+        }
     }
 
     public override void OnReachedPath()
@@ -48,11 +57,21 @@ public class FindingLootBoatState : BoatState
     private void TryUpdateTarget()
     {
         var nearestFocusedLoot = focusedLootManager ? focusedLootManager.GetNearestAvaliableFocusedDriftingLoot(boat) : null;
-        if (nearestFocusedLoot && boat.TrySetTargetLoot(nearestFocusedLoot)) {
-            return;
+        if (!nearestFocusedLoot || !boat.TrySetTargetLoot(nearestFocusedLoot)) {
+            var nearestLoot = DriftingLootFinder.TryFindNearestSwimmingDriftingLoot(DriftingLootManager.Instance, boat);
+            boat.TrySetTargetLoot(nearestLoot);
         }
+    }
 
-        var nearestLoot = DriftingLootFinder.TryFindNearestSwimmingDriftingLoot(DriftingLootManager.Instance, boat);
-        boat.TrySetTargetLoot(nearestLoot);
+    private void UpdateState()
+    {
+        if (boat.TargetDriftingLoot) {
+            boat.SetState(BoatStateEnum.MovingToLoot);
+        }
+    }
+
+    private void TryStopExitingBoat()
+    {
+        boat.CurrentRider.StopExitingBoat();
     }
 }

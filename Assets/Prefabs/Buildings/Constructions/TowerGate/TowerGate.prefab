@@ -1,5 +1,84 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2607668244439571094
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8564042014863522465}
+  - component: {fileID: 4575778343485895908}
+  - component: {fileID: 6067369976374093837}
+  - component: {fileID: 6802734924289811874}
+  m_Layer: 2
+  m_Name: RoomTrigger (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8564042014863522465
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2607668244439571094}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3728160677861581633}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4575778343485895908
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2607668244439571094}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 8, y: 5, z: 16}
+  m_Center: {x: 0, y: 7.5, z: 4}
+--- !u!114 &6067369976374093837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2607668244439571094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57869c7c2f703d743bbe6d6ed3f13757, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6802734924289811874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2607668244439571094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f07fbb11ab161e849bdddb96f07055ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IgnoreSelect
 --- !u!1001 &1775028883656775870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18,11 +97,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 562888234851873099, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       propertyPath: m_Size.z
-      value: 24
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 562888234851873099, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       propertyPath: m_Center.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 562888234851873099, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+      propertyPath: m_Center.z
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1203207049741365582, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       propertyPath: m_Size.x
@@ -86,7 +169,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3107269609673161727, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 8564042014863522465}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6989354260929803138, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
       insertIndex: -1
@@ -122,6 +208,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828d5bae5cf5dce42b5b3d72527983cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelComponent
+--- !u!4 &3728160677861581633 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3107269609673161727, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
+  m_PrefabInstance: {fileID: 1775028883656775870}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4146996725171637188 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2391196798673474426, guid: 22316930f39aa114baa9486ec7868f06, type: 3}
@@ -161,15 +252,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a650ba6089666242a4633704ed5c893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnvironmentBuilding
-  constructionComponent: {fileID: 5184340577209235502}
-  levelComponent: {fileID: 3623753502408224289}
-  upgradeComponent: {fileID: 1543726248379608248}
-  instanceId: {fileID: 4146996725171637188}
-  workAudioSource: {fileID: 2175774227416732871}
   buildingData: {fileID: 11400000, guid: d38b89b154bf42f48a18d9ad947a9839, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: ad96702e37ed8b1488ee96be5a40d0c2, type: 2}
   isRuined: 0
+  constructionComponent: {fileID: 5184340577209235502}
+  levelComponent: {fileID: 3623753502408224289}
+  upgradeComponent: {fileID: 1543726248379608248}
+  instanceId: {fileID: 4146996725171637188}
+  skillId: 0
+  workAudioSource: {fileID: 2175774227416732871}
+  SpawnedConstruction: {fileID: 0}
 --- !u!114 &1063943449198097610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,3 +277,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelsData:
   - {fileID: 11400000, guid: 3df92a01368400440822aef33eaa1485, type: 2}
+  <IsWorking>k__BackingField: 0

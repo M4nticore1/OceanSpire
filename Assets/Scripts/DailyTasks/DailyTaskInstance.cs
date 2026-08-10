@@ -80,6 +80,6 @@ public class DailyTaskInstance : ILocalizable
         var id = Definition.Reward.Definition.ItemId;
         var amount = Definition.Reward.Amount;
 
-        CityStorage.Instance.Inventory.AddItem(id, amount);
+        CityStorage.Instance.Inventory.AddItemAmount(id, amount);
     }
 }

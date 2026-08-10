@@ -70,25 +70,26 @@ public class WorkBuildingStrategy : BuildingStrategy
 
     private BuildingAction GetInteractionPosition(BuildingInteractorsHandler interactorsHandler, Human human)
     {
-        if (!human) {
+        if (human == null) {
             Debug.LogError($"[{nameof(WorkBuildingStrategy)}] Human is not valid!");
             return null;
         }
 
-        var interactors = interactorsHandler.Interactors;
-        if (!interactors.Contains(human)) {
-            Debug.LogError($"[{nameof(WorkBuildingStrategy)}] Interactors does not contains Human {human}!");
+        if (interactorsHandler == null) {
+            Debug.LogError($"[{nameof(WorkBuildingStrategy)}] Interactors Handler is not valid!");
             return null;
         }
 
-        var index = interactors.ToList().IndexOf(human);
+        var interactors = interactorsHandler.Interactors;
+        if (!interactors.Contains(human)) return null;
 
         var construction = building.SpawnedConstruction;
-        if (!construction) {
+        if (construction == null) {
             Debug.LogError($"[{nameof(WorkBuildingStrategy)}] Building construction is not valid at {building}!");
             return null;
         }
 
+        var index = interactors.ToList().IndexOf(human);
         var interaction = construction.GetInteractPoint(index);
         if (interaction == null) {
             Debug.LogError($"[{nameof(WorkBuildingStrategy)}] Interaction at index {index} is not valid at {building}!");

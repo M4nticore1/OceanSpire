@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Raider : Human, IProgressable
@@ -76,23 +77,23 @@ public class Raider : Human, IProgressable
     protected override void DetermineNextAction()
     {
         if (ShouldStartInteracting()) {
-            Debug.Log($"{name} StartInteracting");
+            //Debug.Log($"{name} StartInteracting");
             StartInteracting();
             return;
         }
         if (ShouldBoatMoveToDock()) {
-            Debug.Log($"{name} BoatMoveToDock");
+            //Debug.Log($"{name} BoatMoveToDock");
             BoatMoveToDock();
             return;
         }
         if (ShouldBoatFloatAway()) {
-            Debug.Log($"{name} BoatFloatAway");
+            //Debug.Log($"{name} BoatFloatAway");
             BoatFloatAway();
             return;
         }
-        if (ShouldStartAttacking()) {
-            Debug.Log($"{name} StartAttacking");
-            StartAttacking();
+        if (ShouldSetCombatTarget()) {
+            //Debug.Log($"{name} StartAttacking");
+            SetCombatTarget();
             return;
         }
 
@@ -108,20 +109,10 @@ public class Raider : Human, IProgressable
         boat.RemoveDockPoint();
     }
 
-    protected override void StartAttacking()
+    protected override void SetCombatTarget()
     {
-        var currentBuilding = CityNavigator.CurrentBuilding;
-        var currentWorkers = currentBuilding.CitizensHandler.CurrentInteractors;
-
-        foreach (var worker in currentWorkers) {
-            var citizen = worker as Citizen;
-            if (!citizen) continue;
-            if (!citizen.IsCitizenAvaliable()) continue;
-
-            AttackComponent.SetTarget(worker.AttackComponent);
-            AttackComponent.MoveToTarget();
-            break;
-        }
+        AttackComponent.SetTarget(GetCurrentBuildingCombatTarget());
+        AttackComponent.AddAttackers(GetCurrentBuildingCombatAttackers());
     }
 
     protected override void StartInteracting()
@@ -156,25 +147,11 @@ public class Raider : Human, IProgressable
         return true;
     }
 
-    public override bool ShouldStartAttacking()
+    public override bool ShouldSetCombatTarget()
     {
-        if (!base.ShouldStartAttacking()) return false;
+        if (!base.ShouldSetCombatTarget()) return false;
 
-        var currentBuilding = CityNavigator.CurrentBuilding;
-        if (!currentBuilding) return false;
-
-        if (currentBuilding != InteractComponent.InteractBuilding) return false;
-
-        var currentWorkers = currentBuilding.CitizensHandler.CurrentInteractors;
-        foreach (var worker in currentWorkers) {
-            var citizen = worker as Citizen;
-            if (!citizen) continue;
-            if (!citizen.IsCitizenAvaliable()) continue;
-
-            return true;
-        }
-
-        return false;
+        return GetCurrentBuildingCombatTarget() != null;
     }
 
     protected override void OnInteractBuildingSeted(Building building)
@@ -256,6 +233,13 @@ public class Raider : Human, IProgressable
         return false;
     }
 
+    public float GetProgress()
+    {
+        if (raidBuildingTime == 0) return 0f;
+
+        return currentRaidBuildingTime / raidBuildingTime;
+    }
+
     private void StartRaidingBuilding()
     {
         IsRaidingBuilding = true;
@@ -278,16 +262,13 @@ public class Raider : Human, IProgressable
     {
         if (!InteractComponent) return;
 
-        var raidables = InteractComponent.InteractBuilding.GetComponents<IRaidable>();
-        if (raidables == null) return;
-
-        foreach (IRaidable raidable in raidables) {
-            var loot = raidable.GetRaidLoot();
-
-            foreach (var items in loot) {
-                RaidManager.Instance.AddLose(items);
-            }
+        var interactBuilding = InteractComponent.InteractBuilding;
+        if (interactBuilding == null) {
+            Debug.LogError($"[{nameof(Raider)}] Interact Building is not valid!");
+            return;
         }
+
+        RaidManager.Instance.AddLosses(interactBuilding.GetRaidResources());
     }
 
     private void UpdateTargetBoat()
@@ -313,10 +294,42 @@ public class Raider : Human, IProgressable
         Debug.LogError($"[{nameof(Raider)}] No free raid boats available of {raiderBoats.Count} boats!");
     }
 
-    public float GetProgress()
+    private AttackComponent GetCurrentBuildingCombatTarget()
     {
-        if (raidBuildingTime == 0) return 0f;
+        var currentBuilding = CityNavigator.CurrentBuilding;
+        if (currentBuilding == null) return null;
 
-        return currentRaidBuildingTime / raidBuildingTime;
+        foreach (var worker in currentBuilding.CitizensHandler.CurrentInteractors) {
+            if (worker == null) continue;
+            if (worker.AttackComponent.CurrentTarget != null) continue;
+
+            var citizen = worker.GetComponent<Citizen>();
+            if (citizen == null) continue;
+            if (!citizen.IsCitizenAvaliable()) continue;
+
+            return worker.AttackComponent;
+        }
+
+        return null;
+    }
+
+    private List<AttackComponent> GetCurrentBuildingCombatAttackers()
+    {
+        var currentBuilding = CityNavigator.CurrentBuilding;
+        if (currentBuilding == null) return null;
+
+        var attackers = new List<AttackComponent>();
+
+        foreach (var worker in currentBuilding.CitizensHandler.CurrentInteractors) {
+            if (worker == null) continue;
+
+            var citizen = worker.GetComponent<Citizen>();
+            if (citizen == null) continue;
+            if (!citizen.IsCitizenAvaliable()) continue;
+
+            attackers.Add(worker.AttackComponent);
+        }
+
+        return attackers;
     }
 }

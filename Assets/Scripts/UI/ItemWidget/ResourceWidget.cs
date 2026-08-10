@@ -18,6 +18,7 @@ public class ResourceWidget : MonoBehaviour
 
     [SerializeField] private bool isCityItem = false;
     [SerializeField] private bool useLimit = false;
+    [SerializeField] private bool zeroAmountDestroy = false;
 
     public ItemInstance Item {  get; private set; }
 
@@ -244,11 +245,20 @@ public class ResourceWidget : MonoBehaviour
         SetColor(IsEnough() ? enoughAmountColor : notEnoughAmountColor);
     }
 
+    private bool TryDestroy()
+    {
+        if (Item != null && Item.Amount <= 0) return true;
+
+        return false;
+    }
+
     private void OnAmountChanged(int amount)
     {
-        UpdateAmountAndLimit();
-        TryUpdateResourceBar();
-        TryUpdateAmountColor();
+        if (!TryDestroy()) {
+            UpdateAmountAndLimit();
+            TryUpdateResourceBar();
+            TryUpdateAmountColor();
+        }
     }
 
     private void OnLimitChanged(int amount)

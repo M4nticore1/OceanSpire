@@ -88,6 +88,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1006335371026015129, guid: 71a482b556a081d49bcb608fb6b3d76a, type: 3}
+      propertyPath: m_fontSize
+      value: 56.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3576903766222169412, guid: 71a482b556a081d49bcb608fb6b3d76a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3576903766222169412, guid: 71a482b556a081d49bcb608fb6b3d76a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3749692685632294462, guid: 71a482b556a081d49bcb608fb6b3d76a, type: 3}
       propertyPath: m_Name
       value: BuildingInformationMenu

@@ -93,8 +93,8 @@ public class Citizen : Human
             BoatFloatAway();
             return;
         }
-        if (ShouldStartAttacking()) {
-            StartAttacking();
+        if (ShouldSetCombatTarget()) {
+            SetCombatTarget();
             return;
         }
 
@@ -114,7 +114,7 @@ public class Citizen : Human
         boat.RemoveDockPoint();
     }
 
-    protected override void StartAttacking()
+    protected override void SetCombatTarget()
     {
         var currentBuilding = CityNavigator.CurrentBuilding;
         var currentRaiders = currentBuilding.RaidersHandler.CurrentInteractors;
@@ -162,9 +162,9 @@ public class Citizen : Human
     //    //return true;
     //}
 
-    public override bool ShouldStartAttacking()
+    public override bool ShouldSetCombatTarget()
     {
-        if (!base.ShouldStartAttacking()) return false;
+        if (!base.ShouldSetCombatTarget()) return false;
 
         var currentBuilding = CityNavigator.CurrentBuilding;
         if (!currentBuilding) return false;

@@ -6,7 +6,7 @@ public class BoatDocksManager : MonoBehaviour
 {
     public static BoatDocksManager Instance;
 
-    public List<BoatDockPoint> CitizenBoatDocks { get; private set; } = new();
+    [field: SerializeField] public List<BoatDockPoint> CitizenBoatDocks { get; private set; } = new();
 
     [SerializeField] private BoatDockPoint[] wandererDockPoints;
     public IReadOnlyList<BoatDockPoint> WandererDockPoints => wandererDockPoints;
@@ -29,7 +29,7 @@ public class BoatDocksManager : MonoBehaviour
 
     public void RegisterCitizenDockPoint(BoatDockPoint dockPoint)
     {
-        if (!dockPoint) return;
+        if (dockPoint == null) return;
         if (CitizenBoatDocks.Contains(dockPoint)) return;
 
         CitizenBoatDocks.Add(dockPoint);
@@ -37,7 +37,7 @@ public class BoatDocksManager : MonoBehaviour
 
     public void UnregisterCitizenDockPoint(BoatDockPoint dockPoint)
     {
-        if (!dockPoint) return;
+        if (dockPoint == null) return;
         if (!CitizenBoatDocks.Contains(dockPoint)) return;
 
         CitizenBoatDocks.Remove(dockPoint);

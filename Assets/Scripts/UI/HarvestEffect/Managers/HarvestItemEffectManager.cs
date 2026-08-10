@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,7 +33,7 @@ public abstract class HarvestItemEffectManager : MonoBehaviour
     {
         for (int i = spawnedWidgets.Count - 1; i >= 0; i--) {
             var widget = spawnedWidgets[i];
-            if (!widget) {
+            if (widget == null) {
                 spawnedWidgets.RemoveAt(i);
                 continue;
             }
@@ -51,21 +52,35 @@ public abstract class HarvestItemEffectManager : MonoBehaviour
 
     }
 
-    public bool TryCreateWidget(ItemInstance item, Transform transform, Vector3 startPosition, Vector3 targetPosition)
+    public bool TryCreateWidget(HarvestEffectWidget widget, Transform transform, Vector3 startPosition, Vector3 targetPosition, ItemInstance item, bool useLocalTransform)
     {
         if (!ShouldCreateWidget(item)) return false;
 
-        CreateWidget(item, transform, startPosition, targetPosition);
+        CreateWidget(widget, transform, startPosition, targetPosition, item, useLocalTransform);
+        lastSpawnWidgetTime = Time.timeAsDouble;
+
         return true;
     }
 
-    private void CreateWidget(ItemInstance item, Transform transform, Vector3 startPosition, Vector3 targetPosition)
+    public IEnumerator CreateWidgetsCoroutine(HarvestEffectWidget widget, Transform transform, Vector3 startPosition, Vector3 targetPosition, List<ItemInstance> items, bool useLocalTransform)
     {
-        var widget = HarvestItemWidgetFactory.CreateWidget(harvestResourceWidgetPrefab, transform, item, startPosition, targetPosition);
-        if (!widget) return;
+        var wait = new WaitForSeconds(spawnWidgetCooldown);
 
-        spawnedWidgets.Add(widget);
-        lastSpawnWidgetTime = Time.timeAsDouble;
+        for (int i = 0; i < items.Count; i++) {
+            var item = items[i];
+            if (item == null) continue;
+
+            TryCreateWidget(widget, transform, startPosition, targetPosition, item, useLocalTransform);
+            yield return wait;
+        }
+    }
+
+    private void CreateWidget(HarvestEffectWidget widget, Transform transform, Vector3 startPosition, Vector3 targetPosition, ItemInstance item, bool useLocalTransform)
+    {
+        var spawnedWidget = HarvestItemWidgetFactory.CreateWidget(widget, transform, item, startPosition, targetPosition, useLocalTransform);
+        if (!spawnedWidget) return;
+
+        spawnedWidgets.Add(spawnedWidget);
     }
 
     private bool ShouldCreateWidget(ItemInstance item)

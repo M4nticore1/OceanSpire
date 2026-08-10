@@ -10,7 +10,7 @@ public class StartItems : MonoBehaviour
         foreach (var item in startItems) {
             var id = item.Definition.ItemId;
             var amount = item.Amount;
-            cityStorage.Inventory.AddItem(id, amount);
+            cityStorage.Inventory.AddItemAmount(id, amount);
         }
     }
 }

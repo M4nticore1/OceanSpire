@@ -1,21 +1,26 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class AttackComponent : MonoBehaviour
 {
+    [Header("Main")]
     [SerializeField] private EquipmentComponent weaponComponent;
     [SerializeField] private Movement movement;
     [SerializeField] private HealthComponent health;
 
+    [Header("Parameters")]
     [SerializeField] private float attackFrequency = 1f;
     private float currentAttackTime = 0f;
 
     [SerializeField] private float stopMovingDistance = 1f;
     [SerializeField] private float rotationSpeed = 1f;
 
-    private AttackComponent currentTarget;
-    private List<AttackComponent> currentAttackers = new List<AttackComponent>();
+    [Header("Targets")]
+    [field: SerializeField] public AttackComponent CurrentTarget { get; private set; }
+    [field: SerializeField] public List<AttackComponent> CurrentAttackers { get; private set; } = new();
     public bool IsAttacking { get; private set; } = false;
 
     public event Action OnAttackStarted;
@@ -30,72 +35,101 @@ public class AttackComponent : MonoBehaviour
     {
         CombatManager.Instance.Register(this);
 
-        movement.OnMovementStopped += OnStopped;
-        health.OnDied += OnDied;
+        movement.OnDestinationReached += HandleDestinationReached;
+        health.OnDied += HandleDied;
     }
 
     private void OnDisable()
     {
         CombatManager.Instance.Unregister(this);
 
-        movement.OnMovementStopped -= OnStopped;
-        health.OnDied -= OnDied;
+        movement.OnDestinationReached -= HandleDestinationReached;
+        health.OnDied -= HandleDied;
     }
 
     public void Tick()
     {
-        if (!currentTarget) return;
+        if (CurrentTarget != null) {
+            if (!movement.IsReachedPosition(CurrentTarget.transform.position)) {
+                MoveToTarget();
+            }
 
-        TryStopMoving();
-        CorrentRotation();
+            CorrectRotation();
 
-        if (!IsAttacking) return;
-
-        currentAttackTime += Time.deltaTime;
-        if (currentAttackTime < attackFrequency) return;
-
-        AttackTarget();
+            if (IsAttacking) {
+                currentAttackTime += Time.deltaTime;
+                if (currentAttackTime >= attackFrequency) {
+                    AttackTarget();
+                }
+            }
+        }
     }
 
     public void SetTarget(AttackComponent target)
     {
-        if (!target) {
-            Debug.LogError("Attack target is not valid");
+        if (target == null) {
+            Debug.LogError($"[{nameof(AttackComponent)}] Attack target is not valid");
             return;
         }
 
-        currentTarget = target;
+        if (target == this) {
+            Debug.LogError($"[{nameof(AttackComponent)}] Combat Target is this component!");
+            return;
+        }
+
+        CurrentTarget = target;
         target.AddAttacker(this);
+        MoveToTarget();
     }
 
     public void RemoveTarget()
     {
-        currentTarget = null;
-        StopAtacking();
+        CurrentTarget = null;
+        StopAttacking();
     }
 
     public void AddAttacker(AttackComponent attacker)
     {
-        currentAttackers.Add(attacker);
+        if (attacker == null) {
+            Debug.LogError($"[{nameof(AttackComponent)}] Attacker is not valid");
+            return;
+        }
 
-        if (currentAttackers.Count > 1) return;
+        if (attacker == this) {
+            Debug.LogError($"[{nameof(AttackComponent)}] Attacker is this component!");
+            return;
+        }
 
-        SetTarget(attacker);
-        MoveToTarget();
+        if (CurrentAttackers.Contains(attacker)) return;
+
+        CurrentAttackers.Add(attacker);
+        if (CurrentAttackers.Count == 1 && CurrentTarget == null) {
+            SetTarget(attacker);
+        }
+
+        attacker.AddAttacker(this);
+    }
+
+    public void AddAttackers(List<AttackComponent> attackers)
+    {
+        foreach (var attacker in attackers) {
+            AddAttacker(attacker);
+        }
     }
 
     public void RemoveAllAttackers()
     {
-        foreach (var attacker in currentAttackers) {
+        var attackersCopy = new List<AttackComponent>(CurrentAttackers);
+        foreach (var attacker in attackersCopy) {
             RemoveAttacker(attacker);
         }
     }
 
     public void RemoveAttacker(AttackComponent attacker)
     {
-        currentAttackers.Remove(attacker);
+        CurrentAttackers.Remove(attacker);
 
-        var attackerTarget = attacker.currentTarget;
+        var attackerTarget = attacker.CurrentTarget;
         if (attackerTarget && attackerTarget == this) {
             attacker.RemoveTarget();
         }
@@ -103,15 +137,24 @@ public class AttackComponent : MonoBehaviour
 
     public void MoveToTarget()
     {
-        movement.TryMoveTo(currentTarget.transform.position);
+        if (!CurrentTarget) return;
+
+        movement.TryMoveTo(CurrentTarget.transform.position);
     }
 
     public void AttackTarget()
     {
-        var health = currentTarget.health;
+        if (CurrentTarget == null) return;
 
-        health.RemoveHealth(GetDamage());
+        var healthComponent = CurrentTarget.health;
+        if (healthComponent == null) return;
+
+        healthComponent.RemoveHealth(GetDamage());
         currentAttackTime = 0f;
+
+        if (CurrentTarget != null) {
+            CurrentTarget.HandleAttacked(this);
+        }
 
         OnAttacked?.Invoke();
         OnGlobalAttacked?.Invoke(this);
@@ -127,56 +170,74 @@ public class AttackComponent : MonoBehaviour
         RemoveTarget();
     }
 
-    private void StartAtacking()
+    private void StartAttacking()
     {
+        if (IsAttacking) return;
+
         IsAttacking = true;
+        currentAttackTime = 0f;
 
         OnAttackStarted?.Invoke();
         OnGlobalAttackStarted?.Invoke(this);
     }
 
-    private void StopAtacking()
+    private void StopAttacking()
     {
+        if (!IsAttacking) return;
+
         IsAttacking = false;
 
         OnAttackStopped?.Invoke();
         OnGlobalAttackStopped?.Invoke(this);
     }
 
-    private void TryStopMoving()
+    private bool TryStopMoving()
     {
-        if (!movement.IsReachedPosition(currentTarget.transform.position)) return;
+        if (CurrentTarget == null) return false;
+        if (!movement.IsReachedPosition(CurrentTarget.transform.position)) return false;
 
-        movement.StopMoving();
+        movement.TryStopMoving();
+        return true;
     }
 
-    private void CorrentRotation()
+    private void CorrectRotation()
     {
         if (movement.IsMoving) return;
+        if (CurrentTarget == null) return;
 
-        Vector3 direction = currentTarget.transform.position - transform.position;
-        Quaternion rotation = Quaternion.LookRotation(direction);
+        var direction = CurrentTarget.transform.position - transform.position;
+        if (direction == Vector3.zero) return;
+
+        var rotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
     }
 
-    private void OnStopped()
+    private void HandleAttacked(AttackComponent attackComponent)
     {
-        if (!currentTarget) return;
-
-        StartAtacking();
+        if (CurrentTarget == null) {
+            SetTarget(attackComponent);
+        }
     }
 
-    private void OnDied()
+    private void HandleDestinationReached()
+    {
+        if (CurrentTarget != null) {
+            StartAttacking();
+        }
+    }
+
+    private void HandleDied()
     {
         RemoveTarget();
 
-        foreach (var attacker in currentAttackers) {
+        var attackersCopy = new List<AttackComponent>(CurrentAttackers);
+        foreach (var attacker in attackersCopy) {
             attacker.OnTargetDied();
         }
     }
 
     private float GetDamage()
     {
-        return weaponComponent.GetPower();
+        return weaponComponent != null ? weaponComponent.GetPower() : 0f;
     }
 }

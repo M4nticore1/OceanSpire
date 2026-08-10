@@ -8,21 +8,25 @@ public class FindLootContextElement : ContextElement
     {
         base.Subscribe();
 
-        Boat.OnBoatStateEntered += OnBoatStateEntered;
+        Boat.OnBoatStateEntered += HandleBoatStateEntered;
+        Boat.OnInventoryItemAmountChanged += HandleInventoryItemAmountChanged;
     }
 
     protected override void Unsubscribe()
     {
         base.Unsubscribe();
 
-        Boat.OnBoatStateEntered -= OnBoatStateEntered;
+        Boat.OnBoatStateEntered -= HandleBoatStateEntered;
+        Boat.OnInventoryItemAmountChanged -= HandleInventoryItemAmountChanged;
     }
 
     protected override void OnButtonClicked()
     {
         if (!boat) return;
-        
-        boat.UpdateState();
+       
+        if (boat.ShouldFindLoot()) {
+            boat.SetState(BoatStateEnum.FindingLoot);
+        }
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)
@@ -45,7 +49,16 @@ public class FindLootContextElement : ContextElement
         return true;
     }
 
-    private void OnBoatStateEntered(Boat boat)
+    private void HandleBoatStateEntered(Boat boat)
+    {
+        if (!boat) return;
+        if (boat != this.boat) return;
+
+        UpdateActive(boat.ContextMenuTarget);
+        UpdateButtonEnabled();
+    }
+
+    private void HandleInventoryItemAmountChanged(Boat boat, ItemInstance item)
     {
         if (!boat) return;
         if (boat != this.boat) return;

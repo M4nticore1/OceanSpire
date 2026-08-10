@@ -23,7 +23,7 @@ public class EditorItemsFill : MonoBehaviour
     {
 #if UNITY_EDITOR
         foreach (var item in CityStorage.Inventory.Items) {
-            CityStorage.Inventory.AddItem(item.Definition.ItemId, item.Stack.Amount);
+            CityStorage.Inventory.AddItemAmount(item.Definition.ItemId, item.Stack.Amount);
         }
 #endif
     }

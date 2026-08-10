@@ -3,33 +3,37 @@ using UnityEngine;
 
 public class CreatureWaypointsComponent : MonoBehaviour
 {
-    [SerializeField] private Movement movement;
-    [SerializeField] private CreatureInteractComponent interactComponent;
-    [SerializeField] private CreatureCityNavigator cityNavigator;
+    [SerializeField] private Human human;
 
     public int CurrentWaypointIndex { get; private set; } = 0;
     public float CurrentWaypointTime { get; private set; } = 0f;
 
     private void OnEnable()
     {
-        interactComponent.OnInteractionStarted += OnInteractionStarted;
-        interactComponent.OnInteractionStopped += OnInteractionStopped;
+        human.InteractComponent.OnInteractionStarted += HandleInteractionStarted;
+        human.InteractComponent.OnInteractionStopped += HandleInteractionStopped;
 
         CreatureWaypointsManager.Instance.RegisterComponent(this);
     }
 
     private void OnDisable()
     {
-        interactComponent.OnInteractionStarted -= OnInteractionStarted;
-        interactComponent.OnInteractionStopped -= OnInteractionStopped;
+        human.InteractComponent.OnInteractionStarted -= HandleInteractionStarted;
+        human.InteractComponent.OnInteractionStopped -= HandleInteractionStopped;
 
         CreatureWaypointsManager.Instance.UnregisterComponent(this);
+    }
+
+    public void Init()
+    {
+        Init(CreatureWaypointsComponentData.Default());
     }
 
     public void Init(CreatureWaypointsComponentData waypointsData)
     {
         if (waypointsData == null) {
             Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Waypoints Data is not valid!");
+            Init();
             return;
         }
 
@@ -39,26 +43,33 @@ public class CreatureWaypointsComponent : MonoBehaviour
 
     public void Tick()
     {
-        if (!interactComponent.InteractBuilding) return;
-        if (!interactComponent.IsInteracting) return;
+        if (!human.ShouldFollowPath()) return;
 
-        var interaction = GetCurrentInteractionPoint();
-        if (interaction.GetWaypoint(CurrentWaypointIndex).ActionTime <= 0) return;
+        var cityNavigator = human.CityNavigator;
+
+        var targetBuilding = cityNavigator.TargetBuilding;
+        if (targetBuilding == null) return;
+
+        var currentBuilding = cityNavigator.CurrentBuilding;
+        if (currentBuilding == null) return;
+
+        if (currentBuilding != targetBuilding) return;
 
         CurrentWaypointTime += Time.deltaTime;
         if (!ShouldGoToNextWaypoint()) return;
+
+        var interaction = GetCurrentInteractionPoint();
+        if (interaction == null) return;
+        if (interaction.GetWaypoint(CurrentWaypointIndex).ActionTime <= 0) return;
 
         UpdateWaypoint();
         GoToNextWaypoint();
     }
 
-    public BuildingActionWaypoint GetCurrentWaypoint()
+    public InteractionWaypoint GetCurrentWaypoint()
     {
         var interaction = GetCurrentInteractionPoint();
-        if (interaction == null) {
-            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Building Interaction is not valid at building {cityNavigator.CurrentBuilding}!");
-            return null;
-        }
+        if (interaction == null) return null;
 
         return interaction.GetWaypoint(CurrentWaypointIndex);
     }
@@ -66,14 +77,11 @@ public class CreatureWaypointsComponent : MonoBehaviour
     private void UpdateWaypoint()
     {
         var interaction = GetCurrentInteractionPoint();
-        if (interaction == null) {
-            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Building Interaction is not valid at building {cityNavigator.CurrentBuilding}!");
-            return;
-        }
+        if (interaction == null) return;
 
         var waypointsLength = interaction.Waypoints.Length;
         if (waypointsLength == 0) {
-            Debug.LogWarning($"[{nameof(CreatureWaypointsComponent)}] No waypoints in interaction at building {cityNavigator.CurrentBuilding}!");
+            Debug.LogWarning($"[{nameof(CreatureWaypointsComponent)}] No waypoints in interaction at building {human.CityNavigator.CurrentBuilding}!");
             return;
         }
 
@@ -86,7 +94,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
         var waypoint = GetCurrentWaypoint();
         if (waypoint == null) return;
 
-        movement.TryMoveTo(waypoint.Transform);
+        human.Movement.TryMoveTo(waypoint.Transform);
     }
 
     private void ResetWaypoint()
@@ -99,7 +107,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
     {
         var waypoint = GetCurrentWaypoint();
         if (waypoint == null) {
-            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Waypoint is not valid at building {cityNavigator.CurrentBuilding}!");
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Waypoint is not valid at building {human.CityNavigator.CurrentBuilding}!");
             return false;
         }
 
@@ -110,27 +118,21 @@ public class CreatureWaypointsComponent : MonoBehaviour
 
     private BuildingAction GetCurrentInteractionPoint()
     {
-        var targetBuilding = cityNavigator.TargetBuilding;
-        if (!targetBuilding) {
-            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Target Building is not valid!");
-            return null;
-        }
+        var cityNavigator = human.CityNavigator;
+        if (!cityNavigator.HasPath) return null;
 
-        var human = GetComponent<Human>();
-        if (!human) {
-            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Human is not valid!");
-            return null;
-        }
+        var CurrentBuilding = cityNavigator.CurrentBuilding;
+        if (CurrentBuilding == null) return null;
 
-        return targetBuilding.GetInteractPoint(human);
+        return CurrentBuilding.GetInteractPoint(human);
     }
 
-    private void OnInteractionStarted(Building building)
+    private void HandleInteractionStarted(Building building)
     {
         ResetWaypoint();
     }
 
-    private void OnInteractionStopped(Building building)
+    private void HandleInteractionStopped(Building building)
     {
         ResetWaypoint();
     }

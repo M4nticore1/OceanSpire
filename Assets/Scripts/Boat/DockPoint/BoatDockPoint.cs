@@ -39,8 +39,10 @@ public class BoatDockPoint : MonoBehaviour
 
     public void AddBoat(Boat boat)
     {
+        if (boat == null) return;
+
         if (Boats.Contains(boat)) {
-            Debug.LogError("boat is already in the list");
+            Debug.LogError("Boat is already in the list");
             return;
         }
 
@@ -49,8 +51,10 @@ public class BoatDockPoint : MonoBehaviour
 
     public void RemoveBoat(Boat boat)
     {
+        if (boat == null) return;
+
         if (!Boats.Contains(boat)) {
-            Debug.LogError("boat is not in the list");
+            Debug.LogError("Boat is not in the list");
             return;
         }
 

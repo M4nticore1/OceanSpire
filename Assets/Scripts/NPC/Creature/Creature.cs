@@ -20,7 +20,7 @@ public abstract class Creature : MonoBehaviour
     public bool IsIdle { get; private set; } = true;
     public bool IsInited { get; private set; } = false;
 
-    private IEnumerator determineNextActionCoroutine;
+    private Coroutine determineNextActionCoroutine;
 
     public event Action OnIdleStarted;
     public event Action OnIdleStopped;
@@ -71,7 +71,7 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void HandleInit(CreatureData data)
     {
-        StartCoroutine(DetermineNextActionCoroutine());
+        RunDetermineNextActionCoroutine();
         transform.position = data.Position.Vector3();
         transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
 
@@ -135,9 +135,15 @@ public abstract class Creature : MonoBehaviour
         UpdateIdle();
     }
 
-    protected IEnumerator DetermineNextActionCoroutine()
+    protected void RunDetermineNextActionCoroutine()
     {
-        if (determineNextActionCoroutine != null) yield break;
+        if (determineNextActionCoroutine == null) {
+            determineNextActionCoroutine = StartCoroutine(DetermineNextActionCoroutine());
+        }
+    }
+
+    private IEnumerator DetermineNextActionCoroutine()
+    {
         yield return new WaitForEndOfFrame();
 
         DetermineNextAction();

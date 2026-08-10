@@ -52,9 +52,9 @@ public class UnloadingLootBoatState : BoatState, IProgressable
 
     public float GetProgress()
     {
-        if (boat.MaxWeight == 0) return 0f;
+        if (boat.Inventory.WeightLimit == 0) return 0f;
 
-        return 1f - (boat.CurrentWeight / boat.MaxWeight);
+        return 1f - (boat.Inventory.GetCurrentWeight() / boat.Inventory.WeightLimit);
     }
 
     private void ProcessUnloadResources()
@@ -94,8 +94,8 @@ public class UnloadingLootBoatState : BoatState, IProgressable
 
         var item = ItemInstance.Create(itemData);
 
-        boat.Inventory.RemoveItem(item);
-        cityStorage.Inventory.AddItem(item);
+        boat.Inventory.RemoveItemAmount(item);
+        cityStorage.Inventory.AddItemAmount(item);
         OnLootUnloaded?.Invoke(boat, item);
     }
 
@@ -113,7 +113,7 @@ public class UnloadingLootBoatState : BoatState, IProgressable
 
     private bool ShouldUnload()
     {
-        if (boat.Inventory.CurrentWeight <= 0f) return false;
+        if (boat.Inventory.GetCurrentWeight() <= 0f) return false;
         if (GetItemToUnload() == null) return false;
 
         return true;

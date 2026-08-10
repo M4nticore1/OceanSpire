@@ -46,14 +46,14 @@ public class BuildingCostSystem : MonoBehaviour
     private void SpendResources(Building building)
     {
         foreach (var resource in building.GetResourcesToBuild()) {
-            cityStorage.Inventory.RemoveItem(resource.Definition.ItemId, resource.Amount);
+            cityStorage.Inventory.RemoveItemAmount(resource.Definition.ItemId, resource.Amount);
         }
     }
 
     private void RefundResources(Building building)
     {
         foreach (var resource in building.GetResourcesToRefund()) {
-            cityStorage.Inventory.AddItem(resource.Definition.ItemId, resource.Amount);
+            cityStorage.Inventory.AddItemAmount(resource.Definition.ItemId, resource.Amount);
         }
     }
 

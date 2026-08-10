@@ -63,7 +63,16 @@ public class DockPointsLoader : WorldLoader
     private void LoadDocks(IReadOnlyList<BoatDockPoint> docks, List<BoatDockData> docksData)
     {
         for (int i = 0; i < docks.Count; i++) {
-            if (i >= docksData.Count) break;
+            var dock = docks[i];
+            if (dock == null) {
+                Debug.LogError($"[{nameof(DockPointsLoader)}] Dock is not valid at index {i}!");
+                continue;
+            }
+
+            if (i >= docksData.Count) {
+                Debug.LogError($"[{nameof(DockPointsLoader)}] Dock's count is greater than Docks Data!");
+                break;
+            }
 
             var data = docksData[i];
             if (data == null) {
@@ -71,9 +80,7 @@ public class DockPointsLoader : WorldLoader
                 data = BoatDockData.Default();
             }
 
-            if (docks[i] != null) {
-                docks[i].Init(data);
-            }
+            dock.Init(data);
         }
     }
 }

@@ -228,6 +228,10 @@ PrefabInstance:
       propertyPath: paddle
       value: 
       objectReference: {fileID: 1250184046339965348}
+    - target: {fileID: 2185582854232776361, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
+      propertyPath: human
+      value: 
+      objectReference: {fileID: 5290309351902810709}
     - target: {fileID: 5552754147449274060, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -272,6 +276,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Human_Raider_Male
       objectReference: {fileID: 0}
+    - target: {fileID: 7048535748943796013, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
+      propertyPath: human
+      value: 
+      objectReference: {fileID: 5290309351902810709}
     - target: {fileID: 8499683307490277393, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
       propertyPath: spawnPoint
       value: 

@@ -49,8 +49,11 @@ public class PierModule : BuildingModule
 
     private void CreateBoats()
     {
+        Debug.Log(OwnedBuilding.SpawnedConstruction);
         if (!boatsLoader.IsLoaded) return;
 
+        Debug.Log(PierConstruction.BoatDocks.Count);
+        Debug.Log(boatsManager.CitizenBoats.Count);
         int count = PierConstruction.BoatDocks.Count - boatsManager.CitizenBoats.Count;
 
         for (int i = 0; i < count; i++) {
@@ -76,17 +79,18 @@ public class PierModule : BuildingModule
 
     private void UpdateBoatDocks()
     {
-        var boats = boatsManager.CitizenBoatsDict.Values.ToList();
+        var boats = boatsManager.CitizenBoats;
+        Debug.Log(boats.Count);
 
         for (int i = 0; i < boats.Count; i++) {
             var boat = boats[i];
-            if (!boat) {
+            if (boat == null) {
                 Debug.LogError($"[{nameof(PierModule)}] Boat is not valid by index {i}");
                 continue;
             }
 
-            var dockPoint = PierConstruction.BoatDocks[i];
-            if (!dockPoint) {
+            var dockPoint = PierConstruction.GetBoatDock(i);
+            if (dockPoint == null) {
                 Debug.LogError($"[{nameof(PierModule)}] Dock Point is not valid by index {i}");
                 continue;
             }
@@ -97,11 +101,11 @@ public class PierModule : BuildingModule
 
     private void UpdateBoatPositions()
     {
-        var boats = boatsManager.CitizenBoatsDict.Values.ToList();
+        var boats = boatsManager.CitizenBoats;
 
         for (int i = 0; i < boats.Count; i++) {
             var boat = boats[i];
-            if (!boat) {
+            if (boat == null) {
                 Debug.LogError($"[{nameof(PierModule)}] Boat is not valid by index {i}");
                 continue;
             }
@@ -109,7 +113,7 @@ public class PierModule : BuildingModule
             var state = boat.CurrentStateEnum;
             if (state == BoatStateEnum.Idle || state == BoatStateEnum.UnloadingLoot || (state == BoatStateEnum.MovingToDock && !boat.CurrentRider)) {
                 var dockPoint = boat.DockPoint;
-                if (!dockPoint) {
+                if (dockPoint == null) {
                     Debug.LogError($"[{nameof(PierModule)}] Dock Point is not valid by index {i}");
                     continue;
                 }

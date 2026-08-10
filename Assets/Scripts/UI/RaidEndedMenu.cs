@@ -46,7 +46,7 @@ public class RaidEndedMenu : MonoBehaviour
     {
         Open();
         RemoveLosses();
-        CreateLosses();
+        CreateLosses(result.Losses);
     }
 
     private void Open()
@@ -62,20 +62,20 @@ public class RaidEndedMenu : MonoBehaviour
         currentVisibilityTime = 0f;
     }
 
-    private void CreateLosses()
+    private void CreateLosses(List<ItemInstance> items)
     {
-        int lossesCount = raidManager.Inventory.Items.Count;
-
-        if (lossesCount == 0) {
+        if (items.Count == 0) {
             noLossesText.gameObject.SetActive(true);
         }
         else {
             noLossesText.gameObject.SetActive(false);
 
-            for (int i = 0; i < lossesCount; i++) {
-                var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
+            for (int i = 0; i < items.Count; i++) {
+                var item = items[i];
+                if (item == null) continue;
+                if (item.Amount <= 0) continue;
 
-                var item = raidManager.Inventory.TryGetItemByIndex(i);
+                var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
                 widget.SetItem(item);
                 widget.AddAmount(item);
                 widget.SetColor(loseColor);

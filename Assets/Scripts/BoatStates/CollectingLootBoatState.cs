@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CollectingLootBoatState : BoatState, IProgressable
@@ -5,7 +7,7 @@ public class CollectingLootBoatState : BoatState, IProgressable
     private float currentCollectingTime = 0f;
     private float collectLootTime = 2f;
 
-    private SwimmingDriftingLoot driftingLoot;
+    public static event Action<Boat, List<ItemInstance>> OnLootCollected;
 
     public CollectingLootBoatState(Boat boat) : base(boat)
     {
@@ -14,14 +16,9 @@ public class CollectingLootBoatState : BoatState, IProgressable
 
     public override void Enter()
     {
-        if (!boat.TargetDriftingLoot) {
-            boat.SetState(BoatStateEnum.FindingLoot);
-            return;
-        }
-
-        driftingLoot = boat.TargetDriftingLoot;
-        if (!driftingLoot) {
-            boat.SetState(BoatStateEnum.FindingLoot);
+        var driftingLoot = boat.TargetDriftingLoot;
+        if (driftingLoot == null) {
+            UpdateState();
             return;
         }
 
@@ -30,19 +27,25 @@ public class CollectingLootBoatState : BoatState, IProgressable
 
     public override void Exit()
     {
-        var container = boat.TargetDriftingLoot;
-        if (!container) return;
+        var driftingLoot = boat.TargetDriftingLoot;
+        if (driftingLoot == null) return;
 
-        container.StartMoving();
+        driftingLoot.StartMoving();
     }
 
     public override void Tick()
-    { 
-        currentCollectingTime += Time.deltaTime;
-        if (currentCollectingTime <= collectLootTime) return;
+    {
+        var driftingLoot = boat.TargetDriftingLoot;
+        if (driftingLoot == null) {
+            boat.RunUpdateStateCoroutine();
+            return;
+        }
 
-        TryCollectLoot();
-        UpdateState();
+        currentCollectingTime += Time.deltaTime;
+        if (currentCollectingTime >= collectLootTime) {
+            TryCollectLoot();
+            UpdateState();
+        }
     }
 
     public override void OnReachedPath()
@@ -57,7 +60,7 @@ public class CollectingLootBoatState : BoatState, IProgressable
 
     public float GetProgress()
     {
-        return currentCollectingTime / collectLootTime;
+        return collectLootTime > 0 ? currentCollectingTime / collectLootTime : 1f;
     }
 
     private void UpdateState()
@@ -72,23 +75,22 @@ public class CollectingLootBoatState : BoatState, IProgressable
 
     private bool TryCollectLoot()
     {
-        if (!ShouldCollectLoot()) return false;
-
-        var collectedLoot = driftingLoot.TakeItems();
-
-        foreach (var loot in collectedLoot) {
-            if (boat.Inventory.RemainingWeight <= 0f) break;
-
-            boat.Inventory.AddItem(loot.Definition.ItemId, loot.Amount);
+        var driftingLoot = boat.TargetDriftingLoot;
+        if (driftingLoot == null) {
+            Debug.LogError($"[{nameof(CollectingLootBoatState)}] Target Drifting Loot is not valid!");
+            return false;
         }
 
-        return true;
-    }
+        var collectedLoot = driftingLoot.TakeItems();
+        boat.RemoveTargetLoot();
 
-    private bool ShouldCollectLoot()
-    {
-        if (!driftingLoot) return false;
+        foreach (var loot in collectedLoot) {
+            if (boat.Inventory.GetRemainingWeight() <= 0f) break;
 
+            boat.Inventory.AddItemAmount(loot.Definition.ItemId, loot.Amount);
+        }
+
+        OnLootCollected?.Invoke(boat, collectedLoot);
         return true;
     }
 }

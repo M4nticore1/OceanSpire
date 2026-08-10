@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6176668738817217140}
-  - component: {fileID: 5376106033984805025}
+  - component: {fileID: 6198570733656650747}
   m_Layer: 0
-  m_Name: BoatHarvestEffectManager
+  m_Name: BoatUnloadingHarvestEffectManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5376106033984805025
+--- !u!114 &6198570733656650747
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,8 +41,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 1966153980870586964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f37357790cc8f148825f7a55733adce, type: 3}
+  m_Script: {fileID: 11500000, guid: 087010e611528b84fb7284d68b5591b7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BoatHarvestEffectManager
+  m_EditorClassIdentifier: Assembly-CSharp::BoatUnloadingHarvestEffectManager
   harvestResourceWidgetPrefab: {fileID: 3650328488881421418, guid: ad255964915669b46b66ad4b670535e2, type: 3}
   spawnWidgetCooldown: 0.65

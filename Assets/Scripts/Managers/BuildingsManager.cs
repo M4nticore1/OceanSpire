@@ -102,7 +102,7 @@ public class BuildingsManager : MonoBehaviour
 
             foreach (var roomPlace in floor.RoomBuildingPlaces) {
                 var building = roomPlace.PlacedBuilding;
-                if (!building) continue;
+                if (building == null) continue;
 
                 buildings.Add(building);
             }
@@ -116,14 +116,14 @@ public class BuildingsManager : MonoBehaviour
         var raidableBuildings = new List<TowerBuilding>();
 
         foreach (var floor in BuiltFloors) {
-            if (!floor) {
+            if (floor == null) {
                 Debug.LogError($"[{nameof(BuildingsManager)}] Floor is not valid!");
                 continue;
             }
 
             foreach (var roomPlace in floor.RoomBuildingPlaces) {
                 var building = roomPlace.PlacedBuilding;
-                if (!building) continue;
+                if (building == null) continue;
                 if (!building.CanBeRaided()) continue;
 
                 raidableBuildings.Add(building);
@@ -147,7 +147,7 @@ public class BuildingsManager : MonoBehaviour
             var index = builtFloors.Count - 1;
 
             var floor = builtFloors[index];
-            if (!floor) {
+            if (floor == null) {
                 Debug.LogError($"[{nameof(BuildingsManager)}] Floor at index {index} is not valid");
             }
 
@@ -163,12 +163,12 @@ public class BuildingsManager : MonoBehaviour
         if (builtFloors.Count <= FirstBuildingFloor) return;
 
         var floor = builtFloors[FirstBuildingFloor];
-        if (!floor) return;
+        if (floor == null) return;
 
         if (floor.RoomBuildingPlaces.Count <= FirstBuildingPlace) return;
 
         var place = floor.RoomBuildingPlaces[FirstBuildingPlace];
-        if (!place) return;
+        if (place == null) return;
 
         EntranceBuildingPlace = place;
     }

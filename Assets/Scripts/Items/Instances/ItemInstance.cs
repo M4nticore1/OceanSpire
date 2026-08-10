@@ -37,7 +37,12 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 
     public virtual void SetAmount(int amount)
     {
-        amount = Mathf.Clamp(amount, 0, Stack != null ? Stack.Amount : amount);    
+        amount = Mathf.Max(amount, 0);
+
+        if (Stack != null) {
+            amount = Mathf.Min(amount, Stack.Amount);
+        }
+
         if (this.amount == amount) return;
 
         var lastAmount = this.amount;

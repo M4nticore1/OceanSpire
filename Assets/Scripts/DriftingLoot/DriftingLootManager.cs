@@ -81,33 +81,33 @@ public class DriftingLootManager : MonoBehaviour
 
     public void RegisterSwimmingDriftingLoot(SwimmingDriftingLoot driftingLoot)
     {
-        if (driftingLoot != null && !SpawnedSwimmingDriftingLoot.Contains(driftingLoot)) {
+        if (driftingLoot && !SpawnedSwimmingDriftingLoot.Contains(driftingLoot)) {
             SpawnedSwimmingDriftingLoot.Add(driftingLoot);
         }
     }
 
     public void UnregisterSwimmingDriftingLoot(SwimmingDriftingLoot driftingLoot)
     {
-        if (driftingLoot == null) return;
+        if (!driftingLoot) return;
         SpawnedSwimmingDriftingLoot.Remove(driftingLoot);
     }
 
     public void RegisterFlyingDriftingLoot(FlyingDriftingLoot driftingLoot)
     {
-        if (driftingLoot != null && !SpawnedFlyingDriftingLoot.Contains(driftingLoot)) {
+        if (driftingLoot && !SpawnedFlyingDriftingLoot.Contains(driftingLoot)) {
             SpawnedFlyingDriftingLoot.Add(driftingLoot);
         }
     }
 
     public void UnregisterFlyingDriftingLoot(FlyingDriftingLoot driftingLoot)
     {
-        if (driftingLoot == null) return;
+        if (!driftingLoot) return;
         SpawnedFlyingDriftingLoot.Remove(driftingLoot);
     }
 
     public Vector3 GetSpawnPosition(DriftingLoot containerPrefab)
     {
-        Vector3 windDir = WindManager.Instance != null ? WindManager.Instance.WindDirection : Vector3.forward;
+        Vector3 windDir = WindManager.Instance ? WindManager.Instance.WindDirection : Vector3.forward;
         windDir = new Vector3(windDir.x, 0f, windDir.z).normalized;
         Vector3 baseSpawnPos = -windDir * WorldUtils.SpawnDistance;
         float randomYawAngle = UnityEngine.Random.Range(-spawnMaxOffsetYaw / 2, spawnMaxOffsetYaw / 2);

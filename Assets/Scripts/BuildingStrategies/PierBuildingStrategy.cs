@@ -1,6 +1,3 @@
-using Cysharp.Threading.Tasks.Triggers;
-using System;
-using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -25,10 +22,10 @@ public class PierBuildingStrategy : BuildingStrategy
 
     public override void OnInteractBuildingSet(CreatureInteractComponent interactor)
     {
-        if (!interactor) return;
+        if (interactor == null) return;
 
         var boatRider = interactor.GetComponent<BoatRider>();
-        if (!boatRider) return;
+        if (boatRider == null) return;
 
         TryAssignFreeBoat(boatRider);
 
@@ -114,22 +111,22 @@ public class PierBuildingStrategy : BuildingStrategy
             return null;
         }
 
-        var index = GetFirstFreeBoatIndex();
-
+        int? index = 0;
         var targetBoat = boatRider.TargetBoat;
-        if (targetBoat) {
+
+        if (targetBoat != null) {
             index = BoatsManager.Instance.CitizenBoats.ToList().IndexOf(targetBoat);
         }
         else {
             index = GetFirstFreeBoatIndex();
             if (index == null) {
-                Debug.LogError($"[{nameof(PierBuildingStrategy)}] Not free boats fount at {building}!");
+                //Debug.LogError($"[{nameof(PierBuildingStrategy)}] Not free boats fount at {building}!");
                 return null;
             }
         }
 
         var construction = building.SpawnedConstruction;
-        if (!construction) {
+        if (construction == null) {
             Debug.LogError($"[{nameof(PierBuildingStrategy)}] Construction is not valid at {building}!");
             return null;
         }
@@ -147,13 +144,13 @@ public class PierBuildingStrategy : BuildingStrategy
     {
         for (int i = 0; i < building.CitizensHandler.Interactors.Count; i++) {
             var worker = building.CitizensHandler.Interactors[i];
-            if (!worker) {
+            if (worker == null) {
                 Debug.LogError($"Worker not found at {building.name}");
                 continue;
             }
 
             var boatRider = worker.GetComponent<BoatRider>();
-            if (!boatRider) {
+            if (boatRider == null) {
                 Debug.LogError($"Boat Rider not found at {worker.name}");
                 continue;
             }
@@ -164,7 +161,7 @@ public class PierBuildingStrategy : BuildingStrategy
             }
 
             var boat = BoatsManager.Instance.CitizenBoats[i];
-            if (!boat) {
+            if (boat == null) {
                 Debug.LogError($"Citizen Boat not found at {BoatsManager.Instance.name}");
                 continue;
             }
@@ -182,12 +179,10 @@ public class PierBuildingStrategy : BuildingStrategy
         var ridingBoat = boatRider.RidingBoat;
         if (ridingBoat) {
             boatRider.TrySetTargetBoat(ridingBoat);
-            Debug.Log("RidingBoat");
         }
         else {
-            Debug.Log("FirstBoat");
             var boat = GetFirstFreeBoat();
-            if (!boat) return;
+            if (boat == null) return;
 
             boatRider.TrySetTargetBoat(boat);
         }
@@ -206,9 +201,23 @@ public class PierBuildingStrategy : BuildingStrategy
         var citizenBoats = BoatsManager.Instance.CitizenBoats;
         for (int i = 0; i < citizenBoats.Count; i++) {
             var boat = citizenBoats[i];
-            if (!boat) continue;
-            if (boat.TargetRider) continue;
-            if (boat.CurrentRider) continue;
+            if (boat == null) continue;
+
+            var currentRider = boat.CurrentRider;
+            if (currentRider != null) {
+                var currentCitizen = currentRider.GetComponent<Citizen>();
+                if (currentCitizen != null) {
+                    if (currentRider && currentCitizen.InteractComponent.InteractBuilding?.gameObject == pier.gameObject) continue;
+                }
+            }
+
+            var targetRider = boat.TargetRider;
+            if (targetRider != null) {
+                var targetCitizen = targetRider.GetComponent<Citizen>();
+                if (targetCitizen != null) {
+                    if (targetCitizen && targetCitizen.InteractComponent.InteractBuilding?.gameObject == pier.gameObject) continue;
+                }
+            }
 
             return i;
         }

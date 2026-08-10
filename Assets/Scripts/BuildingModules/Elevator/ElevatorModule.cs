@@ -7,7 +7,7 @@ public class ElevatorModule : BuildingModule, IElectricible
     [SerializeField] private float electricityConsumption = 0f;
     public float ElectricityConsumption => electricityConsumption;
 
-    public ElevatorCabinConstruction SpawnedElevatorCabin;
+    [field: SerializeField] public ElevatorCabinConstruction SpawnedElevatorCabin { get; private set; }
 
     // Subscribe
     protected override void Subscribe()
@@ -98,14 +98,12 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     public bool IsPossibleToExit()
     {
-        if (!SpawnedElevatorCabin) {
+        if (SpawnedElevatorCabin == null) {
             Debug.LogError($"[{nameof(ElevatorModule)}] Spawned Elevator Cabin is not valid!");
             return false;
         }
 
-        if (SpawnedElevatorCabin.IsMoving) return false;
-
-        return true;
+        return !SpawnedElevatorCabin.IsMoving;
     }
 
     //public Transform GetCabinRidingTransform()

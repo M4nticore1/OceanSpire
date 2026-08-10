@@ -48,7 +48,7 @@ public class MovingToDockBoatState : BoatState
         }
         else {
             Debug.LogError($"[{nameof(MovingToDockBoatState)}] Boat Dock is not valid!");
-            boat.Movement.StopMoving();
+            boat.Movement.TryStopMoving();
         }
     }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class PierConstruction : BuildingConstruction
 {
     [SerializeField] private List<BoatDockPoint> boatDocks = new List<BoatDockPoint>();
-    public List<BoatDockPoint> BoatDocks => boatDocks;
+    public IReadOnlyList<BoatDockPoint> BoatDocks => boatDocks;
 
     BoatDocksManager boatDocksManager => BoatDocksManager.Instance;
 
@@ -22,10 +22,26 @@ public class PierConstruction : BuildingConstruction
         UnregisterBoatDocks();
     }
 
+    public BoatDockPoint GetBoatDock(int index)
+    {
+        if (index >= boatDocks.Count) {
+            Debug.LogError($"{nameof(PierConstruction)} Index {index} is greater than dock's count at {name}!");
+            return null;
+        }
+
+        var dock = boatDocks[index];
+        if (dock == null) {
+            Debug.LogError($"{nameof(PierConstruction)} Boat Dock is not valid at index {index} at {name}!");
+            return null;
+        }
+
+        return boatDocks[index];
+    }
+
     private void RegisterBoatDocks()
     {
         foreach (var dock in boatDocks) {
-            if (!dock) {
+            if (dock == null) {
                 Debug.LogError($"[{nameof(PierConstruction)}] Dock is not valid at {name}!");
             }
 
@@ -44,7 +60,7 @@ public class PierConstruction : BuildingConstruction
     private void UnregisterBoatDocks()
     {
         foreach (var dock in boatDocks) {
-            if (!dock) {
+            if (dock == null) {
                 Debug.LogError($"[{nameof(PierConstruction)}] Dock is not valid at {name}!");
                 continue;
             }

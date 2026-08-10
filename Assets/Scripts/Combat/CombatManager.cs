@@ -5,7 +5,7 @@ public class CombatManager : MonoBehaviour
 {
     public static CombatManager Instance { get; private set; }
 
-    private readonly HashSet<AttackComponent> combatComponents = new();
+    private List<AttackComponent> combatComponents = new();
 
     private void Awake()
     {
@@ -16,6 +16,19 @@ public class CombatManager : MonoBehaviour
         }
 
         Instance = this;
+    }
+
+    private void Update()
+    {
+        for (int i = combatComponents.Count - 1; i >= 0; i--) {
+            var component = combatComponents[i];
+            if (component == null) {
+                combatComponents.RemoveAt(i);
+                continue;
+            }
+
+            component.Tick();
+        }
     }
 
     public void Register(AttackComponent component)
@@ -30,12 +43,5 @@ public class CombatManager : MonoBehaviour
         if (!component) return;
 
         combatComponents.Remove(component);
-    }
-
-    private void Update()
-    {
-        foreach (var component in combatComponents) {
-            component.Tick();
-        }
     }
 }

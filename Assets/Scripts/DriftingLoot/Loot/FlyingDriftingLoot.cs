@@ -20,6 +20,13 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
     public static event Action<FlyingDriftingLoot> OnFlyingLootStartedFalling;
     public static event Action<FlyingDriftingLoot> onContainerLanded;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        DriftingLootManager.Instance.RegisterFlyingDriftingLoot(this);
+    }
+
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -40,7 +47,7 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
 
         if (flyingDriftingLootData == null) {
             Debug.Log($"flyingDriftingLootData is not valid");
-            Destroy(gameObject);
+            Destroy();
             return;
         }
 
@@ -49,7 +56,6 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
         TrySetFalling(flyingDriftingLootData.IsFalling);
 
         targetFallingDemolishHeight = boxCollider.size.y / 2 - boxCollider.center.y - fallingDemolishHeightOffset;
-        DriftingLootManager.Instance.RegisterFlyingDriftingLoot(this);
     }
 
     public override void Tick(float deltaTime)
@@ -65,6 +71,11 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
         DemolishFlyingContainer();
     }
 
+    public override DriftingLootData GetDefaultData()
+    {
+        return FlyingDriftingLootData.Default();
+    }
+
     public override DriftingLootData CreateData()
     {
         return FlyingDriftingLootData.Create(this);
@@ -77,6 +88,12 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
             Id = Definition.Id,
             MeshId = UnityEngine.Random.Range(0, Definition.Meshes.Length),
         };
+    }
+
+    public override void Destroy()
+    {
+        Destroy(gameObject);
+        DriftingLootManager.Instance.UnregisterFlyingDriftingLoot(this);
     }
 
     protected override void OnClick()
@@ -114,7 +131,7 @@ public class FlyingDriftingLoot : DriftingLoot, IClickable
         var container = DriftingLootFactory.CreateDriftingLoot(prefab, driftingLootData);
         Instantiate(demolishParticlesPrefab, position, rotation);
 
-        Destroy(gameObject);
+        Destroy();
         onContainerLanded?.Invoke(this);
     }
 

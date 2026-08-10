@@ -55,7 +55,7 @@ public class BuildingTrigger : MonoBehaviour
             Debug.LogError("building is null.");
     }
 
-    IEnumerator InitNextFrame()
+    private IEnumerator InitNextFrame()
     {
         yield return new WaitForFixedUpdate();
         isInited = true;

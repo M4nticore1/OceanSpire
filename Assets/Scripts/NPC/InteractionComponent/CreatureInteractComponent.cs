@@ -42,7 +42,7 @@ public class CreatureInteractComponent : MonoBehaviour
 
         var instance = InstancesManager.Instance.GetInstance(instanceId.Value);
 
-        if (instance) {
+        if (instance != null) {
             var interactBuilding = instance.GetComponent<Building>();
             SetInteractBuilding(interactBuilding);
         }
@@ -50,7 +50,7 @@ public class CreatureInteractComponent : MonoBehaviour
 
     public void SetInteractBuilding(Building building)
     {
-        if (!building) {
+        if (building == null) {
             Debug.LogError($"[{nameof(CreatureInteractComponent)}] Building not found. Use RemoveInteractBuilding method instead of SetInteractBuilding.");
             return;
         }
@@ -68,7 +68,7 @@ public class CreatureInteractComponent : MonoBehaviour
 
     public void RemoveInteractBuilding()
     {
-        if (!InteractBuilding) return;
+        if (InteractBuilding == null) return;
 
         var lastInteractBuilding = InteractBuilding;
         InteractBuilding = null;
@@ -112,7 +112,7 @@ public class CreatureInteractComponent : MonoBehaviour
 
     private bool ShouldStartInteracting(Building building)
     {
-        if (!building) return false;
+        if (building == null) return false;
         if (IsInteracting) return false;
 
         return true;
@@ -120,7 +120,7 @@ public class CreatureInteractComponent : MonoBehaviour
 
     private bool ShouldStopInteracting(Building building)
     {
-        if (!building) return false;
+        if (building == null) return false;
         if (!IsInteracting) return false;
 
         return true;

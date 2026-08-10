@@ -491,6 +491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaidEndedMenu
   resourceWidgetPrefab: {fileID: 5555003485712965333, guid: 05d8556b038f0de4a8ff0ff3890fe101, type: 3}
+  raidManager: {fileID: 0}
   slidePanel: {fileID: 55599211340225704}
   noLossesText: {fileID: 8759625595358339862}
   layoutGroup: {fileID: 7051103166917226330}

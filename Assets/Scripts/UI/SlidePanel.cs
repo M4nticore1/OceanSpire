@@ -121,7 +121,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     private void TryToClose()
     {
-        List<RaycastResult> results = new List<RaycastResult>();
+        var results = new List<RaycastResult>();
         PointerUtils.GetRaycastUIResults(results);
         if (IsClickedOutsideMenu(results)) {
             Hide();
@@ -140,7 +140,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
         openedFrame = Time.frameCount;
 
-        if (background) {
+        if (background != null) {
             background.raycastTarget = true;
             content.Add(background.transform);
         }
@@ -160,7 +160,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         closedPosition = CalculateClosedPosition();
         targetPosition = closedPosition;
 
-        if (background) {
+        if (background != null) {
             background.raycastTarget = false;
         }
 
@@ -180,8 +180,8 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
         float t = 1f - math.exp(-slideTransitionSpeed * Time.deltaTime);
         rectTransform.anchoredPosition = math.lerp(rectTransform.anchoredPosition, targetPosition, t);
 
-        Vector2 min = math.min(openedPosition, closedPosition);
-        Vector2 max = math.max(openedPosition, closedPosition);
+        var min = math.min(openedPosition, closedPosition);
+        var max = math.max(openedPosition, closedPosition);
 
         rectTransform.anchoredPosition = math.clamp(rectTransform.anchoredPosition, min, max);
     }

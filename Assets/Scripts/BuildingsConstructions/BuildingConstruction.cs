@@ -6,10 +6,10 @@ using UnityEngine;
 [System.Serializable]
 public class BuildingAction
 {
-    [SerializeField] private BuildingActionWaypoint[] waypoints;
-    public BuildingActionWaypoint[] Waypoints => waypoints;
+    [SerializeField] private InteractionWaypoint[] waypoints;
+    public InteractionWaypoint[] Waypoints => waypoints;
 
-    public BuildingActionWaypoint GetWaypoint(int index)
+    public InteractionWaypoint GetWaypoint(int index)
     {
         if (index >= waypoints.Length) {
             Debug.LogError("index is over than waypoints length");
@@ -21,13 +21,16 @@ public class BuildingAction
 }
 
 [System.Serializable]
-public class BuildingActionWaypoint
+public class InteractionWaypoint
 {
     [SerializeField] private Transform transform;
     public Transform Transform => transform;
 
     [SerializeField] private int actionTime;
     public int ActionTime => actionTime;
+
+    [SerializeField] private AnimationParam actionAnimation;
+    public AnimationParam ActionAnimation => actionAnimation;
 }
 
 public class BuildingConstruction : MonoBehaviour, IClickable

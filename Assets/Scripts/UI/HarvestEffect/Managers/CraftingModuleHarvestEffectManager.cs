@@ -23,6 +23,7 @@ public class CraftingModuleHarvestEffectManager : HarvestItemEffectManager
     [Header("Multi Spawn")]
     [SerializeField] private float spawnMultiWidgetsFrequency = 0.1f;
     [SerializeField] private int maxMultiWidgetsCount = 5;
+    private double lastSpawnTime = 0d;
 
     private Dictionary<ItemDefinition, RectTransform> customTargetTransformsDict = new();
 
@@ -93,7 +94,7 @@ public class CraftingModuleHarvestEffectManager : HarvestItemEffectManager
         for (int i = 0; i < count; i++) {
             yield return new WaitForSeconds(spawnMultiWidgetsFrequency);
 
-            TryCreateWidget(item, playerCanvas.transform, startPosition, targetPosition);
+            TryCreateWidget(HarvestResourceWidgetPrefab, playerCanvas.transform, startPosition, targetPosition, item, false);
         }
     }
 }

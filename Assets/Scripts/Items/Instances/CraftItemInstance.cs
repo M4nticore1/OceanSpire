@@ -86,7 +86,7 @@ public class CraftItemInstance
         if (!cityStorage) return false;
 
         foreach (var resource in Definition.ConsumeResources) {
-            cityStorage.Inventory.RemoveItem(resource.Definition.ItemId, resource.Amount);
+            cityStorage.Inventory.RemoveItemAmount(resource.Definition.ItemId, resource.Amount);
         }
 
         SetResourcesSpent(true);
@@ -99,7 +99,7 @@ public class CraftItemInstance
         if (!cityStorage) return false;
 
         foreach (var resource in Definition.ConsumeResources) {
-            cityStorage.Inventory.AddItem(resource.Definition.ItemId, resource.Amount);
+            cityStorage.Inventory.AddItemAmount(resource.Definition.ItemId, resource.Amount);
         }
 
         SetResourcesSpent(false);

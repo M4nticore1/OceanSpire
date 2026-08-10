@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class BoatRider : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class BoatRider : MonoBehaviour
     public HealthComponent HealthComponent => healthComponent;
 
     [SerializeField] private float useBoatTime = 1;
+
     private TimerHandle useBoatTimerHandle = new TimerHandle();
 
     public bool IsEnteringBoat { get; private set; } = false;
@@ -46,6 +46,8 @@ public class BoatRider : MonoBehaviour
     {
         movement.OnMovementStopped -= OnMovementStopped;
         healthComponent.OnDied -= OnDied;
+
+        StopAllRidingProcesses();
     }
 
     public void Init()
@@ -65,10 +67,10 @@ public class BoatRider : MonoBehaviour
         if (targetBoatInstanceId != null) {
             var instance = InstancesManager.Instance.GetInstance(targetBoatInstanceId.Value);
 
-            if (instance) {
+            if (instance != null) {
                 var boat = instance.GetComponent<Boat>();
 
-                if (boat)
+                if (boat != null)
                     TrySetTargetBoat(boat);
             }
         }
@@ -77,10 +79,10 @@ public class BoatRider : MonoBehaviour
         if (ridingBoatInstanceId != null) {
             var instance = InstancesManager.Instance.GetInstance(ridingBoatInstanceId.Value);
 
-            if (instance) {
+            if (instance != null) {
                 var boat = instance.GetComponent<Boat>();
 
-                if (boat) {
+                if (boat != null) {
                     EnterBoat(boat);
                 }
             }
@@ -90,6 +92,8 @@ public class BoatRider : MonoBehaviour
     public bool TryStartEnteringBoat(Boat boat)
     {
         if (!ShouldStartEnteringBoat()) return false;
+
+        CancelUseBoatTimer();
 
         TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, () => EnterBoat(boat));
         IsEnteringBoat = true;
@@ -101,7 +105,7 @@ public class BoatRider : MonoBehaviour
     {
         if (!IsEnteringBoat) return false;
 
-        TimerManager.Instance.RemoveTimer(useBoatTimerHandle);
+        CancelUseBoatTimer();
         IsEnteringBoat = false;
 
         return true;
@@ -109,28 +113,41 @@ public class BoatRider : MonoBehaviour
 
     public void StartExitingBoat()
     {
+        if (RidingBoat == null) return;
+
+        StopWaitingForBoat();
+        TryStopEnteringBoat();
+        CancelUseBoatTimer();
+
         TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, ExitBoat);
         IsExitingBoat = true;
     }
 
     public void StopExitingBoat()
     {
-        TimerManager.Instance.RemoveTimer(useBoatTimerHandle);
+        if (!IsExitingBoat) return;
+
+        CancelUseBoatTimer();
         IsExitingBoat = false;
     }
 
     public void WaitForBoatAndEnter()
     {
-        if (!ShouldStartEnteringBoat()) return;
-
-        waitingBoatCoroutine = StartCoroutine(WaitForBoatAndEnterCoroutine(TargetBoat));
+        if (RidingBoat != null) {
+            StopExitingBoat();
+        }
+        else if (ShouldStartEnteringBoat()) {
+            StopWaitingForBoat();
+            waitingBoatCoroutine = StartCoroutine(WaitForBoatAndEnterCoroutine(TargetBoat));
+        }
     }
 
     public void StopWaitingForBoat()
     {
-        if (waitingBoatCoroutine == null) return;
-
-        StopCoroutine(waitingBoatCoroutine);
+        if (waitingBoatCoroutine != null) {
+            StopCoroutine(waitingBoatCoroutine);
+            waitingBoatCoroutine = null;
+        }
     }
 
     public void HandleBoatSetedIdle(Boat boat)
@@ -140,12 +157,14 @@ public class BoatRider : MonoBehaviour
 
     public void EnterBoat(Boat boat)
     {
-        if (!boat) {
+        IsEnteringBoat = false;
+
+        if (boat == null) {
             Debug.LogError($"[{nameof(BoatRider)}] Boat not found at {name}");
             return;
         }
 
-        if (boat.CurrentRider) {
+        if (boat.CurrentRider != null) {
             Debug.LogError($"[{nameof(BoatRider)}] Boat already has another rider!");
             return;
         }
@@ -159,26 +178,26 @@ public class BoatRider : MonoBehaviour
         transform.rotation = boat.SeatSlot.rotation;
         transform.SetParent(boat.SeatSlot);
 
-        IsEnteringBoat = false;
-
         OnEnteredBoat?.Invoke(boat);
         OnRiderEnteredBoat?.Invoke(this, boat);
     }
 
     public void ExitBoat()
     {
-        if (!RidingBoat) {
-            Debug.LogError($"RidingBoat not found at {name}");
+        IsExitingBoat = false;
+
+        if (RidingBoat == null) {
+            Debug.LogError($"[{nameof(BoatRider)}] RidingBoat not found at {name}");
             return;
         }
 
-        if (!RidingBoat.DockPoint) {
-            Debug.LogError($"DockPoint not found at {RidingBoat}");
+        if (RidingBoat.DockPoint == null) {
+            Debug.LogError($"[{nameof(BoatRider)}] DockPoint not found at {RidingBoat}");
             return;
         }
 
-        if (!RidingBoat.DockPoint.EntraceTransform) {
-            Debug.LogError($"EntraceTransform not found at {RidingBoat.DockPoint}");
+        if (RidingBoat.DockPoint.EntraceTransform == null) {
+            Debug.LogError($"[{nameof(BoatRider)}] EntraceTransform not found at {RidingBoat.DockPoint}");
             return;
         }
 
@@ -189,8 +208,6 @@ public class BoatRider : MonoBehaviour
 
         transform.SetParent(null);
         transform.SetPositionAndRotation(pos, rot);
-
-        IsExitingBoat = false;
 
         movement.NavAgent.Warp(transform.position);
         movement.SetAgentEnabled(true);
@@ -204,12 +221,14 @@ public class BoatRider : MonoBehaviour
 
     public bool TrySetTargetBoat(Boat boat)
     {
-        if (!boat) {
+        if (boat == null) {
             Debug.LogError("Boat is not valid. Use RemoveTargetBoat method instead of this.");
             return false;
         }
 
         if (boat == TargetBoat) return false;
+
+        StopWaitingForBoat();
 
         TargetBoat = boat;
         boat.SetTargetRider(this);
@@ -221,10 +240,10 @@ public class BoatRider : MonoBehaviour
 
     public void RemoveTargetBoat()
     {
-        if (!TargetBoat) {
-            Debug.LogError("TargetBoat is already null");
-            return;
-        }
+        if (TargetBoat == null) return;
+
+        StopWaitingForBoat();
+        TryStopEnteringBoat();
 
         var boat = TargetBoat;
 
@@ -236,7 +255,7 @@ public class BoatRider : MonoBehaviour
 
     public void SetRidingBoat(Boat boat)
     {
-        if (!boat) {
+        if (boat == null) {
             Debug.LogError("ridingBoat is not valid", this);
             return;
         }
@@ -268,15 +287,26 @@ public class BoatRider : MonoBehaviour
 
     private void OnDied()
     {
+        StopAllRidingProcesses();
+    }
 
+    private void CancelUseBoatTimer()
+    {
+        TimerManager.Instance.RemoveTimer(useBoatTimerHandle);
+    }
+
+    private void StopAllRidingProcesses()
+    {
+        StopWaitingForBoat();
+        TryStopEnteringBoat();
     }
 
     private bool ShouldStartEnteringBoat()
     {
         if (IsEnteringBoat) return false;
-        if (!TargetBoat) return false;
+        if (TargetBoat == null) return false;
 
-        if (!TargetBoat.DockPoint) {
+        if (TargetBoat.DockPoint == null) {
             Debug.LogError($"BoatDock not found at {TargetBoat}");
             return false;
         }
@@ -288,19 +318,20 @@ public class BoatRider : MonoBehaviour
 
     private IEnumerator WaitForBoatAndEnterCoroutine(Boat boat)
     {
-        if (RidingBoat) yield break;
+        if (RidingBoat != null) yield break;
 
-        if (!boat) {
+        if (boat == null) {
             Debug.LogError($"RidingBoat not found at {name}");
             yield break;
         }
 
-        while (boat.CurrentStateEnum != BoatStateEnum.Idle || boat.CurrentRider) {
+        while (boat.CurrentStateEnum != BoatStateEnum.Idle || boat.CurrentRider != null) {
             yield return new WaitForEndOfFrame();
         }
 
         if (boat != TargetBoat) yield break;
 
+        waitingBoatCoroutine = null;
         TryStartEnteringBoat(boat);
     }
 }

@@ -15,7 +15,7 @@ public class InputListener : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance) {
+        if (Instance != null) {
             Debug.LogError("Another InputListener is already in the scene!");
             Destroy(gameObject);
             return;
@@ -26,7 +26,7 @@ public class InputListener : MonoBehaviour
 
     private void Update()
     {
-        if (Pointer.current != null) {
+        if (Pointer.current != null && Pointer.current.press != null) {
             bool wasPressed = Pointer.current.press.wasPressedThisFrame;
             bool wasReleased = Pointer.current.press.wasReleasedThisFrame;
 
@@ -42,7 +42,9 @@ public class InputListener : MonoBehaviour
 
     private void HandlePress()
     {
-        startPressedObject = PointerUtils.GetRaycastUIResult().gameObject;
+        var raycastResult = PointerUtils.GetRaycastUIResult();
+        startPressedObject = raycastResult.isValid ? raycastResult.gameObject : null;
+
         startPosition = PointerUtils.GetCurrentInputPosition();
 
         OnPressed?.Invoke();

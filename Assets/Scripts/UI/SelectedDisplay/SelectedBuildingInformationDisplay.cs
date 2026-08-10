@@ -6,7 +6,7 @@ public class SelectedBuildingInformationDisplay : SelectedDisplay
     [SerializeField] private BuildingInformationMenu buildingInformationMenu;
     [SerializeField] private CustomButton button;
 
-    private Building building;
+    private IInformationable informationable;
 
     protected override void OnSubscribe()
     {
@@ -26,16 +26,20 @@ public class SelectedBuildingInformationDisplay : SelectedDisplay
     {
         if (!selectComponent) return false;
 
-        building = selectComponent.GetComponent<Building>();
-        if (!building) return false;
+        informationable = selectComponent.GetComponent<IInformationable>();
+        if (informationable == null) return false;
+
+        if (informationable.GetInformationName() == null) return false;
+        if (informationable.GetInformationDescription() == null) return false;
+        if (informationable.GetInformationImage() == null) return false;
 
         return true;
     }
 
     private void OnButtonClicked()
     {
-        if (!building) return;
+        if (informationable == null) return;
 
-        buildingInformationMenu.Show(building);
+        buildingInformationMenu.Show(informationable);
     }
 }

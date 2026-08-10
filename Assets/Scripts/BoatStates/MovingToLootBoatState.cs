@@ -14,6 +14,11 @@ public class MovingToLootBoatState : FindingLootBoatState
     {
         base.Enter();
 
+        if (!boat.TargetDriftingLoot) {
+            boat.SetState(BoatStateEnum.FindingLoot);
+            return;
+        }
+
         TryStartMovingToTarget();
     }
 
@@ -33,6 +38,11 @@ public class MovingToLootBoatState : FindingLootBoatState
     {
         base.OnReachedPath();
 
+        if (boat.TargetDriftingLoot == null) {
+            boat.SetState(BoatStateEnum.FindingLoot);
+            return;
+        }
+
         boat.SetState(BoatStateEnum.CollectingLoot);
     }
 
@@ -50,7 +60,7 @@ public class MovingToLootBoatState : FindingLootBoatState
 
     private bool ShouldStartMovingToTarget()
     {
-        if (!boat) return false;
+        if (boat == null) return false;
         if (!boat.TargetDriftingLoot) return false;
 
         return true;

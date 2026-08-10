@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,7 +15,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private NavMeshAgent navAgent;
     public NavMeshAgent NavAgent => navAgent;
 
-    public Vector3 TargetPosition { get; private set; } = Vector3.zero;
+    public Vector3? TargetPosition { get; private set; } = Vector3.zero;
 
     public bool UseTargetRotation { get; private set; } = false;
     public Quaternion TargetRotation { get; private set; } = Quaternion.identity;
@@ -34,7 +35,7 @@ public class Movement : MonoBehaviour
     private void Update()
     {
         if (IsMoving && IsDestinationReached()) {
-            StopMoving();
+            TryStopMoving();
         }
     }
 
@@ -82,13 +83,11 @@ public class Movement : MonoBehaviour
         if (!CanStartMoving()) return false;
         if (!useReachedPosition && IsReachedPosition(position)) return false;
 
-        //navAgent.ResetPath();
-        //navAgent.Warp(transform.position);
-
         TargetPosition = position;
         RemoveTargetRotation();
 
         if (IsReachedPosition(position)) {
+            TryStopMoving();
             IsMoving = false;
             OnDestinationReached?.Invoke();
             return true;
@@ -103,22 +102,20 @@ public class Movement : MonoBehaviour
         return false;
     }
 
-    public bool StopMoving()
+    public bool TryStopMoving()
     {
         if (!CanStopMoving()) return false;
 
         navAgent.ResetPath();
-        var lastIsMoving = IsMoving;
-        IsMoving = false;
-
-        if (lastIsMoving) {
-            OnMovementStopped?.Invoke();
-        }
 
         if (IsDestinationReached()) {
             OnDestinationReached?.Invoke();
         }
 
+        IsMoving = false;
+        OnMovementStopped?.Invoke();
+
+        TargetPosition = null;
         return true;
     }
 
@@ -147,7 +144,9 @@ public class Movement : MonoBehaviour
 
     public bool IsDestinationReached()
     {
-        if (IsReachedPosition(TargetPosition)) return true;
+        if (TargetPosition == null) return false;
+
+        if (IsReachedPosition(TargetPosition.Value)) return true;
 
         return false;
     }
@@ -159,8 +158,10 @@ public class Movement : MonoBehaviour
 
     public bool CanReachPosition(Vector3 targetPosition)
     {
-        var path = new NavMeshPath();
+        if (!navAgent.enabled) return false;
+        if (!navAgent.isOnNavMesh) return false;
 
+        var path = new NavMeshPath();
         if (navAgent.CalculatePath(targetPosition, path)) {
             if (path.status == NavMeshPathStatus.PathComplete) {
                 return true;
@@ -170,9 +171,11 @@ public class Movement : MonoBehaviour
         return false;
     }
 
-    public float GetTargetPositionDistance()
+    public float? GetTargetPositionDistance()
     {
-        return Vector3.Distance(transform.position, TargetPosition);
+        if (TargetPosition == null) return null;
+
+        return Vector3.Distance(transform.position, TargetPosition.Value);
     }
 
     private void SetTargetRotation(Quaternion value)

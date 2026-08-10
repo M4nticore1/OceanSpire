@@ -7,11 +7,12 @@ public static class HarvestItemWidgetFactory
         Transform parentCanvas,
         ItemInstance item,
         Vector3 startWorldPos,
-        Vector3 targetWorldPos)
+        Vector3 targetWorldPos,
+        bool useLocalTransform)
     {
         var widget = GameObject.Instantiate(widgetPrefab, parentCanvas);
 
-        widget.Init(item, startWorldPos, targetWorldPos);
+        widget.Init(item, startWorldPos, targetWorldPos, useLocalTransform);
 
         return widget;
     }

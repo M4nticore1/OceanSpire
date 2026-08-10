@@ -232,6 +232,22 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         return resources;
     }
 
+    public List<ItemInstance> GetRaidResources()
+    {
+        var raidables = GetComponents<IRaidable>();
+        if (raidables == null) return null;
+
+        var resources = new List<ItemInstance>();
+        foreach (var raidable in raidables) {
+            var loot = raidable.GetRaidLoot();
+            if (loot == null) continue;
+
+            resources.AddRange(loot);
+        }
+
+        return resources;
+    }
+
     public int GetUpgradeTime()
     {
         if (!NextLevelDefinition) return 0;
@@ -370,7 +386,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     private void OnWorkerAdded(Human human)
     {
-        Debug.Log("OnWorkerAdded");
         //UpdateWorkerInteractionTransforms();
 
         buildingStrategy.OnInteractBuildingSet(human.InteractComponent);

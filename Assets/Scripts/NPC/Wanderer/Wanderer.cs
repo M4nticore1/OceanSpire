@@ -129,14 +129,14 @@ public class Wanderer : Human
     public void Accept()
     {
         IsAccepted = true;
-        StartCoroutine(DetermineNextActionCoroutine());
+        RunDetermineNextActionCoroutine();
     }
 
     public void Reject()
     {
         IsRejected = true;
         RemoveBoatDock();
-        StartCoroutine(DetermineNextActionCoroutine());
+        RunDetermineNextActionCoroutine();
     }
 
     private void RemoveBoatDock()

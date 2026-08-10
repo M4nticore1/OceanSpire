@@ -5,7 +5,6 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using static UnityEngine.CullingGroup;
 
 public enum CustomButtonState
 {
@@ -60,31 +59,36 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     public bool IsEnabled => state != CustomButtonState.Disabled;
     public bool isAnimating { get; private set; } = false;
 
-    [SerializeField] private CustomSelectableStateEntry idleState = new CustomSelectableStateEntry()
+    [SerializeField]
+    private CustomSelectableStateEntry idleState = new CustomSelectableStateEntry()
     {
         bodyColor = new Color(0.95f, 0.95f, 0.95f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 1f,
     };
-    [SerializeField] private CustomSelectableStateEntry hoveredState = new CustomSelectableStateEntry()
+    [SerializeField]
+    private CustomSelectableStateEntry hoveredState = new CustomSelectableStateEntry()
     {
         bodyColor = new Color(1f, 1f, 1f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 1.02f,
     };
-    [SerializeField] private CustomSelectableStateEntry pressedState = new CustomSelectableStateEntry()
+    [SerializeField]
+    private CustomSelectableStateEntry pressedState = new CustomSelectableStateEntry()
     {
         bodyColor = new Color(0.75f, 0.75f, 0.75f, 0.75f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 0.98f,
     };
-    [SerializeField] private CustomSelectableStateEntry selectedState = new CustomSelectableStateEntry()
+    [SerializeField]
+    private CustomSelectableStateEntry selectedState = new CustomSelectableStateEntry()
     {
         bodyColor = new Color(1f, 1f, 1f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 1.05f,
     };
-    [SerializeField] private CustomSelectableStateEntry disabledState = new CustomSelectableStateEntry()
+    [SerializeField]
+    private CustomSelectableStateEntry disabledState = new CustomSelectableStateEntry()
     {
         bodyColor = new Color(0.25f, 0.25f, 0.25f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
@@ -94,9 +98,9 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private Color targetBodyColor;
     private Color targetContentColor;
-    public Color CurrentBodyColor { get { return targetGraphic ? targetGraphic.color : Color.black; } set { if (targetGraphic) targetGraphic.color = value; } }
-    public Color CurrentContentColor { get { return targetGraphic ? targetGraphic.color : Color.black; } set { if (targetGraphic) targetGraphic.color = value; } }
-    public Vector3 CurrentScale { get { return scaleRoot ? scaleRoot.localScale : Vector3.one; } set { if (scaleRoot) scaleRoot.localScale = value; } }
+    public Color CurrentBodyColor { get { return targetGraphic != null ? targetGraphic.color : Color.black; } set { if (targetGraphic != null) targetGraphic.color = value; } }
+    public Color CurrentContentColor { get { return targetGraphic != null ? targetGraphic.color : Color.black; } set { if (targetGraphic != null) targetGraphic.color = value; } }
+    public Vector3 CurrentScale { get { return scaleRoot != null ? scaleRoot.localScale : Vector3.one; } set { if (scaleRoot != null) scaleRoot.localScale = value; } }
 
     private Vector3 pressedButtonPosition;
 
@@ -156,7 +160,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         base.OnDestroy();
 
-        if (!selectGroup) return;
+        if (selectGroup == null) return;
 
         selectGroup.RemoveButton(this);
     }
@@ -176,9 +180,9 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         base.Reset();
 
-        if (!targetGraphic) {
+        if (targetGraphic == null) {
             var background = GetComponent<Graphic>();
-            if (!background) return;
+            if (background == null) return;
 
             targetGraphic = background;
             scaleRoot = background.rectTransform;
@@ -230,7 +234,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private void UpdateSelectGroup()
     {
-        if (selectGroup) {
+        if (selectGroup != null) {
             selectGroup.AddButton(this);
         }
     }
@@ -301,7 +305,6 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (!IsEnabled) return;
         if (!IsInteractable) return;
-        //if (!IsPressed && !deselectOnOutsideClick) return;
 
         if (IsPressed) {
             if (IsSelectable)
@@ -317,24 +320,14 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
             }
         }
         else if (!IsIdle) {
-            //if (isSelectable) return;
-
             var go = PointerUtils.GetRaycastUIResult().gameObject;
-            var button = go ? go.GetComponent<CustomButton>() : null;
+            var button = go != null ? go.GetComponent<CustomButton>() : null;
 
             if (deselectOnOutsideClick) {
-                if (!go || go != gameObject) {
+                if (go == null || go != gameObject) {
                     SetState(CustomButtonState.Idle);
                 }
             }
-            //else {
-
-            //}
-
-            //if (button && (!selectGroup || button.selectGroup == selectGroup) && !deselectOnOutsideClick)
-            //    SetState(CustomButtonState.Idle);
-            //else if (deselectOnOutsideClick && !button)
-            //    SetState(CustomButtonState.Idle);
         }
     }
 
@@ -353,7 +346,7 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         UpdateBodyTargetColor();
         UpdateContentTargetColor();
 
-        if (selectGroup) {
+        if (selectGroup != null) {
             selectGroup.OnButtonSelected(this);
         }
 
@@ -459,20 +452,20 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
 
         UpdateColor();
-        if (isScalable && scaleRoot) {
+        if (isScalable && scaleRoot != null) {
             UpdateScale();
         }
     }
 
     private void UpdateColor()
     {
-        if (targetGraphic) {
+        if (targetGraphic != null) {
             targetGraphic.color = Color.Lerp(targetGraphic.color, targetBodyColor, stateTransitionAlpha);
         }
 
         if (contentGraphics != null) {
             foreach (var graphic in contentGraphics) {
-                if (!graphic) continue;
+                if (graphic == null) continue;
 
                 graphic.color = targetContentColor;
             }
@@ -487,12 +480,12 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void UpdateCurrentColorHolder()
     {
-        if (IsEnabled && idleState.bodyColorHolder) {
+        if (IsEnabled && idleState.bodyColorHolder != null) {
             targetGraphic.color = idleState.bodyColorHolder.color;
             return;
         }
 
-        if (!IsEnabled && disabledState.bodyColorHolder) {
+        if (!IsEnabled && disabledState.bodyColorHolder != null) {
             targetGraphic.color = disabledState.bodyColor;
             return;
         }
@@ -501,162 +494,14 @@ public class CustomButton : UIBehaviour, IPointerEnterHandler, IPointerExitHandl
     private void UpdateBodyTargetColor()
     {
         ColorHolder colorHolder = CurrentStateEntry.bodyColorHolder;
-        Color color = colorHolder ? colorHolder.color : CurrentStateEntry.bodyColor;
+        Color color = colorHolder != null ? colorHolder.color : CurrentStateEntry.bodyColor;
         targetBodyColor = color;
     }
 
     private void UpdateContentTargetColor()
     {
         ColorHolder colorHolder = CurrentStateEntry.contentColorHolder;
-        Color color = colorHolder ? colorHolder.color : CurrentStateEntry.contentColor;
+        Color color = colorHolder != null ? colorHolder.color : CurrentStateEntry.contentColor;
         targetContentColor = color;
     }
 }
-
-//#if UNITY_EDITOR
-//[CustomEditor(typeof(CustomSelectable))]
-//[CanEditMultipleObjects]
-//public class CustomSelectableEditor : Editor
-//{
-//    // Main Button
-//    SerializedProperty backgroundGraphic;
-//    SerializedProperty contentGraphicProp;
-//    SerializedProperty isEnabled;
-//    SerializedProperty isInteractable;
-//    SerializedProperty isSelectable;
-//    SerializedProperty isScalable;
-//    SerializedProperty scaleRoot;
-//    SerializedProperty stateTransitionTimeProp;
-//    SerializedProperty selectableGroupIndexProp;
-//    SerializedProperty deselectOnOutsideClickProp;
-
-//    SerializedProperty idleState;
-//    SerializedProperty hoveredStateProp;
-//    SerializedProperty pressedState;
-//    SerializedProperty selectedState;
-//    SerializedProperty disabledState;
-
-//    SerializedProperty idleColorHolderProp;
-//    SerializedProperty disabledColorHolderProp;
-
-
-//    SerializedProperty idleScaleProp;
-//    SerializedProperty disabledScaleProp;
-
-//    private bool showMain = true;
-//    private bool showGraphic = true;
-
-//    private void OnEnable()
-//    {
-//        // Main Button
-//        backgroundGraphic = serializedObject.FindProperty("backgroundGraphic");
-//        contentGraphicProp = serializedObject.FindProperty("contentGraphic");
-//        isEnabled = serializedObject.FindProperty("isEnabled");
-//        isInteractable = serializedObject.FindProperty("isInteractable");
-//        isSelectable = serializedObject.FindProperty("isSelectable");
-//        isScalable = serializedObject.FindProperty("isScalable");
-//        scaleRoot = serializedObject.FindProperty("scaleRoot");
-//        stateTransitionTimeProp = serializedObject.FindProperty("stateTransitionTime");
-//        selectableGroupIndexProp = serializedObject.FindProperty("selectableGroupIndex");
-//        deselectOnOutsideClickProp = serializedObject.FindProperty("deselectOnOutsideClick");
-
-//        idleState = serializedObject.FindProperty("idleState");
-//        hoveredStateProp = serializedObject.FindProperty("hoveredState");
-//        pressedState = serializedObject.FindProperty("pressedState");
-//        selectedState = serializedObject.FindProperty("selectedState");
-//        disabledState = serializedObject.FindProperty("disabledState");
-
-//        idleColorHolderProp = idleState.FindPropertyRelative("backgroundColorHolder");
-//        disabledColorHolderProp = disabledState.FindPropertyRelative("backgroundColorHolder");
-
-//        idleScaleProp = idleState.FindPropertyRelative("scale");
-//        disabledScaleProp = disabledState.FindPropertyRelative("scale");
-//    }
-
-//    public override void OnInspectorGUI()
-//    {
-//        serializedObject.Update();
-
-//        EditorGUI.BeginChangeCheck();
-
-//        var selectable = (CustomSelectable)target;
-//        Color color;
-//        float scale;
-
-//        var contentGraphic = ((CustomSelectable)target).contentGraphic;
-//        Color contentColor = Color.white;
-
-//        showMain = EditorGUILayout.Foldout(showMain, "Main", true);
-//        if (showMain) {
-//            EditorGUILayout.PropertyField(backgroundGraphic);
-//            EditorGUILayout.PropertyField(contentGraphicProp);
-//            EditorGUILayout.PropertyField(scaleRoot);
-//            EditorGUILayout.PropertyField(isEnabled);
-//            EditorGUILayout.PropertyField(isInteractable);
-//            EditorGUILayout.PropertyField(isSelectable);
-//            EditorGUILayout.PropertyField(isScalable);
-//            EditorGUILayout.PropertyField(stateTransitionTimeProp);
-//            EditorGUILayout.PropertyField(selectableGroupIndexProp);
-//            EditorGUILayout.PropertyField(deselectOnOutsideClickProp);
-//        }
-
-//        // Graphic
-//        EditorGUILayout.Space();
-//        showGraphic = EditorGUILayout.Foldout(showGraphic, "Graphic", true);
-//        if (showGraphic) {
-//            EditorGUILayout.PropertyField(idleState);
-//            EditorGUILayout.PropertyField(hoveredStateProp);
-//            EditorGUILayout.PropertyField(pressedState);
-//            EditorGUILayout.PropertyField(selectedState);
-//            EditorGUILayout.PropertyField(disabledState);
-//        }
-
-//        // Apply color
-//        if (!isEnabled.boolValue) {
-//            color = GetCurrentColor(disabledColorHolderProp, disabledState.FindPropertyRelative("backgroundColor"));
-//            scale = disabledScaleProp.floatValue;
-//        }
-//        else {
-//            color = GetCurrentColor(idleColorHolderProp, idleState.FindPropertyRelative("backgroundColor"));
-//            scale = idleScaleProp.floatValue;
-//        }
-
-//        // Content
-//        if (EditorGUI.EndChangeCheck()) {
-//            Undo.RecordObject(selectable.backgroundGraphic, "Background Graphic Color");
-//            selectable.CurrentBackgroundColor = color;
-//            selectable.CurrentScale = new Vector3(scale, scale, scale);
-//            EditorUtility.SetDirty(selectable);
-//            if (contentGraphic) {
-//                Undo.RecordObject(selectable.backgroundGraphic, "Content Graphic Color");
-//                selectable.CurrentContentColor = contentColor;
-//                EditorUtility.SetDirty(contentGraphic);
-//            }
-//        }
-
-//        serializedObject.ApplyModifiedProperties();
-//    }
-
-
-//    private void DrawIndependentColor(string label, SerializedProperty holderProp, ref SerializedProperty colorProp)
-//    {
-//        EditorGUILayout.Space();
-//        EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
-
-//        EditorGUILayout.PropertyField(holderProp);
-//        EditorGUILayout.PropertyField(colorProp);
-//        serializedObject.ApplyModifiedProperties();
-//    }
-
-//    private Color GetCurrentColor(SerializedProperty holderProp, SerializedProperty colorProp)
-//    {
-//        Color color;
-//        ColorHolder holder = holderProp.objectReferenceValue as ColorHolder;
-//        if (holder)
-//            color = holder.color;
-//        else
-//            color = colorProp.colorValue;
-//        return color;
-//    }
-//}
-//#endif

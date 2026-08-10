@@ -12,7 +12,7 @@ public class CityStorage : MonoBehaviour
         Instance = this;
 
         foreach (var item in ItemsList.Instance.Items) {
-            inventory.AddItem(item.ItemId, 0);
+            inventory.AddItemAmount(item.ItemId, 0);
         }
     }
 

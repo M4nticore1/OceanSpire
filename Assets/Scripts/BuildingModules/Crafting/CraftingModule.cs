@@ -298,7 +298,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         var craftItem = SelectedCraftItem.Definition.ProduceItem;
         if (craftItem == null || !craftItem.Definition) return;
 
-        cityStorage.Inventory.AddItem(craftItem.Definition.ItemId, craftItem.Amount);
+        cityStorage.Inventory.AddItemAmount(craftItem.Definition.ItemId, craftItem.Amount);
 
         OnItemCollected?.Invoke(SelectedCraftItem);
         OnModuleItemCollected?.Invoke(this, SelectedCraftItem);
@@ -412,16 +412,23 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     public List<ItemInstance> GetRaidLoot()
     {
-        var items = new List<ItemInstance>();
-        if (SelectedCraftItem == null || !cityStorage) return items;
+        if (!cityStorage) return null;
+        if (SelectedCraftItem == null) return null;
 
+        var items = new List<ItemInstance>();
         foreach (var consumeItem in SelectedCraftItem.Definition.ConsumeResources) {
             var definition = consumeItem.Definition;
             var cityAmount = cityStorage.Inventory.GetItem(consumeItem.Definition.ItemId).Amount;
+
             var amount = Mathf.Min(cityAmount, consumeItem.Amount);
             if (amount <= 0) continue;
 
             var item = definition.CreateInstance();
+            if (item == null) {
+                Debug.LogError($"[{nameof(CraftingModule)}] Item is not valid!");
+                continue;
+            }
+
             item.SetAmount(amount);
             items.Add(item);
         }

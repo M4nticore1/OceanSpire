@@ -20,12 +20,14 @@ public class HarvestEffectWidget : MonoBehaviour
     private Vector3 targetPosition;
 
     private float moveProgress = 0f;
+    private bool useLocalTransform = false;
 
-    public void Init(ItemInstance item, Vector3 startWorldPos, Vector3 targetWorldPos)
+    public void Init(ItemInstance item, Vector3 startWorldPos, Vector3 targetWorldPos, bool useLocalTransform)
     {
         Item = item;
         startPosition = startWorldPos;
         targetPosition = targetWorldPos;
+        this.useLocalTransform = useLocalTransform;
 
         rectTransform.position = startWorldPos;
         rectTransform.localRotation = Quaternion.identity;
@@ -50,7 +52,13 @@ public class HarvestEffectWidget : MonoBehaviour
     private void ProcessMove()
     {
         float evaluatedMove = moveCurve.Evaluate(moveProgress);
-        rectTransform.position = Vector3.Lerp(startPosition, targetPosition, evaluatedMove);
+
+        if (useLocalTransform) {
+            rectTransform.localPosition = Vector3.Lerp(startPosition, targetPosition, evaluatedMove);
+        }
+        else {
+            rectTransform.position = Vector3.Lerp(startPosition, targetPosition, evaluatedMove);
+        }
     }
 
     private void ProcessScale()

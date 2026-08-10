@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class HumanAnimation : MonoBehaviour
@@ -5,46 +6,55 @@ public class HumanAnimation : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Human human;
 
+    private Coroutine updateParametersCoroutine;
+
     private void OnEnable()
     {
-        human.OnIdleStarted += OnIdleStarted;
-        human.OnIdleStopped += OnIdleStopped;
+        human.OnIdleStarted += HandleIdleStarted;
+        human.OnIdleStopped += HandleIdleStopped;
 
-        human.Movement.OnMovementStarted += OnMovementStarted;
-        human.Movement.OnMovementStopped += OnMovementStopped;
+        human.Movement.OnMovementStarted += HandleMovementStarted;
+        human.Movement.OnMovementStopped += HandleMovementStopped;
 
-        human.BoatRider.OnBoatMovementStarted += OnBoatMovementStarted;
-        human.BoatRider.OnBoatMovementStopped += OnBoatMovementStopped;
+        human.BoatRider.OnBoatMovementStarted += HandleBoatMovementStarted;
+        human.BoatRider.OnBoatMovementStopped += HandleBoatMovementStopped;
 
-        human.InteractComponent.OnInteractionStarted += OnInteractionStarted;
-        human.InteractComponent.OnInteractionStopped += OnInteractionStopped;
+        human.InteractComponent.OnInteractionStarted += HandleInteractionStarted;
+        human.InteractComponent.OnInteractionStopped += HandleInteractionStopped;
 
-        human.AttackComponent.OnAttackStarted += OnStartedAttacking;
-        human.AttackComponent.OnAttackStopped += OnStoppedAttacking;
+        human.AttackComponent.OnAttackStarted += HandleStartedAttacking;
+        human.AttackComponent.OnAttackStopped += HandleStoppedAttacking;
 
-        human.ReviveComponent.OnRevived += OnRevived;
-        human.HealthComponent.OnDied += OnDied;
+        human.ReviveComponent.OnRevived += HandleRevived;
+        human.HealthComponent.OnDied += HandleDied;
     }
 
     private void OnDisable()
     {
-        human.OnIdleStarted -= OnIdleStarted;
-        human.OnIdleStopped -= OnIdleStopped;
+        human.OnIdleStarted -= HandleIdleStarted;
+        human.OnIdleStopped -= HandleIdleStopped;
 
-        human.Movement.OnMovementStarted -= OnMovementStarted;
-        human.Movement.OnMovementStopped -= OnMovementStopped;
+        human.Movement.OnMovementStarted -= HandleMovementStarted;
+        human.Movement.OnMovementStopped -= HandleMovementStopped;
 
-        human.BoatRider.OnBoatMovementStarted -= OnBoatMovementStarted;
-        human.BoatRider.OnBoatMovementStopped -= OnBoatMovementStopped;
+        human.BoatRider.OnBoatMovementStarted -= HandleBoatMovementStarted;
+        human.BoatRider.OnBoatMovementStopped -= HandleBoatMovementStopped;
 
-        human.InteractComponent.OnInteractionStarted -= OnInteractionStarted;
-        human.InteractComponent.OnInteractionStopped -= OnInteractionStopped;
+        human.InteractComponent.OnInteractionStarted -= HandleInteractionStarted;
+        human.InteractComponent.OnInteractionStopped -= HandleInteractionStopped;
 
-        human.AttackComponent.OnAttackStarted -= OnStartedAttacking;
-        human.AttackComponent.OnAttackStopped -= OnStoppedAttacking;
+        human.AttackComponent.OnAttackStarted -= HandleStartedAttacking;
+        human.AttackComponent.OnAttackStopped -= HandleStoppedAttacking;
 
-        human.ReviveComponent.OnRevived -= OnRevived;
-        human.HealthComponent.OnDied -= OnDied;
+        human.ReviveComponent.OnRevived -= HandleRevived;
+        human.HealthComponent.OnDied -= HandleDied;
+    }
+
+    private void RunUpdateParametersCoroutine()
+    {
+        if (updateParametersCoroutine == null) {
+            updateParametersCoroutine = StartCoroutine(UpdateParametersCoroutine());
+        }
     }
 
     private void UpdateParameters()
@@ -52,111 +62,125 @@ public class HumanAnimation : MonoBehaviour
         UpdateIdle();
         UpdateWalking();
         UpdateRunning();
-        UpdateWorking();
+        UpdateInteracting();
         UpdateFloating();
         UpdateDied();
     }
 
     private void UpdateIdle()
     {
-        animator.SetBool("isIdle", human.IsIdle);
+        animator.SetBool("IsIdle", human.IsIdle);
     }
 
     private void UpdateWalking()
     {
-        animator.SetBool("isWalking", human.Movement.IsMoving && human.Movement.CurrentMovementMethod == MovementMethod.Walk);
+        animator.SetBool("IsWalking", human.Movement.IsMoving && human.Movement.CurrentMovementMethod == MovementMethod.Walk);
     }
 
     private void UpdateRunning()
     {
-        animator.SetBool("isRunning", human.Movement.IsMoving && human.Movement.CurrentMovementMethod == MovementMethod.Run);
+        animator.SetBool("IsRunning", human.Movement.IsMoving && human.Movement.CurrentMovementMethod == MovementMethod.Run);
     }
 
-    private void UpdateWorking()
+    private void UpdateInteracting()
     {
-        animator.SetBool("isWorking", human.InteractComponent.IsInteracting && !human.Movement.IsMoving);
+        var cityNavigator = human.CityNavigator;
+        var waypoint = cityNavigator.WaypointsComponent.GetCurrentWaypoint();
+        var animation = waypoint?.ActionAnimation;
+        var paramName = animation?.ParamName;
+
+        animator.SetBool(string.IsNullOrEmpty(paramName) ? "IsWorking" : paramName, human.InteractComponent.IsInteracting && !human.Movement.IsMoving);
     }
 
     private void UpdateFloating()
     {
-        animator.SetBool("isFloating", human.BoatRider.RidingBoat && human.BoatRider.RidingBoat.Movement.IsMoving && human.HealthComponent.IsAlive);
+        var ridingBoat = human.BoatRider.RidingBoat;
+        animator.SetBool("IsFloating", ridingBoat && ridingBoat.Movement.IsMoving && human.HealthComponent.IsAlive);
     }
 
     private void UpdateDied()
     {
-        animator.SetBool("isDied", !human.HealthComponent.IsAlive);
+        animator.SetBool("IsDied", !human.HealthComponent.IsAlive);
     }
 
-    private void OnIdleStarted()
+    private void HandleIdleStarted()
     {
-        UpdateParameters();
+        RunUpdateParametersCoroutine();
     }
 
-    private void OnIdleStopped()
+    private void HandleIdleStopped()
     {
-        UpdateParameters();
+        RunUpdateParametersCoroutine();
     }
 
-    private void OnMovementStarted()
+    private void HandleMovementStarted()
     {
-        UpdateParameters();
+        RunUpdateParametersCoroutine();
     }
 
-    private void OnMovementStopped()
+    private void HandleMovementStopped()
     {
-        UpdateParameters();
+        RunUpdateParametersCoroutine();
     }
 
-    private void OnBoatMovementStarted(Boat boat)
+    private void HandleBoatMovementStarted(Boat boat)
     {
-        UpdateParameters();
+        RunUpdateParametersCoroutine();
     }
 
-    private void OnBoatMovementStopped(Boat boat)
+    private void HandleBoatMovementStopped(Boat boat)
     {
-        UpdateParameters();
+        RunUpdateParametersCoroutine();
     }
 
-    private void OnInteractionStarted(Building building)
+    private void HandleInteractionStarted(Building building)
     {
-        UpdateParameters();
+        RunUpdateParametersCoroutine();
     }
 
-    private void OnInteractionStopped(Building building)
+    private void HandleInteractionStopped(Building building)
     {
-        UpdateParameters();
+        RunUpdateParametersCoroutine();
     }
 
-    private void OnStartedAttacking()
+    private void HandleStartedAttacking()
     {
         var weaponDefinition = human.WeaponComponent.EquipmentDefinition as WeaponDefinition;
         if (!weaponDefinition) {
-            Debug.LogError("weaponDefinition is not valid");
+            Debug.LogError("Weapon Definition is not valid");
             return;
         }
 
-        var animationName = weaponDefinition.AttackMethod == AttackMethod.Hands ? "isAttackingHands" :
-            weaponDefinition.AttackMethod == AttackMethod.Light ? "isAttackingLight" :
-            weaponDefinition.AttackMethod == AttackMethod.Heavy ? "isAttackingHeavy" :
+        var animationName = weaponDefinition.AttackMethod == AttackMethod.Hands ? "IsAttackingHands" :
+            weaponDefinition.AttackMethod == AttackMethod.Light ? "IsAttackingLight" :
+            weaponDefinition.AttackMethod == AttackMethod.Heavy ? "IsAttackingHeavy" :
             "";
 
         animator.SetBool(animationName, true);
     }
 
-    private void OnStoppedAttacking()
+    private void HandleStoppedAttacking()
     {
-        animator.SetBool("isAttackingHands", false);
-        animator.SetBool("isAttackingLight", false);
-        animator.SetBool("isAttackingHeavy", false);
+        animator.SetBool("IsAttackingHands", false);
+        animator.SetBool("IsAttackingLight", false);
+        animator.SetBool("IsAttackingHeavy", false);
     }
 
-    private void OnRevived()
+    private void HandleRevived()
     {
-        UpdateParameters();
+        RunUpdateParametersCoroutine();
     }
 
-    private void OnDied()
+    private void HandleDied()
     {
+        RunUpdateParametersCoroutine();
+    }
+
+    private IEnumerator UpdateParametersCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
         UpdateParameters();
+
+        updateParametersCoroutine = null;
     }
 }

@@ -16,8 +16,17 @@ public class SwimmingDriftingLoot : DriftingLoot
     public event Action OnCollected;
     public static event Action<SwimmingDriftingLoot> OnGlobalCollected;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        DriftingLootManager.Instance.RegisterSwimmingDriftingLoot(this);
+    }
+
     protected override void OnDisable()
     {
+        base.OnDisable();
+
         DriftingLootManager.Instance.UnregisterSwimmingDriftingLoot(this);
     }
 
@@ -33,12 +42,16 @@ public class SwimmingDriftingLoot : DriftingLoot
         var swimmingDriftingLootData = driftingLootData as SwimmingDriftingLootData;
         if (swimmingDriftingLootData == null) {
             Debug.Log($"[{nameof(SwimmingDriftingLoot)}] Swimming Drifting Loot Data not found!");
-            Destroy(gameObject);
+            Destroy();
             return;
         }
 
         focusComponent.SetFocused(swimmingDriftingLootData.Focused);
-        DriftingLootManager.Instance.RegisterSwimmingDriftingLoot(this);
+    }
+
+    public override DriftingLootData GetDefaultData()
+    {
+        return SwimmingDriftingLootData.Default();
     }
 
     public override DriftingLootData CreateData()
@@ -62,6 +75,12 @@ public class SwimmingDriftingLoot : DriftingLoot
         };
     }
 
+    public override void Destroy()
+    {
+        Destroy(gameObject);
+        DriftingLootManager.Instance.UnregisterSwimmingDriftingLoot(this);
+    }
+
     public void SetTargetBoat(Boat boat)
     {
         if (!boat) return;
@@ -79,7 +98,7 @@ public class SwimmingDriftingLoot : DriftingLoot
 
     public List<ItemInstance> TakeItems()
     {
-        Destroy(gameObject);
+        Destroy();
 
         OnCollected?.Invoke();
         OnGlobalCollected?.Invoke(this);

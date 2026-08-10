@@ -191,9 +191,11 @@ MonoBehaviour:
   - waypoints:
     - transform: {fileID: 7757892643508838835}
       actionTime: 0
+      actionAnimation: {fileID: 11400000, guid: 11e6723d18a101f4bbf235297e7e81a8, type: 2}
   - waypoints:
     - transform: {fileID: 2983165143885856770}
       actionTime: 0
+      actionAnimation: {fileID: 11400000, guid: 11e6723d18a101f4bbf235297e7e81a8, type: 2}
   FloorIndex: 0
   PlaceIndex: 0
   goingForWaitingPassengers: []

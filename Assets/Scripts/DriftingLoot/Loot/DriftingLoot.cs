@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -25,6 +24,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
     [SerializeField] private Transform meshSpawnTransform;
 
     public Vector3 Destination { get; private set; } = Vector3.zero;
+    public bool IsInited { get; private set; } = false;
 
     public int MeshId { get; private set; } = 0;
     public GameObject SpawnedMesh { get; private set; }
@@ -35,6 +35,11 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
     public static event Action<DriftingLoot> OnLootClicked;
 
     public static event Action<DriftingLoot> OnLootDestroyed;
+
+    protected virtual void Awake()
+    {
+        movement.NavAgent.obstacleAvoidanceType = UnityEngine.AI.ObstacleAvoidanceType.NoObstacleAvoidance;
+    }
 
     protected virtual void OnEnable()
     {
@@ -51,6 +56,18 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
         OnLootDestroyed?.Invoke(this);
     }
 
+    protected virtual void Start()
+    {
+        if (!IsInited) {
+            var data = GetDefaultData();
+            data.Position = new Vector3Data(transform.position);
+            data.Rotation = new Vector3Data(transform.rotation.eulerAngles);
+            data.Destination = new Vector3Data(DriftingLootManager.Instance.GetDestinationPosition());
+
+            Init(data);
+        }
+    }
+
     public void Init(DriftingLootData driftingLootData)
     {
         if (driftingLootData != null) {
@@ -60,6 +77,8 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
             Debug.LogError($"[{nameof(DriftingLoot)}] Drifting Loot Data is not valid");
             OnInit();
         }
+
+        IsInited = true;
     }
 
     protected abstract void OnInit();
@@ -73,7 +92,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
         if (!movement.CanReachPosition(driftingLootData.Destination.Vector3())) {
             Debug.Log($"[{nameof(DriftingLoot)}] Drifting Loot {name} can't reach position {driftingLootData.Destination.Vector3()} from position {transform.position}");
-            Destroy(gameObject);
+            Destroy();
             return;
         }
 
@@ -91,9 +110,13 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
         TryDestroy();
     }
 
+    public abstract DriftingLootData GetDefaultData();
+
     public abstract DriftingLootData CreateData();
 
     public abstract DriftingLootData CreateRandomData();
+
+    public abstract void Destroy();
 
     public virtual bool ShouldClick()
     {
@@ -114,7 +137,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
     public void StopMoving()
     {
-        movement.StopMoving();
+        movement.TryStopMoving();
     }
 
     public void Click()
@@ -132,6 +155,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
     private void CreateMesh(DriftingLootData driftingLootData)
     {
+        if (SpawnedMesh) return;
         if (definition.Meshes.Length <= 0) return;
 
         var meshId = driftingLootData.MeshId;
@@ -144,20 +168,18 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
         SpawnedMesh = Instantiate(meshPrefab, meshSpawnTransform);
 
         var rotation = Quaternion.Euler(driftingLootData.MeshRotation.Vector3());
-        SpawnedMesh.transform.rotation = rotation;
+        SpawnedMesh.transform.localRotation = rotation;
     }
 
     private void TryDestroy()
     {
-        var currentPosition = new Vector3(transform.position.x, 0, transform.position.z);
-        var targetPosition = new Vector3(movement.TargetPosition.x, 0, movement.TargetPosition.z);
-        if (Vector3.Distance(currentPosition, targetPosition) > movement.NavAgent.stoppingDistance) return;
+        if (!movement.IsDestinationReached()) return;
 
-        Destroy(gameObject);
+        Destroy();
     }
 
     private void OnReachedDestination()
     {
-        Destroy(gameObject);
+        Destroy();
     }
 }

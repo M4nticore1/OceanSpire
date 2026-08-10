@@ -503,11 +503,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1006335371026015129, guid: 71a482b556a081d49bcb608fb6b3d76a, type: 3}
       propertyPath: m_fontSize
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 3576903766222169412, guid: 71a482b556a081d49bcb608fb6b3d76a, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 1600
+      value: 43.3
       objectReference: {fileID: 0}
     - target: {fileID: 3749692685632294462, guid: 71a482b556a081d49bcb608fb6b3d76a, type: 3}
       propertyPath: m_Name

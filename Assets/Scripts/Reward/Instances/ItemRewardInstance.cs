@@ -15,7 +15,7 @@ public class ItemRewardInstance : RewardInstance
         base.OnRewardRecieved();
 
         var id = ItemRewardDefinition.Definition.ItemId;
-        CityStorage.Instance.Inventory.AddItem(id, Amount);
+        CityStorage.Instance.Inventory.AddItemAmount(id, Amount);
     }
 
     public void SetAmountPercent(float percent)

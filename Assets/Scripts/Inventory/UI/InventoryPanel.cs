@@ -94,6 +94,7 @@ public class InventoryPanel : MonoBehaviour
     private void CreateWidget(ItemInstance item)
     {
         if (item == null) return;
+        if (spawnedResourceWidgets.ContainsKey(item.Definition)) return;
 
         var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
         widget.SetItem(item);

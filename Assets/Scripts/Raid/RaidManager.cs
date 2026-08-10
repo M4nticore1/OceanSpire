@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public struct RaidEndedResult
+public class RaidEndedResult
 {
     public bool IsRepeled;
+    public List<ItemInstance> Losses;
 }
 
 public class RaidManager : MonoBehaviour
@@ -40,7 +42,7 @@ public class RaidManager : MonoBehaviour
 
     [field: SerializeField] public float RaidCooldownTime { get; private set; } = 0f;
     [field: SerializeField] public float TimeSinceLastRaid { get; private set; } = 0f;
-    public float CurrentTryFindNextBuildingTime { get; private set; } = 0f;
+    [field: SerializeField] public float CurrentTryFindNextBuildingTime { get; private set; } = 0f;
 
     [Header("Spawn")]
     [SerializeField] private int maxRaidersCount = 25;
@@ -60,7 +62,7 @@ public class RaidManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance) {
+        if (Instance != null) {
             Destroy(gameObject);
             return;
         }
@@ -133,7 +135,9 @@ public class RaidManager : MonoBehaviour
         UpdateRaidExist();
         UpdateUnderRaid();
         UpdateBoatDocks();
+
         DestroyExtraBoats();
+        DestroyDiedRaiders();
     }
 
     public void AddLose(ItemInstance item)
@@ -143,14 +147,23 @@ public class RaidManager : MonoBehaviour
             return;
         }
 
-        if (!inventory) {
+        if (inventory == null) {
             Debug.LogError($"[{nameof(RaidManager)}] Inventory is not valid!");
             return;
         }
 
         if (item.Amount <= 0) return;
 
-        inventory.AddItem(item);
+        inventory.AddItemAmount(item);
+    }
+
+    public void AddLosses(List<ItemInstance> items)
+    {
+        foreach (var item in items) {
+            if (item == null) continue;
+
+            AddLose(item);
+        }
     }
 
     public Building CalculateNextRaidBuilding()
@@ -161,15 +174,15 @@ public class RaidManager : MonoBehaviour
         List<Building> path;
 
         if (PathFinder.TryFindBuildingPath(null, b =>
-            b && !b.ConstructionComponent.GetUnderConstruction() &&
+            b != null && !b.ConstructionComponent.GetUnderConstruction() &&
             b.RaidersHandler.Interactors.Count < b.LevelDefinition.MaxHumansCount &&
             b.CanBeRaided(), out path)) {
             if (path != null && path.Count > 0)
                 building = path[path.Count - 1];
         }
 
-        if (!building && PathFinder.TryFindBuildingPath(null, b =>
-            b && !b.ConstructionComponent.GetUnderConstruction() &&
+        if (building == null && PathFinder.TryFindBuildingPath(null, b =>
+            b != null && !b.ConstructionComponent.GetUnderConstruction() &&
             b.CanBeRaided(), out path)) {
             if (path != null && path.Count > 0)
                 building = path[path.Count - 1];
@@ -191,14 +204,20 @@ public class RaidManager : MonoBehaviour
 
     private void EndRaid(bool isRepeled)
     {
+        var result = new RaidEndedResult()
+        {
+            IsRepeled = isRepeled,
+            Losses = inventory.Items.ToList(),
+        };
+
         DestroyExtraBoats();
+        DestroyDiedRaiders();
         RemoveCityLoot();
         ClearLosses();
 
         IsUnderRaid = false;
         IsRaidExist = false;
 
-        RaidEndedResult result = new RaidEndedResult() { IsRepeled = isRepeled };
         OnRaidEnded?.Invoke(result);
     }
 
@@ -228,10 +247,10 @@ public class RaidManager : MonoBehaviour
         if (raiderBoats == null) return;
 
         foreach (var boat in raiderBoats) {
-            if (!boat) continue;
+            if (boat == null) continue;
 
             var dockPoint = BoatDockUtils.GetNearestFreeDockPoint(boatDocksManager.RaiderDockPoints, boat.transform.position);
-            if (!dockPoint) continue;
+            if (dockPoint == null) continue;
 
             boat.SetDockPoint(dockPoint);
         }
@@ -258,13 +277,13 @@ public class RaidManager : MonoBehaviour
             var rotation = Quaternion.LookRotation(-position.normalized);
 
             var boat = CreateBoat(position, rotation);
-            if (!boat) {
+            if (boat == null) {
                 Debug.LogError($"[{nameof(RaidManager)}] Boat creation failed during raid initialization.");
                 continue;
             }
 
             var raider = CreateRaider(position, rotation.eulerAngles, boat.InstanceId.GetGuid());
-            if (!raider) {
+            if (raider == null) {
                 Debug.LogError($"[{nameof(RaidManager)}] Raider creation failed during raid initialization.");
                 continue;
             }
@@ -286,44 +305,58 @@ public class RaidManager : MonoBehaviour
 
         for (int i = 0; i < extraCount; i++) {
             var boat = raiderBoats[raiderBoats.Count - i - 1];
-            if (!boat) continue;
+            if (boat == null) continue;
 
             Destroy(boat.gameObject);
         }
     }
 
+    private void DestroyDiedRaiders()
+    {
+        var raiders = creaturesManager.Raiders;
+        if (raiders == null) return;
+
+        for (int i = 0; i < raiders.Count; i++) {
+            var raider = raiders[i];
+            if (raider == null) continue;
+            if (raider.HealthComponent.IsAlive) continue;
+
+            Destroy(raider.gameObject);
+        }
+    }
+
     private void RemoveCityLoot()
     {
-        if (!inventory) return;
-        if (!cityStorage) return;
-        if (!cityStorage.Inventory) return;
+        if (inventory == null) return;
+        if (cityStorage == null) return;
+        if (cityStorage.Inventory == null) return;
 
         for (int i = 0; i < inventory.Items.Count; i++) {
             var item = inventory.TryGetItemByIndex(i);
             if (item == null) continue;
-            if (!item.Definition) continue;
+            if (item.Definition == null) continue;
 
-            cityStorage.Inventory.RemoveItem(item.Definition.ItemId, item.Amount);
+            cityStorage.Inventory.RemoveItemAmount(item.Definition.ItemId, item.Amount);
         }
     }
 
     private void ClearLosses()
     {
-        if (!inventory) return;
+        if (inventory == null) return;
 
         for (int i = inventory.Items.Count - 1; i >= 0; i--) {
             var item = inventory.TryGetItemByIndex(i);
             if (item == null) continue;
-            if (!item.Definition) continue;
+            if (item.Definition == null) continue;
 
-            inventory.RemoveItem(item.Definition.ItemId, item.Amount);
+            inventory.RemoveItem(item);
         }
     }
 
     private void HandleEnteredBoat(Human human)
     {
-        if (!human) return;
-        if (!human.GetComponent<Raider>()) return;
+        if (human == null) return;
+        if (human.GetComponent<Raider>() == null) return;
         if (!ShouldEndRaid()) return;
 
         EndRaid(false);
@@ -331,8 +364,8 @@ public class RaidManager : MonoBehaviour
 
     private void HandleExitedBoat(Human human)
     {
-        if (!human) return;
-        if (!human.GetComponent<Raider>()) return;
+        if (human == null) return;
+        if (human.GetComponent<Raider>() == null) return;
         if (!TryStartRaid()) return;
 
         ClearLosses();
@@ -340,8 +373,8 @@ public class RaidManager : MonoBehaviour
 
     private void HandleHumanDied(Human human)
     {
-        if (!human) return;
-        if (!human.GetComponent<Raider>()) return;
+        if (human == null) return;
+        if (human.GetComponent<Raider>() == null) return;
         if (!ShouldEndRaid()) return;
 
         EndRaid(true);
@@ -358,14 +391,14 @@ public class RaidManager : MonoBehaviour
     private bool ShouldStartRaid()
     {
         if (IsUnderRaid) return false;
-        if (!creaturesManager) return false;
+        if (creaturesManager == null) return false;
         if (creaturesManager.Raiders == null) return false;
 
         foreach (var raider in creaturesManager.Raiders) {
-            if (!raider) continue;
-            if (!raider.HealthComponent.IsAlive) continue;
-            if (raider.IsRaidFinished && raider.BoatRider.RidingBoat) continue;
-            if (raider.BoatRider.RidingBoat) continue;
+            if (raider == null) continue;
+            if (raider.HealthComponent == null || !raider.HealthComponent.IsAlive) continue;
+            if (raider.IsRaidFinished && raider.BoatRider != null && raider.BoatRider.RidingBoat != null) continue;
+            if (raider.BoatRider != null && raider.BoatRider.RidingBoat != null) continue;
 
             return true;
         }
@@ -376,19 +409,19 @@ public class RaidManager : MonoBehaviour
     private bool ShouldEndRaid()
     {
         if (!IsUnderRaid) return false;
-        if (!creaturesManager) return true;
+        if (creaturesManager == null) return true;
 
         foreach (var raider in creaturesManager.Raiders) {
-            if (!raider) continue;
+            if (raider == null) continue;
 
-            bool isAlive = raider.HealthComponent && raider.HealthComponent.IsAlive;
-            bool isInBoat = raider.BoatRider && raider.BoatRider.RidingBoat;
+            bool isAlive = raider.HealthComponent != null && raider.HealthComponent.IsAlive;
+            bool isInBoat = raider.BoatRider != null && raider.BoatRider.RidingBoat != null;
 
-            if (!raider.IsRaidFinished) {
+            if (isAlive && !raider.IsRaidFinished) {
                 return false;
             }
 
-            if (!raider.IsRaidFinished && isInBoat) {
+            if (isAlive && !raider.IsRaidFinished && isInBoat) {
                 return false;
             }
 
@@ -402,7 +435,13 @@ public class RaidManager : MonoBehaviour
 
     private bool ShouldSetRaidExistTrue()
     {
-        return creaturesManager.Raiders.Count > 0;
+        var raiders = creaturesManager.Raiders;
+        foreach (var raider in raiders) {
+            if (raider == null) continue;
+            if (raider != null) return true;
+        }
+
+        return false;
     }
 
     private bool ShouldSetRaidExistFalse()
@@ -413,7 +452,7 @@ public class RaidManager : MonoBehaviour
     private Human CreateRaider(Vector3 position, Vector3 rotation, Guid boatInstanceId)
     {
         var prefab = raiderPrefabs[UnityEngine.Random.Range(0, raiderPrefabs.Length)];
-        if (!prefab) return null;
+        if (prefab == null) return null;
 
         var weaponDef = GetRandomWeaponDefinition();
         ItemID? weaponId = weaponDef != null ? weaponDef.ItemId : null;
@@ -454,11 +493,11 @@ public class RaidManager : MonoBehaviour
 
     private Boat CreateBoat(Vector3 position, Quaternion rotation)
     {
-        if (!boatDocksManager) return null;
-        if (!boatPrefab) return null;
+        if (boatDocksManager == null) return null;
+        if (boatPrefab == null) return null;
 
         var dockPoint = BoatDockUtils.GetNearestFreeDockPoint(boatDocksManager.RaiderDockPoints, position);
-        if (!dockPoint) return null;
+        if (dockPoint == null) return null;
 
         var data = new BoatData()
         {
@@ -489,7 +528,7 @@ public class RaidManager : MonoBehaviour
 
         for (int i = 0; i < weapons.Length; i++) {
             var weapon = weapons[i];
-            if (!weapon) continue;
+            if (weapon == null) continue;
 
             if (weapon.Power < lowBound) continue;
             if (weapon.Power > highBound) continue;
@@ -506,7 +545,7 @@ public class RaidManager : MonoBehaviour
 
         for (int i = 1; i < weapons.Length; i++) {
             var weapon = weapons[i];
-            if (!weapon) continue;
+            if (weapon == null) continue;
 
             float diff = Mathf.Abs(weapon.Power - targetPower);
             if (diff >= minDiff) continue;
@@ -520,7 +559,7 @@ public class RaidManager : MonoBehaviour
 
     private int GetRandomRaidersCount()
     {
-        if (!buildingsManager) return 0;
+        if (buildingsManager == null) return 0;
         if (buildingsManager.BuiltFloors == null) return 0;
 
         var floorRaidersCount = (int)(buildingsManager.BuiltFloors.Count * raidersCountPerFloor);
