@@ -10,7 +10,7 @@ public abstract class HarvestItemEffectManager : MonoBehaviour
 
     [Header("Cooldown")]
     [SerializeField] private float spawnWidgetCooldown = 0.1f;
-    private double lastSpawnWidgetTime;
+    private Dictionary<ItemDefinition, double> lastSpawnTimes = new();
 
     private List<HarvestEffectWidget> spawnedWidgets = new();
 
@@ -57,7 +57,7 @@ public abstract class HarvestItemEffectManager : MonoBehaviour
         if (!ShouldCreateWidget(item)) return false;
 
         CreateWidget(widget, transform, startPosition, targetPosition, item, useLocalTransform);
-        lastSpawnWidgetTime = Time.timeAsDouble;
+        lastSpawnTimes[item.Definition] = Time.timeAsDouble;
 
         return true;
     }
@@ -78,19 +78,17 @@ public abstract class HarvestItemEffectManager : MonoBehaviour
     private void CreateWidget(HarvestEffectWidget widget, Transform transform, Vector3 startPosition, Vector3 targetPosition, ItemInstance item, bool useLocalTransform)
     {
         var spawnedWidget = HarvestItemWidgetFactory.CreateWidget(widget, transform, item, startPosition, targetPosition, useLocalTransform);
-        if (!spawnedWidget) return;
-
-        spawnedWidgets.Add(spawnedWidget);
+        if (spawnedWidget != null) {
+            spawnedWidgets.Add(spawnedWidget);
+        }
     }
 
     private bool ShouldCreateWidget(ItemInstance item)
     {
         if (item == null) return false;
 
-        var count = spawnedWidgets.Count;
-        if (count >= 1) {
-            var lastSpawned = spawnedWidgets[count - 1];
-            if (lastSpawned && item.Definition == lastSpawned.Item.Definition && Time.timeAsDouble - lastSpawnWidgetTime <= spawnWidgetCooldown) {
+        if (lastSpawnTimes.TryGetValue(item.Definition, out double lastTime)) {
+            if (Time.timeAsDouble - lastTime < spawnWidgetCooldown) {
                 return false;
             }
         }

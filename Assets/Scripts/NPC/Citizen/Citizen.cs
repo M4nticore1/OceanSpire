@@ -182,37 +182,37 @@ public class Citizen : Human
         return false;
     }
 
-    protected override void OnInteractBuildingSeted(Building building)
+    protected override void HandleInteractBuildingSeted(Building building)
     {
         building.CitizensHandler.AddInteractor(this);
 
-        base.OnInteractBuildingSeted(building);
+        base.HandleInteractBuildingSeted(building);
     }
 
-    protected override void OnInteractBuildingRemoved(Building building)
+    protected override void HandleInteractBuildingRemoved(Building building)
     {
         building.CitizensHandler.RemoveInteractor(this);
 
-        base.OnInteractBuildingRemoved(building);
+        base.HandleInteractBuildingRemoved(building);
     }
 
-    protected override void OnInteractionStarted(Building building)
+    protected override void HandleInteractionStarted(Building building)
     {
         building.CitizensHandler.AddCurrentInteractor(this);
 
-        base.OnInteractionStarted(building);
+        base.HandleInteractionStarted(building);
     }
 
-    protected override void OnInteractionStopped(Building building)
+    protected override void HandleInteractionStopped(Building building)
     {
         building.CitizensHandler.RemoveCurrentInteractor(this);
 
-        base.OnInteractionStopped(building);
+        base.HandleInteractionStopped(building);
     }
 
-    protected override void OnDied()
+    protected override void HandleDied()
     {
-        base.OnDied();
+        base.HandleDied();
 
         var interactBuilding = InteractComponent.InteractBuilding;
         InteractComponent.RemoveInteractBuilding();

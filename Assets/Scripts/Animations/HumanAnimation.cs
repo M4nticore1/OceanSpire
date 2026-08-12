@@ -143,7 +143,7 @@ public class HumanAnimation : MonoBehaviour
         RunUpdateParametersCoroutine();
     }
 
-    private void HandleStartedAttacking()
+    private void HandleStartedAttacking(AttackComponent attackComponent)
     {
         var weaponDefinition = human.WeaponComponent.EquipmentDefinition as WeaponDefinition;
         if (!weaponDefinition) {
@@ -159,7 +159,7 @@ public class HumanAnimation : MonoBehaviour
         animator.SetBool(animationName, true);
     }
 
-    private void HandleStoppedAttacking()
+    private void HandleStoppedAttacking(AttackComponent attackComponent)
     {
         animator.SetBool("IsAttackingHands", false);
         animator.SetBool("IsAttackingLight", false);

@@ -70,10 +70,18 @@ public abstract class Human : Creature, IClickable, ILocalizable
     public static event Action<Human> OnHumanInited;
     public static event Action<Human> OnHumanRevived;
     public static event Action<Human> OnHumanDied;
+
+    public static event Action<Human, Building> OnHumanEnteredBuilding;
+    public static event Action<Human, Building> OnHumanExitedBuilding;
+
+    public static event Action<Human> OnHumanEnteredBoat;
+    public static event Action<Human> OnHumanExitedBoat;
+
+    public static event Action<Human, AttackComponent> OnHumanCombatStarted;
+    public static event Action<Human, AttackComponent> OnHumanCombatStopped;
+
     public static event Action<Human> OnHumanSelected;
     public static event Action<Human> OnHumanDeselected;
-    public static event Action<Human> OnEnteredBoat;
-    public static event Action<Human> OnExitedBoat;
 
     protected override void Awake()
     {
@@ -87,75 +95,75 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         base.OnEnable();
 
-        healthComponent.OnDied += OnDied;
+        healthComponent.OnDied += HandleDied;
 
-        reviveComponent.OnRevived += OnRevived;
-        reviveComponent.OnLimitTimeOvered += OnReviveLimitTimeOvered;
+        reviveComponent.OnRevived += HandleRevived;
+        reviveComponent.OnLimitTimeOvered += HandleReviveLimitTimeOvered;
 
-        attackComponent.OnAttackStarted += OnAttackStarted;
-        attackComponent.OnAttackStopped += OnAttackStopped;
+        attackComponent.OnTargetSeted += HandleAttackTargetSeted;
+        attackComponent.OnTargetRemoved += HandleAttackTargetRemoved;
+        attackComponent.OnAttackStarted += HandleAttackStarted;
+        attackComponent.OnAttackStopped += HandleAttackStopped;
 
-        cityNavigator.OnEnteredBuilding += OnEnteredBuilding;
-        cityNavigator.OnExitedBuilding += OnExitedBuilding;
+        cityNavigator.OnEnteredBuilding += HandleEnteredBuilding;
+        cityNavigator.OnExitedBuilding += HandleExitedBuilding;
 
-        interactComponent.OnInteractBuildingSeted += OnInteractBuildingSeted;
-        interactComponent.OnInteractBuildingRemoved += OnInteractBuildingRemoved;
-        interactComponent.OnInteractionStarted += OnInteractionStarted;
-        interactComponent.OnInteractionStopped += OnInteractionStopped;
+        interactComponent.OnInteractBuildingSeted += HandleInteractBuildingSeted;
+        interactComponent.OnInteractBuildingRemoved += HandleInteractBuildingRemoved;
+        interactComponent.OnInteractionStarted += HandleInteractionStarted;
+        interactComponent.OnInteractionStopped += HandleInteractionStopped;
 
         boatRider.OnEnteredBoat += HandleEnteredBoat;
         boatRider.OnExitedBoat += HandleExitedBoat;
-        boatRider.OnTargetBoatSeted += OnTargetBoatSeted;
-        boatRider.OnTargetBoatRemoved += OnTargetBoatRemoved;
-        boatRider.OnBoatSetedIdle += OnBoatSetedIdle;
-        BoatRider.OnBoatMovementStarted += OnBoatMovementStarted;
-        BoatRider.OnBoatMovementStopped += OnBoatMovementStopped;
+        boatRider.OnTargetBoatSeted += HandleTargetBoatSeted;
+        boatRider.OnTargetBoatRemoved += HandleTargetBoatRemoved;
+        boatRider.OnBoatSetedIdle += HandleBoatSetedIdle;
+        BoatRider.OnBoatMovementStarted += HandleBoatMovementStarted;
+        BoatRider.OnBoatMovementStopped += HandleBoatMovementStopped;
 
-        selectComponent.OnSelected += OnSelected;
-        selectComponent.OnDeselected += OnDeselected;
+        selectComponent.OnSelected += HandleSelected;
+        selectComponent.OnDeselected += HandleDeselected;
 
-        if (RaidManager.Instance) {
-            RaidManager.Instance.OnRaidStarted += OnRaidStarted;
-            RaidManager.Instance.OnRaidEnded += OnRaidEnded;
-        }
-        else
-            Debug.Log("raidManager is not valid", this);
+        RaidManager.Instance.OnRaidStarted += HandleRaidStarted;
+        RaidManager.Instance.OnRaidEnded += HandleRaidEnded;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
-        healthComponent.OnDied -= OnDied;
+        healthComponent.OnDied -= HandleDied;
 
-        reviveComponent.OnRevived -= OnRevived;
-        reviveComponent.OnLimitTimeOvered -= OnReviveLimitTimeOvered;
+        reviveComponent.OnRevived -= HandleRevived;
+        reviveComponent.OnLimitTimeOvered -= HandleReviveLimitTimeOvered;
 
-        attackComponent.OnAttackStarted -= OnAttackStarted;
-        attackComponent.OnAttackStopped -= OnAttackStopped;
+        attackComponent.OnTargetSeted -= HandleAttackTargetSeted;
+        attackComponent.OnTargetRemoved -= HandleAttackTargetRemoved;
+        attackComponent.OnAttackStarted -= HandleAttackStarted;
+        attackComponent.OnAttackStopped -= HandleAttackStopped;
 
-        cityNavigator.OnEnteredBuilding -= OnEnteredBuilding;
-        cityNavigator.OnExitedBuilding -= OnExitedBuilding;
+        cityNavigator.OnEnteredBuilding -= HandleEnteredBuilding;
+        cityNavigator.OnExitedBuilding -= HandleExitedBuilding;
 
-        interactComponent.OnInteractBuildingSeted -= OnInteractBuildingSeted;
-        interactComponent.OnInteractBuildingRemoved -= OnInteractBuildingRemoved;
-        interactComponent.OnInteractionStarted -= OnInteractionStarted;
-        interactComponent.OnInteractionStopped -= OnInteractionStopped;
+        interactComponent.OnInteractBuildingSeted -= HandleInteractBuildingSeted;
+        interactComponent.OnInteractBuildingRemoved -= HandleInteractBuildingRemoved;
+        interactComponent.OnInteractionStarted -= HandleInteractionStarted;
+        interactComponent.OnInteractionStopped -= HandleInteractionStopped;
 
         boatRider.OnEnteredBoat -= HandleEnteredBoat;
         boatRider.OnExitedBoat -= HandleExitedBoat;
-        boatRider.OnTargetBoatSeted -= OnTargetBoatSeted;
-        boatRider.OnTargetBoatRemoved -= OnTargetBoatRemoved;
-        boatRider.OnBoatSetedIdle -= OnBoatSetedIdle;
-        BoatRider.OnBoatMovementStarted -= OnBoatMovementStarted;
-        BoatRider.OnBoatMovementStopped -= OnBoatMovementStopped;
+        boatRider.OnTargetBoatSeted -= HandleTargetBoatSeted;
+        boatRider.OnTargetBoatRemoved -= HandleTargetBoatRemoved;
+        boatRider.OnBoatSetedIdle -= HandleBoatSetedIdle;
+        BoatRider.OnBoatMovementStarted -= HandleBoatMovementStarted;
+        BoatRider.OnBoatMovementStopped -= HandleBoatMovementStopped;
 
-        selectComponent.OnSelected -= OnSelected;
-        selectComponent.OnDeselected -= OnDeselected;
+        selectComponent.OnSelected -= HandleSelected;
+        selectComponent.OnDeselected -= HandleDeselected;
 
         if (RaidManager.Instance) {
-            RaidManager.Instance.OnRaidStarted -= OnRaidStarted;
-            RaidManager.Instance.OnRaidEnded -= OnRaidEnded;
+            RaidManager.Instance.OnRaidStarted -= HandleRaidStarted;
+            RaidManager.Instance.OnRaidEnded -= HandleRaidEnded;
         }
     }
 
@@ -189,7 +197,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     protected override void HandleInitNextFrame()
     {
-        if (!elevatorPassenger.IsRiding && !boatRider.RidingBoat) {
+        if (elevatorPassenger != null && !elevatorPassenger.IsRiding && (boatRider == null || boatRider.RidingBoat == null)) {
             movement.SetAgentEnabled(true);
             cityNavigator.FollowPath();
         }
@@ -352,20 +360,20 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     public virtual bool ShouldStartInteracting()
     {
-        if (interactComponent.IsInteracting) return false;
+        if (interactComponent != null && interactComponent.IsInteracting) return false;
 
-        var interactBuilding = interactComponent.InteractBuilding;
-        if (!interactBuilding) return false;
-        if (cityNavigator.CurrentBuilding != interactBuilding) return false;
-        if (interactBuilding.GetComponent<PierModule>()) return false;
+        var interactBuilding = interactComponent != null ? interactComponent.InteractBuilding : null;
+        if (interactBuilding == null) return false;
+        if (cityNavigator != null && cityNavigator.CurrentBuilding != interactBuilding) return false;
+        if (interactBuilding.GetComponent<PierModule>() != null) return false;
 
-        if (!cityNavigator.CurrentBuilding) return false;
-        if (boatRider.RidingBoat) return false;
-        if (!healthComponent.IsAlive) return false;
-        if (attackComponent.IsAttacking) return false;
+        if (cityNavigator != null && cityNavigator.CurrentBuilding == null) return false;
+        if (boatRider != null && boatRider.RidingBoat != null) return false;
+        if (healthComponent != null && !healthComponent.IsAlive) return false;
+        if (attackComponent != null && attackComponent.IsAttacking) return false;
 
-        var waypoint = cityNavigator.WaypointsComponent.GetCurrentWaypoint();
-        if (waypoint == null || !waypoint.Transform) {
+        var waypoint = cityNavigator != null && cityNavigator.WaypointsComponent != null ? cityNavigator.WaypointsComponent.GetCurrentWaypoint() : null;
+        if (waypoint == null || waypoint.Transform == null) {
             Debug.LogError("waypoint or its transform is not valid", this);
             return false;
         }
@@ -377,31 +385,31 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     public virtual bool ShouldStopInteracting()
     {
-        if (!interactComponent.IsInteracting) return false;
-        if (!interactComponent.InteractBuilding) return false;
-        if (!healthComponent.IsAlive) return true;
-        if (attackComponent.IsAttacking) return true;
+        if (interactComponent != null && !interactComponent.IsInteracting) return false;
+        if (interactComponent != null && interactComponent.InteractBuilding == null) return false;
+        if (healthComponent != null && !healthComponent.IsAlive) return true;
+        if (attackComponent != null && attackComponent.IsAttacking) return true;
 
         return false;
     }
 
     public virtual bool ShouldMoveToTargetBoat()
     {
-        if (boatRider.RidingBoat) return false;
-        if (cityNavigator.FloorIndex > 0) return false;
-        if (attackComponent.IsAttacking) return false;
+        if (boatRider != null && boatRider.RidingBoat != null) return false;
+        if (cityNavigator != null && cityNavigator.FloorIndex > 0) return false;
+        if (attackComponent != null && attackComponent.IsAttacking) return false;
 
-        var targetBoat = boatRider.TargetBoat;
-        if (!targetBoat) return false;
+        var targetBoat = boatRider != null ? boatRider.TargetBoat : null;
+        if (targetBoat == null) return false;
 
         var dockPoint = targetBoat.DockPoint;
-        if (!dockPoint) {
+        if (dockPoint == null) {
             Debug.LogError($"[{nameof(Human)}] Target Boat Dock Point is not valid!");
             return false;
         }
 
         var entranceTransform = dockPoint.EntraceTransform;
-        if (!entranceTransform) {
+        if (entranceTransform == null) {
             Debug.LogError($"[{nameof(Human)}] Entrance Transform is not valid!");
             return false;
         }
@@ -413,10 +421,10 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     public virtual bool ShouldWaitForEnteringBoat()
     {
-        var targetBoat = boatRider.TargetBoat;
-        if (!targetBoat) return false;
-        if (!targetBoat.DockPoint) return false;
-        if (!targetBoat.DockPoint.EntraceTransform) return false;
+        var targetBoat = boatRider != null ? boatRider.TargetBoat : null;
+        if (targetBoat == null) return false;
+        if (targetBoat.DockPoint == null) return false;
+        if (targetBoat.DockPoint.EntraceTransform == null) return false;
         if (!movement.IsReachedPosition(targetBoat.DockPoint.EntraceTransform.position)) return false;
 
         return true;
@@ -424,18 +432,18 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     public virtual bool ShouldStopEnteringBoat()
     {
-        if (boatRider.TargetBoat) return false;
-        if (!boatRider.IsEnteringBoat) return false;
+        if (boatRider != null && boatRider.TargetBoat != null) return false;
+        if (boatRider != null && !boatRider.IsEnteringBoat) return false;
 
         return true;
     }
 
     public virtual bool ShouldStartExitingBoat()
     {
-        var ridingBoat = boatRider.RidingBoat;
+        var ridingBoat = boatRider != null ? boatRider.RidingBoat : null;
         if (ridingBoat == null) return false;
 
-        var targetBoat = boatRider.TargetBoat;
+        var targetBoat = boatRider != null ? boatRider.TargetBoat : null;
         if (targetBoat != null && targetBoat == ridingBoat) return false;
 
         var stateEnum = ridingBoat.CurrentStateEnum;
@@ -447,75 +455,84 @@ public abstract class Human : Creature, IClickable, ILocalizable
         var dockTransform = dockPoint.DockTransform;
         if (dockTransform == null) return false;
 
-        if (!ridingBoat.Movement.IsReachedPosition(dockTransform.position)) return false;
+        if (ridingBoat.Movement != null && !ridingBoat.Movement.IsReachedPosition(dockTransform.position)) return false;
 
         return true;
     }
 
     public virtual bool ShouldStopExitingBoat()
     {
-        if (!boatRider.RidingBoat) return false;
-        if (!boatRider.IsExitingBoat) return false;
-        if (boatRider.RidingBoat.CurrentStateEnum != BoatStateEnum.Idle) return false;
+        var ridingBoat = boatRider != null ? boatRider.RidingBoat : null;
+        if (ridingBoat == null) return false;
+        if (boatRider != null && !boatRider.IsExitingBoat) return false;
+        if (ridingBoat.CurrentStateEnum != BoatStateEnum.Idle) return false;
 
         return true;
     }
 
     public virtual bool ShouldBoatMoveToDock()
     {
-        var ridingBoat = boatRider.RidingBoat;
-        if (!ridingBoat) return false;
+        var ridingBoat = boatRider != null ? boatRider.RidingBoat : null;
+        if (ridingBoat == null) return false;
 
         var dockPoint = ridingBoat.DockPoint;
-        if (!dockPoint) return false;
+        if (dockPoint == null) return false;
 
         var boatState = ridingBoat.CurrentStateEnum;
         if (boatState == BoatStateEnum.MovingToDock) return false;
-        if (boatState == BoatStateEnum.Idle && ridingBoat.Movement.IsReachedPosition(dockPoint.DockTransform.position)) return false;
+        if (boatState == BoatStateEnum.Idle && ridingBoat.Movement != null && ridingBoat.Movement.IsReachedPosition(dockPoint.DockTransform.position)) return false;
 
-        if (boatRider.IsExitingBoat) return false;
+        if (boatRider != null && boatRider.IsExitingBoat) return false;
 
         return true;
     }
 
     public virtual bool ShouldBoatFindLoot()
     {
-        if (!boatRider.RidingBoat) return false;
-        if (!boatRider.RidingBoat.ShouldFindLoot()) return false;
+        var ridingBoat = boatRider != null ? boatRider.RidingBoat : null;
+        if (ridingBoat == null) return false;
+        if (!ridingBoat.ShouldFindLoot()) return false;
 
         return true;
     }
 
     public virtual bool ShouldBoatFloatAway()
     {
-        if (!boatRider.RidingBoat) return false;
+        var ridingBoat = boatRider != null ? boatRider.RidingBoat : null;
+        if (ridingBoat == null) return false;
 
         return true;
     }
 
     public virtual bool ShouldSetCombatTarget()
     {
-        if (attackComponent.IsAttacking) return false;
-        if (!healthComponent.IsAlive) return false;
+        if (attackComponent != null && attackComponent.IsAttacking) return false;
+        if (healthComponent != null && !healthComponent.IsAlive) return false;
 
-        return true;
+        return false;
     }
 
     public virtual bool ShouldStopAttacking()
     {
-        if (!attackComponent.IsAttacking) return false;
+        if (attackComponent != null && !attackComponent.IsAttacking) return false;
 
         return true;
     }
 
     public virtual bool ShouldFollowPath()
     {
-        if (cityNavigator.TargetBuilding == null) return false;
-        if (!healthComponent.IsAlive) return false;
-        if (boatRider.RidingBoat) return false;
-        if (attackComponent.IsAttacking) return false;
-        if (attackComponent.CurrentTarget) return false;
+        //Debug.Log("ShouldFollowPath");
+        if (cityNavigator != null && cityNavigator.TargetBuilding == null) return false;
+        //Debug.Log("ShouldFollowPath1");
+        if (healthComponent != null && !healthComponent.IsAlive) return false;
+        //Debug.Log("ShouldFollowPath2");
+        if (boatRider != null && boatRider.RidingBoat != null) return false;
+        //Debug.Log("ShouldFollowPath3");
+        if (attackComponent != null && attackComponent.IsAttacking) return false;
+        //Debug.Log("ShouldFollowPath4");
+        if (attackComponent != null && attackComponent.CurrentTarget != null) return false;
 
+        //Debug.Log("ShouldFollowPath5");
         return true;
     }
 
@@ -543,11 +560,11 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     protected override bool ShouldStartIdle()
     {
-        if (movement.IsMoving) return false;
-        if (interactComponent.IsInteracting) return false;
-        if (boatRider.RidingBoat && boatRider.RidingBoat.Movement.IsMoving) return false;
-        if (attackComponent.IsAttacking) return false;
-        if (!healthComponent.IsAlive) return false;
+        if (movement != null && movement.IsMoving) return false;
+        if (interactComponent != null && interactComponent.IsInteracting) return false;
+        if (boatRider != null && boatRider.RidingBoat != null && boatRider.RidingBoat.Movement != null && boatRider.RidingBoat.Movement.IsMoving) return false;
+        if (attackComponent != null && attackComponent.IsAttacking) return false;
+        if (healthComponent != null && !healthComponent.IsAlive) return false;
 
         return true;
     }
@@ -557,27 +574,31 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         return new Dictionary<string, string>()
         {
-            { "name",  nameComponent.GetLocalization()["name"]}
+            { "name",  nameComponent != null ? nameComponent.GetLocalization()["name"] : string.Empty }
         };
     }
 
     // Health
-    protected virtual void OnRevived()
+    protected virtual void HandleRevived()
     {
         RunDetermineNextActionCoroutine();
-        contextMenuTarget.SetShowContextMenu(true);
+        if (contextMenuTarget != null)
+            contextMenuTarget.SetShowContextMenu(true);
+
         OnHumanRevived?.Invoke(this);
     }
 
-    protected virtual void OnDied()
+    protected virtual void HandleDied()
     {
         RunDetermineNextActionCoroutine();
-        contextMenuTarget.SetShowContextMenu(false);
+        if (contextMenuTarget != null)
+            contextMenuTarget.SetShowContextMenu(false);
+
         OnHumanDied?.Invoke(this);
     }
 
     // Revive
-    private void OnReviveLimitTimeOvered()
+    private void HandleReviveLimitTimeOvered()
     {
         Destroy(gameObject);
     }
@@ -591,83 +612,116 @@ public abstract class Human : Creature, IClickable, ILocalizable
     }
 
     // Attack
-    protected virtual void OnAttackStarted()
+    protected virtual void HandleAttackTargetSeted(AttackComponent combatComponent)
     {
         RunDetermineNextActionCoroutine();
     }
 
-    protected virtual void OnAttackStopped()
+    protected virtual void HandleAttackTargetRemoved(AttackComponent combatComponent)
     {
         RunDetermineNextActionCoroutine();
+    }
+
+    protected virtual void HandleAttackStarted(AttackComponent combatComponent)
+    {
+        RunDetermineNextActionCoroutine();
+        OnHumanCombatStarted?.Invoke(this, combatComponent);
+    }
+
+    protected virtual void HandleAttackStopped(AttackComponent combatComponent)
+    {
+        RunDetermineNextActionCoroutine();
+        OnHumanCombatStopped?.Invoke(this, combatComponent);
     }
 
     // Entrance
-    protected virtual void OnEnteredBuilding(Building building)
+    protected virtual void HandleEnteredBuilding(Building building)
     {
+        if (building == null) return;
+
         RunDetermineNextActionCoroutine();
+        OnHumanEnteredBuilding?.Invoke(this, building);
     }
 
-    protected virtual void OnExitedBuilding(Building building)
+    protected virtual void HandleExitedBuilding(Building building)
     {
+        if (building == null) return;
+
         RunDetermineNextActionCoroutine();
+        OnHumanExitedBuilding?.Invoke(this, building);
     }
 
     // Interaction Building
-    protected virtual void OnInteractBuildingSeted(Building building)
+    protected virtual void HandleInteractBuildingSeted(Building building)
     {
-        cityNavigator.SetTargetBuilding(building);
-        cityNavigator.TryFindPathToTargetBuilding();
+        if (building == null) return;
+
+        if (cityNavigator != null) {
+            cityNavigator.SetTargetBuilding(building);
+            cityNavigator.TryFindPathToTargetBuilding();
+        }
         RunDetermineNextActionCoroutine();
     }
 
-    protected virtual void OnInteractBuildingRemoved(Building building)
+    protected virtual void HandleInteractBuildingRemoved(Building building)
     {
-        cityNavigator.RemoveTargetBuilding();
-        cityNavigator.RemovePath();
+        if (building == null) return;
 
+        if (cityNavigator != null) {
+            cityNavigator.RemoveTargetBuilding();
+            cityNavigator.RemovePath();
+        }
         RunDetermineNextActionCoroutine();
     }
 
     // Interaction
-    protected virtual void OnInteractionStarted(Building building)
+    protected virtual void HandleInteractionStarted(Building building)
     {
+        if (building == null) return;
+
         RunDetermineNextActionCoroutine();
     }
 
-    protected virtual void OnInteractionStopped(Building building)
+    protected virtual void HandleInteractionStopped(Building building)
     {
+        if (building == null) return;
+
         RunDetermineNextActionCoroutine();
     }
 
     // Boat
     protected virtual void HandleEnteredBoat(Boat boat)
     {
-        RunDetermineNextActionCoroutine();
+        if (boat == null) return;
 
-        OnEnteredBoat?.Invoke(this);
+        RunDetermineNextActionCoroutine();
+        OnHumanEnteredBoat?.Invoke(this);
     }
 
     protected virtual void HandleExitedBoat(Boat boat)
     {
-        RunDetermineNextActionCoroutine();
+        if (boat == null) return;
 
-        OnExitedBoat?.Invoke(this);
+        RunDetermineNextActionCoroutine();
+        OnHumanExitedBoat?.Invoke(this);
     }
 
-    protected virtual void OnBoatSetedIdle(Boat boat)
+    protected virtual void HandleBoatSetedIdle(Boat boat)
     {
         RunDetermineNextActionCoroutine();
     }
 
-    private void OnTargetBoatSeted(Boat boat)
+    private void HandleTargetBoatSeted(Boat boat)
     {
-        var interactBuilding = interactComponent.InteractBuilding;
-        if (interactBuilding && !interactBuilding.GetComponent<PierModule>()) {
-            interactComponent.RemoveInteractBuilding();
-            interactComponent.TryStopInteracting(interactBuilding);
+        var interactBuilding = interactComponent != null ? interactComponent.InteractBuilding : null;
+        if (interactBuilding != null && interactBuilding.GetComponent<PierModule>() == null) {
+            if (interactComponent != null) {
+                interactComponent.RemoveInteractBuilding();
+                interactComponent.TryStopInteracting(interactBuilding);
+            }
         }
 
-        if (cityNavigator.CurrentBuilding && cityNavigator.CurrentBuilding as TowerBuilding) {
+        if (cityNavigator != null && cityNavigator.CurrentBuilding != null && cityNavigator.CurrentBuilding is TowerBuilding) {
             cityNavigator.SetTargetBuilding(BuildingsManager.Instance.TowerGate);
 
             if (cityNavigator.TryFindPathToTargetBuilding()) {
@@ -678,38 +732,40 @@ public abstract class Human : Creature, IClickable, ILocalizable
         RunDetermineNextActionCoroutine();
     }
 
-    private void OnTargetBoatRemoved(Boat boat)
+    private void HandleTargetBoatRemoved(Boat boat)
     {
         RunDetermineNextActionCoroutine();
     }
 
-    private void OnBoatMovementStarted(Boat boat)
+    private void HandleBoatMovementStarted(Boat boat)
     {
         UpdateIdle();
     }
 
-    private void OnBoatMovementStopped(Boat boat)
+    private void HandleBoatMovementStopped(Boat boat)
     {
         UpdateIdle();
     }
 
     // Raid
-    private void OnRaidStarted()
+    private void HandleRaidStarted()
     {
-        movement.SetMovementMethod(MovementMethod.Run);
+        if (movement != null)
+            movement.SetMovementMethod(MovementMethod.Run);
     }
 
-    private void OnRaidEnded(RaidEndedResult result)
+    private void HandleRaidEnded(RaidEndedResult result)
     {
-        movement.SetMovementMethod(MovementMethod.Walk);
+        if (movement != null)
+            movement.SetMovementMethod(MovementMethod.Walk);
     }
 
-    private void OnSelected()
+    private void HandleSelected()
     {
         OnHumanSelected?.Invoke(this);
     }
 
-    private void OnDeselected()
+    private void HandleDeselected()
     {
         OnHumanDeselected?.Invoke(this);
     }

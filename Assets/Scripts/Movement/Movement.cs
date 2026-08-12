@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -153,7 +151,8 @@ public class Movement : MonoBehaviour
 
     public bool IsReachedPosition(Vector3 position)
     {
-        return Vector3.Distance(transform.position, position) <= navAgent.stoppingDistance;
+        var currentPosition = transform.position;
+        return Vector3.Distance(new Vector3(currentPosition.x, currentPosition.y - navAgent.baseOffset, currentPosition.z), position) <= navAgent.stoppingDistance;
     }
 
     public bool CanReachPosition(Vector3 targetPosition)
@@ -175,7 +174,8 @@ public class Movement : MonoBehaviour
     {
         if (TargetPosition == null) return null;
 
-        return Vector3.Distance(transform.position, TargetPosition.Value);
+        var position = transform.position;
+        return Vector3.Distance(new Vector3(position.x, position.y - navAgent.baseOffset, position.z), TargetPosition.Value);
     }
 
     private void SetTargetRotation(Quaternion value)

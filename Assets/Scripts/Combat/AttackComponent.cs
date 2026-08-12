@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class AttackComponent : MonoBehaviour
 {
@@ -23,9 +21,12 @@ public class AttackComponent : MonoBehaviour
     [field: SerializeField] public List<AttackComponent> CurrentAttackers { get; private set; } = new();
     public bool IsAttacking { get; private set; } = false;
 
-    public event Action OnAttackStarted;
-    public event Action OnAttackStopped;
-    public event Action OnAttacked;
+    public event Action<AttackComponent> OnTargetSeted;
+    public event Action<AttackComponent> OnTargetRemoved;
+
+    public event Action<AttackComponent> OnAttackStarted;
+    public event Action<AttackComponent> OnAttackStopped;
+    public event Action<AttackComponent> OnAttacked;
 
     public static event Action<AttackComponent> OnGlobalAttackStarted;
     public static event Action<AttackComponent> OnGlobalAttackStopped;
@@ -80,12 +81,14 @@ public class AttackComponent : MonoBehaviour
         CurrentTarget = target;
         target.AddAttacker(this);
         MoveToTarget();
+        OnTargetSeted?.Invoke(this);
     }
 
     public void RemoveTarget()
     {
         CurrentTarget = null;
         StopAttacking();
+        OnTargetRemoved?.Invoke(this);
     }
 
     public void AddAttacker(AttackComponent attacker)
@@ -156,28 +159,30 @@ public class AttackComponent : MonoBehaviour
             CurrentTarget.HandleAttacked(this);
         }
 
-        OnAttacked?.Invoke();
+        OnAttacked?.Invoke(CurrentTarget);
         OnGlobalAttacked?.Invoke(this);
     }
 
-    public void OnStopBeingTarget(AttackComponent target)
+    public void HandleStoppedBeingTarget(AttackComponent target)
     {
         RemoveAttacker(target);
     }
 
-    public void OnTargetDied()
+    public void HandleTargetDied()
     {
+        RemoveAttacker(CurrentTarget);
         RemoveTarget();
     }
 
     private void StartAttacking()
     {
+        if (CurrentTarget == null) return;
         if (IsAttacking) return;
 
         IsAttacking = true;
         currentAttackTime = 0f;
 
-        OnAttackStarted?.Invoke();
+        OnAttackStarted?.Invoke(CurrentTarget);
         OnGlobalAttackStarted?.Invoke(this);
     }
 
@@ -187,17 +192,8 @@ public class AttackComponent : MonoBehaviour
 
         IsAttacking = false;
 
-        OnAttackStopped?.Invoke();
+        OnAttackStopped?.Invoke(CurrentTarget);
         OnGlobalAttackStopped?.Invoke(this);
-    }
-
-    private bool TryStopMoving()
-    {
-        if (CurrentTarget == null) return false;
-        if (!movement.IsReachedPosition(CurrentTarget.transform.position)) return false;
-
-        movement.TryStopMoving();
-        return true;
     }
 
     private void CorrectRotation()
@@ -232,7 +228,7 @@ public class AttackComponent : MonoBehaviour
 
         var attackersCopy = new List<AttackComponent>(CurrentAttackers);
         foreach (var attacker in attackersCopy) {
-            attacker.OnTargetDied();
+            attacker.HandleTargetDied();
         }
     }
 
