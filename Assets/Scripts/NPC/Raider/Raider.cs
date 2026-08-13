@@ -216,7 +216,7 @@ public class Raider : Human, IProgressable
 
         CityNavigator.RemoveTargetBuilding();
         CityNavigator.RemoveTargetBuilding();
-        CityNavigator.RemovePath();
+        CityNavigator.RemovePathAndTargetBuilding();
     }
 
     protected override void HandleAttackTargetSeted(AttackComponent combatComponent)

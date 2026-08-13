@@ -278,6 +278,8 @@ public abstract class Human : Creature, IClickable, ILocalizable
             FollowPath();
             return;
         }
+
+        base.DetermineNextAction();
     }
 
     protected virtual void StartInteracting()
@@ -395,22 +397,32 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     public virtual bool ShouldMoveToTargetBoat()
     {
-        if (boatRider != null && boatRider.RidingBoat != null) return false;
-        if (cityNavigator != null && cityNavigator.FloorIndex > 0) return false;
-        if (attackComponent != null && attackComponent.IsAttacking) return false;
+        if (boatRider == null) return false;
+        if (cityNavigator == null) return false;
+        if (attackComponent == null) return false;
+
+        if (boatRider.RidingBoat != null) return false;
+        if (cityNavigator.FloorIndex > 0) return false;
+        if (attackComponent.IsAttacking) return false;
+
+        var buildingsManager = BuildingsManager.Instance;
+        if (buildingsManager == null) return false;
+
+        var path = new List<Building>();
+        if (!cityNavigator.TryFindPathToBuilding(buildingsManager.EntranceBuildingPlace.PlacedBuilding, out path)) return false;
 
         var targetBoat = boatRider != null ? boatRider.TargetBoat : null;
         if (targetBoat == null) return false;
 
         var dockPoint = targetBoat.DockPoint;
         if (dockPoint == null) {
-            Debug.LogError($"[{nameof(Human)}] Target Boat Dock Point is not valid!");
+            Debug.LogError($"[{nameof(Human)}] Target Boat Dock is not valid at {targetBoat}!");
             return false;
         }
 
         var entranceTransform = dockPoint.EntraceTransform;
         if (entranceTransform == null) {
-            Debug.LogError($"[{nameof(Human)}] Entrance Transform is not valid!");
+            Debug.LogError($"[{nameof(Human)}] Entrance Transform is not valid at {dockPoint}!");
             return false;
         }
 
@@ -521,8 +533,10 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     public virtual bool ShouldFollowPath()
     {
+        if (cityNavigator == null) return false;
         //Debug.Log("ShouldFollowPath");
-        if (cityNavigator != null && cityNavigator.TargetBuilding == null) return false;
+        if (cityNavigator.TargetBuilding == null) return false;
+        if (!cityNavigator.HasPath) return false;
         //Debug.Log("ShouldFollowPath1");
         if (healthComponent != null && !healthComponent.IsAlive) return false;
         //Debug.Log("ShouldFollowPath2");
@@ -658,7 +672,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
         if (cityNavigator != null) {
             cityNavigator.SetTargetBuilding(building);
-            cityNavigator.TryFindPathToTargetBuilding();
+            cityNavigator.TryUpdatePathToTargetBuilding();
         }
         RunDetermineNextActionCoroutine();
     }
@@ -669,7 +683,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
         if (cityNavigator != null) {
             cityNavigator.RemoveTargetBuilding();
-            cityNavigator.RemovePath();
+            cityNavigator.RemovePathAndTargetBuilding();
         }
         RunDetermineNextActionCoroutine();
     }
@@ -724,7 +738,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         if (cityNavigator != null && cityNavigator.CurrentBuilding != null && cityNavigator.CurrentBuilding is TowerBuilding) {
             cityNavigator.SetTargetBuilding(BuildingsManager.Instance.TowerGate);
 
-            if (cityNavigator.TryFindPathToTargetBuilding()) {
+            if (cityNavigator.TryUpdatePathToTargetBuilding()) {
                 cityNavigator.FollowPath();
             }
         }

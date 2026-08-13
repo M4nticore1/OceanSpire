@@ -95,7 +95,7 @@ public class CreatureCityNavigator : MonoBehaviour
             if (instance != null) {
                 var building = instance.GetComponent<Building>();
                 SetTargetBuilding(building);
-                TryFindPathToTargetBuilding();
+                TryUpdatePathToTargetBuilding();
                 FollowPath();
             }
         }
@@ -116,6 +116,9 @@ public class CreatureCityNavigator : MonoBehaviour
 
         TargetBuilding = target;
         TargetBuilding.SpawnedConstruction.AssignInteract(this);
+
+        RemovePath();
+        TryUpdatePathToTargetBuilding();
     }
 
     public void RemoveTargetBuilding()
@@ -126,23 +129,35 @@ public class CreatureCityNavigator : MonoBehaviour
         TargetBuilding = null;
     }
 
-    public bool TryFindPathToTargetBuilding()
+    public bool TryUpdatePathToTargetBuilding()
     {
         if (TargetBuilding == null) {
-            Debug.Log($"[{nameof(CreatureCityNavigator)}] Target Building not found at {name}");
+            Debug.Log($"[{nameof(CreatureCityNavigator)}] Target Building is not valid!");
             return false;
         }
 
-        return TryFindPathToBuilding(TargetBuilding);
+        return TryUpdatePathToBuilding(TargetBuilding);
     }
 
-    public bool TryFindPathToBuilding(Building building)
+    public bool TryUpdatePathToBuilding(Building building)
+    {
+        if (!TryFindPathToBuilding(building, out var path)) return false;
+
+        RemovePath();
+        pathBuildings = path;
+        SortPath(pathBuildings);
+        UpdatePathBuildings(pathBuildings);
+
+        return true;
+    }
+
+    public bool TryFindPathToBuilding(Building building, out List<Building> path)
     {
         TowerBuilding startTowerBuilding;
         BuildingPlace startPlace;
 
         if (elevatorPassenger.IsRiding && CurrentElevator.SpawnedElevatorCabin.IsMoving) {
-            int nextFloor = CurrentElevator.SpawnedElevatorCabin.NextFloor;
+            var nextFloor = CurrentElevator.SpawnedElevatorCabin.NextFloor;
             startTowerBuilding = BuildingsManager.Instance.BuiltFloors[nextFloor].RoomBuildingPlaces[PlaceIndex].PlacedBuilding;
             startPlace = startTowerBuilding != null ? startTowerBuilding.BuildingPlace : null;
         }
@@ -151,15 +166,7 @@ public class CreatureCityNavigator : MonoBehaviour
             startPlace = startTowerBuilding != null ? startTowerBuilding.BuildingPlace : BuildingsManager.Instance.EntranceBuildingPlace;
         }
 
-        List<Building> path;
-        if (!PathFinder.TryFindBuildingPath(startPlace, building, out path)) return false;
-
-        ResetPath();
-        pathBuildings = path;
-        SortPath(pathBuildings);
-        UpdatePathBuildings(pathBuildings);
-
-        return true;
+        return PathFinder.TryFindBuildingPath(startPlace, building, out path);
     }
 
     public bool CanReachTargetBuilding()
@@ -175,9 +182,9 @@ public class CreatureCityNavigator : MonoBehaviour
         return PathFinder.TryFindBuildingPath(startPlace, targetBuilding, out path);
     }
 
-    public void RemovePath()
+    public void RemovePathAndTargetBuilding()
     {
-        ResetPath();
+        RemovePath();
         UpdatePathBuildings(pathBuildings);
         RemoveTargetBuilding();
     }
@@ -406,7 +413,7 @@ public class CreatureCityNavigator : MonoBehaviour
         }
     }
 
-    private void ResetPath()
+    private void RemovePath()
     {
         pathBuildings.Clear();
         PathProgress = 0;
@@ -459,11 +466,11 @@ public class CreatureCityNavigator : MonoBehaviour
     {
         if (TargetBuilding == null) return;
 
-        if (TryFindPathToTargetBuilding()) {
+        if (TryUpdatePathToTargetBuilding()) {
             FollowPath();
         }
         else {
-            RemovePath();
+            RemovePathAndTargetBuilding();
             StopFollowingPath();
         }
     }
@@ -472,11 +479,11 @@ public class CreatureCityNavigator : MonoBehaviour
     {
         if (TargetBuilding == null) return;
 
-        if (TryFindPathToTargetBuilding()) {
+        if (TryUpdatePathToTargetBuilding()) {
             FollowPath();
         }
         else {
-            RemovePath();
+            RemovePathAndTargetBuilding();
             StopFollowingPath();
         }
     }
@@ -486,10 +493,10 @@ public class CreatureCityNavigator : MonoBehaviour
         if (TargetBuilding == null) return;
 
         if (building == TargetBuilding) {
-            RemovePath();
+            RemovePathAndTargetBuilding();
         }
         else {
-            if (TryFindPathToTargetBuilding()) {
+            if (TryUpdatePathToTargetBuilding()) {
                 FollowPath();
             }
             else {
