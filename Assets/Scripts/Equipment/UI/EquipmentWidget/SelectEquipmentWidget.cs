@@ -19,6 +19,14 @@ public class SelectEquipmentWidget : EquipmentWidget
         EquipmentComponent.OnEquipmentComponentEquiped -= OnEquipmentComponentEquiped;
     }
 
+    protected override string GetAmountText(EquipmentDefinition definition)
+    {
+        if (!definition) return null;
+
+        var amount = CityStorage.Instance.Inventory.GetItem(definition.ItemId).Amount;
+        return amount.ToString();
+    }
+
     protected override void OnClicked()
     {
         selectEquipmentMenu.Open(EquipmentCategory);

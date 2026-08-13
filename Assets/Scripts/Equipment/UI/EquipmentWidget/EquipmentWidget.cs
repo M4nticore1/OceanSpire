@@ -12,6 +12,7 @@ public abstract class EquipmentWidget : UIBehaviour
     [Header("Equipment Widget")]
     [SerializeField] private TextLocalizer nameText;
     [SerializeField] private TextMeshProUGUI powerText;
+    [SerializeField] private TextMeshProUGUI amountText;
     [SerializeField] private Image icon;
     [SerializeField] private CustomButton button;
     protected CustomButton Button => button;
@@ -38,6 +39,8 @@ public abstract class EquipmentWidget : UIBehaviour
         button.OnReleased.RemoveListener(OnButtonClicked);
     }
 
+    protected abstract string GetAmountText(EquipmentDefinition definition);
+
     public virtual void SetEquipmentComponent(EquipmentComponent component)
     {
         equipmentComponent = component;
@@ -51,6 +54,7 @@ public abstract class EquipmentWidget : UIBehaviour
 
         UpdateNameText(definition);
         UpdatePowerText(definition);
+        UpdateAmountText(definition);
         UpdateIcon(definition);
         UpdateEquipmentPanel(definition);
     }
@@ -67,6 +71,11 @@ public abstract class EquipmentWidget : UIBehaviour
         if (!definition) return;
 
         powerText.SetText(definition.Power.ToString());
+    }
+
+    private void UpdateAmountText(EquipmentDefinition definition)
+    {
+        amountText.SetText(GetAmountText(definition));
     }
 
     private void UpdateIcon(EquipmentDefinition definition)

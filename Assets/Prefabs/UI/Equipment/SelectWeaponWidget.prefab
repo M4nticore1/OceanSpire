@@ -335,6 +335,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+--- !u!114 &6831993411964568423 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1308975298198158899, guid: 7279f399ae8409843ae7e180f209cac9, type: 3}
+  m_PrefabInstance: {fileID: 5546877655274077524}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &7488068295536451770 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3103122694405168622, guid: 7279f399ae8409843ae7e180f209cac9, type: 3}
@@ -355,6 +366,7 @@ MonoBehaviour:
   equipmentCategory: 0
   nameText: {fileID: 7613167649979859048}
   powerText: {fileID: 3309838928764943333}
+  amountText: {fileID: 6831993411964568423}
   icon: {fileID: 5563188332413125826}
   button: {fileID: 5078511957557747250}
   equipmentPanel: {fileID: 7532994630614671940}

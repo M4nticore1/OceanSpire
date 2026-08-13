@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class ActionEquipmentWidget : EquipmentWidget
 {
-    [Header("Storage Equipment Widget")]
-    [SerializeField] private TextMeshProUGUI amountText;
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -35,7 +32,7 @@ public class ActionEquipmentWidget : EquipmentWidget
         base.SetEquipmentDefinition(definition);
 
         UpdateSelected(definition);
-        UpdateAmount(definition);
+        GetAmountText(definition);
     }
 
     public void SetSelectGroup(SelectGroup selectGroup)
@@ -71,9 +68,9 @@ public class ActionEquipmentWidget : EquipmentWidget
         Button.EndTransitionAnimation();
     }
 
-    private void UpdateAmount(EquipmentDefinition definition)
+    protected override string GetAmountText(EquipmentDefinition definition)
     {
-        if (!definition) return;
+        if (!definition) return null;
 
         var selectedCitizen = SelectManager.Instance.GetSelectedHuman();
         int amount = CityStorage.Instance.Inventory.GetItem(definition.ItemId).Amount;
@@ -85,7 +82,7 @@ public class ActionEquipmentWidget : EquipmentWidget
             amount--;
         }
 
-        amountText.SetText(amount.ToString());
+        return amount.ToString();
     }
 
     private void OnButtonSelected()
@@ -102,6 +99,6 @@ public class ActionEquipmentWidget : EquipmentWidget
     {
         yield return new WaitForEndOfFrame();
 
-        UpdateAmount(equipmentDefinition);
+        GetAmountText(equipmentDefinition);
     }
 }

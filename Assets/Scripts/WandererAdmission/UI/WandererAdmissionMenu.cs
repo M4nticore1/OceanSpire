@@ -22,7 +22,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 
     private void OnEnable()
     {
-        slidePanel.OnHidden += OnClosed;
+        slidePanel.OnHidden += HandleHidden;
         acceptButton.OnStateChanged += OnAcceptButtonStateChanged;
         acceptButton.OnReleased.AddListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.AddListener(OnRejectButtonClicked);
@@ -35,7 +35,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 
     private void OnDisable()
     {
-        slidePanel.OnHidden -= OnClosed;
+        slidePanel.OnHidden -= HandleHidden;
         acceptButton.OnStateChanged -= OnAcceptButtonStateChanged;
         acceptButton.OnReleased.RemoveListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.RemoveListener(OnRejectButtonClicked);
@@ -74,18 +74,16 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
     public void Hide()
     {
         slidePanel.Hide();
-        OnClosed();
-
-        OnHidden?.Invoke();
     }
 
-    private void OnClosed()
+    private void HandleHidden()
     {
         if (!IsShowed) return;
 
         IsShowed = false;
         selectedWanderer.BoatRider.RidingBoat.SelectComponent.Deselect();
         InputStateManager.Instance.RemoveBlockTarget(this);
+        OnHidden?.Invoke();
     }
 
     private void UpdateWandererNameText()

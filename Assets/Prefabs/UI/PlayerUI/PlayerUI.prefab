@@ -1344,6 +1344,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7889012030224363213, guid: b06f0c9c060a31a4b8af6346945d7aef, type: 3}
+      propertyPath: m_fontSize
+      value: 57.6
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3002,10 +3006,6 @@ PrefabInstance:
     - target: {fileID: 1158859948315122318, guid: c6b052e916d56be4eb3bc6a07fc65412, type: 3}
       propertyPath: m_Name
       value: GameVersionDisplay
-      objectReference: {fileID: 0}
-    - target: {fileID: 1158859948315122318, guid: c6b052e916d56be4eb3bc6a07fc65412, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5623,6 +5623,10 @@ PrefabInstance:
     - target: {fileID: 7258851948686947581, guid: 59cb81d5b4913fa4bac7ef951badecc1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7889012030224363213, guid: 59cb81d5b4913fa4bac7ef951badecc1, type: 3}
+      propertyPath: m_fontSize
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
