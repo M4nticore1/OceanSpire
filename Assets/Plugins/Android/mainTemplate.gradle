@@ -7,6 +7,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
     implementation 'androidx.activity:activity:1.6.0' // Assets/GooglePlayPlugins/com.google.play.appupdate/Editor/Dependencies.xml:4
+    implementation 'androidx.annotation:annotation:1.7.1' // Packages/io.appmetrica.analytics/Editor/AppMetricaDependencies.xml:5
     implementation 'androidx.lifecycle:lifecycle-process:2.4.1' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:12
     implementation 'com.google.android.gms:play-services-base:18.10.0' // Assets/Firebase/Editor/AppDependencies.xml:20
     implementation 'com.google.android.play:app-update:2.1.0' // Assets/GooglePlayPlugins/com.google.play.appupdate/Editor/Dependencies.xml:3
@@ -17,7 +18,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-ndk:20.0.6' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:16
     implementation 'com.google.firebase:firebase-crashlytics-unity:13.13.0' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:23
     implementation 'com.yandex.android:mobileads:8.1.0' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:7
-    implementation 'io.appmetrica.analytics:analytics:8.0.0' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:17
+    // implementation 'io.appmetrica.analytics:analytics:8.0.0' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:17
+    implementation 'io.appmetrica.analytics:analytics:8.4.1' // Packages/io.appmetrica.analytics/Editor/AppMetricaDependencies.xml:4
 // Android Resolver Dependencies End
 **DEPS**}
 
