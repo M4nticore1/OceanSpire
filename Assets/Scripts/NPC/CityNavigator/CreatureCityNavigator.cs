@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CreatureCityNavigator : MonoBehaviour
 {
@@ -45,8 +46,12 @@ public class CreatureCityNavigator : MonoBehaviour
     public int FloorIndex { get; private set; } = 0;
     public int PlaceIndex { get; private set; } = 0;
 
+    public event Action<Building> OnTargetBuildingSet;
+    public event Action<Building> OnTargetBuildingRemoved;
+
     public event Action<Building> OnEnteredBuilding;
     public event Action<Building> OnExitedBuilding;
+
     public event Action onReachedPathBuilding;
 
     private void OnEnable()
@@ -119,6 +124,8 @@ public class CreatureCityNavigator : MonoBehaviour
 
         RemovePath();
         TryUpdatePathToTargetBuilding();
+
+        OnTargetBuildingSet?.Invoke(target);
     }
 
     public void RemoveTargetBuilding()
@@ -127,6 +134,8 @@ public class CreatureCityNavigator : MonoBehaviour
 
         TargetBuilding.SpawnedConstruction.RemoveInteract(this);
         TargetBuilding = null;
+
+        OnTargetBuildingRemoved?.Invoke(TargetBuilding);
     }
 
     public bool TryUpdatePathToTargetBuilding()

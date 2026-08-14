@@ -16,6 +16,7 @@ public enum BuildingIdEnum
     FoodStorage,
     BatteryRoom,
     WeaponStorage,
+    RadioStation
 };
 
 public enum BuildingType

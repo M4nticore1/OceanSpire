@@ -56,10 +56,10 @@ public class InstancesManager
         }
 
         var instance = instances.GetValueOrDefault(guid);
-        if (!instance) {
-            Debug.LogError($"[{nameof(InstancesManager)}] Instance by Id {guid} does not exitst!");
-            return null;
-        }
+        //if (!instance) {
+        //    Debug.LogError($"[{nameof(InstancesManager)}] Instance by Id {guid} does not exitst!");
+        //    return null;
+        //}
 
         return instance;
     }

@@ -327,7 +327,7 @@ public class TowerBuilding : Building
             InvokeBuildingConnected();
 
             building.TryConnectTo(GetInverseDirection(dir), this);
-            building.UpdateConstruction();
+            building.RunUpdateConstructionCoroutine();
         }
     }
 
@@ -399,7 +399,7 @@ public class TowerBuilding : Building
     private void OnConnectedBuildingDemolished(TowerBuilding building)
     {
         UpdateConnectedBuildings();
-        UpdateConstruction();
+        RunUpdateConstructionCoroutine();
 
         foreach (var module in GetComponents<IBuildingListener>()) {
             if ((Component)module == this) continue;

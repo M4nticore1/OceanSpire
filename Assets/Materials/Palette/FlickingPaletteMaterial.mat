@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OceanSpirePaletteMaterial
+  m_Name: FlickingPaletteMaterial
   m_Shader: {fileID: 4800000, guid: 3c87f82d4547c6142b9566f9962980a4, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0

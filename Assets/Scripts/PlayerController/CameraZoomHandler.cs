@@ -8,15 +8,15 @@ public class CameraZoomHandler : MonoBehaviour
     [SerializeField] private InputStateManager inputStateManager;
     [SerializeField] private PlayerInputHandler inputHandler;
 
-    private float currentArmLength = 0f;
+    [Header("Length")]
     [SerializeField] private float minCameraArmLength = 10f;
     [SerializeField] private float maxCameraArmLength = 200f;
+    private float currentArmLength = 0f;
 
-    private const float nearArmBoundaryPadding = 10f;
-    private const float farArmBoundaryPadding = 20f;
-    private const float cameraArmReturnSpeed = 4f;
-
-    private float cameraArmMoveMultiplier = 1f;
+    [Header("Padding")]
+    [SerializeField] private float nearArmBoundaryPadding = 10f;
+    [SerializeField] private float farArmBoundaryPadding = 20f;
+    [SerializeField] private float cameraArmReturnSpeed = 4f;
 
     private float zoomVelocity = 0f;
     private const float pitchSensitivity = 4f;
@@ -110,9 +110,12 @@ public class CameraZoomHandler : MonoBehaviour
 
     private void ProcessPadding()
     {
-        if (currentArmLength > minCameraArmLength + nearArmBoundaryPadding && currentArmLength < maxCameraArmLength - farArmBoundaryPadding) return;
+        if (currentArmLength > minCameraArmLength + nearArmBoundaryPadding &&
+            currentArmLength < maxCameraArmLength - farArmBoundaryPadding) return;
 
-        float targetArmLength = math.abs(minCameraArmLength - currentArmLength) < math.abs(maxCameraArmLength - currentArmLength) ? minCameraArmLength + nearArmBoundaryPadding : maxCameraArmLength - farArmBoundaryPadding;
+        var distanceToMin = currentArmLength - minCameraArmLength;
+        var distanceToMax = maxCameraArmLength - currentArmLength;
+        var targetArmLength = distanceToMin < distanceToMax ? minCameraArmLength + nearArmBoundaryPadding : maxCameraArmLength - farArmBoundaryPadding;
 
         currentArmLength = math.lerp(currentArmLength, targetArmLength, cameraArmReturnSpeed * Time.deltaTime);
     }

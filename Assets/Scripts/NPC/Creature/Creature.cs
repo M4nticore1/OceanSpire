@@ -17,8 +17,8 @@ public abstract class Creature : MonoBehaviour
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
 
-    public bool IsIdle { get; private set; } = true;
-    public bool IsInited { get; private set; } = false;
+    [field: SerializeField] public bool IsIdle { get; private set; } = true;
+    [field: SerializeField] public bool IsInited { get; private set; } = false;
 
     private Coroutine determineNextActionCoroutine;
 
@@ -86,6 +86,7 @@ public abstract class Creature : MonoBehaviour
     protected virtual void DetermineNextAction()
     {
         if (ShouldStartIdle()) {
+            Debug.Log("StartIdle");
             StartIdle();
             return;
         }
@@ -100,6 +101,16 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual bool ShouldStartIdle()
     {
+        if (IsIdle) return false;
+
+        return true;
+    }
+
+    protected virtual bool ShouldStopIdle()
+    {
+        if (!IsIdle) return false;
+        if (ShouldStartIdle()) return false;
+
         return true;
     }
 
@@ -111,7 +122,7 @@ public abstract class Creature : MonoBehaviour
         if (ShouldStartIdle()) {
             StartIdle();
         }
-        else {
+        else if (ShouldStopIdle()) {
             StopIdle();
         }
     }
@@ -125,7 +136,7 @@ public abstract class Creature : MonoBehaviour
 
     protected void TryStopIdle()
     {
-        if (ShouldStartIdle()) return;
+        if (!ShouldStopIdle()) return;
 
         StopIdle();
     }

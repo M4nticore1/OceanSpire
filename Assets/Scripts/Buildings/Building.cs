@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,6 +56,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     public bool IsInited { get; private set; } = false;
 
+    private Coroutine updateConstructionCoroutine;
+
     public event Action OnInited;
     public event Action OnWorkStarted;
     public event Action OnWorkStopped;
@@ -70,6 +73,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     public event Action OnLevelChanged;
     public event Action OnDemolished;
+
+    public event Action<BuildingConstruction> OnConstructionChanged;
 
     public event Action OnClicked;
 
@@ -315,29 +320,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     }
 
-    protected void UpdateConstruction()
-    {
-        var constructionToSpawn = GetConstructionToSpawn();
-        if (!constructionToSpawn && buildingData.BuildingId != BuildingIdEnum.FloorFrame) {
-            Debug.LogError($"[{nameof(Building)}] Construction To Spawn is not valid at {name}");
-            return;
-        }
-
-        if (constructionToSpawn == SpawnedConstruction) return;
-
-        if (SpawnedConstruction) {
-            Destroy(SpawnedConstruction.gameObject);
-            SpawnedConstruction = null;
-        }
-
-        var data = new BuildingConstructionData()
-        {
-            OwnedBuildingInstanceId = instanceId.GetGuid()
-        };
-
-        SpawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, transform, data);
-    }
-
     // Work
     public void RemoveWorkers()
     {
@@ -509,7 +491,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     private void RefreshConstructionState()
     {
-        UpdateConstruction();
+        RunUpdateConstructionCoroutine();
         HandleConstructionComplete();
 
         if (SelectComponent.IsSelected) {
@@ -549,6 +531,46 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     private void OnDeselected()
     {
         OnBuildingDeselected?.Invoke(this);
+    }
+
+    // UpdateConstruction
+    protected void RunUpdateConstructionCoroutine()
+    {
+        if (updateConstructionCoroutine == null) {
+            updateConstructionCoroutine = StartCoroutine(UpdateConstructionCoroutine());
+        }
+    }
+
+    private void UpdateConstruction()
+    {
+        var constructionToSpawn = GetConstructionToSpawn();
+        if (!constructionToSpawn && buildingData.BuildingId != BuildingIdEnum.FloorFrame) {
+            Debug.LogError($"[{nameof(Building)}] Construction To Spawn is not valid at {name}");
+            return;
+        }
+
+        if (constructionToSpawn == SpawnedConstruction) return;
+
+        if (SpawnedConstruction) {
+            Destroy(SpawnedConstruction.gameObject);
+            SpawnedConstruction = null;
+        }
+
+        var data = new BuildingConstructionData()
+        {
+            OwnedBuildingInstanceId = instanceId.GetGuid()
+        };
+
+        SpawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, transform, data);
+    }
+
+    private IEnumerator UpdateConstructionCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+        UpdateConstruction();
+        OnConstructionChanged?.Invoke(SpawnedConstruction);
+        updateConstructionCoroutine = null;
     }
 
     //private BuildingAction GetNextAction()

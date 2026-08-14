@@ -812,6 +812,7 @@ MonoBehaviour:
   wandererAdmissionManager: {fileID: 624742860}
   creaturesManager: {fileID: 220072952}
   dockPointsManager: {fileID: 1711846142}
+  radioStationsManager: {fileID: 281772852}
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
   boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
   humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
@@ -3186,6 +3187,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7877060323572382484, guid: 693a24886030b8a4aa85d9fe750467a5, type: 3}
   m_PrefabInstance: {fileID: 270415392}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &281772850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 281772851}
+  - component: {fileID: 281772852}
+  m_Layer: 0
+  m_Name: RadioStationsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &281772851
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281772850}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &281772852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 281772850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c084f33af642a2944bb256e5594bf514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RadioStationsManager
+  <currentWandererCooldownSpeedBonus>k__BackingField: 1
 --- !u!1 &282319447
 GameObject:
   m_ObjectHideFlags: 0
@@ -6948,6 +6994,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2af2e65253d27349b98a064b04e4dc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPoint
+--- !u!1 &449775345
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 449775346}
+  - component: {fileID: 449775347}
+  m_Layer: 0
+  m_Name: MovementManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &449775346
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449775345}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &449775347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449775345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b843b3c02da9a00468e519f400be395f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovementManager
 --- !u!1 &455527462
 GameObject:
   m_ObjectHideFlags: 0
@@ -15859,6 +15949,8 @@ Transform:
   - {fileID: 862745571}
   - {fileID: 327564395}
   - {fileID: 998043850}
+  - {fileID: 281772851}
+  - {fileID: 449775346}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1322718665

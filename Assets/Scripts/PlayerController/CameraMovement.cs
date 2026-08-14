@@ -9,13 +9,19 @@ public class CameraMovement : MonoBehaviour
     private Vector2 startPressPosition = Vector2.zero;
     private Vector2 cameraMoveVelocity = Vector2.zero;
 
+    [Header("Position")]
+    [SerializeField] private float minBottomPosition = 5.0f;
+
+    [Header("Padding")]
     [SerializeField] private float cameraTopBoundaryPadding = 10.0f;
     [SerializeField] private float cameraBottomBoundaryPadding = 5.0f;
     [SerializeField] private float cameraVerticalReturnSpeed = 5.0f;
 
+    [Header("Speed")]
     [SerializeField] private float cameraMoveLerpSpeed = 10.0f;
     [SerializeField] private float cameraStopMoveSpeed = 6.0f;
 
+    [Header("Dead zone")]
     [SerializeField] private float movingThreshold = 0.0005f;
     private bool inDeadZone = false;
 
@@ -66,8 +72,8 @@ public class CameraMovement : MonoBehaviour
 
         if (transform.position.y > buildingsManager.CurrentCityHeight && cameraMoveVelocity.y > 0f)
             multiplier = 1f - math.clamp((cameraHeight - buildingsManager.CurrentCityHeight) / cameraTopBoundaryPadding, 0f, 1f);
-        else if (transform.position.y < 0f && cameraMoveVelocity.y < 0f)
-            multiplier = 1f - math.clamp(cameraHeight / cameraBottomBoundaryPadding, 0f, 1f);
+        else if (transform.position.y < minBottomPosition && cameraMoveVelocity.y < 0f)
+            multiplier = 1f - math.clamp((minBottomPosition - transform.position.y) / cameraBottomBoundaryPadding, 0f, 1f);
 
         return multiplier;
     }
@@ -77,7 +83,12 @@ public class CameraMovement : MonoBehaviour
         if (playerInputHandler.cameraMoveIA.IsPressed()) return;
 
         var cameraPosition = transform.position;
-        float targetHeight = transform.position.y > buildingsManager.CurrentCityHeight ? buildingsManager.CurrentCityHeight : transform.position.y < 0f ? 0f : transform.position.y;
+
+        float targetHeight = transform.position.y;
+        if (transform.position.y > buildingsManager.CurrentCityHeight)
+            targetHeight = buildingsManager.CurrentCityHeight;
+        else if (transform.position.y < minBottomPosition)
+            targetHeight = minBottomPosition;
 
         transform.position = math.lerp(transform.position, new Vector3(cameraPosition.x, targetHeight, cameraPosition.z), cameraVerticalReturnSpeed * Time.deltaTime);
     }
@@ -85,7 +96,12 @@ public class CameraMovement : MonoBehaviour
     private void ApplyMove()
     {
         transform.position += new Vector3(0, cameraMoveVelocity.y, 0) * Time.deltaTime;
-        transform.position = new Vector3(transform.position.x, math.clamp(transform.position.y, -cameraBottomBoundaryPadding, buildingsManager.CurrentCityHeight + cameraTopBoundaryPadding), transform.position.z);
+
+        transform.position = new Vector3(
+            transform.position.x,
+            math.clamp(transform.position.y, minBottomPosition - cameraBottomBoundaryPadding, buildingsManager.CurrentCityHeight + cameraTopBoundaryPadding),
+            transform.position.z
+        );
 
         var eulers = transform.eulerAngles;
         eulers.y += cameraMoveVelocity.x * Time.deltaTime;
@@ -106,19 +122,19 @@ public class CameraMovement : MonoBehaviour
 
         float seg = 1f / 4f;
 
-        if (t < seg) { // Bottom → Right
+        if (t < seg) { // Bottom to Right
             float k = t / seg;
             return new Vector2(math.lerp(-halfSize, halfSize, GetSquareSmooth(k, corner)), -halfSize);
         }
-        else if (t < seg * 2f) { // Right → Top
+        else if (t < seg * 2f) { // Right to Top
             float k = (t - seg) / seg;
             return new Vector2(halfSize, math.lerp(-halfSize, halfSize, GetSquareSmooth(k, corner)));
         }
-        else if (t < seg * 3f) { // Top → Left
+        else if (t < seg * 3f) { // Top to Left
             float k = (t - seg * 2f) / seg;
             return new Vector2(math.lerp(halfSize, -halfSize, GetSquareSmooth(k, corner)), halfSize);
         }
-        else { // Left → Bottom
+        else { // Left to Bottom
             float k = (t - seg * 3f) / seg;
             return new Vector2(-halfSize, math.lerp(halfSize, -halfSize, GetSquareSmooth(k, corner)));
         }

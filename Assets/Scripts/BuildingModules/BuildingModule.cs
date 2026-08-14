@@ -56,6 +56,9 @@ public abstract class BuildingModule : MonoBehaviour
     public event Action OnWorkingStarted;
     public event Action OnWorkingStopped;
 
+    public static event Action<BuildingModule> OnModuleWorkingStarted;
+    public static event Action<BuildingModule> OnModuleWorkingStopped;
+
     protected virtual void Awake()
     {
         ownedBuilding = GetComponent<Building>();
@@ -217,6 +220,7 @@ public abstract class BuildingModule : MonoBehaviour
         HandleWorkingStart();
 
         OnWorkingStarted?.Invoke();
+        OnModuleWorkingStarted?.Invoke(this);
     }
 
     private void StopWorking()
@@ -225,5 +229,6 @@ public abstract class BuildingModule : MonoBehaviour
         HandleWorkingStop();
 
         OnWorkingStopped?.Invoke();
+        OnModuleWorkingStopped?.Invoke(this);
     }
 }

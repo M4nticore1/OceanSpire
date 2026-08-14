@@ -192,8 +192,12 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
     public BuildingAction GetInteractPoint(int index)
     {
-        var actions = BuildingInteractions;
+        if (index < 0) {
+            Debug.LogError($"[{nameof(BuildingConstruction)}] Index is negative ({index})!");
+            return null;
+        }
 
+        var actions = BuildingInteractions;
         if (actions.Length <= 0) {
             Debug.LogError($"[{nameof(BuildingConstruction)}] Intreactions count is 0 at {name}!");
             return null;

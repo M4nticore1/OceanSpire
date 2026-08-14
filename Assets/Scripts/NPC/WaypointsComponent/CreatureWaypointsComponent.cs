@@ -8,20 +8,33 @@ public class CreatureWaypointsComponent : MonoBehaviour
     public int CurrentWaypointIndex { get; private set; } = 0;
     public float CurrentWaypointTime { get; private set; } = 0f;
 
+    private CreatureWaypointsManager creatureWaypointsManager => CreatureWaypointsManager.Instance;
+
     private void OnEnable()
     {
-        human.InteractComponent.OnInteractionStarted += HandleInteractionStarted;
-        human.InteractComponent.OnInteractionStopped += HandleInteractionStopped;
+        if (human != null) {
+            human.InteractComponent.OnInteractionStarted += HandleInteractionStarted;
+            human.InteractComponent.OnInteractionStopped += HandleInteractionStopped;
+        }
+        else {
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Human is not assigned on {name}!");
+        }
 
-        CreatureWaypointsManager.Instance.RegisterComponent(this);
+        if (creatureWaypointsManager != null) {
+            creatureWaypointsManager.RegisterComponent(this);
+        }
     }
 
     private void OnDisable()
     {
-        human.InteractComponent.OnInteractionStarted -= HandleInteractionStarted;
-        human.InteractComponent.OnInteractionStopped -= HandleInteractionStopped;
+        if (human != null) {
+            human.InteractComponent.OnInteractionStarted -= HandleInteractionStarted;
+            human.InteractComponent.OnInteractionStopped -= HandleInteractionStopped;
+        }
 
-        CreatureWaypointsManager.Instance.UnregisterComponent(this);
+        if (creatureWaypointsManager != null) {
+            creatureWaypointsManager.UnregisterComponent(this);
+        }
     }
 
     public void Init()
@@ -33,8 +46,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
     {
         if (waypointsData == null) {
             Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Waypoints Data is not valid!");
-            Init();
-            return;
+            waypointsData = CreatureWaypointsComponentData.Default();
         }
 
         CurrentWaypointIndex = waypointsData.CurrentWaypointIndex;
@@ -49,6 +61,8 @@ public class CreatureWaypointsComponent : MonoBehaviour
         if (currentWaypoint == null) return;
 
         var interaction = GetCurrentInteractionPoint();
+        if (interaction == null) return;
+
         if (currentWaypoint.ActionTime <= 0f) {
             if (interaction.Waypoints.Length <= 1) {
                 human.Movement.TryMoveTo(currentWaypoint.Transform);
@@ -76,6 +90,11 @@ public class CreatureWaypointsComponent : MonoBehaviour
         var interaction = GetCurrentInteractionPoint();
         if (interaction == null) return null;
 
+        if (interaction.Waypoints == null || interaction.Waypoints.Length == 0) {
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] No waypoints in interaction at building {human.CityNavigator.CurrentBuilding}!");
+            return null;
+        }
+
         if (CurrentWaypointIndex < 0 || CurrentWaypointIndex >= interaction.Waypoints.Length) {
             CurrentWaypointIndex = 0;
         }
@@ -89,6 +108,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
         if (interaction == null) return;
 
         var waypointsLength = interaction.Waypoints.Length;
+
         if (waypointsLength == 0) {
             Debug.LogWarning($"[{nameof(CreatureWaypointsComponent)}] No waypoints in interaction at building {human.CityNavigator.CurrentBuilding}!");
             return;
@@ -138,6 +158,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
     private BuildingAction GetCurrentInteractionPoint()
     {
         var cityNavigator = human.CityNavigator;
+
         if (!cityNavigator.HasPath) return null;
 
         var currentBuilding = cityNavigator.CurrentBuilding;

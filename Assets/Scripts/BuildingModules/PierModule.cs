@@ -18,26 +18,17 @@ public class PierModule : BuildingModule
     {
         base.Subscribe();
 
-        OwnedBuilding.UpgradeComponent.OnUpgradeStarted += OnUpgradeStarted;
-        OwnedBuilding.UpgradeComponent.OnUpgradeFinished += OnUpgradeCompleted;
+        OwnedBuilding.OnConstructionChanged += HandleConstructionChanged;
     }
 
     protected override void Unsubscribe()
     {
         base.Unsubscribe();
 
-        OwnedBuilding.UpgradeComponent.OnUpgradeStarted -= OnUpgradeStarted;
-        OwnedBuilding.UpgradeComponent.OnUpgradeFinished -= OnUpgradeCompleted;
+        OwnedBuilding.OnConstructionChanged -= HandleConstructionChanged;
     }
 
-    private void OnUpgradeStarted()
-    {
-        if (!docksLoader.IsLoaded) return;
-
-        UpdateBoatDocks();
-    }
-
-    private void OnUpgradeCompleted()
+    private void HandleConstructionChanged(BuildingConstruction buildingConstruction)
     {
         if (!boatsLoader.IsLoaded) return;
         if (!docksLoader.IsLoaded) return;
@@ -49,11 +40,8 @@ public class PierModule : BuildingModule
 
     private void CreateBoats()
     {
-        Debug.Log(OwnedBuilding.SpawnedConstruction);
         if (!boatsLoader.IsLoaded) return;
 
-        Debug.Log(PierConstruction.BoatDocks.Count);
-        Debug.Log(boatsManager.CitizenBoats.Count);
         int count = PierConstruction.BoatDocks.Count - boatsManager.CitizenBoats.Count;
 
         for (int i = 0; i < count; i++) {
@@ -80,12 +68,16 @@ public class PierModule : BuildingModule
     private void UpdateBoatDocks()
     {
         var boats = boatsManager.CitizenBoats;
-        Debug.Log(boats.Count);
 
         for (int i = 0; i < boats.Count; i++) {
             var boat = boats[i];
             if (boat == null) {
                 Debug.LogError($"[{nameof(PierModule)}] Boat is not valid by index {i}");
+                continue;
+            }
+
+            if (PierConstruction == null) {
+                Debug.LogError($"[{nameof(PierModule)}] PierConstruction is not valid!");
                 continue;
             }
 

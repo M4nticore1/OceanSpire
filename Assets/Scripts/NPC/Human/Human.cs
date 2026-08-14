@@ -214,67 +214,67 @@ public abstract class Human : Creature, IClickable, ILocalizable
     protected override void DetermineNextAction()
     {
         if (ShouldStartInteracting()) {
-            //Debug.Log($"{name} ShouldStartInteracting");
+            Debug.Log($"{name} ShouldStartInteracting");
             StartInteracting();
             return;
         }
         if (ShouldStopInteracting()) {
-            //Debug.Log($"{name} ShouldStopInteracting");
+            Debug.Log($"{name} ShouldStopInteracting");
             StopInteracting();
             return;
         }
         if (ShouldMoveToTargetBoat()) {
-            //Debug.Log($"{name} ShouldMoveToTargetBoat");
+            Debug.Log($"{name} ShouldMoveToTargetBoat");
             MoveToTargetBoat();
             return;
         }
         if (ShouldWaitForEnteringBoat()) {
-            //Debug.Log($"{name} ShouldStartEnteringBoat");
+            Debug.Log($"{name} ShouldStartEnteringBoat");
             StartEnteringBoat();
             return;
         }
         if (ShouldStopEnteringBoat()) {
-            //Debug.Log($"{name} ShouldStopEnteringBoat");
+            Debug.Log($"{name} ShouldStopEnteringBoat");
             StopEnteringBoat();
             return;
         }
         if (ShouldStartExitingBoat()) {
-            //Debug.Log($"{name} ShouldStartExitingBoat");
+            Debug.Log($"{name} ShouldStartExitingBoat");
             StartExitingBoat();
             return;
         }
         if (ShouldStopExitingBoat()) {
-            //Debug.Log($"{name} ShouldStopExitingBoat");
+            Debug.Log($"{name} ShouldStopExitingBoat");
             StopExitingBoat();
             return;
         }
         if (ShouldBoatMoveToDock()) {
-            //Debug.Log($"{name} ShouldBoatMoveToDock");
+            Debug.Log($"{name} ShouldBoatMoveToDock");
             BoatMoveToDock();
             return;
         }
         if (ShouldBoatFindLoot()) {
-            //Debug.Log($"{name} ShouldBoatFindLoot");
+            Debug.Log($"{name} ShouldBoatFindLoot");
             BoatFindLoot();
             return;
         }
         if (ShouldBoatFloatAway()) {
-            //Debug.Log($"{name} ShouldBoatFloatAway");
+            Debug.Log($"{name} ShouldBoatFloatAway");
             BoatFloatAway();
             return;
         }
         if (ShouldSetCombatTarget()) {
-            //Debug.Log($"{name} ShouldStartAttacking");
+            Debug.Log($"{name} ShouldStartAttacking");
             SetCombatTarget();
             return;
         }
         if (ShouldStopAttacking()) {
-            //Debug.Log($"{name} ShouldStopAttacking");
+            Debug.Log($"{name} ShouldStopAttacking");
             StopAttacking();
             return;
         }
         if (ShouldFollowPath()) {
-            //Debug.Log($"{name} ShouldFollowPath");
+            Debug.Log($"{name} ShouldFollowPath");
             FollowPath();
             return;
         }
@@ -358,6 +358,25 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         cityNavigator.FollowPath();
         UpdateIdle();
+    }
+
+    protected override bool ShouldStartIdle()
+    {
+        Debug.Log("ShouldStartIdle");
+        if (!base.ShouldStartIdle()) return false;
+
+        Debug.Log("ShouldStartIdle1");
+        //if (movement != null && movement.IsMoving) return false;
+        if (interactComponent != null && interactComponent.IsInteracting) return false;
+        Debug.Log("ShouldStartIdle2");
+        if (boatRider != null && boatRider.RidingBoat != null && boatRider.RidingBoat.Movement != null && boatRider.RidingBoat.Movement.IsMoving) return false;
+        Debug.Log("ShouldStartIdle3");
+        if (attackComponent != null && attackComponent.IsAttacking) return false;
+        Debug.Log("ShouldStartIdle4");
+        if (healthComponent != null && !healthComponent.IsAlive) return false;
+
+        Debug.Log("ShouldStartIdle5");
+        return true;
     }
 
     public virtual bool ShouldStartInteracting()
@@ -570,17 +589,6 @@ public abstract class Human : Creature, IClickable, ILocalizable
     protected virtual void OnClick()
     {
 
-    }
-
-    protected override bool ShouldStartIdle()
-    {
-        if (movement != null && movement.IsMoving) return false;
-        if (interactComponent != null && interactComponent.IsInteracting) return false;
-        if (boatRider != null && boatRider.RidingBoat != null && boatRider.RidingBoat.Movement != null && boatRider.RidingBoat.Movement.IsMoving) return false;
-        if (attackComponent != null && attackComponent.IsAttacking) return false;
-        if (healthComponent != null && !healthComponent.IsAlive) return false;
-
-        return true;
     }
 
     // ILocalizable

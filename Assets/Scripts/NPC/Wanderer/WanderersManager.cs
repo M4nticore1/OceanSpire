@@ -9,6 +9,7 @@ public class WanderersManager : MonoBehaviour
     [SerializeField] private WandererAdmissionManager wandererAdmissionManager;
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private BoatDocksManager dockPointsManager;
+    [SerializeField] private RadioStationsManager radioStationsManager;
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
     [SerializeField] private HumanNamesList humanNamesList;
@@ -25,6 +26,7 @@ public class WanderersManager : MonoBehaviour
     [SerializeField] private SpawnArea spawnArea;
 
     public long? NextWandererTime { get; private set; } = null;
+    public int CurrentWandererSpawnCooldown { get; private set; } = 0;
 
     private void Awake()
     {
@@ -64,18 +66,18 @@ public class WanderersManager : MonoBehaviour
 
     private void Update()
     {
-        if (NextWandererTime == null) return;
-
-        var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        if (currentTime < NextWandererTime) return;
-
-        if (!CanSpawnWanderer()) {
-            NextWandererTime = null;
-            return;
+        if (NextWandererTime != null) {
+            var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            if (currentTime >= GetNextWandererTimeWithBonus()) {
+                if (CanSpawnWanderer()) {
+                    TrySpawnAllWanderers();
+                    UpdateNextWanderersTime();
+                }
+                else {
+                    NextWandererTime = null;
+                }
+            }
         }
-
-        TrySpawnAllWanderers();
-        UpdateNextWanderersTime();
     }
 
     public void Init()
@@ -109,6 +111,16 @@ public class WanderersManager : MonoBehaviour
         var cooldown = UnityEngine.Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown + 1);
 
         return currentTime + cooldown;
+    }
+
+    public long? GetNextWandererTimeWithBonus()
+    {
+        if (NextWandererTime == null) return null;
+
+        var speededCooldown = (int)(CurrentWandererSpawnCooldown / radioStationsManager.currentWandererCooldownSpeedBonus);
+        var cooldownDifferent = CurrentWandererSpawnCooldown - speededCooldown;
+
+        return NextWandererTime - cooldownDifferent;
     }
 
     private bool TrySpawnAllWanderers()
@@ -171,9 +183,11 @@ public class WanderersManager : MonoBehaviour
             return;
         }
 
-        long timeDelta = NextWandererTime.Value - currentTime;
+        var timeDelta = NextWandererTime.Value - currentTime;
         var cooldown = UnityEngine.Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown + 1);
+
         NextWandererTime = currentTime + cooldown + timeDelta;
+        CurrentWandererSpawnCooldown = cooldown;
     }
 
     private void WarpAllWanderers()

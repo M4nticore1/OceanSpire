@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07af6b02073e7f943abb14e81c8f2641, type: 3}
+  m_Name: RadioStation_Data
+  m_EditorClassIdentifier: 
+  buildingId: 13
+  localizationItem: {fileID: 11400000, guid: c80d03f672a9f2149a3ef81d54c551a7, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 19930717e759e304dbd3011f806bbd5e, type: 2}
+  buildingType: 0
+  buildingCategory: 4
+  connectionType: 1
+  buildingStrategy: 0
+  isConstructable: 1
+  isWorkable: 1
+  isDemolishable: 1
+  isRaidable: 0

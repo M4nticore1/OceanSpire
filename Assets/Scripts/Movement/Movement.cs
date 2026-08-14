@@ -26,11 +26,30 @@ public class Movement : MonoBehaviour
 
     public bool IsMoving { get; private set; } = false;
 
+    private MovementManager movementManager => MovementManager.Instance;
+
     public event Action OnMovementStarted;
     public event Action OnMovementStopped;
     public event Action OnDestinationReached;
 
-    private void Update()
+    private void OnEnable()
+    {
+        if (movementManager) {
+            movementManager.RegisterMovement(this);
+        }
+        else {
+            Debug.LogError($"[{nameof(Movement)}] Movement Manager is not valid!");
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (movementManager) {
+            movementManager.UnregisterMovement(this);
+        }
+    }
+
+    public void Tick()
     {
         if (IsMoving && IsDestinationReached()) {
             TryStopMoving();
@@ -65,7 +84,7 @@ public class Movement : MonoBehaviour
 
     public bool TryMoveTo(Transform transform)
     {
-        if (!transform) {
+        if (transform == null) {
             Debug.LogError($"[{nameof(Movement)}] Transform is not valid!");
             return false;
         }
