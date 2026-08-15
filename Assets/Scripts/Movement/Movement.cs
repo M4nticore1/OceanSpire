@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public enum MovementMethod
 {
@@ -180,10 +181,9 @@ public class Movement : MonoBehaviour
         return IsReachedPosition(TargetPosition.Value);
     }
 
-    public bool IsReachedPosition(Vector3 position)
+    public bool IsReachedPosition(Vector3 targetPosition)
     {
-        var currentPosition = transform.position;
-        return Vector3.Distance(new Vector3(currentPosition.x, currentPosition.y - navAgent.baseOffset, currentPosition.z), position) <= navAgent.stoppingDistance;
+        return GetDistanceToPosition(targetPosition) <= navAgent.stoppingDistance;
     }
 
     public bool CanReachPosition(Vector3 targetPosition)
@@ -199,6 +199,12 @@ public class Movement : MonoBehaviour
         }
 
         return path.status == NavMeshPathStatus.PathComplete;
+    }
+
+    public float GetDistanceToPosition(Vector3 targetPosition)
+    {
+        var currentPosition = transform.position;
+        return Vector3.Distance(new Vector3(currentPosition.x, currentPosition.y - navAgent.baseOffset, currentPosition.z), targetPosition);
     }
 
     public float? GetTargetPositionDistance()

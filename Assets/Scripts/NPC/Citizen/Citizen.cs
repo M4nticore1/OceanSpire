@@ -82,22 +82,22 @@ public class Citizen : Human
     protected override void DetermineNextAction()
     {
         if (ShouldBoatMoveToDock()) {
-            Debug.Log("BoatMoveToDock");
+            //Debug.Log("BoatMoveToDock");
             BoatMoveToDock();
             return;
         }
         if (ShouldBoatFindLoot()) {
-            Debug.Log("BoatFindLoot");
+            //Debug.Log("BoatFindLoot");
             BoatFindLoot();
             return;
         }
         if (ShouldBoatFloatAway()) {
-            Debug.Log("BoatFloatAway");
+            //Debug.Log("BoatFloatAway");
             BoatFloatAway();
             return;
         }
         if (ShouldSetCombatTarget()) {
-            Debug.Log("SetCombatTarget");
+            //Debug.Log("SetCombatTarget");
             SetCombatTarget();
             return;
         }

@@ -173,8 +173,8 @@ public abstract class Creature : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
-        DetermineNextAction();
         determineNextActionCoroutine = null;
+        DetermineNextAction();
     }
 
     private IEnumerator InitNextFrameCoroutine()

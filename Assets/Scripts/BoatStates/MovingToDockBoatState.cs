@@ -12,7 +12,7 @@ public class MovingToDockBoatState : BoatState
         boat.RemoveTargetLoot();
 
         if (IsReachedDock()) {
-            boat.OnReturnedToDock();
+            boat.HandleReturnedToDock();
             return;
         }
 
@@ -31,7 +31,7 @@ public class MovingToDockBoatState : BoatState
 
     public override void OnReachedPath()
     {
-        boat.OnReturnedToDock();
+        boat.HandleReturnedToDock();
     }
 
     public override void OnBoatDockChanged(BoatDockPoint boatDock)

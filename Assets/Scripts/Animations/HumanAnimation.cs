@@ -6,6 +6,8 @@ public class HumanAnimation : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Human human;
 
+    private AnimationParam interactionAnimationParam;
+
     private Coroutine updateParametersCoroutine;
 
     private void OnEnable()
@@ -84,12 +86,19 @@ public class HumanAnimation : MonoBehaviour
 
     private void UpdateInteracting()
     {
-        var cityNavigator = human.CityNavigator;
-        var waypoint = cityNavigator.WaypointsComponent.GetCurrentWaypoint();
-        var animation = waypoint?.ActionAnimation;
-        var paramName = animation?.ParamName;
+        if (human.InteractComponent.IsInteracting) {
+            var cityNavigator = human.CityNavigator;
+            var waypoint = cityNavigator.WaypointsComponent.GetCurrentWaypoint();
+            var animation = waypoint?.ActionAnimation;
+            var paramName = animation?.ParamName;
 
-        animator.SetBool(string.IsNullOrEmpty(paramName) ? "IsWorking" : paramName, human.InteractComponent.IsInteracting && !human.Movement.IsMoving);
+            animator.SetBool(string.IsNullOrEmpty(paramName) ? "IsWorking" : paramName, human.InteractComponent.IsInteracting && !human.Movement.IsMoving);
+            interactionAnimationParam = animation;
+        }
+        else {
+            var paramName = interactionAnimationParam?.ParamName;
+            animator.SetBool(interactionAnimationParam ? paramName : "IsWorking", false);
+        }
     }
 
     private void UpdateFloating()

@@ -107,7 +107,13 @@ public class CreatureWaypointsComponent : MonoBehaviour
             CurrentWaypointIndex = 0;
         }
 
-        return interaction.GetWaypoint(CurrentWaypointIndex);
+        var waypoint = interaction.GetWaypoint(CurrentWaypointIndex);
+        if (waypoint == null) {
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Waypoint is not valid at {cityNavigator.CurrentBuilding}!");
+            return null;
+        }
+
+        return waypoint;
     }
 
     private void UpdateWaypointIndex()

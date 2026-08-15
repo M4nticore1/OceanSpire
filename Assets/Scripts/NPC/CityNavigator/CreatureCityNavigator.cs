@@ -46,8 +46,6 @@ public class CreatureCityNavigator : MonoBehaviour
     [field: SerializeField] public int FloorIndex { get; private set; } = 0;
     [field: SerializeField] public int PlaceIndex { get; private set; } = 0;
 
-    private Coroutine followPathCoroutine;
-
     public event Action<Building> OnTargetBuildingSet;
     public event Action<Building> OnTargetBuildingRemoved;
 
@@ -330,8 +328,8 @@ public class CreatureCityNavigator : MonoBehaviour
                 return;
             }
 
-            if (!movement.IsReachedPosition(waypoint.Transform.position)) {
-                Movement.TryMoveTo(waypoint.Transform);
+            if (!movement.IsReachedPosition(waypoint.Transform.position) && movement.TargetPosition != transform.position) {
+                movement.TryMoveTo(waypoint.Transform);
             }
         }
         else {
@@ -362,7 +360,9 @@ public class CreatureCityNavigator : MonoBehaviour
                 return;
             }
 
-            Movement.TryMoveTo(transform.position, false);
+            if (movement.TargetPosition != transform.position) {
+                movement.TryMoveTo(transform.position, false);
+            }
         }
     }
 

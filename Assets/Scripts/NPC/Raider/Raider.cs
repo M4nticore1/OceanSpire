@@ -200,9 +200,9 @@ public class Raider : Human, IProgressable
         base.HandleExitedBoat(boat);
     }
 
-    protected override void HandleBoatSetedIdle(Boat boat)
+    protected override void HandleBoatSetIdle(Boat boat)
     {
-        base.HandleBoatSetedIdle(boat);
+        base.HandleBoatSetIdle(boat);
 
         BoatRider.StartExitingBoat();
     }

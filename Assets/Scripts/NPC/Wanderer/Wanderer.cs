@@ -93,9 +93,9 @@ public class Wanderer : Human
         boat.ContextMenuTarget.SetShowContextMenu(false);
     }
 
-    protected override void HandleBoatSetedIdle(Boat boat)
+    protected override void HandleBoatSetIdle(Boat boat)
     {
-        base.HandleBoatSetedIdle(boat);
+        base.HandleBoatSetIdle(boat);
 
         UpdateRidingBoatClickable();
     }

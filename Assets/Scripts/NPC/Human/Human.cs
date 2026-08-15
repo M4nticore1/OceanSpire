@@ -117,7 +117,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         boatRider.OnExitedBoat += HandleExitedBoat;
         boatRider.OnTargetBoatSeted += HandleTargetBoatSeted;
         boatRider.OnTargetBoatRemoved += HandleTargetBoatRemoved;
-        boatRider.OnBoatSetedIdle += HandleBoatSetedIdle;
+        boatRider.OnBoatSetIdle += HandleBoatSetIdle;
         BoatRider.OnBoatMovementStarted += HandleBoatMovementStarted;
         BoatRider.OnBoatMovementStopped += HandleBoatMovementStopped;
 
@@ -154,7 +154,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         boatRider.OnExitedBoat -= HandleExitedBoat;
         boatRider.OnTargetBoatSeted -= HandleTargetBoatSeted;
         boatRider.OnTargetBoatRemoved -= HandleTargetBoatRemoved;
-        boatRider.OnBoatSetedIdle -= HandleBoatSetedIdle;
+        boatRider.OnBoatSetIdle -= HandleBoatSetIdle;
         BoatRider.OnBoatMovementStarted -= HandleBoatMovementStarted;
         BoatRider.OnBoatMovementStopped -= HandleBoatMovementStopped;
 
@@ -188,9 +188,9 @@ public abstract class Human : Creature, IClickable, ILocalizable
         healthComponent.Init(humanData.Health);
         reviveComponent.Init(humanData.Revive);
         weaponComponent.Init(humanData.Weapon);
-        boatRider.Init(humanData.BoatRider);
-        cityNavigator.Init(humanData.CityNavigator);
         interactComponent.Init(humanData.Interaction);
+        cityNavigator.Init(humanData.CityNavigator);
+        boatRider.Init(humanData.BoatRider);
 
         OnHumanInited?.Invoke(this);
     }
@@ -365,6 +365,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         if (!base.ShouldStartIdle()) return false;
 
         //if (movement != null && movement.IsMoving) return false;
+        if (CityNavigator.IsFollowingPath && movement.IsMoving) return false;
         if (interactComponent != null && interactComponent.IsInteracting) return false;
         if (boatRider != null && boatRider.RidingBoat != null && boatRider.RidingBoat.Movement != null && boatRider.RidingBoat.Movement.IsMoving) return false;
         if (attackComponent != null && attackComponent.IsAttacking) return false;
@@ -409,6 +410,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         }
 
         //Debug.Log($"ShouldStartInteracting9 {this}");
+        //Debug.Log(movement.GetDistanceToPosition(waypoint.Transform.position));
         if (!movement.IsReachedPosition(waypoint.Transform.position)) return false;
 
         //Debug.Log($"ShouldStartInteracting10 {this}");
@@ -483,11 +485,11 @@ public abstract class Human : Creature, IClickable, ILocalizable
     public virtual bool ShouldStartExitingBoat()
     {
         //Debug.Log("ShouldStartExitingBoat1");
-        var ridingBoat = boatRider != null ? boatRider.RidingBoat : null;
+        var ridingBoat = boatRider.RidingBoat;
         if (ridingBoat == null) return false;
 
         //Debug.Log("ShouldStartExitingBoat2");
-        var targetBoat = boatRider != null ? boatRider.TargetBoat : null;
+        var targetBoat = boatRider.TargetBoat;
         if (targetBoat != null && targetBoat == ridingBoat) return false;
 
         //Debug.Log("ShouldStartExitingBoat3");
@@ -531,7 +533,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         if (boatState == BoatStateEnum.MovingToDock) return false;
         if (boatState == BoatStateEnum.Idle && ridingBoat.Movement != null && ridingBoat.Movement.IsReachedPosition(dockPoint.DockTransform.position)) return false;
 
-        if (boatRider != null && boatRider.IsExitingBoat) return false;
+        //if (boatRider != null && boatRider.IsExitingBoat) return false;
 
         return true;
     }
@@ -746,7 +748,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         OnHumanExitedBoat?.Invoke(this);
     }
 
-    protected virtual void HandleBoatSetedIdle(Boat boat)
+    protected virtual void HandleBoatSetIdle(Boat boat)
     {
         RunDetermineNextActionCoroutine();
     }
@@ -808,12 +810,5 @@ public abstract class Human : Creature, IClickable, ILocalizable
     private void HandleDeselected()
     {
         OnHumanDeselected?.Invoke(this);
-    }
-
-    private IEnumerator FollowPathCorouine()
-    {
-        yield return new WaitForEndOfFrame();
-
-        FollowPath();
     }
 }

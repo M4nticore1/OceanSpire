@@ -31,7 +31,7 @@ public class BoatRider : MonoBehaviour
     public event Action<Boat> OnBoatMovementStarted;
     public event Action<Boat> OnBoatMovementStopped;
 
-    public event Action<Boat> OnBoatSetedIdle;
+    public event Action<Boat> OnBoatSetIdle;
 
     public static event Action<BoatRider, Boat> OnRiderEnteredBoat;
     public static event Action<BoatRider, Boat> OnRiderExitedBoat;
@@ -150,9 +150,10 @@ public class BoatRider : MonoBehaviour
         }
     }
 
-    public void HandleBoatSetedIdle(Boat boat)
+    public void HandleBoatSetIdle(Boat boat)
     {
-        OnBoatSetedIdle?.Invoke(boat);
+        Debug.Log("HandleBoatSetIdle");
+        OnBoatSetIdle?.Invoke(boat);
     }
 
     public void EnterBoat(Boat boat)

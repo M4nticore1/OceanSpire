@@ -76,7 +76,7 @@ public class ConstructionInteractionPointsHandler : MonoBehaviour
     public BuildingAction GetInteractPoint(CreatureCityNavigator navigator)
     {
         if (!interactorsDict.ContainsKey(navigator)) {
-            Debug.LogError($"[{nameof(ConstructionInteractionPointsHandler)}] Intreactions doesn't contain {navigator} at {this}!");
+            //Debug.LogError($"[{nameof(ConstructionInteractionPointsHandler)}] Intreactions doesn't contain {navigator} at {this}!");
             return null;
         }
 

@@ -180,7 +180,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         updateStateCoroutine = StartCoroutine(UpdateStateCoroutine());
     }
 
-    public void OnReturnedToDock()
+    public void HandleReturnedToDock()
     {
         if (Inventory.GetCurrentWeight() > 0) {
             SetState(BoatStateEnum.UnloadingLoot);

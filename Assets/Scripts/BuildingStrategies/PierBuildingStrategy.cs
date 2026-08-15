@@ -28,54 +28,16 @@ public class PierBuildingStrategy : BuildingStrategy
         if (boatRider == null) return;
 
         TryAssignFreeBoat(boatRider);
-
-        //if (!BoatsManager.Instance) {
-        //    Debug.Log("BoatManager is not on the scene.");
-        //    return;
-        //}
-
-        //if (!interactor) {
-        //    Debug.Log("Interactor not found");
-        //    return;
-        //}
-
-        //var boatRider = interactor.GetComponent<BoatRider>();
-        //if (!boatRider) {
-        //    Debug.Log($"BoatRider not found at {interactor.name}");
-        //    return;
-        //}
-
-        //var citizen = interactor.GetComponent<Citizen>();
-        //if (!citizen) {
-        //    Debug.Log($"Citizen not found at {interactor.name}");
-        //    return;
-        //}
-
-        //int? index = building.WorkComponent.TryGetWorkerIndex(citizen);
-        //if (index == null) return;
-
-        //var boat = BoatsManager.Instance.CitizenBoats[index.Value];
-        //boatRider.TrySetTargetBoat(boat);
-
-        //if (boatRider.RidingBoat) {
-        //    if (boatRider.IsExitingBoat) {
-        //        boatRider.StopExitingBoat();
-        //    }
-
-        //    if (boatRider.RidingBoat == boat &&
-        //        boatRider.TargetBoat.CurrentStateEnum != BoatStateEnum.UnloadingLoot &&
-        //        boatRider.TargetBoat.Inventory.RemainingWeight != 0) {
-        //        boatRider.TargetBoat.SetState(BoatStateEnum.FindingLoot);
-        //    }
-        //}
     }
 
     public override void OnInteractBuildingRemove(CreatureInteractComponent interactor)
     {
-        var boatRider = interactor.GetComponent<BoatRider>();
-        boatRider.RemoveTargetBoat();
+        if (interactor == null) return;
 
-        //UpdateTargetBoats();
+        var boatRider = interactor.GetComponent<BoatRider>();
+        if (boatRider == null) return;
+
+        boatRider.RemoveTargetBoat();
     }
 
     public override void OnStartedInteracting(CreatureInteractComponent interactor)
@@ -118,9 +80,9 @@ public class PierBuildingStrategy : BuildingStrategy
             index = BoatsManager.Instance.CitizenBoats.ToList().IndexOf(targetBoat);
         }
         else {
-            index = GetFirstFreeBoatIndex();
+            index = GetFirstFreeBoatIndex(boatRider);
             if (index == null) {
-                //Debug.LogError($"[{nameof(PierBuildingStrategy)}] Not free boats fount at {building}!");
+                Debug.LogError($"[{nameof(PierBuildingStrategy)}] Not free boats fount at {building} for {boatRider}!");
                 return null;
             }
         }
@@ -140,63 +102,63 @@ public class PierBuildingStrategy : BuildingStrategy
         return interaction;
     }
 
-    private void UpdateTargetBoats()
-    {
-        for (int i = 0; i < building.CitizensHandler.Interactors.Count; i++) {
-            var worker = building.CitizensHandler.Interactors[i];
-            if (worker == null) {
-                Debug.LogError($"Worker not found at {building.name}");
-                continue;
-            }
+    //private void UpdateTargetBoats()
+    //{
+    //    for (int i = 0; i < building.CitizensHandler.Interactors.Count; i++) {
+    //        var worker = building.CitizensHandler.Interactors[i];
+    //        if (worker == null) {
+    //            Debug.LogError($"Worker not found at {building.name}");
+    //            continue;
+    //        }
 
-            var boatRider = worker.GetComponent<BoatRider>();
-            if (boatRider == null) {
-                Debug.LogError($"Boat Rider not found at {worker.name}");
-                continue;
-            }
+    //        var boatRider = worker.GetComponent<BoatRider>();
+    //        if (boatRider == null) {
+    //            Debug.LogError($"Boat Rider not found at {worker.name}");
+    //            continue;
+    //        }
 
-            if (BoatsManager.Instance.CitizenBoats.Count <= i) {
-                Debug.LogError($"Citizen Boats count is less than worker index {i}");
-                continue;
-            }
+    //        if (BoatsManager.Instance.CitizenBoats.Count <= i) {
+    //            Debug.LogError($"Citizen Boats count is less than worker index {i}");
+    //            continue;
+    //        }
 
-            var boat = BoatsManager.Instance.CitizenBoats[i];
-            if (boat == null) {
-                Debug.LogError($"Citizen Boat not found at {BoatsManager.Instance.name}");
-                continue;
-            }
+    //        var boat = BoatsManager.Instance.CitizenBoats[i];
+    //        if (boat == null) {
+    //            Debug.LogError($"Citizen Boat not found at {BoatsManager.Instance.name}");
+    //            continue;
+    //        }
 
-            if (!boatRider.TrySetTargetBoat(boat)) continue;
+    //        if (!boatRider.TrySetTargetBoat(boat)) continue;
 
-            boatRider.TryStopEnteringBoat();
-        }
-    }
+    //        boatRider.TryStopEnteringBoat();
+    //    }
+    //}
 
     private void TryAssignFreeBoat(BoatRider boatRider)
     {
-        if (!boatRider) return;
-
-        var ridingBoat = boatRider.RidingBoat;
-        if (ridingBoat) {
-            boatRider.TrySetTargetBoat(ridingBoat);
+        if (boatRider == null) {
+            Debug.LogError($"[{nameof(PierBuildingStrategy)}] Boat Rider is not valid!");
+            return;
         }
-        else {
-            var boat = GetFirstFreeBoat();
-            if (boat == null) return;
 
-            boatRider.TrySetTargetBoat(boat);
+        var boat = GetFirstFreeBoat(boatRider);
+        if (boat == null) {
+            Debug.LogError($"[{nameof(PierBuildingStrategy)}] Free Boat is not valid for {boatRider}!");
+            return;
         }
+
+        boatRider.TrySetTargetBoat(boat);
     }
 
-    private Boat GetFirstFreeBoat()
+    private Boat GetFirstFreeBoat(BoatRider boatRider)
     {
-        var index = GetFirstFreeBoatIndex();
+        var index = GetFirstFreeBoatIndex(boatRider);
         if (index == null) return null;
 
         return BoatsManager.Instance.CitizenBoats[index.Value];
     }
 
-    private int? GetFirstFreeBoatIndex()
+    private int? GetFirstFreeBoatIndex(BoatRider boatRider)
     {
         var citizenBoats = BoatsManager.Instance.CitizenBoats;
         for (int i = 0; i < citizenBoats.Count; i++) {
@@ -206,16 +168,23 @@ public class PierBuildingStrategy : BuildingStrategy
             var currentRider = boat.CurrentRider;
             if (currentRider != null) {
                 var currentCitizen = currentRider.GetComponent<Citizen>();
-                if (currentCitizen != null) {
-                    if (currentRider && currentCitizen.InteractComponent.InteractBuilding?.gameObject == pier.gameObject) continue;
+                if (currentCitizen.InteractComponent != null && currentCitizen.InteractComponent.InteractBuilding?.gameObject == pier.gameObject) {
+                    continue;
                 }
             }
 
             var targetRider = boat.TargetRider;
             if (targetRider != null) {
+                if (targetRider != null) {
+                    if (targetRider != boatRider) continue;
+                    return i;
+                }
+
                 var targetCitizen = targetRider.GetComponent<Citizen>();
                 if (targetCitizen != null) {
-                    if (targetCitizen && targetCitizen.InteractComponent.InteractBuilding?.gameObject == pier.gameObject) continue;
+                    if (targetCitizen.InteractComponent != null && targetCitizen.InteractComponent.InteractBuilding?.gameObject == pier.gameObject) {
+                        continue;
+                    }
                 }
             }
 

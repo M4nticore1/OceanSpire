@@ -13,16 +13,16 @@ public class IdleBoatState : BoatState
     public override void Enter()
     {
         boat.RemoveTargetLoot();
-        boat.Movement.SetAgentEnabled(false);
+        boat.Movement.TryStopMoving();
 
         if (boat.CurrentRider) {
-            boat.CurrentRider.HandleBoatSetedIdle(boat);
+            boat.CurrentRider.HandleBoatSetIdle(boat);
         }
     }
 
     public override void Exit()
     {
-        boat.Movement.SetAgentEnabled(true);
+
     }
 
     public override void Tick()
