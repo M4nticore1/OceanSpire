@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 337465256166747431}
   - component: {fileID: 7469822553162115358}
+  - component: {fileID: -6375469359371964362}
   - component: {fileID: 8565429626344292583}
   - component: {fileID: -7796214933308666227}
   m_Layer: 0
@@ -124,6 +125,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OwnedBuilding: {fileID: 0}
   buildingInteractions: []
+  interactionPointsHandler: {fileID: -6375469359371964362}
+--- !u!114 &-6375469359371964362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5452299794892249143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d307acad614dc04469c847f3d6653410, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionPointsHandler
+  buildingConstruction: {fileID: 7469822553162115358}
 --- !u!114 &8565429626344292583
 MonoBehaviour:
   m_ObjectHideFlags: 0

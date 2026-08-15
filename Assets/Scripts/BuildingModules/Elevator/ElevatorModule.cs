@@ -79,7 +79,7 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     private bool CanGetSpawnedCabin()
     {
-        if (!SpawnedElevatorCabin) {
+        if (SpawnedElevatorCabin == null) {
             Debug.LogError($"[{nameof(ElevatorModule)}] Spawned Elevator Cabin is not valid!");
             return false;
         }
@@ -89,6 +89,10 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     public bool IsPossibleToEnter()
     {
+        if (SpawnedElevatorCabin == null) {
+            Debug.LogError($"[{nameof(ElevatorModule)}] Spawned Elevator Cabin is not valid!");
+            return false;
+        }
         if (SpawnedElevatorCabin.IsMoving) return false;
         if (SpawnedElevatorCabin.OwnedElevator.OwnedTowerBuilding.FloorIndex != OwnedTowerBuilding.FloorIndex) return false;
         if (SpawnedElevatorCabin.RidingPassengers.Count + SpawnedElevatorCabin.GoingToRidingPassengers.Count >= OwnedBuilding.LevelDefinition.MaxHumansCount) return false;
@@ -126,15 +130,15 @@ public class ElevatorModule : BuildingModule, IElectricible
     {
         if (!CanGetSpawnedCabin()) return null;
 
-        var interaction = SpawnedElevatorCabin.GetInteractPoint(elevatorPassenger.CityNavigator);
+        var interaction = SpawnedElevatorCabin.InteractionPointsHandler.GetInteractPoint(elevatorPassenger.CityNavigator);
         if (interaction == null) {
-            Debug.LogError($"[{nameof(ElevatorModule)}] Interaction is not valid", this);
+            Debug.LogError($"[{nameof(ElevatorModule)}] Interaction is not valid!");
             return null;
         }
 
         var waypoint = interaction.GetWaypoint(0);
         if (waypoint == null) {
-            Debug.LogError($"[{nameof(ElevatorModule)}] Waypoint is not valid", this);
+            Debug.LogError($"[{nameof(ElevatorModule)}] Waypoint is not valid!");
             return null;
         }
 
@@ -148,12 +152,12 @@ public class ElevatorModule : BuildingModule, IElectricible
 
     public bool ShouldSpendElectricity()
     {
-        return SpawnedElevatorCabin && SpawnedElevatorCabin.IsMoving && SpawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).FloorIndex;
+        return SpawnedElevatorCabin != null && SpawnedElevatorCabin.IsMoving && SpawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).FloorIndex;
     }
 
     public void SetCabin(ElevatorCabinConstruction cabin)
     {
-        if (!cabin) {
+        if (cabin == null) {
             Debug.LogError($"[{nameof(ElevatorModule)}] Cabin Construction is not valid!");
             return;
         }

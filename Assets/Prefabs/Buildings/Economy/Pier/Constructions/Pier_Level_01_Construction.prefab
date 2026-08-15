@@ -107,6 +107,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -6375469359371964362, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: buildingConstruction
+      value: 
+      objectReference: {fileID: 4629692952556708248}
     - target: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -195,6 +199,8 @@ MonoBehaviour:
   - waypoints:
     - transform: {fileID: 423467173397231927}
       actionTime: 0
+      actionAnimation: {fileID: 0}
+  interactionPointsHandler: {fileID: 8002700582489489827}
   boatDocks:
   - {fileID: 6964030646355368549}
 --- !u!4 &5486632833755438258 stripped
@@ -202,6 +208,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 337465256166747431, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
   m_PrefabInstance: {fileID: 5227137252125454741}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8002700582489489827 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -6375469359371964362, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+  m_PrefabInstance: {fileID: 5227137252125454741}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 225444294769174946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d307acad614dc04469c847f3d6653410, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionPointsHandler
 --- !u!1001 &6335149939643643299
 PrefabInstance:
   m_ObjectHideFlags: 0

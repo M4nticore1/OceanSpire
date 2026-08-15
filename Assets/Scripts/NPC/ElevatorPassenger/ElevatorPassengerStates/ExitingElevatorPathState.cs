@@ -9,40 +9,37 @@ public class ExitingElevatorPathState : ElevatorPassengerState
 
     public override void Enter()
     {
-        var cityNavigator = elevatorPassenger.CityNavigator;
+        var cityNavigator = ElevatorPassenger.CityNavigator;
         var currentBuilding = cityNavigator.CurrentBuilding;
 
-        if (!currentBuilding) {
+        if (currentBuilding == null) {
             Debug.LogError("currentBuilding is not valid");
             return;
         }
 
         var construction = currentBuilding.SpawnedConstruction;
-        if (!construction) {
+        if (construction == null) {
             Debug.LogError("construction is not valid");
             return;
         }
 
-        construction.AssignInteract(cityNavigator);
-        cityNavigator.Movement.TryMoveTo(construction.GetInteractPoint(cityNavigator).GetWaypoint(0).Transform);
+        construction.InteractionPointsHandler.AssignInteractor(cityNavigator);
+        cityNavigator.Movement.TryMoveTo(construction.InteractionPointsHandler.GetInteractPoint(cityNavigator).GetWaypoint(0).Transform);
     }
 
     public override void Exit()
     {
-        var cityNavigator = elevatorPassenger.CityNavigator;
+        var cityNavigator = ElevatorPassenger.CityNavigator;
         var currentBuilding = cityNavigator.CurrentBuilding;
 
-        if (!currentBuilding) {
-            Debug.LogError("currentBuilding is not valid");
-            return;
-        }
+        if (currentBuilding == null) return;
 
         var construction = currentBuilding.SpawnedConstruction;
-        if (!construction) {
+        if (construction == null) {
             Debug.LogError("construction is not valid");
             return;
         }
 
-        construction.RemoveInteract(cityNavigator);
+        construction.InteractionPointsHandler.RemoveInteractor(cityNavigator);
     }
 }

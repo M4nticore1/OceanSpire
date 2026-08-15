@@ -9,31 +9,23 @@ public class RidingElevatorPassengerState : ElevatorPassengerState
 
     public override void Enter()
     {
-        var cityNavigator = elevatorPassenger.CityNavigator;
-        var currentElevator = cityNavigator.CurrentElevator;
+        if (EnteredElevator == null) return;
+        if (CityNavigator == null) return;
 
-        if (!currentElevator) {
-            Debug.LogError("currentElevator is not valid");
-            return;
-        }
-
-        currentElevator.AddRidingPassenger(elevatorPassenger);
-        cityNavigator.Movement.SetAgentEnabled(false);
-        cityNavigator.transform.SetParent(currentElevator.SpawnedElevatorCabin.transform);
+        EnteredElevator.AddRidingPassenger(ElevatorPassenger);
+        CityNavigator.Movement.SetAgentEnabled(false);
+        CityNavigator.transform.SetParent(EnteredElevator.SpawnedElevatorCabin.transform);
     }
 
     public override void Exit()
     {
-        var cityNavigator = elevatorPassenger.CityNavigator;
-        var currentElevator = cityNavigator.CurrentElevator;
+        if (CityNavigator == null) return;
 
-        if (!currentElevator) {
-            Debug.LogError("currentElevator is not valid");
-            return;
-        }
+        var currentElevator = CityNavigator.CurrentElevator;
+        if (currentElevator == null) return;
 
-        cityNavigator.Movement.SetAgentEnabled(true);
-        cityNavigator.transform.SetParent(null);
-        currentElevator.RemoveRidingPassenger(elevatorPassenger);
+        CityNavigator.Movement.SetAgentEnabled(true);
+        CityNavigator.transform.SetParent(null);
+        currentElevator.RemoveRidingPassenger(ElevatorPassenger);
     }
 }

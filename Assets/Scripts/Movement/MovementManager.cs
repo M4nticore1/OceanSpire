@@ -14,7 +14,7 @@ public class MovementManager : MonoBehaviour
             Instance = this;
         }
         else {
-            Debug.LogError($"[{nameof(RadioStationsManager)}] There's another Radio Stations Manager in the scene!");
+            Debug.LogError($"[{nameof(MovementManager)}] There's another Movement Manager in the scene!");
             Destroy(gameObject);
         }
     }

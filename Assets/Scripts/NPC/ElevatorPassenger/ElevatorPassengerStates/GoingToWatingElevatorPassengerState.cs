@@ -9,54 +9,41 @@ public class GoingToWatingElevatorPassengerState : ElevatorPassengerState
 
     public override void Enter()
     {
-        var cityNavigator = elevatorPassenger.CityNavigator;
+        if (EnteredElevator == null) return;
+        if (CityNavigator == null) return;
 
-        var currentBuilding = cityNavigator.CurrentBuilding;
-        if (!currentBuilding) {
-            Debug.LogError("currentBuilding is not valid");
-            return;
-        }
-
-        var currentElevator = cityNavigator.CurrentElevator;
-        if (!currentElevator) {
-            Debug.LogError("currentElevator is not valid");
+        var currentBuilding = EnteredElevator.OwnedBuilding;
+        if (currentBuilding == null) {
+            Debug.LogError($"[{nameof(GoingToWatingElevatorPassengerState)}] Current Building is not valid!");
             return;
         }
 
         var construction = currentBuilding.SpawnedConstruction;
-        if (!construction) {
-            Debug.LogError("construction is not valid");
+        if (construction == null) {
+            Debug.LogError($"[{nameof(GoingToWatingElevatorPassengerState)}] Construction is not valid!");
             return;
         }
 
-        construction.AssignInteract(cityNavigator);
-        currentElevator.AddGoingToWaitingPassenger(elevatorPassenger);
-        cityNavigator.Movement.TryMoveTo(construction.GetInteractPoint(cityNavigator).GetWaypoint(0).Transform);
+        construction.InteractionPointsHandler.AssignInteractor(CityNavigator);
+        EnteredElevator.AddGoingToWaitingPassenger(ElevatorPassenger);
+        CityNavigator.Movement.TryMoveTo(construction.InteractionPointsHandler.GetInteractPoint(CityNavigator).GetWaypoint(0).Transform);
     }
 
     public override void Exit()
     {
-        var cityNavigator = elevatorPassenger.CityNavigator;
+        if (EnteredElevator == null) return;
+        if (CityNavigator == null) return;
 
-        var currentBuilding = cityNavigator.CurrentBuilding;
-        if (!currentBuilding) {
-            Debug.LogError("currentBuilding is not valid");
-            return;
-        }
-
-        var currentElevator = cityNavigator.CurrentElevator;
-        if (!currentElevator) {
-            Debug.LogError("currentElevator is not valid");
-            return;
-        }
+        var currentBuilding = EnteredElevator.OwnedBuilding;
+        if (currentBuilding == null) return;
 
         var construction = currentBuilding.SpawnedConstruction;
-        if (!construction) {
-            Debug.LogError("construction is not valid");
+        if (construction == null) {
+            Debug.LogError($"[{nameof(GoingToWatingElevatorPassengerState)}] Construction is not valid!");
             return;
         }
 
-        construction.RemoveInteract(cityNavigator);
-        currentElevator.RemoveGoingToWaitingPassenger(elevatorPassenger);
+        construction.InteractionPointsHandler.RemoveInteractor(CityNavigator);
+        EnteredElevator.RemoveGoingToWaitingPassenger(ElevatorPassenger);
     }
 }

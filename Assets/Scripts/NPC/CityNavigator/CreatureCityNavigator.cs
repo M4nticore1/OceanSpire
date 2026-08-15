@@ -43,8 +43,10 @@ public class CreatureCityNavigator : MonoBehaviour
     [field: SerializeField] public bool IsFollowingPath { get; private set; } = false;
 
     // Positions
-    public int FloorIndex { get; private set; } = 0;
-    public int PlaceIndex { get; private set; } = 0;
+    [field: SerializeField] public int FloorIndex { get; private set; } = 0;
+    [field: SerializeField] public int PlaceIndex { get; private set; } = 0;
+
+    private Coroutine followPathCoroutine;
 
     public event Action<Building> OnTargetBuildingSet;
     public event Action<Building> OnTargetBuildingRemoved;
@@ -52,7 +54,7 @@ public class CreatureCityNavigator : MonoBehaviour
     public event Action<Building> OnEnteredBuilding;
     public event Action<Building> OnExitedBuilding;
 
-    public event Action onReachedPathBuilding;
+    public event Action<Building> OnReachedPathBuilding;
 
     private void OnEnable()
     {
@@ -83,10 +85,9 @@ public class CreatureCityNavigator : MonoBehaviour
             return;
         }
 
-        var currentBuildingInstanceId = cityNavigatorData.EnteredBuildingInstanceId;
-        if (currentBuildingInstanceId != null) {
-            var instance = InstancesManager.Instance.GetInstance(currentBuildingInstanceId.Value);
-
+        var enteredBuildingInstanceId = cityNavigatorData.EnteredBuildingInstanceId;
+        if (enteredBuildingInstanceId != null) {
+            var instance = InstancesManager.Instance.GetInstance(enteredBuildingInstanceId.Value);
             if (instance != null) {
                 var building = instance.GetComponent<Building>();
                 EnterBuilding(building);
@@ -96,17 +97,17 @@ public class CreatureCityNavigator : MonoBehaviour
         var targetBuildingInstanceId = cityNavigatorData.TargetBuildingInstanceId;
         if (targetBuildingInstanceId != null) {
             var instance = InstancesManager.Instance.GetInstance(targetBuildingInstanceId.Value);
-
             if (instance != null) {
                 var building = instance.GetComponent<Building>();
                 SetTargetBuilding(building);
                 TryUpdatePathToTargetBuilding();
-                FollowPath();
             }
         }
 
         elevatorPassenger.Init(cityNavigatorData.ElevatorPassenger);
         waypointsComponent.Init(cityNavigatorData.Waypoints);
+
+        //FollowPath();
     }
 
     // Target Building
@@ -120,7 +121,7 @@ public class CreatureCityNavigator : MonoBehaviour
         if (target == TargetBuilding) return;
 
         TargetBuilding = target;
-        TargetBuilding.SpawnedConstruction.AssignInteract(this);
+        TargetBuilding.SpawnedConstruction.InteractionPointsHandler.AssignInteractor(this);
 
         RemovePath();
         TryUpdatePathToTargetBuilding();
@@ -132,7 +133,7 @@ public class CreatureCityNavigator : MonoBehaviour
     {
         if (TargetBuilding == null) return;
 
-        TargetBuilding.SpawnedConstruction.RemoveInteract(this);
+        TargetBuilding.SpawnedConstruction.InteractionPointsHandler.RemoveInteractor(this);
         TargetBuilding = null;
 
         OnTargetBuildingRemoved?.Invoke(TargetBuilding);
@@ -155,7 +156,7 @@ public class CreatureCityNavigator : MonoBehaviour
         RemovePath();
         pathBuildings = path;
         SortPath(pathBuildings);
-        UpdatePathBuildings(pathBuildings);
+        UpdatePathBuildings();
 
         return true;
     }
@@ -185,7 +186,7 @@ public class CreatureCityNavigator : MonoBehaviour
 
     public bool CanReachBuilding(Building targetBuilding)
     {
-        BuildingPlace startPlace = CurrentTowerBuilding != null ? CurrentTowerBuilding.BuildingPlace : null;
+        var startPlace = CurrentTowerBuilding != null ? CurrentTowerBuilding.BuildingPlace : null;
         List<Building> path;
 
         return PathFinder.TryFindBuildingPath(startPlace, targetBuilding, out path);
@@ -194,30 +195,36 @@ public class CreatureCityNavigator : MonoBehaviour
     public void RemovePathAndTargetBuilding()
     {
         RemovePath();
-        UpdatePathBuildings(pathBuildings);
+        UpdatePathBuildings();
         RemoveTargetBuilding();
     }
 
     // Trigger
     public void OnEnteredBuildingTrigger(Building building)
     {
+        if (building == null) return;
         if (building == CurrentBuilding) return;
-        if (!TryEnterBuilding(building)) return;
 
-        //FollowPath();
+        if (TryEnterBuilding(building)) {
+            UpdatePathIndex();
+            UpdatePathBuildings();
+            FollowPath();
+        }
     }
 
     public void OnStayBuildingTrigger(Building building)
     {
+        if (building == null) return;
         if (CurrentBuilding != null) return;
         if (building == CurrentBuilding) return;
-        if (!TryEnterBuilding(building)) return;
 
-        //FollowPath();
+        TryEnterBuilding(building);
     }
 
     public void OnExitedBuildingTrigger(Building building)
     {
+        if (building == null) return;
+
         TryExitBuilding(building);
     }
 
@@ -227,17 +234,22 @@ public class CreatureCityNavigator : MonoBehaviour
         if (elevatorPassenger.IsRiding) return false;
 
         EnterBuilding(building);
-
         return true;
     }
 
     public void EnterBuilding(Building building)
     {
-        CurrentBuilding = building;
-        AssignBuildings();
-        AssignTowerPlace();
+        if (building == null) {
+            Debug.LogError($"[{nameof(CreatureCityNavigator)}] Building is not valid!");
+            return;
+        }
 
+        CurrentBuilding = building;
         building.EnterBuilding(this);
+
+        UpdateCurrentBuildings();
+        UpdateCurrentTowerPlace();
+
         OnEnteredBuilding?.Invoke(CurrentBuilding);
     }
 
@@ -247,20 +259,20 @@ public class CreatureCityNavigator : MonoBehaviour
             CurrentBuilding = null;
         }
 
-        AssignBuildings();
-        AssignTowerPlace();
+        UpdateCurrentBuildings();
+        UpdateCurrentTowerPlace();
 
         building.ExitBuilding(this);
         OnExitedBuilding?.Invoke(building);
     }
 
-    private void AssignBuildings()
+    private void UpdateCurrentBuildings()
     {
         CurrentTowerBuilding = CurrentBuilding as TowerBuilding;
         CurrentElevator = CurrentBuilding != null ? CurrentBuilding.GetComponent<ElevatorModule>() : null;
     }
 
-    private void AssignTowerPlace()
+    private void UpdateCurrentTowerPlace()
     {
         FloorIndex = CurrentTowerBuilding != null ? CurrentTowerBuilding.FloorIndex : 0;
         PlaceIndex = CurrentTowerBuilding != null ? CurrentTowerBuilding.PlaceIndex : 0;
@@ -303,14 +315,14 @@ public class CreatureCityNavigator : MonoBehaviour
         }
 
         var currentBuilding = CurrentBuilding;
-        if (currentBuilding == targetBuilding) {
+        if (currentBuilding && currentBuilding == targetBuilding) {
             var construction = currentBuilding.SpawnedConstruction;
             if (construction == null) {
                 Debug.LogError($"[{nameof(CreatureCityNavigator)}] Construction is not valid");
                 return;
             }
 
-            construction.AssignInteract(this);
+            construction.InteractionPointsHandler.AssignInteractor(this);
 
             var waypoint = WaypointsComponent.GetCurrentWaypoint();
             if (waypoint == null) {
@@ -329,6 +341,7 @@ public class CreatureCityNavigator : MonoBehaviour
             }
 
             var interactPoint = CurrentPathBuilding.GetInteractPoint(0);
+            Debug.Log(CurrentPathBuilding);
             if (interactPoint == null) {
                 Debug.LogError($"[{nameof(CreatureCityNavigator)}] Interact point is not valid at {CurrentPathBuilding}");
                 Movement.TryMoveTo(CurrentPathBuilding.transform.position, false);
@@ -366,7 +379,7 @@ public class CreatureCityNavigator : MonoBehaviour
             return;
         }
 
-        construction.RemoveInteract(this);
+        construction.InteractionPointsHandler.RemoveInteractor(this);
     }
 
     private bool TryExitBuilding(Building building)
@@ -428,13 +441,13 @@ public class CreatureCityNavigator : MonoBehaviour
         PathProgress = 0;
     }
 
-    private void OnReachedPathBuilding()
+    private void HandleReachedPathBuilding()
     {
         UpdatePathIndex();
-        UpdatePathBuildings(pathBuildings);
+        UpdatePathBuildings();
         UpdateFollowingPathState();
 
-        onReachedPathBuilding?.Invoke();
+        OnReachedPathBuilding?.Invoke(CurrentBuilding);
     }
 
     private bool IsOnCurrentPathBuilding()
@@ -455,10 +468,20 @@ public class CreatureCityNavigator : MonoBehaviour
 
     private void UpdatePathIndex()
     {
-        PathProgress = CurrentBuilding != null ? pathBuildings.IndexOf(CurrentBuilding) + 1 : 0;
+        if (CurrentBuilding != null) {
+            if (pathBuildings.Contains(CurrentBuilding)) {
+                PathProgress = pathBuildings.IndexOf(CurrentBuilding) + 1;
+            }
+            else {
+                PathProgress = Mathf.Max(0, PathProgress - 1);
+            }
+        }
+        //else {
+        //    PathProgress = 0;
+        //}
     }
 
-    private void UpdatePathBuildings(List<Building> pathBuildings)
+    private void UpdatePathBuildings()
     {
         LastPathBuilding = PathProgress - 1 >= 0 && pathBuildings.Count > PathProgress - 1 ? pathBuildings[PathProgress - 1] : null;
         CurrentPathBuilding = pathBuildings.Count > PathProgress ? pathBuildings[PathProgress] : TargetBuilding;
@@ -528,7 +551,7 @@ public class CreatureCityNavigator : MonoBehaviour
             UpdateFollowingPathState();
         }
         else if (IsOnCurrentPathBuilding()) {
-            OnReachedPathBuilding();
+            HandleReachedPathBuilding();
         }
         else {
             UpdateFollowingPathState();
@@ -563,9 +586,27 @@ public class CreatureCityNavigator : MonoBehaviour
         if (CurrentBuilding == null) return false;
 
         var construction = CurrentBuilding.SpawnedConstruction;
-        if (construction == null) return false;
+        if (construction == null) {
+            Debug.LogError($"[{nameof(CreatureCityNavigator)}] Construction is not valid at {CurrentBuilding}!");
+            return false;
+        }
 
-        if (!movement.IsReachedPosition(construction.GetInteractPoint(this).GetWaypoint(0).Transform.position)) return false;
+        var interactPoint = construction.InteractionPointsHandler.GetInteractPoint(this);
+        if (interactPoint == null) return false;
+
+        var waypoint = interactPoint.GetWaypoint(0);
+        if (waypoint == null) {
+            Debug.LogError($"[{nameof(CreatureCityNavigator)}] Waypoint is not valid at {CurrentBuilding}!");
+            return false;
+        }
+
+        var transform = waypoint.Transform;
+        if (transform == null) {
+            Debug.LogError($"[{nameof(CreatureCityNavigator)}] Waypoint's transform is not valid at {CurrentBuilding}!");
+            return false;
+        }
+
+        if (!movement.IsReachedPosition(transform.position)) return false;
 
         return true;
     }

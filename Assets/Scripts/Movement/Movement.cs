@@ -13,9 +13,9 @@ public class Movement : MonoBehaviour
     [SerializeField] private NavMeshAgent navAgent;
     public NavMeshAgent NavAgent => navAgent;
 
-    public Vector3? TargetPosition { get; private set; } = Vector3.zero;
+    public Vector3? TargetPosition { get; private set; }
 
-    public bool UseTargetRotation { get; private set; } = false;
+    public bool UseTargetRotation { get; private set; }
     public Quaternion TargetRotation { get; private set; } = Quaternion.identity;
 
     public MovementMethod CurrentMovementMethod { get; private set; }
@@ -24,7 +24,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
 
-    public bool IsMoving { get; private set; } = false;
+    [field: SerializeField] public bool IsMoving { get; private set; }
 
     private MovementManager movementManager => MovementManager.Instance;
 
@@ -51,7 +51,9 @@ public class Movement : MonoBehaviour
 
     public void Tick()
     {
-        if (IsMoving && IsDestinationReached()) {
+        if (!IsMoving) return;
+
+        if (IsDestinationReached()) {
             TryStopMoving();
         }
     }
@@ -71,6 +73,7 @@ public class Movement : MonoBehaviour
             case MovementMethod.Walk:
                 navAgent.speed = walkSpeed;
                 break;
+
             case MovementMethod.Run:
                 navAgent.speed = runSpeed;
                 break;
@@ -79,79 +82,90 @@ public class Movement : MonoBehaviour
 
     public void SetAgentEnabled(bool enabled)
     {
+        if (!navAgent) return;
+
         navAgent.enabled = enabled;
     }
 
-    public bool TryMoveTo(Transform transform)
+    public bool TryMoveTo(Transform target)
     {
-        if (transform == null) {
-            Debug.LogError($"[{nameof(Movement)}] Transform is not valid!");
+        if (target == null) {
+            Debug.LogError($"[{nameof(Movement)}] Target Transform is not valid!");
             return false;
         }
 
-        if (!TryMoveTo(transform.position)) return false;
+        if (!TryMoveTo(target.position)) return false;
 
-        SetTargetRotation(transform.rotation);
+        SetTargetRotation(target.rotation);
         return true;
     }
 
     public bool TryMoveTo(Vector3 position, bool useReachedPosition = true)
     {
         if (!CanStartMoving()) return false;
-        if (!useReachedPosition && IsReachedPosition(position)) return false;
 
+        if (IsReachedPosition(position)) {
+            if (useReachedPosition) {
+                TargetPosition = position;
+
+                IsMoving = false;
+                TargetPosition = null;
+
+                OnDestinationReached?.Invoke();
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        navAgent.isStopped = false;
         TargetPosition = position;
         RemoveTargetRotation();
 
-        if (IsReachedPosition(position)) {
-            TryStopMoving();
+        if (!navAgent.SetDestination(position)) {
+            TargetPosition = null;
             IsMoving = false;
-            OnDestinationReached?.Invoke();
-            return true;
+            return false;
         }
 
-        if (navAgent.SetDestination(position)) {
-            IsMoving = true;
-            OnMovementStarted?.Invoke();
-            return true;
-        }
+        IsMoving = true;
+        OnMovementStarted?.Invoke();
 
-        return false;
+        return true;
     }
 
     public bool TryStopMoving()
     {
         if (!CanStopMoving()) return false;
 
-        navAgent.ResetPath();
+        bool destinationReached = IsDestinationReached();
 
-        if (IsDestinationReached()) {
+        navAgent.isStopped = true;
+        IsMoving = false;
+        TargetPosition = null;
+
+        if (destinationReached) {
             OnDestinationReached?.Invoke();
         }
 
-        IsMoving = false;
         OnMovementStopped?.Invoke();
 
-        TargetPosition = null;
         return true;
     }
 
     public bool CanStartMoving()
     {
-        if (!navAgent.enabled) {
-            //Debug.LogError($"[{nameof(Movement)}] Nav Agent is not enabled! Movement blocked.");
-            return false;
-        }
-        if (!navAgent.isOnNavMesh) {
-            //Debug.LogError($"[{nameof(Movement)}] Nav Agent is not on nav mesh! Movement blocked.");
-            return false;
-        }
+        if (!navAgent) return false;
+        if (!navAgent.enabled) return false;
+        if (!navAgent.isOnNavMesh) return false;
 
         return true;
     }
 
     public bool CanStopMoving()
     {
+        if (!navAgent) return false;
         if (!IsMoving) return false;
         if (!navAgent.enabled) return false;
         if (!navAgent.isOnNavMesh) return false;
@@ -163,9 +177,7 @@ public class Movement : MonoBehaviour
     {
         if (TargetPosition == null) return false;
 
-        if (IsReachedPosition(TargetPosition.Value)) return true;
-
-        return false;
+        return IsReachedPosition(TargetPosition.Value);
     }
 
     public bool IsReachedPosition(Vector3 position)
@@ -176,25 +188,27 @@ public class Movement : MonoBehaviour
 
     public bool CanReachPosition(Vector3 targetPosition)
     {
+        if (!navAgent) return false;
         if (!navAgent.enabled) return false;
         if (!navAgent.isOnNavMesh) return false;
 
         var path = new NavMeshPath();
-        if (navAgent.CalculatePath(targetPosition, path)) {
-            if (path.status == NavMeshPathStatus.PathComplete) {
-                return true;
-            }
+
+        if (!navAgent.CalculatePath(targetPosition, path)) {
+            return false;
         }
 
-        return false;
+        return path.status == NavMeshPathStatus.PathComplete;
     }
 
     public float? GetTargetPositionDistance()
     {
         if (TargetPosition == null) return null;
 
-        var position = transform.position;
-        return Vector3.Distance(new Vector3(position.x, position.y - navAgent.baseOffset, position.z), TargetPosition.Value);
+        return Vector3.Distance(
+            navAgent.nextPosition,
+            TargetPosition.Value
+        );
     }
 
     private void SetTargetRotation(Quaternion value)

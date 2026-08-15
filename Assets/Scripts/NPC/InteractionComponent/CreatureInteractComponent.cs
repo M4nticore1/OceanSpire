@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class CreatureInteractComponent : MonoBehaviour
 {
+    [SerializeField] private Movement movement;
+    [SerializeField] private CreatureCityNavigator creatureCityNavigator;
+
     [field: SerializeField] public Building InteractBuilding { get; private set; }
     [field: SerializeField] public bool IsInteracting { get; private set; } = false;
 
@@ -16,12 +19,12 @@ public class CreatureInteractComponent : MonoBehaviour
 
     private void OnEnable()
     {
-        Building.OnBuildingDemolished += OnBuildingDemolished;
+        Building.OnBuildingDemolished += HandleBuildingDemolished;
     }
 
     private void OnDisable()
     {
-        Building.OnBuildingDemolished -= OnBuildingDemolished;
+        Building.OnBuildingDemolished -= HandleBuildingDemolished;
     }
 
     public void Init()
@@ -103,7 +106,7 @@ public class CreatureInteractComponent : MonoBehaviour
         OnInteractionStopped?.Invoke(building);
     }
 
-    private void OnBuildingDemolished(Building building)
+    private void HandleBuildingDemolished(Building building)
     {
         if (building != InteractBuilding) return;
 
@@ -114,6 +117,17 @@ public class CreatureInteractComponent : MonoBehaviour
     {
         if (building == null) return false;
         if (IsInteracting) return false;
+
+        var interactPoint = building.GetInteractPoint(this);
+        if (interactPoint == null) return false;
+
+        var waypoint = interactPoint.GetWaypoint(0);
+        if (waypoint == null) return false;
+
+        var transform = waypoint.Transform;
+        if (transform == null) return false;
+
+        if (!movement.IsReachedPosition(transform.position)) return false;
 
         return true;
     }

@@ -53,16 +53,18 @@ public class WorkBuildingStrategy : BuildingStrategy
 
     }
 
-    public override BuildingAction GetInteractPoint(Human human)
+    public override BuildingAction GetInteractPoint(CreatureInteractComponent interactor)
     {
-        var citizen = human as Citizen;
-        var raider = human as Raider;
+        if (interactor == null) return null;
+
+        var citizen = interactor.GetComponent<Citizen>();
+        var raider = interactor.GetComponent<Raider>();
 
         if (citizen) {
-            return GetInteractionPosition(building.CitizensHandler, human);
+            return GetInteractionPosition(building.CitizensHandler, citizen);
         }
         else if (raider) {
-            return GetInteractionPosition(building.RaidersHandler, human);
+            return GetInteractionPosition(building.RaidersHandler, raider);
         }
 
         return null;
@@ -89,10 +91,9 @@ public class WorkBuildingStrategy : BuildingStrategy
             return null;
         }
 
-        var index = interactors.ToList().IndexOf(human);
-        var interaction = construction.GetInteractPoint(index);
+        var interaction = construction.InteractionPointsHandler.GetInteractPoint(human.CityNavigator);
         if (interaction == null) {
-            Debug.LogError($"[{nameof(WorkBuildingStrategy)}] Interaction at index {index} is not valid at {building}!");
+            Debug.LogError($"[{nameof(WorkBuildingStrategy)}] Interaction is not valid at {building} with {human.CityNavigator}!");
             return null;
         }
 

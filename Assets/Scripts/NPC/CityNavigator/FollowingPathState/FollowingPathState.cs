@@ -23,7 +23,7 @@ public class FollowingPathState : PathState
                 return;
             }
 
-            construction.AssignInteract(cityNavigator);
+            construction.InteractionPointsHandler.AssignInteractor(cityNavigator);
             cityNavigator.Movement.TryMoveTo(cityNavigator.WaypointsComponent.GetCurrentWaypoint().Transform);
         }
         else {
@@ -47,6 +47,6 @@ public class FollowingPathState : PathState
             return;
         }
 
-        construction.RemoveInteract(cityNavigator);
+        construction.InteractionPointsHandler.RemoveInteractor(cityNavigator);
     }
 }

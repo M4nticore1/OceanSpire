@@ -115,21 +115,25 @@ public class ElevatorCabinConstruction : BuildingConstruction
     // Waiting Passengers
     public void AddGoingToWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
+        if (goingForWaitingPassengers.Contains(elevatorPassenger)) return;
+
         goingForWaitingPassengers.Add(elevatorPassenger);
-        AssignInteract(elevatorPassenger.CityNavigator);
+        InteractionPointsHandler.AssignInteractor(elevatorPassenger.CityNavigator);
     }
 
     public void RemoveGoingToWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
         goingForWaitingPassengers.Remove(elevatorPassenger);
-        RemoveInteract(elevatorPassenger.CityNavigator);
+        InteractionPointsHandler.RemoveInteractor(elevatorPassenger.CityNavigator);
     }
 
     // Waiting Passengers
     public void AddWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
+        if (waitingPassengers.Contains(elevatorPassenger)) return;
+
         waitingPassengers.Add(elevatorPassenger);
-        AssignInteract(elevatorPassenger.CityNavigator);
+        InteractionPointsHandler.AssignInteractor(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
@@ -137,7 +141,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void RemoveWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
         waitingPassengers.Remove(elevatorPassenger);
-        RemoveInteract(elevatorPassenger.CityNavigator);
+        InteractionPointsHandler.RemoveInteractor(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
@@ -145,8 +149,10 @@ public class ElevatorCabinConstruction : BuildingConstruction
     // Going To Riding Passengers
     public void AddGoingToRidingPassenger(ElevatorPassenger elevatorPassenger)
     {
+        if (goingToRidingPassengers.Contains(elevatorPassenger)) return;
+
         goingToRidingPassengers.Add(elevatorPassenger);
-        AssignInteract(elevatorPassenger.CityNavigator);
+        InteractionPointsHandler.AssignInteractor(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
@@ -154,7 +160,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void RemoveGoingToRidingPassenger(ElevatorPassenger elevatorPassenger)
     {
         goingToRidingPassengers.Remove(elevatorPassenger);
-        RemoveInteract(elevatorPassenger.CityNavigator);
+        InteractionPointsHandler.RemoveInteractor(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
@@ -162,8 +168,10 @@ public class ElevatorCabinConstruction : BuildingConstruction
     // Riding Passengers
     public void AddRidingPassenger(ElevatorPassenger elevatorPassenger)
     {
+        if (ridingPassengers.Contains(elevatorPassenger)) return;
+
         ridingPassengers.Add(elevatorPassenger);
-        AssignInteract(elevatorPassenger.CityNavigator);
+        InteractionPointsHandler.AssignInteractor(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }
@@ -171,7 +179,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public void RemoveRidingPassenger(ElevatorPassenger elevatorPassenger)
     {
         ridingPassengers.Remove(elevatorPassenger);
-        RemoveInteract(elevatorPassenger.CityNavigator);
+        InteractionPointsHandler.RemoveInteractor(elevatorPassenger.CityNavigator);
 
         UpdateDestinationAndProceed();
     }

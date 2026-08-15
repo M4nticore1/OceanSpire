@@ -124,6 +124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5408492365fd0f4b97066addd4542d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCBuildingInteractor
+  movement: {fileID: -7493649843608556168}
+  creatureCityNavigator: {fileID: 0}
   <InteractBuilding>k__BackingField: {fileID: 0}
   <IsInteracting>k__BackingField: 0
 --- !u!114 &2185582854232776361
@@ -138,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e804fbfb8d53e46498b590b8d030a447, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CityPathFollower
+  human: {fileID: 0}
   movement: {fileID: -7493649843608556168}
   elevatorPassenger: {fileID: 1218019482049909420}
   waypointsComponent: {fileID: 7048535748943796013}
@@ -147,6 +150,8 @@ MonoBehaviour:
   <TargetBuilding>k__BackingField: {fileID: 0}
   <PathProgress>k__BackingField: 0
   <IsFollowingPath>k__BackingField: 0
+  <FloorIndex>k__BackingField: 0
+  <PlaceIndex>k__BackingField: 0
 --- !u!114 &1218019482049909420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,9 +180,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b217f273265fdb4eb737faf98efc3a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CreatureWaypointsComponent
+  human: {fileID: 0}
   movement: {fileID: -7493649843608556168}
-  interactComponent: {fileID: 6316746746762001490}
   cityNavigator: {fileID: 2185582854232776361}
+  interactComponent: {fileID: 6316746746762001490}
 --- !u!114 &6497944028369977301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,6 +234,8 @@ MonoBehaviour:
   attackFrequency: 1.2
   stopMovingDistance: 1
   rotationSpeed: 1
+  <CurrentTarget>k__BackingField: {fileID: 0}
+  <CurrentAttackers>k__BackingField: []
 --- !u!114 &8499683307490277393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +265,7 @@ MonoBehaviour:
   navAgent: {fileID: 1338494420481879648}
   walkSpeed: 3
   runSpeed: 5
+  <IsMoving>k__BackingField: 0
 --- !u!114 &3276445640208814929
 MonoBehaviour:
   m_ObjectHideFlags: 0

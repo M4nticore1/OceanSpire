@@ -6,24 +6,28 @@ public class CraftingModuleHighlightController : MonoBehaviour
 
     private void OnEnable()
     {
-        craftingModule.OnInited += OnInited;
+        craftingModule.OnInited += HandleInited;
 
-        craftingModule.OnWorkingStarted += OnWorkingStarted;
-        craftingModule.OnWorkingStarted += OnWorkingStopped;
+        craftingModule.OnWorkingStarted += HandleWorkingStarted;
+        craftingModule.OnWorkingStarted += HandleWorkingStopped;
 
-        craftingModule.OnItemCraftFinished += OnItemCraftFinished;
-        craftingModule.OnClicked += OnClicked;
+        craftingModule.OnItemCraftFinished += HandleItemCraftFinished;
+        craftingModule.OnClicked += HandleClicked;
+
+        craftingModule.OwnedBuilding.OnConstructionChanged += HandleConstructionChanged;
     }
 
     private void OnDisable()
     {
-        craftingModule.OnInited -= OnInited;
+        craftingModule.OnInited -= HandleInited;
 
-        craftingModule.OnWorkingStarted -= OnWorkingStarted;
-        craftingModule.OnWorkingStarted -= OnWorkingStopped;
+        craftingModule.OnWorkingStarted -= HandleWorkingStarted;
+        craftingModule.OnWorkingStarted -= HandleWorkingStopped;
 
-        craftingModule.OnItemCraftFinished -= OnItemCraftFinished;
-        craftingModule.OnClicked -= OnClicked;
+        craftingModule.OnItemCraftFinished -= HandleItemCraftFinished;
+        craftingModule.OnClicked -= HandleClicked;
+
+        craftingModule.OwnedBuilding.OnConstructionChanged -= HandleConstructionChanged;
     }
 
     private void Start()
@@ -47,27 +51,32 @@ public class CraftingModuleHighlightController : MonoBehaviour
         spawnedConstruction.SetFlickingPower(power);
     }
 
-    private void OnInited()
+    private void HandleInited()
     {
 
     }
 
-    private void OnWorkingStarted()
-    {
-        UpdateHighlight();
-    }
-
-    private void OnWorkingStopped()
+    private void HandleWorkingStarted()
     {
         UpdateHighlight();
     }
 
-    private void OnItemCraftFinished(CraftItemInstance craftItem)
+    private void HandleWorkingStopped()
     {
         UpdateHighlight();
     }
 
-    private void OnClicked()
+    private void HandleItemCraftFinished(CraftItemInstance craftItem)
+    {
+        UpdateHighlight();
+    }
+
+    private void HandleClicked()
+    {
+        UpdateHighlight();
+    }
+
+    private void HandleConstructionChanged(BuildingConstruction buildingConstruction)
     {
         UpdateHighlight();
     }

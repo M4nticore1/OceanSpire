@@ -9,27 +9,15 @@ public class WaitingElevatorPassengerState : ElevatorPassengerState
 
     public override void Enter()
     {
-        var cityNavigator = elevatorPassenger.CityNavigator;
-        var currentElevator = cityNavigator.CurrentElevator;
+        if (EnteredElevator == null) return;
 
-        if (!currentElevator) {
-            Debug.LogError("currentElevator is not valid");
-            return;
-        }
-
-        currentElevator.AddWaitingPassenger(elevatorPassenger);
+        EnteredElevator.AddWaitingPassenger(ElevatorPassenger);
     }
 
     public override void Exit()
     {
-        var cityNavigator = elevatorPassenger.CityNavigator;
-        var currentElevator = cityNavigator.CurrentElevator;
+        if (EnteredElevator == null) return;
 
-        if (!currentElevator) {
-            Debug.LogError("currentElevator is not valid");
-            return;
-        }
-
-        currentElevator.RemoveWaitingPassenger(elevatorPassenger);
+        EnteredElevator.RemoveWaitingPassenger(ElevatorPassenger);
     }
 }

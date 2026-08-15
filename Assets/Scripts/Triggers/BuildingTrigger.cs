@@ -21,9 +21,9 @@ public class BuildingTrigger : MonoBehaviour
         if (!isInited) return;
 
         var entity = other.GetComponent<CreatureCityNavigator>();
-        if (!entity) return;
+        if (entity == null) return;
 
-        if (building)
+        if (building != null)
             entity.OnEnteredBuildingTrigger(building);
         else
             Debug.LogError("building is null.");
@@ -34,9 +34,9 @@ public class BuildingTrigger : MonoBehaviour
         if (!isInited) return;
 
         var entity = other.GetComponent<CreatureCityNavigator>();
-        if (!entity) return;
+        if (entity == null) return;
 
-        if (building)
+        if (building != null)
             entity.OnStayBuildingTrigger(building);
         else
             Debug.LogError("building is null.");
@@ -47,9 +47,9 @@ public class BuildingTrigger : MonoBehaviour
         if (!isInited) return;
 
         var entity = other.GetComponent<CreatureCityNavigator>();
-        if (!entity) return;
+        if (entity == null) return;
 
-        if (building)
+        if (building != null)
             entity.OnExitedBuildingTrigger(building);
         else
             Debug.LogError("building is null.");

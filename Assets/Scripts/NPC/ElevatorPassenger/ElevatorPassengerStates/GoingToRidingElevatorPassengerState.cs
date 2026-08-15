@@ -9,28 +9,17 @@ public class GoingToRidingElevatorPassengerState : ElevatorPassengerState
 
     public override void Enter()
     {
-        var cityNavigator = elevatorPassenger.CityNavigator;
-        var currentElevator = cityNavigator.CurrentElevator;
+        if (EnteredElevator == null) return;
+        if (CityNavigator == null) return;
 
-        if (!currentElevator) {
-            Debug.LogError("cityNavigator.CurrentElevator is not valid");
-            return;
-        }
-
-        currentElevator.AddGoingToRidingPassenger(elevatorPassenger);
-        cityNavigator.Movement.TryMoveTo(currentElevator.GetCabinRidingTransform(elevatorPassenger));
+        EnteredElevator.AddGoingToRidingPassenger(ElevatorPassenger);
+        CityNavigator.Movement.TryMoveTo(EnteredElevator.GetCabinRidingTransform(ElevatorPassenger));
     }
 
     public override void Exit()
     {
-        var cityNavigator = elevatorPassenger.CityNavigator;
-        var currentElevator = cityNavigator.CurrentElevator;
+        if (EnteredElevator == null) return;
 
-        if (!currentElevator) {
-            Debug.LogError("cityNavigator.CurrentElevator is not valid");
-            return;
-        }
-
-        currentElevator.RemoveGoingToRidingPassenger(elevatorPassenger);
+        EnteredElevator.RemoveGoingToRidingPassenger(ElevatorPassenger);
     }
 }

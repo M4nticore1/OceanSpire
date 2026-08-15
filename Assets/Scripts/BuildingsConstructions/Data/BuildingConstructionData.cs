@@ -5,7 +5,7 @@ public class BuildingConstructionData
 {
     public Guid OwnedBuildingInstanceId = Guid.NewGuid();
 
-    public BuildingConstructionData Default()
+    public static BuildingConstructionData Default()
     {
         return new BuildingConstructionData();
     }

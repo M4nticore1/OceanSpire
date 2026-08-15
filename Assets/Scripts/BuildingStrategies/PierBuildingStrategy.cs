@@ -103,9 +103,9 @@ public class PierBuildingStrategy : BuildingStrategy
 
     }
 
-    public override BuildingAction GetInteractPoint(Human human)
+    public override BuildingAction GetInteractPoint(CreatureInteractComponent interactor)
     {
-        var boatRider = human.GetComponent<BoatRider>();
+        var boatRider = interactor.GetComponent<BoatRider>();
         if (!boatRider) {
             Debug.LogError($"[{nameof(PierBuildingStrategy)}] Boat Rider is not valid!");
             return null;
@@ -131,7 +131,7 @@ public class PierBuildingStrategy : BuildingStrategy
             return null;
         }
 
-        var interaction = construction.GetInteractPoint(index.Value);
+        var interaction = construction.InteractionPointsHandler.GetInteractPoint(index.Value);
         if (interaction == null) {
             Debug.LogError($"[{nameof(PierBuildingStrategy)}] Interaction is not valid at index {index.Value}!");
             return null;

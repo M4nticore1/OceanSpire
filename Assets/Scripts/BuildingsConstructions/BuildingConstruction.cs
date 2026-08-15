@@ -12,11 +12,16 @@ public class BuildingAction
     public InteractionWaypoint GetWaypoint(int index)
     {
         if (index >= waypoints.Length) {
-            Debug.LogError("index is over than waypoints length");
+            Debug.LogError($"Index is over than waypoints length");
             return null;
         }
 
-        return waypoints[index];
+        var waypoint = waypoints[index];
+        if (waypoint == null) {
+            Debug.LogError($"Waypoint is not valid at index {index}");
+        }
+
+        return waypoint;
     }
 }
 
@@ -42,14 +47,11 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     [SerializeField] private BuildingAction[] buildingInteractions;
     public BuildingAction[] BuildingInteractions => buildingInteractions;
 
+    [SerializeField] private ConstructionInteractionPointsHandler interactionPointsHandler;
+    public ConstructionInteractionPointsHandler InteractionPointsHandler => interactionPointsHandler != null ? interactionPointsHandler : GetComponent<ConstructionInteractionPointsHandler>();
+
     private MeshRenderer[] meshRendererers;
     private MaterialPropertyBlock propertyBlock;
-
-    private Dictionary<CreatureCityNavigator, BuildingAction> interactionsDict = new();
-    public IReadOnlyDictionary<CreatureCityNavigator, BuildingAction> InteractionsDict => interactionsDict;
-
-    private List<BuildingAction> interactionsList = new();
-    public IReadOnlyList<BuildingAction> InteractionsList => interactionsList;
 
     public bool IsClickable { get; private set; } = true;
 
@@ -80,8 +82,19 @@ public class BuildingConstruction : MonoBehaviour, IClickable
         propertyBlock = new MaterialPropertyBlock();
     }
 
+    public void Init()
+    {
+        Init(BuildingConstructionData.Default());
+    }
+
     public void Init(BuildingConstructionData data)
     {
+        if (data == null) {
+            Debug.LogError($"[{nameof(BuildingConstruction)}] Building Construction Data is not vaid!");
+            Init();
+            return;
+        }
+
         OnInited(data);
         OnBuildingConstructionInited?.Invoke(this);
     }
@@ -100,13 +113,16 @@ public class BuildingConstruction : MonoBehaviour, IClickable
         }
 
         SetOwnedBuilding(building);
-
-        UpdateWorkerInteractionTransforms();
-        UpdateRaiderInteractionTransforms();
+        interactionPointsHandler.Init();
     }
 
     public virtual void SetOwnedBuilding(Building building)
     {
+        if (building == null) {
+            Debug.LogError($"[{nameof(BuildingConstruction)}] Owned building is not valid!!");
+            return;
+        }
+
         OwnedBuilding = building;
     }
 
@@ -135,84 +151,6 @@ public class BuildingConstruction : MonoBehaviour, IClickable
         foreach (var renderer in meshRendererers) {
             renderer.SetPropertyBlock(propertyBlock);
         }
-    }
-
-    // Interaction
-    public void AssignInteract(CreatureCityNavigator navigator)
-    {
-        if (interactionsDict.ContainsKey(navigator))
-            return;
-
-        interactionsDict.Add(navigator, GetInteractPoint(interactionsDict.Count));
-    }
-
-    public void RemoveInteract(CreatureCityNavigator navigator)
-    {
-        if (!interactionsDict.ContainsKey(navigator))
-            return;
-
-        interactionsDict.Remove(navigator);
-    }
-
-    public void UpdateWorkerInteractionTransforms()
-    {
-        for (int i = 0; i < OwnedBuilding.CitizensHandler.Interactors.Count; i++) {
-            var worker = OwnedBuilding.CitizensHandler.Interactors[i];
-            var navigator = worker.CityNavigator;
-
-            AssignInteract(navigator);
-        }
-    }
-
-    public void UpdateRaiderInteractionTransforms()
-    {
-        for (int i = 0; i < OwnedBuilding.RaidersHandler.Interactors.Count; i++) {
-            var raider = OwnedBuilding.RaidersHandler.Interactors[i];
-            if (!raider) continue;
-
-            var navigator = raider.CityNavigator;
-
-            AssignInteract(navigator);
-        }
-    }
-
-    public void UpdateInteractTransforms()
-    {
-        interactionsList.Clear();
-
-        var keys = interactionsDict.Keys.ToArray();
-        for (int i = 0; i < keys.Length; i++) {
-            if (i >= BuildingInteractions.Length) break;
-
-            var interaction = BuildingInteractions[i];
-            interactionsDict[keys[i]] = interaction;
-            interactionsList.Add(interaction);
-        }
-    }
-
-    public BuildingAction GetInteractPoint(int index)
-    {
-        if (index < 0) {
-            Debug.LogError($"[{nameof(BuildingConstruction)}] Index is negative ({index})!");
-            return null;
-        }
-
-        var actions = BuildingInteractions;
-        if (actions.Length <= 0) {
-            Debug.LogError($"[{nameof(BuildingConstruction)}] Intreactions count is 0 at {name}!");
-            return null;
-        }
-
-        index %= actions.Length;
-        return actions[index];
-    }
-
-    public BuildingAction GetInteractPoint(CreatureCityNavigator navigator)
-    {
-        if (!interactionsDict.ContainsKey(navigator))
-            return null;
-
-        return interactionsDict[navigator];
     }
 
     // IClickable

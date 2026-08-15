@@ -86,17 +86,27 @@ public abstract class Creature : MonoBehaviour
     protected virtual void DetermineNextAction()
     {
         if (ShouldStartIdle()) {
-            Debug.Log("StartIdle");
+            //Debug.Log("StartIdle");
             StartIdle();
+            return;
+        }
+        if (ShouldStopIdle()) {
+            StopIdle();
             return;
         }
     }
 
     protected virtual void StartIdle()
     {
-        movement.TryStopMoving();
         IsIdle = true;
+        movement.TryStopMoving();
         OnIdleStarted?.Invoke();
+    }
+
+    protected virtual void StopIdle()
+    {
+        IsIdle = false;
+        OnIdleStopped?.Invoke();
     }
 
     protected virtual bool ShouldStartIdle()
@@ -141,12 +151,6 @@ public abstract class Creature : MonoBehaviour
         StopIdle();
     }
 
-    protected void StopIdle()
-    {
-        IsIdle = false;
-        OnIdleStopped?.Invoke();
-    }
-
     // Movement
     protected virtual void OnReachedPath()
     {
@@ -175,7 +179,7 @@ public abstract class Creature : MonoBehaviour
 
     private IEnumerator InitNextFrameCoroutine()
     {
-        yield return new WaitForEndOfFrame();
+        yield return null;
 
         HandleInitNextFrame();
     }

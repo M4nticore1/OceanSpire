@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInformationable
@@ -35,10 +36,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     public SkillId SkillId => skillId;
 
     private BuildingCitizensHandler citizensHandler;
-    public BuildingCitizensHandler CitizensHandler => citizensHandler ? citizensHandler : GetComponent<BuildingCitizensHandler>();
+    public BuildingCitizensHandler CitizensHandler => citizensHandler != null ? citizensHandler : GetComponent<BuildingCitizensHandler>();
 
     private BuildingRaidersHandler raidersHandler;
-    public BuildingRaidersHandler RaidersHandler => raidersHandler ? raidersHandler : GetComponent<BuildingRaidersHandler>();
+    public BuildingRaidersHandler RaidersHandler => raidersHandler != null ? raidersHandler : GetComponent<BuildingRaidersHandler>();
 
     public SelectComponent SelectComponent { get; private set; }
 
@@ -62,7 +63,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     public event Action OnWorkStarted;
     public event Action OnWorkStopped;
 
-    public event Action<CreatureCityNavigator> onEnterBuilding;
+    public event Action<CreatureCityNavigator> OnEnteredBuilding;
     public event Action<CreatureCityNavigator> onExitBuilding;
 
     public event Action OnConstructionStarted;
@@ -187,7 +188,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     public void EnterBuilding(CreatureCityNavigator navigator)
     {
         buildingStrategy.OnEntityEnter(navigator);
-        onEnterBuilding?.Invoke(navigator);
+        OnEnteredBuilding?.Invoke(navigator);
     }
 
     public void ExitBuilding(CreatureCityNavigator navigator)
@@ -255,7 +256,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     public int GetUpgradeTime()
     {
-        if (!NextLevelDefinition) return 0;
+        if (NextLevelDefinition == null) return 0;
 
         return NextLevelDefinition.UpgradeTime;
     }
@@ -281,21 +282,21 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     // Information
     public LocalizationItem GetInformationName()
     {
-        if (!Definition) return null;
+        if (Definition == null) return null;
 
         return Definition.NameLocalizationItem;
     }
 
     public LocalizationItem GetInformationDescription()
     {
-        if (!Definition) return null;
+        if (Definition == null) return null;
 
         return Definition.DescriptionLocalizationItem;
     }
 
     public Sprite GetInformationImage()
     {
-        if (!LevelDefinition) return null;
+        if (LevelDefinition == null) return null;
 
         return LevelDefinition.BuildingThumb;
     }
@@ -303,16 +304,16 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     // Construction
     protected virtual void OnConstructionStart()
     {
-        if (!SpawnedConstruction) return;
+        if (SpawnedConstruction == null) return;
 
-        SpawnedConstruction.UpdateInteractTransforms();
+        //SpawnedConstruction.UpdateInteractTransforms();
     }
 
     protected virtual void HandleConstructionComplete()
     {
-        if (!SpawnedConstruction) return;
+        if (SpawnedConstruction == null) return;
 
-        SpawnedConstruction.UpdateInteractTransforms();
+        //SpawnedConstruction.UpdateInteractTransforms();
     }
 
     protected virtual void OnLevelChange()
@@ -325,7 +326,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     {
         for (int i = citizensHandler.CurrentInteractors.Count - 1; i >= 0; i--) {
             var worker = citizensHandler.CurrentInteractors[i];
-            if (!worker) continue;
+            if (worker == null) continue;
 
             var building = worker.InteractComponent.InteractBuilding;
             worker.InteractComponent.RemoveInteractBuilding();
@@ -334,7 +335,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
         for (int i = citizensHandler.Interactors.Count - 1; i >= 0; i--) {
             var worker = citizensHandler.Interactors[i];
-            if (!worker) continue;
+            if (worker == null) continue;
 
             var building = worker.InteractComponent.InteractBuilding;
             worker.InteractComponent.RemoveInteractBuilding();
@@ -344,18 +345,18 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     public BuildingAction GetInteractPoint(int index)
     {
-        if (!SpawnedConstruction) {
+        if (SpawnedConstruction == null) {
             Debug.LogError($"[{nameof(Building)}] Spawned Construction is not valid at {this}!");
             return null;
         }
 
-        return SpawnedConstruction.GetInteractPoint(index);
+        return SpawnedConstruction.InteractionPointsHandler.GetInteractPoint(index);
     }
 
-    public BuildingAction GetInteractPoint(Human human)
+    public BuildingAction GetInteractPoint(CreatureInteractComponent interactor)
     {
-        if (!human) {
-            Debug.LogError($"[{nameof(Building)}] Human is not valid!");
+        if (interactor == null) {
+            Debug.LogError($"[{nameof(Building)}] Interactor is not valid!");
             return null;
         }
         if (buildingStrategy == null) {
@@ -363,7 +364,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
             return null;
         }
 
-        return buildingStrategy.GetInteractPoint(human);
+        return buildingStrategy.GetInteractPoint(interactor);
     }
 
     private void OnWorkerAdded(Human human)
@@ -399,7 +400,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     // Raid
     public bool CanBeRaided()
     {
-        if (!Definition) {
+        if (Definition == null) {
             Debug.LogError($"[{nameof(Building)}] Definition is not valid at {name}");
             return false;
         }
@@ -510,14 +511,14 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     // Audio
     private void PlayWorkSound()
     {
-        if (!workAudioSource) return;
+        if (workAudioSource == null) return;
 
         workAudioSource.Play();
     }
 
     private void StopWorkSound()
     {
-        if (!workAudioSource) return;
+        if (workAudioSource == null) return;
 
         workAudioSource.Stop();
     }
@@ -544,14 +545,14 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     private void UpdateConstruction()
     {
         var constructionToSpawn = GetConstructionToSpawn();
-        if (!constructionToSpawn && buildingData.BuildingId != BuildingIdEnum.FloorFrame) {
+        if (constructionToSpawn == null && buildingData.BuildingId != BuildingIdEnum.FloorFrame) {
             Debug.LogError($"[{nameof(Building)}] Construction To Spawn is not valid at {name}");
             return;
         }
 
         if (constructionToSpawn == SpawnedConstruction) return;
 
-        if (SpawnedConstruction) {
+        if (SpawnedConstruction != null) {
             Destroy(SpawnedConstruction.gameObject);
             SpawnedConstruction = null;
         }
@@ -572,28 +573,4 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         OnConstructionChanged?.Invoke(SpawnedConstruction);
         updateConstructionCoroutine = null;
     }
-
-    //private BuildingAction GetNextAction()
-    //{
-    //    if (!SpawnedConstruction) {
-    //        Debug.LogError("SpawnedConstruction is not valid ", this);
-    //        return null;
-    //    }
-
-    //    var actions = SpawnedConstruction.BuildingInteractions;
-    //    if (actions.Length == 0)
-    //        return null;
-
-    //    var interactorsCount = interactTransformsDict.Values.Count;
-
-    //    var actionIndex = interactorsCount % actions.Length;
-    //    actionIndex = Mathf.Clamp(actionIndex, 0, actionIndex);
-
-    //    var action = actions[actionIndex];
-
-    //    if (action.waypoints == null || action.waypoints.Length == 0)
-    //        return null;
-
-    //    return action.waypoints[0];
-    //}
 }
