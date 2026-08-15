@@ -60,6 +60,7 @@ public class WorldData
     public WandererSystemData WanderersSystem;
     public BuilderEnergyData BuilderEnergy;
     public ReviveSystemData ReviveSystem;
+    public FoodDrainData FoodDrain;
     public WindData Wind;
 
     public static WorldData Create(WorldSaveHandler saveManager,
@@ -79,6 +80,7 @@ public class WorldData
         BuilderEnergyManager constructionEnergy,
         ReviveManager revive,
         FocusManager focusManager,
+        FoodDrainManager foodDtain,
         WindManager wind)
     {
         return new WorldData() {
@@ -112,6 +114,7 @@ public class WorldData
             ReviveSystem = ReviveSystemData.Create(revive),
             BuilderEnergy = BuilderEnergyData.Create(constructionEnergy),
             FocusSystem = FocusSystemData.Create(focusManager),
+            FoodDrain = FoodDrainData.Create(foodDtain),
             Wind = WindData.Create(wind),
         };
     }

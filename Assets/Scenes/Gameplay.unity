@@ -4893,7 +4893,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885055524852335870, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_fontSize
-      value: 57.6
+      value: 56.8
       objectReference: {fileID: 0}
     - target: {fileID: 1908121542683669061, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
@@ -7530,6 +7530,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
   m_PrefabInstance: {fileID: 1311537096}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &494060158
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 494060159}
+  - component: {fileID: 494060160}
+  m_Layer: 0
+  m_Name: FoodDrainLoader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &494060159
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494060158}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2105899119}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &494060160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 494060158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 139ad9285cea02d4da5c45fe6546f69d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FoodDrainLoader
+  foodDrainManager: {fileID: 723582995}
 --- !u!1 &502852315
 GameObject:
   m_ObjectHideFlags: 0
@@ -9614,7 +9659,7 @@ GameObject:
   - component: {fileID: 723582994}
   - component: {fileID: 723582995}
   m_Layer: 0
-  m_Name: FoodDrainSystem
+  m_Name: FoodDrainManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9633,7 +9678,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1317929167}
+  m_Father: {fileID: 2105899119}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &723582995
 MonoBehaviour:
@@ -13235,6 +13280,7 @@ MonoBehaviour:
   constructionEnergyManager: {fileID: 853076771}
   reviveManager: {fileID: 1918364871}
   focusManager: {fileID: 1382970734}
+  foodDrainManager: {fileID: 723582995}
   windManager: {fileID: 954540110}
 --- !u!4 &1040276942
 Transform:
@@ -15039,6 +15085,7 @@ Transform:
   - {fileID: 1445600141}
   - {fileID: 1596085377}
   - {fileID: 180467421}
+  - {fileID: 2105899119}
   - {fileID: 2134108936}
   - {fileID: 122833754}
   m_Father: {fileID: 0}
@@ -15933,7 +15980,6 @@ Transform:
   - {fileID: 1290112043}
   - {fileID: 1262348146}
   - {fileID: 1030270321}
-  - {fileID: 723582994}
   - {fileID: 2049673467}
   - {fileID: 238131042}
   - {fileID: 1518449162}
@@ -23097,6 +23143,39 @@ MonoBehaviour:
   dailyRewardManager: {fileID: 101393569}
   notificationTimeInHours: 12
   notificationDays: 000000000200000006000000
+--- !u!1 &2105899118
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2105899119}
+  m_Layer: 0
+  m_Name: FoodDrain
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2105899119
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2105899118}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 723582994}
+  - {fileID: 494060159}
+  m_Father: {fileID: 1238355532}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2109934042
 GameObject:
   m_ObjectHideFlags: 0
