@@ -242,13 +242,13 @@ public class Raider : Human, IProgressable
     {
         IsRaidingBuilding = true;
         currentRaidBuildingTime = 0f;
-        OnRaidBuildingStarted?.Invoke(CityNavigator.CurrentBuilding);
+        OnRaidBuildingStarted?.Invoke(CityNavigator.EnteredBuilding);
     }
 
     private void StopRaidingBuilding()
     {
         IsRaidingBuilding = false;
-        OnRaidBuildingStopped?.Invoke(CityNavigator.CurrentBuilding);
+        OnRaidBuildingStopped?.Invoke(CityNavigator.EnteredBuilding);
     }
 
     private void FinishRaid()

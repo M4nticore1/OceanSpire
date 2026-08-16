@@ -28,7 +28,7 @@ public class RaidCombatManager : MonoBehaviour
     {
         if (human == null) return;
 
-        var building = human.CityNavigator.CurrentBuilding;
+        var building = human.CityNavigator.EnteredBuilding;
         if (building == null) return;
 
         if (human is Citizen citizen) {

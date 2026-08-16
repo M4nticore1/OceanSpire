@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("Building Modules/Crafting Module")]
-public class CraftingModule : BuildingModule, IElectricible, IRaidable
+public class CraftingModule : BuildingModule, IRaidable
 {
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
 
@@ -23,9 +23,6 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
             return null;
         }
     }
-
-    [SerializeField] private float electricityConsumption = 0f;
-    public float ElectricityConsumption => electricityConsumption;
 
     public List<CraftItemInstance> CraftItems { get; private set; } = new();
     public CraftItemInstance SelectedCraftItem { get; private set; }
@@ -114,7 +111,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
     public void Tick()
     {
-        var isEnergyShortage = energyShortageManager ? energyShortageManager.IsUnderEnergyShortage && electricityConsumption > 0 : false;
+        var isEnergyShortage = energyShortageManager ? energyShortageManager.IsUnderEnergyShortage && OwnedBuilding.GetElectricityConsumption() > 0 : false;
 
         if (IsWorking && !isEnergyShortage) {
             UpdateCraftingTime();
@@ -184,7 +181,7 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
 
         if (SelectedCraftItem == null) return true;
         if (SelectedCraftItem.IsCraftingFinished()) return true;
-        if (energyShortageManager.IsUnderEnergyShortage && electricityConsumption > 0) return true;
+        if (energyShortageManager.IsUnderEnergyShortage && OwnedBuilding.GetElectricityConsumption() > 0) return true;
         if (!IsEnoughResources(SelectedCraftItem.Definition)) return true;
 
         return false;
@@ -390,11 +387,6 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         return true;
     }
 
-    public bool ShouldSpendElectricity()
-    {
-        return IsWorking;
-    }
-
     public int GetIndexOfCurrentCraftItem()
     {
         if (CraftItems.Contains(SelectedCraftItem)) {
@@ -403,11 +395,6 @@ public class CraftingModule : BuildingModule, IElectricible, IRaidable
         else {
             return 0;
         }
-    }
-
-    public float GetElectricityConsumption()
-    {
-        return ElectricityConsumption;
     }
 
     public List<ItemInstance> GetRaidLoot()

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class ConstructionInteractionPointsHandler : MonoBehaviour
@@ -28,7 +27,8 @@ public class ConstructionInteractionPointsHandler : MonoBehaviour
         if (navigator == null) return;
         if (interactorsDict.ContainsKey(navigator)) return;
 
-        interactorsDict.Add(navigator, GetInteractPoint(interactorsDict.Count));
+        var index = GetFirstFreeIndex();
+        interactorsDict.Add(navigator, GetInteractPoint(index));
     }
 
     public void RemoveInteractor(CreatureCityNavigator navigator)
@@ -64,8 +64,8 @@ public class ConstructionInteractionPointsHandler : MonoBehaviour
         }
 
         var actions = buildingConstruction.BuildingInteractions;
-        if (actions.Length <= 0) {
-            Debug.LogError($"[{nameof(ConstructionInteractionPointsHandler)}] Intreactions count is 0 at {name}!");
+        if (actions == null || actions.Length <= 0) {
+            Debug.LogError($"[{nameof(ConstructionInteractionPointsHandler)}] Interactions count is 0 at {name}!");
             return null;
         }
 
@@ -75,11 +75,31 @@ public class ConstructionInteractionPointsHandler : MonoBehaviour
 
     public BuildingAction GetInteractPoint(CreatureCityNavigator navigator)
     {
-        if (!interactorsDict.ContainsKey(navigator)) {
-            //Debug.LogError($"[{nameof(ConstructionInteractionPointsHandler)}] Intreactions doesn't contain {navigator} at {this}!");
-            return null;
-        }
+        if (navigator == null) return null;
+        if (!interactorsDict.ContainsKey(navigator)) return null;
 
         return interactorsDict[navigator];
+    }
+
+    private int GetFirstFreeIndex()
+    {
+        var index = 0;
+
+        while (IsIndexOccupied(index)) {
+            index++;
+        }
+
+        return index;
+    }
+
+    private bool IsIndexOccupied(int index)
+    {
+        foreach (var action in interactorsDict.Values) {
+            if (action == GetInteractPoint(index)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

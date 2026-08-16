@@ -120,7 +120,7 @@ public class Citizen : Human
 
     protected override void SetCombatTarget()
     {
-        var currentBuilding = CityNavigator.CurrentBuilding;
+        var currentBuilding = CityNavigator.EnteredBuilding;
         var currentRaiders = currentBuilding.RaidersHandler.CurrentInteractors;
 
         foreach (var interactor in currentRaiders) {
@@ -170,7 +170,7 @@ public class Citizen : Human
     {
         if (!base.ShouldSetCombatTarget()) return false;
 
-        var currentBuilding = CityNavigator.CurrentBuilding;
+        var currentBuilding = CityNavigator.EnteredBuilding;
         if (!currentBuilding) return false;
 
         if (currentBuilding != InteractComponent.InteractBuilding) return false;

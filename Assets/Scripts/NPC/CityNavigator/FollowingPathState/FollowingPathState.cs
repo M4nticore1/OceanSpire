@@ -15,7 +15,7 @@ public class FollowingPathState : PathState
             return;
         }
 
-        var currentBuilding = cityNavigator.CurrentBuilding;
+        var currentBuilding = cityNavigator.EnteredBuilding;
         if (currentBuilding == targetBuilding) {
             var construction = currentBuilding.SpawnedConstruction;
             if (!construction) {
@@ -38,7 +38,7 @@ public class FollowingPathState : PathState
 
     public override void Exit()
     {
-        var currentBuilding = cityNavigator.CurrentBuilding;
+        var currentBuilding = cityNavigator.EnteredBuilding;
         if (!currentBuilding) return;
 
         var construction = currentBuilding.SpawnedConstruction;

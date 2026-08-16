@@ -13,8 +13,12 @@ public abstract class ElevatorPassengerState
             return;
         }
 
-        this.ElevatorPassenger = elevatorPassenger;
-        EnteredElevator = elevatorPassenger.CityNavigator.CurrentElevator;
+        ElevatorPassenger = elevatorPassenger;
+
+        EnteredElevator = elevatorPassenger.CityNavigator.EnteredElevator;
+        if (EnteredElevator == null && this is not NoneElevatorPassengerState) {
+            Debug.LogError($"[{nameof(ElevatorPassengerState)}] Entered Elevator is not valid!");
+        }
     }
 
     public abstract void Enter();

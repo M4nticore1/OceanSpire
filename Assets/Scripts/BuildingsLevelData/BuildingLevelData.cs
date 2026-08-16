@@ -20,6 +20,9 @@ public abstract class BuildingLevelData : ScriptableObject, ILocalizable
     [SerializeField] private int constructionTime = 0;
     public int UpgradeTime => constructionTime;
 
+    [SerializeField] private float energyConsumption = 0;
+    public float EnergyConsumption => energyConsumption;
+
     [SerializeField] private Sprite buildingThumb;
     public Sprite BuildingThumb => buildingThumb;
 

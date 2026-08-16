@@ -99,7 +99,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
         }
 
         if (interaction.Waypoints == null || interaction.Waypoints.Length == 0) {
-            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] No waypoints in interaction at building {cityNavigator.CurrentBuilding}!");
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] No waypoints in interaction at building {cityNavigator.EnteredBuilding}!");
             return null;
         }
 
@@ -109,7 +109,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
 
         var waypoint = interaction.GetWaypoint(CurrentWaypointIndex);
         if (waypoint == null) {
-            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Waypoint is not valid at {cityNavigator.CurrentBuilding}!");
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Waypoint is not valid at {cityNavigator.EnteredBuilding}!");
             return null;
         }
 
@@ -124,7 +124,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
         var waypointsLength = interaction.Waypoints.Length;
 
         if (waypointsLength == 0) {
-            Debug.LogWarning($"[{nameof(CreatureWaypointsComponent)}] No waypoints in interaction at building {cityNavigator.CurrentBuilding}!");
+            Debug.LogWarning($"[{nameof(CreatureWaypointsComponent)}] No waypoints in interaction at building {cityNavigator.EnteredBuilding}!");
             return;
         }
 
@@ -153,14 +153,14 @@ public class CreatureWaypointsComponent : MonoBehaviour
         var targetBuilding = cityNavigator.TargetBuilding;
         if (targetBuilding == null) return false;
 
-        var currentBuilding = cityNavigator.CurrentBuilding;
+        var currentBuilding = cityNavigator.EnteredBuilding;
         if (currentBuilding == null) return false;
 
         if (currentBuilding != targetBuilding) return false;
 
         var waypoint = GetCurrentWaypoint();
         if (waypoint == null) {
-            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Waypoint is not valid at building {human.CityNavigator.CurrentBuilding}!");
+            Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Waypoint is not valid at building {human.CityNavigator.EnteredBuilding}!");
             return false;
         }
 
@@ -171,7 +171,7 @@ public class CreatureWaypointsComponent : MonoBehaviour
     {
         //if (!cityNavigator.HasPath) return null;
 
-        var currentBuilding = cityNavigator.CurrentBuilding;
+        var currentBuilding = cityNavigator.EnteredBuilding;
         if (currentBuilding == null) {
             //Debug.LogError($"[{nameof(CreatureWaypointsComponent)}] Current Building is not valid at {this}!");
             return null;

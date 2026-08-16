@@ -13,17 +13,22 @@ public class ElectricityDrain : MonoBehaviour
 
         lastCheckTime = Time.timeAsDouble;
 
-        for (int i = 0; i < BuildingsManager.Instance.BuiltFloors.Count; i++) {
-            var floorModule = BuildingsManager.Instance.BuiltFloors[i];
-            var floorBuilding = floorModule.GetComponent<Building>();
+        var floors = BuildingsManager.Instance.BuiltFloors;
+        for (int i = 0; i < floors.Count; i++) {
+            var floorModule = floors[i];
+            if (floorModule == null) continue;
 
+            var floorBuilding = floorModule.OwnedBuilding;
             foreach (var buildingPlace in floorModule.RoomBuildingPlaces) {
-                var building = buildingPlace.PlacedBuilding;
-                if (!building) continue;
+                var placedBuilding = buildingPlace.PlacedBuilding;
+                if (placedBuilding == null) continue;
 
-                foreach (var electricible in building.GetComponents<IElectricible>()) {
-                    if (electricible.ShouldSpendElectricity()) {
-                        currentElectricityToDrain += electricible.GetElectricityConsumption();
+                for (var j = 0; j < placedBuilding.buildingModules.Count; j++) {
+                    var module = placedBuilding.buildingModules[j];
+                    if (module == null) continue;
+
+                    if (module.ShouldSpendElectricity()) {
+                        currentElectricityToDrain += module.GetElectricityConsumption();
                     }
                 }
             }

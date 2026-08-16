@@ -17,7 +17,7 @@ public class CityNavigatorData
     {
         return new CityNavigatorData()
         {
-            EnteredBuildingInstanceId = cityNavigator.CurrentBuilding?.InstanceId.GetGuid(),
+            EnteredBuildingInstanceId = cityNavigator.EnteredBuilding?.InstanceId.GetGuid(),
             TargetBuildingInstanceId = cityNavigator.TargetBuilding?.InstanceId.GetGuid(),
             ElevatorPassenger = ElevatorPassengerData.Create(cityNavigator.ElevatorPassenger),
             Waypoints = CreatureWaypointsComponentData.Create(cityNavigator.WaypointsComponent)

@@ -21,7 +21,7 @@ public class RidingElevatorPassengerState : ElevatorPassengerState
     {
         if (CityNavigator == null) return;
 
-        var currentElevator = CityNavigator.CurrentElevator;
+        var currentElevator = CityNavigator.EnteredElevator;
         if (currentElevator == null) return;
 
         CityNavigator.Movement.SetAgentEnabled(true);

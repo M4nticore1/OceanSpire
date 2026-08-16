@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -95,11 +96,12 @@ public class BuildingConstruction : MonoBehaviour, IClickable
             return;
         }
 
-        OnInited(data);
+        HandleInited(data);
+        StartCoroutine(InitCoroutine());
         OnBuildingConstructionInited?.Invoke(this);
     }
 
-    protected virtual void OnInited(BuildingConstructionData data)
+    protected virtual void HandleInited(BuildingConstructionData data)
     {
         if (data == null) {
             Debug.LogError($"[{nameof(BuildingConstruction)}] BuildingConstruction is not vaid!");
@@ -114,6 +116,11 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
         SetOwnedBuilding(building);
         interactionPointsHandler.Init();
+    }
+
+    protected virtual void HandleInitedEndOfFrame()
+    {
+
     }
 
     public virtual void SetOwnedBuilding(Building building)
@@ -168,5 +175,12 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     public bool ShouldClick()
     {
         return IsClickable;
+    }
+
+    private IEnumerator InitCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+        HandleInitedEndOfFrame();
     }
 }

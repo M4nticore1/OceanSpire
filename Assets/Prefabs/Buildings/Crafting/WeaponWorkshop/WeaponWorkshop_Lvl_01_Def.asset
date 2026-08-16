@@ -21,6 +21,7 @@ MonoBehaviour:
     amount: 600
   maxResidentsCount: 1
   constructionTime: 900
+  energyConsumption: 0.015
   buildingThumb: {fileID: 21300000, guid: 102995cf17d1d9746a4a84ff763ad436, type: 3}
   constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
   constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}

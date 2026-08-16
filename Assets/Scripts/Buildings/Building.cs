@@ -11,10 +11,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     public BuildingDefinition Definition => buildingData;
 
     [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
-    public IReadOnlyList<BuildingLevelData> LevelsData => buildingLevelsData;
+    public IReadOnlyList<BuildingLevelData> LevelsDefinitions => buildingLevelsData;
 
-    public BuildingLevelData LevelDefinition => LevelsData.Count > levelComponent.Level - 1 ? LevelsData[levelComponent.Level - 1] : null;
-    public BuildingLevelData NextLevelDefinition => LevelsData.Count > levelComponent.Level ? LevelsData[levelComponent.Level] : null;
+    public BuildingLevelData LevelDefinition => LevelsDefinitions.Count > levelComponent.Level - 1 ? LevelsDefinitions[levelComponent.Level - 1] : null;
+    public BuildingLevelData NextLevelDefinition => LevelsDefinitions.Count > levelComponent.Level ? LevelsDefinitions[levelComponent.Level] : null;
 
     [SerializeField] private bool isRuined = false;
     public bool IsRuined => isRuined;
@@ -42,6 +42,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     public BuildingRaidersHandler RaidersHandler => raidersHandler != null ? raidersHandler : GetComponent<BuildingRaidersHandler>();
 
     public SelectComponent SelectComponent { get; private set; }
+
+    public List<BuildingModule> buildingModules = new();
 
     [Header("Audio")]
     [SerializeField] protected AudioSource workAudioSource;
@@ -98,6 +100,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         citizensHandler = GetComponent<BuildingCitizensHandler>();
         raidersHandler = GetComponent<BuildingRaidersHandler>();
         SelectComponent = GetComponent<SelectComponent>();
+        buildingModules = GetComponents<BuildingModule>().ToList();
     }
 
     protected virtual void OnEnable()
@@ -343,6 +346,18 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         }
     }
 
+    public int GetInteractIndex(Human human)
+    {
+        if (human as Citizen != null) {
+            return citizensHandler.Interactors.Count;
+        }
+        else if (human as Raider != null) {
+            return raidersHandler.Interactors.Count;
+        }
+
+        return 0;
+    }
+
     public BuildingAction GetInteractPoint(int index)
     {
         if (SpawnedConstruction == null) {
@@ -506,6 +521,14 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
         OnLevelChanged?.Invoke();
         OnBuildingLevelChanged?.Invoke(this);
+    }
+
+    // Energy
+    public float GetElectricityConsumption()
+    {
+        if (LevelDefinition == null) return 0;
+
+        return LevelDefinition.EnergyConsumption;
     }
 
     // Audio

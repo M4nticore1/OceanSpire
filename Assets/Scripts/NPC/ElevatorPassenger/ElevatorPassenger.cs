@@ -40,14 +40,22 @@ public class ElevatorPassenger : MonoBehaviour
         healthComponent.OnDied -= OnDied;
     }
 
+    public void Init()
+    {
+        Init(ElevatorPassengerData.Default());
+    }
+
     public void Init(ElevatorPassengerData elevatorPassengerData)
     {
         if (elevatorPassengerData == null) {
-            Debug.LogError("elevatorPassengerData is not valid", this);
+            Debug.LogError($"[{nameof(ElevatorPassenger)}] ElevatorPassengerData is not valid", this);
+            Init();
             return;
         }
 
-        SetState(elevatorPassengerData.State);
+        if (cityNavigator.EnteredElevator) {
+            SetState(elevatorPassengerData.State);
+        }
     }
 
     public void SetState(ElevatorPassengerStateEnum state)

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class BuildingModule : MonoBehaviour
+public abstract class BuildingModule : MonoBehaviour, IElectricible
 {
     private Building ownedBuilding;
     public Building OwnedBuilding => ownedBuilding ? ownedBuilding : GetComponent<Building>();
@@ -158,6 +158,7 @@ public abstract class BuildingModule : MonoBehaviour
         return false;
     }
 
+    // Working
     public bool TryStartWorking()
     {
         if (!ShouldStartWorking()) return false;
@@ -174,6 +175,20 @@ public abstract class BuildingModule : MonoBehaviour
         return true;
     }
 
+    // Energy
+    public virtual float GetElectricityConsumption()
+    {
+        if (OwnedBuilding == null) return 0;
+
+        return OwnedBuilding.GetElectricityConsumption();
+    }
+
+    public virtual bool ShouldSpendElectricity()
+    {
+        return IsWorking;
+    }
+
+    // Workers
     private void HandleWorkerAdded(Human human)
     {
         TryStartWorking();
@@ -194,6 +209,7 @@ public abstract class BuildingModule : MonoBehaviour
         TryStopWorking();
     }
 
+    // Subscribe
     private bool TrySubscribe()
     {
         if (!ShouldSubscribe()) return false;
@@ -214,6 +230,7 @@ public abstract class BuildingModule : MonoBehaviour
         return true;
     }
 
+    // Working
     private void StartWorking()
     {
         IsWorking = true;

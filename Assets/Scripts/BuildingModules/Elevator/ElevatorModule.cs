@@ -1,11 +1,8 @@
 using UnityEngine;
 
-public class ElevatorModule : BuildingModule, IElectricible
+public class ElevatorModule : BuildingModule
 {
     public ElevatorModuleLevelData ElevatorLevelData => LevelData as ElevatorModuleLevelData;
-
-    [SerializeField] private float electricityConsumption = 0f;
-    public float ElectricityConsumption => electricityConsumption;
 
     [field: SerializeField] public ElevatorCabinConstruction SpawnedElevatorCabin { get; private set; }
 
@@ -145,14 +142,9 @@ public class ElevatorModule : BuildingModule, IElectricible
         return waypoint.Transform;
     }
 
-    public float GetElectricityConsumption()
+    public override bool ShouldSpendElectricity()
     {
-        return electricityConsumption;
-    }
-
-    public bool ShouldSpendElectricity()
-    {
-        return SpawnedElevatorCabin != null && SpawnedElevatorCabin.IsMoving && SpawnedElevatorCabin.FloorIndex == (OwnedBuilding as TowerBuilding).FloorIndex;
+        return SpawnedElevatorCabin != null && SpawnedElevatorCabin.IsMoving;
     }
 
     public void SetCabin(ElevatorCabinConstruction cabin)

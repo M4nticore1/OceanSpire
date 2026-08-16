@@ -10,7 +10,7 @@ public class ExitingElevatorPathState : ElevatorPassengerState
     public override void Enter()
     {
         var cityNavigator = ElevatorPassenger.CityNavigator;
-        var currentBuilding = cityNavigator.CurrentBuilding;
+        var currentBuilding = cityNavigator.EnteredBuilding;
 
         if (currentBuilding == null) {
             Debug.LogError("currentBuilding is not valid");
@@ -30,7 +30,7 @@ public class ExitingElevatorPathState : ElevatorPassengerState
     public override void Exit()
     {
         var cityNavigator = ElevatorPassenger.CityNavigator;
-        var currentBuilding = cityNavigator.CurrentBuilding;
+        var currentBuilding = cityNavigator.EnteredBuilding;
 
         if (currentBuilding == null) return;
 

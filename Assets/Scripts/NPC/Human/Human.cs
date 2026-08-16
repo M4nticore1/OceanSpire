@@ -383,7 +383,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         var interactBuilding = interactComponent != null ? interactComponent.InteractBuilding : null;
         if (interactBuilding == null) return false;
 
-        var currentBuilding = cityNavigator.CurrentBuilding;
+        var currentBuilding = cityNavigator.EnteredBuilding;
         //Debug.Log($"ShouldStartInteracting2 {this} {currentBuilding}");
         if (currentBuilding != interactBuilding) return false;
 
@@ -763,7 +763,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
             }
         }
 
-        if (cityNavigator != null && cityNavigator.CurrentBuilding != null && cityNavigator.CurrentBuilding is TowerBuilding) {
+        if (cityNavigator != null && cityNavigator.EnteredBuilding != null && cityNavigator.EnteredBuilding is TowerBuilding) {
             cityNavigator.SetTargetBuilding(BuildingsManager.Instance.TowerGate);
 
             if (cityNavigator.TryUpdatePathToTargetBuilding()) {
