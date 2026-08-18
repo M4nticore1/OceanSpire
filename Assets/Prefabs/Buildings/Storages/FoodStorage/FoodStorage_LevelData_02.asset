@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c900db7448c54c043813e75863d49d29, type: 3}
+  m_Name: FoodStorage_LevelData_02
+  m_EditorClassIdentifier: Assembly-CSharp::TowerBuildingLevelData
+  resourcesToBuild:
+  - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
+    amount: 5500
+  - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+    amount: 1500
+  - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
+    amount: 250
+  - definition: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+    amount: 500
+  maxResidentsCount: 1
+  constructionTime: 2700
+  energyConsumption: 0
+  buildingThumb: {fileID: 21300000, guid: 1f37b52a3633da94ea0cdd8ed45119af, type: 3}
+  constructionStraightFrame: {fileID: 5687680001791414433, guid: 78326d98f50c21e4ea2037b183f98e39, type: 3}
+  constructionCornerFrame: {fileID: 5687680001791414433, guid: 9d01b2a3a673abd479b80234b794f575, type: 3}
+  constructionStraight: {fileID: 3395891878762895499, guid: 7d8bc485e5f372444bbefefbd61c96b9, type: 3}
+  constructionCorner: {fileID: 3395891878762895499, guid: 9951054f4f688c7498dcbb2a9621aaf1, type: 3}
+  constructionStraightLeft: {fileID: 3395891878762895499, guid: e48eb6ed530227240a83476675f5e68d, type: 3}
+  constructionStraightRight: {fileID: 3395891878762895499, guid: 0f34cc2b07b65b24a9200b42a83f8ae1, type: 3}
+  constructionStraightLeftRight: {fileID: 3395891878762895499, guid: 499a3dc3b9875c947a5198f8d7060f66, type: 3}
+  constructionCornerLeft: {fileID: 3395891878762895499, guid: a7c3cf368ef54e24a874b0a2b98880d3, type: 3}
+  constructionCornerRight: {fileID: 3395891878762895499, guid: 3c17515f60eb8a849856b0407401aedf, type: 3}
+  constructionCornerLeftRight: {fileID: 3395891878762895499, guid: 0659ffa615ccc50419fb035d6a34f8cc, type: 3}
+  constructionStraightUp: {fileID: 0}
+  constructionStraightDown: {fileID: 0}
+  constructionStraightUpDown: {fileID: 0}
+  constructionCornerUp: {fileID: 0}
+  constructionCornerDown: {fileID: 0}
+  constructionCornerUpDown: {fileID: 0}
