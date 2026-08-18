@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class StorageModule : BuildingModule, IRaidable
     public StorageModuleLevelData StorageLevelData => LevelData as StorageModuleLevelData;
 
     private bool IsLimitAdded = false;
+    private Coroutine addAndRemoveLimitCoroutine;
 
     private CityStorage cityStorage => CityStorage.Instance;
 
@@ -76,25 +78,33 @@ public class StorageModule : BuildingModule, IRaidable
 
     private void OnConstructionFinished()
     {
-        if (LastStorageLevelData) {
-            RemoveLimit(LastStorageLevelData);
-        }
-
-        AddLimit(StorageLevelData);
+        RunAddAndRemoveLimitCoroutine();
     }
 
     private void OnUpgradeFinished()
     {
-        if (LastStorageLevelData) {
-            RemoveLimit(LastStorageLevelData);
-        }
-
-        AddLimit(StorageLevelData);
+        RunAddAndRemoveLimitCoroutine();
     }
 
     private void OnDemolished()
     {
         RemoveLimit(StorageLevelData);
+    }
+
+    private void RunAddAndRemoveLimitCoroutine()
+    {
+        if (addAndRemoveLimitCoroutine == null) {
+            addAndRemoveLimitCoroutine = StartCoroutine(AddAndRemoveLimitCoroutine());
+        }
+    }
+
+    private void AddAndRemoveLimit()
+    {
+        AddLimit(StorageLevelData);
+
+        if (LastStorageLevelData) {
+            RemoveLimit(LastStorageLevelData);
+        }
     }
 
     private void AddLimit(StorageModuleLevelData levelData)
@@ -121,5 +131,13 @@ public class StorageModule : BuildingModule, IRaidable
         }
 
         IsLimitAdded = false;
+    }
+
+    private IEnumerator AddAndRemoveLimitCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+        addAndRemoveLimitCoroutine = null;
+        AddAndRemoveLimit();
     }
 }

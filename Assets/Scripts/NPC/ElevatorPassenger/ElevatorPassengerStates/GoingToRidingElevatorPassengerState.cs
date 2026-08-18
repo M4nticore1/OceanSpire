@@ -13,7 +13,6 @@ public class GoingToRidingElevatorPassengerState : ElevatorPassengerState
         if (CityNavigator == null) return;
 
         EnteredElevator.AddGoingToRidingPassenger(ElevatorPassenger);
-        Debug.Log(EnteredElevator.SpawnedElevatorCabin.InteractionPointsHandler.InteractorsDict.Count);
         CityNavigator.Movement.TryMoveTo(EnteredElevator.GetCabinRidingTransform(ElevatorPassenger));
     }
 

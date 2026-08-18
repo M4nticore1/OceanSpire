@@ -133,12 +133,14 @@ MonoBehaviour:
   buildingData: {fileID: 11400000, guid: 5c8d5ba0806af04438ef7f0a03ea0c32, type: 2}
   buildingLevelsData:
   - {fileID: 11400000, guid: b0250122bf7e5904f85ea72ddf233fd9, type: 2}
+  - {fileID: 11400000, guid: 3f7f16e53f406e245a77f4c0c5784224, type: 2}
   isRuined: 0
   constructionComponent: {fileID: 5184340577209235502}
   levelComponent: {fileID: 3623753502408224289}
   upgradeComponent: {fileID: 1543726248379608248}
   instanceId: {fileID: 4146996725171637188}
   skillId: 2
+  buildingModules: []
   workAudioSource: {fileID: 2175774227416732871}
   SpawnedConstruction: {fileID: 0}
   FloorIndex: 0
@@ -157,4 +159,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StorageBuildingModule
   levelsData:
   - {fileID: 11400000, guid: b64cebabe29234740927c9d75dae92d5, type: 2}
+  - {fileID: 11400000, guid: f683d8a49d05c254da4f65bf15d97e0a, type: 2}
   <IsWorking>k__BackingField: 0
