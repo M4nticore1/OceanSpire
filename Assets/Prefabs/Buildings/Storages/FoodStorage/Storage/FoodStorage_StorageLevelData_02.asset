@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stacks:
   - stackEnum: 2
-    amount: 125
+    amount: 75
   - stackEnum: 7
     amount: 25
   raidLossRate: 0.25
