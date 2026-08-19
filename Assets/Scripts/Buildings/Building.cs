@@ -60,6 +60,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     public bool IsInited { get; private set; } = false;
 
     private Coroutine updateConstructionCoroutine;
+    private Coroutine refreshConstructionCoroutine;
 
     public event Action OnInited;
     public event Action OnWorkStarted;
@@ -312,7 +313,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         //SpawnedConstruction.UpdateInteractTransforms();
     }
 
-    protected virtual void HandleConstructionComplete()
+    protected virtual void HandleConstructionRefresh()
     {
         if (SpawnedConstruction == null) return;
 
@@ -477,42 +478,30 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     private void HandleConstructionStarted()
     {
-        RefreshConstructionState();
-
+        RunRefreshConstructionCoroutine();
         OnConstructionStarted?.Invoke();
         OnBuildingConstructionStarted?.Invoke(this);
     }
 
     private void HandleConstructionFinished()
     {
-        RefreshConstructionState();
+        RunRefreshConstructionCoroutine();
         OnConstructionFinished?.Invoke();
         OnBuildingConstructionFinished?.Invoke(this);
     }
 
     private void HandleUpgradeStarted()
     {
-        RefreshConstructionState();
+        RunRefreshConstructionCoroutine();
         OnUpgradeStarted?.Invoke();
         OnBuildingUpgradeStarted?.Invoke(this);
     }
 
     private void HandleUpgradeFinished()
     {
-        RefreshConstructionState();
-
+        RunRefreshConstructionCoroutine();
         OnUpgradeFinished?.Invoke();
         OnBuildingUpgradeFinished?.Invoke(this);
-    }
-
-    private void RefreshConstructionState()
-    {
-        RunUpdateConstructionCoroutine();
-        HandleConstructionComplete();
-
-        if (SelectComponent.IsSelected) {
-            SelectComponent.Select();
-        }
     }
 
     private void HandleLevelChanged()
@@ -592,8 +581,34 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     {
         yield return new WaitForEndOfFrame();
 
+        updateConstructionCoroutine = null;
         UpdateConstruction();
         OnConstructionChanged?.Invoke(SpawnedConstruction);
-        updateConstructionCoroutine = null;
+    }
+
+    // Refresh Construction
+    protected void RunRefreshConstructionCoroutine()
+    {
+        if (refreshConstructionCoroutine == null) {
+            refreshConstructionCoroutine = StartCoroutine(RefreshConstructionCoroutine());
+        }
+    }
+
+    private void RefreshConstruction()
+    {
+        UpdateConstruction();
+        HandleConstructionRefresh();
+
+        if (SelectComponent.IsSelected) {
+            SelectComponent.Select();
+        }
+    }
+
+    private IEnumerator RefreshConstructionCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+        refreshConstructionCoroutine = null;
+        RefreshConstruction();
     }
 }
