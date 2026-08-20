@@ -139,7 +139,7 @@ MonoBehaviour:
   levelComponent: {fileID: 3623753502408224289}
   upgradeComponent: {fileID: 1543726248379608248}
   instanceId: {fileID: 4146996725171637188}
-  skillId: 0
+  skillId: 7
   buildingModules: []
   workAudioSource: {fileID: 2175774227416732871}
   SpawnedConstruction: {fileID: 0}
