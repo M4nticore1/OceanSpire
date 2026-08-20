@@ -55,7 +55,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     public BuildingConstruction SpawnedConstruction;
 
-    public const float DemolishionResourcesRefundPercent = 0.2f;
+    public const float DemolishionResourcesRefundPercent = 0.5f;
 
     public bool IsInited { get; private set; } = false;
 
@@ -176,9 +176,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     {
         instanceId.SetGuid(buildingData.InstanceId);
         UpdateStrategy();
-        constructionComponent.Init(buildingData.Construction);
-        upgradeComponent.Init(buildingData.Upgrade);
+
         levelComponent.Init(buildingData.Level);
+        upgradeComponent.Init(buildingData.Upgrade);
+        constructionComponent.Init(buildingData.Construction);
     }
 
     protected virtual void OnDemolish()

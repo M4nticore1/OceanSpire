@@ -20,7 +20,7 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
     amount: 250
   maxResidentsCount: 1
-  constructionTime: 900
+  constructionTime: 1800
   energyConsumption: 0.007
   buildingThumb: {fileID: 21300000, guid: 28be3b81121e92e4085b378bc9fe3951, type: 3}
   constructionStraightFrame: {fileID: 3395891878762895499, guid: ff055526b28f1e3479c5c23bc91b0e36, type: 3}

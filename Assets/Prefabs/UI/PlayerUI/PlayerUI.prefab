@@ -1346,7 +1346,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7889012030224363213, guid: b06f0c9c060a31a4b8af6346945d7aef, type: 3}
       propertyPath: m_fontSize
-      value: 57.6
+      value: 56.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5945,13 +5945,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6398696040209902730, guid: 06810a6892539c84cbba364a5adfe13e, type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 7388978357352574682}
     - target: {fileID: 7425799172995048621, guid: 06810a6892539c84cbba364a5adfe13e, type: 3}
       propertyPath: m_Name
       value: SpeedUpConstructionMenu
       objectReference: {fileID: 0}
     - target: {fileID: 7425799172995048621, guid: 06810a6892539c84cbba364a5adfe13e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

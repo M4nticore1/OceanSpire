@@ -152,7 +152,6 @@ public class BoatRider : MonoBehaviour
 
     public void HandleBoatSetIdle(Boat boat)
     {
-        Debug.Log("HandleBoatSetIdle");
         OnBoatSetIdle?.Invoke(boat);
     }
 

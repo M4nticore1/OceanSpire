@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 {
+    [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private TextLocalizer buildingName;
     [SerializeField] private TextLocalizer buildingLevel;
     [SerializeField] private TextLocalizer constructionTime;
@@ -19,16 +20,18 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     private void OnEnable()
     {
-        completeButton.OnReleased.AddListener(OnCompleteButtonReleased);
-        closeMenuButton.OnReleased.AddListener(OnCloseMenuButtonClicked);
-        Building.OnBuildingConstructionFinished += OnBuildingConstructionFinished;
+        slidePanel.OnHidden += HandleHidden;
+        completeButton.OnReleased.AddListener(HandleCompleteButtonReleased);
+        closeMenuButton.OnReleased.AddListener(HandleCloseMenuButtonClicked);
+        Building.OnBuildingConstructionFinished += HandleBuildingConstructionFinished;
     }
 
     private void OnDisable()
     {
-        completeButton.OnReleased.RemoveListener(OnCompleteButtonReleased);
-        closeMenuButton.OnReleased.RemoveListener(OnCloseMenuButtonClicked);
-        Building.OnBuildingConstructionFinished -= OnBuildingConstructionFinished;
+        slidePanel.OnHidden -= HandleHidden;
+        completeButton.OnReleased.RemoveListener(HandleCompleteButtonReleased);
+        closeMenuButton.OnReleased.RemoveListener(HandleCloseMenuButtonClicked);
+        Building.OnBuildingConstructionFinished -= HandleBuildingConstructionFinished;
     }
 
     private void Update()
@@ -38,8 +41,10 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
+        if (IsShowed) return;
+
         IsShowed = true;
-        gameObject.SetActive(true);
+        slidePanel.Show();
         InputStateManager.Instance.AddBlockTarget(this);
 
         OnShowed?.Invoke();
@@ -47,30 +52,37 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     public void Show(Building building)
     {
-        if (!building) {
+        if (building == null) {
             Debug.LogError("building is null to open Complete Construction Menu");
             return;
         }
 
         this.building = building;
+
         buildingName.SetLocalizationItem(building.Definition.NameLocalizationItem);
         buildingLevel.SetPlaceHolderLocalization(building);
         constructionTime.SetPlaceHolderLocalization(building);
-
         buildingImage.sprite = building.UpgradeComponent.IsUnderUpgrade ? building.NextLevelDefinition.BuildingThumb : building.LevelDefinition.BuildingThumb;
+
         Show();
     }
 
     public void Hide()
     {
+        slidePanel.Hide();
+    }
+
+    private void HandleHidden()
+    {
+        if (!IsShowed) return;
+
         IsShowed = false;
-        gameObject.SetActive(false);
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
     }
 
-    private void OnCompleteButtonReleased()
+    private void HandleCompleteButtonReleased()
     {
         var reward = new SkipConstructionRewardInstance(null, building.ConstructionComponent);
         if (reward == null) {
@@ -81,13 +93,14 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         RewardedAdsManager.Instance.ShowAd();
     }
 
-    private void OnCloseMenuButtonClicked()
+    private void HandleCloseMenuButtonClicked()
     {
         Hide();
     }
 
-    private void OnBuildingConstructionFinished(Building building)
+    private void HandleBuildingConstructionFinished(Building building)
     {
+        if (building == null) return;
         if (building != this.building) return;
 
         Hide();
