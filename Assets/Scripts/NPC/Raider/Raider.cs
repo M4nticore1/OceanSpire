@@ -153,11 +153,11 @@ public class Raider : Human, IProgressable
     //    return GetCurrentBuildingCombatTarget() != null;
     //}
 
-    protected override void HandleInteractBuildingSeted(Building building)
+    protected override void HandleInteractBuildingSet(Building building)
     {
         building.RaidersHandler.AddInteractor(this);
 
-        base.HandleInteractBuildingSeted(building);
+        base.HandleInteractBuildingSet(building);
     }
 
     protected override void HandleInteractBuildingRemoved(Building building)
@@ -226,6 +226,49 @@ public class Raider : Human, IProgressable
         StopRaidingBuilding();
     }
 
+    // Update boat
+    protected override void UpdateTargetBoat()
+    {
+        var raiderBoats = BoatsManager.Instance.RaiderBoats;
+
+        for (int i = 0; i < raiderBoats.Count; i++) {
+            var boat = raiderBoats[i];
+            if (!boat) {
+                Debug.LogError($"[{nameof(Raider)}] Raider Boat is not valid at index {i}");
+                continue;
+            }
+
+            if (boat.CurrentRider) continue;
+
+            var targetRidet = boat.TargetRider;
+            if (targetRidet && targetRidet != BoatRider) continue;
+
+            BoatRider.TrySetTargetBoat(boat);
+            return;
+        }
+
+        Debug.LogError($"[{nameof(Raider)}] No free raid boats available of {raiderBoats.Count} boats!");
+    }
+
+    protected override void UpdateRidingBoat()
+    {
+        
+    }
+
+    protected override bool ShouldUpdateTargetBoat()
+    {
+        if (!base.ShouldUpdateTargetBoat()) return false;
+        if (!IsRaidFinished) return false;
+
+        return true;
+    }
+
+    protected override bool ShouldUpdateRidingBoat()
+    {
+        return false;
+    }
+
+    // Click
     public override bool ShouldClick()
     {
         return false;
@@ -267,29 +310,6 @@ public class Raider : Human, IProgressable
         }
 
         RaidManager.Instance.AddLosses(interactBuilding.GetRaidResources());
-    }
-
-    private void UpdateTargetBoat()
-    {
-        var raiderBoats = BoatsManager.Instance.RaiderBoats;
-
-        for (int i = 0; i < raiderBoats.Count; i++) {
-            var boat = raiderBoats[i];
-            if (!boat) {
-                Debug.LogError($"[{nameof(Raider)}] Raider Boat is not valid at index {i}");
-                continue;
-            }
-
-            if (boat.CurrentRider) continue;
-
-            var targetRidet = boat.TargetRider;
-            if (targetRidet && targetRidet != BoatRider) continue;
-
-            BoatRider.TrySetTargetBoat(boat);
-            return;
-        }
-
-        Debug.LogError($"[{nameof(Raider)}] No free raid boats available of {raiderBoats.Count} boats!");
     }
 
     //private AttackComponent GetCurrentBuildingCombatTarget()

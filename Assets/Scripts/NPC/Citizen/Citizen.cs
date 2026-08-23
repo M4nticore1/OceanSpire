@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class Citizen : Human
 {
-    public bool IsEvicted { get; private set; } = false;
-    public Vector3 LeavePosition { get; private set; }
+    [Header("Citizen")]
+    [field: SerializeField] public bool IsEvicted { get; private set; } = false;
+    [field: SerializeField] public Vector3 LeavePosition { get; private set; }
 
     public static event Action<Citizen> OnCitizenEvicted;
 
@@ -26,6 +27,8 @@ public class Citizen : Human
     {
         IsEvicted = true;
         LeavePosition = leavePosition;
+
+        InteractComponent.RemoveInteractBuilding();
         BoatRider.TrySetTargetBoat(boat);
 
         AttackComponent.RemoveTarget();
@@ -59,7 +62,7 @@ public class Citizen : Human
     {
         var citizenData = creatureData as CitizenData;
         if (citizenData == null) {
-            Debug.Log($"Citizen Data is not valid", this);
+            Debug.Log($"[{nameof(Citizen)}] Citizen Data is not valid");
             return;
         }
 
@@ -68,10 +71,14 @@ public class Citizen : Human
             LeavePosition = citizenData.EvictData.LeavePosition.Vector3();
         }
         else {
-            Debug.LogError("Evict Data is not valid", this);
+            Debug.LogError($"{nameof(Citizen)}] Evict Data is not valid");
         }
 
         base.HandleInit(creatureData);
+
+        if (IsEvicted) {
+            InteractComponent.RemoveInteractBuilding();
+        }
     }
 
     protected override CreatureData GetDefaultData()
@@ -79,13 +86,9 @@ public class Citizen : Human
         return CitizenData.Default();
     }
 
+    // Actions
     protected override void DetermineNextAction()
     {
-        if (ShouldBoatMoveToDock()) {
-            //Debug.Log("BoatMoveToDock");
-            BoatMoveToDock();
-            return;
-        }
         if (ShouldBoatFindLoot()) {
             //Debug.Log("BoatFindLoot");
             BoatFindLoot();
@@ -136,10 +139,19 @@ public class Citizen : Human
         }
     }
 
+    public override bool ShouldBoatFindLoot()
+    {
+        if (!base.ShouldBoatFindLoot()) return false;
+        if (IsEvicted) return false;
+
+        return true;
+    }
+
     public override bool ShouldBoatMoveToDock()
     {
         if (!base.ShouldBoatMoveToDock()) return false;
-        if (InteractComponent.InteractBuilding && InteractComponent.InteractBuilding.GetComponent<PierModule>()) return false;
+        if (IsEvicted) return true;
+        //if (InteractComponent.InteractBuilding && InteractComponent.InteractBuilding.GetComponent<PierModule>()) return false;
 
         return true;
     }
@@ -150,25 +162,18 @@ public class Citizen : Human
 
         if (!IsEvicted) return false;
         if (!HealthComponent.IsAlive) return false;
-        if (BoatRider.RidingBoat != BoatRider.TargetBoat) return false;
+
+        var ridingBoat = BoatRider.RidingBoat;
+        var targetBoat = BoatRider.TargetBoat;
+        if (ridingBoat != targetBoat) return false;
 
         return true;
     }
 
-    //public override bool ShouldBoatFindLoot()
-    //{
-    //    if (!base.ShouldBoatFindLoot()) return false;
-
-    //    //var ridingBoat = BoatRider.RidingBoat;
-    //    //if (ridingBoat != BoatRider.TargetBoat) return false;
-    //    //if (!ridingBoat.ShouldFindLoot()) return false;
-
-    //    //return true;
-    //}
-
     public override bool ShouldSetCombatTarget()
     {
         if (!base.ShouldSetCombatTarget()) return false;
+        if (IsEvicted) return false;
 
         var currentBuilding = CityNavigator.EnteredBuilding;
         if (!currentBuilding) return false;
@@ -186,11 +191,48 @@ public class Citizen : Human
         return false;
     }
 
-    protected override void HandleInteractBuildingSeted(Building building)
+    // Fix Boat
+    protected override void UpdateTargetBoat()
+    {
+        if (IsEvicted) {
+            BoatRider.TrySetTargetBoat(boatsManager.GetFirstFreeBoat(boatsManager.EvictBoats));
+        }
+        else {
+            BoatRider.TrySetTargetBoat(boatsManager.GetFirstFreeBoat(boatsManager.CitizenBoats));
+        }
+    }
+
+    protected override void UpdateRidingBoat()
+    {
+        
+    }
+
+    protected override bool ShouldUpdateTargetBoat()
+    {
+        if (!base.ShouldUpdateTargetBoat()) return false;
+
+        if (!IsEvicted) {
+            var interactBuilding = InteractComponent.InteractBuilding;
+            if (interactBuilding == null) return false;
+
+            var pierModule = interactBuilding.GetComponent<PierModule>();
+            if (pierModule == null) return false;
+        }
+
+        return true;
+    }
+
+    protected override bool ShouldUpdateRidingBoat()
+    {
+        return false;
+    }
+
+    // Interact Building
+    protected override void HandleInteractBuildingSet(Building building)
     {
         building.CitizensHandler.AddInteractor(this);
 
-        base.HandleInteractBuildingSeted(building);
+        base.HandleInteractBuildingSet(building);
     }
 
     protected override void HandleInteractBuildingRemoved(Building building)
@@ -200,6 +242,7 @@ public class Citizen : Human
         base.HandleInteractBuildingRemoved(building);
     }
 
+    // Interaction
     protected override void HandleInteractionStarted(Building building)
     {
         building.CitizensHandler.AddCurrentInteractor(this);
@@ -214,6 +257,7 @@ public class Citizen : Human
         base.HandleInteractionStopped(building);
     }
 
+    // Dead
     protected override void HandleDied()
     {
         base.HandleDied();
@@ -223,7 +267,7 @@ public class Citizen : Human
         InteractComponent.TryStopInteracting(interactBuilding);
     }
 
-    public bool IsCitizenAvaliable()
+    public bool IsCitizenAvailable()
     {
         if (IsEvicted) return false;
         if (!HealthComponent.IsAlive) return false;

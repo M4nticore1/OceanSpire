@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class WorkersControlMenu : ControlMenu
 {
@@ -18,7 +19,7 @@ public class WorkersControlMenu : ControlMenu
     [SerializeField] private RectTransform scrollRectContent;
     [SerializeField] private FitSizeToChildren fitSizeToChildren;
 
-    private Dictionary<Citizen, CitizenWidget> spawnedWidgets = new();
+    private List<CitizenWidget> spawnedWidgets = new();
     private List<CitizenWidget> spawnedEmptyWidgets = new();
 
     private Building selectedBuilding;
@@ -63,11 +64,11 @@ public class WorkersControlMenu : ControlMenu
 
     protected override void UpdateMenu()
     {
-        if (!creaturesManager) return;
-        if (!selectManager) return;
+        if (creaturesManager == null) return;
+        if (selectManager == null) return;
 
         var selectedBuilding = selectManager.GetSelectedBuilding();
-        if (!selectedBuilding) {
+        if (selectedBuilding == null) {
             Debug.LogError($"[{nameof(WorkersControlMenu)}] SelectedBuilding is not valid");
             return;
         }
@@ -75,7 +76,7 @@ public class WorkersControlMenu : ControlMenu
         int maxWorkersCount = selectedBuilding.LevelDefinition.MaxHumansCount;
         for (int i = spawnedEmptyWidgets.Count - 1; i >= 0; i--) {
             var widget = spawnedEmptyWidgets[i];
-            if (!widget) {
+            if (widget == null) {
                 Debug.LogError($"[{nameof(WorkersControlMenu)}] Spawned Empty Widget is not valid!");
                 continue;
             }
@@ -83,16 +84,20 @@ public class WorkersControlMenu : ControlMenu
             RemoveWidget(widget);
         }
 
-        foreach (var widget in spawnedWidgets.Values) {
-            if (!widget) {
+        for (int i = spawnedWidgets.Count - 1; i >= 0; i--) {
+            var widget = spawnedWidgets[i];
+            if (widget == null) {
                 Debug.LogError($"[{nameof(WorkersControlMenu)}] Spawned Widget is not valid!");
                 continue;
             }
 
             var citizen = widget.Citizen;
-            if (!citizen) continue;
+            if (citizen == null) continue;
 
-            if (!citizen.IsCitizenAvaliable()) continue;
+            if (!citizen.IsCitizenAvailable()) {
+                RemoveWidget(widget);
+                continue;
+            }
 
             var interactBuilding = citizen.InteractComponent.InteractBuilding;
             WorkersPanel targetPanel;
@@ -100,7 +105,7 @@ public class WorkersControlMenu : ControlMenu
             if (interactBuilding == selectedBuilding) {
                 targetPanel = buildingWorkersMenu;
             }
-            else if (interactBuilding) {
+            else if (interactBuilding != null) {
                 targetPanel = employedCitizensMenu;
             }
             else {
@@ -148,11 +153,11 @@ public class WorkersControlMenu : ControlMenu
 
         var buildingSkillId = selectedBuilding.SkillId;
 
-        foreach (var citizenWidget in spawnedWidgets.Values) {
-            if (!citizenWidget) continue;
+        foreach (var citizenWidget in spawnedWidgets) {
+            if (citizenWidget == null) continue;
 
             foreach (var skillWidget in citizenWidget.SkillsPanel.SpawnedSkillWidgets) {
-                if (!skillWidget) continue;
+                if (skillWidget == null) continue;
 
                 skillWidget.SetHighlighted(skillWidget.Skill.SkillDefinition.SkillId == buildingSkillId);
             }
@@ -168,8 +173,8 @@ public class WorkersControlMenu : ControlMenu
 
     private void CreateWidget(Citizen citizen)
     {
-        if (spawnedWidgets.ContainsKey(citizen)) return;
-        if (!citizen.IsCitizenAvaliable()) return;
+        if (citizen == null) return;
+        if (!citizen.IsCitizenAvailable()) return;
 
         var selectedBuilding = selectManager.GetSelectedBuilding();
         WorkersPanel menu = null;
@@ -192,38 +197,25 @@ public class WorkersControlMenu : ControlMenu
         }
 
         var widget = CitizenWidgetFactory.CreateWidget(citizenWidgetPrefab, menu.LayoutGroup.transform, citizen);
-        spawnedWidgets.Add(citizen, widget);
+        spawnedWidgets.Add(widget);
 
         menu.AddWidget(widget);
         menu.SortWidgets();
     }
 
-    private void RemoveWidget(Citizen citizen)
+    private void RemoveWidget(CitizenWidget widget)
     {
-        if (!citizen) return;
-        if (!spawnedWidgets.TryGetValue(citizen, out var citizenWidget)) return;
+        if (widget == null) return;
 
-        RemoveWidget(citizenWidget);
-    }
+        spawnedWidgets.Remove(widget);
+        spawnedEmptyWidgets.Remove(widget);
 
-    private void RemoveWidget(CitizenWidget citizenWidget)
-    {
-        if (!citizenWidget) return;
+        buildingWorkersMenu.RemoveWidget(widget);
+        employedCitizensMenu.RemoveWidget(widget);
+        unemployedCitizensMenu.RemoveWidget(widget);
 
-        var citizen = citizenWidget.Citizen;
-
-        if (citizen != null) {
-            spawnedWidgets.Remove(citizen);
-        }
-
-        spawnedEmptyWidgets.Remove(citizenWidget);
-
-        buildingWorkersMenu.RemoveWidget(citizenWidget);
-        employedCitizensMenu.RemoveWidget(citizenWidget);
-        unemployedCitizensMenu.RemoveWidget(citizenWidget);
-
-        citizenWidget.transform.SetParent(null);
-        Destroy(citizenWidget.gameObject);
+        widget.transform.SetParent(null);
+        Destroy(widget.gameObject);
 
         UpdateWidgetsSort();
     }
@@ -265,7 +257,10 @@ public class WorkersControlMenu : ControlMenu
         var citizen = human as Citizen;
         if (!citizen) return;
 
-        RemoveWidget(citizen);
+        var widget = GetSpawnedWidgetByCitizen(citizen);
+        if (widget == null) return;
+
+        RemoveWidget(widget);
         UpdateMenus();
     }
 
@@ -285,12 +280,22 @@ public class WorkersControlMenu : ControlMenu
 
     private bool ShouldUpdateMenu(Human human)
     {
-        if (!human) return false;
         if (!IsShowed) return false;
+        if (human == null) return false;
 
         var citizen = human as Citizen;
-        if (!citizen) return false;
+        if (citizen == null) return false;
 
         return true;
+    }
+
+    private CitizenWidget GetSpawnedWidgetByCitizen(Citizen citizen)
+    {
+        foreach (var widget in spawnedWidgets) {
+            if (widget == null) continue;
+            if (widget.Citizen == citizen) return widget;
+        }
+
+        return null;
     }
 }

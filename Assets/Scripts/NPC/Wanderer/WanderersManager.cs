@@ -8,6 +8,7 @@ public class WanderersManager : MonoBehaviour
     [Header("Main")]
     [SerializeField] private WandererAdmissionManager wandererAdmissionManager;
     [SerializeField] private CreaturesManager creaturesManager;
+    [SerializeField] private BoatsManager boatsManager;
     [SerializeField] private BoatDocksManager dockPointsManager;
     [SerializeField] private RadioStationsManager radioStationsManager;
     [SerializeField] private CreaturesList creaturesList;
@@ -39,27 +40,27 @@ public class WanderersManager : MonoBehaviour
 
     private void OnEnable()
     {
-        wandererAdmissionManager.OnWandererAccepted += OnWandererAccepted;
-        wandererAdmissionManager.OnWandererRejected += OnWandererRejected;
+        wandererAdmissionManager.OnWandererAccepted += HandleWandererAccepted;
+        wandererAdmissionManager.OnWandererRejected += HandleWandererRejected;
     }
 
     private void OnDisable()
     {
-        wandererAdmissionManager.OnWandererAccepted -= OnWandererAccepted;
-        wandererAdmissionManager.OnWandererRejected -= OnWandererRejected;
+        wandererAdmissionManager.OnWandererAccepted -= HandleWandererAccepted;
+        wandererAdmissionManager.OnWandererRejected -= HandleWandererRejected;
     }
 
     private void OnApplicationFocus(bool focus)
     {
         if (focus) {
-            OnPlayerReturned();
+            HandlePlayerReturned();
         }
     }
 
     private void OnApplicationPause(bool pause)
     {
         if (!pause) {
-            OnPlayerReturned();
+            HandlePlayerReturned();
         }
     }
 
@@ -68,12 +69,12 @@ public class WanderersManager : MonoBehaviour
         if (NextWandererTime == null) return;
 
         var currentTime = GetCurrentTime();
-        var nextWandererTimeWithBonus = GetNextWandererTimeWithBonus();
+        var nextWandererTimeWithBonus = GetNextSpawnTimeWithBonus();
 
         if (nextWandererTimeWithBonus == null) return;
         if (currentTime < nextWandererTimeWithBonus.Value) return;
 
-        if (CanSpawnWanderer()) {
+        if (!AreWanderersFull()) {
             TrySpawnAllWanderers();
         }
         else {
@@ -85,7 +86,7 @@ public class WanderersManager : MonoBehaviour
     {
         var wanderersData = new WandererSystemData()
         {
-            NextWandererTime = GetRandomNextWandererTime()
+            NextWandererTime = GetNextRandomWandererTimeWithBonus()
         };
 
         Init(wanderersData);
@@ -102,19 +103,21 @@ public class WanderersManager : MonoBehaviour
         NextWandererTime = wanderersData.NextWandererTime;
 
         TrySpawnAllWanderers();
-        WarpAllWanderers();
+        DestroyRejectWandereres();
+        DestroyEmpryWandererBoats();
+        WarpWanderers();
         UpdateNextWanderersTime();
     }
 
-    public long GetRandomNextWandererTime()
+    public long GetNextRandomWandererTimeWithBonus()
     {
         var currentTime = GetCurrentTime();
-        var cooldown = GetRandomWandererSpawnCooldown();
+        var cooldown = GetRandomCooldownWithBonus();
 
         return currentTime + cooldown;
     }
 
-    public long? GetNextWandererTimeWithBonus()
+    public long? GetNextSpawnTimeWithBonus()
     {
         if (NextWandererTime == null) return null;
 
@@ -134,25 +137,17 @@ public class WanderersManager : MonoBehaviour
     private bool TrySpawnAllWanderers()
     {
         if (NextWandererTime == null) return false;
-        if (!CanSpawnWanderer()) return false;
 
         var currentTime = GetCurrentTime();
-        bool spawnedAny = false;
+        bool spawned = false;
 
-        while (CanSpawnWanderer()) {
-            var nextWandererTimeWithBonus = GetNextWandererTimeWithBonus();
-
-            if (nextWandererTimeWithBonus == null) break;
-            if (currentTime < nextWandererTimeWithBonus.Value) break;
-
+        while (ShouldSpawnWanderer()) {
             SpawnWanderer();
-            spawnedAny = true;
-
-            NextWandererTime = GetRandomNextWandererTime();
-            currentTime = GetCurrentTime();
+            NextWandererTime += GetRandomCooldownWithBonus();
+            spawned = true;
         }
 
-        return spawnedAny;
+        return spawned;
     }
 
     private void SpawnWanderer()
@@ -174,18 +169,18 @@ public class WanderersManager : MonoBehaviour
 
     private void UpdateNextWanderersTime()
     {
-        if (!CanSpawnWanderer()) {
+        if (AreWanderersFull()) {
             NextWandererTime = null;
             return;
         }
 
         if (NextWandererTime == null) {
-            NextWandererTime = GetRandomNextWandererTime();
+            NextWandererTime = GetNextRandomWandererTimeWithBonus();
             return;
         }
 
         var currentTime = GetCurrentTime();
-        var nextWandererTimeWithBonus = GetNextWandererTimeWithBonus();
+        var nextWandererTimeWithBonus = GetNextSpawnTimeWithBonus();
 
         if (nextWandererTimeWithBonus == null) return;
         if (nextWandererTimeWithBonus.Value > currentTime) return;
@@ -193,11 +188,35 @@ public class WanderersManager : MonoBehaviour
         TrySpawnAllWanderers();
 
         if (NextWandererTime == null) {
-            NextWandererTime = GetRandomNextWandererTime();
+            NextWandererTime = GetNextRandomWandererTimeWithBonus();
         }
     }
 
-    private void WarpAllWanderers()
+    private void DestroyRejectWandereres()
+    {
+        var wanderers = creaturesManager.Wanderers;
+        for (int i = wanderers.Count - 1; i >= 0; i--) {
+            var wanderer = wanderers[i];
+            if (wanderer == null) continue;
+            if (!wanderer.IsRejected) continue;
+
+            Destroy(wanderer.gameObject);
+        }
+    }
+
+    private void DestroyEmpryWandererBoats()
+    {
+        var boats = boatsManager.WandererBoats;
+        for (int i = boats.Count - 1; i >= 0; i--) {
+            var boat = boats[i];
+            if (boat == null) continue;
+            if (boat.CurrentRider != null) continue;
+
+            Destroy(boat.gameObject);
+        }
+    }
+
+    private void WarpWanderers()
     {
         foreach (var wanderer in creaturesManager.Wanderers) {
             if (wanderer == null) continue;
@@ -250,16 +269,16 @@ public class WanderersManager : MonoBehaviour
         }
     }
 
-    private void OnPlayerReturned()
+    private void HandlePlayerReturned()
     {
         if (TrySpawnAllWanderers()) {
-            WarpAllWanderers();
+            WarpWanderers();
         }
 
         UpdateNextWanderersTime();
     }
 
-    private void OnWandererAccepted(Human human)
+    private void HandleWandererAccepted(Human human)
     {
         human.transform.position = spawnArea.GetRandomSpawnPosition();
 
@@ -267,7 +286,7 @@ public class WanderersManager : MonoBehaviour
         UpdateNextWanderersTime();
     }
 
-    private void OnWandererRejected(Human human)
+    private void HandleWandererRejected(Human human)
     {
         UpdateDockPoints();
         UpdateNextWanderersTime();
@@ -340,7 +359,7 @@ public class WanderersManager : MonoBehaviour
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation),
             DockInstanceId = dockPoint.InstanceId.GetGuid(),
-            Status = HumanStatusEnum.Wanderer
+            Status = BoatStatusEnum.Wanderer
         };
 
         return BoatFactory.CreateBoat(boatPrefab, boatData);
@@ -368,7 +387,22 @@ public class WanderersManager : MonoBehaviour
         return dockPointsManager.GetWandererBoatDock(activeWanderersCount);
     }
 
-    private bool CanSpawnWanderer()
+    private bool ShouldSpawnWanderer()
+    {
+        if (AreWanderersFull()) return false;
+        if (!IsWandererTimeReached()) return false;
+
+        return true;
+    }
+
+    private bool IsWandererTimeReached()
+    {
+        if (NextWandererTime == null) return false;
+
+        return GetCurrentTime() >= NextWandererTime.Value;
+    }
+
+    private bool AreWanderersFull()
     {
         if (creaturesManager == null) return false;
         if (creaturesManager.Wanderers == null) return false;
@@ -387,16 +421,23 @@ public class WanderersManager : MonoBehaviour
             activeWanderersCount++;
         }
 
-        if (activeWanderersCount >= dockPointsManager.WandererDockPoints.Count) {
-            return false;
-        }
-
-        return true;
+        return activeWanderersCount >= dockPointsManager.WandererDockPoints.Count;
     }
 
-    private int GetRandomWandererSpawnCooldown()
+    // Cooldown
+    private int GetRandomCooldownWithBonus()
     {
-        return UnityEngine.Random.Range(minWandererSpawnCooldown, maxWandererSpawnCooldown + 1);
+        return UnityEngine.Random.Range(GetMinCooldownTimeWithBonus(), GetMaxCooldownTimeWithBonus() + 1);
+    }
+
+    private int GetMinCooldownTimeWithBonus()
+    {
+        return Mathf.CeilToInt(minWandererSpawnCooldown / GetWandererCooldownSpeedBonus());
+    }
+
+    private int GetMaxCooldownTimeWithBonus()
+    {
+        return Mathf.CeilToInt(maxWandererSpawnCooldown / GetWandererCooldownSpeedBonus());
     }
 
     private float GetWandererCooldownSpeedBonus()

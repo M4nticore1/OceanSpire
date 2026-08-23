@@ -40,7 +40,7 @@ public class StarvationSystem : MonoBehaviour
     private void DamageCitizens()
     {
         foreach (var citizen in CreaturesManager.Instance.Citizens) {
-            if (!citizen.IsCitizenAvaliable()) continue;
+            if (!citizen.IsCitizenAvailable()) continue;
 
             citizen.HealthComponent.RemoveHealth(damagePerSecond * damageFrequence);
         }

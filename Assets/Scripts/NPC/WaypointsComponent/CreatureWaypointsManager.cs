@@ -10,7 +10,7 @@ public class CreatureWaypointsManager : MonoBehaviour
     private void Awake()
     {
         if (Instance) {
-            Debug.LogError("Another CraetureCityNavigatorsManager is alredy on the scene");
+            Debug.LogError($"[{nameof(CreatureWaypointsManager)}] Another CraetureCityNavigatorsManager is alredy on the scene");
             Destroy(gameObject);
             return;
         }
@@ -21,7 +21,7 @@ public class CreatureWaypointsManager : MonoBehaviour
     private void Update()
     {
         foreach (var component in waypointsComponents) {
-            if (!component) {
+            if (component == null) {
                 Debug.LogError($"[{nameof(CreatureWaypointsManager)}] Waypoint Component is not valid!");
                 continue;
             }
@@ -32,6 +32,7 @@ public class CreatureWaypointsManager : MonoBehaviour
 
     public void RegisterComponent(CreatureWaypointsComponent component)
     {
+        if (component == null) return;
         if (waypointsComponents.Contains(component)) return;
 
         waypointsComponents.Add(component);
@@ -39,6 +40,7 @@ public class CreatureWaypointsManager : MonoBehaviour
 
     public void UnregisterComponent(CreatureWaypointsComponent component)
     {
+        if (component == null) return;
         if (!waypointsComponents.Contains(component)) return;
 
         waypointsComponents.Remove(component);

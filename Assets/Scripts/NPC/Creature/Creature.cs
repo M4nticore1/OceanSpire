@@ -32,14 +32,14 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        movement.OnDestinationReached += OnReachedPath;
-        movement.OnMovementStopped += OnMovementStopped;
+        movement.OnDestinationReached += HandleDestinationReached;
+        movement.OnMovementStopped += HandleMovementStopped;
     }
 
     protected virtual void OnDisable()
     {
-        movement.OnDestinationReached -= OnReachedPath;
-        movement.OnMovementStopped -= OnMovementStopped;
+        movement.OnDestinationReached -= HandleDestinationReached;
+        movement.OnMovementStopped -= HandleMovementStopped;
     }
 
     protected virtual void OnDestroy()
@@ -71,7 +71,6 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void HandleInit(CreatureData data)
     {
-        RunDetermineNextActionCoroutine();
         transform.position = data.Position.Vector3();
         transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
 
@@ -80,7 +79,7 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void HandleInitNextFrame()
     {
-
+        DetermineNextAction();
     }
 
     protected virtual void DetermineNextAction()
@@ -152,18 +151,19 @@ public abstract class Creature : MonoBehaviour
     }
 
     // Movement
-    protected virtual void OnReachedPath()
+    protected virtual void HandleDestinationReached()
     {
         UpdateIdle();
     }
 
-    protected virtual void OnMovementStopped()
+    protected virtual void HandleMovementStopped()
     {
         UpdateIdle();
     }
 
     protected void RunDetermineNextActionCoroutine()
     {
+        //Debug.Log("RunDetermineNextActionCoroutine");
         if (determineNextActionCoroutine == null) {
             determineNextActionCoroutine = StartCoroutine(DetermineNextActionCoroutine());
         }

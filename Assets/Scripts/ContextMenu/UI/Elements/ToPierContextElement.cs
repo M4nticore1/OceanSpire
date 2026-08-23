@@ -49,7 +49,7 @@ public class ToPierContextElement : ContextElement
 
         var citizen = rider.GetComponent<Citizen>();
         if (!citizen) return false;
-        if (!citizen.IsCitizenAvaliable()) return false;
+        if (!citizen.IsCitizenAvailable()) return false;
 
         return true;
     }

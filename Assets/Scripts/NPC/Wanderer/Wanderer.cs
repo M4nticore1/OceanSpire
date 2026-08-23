@@ -30,6 +30,11 @@ public class Wanderer : Human
         SelectComponent.SetClickable(false);
 
         base.HandleInit(data);
+    }
+
+    protected override void HandleInitNextFrame()
+    {
+        base.HandleInitNextFrame();
 
         var ridingBoat = BoatRider.RidingBoat;
         if (!ridingBoat) {
@@ -85,6 +90,30 @@ public class Wanderer : Human
         return false;
     }
 
+    // Update Boat
+    protected override void UpdateTargetBoat()
+    {
+
+    }
+
+    protected override void UpdateRidingBoat()
+    {
+        BoatRider.SetRidingBoat(boatsManager.GetFirstFreeBoat(boatsManager.WandererBoats));
+    }
+
+    protected override bool ShouldUpdateTargetBoat()
+    {
+        return false;
+    }
+
+    protected override bool ShouldUpdateRidingBoat()
+    {
+        if (!base.ShouldUpdateRidingBoat()) return false;
+
+        return true;
+    }
+
+    // Boat
     protected override void HandleEnteredBoat(Boat boat)
     {
         base.HandleEnteredBoat(boat);

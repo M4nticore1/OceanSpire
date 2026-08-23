@@ -438,7 +438,7 @@ public class RaidManager : MonoBehaviour
         var raiders = creaturesManager.Raiders;
         foreach (var raider in raiders) {
             if (raider == null) continue;
-            if (raider != null && !raider.IsRaidFinished && !raider.BoatRider.RidingBoat) return true;
+            if (!raider.IsRaidFinished) return true;
         }
 
         return false;
@@ -505,7 +505,7 @@ public class RaidManager : MonoBehaviour
             Position = new Vector3Data(position),
             Rotation = new Vector3Data(rotation.eulerAngles),
             DockInstanceId = dockPoint.InstanceId.GetGuid(),
-            Status = HumanStatusEnum.Raider
+            Status = BoatStatusEnum.Raider
         };
 
         return BoatFactory.CreateBoat(boatPrefab, data);

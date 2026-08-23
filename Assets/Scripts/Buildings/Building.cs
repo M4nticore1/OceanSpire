@@ -576,6 +576,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         };
 
         SpawnedConstruction = ConstructionFactory.CreateConstruction(constructionToSpawn, transform, data);
+        OnConstructionChanged?.Invoke(SpawnedConstruction);
     }
 
     private IEnumerator UpdateConstructionCoroutine()
@@ -584,7 +585,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
         updateConstructionCoroutine = null;
         UpdateConstruction();
-        OnConstructionChanged?.Invoke(SpawnedConstruction);
     }
 
     // Refresh Construction

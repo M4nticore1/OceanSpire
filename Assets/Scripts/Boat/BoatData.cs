@@ -8,7 +8,7 @@ public class BoatData
     public BoatIdEnum Id = 0;
     public Guid InstanceId = Guid.NewGuid();
     public Guid? DockInstanceId = null;
-    public HumanStatusEnum Status = HumanStatusEnum.Citizen;
+    public BoatStatusEnum Status = BoatStatusEnum.Citizen;
     public BoatStateEnum State = BoatStateEnum.Idle;
     public InventoryData InventoryData = InventoryData.Default();
     public Vector3Data Position = Vector3Data.Zero();

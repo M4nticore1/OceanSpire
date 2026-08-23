@@ -811,6 +811,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WanderersManager
   wandererAdmissionManager: {fileID: 624742860}
   creaturesManager: {fileID: 220072952}
+  boatsManager: {fileID: 1934078805}
   dockPointsManager: {fileID: 1711846142}
   radioStationsManager: {fileID: 281772852}
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
@@ -820,8 +821,8 @@ MonoBehaviour:
   - {fileID: 8411686280589987336, guid: 649b0985789fc6c42bd0c217a9a1f0d5, type: 3}
   - {fileID: 7660346723931557201, guid: 301f8de32aed5d94f9a8a91d01f584c2, type: 3}
   boatPrefab: {fileID: 8804275003585880861, guid: d0ad1226837183441b6e694aa3c9279b, type: 3}
-  minWandererSpawnCooldown: 900
-  maxWandererSpawnCooldown: 2700
+  minWandererSpawnCooldown: 1800
+  maxWandererSpawnCooldown: 3600
   spawnArea: {fileID: 40920800}
 --- !u!4 &61009885 stripped
 Transform:
@@ -18864,7 +18865,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1634320636
 Transform:
   m_ObjectHideFlags: 0
@@ -21310,6 +21311,7 @@ MonoBehaviour:
   citizenBoats: []
   wandererBoats: []
   raiderBoats: []
+  evictBoats: []
 --- !u!1001 &1941474180
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22459,8 +22461,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f06fe61b7098b2146a7f57b9763df44e, type: 2}
   - {fileID: 11400000, guid: cab8b74954853c24480473f9ce175af9, type: 2}
   weaponDamageThreshold: 0.1
-  minRaidCooldown: 1800
-  maxRaidCooldown: 3600
+  minRaidCooldown: 3600
+  maxRaidCooldown: 7200
   tryFindNextBuildingFrequency: 5
   <RaidCooldownTime>k__BackingField: 0
   <TimeSinceLastRaid>k__BackingField: 0

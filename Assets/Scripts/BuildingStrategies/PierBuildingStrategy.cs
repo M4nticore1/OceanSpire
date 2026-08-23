@@ -68,13 +68,14 @@ public class PierBuildingStrategy : BuildingStrategy
     public override BuildingAction GetInteractPoint(CreatureInteractComponent interactor)
     {
         var boatRider = interactor.GetComponent<BoatRider>();
-        if (!boatRider) {
+        if (boatRider == null) {
             Debug.LogError($"[{nameof(PierBuildingStrategy)}] Boat Rider is not valid!");
             return null;
         }
 
         int? index = 0;
         var targetBoat = boatRider.TargetBoat;
+        if (targetBoat != null && targetBoat.CurrentStatus != BoatStatusEnum.Citizen) return null;
 
         if (targetBoat != null) {
             index = BoatsManager.Instance.CitizenBoats.ToList().IndexOf(targetBoat);
@@ -160,35 +161,38 @@ public class PierBuildingStrategy : BuildingStrategy
 
     private int? GetFirstFreeBoatIndex(BoatRider boatRider)
     {
+        if (boatRider == null) return null;
         var citizenBoats = BoatsManager.Instance.CitizenBoats;
+
         for (int i = 0; i < citizenBoats.Count; i++) {
             var boat = citizenBoats[i];
             if (boat == null) continue;
 
+            var targetRider = boat.TargetRider;
             var currentRider = boat.CurrentRider;
-            if (currentRider != null) {
-                var currentCitizen = currentRider.GetComponent<Citizen>();
-                if (currentCitizen.InteractComponent != null && currentCitizen.InteractComponent.InteractBuilding?.gameObject == pier.gameObject) {
-                    continue;
-                }
-            }
+
+            if (targetRider == boatRider)
+                return i;
+
+            if (targetRider == null && currentRider == null)
+                return i;
+        }
+
+        for (int i = 0; i < citizenBoats.Count; i++) {
+            var boat = citizenBoats[i];
+            if (boat == null) continue;
 
             var targetRider = boat.TargetRider;
-            if (targetRider != null) {
-                if (targetRider != null) {
-                    if (targetRider != boatRider) continue;
-                    return i;
-                }
+            var currentRider = boat.CurrentRider;
 
-                var targetCitizen = targetRider.GetComponent<Citizen>();
-                if (targetCitizen != null) {
-                    if (targetCitizen.InteractComponent != null && targetCitizen.InteractComponent.InteractBuilding?.gameObject == pier.gameObject) {
-                        continue;
-                    }
-                }
-            }
+            if (currentRider == boatRider && targetRider == null)
+                return i;
 
-            return i;
+            if (currentRider == null && targetRider == boatRider)
+                return i;
+
+            if (targetRider == null)
+                return i;
         }
 
         return null;

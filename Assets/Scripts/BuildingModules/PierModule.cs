@@ -14,6 +14,15 @@ public class PierModule : BuildingModule
     [SerializeField] private BoatDocksManager boatDocksManager;
     [SerializeField] private Boat citizenBoatPrefab;
 
+    protected override void Start()
+    {
+        base.Start();
+
+        CreateBoats();
+        UpdateBoatDocks();
+        UpdateBoatPositions();
+    }
+
     protected override void Subscribe()
     {
         base.Subscribe();
@@ -58,7 +67,7 @@ public class PierModule : BuildingModule
                 Position = new Vector3Data(position),
                 Rotation = new Vector3Data(rotation.eulerAngles),
                 DockInstanceId = boatDock.InstanceId.GetGuid(),
-                Status = HumanStatusEnum.Citizen
+                Status = BoatStatusEnum.Citizen
             };
 
             var boat = BoatFactory.CreateBoat(citizenBoatPrefab, boatData);

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public enum BoatStateEnum
 {
@@ -17,6 +16,14 @@ public enum BoatStateEnum
     Demolished
 }
 
+public enum BoatStatusEnum
+{
+    Citizen,
+    Wanderer,
+    Raider,
+    Evicted
+}
+
 public class Boat : MonoBehaviour, IClickable, ILocalizable
 {
     [Header("Main")]
@@ -26,7 +33,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     [field: SerializeField] public BoatStateEnum CurrentStateEnum { get; private set; }
     public BoatState CurrentState { get; private set; }
 
-    [field: SerializeField] public HumanStatusEnum CurrentStatus { get; private set; }
+    [field: SerializeField] public BoatStatusEnum CurrentStatus { get; private set; }
 
     [field: SerializeField] public BoatRider CurrentRider { get; private set; }
     [field: SerializeField] public BoatRider TargetRider { get; private set; }
@@ -135,20 +142,15 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         CurrentState.Tick();
     }
 
-    public void Init()
-    {
-        Init(BoatData.Default() ?? new BoatData());
-    }
-
     public void Init(BoatData boatData)
     {
         if (boatData == null) {
             Debug.LogError($"[{nameof(Boat)}] BoatData is not valid");
-            Init();
+            Destroy(gameObject);
             return;
         }
 
-        CurrentStatus = boatData.Status;
+        SetStatus(boatData.Status);
 
         instanceId.SetGuid(boatData.InstanceId);
         inventory.Init(boatData.InventoryData);
@@ -166,7 +168,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
             }
         }
 
-        FixDockPoint();
+        UpdateDockPoint();
         SetState(boatData.State);
 
         transform.position = boatData.Position.Vector3();
@@ -177,6 +179,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         UpdateClickable();
         UpdateContextMenuTarget();
         TryDestroyBoat();
+
         updateStateCoroutine = StartCoroutine(UpdateStateCoroutine());
     }
 
@@ -232,6 +235,11 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
     public void SetTargetRider(BoatRider rider)
     {
+        if (rider == null) {
+            Debug.LogError($"[{nameof(rider)}] Target Rider is not valid!");
+            return;
+        }
+
         TargetRider = rider;
 
         UpdateClickable();
@@ -280,33 +288,34 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         }
     }
 
-    private void FixDockPoint()
+    private void UpdateDockPoint()
     {
         if (DockPoint != null) return;
         if (CurrentStateEnum == BoatStateEnum.FloatingAway) return;
 
         int index = 0;
-        BoatDockPoint dock;
+        BoatDockPoint dock = null;
 
-        if (CurrentStatus == HumanStatusEnum.Citizen) {
+        if (CurrentStatus == BoatStatusEnum.Citizen) {
             index = Array.IndexOf(boatsManager.CitizenBoats.ToArray(), this);
             dock = boatDocksManager.GetCitizenBoatDock(index);
-            if (dock != null) {
-                SetDockPoint(dock);
-            }
         }
-        else if (CurrentStatus == HumanStatusEnum.Wanderer) {
+        else if (CurrentStatus == BoatStatusEnum.Wanderer) {
             index = Array.IndexOf(boatsManager.WandererBoats.ToArray(), this);
             dock = boatDocksManager.GetWandererBoatDock(index);
-            if (dock != null) {
-                SetDockPoint(dock);
-            }
         }
-        else if (CurrentStatus == HumanStatusEnum.Raider) {
+        else if (CurrentStatus == BoatStatusEnum.Raider) {
             dock = BoatDockUtils.GetNearestFreeDockPoint(boatDocksManager.RaiderDockPoints, transform.position);
-            if (dock != null) {
-                SetDockPoint(dock);
-            }
+        }
+        else if (CurrentStatus == BoatStatusEnum.Evicted) {
+            dock = BoatDockUtils.GetNearestFreeDockPoint(boatDocksManager.EvictDockPoints, transform.position);
+        }
+
+        if (dock != null) {
+            SetDockPoint(dock);
+        }
+        else {
+            Debug.LogError($"[{nameof(Boat)}] Boat Dock to fix is not valid!");
         }
     }
 
@@ -319,7 +328,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
     private bool ShouldDestroyBoat()
     {
-        if (CurrentStatus == HumanStatusEnum.Citizen && DockPoint == null) {
+        if (CurrentStatus == BoatStatusEnum.Citizen && DockPoint == null) {
             var currentCitizen = CurrentRider != null ? CurrentRider.GetComponent<Citizen>() : null;
             if (currentCitizen == null || !currentCitizen.IsEvicted) return true;
         }
@@ -455,7 +464,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     {
         if (CurrentStateEnum == BoatStateEnum.CollectingLoot && TargetDriftingLoot != null) return false;
         if (CurrentStateEnum == BoatStateEnum.UnloadingLoot && inventory.Items.Count > 0) return false;
-        if (CurrentState as FindingLootBoatState != null) return false;
+        //if (CurrentState as FindingLootBoatState != null) return false;
 
         if (CurrentRider == null) return false;
 
@@ -464,7 +473,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         var citizen = CurrentRider.GetComponent<Citizen>();
         if (citizen == null) return false;
-        if (!citizen.IsCitizenAvaliable()) return false;
+        if (!citizen.IsCitizenAvailable()) return false;
 
         var interactBuilding = citizen.InteractComponent.InteractBuilding;
         if (interactBuilding == null) return false;
@@ -534,8 +543,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     public bool ShouldClick()
     {
         if (!IsClickable) return false;
-        if (CurrentStatus == HumanStatusEnum.Raider) return false;
-        if (CurrentStatus == HumanStatusEnum.Wanderer && movement.IsMoving) return false;
+        if (CurrentStatus == BoatStatusEnum.Raider) return false;
+        if (CurrentStatus == BoatStatusEnum.Wanderer && movement.IsMoving) return false;
 
         return true;
     }
@@ -583,19 +592,16 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     // Clickable
     private void UpdateClickable()
     {
-        if (CurrentStatus == HumanStatusEnum.Citizen) {
-            var targetCitizen = TargetRider != null ? TargetRider.GetComponent<Citizen>() : null;
-            var ridingCitizen = CurrentRider != null ? CurrentRider.GetComponent<Citizen>() : null;
-
-            bool targetCondition = targetCitizen != null ? !targetCitizen.IsEvicted : true;
-            bool ridingCondition = ridingCitizen != null ? !ridingCitizen.IsEvicted : true;
-
-            SetClickable(targetCondition && ridingCondition);
+        if (CurrentStatus == BoatStatusEnum.Citizen) {
+            SetClickable(true);
         }
-        else if (CurrentStatus == HumanStatusEnum.Wanderer) {
+        else if (CurrentStatus == BoatStatusEnum.Wanderer) {
             SetClickable(!movement.IsMoving);
         }
-        else if (CurrentStatus == HumanStatusEnum.Raider) {
+        else if (CurrentStatus == BoatStatusEnum.Raider) {
+            SetClickable(false);
+        }
+        else if (CurrentStatus == BoatStatusEnum.Evicted) {
             SetClickable(false);
         }
     }
@@ -608,7 +614,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         bool targetCondition = targetCitizen != null ? !targetCitizen.IsEvicted : true;
         bool ridingCondition = ridingCitizen != null ? !ridingCitizen.IsEvicted : true;
 
-        contextMenuTarget.SetShowContextMenu(CurrentStatus == HumanStatusEnum.Citizen && targetCondition && ridingCondition);
+        contextMenuTarget.SetShowContextMenu(CurrentStatus == BoatStatusEnum.Citizen && targetCondition && ridingCondition);
     }
 
     // Inventory
@@ -624,5 +630,13 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         UpdateBoatState();
         updateStateCoroutine = null;
+    }
+
+    // Status
+    private void SetStatus(BoatStatusEnum status)
+    {
+        boatsManager.UnregisterBoat(this);
+        CurrentStatus = status;
+        boatsManager.RegisterBoat(this);
     }
 }

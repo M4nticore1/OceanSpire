@@ -172,6 +172,8 @@ public class BoatRider : MonoBehaviour
         SetRidingBoat(boat);
 
         movement.SetAgentEnabled(false);
+        movement.SetUseRotation(false);
+
         boat.SetCurrentRider(this);
 
         transform.position = boat.SeatSlot.position;
@@ -211,6 +213,7 @@ public class BoatRider : MonoBehaviour
 
         movement.NavAgent.Warp(transform.position);
         movement.SetAgentEnabled(true);
+        movement.SetUseRotation(true);
 
         var lastRidingBoat = RidingBoat;
         RemoveRidingBoat();

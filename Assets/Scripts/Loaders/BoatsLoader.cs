@@ -96,7 +96,7 @@ public class BoatsLoader : WorldLoader
                 Position = new Vector3Data(position),
                 Rotation = new Vector3Data(rotation),
                 DockInstanceId = dockId,
-                Status = HumanStatusEnum.Citizen
+                Status = BoatStatusEnum.Citizen
             };
 
             BoatFactory.CreateBoat(prefab, boatData);

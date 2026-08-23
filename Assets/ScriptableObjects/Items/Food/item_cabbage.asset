@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: 11
   itemCategory: 2
   stack: 7
-  weight: 3
+  weight: 5
   nameLocalizationItem: {fileID: 11400000, guid: 9065ef487a14aa346ab7cdbee720c14f, type: 2}
   descriptionLocalizationItem: {fileID: 11400000, guid: f7bdd8d2d57e75943b901b47ddbadd0c, type: 2}
   itemIcon: {fileID: 21300000, guid: fd9be96fa602bbc41ab999a6de4cfc48, type: 3}

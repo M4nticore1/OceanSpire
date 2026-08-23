@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
 
 public enum MovementMethod
 {
@@ -14,10 +13,10 @@ public class Movement : MonoBehaviour
     [SerializeField] private NavMeshAgent navAgent;
     public NavMeshAgent NavAgent => navAgent;
 
-    public Vector3? TargetPosition { get; private set; }
+    [field: SerializeField] public bool IsMoving { get; private set; } = false;
 
-    public bool UseTargetRotation { get; private set; }
-    public Quaternion TargetRotation { get; private set; } = Quaternion.identity;
+    public Vector3? TargetPosition { get; private set; } = null;
+    public Quaternion? TargetRotation { get; private set; } = null;
 
     public MovementMethod CurrentMovementMethod { get; private set; }
 
@@ -25,7 +24,9 @@ public class Movement : MonoBehaviour
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
 
-    [field: SerializeField] public bool IsMoving { get; private set; }
+    [Header("Rotation")]
+    [field: SerializeField] public bool UseTargetRotation { get; private set; } = true;
+    [SerializeField] private float rotationSpeed = 1f;
 
     private MovementManager movementManager => MovementManager.Instance;
 
@@ -52,11 +53,11 @@ public class Movement : MonoBehaviour
 
     public void Tick()
     {
-        if (!IsMoving) return;
-
-        if (IsDestinationReached()) {
+        if (IsMoving && IsDestinationReached()) {
             TryStopMoving();
         }
+
+        ProcessRotation();
     }
 
     public void Move(Vector3 direction, float speed)
@@ -88,6 +89,7 @@ public class Movement : MonoBehaviour
         navAgent.enabled = enabled;
     }
 
+    // Move To
     public bool TryMoveTo(Transform target)
     {
         if (target == null) {
@@ -136,6 +138,7 @@ public class Movement : MonoBehaviour
         return true;
     }
 
+    // Stop
     public bool TryStopMoving()
     {
         if (!CanStopMoving()) return false;
@@ -155,6 +158,7 @@ public class Movement : MonoBehaviour
         return true;
     }
 
+    // Check
     public bool CanStartMoving()
     {
         if (!navAgent) return false;
@@ -217,14 +221,27 @@ public class Movement : MonoBehaviour
         );
     }
 
+    // Rotation
+    private void ProcessRotation()
+    {
+        if (!UseTargetRotation) return;
+        if (TargetRotation == null) return;
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, TargetRotation.Value, rotationSpeed * Time.deltaTime);
+    }
+
     private void SetTargetRotation(Quaternion value)
     {
         TargetRotation = value;
-        UseTargetRotation = true;
     }
 
     private void RemoveTargetRotation()
     {
-        UseTargetRotation = false;
+        TargetRotation = null;
+    }
+
+    public void SetUseRotation(bool value)
+    {
+        UseTargetRotation = value;
     }
 }

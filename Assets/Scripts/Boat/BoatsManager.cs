@@ -18,6 +18,9 @@ public class BoatsManager : MonoBehaviour
     [SerializeField] private List<Boat> raiderBoats = new();
     public IReadOnlyList<Boat> RaiderBoats => raiderBoats;
 
+    [SerializeField] private List<Boat> evictBoats = new();
+    public IReadOnlyList<Boat> EvictBoats => evictBoats;
+
     private void Awake()
     {
         if (Instance) {
@@ -38,14 +41,17 @@ public class BoatsManager : MonoBehaviour
     public void RegisterBoat(Boat boat)
     {
         switch (boat.CurrentStatus) {
-            case HumanStatusEnum.Citizen:
+            case BoatStatusEnum.Citizen:
                 RegisterBoat(citizenBoats, boat);
                 break;
-            case HumanStatusEnum.Wanderer:
+            case BoatStatusEnum.Wanderer:
                 RegisterBoat(wandererBoats, boat);
                 break;
-            case HumanStatusEnum.Raider:
+            case BoatStatusEnum.Raider:
                 RegisterBoat(raiderBoats, boat);
+                break;
+            case BoatStatusEnum.Evicted:
+                RegisterBoat(evictBoats, boat);
                 break;
         }
     }
@@ -53,16 +59,33 @@ public class BoatsManager : MonoBehaviour
     public void UnregisterBoat(Boat boat)
     {
         switch (boat.CurrentStatus) {
-            case HumanStatusEnum.Citizen:
+            case BoatStatusEnum.Citizen:
                 UnregisterBoat(citizenBoats, boat);
                 break;
-            case HumanStatusEnum.Wanderer:
+            case BoatStatusEnum.Wanderer:
                 UnregisterBoat(wandererBoats, boat);
                 break;
-            case HumanStatusEnum.Raider:
+            case BoatStatusEnum.Raider:
                 UnregisterBoat(raiderBoats, boat);
                 break;
+            case BoatStatusEnum.Evicted:
+                UnregisterBoat(evictBoats, boat);
+                break;
         }
+    }
+
+    public Boat GetFirstFreeBoat(IReadOnlyList<Boat> boatsList)
+    {
+        if (boatsList == null) return null;
+
+        foreach (var boat in boatsList) {
+            if (boat.TargetRider != null) continue;
+            if (boat.CurrentRider != null) continue;
+
+            return boat;
+        }
+
+        return null;
     }
 
     private void RegisterBoat(List<Boat> boatsList, Boat boat)

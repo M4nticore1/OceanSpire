@@ -9,7 +9,7 @@ public class CitizensManager : MonoBehaviour
         var count = 0;
         foreach (var citizen in creaturesManager.Citizens) {
             if (!citizen) continue;
-            if (!citizen.IsCitizenAvaliable()) continue;
+            if (!citizen.IsCitizenAvailable()) continue;
 
             count++;
         }
