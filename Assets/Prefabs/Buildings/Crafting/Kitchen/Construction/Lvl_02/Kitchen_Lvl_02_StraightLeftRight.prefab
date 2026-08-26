@@ -278,7 +278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CraftingModuleConstructionVFXController
   buildingConstruction: {fileID: 3395891878762895499}
-  vfx: {fileID: 0}
+  vfx: {fileID: 5829787370462549133}
 --- !u!114 &3395891878762895499 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7469822553162115358, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
@@ -355,5 +355,10 @@ PrefabInstance:
 --- !u!4 &351604823889816347 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6409988229791710226, guid: 5890f4faa794c1c4185239e121de5f94, type: 3}
+  m_PrefabInstance: {fileID: 6635487717321824009}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5829787370462549133 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 932927189342864260, guid: 5890f4faa794c1c4185239e121de5f94, type: 3}
   m_PrefabInstance: {fileID: 6635487717321824009}
   m_PrefabAsset: {fileID: 0}

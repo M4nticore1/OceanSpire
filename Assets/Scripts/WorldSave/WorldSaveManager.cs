@@ -19,6 +19,7 @@ public class WorldSaveManager : MonoBehaviour
     [SerializeField] private ReviveManager reviveManager;
     [SerializeField] private FocusManager focusManager;
     [SerializeField] private FoodDrainManager foodDrainManager;
+    [SerializeField] private EnergyDrainManager energyDrainManager;
     [SerializeField] private WindManager windManager;
 
     public void SaveWorld()
@@ -41,6 +42,7 @@ public class WorldSaveManager : MonoBehaviour
             reviveManager,
             focusManager,
             foodDrainManager,
+            energyDrainManager,
             windManager);
 
         WorldSaveSystem.SaveWorld(worldData);

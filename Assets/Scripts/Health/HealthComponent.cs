@@ -52,7 +52,7 @@ public class HealthComponent : MonoBehaviour, ILocalizable
 
     public void SetCurrentHealth(float value)
     {
-        currentHealth = value;
+        currentHealth = Mathf.Clamp(value, 0, maxHealth);
         OnHealthChanged?.Invoke();
 
         if (ShouldDie()) {
@@ -67,9 +67,9 @@ public class HealthComponent : MonoBehaviour, ILocalizable
     {
         return new Dictionary<string, string>()
         {
-            { "currentHealth", Mathf.Ceil(CurrentHealth).ToString() },
-            { "maxHealth", Mathf.Ceil(MaxHealth).ToString() },
-            { "currentHealthPercent", MaxHealth > 0? Mathf.Ceil(CurrentHealth / MaxHealth * 100).ToString(): "0" },
+            { "currentHealth", Mathf.Max(Mathf.CeilToInt(CurrentHealth), maxHealth).ToString() },
+            { "maxHealth", Mathf.Max(Mathf.CeilToInt(MaxHealth), maxHealth).ToString() },
+            { "currentHealthPercent", MaxHealth > 0 ? Mathf.CeilToInt(CurrentHealth / MaxHealth * 100).ToString(): "0" },
         };
     }
 

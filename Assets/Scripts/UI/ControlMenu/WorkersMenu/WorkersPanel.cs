@@ -6,19 +6,14 @@ using UnityEngine.UI;
 public class WorkersPanel : MonoBehaviour
 {
     [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private FitSizeToChildren fitSizeToChildren;
 
     [SerializeField] private GridLayoutGroup layoutGroup;
     public GridLayoutGroup LayoutGroup => layoutGroup;
 
     [SerializeField] private GameObject haveNoCitizensText;
 
-    private Vector2? startSize = null;
     private List<CitizenWidget> spawnedWidgets = new();
-
-    private void Awake()
-    {
-        startSize = rectTransform.sizeDelta;
-    }
 
     private void Start()
     {
@@ -27,46 +22,51 @@ public class WorkersPanel : MonoBehaviour
 
     public void UpdateMenu()
     {
-        if (startSize == null) return;
+        if (!gameObject.activeSelf) return;
+        if (!gameObject.activeInHierarchy) return;
 
-        if (layoutGroup.transform.childCount == 0) {
-            rectTransform.sizeDelta = startSize.Value;
-        }
-        else {
-            layoutGroup.GetComponent<RectTransform>().ForceUpdateRectTransforms();
-            float ySize = startSize.Value.y + (LayoutGroupUtils.GetRowsCount(layoutGroup) * layoutGroup.cellSize.y);
-            rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, ySize);
-        }
+        //if (layoutGroup.transform.childCount == 0) {
+        //    rectTransform.sizeDelta = startSize.Value;
+        //}
+        //else {
+        //    fitSizeToChildren.UpdateSize();
+        //}
 
         if (haveNoCitizensText) {
             haveNoCitizensText.SetActive(layoutGroup.transform.childCount == 0);
         }
     }
 
-    public void SortWidgets()
+    public void SortWidgets(Building building)
     {
+        if (building == null) return;
+
         if (!gameObject.activeSelf) return;
         if (!gameObject.activeInHierarchy) return;
 
-        var selectedBuilding = SelectManager.Instance.SelectedComponent?.GetComponent<Building>();
-        if (!selectedBuilding) {
-            Debug.LogError($"[{nameof(WorkersPanel)}] Selected Building is not valid!");
-            return;
-        }
-
-        var sortedWidgets = spawnedWidgets.Where(w => w && w.Citizen).OrderByDescending(w => w.Citizen.SkillsComponent?.GetSkill(selectedBuilding.SkillId)?.CurrentLevel ?? 0).ToList();
+        var sortedWidgets = spawnedWidgets.Where(w => w && w.Citizen).OrderByDescending(w => w.Citizen.SkillsComponent?.GetSkill(building.SkillId)?.CurrentLevel ?? 0).ToList();
         for (int i = 0; i < sortedWidgets.Count; i++) {
             sortedWidgets[i].transform.SetSiblingIndex(i);
         }
     }
 
+    public void UpdateSize()
+    {
+        fitSizeToChildren.UpdateSize();
+    }
+
     public void AddWidget(CitizenWidget widget)
     {
+        if (widget == null) return;
+        if (spawnedWidgets.Contains(widget)) return;
+
         spawnedWidgets.Add(widget);
+        fitSizeToChildren.AddIncludedTransform(widget.gameObject);
     }
 
     public void RemoveWidget(CitizenWidget widget)
     {
         spawnedWidgets.Remove(widget);
+        fitSizeToChildren.RemoveIncludedTransform(widget.gameObject);
     }
 }

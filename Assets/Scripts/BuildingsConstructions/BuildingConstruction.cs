@@ -56,6 +56,7 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
     public bool IsClickable { get; private set; } = true;
 
+    public event Action OnInit;
     public event Action OnClicked;
 
     public static event Action<BuildingConstruction> OnBuildingConstructionInited;
@@ -98,6 +99,8 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
         HandleInited(data);
         StartCoroutine(InitCoroutine());
+
+        OnInit?.Invoke();
         OnBuildingConstructionInited?.Invoke(this);
     }
 

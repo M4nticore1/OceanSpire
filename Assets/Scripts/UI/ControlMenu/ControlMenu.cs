@@ -1,15 +1,26 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public abstract class ControlMenu : MonoBehaviour, IOpenable
 {
+    [Header("Main")]
     [SerializeField] private GameObject content;
     [SerializeField] private CustomButton closeButton;
+
+    [Header("Target Info")]
+    [SerializeField] private TextLocalizer targetNameText;
+    [SerializeField] private TextLocalizer targetDescriptionText;
 
     public bool IsShowed { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
+
+    protected virtual void Awake()
+    {
+
+    }
 
     private void OnEnable()
     {
@@ -23,12 +34,12 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
 
     protected virtual void Subscribe()
     {
-        closeButton.OnReleased.AddListener(OnCloseButtonClicked);
+        closeButton.OnReleased.AddListener(HandleCloseButtonClicked);
     }
 
     protected virtual void Unsubscribe()
     {
-        closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
+        closeButton.OnReleased.RemoveListener(HandleCloseButtonClicked);
     }
 
     protected virtual bool ShouldSubscribe()
@@ -45,7 +56,6 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
     {
         IsShowed = true;
         content.SetActive(true);
-        UpdateMenu();
 
         InputStateManager.Instance.AddBlockTarget(this);
         OnShow();
@@ -64,13 +74,39 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
         OnHidden?.Invoke();
     }
 
-    protected abstract void OnShow();
+    protected virtual void OnShow()
+    {
+        UpdateMenu();
+        UpdateTargetNameText();
+        UpdateTargetDescriptionText();
+    }
 
-    protected abstract void OnHide();
+    protected virtual void OnHide()
+    {
+
+    }
 
     protected abstract void UpdateMenu();
 
-    private void OnCloseButtonClicked()
+    protected abstract ILocalizable GetTargetNameText();
+
+    protected abstract ILocalizable GetTargetDescriptionText();
+
+    private void UpdateTargetNameText()
+    {
+        if (targetNameText == null) return;
+
+        targetNameText.SetPlaceHolderLocalization(GetTargetNameText());
+    }
+
+    private void UpdateTargetDescriptionText()
+    {
+        if (targetDescriptionText == null) return;
+
+        targetDescriptionText.SetPlaceHolderLocalization(GetTargetDescriptionText());
+    }
+
+    private void HandleCloseButtonClicked()
     {
         Hide();
     }

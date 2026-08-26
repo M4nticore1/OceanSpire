@@ -21,7 +21,7 @@ public class SelectEquipmentWidget : EquipmentWidget
 
     protected override string GetAmountText(EquipmentDefinition definition)
     {
-        if (!definition) return null;
+        if (definition == null) return null;
 
         var amount = CityStorage.Instance.Inventory.GetItem(definition.ItemId).Amount;
         return amount.ToString();
@@ -29,7 +29,7 @@ public class SelectEquipmentWidget : EquipmentWidget
 
     protected override void OnClicked()
     {
-        selectEquipmentMenu.Open(EquipmentCategory);
+        selectEquipmentMenu.Show(EquipmentCategory);
     }
 
     private void OnEquipmentComponentEquiped(EquipmentComponent equipmentComponent)

@@ -6,6 +6,13 @@ public class BoatProgressDisplayController : ProgressDisplayController
 
     private IProgressable currentProgressable;
 
+    public override void Tick()
+    {
+        base.Tick();
+
+        UpdateProgress();
+    }
+
     protected override void Subscribe()
     {
         boat.OnStateEntered += OnBoatStateEntered;
@@ -18,23 +25,18 @@ public class BoatProgressDisplayController : ProgressDisplayController
         boat.OnStateExited -= OnBoatStateExited;
     }
 
-    private void Update()
-    {
-        UpdateProgress();
-    }
-
     private void UpdateProgress()
     {
-        if (currentProgressable == null) return;
-
-        ProgressDisplay.SetProgress(currentProgressable.GetProgress());
+        if (currentProgressable != null) {
+            ProgressDisplay.SetProgress(currentProgressable.GetProgress());
+        }
     }
 
     private void OnBoatStateEntered(BoatState state)
     {
         if (state is IProgressable progressable) {
             currentProgressable = progressable;
-            ProgressDisplay.Display();
+            ProgressDisplay.Show();
             UpdateProgress();
         }
     }

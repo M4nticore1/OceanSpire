@@ -3,16 +3,22 @@ using UnityEngine.UI;
 
 public class ProgressDisplay : MonoBehaviour
 {
-    [SerializeField] GameObject root;
-    [SerializeField] Image progressImage;
+    [SerializeField] private GameObject root;
+    [SerializeField] private Image progressImage;
 
-    public void Display()
+    private bool isShown => root.activeSelf;
+
+    public void Show()
     {
+        if (isShown) return;
+
         root.SetActive(true);
     }
 
     public void Hide()
     {
+        if (!isShown) return;
+
         root.SetActive(false);
     }
 

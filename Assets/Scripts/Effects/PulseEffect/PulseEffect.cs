@@ -6,13 +6,20 @@ public class PulseEffect : MonoBehaviour
     [SerializeField] private float pulseSpeed = 1f;
 
     private Vector3 startScale;
+    private PulseEffectsManager pulseEffectsManager => PulseEffectsManager.Instance;
+
+    private void OnDestroy()
+    {
+        pulseEffectsManager.UnregisterEffect(this);
+    }
 
     private void Start()
     {
+        pulseEffectsManager.RegisterEffect(this);
         startScale = transform.localScale;
     }
 
-    private void Update()
+    public void Tick()
     {
         float t = (Mathf.Sin(Time.time * pulseSpeed) + 1f) / 2f;
         float scaleMultiplier = t * pulseIntensity;

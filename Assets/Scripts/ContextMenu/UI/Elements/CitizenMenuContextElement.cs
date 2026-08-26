@@ -5,15 +5,17 @@ public class CitizenMenuContextElement : ContextElement
     [Header("Citizen")]
     [SerializeField] private CitizenMenu citizenMenu;
 
+    private Citizen citizen;
+
     protected override void OnButtonClicked()
     {
-        citizenMenu.Show();
+        citizenMenu.Show(citizen);
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)
     {
-        var citizen = target.GetComponent<Citizen>();
-        if (!citizen) return false;
+        citizen = target.GetComponent<Citizen>();
+        if (citizen == null) return false;
 
         return true;
     }

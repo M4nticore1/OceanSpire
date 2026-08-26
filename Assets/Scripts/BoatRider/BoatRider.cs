@@ -225,11 +225,16 @@ public class BoatRider : MonoBehaviour
     public bool TrySetTargetBoat(Boat boat)
     {
         if (boat == null) {
-            Debug.LogError("Boat is not valid. Use RemoveTargetBoat method instead of this.");
+            Debug.LogError($"[{nameof(BoatRider)}] Boat is not valid. Use RemoveTargetBoat method instead of this.");
             return false;
         }
 
         if (boat == TargetBoat) return false;
+
+        var lastTargetRider = TargetBoat != null ? TargetBoat.TargetRider : null;
+        if (lastTargetRider != null && lastTargetRider == this) {
+            TargetBoat.RemoveTargetRider(this);
+        }
 
         StopWaitingForBoat();
 
@@ -251,7 +256,7 @@ public class BoatRider : MonoBehaviour
         var boat = TargetBoat;
 
         TargetBoat = null;
-        boat.RemoveTargetRider();
+        boat.RemoveTargetRider(this);
 
         OnTargetBoatRemoved?.Invoke(boat);
     }

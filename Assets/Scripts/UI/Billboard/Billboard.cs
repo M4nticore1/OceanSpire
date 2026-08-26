@@ -23,12 +23,13 @@ public class Billboard : MonoBehaviour
 
     public void Tick()
     {
-        if (!cam) return;
+        if (cam == null) return;
 
         transform.LookAt(cam.transform.position, cam.transform.up);
+        transform.Rotate(0f, 180f, 0f);
 
         if (useParentRotation) {
-            if (!transform.parent) return;
+            if (transform.parent == null) return;
 
             transform.rotation *= transform.parent.rotation;
         }

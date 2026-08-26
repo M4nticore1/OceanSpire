@@ -10,7 +10,7 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
 
     private void Update()
     {
-        if (!building) return;
+        if (building == null) return;
         if (!building.ConstructionComponent.GetUnderConstruction()) return;
 
         localizer.UpdateText();
@@ -37,7 +37,7 @@ public class SelectedBuildingLevelDisplay : SelectedDisplay
         if (!selectComponent) return false;
 
         building = selectComponent.GetComponent<Building>();
-        if (!building) return false;
+        if (building == null) return false;
 
         return true;
     }

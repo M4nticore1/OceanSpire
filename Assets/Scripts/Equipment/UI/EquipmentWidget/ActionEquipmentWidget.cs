@@ -1,5 +1,4 @@
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class ActionEquipmentWidget : EquipmentWidget
@@ -43,7 +42,7 @@ public class ActionEquipmentWidget : EquipmentWidget
     protected override void OnClicked()
     {
         var human = SelectManager.Instance.GetSelectedHuman();
-        if (!human) {
+        if (human == null) {
             Debug.Log($"Human not found at {name}");
             return;
         }
@@ -59,9 +58,9 @@ public class ActionEquipmentWidget : EquipmentWidget
     private void UpdateSelected(EquipmentDefinition definition)
     {
         var citizen = SelectManager.Instance.GetSelectedHuman();
-        if (!citizen) return;
+        if (citizen == null) return;
 
-        bool showSelect = citizen.WeaponComponent.EquipmentDefinition == definition || (citizen.WeaponComponent.EquipedDefaultEquipement() && definition == null);
+        var showSelect = citizen.WeaponComponent.EquipmentDefinition == definition || (citizen.WeaponComponent.EquipedDefaultEquipement() && definition == null);
         if (!showSelect) return;
 
         Button.SetState(CustomButtonState.Selected);
@@ -70,7 +69,7 @@ public class ActionEquipmentWidget : EquipmentWidget
 
     protected override string GetAmountText(EquipmentDefinition definition)
     {
-        if (!definition) return null;
+        if (definition == null) return null;
 
         var selectedCitizen = SelectManager.Instance.GetSelectedHuman();
         int amount = CityStorage.Instance.Inventory.GetItem(definition.ItemId).Amount;

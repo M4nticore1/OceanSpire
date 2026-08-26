@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SelectEquipmentMenu : UIBehaviour
+public class SelectEquipmentMenu : ControlMenu
 {
-    [SerializeField] private GameObject content;
+    [Header("Select Equipment Menu")]
     [SerializeField] private ActionEquipmentWidget equipmentWidgetPrefab;
     [SerializeField] private GridLayoutGroup layoutGroup;
     [SerializeField] private SelectGroup selectGroup;
@@ -13,17 +12,30 @@ public class SelectEquipmentMenu : UIBehaviour
     private EquipmentCategory equipmentCategory;
     private List<ActionEquipmentWidget> spawnedWidgets = new();
 
-    public void Open(EquipmentCategory category)
-    {
-        content.SetActive(true);
+    private Human selectedHuman;
 
-        equipmentCategory = category;
-        UpdateMenu(category);
+    protected override void UpdateMenu()
+    {
+
     }
 
-    public void Close()
+    protected override ILocalizable GetTargetNameText()
     {
-        content.SetActive(false);
+        return selectedHuman;
+    }
+
+    protected override ILocalizable GetTargetDescriptionText()
+    {
+        return null;
+    }
+
+    public void Show(EquipmentCategory category)
+    {
+        selectedHuman = SelectManager.Instance.GetSelectedHuman();
+        equipmentCategory = category;
+
+        UpdateMenu(category);
+        Show();
     }
 
     private void UpdateMenu(EquipmentCategory category)

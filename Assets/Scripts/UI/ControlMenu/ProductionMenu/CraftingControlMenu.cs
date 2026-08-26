@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class CraftingControlMenu : ControlMenu
 {
+    [Header("Crafting Menu")]
     [SerializeField] private CraftItemPanel producedResourcePanelPrefab;
     private List<CraftItemPanel> spawnedCraftResourcePanels = new();
 
@@ -13,21 +14,34 @@ public class CraftingControlMenu : ControlMenu
     [SerializeField] private SelectGroup selectGroup;
     [SerializeField] private FitSizeToChildren fitSizeToChildren;
 
-    protected override void OnShow()
-    {
-
-    }
-
-    protected override void OnHide()
-    {
-
-    }
+    private Building building;
 
     protected override void UpdateMenu()
     {
         DestroyCraftWidgets();
         CreateCraftWidgets();
         FitLayoutGroupSize();
+    }
+
+    protected override ILocalizable GetTargetNameText()
+    {
+        return building;
+    }
+
+    protected override ILocalizable GetTargetDescriptionText()
+    {
+        return building;
+    }
+
+    public void Show(Building building)
+    {
+        if (building == null) {
+            Debug.LogError($"[{nameof(EquipmentMenu)}] Building is not valid!");
+            return;
+        }
+
+        this.building = building;
+        Show();
     }
 
     private void CreateCraftWidgets()
@@ -87,6 +101,6 @@ public class CraftingControlMenu : ControlMenu
         yield return new WaitForEndOfFrame();
 
         scrollRect.verticalNormalizedPosition = 1f;
-        fitSizeToChildren.UpdateSize();
+        fitSizeToChildren.UpdateSizeDelay();
     }
 }

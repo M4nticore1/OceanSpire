@@ -240,14 +240,19 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
             return;
         }
 
-        TargetRider = rider;
+        if (rider == TargetRider) return;
 
+        TargetRider = rider;
         UpdateClickable();
         UpdateContextMenuTarget();
     }
 
-    public void RemoveTargetRider()
+    public void RemoveTargetRider(BoatRider rider)
     {
+        if (TargetRider == null) return;
+        if (rider == null) return;
+        if (rider != TargetRider) return;
+
         TargetRider = null;
 
         UpdateClickable();

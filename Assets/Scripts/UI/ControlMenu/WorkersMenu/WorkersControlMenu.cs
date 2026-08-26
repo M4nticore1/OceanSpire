@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class WorkersControlMenu : ControlMenu
 {
-    [Header("Workers")]
+    public static WorkersControlMenu Instance { get; private set; }
+
+    [Header("Workers Menu")]
     [Header("Main")]
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private SelectManager selectManager;
@@ -22,7 +23,20 @@ public class WorkersControlMenu : ControlMenu
     private List<CitizenWidget> spawnedWidgets = new();
     private List<CitizenWidget> spawnedEmptyWidgets = new();
 
-    private Building selectedBuilding;
+    private Building currentBuilding;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (Instance != null) {
+            Debug.LogError($"[{nameof(WorkersControlMenu)}] There's another Workers Control Menu on the scene!");
+            Destroy(gameObject);
+        }
+        else {
+            Instance = this;
+        }
+    }
 
     protected override void Subscribe()
     {
@@ -50,16 +64,19 @@ public class WorkersControlMenu : ControlMenu
 
     protected override void OnShow()
     {
-        selectedBuilding = selectManager.SelectedComponent?.GetComponent<Building>();
+        base.OnShow();
 
         UpdateMenu();
         UpdateWidgetsSort();
         UpdateWidgetsHighlight();
+
+        UpdatePanelSizes();
+        UpdateScrollRect();
     }
 
     protected override void OnHide()
     {
-
+        base.OnHide();
     }
 
     protected override void UpdateMenu()
@@ -67,13 +84,12 @@ public class WorkersControlMenu : ControlMenu
         if (creaturesManager == null) return;
         if (selectManager == null) return;
 
-        var selectedBuilding = selectManager.GetSelectedBuilding();
-        if (selectedBuilding == null) {
-            Debug.LogError($"[{nameof(WorkersControlMenu)}] SelectedBuilding is not valid");
+        if (currentBuilding == null) {
+            Debug.LogError($"[{nameof(WorkersControlMenu)}] Current Building is not valid");
             return;
         }
 
-        int maxWorkersCount = selectedBuilding.LevelDefinition.MaxHumansCount;
+        int maxWorkersCount = currentBuilding.LevelDefinition.MaxHumansCount;
         for (int i = spawnedEmptyWidgets.Count - 1; i >= 0; i--) {
             var widget = spawnedEmptyWidgets[i];
             if (widget == null) {
@@ -102,7 +118,7 @@ public class WorkersControlMenu : ControlMenu
             var interactBuilding = citizen.InteractComponent.InteractBuilding;
             WorkersPanel targetPanel;
 
-            if (interactBuilding == selectedBuilding) {
+            if (interactBuilding == currentBuilding) {
                 targetPanel = buildingWorkersMenu;
             }
             else if (interactBuilding != null) {
@@ -129,7 +145,27 @@ public class WorkersControlMenu : ControlMenu
         buildingWorkersMenu.UpdateMenu();
         employedCitizensMenu.UpdateMenu();
         unemployedCitizensMenu.UpdateMenu();
-        UpdateScrollRect();
+    }
+
+    protected override ILocalizable GetTargetNameText()
+    {
+        return currentBuilding;
+    }
+
+    protected override ILocalizable GetTargetDescriptionText()
+    {
+        return currentBuilding;
+    }
+
+    public void Show(Building building)
+    {
+        if (building == null) {
+            Debug.LogError($"[{nameof(WorkersControlMenu)}] Building is not valid!");
+            return;
+        }
+
+        currentBuilding = building;
+        Show();
     }
 
     private void UpdateScrollRect()
@@ -137,21 +173,28 @@ public class WorkersControlMenu : ControlMenu
         fitSizeToChildren.UpdateSize();
     }
 
+    private void UpdatePanelSizes()
+    {
+        buildingWorkersMenu.UpdateSize();
+        employedCitizensMenu.UpdateSize();
+        unemployedCitizensMenu.UpdateSize();
+    }
+
     private void UpdateWidgetsSort()
     {
         //buildingWorkersMenu.SortWidgets();
-        employedCitizensMenu.SortWidgets();
-        unemployedCitizensMenu.SortWidgets();
+        employedCitizensMenu.SortWidgets(currentBuilding);
+        unemployedCitizensMenu.SortWidgets(currentBuilding);
     }
 
     private void UpdateWidgetsHighlight()
     {
-        if (!selectedBuilding) {
+        if (!currentBuilding) {
             Debug.LogError($"[{nameof(WorkersControlMenu)}] Selected Building is not valid!");
             return;
         }
 
-        var buildingSkillId = selectedBuilding.SkillId;
+        var buildingSkillId = currentBuilding.SkillId;
 
         foreach (var citizenWidget in spawnedWidgets) {
             if (citizenWidget == null) continue;
@@ -200,7 +243,7 @@ public class WorkersControlMenu : ControlMenu
         spawnedWidgets.Add(widget);
 
         menu.AddWidget(widget);
-        menu.SortWidgets();
+        menu.SortWidgets(currentBuilding);
     }
 
     private void RemoveWidget(CitizenWidget widget)
@@ -246,7 +289,7 @@ public class WorkersControlMenu : ControlMenu
     private void OnHumanInited(Human human)
     {
         var citizen = human as Citizen;
-        if (!citizen) return;
+        if (citizen == null) return;
 
         CreateWidget(citizen);
         UpdateMenus();

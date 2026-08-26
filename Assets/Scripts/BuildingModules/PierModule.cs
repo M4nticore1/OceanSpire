@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 
 public class PierModule : BuildingModule
@@ -123,5 +122,87 @@ public class PierModule : BuildingModule
                 boat.transform.rotation = dockPoint.DockTransform.rotation;
             }
         }
+    }
+
+    public void UpdatePierWorkersBoats()
+    {
+        foreach (var worker in OwnedBuilding.CitizensHandler.Interactors) {
+            if (worker == null) continue;
+
+            var boatRider = worker.GetComponent<BoatRider>();
+            if (boatRider == null) return;
+
+            TryAssignFreeBoat(boatRider);
+        }
+    }
+
+    public void TryAssignFreeBoat(BoatRider boatRider)
+    {
+        if (boatRider == null) {
+            Debug.LogError($"[{nameof(PierBuildingStrategy)}] Boat Rider is not valid!");
+            return;
+        }
+
+        var boat = GetFirstFreeBoat(boatRider);
+        if (boat == null) {
+            Debug.LogError($"[{nameof(PierBuildingStrategy)}] Free Boat is not valid for {boatRider}!");
+            return;
+        }
+
+        boatRider.TrySetTargetBoat(boat);
+    }
+
+    public Boat GetFirstFreeBoat(BoatRider boatRider)
+    {
+        var index = GetFirstFreeBoatIndex(boatRider);
+        if (index == null) return null;
+
+        return BoatsManager.Instance.CitizenBoats[index.Value];
+    }
+
+    public int? GetFirstFreeBoatIndex(BoatRider boatRider)
+    {
+        if (boatRider == null) return null;
+        var citizenBoats = BoatsManager.Instance.CitizenBoats;
+
+        for (int i = 0; i < citizenBoats.Count; i++) {
+            var boat = citizenBoats[i];
+            if (boat == null) continue;
+
+            var targetRider = boat.TargetRider;
+            var currentRider = boat.CurrentRider;
+
+            if (targetRider != null && targetRider != boatRider) continue;
+
+            if (boat == boatRider.TargetBoat)
+                return i;
+
+            if (targetRider == boatRider)
+                return i;
+
+            if (targetRider == null && currentRider == null)
+                return i;
+        }
+
+        for (int i = 0; i < citizenBoats.Count; i++) {
+            var boat = citizenBoats[i];
+            if (boat == null) continue;
+
+            var targetRider = boat.TargetRider;
+            var currentRider = boat.CurrentRider;
+
+            if (targetRider != null && targetRider != boatRider) continue;
+
+            if (currentRider == boatRider && targetRider == null)
+                return i;
+
+            if (currentRider == null && targetRider == boatRider)
+                return i;
+
+            if (targetRider == null)
+                return i;
+        }
+
+        return null;
     }
 }

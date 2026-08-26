@@ -125,7 +125,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCBuildingInteractor
   movement: {fileID: -7493649843608556168}
-  creatureCityNavigator: {fileID: 0}
   <InteractBuilding>k__BackingField: {fileID: 0}
   <IsInteracting>k__BackingField: 0
 --- !u!114 &2185582854232776361
@@ -146,7 +145,7 @@ MonoBehaviour:
   waypointsComponent: {fileID: 7048535748943796013}
   healthComponent: {fileID: 4098557255172134659}
   pathBuildings: []
-  <CurrentBuilding>k__BackingField: {fileID: 0}
+  <EnteredBuilding>k__BackingField: {fileID: 0}
   <TargetBuilding>k__BackingField: {fileID: 0}
   <PathProgress>k__BackingField: 0
   <IsFollowingPath>k__BackingField: 0
@@ -184,6 +183,8 @@ MonoBehaviour:
   movement: {fileID: -7493649843608556168}
   cityNavigator: {fileID: 2185582854232776361}
   interactComponent: {fileID: 6316746746762001490}
+  <CurrentWaypointIndex>k__BackingField: 0
+  <CurrentWaypointTime>k__BackingField: 0
 --- !u!114 &6497944028369977301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,9 +264,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCMovement
   navAgent: {fileID: 1338494420481879648}
+  <IsMoving>k__BackingField: 0
   walkSpeed: 3
   runSpeed: 5
-  <IsMoving>k__BackingField: 0
+  <UseTargetRotation>k__BackingField: 1
+  rotationSpeed: 1
 --- !u!114 &3276445640208814929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,10 +512,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelUpWidget
       objectReference: {fileID: 0}
-    - target: {fileID: 3378358381403698184, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7287354125636601561, guid: 1570eb58984c58a4a8fa94e25fa4cff1, type: 3}
       propertyPath: useParentRotation
       value: 0
@@ -653,7 +652,7 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5713810874044961763}
     m_Modifications:
-    - target: {fileID: 1657309434744731797, guid: 63dac51a073a19c47bda824592f2b4c3, type: 3}
+    - target: {fileID: 1190114817078418139, guid: 63dac51a073a19c47bda824592f2b4c3, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}

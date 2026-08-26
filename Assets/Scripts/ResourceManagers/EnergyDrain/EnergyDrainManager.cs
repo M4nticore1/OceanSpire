@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class ElectricityDrain : MonoBehaviour
+public class EnergyDrainManager : MonoBehaviour
 {
-    private float currentElectricityToDrain = 0f;
-
+    [field: SerializeField] public float CurrentDrainAmount { get; private set; } = 0f;
     private double lastCheckTime = 0;
 
     private void Update()
@@ -28,22 +27,38 @@ public class ElectricityDrain : MonoBehaviour
                     if (module == null) continue;
 
                     if (module.ShouldSpendElectricity()) {
-                        currentElectricityToDrain += module.GetElectricityConsumption();
+                        CurrentDrainAmount += module.GetElectricityConsumption();
                     }
                 }
             }
         }
 
-        if (currentElectricityToDrain < 1) return;
+        if (CurrentDrainAmount < 1f) return;
 
-        var amount = (int)currentElectricityToDrain;
+        var amount = (int)CurrentDrainAmount;
         SpendElectricity(amount);
     }
 
-    private void SpendElectricity(int amoount)
+    public void Init()
+    {
+        Init(EnergyDrainData.Default());
+    }
+
+    public void Init(EnergyDrainData energyDrainData)
+    {
+        if (energyDrainData == null) {
+            Debug.LogError($"[{nameof(EnergyDrainManager)}] Energy Drain Data is not valid!");
+            Init(energyDrainData);
+            return;
+        }
+
+        CurrentDrainAmount = energyDrainData.DrainAmount;
+    }
+
+    private void SpendElectricity(int amount)
     {
         var id = ItemID.Electricity;
-        CityStorage.Instance.Inventory.RemoveItemAmount(id, amoount);
-        currentElectricityToDrain = 0f;
+        CityStorage.Instance.Inventory.RemoveItemAmount(id, amount);
+        CurrentDrainAmount = 0f;
     }
 }

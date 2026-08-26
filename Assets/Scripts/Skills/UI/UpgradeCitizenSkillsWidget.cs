@@ -5,7 +5,12 @@ public class UpgradeCitizenSkillsWidget : MonoBehaviour
     [SerializeField] private SkillsComponent skillComponent;
     [SerializeField] private GameObject content;
 
-    private bool isDisplayed;
+    private bool isShown => content.activeSelf;
+
+    private void Awake()
+    {
+        Hide();
+    }
 
     private void OnEnable()
     {
@@ -19,30 +24,33 @@ public class UpgradeCitizenSkillsWidget : MonoBehaviour
         skillComponent.OnSkillLevelChanged -= OnSkillLevelChanged;
     }
 
+    private void Start()
+    {
+        UpdateDisplayed();
+    }
+
     private void UpdateDisplayed()
     {
         if (ShouldDisplay()) {
-            Display();
+            Show();
         }
         else {
             Hide();
         }
     }
 
-    private void Display()
+    private void Show()
     {
-        if (isDisplayed) return;
+        if (isShown) return;
 
         content.SetActive(true);
-        isDisplayed = true;
     }
 
     private void Hide()
     {
-        if (!isDisplayed) return;
+        if (!isShown) return;
 
         content.SetActive(false);
-        isDisplayed = false;
     }
     
     private void OnSkillXpChanged(SkillInstance skill, float xp)

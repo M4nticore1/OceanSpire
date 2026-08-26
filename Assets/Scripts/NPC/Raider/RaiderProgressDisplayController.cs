@@ -18,17 +18,19 @@ public class RaiderProgressDisplayController : ProgressDisplayController
         raider.OnRaidBuildingStopped -= OnRaidBuildingStopped;
     }
 
-    private void Update()
+    public override void Tick()
     {
-        if (!IsRaiding) return;
+        base.Tick();
 
-        ProgressDisplay.SetProgress(raider.GetProgress());
+        if (IsRaiding) {
+            ProgressDisplay.SetProgress(raider.GetProgress());
+        }
     }
 
     private void OnRaidBuildingStarted(Building building)
     {
         IsRaiding = true;
-        ProgressDisplay.Display();
+        ProgressDisplay.Show();
     }
 
     private void OnRaidBuildingStopped(Building building)
