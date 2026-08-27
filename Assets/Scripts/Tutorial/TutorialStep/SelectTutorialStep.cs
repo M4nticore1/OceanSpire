@@ -8,6 +8,6 @@ public class SelectTutorialStep : TutorialStep
     {
         base.OnShow();
 
-        selectComponent.SetClickable(true);
+        selectComponent.IsClickable = true;
     }
 }

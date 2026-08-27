@@ -29,7 +29,8 @@ public class BuildingPlace : MonoBehaviour, IClickable
     private Dictionary<Direction, BuildingPlace> neighborBuildingPlaces = new();
     public IReadOnlyDictionary<Direction, BuildingPlace> NeighborBuildingPlaces => neighborBuildingPlaces;
 
-    public bool IsClickable { get; private set; } = true;
+    private bool isClickable = true;
+    public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     public event Action OnClicked;
 
@@ -122,11 +123,6 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
         OnClicked?.Invoke();
         OnBuildingPlaceClicked?.Invoke(spawnedBuilding);
-    }
-
-    public void SetClickable(bool value)
-    {
-        IsClickable = value;
     }
 
     public bool ShouldClick()

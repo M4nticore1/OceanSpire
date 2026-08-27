@@ -27,7 +27,7 @@ public class Wanderer : Human
         IsRejected = wandererData.Rejected;
         SpawnPosition = wandererData.SpawnPosition.Vector3();
 
-        SelectComponent.SetClickable(false);
+        SelectComponent.IsClickable = false;
 
         base.HandleInit(data);
     }
@@ -185,6 +185,6 @@ public class Wanderer : Human
         if (ridingBoat == null) return;
         if (ridingBoat.CurrentStateEnum != BoatStateEnum.Idle) return;
 
-        ridingBoat.SetClickable(true);
+        ridingBoat.IsClickable = true;
     }
 }

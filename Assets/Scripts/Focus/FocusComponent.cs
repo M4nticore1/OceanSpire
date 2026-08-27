@@ -10,7 +10,9 @@ public class FocusComponent : MonoBehaviour, IClickable
     public InstanceId InstanceId => instanceId;
 
     public bool IsFocused { get; private set; } = false;
-    public bool IsClickable { get; private set; } = true;
+
+    private bool isClickable = true;
+    public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     public static event Action<FocusComponent> OnFocusedChanged;
     public static event Action<FocusComponent> OnComponentDestroyed;
@@ -37,11 +39,6 @@ public class FocusComponent : MonoBehaviour, IClickable
 
         OnClicked?.Invoke();
         OnGlobalClicked?.Invoke(this);
-    }
-
-    public void SetClickable(bool value)
-    {
-        IsClickable = value;
     }
 
     public bool ShouldClick()

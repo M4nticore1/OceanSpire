@@ -49,8 +49,8 @@ MonoBehaviour:
   arrow: {fileID: 9171837909394750635}
   targetArrowHeight: 0
   targetArrowScale: 0
-  moveArrowSpeed: 2.2
-  scaleArrowSpeed: 2.2
+  moveArrowSpeed: 2
+  scaleArrowSpeed: 2
   circle: {fileID: 5689568394793503645}
   minCircleScale: 6
   maxCircleScale: 8
@@ -172,7 +172,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0fa854876c21bf348aeb02dc1882f671, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0fa854876c21bf348aeb02dc1882f671, type: 3}
       propertyPath: m_LocalRotation.y

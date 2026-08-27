@@ -56,7 +56,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
     public ContextMenuTarget ContextMenuTarget => contextMenuTarget;
 
     [SerializeField] private bool isClickable = true;
-    public bool IsClickable => isClickable;
+    public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     protected BoatsManager boatsManager => BoatsManager.Instance;
 
@@ -652,11 +652,6 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         OnClick();
         OnClicked?.Invoke();
-    }
-
-    public void SetClickable(bool value)
-    {
-        isClickable = value;
     }
 
     public virtual bool ShouldClick()

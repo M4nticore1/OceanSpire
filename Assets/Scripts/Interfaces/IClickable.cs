@@ -3,9 +3,8 @@ using UnityEngine;
 
 public interface IClickable
 {
-    bool IsClickable { get; }
+    bool IsClickable { get; set; }
     void Click();
-    void SetClickable(bool value);
     bool ShouldClick();
     event Action OnClicked;
 }

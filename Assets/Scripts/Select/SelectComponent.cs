@@ -10,7 +10,7 @@ public class SelectComponent : MonoBehaviour, IClickable
     private Dictionary<GameObject, int> layers = new Dictionary<GameObject, int>();
 
     [SerializeField] private bool isClickable = true;
-    public bool IsClickable => isClickable;
+    public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     public event Action OnSelected;
     public event Action OnDeselected;
@@ -108,11 +108,6 @@ public class SelectComponent : MonoBehaviour, IClickable
     public bool ShouldClick()
     {
         return isClickable;
-    }
-
-    public void SetClickable(bool value)
-    {
-        isClickable = value;
     }
 
     private void OnPlayerClicked(GameObject clicked)

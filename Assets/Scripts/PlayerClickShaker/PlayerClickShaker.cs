@@ -12,7 +12,9 @@ public class PlayerClickShaker : MonoBehaviour, IClickable
     private bool isShaking = false;
     private float shakeIntensity = 0;
 
-    public bool IsClickable { get; private set; }
+    private bool isClickable = false;
+    public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
+
     public event Action OnClicked;
 
     private void OnEnable()
@@ -57,11 +59,6 @@ public class PlayerClickShaker : MonoBehaviour, IClickable
         SetShaking(true);
         SetShakeIntensity(0f);
         OnClicked?.Invoke();
-    }
-
-    public void SetClickable(bool value)
-    {
-        IsClickable = value;
     }
 
     public bool ShouldClick()

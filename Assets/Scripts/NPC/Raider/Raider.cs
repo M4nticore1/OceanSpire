@@ -63,7 +63,7 @@ public class Raider : Human, IProgressable
         SpawnPosition = raiderData.SpawnPosition.Vector3();
 
         Movement.SetMovementMethod(MovementMethod.Run);
-        SelectComponent.SetClickable(false);
+        SelectComponent.IsClickable = false;
 
         base.HandleInit(data);
     }
@@ -185,7 +185,7 @@ public class Raider : Human, IProgressable
 
     protected override void HandleEnteredBoat(Boat boat)
     {
-        boat.SelectComponent.SetClickable(false);
+        boat.SelectComponent.IsClickable = false;
 
         base.HandleEnteredBoat(boat);
     }

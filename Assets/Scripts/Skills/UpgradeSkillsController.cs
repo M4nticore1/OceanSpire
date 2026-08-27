@@ -7,7 +7,7 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
     [SerializeField] private SelectComponent selectComponent;
     
     [SerializeField] private bool isClickable = false;
-    public bool IsClickable => isClickable;
+    public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     public event Action OnClicked;
 
@@ -54,6 +54,7 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
     {
         bool upgraded = false;
         foreach (var skill in skillComponent.Skills.Values) {
+            if (skill == null) continue;
             if (!skill.TryLevelUp()) continue;
 
             upgraded = true;
@@ -65,6 +66,7 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
     private void UpdateClickable()
     {
         foreach (var skill in skillComponent.Skills.Values) {
+            if (skill == null) continue;
             if (skill.CurrentXp < 1f) continue;
 
             SetClickable(true);
@@ -76,6 +78,7 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
 
     private void OnSkillXpChanged(SkillInstance skill, float xp)
     {
+        if (skill == null) return;
         if (!skill.ShouldLevelUp()) return;
 
         SetClickable(true);

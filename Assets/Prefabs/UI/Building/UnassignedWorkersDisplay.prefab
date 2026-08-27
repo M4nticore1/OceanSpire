@@ -64,8 +64,10 @@ MonoBehaviour:
   isInteractable: 1
   isSelectable: 0
   isScalable: 1
+  isClickable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 1
+  cancelPressWhenPointerMoving: 1
   selectGroup: {fileID: 0}
   stateTransitionTime: 0.2
   state: 0
@@ -300,5 +302,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08277d85c8d42d34cbd82d3632c1d3b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PulseEffect
-  pulseIntensity: 0.5
+  pulseIntensity: 0.3
   pulseSpeed: 1.25

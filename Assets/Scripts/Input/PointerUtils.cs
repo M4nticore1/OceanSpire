@@ -3,8 +3,18 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
+public struct PointerRaycastHit
+{
+    public GameObject gameObject;
+    public float distance;
+
+    public RaycastHit? colliderHit;
+    public RaycastResult? uiHit;
+}
+
 public static class PointerUtils
 {
+    // Position
     public static Vector2 GetCurrentInputPosition()
     {
         if (Touchscreen.current != null) {
@@ -20,32 +30,93 @@ public static class PointerUtils
         return Vector2.zero;
     }
 
+    public static bool GetRaycastHit(out PointerRaycastHit hit)
+    {
+        hit = default;
+        var position = GetCurrentInputPosition();
+        var ray = Camera.main.ScreenPointToRay(position);
+
+        // 3D
+        var layerMask = ~LayerMask.GetMask("Ignore Raycast");
+        bool hasColliderHit = Physics.Raycast(ray, out RaycastHit colliderHit, Mathf.Infinity, layerMask);
+
+        // UI
+        var uiResults = new List<RaycastResult>();
+        GetRaycastUIResults(uiResults);
+
+        RaycastResult? closestWorldUI = null;
+        float closestUIDistance = Mathf.Infinity;
+
+        foreach (var uiResult in uiResults) {
+            var canvas = uiResult.module.GetComponent<Canvas>();
+
+            if (canvas == null)
+                continue;
+
+            // Screen Space UI имеет безусловный приоритет
+            if (canvas.renderMode != RenderMode.WorldSpace) {
+                hit.gameObject = uiResult.gameObject;
+                hit.distance = 0f;
+                hit.uiHit = uiResult;
+
+                return true;
+            }
+
+            // World Space UI
+            var distance = Vector3.Distance( ray.origin, uiResult.worldPosition);
+            if (distance < closestUIDistance) {
+                closestUIDistance = distance;
+                closestWorldUI = uiResult;
+            }
+        }
+
+        // Сравниваем World Space UI и Collider
+        if (closestWorldUI.HasValue && (!hasColliderHit || closestUIDistance < colliderHit.distance)) {
+            hit.gameObject = closestWorldUI.Value.gameObject;
+            hit.distance = closestUIDistance;
+            hit.uiHit = closestWorldUI;
+
+            return true;
+        }
+
+        if (hasColliderHit) {
+            hit.gameObject = colliderHit.collider.gameObject;
+            hit.distance = colliderHit.distance;
+            hit.colliderHit = colliderHit;
+
+            return true;
+        }
+
+        return false;
+    }
+
     // Colliders
     public static bool GetRaycastColliderHit(out RaycastHit hit)
     {
-        Vector2 position = GetCurrentInputPosition();
-        Ray ray = Camera.main.ScreenPointToRay(position);
+        var position = GetCurrentInputPosition();
+        var ray = Camera.main.ScreenPointToRay(position);
+        var layerMask = ~LayerMask.GetMask("Ignore Raycast");
 
-        int layerMask = ~LayerMask.GetMask("Ignore Raycast");
         return Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask);
     }
 
     // UI
     public static void GetRaycastUIResults(List<RaycastResult> results)
     {
-        if (!EventSystem.current) {
-            Debug.LogWarning("EventSystem is not on the scene.");
+        var eventSystem = EventSystem.current;
+        if (eventSystem == null) {
+            Debug.LogError($"[{nameof(PointerUtils)}] Event System is not on the scene!");
             return;
         }
 
-        PointerEventData data = new PointerEventData(EventSystem.current);
+        var data = new PointerEventData(eventSystem);
         data.position = GetCurrentInputPosition();
-        EventSystem.current.RaycastAll(data, results);
+        eventSystem.RaycastAll(data, results);
     }
 
     public static RaycastResult GetRaycastUIResult()
     {
-        List<RaycastResult> results = new List<RaycastResult>();
+        var results = new List<RaycastResult>();
         GetRaycastUIResults(results);
 
         if (results.Count > 0) {
@@ -58,9 +129,8 @@ public static class PointerUtils
     // Conditions
     public static bool IsUIHovered(GameObject gameObjectToCheck)
     {
-        GameObject hovered = GetRaycastUIResult().gameObject;
-
-        if (!hovered) return false;
+        var hovered = GetRaycastUIResult().gameObject;
+        if (hovered == null) return false;
 
         return GetRaycastUIResult().gameObject == gameObjectToCheck;
     }

@@ -113,6 +113,7 @@ public class FitSizeToChildren : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(FitSizeToChildren))]
 public class MyWidgetEditor : Editor
 {
@@ -131,3 +132,4 @@ public class MyWidgetEditor : Editor
         }
     }
 }
+#endif

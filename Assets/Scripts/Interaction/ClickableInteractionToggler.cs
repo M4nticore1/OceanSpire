@@ -8,7 +8,7 @@ public class ClickableInteractionToggler : InteractionToggler
     public override void EnableInteraction()
     {
         foreach (var select in selectionsDict) {
-            select.Key.SetClickable(select.Value);
+            select.Key.IsClickable = select.Value;
         }
 
         selectionsDict.Clear();
@@ -24,7 +24,7 @@ public class ClickableInteractionToggler : InteractionToggler
 
             if (!selectionsDict.TryAdd(clickable, clickable.IsClickable)) continue;
 
-            clickable.SetClickable(false);
+            clickable.IsClickable = false;
         }
     }
 }

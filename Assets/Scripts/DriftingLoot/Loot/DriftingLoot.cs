@@ -29,7 +29,8 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
     public int MeshId { get; private set; } = 0;
     public GameObject SpawnedMesh { get; private set; }
 
-    public bool IsClickable { get; private set; } = true;
+    private bool isClickable = true;
+    public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     public event Action OnClicked;
     public static event Action<DriftingLoot> OnLootClicked;
@@ -146,11 +147,6 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
 
         OnClicked?.Invoke();
         OnLootClicked?.Invoke(this);
-    }
-
-    public void SetClickable(bool value)
-    {
-        IsClickable = value;
     }
 
     private void CreateMesh(DriftingLootData driftingLootData)

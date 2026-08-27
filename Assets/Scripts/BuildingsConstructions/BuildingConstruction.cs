@@ -54,7 +54,8 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     private MeshRenderer[] meshRendererers;
     private MaterialPropertyBlock propertyBlock;
 
-    public bool IsClickable { get; private set; } = true;
+    private bool isClickable = true;
+    public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     public event Action OnInit;
     public event Action OnClicked;
@@ -168,11 +169,6 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     {
         OwnedBuilding.OnConstructionClicked();
         OnClicked?.Invoke();
-    }
-
-    public void SetClickable(bool value)
-    {
-        IsClickable = value;
     }
 
     public bool ShouldClick()

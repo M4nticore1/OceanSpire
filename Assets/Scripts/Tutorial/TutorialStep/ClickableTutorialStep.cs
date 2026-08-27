@@ -14,6 +14,6 @@ public class ClickableTutorialStep : TutorialStep
             return;
         }
 
-        Clickable.SetClickable(true);
+        Clickable.IsClickable = true;
     }
 }

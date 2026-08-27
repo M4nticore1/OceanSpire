@@ -16,18 +16,19 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     private void Interact(Vector2 interactionPosition)
     {
-        if (PointerUtils.GetRaycastUIResult().gameObject) return;
+        if (PointerUtils.GetRaycastHit(out var hit)) {
+            var go = hit.gameObject;
+            if (go == null) return;
 
-        if (PointerUtils.GetRaycastColliderHit(out var hit)) {
-            IClickable[] clickables = hit.collider.GetComponents<IClickable>();
-
-            foreach (IClickable clickable in clickables) {
+            var clickables = go.GetComponents<IClickable>();
+            foreach (var clickable in clickables) {
+                if (clickable == null) continue;
                 if (!clickable.ShouldClick()) continue;
 
                 clickable.Click();
             }
 
-            EventBus.InvokeClicked(hit.collider.gameObject);
+            EventBus.InvokeClicked(hit.gameObject);
         }
         else {
             EventBus.InvokeClicked(null);

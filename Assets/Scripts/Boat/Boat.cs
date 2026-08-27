@@ -77,7 +77,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     public Transform SeatSlot => seatSlot;
 
     [SerializeField] private bool isClickable = true;
-    public bool IsClickable => isClickable;
+    public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     private BoatsManager boatsManager => BoatsManager.Instance;
     private BoatDocksManager boatDocksManager => BoatDocksManager.Instance;
@@ -540,11 +540,6 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         OnClicked?.Invoke();
     }
 
-    public void SetClickable(bool value)
-    {
-        isClickable = value;
-    }
-
     public bool ShouldClick()
     {
         if (!IsClickable) return false;
@@ -598,16 +593,16 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     private void UpdateClickable()
     {
         if (CurrentStatus == BoatStatusEnum.Citizen) {
-            SetClickable(true);
+            IsClickable = true;
         }
         else if (CurrentStatus == BoatStatusEnum.Wanderer) {
-            SetClickable(!movement.IsMoving);
+            IsClickable = !movement.IsMoving;
         }
         else if (CurrentStatus == BoatStatusEnum.Raider) {
-            SetClickable(false);
+            IsClickable = false;
         }
         else if (CurrentStatus == BoatStatusEnum.Evicted) {
-            SetClickable(false);
+            IsClickable = false;
         }
     }
 

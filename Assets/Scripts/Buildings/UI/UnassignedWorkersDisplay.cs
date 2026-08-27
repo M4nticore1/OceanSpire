@@ -55,11 +55,15 @@ public class UnassignedWorkersDisplay : MonoBehaviour
 
     private void Show()
     {
+        if (isShown) return;
+
         content.SetActive(true);
     }
 
     private void Hide()
     {
+        if (!isShown) return;
+
         content.SetActive(false);
     }
 
@@ -75,7 +79,7 @@ public class UnassignedWorkersDisplay : MonoBehaviour
         if (ShouldShow()) {
             Show();
         }
-        else if (ShouldHide()) {
+        else {
             Hide();
         }
     }
@@ -120,20 +124,11 @@ public class UnassignedWorkersDisplay : MonoBehaviour
 
     private bool ShouldShow()
     {
-        if (isShown) return false;
-        if (ownedBuilding.ConstructionComponent.IsUnderConstruction) return false;
+        if (!ownedBuilding.Definition.IsWorkable) return false;
+        if (constructionComponent.IsUnderConstruction) return false;
         if (ownedBuilding.LevelDefinition.MaxHumansCount <= 0) return false;
 
         return citizensHandler.Interactors.Count <= 0;
-    }
-
-    private bool ShouldHide()
-    {
-        if (!isShown) return false;
-        if (ownedBuilding.ConstructionComponent.IsUnderConstruction) return true;
-        if (ownedBuilding.LevelDefinition.MaxHumansCount <= 0) return true;
-
-        return citizensHandler.Interactors.Count > 0;
     }
 
     private IEnumerator UpdateShownCoroutine()

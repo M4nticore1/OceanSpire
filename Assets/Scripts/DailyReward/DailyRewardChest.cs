@@ -7,7 +7,8 @@ public class DailyRewardChest : MonoBehaviour, IClickable
     [SerializeField] private DailyRewardMenu dailyRewardMenu;
     [SerializeField] private GameObject content;
 
-    public bool IsClickable { get; private set; } = true;
+    private bool isClickable = true;
+    public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     public event Action OnClicked;
 
@@ -30,11 +31,6 @@ public class DailyRewardChest : MonoBehaviour, IClickable
         dailyRewardMenu.Show();
 
         OnClicked?.Invoke();
-    }
-
-    public void SetClickable(bool value)
-    {
-        IsClickable = value;
     }
 
     public bool ShouldClick()
