@@ -112,8 +112,11 @@ public class SelectComponent : MonoBehaviour, IClickable
 
     private void OnPlayerClicked(GameObject clicked)
     {
-        if (clicked == gameObject) return;
-        if (GameUtils.GetAllChildren(transform).Contains(clicked)) return;
+        if (clicked != null) {
+            if (clicked == gameObject) return;
+            if (clicked.GetComponent<RectTransform>() != null) return;
+            if (GameUtils.GetAllChildren(transform).Contains(clicked)) return;
+        }
 
         TryDeselect();
     }

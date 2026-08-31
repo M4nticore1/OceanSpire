@@ -5,7 +5,7 @@ public class BillboardsManager : MonoBehaviour
 {
     public static BillboardsManager Instance { get; private set; }
 
-    private readonly HashSet<Billboard> billboards = new();
+    private readonly List<Billboard> billboards = new();
 
     private void Awake()
     {
@@ -20,21 +20,27 @@ public class BillboardsManager : MonoBehaviour
 
     public void Register(Billboard billboard)
     {
-        if (!billboard) return;
+        if (billboard == null) return;
 
         billboards.Add(billboard);
     }
 
     public void Unregister(Billboard billboard)
     {
-        if (!billboard) return;
+        if (billboard == null) return;
 
         billboards.Remove(billboard);
     }
 
     private void LateUpdate()
     {
-        foreach (var billboard in billboards) {
+        for (int i = billboards.Count - 1; i >= 0; i--) {
+            var billboard = billboards[i];
+            if (billboard == null) {
+                billboards.RemoveAt(i);
+                continue;
+            }
+
             billboard.Tick();
         }
     }

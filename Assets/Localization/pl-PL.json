@@ -42,6 +42,7 @@
   "instantly": "Natychmiast",
   "inventory": "Ekwipunek",
   "weapon": "Broń",
+  "pier_workers_unassigned": "Na molo nie ma robotników. Przydziel robotników do zbierania dryfujących zasobów.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

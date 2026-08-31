@@ -387,7 +387,9 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     // State
     public void RunUpdateStateCoroutine()
     {
-        updateStateCoroutine = StartCoroutine(UpdateStateCoroutine());
+        if (updateStateCoroutine == null) {
+            updateStateCoroutine = StartCoroutine(UpdateStateCoroutine());
+        }
     }
 
     public void UpdateBoatState()
@@ -625,10 +627,10 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
     private IEnumerator UpdateStateCoroutine()
     {
-        if (updateStateCoroutine != null) yield break;
         yield return new WaitForEndOfFrame();
 
         UpdateBoatState();
+
         updateStateCoroutine = null;
     }
 

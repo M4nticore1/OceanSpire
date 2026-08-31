@@ -14,12 +14,17 @@ public class SwimmingDriftingLoot : DriftingLoot
     [field: SerializeField] public Boat TargetBoat {  get; private set; }
 
     public event Action OnCollected;
+
     public static event Action<SwimmingDriftingLoot> OnGlobalCollected;
+
+    public static event Action<bool> OnFocusChanged;
+    public static event Action<SwimmingDriftingLoot, bool> OnLootFocusChanged;
 
     protected override void OnEnable()
     {
         base.OnEnable();
 
+        focusComponent.OnFocusChanged += HandleFocusedChanged;
         DriftingLootManager.Instance.RegisterSwimmingDriftingLoot(this);
     }
 
@@ -27,6 +32,7 @@ public class SwimmingDriftingLoot : DriftingLoot
     {
         base.OnDisable();
 
+        focusComponent.OnFocusChanged -= HandleFocusedChanged;
         DriftingLootManager.Instance.UnregisterSwimmingDriftingLoot(this);
     }
 
@@ -94,6 +100,12 @@ public class SwimmingDriftingLoot : DriftingLoot
         if (boat != TargetBoat) return;
 
         TargetBoat = null;
+    }
+
+    private void HandleFocusedChanged(bool focused)
+    {
+        OnFocusChanged?.Invoke(focused);
+        OnLootFocusChanged?.Invoke(this, focused);
     }
 
     public List<ItemInstance> TakeItems()

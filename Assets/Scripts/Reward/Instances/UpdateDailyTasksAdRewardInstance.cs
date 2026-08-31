@@ -13,9 +13,9 @@ public class UpdateDailyTasksAdRewardInstance : RewardInstance
 
     }
 
-    protected override void OnRewardRecieved()
+    protected override void HandleRewardRecieved()
     {
-        base.OnRewardRecieved();
+        base.HandleRewardRecieved();
 
         DailyTasksManager.Instance.ResetTasks();
         DailyTasksManager.Instance.SetAdUpdateUsedSetTrue(true);

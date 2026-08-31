@@ -208,6 +208,19 @@ public class TowerBuilding : Building
         UpdateConnectedBuildings();
     }
 
+    public bool ShouldBuild(BuildingPlace buildingPlace)
+    {
+        if (buildingPlace == null) return false;
+        if (!BuildingType.ShouldBuild(buildingPlace)) return false;
+
+        foreach (var module in BuildingModules) {
+            if (module == null) continue;
+            if (!module.ShouldBuild(buildingPlace)) return false;
+        }
+
+        return true;
+    }
+
     public bool NetworkWith(TowerBuilding target, HashSet<TowerBuilding> visited = null)
     {
         if (this == target)
@@ -287,15 +300,15 @@ public class TowerBuilding : Building
         IReadOnlyList<FloorFrameModule> floors = BuildingsManager.Instance.BuiltFloors;
         BuildingPlace place = null;
 
-        if (Definition.BuildingType == BuildingType.Room) {
+        if (Definition.BuildingType == BuildingTypeEnum.Room) {
             place = BuildingsManager.Instance.GetRoomPlace(floorIndex, placeIndex);
             transform.SetParent(place.transform);
         }
-        else if (Definition.BuildingType == BuildingType.Hall) {
+        else if (Definition.BuildingType == BuildingTypeEnum.Hall) {
             place = floors[floorIndex].HallBuildingPlace;
             transform.SetParent(place.transform);
         }
-        else if (Definition.BuildingType == BuildingType.FloorFrame) {
+        else if (Definition.BuildingType == BuildingTypeEnum.FloorFrame) {
             place = BuildingsManager.Instance.GetFloorFrameBuilding(floorIndex - 1)?.FloorBuildingPlace;
             transform.SetParent(place != null ? null : BuildingsManager.Instance.FirstFloorBuildingTransform);
         }

@@ -10,9 +10,8 @@ public class SelectEquipmentMenu : ControlMenu
     [SerializeField] private SelectGroup selectGroup;
 
     private EquipmentCategory equipmentCategory;
+    private EquipmentComponent equipmentComponent;
     private List<ActionEquipmentWidget> spawnedWidgets = new();
-
-    private Human selectedHuman;
 
     protected override void UpdateMenu()
     {
@@ -21,7 +20,12 @@ public class SelectEquipmentMenu : ControlMenu
 
     protected override ILocalizable GetTargetNameText()
     {
-        return selectedHuman;
+        if (equipmentComponent == null) return null;
+
+        var human = equipmentComponent.GetComponent<Human>();
+        if (human == null) return null;
+
+        return human;
     }
 
     protected override ILocalizable GetTargetDescriptionText()
@@ -29,9 +33,14 @@ public class SelectEquipmentMenu : ControlMenu
         return null;
     }
 
-    public void Show(EquipmentCategory category)
+    public void Show(EquipmentComponent equipmentComponent, EquipmentCategory category)
     {
-        selectedHuman = SelectManager.Instance.GetSelectedHuman();
+        if (equipmentComponent == null) {
+            Debug.LogError($"[{nameof(SelectEquipmentMenu)}] Equipment Component is not valid!");
+            return;
+        }
+
+        this.equipmentComponent = equipmentComponent;
         equipmentCategory = category;
 
         UpdateMenu(category);
@@ -48,10 +57,13 @@ public class SelectEquipmentMenu : ControlMenu
     private void CreateDeselectWidget()
     {
         var widget = Instantiate(equipmentWidgetPrefab, layoutGroup.transform);
+        if (widget == null) {
+            Debug.LogError($"[{nameof(SelectEquipmentMenu)}] Widget is not valid!");
+            return;
+        }
 
-        var selectedCitizen = SelectManager.Instance.GetSelectedHuman();
         widget.SetSelectGroup(selectGroup);
-        widget.SetEquipmentComponent(selectedCitizen.WeaponComponent);
+        widget.SetEquipmentComponent(equipmentComponent);
 
         spawnedWidgets.Add(widget);
     }
@@ -75,7 +87,7 @@ public class SelectEquipmentMenu : ControlMenu
     {
         for (int i = spawnedWidgets.Count - 1; i >= 0; i--) {
             var widget = spawnedWidgets[i];
-            if (!widget) {
+            if (widget == null) {
                 spawnedWidgets.RemoveAt(i);
                 continue;
             }
@@ -85,6 +97,8 @@ public class SelectEquipmentMenu : ControlMenu
         }
 
         foreach (Transform child in layoutGroup.transform) {
+            if (child == null) continue;
+
             Destroy(child.gameObject);
         }
     }
@@ -95,13 +109,13 @@ public class SelectEquipmentMenu : ControlMenu
         if (item.Amount <= 0) return false;
 
         var definition = item.Definition as EquipmentDefinition;
-        if (!definition) return false;
+        if (definition == null) return false;
 
         if (definition.EquipmentCategory != category) return false;
 
-        int amount = item.Amount;
-
+        var amount = item.Amount;
         foreach (var human in CreaturesManager.Instance.Citizens) {
+            if (human == null) continue;
             if (human.WeaponComponent.EquipmentDefinition != definition) continue;
 
             amount--;

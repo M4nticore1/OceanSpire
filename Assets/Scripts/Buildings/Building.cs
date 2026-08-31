@@ -43,12 +43,17 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     public SelectComponent SelectComponent { get; private set; }
 
-    public List<BuildingModule> buildingModules = new();
+    private BuildingModule[] buildingModules;
+    public BuildingModule[] BuildingModules => buildingModules != null ? buildingModules : GetComponents<BuildingModule>();
 
     [Header("Audio")]
     [SerializeField] protected AudioSource workAudioSource;
 
     private BuildingStrategy buildingStrategy;
+    public BuildingStrategy BuildingStrategy => buildingStrategy != null ? buildingStrategy : GetBuildingStrategy();
+
+    private BuildingType buildingType;
+    public BuildingType BuildingType => buildingType != null ? buildingType : GetBuildingType();
 
     public bool isWorking { get; private set; } = false;
     public bool IsDemolished { get; private set; } = false;
@@ -58,6 +63,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     public const float DemolishionResourcesRefundPercent = 0.5f;
 
     public bool IsInited { get; private set; } = false;
+
+    private CityStorage cityStorage => CityStorage.Instance;
+    private RaidManager raidManager => RaidManager.Instance;
 
     private Coroutine updateConstructionCoroutine;
     private Coroutine refreshConstructionCoroutine;
@@ -101,7 +109,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         citizensHandler = GetComponent<BuildingCitizensHandler>();
         raidersHandler = GetComponent<BuildingRaidersHandler>();
         SelectComponent = GetComponent<SelectComponent>();
-        buildingModules = GetComponents<BuildingModule>().ToList();
+        buildingModules = GetComponents<BuildingModule>();
     }
 
     protected virtual void OnEnable()
@@ -172,10 +180,42 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         Destroy(gameObject);
     }
 
+    // Building
+    public bool ShouldBuild()
+    {
+        if (BuildingType == null) return false;
+        if (!BuildingType.ShouldBuild()) return false;
+
+        foreach (var module in BuildingModules) {
+            if (module == null) continue;
+            if (!module.ShouldBuild()) return false;
+        }
+
+        if (!IsEnoughResourcesToBuild()) return false;
+
+        if (raidManager == null) return false;
+        if (raidManager.IsUnderRaid) return false;
+
+        return true;
+    }
+
+    private bool IsEnoughResourcesToBuild()
+    {
+        if (cityStorage == null) return false;
+
+        foreach (var buildItem in LevelDefinition.ResourcesToBuild) {
+            var storageItem = cityStorage.Inventory.GetItem(buildItem.Definition.ItemId);
+            if (storageItem.Amount < buildItem.Amount) return false;
+        }
+
+        return true;
+    }
+
     protected virtual void OnInit(BuildingData buildingData)
     {
         instanceId.SetGuid(buildingData.InstanceId);
-        UpdateStrategy();
+        buildingStrategy = GetBuildingStrategy();
+        buildingType = GetBuildingType();
 
         levelComponent.Init(buildingData.Level);
         upgradeComponent.Init(buildingData.Upgrade);
@@ -192,13 +232,13 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     // Residents Management
     public void EnterBuilding(CreatureCityNavigator navigator)
     {
-        buildingStrategy.OnEntityEnter(navigator);
+        BuildingStrategy.OnEntityEnter(navigator);
         OnEnteredBuilding?.Invoke(navigator);
     }
 
     public void ExitBuilding(CreatureCityNavigator navigator)
     {
-        buildingStrategy.OnEntityExit(navigator);
+        BuildingStrategy.OnEntityExit(navigator);
         onExitBuilding?.Invoke(navigator);
     }
 
@@ -207,15 +247,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     {
         SelectComponent.Click();
         OnClicked?.Invoke();
-    }
-
-    // Modules
-    public BuildingModule[] GetModules()
-    {
-        BuildingModule[] modules;
-        modules = GetComponents<BuildingModule>();
-
-        return modules;
     }
 
     // Cost
@@ -376,26 +407,26 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
             Debug.LogError($"[{nameof(Building)}] Interactor is not valid!");
             return null;
         }
-        if (buildingStrategy == null) {
+        if (BuildingStrategy == null) {
             Debug.LogError($"[{nameof(Building)}] Building Strategy is not valid!");
             return null;
         }
 
-        return buildingStrategy.GetInteractPoint(interactor);
+        return BuildingStrategy.GetInteractPoint(interactor);
     }
 
     private void OnWorkerAdded(Human human)
     {
         //UpdateWorkerInteractionTransforms();
 
-        buildingStrategy.OnInteractBuildingSet(human.InteractComponent);
+        BuildingStrategy.OnInteractBuildingSet(human.InteractComponent);
     }
 
     private void OnWorkerRemoved(Human human)
     {
         //UpdateWorkerInteractionTransforms();
 
-        buildingStrategy.OnInteractBuildingRemove(human.InteractComponent);
+        BuildingStrategy.OnInteractBuildingRemove(human.InteractComponent);
     }
 
     private void OnCurrentWorkerAdded(Human human)
@@ -403,7 +434,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         if (CitizensHandler.CurrentInteractors.Count == 1)
             StartWorking();
 
-        buildingStrategy.OnStartedInteracting(human.InteractComponent);
+        BuildingStrategy.OnStartedInteracting(human.InteractComponent);
     }
 
     private void OnCurrentWorkerRemoved(Human human)
@@ -411,7 +442,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         if (CitizensHandler.CurrentInteractors.Count == 0)
             StopWorking();
 
-        buildingStrategy.OnStoppedInteracting(human.InteractComponent);
+        BuildingStrategy.OnStoppedInteracting(human.InteractComponent);
     }
 
     // Raid
@@ -465,16 +496,36 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         OnWorkStopped?.Invoke();
     }
 
-    private void UpdateStrategy()
+    private BuildingStrategy GetBuildingStrategy()
     {
+        if (buildingData == null) return null;
+
         switch (buildingData.BuildingStrategy) {
             case BuildingStrategyEnum.WorkBuilding:
-                buildingStrategy = new WorkBuildingStrategy(this);
-                break;
+                return new WorkBuildingStrategy(this);
             case BuildingStrategyEnum.Pier:
-                buildingStrategy = new PierBuildingStrategy(this);
-                break;
+                return new PierBuildingStrategy(this);
         }
+
+        return null;
+    }
+
+    private BuildingType GetBuildingType()
+    {
+        if (buildingData == null) return null;
+
+        switch (buildingData.BuildingType) {
+            case BuildingTypeEnum.Room:
+                return new RoomBuildingType(this);
+            case BuildingTypeEnum.Hall:
+                return new HallBuildingType(this);
+            case BuildingTypeEnum.FloorFrame:
+                return new FloorFrameBuildingType(this);
+            case BuildingTypeEnum.Ground:
+                return new GroundBuildingType(this);
+        }
+
+        return null;
     }
 
     private void HandleConstructionStarted()

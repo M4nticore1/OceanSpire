@@ -42,6 +42,7 @@
   "instantly": "Imediatamente",
   "inventory": "Inventário",
   "weapon": "Arma",
+  "pier_workers_unassigned": "Não há trabalhadores no cais. Atribua trabalhadores para coletar recursos à deriva.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

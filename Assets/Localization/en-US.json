@@ -42,6 +42,7 @@
   "instantly": "Instantly",
   "inventory": "Inventory",
   "weapon": "Weapon",
+  "pier_workers_unassigned": "There are no workers at the pier. Assign workers to collect drifting resources.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

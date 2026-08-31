@@ -42,6 +42,7 @@
   "instantly": "Onmiddellijk",
   "inventory": "Inventaris",
   "weapon": "Wapen",
+  "pier_workers_unassigned": "Er zijn geen werknemers op de pier. Wijs werknemers toe om drijvende grondstoffen te verzamelen.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

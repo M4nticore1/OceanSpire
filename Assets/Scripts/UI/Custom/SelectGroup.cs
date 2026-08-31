@@ -7,6 +7,7 @@ public class SelectGroup : MonoBehaviour
 
     public void AddButton(CustomButton button)
     {
+        if (button == null) return;
         if (buttons.Contains(button)) return;
 
         buttons.Add(button);
@@ -19,6 +20,7 @@ public class SelectGroup : MonoBehaviour
 
     public void OnButtonSelected(CustomButton selectedButton)
     {
+        if (selectedButton == null) return;
         if (!buttons.Contains(selectedButton)) return;
 
         foreach (var button in buttons) {

@@ -42,6 +42,7 @@
   "instantly": "Omedelbart",
   "inventory": "Ryggsäck",
   "weapon": "Vapen",
+  "pier_workers_unassigned": "Det finns inga arbetare vid piren. Tilldela arbetare för att samla in drivande resurser.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

@@ -47,36 +47,64 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnEnable()
     {
-        touchInputActionMap.Enable();
+        if (touchInputActionMap != null) {
+            touchInputActionMap.Enable();
+        }
+        else {
+            Debug.LogError($"[{nameof(PlayerInputHandler)}] Touch Input Action Map is not valid!");
+        }
 
         // Primary Interaction
-        primaryTouchPressIA.performed += HandlePrimaryTouchPressed;
-        primaryTouchPressIA.canceled += HandlePrimaryTouchReleased;
+        if (primaryTouchPressIA != null) {
+            primaryTouchPressIA.performed += HandlePrimaryTouchPressed;
+            primaryTouchPressIA.canceled += HandlePrimaryTouchReleased;
+        }
+        else {
+            Debug.LogError($"[{nameof(PlayerInputHandler)}] Primary Touch Press IA is not valid!");
+        }
 
         // Secondary Interaction
-        secondaryTouchPressIA.performed += HandleSecondaryTouchPressed;
-        secondaryTouchPressIA.canceled += HandleSecondaryTouchReleased;
+        if (primaryTouchPressIA != null) {
+            secondaryTouchPressIA.performed += HandleSecondaryTouchPressed;
+            secondaryTouchPressIA.canceled += HandleSecondaryTouchReleased;
+        }
+        else {
+            Debug.LogError($"[{nameof(PlayerInputHandler)}] Primary Touch Press IA is not valid!");
+        }
 
         // Camera
-        cameraMoveIA.performed += HandleCameraMovePerformed;
-        cameraZoomIA.performed += HandleCameraZoomPerformed;
+        if (primaryTouchPressIA != null) {
+            cameraMoveIA.performed += HandleCameraMovePerformed;
+            cameraZoomIA.performed += HandleCameraZoomPerformed;
+        }
+        else {
+            Debug.LogError($"[{nameof(PlayerInputHandler)}] Primary Touch Press IA is not valid!");
+        }
     }
 
     private void OnDisable()
     {
-        touchInputActionMap.Disable();
+        if (touchInputActionMap != null) {
+            touchInputActionMap.Disable();
+        }
 
         // Primary Interaction
-        primaryTouchPressIA.performed -= HandlePrimaryTouchPressed;
-        primaryTouchPressIA.canceled -= HandlePrimaryTouchReleased;
+        if (primaryTouchPressIA != null) {
+            primaryTouchPressIA.performed -= HandlePrimaryTouchPressed;
+            primaryTouchPressIA.canceled -= HandlePrimaryTouchReleased;
+        }
 
         // Secondary Interaction
-        secondaryTouchPressIA.performed -= HandleSecondaryTouchPressed;
-        secondaryTouchPressIA.canceled -= HandleSecondaryTouchReleased;
+        if (primaryTouchPressIA != null) {
+            secondaryTouchPressIA.performed -= HandleSecondaryTouchPressed;
+            secondaryTouchPressIA.canceled -= HandleSecondaryTouchReleased;
+        }
 
         // Camera
-        cameraMoveIA.performed -= HandleCameraMovePerformed;
-        cameraZoomIA.performed -= HandleCameraZoomPerformed;
+        if (primaryTouchPressIA != null) {
+            cameraMoveIA.performed -= HandleCameraMovePerformed;
+            cameraZoomIA.performed -= HandleCameraZoomPerformed;
+        }
     }
 
     private void SetInputSystem()
@@ -96,11 +124,13 @@ public class PlayerInputHandler : MonoBehaviour
                 cameraZoomIA = touchInputActionMap.FindAction("CameraZoom");
                 cameraMoveIA = touchInputActionMap.FindAction("CameraMove");
             }
-            else
-                Debug.LogError("void PlayerController : SetInputSystem() touchInputActionMap is NULL");
+            else {
+                Debug.LogError($"[{nameof(PlayerInputHandler)}] Touch Input Action Map is NULL");
+            }
         }
-        else
-            Debug.LogError("void PlayerController : SetInputSystem() inputActions is NULL");
+        else {
+            Debug.LogError($"[{nameof(PlayerInputHandler)}] Input Actions is NULL");
+        }
     }
 
     // Primary Touch
@@ -140,7 +170,7 @@ public class PlayerInputHandler : MonoBehaviour
     // Camera Zoom
     private void HandleCameraZoomPerformed(InputAction.CallbackContext context)
     {
-        float value = context.ReadValue<float>();
+        var value = context.ReadValue<float>();
         OnCameraZoomPerformed?.Invoke(value);
     }
 }

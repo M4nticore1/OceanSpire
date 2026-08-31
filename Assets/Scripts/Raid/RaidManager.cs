@@ -72,6 +72,7 @@ public class RaidManager : MonoBehaviour
 
     private void OnEnable()
     {
+        creaturesManager.OnRaiderUnregistered += HandleRaiderUnregistered;
         Human.OnHumanDied += HandleHumanDied;
         Human.OnHumanEnteredBoat += HandleEnteredBoat;
         Human.OnHumanExitedBoat += HandleExitedBoat;
@@ -79,6 +80,7 @@ public class RaidManager : MonoBehaviour
 
     private void OnDisable()
     {
+        creaturesManager.OnRaiderUnregistered -= HandleRaiderUnregistered;
         Human.OnHumanDied -= HandleHumanDied;
         Human.OnHumanEnteredBoat -= HandleEnteredBoat;
         Human.OnHumanExitedBoat -= HandleExitedBoat;
@@ -378,6 +380,11 @@ public class RaidManager : MonoBehaviour
         if (!ShouldEndRaid()) return;
 
         EndRaid(true);
+    }
+
+    private void HandleRaiderUnregistered(Human human)
+    {
+        UpdateUnderRaid();
     }
 
     private bool TryStartRaid()

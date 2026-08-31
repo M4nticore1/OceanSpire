@@ -11,8 +11,8 @@ public enum BuildingPlaceState
 
 public class BuildingPlace : MonoBehaviour, IClickable
 {
-    [SerializeField] private BuildingType buildingType = BuildingType.Room;
-    public BuildingType BuildingType => buildingType;
+    [SerializeField] private BuildingTypeEnum buildingType = BuildingTypeEnum.Room;
+    public BuildingTypeEnum BuildingType => buildingType;
 
     public int FloorIndex = 0;
 
@@ -31,6 +31,8 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private bool isClickable = true;
     public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
+
+    private BuildingsManager buildingsManager => BuildingsManager.Instance;
 
     public event Action OnClicked;
 
@@ -227,7 +229,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void ShowBuildingPlace(BuildingPlaceState buildingPlaceState)
     {
-        if (buildingType == BuildingType.FloorFrame && BuildingsManager.Instance.BuiltFloors.Count >= BuildingsManager.Instance.MaxFloorsCount) return;
+        if (buildingType == BuildingTypeEnum.FloorFrame && BuildingsManager.Instance.BuiltFloors.Count >= BuildingsManager.Instance.MaxFloorsCount) return;
 
         if (buildingZone) {
             buildingZone.SetActive(true);
@@ -251,36 +253,13 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private bool ShouldShow(Building building)
     {
+        if (placedBuilding != null) return false;
+        if (building == null) return false;
+
         var towerBuilding = building as TowerBuilding;
-        if (!towerBuilding) return false;
+        if (towerBuilding == null) return false;
+        if (!towerBuilding.ShouldBuild(this)) return false;
 
-        if (placedBuilding) return false;
-        if (buildingType != BuildingType.Room) return true;
-
-        var entranceBuildingPlace = BuildingsManager.Instance.EntranceBuildingPlace;
-
-        var leftPlace = neighborBuildingPlaces[Direction.Left];
-        if (leftPlace.placedBuilding || leftPlace == entranceBuildingPlace) {
-            return true;
-        }
-
-        var rightPlace = neighborBuildingPlaces[Direction.Right];
-        if (rightPlace.placedBuilding || rightPlace == entranceBuildingPlace) {
-            return true;
-        }
-
-        if (building.GetComponent<ElevatorModule>()) {
-            var upPlace = neighborBuildingPlaces[Direction.Up];
-            if (upPlace && upPlace.placedBuilding && upPlace.placedBuilding.Definition == building.Definition) {
-                return true;
-            }
-
-            var downPlace = neighborBuildingPlaces[Direction.Down];
-            if (downPlace && downPlace.placedBuilding && downPlace.placedBuilding.Definition == building.Definition) {
-                return true;
-            }
-        }
-
-        return false;
+        return true;
     }
 }

@@ -29,13 +29,13 @@ public class DriftingLootFocusManager : MonoBehaviour
 
     private void OnEnable()
     {
-        FocusComponent.OnFocusedChanged += OnComponentFocusedChanged;
+        FocusComponent.OnComponentFocusedChanged += OnComponentFocusedChanged;
         DriftingLoot.OnLootDestroyed += OnDriftingLootDestroyed;
     }
 
     private void OnDisable()
     {
-        FocusComponent.OnFocusedChanged -= OnComponentFocusedChanged;
+        FocusComponent.OnComponentFocusedChanged -= OnComponentFocusedChanged;
         DriftingLoot.OnLootDestroyed -= OnDriftingLootDestroyed;
     }
 
@@ -47,12 +47,12 @@ public class DriftingLootFocusManager : MonoBehaviour
         for (int i = focusedDriftingLoot.Count - 1; i >= 0; i--) {
             var loot = focusedDriftingLoot[i];
 
-            if (!loot) {
+            if (loot == null) {
                 focusedDriftingLoot.RemoveAt(i);
                 continue;
             }
 
-            if (!loot.FocusComponent || !loot.FocusComponent.IsFocused) {
+            if (loot.FocusComponent == null || !loot.FocusComponent.IsFocused) {
                 Debug.LogError($"[{nameof(DriftingLootFocusManager)}] Loot found in list but it's not focused. Removing.");
                 focusedDriftingLoot.RemoveAt(i);
                 continue;
@@ -77,7 +77,7 @@ public class DriftingLootFocusManager : MonoBehaviour
 
     private void AddFocusedDriftingLoot(SwimmingDriftingLoot driftingLoot)
     {
-        if (!driftingLoot) return;
+        if (driftingLoot == null) return;
         if (focusedDriftingLoot.Contains(driftingLoot)) return;
         if (!driftingLoot.FocusComponent.IsFocused) return;
 
@@ -86,20 +86,20 @@ public class DriftingLootFocusManager : MonoBehaviour
 
     private void RemoveFocusedDriftingLoot(SwimmingDriftingLoot driftingLoot)
     {
-        if (!driftingLoot) return;
+        if (driftingLoot == null) return;
         focusedDriftingLoot.Remove(driftingLoot);
     }
 
     private void TryUnfocusExtraLoot(SwimmingDriftingLoot newFocusedDriftingLoot)
     {
-        if (!newFocusedDriftingLoot) return;
+        if (newFocusedDriftingLoot == null) return;
         if (focusedDriftingLoot.Count <= GetMaxPointersCount()) return;
 
         var nearestDriftingLoot = GetNearestDriftingLoot(newFocusedDriftingLoot);
 
         if (nearestDriftingLoot) {
-            float maxClusterDistance = this.maxClusterDistance * this.maxClusterDistance;
-            float lootSqrDistance = (nearestDriftingLoot.transform.position - newFocusedDriftingLoot.transform.position).sqrMagnitude;
+            var maxClusterDistance = this.maxClusterDistance * this.maxClusterDistance;
+            var lootSqrDistance = (nearestDriftingLoot.transform.position - newFocusedDriftingLoot.transform.position).sqrMagnitude;
 
             if (lootSqrDistance <= maxClusterDistance) {
                 nearestDriftingLoot.FocusComponent.SetFocused(false);
@@ -115,12 +115,12 @@ public class DriftingLootFocusManager : MonoBehaviour
         }
     }
 
-    private void OnComponentFocusedChanged(FocusComponent focusComponent)
+    private void OnComponentFocusedChanged(FocusComponent focusComponent, bool focused)
     {
-        if (!focusComponent) return;
+        if (focusComponent == null) return;
 
         var driftingLoot = focusComponent.GetComponent<SwimmingDriftingLoot>();
-        if (!driftingLoot) return;
+        if (driftingLoot == null) return;
 
         if (focusComponent.IsFocused) {
             AddFocusedDriftingLoot(driftingLoot);
@@ -133,7 +133,7 @@ public class DriftingLootFocusManager : MonoBehaviour
 
     private void OnDriftingLootDestroyed(DriftingLoot driftingLoot)
     {
-        if (!driftingLoot) return;
+        if (driftingLoot == null) return;
 
         for (int i = focusedDriftingLoot.Count - 1; i >= 0; i--) {
             if (focusedDriftingLoot[i] && !focusedDriftingLoot[i].Equals(driftingLoot)) continue;
@@ -145,15 +145,14 @@ public class DriftingLootFocusManager : MonoBehaviour
     private SwimmingDriftingLoot GetNearestDriftingLoot(SwimmingDriftingLoot startLoot)
     {
         SwimmingDriftingLoot bestLoot = null;
-        float bestSqrDistance = float.MaxValue;
+        var bestSqrDistance = float.MaxValue;
         var position = startLoot.transform.position;
 
         foreach (var loot in focusedDriftingLoot) {
-            if (!loot) continue;
+            if (loot == null) continue;
             if (loot == startLoot) continue;
 
-            float sqrDistance = (loot.transform.position - position).sqrMagnitude;
-
+            var sqrDistance = (loot.transform.position - position).sqrMagnitude;
             if (sqrDistance < bestSqrDistance) {
                 bestSqrDistance = sqrDistance;
                 bestLoot = loot;
@@ -165,15 +164,15 @@ public class DriftingLootFocusManager : MonoBehaviour
 
     private int GetMaxPointersCount()
     {
-        if (!boatsManager) return 1;
+        if (boatsManager == null) return 1;
         if (boatsManager.CitizenBoats == null) return 1;
 
         var count = 0;
         foreach (var boat in boatsManager.CitizenBoats) {
-            if (!boat) continue;
+            if (boat == null) continue;
 
             var dockPoint = boat.DockPoint;
-            if (!dockPoint) continue;
+            if (dockPoint == null) continue;
 
             if (!boatDocksManager.CitizenBoatDocks.Contains(dockPoint)) continue;
 

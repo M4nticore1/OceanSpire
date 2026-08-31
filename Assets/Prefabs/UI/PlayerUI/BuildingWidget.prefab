@@ -1127,15 +1127,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetGraphic: {fileID: 8287378216999079271}
   contentGraphics: []
-  scaleRoot: {fileID: 2935036107710263794}
-  isInteractable: 1
   isSelectable: 0
+  selectGroup: {fileID: 0}
   isScalable: 1
+  scaleRoot: {fileID: 2935036107710263794}
+  isClickable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectGroup: {fileID: 0}
-  stateTransitionTime: 0.3
+  cancelPressWhenPointerMoving: 0
   state: 0
+  stateTransitionTime: 0.3
   idleState:
     bodyColor: {r: 1, g: 1, b: 1, a: 1}
     bodyColorHolder: {fileID: 0}
@@ -1287,7 +1288,6 @@ GameObject:
   - component: {fileID: 5911863147813292838}
   - component: {fileID: 8369071072566013778}
   - component: {fileID: 3753086174136718447}
-  - component: {fileID: 4816280516331780429}
   m_Layer: 5
   m_Name: BuildButton
   m_TagString: Untagged
@@ -1367,15 +1367,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetGraphic: {fileID: 8369071072566013778}
   contentGraphics: []
-  scaleRoot: {fileID: 1603433769933191045}
-  isInteractable: 1
   isSelectable: 0
+  selectGroup: {fileID: 0}
   isScalable: 1
+  scaleRoot: {fileID: 1603433769933191045}
+  isClickable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 1
-  selectGroup: {fileID: 0}
-  stateTransitionTime: 0.3
+  cancelPressWhenPointerMoving: 0
   state: 0
+  stateTransitionTime: 0.3
   idleState:
     bodyColor: {r: 0.9, g: 0.7506383, b: 0.53999996, a: 1}
     bodyColorHolder: {fileID: 0}
@@ -1424,19 +1425,6 @@ MonoBehaviour:
   OnUnhovered:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &4816280516331780429
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8061749931158324390}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e23345ccd9f026a47b406acbe6ce7b15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RaidDisablerButton
-  button: {fileID: 3753086174136718447}
 --- !u!1 &9080772693184277250
 GameObject:
   m_ObjectHideFlags: 0

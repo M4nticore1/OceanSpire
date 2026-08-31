@@ -49,8 +49,8 @@ MonoBehaviour:
   arrow: {fileID: 9171837909394750635}
   targetArrowHeight: 0
   targetArrowScale: 0
-  moveArrowSpeed: 2
-  scaleArrowSpeed: 2
+  moveArrowSpeed: 1.5
+  scaleArrowSpeed: 1.5
   circle: {fileID: 5689568394793503645}
   minCircleScale: 6
   maxCircleScale: 8

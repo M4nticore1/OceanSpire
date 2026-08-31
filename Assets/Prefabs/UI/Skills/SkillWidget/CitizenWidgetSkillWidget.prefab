@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1051846453867801410, guid: b76f5bd1f948e0340b4176f8f77c0b76, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2154957510288727171, guid: b76f5bd1f948e0340b4176f8f77c0b76, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

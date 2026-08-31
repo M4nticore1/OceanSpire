@@ -13,6 +13,8 @@ public enum ResidentWidgetState
 public class CitizenWidget : MonoBehaviour
 {
     public Citizen Citizen { get; private set; }
+    public Building InteractBuilding { get; private set; }
+
     public int WidgetIndex { get; private set; } = 0;
 
     [SerializeField] private SkillsPanel skillsPanel;
@@ -51,9 +53,14 @@ public class CitizenWidget : MonoBehaviour
         }
     }
 
-    private void SetCitizen(Citizen citizen)
+    public void SetCitizen(Citizen citizen)
     {
         Citizen = citizen;
+    }
+
+    public void SetInteractBuilding(Building interactBuilding)
+    {
+        InteractBuilding = interactBuilding;
     }
 
     private void ShowResidentMenu()
@@ -85,7 +92,15 @@ public class CitizenWidget : MonoBehaviour
 
     private void OnClicked()
     {
-        if (!Citizen) return;
+        if (Citizen == null) {
+            Debug.LogError($"[{nameof(CitizenWidget)}] Citizen is not valid!");
+            return;
+        }
+
+        if (InteractBuilding == null) {
+            Debug.LogError($"[{nameof(CitizenWidget)}] Interact Building is not valid!");
+            return;
+        }
 
         var interactComponent = Citizen.InteractComponent;
         var interactBuilding = Citizen.InteractComponent.InteractBuilding;
@@ -95,12 +110,9 @@ public class CitizenWidget : MonoBehaviour
             interactComponent.TryStopInteracting(interactBuilding);
         }
 
-        var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
+        if (InteractBuilding == interactBuilding) return;
+        if (InteractBuilding.CitizensHandler.Interactors.Count >= InteractBuilding.LevelDefinition.MaxHumansCount) return;
 
-        if (!selectedBuilding) return;
-        if (selectedBuilding == interactBuilding) return;
-        if (selectedBuilding.CitizensHandler.Interactors.Count >= selectedBuilding.LevelDefinition.MaxHumansCount) return;
-
-        interactComponent.SetInteractBuilding(selectedBuilding);
+        interactComponent.SetInteractBuilding(InteractBuilding);
     }
 }

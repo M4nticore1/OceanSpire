@@ -53,7 +53,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
         int floor = GetFloorIndexByPosition();
         if (TryApplyOwnedBuildingByFloor(floor)) {
             if (TryStopMoving()) {
-                ApplyConstructionPosition();
+                ApplyOwnedBuildingPosition();
                 SetTargetFloor(CalculateTargetFloor());
                 UpdateMoveDirection();
                 StartMovingToTargetFloorTimer();

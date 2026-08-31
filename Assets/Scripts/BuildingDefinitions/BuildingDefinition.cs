@@ -19,12 +19,12 @@ public enum BuildingIdEnum
     RadioStation
 };
 
-public enum BuildingType
+public enum BuildingTypeEnum
 {
     Room,
     Hall,
     FloorFrame,
-    Environment
+    Ground
 };
 
 public enum BuildingCategory
@@ -58,8 +58,8 @@ public class BuildingDefinition : ScriptableObject
     public LocalizationItem DescriptionLocalizationItem => descriptionLocalizationItem;
 
     [Header("Enums")]
-    [SerializeField] private BuildingType buildingType = BuildingType.Room;
-    public BuildingType BuildingType => buildingType;
+    [SerializeField] private BuildingTypeEnum buildingType = BuildingTypeEnum.Room;
+    public BuildingTypeEnum BuildingType => buildingType;
 
     [SerializeField] private BuildingCategory buildingCategory = BuildingCategory.Construction;
     public BuildingCategory BuildingCategory => buildingCategory;

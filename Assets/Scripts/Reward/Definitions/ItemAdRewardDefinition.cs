@@ -4,7 +4,7 @@ using UnityEngine;
 public class ItemAdRewardDefinition : AdRewardDefinition
 {
     [SerializeField] private ItemDefinition itemData;
-    public ItemDefinition Definition => itemData;
+    public ItemDefinition ItemDefinition => itemData;
 
     [SerializeField] private int minAmount;
     public int MinAmount => minAmount;

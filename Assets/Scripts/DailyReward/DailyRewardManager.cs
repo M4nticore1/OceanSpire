@@ -28,7 +28,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     private void Awake()
     {
-        if (Instance) {
+        if (Instance != null) {
             Destroy(gameObject);
             return;
         }
@@ -105,7 +105,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
                 var definition = availablePool[index];
                 availablePool.RemoveAt(index);
 
-                if (!definition) continue;
+                if (definition == null) continue;
                 if (existingIds.Contains(definition.RewardId)) {
                     continue;
                 }
@@ -149,16 +149,16 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         for (int i = 0; i < count; i++) {
             if (availableRewards.Count == 0) break;
 
-            int index = UnityEngine.Random.Range(0, availableRewards.Count);
+            var index = UnityEngine.Random.Range(0, availableRewards.Count);
             var definition = availableRewards[index];
             availableRewards.RemoveAt(index);
 
-            if (!definition) {
+            if (definition == null) {
                 Debug.LogWarning($"Reward Definition is null at index {index}");
                 continue;
             }
 
-            int id = (int)definition.RewardId;
+            var id = (int)definition.RewardId;
             var reward = TryCreateReward(id);
 
             if (reward == null) {
@@ -185,8 +185,8 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     public long CalculateNextResetTime()
     {
-        DateTime now = DateTime.UtcNow;
-        DateTime nextReset = new DateTime(now.Year, now.Month, now.Day, updateRewardTimeOffset, 0, 0, DateTimeKind.Utc);
+        var now = DateTime.UtcNow;
+        var nextReset = new DateTime(now.Year, now.Month, now.Day, updateRewardTimeOffset, 0, 0, DateTimeKind.Utc);
 
         if (nextReset <= now) {
             nextReset = nextReset.AddDays(1);
@@ -200,6 +200,8 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         currentRewards.Clear();
 
         foreach (var rewardData in GetRandomRewardsData()) {
+            if (rewardData == null) continue;
+
             var reward = rewardData.CreateReward();
             if (reward == null) {
                 Debug.LogError($"[{nameof(DailyRewardManager)}] Reward is not valid");
@@ -254,7 +256,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     private RewardInstance TryCreateReward(int id)
     {
         var definition = rewardsList.GetRewardDefinition(id);
-        if (!definition) {
+        if (definition == null) {
             Debug.Log($"[{nameof(DailyRewardManager)}] Reward Definition not found at {name}");
             return null;
         }

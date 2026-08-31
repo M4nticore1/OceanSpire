@@ -152,7 +152,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonTutorialStep
   content: {fileID: 6390121106355143851}
   completeEventListener: {fileID: 0}
-  disabledInteractions: []
+  disabledInteractions:
+  - {fileID: 0}
+  - {fileID: 0}
   blockCameraMovement: 0
   button: {fileID: 0}
 --- !u!1 &6390121106355143851 stripped

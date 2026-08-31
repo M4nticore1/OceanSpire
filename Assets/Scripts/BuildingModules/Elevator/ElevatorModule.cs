@@ -17,6 +17,24 @@ public class ElevatorModule : BuildingModule
 
     }
 
+    // Building
+    //public override bool ShouldBuild(BuildingPlace buildingPlace)
+    //{
+    //    if (!base.ShouldBuild(buildingPlace)) return false;
+
+    //    var upPlace = buildingPlace.NeighborBuildingPlaces[Direction.Up];
+    //    if (upPlace && upPlace.PlacedBuilding && upPlace.PlacedBuilding.Definition == OwnedBuilding.Definition) {
+    //        return true;
+    //    }
+
+    //    var downPlace = buildingPlace.NeighborBuildingPlaces[Direction.Down];
+    //    if (downPlace && downPlace.PlacedBuilding && downPlace.PlacedBuilding.Definition == OwnedBuilding.Definition) {
+    //        return true;
+    //    }
+
+    //    return false;
+    //}
+
     // Passengers
     public void AddGoingToWaitingPassenger(ElevatorPassenger elevatorPassenger)
     {
@@ -107,22 +125,6 @@ public class ElevatorModule : BuildingModule
         return !SpawnedElevatorCabin.IsMoving;
     }
 
-    //public Transform GetCabinRidingTransform()
-    //{
-    //    int ridersCount = SpawnedElevatorCabin.RidingPassengers.Count;
-    //    int goingToRidingCount = SpawnedElevatorCabin.GoingToRidingPassengers.Count;
-    //    int totalPassengers = ridersCount + goingToRidingCount;
-
-    //    int length = SpawnedElevatorCabin.BuildingInteractions.Length;
-    //    if (length > 0 && totalPassengers > 0) {
-    //        int index = (totalPassengers - 1) % length;
-
-    //        return SpawnedElevatorCabin.GetInteraction(index).GetWaypoint(0).transform;
-    //    }
-
-    //    return transform;
-    //}
-
     public Transform GetCabinRidingTransform(ElevatorPassenger elevatorPassenger)
     {
         if (!CanGetSpawnedCabin()) return null;
@@ -155,6 +157,7 @@ public class ElevatorModule : BuildingModule
         }
 
         if (cabin == SpawnedElevatorCabin) return;
+
         SpawnedElevatorCabin = cabin;
     }
 

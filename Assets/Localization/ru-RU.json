@@ -42,6 +42,7 @@
   "instantly": "Моментально",
   "inventory": "Инвентарь",
   "weapon": "Оружие",
+  "pier_workers_unassigned": "На пирсе нет рабочих. Назначьте рабочих, чтобы собирать дрейфующие ресурсы.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "с",

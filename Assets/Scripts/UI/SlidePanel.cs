@@ -49,6 +49,8 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
     private Vector2 releasePossition;
     private int openedFrame = 0;
 
+    private InputListener inputListener => InputListener.Instance;
+
     public event Action OnShowed;
     public event Action OnHidden;
 
@@ -59,22 +61,26 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     private void OnEnable()
     {
-        InputListener.Instance.OnPressed += OnPress;
-        InputListener.Instance.OnReleased += OnRelease;
+        if (inputListener != null) {
+            InputListener.Instance.OnPressed += OnPress;
+            InputListener.Instance.OnReleased += OnRelease;
+        }
     }
 
     private void OnDisable()
     {
-        InputListener.Instance.OnPressed -= OnPress;
-        InputListener.Instance.OnReleased -= OnRelease;
+        if (inputListener != null) {
+            InputListener.Instance.OnPressed -= OnPress;
+            InputListener.Instance.OnReleased -= OnRelease;
+        }
     }
 
     private void Start()
     {
         FillContent();
 
-        if (background) {
-            Color color = background.color;
+        if (background != null) {
+            var color = background.color;
             color.a = 0f;
             background.color = color;
             background.raycastTarget = false;
@@ -95,7 +101,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
             }
         }
 
-        if (background) {
+        if (background != null) {
             UpdateBackground();
         }
     }
@@ -177,7 +183,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     private void ProcessMoving()
     {
-        float t = 1f - math.exp(-slideTransitionSpeed * Time.deltaTime);
+        var t = 1f - math.exp(-slideTransitionSpeed * Time.deltaTime);
         rectTransform.anchoredPosition = math.lerp(rectTransform.anchoredPosition, targetPosition, t);
 
         var min = math.min(openedPosition, closedPosition);
@@ -188,8 +194,7 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     private void UpdateBackground()
     {
-        Color color = background.color;
-
+        var color = background.color;
         if (IsShowed) {
             color.a = math.lerp(color.a, openedBackgroundAlpha, alphaTransitionSpeed * Time.deltaTime);
         }
@@ -235,18 +240,18 @@ public class SlidePanel : MonoBehaviour, IInputListenable, IOpenable
 
     private Vector2 CalculatePositionByAlpha(Vector2 screenPostionAlpha, Vector2 panelPostionAlpha)
     {
-        float scale = canvas.scaleFactor;
+        var scale = canvas.scaleFactor;
         if (scale <= 0f) {
             scale = 1f;
         }
 
-        Vector2 resolution = new Vector2(Screen.width, Screen.height) / scale;
-        float positionX = resolution.x * screenPostionAlpha.x;
-        float positionY = resolution.y * screenPostionAlpha.y;
+        var resolution = new Vector2(Screen.width, Screen.height) / scale;
+        var positionX = resolution.x * screenPostionAlpha.x;
+        var positionY = resolution.y * screenPostionAlpha.y;
 
-        Vector2 size = rectTransform.rect.size;
-        float sizeCorrectionX = size.x * panelPostionAlpha.x;
-        float sizeCorrectionY = size.y * panelPostionAlpha.y;
+        var size = rectTransform.rect.size;
+        var sizeCorrectionX = size.x * panelPostionAlpha.x;
+        var sizeCorrectionY = size.y * panelPostionAlpha.y;
 
         return new Vector2(positionX, positionY) + new Vector2(sizeCorrectionX, sizeCorrectionY);
     }

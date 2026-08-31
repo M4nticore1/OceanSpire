@@ -42,6 +42,7 @@
   "instantly": "Seketika",
   "inventory": "Inventaris",
   "weapon": "Senjata",
+  "pier_workers_unassigned": "Tidak ada pekerja di dermaga. Tugaskan pekerja untuk mengumpulkan sumber daya yang hanyut.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "d",

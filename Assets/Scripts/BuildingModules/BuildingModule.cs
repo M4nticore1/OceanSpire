@@ -79,6 +79,27 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
 
     }
 
+    // Subscribe
+    private bool TrySubscribe()
+    {
+        if (!ShouldSubscribe()) return false;
+
+        Subscribe();
+        isSubscribed = true;
+
+        return true;
+    }
+
+    private bool TryUnsubscribe()
+    {
+        if (!ShouldUnsubscribe()) return false;
+
+        Unsubscribe();
+        isSubscribed = false;
+
+        return true;
+    }
+
     protected virtual void Subscribe()
     {
         ownedBuilding.OnInited += Init;
@@ -115,6 +136,7 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
         return true;
     }
 
+    // Init
     private void Init()
     {
         OnInit();
@@ -158,6 +180,32 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
         return false;
     }
 
+    // Building
+    public virtual bool ShouldBuild()
+    {
+        return true;
+    }
+
+    public virtual bool ShouldBuild(BuildingPlace buildingPlace)
+    {
+        if (buildingPlace == null) return false;
+
+        return true;
+    }
+
+    // Energy
+    public virtual float GetElectricityConsumption()
+    {
+        if (OwnedBuilding == null) return 0;
+
+        return OwnedBuilding.GetElectricityConsumption();
+    }
+
+    public virtual bool ShouldSpendElectricity()
+    {
+        return IsWorking;
+    }
+
     // Working
     public bool TryStartWorking()
     {
@@ -175,17 +223,22 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
         return true;
     }
 
-    // Energy
-    public virtual float GetElectricityConsumption()
+    private void StartWorking()
     {
-        if (OwnedBuilding == null) return 0;
+        IsWorking = true;
+        HandleWorkingStart();
 
-        return OwnedBuilding.GetElectricityConsumption();
+        OnWorkingStarted?.Invoke();
+        OnModuleWorkingStarted?.Invoke(this);
     }
 
-    public virtual bool ShouldSpendElectricity()
+    private void StopWorking()
     {
-        return IsWorking;
+        IsWorking = false;
+        HandleWorkingStop();
+
+        OnWorkingStopped?.Invoke();
+        OnModuleWorkingStopped?.Invoke(this);
     }
 
     // Workers
@@ -207,45 +260,5 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
     private void HandleCurrentWorkerRemoved(Human human)
     {
         TryStopWorking();
-    }
-
-    // Subscribe
-    private bool TrySubscribe()
-    {
-        if (!ShouldSubscribe()) return false;
-
-        Subscribe();
-        isSubscribed = true;
-
-        return true;
-    }
-
-    private bool TryUnsubscribe()
-    {
-        if (!ShouldUnsubscribe()) return false;
-
-        Unsubscribe();
-        isSubscribed = false;
-
-        return true;
-    }
-
-    // Working
-    private void StartWorking()
-    {
-        IsWorking = true;
-        HandleWorkingStart();
-
-        OnWorkingStarted?.Invoke();
-        OnModuleWorkingStarted?.Invoke(this);
-    }
-
-    private void StopWorking()
-    {
-        IsWorking = false;
-        HandleWorkingStop();
-
-        OnWorkingStopped?.Invoke();
-        OnModuleWorkingStopped?.Invoke(this);
     }
 }

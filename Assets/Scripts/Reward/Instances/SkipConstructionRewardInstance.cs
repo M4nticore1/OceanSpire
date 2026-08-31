@@ -10,9 +10,9 @@ public class SkipConstructionRewardInstance : RewardInstance
         this.constructionComponent = constructionComponent;
     }
 
-    protected override void OnRewardRecieved()
+    protected override void HandleRewardRecieved()
     {
-        base.OnRewardRecieved();
+        base.HandleRewardRecieved();
 
         constructionComponent.FinishConstruction();
     }

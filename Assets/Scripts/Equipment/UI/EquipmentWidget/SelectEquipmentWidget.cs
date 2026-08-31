@@ -29,7 +29,7 @@ public class SelectEquipmentWidget : EquipmentWidget
 
     protected override void OnClicked()
     {
-        selectEquipmentMenu.Show(EquipmentCategory);
+        selectEquipmentMenu.Show(equipmentComponent, EquipmentCategory);
     }
 
     private void OnEquipmentComponentEquiped(EquipmentComponent equipmentComponent)

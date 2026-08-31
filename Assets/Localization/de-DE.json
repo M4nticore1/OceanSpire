@@ -42,6 +42,7 @@
   "instantly": "Sofort",
   "inventory": "Inventar",
   "weapon": "Waffe",
+  "pier_workers_unassigned": "Keine Arbeiter am Pier. Weise Arbeiter zu, um treibende Ressourcen zu sammeln.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

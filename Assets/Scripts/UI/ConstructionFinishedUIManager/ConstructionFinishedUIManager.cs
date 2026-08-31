@@ -26,24 +26,28 @@ public class ConstructionFinishedUIManager : MonoBehaviour
 
     private void Update()
     {
-        if (spawnedWidget.Count == 0) return;
+        for (int i = spawnedWidget.Count - 1; i >= 0; i--) {
+            var widget = spawnedWidget[i];
+            if (widget == null) {
+                spawnedWidget.RemoveAt(i);
+                continue;
+            }
 
-        foreach (var widget in spawnedWidget.ToArray()) {
             widget.Tick();
         }
     }
 
     private void OnBuildingConstructionFinished(Building building)
     {
-        if (!building) {
-            Debug.LogError("building is not valid");
+        if (building == null) {
+            Debug.LogError($"[{nameof(ConstructionFinishedUIManager)}] Building is not valid");
             return;
         }
 
         if (!ShouldCreateWidget(building)) return;
 
         if (!constructionFinishedWidget) {
-            Debug.LogError("constructionFinishedWidget is not valid");
+            Debug.LogError($"[{nameof(ConstructionFinishedUIManager)}] Construction Finished Widget is not valid");
             return;
         }
 
@@ -58,19 +62,21 @@ public class ConstructionFinishedUIManager : MonoBehaviour
 
     private void OnBuildingUpgradeFinished(Building building)
     {
-        if (!building) {
-            Debug.LogError("building is not valid");
+        if (building == null) {
+            Debug.LogError($"[{nameof(ConstructionFinishedUIManager)}] Building is not valid");
             return;
         }
 
         if (!ShouldCreateWidget(building)) return;
 
         if (!upgradeFinishedWidget) {
-            Debug.LogError("upgradeFinishedWidget is not valid");
+            Debug.LogError($"[{nameof(ConstructionFinishedUIManager)}] Upgrade Finished Widget is not valid");
             return;
         }
 
         foreach (var spawnedWidget in spawnedWidget) {
+            if (spawnedWidget == null) continue;
+
             if (spawnedWidget.Localizable == building as ILocalizable)
                 return;
         }

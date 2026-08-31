@@ -233,7 +233,7 @@ public class Raider : Human, IProgressable
 
         for (int i = 0; i < raiderBoats.Count; i++) {
             var boat = raiderBoats[i];
-            if (!boat) {
+            if (boat == null) {
                 Debug.LogError($"[{nameof(Raider)}] Raider Boat is not valid at index {i}");
                 continue;
             }

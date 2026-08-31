@@ -19,7 +19,7 @@ public class ButtonsToggler : InteractionToggler
         var buttons = FindObjectsByType<CustomButton>(FindObjectsSortMode.None);
 
         foreach (var button in buttons) {
-            if (!buttonsDict.TryAdd(button, button.IsInteractable)) continue;
+            if (!buttonsDict.TryAdd(button, button.IsClickable)) continue;
 
             button.SetInteractable(false);
         }

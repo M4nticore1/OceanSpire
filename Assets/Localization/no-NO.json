@@ -42,6 +42,7 @@
   "instantly": "Øyeblikkelig",
   "inventory": "Inventar",
   "weapon": "Våpen",
+  "pier_workers_unassigned": "Det er ingen arbeidere på kaien. Tildel arbeidere for å samle inn drivende ressurser.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

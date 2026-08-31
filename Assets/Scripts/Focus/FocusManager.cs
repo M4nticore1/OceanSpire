@@ -6,7 +6,7 @@ public class FocusManager : MonoBehaviour
 {
     public static FocusManager Instance { get; private set; }
 
-    private HashSet<FocusPointer> focusPointers = new();
+    private List<FocusPointer> focusPointers = new();
     public IReadOnlyCollection<FocusPointer> FocusPointersList => focusPointers;
 
     private List<FocusComponent> focusComponentsList = new();
@@ -17,13 +17,13 @@ public class FocusManager : MonoBehaviour
 
     private void OnEnable()
     {
-        FocusComponent.OnFocusedChanged += OnFocusedChanged;
+        FocusComponent.OnComponentFocusedChanged += OnFocusedChanged;
         FocusComponent.OnComponentDestroyed += OnFocusComponentDestroyed;
     }
 
     private void OnDisable()
     {
-        FocusComponent.OnFocusedChanged -= OnFocusedChanged;
+        FocusComponent.OnComponentFocusedChanged -= OnFocusedChanged;
         FocusComponent.OnComponentDestroyed -= OnFocusComponentDestroyed;
     }
 
@@ -40,7 +40,13 @@ public class FocusManager : MonoBehaviour
 
     private void Update()
     {
-        foreach (var pointer in focusPointers) {
+        for (int i = focusPointers.Count - 1; i >= 0; i--) {
+            var pointer = focusPointers[i];
+            if (pointer == null) {
+                focusPointers.RemoveAt(i);
+                continue;
+            }
+
             pointer.Tick();
         }
     }
@@ -63,10 +69,10 @@ public class FocusManager : MonoBehaviour
                 if (guid == Guid.Empty) continue;
 
                 var instance = InstancesManager.Instance.GetInstance(guid);
-                if (!instance) continue;
+                if (instance == null) continue;
 
                 var focusComponent = instance.GetComponent<FocusComponent>();
-                if (!focusComponent) continue;
+                if (focusComponent == null) continue;
 
                 focusComponent.SetFocused(true);
             }
@@ -75,24 +81,24 @@ public class FocusManager : MonoBehaviour
 
     public void RegisterPointer(FocusPointer pointer)
     {
-        if (!pointer) return;
+        if (pointer == null) return;
 
         focusPointers.Add(pointer);
     }
 
     public void UnregisterPointer(FocusPointer pointer)
     {
-        if (!pointer) return;
+        if (pointer == null) return;
 
         focusPointers.Remove(pointer);
     }
 
     private void CreateFocusPointer(FocusComponent focusComponent)
     {
-        if (!focusComponent) return;
+        if (focusComponent == null) return;
 
         var pointer = FocusPointerFactory.CreatePointer(focusComponent.FocusPointerPrefab, focusComponent.transform);
-        if (!pointer) return;
+        if (pointer == null) return;
 
         focusPointers.Add(pointer);
         focusPointersDict.Add(focusComponent, pointer);
@@ -100,7 +106,7 @@ public class FocusManager : MonoBehaviour
 
     private void RemoveFocusPointer(FocusComponent focusComponent)
     {
-        if (!focusComponent) return;
+        if (focusComponent == null) return;
         if (!focusPointersDict.TryGetValue(focusComponent, out var pointer)) return;
 
         Destroy(pointer.gameObject);
@@ -110,21 +116,21 @@ public class FocusManager : MonoBehaviour
 
     private void AddFocusComponent(FocusComponent focusComponent)
     {
-        if (!focusComponent) return;
+        if (focusComponent == null) return;
 
         focusComponentsList.Add(focusComponent);
     }
 
     private void RemoveFocusComponent(FocusComponent focusComponent)
     {
-        if (!focusComponent) return;
+        if (focusComponent == null) return;
 
         focusComponentsList.Remove(focusComponent);
     }
 
     private void UpdateFocusPointer(FocusComponent focusComponent)
     {
-        if (!focusComponent) return;
+        if (focusComponent == null) return;
 
         if (focusComponent.IsFocused && !focusComponentsList.Contains(focusComponent)) {
             if (focusComponentsList.Contains(focusComponent)) return;
@@ -138,7 +144,7 @@ public class FocusManager : MonoBehaviour
         }
     }
 
-    private void OnFocusedChanged(FocusComponent focusComponent)
+    private void OnFocusedChanged(FocusComponent focusComponent, bool focused)
     {
         UpdateFocusPointer(focusComponent);
     }

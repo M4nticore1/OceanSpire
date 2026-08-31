@@ -42,6 +42,7 @@
   "instantly": "Istantaneamente",
   "inventory": "Inventario",
   "weapon": "Arma",
+  "pier_workers_unassigned": "Non ci sono operai al molo. Assegna gli operai per raccogliere le risorse alla deriva.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

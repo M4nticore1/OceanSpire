@@ -42,6 +42,7 @@
   "instantly": "Instantanément",
   "inventory": "Inventaire",
   "weapon": "Arme",
+  "pier_workers_unassigned": "Aucun ouvrier sur le quai. Attribuez des ouvriers pour récolter les ressources à la dérive.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

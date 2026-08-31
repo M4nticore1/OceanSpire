@@ -42,6 +42,7 @@
   "instantly": "Serta-merta",
   "inventory": "Inventori",
   "weapon": "Senjata",
+  "pier_workers_unassigned": "Tiada pekerja di jeti. Tugaskan pekerja untuk mengutip sumber yang hanyut.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

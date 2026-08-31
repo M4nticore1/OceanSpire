@@ -32,9 +32,9 @@ public class RewardInstance : ILocalizable
         return localizationDictionary;
     }
 
-    protected virtual void OnRewardRecieved()
+    protected virtual void HandleRewardRecieved()
     {
-        IsCollected = true;
+        SetCollected(true);
     }
 
     public void SetAmount(int amount)
@@ -44,7 +44,7 @@ public class RewardInstance : ILocalizable
 
     public void RecieveReward()
     {
-        OnRewardRecieved();
+        HandleRewardRecieved();
         OnRewardReceived?.Invoke(this);
     }
 

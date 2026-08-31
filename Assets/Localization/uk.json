@@ -42,6 +42,7 @@
   "instantly": "Миттєво",
   "inventory": "Інвентар",
   "weapon": "Зброя",
+  "pier_workers_unassigned": "На причалі немає робітників. Призначте робітників для збору ресурсів, що дрейфують.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "с",

@@ -14,23 +14,27 @@ public class FocusComponent : MonoBehaviour, IClickable
     private bool isClickable = true;
     public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
-    public static event Action<FocusComponent> OnFocusedChanged;
-    public static event Action<FocusComponent> OnComponentDestroyed;
+    public event Action<bool> OnFocusChanged;
+    public static event Action<FocusComponent, bool> OnComponentFocusedChanged;
 
     public event Action OnClicked;
     public static event Action<FocusComponent> OnGlobalClicked;
+
+    public static event Action<FocusComponent> OnComponentDestroyed;
 
     private void OnDestroy()
     {
         OnComponentDestroyed?.Invoke(this);
     }
 
-    public void SetFocused(bool value)
+    public void SetFocused(bool focused)
     {
-        if (value == IsFocused) return;
+        if (focused == IsFocused) return;
 
-        IsFocused = value;
-        OnFocusedChanged?.Invoke(this);
+        IsFocused = focused;
+
+        OnFocusChanged?.Invoke(focused);
+        OnComponentFocusedChanged?.Invoke(this, focused);
     }
 
     public void Click()

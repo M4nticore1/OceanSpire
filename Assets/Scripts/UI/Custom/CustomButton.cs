@@ -25,7 +25,7 @@ public class CustomSelectableStateEntry
     public float scale;
 }
 
-public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
+public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     [SerializeField] public Graphic targetGraphic;
     [SerializeField] public Graphic[] contentGraphics = null;
@@ -43,9 +43,6 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] public RectTransform scaleRoot = null;
 
     [Header("Interaction")]
-    [SerializeField] private bool isInteractable = true;
-    public bool IsInteractable => isInteractable;
-
     [SerializeField] private bool isClickable = true;
     public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
@@ -138,18 +135,27 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         UpdateSelectGroup();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        CustomUIManager.Instance.RegisterCustomButton(this);
-        InputListener.Instance.OnReleased += OnPointerReleased;
+        base.OnEnable();
+
+        if (customUIManager != null) {
+            customUIManager.RegisterCustomButton(this);
+        }
+        else {
+            Debug.Log($"[{nameof(CustomButton)}] Custom UI Manager is not valid!");
+        }
 
         EndTransitionAnimation();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
-        CustomUIManager.Instance.UnregisterCustomButton(this);
-        InputListener.Instance.OnReleased -= OnPointerReleased;
+        base.OnDisable();
+
+        if (customUIManager != null) {
+            customUIManager.UnregisterCustomButton(this);
+        }
 
         if (state == CustomButtonState.Hovered) {
             SetState(CustomButtonState.Idle);
@@ -184,15 +190,13 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     }
 #endif
 
-    public void Tick()
+    public override void Tick()
     {
+        base.Tick();
+
         if (!enabled) return;
         if (!gameObject.activeSelf) return;
         if (!gameObject.activeInHierarchy) return;
-
-        if (isAnimating) {
-            ApplyInteractionAlpha();
-        }
 
         if (IsPressed) {
             if (cancelPressWhenMoving && (pressedButtonStartPosition - transform.position).sqrMagnitude >= 1f) {
@@ -202,6 +206,8 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 SetState(CustomButtonState.Idle);
             }
         }
+
+        ApplyInteractionAlpha();
     }
 
     // Enable
@@ -229,7 +235,7 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void SetInteractable(bool value)
     {
-        isInteractable = value;
+        isClickable = value;
     }
 
     private void UpdateSelectGroup()
@@ -250,7 +256,7 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (!IsEnabled) return;
-        if (!IsInteractable) return;
+        if (!IsClickable) return;
         if (IsSelected) return;
         if (!PointerUtils.GetRaycastHit(out var hit)) return;
         if (hit.colliderHit != null) return;
@@ -269,7 +275,7 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerExit(PointerEventData eventData)
     {
         if (!IsEnabled) return;
-        if (!IsInteractable) return;
+        if (!IsClickable) return;
         if (IsSelected) return;
 
         SetState(CustomButtonState.Idle);
@@ -284,7 +290,7 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerDown(PointerEventData eventData)
     {
         if (!IsEnabled) return;
-        if (!IsInteractable) return;
+        if (!IsClickable) return;
         if (IsPressed) return;
         if (!IsHovered) return;
 
@@ -307,27 +313,24 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private void OnPointerReleased()
     {
         if (!IsEnabled) return;
-        if (!IsInteractable) return;
+        if (!IsClickable) return;
 
-        Debug.Log("Click");
+        PointerUtils.GetRaycastHit(out var hit);
         if (IsPressed) {
-            Debug.Log("Click1");
             if (IsSelectable) {
-                Debug.Log("Click2");
                 SetState(CustomButtonState.Selected);
             }
             else {
-                Debug.Log("Click3");
                 SetState(CustomButtonState.Hovered);
             }
 
             Release();
         }
-        else if (IsIdle && PointerUtils.GetRaycastUIResult().gameObject == gameObject) {
+        else if (IsIdle && hit.gameObject == gameObject) {
             SetState(CustomButtonState.Hovered);
         }
         else if (!IsIdle) {
-            var go = PointerUtils.GetRaycastUIResult().gameObject;
+            var go = hit.gameObject;
             var button = go != null ? go.GetComponent<CustomButton>() : null;
 
             if (deselectOnOutsideClick && (go == null || go != gameObject)) {
@@ -338,7 +341,8 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private void Release()
     {
-        if (!PointerUtils.IsUIHovered(gameObject)) return;
+        if (!PointerUtils.GetRaycastHit(out var hit)) return;
+        if (hit.gameObject != gameObject) return;
 
         OnReleased?.Invoke();
         OnButtonReleased?.Invoke(this);
@@ -431,11 +435,7 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private void ApplyInteractionAlpha()
     {
-        float duration = Mathf.Max(stateTransitionTime, 0.0001f);
-        SetStateTransitionAlpha(stateTransitionAlpha + Time.deltaTime / duration);
-
-        if (stateTransitionAlpha >= 1f)
-            isAnimating = false;
+        SetStateTransitionAlpha(stateTransitionTime > 0 ? stateTransitionAlpha + Time.deltaTime / stateTransitionTime : 1f);
     }
 
     private void ResetTransitionAnimation()
@@ -446,7 +446,7 @@ public class CustomButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private void SetStateTransitionAlpha(float value)
     {
         stateTransitionAlpha = value;
-        stateTransitionAlpha = math.clamp(stateTransitionAlpha, 0, 1);
+        stateTransitionAlpha = Mathf.Clamp01(stateTransitionAlpha);
 
         if (stateTransitionAlpha >= 1) {
             isAnimating = false;

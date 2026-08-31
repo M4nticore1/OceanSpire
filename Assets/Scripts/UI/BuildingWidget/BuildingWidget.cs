@@ -28,13 +28,18 @@ public class BuildingWidget : MonoBehaviour
     [SerializeField] private LocalizationItem instantlyBuildLocalization;
 
     private CityStorage cityStorage => CityStorage.Instance;
+    private RaidManager raidManager => RaidManager.Instance;
+
     public Building BuildingPrefab { get; private set; }
 
     private void OnEnable()
     {
         buildButton.OnReleased.AddListener(OnBuildButtonCliked);
         informationButton.OnReleased.AddListener(OnInformationButtonClicked);
-        cityStorage.Inventory.OnItemAmountAdded += OnCityItemAdded;
+        cityStorage.Inventory.OnItemAmountAdded += HandleCityItemAdded;
+
+        raidManager.OnRaidStarted += HandleRaidStarted;
+        raidManager.OnRaidEnded += HandleRaidEnded;
 
         UpdateBuildButtonEnabled();
         UpdateBuildTime();
@@ -44,12 +49,15 @@ public class BuildingWidget : MonoBehaviour
     {
         buildButton.OnReleased.RemoveListener(OnBuildButtonCliked);
         informationButton.OnReleased.RemoveListener(OnInformationButtonClicked);
-        cityStorage.Inventory.OnItemAmountAdded -= OnCityItemAdded;
+        cityStorage.Inventory.OnItemAmountAdded -= HandleCityItemAdded;
+
+        raidManager.OnRaidStarted -= HandleRaidStarted;
+        raidManager.OnRaidEnded -= HandleRaidEnded;
     }
 
     public void Init(Building building)
     {
-        if (!building) {
+        if (building == null) {
             Debug.LogError($"[{nameof(BuildingWidget)}] Building is not valid");
             return;
         }
@@ -89,35 +97,12 @@ public class BuildingWidget : MonoBehaviour
 
     private void UpdateBuildButtonEnabled()
     {
-        if (!BuildingPrefab) {
-            BuildButton.SetState(CustomButtonState.Disabled);
-            BuildButton.EndTransitionAnimation();
-            return;
+        if (ShouldEnableBuildButton()) {
+            BuildButton.SetState(CustomButtonState.Idle);
         }
-
-        if (!cityStorage) {
-            Debug.LogError($"[{nameof(BuildingWidget)}] City Storage is not valid!");
+        else {
             BuildButton.SetState(CustomButtonState.Disabled);
-            BuildButton.EndTransitionAnimation();
-            return;
         }
-
-        if (RaidManager.Instance && RaidManager.Instance.IsUnderRaid) {
-            BuildButton.SetState(CustomButtonState.Disabled);
-            BuildButton.EndTransitionAnimation();
-            return;
-        }
-
-        foreach (var buildItem in BuildingPrefab.LevelDefinition.ResourcesToBuild) {
-            var storageItem = cityStorage.Inventory.GetItem(buildItem.Definition.ItemId);
-            if (storageItem.Amount >= buildItem.Amount) continue;
-
-            BuildButton.SetState(CustomButtonState.Disabled);
-            BuildButton.EndTransitionAnimation();
-            return;
-        }
-
-        BuildButton.SetState(CustomButtonState.Idle);
         BuildButton.EndTransitionAnimation();
     }
 
@@ -148,13 +133,31 @@ public class BuildingWidget : MonoBehaviour
     private void OnInformationButtonClicked()
     {
         var informationMenu = BuildingInformationMenu.Instance;
-        if (!informationMenu) return;
+        if (informationMenu == null) return;
 
         informationMenu.Show(BuildingPrefab);
     }
 
-    private void OnCityItemAdded(ItemInstance itemInstance)
+    private void HandleCityItemAdded(ItemInstance itemInstance)
     {
         UpdateBuildButtonEnabled();
+    }
+
+    private void HandleRaidStarted()
+    {
+        UpdateBuildButtonEnabled();
+    }
+
+    private void HandleRaidEnded(RaidEndedResult result)
+    {
+        UpdateBuildButtonEnabled();
+    }
+
+    private bool ShouldEnableBuildButton()
+    {
+        if (BuildingPrefab == null) return false;
+        if (!BuildingPrefab.ShouldBuild()) return false;
+
+        return true;
     }
 }

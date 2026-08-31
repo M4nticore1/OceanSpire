@@ -42,6 +42,7 @@
   "instantly": "Agad",
   "inventory": "Imbentaryo",
   "weapon": "Armas",
+  "pier_workers_unassigned": "Walang manggagawa sa pantalan. Magtalaga ng mga manggagawa para kumuha ng mga lumulutang na yaman.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

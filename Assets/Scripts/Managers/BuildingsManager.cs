@@ -5,7 +5,7 @@ public class BuildingsManager : MonoBehaviour
 {
     public static BuildingsManager Instance;
 
-    [SerializeField] private List<FloorFrameModule> builtFloors = new List<FloorFrameModule>();
+    [SerializeField] private List<FloorFrameModule> builtFloors = new();
     public IReadOnlyList<FloorFrameModule> BuiltFloors => builtFloors;
 
     [SerializeField] private Transform firstFloorBuildingTransform;

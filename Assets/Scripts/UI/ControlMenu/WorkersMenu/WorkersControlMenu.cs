@@ -165,6 +165,7 @@ public class WorkersControlMenu : ControlMenu
         }
 
         currentBuilding = building;
+        SetWidgetsInteractBuilding(building);
         Show();
     }
 
@@ -268,6 +269,19 @@ public class WorkersControlMenu : ControlMenu
         buildingWorkersMenu.UpdateMenu();
         employedCitizensMenu.UpdateMenu();
         unemployedCitizensMenu.UpdateMenu();
+    }
+
+    private void SetWidgetsInteractBuilding(Building building)
+    {
+        for (int i = spawnedWidgets.Count - 1; i >= 0; i--) {
+            var widget = spawnedWidgets[i];
+            if (widget == null) {
+                spawnedWidgets.RemoveAt(i);
+                continue;
+            }
+
+            widget.SetInteractBuilding(building);
+        }
     }
 
     private void OnCitizenWorkSeted(CreatureInteractComponent interactor)

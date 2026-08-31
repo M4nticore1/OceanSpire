@@ -42,6 +42,7 @@
   "instantly": "Øjeblikkeligt",
   "inventory": "Inventar",
   "weapon": "Våben",
+  "pier_workers_unassigned": "Der er ingen arbejdere på molen. Tildel arbeidere til at samle drivende ressourcer.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

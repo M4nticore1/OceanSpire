@@ -329,15 +329,24 @@ public class BoatRider : MonoBehaviour
         if (RidingBoat != null) yield break;
 
         if (boat == null) {
-            Debug.LogError($"RidingBoat not found at {name}");
+            Debug.LogError($"[{nameof(BoatRider)}] Boat not found at {name}");
+            waitingBoatCoroutine = null;
             yield break;
         }
 
-        while (boat.CurrentStateEnum != BoatStateEnum.Idle || boat.CurrentRider != null) {
-            yield return new WaitForEndOfFrame();
+        while (boat != null && (boat.CurrentStateEnum != BoatStateEnum.Idle ||  boat.CurrentRider != null)) {
+            yield return null;
         }
 
-        if (boat != TargetBoat) yield break;
+        if (boat == null) {
+            waitingBoatCoroutine = null;
+            yield break;
+        }
+
+        if (boat != TargetBoat) {
+            waitingBoatCoroutine = null;
+            yield break;
+        }
 
         waitingBoatCoroutine = null;
         TryStartEnteringBoat(boat);

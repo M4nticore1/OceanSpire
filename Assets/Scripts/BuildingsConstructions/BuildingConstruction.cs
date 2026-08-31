@@ -78,8 +78,10 @@ public class BuildingConstruction : MonoBehaviour, IClickable
         lightProbeGroupManager = FindAnyObjectByType<LightProbeGroupManager>();
         meshRendererers = GetComponentsInChildren<MeshRenderer>();
 
-        foreach (var renderer in meshRendererers) {
-            renderer.probeAnchor = lightProbeGroupManager.ProbeAnchor;
+        if (lightProbeGroupManager != null) {
+            foreach (var renderer in meshRendererers) {
+                renderer.probeAnchor = lightProbeGroupManager.ProbeAnchor;
+            }
         }
 
         propertyBlock = new MaterialPropertyBlock();
@@ -150,7 +152,7 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
     }
 
-    public void ApplyConstructionPosition()
+    public void ApplyOwnedBuildingPosition()
     {
         transform.position = OwnedBuilding.transform.position;
     }

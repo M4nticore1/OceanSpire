@@ -27,12 +27,12 @@ public class CameraMovement : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInputHandler.OnPrimaryInteractionPressed += OnPrimaryInteractionPressed;
+        playerInputHandler.OnPrimaryInteractionPressed += HandlePrimaryInteractionPressed;
     }
 
     private void OnDisable()
     {
-        playerInputHandler.OnPrimaryInteractionPressed -= OnPrimaryInteractionPressed;
+        playerInputHandler.OnPrimaryInteractionPressed -= HandlePrimaryInteractionPressed;
     }
 
     private void Update()
@@ -172,7 +172,7 @@ public class CameraMovement : MonoBehaviour
         return normalizedDelta.sqrMagnitude >= movingThreshold;
     }
 
-    private void OnPrimaryInteractionPressed()
+    private void HandlePrimaryInteractionPressed()
     {
         startPressPosition = playerInputHandler.primaryInteractionPosition;
         inDeadZone = true;

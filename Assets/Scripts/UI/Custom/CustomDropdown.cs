@@ -1,10 +1,9 @@
 using System;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CustomDropdown : UIBehaviour
+public class CustomDropdown : CustomUI
 {
     [SerializeField] private CustomButton button;
     [SerializeField] private LayoutGroup layoutGroup;
@@ -26,30 +25,42 @@ public class CustomDropdown : UIBehaviour
     {
         base.OnEnable();
 
+        if (customUIManager != null) {
+            customUIManager.RegisterCustomDropdown(this);
+        }
+        else {
+            Debug.Log($"[{nameof(CustomDropdown)}] Custom UI Manager is not valid!");
+        }
+
         button.OnReleased.AddListener(OnButtonClicked);
         InputListener.Instance.OnReleased += OnPointerReleased;
+
+        SetTransitionAlpha(1f);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
 
+        if (customUIManager != null) {
+            customUIManager.UnregisterCustomDropdown(this);
+        }
+
         button.OnReleased.RemoveListener(OnButtonClicked);
         InputListener.Instance.OnReleased -= OnPointerReleased;
     }
 
-    protected override void Start()
+    public override void Tick()
     {
-        base.Start();
+        base.Tick();
 
-        SetTransitionAlpha(1f);
-    }
+        if (!enabled) return;
+        if (!gameObject.activeSelf) return;
+        if (!gameObject.activeInHierarchy) return;
 
-    private void Update()
-    {
-        if (!isAnimating) return;
-
-        MoveDropdown();
+        if (isAnimating) {
+            MoveDropdown();
+        }
     }
 
     public void SetListeningClick(bool value)

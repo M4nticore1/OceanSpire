@@ -58,21 +58,27 @@ public class ElevatorCabinsManager : MonoBehaviour
         var elevatorCabin = elevator.SpawnedElevatorCabin;
         if (elevatorCabin == null) return;
 
+        int elevatorIndex = 0;
         var connectedBuildings = elevator.OwnedTowerBuilding.ConnectedBuildingsEnumerable().ToArray();
-
         if (connectedBuildings.Length > 0) {
             for (int i = connectedBuildings.Length - 1; i >= 0; i--) {
                 var connectedBuilding = connectedBuildings[i];
-                var connectedElevator = connectedBuilding.GetComponent<ElevatorModule>();
+                if (connectedBuilding == null) continue;
 
-                if (i == 0) {
+                var connectedElevator = connectedBuilding.GetComponent<ElevatorModule>();
+                if (connectedElevator == null) continue;
+
+                if (elevatorIndex == 0) {
                     elevatorCabin.SetOwnedBuilding(connectedBuilding);
+                    elevatorCabin.ApplyOwnedBuildingPosition();
                 }
                 else {
-                    connectedElevator.SetCabin(TryCreateCabin(connectedElevator));
+                    var cabin = TryCreateCabin(connectedElevator);
+                    connectedElevator.SetCabin(cabin);
                 }
 
                 UpdateElevatorNetworkCabins(connectedElevator);
+                elevatorIndex++;
             }
         }
         else if (elevatorCabin) {
@@ -91,7 +97,6 @@ public class ElevatorCabinsManager : MonoBehaviour
         if (elevator == null) return;
 
         var elevatorCabin = TryGetNetworkCabin(elevator);
-
         if (elevatorCabin) {
             elevator.SetCabin(elevatorCabin);
             UpdateElevatorNetworkCabins(elevator);
@@ -110,13 +115,13 @@ public class ElevatorCabinsManager : MonoBehaviour
 
         var ownedBuilding = cabinConstruction.OwnedBuilding;
         if (ownedBuilding == null) {
-            Debug.LogError($"[{nameof(ElevatorCabinsManager)}] COwned Building is not valid!");
+            Debug.LogError($"[{nameof(ElevatorCabinsManager)}] Owned Building is not valid at {cabinConstruction}!");
             return;
         }
 
         var elevator = ownedBuilding.GetComponent<ElevatorModule>();
         if (elevator == null) {
-            Debug.LogError($"[{nameof(ElevatorCabinsManager)}] Elevator Module is not valid!");
+            Debug.LogError($"[{nameof(ElevatorCabinsManager)}] Elevator Module is not valid at {ownedBuilding}!");
             return;
         }
 
@@ -150,8 +155,9 @@ public class ElevatorCabinsManager : MonoBehaviour
                 continue;
             }
 
-            if (networkElevator.SpawnedElevatorCabin != null && networkElevator.SpawnedElevatorCabin != elevator.SpawnedElevatorCabin) {
-                networkElevator.SpawnedElevatorCabin.Demolish();
+            var networkCabin = networkElevator.SpawnedElevatorCabin;
+            if (networkCabin != null && networkCabin != elevator.SpawnedElevatorCabin) {
+                networkCabin.Demolish();
             }
 
             networkElevator.SetCabin(elevator.SpawnedElevatorCabin);

@@ -10,12 +10,16 @@ public class PulseEffect : MonoBehaviour
 
     private void OnDestroy()
     {
-        pulseEffectsManager.UnregisterEffect(this);
+        if (pulseEffectsManager != null) {
+            pulseEffectsManager.UnregisterEffect(this);
+        }
     }
 
     private void Start()
     {
-        pulseEffectsManager.RegisterEffect(this);
+        if (pulseEffectsManager != null) {
+            pulseEffectsManager.RegisterEffect(this);
+        }
         startScale = transform.localScale;
     }
 

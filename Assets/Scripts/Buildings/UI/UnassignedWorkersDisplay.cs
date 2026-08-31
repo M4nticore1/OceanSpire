@@ -1,29 +1,54 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-public class UnassignedWorkersDisplay : MonoBehaviour
+public class UnassignedWorkersDisplay : MonoBehaviour, IClickable
 {
     [SerializeField] private GameObject content;
+    [SerializeField] private Collider collider;
     [SerializeField] private BuildingConstruction buildingConstruction;
-    [SerializeField] private CustomButton openWorkersMenuButton;
 
     private bool isShown => content.activeSelf;
     private Building ownedBuilding;
     private ConstructionComponent constructionComponent;
     private BuildingCitizensHandler citizensHandler;
 
+    [SerializeField] private bool isClickable = true;
+    public bool IsClickable
+    {
+        get {
+            return isClickable;
+        }
+        set {
+            isClickable = value;
+        }
+    }
+
     private Coroutine updateShownCoroutine;
+    public event Action OnClicked;
 
     private void OnEnable()
     {
         buildingConstruction.OnInit += HandleConstructionInit;
-        openWorkersMenuButton.OnReleased.AddListener(HandleOpenWorkersMenuButtonClicked);
     }
 
     private void OnDisable()
     {
         buildingConstruction.OnInit -= HandleConstructionInit;
-        openWorkersMenuButton.OnReleased.RemoveListener(HandleOpenWorkersMenuButtonClicked);
+    }
+
+    public void Click()
+    {
+        var workersMenu = WorkersControlMenu.Instance;
+        if (workersMenu == null) return;
+
+        workersMenu.Show(ownedBuilding);
+        OnClicked?.Invoke();
+    }
+
+    public bool ShouldClick()
+    {
+        return IsClickable;
     }
 
     private void OnDestroy()
@@ -58,6 +83,7 @@ public class UnassignedWorkersDisplay : MonoBehaviour
         if (isShown) return;
 
         content.SetActive(true);
+        collider.enabled = true;
     }
 
     private void Hide()
@@ -65,6 +91,7 @@ public class UnassignedWorkersDisplay : MonoBehaviour
         if (!isShown) return;
 
         content.SetActive(false);
+        collider.enabled = false;
     }
 
     private void RunUpdateShownCoroutine()
@@ -112,14 +139,6 @@ public class UnassignedWorkersDisplay : MonoBehaviour
     private void HandleConstructionFinished()
     {
         RunUpdateShownCoroutine();
-    }
-
-    private void HandleOpenWorkersMenuButtonClicked()
-    {
-        var workersMenu = WorkersControlMenu.Instance;
-        if (workersMenu == null) return;
-
-        workersMenu.Show(ownedBuilding);
     }
 
     private bool ShouldShow()

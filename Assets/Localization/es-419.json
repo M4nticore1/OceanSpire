@@ -42,6 +42,7 @@
   "instantly": "Al instante",
   "inventory": "Inventario",
   "weapon": "Arma",
+  "pier_workers_unassigned": "No hay trabajadores en el muelle. Asigna trabajadores para recolectar recursos a la deriva.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

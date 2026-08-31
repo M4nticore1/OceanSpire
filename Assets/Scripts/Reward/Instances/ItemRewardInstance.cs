@@ -1,21 +1,37 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class ItemRewardInstance : RewardInstance
 {
     public ItemAdRewardDefinition ItemRewardDefinition { get; private set; }
+    private CityStorage cityStorage => CityStorage.Instance;
 
     public ItemRewardInstance(ItemAdRewardDefinition data, int amount) : base(data, amount)
     {
         ItemRewardDefinition = data;
     }
 
-    protected override void OnRewardRecieved()
+    protected override void HandleRewardRecieved()
     {
-        base.OnRewardRecieved();
+        base.HandleRewardRecieved();
 
-        var id = ItemRewardDefinition.Definition.ItemId;
-        CityStorage.Instance.Inventory.AddItemAmount(id, Amount);
+        if (ItemRewardDefinition == null) {
+            Debug.LogError($"[{nameof(ItemRewardDefinition)}] Item Reward Definition is not valid!");
+            return;
+        }
+
+        var itemDefinition = ItemRewardDefinition.ItemDefinition;
+        if (itemDefinition == null) {
+            Debug.LogError($"[{nameof(CityStorage)}] Item Definition is not valid!");
+            return;
+        }
+
+        if (cityStorage == null) {
+            Debug.LogError($"[{nameof(CityStorage)}] City Storage is not valid!");
+            return;
+        }
+
+        var id = itemDefinition.ItemId;
+        cityStorage.Inventory.AddItemAmount(id, Amount);
     }
 
     public void SetAmountPercent(float percent)

@@ -42,6 +42,7 @@
   "instantly": "Anında",
   "inventory": "Çanta",
   "weapon": "Silah",
+  "pier_workers_unassigned": "İskelede işçi yok. Sürüklenen kaynakları toplamak için işçileri görevlendir.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

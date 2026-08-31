@@ -79,6 +79,7 @@ public class BoatsManager : MonoBehaviour
         if (boatsList == null) return null;
 
         foreach (var boat in boatsList) {
+            if (boat == null) continue;
             if (boat.TargetRider != null) continue;
             if (boat.CurrentRider != null) continue;
 

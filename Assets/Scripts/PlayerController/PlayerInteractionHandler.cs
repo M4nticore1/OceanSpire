@@ -20,6 +20,9 @@ public class PlayerInteractionHandler : MonoBehaviour
             var go = hit.gameObject;
             if (go == null) return;
 
+            var rectTransform = go?.GetComponent<RectTransform>();
+            if (rectTransform == null && playerInputHandler.primaryInteractionPosition != playerInputHandler.primaryInteractionStartPosition) return;
+
             var clickables = go.GetComponents<IClickable>();
             foreach (var clickable in clickables) {
                 if (clickable == null) continue;
@@ -37,8 +40,6 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     private void OnPrimaryInteractionReleased()
     {
-        if (playerInputHandler.primaryInteractionPosition != playerInputHandler.primaryInteractionStartPosition) return;
-
         Interact(playerInputHandler.primaryInteractionPosition);
     }
 }

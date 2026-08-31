@@ -42,6 +42,7 @@
   "instantly": "Okamžitě",
   "inventory": "Inventář",
   "weapon": "Zbraň",
+  "pier_workers_unassigned": "Na molu nejsou žádní dělníci. Přiřaďte je ke sběru plovoucích surovin.",
   "name": "{name}",
   "name_first_last": "{firstName} {lastName}",
   "time_second_short": "s",

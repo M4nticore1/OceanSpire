@@ -9,9 +9,9 @@ public class ReviveAdRewardInstance : RewardInstance
         this.citizen = citizen;
     }
 
-    protected override void OnRewardRecieved()
+    protected override void HandleRewardRecieved()
     {
-        base.OnRewardRecieved();
+        base.HandleRewardRecieved();
 
         if (!citizen) {
             Debug.LogError("citizen is not valid to revive");

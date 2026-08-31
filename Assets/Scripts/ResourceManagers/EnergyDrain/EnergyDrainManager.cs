@@ -22,8 +22,8 @@ public class EnergyDrainManager : MonoBehaviour
                 var placedBuilding = buildingPlace.PlacedBuilding;
                 if (placedBuilding == null) continue;
 
-                for (var j = 0; j < placedBuilding.buildingModules.Count; j++) {
-                    var module = placedBuilding.buildingModules[j];
+                for (var j = 0; j < placedBuilding.BuildingModules.Length; j++) {
+                    var module = placedBuilding.BuildingModules[j];
                     if (module == null) continue;
 
                     if (module.ShouldSpendElectricity()) {

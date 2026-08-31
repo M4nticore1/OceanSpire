@@ -49,7 +49,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
     private void Update()
     {
-        if (!citizen) return;
+        if (citizen == null) return;
         if (!IsShowed) return;
 
         UpdateMenuShowed();
@@ -59,25 +59,23 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
+        IsShowed = true;
+        InputStateManager.Instance.AddBlockTarget(this);
         OnShowed?.Invoke();
     }
 
     public void Show(Citizen citizen)
     {
-        if (!citizen) {
-            Debug.LogError($"[{nameof(ReviveMenu)}] Citizen to open revive menu is not valid");
+        if (citizen == null) {
+            Debug.LogError($"[{nameof(ReviveMenu)}] Citizen is not valid!");
             return;
         }
 
         this.citizen = citizen;
-
-        IsShowed = true;
         slidePanel.Show();
 
         skillsPanel.SetSkills(citizen.SkillsComponent);
         UpdateCitizenNameText();
-
-        InputStateManager.Instance.AddBlockTarget(this);
 
         Show();
     }
@@ -110,7 +108,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
     private void UpdateButtonEnabled()
     {
-        if (!citizen) return;
+        if (citizen == null) return;
 
         var enoughRevives = reviveManager.RemainingRevivesCount > 0;
 
@@ -136,10 +134,10 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
     private void UpdateTimeToDie()
     {
-        if (!citizen) return;
+        if (citizen == null) return;
 
         var reviveComponent = citizen.ReviveComponent;
-        if (!reviveComponent) return;
+        if (reviveComponent == null) return;
 
         remainingReviveTimeText.SetPlaceHolderLocalization(reviveComponent);
         remainingReviveTimeText.UpdateText();
@@ -168,8 +166,8 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
     private void OnRevived(ReviveComponent reviveComponent)
     {
-        if (!reviveComponent) return;
-        if (!citizen) return;
+        if (reviveComponent == null) return;
+        if (citizen == null) return;
         if (reviveComponent != citizen.ReviveComponent) return;
 
         Hide();
@@ -185,8 +183,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     private void OnComponentSelected(SelectComponent component)
     {
         var citizen = SelectManager.Instance.GetSelectedHuman() as Citizen;
-        if (!citizen) return;
-
+        if (citizen == null) return;
         if (citizen.HealthComponent.IsAlive) return;
 
         Show(citizen);

@@ -34,7 +34,11 @@ public static class PointerUtils
     {
         hit = default;
         var position = GetCurrentInputPosition();
-        var ray = Camera.main.ScreenPointToRay(position);
+
+        var camera = Camera.main;
+        if (camera == null) return false;
+
+        var ray = camera.ScreenPointToRay(position);
 
         // 3D
         var layerMask = ~LayerMask.GetMask("Ignore Raycast");
@@ -127,11 +131,11 @@ public static class PointerUtils
     }
 
     // Conditions
-    public static bool IsUIHovered(GameObject gameObjectToCheck)
+    public static bool IsUIHovered(GameObject goToCheck)
     {
         var hovered = GetRaycastUIResult().gameObject;
         if (hovered == null) return false;
 
-        return GetRaycastUIResult().gameObject == gameObjectToCheck;
+        return hovered == goToCheck;
     }
 }
