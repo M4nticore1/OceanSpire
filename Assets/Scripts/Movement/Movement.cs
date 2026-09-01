@@ -84,7 +84,7 @@ public class Movement : MonoBehaviour
 
     public void SetAgentEnabled(bool enabled)
     {
-        if (!navAgent) return;
+        if (navAgent == null) return;
 
         navAgent.enabled = enabled;
     }
@@ -108,12 +108,10 @@ public class Movement : MonoBehaviour
         if (!CanStartMoving()) return false;
 
         if (IsReachedPosition(position)) {
+            IsMoving = false;
+            TargetPosition = null;
+
             if (useReachedPosition) {
-                TargetPosition = position;
-
-                IsMoving = false;
-                TargetPosition = null;
-
                 OnDestinationReached?.Invoke();
                 return true;
             }
@@ -122,6 +120,7 @@ public class Movement : MonoBehaviour
             }
         }
 
+        IsMoving = true;
         navAgent.isStopped = false;
         TargetPosition = position;
         RemoveTargetRotation();
@@ -132,9 +131,8 @@ public class Movement : MonoBehaviour
             return false;
         }
 
-        IsMoving = true;
+        //Debug.Log($"MoveTo {gameObject}");
         OnMovementStarted?.Invoke();
-
         return true;
     }
 
@@ -153,8 +151,8 @@ public class Movement : MonoBehaviour
             OnDestinationReached?.Invoke();
         }
 
+        //Debug.Log($"StopMoving {gameObject}");
         OnMovementStopped?.Invoke();
-
         return true;
     }
 

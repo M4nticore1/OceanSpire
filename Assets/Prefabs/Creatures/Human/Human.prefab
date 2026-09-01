@@ -141,6 +141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CityPathFollower
   human: {fileID: 0}
   movement: {fileID: -7493649843608556168}
+  creatureInteractComponent: {fileID: 6316746746762001490}
   elevatorPassenger: {fileID: 1218019482049909420}
   waypointsComponent: {fileID: 7048535748943796013}
   healthComponent: {fileID: 4098557255172134659}

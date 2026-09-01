@@ -89,7 +89,7 @@ public abstract class Creature : MonoBehaviour
             StartIdle();
             return;
         }
-        if (ShouldStopIdle()) {
+        else {
             StopIdle();
             return;
         }
@@ -97,28 +97,23 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void StartIdle()
     {
+        if (IsIdle) return;
+
         IsIdle = true;
-        movement.TryStopMoving();
         OnIdleStarted?.Invoke();
     }
 
     protected virtual void StopIdle()
     {
+        if (!IsIdle) return;
+
         IsIdle = false;
         OnIdleStopped?.Invoke();
     }
 
     protected virtual bool ShouldStartIdle()
     {
-        if (IsIdle) return false;
-
-        return true;
-    }
-
-    protected virtual bool ShouldStopIdle()
-    {
-        if (!IsIdle) return false;
-        if (ShouldStartIdle()) return false;
+        if (movement != null && movement.IsMoving) return false;
 
         return true;
     }
@@ -131,7 +126,7 @@ public abstract class Creature : MonoBehaviour
         if (ShouldStartIdle()) {
             StartIdle();
         }
-        else if (ShouldStopIdle()) {
+        else {
             StopIdle();
         }
     }
@@ -145,7 +140,7 @@ public abstract class Creature : MonoBehaviour
 
     protected void TryStopIdle()
     {
-        if (!ShouldStopIdle()) return;
+        if (ShouldStartIdle()) return;
 
         StopIdle();
     }

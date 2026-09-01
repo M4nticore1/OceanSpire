@@ -12,7 +12,7 @@ public class MovingToDockBoatState : BoatState
         boat.RemoveTargetLoot();
 
         if (IsReachedDock()) {
-            boat.HandleReturnedToDock();
+            UpdateState();
             return;
         }
 
@@ -31,12 +31,22 @@ public class MovingToDockBoatState : BoatState
 
     public override void OnReachedPath()
     {
-        boat.HandleReturnedToDock();
+        UpdateState();
     }
 
     public override void OnBoatDockChanged(BoatDockPoint boatDock)
     {
         UpdateMovement();
+    }
+
+    private void UpdateState()
+    {
+        if (boat.Inventory.GetCurrentWeight() > 0) {
+            boat.SetState(BoatStateEnum.UnloadingLoot);
+        }
+        else {
+            boat.SetState(BoatStateEnum.Idle);
+        }
     }
 
     private void UpdateMovement()

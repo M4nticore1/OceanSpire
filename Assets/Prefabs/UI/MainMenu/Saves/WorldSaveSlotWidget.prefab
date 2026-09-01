@@ -780,15 +780,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
   targetGraphic: {fileID: 4696869006643466086}
   contentGraphics: []
-  scaleRoot: {fileID: 277249682003200902}
-  isInteractable: 1
   isSelectable: 1
-  isScalable: 1
-  deselectOnOutsideClick: 0
-  cancelPressWhenMoving: 1
   selectGroup: {fileID: 0}
-  stateTransitionTime: 0.3
+  isScalable: 1
+  scaleRoot: {fileID: 277249682003200902}
+  isClickable: 1
+  deselectOnOutsideClick: 1
+  cancelPressWhenMoving: 1
+  cancelPressWhenPointerMoving: 0
   state: 0
+  stateTransitionTime: 0.3
   idleState:
     bodyColor: {r: 0.8, g: 0.6627451, b: 0.54509807, a: 1}
     bodyColorHolder: {fileID: 0}

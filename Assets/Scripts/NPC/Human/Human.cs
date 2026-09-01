@@ -197,7 +197,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
         if (elevatorPassenger != null && !elevatorPassenger.IsRiding && (boatRider == null || boatRider.RidingBoat == null)) {
             movement.SetAgentEnabled(true);
-            cityNavigator.FollowPath();
+            cityNavigator.RunUpdateFollowingPathEndOfFrame();
         }
 
         base.HandleInitNextFrame();
@@ -350,21 +350,17 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         TryStopIdle();
     }
-
+     
     protected virtual void FollowPath()
     {
-        cityNavigator.FollowPath();
+        cityNavigator.RunUpdateFollowingPathEndOfFrame();
         UpdateIdle();
     }
 
     protected override bool ShouldStartIdle()
     {
         if (!base.ShouldStartIdle()) return false;
-        //if (movement != null && movement.IsMoving) return false;
-        if (CityNavigator.IsFollowingPath && movement.IsMoving) return false;
         if (interactComponent != null && interactComponent.IsInteracting) return false;
-        if (boatRider != null && boatRider.RidingBoat != null && boatRider.RidingBoat.Movement != null && boatRider.RidingBoat.Movement.IsMoving) return false;
-        if (attackComponent != null && attackComponent.IsAttacking) return false;
         if (healthComponent != null && !healthComponent.IsAlive) return false;
 
         return true;
@@ -536,13 +532,14 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
         var ridingBoat = boatRider.RidingBoat;
         if (ridingBoat == null) return false;
+        if (ridingBoat.Movement == null) return false;
 
         var dockPoint = ridingBoat.DockPoint;
         if (dockPoint == null) return false;
 
         var boatState = ridingBoat.CurrentStateEnum;
         if (boatState == BoatStateEnum.MovingToDock) return false;
-        if (boatState == BoatStateEnum.Idle && ridingBoat.Movement != null && ridingBoat.Movement.IsReachedPosition(dockPoint.DockTransform.position)) return false;
+        if (boatState == BoatStateEnum.Idle && ridingBoat.Movement.IsReachedPosition(dockPoint.DockTransform.position)) return false;
 
         //var targetBoat = boatRider.TargetBoat;
         //if (targetBoat != null && targetBoat != ridingBoat) return true;
@@ -751,19 +748,11 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         if (building == null) return;
 
-        if (cityNavigator != null) {
-            cityNavigator.SetTargetBuilding(building);
-            cityNavigator.TryUpdatePathToTargetBuilding();
-        }
         RunDetermineNextActionCoroutine();
     }
 
     protected virtual void HandleInteractBuildingRemoved(Building building)
     {
-        if (cityNavigator != null) {
-            cityNavigator.RemoveTargetBuilding();
-            cityNavigator.RemovePathAndTargetBuilding();
-        }
         RunDetermineNextActionCoroutine();
     }
 
@@ -807,11 +796,11 @@ public abstract class Human : Creature, IClickable, ILocalizable
         }
 
         if (cityNavigator != null && cityNavigator.EnteredBuilding != null && cityNavigator.EnteredBuilding is TowerBuilding) {
-            cityNavigator.SetTargetBuilding(BuildingsManager.Instance.TowerGate);
+            cityNavigator.TrySetTargetBuilding(BuildingsManager.Instance.TowerGate);
 
-            if (cityNavigator.TryUpdatePathToTargetBuilding()) {
-                cityNavigator.FollowPath();
-            }
+            //if (cityNavigator.TryUpdatePathToTargetBuilding()) {
+            //    cityNavigator.FollowPath();
+            //}
         }
 
         RunDetermineNextActionCoroutine();

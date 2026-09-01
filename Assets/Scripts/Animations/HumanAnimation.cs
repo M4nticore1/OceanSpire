@@ -61,30 +61,53 @@ public class HumanAnimation : MonoBehaviour
 
     private void UpdateParameters()
     {
-        UpdateIdle();
-        UpdateWalking();
-        UpdateRunning();
-        UpdateInteracting();
-        UpdateFloating();
-        UpdateDied();
+        var isAnimating = false;
+
+        if (UpdateIdle()) {
+            isAnimating = true;
+        }
+        if (UpdateWalking()) {
+            isAnimating = true;
+        }
+        if (UpdateRunning()) {
+            isAnimating = true;
+        }
+        if (UpdateInteracting()) {
+            isAnimating = true;
+        }
+        if (UpdateFloating()) {
+            isAnimating = true;
+        }
+        if (UpdateDied()) {
+            isAnimating = true;
+        }
+        if (!isAnimating) {
+            animator.SetBool("IsIdle", true);
+        }
     }
 
-    private void UpdateIdle()
+    private bool UpdateIdle()
     {
-        animator.SetBool("IsIdle", human.IsIdle);
+        var value = human.IsIdle;
+        animator.SetBool("IsIdle", value);
+        return value;
     }
 
-    private void UpdateWalking()
+    private bool UpdateWalking()
     {
-        animator.SetBool("IsWalking", human.Movement.IsMoving && human.Movement.CurrentMovementMethod == MovementMethod.Walk);
+        var value = human.Movement.IsMoving && human.Movement.CurrentMovementMethod == MovementMethod.Walk;
+        animator.SetBool("IsWalking", value);
+        return value;
     }
 
-    private void UpdateRunning()
+    private bool UpdateRunning()
     {
-        animator.SetBool("IsRunning", human.Movement.IsMoving && human.Movement.CurrentMovementMethod == MovementMethod.Run);
+        var value = human.Movement.IsMoving && human.Movement.CurrentMovementMethod == MovementMethod.Run;
+        animator.SetBool("IsRunning", value);
+        return value;
     }
 
-    private void UpdateInteracting()
+    private bool UpdateInteracting()
     {
         if (human.InteractComponent.IsInteracting) {
             var cityNavigator = human.CityNavigator;
@@ -92,24 +115,31 @@ public class HumanAnimation : MonoBehaviour
             var animation = waypoint?.ActionAnimation;
             var paramName = animation?.ParamName;
 
+            var value = human.InteractComponent.IsInteracting && !human.Movement.IsMoving;
             animator.SetBool(string.IsNullOrEmpty(paramName) ? "IsWorking" : paramName, human.InteractComponent.IsInteracting && !human.Movement.IsMoving);
             interactionAnimationParam = animation;
+            return value;
         }
         else {
             var paramName = interactionAnimationParam?.ParamName;
             animator.SetBool(interactionAnimationParam ? paramName : "IsWorking", false);
+            return false;
         }
     }
 
-    private void UpdateFloating()
+    private bool UpdateFloating()
     {
         var ridingBoat = human.BoatRider.RidingBoat;
-        animator.SetBool("IsFloating", ridingBoat && ridingBoat.Movement.IsMoving && human.HealthComponent.IsAlive);
+        var value = ridingBoat && ridingBoat.Movement.IsMoving && human.HealthComponent.IsAlive;
+        animator.SetBool("IsFloating", value);
+        return value;
     }
 
-    private void UpdateDied()
+    private bool UpdateDied()
     {
-        animator.SetBool("IsDied", !human.HealthComponent.IsAlive);
+        var value = !human.HealthComponent.IsAlive;
+        animator.SetBool("IsDied", value);
+        return value;
     }
 
     private void HandleIdleStarted()
@@ -188,8 +218,8 @@ public class HumanAnimation : MonoBehaviour
     private IEnumerator UpdateParametersCoroutine()
     {
         yield return new WaitForEndOfFrame();
-        UpdateParameters();
 
         updateParametersCoroutine = null;
+        UpdateParameters();
     }
 }

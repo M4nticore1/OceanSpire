@@ -97,7 +97,7 @@ public class ElevatorPassenger : MonoBehaviour
 
     public void OnElevatorStopped()
     {
-        cityNavigator.FollowPath();
+        cityNavigator.RunUpdateFollowingPathEndOfFrame();
     }
 
     private void OnDied()

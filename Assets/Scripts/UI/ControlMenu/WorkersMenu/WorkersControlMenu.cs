@@ -89,6 +89,7 @@ public class WorkersControlMenu : ControlMenu
             return;
         }
 
+        // Remove Building Current Workers
         int maxWorkersCount = currentBuilding.LevelDefinition.MaxHumansCount;
         for (int i = spawnedEmptyWidgets.Count - 1; i >= 0; i--) {
             var widget = spawnedEmptyWidgets[i];
@@ -100,6 +101,7 @@ public class WorkersControlMenu : ControlMenu
             RemoveWidget(widget);
         }
 
+        // Update Created Widgets
         for (int i = spawnedWidgets.Count - 1; i >= 0; i--) {
             var widget = spawnedWidgets[i];
             if (widget == null) {
@@ -138,6 +140,7 @@ public class WorkersControlMenu : ControlMenu
             }
         }
 
+        // Create Building Empty Widgets
         while (buildingWorkersMenu.LayoutGroup.transform.childCount < maxWorkersCount) {
             CreateWidget();
         }
@@ -220,6 +223,9 @@ public class WorkersControlMenu : ControlMenu
         if (citizen == null) return;
         if (!citizen.IsCitizenAvailable()) return;
 
+        if (GetSpawnedWidgetByCitizen(citizen) != null)
+            return;
+
         var selectedBuilding = selectManager.GetSelectedBuilding();
         WorkersPanel menu = null;
 
@@ -241,6 +247,8 @@ public class WorkersControlMenu : ControlMenu
         }
 
         var widget = CitizenWidgetFactory.CreateWidget(citizenWidgetPrefab, menu.LayoutGroup.transform, citizen);
+        widget.transform.SetParent(menu.LayoutGroup.transform);
+
         spawnedWidgets.Add(widget);
 
         menu.AddWidget(widget);
@@ -251,6 +259,8 @@ public class WorkersControlMenu : ControlMenu
     {
         if (widget == null) return;
 
+        widget.transform.SetParent(null);
+
         spawnedWidgets.Remove(widget);
         spawnedEmptyWidgets.Remove(widget);
 
@@ -258,9 +268,7 @@ public class WorkersControlMenu : ControlMenu
         employedCitizensMenu.RemoveWidget(widget);
         unemployedCitizensMenu.RemoveWidget(widget);
 
-        widget.transform.SetParent(null);
         Destroy(widget.gameObject);
-
         UpdateWidgetsSort();
     }
 
@@ -307,24 +315,27 @@ public class WorkersControlMenu : ControlMenu
 
         CreateWidget(citizen);
         UpdateMenus();
+        UpdateScrollRect();
     }
 
     private void OnHumanDied(Human human)
     {
         var citizen = human as Citizen;
-        if (!citizen) return;
+        if (citizen == null) return;
 
         var widget = GetSpawnedWidgetByCitizen(citizen);
         if (widget == null) return;
 
         RemoveWidget(widget);
         UpdateMenus();
+        UpdateScrollRect();
     }
 
     private void OnCitizenEvicted(Citizen citizen)
     {
         CreateWidget(citizen);
         UpdateMenus();
+        UpdateScrollRect();
     }
 
     private bool TryUpdateMenu(Human human)

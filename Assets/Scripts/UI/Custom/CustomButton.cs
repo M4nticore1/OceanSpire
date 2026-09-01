@@ -146,6 +146,8 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
             Debug.Log($"[{nameof(CustomButton)}] Custom UI Manager is not valid!");
         }
 
+        InputListener.Instance.OnReleased += OnPointerReleased;
+
         EndTransitionAnimation();
     }
 
@@ -156,6 +158,8 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
         if (customUIManager != null) {
             customUIManager.UnregisterCustomButton(this);
         }
+
+        InputListener.Instance.OnReleased -= OnPointerReleased;
 
         if (state == CustomButtonState.Hovered) {
             SetState(CustomButtonState.Idle);
@@ -316,24 +320,9 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
         if (!IsClickable) return;
 
         PointerUtils.GetRaycastHit(out var hit);
-        if (IsPressed) {
-            if (IsSelectable) {
-                SetState(CustomButtonState.Selected);
-            }
-            else {
-                SetState(CustomButtonState.Hovered);
-            }
-
-            Release();
-        }
-        else if (IsIdle && hit.gameObject == gameObject) {
-            SetState(CustomButtonState.Hovered);
-        }
-        else if (!IsIdle) {
+        if (IsSelected && deselectOnOutsideClick) {
             var go = hit.gameObject;
-            var button = go != null ? go.GetComponent<CustomButton>() : null;
-
-            if (deselectOnOutsideClick && (go == null || go != gameObject)) {
+            if (go == null || go != gameObject) {
                 SetState(CustomButtonState.Idle);
             }
         }
@@ -512,7 +501,20 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
     // Click
     public void Click()
     {
-        OnPointerReleased();
+        PointerUtils.GetRaycastHit(out var hit);
+        if (IsPressed) {
+            if (IsSelectable) {
+                SetState(CustomButtonState.Selected);
+            }
+            else {
+                SetState(CustomButtonState.Hovered);
+            }
+
+            Release();
+        }
+        else if (IsIdle && hit.gameObject == gameObject) {
+            SetState(CustomButtonState.Hovered);
+        }
         OnClicked?.Invoke();
     }
 

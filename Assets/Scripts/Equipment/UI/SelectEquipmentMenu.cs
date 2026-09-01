@@ -56,6 +56,16 @@ public class SelectEquipmentMenu : ControlMenu
 
     private void CreateDeselectWidget()
     {
+        if (equipmentWidgetPrefab == null) {
+            Debug.LogError($"[{nameof(SelectEquipmentMenu)}] Equipment Widget Prefab is not valid!");
+            return;
+        }
+
+        if (layoutGroup == null) {
+            Debug.LogError($"[{nameof(SelectEquipmentMenu)}] Layout Group is not valid!");
+            return;
+        }
+
         var widget = Instantiate(equipmentWidgetPrefab, layoutGroup.transform);
         if (widget == null) {
             Debug.LogError($"[{nameof(SelectEquipmentMenu)}] Widget is not valid!");

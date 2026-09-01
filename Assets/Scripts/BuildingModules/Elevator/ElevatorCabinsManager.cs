@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,10 +11,13 @@ public class ElevatorCabinsManager : MonoBehaviour
     private List<ElevatorCabinConstruction> elevatorCabins = new();
     public IReadOnlyList<ElevatorCabinConstruction> ElevatorCabins => elevatorCabins;
 
+    private Coroutine UpdateElevatorCabinCoroutine;
+
     private void OnEnable()
     {
         Building.OnBuildingInited += HandleBuildingInited;
-        Building.OnBuildingUpgradeFinished += HandleBuildingConstructionFinished;
+        Building.OnBuildingConstructionFinished += HandleBuildingConstructionFinished;
+        Building.OnBuildingUpgradeFinished += HandleBuildingUpgradeFinished;
         Building.OnBuildingDemolished += HandleBuildingDemolished;
 
         BuildingConstruction.OnBuildingConstructionInited += HandleBuildingConstructionInited;
@@ -23,7 +27,8 @@ public class ElevatorCabinsManager : MonoBehaviour
     private void OnDisable()
     {
         Building.OnBuildingInited -= HandleBuildingInited;
-        Building.OnBuildingUpgradeFinished -= HandleBuildingConstructionFinished;
+        Building.OnBuildingConstructionFinished -= HandleBuildingConstructionFinished;
+        Building.OnBuildingUpgradeFinished -= HandleBuildingUpgradeFinished;
         Building.OnBuildingDemolished -= HandleBuildingDemolished;
 
         BuildingConstruction.OnBuildingConstructionInited -= HandleBuildingConstructionInited;
@@ -36,14 +41,21 @@ public class ElevatorCabinsManager : MonoBehaviour
         if (building == null) return;
         if (building.ConstructionComponent.ConstructionFinishTime != null) return;
 
-        UpdateElevatorCabin(building);
+        RunUpdateElevatorCabin(building);
     }
 
     private void HandleBuildingConstructionFinished(Building building)
     {
         if (ShouldIgnoreEvents()) return;
 
-        UpdateElevatorCabin(building);
+        RunUpdateElevatorCabin(building);
+    }
+
+    private void HandleBuildingUpgradeFinished(Building building)
+    {
+        if (ShouldIgnoreEvents()) return;
+
+        RunUpdateElevatorCabin(building);
     }
 
     private void HandleBuildingDemolished(Building building)
@@ -86,18 +98,22 @@ public class ElevatorCabinsManager : MonoBehaviour
         }
     }
 
+    private void RunUpdateElevatorCabin(Building building)
+    {
+        if (UpdateElevatorCabinCoroutine == null) {
+            UpdateElevatorCabinCoroutine = StartCoroutine(UpdateElevatorCabinEndOfFrame(building));
+        }
+    }
+
     private void UpdateElevatorCabin(Building building)
     {
-        if (building == null) {
-            Debug.LogError($"[{nameof(ElevatorCabinsManager)}] Building is not valid!");
-            return;
-        }
+        if (building == null) return;
 
         var elevator = building.GetComponent<ElevatorModule>();
         if (elevator == null) return;
 
         var elevatorCabin = TryGetNetworkCabin(elevator);
-        if (elevatorCabin) {
+        if (elevatorCabin != null) {
             elevator.SetCabin(elevatorCabin);
             UpdateElevatorNetworkCabins(elevator);
         }
@@ -209,5 +225,13 @@ public class ElevatorCabinsManager : MonoBehaviour
         if (WorldSaveHandler.Instance == null) return false;
 
         return !buildingsLoader.IsLoaded && WorldSaveHandler.Instance.CurrentWorldData != null;
+    }
+
+    private IEnumerator UpdateElevatorCabinEndOfFrame(Building building)
+    {
+        yield return new WaitForEndOfFrame();
+
+        UpdateElevatorCabinCoroutine = null;
+        UpdateElevatorCabin(building);
     }
 }

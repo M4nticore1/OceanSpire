@@ -127,19 +127,13 @@ public class ElevatorModule : BuildingModule
 
     public Transform GetCabinRidingTransform(ElevatorPassenger elevatorPassenger)
     {
-        if (!CanGetSpawnedCabin()) return null;
+        if (!CanGetSpawnedCabin()) return transform;
 
         var interaction = SpawnedElevatorCabin.InteractionPointsHandler.GetInteractPoint(elevatorPassenger.CityNavigator);
-        if (interaction == null) {
-            Debug.LogError($"[{nameof(ElevatorModule)}] Interaction is not valid!");
-            return null;
-        }
+        if (interaction == null) return transform;
 
         var waypoint = interaction.GetWaypoint(0);
-        if (waypoint == null) {
-            Debug.LogError($"[{nameof(ElevatorModule)}] Waypoint is not valid!");
-            return null;
-        }
+        if (waypoint == null) return transform;
 
         return waypoint.Transform;
     }

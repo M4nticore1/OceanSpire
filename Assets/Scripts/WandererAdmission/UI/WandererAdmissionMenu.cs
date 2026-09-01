@@ -11,6 +11,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
     [SerializeField] private SkillsPanel skillPanel;
     [SerializeField] private CustomButton acceptButton;
     [SerializeField] private CustomButton rejectButton;
+    [SerializeField] private CustomButton closeButton;
     [SerializeField] private TextLocalizer wandererNameText;
 
     private Wanderer selectedWanderer;
@@ -26,6 +27,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
         acceptButton.OnStateChanged += OnAcceptButtonStateChanged;
         acceptButton.OnReleased.AddListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.AddListener(OnRejectButtonClicked);
+        closeButton.OnReleased.AddListener(OnCloseButtonClicked);
 
         Human.OnHumanDied += OnHumanDied;
 
@@ -39,6 +41,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
         acceptButton.OnStateChanged -= OnAcceptButtonStateChanged;
         acceptButton.OnReleased.RemoveListener(OnAcceptButtonClicked);
         rejectButton.OnReleased.RemoveListener(OnRejectButtonClicked);
+        closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
 
         Human.OnHumanDied -= OnHumanDied;
 
@@ -110,6 +113,11 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
     private void OnRejectButtonClicked()
     {
         wandererAdmissionManager.RejectWanderer(selectedWanderer);
+        Hide();
+    }
+
+    private void OnCloseButtonClicked()
+    {
         Hide();
     }
 

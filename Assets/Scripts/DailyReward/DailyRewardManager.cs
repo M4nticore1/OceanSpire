@@ -202,12 +202,14 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         foreach (var rewardData in GetRandomRewardsData()) {
             if (rewardData == null) continue;
 
-            var reward = rewardData.CreateReward();
+            var reward = TryCreateReward(rewardData.Id);
+
             if (reward == null) {
-                Debug.LogError($"[{nameof(DailyRewardManager)}] Reward is not valid");
+                Debug.LogError($"[{nameof(DailyRewardManager)}] Reward with ID {rewardData.Id} could not be created");
                 continue;
             }
 
+            reward.SetCollected(rewardData.Collected);
             currentRewards.Add(reward);
         }
     }
@@ -244,16 +246,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
         return (int)(NextResetTime - currentSeconds);
     }
 
-    private RewardInstance TryCreateRandomReward()
-    {
-        int count = rewards.Length;
-        int index = UnityEngine.Random.Range(0, count);
-        int id = (int)rewards[index].RewardId;
-
-        return TryCreateReward(id);
-    }
-
-    private RewardInstance TryCreateReward(int id)
+    private ItemRewardInstance TryCreateReward(int id)
     {
         var definition = rewardsList.GetRewardDefinition(id);
         if (definition == null) {
@@ -267,10 +260,11 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
             return null;
         }
 
-        if (reward is ItemRewardInstance itemReward) {
+        var itemReward = reward as ItemRewardInstance;
+        if (itemReward != null) {
             itemReward.SetAmountPercent(GameStageSystem.CalculateGameStagePercent());
         }
 
-        return reward;
+        return itemReward;
     }
 }

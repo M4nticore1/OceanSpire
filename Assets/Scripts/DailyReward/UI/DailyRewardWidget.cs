@@ -31,6 +31,7 @@ public class DailyRewardWidget : MonoBehaviour
 
         UpdateButtonEnabled();
         UpdateButtonText();
+        UpdateRewardAmount();
     }
 
     private void OnDisable()
@@ -80,16 +81,22 @@ public class DailyRewardWidget : MonoBehaviour
 
     private void UpdateRewardIcon()
     {
+        if (reward == null) return;
+
         rewardIcon.sprite = reward.Definition.RewardIcon;
     }
 
     private void UpdateRewardName()
     {
+        if (reward == null) return;
+
         rewardNameText.SetLocalizationItem(reward.Definition.RewardNameLocalization);
     }
 
     private void UpdateRewardAmount()
     {
+        if (reward == null) return;
+
         rewardAmountText.SetText(reward.Amount.ToString());
     }
 
@@ -115,6 +122,7 @@ public class DailyRewardWidget : MonoBehaviour
             rewardedAdsManager.ShowAd();
         }
         else {
+            Debug.Log(reward.Amount);
             reward.RecieveReward();
         }
 

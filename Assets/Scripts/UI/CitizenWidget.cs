@@ -41,7 +41,7 @@ public class CitizenWidget : MonoBehaviour
 
     public void Init(Citizen citizen)
     {
-        if (citizen) {
+        if (citizen != null) {
             SetCitizen(citizen);
             ShowResidentMenu();
             UpdateName();
@@ -77,16 +77,24 @@ public class CitizenWidget : MonoBehaviour
 
     private void UpdateName()
     {
+        if (Citizen == null) return;
+        if (Citizen.NameComponent == null) return;
+
         citizenNameText.SetText(Citizen.NameComponent.GetName());
     }
 
     private void UpdateSkills()
     {
+        if (Citizen == null) return;
+
         skillsPanel.SetSkills(Citizen.SkillsComponent);
     }
 
     private void UpdateGender()
     {
+        if (Citizen == null) return;
+        if (Citizen.GenderComponent == null) return;
+
         genderImage.sprite = Citizen.GenderComponent.IsMale ? maleIcon : femaleIcon;
     }
 

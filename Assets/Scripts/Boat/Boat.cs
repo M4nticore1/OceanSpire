@@ -183,16 +183,6 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         updateStateCoroutine = StartCoroutine(UpdateStateCoroutine());
     }
 
-    public void HandleReturnedToDock()
-    {
-        if (Inventory.GetCurrentWeight() > 0) {
-            SetState(BoatStateEnum.UnloadingLoot);
-        }
-        else {
-            SetState(BoatStateEnum.Idle);
-        }
-    }
-
     public void FloatAway(Vector3 position)
     {
         SetState(BoatStateEnum.FloatingAway);
@@ -431,6 +421,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
             OnBoatStateExited?.Invoke(this);
         }
 
+        CurrentState = null;
+
         switch (state) {
             case BoatStateEnum.Idle:
                 CurrentState = new IdleBoatState(this);
@@ -454,6 +446,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
                 CurrentState = new FloatingAwayBoatState(this);
                 break;
         }
+
+        if (CurrentState == null) return;
 
         CurrentStateEnum = state;
         CurrentState.Enter();

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,8 +6,11 @@ public class ConstructionInteractionPointsHandler : MonoBehaviour
 {
     [SerializeField] private BuildingConstruction buildingConstruction;
 
+    [SerializeField] private List<CreatureCityNavigator> interactors = new();
     private Dictionary<CreatureCityNavigator, BuildingAction> interactorsDict = new();
-    public IReadOnlyDictionary<CreatureCityNavigator, BuildingAction> InteractorsDict => interactorsDict;
+
+    private Coroutine AssignInteractorCoroutine;
+    private Coroutine RemoveInteractorCoroutine;
 
     public void Init()
     {
@@ -22,19 +26,41 @@ public class ConstructionInteractionPointsHandler : MonoBehaviour
         UpdateInteractionTransforms(ownedBuilding.RaidersHandler);
     }
 
+    public void RunAssignInteractorEndOfFrame(CreatureCityNavigator navigator)
+    {
+        if (AssignInteractorCoroutine == null) {
+            AssignInteractorCoroutine = StartCoroutine(AssignInteractorEndOfFrame(navigator));
+        }
+    }
+
+    public void RunRemoveInteractorEndOfFrame(CreatureCityNavigator navigator)
+    {
+        if (RemoveInteractorCoroutine == null) {
+            RemoveInteractorCoroutine = StartCoroutine(RemoveInteractorEndOfFrame(navigator));
+        }
+    }
+
     public void AssignInteractor(CreatureCityNavigator navigator)
     {
         if (navigator == null) return;
         if (interactorsDict.ContainsKey(navigator)) return;
 
         var index = GetFirstFreeIndex();
-        interactorsDict.Add(navigator, GetInteractPoint(index));
+        if (index == null) return;
+
+        if (RemoveInteractorCoroutine != null) {
+            StopCoroutine(RemoveInteractorCoroutine);
+        }
+
+        interactors.Add(navigator);
+        interactorsDict.Add(navigator, GetInteractPoint(index.Value));
     }
 
     public void RemoveInteractor(CreatureCityNavigator navigator)
     {
         if (navigator == null) return;
 
+        interactors.Remove(navigator);
         interactorsDict.Remove(navigator);
     }
 
@@ -81,23 +107,44 @@ public class ConstructionInteractionPointsHandler : MonoBehaviour
         return interactorsDict[navigator];
     }
 
-    private int GetFirstFreeIndex()
+    private IEnumerator AssignInteractorEndOfFrame(CreatureCityNavigator navigator)
     {
-        var index = 0;
+        yield return new WaitForEndOfFrame();
 
-        while (IsIndexOccupied(index)) {
-            index++;
+        AssignInteractorCoroutine = null;
+        AssignInteractor(navigator);
+    }
+
+    private IEnumerator RemoveInteractorEndOfFrame(CreatureCityNavigator navigator)
+    {
+        yield return new WaitForEndOfFrame();
+
+        RemoveInteractorCoroutine = null;
+        RemoveInteractor(navigator);
+    }
+
+    private int? GetFirstFreeIndex()
+    {
+        var actions = buildingConstruction.BuildingInteractions;
+        if (actions == null) return null;
+        if (actions.Length == 0) return null;
+
+        for (int i = 0; i < actions.Length; i++) {
+            if (IsIndexOccupied(i)) continue;
+
+            return i;
         }
 
-        return index;
+        return interactorsDict.Count % actions.Length;
     }
 
     private bool IsIndexOccupied(int index)
     {
         foreach (var action in interactorsDict.Values) {
-            if (action == GetInteractPoint(index)) {
-                return true;
-            }
+            if (action == null) continue;
+            if (action != GetInteractPoint(index)) continue;
+
+            return true;
         }
 
         return false;

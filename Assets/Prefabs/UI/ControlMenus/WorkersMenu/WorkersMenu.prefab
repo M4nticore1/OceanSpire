@@ -211,7 +211,9 @@ MonoBehaviour:
   minHeight: 0
   extraHeight: 0
   includedTransforms: []
+  includedHierarchyTransforms: []
   excludedTransforms: []
+  excludedHierarchyTransforms: []
 --- !u!1001 &1142211388075632633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -551,6 +553,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6991501609938947604, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
+      propertyPath: excludedHierarchyTransforms.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6991501609938947604, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
+      propertyPath: 'excludedHierarchyTransforms.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7155589330534523318}
     - target: {fileID: 7370304593813135405, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
       propertyPath: item
       value: 
@@ -572,12 +582,17 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 112518036232126804, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
   m_PrefabInstance: {fileID: 3271852802896944267}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 3966108895575759385}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bfcd816596521b4a89bc09fc866f1e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkersMenu
+--- !u!1 &3966108895575759385 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1904327531973478034, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
+  m_PrefabInstance: {fileID: 3271852802896944267}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7772847686222706272 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5096182534854453995, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
@@ -632,6 +647,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5096182534854453995, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 220
+      objectReference: {fileID: 0}
+    - target: {fileID: 5096182534854453995, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -683,6 +702,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6991501609938947604, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
+      propertyPath: excludedHierarchyTransforms.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6991501609938947604, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
+      propertyPath: 'excludedHierarchyTransforms.Array.data[0]'
+      value: 
+      objectReference: {fileID: 3966108895575759385}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -821,12 +848,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5096182534854453995, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
   m_PrefabInstance: {fileID: 8728052328316495652}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7155589330534523318 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1904327531973478034, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
+  m_PrefabInstance: {fileID: 8728052328316495652}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8696446309502264944 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 112518036232126804, guid: f4c36734a54f0cc40af1378889f62bc4, type: 3}
   m_PrefabInstance: {fileID: 8728052328316495652}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 7155589330534523318}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bfcd816596521b4a89bc09fc866f1e7, type: 3}

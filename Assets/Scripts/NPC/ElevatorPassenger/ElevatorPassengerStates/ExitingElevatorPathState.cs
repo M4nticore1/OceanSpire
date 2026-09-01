@@ -40,6 +40,6 @@ public class ExitingElevatorPathState : ElevatorPassengerState
             return;
         }
 
-        construction.InteractionPointsHandler.RemoveInteractor(cityNavigator);
+        construction.InteractionPointsHandler.RunRemoveInteractorEndOfFrame(cityNavigator);
     }
 }

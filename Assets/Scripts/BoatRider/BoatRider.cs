@@ -119,8 +119,8 @@ public class BoatRider : MonoBehaviour
         TryStopEnteringBoat();
         CancelUseBoatTimer();
 
-        TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, ExitBoat);
         IsExitingBoat = true;
+        TimerManager.Instance.StartTimer(useBoatTimerHandle, useBoatTime, ExitBoat);
     }
 
     public void StopExitingBoat()
@@ -205,8 +205,8 @@ public class BoatRider : MonoBehaviour
 
         RidingBoat.RemoveCurrentRider();
 
-        Vector3 pos = RidingBoat.DockPoint.EntraceTransform.position;
-        Quaternion rot = RidingBoat.DockPoint.EntraceTransform.rotation;
+        var pos = RidingBoat.DockPoint.EntraceTransform.position;
+        var rot = RidingBoat.DockPoint.EntraceTransform.rotation;
 
         transform.SetParent(null);
         transform.SetPositionAndRotation(pos, rot);

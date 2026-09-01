@@ -26,7 +26,11 @@ public class GoingToWatingElevatorPassengerState : ElevatorPassengerState
 
         construction.InteractionPointsHandler.AssignInteractor(CityNavigator);
         EnteredElevator.AddGoingToWaitingPassenger(ElevatorPassenger);
-        CityNavigator.Movement.TryMoveTo(construction.InteractionPointsHandler.GetInteractPoint(CityNavigator).GetWaypoint(0).Transform);
+
+        var interactPoint = construction.InteractionPointsHandler.GetInteractPoint(CityNavigator);
+        var waypoint = interactPoint?.GetWaypoint(0);
+
+        CityNavigator.Movement.TryMoveTo(waypoint != null ? waypoint.Transform : construction.transform);
     }
 
     public override void Exit()
@@ -43,7 +47,7 @@ public class GoingToWatingElevatorPassengerState : ElevatorPassengerState
             return;
         }
 
-        construction.InteractionPointsHandler.RemoveInteractor(CityNavigator);
+        construction.InteractionPointsHandler.RunRemoveInteractorEndOfFrame(CityNavigator);
         EnteredElevator.RemoveGoingToWaitingPassenger(ElevatorPassenger);
     }
 }

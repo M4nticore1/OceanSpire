@@ -27,7 +27,7 @@ public class IdleBoatState : BoatState
 
     public override void Tick()
     {
-        if (!boat.DockPoint) return;
+        if (boat.DockPoint == null) return;
         if (boat.transform.rotation == boat.DockPoint.DockTransform.rotation) return;
 
         boat.transform.position = Vector3.Lerp(boat.transform.position, boat.DockPoint.DockTransform.position, correctDockPositionSpeed * Time.deltaTime);
@@ -41,7 +41,7 @@ public class IdleBoatState : BoatState
 
     public override void OnBoatDockChanged(BoatDockPoint boatDock)
     {
-        if (boatDock) {
+        if (boatDock != null) {
             boat.SetState(BoatStateEnum.MovingToDock);
         }
     }

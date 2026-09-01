@@ -58,15 +58,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.31726614, g: 0.58920866, b: 0.7, a: 0.95686275}
+  m_Color: {r: 0.32156864, g: 0.6006537, b: 0.8, a: 0.95686275}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -572,7 +572,7 @@ MonoBehaviour:
   selectManager: {fileID: 0}
   rewardedAdsManager: {fileID: 0}
   slidePanel: {fileID: 7516530728658833054}
-  skillsPanel: {fileID: 0}
+  skillsPanel: {fileID: 166053215583141585}
   button: {fileID: 1922342582479404911}
   citizenNameText: {fileID: 4300593157059654464}
   remainingReviveTimeText: {fileID: 3304952253342364649}
@@ -1676,15 +1676,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomButton
   targetGraphic: {fileID: 4890934644482647226}
   contentGraphics: []
-  scaleRoot: {fileID: 7906949336515028505}
-  isInteractable: 1
   isSelectable: 0
+  selectGroup: {fileID: 0}
   isScalable: 1
+  scaleRoot: {fileID: 7906949336515028505}
+  isClickable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectGroup: {fileID: 0}
-  stateTransitionTime: 0.2
+  cancelPressWhenPointerMoving: 0
   state: 0
+  stateTransitionTime: 0.2
   idleState:
     bodyColor: {r: 0.9490196, g: 0.8117647, b: 0.6156863, a: 1}
     bodyColorHolder: {fileID: 0}
@@ -1830,6 +1831,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e099ae5808cf747ac414e6cf8c0dc1, type: 3}
+--- !u!114 &166053215583141585 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4683977335344039083, guid: 41e099ae5808cf747ac414e6cf8c0dc1, type: 3}
+  m_PrefabInstance: {fileID: 4849572045447330426}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4142f18492561e642a71e9d80747ab62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillsPanel
 --- !u!224 &8513894484248038881 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3848970161265473435, guid: 41e099ae5808cf747ac414e6cf8c0dc1, type: 3}

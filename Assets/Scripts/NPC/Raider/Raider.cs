@@ -11,6 +11,7 @@ public class Raider : Human, IProgressable
     public bool IsRaidingBuilding { get; private set; } = false;
 
     public Vector3 SpawnPosition { get; private set; } = Vector3.zero;
+    private RaidManager raidManager => RaidManager.Instance;
 
     public event Action<Building> OnRaidBuildingStarted;
     public event Action<Building> OnRaidBuildingStopped;
@@ -118,7 +119,7 @@ public class Raider : Human, IProgressable
     {
         base.StartInteracting();
 
-        CityNavigator.FollowPath();
+        CityNavigator.RunUpdateFollowingPathEndOfFrame();
     }
 
     public override bool ShouldStartInteracting()
@@ -192,19 +193,12 @@ public class Raider : Human, IProgressable
 
     protected override void HandleExitedBoat(Boat boat)
     {
-        var interactBuilding = RaidManager.Instance.CalculateNextRaidBuilding();
-        if (interactBuilding) {
+        var interactBuilding = raidManager.CalculateNextRaidBuilding();
+        if (interactBuilding != null) {
             InteractComponent.SetInteractBuilding(interactBuilding);
         }
 
         base.HandleExitedBoat(boat);
-    }
-
-    protected override void HandleBoatSetIdle(Boat boat)
-    {
-        base.HandleBoatSetIdle(boat);
-
-        BoatRider.StartExitingBoat();
     }
 
     protected override void HandleEnteredBuilding(Building buildng)
@@ -214,8 +208,8 @@ public class Raider : Human, IProgressable
         if (!IsRaidFinished) return;
         if (buildng != CityNavigator.TargetBuilding) return;
 
-        CityNavigator.RemoveTargetBuilding();
-        CityNavigator.RemoveTargetBuilding();
+        CityNavigator.TryRemoveTargetBuilding();
+        CityNavigator.TryRemoveTargetBuilding();
         CityNavigator.RemovePathAndTargetBuilding();
     }
 

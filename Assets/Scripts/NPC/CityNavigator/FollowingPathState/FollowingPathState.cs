@@ -47,6 +47,6 @@ public class FollowingPathState : PathState
             return;
         }
 
-        construction.InteractionPointsHandler.RemoveInteractor(cityNavigator);
+        construction.InteractionPointsHandler.RunRemoveInteractorEndOfFrame(cityNavigator);
     }
 }

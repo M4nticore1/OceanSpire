@@ -10179,7 +10179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoSave
   worldSaveManager: {fileID: 1040276941}
-  autoSaveDataFrequency: 100
+  autoSaveDataFrequency: 2
   autoSaveThumbFrequency: 60
 --- !u!1001 &749933963
 PrefabInstance:
@@ -16770,7 +16770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1372936028
 Transform:
   m_ObjectHideFlags: 0
