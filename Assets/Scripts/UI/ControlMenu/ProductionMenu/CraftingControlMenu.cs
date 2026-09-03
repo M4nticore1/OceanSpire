@@ -47,19 +47,19 @@ public class CraftingControlMenu : ControlMenu
     private void CreateCraftWidgets()
     {
         var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
-        if (!selectedBuilding) {
+        if (selectedBuilding == null) {
             Debug.LogError("SelectedBuilding is not valid");
             return;
         }
 
         var module = selectedBuilding.GetComponent<CraftingModule>();
-        if (!module) {
+        if (module == null) {
             Debug.LogError($"{selectedBuilding} does not have a CraftingModule");
             return;
         }
 
         var craftingLevelData = module.ProductionLevelData;
-        if (!craftingLevelData) {
+        if (craftingLevelData == null) {
             Debug.LogError($"{module} doesn not have a LevelData");
             return;
         }
