@@ -310,7 +310,7 @@ public class CraftingModule : BuildingModule, IRaidable
         if (produceItem == null) return false;
         if (!produceItem.Definition) return false;
 
-        var storageItem = cityStorage.Inventory.GetItem(produceItem.Definition.ItemId);
+        var storageItem = cityStorage.Inventory.GetInventoryItem(produceItem.Definition.ItemId);
         if (storageItem != null && storageItem.Stack != null) {
             if (storageItem.Stack.GetItemAmountsSum() >= storageItem.Stack.Amount) return false;
         }
@@ -379,7 +379,7 @@ public class CraftingModule : BuildingModule, IRaidable
             if (resource == null) continue;
             if (!resource.Definition) continue;
 
-            var item = cityStorage.Inventory.GetItem(resource.Definition.ItemId);
+            var item = cityStorage.Inventory.GetInventoryItem(resource.Definition.ItemId);
             var storageAmount = item != null ? item.Amount : 0;
             if (resource.Amount > storageAmount) return false;
         }
@@ -405,7 +405,7 @@ public class CraftingModule : BuildingModule, IRaidable
         var items = new List<ItemInstance>();
         foreach (var consumeItem in SelectedCraftItem.Definition.ConsumeResources) {
             var definition = consumeItem.Definition;
-            var cityAmount = cityStorage.Inventory.GetItem(consumeItem.Definition.ItemId).Amount;
+            var cityAmount = cityStorage.Inventory.GetInventoryItem(consumeItem.Definition.ItemId).Amount;
 
             var amount = Mathf.Min(cityAmount, consumeItem.Amount);
             if (amount <= 0) continue;

@@ -87,7 +87,7 @@ public abstract class DriftingLoot : MonoBehaviour, IClickable
     protected virtual void OnInit(DriftingLootData driftingLootData)
     {
         if (driftingLootData == null) {
-            Debug.LogError("driftingLootData is not valid");
+            Debug.LogError($"[{nameof(DriftingLoot)}] Drifting Loot Data is not valid");
             return;
         }
 

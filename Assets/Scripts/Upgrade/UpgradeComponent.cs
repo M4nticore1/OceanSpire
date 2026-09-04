@@ -19,7 +19,6 @@ public class UpgradeComponent : MonoBehaviour
     private void Awake()
     {
         upgradable = GetComponent<IUpgradable>();
-
         if (upgradable == null) {
             Debug.Log($"Upgrade component is on the game object {gameObject} that doesn't have any component with an IUpgradable interface");
         }
@@ -60,8 +59,8 @@ public class UpgradeComponent : MonoBehaviour
     public void StartUpgrading()
     {
         if (upgradable == null) return;
-        if (!levelComponent) return;
-        if (!constructionComponent) return;
+        if (levelComponent == null) return;
+        if (constructionComponent == null) return;
 
         IsUnderUpgrade = true;
         NextLevel = levelComponent.Level + 1;

@@ -75,9 +75,7 @@ public class SwimmingDriftingLoot : DriftingLoot
         return new SwimmingDriftingLootData()
         {
             Id = Definition.Id,
-            Position = new Vector3Data(transform.position),
-            Rotation = new Vector3Data(transform.rotation.eulerAngles),
-            MeshId = MeshId,
+            MeshId = UnityEngine.Random.Range(0, Definition.Meshes.Length),
         };
     }
 

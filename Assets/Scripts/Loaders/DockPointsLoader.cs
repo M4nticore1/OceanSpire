@@ -69,10 +69,7 @@ public class DockPointsLoader : WorldLoader
                 continue;
             }
 
-            if (i >= docksData.Count) {
-                Debug.LogError($"[{nameof(DockPointsLoader)}] Dock's count is greater than Docks Data!");
-                break;
-            }
+            if (i >= docksData.Count) break;
 
             var data = docksData[i];
             if (data == null) {

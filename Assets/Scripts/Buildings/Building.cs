@@ -11,10 +11,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     public BuildingDefinition Definition => buildingData;
 
     [SerializeField] protected List<BuildingLevelData> buildingLevelsData = new List<BuildingLevelData>();
-    public IReadOnlyList<BuildingLevelData> LevelsDefinitions => buildingLevelsData;
+    public IReadOnlyList<BuildingLevelData> LevelDefinitions => buildingLevelsData;
 
-    public BuildingLevelData LevelDefinition => LevelsDefinitions.Count > levelComponent.Level - 1 ? LevelsDefinitions[levelComponent.Level - 1] : null;
-    public BuildingLevelData NextLevelDefinition => LevelsDefinitions.Count > levelComponent.Level ? LevelsDefinitions[levelComponent.Level] : null;
+    public BuildingLevelData LevelDefinition => LevelDefinitions.Count > levelComponent.Level - 1 ? LevelDefinitions[levelComponent.Level - 1] : null;
+    public BuildingLevelData NextLevelDefinition => LevelDefinitions.Count > levelComponent.Level ? LevelDefinitions[levelComponent.Level] : null;
 
     [SerializeField] private bool isRuined = false;
     public bool IsRuined => isRuined;
@@ -204,7 +204,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         if (cityStorage == null) return false;
 
         foreach (var buildItem in LevelDefinition.ResourcesToBuild) {
-            var storageItem = cityStorage.Inventory.GetItem(buildItem.Definition.ItemId);
+            var storageItem = cityStorage.Inventory.GetInventoryItem(buildItem.Definition.ItemId);
             if (storageItem.Amount < buildItem.Amount) return false;
         }
 
@@ -250,24 +250,35 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     }
 
     // Cost
-    public ItemInstance[] GetResourcesToBuild()
+    public ItemInstance[] GetResourcesToBuild(int level)
     {
-        return LevelDefinition.ResourcesToBuild;
+        var levelDef = GetLevelDefinition(level);
+        if (levelDef == null) return null;
+
+        return levelDef.ResourcesToBuild;
     }
 
-    public ItemInstance[] GetResourcesToRefund()
+    public ItemInstance[] GetResourcesToRefund(int level)
     {
-        int count = LevelDefinition.ResourcesToBuild.Length;
+        var levelDef = GetLevelDefinition(level);
+        if (levelDef == null) return null;
+
+        var count = levelDef.ResourcesToBuild.Length;
         var resources = new ItemInstance[count];
 
         for (int i = 0; i < count; i++) {
-            var resource = LevelDefinition.ResourcesToBuild[i];
+            var resource = levelDef.ResourcesToBuild[i];
+            if (resource == null) continue;
+
             var definition = resource.Definition;
+            if (definition == null) continue;
+
             int amount = (int)(resource.Amount * DemolishionResourcesRefundPercent);
 
             var item = definition.CreateInstance();
-            item.SetAmount(amount);
+            if (item == null) continue;
 
+            item.SetAmount(amount);
             resources[i] = item;
         }
 
@@ -295,6 +306,25 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         if (NextLevelDefinition == null) return 0;
 
         return NextLevelDefinition.UpgradeTime;
+    }
+
+    // Level Definition
+    public BuildingLevelData GetLevelDefinition(int level)
+    {
+        var index = level - 1;
+
+        if (index < 0 || index >= LevelDefinitions.Count) {
+            Debug.LogError($"[{nameof(Building)}] Level {level} is not valid!");
+            return null;
+        }
+
+        var levelDef = LevelDefinitions[index];
+        if (levelDef == null) {
+            Debug.LogError($"[{nameof(Building)}] Level Definition at index {index} is null!");
+            return null;
+        }
+
+        return levelDef;
     }
 
     // Localization

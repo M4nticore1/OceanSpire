@@ -23,36 +23,75 @@ public class BuildingCostSystem : MonoBehaviour
     {
         if (!ShouldWork()) return;
 
-        SpendResources(building);
+        if (building == null) {
+            Debug.LogError($"[{nameof(BuildingCostSystem)}] Items To Upgrade is not valid!");
+            return;
+        }
+
+        var level = building.LevelComponent.Level;
+        SpendResources(building.GetResourcesToBuild(level));
     }
 
     private void HandleUpgradeStarted(UpgradeComponent component)
     {
         if (!ShouldWork()) return;
 
-        var building = component.GetComponent<Building>();
-        if (!building) return;
+        if (component == null) {
+            Debug.LogError($"[{nameof(BuildingCostSystem)}] Upgrade Component is not valid!");
+            return;
+        }
 
-        SpendResources(building);
+        var building = component.GetComponent<Building>();
+        if (building == null) {
+            Debug.LogError($"[{nameof(BuildingCostSystem)}] Building is not valid!");
+            return;
+        }
+
+        SpendResources(building.GetResourcesToBuild(component.NextLevel));
     }
 
     private void HandleBuildingDemolished(Building building)
     {
         if (!ShouldWork()) return;
 
-        RefundResources(building);
+        if (building == null) {
+            Debug.LogError($"[{nameof(BuildingCostSystem)}] Building is not valid!");
+            return;
+        }
+
+        RefundResources(building.LevelDefinition.ResourcesToBuild);
     }
 
-    private void SpendResources(Building building)
+    private void SpendResources(ItemInstance[] itemsToSpend)
     {
-        foreach (var resource in building.GetResourcesToBuild()) {
+        if (itemsToSpend == null) {
+            Debug.LogError($"[{nameof(BuildingCostSystem)}] Items To Spend is not valid!");
+            return;
+        }
+
+        foreach (var resource in itemsToSpend) {
+            if (resource == null) {
+                Debug.LogError($"[{nameof(BuildingCostSystem)}] Item is not valid!");
+                continue;
+            }
+
             cityStorage.Inventory.RemoveItemAmount(resource.Definition.ItemId, resource.Amount);
         }
     }
 
-    private void RefundResources(Building building)
+    private void RefundResources(ItemInstance[] itemsToUpgrade)
     {
-        foreach (var resource in building.GetResourcesToRefund()) {
+        if (itemsToUpgrade == null) {
+            Debug.LogError($"[{nameof(BuildingCostSystem)}] Items To Upgrade is not valid!");
+            return;
+        }
+
+        foreach (var resource in itemsToUpgrade) {
+            if (resource == null) {
+                Debug.LogError($"[{nameof(BuildingCostSystem)}] Item is not valid!");
+                continue;
+            }
+
             cityStorage.Inventory.AddItemAmount(resource.Definition.ItemId, resource.Amount);
         }
     }

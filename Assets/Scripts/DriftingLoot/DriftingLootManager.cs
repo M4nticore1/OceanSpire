@@ -209,9 +209,9 @@ public class DriftingLootManager : MonoBehaviour
 
         if (!ShouldSpawnLootContainer(containerPrefab, id)) return false;
 
-        Vector3 spawnPosition = GetSpawnPosition(containerPrefab);
-        Vector3 destinationPosition = GetDestinationPosition();
-        Quaternion spawnRotation = GetSpawnRotation();
+        var spawnPosition = GetSpawnPosition(containerPrefab);
+        var destinationPosition = GetDestinationPosition();
+        var spawnRotation = GetSpawnRotation();
 
         var driftingLootData = containerPrefab.CreateRandomData();
         driftingLootData.Position = new Vector3Data(spawnPosition);

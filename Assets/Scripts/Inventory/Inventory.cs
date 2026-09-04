@@ -22,6 +22,8 @@ public class Inventory : MonoBehaviour, ILocalizable
     private Dictionary<ItemID, ItemInstance> itemsDict = new();
     private Dictionary<ItemStackEnum, ItemStack> itemStacks = new();
 
+    private ItemsList itemsList => ItemsList.Instance;
+
     public event Action<ItemInstance> OnItemAdded;
     public event Action<ItemInstance> OnItemRemoved;
 
@@ -72,11 +74,31 @@ public class Inventory : MonoBehaviour, ILocalizable
         }
     }
 
+    private ItemInstance AddItem(ItemID id)
+    {
+        var definition = GetItemDefinition(id);
+        if (definition == null) return null;
+
+        var item = definition.CreateInstance();
+        AddItem(item);
+
+        return item;
+    }
+
     public void AddItem(ItemInstance item)
     {
         if (item == null) return;
 
         SubscribeItem(item);
+
+        if (useAmountLimit) {
+            item.SetStack(GetStack(item.Definition.Stack));
+        }
+
+        items.Add(item);
+        itemsDict.Add(item.Definition.ItemId, item);
+
+        OnItemAdded?.Invoke(item);
     }
 
     public void AddItemAmount(ItemInstance item)
@@ -86,26 +108,28 @@ public class Inventory : MonoBehaviour, ILocalizable
 
     public void AddItemAmount(ItemID id, int amount)
     {
-        if (!ShouldAddItem(id, amount)) return;
-
-        var item = GetItem(id) ?? CreateAndRegisterItem(id);
-        var stack = GetStack(item.Definition.Stack);
+        var definition = GetItemDefinition(id);
+        if (definition == null) return;
 
         if (useAmountLimit) {
-            amount = Mathf.Clamp(amount, 0, stack.Amount - stack.GetItemAmountsSum());
+            var stack = GetStack(definition.Stack);
+            var maxAmount = stack != null ? stack.Amount - stack.GetItemAmountsSum() : amount;
+            amount = Mathf.Clamp(amount, 0, maxAmount);
         }
 
-        if (useWeightLimit && item.Definition.Weight > 0) {
-            amount = Mathf.Clamp(amount, 0, (int)(GetRemainingWeight() / item.Definition.Weight));
+        if (useWeightLimit && definition.Weight > 0) {
+            amount = Mathf.Clamp(amount, 0, (int)(GetRemainingWeight() / definition.Weight));
         }
 
+        if (!ShouldAddItem(id, amount)) return;
+
+        var item = GetInventoryItem(id) ?? AddItem(id);
         item.AddAmount(amount);
     }
 
     public void RemoveItem(ItemInstance item)
     {
         if (item == null) return;
-        if (!items.Contains(item)) return;
 
         UnsubscribeItem(item);
 
@@ -122,7 +146,7 @@ public class Inventory : MonoBehaviour, ILocalizable
 
     public void RemoveItemAmount(ItemID id, int amount)
     {
-        var item = GetItem(id);
+        var item = GetInventoryItem(id);
         if (item == null) return;
 
         item.RemoveAmount(amount);
@@ -145,10 +169,14 @@ public class Inventory : MonoBehaviour, ILocalizable
 
     public ItemStack GetStack(ItemStackEnum stack)
     {
-        return itemStacks[stack];
+        if (!itemStacks.TryGetValue(stack, out var itemStack)) {
+            Debug.LogError($"[{nameof(Inventory)}] Stack ({stack}) is not valid!");
+        }
+
+        return itemStack;
     }
 
-    public ItemInstance GetItem(ItemID id)
+    public ItemInstance GetInventoryItem(ItemID id)
     {
         itemsDict.TryGetValue(id, out var item);
         return item;
@@ -211,25 +239,6 @@ public class Inventory : MonoBehaviour, ILocalizable
         item.OnItemAmountRemoved -= HandleItemAmountRemoved;
     }
 
-    private ItemInstance CreateAndRegisterItem(ItemID id)
-    {
-        var definition = ItemsList.Instance.GetItem(id);
-        var item = definition.CreateInstance();
-
-        AddItem(item);
-
-        if (useAmountLimit) {
-            item.SetStack(GetStack(item.Definition.Stack));
-        }
-
-        if (itemsDict.TryAdd(id, item)) {
-            items.Add(item);
-        }
-
-        OnItemAdded?.Invoke(item);
-        return item;
-    }
-
     private void HandleItemAmountAdded(ItemInstance item, int amount)
     {
         var stack = GetStack(item.Definition.Stack);
@@ -252,9 +261,16 @@ public class Inventory : MonoBehaviour, ILocalizable
         }
     }
 
+    private ItemDefinition GetItemDefinition(ItemID id)
+    {
+        if (itemsList == null) return null;
+
+        return itemsList.GetItem(id);
+    }
+
     private bool ShouldAddItem(ItemID id, int amount)
     {
-        var item = GetItem(id);
+        var item = GetInventoryItem(id);
         if (autoCleaning && ((item != null ? item.Amount : 0) + amount) <= 0) return false;
 
         return true;

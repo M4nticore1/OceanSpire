@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 651485729ab488c439f3873c6637545e, type: 3}
-  m_Name: craft_kitchen_knife
+  m_Name: craft_crowbar
   m_EditorClassIdentifier: Assembly-CSharp::CraftItemDefinition
   produceItem:
-    definition: {fileID: 11400000, guid: 2885e0f30598a164395e493ce7632386, type: 2}
+    definition: {fileID: 11400000, guid: 031121acef0caee429e0623fc1e8ad0d, type: 2}
     amount: 1
   consumeResources:
-  - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 300
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-    amount: 70
-  produceTime: 400
+    amount: 130
+  produceTime: 420

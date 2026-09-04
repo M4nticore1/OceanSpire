@@ -80,7 +80,7 @@ public class BuildingWidget : MonoBehaviour
 
             var buildResource = buildResources[i];
             var id = buildResource.Definition.ItemId;
-            var storageItem = cityStorage.Inventory.GetItem(id);
+            var storageItem = cityStorage.Inventory.GetInventoryItem(id);
 
             resourceWidget.SetItemDefinition(buildResource.Definition);
             resourceWidget.AddAmount(storageItem);

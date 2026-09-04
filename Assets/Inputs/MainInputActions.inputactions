@@ -299,7 +299,7 @@
                     "id": "8ff2c7ea-3dd9-4447-b577-e4f4d5e712cb",
                     "path": "2DVector",
                     "interactions": "",
-                    "processors": "InvertVector2(invertY=false),ScaleVector2(x=40,y=15)",
+                    "processors": "InvertVector2(invertY=false),ScaleVector2(x=50,y=25)",
                     "groups": "",
                     "action": "CameraMove",
                     "isComposite": true,

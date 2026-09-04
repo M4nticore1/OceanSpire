@@ -9,28 +9,29 @@ public class UpgradeBuildingMenu : BuildingMenu
     [SerializeField] private LocalizationItem buildTimeLocalization;
     [SerializeField] private LocalizationItem instantlyBuildLocalization;
 
-    private UpgradeComponent upgradeComponent;
-
     protected override void OnOpened(Building building)
     {
-        upgradeComponent = building.UpgradeComponent;
         UpdateBuildTimeText();
     }
 
     protected override void OnAction(Building building)
     {
-        upgradeComponent.StartUpgrading();
+        if (building == null) {
+            Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Building is not valid!");
+        }
+
+        building.UpgradeComponent.StartUpgrading();
     }
 
     protected override void CreateWidgets(Building building)
     {
-        if (!building) {
+        if (building == null) {
             Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Building is not valid!");
             return;
         }
 
         var nextLevel = building.NextLevelDefinition;
-        if (!nextLevel) {
+        if (nextLevel == null) {
             Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Next Level is not valid at {building}!");
             return;
         }
@@ -44,7 +45,7 @@ public class UpgradeBuildingMenu : BuildingMenu
             var widget = ResourceWidgetFactory.CreateResourceWidget(ResourceWidgetPrefab, LayoutGroup.transform);
             spawnedResourceWidgets.Add(widget);
 
-            var item = cityStorage.Inventory.GetItem(buildItem.Definition.ItemId);
+            var item = cityStorage.Inventory.GetInventoryItem(buildItem.Definition.ItemId);
 
             widget.SetItemDefinition(item.Definition);
             widget.AddAmount(item);
@@ -54,13 +55,13 @@ public class UpgradeBuildingMenu : BuildingMenu
 
     protected override void UpdateIcon(Building building)
     {
-        if (!building) {
+        if (building == null) {
             Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Building is not valid!");
             return;
         }
 
         var nextLevel = building.NextLevelDefinition;
-        if (!nextLevel) {
+        if (nextLevel == null) {
             Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Next Level is not valid at {building}!");
             return;
         }
@@ -72,19 +73,19 @@ public class UpgradeBuildingMenu : BuildingMenu
     {
         if (!base.ShouldEnableButton()) return false;
 
-        if (!building) {
+        if (building == null) {
             Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Building is not valid!");
             return false;
         }
 
         var nextLevel = building.NextLevelDefinition;
-        if (!nextLevel) {
+        if (nextLevel == null) {
             Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] Next Level is not valid at {building}!");
             return false;
         }
 
         var cityStorage = CityStorage.Instance;
-        if (!cityStorage) {
+        if (cityStorage == null) {
             Debug.LogError($"[{nameof(UpgradeBuildingMenu)}] City Storage is not valid!");
             return false;
         }
@@ -94,7 +95,7 @@ public class UpgradeBuildingMenu : BuildingMenu
         }
 
         foreach (var buildItem in building.NextLevelDefinition.ResourcesToBuild) {
-            var storageItem = cityStorage.Inventory.GetItem(buildItem.Definition.ItemId);
+            var storageItem = cityStorage.Inventory.GetInventoryItem(buildItem.Definition.ItemId);
             if (buildItem.Amount > storageItem.Amount) return false;
         }
 
@@ -103,10 +104,10 @@ public class UpgradeBuildingMenu : BuildingMenu
 
     private void UpdateBuildTimeText()
     {
-        if (!buildTimeText) return;
+        if (buildTimeText == null) return;
 
         var levelDefinition = building.NextLevelDefinition;
-        if (!levelDefinition) return;
+        if (levelDefinition == null) return;
 
         if (levelDefinition.UpgradeTime > 0) {
             buildTimeText.SetLocalizationItem(buildTimeLocalization);

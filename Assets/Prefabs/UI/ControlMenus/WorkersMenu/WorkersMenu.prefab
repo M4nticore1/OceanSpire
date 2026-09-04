@@ -435,7 +435,7 @@ MonoBehaviour:
   buildingWorkersMenu: {fileID: 8104197365160454166}
   unemployedCitizensMenu: {fileID: 3235917991513759199}
   employedCitizensMenu: {fileID: 8696446309502264944}
-  scrollRectContent: {fileID: 5955685899923583786}
+  scrollRect: {fileID: 1324262741190070697}
   fitSizeToChildren: {fileID: 1033144450874200247}
 --- !u!114 &7262946258100083721 stripped
 MonoBehaviour:

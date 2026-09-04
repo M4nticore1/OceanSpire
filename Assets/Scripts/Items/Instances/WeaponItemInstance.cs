@@ -15,7 +15,7 @@ public class WeaponItemInstance : ItemInstance
         var cityStorage = CityStorage.Instance;
         if (!cityStorage) return;
 
-        var cityStorageEquipment = cityStorage.Inventory.GetItem(Definition.ItemId);
+        var cityStorageEquipment = cityStorage.Inventory.GetInventoryItem(Definition.ItemId);
         if (cityStorageEquipment != this) return;
 
         UnequipFromCitizens(amount);

@@ -85,6 +85,8 @@ public class CollectingLootBoatState : BoatState, IProgressable
         boat.RemoveTargetLoot();
 
         foreach (var loot in collectedLoot) {
+            if (loot == null) continue;
+            if (loot.Amount <= 0) continue;
             if (boat.Inventory.GetRemainingWeight() <= 0f) break;
 
             boat.Inventory.AddItemAmount(loot.Definition.ItemId, loot.Amount);

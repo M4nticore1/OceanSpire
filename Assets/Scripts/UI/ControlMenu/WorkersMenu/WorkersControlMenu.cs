@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WorkersControlMenu : ControlMenu
 {
@@ -17,7 +18,7 @@ public class WorkersControlMenu : ControlMenu
     [SerializeField] private WorkersPanel unemployedCitizensMenu;
     [SerializeField] private WorkersPanel employedCitizensMenu;
 
-    [SerializeField] private RectTransform scrollRectContent;
+    [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private FitSizeToChildren fitSizeToChildren;
 
     private List<CitizenWidget> spawnedWidgets = new();
@@ -71,7 +72,8 @@ public class WorkersControlMenu : ControlMenu
         UpdateWidgetsHighlight();
 
         UpdatePanelSizes();
-        UpdateScrollRect();
+        UpdateScrollRectZie();
+        UpdateScrollRectPosition();
     }
 
     protected override void OnHide()
@@ -172,7 +174,12 @@ public class WorkersControlMenu : ControlMenu
         Show();
     }
 
-    private void UpdateScrollRect()
+    private void UpdateScrollRectPosition()
+    {
+        scrollRect.verticalNormalizedPosition = 1f;
+    }
+
+    private void UpdateScrollRectZie()
     {
         fitSizeToChildren.UpdateSize();
     }
@@ -298,6 +305,9 @@ public class WorkersControlMenu : ControlMenu
         if (TryUpdateMenu(human)) {
             UpdateWidgetsSort();
         }
+
+        UpdatePanelSizes();
+        UpdateScrollRectZie();
     }
 
     private void OnCitizenWorkRemoved(CreatureInteractComponent interactor)
@@ -306,6 +316,9 @@ public class WorkersControlMenu : ControlMenu
         if (TryUpdateMenu(human)) {
             UpdateWidgetsSort();
         }
+
+        UpdatePanelSizes();
+        UpdateScrollRectZie();
     }
 
     private void OnHumanInited(Human human)
@@ -315,7 +328,9 @@ public class WorkersControlMenu : ControlMenu
 
         CreateWidget(citizen);
         UpdateMenus();
-        UpdateScrollRect();
+
+        UpdatePanelSizes();
+        UpdateScrollRectZie();
     }
 
     private void OnHumanDied(Human human)
@@ -328,14 +343,14 @@ public class WorkersControlMenu : ControlMenu
 
         RemoveWidget(widget);
         UpdateMenus();
-        UpdateScrollRect();
+        UpdateScrollRectZie();
     }
 
     private void OnCitizenEvicted(Citizen citizen)
     {
         CreateWidget(citizen);
         UpdateMenus();
-        UpdateScrollRect();
+        UpdateScrollRectZie();
     }
 
     private bool TryUpdateMenu(Human human)

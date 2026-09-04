@@ -209,7 +209,6 @@ public class Raider : Human, IProgressable
         if (buildng != CityNavigator.TargetBuilding) return;
 
         CityNavigator.TryRemoveTargetBuilding();
-        CityNavigator.TryRemoveTargetBuilding();
         CityNavigator.RemovePathAndTargetBuilding();
     }
 

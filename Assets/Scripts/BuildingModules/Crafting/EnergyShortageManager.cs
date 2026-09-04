@@ -40,7 +40,7 @@ public class EnergyShortageManager : MonoBehaviour
     private void UpdateEnergyShortage()
     {
         var lastShortage = IsUnderEnergyShortage;
-        var item = cityStorage.Inventory.GetItem(ItemID.Electricity);
+        var item = cityStorage.Inventory.GetInventoryItem(ItemID.Electricity);
         if (item == null) {
             Debug.LogError($"[{nameof(EnergyShortageManager)}] Electricity Item is not valid!");
             return;

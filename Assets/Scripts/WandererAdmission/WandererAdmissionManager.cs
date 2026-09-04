@@ -90,7 +90,7 @@ public class WandererAdmissionManager : MonoBehaviour
 
     public bool CanAcceptWanderer(Wanderer wanderer)
     {
-        if (citizensManager.GetAvaliableCitizensCount() >= cityStorage.Inventory.GetItem(ItemID.Population).Stack.Amount) return false;
+        if (citizensManager.GetAvaliableCitizensCount() >= cityStorage.Inventory.GetInventoryItem(ItemID.Population).Stack.Amount) return false;
 
         return true;
     }

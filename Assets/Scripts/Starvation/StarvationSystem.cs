@@ -24,7 +24,7 @@ public class StarvationSystem : MonoBehaviour
     private void Update()
     {
         var id = ItemID.Food;
-        if (CityStorage.Instance.Inventory.GetItem(id).Amount > 0) {
+        if (CityStorage.Instance.Inventory.GetInventoryItem(id).Amount > 0) {
             TrySetStarvation(false);
             return;
         }

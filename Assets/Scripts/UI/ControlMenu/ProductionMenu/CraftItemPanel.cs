@@ -136,7 +136,7 @@ public class CraftItemPanel : MonoBehaviour
             var definition = resource.Definition;
 
             widget.SetItemDefinition(definition);
-            widget.AddAmount(CityStorage.Instance.Inventory.GetItem(definition.ItemId));
+            widget.AddAmount(CityStorage.Instance.Inventory.GetInventoryItem(definition.ItemId));
             widget.SetLimit(resource);
         }
     }

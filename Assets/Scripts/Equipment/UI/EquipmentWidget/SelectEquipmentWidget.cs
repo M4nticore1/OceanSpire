@@ -23,7 +23,7 @@ public class SelectEquipmentWidget : EquipmentWidget
     {
         if (definition == null) return null;
 
-        var amount = CityStorage.Instance.Inventory.GetItem(definition.ItemId).Amount;
+        var amount = CityStorage.Instance.Inventory.GetInventoryItem(definition.ItemId).Amount;
         return amount.ToString();
     }
 

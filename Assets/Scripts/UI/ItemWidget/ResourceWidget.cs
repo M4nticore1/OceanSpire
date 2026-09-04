@@ -203,7 +203,7 @@ public class ResourceWidget : MonoBehaviour
         if (!cityStorage) return;
         if (!itemDefinition) return;
 
-        SetItem(cityStorage.Inventory.GetItem(itemDefinition.ItemId));
+        SetItem(cityStorage.Inventory.GetInventoryItem(itemDefinition.ItemId));
     }
 
     private void UpdateIcon()

@@ -20,7 +20,7 @@ public class EnergyShortageNotificationController : GameNotificationController
 
     protected override bool TrySubscribe()
     {
-        item = cityStorage.Inventory.GetItem(ItemID.Electricity);
+        item = cityStorage.Inventory.GetInventoryItem(ItemID.Electricity);
         if (item == null) return false;
 
         if (!base.TrySubscribe()) return false;

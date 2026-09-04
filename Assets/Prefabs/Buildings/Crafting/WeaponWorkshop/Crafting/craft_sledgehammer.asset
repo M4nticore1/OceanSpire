@@ -10,14 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 651485729ab488c439f3873c6637545e, type: 3}
-  m_Name: craft_machete
+  m_Name: craft_sledgehammer
   m_EditorClassIdentifier: Assembly-CSharp::CraftItemDefinition
   produceItem:
-    definition: {fileID: 11400000, guid: cab8b74954853c24480473f9ce175af9, type: 2}
+    definition: {fileID: 11400000, guid: f3751d18bd6e96c40989c2511505e1da, type: 2}
     amount: 1
   consumeResources:
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 300
+    amount: 2000
+  - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
+    amount: 1200
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
-    amount: 130
-  produceTime: 480
+    amount: 800
+  produceTime: 1200

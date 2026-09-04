@@ -30,12 +30,12 @@ public class DemolishBuildingMenu : BuildingMenu
 
     protected override void CreateWidgets(Building building)
     {
-        if (!building) {
+        if (building == null) {
             Debug.LogError($"[{nameof(DemolishBuildingMenu)}] Building is not valid!");
             return;
         }
 
-        var resourcesToBuild = building.GetResourcesToRefund();
+        var resourcesToBuild = building.GetResourcesToRefund(building.LevelComponent.Level);
         int resourcesCount = resourcesToBuild.Length;
 
         foreach (var item in resourcesToBuild) {
