@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,17 +18,21 @@ public class RaidCombatManager : MonoBehaviour
 
     private void HandleHumanEnteredBuilding(Human human, Building building)
     {
-        UpdateHumanCombat(human);
+        StartCoroutine(UpdateCombatDelay(human));
     }
 
     private void HandleHumanCombatStopped(Human human, AttackComponent combatComponent)
     {
-        UpdateHumanCombat(human);
+        StartCoroutine(UpdateCombatDelay(human));
     }
 
     private void UpdateHumanCombat(Human human)
     {
         if (human == null) return;
+
+        var healthComponent = human.HealthComponent;
+        if (healthComponent == null) return;
+        if (!healthComponent.IsAlive) return;
 
         var building = human.CityNavigator.EnteredBuilding;
         if (building == null) return;
@@ -114,5 +119,12 @@ public class RaidCombatManager : MonoBehaviour
         }
 
         return targets;
+    }
+
+    private IEnumerator UpdateCombatDelay(Human human)
+    {
+        yield return null;
+
+        UpdateHumanCombat(human);
     }
 }

@@ -78,8 +78,11 @@ public class AttackComponent : MonoBehaviour
             return;
         }
 
+        if (!IsAvaliable()) return;
+
         CurrentTarget = target;
         target.AddAttacker(this);
+
         MoveToTarget();
         OnTargetSeted?.Invoke(this);
     }
@@ -109,6 +112,7 @@ public class AttackComponent : MonoBehaviour
             return;
         }
 
+        if (!IsAvaliable()) return;
         if (CurrentAttackers.Contains(attacker)) return;
 
         CurrentAttackers.Add(attacker);
@@ -121,6 +125,8 @@ public class AttackComponent : MonoBehaviour
 
     public void AddAttackers(List<AttackComponent> attackers)
     {
+        if (!IsAvaliable()) return;
+
         foreach (var attacker in attackers) {
             AddAttacker(attacker);
         }
@@ -231,6 +237,7 @@ public class AttackComponent : MonoBehaviour
     private void HandleDied()
     {
         RemoveTarget();
+        StopAttacking();
 
         var attackersCopy = new List<AttackComponent>(CurrentAttackers);
         foreach (var attacker in attackersCopy) {
@@ -241,5 +248,13 @@ public class AttackComponent : MonoBehaviour
     private float GetDamage()
     {
         return weaponComponent != null ? weaponComponent.GetPower() : 0f;
+    }
+
+    private bool IsAvaliable()
+    {
+        if (health == null) return false;
+        if (!health.IsAlive) return false;
+
+        return true;
     }
 }
