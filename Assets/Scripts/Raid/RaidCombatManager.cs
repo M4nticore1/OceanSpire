@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RaidCombatManager : MonoBehaviour
@@ -39,28 +40,47 @@ public class RaidCombatManager : MonoBehaviour
         }
     }
 
-    private void AssignCombatTarget(Human human, BuildingInteractorsHandler targetsHandler)
+    private void AssignCombatTarget(Citizen citizen, BuildingInteractorsHandler targetsHandler)
     {
-        if (human == null) return;
+        if (citizen == null) return;
         if (targetsHandler == null) return;
 
-        var attackComponent = human.AttackComponent;
+        var attackComponent = citizen.AttackComponent;
         if (attackComponent == null) return;
 
         if (attackComponent.CurrentTarget != null) return;
 
-        var bestTarget = GetNearestFreeTarget(human.transform.position, targetsHandler);
+        var bestTarget = GetNearestFreeTarget(citizen.transform.position, targetsHandler);
         if (bestTarget == null) return;
 
-        attackComponent.SetTarget(bestTarget.AttackComponent);
+        attackComponent.SetTarget(bestTarget);
     }
 
-    private Human GetNearestFreeTarget(Vector3 currentPos, BuildingInteractorsHandler buildingInteractors)
+    private void AssignCombatTarget(Raider raider, BuildingInteractorsHandler targetsHandler)
+    {
+        if (raider == null) return;
+        if (targetsHandler == null) return;
+
+        var attackComponent = raider.AttackComponent;
+        if (attackComponent == null) return;
+        if (attackComponent.CurrentTarget != null) return;
+
+        var bestTarget = GetNearestFreeTarget(raider.transform.position, targetsHandler);
+        if (bestTarget == null) return;
+
+        attackComponent.SetTarget(bestTarget);
+
+        foreach (var target in GetAllFreeTargets(targetsHandler)) {
+            target.SetTarget(attackComponent);
+        }
+    }
+
+    private AttackComponent GetNearestFreeTarget(Vector3 currentPos, BuildingInteractorsHandler buildingInteractors)
     {
         if (buildingInteractors == null) return null;
         if (buildingInteractors.CurrentInteractors == null) return null;
 
-        Human nearestTarget = null;
+        AttackComponent nearestTarget = null;
         float minSqDistance = float.MaxValue;
 
         foreach (var interactor in buildingInteractors.CurrentInteractors) {
@@ -70,10 +90,29 @@ public class RaidCombatManager : MonoBehaviour
             float sqDist = (interactor.transform.position - currentPos).sqrMagnitude;
             if (sqDist < minSqDistance) {
                 minSqDistance = sqDist;
-                nearestTarget = interactor;
+                nearestTarget = interactor.AttackComponent;
             }
         }
 
         return nearestTarget;
+    }
+
+    private List<AttackComponent> GetAllFreeTargets(BuildingInteractorsHandler buildingInteractors)
+    {
+        if (buildingInteractors == null) return null;
+        if (buildingInteractors.CurrentInteractors == null) return null;
+
+        var targets = new List<AttackComponent>();
+        foreach (var interactor in buildingInteractors.CurrentInteractors) {
+            if (interactor == null) continue;
+
+            var attackComponent = interactor.AttackComponent;
+            if (attackComponent == null) continue;
+            if (attackComponent.CurrentTarget != null) continue;
+
+            targets.Add(attackComponent);
+        }
+
+        return targets;
     }
 }

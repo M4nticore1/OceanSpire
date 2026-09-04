@@ -86,7 +86,13 @@ public class AttackComponent : MonoBehaviour
 
     public void RemoveTarget()
     {
+        if (CurrentTarget == null) return;
+
+        var lastTarget = CurrentTarget;
         CurrentTarget = null;
+
+        lastTarget.RemoveAttacker(this);
+
         StopAttacking();
         OnTargetRemoved?.Invoke(this);
     }
