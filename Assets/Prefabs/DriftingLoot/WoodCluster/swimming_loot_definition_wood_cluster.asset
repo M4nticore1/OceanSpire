@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c3068e7d9c967c4da146a4227a2840e, type: 3}
-  m_Name: swimming_loot_definition_plastic
+  m_Name: swimming_loot_definition_wood_cluster
   m_EditorClassIdentifier: Assembly-CSharp::SwimmingDriftingLootDefinition
-  id: 3
+  id: 6
   movementSpeed: 0.4
   stopMovingSpeed: 10
   minSpawnTime: 0
-  maxSpawnTime: 75
+  maxSpawnTime: 45
   meshes:
-  - {fileID: 919132149155446097, guid: d51a42afd4a57c64d899a1fc49f5d508, type: 3}
+  - {fileID: 919132149155446097, guid: 0d7ecb503069b1a448be31fc4c634c24, type: 3}
   lootTable:
-  - itemData: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
+  - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     dropChance: 1
-    minAmount: 5
-    maxAmount: 15
+    minAmount: 30
+    maxAmount: 90

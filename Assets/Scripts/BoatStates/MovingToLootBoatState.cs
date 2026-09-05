@@ -14,12 +14,9 @@ public class MovingToLootBoatState : FindingLootBoatState
     {
         base.Enter();
 
-        if (!boat.TargetDriftingLoot) {
-            boat.SetState(BoatStateEnum.FindingLoot);
-            return;
+        if (!TryUpdateState()) {
+            TryStartMovingToTarget();
         }
-
-        TryStartMovingToTarget();
     }
 
     public override void Tick()
@@ -38,12 +35,9 @@ public class MovingToLootBoatState : FindingLootBoatState
     {
         base.OnReachedPath();
 
-        if (boat.TargetDriftingLoot == null) {
-            boat.SetState(BoatStateEnum.FindingLoot);
-            return;
+        if (!TryUpdateState()) {
+            boat.SetState(BoatStateEnum.CollectingLoot);
         }
-
-        boat.SetState(BoatStateEnum.CollectingLoot);
     }
 
     public override void OnBoatDockChanged(BoatDockPoint boatDock)
@@ -56,6 +50,16 @@ public class MovingToLootBoatState : FindingLootBoatState
         if (!ShouldStartMovingToTarget()) return;
 
         boat.Movement.TryMoveTo(boat.TargetDriftingLoot.transform.position);
+    }
+
+    private bool TryUpdateState()
+    {
+        if (boat.TargetDriftingLoot == null) {
+            boat.SetState(BoatStateEnum.FindingLoot);
+            return true;
+        }
+
+        return false;
     }
 
     private bool ShouldStartMovingToTarget()

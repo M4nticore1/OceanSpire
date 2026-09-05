@@ -185,8 +185,8 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
 
     public long CalculateNextResetTime()
     {
-        var now = DateTime.UtcNow;
-        var nextReset = new DateTime(now.Year, now.Month, now.Day, updateRewardTimeOffset, 0, 0, DateTimeKind.Utc);
+        var now = DateTime.Now;
+        var nextReset = new DateTime(now.Year, now.Month, now.Day, updateRewardTimeOffset, 0, 0, DateTimeKind.Local);
 
         if (nextReset <= now) {
             nextReset = nextReset.AddDays(1);

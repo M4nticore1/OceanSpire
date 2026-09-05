@@ -26,6 +26,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
     private void OnEnable()
     {
         TrySubscribe();
+        UpdateButtonEnabled();
     }
 
     private void OnDisable()
@@ -104,7 +105,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
 
     protected void UpdateActive(ContextMenuTarget target)
     {
-        if (!target) return;
+        if (target == null) return;
 
         if (ShouldShow(target)) {
             Show();
@@ -122,7 +123,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
 
     private void OnTargetSelected(ContextMenuTarget target)
     {
-        if (!target) return;
+        if (target == null) return;
 
         UpdateActive(target);
         UpdateButtonEnabled();
@@ -131,7 +132,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
     private bool TrySubscribe()
     {
         if (isSubscribed) return false;
-        if (!ContextMenuManager.Instance) return false;
+        if (ContextMenuManager.Instance == null) return false;
 
         Subscribe();
         isSubscribed = true;
@@ -141,7 +142,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
     private bool TryUnsubscribe()
     {
         if (!isSubscribed) return false;
-        if (!ContextMenuManager.Instance) return false;
+        if (ContextMenuManager.Instance == null) return false;
 
         Unsubscribe();
         isSubscribed = false;

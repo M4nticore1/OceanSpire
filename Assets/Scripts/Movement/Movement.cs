@@ -190,12 +190,11 @@ public class Movement : MonoBehaviour
 
     public bool CanReachPosition(Vector3 targetPosition)
     {
-        if (!navAgent) return false;
+        if (navAgent == null) return false;
         if (!navAgent.enabled) return false;
         if (!navAgent.isOnNavMesh) return false;
 
         var path = new NavMeshPath();
-
         if (!navAgent.CalculatePath(targetPosition, path)) {
             return false;
         }

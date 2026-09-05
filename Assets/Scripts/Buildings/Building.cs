@@ -390,22 +390,30 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     // Work
     public void RemoveWorkers()
     {
-        for (int i = citizensHandler.CurrentInteractors.Count - 1; i >= 0; i--) {
-            var worker = citizensHandler.CurrentInteractors[i];
+        var currentInteractors = citizensHandler.CurrentInteractors;
+        for (int i = currentInteractors.Count - 1; i >= 0; i--) {
+            var worker = currentInteractors[i];
             if (worker == null) continue;
 
-            var building = worker.InteractComponent.InteractBuilding;
-            worker.InteractComponent.RemoveInteractBuilding();
-            worker.InteractComponent.TryStopInteracting(building);
+            var interactComponent = worker.InteractComponent;
+            if (interactComponent == null) continue;
+
+            var building = interactComponent.InteractBuilding;
+            interactComponent.RemoveInteractBuilding();
+            interactComponent.TryStopInteracting(building);
         }
 
-        for (int i = citizensHandler.Interactors.Count - 1; i >= 0; i--) {
-            var worker = citizensHandler.Interactors[i];
+        var interactors = citizensHandler.Interactors;
+        for (int i = interactors.Count - 1; i >= 0; i--) {
+            var worker = interactors[i];
             if (worker == null) continue;
 
-            var building = worker.InteractComponent.InteractBuilding;
-            worker.InteractComponent.RemoveInteractBuilding();
-            worker.InteractComponent.TryStopInteracting(building);
+            var interactComponent = worker.InteractComponent;
+            if (interactComponent == null) continue;
+
+            var building = interactComponent.InteractBuilding;
+            interactComponent.RemoveInteractBuilding();
+            interactComponent.TryStopInteracting(building);
         }
     }
 
@@ -561,6 +569,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     private void HandleConstructionStarted()
     {
         RunRefreshConstructionCoroutine();
+        if (buildingStrategy != null) {
+            buildingStrategy.OnConstructionStarted();
+        }
+        
         OnConstructionStarted?.Invoke();
         OnBuildingConstructionStarted?.Invoke(this);
     }
@@ -568,6 +580,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     private void HandleConstructionFinished()
     {
         RunRefreshConstructionCoroutine();
+        if (buildingStrategy != null) {
+            buildingStrategy.OnConstructionFinished();
+        }
+
         OnConstructionFinished?.Invoke();
         OnBuildingConstructionFinished?.Invoke(this);
     }
@@ -575,6 +591,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     private void HandleUpgradeStarted()
     {
         RunRefreshConstructionCoroutine();
+
         OnUpgradeStarted?.Invoke();
         OnBuildingUpgradeStarted?.Invoke(this);
     }
@@ -582,6 +599,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     private void HandleUpgradeFinished()
     {
         RunRefreshConstructionCoroutine();
+
         OnUpgradeFinished?.Invoke();
         OnBuildingUpgradeFinished?.Invoke(this);
     }

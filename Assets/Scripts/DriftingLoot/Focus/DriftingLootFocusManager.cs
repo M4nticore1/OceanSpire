@@ -39,10 +39,12 @@ public class DriftingLootFocusManager : MonoBehaviour
         DriftingLoot.OnLootDestroyed -= OnDriftingLootDestroyed;
     }
 
-    public SwimmingDriftingLoot GetNearestAvaliableFocusedDriftingLoot(Boat boat)
+    public SwimmingDriftingLoot GetNearestAvailableFocusedDriftingLoot(Boat boat)
     {
+        if (boat == null) return null;
+
         SwimmingDriftingLoot bestLoot = null;
-        float bestSqrDistance = float.MaxValue;
+        var bestSqrDistance = float.MaxValue;
 
         for (int i = focusedDriftingLoot.Count - 1; i >= 0; i--) {
             var loot = focusedDriftingLoot[i];
@@ -53,21 +55,21 @@ public class DriftingLootFocusManager : MonoBehaviour
             }
 
             if (loot.FocusComponent == null || !loot.FocusComponent.IsFocused) {
-                Debug.LogError($"[{nameof(DriftingLootFocusManager)}] Loot found in list but it's not focused. Removing.");
                 focusedDriftingLoot.RemoveAt(i);
                 continue;
             }
 
-            var currentBoatSqrDistance = (loot.transform.position - boat.transform.position).sqrMagnitude;
+            if (!boat.ShouldSetTargetLoot(loot))
+                continue;
 
-            var targetBoat = loot.TargetBoat;
-            if (targetBoat) {
-                var targetBoatSqrDistance = (loot.transform.position - targetBoat.transform.position).sqrMagnitude;
-                if (currentBoatSqrDistance > targetBoatSqrDistance) continue;
-            }
+            if (!CanTargetLoot(boat, loot))
+                continue;
 
-            if (currentBoatSqrDistance < bestSqrDistance) {
-                bestSqrDistance = currentBoatSqrDistance;
+            var sqrDistance =
+                (loot.transform.position - boat.transform.position).sqrMagnitude;
+
+            if (sqrDistance < bestSqrDistance) {
+                bestSqrDistance = sqrDistance;
                 bestLoot = loot;
             }
         }
@@ -180,5 +182,27 @@ public class DriftingLootFocusManager : MonoBehaviour
         }
 
         return count;
+    }
+
+    private bool CanTargetLoot(Boat boat, SwimmingDriftingLoot loot)
+    {
+        var targetBoat = loot.TargetBoat;
+
+        // Никто не таргетит
+        if (targetBoat == null)
+            return true;
+
+        // Уже наш таргет
+        if (targetBoat == boat)
+            return true;
+
+        // Другая лодка ближе — нам нельзя забирать
+        var ourSqrDistance =
+            (loot.transform.position - boat.transform.position).sqrMagnitude;
+
+        var otherSqrDistance =
+            (loot.transform.position - targetBoat.transform.position).sqrMagnitude;
+
+        return ourSqrDistance < otherSqrDistance;
     }
 }

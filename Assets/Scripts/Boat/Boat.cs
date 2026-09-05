@@ -79,6 +79,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     [SerializeField] private bool isClickable = true;
     public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
+    [field: SerializeField] public bool IsForcedMovingToDock { get; private set; } = false;
+
     private BoatsManager boatsManager => BoatsManager.Instance;
     private BoatDocksManager boatDocksManager => BoatDocksManager.Instance;
 
@@ -173,14 +175,21 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
         transform.position = boatData.Position.Vector3();
         transform.rotation = Quaternion.Euler(boatData.Rotation.Vector3());
-
         movement.NavAgent.speed = Definition.BoatSpeed;
+        IsForcedMovingToDock = boatData.IsForcedMovingToDock;
 
         UpdateClickable();
         UpdateContextMenuTarget();
         TryDestroyBoat();
 
         updateStateCoroutine = StartCoroutine(UpdateStateCoroutine());
+    }
+
+    // Actions
+    public void ForceMoveToDock()
+    {
+        IsForcedMovingToDock = true;
+        SetState(BoatStateEnum.MovingToDock);
     }
 
     public void FloatAway(Vector3 position)
@@ -359,8 +368,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     {
         if (driftingLoot == null) return false;
 
-        var targetBoat = driftingLoot.TargetBoat;
-        if (targetBoat != null && targetBoat != this) return false;
+        //var targetBoat = driftingLoot.TargetBoat;
+        //if (targetBoat != null && targetBoat != this) return false;
 
         var swimmingDefinition = driftingLoot.Definition as SwimmingDriftingLootDefinition;
         if (swimmingDefinition == null) return false;
@@ -452,8 +461,16 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         CurrentStateEnum = state;
         CurrentState.Enter();
 
+        HandleStateEntered(CurrentStateEnum);
         OnStateEntered?.Invoke(CurrentState);
         OnBoatStateEntered?.Invoke(this);
+    }
+
+    private void HandleStateEntered(BoatStateEnum state)
+    {
+        if (state != BoatStateEnum.MovingToDock) {
+            IsForcedMovingToDock = false;
+        }
     }
 
     public bool ShouldIdle()
@@ -463,6 +480,8 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
 
     public bool ShouldFindLoot()
     {
+        if (IsForcedMovingToDock) return false;
+
         if (CurrentStateEnum == BoatStateEnum.CollectingLoot && TargetDriftingLoot != null) return false;
         if (CurrentStateEnum == BoatStateEnum.UnloadingLoot && inventory.Items.Count > 0) return false;
         //if (CurrentState as FindingLootBoatState != null) return false;
@@ -497,6 +516,7 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         if (TargetDriftingLoot == null) return false;
         if (CurrentRider == null) return false;
         if (CurrentStateEnum == BoatStateEnum.CollectingLoot) return false;
+        if (CurrentStateEnum == BoatStateEnum.MovingToDock) return false;
         if (CurrentStateEnum == BoatStateEnum.UnloadingLoot) return false;
 
         return true;

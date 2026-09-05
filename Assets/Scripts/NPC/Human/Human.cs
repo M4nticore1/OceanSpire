@@ -261,16 +261,6 @@ public abstract class Human : Creature, IClickable, ILocalizable
             BoatMoveToDock();
             return;
         }
-        if (ShouldSetCombatTarget()) {
-            //Debug.Log($"{name} ShouldStartAttacking");
-            SetCombatTarget();
-            return;
-        }
-        if (ShouldStopAttacking()) {
-            //Debug.Log($"{name} ShouldStopAttacking");
-            StopAttacking();
-            return;
-        }
         if (ShouldFollowPath()) {
             //Debug.Log($"{name} ShouldFollowPath");
             FollowPath();
@@ -322,16 +312,6 @@ public abstract class Human : Creature, IClickable, ILocalizable
         var position = boatRider.TargetBoat.DockPoint.EntraceTransform.position;
         movement.TryMoveTo(position);
         TryStopIdle();
-    }
-
-    protected virtual void SetCombatTarget()
-    {
-        UpdateIdle();
-    }
-
-    protected virtual void StopAttacking()
-    {
-        UpdateIdle();
     }
 
     protected virtual void BoatMoveToDock()
@@ -571,21 +551,6 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
         var targetBoat = boatRider.TargetBoat;
         if (targetBoat != null && targetBoat != ridingBoat) return false;
-
-        return true;
-    }
-
-    public virtual bool ShouldSetCombatTarget()
-    {
-        if (attackComponent != null && attackComponent.IsAttacking) return false;
-        if (healthComponent != null && !healthComponent.IsAlive) return false;
-
-        return false;
-    }
-
-    public virtual bool ShouldStopAttacking()
-    {
-        if (attackComponent != null && !attackComponent.IsAttacking) return false;
 
         return true;
     }

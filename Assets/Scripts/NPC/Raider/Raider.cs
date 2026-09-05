@@ -91,11 +91,6 @@ public class Raider : Human, IProgressable
             BoatFloatAway();
             return;
         }
-        if (ShouldSetCombatTarget()) {
-            //Debug.Log($"{name} StartAttacking");
-            SetCombatTarget();
-            return;
-        }
 
         base.DetermineNextAction();
     }

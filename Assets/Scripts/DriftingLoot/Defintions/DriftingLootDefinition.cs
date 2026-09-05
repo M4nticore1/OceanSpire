@@ -7,7 +7,8 @@ public enum DriftingLootId
     Scrap,
     Plastic,
     Barrel,
-    FlyingBox
+    FlyingBox,
+    WoodCluster
 }
 
 [CreateAssetMenu(fileName = "DriftingLootDefinition", menuName = "Drifting Loot/Definition")]

@@ -20,15 +20,15 @@ public class ToPierContextElement : ContextElement
 
     protected override void OnButtonClicked()
     {
-        if (!boat) return;
-
-        boat.SetState(BoatStateEnum.MovingToDock);
+        if (boat != null) {
+            boat.ForceMoveToDock();
+        }
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)
     {
         boat = target.GetComponent<Boat>();
-        if (!boat) return false;
+        if (boat == null) return false;
 
         if (boat.CurrentStateEnum == BoatStateEnum.Idle) return false;
         if (boat.CurrentStateEnum == BoatStateEnum.MovingToDock) return false;
@@ -41,14 +41,14 @@ public class ToPierContextElement : ContextElement
 
     protected override bool ShouldEnableButton()
     {
-        if (!boat) return false;
+        if (boat == null) return false;
         if (boat.Inventory.Items.Count <= 0) return false;
 
         var rider = boat.CurrentRider;
-        if (!rider) return false;
+        if (rider == null) return false;
 
         var citizen = rider.GetComponent<Citizen>();
-        if (!citizen) return false;
+        if (citizen == null) return false;
         if (!citizen.IsCitizenAvailable()) return false;
 
         return true;
@@ -56,7 +56,7 @@ public class ToPierContextElement : ContextElement
 
     private void OnBoatStateEntered(Boat boat)
     {
-        if (!boat) return;
+        if (boat == null) return;
         if (boat != this.boat) return;
 
         UpdateActive(boat.ContextMenuTarget);

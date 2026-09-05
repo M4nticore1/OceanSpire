@@ -16,12 +16,11 @@ MonoBehaviour:
   movementSpeed: 0.4
   stopMovingSpeed: 10
   minSpawnTime: 0
-  maxSpawnTime: 25
+  maxSpawnTime: 30
   meshes:
   - {fileID: 919132149155446097, guid: 8a8031b2fe3c3654f9cc8311b7f352c8, type: 3}
-  - {fileID: 919132149155446097, guid: 0d7ecb503069b1a448be31fc4c634c24, type: 3}
   lootTable:
   - itemData: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
     dropChance: 1
-    minAmount: 10
-    maxAmount: 50
+    minAmount: 20
+    maxAmount: 60

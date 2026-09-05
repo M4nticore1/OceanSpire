@@ -99,11 +99,6 @@ public class Citizen : Human
             BoatFloatAway();
             return;
         }
-        if (ShouldSetCombatTarget()) {
-            //Debug.Log("SetCombatTarget");
-            SetCombatTarget();
-            return;
-        }
 
         base.DetermineNextAction();
     }
@@ -119,24 +114,6 @@ public class Citizen : Human
         var boat = BoatRider.RidingBoat;
         boat.FloatAway(LeavePosition);
         boat.RemoveDockPoint();
-    }
-
-    protected override void SetCombatTarget()
-    {
-        var currentBuilding = CityNavigator.EnteredBuilding;
-        var currentRaiders = currentBuilding.RaidersHandler.CurrentInteractors;
-
-        foreach (var interactor in currentRaiders) {
-            if (!interactor.HealthComponent.IsAlive) continue;
-
-            var raider = interactor as Raider;
-            if (!raider) continue;
-            if (!raider.IsRaidingBuilding) continue;
-
-            AttackComponent.SetTarget(interactor.AttackComponent);
-            AttackComponent.MoveToTarget();
-            break;
-        }
     }
 
     public override bool ShouldBoatFindLoot()
@@ -168,27 +145,6 @@ public class Citizen : Human
         if (ridingBoat != targetBoat) return false;
 
         return true;
-    }
-
-    public override bool ShouldSetCombatTarget()
-    {
-        if (!base.ShouldSetCombatTarget()) return false;
-        if (IsEvicted) return false;
-
-        var currentBuilding = CityNavigator.EnteredBuilding;
-        if (!currentBuilding) return false;
-
-        if (currentBuilding != InteractComponent.InteractBuilding) return false;
-
-        var currentRaiders = currentBuilding.RaidersHandler.CurrentInteractors;
-        foreach (var raider in currentRaiders) {
-            if (!raider) continue;
-            if (!raider.HealthComponent.IsAlive) continue;
-
-            return true;
-        }
-
-        return false;
     }
 
     // Fix Boat

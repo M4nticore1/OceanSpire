@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class FindingLootBoatState : BoatState
 {
-    private const double updateDestinationRate = 0.5f;
-    private double lastUpdateDestinationTime = 0;
+    private const float updateDestinationRate = 0.5f;
+    private float currentUpdateDestinationTime = 0;
 
     public DriftingLoot currentTarget { get; private set; } = null;
     public bool isCollectingLoot { get; private set; } = false;
@@ -18,7 +18,7 @@ public class FindingLootBoatState : BoatState
 
     public override void Enter()
     {
-        if (!boat.CurrentRider) {
+        if (boat.CurrentRider == null) {
             boat.SetState(BoatStateEnum.MovingToDock);
             return;
         }
@@ -27,7 +27,7 @@ public class FindingLootBoatState : BoatState
         boat.RemoveTargetLoot();
 
         TryStopExitingBoat();
-        TryUpdateTarget();
+        UpdateTarget();
     }
 
     public override void Exit()
@@ -37,10 +37,11 @@ public class FindingLootBoatState : BoatState
 
     public override void Tick()
     {
-        if (Time.timeAsDouble >= lastUpdateDestinationTime + updateDestinationRate) {
-            TryUpdateTarget();
+        currentUpdateDestinationTime += Time.deltaTime;
+        if (currentUpdateDestinationTime >= updateDestinationRate) {
+            UpdateTarget();
             UpdateState();
-            lastUpdateDestinationTime = Time.timeAsDouble;
+            currentUpdateDestinationTime = 0f;
         }
     }
 
@@ -54,18 +55,23 @@ public class FindingLootBoatState : BoatState
 
     }
 
-    private void TryUpdateTarget()
+    private void UpdateTarget()
     {
-        var nearestFocusedLoot = focusedLootManager ? focusedLootManager.GetNearestAvaliableFocusedDriftingLoot(boat) : null;
-        if (!nearestFocusedLoot || !boat.TrySetTargetLoot(nearestFocusedLoot)) {
-            var nearestLoot = DriftingLootFinder.TryFindNearestSwimmingDriftingLoot(DriftingLootManager.Instance, boat);
+        var nearestFocusedLoot = focusedLootManager?.GetNearestAvailableFocusedDriftingLoot(boat);
+        if (nearestFocusedLoot != null) {
+            if (boat.TrySetTargetLoot(nearestFocusedLoot))
+                return;
+        }
+
+        var nearestLoot = DriftingLootFinder.TryFindNearestSwimmingDriftingLoot(DriftingLootManager.Instance, boat);
+        if (nearestLoot != null) {
             boat.TrySetTargetLoot(nearestLoot);
         }
     }
 
     private void UpdateState()
     {
-        if (boat.TargetDriftingLoot) {
+        if (boat.TargetDriftingLoot != null) {
             boat.SetState(BoatStateEnum.MovingToLoot);
         }
     }
