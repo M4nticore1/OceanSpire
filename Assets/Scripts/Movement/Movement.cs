@@ -26,7 +26,9 @@ public class Movement : MonoBehaviour
 
     [Header("Rotation")]
     [field: SerializeField] public bool UseTargetRotation { get; private set; } = true;
+
     [SerializeField] private float rotationSpeed = 1f;
+    public float RotationSpeed => rotationSpeed;
 
     private MovementManager movementManager => MovementManager.Instance;
 
@@ -84,9 +86,9 @@ public class Movement : MonoBehaviour
 
     public void SetAgentEnabled(bool enabled)
     {
-        if (navAgent == null) return;
-
-        navAgent.enabled = enabled;
+        if (navAgent != null) {
+            navAgent.enabled = enabled;
+        }
     }
 
     // Move To

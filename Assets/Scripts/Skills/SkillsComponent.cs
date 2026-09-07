@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class SkillsComponent : MonoBehaviour
 {
-    private Dictionary<SkillId, SkillInstance> skills = new();
-    public IReadOnlyDictionary<SkillId, SkillInstance> Skills => skills;
+    private Dictionary<SkillId, SkillInstance> skillsDict = new();
+    public IReadOnlyDictionary<SkillId, SkillInstance> SkillsDict => skillsDict;
 
-    public event Action<SkillInstance, float> OnSkillXpChanged;
-    public event Action<SkillInstance, int> OnSkillLevelChanged;
+    public event Action<SkillsComponent, SkillInstance> OnSkillXpChanged;
+    public event Action<SkillsComponent, SkillInstance> OnSkillLevelChanged;
 
     private void OnDisable()
     {
-        foreach (var skill in skills.Values) {
+        foreach (var skill in skillsDict.Values) {
+            if (skill == null) continue;
+
             skill.OnXpChanged -= OnXpChanged;
             skill.OnLevelChanged -= OnLevelChanged;
         }
@@ -31,24 +33,27 @@ public class SkillsComponent : MonoBehaviour
             return;
         }
 
-        foreach (var skill in skills.Values) {
+        foreach (var skill in skillsDict.Values) {
             skill.OnXpChanged -= OnXpChanged;
             skill.OnLevelChanged -= OnLevelChanged;
         }
-        skills.Clear();
 
-        foreach (var saved in skillsData.Skills) {
-            var def = SkillsList.Instance.GetSkillDefinition(saved.Id);
+        skillsDict.Clear();
+
+        var savedSkills = new Dictionary<SkillId, SkillInstanceData>();
+
+        foreach (var saved in skillsData.Skills)
+            savedSkills[saved.Id] = saved;
+
+        foreach (var def in SkillsList.Instance.SkillDefinitions) {
             var skill = new SkillInstance(def);
 
-            skill.SetXp(saved.Xp);
-            skill.SetLevel(saved.Level);
+            if (savedSkills.TryGetValue(def.SkillId, out var saved)) {
+                skill.SetXp(saved.Xp);
+                skill.SetLevel(saved.Level);
+            }
 
-            var skillId = def.SkillId;
-            skills.Add(skillId, skill);
-
-            skill.OnXpChanged += OnXpChanged;
-            skill.OnLevelChanged += OnLevelChanged;
+            AddSkill(skill);
         }
     }
 
@@ -59,13 +64,14 @@ public class SkillsComponent : MonoBehaviour
 
     public SkillInstance GetSkill(SkillId id)
     {
-        return skills[id];
+        skillsDict.TryGetValue(id, out var skill);
+        return skill;
     }
 
     private void AddSkill(SkillInstance skill)
     {
         var skillId = skill.SkillDefinition.SkillId;
-        skills.Add(skillId, skill);
+        skillsDict.Add(skillId, skill);
 
         skill.OnXpChanged += OnXpChanged;
         skill.OnLevelChanged += OnLevelChanged;
@@ -73,11 +79,11 @@ public class SkillsComponent : MonoBehaviour
 
     private void OnXpChanged(SkillInstance skill, float xp)
     {
-        OnSkillXpChanged?.Invoke(skill, xp);
+        OnSkillXpChanged?.Invoke(this, skill);
     }
 
     private void OnLevelChanged(SkillInstance skill, int level)
     {
-        OnSkillLevelChanged?.Invoke(skill, level);
+        OnSkillLevelChanged?.Invoke(this, skill);
     }
 }

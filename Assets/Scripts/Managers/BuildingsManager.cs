@@ -21,8 +21,6 @@ public class BuildingsManager : MonoBehaviour
     [SerializeField] private int maxFloorsCount = 25;
     public int MaxFloorsCount => maxFloorsCount;
 
-    public BuildingPlace EntranceBuildingPlace { get; private set; }
-
     public const int FloorHeight = 5;
     public const int FirstFloorHeight = 10;
 
@@ -44,11 +42,6 @@ public class BuildingsManager : MonoBehaviour
         }
 
         Instance = this;
-    }
-
-    private void Start()
-    {
-        UpdateEnterBuildingPlace();
     }
 
     public void RegisterFloorModule(FloorFrameModule floorModule)
@@ -141,6 +134,21 @@ public class BuildingsManager : MonoBehaviour
         return floorIndex;
     }
 
+    public BuildingPlace GetEntranceBuildingPlace()
+    {
+        if (builtFloors.Count <= FirstBuildingFloor) return null;
+
+        var floor = builtFloors[FirstBuildingFloor];
+        if (floor == null) return null;
+
+        if (floor.RoomBuildingPlaces.Count <= FirstBuildingPlace) return null;
+
+        var place = floor.RoomBuildingPlaces[FirstBuildingPlace];
+        if (place == null) return null;
+
+        return place;
+    }
+
     private void UpdateCityHeight()
     {
         if (builtFloors.Count > 0) {
@@ -156,20 +164,5 @@ public class BuildingsManager : MonoBehaviour
         else {
             CurrentCityHeight = FirstFloorHeight;
         }
-    }
-
-    private void UpdateEnterBuildingPlace()
-    {
-        if (builtFloors.Count <= FirstBuildingFloor) return;
-
-        var floor = builtFloors[FirstBuildingFloor];
-        if (floor == null) return;
-
-        if (floor.RoomBuildingPlaces.Count <= FirstBuildingPlace) return;
-
-        var place = floor.RoomBuildingPlaces[FirstBuildingPlace];
-        if (place == null) return;
-
-        EntranceBuildingPlace = place;
     }
 }

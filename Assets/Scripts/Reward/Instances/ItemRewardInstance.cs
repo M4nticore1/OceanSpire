@@ -14,7 +14,6 @@ public class ItemRewardInstance : RewardInstance
     {
         base.HandleRewardRecieved();
 
-        Debug.Log("HandleRewardRecieved1");
         if (ItemRewardDefinition == null) {
             Debug.LogError($"[{nameof(ItemRewardDefinition)}] Item Reward Definition is not valid!");
             return;
@@ -32,7 +31,6 @@ public class ItemRewardInstance : RewardInstance
         }
 
         var id = itemDefinition.ItemId;
-        Debug.Log(id + " " + Amount);
         cityStorage.Inventory.AddItemAmount(id, Amount);
     }
 

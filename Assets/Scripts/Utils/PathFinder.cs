@@ -10,7 +10,7 @@ public static class PathFinder
         if (targetBuilding == null) return false;
 
         if (startPlace == null) {
-            startPlace = BuildingsManager.Instance.EntranceBuildingPlace;
+            startPlace = BuildingsManager.Instance.GetEntranceBuildingPlace();
         }
 
         BuildingPlace targetBuildingPlace = null;
@@ -18,7 +18,7 @@ public static class PathFinder
             targetBuildingPlace = tower.BuildingPlace;
         }
         else if (targetBuilding is GroundBuilding) {
-            targetBuildingPlace = BuildingsManager.Instance.EntranceBuildingPlace;
+            targetBuildingPlace = BuildingsManager.Instance.GetEntranceBuildingPlace();
         }
 
         bool pathFound = TryFindTowerPath(startPlace, targetBuildingPlace, out buildingsPath);
@@ -77,10 +77,10 @@ public static class PathFinder
             return false;
         }
 
-        if (startPlace.PlacedBuilding == null && startPlace != BuildingsManager.Instance.EntranceBuildingPlace)
+        if (startPlace.PlacedBuilding == null && startPlace != BuildingsManager.Instance.GetEntranceBuildingPlace())
             return false;
 
-        if (targetPlace.PlacedBuilding == null && targetPlace != BuildingsManager.Instance.EntranceBuildingPlace)
+        if (targetPlace.PlacedBuilding == null && targetPlace != BuildingsManager.Instance.GetEntranceBuildingPlace())
             return false;
 
         var queue = new Queue<(BuildingPlace place, List<Building> currentPath)>();
@@ -106,7 +106,7 @@ public static class PathFinder
 
             foreach (var neighborPlace in place.GetNeighborPlaces(mask)) {
                 if (neighborPlace == null) continue;
-                if (neighborPlace.PlacedBuilding == null && neighborPlace != BuildingsManager.Instance.EntranceBuildingPlace) continue;
+                if (neighborPlace.PlacedBuilding == null && neighborPlace != BuildingsManager.Instance.GetEntranceBuildingPlace()) continue;
                 if (visited.Contains(neighborPlace)) continue;
 
                 bool neighborHasElevator = neighborPlace.PlacedBuilding != null && neighborPlace.PlacedBuilding.GetComponent<ElevatorModule>() != null;

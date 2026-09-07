@@ -4,25 +4,19 @@ public class InventoryContextElement : ContextElement
 {
     [Header("Inventory")]
     [SerializeField] private InventoryMenu inventoryMenu;
+    private Inventory inventory;
 
     protected override void OnButtonClicked()
     {
-        var contextMenuManager = ContextMenuManager.Instance;
-        if (!contextMenuManager) return;
-
-        var contextTarget = contextMenuManager.ContextMenuTarget;
-        if (!contextTarget) return;
-
-        var inventory = contextTarget.GetComponent<Inventory>();
-        if (!inventory) return;
-
         inventoryMenu.Show(inventory);
     }
 
     protected override bool ShouldShow(ContextMenuTarget target)
     {
-        var inventory = target.GetComponent<Inventory>();
-        if (!inventory) return false;
+        inventory = target.GetComponent<Inventory>();
+        if (inventory == null) return false;
+
+        if (inventory.IgnoreContextMenu) return false;
 
         return true;
     }

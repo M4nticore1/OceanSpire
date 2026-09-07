@@ -24,16 +24,14 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private BoatsList boatsList;
     [SerializeField] private HumanNamesList humanNamesList;
 
-    [SerializeField] private Inventory inventory;
-    public Inventory Inventory => inventory;
-
     [Header("Prefabs")]
     [SerializeField] private Raider[] raiderPrefabs;
     [SerializeField] private Boat boatPrefab;
 
     [Header("Weapon")]
     [SerializeField] private WeaponDefinition[] weapons;
-    [SerializeField] private float weaponDamageThreshold = 0.1f;
+    [SerializeField] private float minWeaponDamageThreshold = 0.5f;
+    [SerializeField] private float maxWeaponDamageThreshold = 0.1f;
 
     [Header("Cooldown")]
     [SerializeField] private float minRaidCooldown = 10f;
@@ -114,6 +112,7 @@ public class RaidManager : MonoBehaviour
         }
     }
 
+    // Init
     public void Init()
     {
         var raidData = RaidData.Default();
@@ -132,7 +131,6 @@ public class RaidManager : MonoBehaviour
         IsRaidExist = raidData.RaidExist;
         RaidCooldownTime = raidData.RaidCooldownTime;
         TimeSinceLastRaid = raidData.TimeSinceLastRaid;
-        inventory.Init(raidData.Inventory);
 
         UpdateRaidExist();
         UpdateUnderRaid();
@@ -142,32 +140,7 @@ public class RaidManager : MonoBehaviour
         DestroyDiedRaiders();
     }
 
-    public void AddLose(ItemInstance item)
-    {
-        if (item == null) {
-            Debug.LogError($"[{nameof(RaidManager)}] Item is not valid!");
-            return;
-        }
-
-        if (inventory == null) {
-            Debug.LogError($"[{nameof(RaidManager)}] Inventory is not valid!");
-            return;
-        }
-
-        if (item.Amount <= 0) return;
-
-        inventory.AddItemAmount(item);
-    }
-
-    public void AddLosses(List<ItemInstance> items)
-    {
-        foreach (var item in items) {
-            if (item == null) continue;
-
-            AddLose(item);
-        }
-    }
-
+    // 
     public Building CalculateNextRaidBuilding()
     {
         if (buildingsManager == null) return null;
@@ -198,6 +171,7 @@ public class RaidManager : MonoBehaviour
         return UnityEngine.Random.Range(minRaidCooldown, maxRaidCooldown);
     }
 
+    // Start/end raid
     private void StartRaid()
     {
         IsUnderRaid = true;
@@ -206,16 +180,16 @@ public class RaidManager : MonoBehaviour
 
     private void EndRaid(bool isRepeled)
     {
+        var losses = GetAddLosses(creaturesManager.Raiders);
         var result = new RaidEndedResult()
         {
             IsRepeled = isRepeled,
-            Losses = inventory.Items.ToList(),
+            Losses = losses
         };
 
-        DestroyExtraBoats();
+        DestroyEmptyBoats();
         DestroyDiedRaiders();
-        RemoveCityLoot();
-        ClearLosses();
+        RemoveCityLoot(losses);
 
         IsUnderRaid = false;
         IsRaidExist = false;
@@ -223,26 +197,7 @@ public class RaidManager : MonoBehaviour
         OnRaidEnded?.Invoke(result);
     }
 
-    private void UpdateUnderRaid()
-    {
-        if (ShouldStartRaid()) {
-            StartRaid();
-        }
-        else if (ShouldEndRaid()) {
-            EndRaid(true);
-        }
-    }
-
-    private void UpdateRaidExist()
-    {
-        if (ShouldSetRaidExistTrue()) {
-            IsRaidExist = true;
-        }
-        else if (ShouldSetRaidExistFalse()) {
-            IsRaidExist = false;
-        }
-    }
-
+    // Boats
     private void UpdateBoatDocks()
     {
         var raiderBoats = boatsManager.RaiderBoats;
@@ -258,6 +213,7 @@ public class RaidManager : MonoBehaviour
         }
     }
 
+    // Create Raid
     private bool TryCreateRaid()
     {
         var raidersCount = GetRandomRaidersCount();
@@ -295,6 +251,7 @@ public class RaidManager : MonoBehaviour
         return true;
     }
 
+    // Destroy
     private void DestroyExtraBoats()
     {
         var raiders = creaturesManager.Raiders;
@@ -308,6 +265,20 @@ public class RaidManager : MonoBehaviour
         for (int i = 0; i < extraCount; i++) {
             var boat = raiderBoats[raiderBoats.Count - i - 1];
             if (boat == null) continue;
+
+            Destroy(boat.gameObject);
+        }
+    }
+
+    private void DestroyEmptyBoats()
+    {
+        var raiderBoats = boatsManager.RaiderBoats;
+        if (raiderBoats == null) return;
+
+        for (int i = 0; i < raiderBoats.Count; i++) {
+            var boat = raiderBoats[raiderBoats.Count - i - 1];
+            if (boat == null) continue;
+            if (boat.CurrentRider != null) continue;
 
             Destroy(boat.gameObject);
         }
@@ -327,14 +298,31 @@ public class RaidManager : MonoBehaviour
         }
     }
 
-    private void RemoveCityLoot()
+    // Losses
+    private List<ItemInstance> GetAddLosses(IReadOnlyList<Raider> raiders)
     {
-        if (inventory == null) return;
+        var losses = new List<ItemInstance>();
+        foreach (var raider in creaturesManager.Raiders) {
+            if (raider == null) continue;
+            if (raider.HealthComponent && !raider.HealthComponent.IsAlive) continue;
+            if (!raider.IsRaidFinished) continue;
+
+            var inventory = raider.Inventory;
+            if (inventory == null) continue;
+
+            losses.AddRange(inventory.Items);
+        }
+
+        return losses;
+    }
+
+    private void RemoveCityLoot(IReadOnlyList<ItemInstance> items)
+    {
         if (cityStorage == null) return;
         if (cityStorage.Inventory == null) return;
 
-        for (int i = 0; i < inventory.Items.Count; i++) {
-            var item = inventory.TryGetItemByIndex(i);
+        for (int i = 0; i < items.Count; i++) {
+            var item = items[i];
             if (item == null) continue;
             if (item.Definition == null) continue;
 
@@ -342,37 +330,26 @@ public class RaidManager : MonoBehaviour
         }
     }
 
-    private void ClearLosses()
-    {
-        if (inventory == null) return;
-
-        for (int i = inventory.Items.Count - 1; i >= 0; i--) {
-            var item = inventory.TryGetItemByIndex(i);
-            if (item == null) continue;
-            if (item.Definition == null) continue;
-
-            inventory.RemoveItem(item);
-        }
-    }
-
+    // Boats
     private void HandleEnteredBoat(Human human)
     {
         if (human == null) return;
         if (human.GetComponent<Raider>() == null) return;
-        if (!ShouldEndRaid()) return;
 
-        EndRaid(false);
+        if (ShouldEndRaid()) {
+            EndRaid(false);
+        }
     }
 
     private void HandleExitedBoat(Human human)
     {
         if (human == null) return;
         if (human.GetComponent<Raider>() == null) return;
-        if (!TryStartRaid()) return;
 
-        ClearLosses();
+        TryStartRaid();
     }
 
+    // Raiders
     private void HandleHumanDied(Human human)
     {
         if (human == null) return;
@@ -393,6 +370,27 @@ public class RaidManager : MonoBehaviour
 
         StartRaid();
         return true;
+    }
+
+    // Start/end raid
+    private void UpdateUnderRaid()
+    {
+        if (ShouldStartRaid()) {
+            StartRaid();
+        }
+        else if (ShouldEndRaid()) {
+            EndRaid(true);
+        }
+    }
+
+    private void UpdateRaidExist()
+    {
+        if (ShouldSetRaidExistTrue()) {
+            IsRaidExist = true;
+        }
+        else if (ShouldSetRaidExistFalse()) {
+            IsRaidExist = false;
+        }
     }
 
     private bool ShouldStartRaid()
@@ -440,6 +438,7 @@ public class RaidManager : MonoBehaviour
         return true;
     }
 
+    // Raid Exist
     private bool ShouldSetRaidExistTrue()
     {
         var raiders = creaturesManager.Raiders;
@@ -456,6 +455,7 @@ public class RaidManager : MonoBehaviour
         return true;
     }
 
+    // Create
     private Human CreateRaider(Vector3 position, Vector3 rotation, Guid boatInstanceId)
     {
         var prefab = raiderPrefabs[UnityEngine.Random.Range(0, raiderPrefabs.Length)];
@@ -491,7 +491,6 @@ public class RaidManager : MonoBehaviour
                 EquipmentId = weaponId
             },
 
-            Skills = SkillsData.CreateByLevelsCount(SkillsData.GetLevelsCountByGameStage()),
             SpawnPosition = new Vector3Data(position)
         };
 
@@ -518,6 +517,7 @@ public class RaidManager : MonoBehaviour
         return BoatFactory.CreateBoat(boatPrefab, data);
     }
 
+    // Getters
     private WeaponDefinition GetRandomWeaponDefinition()
     {
         if (weapons == null || weapons.Length == 0) return null;
@@ -528,8 +528,8 @@ public class RaidManager : MonoBehaviour
 
         float targetPower = Mathf.Lerp(minDamage, maxDamage, gameStage);
 
-        float lowBound = Mathf.Lerp(minDamage, maxDamage, gameStage - weaponDamageThreshold);
-        float highBound = Mathf.Lerp(minDamage, maxDamage, gameStage + weaponDamageThreshold);
+        float lowBound = Mathf.Lerp(minDamage, maxDamage, Mathf.Clamp01(gameStage - minWeaponDamageThreshold));
+        float highBound = Mathf.Lerp(minDamage, maxDamage, Mathf.Clamp01(gameStage + maxWeaponDamageThreshold));
 
         reusableWeaponList.Clear();
 

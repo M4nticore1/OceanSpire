@@ -14,46 +14,22 @@ public class CraftingModuleSkillProgress : SkillProgress
         foreach (var component in SkillAdapter.SkillComponents) {
             if (!ShouldAddXp(component)) continue;
 
-            float xp = XpGain * gainXpFrequency;
-            AddXp(xp);
+            AddXp(gainXpFrequency * XpGain);
         }
 
         currentAddXpTime = 0f;
     }
 
-    protected override bool TrySubscribe()
-    {
-        if (!base.TrySubscribe()) return false;
-
-        CraftingModule.OnModuleItemCraftEnded += OnItemCrafted;
-        return true;
-    }
-
-    protected override bool TryUnsubscribe()
-    {
-        if (!base.TryUnsubscribe()) return false;
-
-        CraftingModule.OnModuleItemCraftEnded -= OnItemCrafted;
-        return true;
-    }
-
-    private void OnItemCrafted(CraftingModule module, CraftItemInstance craftItem)
-    {
-        if (module.OwnedBuilding.SkillId != SkillAdapter.SkillId) return;
-
-        AddXp(XpGain);
-    }
-
     private bool ShouldAddXp(SkillsComponent skillsComponent)
     {
         var interactComponent = skillsComponent.GetComponent<CreatureInteractComponent>();
-        if (!interactComponent) return false;
+        if (interactComponent == null) return false;
 
         var interactBuilding = interactComponent.InteractBuilding;
-        if (!interactBuilding) return false;
+        if (interactBuilding == null) return false;
 
         var craftBuilding = interactBuilding.GetComponent<CraftingModule>();
-        if (!craftBuilding) return false;
+        if (craftBuilding == null) return false;
 
         if (!craftBuilding.IsWorking) return false;
         if (craftBuilding.OwnedBuilding.SkillId != SkillAdapter.SkillId) return false;

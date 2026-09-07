@@ -194,7 +194,7 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
     }
 
     // Energy
-    public virtual float GetElectricityConsumption()
+    public virtual float GetElectricityConsumptionPerMinute()
     {
         if (OwnedBuilding == null) return 0;
 

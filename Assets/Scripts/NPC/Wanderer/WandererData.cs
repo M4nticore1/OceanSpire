@@ -10,7 +10,10 @@ public class WandererData : HumanData
 
     public static WandererData Create(Wanderer wanderer)
     {
+        if (wanderer == null) return null;
+
         var wandererData = new WandererData();
+        wandererData.FillCreatureData(wanderer);
         wandererData.FillHumanData(wanderer);
 
         wandererData.Rejected = wanderer.IsRejected;
@@ -21,10 +24,11 @@ public class WandererData : HumanData
 
     public static List<WandererData> Create(IReadOnlyList<Wanderer> wanderers)
     {
-        var wanderersData = new List<WandererData>();
+        if (wanderers == null) return null;
 
+        var wanderersData = new List<WandererData>();
         foreach (var wanderer in wanderers) {
-            if (!wanderer) continue;
+            if (wanderer == null) continue;
 
             var data = Create(wanderer);
             if (data == null) continue;

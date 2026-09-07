@@ -19,7 +19,7 @@ public class RoomBuildingType : BuildingType
         if (!base.ShouldBuild(buildingPlace)) return false;
 
         if (buildingsManager == null) return false;
-        var entranceBuildingPlace = buildingsManager.EntranceBuildingPlace;
+        var entranceBuildingPlace = buildingsManager.GetEntranceBuildingPlace();
 
         var leftPlace = buildingPlace.NeighborBuildingPlaces[Direction.Left];
         if (leftPlace != null && leftPlace.PlacedBuilding != null || leftPlace == entranceBuildingPlace) {

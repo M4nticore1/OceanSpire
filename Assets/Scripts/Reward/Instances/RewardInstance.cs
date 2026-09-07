@@ -35,7 +35,6 @@ public class RewardInstance : ILocalizable
 
     protected virtual void HandleRewardRecieved()
     {
-        Debug.Log("HandleRewardRecieved");
         SetCollected(true);
     }
 
@@ -46,8 +45,6 @@ public class RewardInstance : ILocalizable
 
     public void RecieveReward()
     {
-        Debug.Log(this as ItemRewardInstance);
-        Debug.Log("RecieveReward");
         HandleRewardRecieved();
         OnRewardReceived?.Invoke(this);
     }

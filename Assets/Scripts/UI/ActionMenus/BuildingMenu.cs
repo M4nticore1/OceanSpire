@@ -7,8 +7,8 @@ using UnityEngine.UI;
 public abstract class BuildingMenu : UIBehaviour, IOpenable
 {
     [Header("Building Menu")]
-    [SerializeField] private ResourceWidget resourceWidgetPrefab;
-    protected ResourceWidget ResourceWidgetPrefab => resourceWidgetPrefab;
+    [SerializeField] private ItemWidget resourceWidgetPrefab;
+    protected ItemWidget ResourceWidgetPrefab => resourceWidgetPrefab;
 
     [SerializeField] private SlidePanel slidePanel;
 
@@ -25,7 +25,7 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
 
     [SerializeField] private TextLocalizer targetLocalizer;
 
-    protected List<ResourceWidget> spawnedResourceWidgets = new();
+    protected List<ItemWidget> spawnedResourceWidgets = new();
 
     protected Building building { get; private set; }
     private bool isSubscribed = false;

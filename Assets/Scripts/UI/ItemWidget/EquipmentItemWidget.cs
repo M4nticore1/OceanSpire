@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class EquipmentItemWidget : ResourceWidget
+public class EquipmentItemWidget : ItemWidget
 {
     [Header("Weapon")]
     [SerializeField] TextMeshProUGUI powerText;

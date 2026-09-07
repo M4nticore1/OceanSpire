@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class BuildingWidget : MonoBehaviour
 {
     [Header("Prfabs")]
-    [SerializeField] private ResourceWidget buildingResourceWidget;
-    private List<ResourceWidget> spawnedBuildingResourceWidgets = new List<ResourceWidget>();
+    [SerializeField] private ItemWidget buildingResourceWidget;
+    private List<ItemWidget> spawnedBuildingResourceWidgets = new List<ItemWidget>();
 
     [Header("Buttons")]
     [SerializeField] private CustomButton buildButton;

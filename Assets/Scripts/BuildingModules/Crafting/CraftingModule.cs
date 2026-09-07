@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("Building Modules/Crafting Module")]
-public class CraftingModule : BuildingModule, IRaidable
+public class CraftingModule : BuildingModule, IRaidable, ILevelBonusable
 {
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
 
@@ -27,7 +27,7 @@ public class CraftingModule : BuildingModule, IRaidable
     public List<CraftItemInstance> CraftItems { get; private set; } = new();
     public CraftItemInstance SelectedCraftItem { get; private set; }
 
-    public float CraftingSpeedMultiplier { get; private set; } = 1f;
+    public float LevelBonus { get; private set; } = 0f;
 
     private CityStorage cityStorage => CityStorage.Instance;
     private EnergyShortageManager energyShortageManager => EnergyShortageManager.Instance;
@@ -262,9 +262,9 @@ public class CraftingModule : BuildingModule, IRaidable
         }
     }
 
-    public void SetCraftingSpeedBonus(float multiplier)
+    public void SetLevelBonus(float multiplier)
     {
-        CraftingSpeedMultiplier = Mathf.Max(0, multiplier);
+        LevelBonus = Mathf.Max(0, multiplier);
 
         foreach (var item in CraftItems) {
             item.SetCraftingSpeedMultiplier(multiplier);
@@ -290,10 +290,12 @@ public class CraftingModule : BuildingModule, IRaidable
 
     private void CollectItem()
     {
-        if (!cityStorage || SelectedCraftItem == null) return;
+        if (cityStorage == null) return;
+        if (SelectedCraftItem == null) return;
 
         var craftItem = SelectedCraftItem.Definition.ProduceItem;
-        if (craftItem == null || !craftItem.Definition) return;
+        if (craftItem == null) return;
+        if (craftItem.Definition == null) return;
 
         cityStorage.Inventory.AddItemAmount(craftItem.Definition.ItemId, craftItem.Amount);
 
@@ -312,7 +314,7 @@ public class CraftingModule : BuildingModule, IRaidable
 
         var storageItem = cityStorage.Inventory.GetInventoryItem(produceItem.Definition.ItemId);
         if (storageItem != null && storageItem.Stack != null) {
-            if (storageItem.Stack.GetItemAmountsSum() >= storageItem.Stack.Amount) return false;
+            if (storageItem.Stack.GetItemsAmountSum() >= storageItem.Stack.Amount) return false;
         }
 
         return true;
@@ -433,6 +435,7 @@ public class CraftingModule : BuildingModule, IRaidable
         CraftingModulesManager.Instance?.UnregisterCraftingModule(this);
     }
 
+    // Click
     private void HandleBuildingClicked()
     {
         if (TryCollectItem()) {
@@ -445,11 +448,13 @@ public class CraftingModule : BuildingModule, IRaidable
         OnClicked?.Invoke();
     }
 
+    // Storage
     private void HandleStorageAmountChanged(ItemInstance item)
     {
         TryStartWorking();
     }
 
+    // Energy Shortage
     private void HandleEnergyShortageStarted()
     {
         TryStopWorking();

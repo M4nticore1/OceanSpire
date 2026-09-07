@@ -292,12 +292,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wanderer
   definition: {fileID: 11400000, guid: a8dfcf0a32f1a494eb604e2c842b25ac, type: 2}
-  agent: {fileID: 4707038079339793117}
   movement: {fileID: 5458572271330249157}
+  healthComponent: {fileID: 7719323413831070654}
   instanceId: {fileID: 414756016778997668}
+  <IsIdle>k__BackingField: 1
+  <IsInited>k__BackingField: 0
   genderComponent: {fileID: 8328271919694642245}
   nameComponent: {fileID: 374115513058551452}
-  healthComponent: {fileID: 7719323413831070654}
   healthDisplay: {fileID: 8760509714274860151}
   reviveComponent: {fileID: 8449329797804703458}
   cityNavigator: {fileID: 5590457673492052500}
@@ -305,6 +306,7 @@ MonoBehaviour:
   interactComponent: {fileID: 317534655034775791}
   boatRider: {fileID: 715190593776507752}
   attackComponent: {fileID: 6413572688562527913}
+  inventory: {fileID: 1334952770641371037}
   weaponComponent: {fileID: 2753242311736777900}
   skillsComponent: {fileID: 1368942810633588043}
   selectComponent: {fileID: 2870980040640394751}
@@ -321,6 +323,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b0c4d83530020347a7953f4fc928c00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatRider
+--- !u!114 &1334952770641371037 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4703798550270819104, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
+  m_PrefabInstance: {fileID: 6035258515464070333}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 687457434963288068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27afc86b48e1cd4d987e182d36208aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Inventory
 --- !u!114 &1368942810633588043 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4701473922447632886, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
@@ -370,11 +383,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d99a68852cd4906449f8260097b5b48d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ContextMenuTarget
---- !u!195 &4707038079339793117 stripped
-NavMeshAgent:
-  m_CorrespondingSourceObject: {fileID: 1338494420481879648, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}
-  m_PrefabInstance: {fileID: 6035258515464070333}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4838781242632844817 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1218019482049909420, guid: 5fd621156ea74d04fa95a5176b6fc9bf, type: 3}

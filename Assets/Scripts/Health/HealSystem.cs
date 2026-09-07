@@ -24,15 +24,11 @@ public class HealSystem : MonoBehaviour
     {
         for (int i = creaturesManager.Citizens.Count - 1; i >= 0; i--) {
             var citizen = creaturesManager.Citizens[i];
-            if (!citizen) continue;
 
             if (!ShouldHeal(citizen)) continue;
 
             var healthAmount = healPerSecond * healFrequence;
-            var bonus = citizen.SkillsComponent.GetSkill(SkillId.Medicine).GetBonus();
-            var healthWithBonus = healthAmount * (1 + bonus);
-
-            citizen.HealthComponent.AddHealth(healthWithBonus);
+            citizen.HealthComponent.AddHealth(healthAmount, true);
         }
     }
 
@@ -43,6 +39,7 @@ public class HealSystem : MonoBehaviour
 
     private bool ShouldHeal(Human human)
     {
+        if (human == null) return false;
         if (!human.HealthComponent.IsAlive) return false;
 
         return true;

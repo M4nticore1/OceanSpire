@@ -10,37 +10,34 @@ public abstract class SkillAdapter : MonoBehaviour
 
     private bool isSubscribed = false;
 
-    private void OnEnable()
+    private void Awake()
     {
-        TrySubscribe();
-    }
-
-    private void OnDisable()
-    {
-        TryUnsubscribe();
+        if (TrySubscribe()) {
+            isSubscribed = true;
+        }
     }
 
     private void OnDestroy()
     {
-        foreach (var component in SkillComponents) {
+        if (TryUnsubscribe()) {
+            isSubscribed = false;
+        }
+
+        for (int i = SkillComponents.Count - 1; i >= 0; i--) {
+            var component = SkillComponents[i];
+            if (component == null) {
+                SkillComponents.RemoveAt(i);
+                continue;
+            }
+
             component.OnSkillLevelChanged -= OnSkillLevelChanged;
         }
     }
 
     private void Start()
     {
-        TrySubscribe();
-    }
-
-    protected abstract void OnSkillLevelChanged(SkillsComponent skillsComponents);
-
-    private void OnSkillLevelChanged(SkillInstance skill, int level)
-    {
-        foreach (var component in SkillComponents) {
-            if (component.GetSkill(SkillId) != skill) continue;
-
-            OnSkillLevelChanged(component);
-            break;
+        if (TrySubscribe()) {
+            isSubscribed = true;
         }
     }
 
@@ -48,17 +45,18 @@ public abstract class SkillAdapter : MonoBehaviour
     {
         if (isSubscribed) return false;
 
-        isSubscribed = true;
         return true;
     }
 
     protected virtual bool TryUnsubscribe()
     {
-        if (!isSubscribed) return false;
+        if (!isSubscribed)
+            return false;
 
-        isSubscribed = false;
         return true;
     }
+
+    protected abstract ILevelBonusable GetBonusTarget(SkillsComponent skillsComponent);
 
     public SkillInstance[] GetSkills()
     {
@@ -73,33 +71,26 @@ public abstract class SkillAdapter : MonoBehaviour
 
     protected void AddSkillsComponent(SkillsComponent skillsComponent)
     {
-        if (!skillsComponent) {
-            Debug.LogError("skillsComponent is not valid");
+        if (skillsComponent == null)
             return;
-        }
 
-        if (SkillComponents.Contains(skillsComponent)) {
-            Debug.LogError("SkillComponents is already contains skillcomponent");
+        if (SkillComponents.Contains(skillsComponent))
             return;
-        }
 
         SkillComponents.Add(skillsComponent);
-
-        var skill = skillsComponent.GetSkill(skillId);
-        skill.OnLevelChanged += OnSkillLevelChanged;
+        skillsComponent.OnSkillLevelChanged += OnSkillLevelChanged;
     }
 
     protected void RemoveSkillsComponent(SkillsComponent skillsComponent)
     {
-        if (!SkillComponents.Contains(skillsComponent)) {
-            Debug.LogError("skillComponents does not contain skillsComponent");
+        if (skillsComponent == null)
             return;
-        }
+
+        if (!SkillComponents.Contains(skillsComponent))
+            return;
 
         SkillComponents.Remove(skillsComponent);
-
-        var skill = skillsComponent.GetSkill(skillId);
-        skill.OnLevelChanged -= OnSkillLevelChanged;
+        skillsComponent.OnSkillLevelChanged -= OnSkillLevelChanged;
     }
 
     protected void SetSkillId(SkillId skillId)
@@ -107,8 +98,32 @@ public abstract class SkillAdapter : MonoBehaviour
         this.skillId = skillId;
     }
 
+    // Events
+    private void OnSkillLevelChanged(SkillsComponent skillsComponent, SkillInstance skill)
+    {
+        if (skillsComponent == null)
+            return;
+
+        if (skill == null)
+            return;
+
+        var bonusTarget = GetBonusTarget(skillsComponent);
+        if (bonusTarget == null)
+            return;
+
+        var skillBonus = skill.GetBonus();
+        var bonusPerLevel = skill.SkillDefinition.BonusPerLevel;
+        var lastSkillBonus = skillBonus - bonusPerLevel;
+
+        bonusTarget.SetLevelBonus(bonusTarget.LevelBonus - lastSkillBonus);
+        bonusTarget.SetLevelBonus(bonusTarget.LevelBonus + skillBonus);
+    }
+
     protected float GetBonus(SkillsComponent skillsComponent)
     {
+        if (skillsComponent == null)
+            return 0f;
+
         var skill = skillsComponent.GetSkill(SkillId);
         var bonus = skill.GetBonus();
 

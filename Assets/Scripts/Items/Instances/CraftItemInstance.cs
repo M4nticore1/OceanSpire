@@ -9,7 +9,7 @@ public class CraftItemInstance
     public long? FinishTime { get; private set; } = null;
     public bool IsResourcesSpent { get; private set; } = false;
 
-    public float CraftingSpeedMultiplier { get; private set; } = 1f;
+    public float CraftingSpeedBonus { get; private set; } = 0f;
 
     private CityStorage cityStorage => CityStorage.Instance;
 
@@ -23,7 +23,8 @@ public class CraftItemInstance
 
     public int GetCraftTimeWithBonus()
     {
-        return Mathf.Max(0, (int)(Definition.ProduceTime / CraftingSpeedMultiplier));
+        var bonus = 1f + CraftingSpeedBonus;
+        return Mathf.RoundToInt(Definition.ProduceTime / bonus);
     }
 
     public int GetRemainingCraftingTimeByCraftingTime()
@@ -69,10 +70,10 @@ public class CraftItemInstance
         FinishTime = seconds;
     }
 
-    public void SetCraftingSpeedMultiplier(float multiplier)
+    public void SetCraftingSpeedMultiplier(float bonus)
     {
-        CraftingSpeedMultiplier = Mathf.Max(0, multiplier);
-        OnSpeedBonusChanged?.Invoke(multiplier);
+        CraftingSpeedBonus = Mathf.Max(0, bonus);
+        OnSpeedBonusChanged?.Invoke(bonus);
     }
 
     public void SetResourcesSpent(bool value)
@@ -110,7 +111,7 @@ public class CraftItemInstance
     {
         if (FinishTime == null) return null;
 
-        float safeBonus = Mathf.Clamp01(CraftingSpeedMultiplier);
+        float safeBonus = Mathf.Clamp01(CraftingSpeedBonus);
         int discountSeconds = (int)(Definition.ProduceTime * safeBonus);
 
         return FinishTime.Value - discountSeconds;

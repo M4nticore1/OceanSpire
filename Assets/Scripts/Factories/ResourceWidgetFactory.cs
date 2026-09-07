@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class ResourceWidgetFactory
 {
-    public static ResourceWidget CreateResourceWidget(ResourceWidget prefab, Transform transform)
+    public static ItemWidget CreateResourceWidget(ItemWidget prefab, Transform transform)
     {
         var widget = GameObject.Instantiate(prefab, transform);
 

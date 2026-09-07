@@ -19,9 +19,6 @@ public abstract class Human : Creature, IClickable, ILocalizable
     [SerializeField] private NameComponent nameComponent;
     public NameComponent NameComponent => nameComponent;
 
-    [SerializeField] private HealthComponent healthComponent;
-    public HealthComponent HealthComponent => healthComponent;
-
     [SerializeField] private HealthDisplay healthDisplay;
     public HealthDisplay HealthDisplay => healthDisplay;
 
@@ -42,6 +39,9 @@ public abstract class Human : Creature, IClickable, ILocalizable
 
     [SerializeField] private AttackComponent attackComponent;
     public AttackComponent AttackComponent => attackComponent;
+
+    [SerializeField] private Inventory inventory;
+    public Inventory Inventory => inventory;
 
     [SerializeField] private EquipmentComponent weaponComponent;
     public EquipmentComponent WeaponComponent => weaponComponent;
@@ -90,12 +90,10 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         base.OnEnable();
 
-        healthComponent.OnDied += HandleDied;
-
         reviveComponent.OnRevived += HandleRevived;
         reviveComponent.OnLimitTimeOvered += HandleReviveLimitTimeOvered;
 
-        attackComponent.OnTargetSeted += HandleAttackTargetSeted;
+        attackComponent.OnTargetSet += HandleAttackTargetSeted;
         attackComponent.OnTargetRemoved += HandleAttackTargetRemoved;
         attackComponent.OnAttackStarted += HandleAttackStarted;
         attackComponent.OnAttackStopped += HandleAttackStopped;
@@ -127,12 +125,10 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         base.OnDisable();
 
-        healthComponent.OnDied -= HandleDied;
-
         reviveComponent.OnRevived -= HandleRevived;
         reviveComponent.OnLimitTimeOvered -= HandleReviveLimitTimeOvered;
 
-        attackComponent.OnTargetSeted -= HandleAttackTargetSeted;
+        attackComponent.OnTargetSet -= HandleAttackTargetSeted;
         attackComponent.OnTargetRemoved -= HandleAttackTargetRemoved;
         attackComponent.OnAttackStarted -= HandleAttackStarted;
         attackComponent.OnAttackStopped -= HandleAttackStopped;
@@ -172,20 +168,35 @@ public abstract class Human : Creature, IClickable, ILocalizable
         base.HandleInit(creatureData);
 
         var humanData = creatureData as HumanData;
-
         if (humanData == null) {
-            Debug.LogError("humanData is not valid");
+            Debug.LogError($"[{nameof(Human)}] Human Data is not valid!");
             humanData = HumanData.Default();
         }
 
-        nameComponent.Init(humanData.Name);
-        skillsComponent.Init(humanData.Skills);
-        healthComponent.Init(humanData.Health);
-        reviveComponent.Init(humanData.Revive);
-        weaponComponent.Init(humanData.Weapon);
-        boatRider.Init(humanData.BoatRider);
-        interactComponent.Init(humanData.Interaction);
-        cityNavigator.Init(humanData.CityNavigator);
+        if (nameComponent != null) {
+            nameComponent.Init(humanData.Name);
+        }
+        if (skillsComponent != null) {
+            skillsComponent.Init(humanData.Skills);
+        }
+        if (reviveComponent != null) {
+            reviveComponent.Init(humanData.Revive);
+        }
+        if (weaponComponent != null) {
+            weaponComponent.Init(humanData.Weapon);
+        }
+        if (boatRider != null) {
+            boatRider.Init(humanData.BoatRider);
+        }
+        if (interactComponent != null) {
+            interactComponent.Init(humanData.Interaction);
+        }
+        if (cityNavigator != null) {
+            cityNavigator.Init(humanData.CityNavigator);
+        }
+        if (inventory != null) {
+            inventory.Init(humanData.Inventory);
+        }
 
         OnHumanInited?.Invoke(this);
     }
@@ -311,7 +322,6 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         var position = boatRider.TargetBoat.DockPoint.EntraceTransform.position;
         movement.TryMoveTo(position);
-        TryStopIdle();
     }
 
     protected virtual void BoatMoveToDock()
@@ -341,7 +351,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         if (!base.ShouldStartIdle()) return false;
         if (interactComponent != null && interactComponent.IsInteracting) return false;
-        if (healthComponent != null && !healthComponent.IsAlive) return false;
+        if (HealthComponent != null && !HealthComponent.IsAlive) return false;
 
         return true;
     }
@@ -369,7 +379,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         if (boatRider != null && boatRider.RidingBoat != null) return false;
 
         //Debug.Log($"ShouldStartInteracting6 {this}");
-        if (healthComponent != null && !healthComponent.IsAlive) return false;
+        if (HealthComponent != null && !HealthComponent.IsAlive) return false;
 
         //Debug.Log($"ShouldStartInteracting7 {this}");
         if (attackComponent != null && attackComponent.IsAttacking) return false;
@@ -393,7 +403,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
     {
         if (interactComponent != null && !interactComponent.IsInteracting) return false;
         if (interactComponent != null && interactComponent.InteractBuilding == null) return false;
-        if (healthComponent != null && !healthComponent.IsAlive) return true;
+        if (HealthComponent != null && !HealthComponent.IsAlive) return true;
         if (attackComponent != null && attackComponent.IsAttacking) return true;
 
         return false;
@@ -428,11 +438,10 @@ public abstract class Human : Creature, IClickable, ILocalizable
         //Debug.Log("ShouldMoveToTargetBoat8");
         if (boatRider.RidingBoat != null) return false;
 
-        //Debug.Log("ShouldMoveToTargetBoat9");
-        if (attackComponent == null) return false;
-
         //Debug.Log("ShouldMoveToTargetBoat10");
-        if (attackComponent.IsAttacking) return false;
+        if (attackComponent != null && attackComponent.IsAttacking) return false;
+
+        if (HealthComponent != null && !HealthComponent.IsAlive) return false;
 
         if (cityNavigator.EnteredTowerBuilding != null) {
             //Debug.Log("ShouldMoveToTargetBoat11");
@@ -440,8 +449,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
             if (buildingsManager == null) return false;
 
             //Debug.Log("ShouldMoveToTargetBoat12");
-            var path = new List<Building>();
-            if (!cityNavigator.TryFindPathToBuilding(buildingsManager.EntranceBuildingPlace.PlacedBuilding, out path)) return false;
+            if (!cityNavigator.TryFindPathToBuilding(buildingsManager.GetEntranceBuildingPlace().PlacedBuilding, out var path)) return false;
         }
 
         //Debug.Log("ShouldMoveToTargetBoat13");
@@ -562,7 +570,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
         if (cityNavigator.TargetBuilding == null) return false;
         if (!cityNavigator.HasPath) return false;
         //Debug.Log("ShouldFollowPath1");
-        if (healthComponent != null && !healthComponent.IsAlive) return false;
+        if (HealthComponent != null && !HealthComponent.IsAlive) return false;
         //Debug.Log("ShouldFollowPath2");
         if (boatRider != null && boatRider.RidingBoat != null) return false;
         //Debug.Log("ShouldFollowPath3");
@@ -645,11 +653,13 @@ public abstract class Human : Creature, IClickable, ILocalizable
         OnHumanRevived?.Invoke(this);
     }
 
-    protected virtual void HandleDied()
+    protected override void HandleDied()
     {
-        RunDetermineNextActionCoroutine();
-        if (contextMenuTarget != null)
+        base.HandleDied();
+
+        if (contextMenuTarget != null) {
             contextMenuTarget.SetShowContextMenu(false);
+        }
 
         OnHumanDied?.Invoke(this);
     }

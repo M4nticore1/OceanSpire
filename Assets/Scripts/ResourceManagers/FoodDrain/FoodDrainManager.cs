@@ -5,20 +5,21 @@ public class FoodDrainManager : MonoBehaviour
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private CityStorage cityStorage;
 
-    [SerializeField] private float drainPerSecond = 0.01f;
+    [SerializeField] private float drainPerMinute = 0.375f;
     [SerializeField] private float drainFrequency = 10f;
-    public float CurrentDrainTime { get; private set; } = 0f;
 
-    public float DrainAmount { get; private set; } = 0;
+    public float CurrentDrainTime { get; private set; }
+    public float DrainAmount { get; private set; }
 
     private void Update()
     {
         CurrentDrainTime += Time.deltaTime;
-        if (CurrentDrainTime >= drainFrequency) {
-            ApplyDrainAmount();
-            TryDrainFood();
-            ResetCurrentTime();
-        }
+        if (CurrentDrainTime < drainFrequency)
+            return;
+
+        ApplyDrainAmount();
+        TryDrainFood();
+        ResetCurrentTime();
     }
 
     public void Init()
@@ -40,15 +41,18 @@ public class FoodDrainManager : MonoBehaviour
 
     private void ApplyDrainAmount()
     {
+        float drainPerSecond = drainPerMinute / 60f;
+
         DrainAmount += drainPerSecond * drainFrequency * creaturesManager.Citizens.Count;
     }
 
     private void TryDrainFood()
     {
-        if (DrainAmount < 1f) return;
+        if (DrainAmount < 1f)
+            return;
 
         var id = ItemID.Food;
-        var amount = (int)DrainAmount;
+        var amount = Mathf.FloorToInt(DrainAmount);
 
         cityStorage.Inventory.RemoveItemAmount(id, amount);
         DrainAmount -= amount;

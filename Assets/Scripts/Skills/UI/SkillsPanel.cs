@@ -24,7 +24,7 @@ public class SkillsPanel : MonoBehaviour
 
     private void CreateWidgets(SkillsComponent skills)
     {
-        foreach (var skill in skills.Skills.Values) {
+        foreach (var skill in skills.SkillsDict.Values) {
             var widget = SkillWidgetFactory.CreateSkillWidget(skillWidgetPrefab, layoutGroup.transform, skill);
             spawnedSkillWidgets.Add(widget);
         }

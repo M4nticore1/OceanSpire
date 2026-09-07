@@ -16,10 +16,14 @@ public class ItemCategoryData
 [Serializable]
 public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 {
-    [SerializeField, FormerlySerializedAs("itemData")] private ItemDefinition definition;
+    [SerializeField, FormerlySerializedAs("itemData")]
+    private ItemDefinition definition;
+
     public ItemDefinition Definition => definition;
 
-    [SerializeField] private int amount;
+    [SerializeField]
+    private int amount;
+
     public int Amount => amount;
 
     public ItemStack Stack { get; private set; }
@@ -37,18 +41,22 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 
     public virtual void SetAmount(int amount)
     {
-        amount = Mathf.Max(amount, 0);
+        amount = Mathf.Max(0, amount);
 
         if (Stack != null) {
-            amount = Mathf.Min(amount, Stack.Amount);
+            int otherItemsAmount = Stack.GetItemsAmountSum() - this.amount;
+            int availableAmount = Mathf.Max(0, Stack.Amount - otherItemsAmount);
+
+            amount = Mathf.Min(amount, availableAmount);
         }
 
-        if (this.amount == amount) return;
+        if (this.amount == amount)
+            return;
 
-        var lastAmount = this.amount;
+        int lastAmount = this.amount;
         this.amount = amount;
 
-        var difference = Mathf.Abs(amount - lastAmount);
+        int difference = Mathf.Abs(amount - lastAmount);
 
         if (amount > lastAmount) {
             OnItemAmountAdded?.Invoke(this, difference);
@@ -63,17 +71,35 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 
     public virtual void AddAmount(int amount)
     {
+        if (amount <= 0)
+            return;
+
         SetAmount(this.amount + amount);
     }
 
     public virtual void RemoveAmount(int amount)
     {
+        if (amount <= 0)
+            return;
+
         SetAmount(this.amount - amount);
     }
 
     public void SetStack(ItemStack stack)
     {
-        this.Stack = stack;
+        if (Stack == stack)
+            return;
+
+        if (Stack != null)
+            Stack.RemoveItemAmount(this);
+
+        Stack = stack;
+
+        if (Stack != null) {
+            Stack.AddItemAmount(this);
+
+            SetAmount(amount);
+        }
     }
 
     // Localization
@@ -81,29 +107,39 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
     {
         return new Dictionary<string, string>()
         {
-            { "itemName", LocalizationManager.Instance.GetLocalizedText(definition.NameLocalizationItem) },
-            { "itemAmount", amount.ToString() },
+            {
+                "itemName",
+                LocalizationManager.Instance.GetLocalizedText(
+                    definition.NameLocalizationItem)
+            },
+            {
+                "itemAmount",
+                amount.ToString()
+            }
         };
     }
 
     // Information
     public LocalizationItem GetInformationName()
     {
-        if (!Definition) return null;
+        if (!Definition)
+            return null;
 
         return Definition.NameLocalizationItem;
     }
 
     public LocalizationItem GetInformationDescription()
     {
-        if (!Definition) return null;
+        if (!Definition)
+            return null;
 
         return Definition.DescriptionLocalizationItem;
     }
 
     public Sprite GetInformationImage()
     {
-        if (!Definition) return null;
+        if (!Definition)
+            return null;
 
         return Definition.ItemIcon;
     }
@@ -111,7 +147,13 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
     // Factory
     public static ItemInstance Create(ItemData itemData)
     {
+        if (itemData == null)
+            return null;
+
         var definition = ItemsList.Instance.GetItem(itemData.Id);
+
+        if (definition == null)
+            return null;
 
         var item = definition.CreateInstance();
         item.SetAmount(itemData.Amount);
@@ -126,10 +168,13 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
             return null;
         }
 
-        List<ItemInstance> items = new List<ItemInstance>();
+        var items = new List<ItemInstance>();
 
-        foreach (ItemData item in itemData) {
-            items.Add(Create(item));
+        foreach (var data in itemData) {
+            var item = Create(data);
+
+            if (item != null)
+                items.Add(item);
         }
 
         return items.ToArray();

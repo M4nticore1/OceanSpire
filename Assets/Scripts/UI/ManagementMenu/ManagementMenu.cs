@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public abstract class ManagementMenu : UIBehaviour
+public abstract class ManagementMenu : MonoBehaviour
 {
     [SerializeField] protected GameObject managementMenu;
     [SerializeField] protected CustomButton openListButton;
@@ -11,24 +11,18 @@ public abstract class ManagementMenu : UIBehaviour
 
     protected int lastOpenedBuildingsListCategory = 0;
 
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
-
         EventBus.OnConstructionStarted += OnConstructionStarted;
     }
 
-    protected override void OnDisable()
+    private void OnDisable()
     {
-        base.OnDisable();
-
         EventBus.OnConstructionStarted -= OnConstructionStarted;
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
-
         CreateWidgets();
     }
 

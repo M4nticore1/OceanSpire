@@ -6,8 +6,7 @@ public class BoatingSkillAdapter : SkillAdapter
     {
         if (!base.TrySubscribe()) return false;
 
-        BoatRider.OnRiderEnteredBoat += OnRiderBoatAdded;
-        BoatRider.OnRiderExitedBoat += OnRiderBoatRemoved;
+        BoatRider.OnRiderEnteredBoat += HandleRiderBoatAdded;
 
         return true;
     }
@@ -16,52 +15,39 @@ public class BoatingSkillAdapter : SkillAdapter
     {
         if (!base.TryUnsubscribe()) return false;
 
-        BoatRider.OnRiderEnteredBoat -= OnRiderBoatAdded;
-        BoatRider.OnRiderExitedBoat -= OnRiderBoatRemoved;
+        BoatRider.OnRiderEnteredBoat -= HandleRiderBoatAdded;
 
         return true;
     }
 
-    protected override void OnSkillLevelChanged(SkillsComponent skillsComponent)
+    protected override ILevelBonusable GetBonusTarget(SkillsComponent skillsComponent)
     {
-        
+        if (skillsComponent == null) return null;
+
+        var boatRider = skillsComponent.GetComponent<BoatRider>();
+        if (boatRider == null) return null;
+
+        return boatRider.RidingBoat;
     }
 
-    private void AddBonus(Boat boat, float bonus)
+    private void SetBonus(Boat boat, float bonus)
     {
-        var boatSpeed = boat.Definition.BoatSpeed;
-        var skillBonus = bonus;
-        var bonusSpeed = boatSpeed * (1 + skillBonus);
+        if (boat == null) return;
 
-        boat.Movement.NavAgent.speed = bonusSpeed;
+        boat.SetLevelBonus(bonus);
     }
 
-    private void RemoveBonus(Boat boat, float bonus)
+    private void HandleRiderBoatAdded(BoatRider rider, Boat boat)
     {
-        var boatSpeed = boat.Definition.BoatSpeed;
-        boat.Movement.NavAgent.speed = boatSpeed;
-    }
+        if (rider == null) return;
 
-    private void OnRiderBoatAdded(BoatRider rider, Boat boat)
-    {
         var citizen = rider.GetComponent<Citizen>();
-        if (!citizen) return;
+        if (citizen == null) return;
 
         var skillsComponent = citizen.SkillsComponent;
-        if (!skillsComponent) return;
+        if (skillsComponent == null) return;
 
         AddSkillsComponent(skillsComponent);
-        AddBonus(boat, GetBonus(skillsComponent));
-    }
-
-    private void OnRiderBoatRemoved(BoatRider rider, Boat boat)
-    {
-        var citizen = rider.GetComponent<Citizen>();
-        if (!citizen) return;
-
-        var skillsComponent = citizen.SkillsComponent;
-
-        RemoveSkillsComponent(skillsComponent);
-        RemoveBonus(boat, GetBonus(skillsComponent));
+        SetBonus(boat, GetBonus(skillsComponent));
     }
 }

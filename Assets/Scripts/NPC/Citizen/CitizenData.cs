@@ -10,6 +10,7 @@ public class CitizenData : HumanData
     public static CitizenData Create(Citizen citizen)
     {
         var citizenData = new CitizenData();
+        citizenData.FillCreatureData(citizen);
         citizenData.FillHumanData(citizen);
 
         citizenData.EvictData = EvictData.Create(citizen);

@@ -9,7 +9,7 @@ public abstract class ManagementList : MonoBehaviour
     [SerializeField] private ScrollRect scrollRect;
     public ScrollRect ScrollRect => scrollRect;
 
-    private void Start()
+    protected virtual void Start()
     {
         CreateWidgets();
     }

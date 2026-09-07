@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class InventoryPanel : MonoBehaviour
 {
     [Header("Main")]
-    [SerializeField] private ResourceWidget resourceWidgetPrefab;
+    [SerializeField] private ItemWidget resourceWidgetPrefab;
 
     [Header("UI")]
     [SerializeField] private LayoutGroup layoutGroup;
@@ -15,7 +15,7 @@ public class InventoryPanel : MonoBehaviour
     [SerializeField] private GameObject emptyText;
 
     private Inventory inventory;
-    private Dictionary<ItemDefinition, ResourceWidget> spawnedResourceWidgets = new();
+    private Dictionary<ItemDefinition, ItemWidget> spawnedResourceWidgets = new();
 
     private bool isSubscribed = false;
 

@@ -17,7 +17,7 @@ public class BuilderEnergyManager : MonoBehaviour, ILocalizable
     [SerializeField] private float energySpend = 0.3f;
     public float EnergySpend => energySpend;
 
-    public float CurrentEnergy { get; private set; } = 1f;
+    [field: SerializeField] public float CurrentEnergy { get; private set; } = 1f;
     public long? NextChargeTime { get; private set; } = null;
 
     public event Action<float> OnEnergyChanged;

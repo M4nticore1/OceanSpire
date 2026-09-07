@@ -87,10 +87,9 @@ public class TowerBuilding : Building
         UpdateBuildingPlace(FloorIndex, PlaceIndex);
         UpdatePositionType();
         UpdateNeighborBuildings();
+        UpdateConnectedBuildings();
 
         base.OnInit(buildingData);
-
-        UpdateConnectedBuildings();
     }
 
     protected override void OnDemolish()

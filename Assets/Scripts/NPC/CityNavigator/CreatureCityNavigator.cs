@@ -192,7 +192,7 @@ public class CreatureCityNavigator : MonoBehaviour
         }
         else {
             startTowerBuilding = EnteredBuilding as TowerBuilding;
-            startPlace = startTowerBuilding != null ? startTowerBuilding.BuildingPlace : BuildingsManager.Instance.EntranceBuildingPlace;
+            startPlace = startTowerBuilding != null ? startTowerBuilding.BuildingPlace : BuildingsManager.Instance.GetEntranceBuildingPlace();
         }
 
         return PathFinder.TryFindBuildingPath(startPlace, building, out path);

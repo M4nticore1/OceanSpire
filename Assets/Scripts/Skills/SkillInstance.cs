@@ -49,15 +49,14 @@ public class SkillInstance : ILocalizable
 
     public float GetBonus()
     {
-        float bonus = SkillDefinition.BonusPerLevel * (CurrentLevel - 1);
-        return bonus;
+        return SkillDefinition.BonusPerLevel * (CurrentLevel - 1);
     }
 
     public Dictionary<string, string> GetLocalization()
     {
         return new Dictionary<string, string>()
         {
-            {"skillBonus", $"<color=green>{GetBonus() * 100}%</color>"}
+            {"skillBonus", $"<color=green>{(GetBonus() * 100):F1}%</color>"}
         };
     }
 

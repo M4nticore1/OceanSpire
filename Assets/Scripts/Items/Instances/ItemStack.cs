@@ -16,16 +16,20 @@ public enum ItemStackEnum
     Weapon,
 }
 
-[System.Serializable]
+[Serializable]
 public class ItemStack : IItemAmount
 {
     [SerializeField] private ItemStackEnum stackEnum = ItemStackEnum.Population;
     public ItemStackEnum StackEnum => stackEnum;
 
-    [SerializeField, FormerlySerializedAs("limit")] private int amount = 0;
+    [SerializeField, FormerlySerializedAs("limit")]
+    private int amount = 0;
+
+    // Stack capacity.
     public int Amount => amount;
 
-    public List<IItemAmount> ItemAmounts = new();
+    // Items that belong to this stack.
+    public List<IItemAmount> ItemAmounts { get; private set; } = new();
 
     public event Action<int> OnAmountChanged;
 
@@ -36,40 +40,56 @@ public class ItemStack : IItemAmount
 
     public void AddLimit(int value)
     {
+        if (value <= 0)
+            return;
+
         SetLimit(amount + value);
     }
 
     public void RemoveLimit(int value)
     {
+        if (value <= 0)
+            return;
+
         SetLimit(amount - value);
     }
 
     public void AddItemAmount(IItemAmount value)
     {
-        if (ItemAmounts.Contains(value)) return;
+        if (value == null)
+            return;
+
+        if (ItemAmounts.Contains(value))
+            return;
 
         ItemAmounts.Add(value);
     }
 
     public void RemoveItemAmount(IItemAmount value)
     {
+        if (value == null)
+            return;
+
         ItemAmounts.Remove(value);
     }
 
-    public int GetItemAmountsSum()
+    public int GetItemsAmountSum()
     {
         int sum = 0;
+
         foreach (var item in ItemAmounts) {
-            sum += item.Amount;
+            if (item == null)
+                continue;
+
+            sum += Mathf.Max(0, item.Amount);
         }
-        
+
         return sum;
     }
 
     private void SetLimit(int value)
     {
-        value = Mathf.Max(0, value);
-        amount = value;
-        OnAmountChanged?.Invoke(value);
+        amount = Mathf.Max(0, value);
+        OnAmountChanged?.Invoke(amount);
     }
 }

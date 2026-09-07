@@ -14,13 +14,12 @@ public class HealthDisplay : MonoBehaviour
     [SerializeField] private Gradient barGradient;
 
     [Header("Stats")]
-    [SerializeField] private float minHealthVisibilityThreshold = 0.5f;
-    [SerializeField] private float visibilityTime = 0f;
+    [SerializeField, Min(0f)] private float minHealthVisibilityThreshold = 0.5f;
+    [SerializeField, Min(0f)] private float visibilityTime = 0f;
 
     private Coroutine hideCoroutine;
-
-    private bool isDisplayed = false;
-    private bool isSubscribed = false;
+    private bool isDisplayed => content != null ? content.activeSelf && content.activeInHierarchy : true;
+    private bool isSubscribed;
 
     private void OnEnable()
     {
@@ -30,77 +29,72 @@ public class HealthDisplay : MonoBehaviour
     private void OnDisable()
     {
         TryUnsubscribe();
+        StopHideCoroutine();
     }
 
     private void Start()
     {
-        if (!health) return;
-
-        float currentHealth = health.CurrentHealth;
-        float maxHealth = health.MaxHealth;
-        float alpha = currentHealth / maxHealth;
-
-        if (alpha < minHealthVisibilityThreshold) {
-            Display();
-        }
-        else {
-            Hide();
-        }
-    }
-
-    private void TrySubscribe()
-    {
-        if (!ShouldSubscribe()) return;
-
-        health.OnHealthChanged += OnHealthChanged;
-        health.OnDied += OnDied;
-        isSubscribed = true;
-    }
-
-    private void TryUnsubscribe()
-    {
-        if (!ShouldUnsubscribe()) return;
-
-        health.OnHealthChanged -= OnHealthChanged;
-        health.OnDied -= OnDied;
-        isSubscribed = false;
-    }
-
-    private bool ShouldSubscribe()
-    {
-        if (isSubscribed) return false;
-        if (!health) return false;
-
-        return true;
-    }
-
-    private bool ShouldUnsubscribe()
-    {
-        if (!isSubscribed) return false;
-        if (!health) return false;
-
-        return true;
+        UpdateDisplayed();
     }
 
     public void SetHealthComponent(HealthComponent health)
     {
+        if (this.health == health)
+            return;
+
         TryUnsubscribe();
 
         this.health = health;
 
         TrySubscribe();
+        UpdateHealth();
     }
 
     public void RemoveHealthComponent()
     {
         TryUnsubscribe();
+
         health = null;
+        Hide();
+    }
+
+    private void TrySubscribe()
+    {
+        if (isSubscribed)
+            return;
+
+        if (health == null)
+            return;
+
+        health.OnHealthChanged += OnHealthChanged;
+        health.OnDied += OnDied;
+
+        isSubscribed = true;
+    }
+
+    private void TryUnsubscribe()
+    {
+        if (!isSubscribed)
+            return;
+
+        if (health == null) {
+            isSubscribed = false;
+            return;
+        }
+
+        health.OnHealthChanged -= OnHealthChanged;
+        health.OnDied -= OnDied;
+
+        isSubscribed = false;
     }
 
     private void OnHealthChanged()
     {
-        TryToDisplay();
-        TryUpdateHealth();
+        if (health == null)
+            return;
+
+        TryDisplay();
+        UpdateHealth();
         UpdateHideCoroutine();
     }
 
@@ -109,94 +103,126 @@ public class HealthDisplay : MonoBehaviour
         Hide();
     }
 
-    private bool TryToDisplay()
+    private bool TryDisplay()
     {
-        float currentHealth = health.CurrentHealth;
-        float maxHealth = health.MaxHealth;
-        float alpha = currentHealth / maxHealth;
+        if (health == null)
+            return false;
 
-        if (!isDisplayed && alpha <= minHealthVisibilityThreshold) {
-            Display();
-            return true;
-        }
+        if (isDisplayed)
+            return false;
 
-        return false;
+        if (GetHealthPercent() > minHealthVisibilityThreshold)
+            return false;
+
+        Display();
+
+        return true;
     }
 
     public void Display()
     {
-        if (!content) return;
-
-        content.SetActive(true);
-        isDisplayed = true;
-    }
-
-    public void Hide()
-    {
-        if (!content) return;
-
-        if (hideCoroutine != null) {
-            StopCoroutine(hideCoroutine);
-            hideCoroutine = null;
+        if (content == null) {
+            content.SetActive(true);
         }
-
-        content.SetActive(false);
-        isDisplayed = false;
-    }
-
-    private void TryUpdateHealth()
-    {
-        if (!isDisplayed) return;
 
         UpdateHealth();
     }
 
+    public void Hide()
+    {
+        StopHideCoroutine();
+
+        if (content != null) {
+            content.SetActive(false);
+        }
+    }
+
     public void UpdateHealth()
     {
-        if (healthTextLocalizer) {
-            UpdateHealthText();
-        }
+        if (!isDisplayed)
+            return;
 
-        if (bar) {
-            UpdateHealthBar();
+        UpdateHealthText();
+        UpdateHealthBar();
+    }
+
+    private void UpdateDisplayed()
+    {
+        if (ShouldDisplay()) {
+            Display();
+        }
+        else {
+            Hide();
         }
     }
 
     private void UpdateHealthText()
     {
+        if (health == null)
+            return;
+
+        if (healthTextLocalizer == null)
+            return;
+
         healthTextLocalizer.SetPlaceHolderLocalization(health);
     }
 
     private void UpdateHealthBar()
     {
-        float currentHealth = health.CurrentHealth;
-        float maxHealth = health.MaxHealth;
-        float alpha = currentHealth > 0 ? currentHealth / maxHealth : 0f;
-        Color color = barGradient.Evaluate(alpha);
+        if (health == null)
+            return;
 
-        bar.fillAmount = alpha;
-        bar.color = color;
+        if (bar == null)
+            return;
+
+        var healthPercent = GetHealthPercent();
+        bar.fillAmount = healthPercent;
+
+        if (barGradient != null) {
+            bar.color = barGradient.Evaluate(healthPercent);
+        }
     }
 
     private void UpdateHideCoroutine()
     {
-        if (hideCoroutine != null) {
-            StopCoroutine(hideCoroutine);
-            hideCoroutine = null;
-        }
+        StopHideCoroutine();
 
-        if (visibilityTime <= 0) {
+        if (visibilityTime <= 0f)
             return;
-        }
 
-        hideCoroutine = StartCoroutine(HideCoroutine());
+        hideCoroutine = StartCoroutine(HideDelayed());
     }
 
-    private IEnumerator HideCoroutine()
+    private void StopHideCoroutine()
+    {
+        if (hideCoroutine == null)
+            return;
+
+        StopCoroutine(hideCoroutine);
+        hideCoroutine = null;
+    }
+
+    private bool ShouldDisplay()
+    {
+        return GetHealthPercent() < minHealthVisibilityThreshold;
+    }
+
+    private float GetHealthPercent()
+    {
+        if (health == null)
+            return 0f;
+
+        if (health.MaxHealth <= 0f)
+            return 0f;
+
+        return Mathf.Clamp01(health.CurrentHealth / health.MaxHealth);
+    }
+
+    private IEnumerator HideDelayed()
     {
         yield return new WaitForSeconds(visibilityTime);
 
-        Hide();
         hideCoroutine = null;
+        Hide();
     }
 }

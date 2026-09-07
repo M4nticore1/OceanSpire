@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class CraftItemPanel : MonoBehaviour
 {
     [Header("Prefabs")]
-    [SerializeField] private ResourceWidget consumeResourceWidgetPrefab;
-    [SerializeField] private ResourceWidget craftResourceWidgetPrefab;
+    [SerializeField] private ItemWidget consumeResourceWidgetPrefab;
+    [SerializeField] private ItemWidget craftResourceWidgetPrefab;
 
     [Header("UI")]
     [SerializeField] private CustomButton button;
@@ -28,13 +28,14 @@ public class CraftItemPanel : MonoBehaviour
 
     private void Awake()
     {
-        if (progressBar)
+        if (progressBar != null) {
             flickingProgressBar = progressBar.GetComponent<FlickingImage>();
+        }
     }
 
     private void OnEnable()
     {
-        if (button) {
+        if (button != null) {
             button.OnSelected.AddListener(OnSelected);
             button.OnDeselected.AddListener(OnDeselected);
         }
@@ -42,7 +43,7 @@ public class CraftItemPanel : MonoBehaviour
 
     private void OnDisable()
     {
-        if (button) {
+        if (button != null) {
             button.OnSelected.RemoveListener(OnSelected);
             button.OnDeselected.RemoveListener(OnDeselected);
         }
@@ -58,7 +59,7 @@ public class CraftItemPanel : MonoBehaviour
     private void Update()
     {
         if (!isSelected) return;
-        if (!craftingModule) return;
+        if (craftingModule == null) return;
         if (!craftingModule.IsWorking) return;
 
         craftItem.UpdateCraftingTimeByFinishTime();
@@ -69,7 +70,7 @@ public class CraftItemPanel : MonoBehaviour
 
     public void Init(CraftingModule craftingModule, CraftItemInstance craftItem, SelectGroup selectGroup)
     {
-        if (!craftingModule || craftItem == null) {
+        if (craftingModule == null || craftItem == null) {
             Debug.LogError($"[{nameof(CraftItemPanel)}] Invalid Init parameters");
             return;
         }
@@ -77,7 +78,9 @@ public class CraftItemPanel : MonoBehaviour
         this.craftingModule = craftingModule;
         this.craftItem = craftItem;
 
-        if (button) button.SetSelectGroup(selectGroup);
+        if (button != null) {
+            button.SetSelectGroup(selectGroup);
+        }
 
         UpdateSelected();
         CreateProducedResourceWidget();
@@ -108,7 +111,8 @@ public class CraftItemPanel : MonoBehaviour
 
     private void UpdateSelected()
     {
-        if (craftItem == null || !craftingModule) return;
+        if (craftItem == null) return;
+        if (craftingModule == null) return;
 
         if (craftItem == craftingModule.SelectedCraftItem) {
             Select();
@@ -120,7 +124,8 @@ public class CraftItemPanel : MonoBehaviour
 
     private void CreateProducedResourceWidget()
     {
-        if (!craftResourceWidgetPrefab || !producedResourceSlot) return;
+        if (craftResourceWidgetPrefab == null) return;
+        if (producedResourceSlot == null) return;
 
         var widget = Instantiate(craftResourceWidgetPrefab, producedResourceSlot.transform);
         widget.SetItemDefinition(craftItem.Definition.ProduceItem.Definition);
@@ -129,7 +134,8 @@ public class CraftItemPanel : MonoBehaviour
 
     private void CreateConsumedResourcesWidget()
     {
-        if (!consumeResourceWidgetPrefab || !consumedResourcesSlot) return;
+        if (consumeResourceWidgetPrefab == null) return;
+        if (consumedResourcesSlot == null) return;
 
         foreach (var resource in craftItem.Definition.ConsumeResources) {
             var widget = Instantiate(consumeResourceWidgetPrefab, consumedResourcesSlot.transform);
@@ -143,13 +149,12 @@ public class CraftItemPanel : MonoBehaviour
 
     private void UpdateTimer()
     {
-        if (!timer) return;
+        if (timer == null) return;
 
-        string text = "";
-
+        var text = "";
         if (isSelected) {
-            int craftTime = craftItem.GetCraftTimeWithBonus();
-            int currentCraftingTime = craftItem.CurrentCraftingTime;
+            var craftTime = craftItem.GetCraftTimeWithBonus();
+            var currentCraftingTime = craftItem.CurrentCraftingTime;
 
             if (craftItem.IsCraftingFinished()) {
                 currentCraftingTime = craftTime;
@@ -159,13 +164,13 @@ public class CraftItemPanel : MonoBehaviour
             text = TimeFormatter.SecondToFractionalTimer(currentCraftingTime, craftTime);
         }
         else {
-            int targetTime = craftItem.GetCraftTimeWithBonus();
+            var targetTime = craftItem.GetCraftTimeWithBonus();
             text = TimeFormatter.SecondsToMinuteTimer(targetTime);
         }
 
-        float bonusPercent = (craftItem.CraftingSpeedMultiplier - 1) * 100f;
-        string bonusColorHex = ColorUtility.ToHtmlStringRGB(bonusPercent > 0 ? positiveBonusColor : negativeBonusColor);
-        string bonusText = bonusPercent > 0f ? $" <color=#{bonusColorHex}>(-{bonusPercent:F0}%)</color>" : bonusPercent < 0f ? $" <color=#{bonusColorHex}>(+{bonusPercent:F0}%)</color>" : "";
+        var bonusPercent = craftItem.CraftingSpeedBonus * 100f;
+        var bonusColorHex = ColorUtility.ToHtmlStringRGB(bonusPercent > 0 ? positiveBonusColor : negativeBonusColor);
+        var bonusText = bonusPercent > 0f ? $" <color=#{bonusColorHex}>(-{bonusPercent:F0}%)</color>" : bonusPercent < 0f ? $" <color=#{bonusColorHex}>(+{bonusPercent:F0}%)</color>" : "";
 
         text += bonusText;
         timer.SetText(text);
@@ -173,18 +178,17 @@ public class CraftItemPanel : MonoBehaviour
 
     private void UpdateProgressBar()
     {
-        if (!progressBar) return;
+        if (progressBar == null) return;
 
-        int craftTime = craftItem.GetCraftTimeWithBonus();
-        int currentCraftingTime = craftItem.CurrentCraftingTime;
+        var craftTime = craftItem.GetCraftTimeWithBonus();
+        var currentCraftingTime = craftItem.CurrentCraftingTime;
 
-        float amount = 0f;
-
+        var amount = 0f;
         if (isSelected && craftTime > 0) {
             amount = Mathf.Clamp01((float)currentCraftingTime / craftTime);
 
             if (flickingProgressBar != null) {
-                bool isFinished = currentCraftingTime >= craftTime;
+                var isFinished = currentCraftingTime >= craftTime;
                 flickingProgressBar.SetFlickingEnabled(isFinished);
             }
         }

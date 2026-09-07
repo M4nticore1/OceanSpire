@@ -1,24 +1,28 @@
 using UnityEngine;
 
-public class PopulationItemWidget : ResourceWidget
+public class PopulationItemWidget : ItemWidget
 {
-    private void OnEnable()
+    private CreaturesManager creaturesManager => CreaturesManager.Instance;
+
+    protected override void OnEnable()
     {
-        CreaturesManager.Instance.OnCitizenRegistered += OnHumanAdded;
-        CreaturesManager.Instance.OnCitizenUnregistered += OnHumanRemoved;
+        base.OnEnable();
+
+        creaturesManager.OnCitizenRegistered += OnHumanAdded;
+        creaturesManager.OnCitizenUnregistered += OnHumanRemoved;
 
         Human.OnHumanRevived += OnHumanRevived;
         Human.OnHumanDied += OnHumanDied;
 
         Citizen.OnCitizenEvicted += OnCitizenEvicted;
-
-        UpdateAmountAndLimit();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
-        CreaturesManager.Instance.OnCitizenRegistered -= OnHumanAdded;
-        CreaturesManager.Instance.OnCitizenUnregistered -= OnHumanRemoved;
+        base.OnDisable();
+
+        creaturesManager.OnCitizenRegistered -= OnHumanAdded;
+        creaturesManager.OnCitizenUnregistered -= OnHumanRemoved;
 
         Human.OnHumanRevived -= OnHumanRevived;
         Human.OnHumanDied -= OnHumanDied;
@@ -30,23 +34,21 @@ public class PopulationItemWidget : ResourceWidget
     {
         base.Start();
 
-        UpdateAmountAndLimit();
-    }
+        if (ItemDefinition == null) return;
+        if (cityStorage == null) return;
 
-    protected override void UpdateAmountAndLimit()
-    {
-        if (!ItemDefinition) return;
+        var inventory = cityStorage.Inventory;
+        if (inventory == null) return;
 
-        var limit = CityStorage.Instance.Inventory.GetStack(ItemDefinition.Stack);
+        var limit = inventory.GetStack(ItemDefinition.Stack);
         SetLimit(limit);
-
-        SetAmountText(CalculateAmountsSum(), limit.Amount);
     }
 
     protected override int CalculateAmountsSum()
     {
         int amount = 0;
-        foreach (var citizen in CreaturesManager.Instance.Citizens) {
+        foreach (var citizen in creaturesManager.Citizens) {
+            if (citizen == null) continue;
             if (citizen.IsEvicted) continue;
             if (!citizen.HealthComponent.IsAlive) continue;
 
@@ -58,26 +60,26 @@ public class PopulationItemWidget : ResourceWidget
 
     private void OnHumanAdded(Human human)
     {
-        UpdateAmountAndLimit();
+        UpdateAmountAndLimitText();
     }
 
     private void OnHumanRemoved(Human human)
     {
-        UpdateAmountAndLimit();
+        UpdateAmountAndLimitText();
     }
 
     private void OnHumanRevived(Human human)
     {
-        UpdateAmountAndLimit();
+        UpdateAmountAndLimitText();
     }
 
     private void OnHumanDied(Human human)
     {
-        UpdateAmountAndLimit();
+        UpdateAmountAndLimitText();
     }
 
     private void OnCitizenEvicted(Citizen citizen)
     {
-        UpdateAmountAndLimit();
+        UpdateAmountAndLimitText();
     }
 }

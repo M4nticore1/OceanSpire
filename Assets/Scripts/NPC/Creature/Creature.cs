@@ -9,10 +9,11 @@ public abstract class Creature : MonoBehaviour
     [SerializeField] private CreatureDefinition definition;
     public CreatureDefinition Definition => definition;
 
-    [SerializeField] protected NavMeshAgent agent;
-
     [SerializeField] protected Movement movement;
     public Movement Movement => movement;
+
+    [SerializeField] private HealthComponent healthComponent;
+    public HealthComponent HealthComponent => healthComponent;
 
     [SerializeField] private InstanceId instanceId;
     public InstanceId InstanceId => instanceId;
@@ -32,14 +33,20 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        movement.OnMovementStarted += HandleMovementStarted;
         movement.OnDestinationReached += HandleDestinationReached;
         movement.OnMovementStopped += HandleMovementStopped;
+
+        healthComponent.OnDied += HandleDied;
     }
 
     protected virtual void OnDisable()
     {
+        movement.OnMovementStarted -= HandleMovementStarted;
         movement.OnDestinationReached -= HandleDestinationReached;
         movement.OnMovementStopped -= HandleMovementStopped;
+
+        healthComponent.OnDied += HandleDied;
     }
 
     protected virtual void OnDestroy()
@@ -75,6 +82,7 @@ public abstract class Creature : MonoBehaviour
         transform.rotation = Quaternion.Euler(data.Rotation.Vector3());
 
         instanceId.SetGuid(data.InstanceId);
+        healthComponent.Init(data.Health);
     }
 
     protected virtual void HandleInitNextFrame()
@@ -146,6 +154,11 @@ public abstract class Creature : MonoBehaviour
     }
 
     // Movement
+    protected virtual void HandleMovementStarted()
+    {
+        UpdateIdle();
+    }
+
     protected virtual void HandleDestinationReached()
     {
         UpdateIdle();
@@ -154,6 +167,13 @@ public abstract class Creature : MonoBehaviour
     protected virtual void HandleMovementStopped()
     {
         UpdateIdle();
+    }
+
+    // Health
+    protected virtual void HandleDied()
+    {
+        movement.TryStopMoving();
+        RunDetermineNextActionCoroutine();
     }
 
     protected void RunDetermineNextActionCoroutine()

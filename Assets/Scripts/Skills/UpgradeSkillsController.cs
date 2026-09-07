@@ -53,7 +53,7 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
     private bool TryUpgradeLevels()
     {
         bool upgraded = false;
-        foreach (var skill in skillComponent.Skills.Values) {
+        foreach (var skill in skillComponent.SkillsDict.Values) {
             if (skill == null) continue;
             if (!skill.TryLevelUp()) continue;
 
@@ -65,7 +65,7 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
 
     private void UpdateClickable()
     {
-        foreach (var skill in skillComponent.Skills.Values) {
+        foreach (var skill in skillComponent.SkillsDict.Values) {
             if (skill == null) continue;
             if (skill.CurrentXp < 1f) continue;
 
@@ -76,11 +76,12 @@ public class UpgradeSkillsController : MonoBehaviour, IClickable
         SetClickable(false);
     }
 
-    private void OnSkillXpChanged(SkillInstance skill, float xp)
+    private void OnSkillXpChanged(SkillsComponent skillsComponent, SkillInstance skillInstance)
     {
-        if (skill == null) return;
-        if (!skill.ShouldLevelUp()) return;
+        if (skillInstance == null) return;
 
-        SetClickable(true);
+        if (skillInstance.ShouldLevelUp()) {
+            SetClickable(true);
+        }
     }
 }

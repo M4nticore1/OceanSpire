@@ -24,6 +24,7 @@ MonoBehaviour:
   - {fileID: 9092713361229683442, guid: 0219d66037bfc9744aadb5abe161980c, type: 3}
   - {fileID: 9092713361229683442, guid: 66bf09a591535c147a2cd1c2223243af, type: 3}
   - {fileID: 9092713361229683442, guid: 642a6aea44523a141b1a9aff5211e2f9, type: 3}
+  - {fileID: 9092713361229683442, guid: 9acf55b32b546da4fbf73e7334d23ac3, type: 3}
   floorsToSpawn: 0
   minSpawnFloor: 4
   maxSpawnFloor: 0

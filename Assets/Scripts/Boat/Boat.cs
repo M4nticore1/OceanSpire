@@ -24,7 +24,7 @@ public enum BoatStatusEnum
     Evicted
 }
 
-public class Boat : MonoBehaviour, IClickable, ILocalizable
+public class Boat : MonoBehaviour, IClickable, ILevelBonusable, ILocalizable
 {
     [Header("Main")]
     [SerializeField] private BoatDefinition boatData;
@@ -80,6 +80,9 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
     public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     [field: SerializeField] public bool IsForcedMovingToDock { get; private set; } = false;
+
+    // BOnus
+    public float LevelBonus { get; private set; } = 1f;
 
     private BoatsManager boatsManager => BoatsManager.Instance;
     private BoatDocksManager boatDocksManager => BoatDocksManager.Instance;
@@ -563,6 +566,13 @@ public class Boat : MonoBehaviour, IClickable, ILocalizable
         if (CurrentStatus == BoatStatusEnum.Wanderer && movement.IsMoving) return false;
 
         return true;
+    }
+
+    // Bonus
+    public void SetLevelBonus(float bonus)
+    {
+        LevelBonus = bonus;
+        Movement.NavAgent.speed = Definition.BoatSpeed * (1f + bonus);
     }
 
     // ILocalizable

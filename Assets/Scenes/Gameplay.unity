@@ -169,6 +169,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3960c87c5d6224b4088bae877cccf1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WandererAdmissionMenu
+--- !u!1 &10918178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 10918180}
+  - component: {fileID: 10918179}
+  m_Layer: 0
+  m_Name: SkillAdapter_Combat
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &10918179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10918178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8dfeb73d78537746a8e086d63ce085f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatSkillAdapter
+  skillId: 7
+--- !u!4 &10918180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 10918178}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 477095215}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &11672048
 GameObject:
   m_ObjectHideFlags: 0
@@ -821,8 +866,8 @@ MonoBehaviour:
   - {fileID: 8411686280589987336, guid: 649b0985789fc6c42bd0c217a9a1f0d5, type: 3}
   - {fileID: 7660346723931557201, guid: 301f8de32aed5d94f9a8a91d01f584c2, type: 3}
   boatPrefab: {fileID: 8804275003585880861, guid: d0ad1226837183441b6e694aa3c9279b, type: 3}
-  minWandererSpawnCooldown: 900
-  maxWandererSpawnCooldown: 2700
+  minWandererSpawnCooldown: 720
+  maxWandererSpawnCooldown: 1080
   spawnArea: {fileID: 40920800}
 --- !u!4 &61009885 stripped
 Transform:
@@ -7518,7 +7563,9 @@ Transform:
   - {fileID: 1342345112}
   - {fileID: 370128874}
   - {fileID: 802138729}
+  - {fileID: 823361349}
   - {fileID: 1579658449}
+  - {fileID: 10918180}
   m_Father: {fileID: 1482010372}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &480597617
@@ -8721,6 +8768,8 @@ Transform:
   - {fileID: 508279134}
   - {fileID: 140132609}
   - {fileID: 1720769295}
+  - {fileID: 1513688114}
+  - {fileID: 1596870052}
   - {fileID: 1472620077}
   m_Father: {fileID: 1482010372}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9775,8 +9824,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodDrain
   creaturesManager: {fileID: 220072952}
   cityStorage: {fileID: 1388613268}
-  drainPerSecond: 0.003333
-  drainFrequency: 10
+  drainPerMinute: 0.5
+  drainFrequency: 1
 --- !u!1001 &725010069
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11492,6 +11541,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
   m_PrefabInstance: {fileID: 1774829897}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &823361347
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 823361349}
+  - component: {fileID: 823361348}
+  m_Layer: 0
+  m_Name: SkillAdapter_Medicine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &823361348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823361347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b9771bf759355540bd1a291d1c0f5c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MedicineSkillAdapter
+  skillId: 5
+--- !u!4 &823361349
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823361347}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 477095215}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &826283715 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
@@ -11859,6 +11953,7 @@ MonoBehaviour:
   chargeEnergyPower: 0.1
   chargeEnergyFrequency: 1800
   energySpend: 0.3
+  <CurrentEnergy>k__BackingField: 1
 --- !u!4 &853076772
 Transform:
   m_ObjectHideFlags: 0
@@ -16906,6 +17001,7 @@ MonoBehaviour:
   useWeightLimit: 0
   weightLimit: 0
   items: []
+  ignoreContextMenu: 0
 --- !u!114 &1388613268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17571,6 +17667,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1472620077}
+  - component: {fileID: 1472620078}
   m_Layer: 0
   m_Name: SkillProgress_Combat
   m_TagString: Untagged
@@ -17593,6 +17690,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 610879149}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1472620078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1472620076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1a82d015e1e2d4438e4756eb0d96036, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatSkillProgress
+  skillAdapter: {fileID: 10918179}
+  xpGain: 0.003
 --- !u!4 &1476504963 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3419078009725385685, guid: 0b5ba59b2b38dca4ca7735bf315ae542, type: 3}
@@ -17948,6 +18059,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3264082960243944127, guid: 56a9005df137a8e4088488a174eade01, type: 3}
   m_PrefabInstance: {fileID: 1510976772}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1513688113
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1513688114}
+  - component: {fileID: 1513688115}
+  m_Layer: 0
+  m_Name: SkillProgress_Medicine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1513688114
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1513688113}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 610879149}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1513688115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1513688113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fa9662d62920b242880ab0df5816b71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MedicineSkillProgress
+  skillAdapter: {fileID: 823361348}
+  xpGain: 0.003
 --- !u!1 &1518449161
 GameObject:
   m_ObjectHideFlags: 0
@@ -18628,9 +18785,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1579658449}
-  - component: {fileID: 1579658450}
   m_Layer: 0
-  m_Name: SkillAdapter_Combat
+  m_Name: SkillAdapter_Science
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18651,19 +18807,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 477095215}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1579658450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1579658448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8dfeb73d78537746a8e086d63ce085f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CombatSkillAdapter
-  skillId: 7
 --- !u!1 &1588213879
 GameObject:
   m_ObjectHideFlags: 0
@@ -18776,6 +18919,37 @@ Transform:
   m_Children:
   - {fileID: 694769090}
   m_Father: {fileID: 1238355532}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1596870051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1596870052}
+  m_Layer: 0
+  m_Name: SkillProgress_Science
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1596870052
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1596870051}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 610879149}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1601749395
 PrefabInstance:
@@ -19048,7 +19222,7 @@ Transform:
   m_GameObject: {fileID: 1634320635}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.23, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19710,7 +19884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatingSkillProgress
   skillAdapter: {fileID: 802138730}
-  xpGain: 0.0005
+  xpGain: 0.0002
   gainXpFrequency: 10
 --- !u!1001 &1725547056
 PrefabInstance:
@@ -22664,7 +22838,6 @@ MonoBehaviour:
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
   boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
   humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
-  inventory: {fileID: 2047238981}
   raiderPrefabs:
   - {fileID: 5290309351902810709, guid: 8aee4d31267ad2a409a74dbaf84efb95, type: 3}
   - {fileID: -4342417268633007667, guid: 40a2021fd71eee344acfdb909817990f, type: 3}
@@ -22677,9 +22850,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2885e0f30598a164395e493ce7632386, type: 2}
   - {fileID: 11400000, guid: f06fe61b7098b2146a7f57b9763df44e, type: 2}
   - {fileID: 11400000, guid: cab8b74954853c24480473f9ce175af9, type: 2}
-  weaponDamageThreshold: 0.1
-  minRaidCooldown: 1200
-  maxRaidCooldown: 1800
+  minWeaponDamageThreshold: 1
+  maxWeaponDamageThreshold: 0.1
+  minRaidCooldown: 1020
+  maxRaidCooldown: 1440
   tryFindNextBuildingFrequency: 5
   <RaidCooldownTime>k__BackingField: 0
   <TimeSinceLastRaid>k__BackingField: 0
@@ -22709,6 +22883,7 @@ MonoBehaviour:
   useWeightLimit: 0
   weightLimit: 0
   items: []
+  ignoreContextMenu: 0
 --- !u!1 &2049673466
 GameObject:
   m_ObjectHideFlags: 0

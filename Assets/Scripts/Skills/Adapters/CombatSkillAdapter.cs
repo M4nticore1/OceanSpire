@@ -6,7 +6,8 @@ public class CombatSkillAdapter : SkillAdapter
     {
         if (!base.TrySubscribe()) return false;
 
-
+        AttackComponent.OnInited += HandleCombatComponentInited;
+        AttackComponent.OnDestroyed += HandleCombatComponentDestroyed;
 
         return true;
     }
@@ -15,23 +16,38 @@ public class CombatSkillAdapter : SkillAdapter
     {
         if (!base.TryUnsubscribe()) return false;
 
-
+        AttackComponent.OnInited -= HandleCombatComponentInited;
+        AttackComponent.OnDestroyed -= HandleCombatComponentDestroyed;
 
         return true;
     }
 
-    protected override void OnSkillLevelChanged(SkillsComponent skillsComponent)
+    protected override ILevelBonusable GetBonusTarget(SkillsComponent skillsComponent)
     {
+        if (skillsComponent == null) return null;
 
+        var combatComponent = skillsComponent.GetComponent<AttackComponent>();
+
+        return combatComponent;
     }
 
-    private void AddBonus(EquipmentComponent equipmentComponent, float bonus)
+    private void HandleCombatComponentInited(AttackComponent attackComponent)
     {
-        //weaponEquipmentComponent.AddPowerBonus(bonus);
+        if (attackComponent == null) return;
+
+        var skillsComponent = attackComponent.GetComponent<SkillsComponent>();
+        if (skillsComponent == null) return;
+
+        AddSkillsComponent(skillsComponent);
     }
 
-    private void RemoveBonus(EquipmentComponent equipmentComponent, float bonus)
+    private void HandleCombatComponentDestroyed(AttackComponent attackComponent)
     {
-        //weaponEquipmentComponent.RemovePowerBonus(bonus);
+        if (attackComponent == null) return;
+
+        var skillsComponent = attackComponent.GetComponent<SkillsComponent>();
+        if (skillsComponent == null) return;
+
+        RemoveSkillsComponent(skillsComponent);
     }
 }

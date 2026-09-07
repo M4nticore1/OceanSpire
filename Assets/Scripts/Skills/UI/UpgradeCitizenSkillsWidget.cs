@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UpgradeCitizenSkillsWidget : MonoBehaviour
 {
     [SerializeField] private SkillsComponent skillComponent;
     [SerializeField] private GameObject content;
+    [SerializeField] private LayoutElement layoutElement;
 
     private bool isShown => content.activeSelf;
 
@@ -27,6 +29,7 @@ public class UpgradeCitizenSkillsWidget : MonoBehaviour
     private void Start()
     {
         UpdateDisplayed();
+        UpdateIgnoreLayout();
     }
 
     private void UpdateDisplayed()
@@ -44,6 +47,7 @@ public class UpgradeCitizenSkillsWidget : MonoBehaviour
         if (isShown) return;
 
         content.SetActive(true);
+        UpdateIgnoreLayout();
     }
 
     private void Hide()
@@ -51,26 +55,33 @@ public class UpgradeCitizenSkillsWidget : MonoBehaviour
         if (!isShown) return;
 
         content.SetActive(false);
+        UpdateIgnoreLayout();
+    }
+
+    private void UpdateIgnoreLayout()
+    {
+        if (layoutElement != null) {
+            layoutElement.ignoreLayout = !isShown;
+        }
     }
     
-    private void OnSkillXpChanged(SkillInstance skill, float xp)
+    private void OnSkillXpChanged(SkillsComponent skillsComponent, SkillInstance skillInstance)
     {
-        if (!skill.ShouldLevelUp()) return;
-
-        UpdateDisplayed();
+        if (skillInstance.ShouldLevelUp()) {
+            UpdateDisplayed();
+        }
     }
 
-    private void OnSkillLevelChanged(SkillInstance skill, int level)
+    private void OnSkillLevelChanged(SkillsComponent skillsComponent, SkillInstance skillInstance)
     {
         UpdateDisplayed();
     }
 
     private bool ShouldDisplay()
     {
-        foreach (var skill in skillComponent.Skills.Values) {
-            if (!skill.ShouldLevelUp()) continue;
-
-            return true;
+        foreach (var skill in skillComponent.SkillsDict.Values) {
+            if (skill.ShouldLevelUp())
+                return true;
         }
 
         return false;

@@ -2,41 +2,51 @@ using UnityEngine;
 
 public class EnergyDrainManager : MonoBehaviour
 {
-    [field: SerializeField] public float CurrentDrainAmount { get; private set; } = 0f;
-    private double lastCheckTime = 0;
+    [field: SerializeField] public float CurrentDrainAmount { get; private set; }
+
+    private double lastCheckTime;
 
     private void Update()
     {
-        double nextTimeToCheck = lastCheckTime + 1d;
-        if (Time.timeAsDouble < nextTimeToCheck) return;
+        double currentTime = Time.timeAsDouble;
+        double elapsedTime = currentTime - lastCheckTime;
 
-        lastCheckTime = Time.timeAsDouble;
+        if (elapsedTime < 1d)
+            return;
+
+        lastCheckTime = currentTime;
 
         var floors = BuildingsManager.Instance.BuiltFloors;
         for (int i = 0; i < floors.Count; i++) {
             var floorModule = floors[i];
             if (floorModule == null) continue;
 
-            var floorBuilding = floorModule.OwnedBuilding;
             foreach (var buildingPlace in floorModule.RoomBuildingPlaces) {
                 var placedBuilding = buildingPlace.PlacedBuilding;
                 if (placedBuilding == null) continue;
 
-                for (var j = 0; j < placedBuilding.BuildingModules.Length; j++) {
+                for (int j = 0; j < placedBuilding.BuildingModules.Length; j++) {
                     var module = placedBuilding.BuildingModules[j];
-                    if (module == null) continue;
+                    if (module == null || !module.ShouldSpendElectricity())
+                        continue;
 
-                    if (module.ShouldSpendElectricity()) {
-                        CurrentDrainAmount += module.GetElectricityConsumption();
-                    }
+                    CurrentDrainAmount += (float)(module.GetElectricityConsumptionPerMinute() / 60d * elapsedTime);
                 }
             }
         }
 
-        if (CurrentDrainAmount < 1f) return;
+        TrySpendElectricity();
+    }
 
-        var amount = (int)CurrentDrainAmount;
+    private void TrySpendElectricity()
+    {
+        if (CurrentDrainAmount < 1f)
+            return;
+
+        var amount = Mathf.FloorToInt(CurrentDrainAmount);
         SpendElectricity(amount);
+
+        CurrentDrainAmount -= amount;
     }
 
     public void Init()
@@ -48,17 +58,16 @@ public class EnergyDrainManager : MonoBehaviour
     {
         if (energyDrainData == null) {
             Debug.LogError($"[{nameof(EnergyDrainManager)}] Energy Drain Data is not valid!");
-            Init(energyDrainData);
             return;
         }
 
         CurrentDrainAmount = energyDrainData.DrainAmount;
+        lastCheckTime = Time.timeAsDouble;
     }
 
     private void SpendElectricity(int amount)
     {
-        var id = ItemID.Electricity;
-        CityStorage.Instance.Inventory.RemoveItemAmount(id, amount);
-        CurrentDrainAmount = 0f;
+        CityStorage.Instance.Inventory.RemoveItemAmount(ItemID.Electricity, amount
+        );
     }
 }

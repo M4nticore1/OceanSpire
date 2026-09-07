@@ -22,45 +22,46 @@ public class CraftingModuleSkillAdapter : SkillAdapter
         return true;
     }
 
-    protected override void OnSkillLevelChanged(SkillsComponent skillsComponent)
+    protected override ILevelBonusable GetBonusTarget(SkillsComponent skillsComponent)
     {
+        if (skillsComponent == null) return null;
+
         var interactComponent = skillsComponent.GetComponent<CreatureInteractComponent>();
+        if (interactComponent == null) return null;
+
         var interactBuilding = interactComponent.InteractBuilding;
-        if (!interactBuilding) return;
+        if (interactBuilding == null) return null;
 
-        var craftModule = interactBuilding.GetComponent<CraftingModule>();
-        if (!craftModule) return;
+        var craftingModule = interactBuilding.GetComponent<CraftingModule>();
 
-        var skill = skillsComponent.GetSkill(SkillId);
-        var skillLevel = skill.CurrentLevel;
-        var skillBonus = skill.GetBonus();
-
-        var bonusPerLevel = skill.SkillDefinition.BonusPerLevel;
-        var skillLastBonus = skillBonus - bonusPerLevel;
-
-        RemoveBonus(craftModule, skillLastBonus);
-        AddBonus(craftModule, skillBonus);
+        return craftingModule;
     }
 
     private void AddBonus(CraftingModule module, float bonus)
     {
-        var currentBonus = module.CraftingSpeedMultiplier;
-        module.SetCraftingSpeedBonus(currentBonus + bonus);
+        if (module == null) return;
+
+        var currentBonus = module.LevelBonus;
+        module.SetLevelBonus(currentBonus + bonus);
     }
 
     private void RemoveBonus(CraftingModule module, float bonus)
     {
-        var currentBonus = module.CraftingSpeedMultiplier;
-        module.SetCraftingSpeedBonus(currentBonus - bonus);
+        if (module == null) return;
+
+        var currentBonus = module.LevelBonus;
+        module.SetLevelBonus(currentBonus - bonus);
     }
 
     private void OnCurrentWorkerAdded(BuildingInteractorsHandler workComponent, Human human)
     {
+        if (workComponent == null) return;
+
         var citizen = human as Citizen;
-        if (!citizen) return;
+        if (citizen == null) return;
 
         var craftingModule = workComponent.GetComponent<CraftingModule>();
-        if (!craftingModule) return;
+        if (craftingModule == null) return;
 
         if (craftingModule.OwnedBuilding.SkillId != SkillId) return;
 
@@ -71,11 +72,13 @@ public class CraftingModuleSkillAdapter : SkillAdapter
 
     private void OnCurrentWorkerRemoved(BuildingInteractorsHandler workComponent, Human human)
     {
+        if (workComponent == null) return;
+
         var citizen = human as Citizen;
-        if (!citizen) return;
+        if (citizen == null) return;
 
         var craftingModule = workComponent.GetComponent<CraftingModule>();
-        if (!craftingModule) return;
+        if (craftingModule == null) return;
 
         if (craftingModule.OwnedBuilding.SkillId != SkillId) return;
 

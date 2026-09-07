@@ -13,7 +13,7 @@ public class SkillInstanceData
 [Serializable]
 public class SkillsData
 {
-    public SkillInstanceData[] Skills = new SkillInstanceData[0];
+    public List<SkillInstanceData> Skills = new();
 
     public static SkillsData Default()
     {
@@ -22,9 +22,9 @@ public class SkillsData
 
     public static SkillsData Create(SkillsComponent skillsComponent)
     {
-        var count = skillsComponent.Skills.Count;
-        var skills = new SkillInstanceData[count];
+        var skills = new List<SkillInstanceData>();
 
+        var count = skillsComponent.SkillsDict.Count;
         for (int i = 0; i < count; i++) {
             var skillId = (SkillId)Enum.GetValues(typeof(SkillId)).GetValue(i);
 
@@ -40,7 +40,7 @@ public class SkillsData
                 Xp = xp,
             };
 
-            skills[i] = data;
+            skills.Add(data);
         }
 
         return new SkillsData()
@@ -57,7 +57,7 @@ public class SkillsData
         levelsCount = Mathf.Min(levelsCount, maxLevelsCount);
 
         var skillsData = CreateFilledSkillsData();
-        if (skillsData.Skills == null || skillsData.Skills.Length != skillsCount) {
+        if (skillsData.Skills == null || skillsData.Skills.Count != skillsCount) {
             Debug.LogError("SkillsData.Skills length mismatch with SkillDefinitions!");
             return skillsData;
         }
@@ -84,12 +84,12 @@ public class SkillsData
     {
         var skillsData = Default();
         var skillsCount = SkillsList.Instance.SkillDefinitions.Length;
-        skillsData.Skills = new SkillInstanceData[skillsCount];
+        skillsData.Skills = new();
 
         for (int i = 0; i < skillsCount; i++) {
             var skill = new SkillInstanceData();
             skill.Id = (SkillId)Enum.GetValues(typeof(SkillId)).GetValue(i);
-            skillsData.Skills[i] = skill;
+            skillsData.Skills.Add(skill);
         }
 
         return skillsData;

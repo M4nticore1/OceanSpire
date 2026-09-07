@@ -11,12 +11,7 @@ public class BoatingSkillProgress : SkillProgress
         currentAddXpTime += Time.deltaTime;
         if (currentAddXpTime < gainXpFrequency) return;
 
-        foreach (var component in SkillAdapter.SkillComponents) {
-            if (!ShouldAddXp(component)) continue;
-
-            float xp = XpGain * gainXpFrequency;
-            AddXp(xp);
-        }
+        AddXp(gainXpFrequency * XpGain);
 
         currentAddXpTime = 0f;
     }
@@ -31,18 +26,6 @@ public class BoatingSkillProgress : SkillProgress
     protected override bool TryUnsubscribe()
     {
         if (!base.TryUnsubscribe()) return false;
-
-        return true;
-    }
-
-    private bool ShouldAddXp(SkillsComponent skillsComponent)
-    {
-        if (!skillsComponent) return false;
-
-        var boatRider = skillsComponent.GetComponent<BoatRider>();
-        if (!boatRider) return false;
-
-        if (!boatRider.RidingBoat) return false;
 
         return true;
     }

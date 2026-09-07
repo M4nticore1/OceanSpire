@@ -5,11 +5,11 @@ using UnityEngine;
 public class HumanData : CreatureData
 {
     public NameData Name = NameData.Default();
-    public HealthData Health = HealthData.Default();
     public ReviveData Revive = ReviveData.Default();
     public InteractionComponentData Interaction = InteractionComponentData.Default();
     public CityNavigatorData CityNavigator = CityNavigatorData.Default();
     public BoatRiderData BoatRider = BoatRiderData.Default();
+    public InventoryData Inventory = InventoryData.Default();
     public EquipmentData Weapon = EquipmentData.Default();
     public SkillsData Skills = SkillsData.Default();
 
@@ -20,7 +20,10 @@ public class HumanData : CreatureData
 
     public static HumanData Create(Human human)
     {
+        if (human == null) return null;
+
         var humanData = new HumanData();
+        humanData.FillCreatureData(human);
         humanData.FillHumanData(human);
 
         return humanData;
@@ -28,15 +31,13 @@ public class HumanData : CreatureData
 
     protected void FillHumanData(Human human)
     {
-        Id = human.Definition.CreatureId;
-        InstanceId = human.InstanceId.GetGuid();
-        Position = new Vector3Data(human.transform.position);
-        Rotation = new Vector3Data(human.transform.rotation.eulerAngles);
-        Health = HealthData.Create(human.HealthComponent);
-        Revive =ReviveData.Create(human.ReviveComponent);
+        if (human == null) return;
+
+        Revive = ReviveData.Create(human.ReviveComponent);
         CityNavigator = CityNavigatorData.Create(human.CityNavigator);
         Interaction = InteractionComponentData.Create(human.InteractComponent);
         Name = NameData.Create(human.NameComponent);
+        Inventory = InventoryData.Create(human.Inventory);
         BoatRider = BoatRiderData.Create(human.BoatRider);
         Weapon = EquipmentData.Create(human.WeaponComponent);
         Skills = SkillsData.Create(human.SkillsComponent);

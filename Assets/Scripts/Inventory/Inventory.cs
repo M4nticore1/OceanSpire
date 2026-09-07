@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour, ILocalizable
+public class Inventory : MonoBehaviour, IContextable, ILocalizable
 {
     [SerializeField] private bool autoCleaning = false;
 
@@ -23,6 +22,18 @@ public class Inventory : MonoBehaviour, ILocalizable
     private Dictionary<ItemStackEnum, ItemStack> itemStacks = new();
 
     private ItemsList itemsList => ItemsList.Instance;
+
+    [Header("Context Menu")]
+    [SerializeField] public bool ignoreContextMenu = false;
+    public bool IgnoreContextMenu
+    {
+        get {
+            return ignoreContextMenu;
+        }
+        set {
+            ignoreContextMenu = value;
+        }
+    }
 
     public event Action<ItemInstance> OnItemAdded;
     public event Action<ItemInstance> OnItemRemoved;
@@ -109,21 +120,24 @@ public class Inventory : MonoBehaviour, ILocalizable
     public void AddItemAmount(ItemID id, int amount)
     {
         var definition = GetItemDefinition(id);
-        if (definition == null) return;
+        if (definition == null)
+            return;
 
-        if (useAmountLimit) {
-            var stack = GetStack(definition.Stack);
-            var maxAmount = stack != null ? stack.Amount - stack.GetItemAmountsSum() : amount;
-            amount = Mathf.Clamp(amount, 0, maxAmount);
+        if (useWeightLimit && definition.Weight > 0f) {
+            amount = Mathf.Min(amount, Mathf.FloorToInt(GetRemainingWeight() / definition.Weight));
         }
 
-        if (useWeightLimit && definition.Weight > 0) {
-            amount = Mathf.Clamp(amount, 0, (int)(GetRemainingWeight() / definition.Weight));
+        if (!ShouldAddItem(id, amount))
+            return;
+
+        var item = GetInventoryItem(id);
+        if (item == null) {
+            item = AddItem(id);
+
+            if (item == null)
+                return;
         }
 
-        if (!ShouldAddItem(id, amount)) return;
-
-        var item = GetInventoryItem(id) ?? AddItem(id);
         item.AddAmount(amount);
     }
 

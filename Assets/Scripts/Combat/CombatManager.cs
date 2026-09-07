@@ -33,14 +33,14 @@ public class CombatManager : MonoBehaviour
 
     public void Register(AttackComponent component)
     {
-        if (!component) return;
+        if (component == null) return;
 
         combatComponents.Add(component);
     }
 
     public void Unregister(AttackComponent component)
     {
-        if (!component) return;
+        if (component == null) return;
 
         combatComponents.Remove(component);
     }

@@ -49,7 +49,7 @@ public class Raider : Human, IProgressable
             UpdateTargetBoat();
 
             var targetBoat = BoatRider.TargetBoat;
-            if (!targetBoat) {
+            if (targetBoat == null) {
                 Debug.LogError($"[{nameof(Raider)}] Target Boat is not valid!");
                 Destroy(gameObject);
             }
@@ -104,12 +104,6 @@ public class Raider : Human, IProgressable
         boat.RemoveDockPoint();
     }
 
-    //protected override void SetCombatTarget()
-    //{
-    //    AttackComponent.SetTarget(GetCurrentBuildingCombatTarget());
-    //    AttackComponent.AddAttackers(GetCurrentBuildingCombatAttackers());
-    //}
-
     protected override void StartInteracting()
     {
         base.StartInteracting();
@@ -141,13 +135,6 @@ public class Raider : Human, IProgressable
 
         return true;
     }
-
-    //public override bool ShouldSetCombatTarget()
-    //{
-    //    if (!base.ShouldSetCombatTarget()) return false;
-
-    //    return GetCurrentBuildingCombatTarget() != null;
-    //}
 
     protected override void HandleInteractBuildingSet(Building building)
     {
@@ -289,53 +276,15 @@ public class Raider : Human, IProgressable
 
     private void AddLoot()
     {
-        if (!InteractComponent) return;
+        if (InteractComponent == null) return;
 
         var interactBuilding = InteractComponent.InteractBuilding;
-        if (interactBuilding == null) {
-            Debug.LogError($"[{nameof(Raider)}] Interact Building is not valid!");
-            return;
+        if (interactBuilding == null) return;
+
+        foreach (var item in interactBuilding.GetRaidResources()) {
+            if (item == null) continue;
+
+            Inventory.AddItem(item);
         }
-
-        RaidManager.Instance.AddLosses(interactBuilding.GetRaidResources());
     }
-
-    //private AttackComponent GetCurrentBuildingCombatTarget()
-    //{
-    //    var currentBuilding = CityNavigator.CurrentBuilding;
-    //    if (currentBuilding == null) return null;
-
-    //    foreach (var worker in currentBuilding.CitizensHandler.CurrentInteractors) {
-    //        if (worker == null) continue;
-    //        if (worker.AttackComponent.CurrentTarget != null) continue;
-
-    //        var citizen = worker.GetComponent<Citizen>();
-    //        if (citizen == null) continue;
-    //        if (!citizen.IsCitizenAvaliable()) continue;
-
-    //        return worker.AttackComponent;
-    //    }
-
-    //    return null;
-    //}
-
-    //private List<AttackComponent> GetCurrentBuildingCombatAttackers()
-    //{
-    //    var currentBuilding = CityNavigator.CurrentBuilding;
-    //    if (currentBuilding == null) return null;
-
-    //    var attackers = new List<AttackComponent>();
-
-    //    foreach (var worker in currentBuilding.CitizensHandler.CurrentInteractors) {
-    //        if (worker == null) continue;
-
-    //        var citizen = worker.GetComponent<Citizen>();
-    //        if (citizen == null) continue;
-    //        if (!citizen.IsCitizenAvaliable()) continue;
-
-    //        attackers.Add(worker.AttackComponent);
-    //    }
-
-    //    return attackers;
-    //}
 }

@@ -17,7 +17,7 @@ public class FloorFrameBuildingType : BuildingType
         var highFloorFrame = buildingsManager.GetFloorFrameBuilding(highIndex);
         if (highFloorFrame == null) return false;
 
-        var entrancePlace = buildingsManager.EntranceBuildingPlace;
+        var entrancePlace = buildingsManager.GetEntranceBuildingPlace();
         foreach (var roomPlace in highFloorFrame.RoomBuildingPlaces) {
             if (roomPlace == null) continue;
 

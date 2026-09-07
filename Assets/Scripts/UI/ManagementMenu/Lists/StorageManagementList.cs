@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class StorageManagementList : ManagementList
 {
-    [SerializeField] private ResourceWidget itemWidgetPrefab;
-    [SerializeField] private ResourceWidget stackWidget;
+    [SerializeField] private ItemWidget itemWidgetPrefab;
+    [SerializeField] private ItemWidget stackWidget;
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private ItemStackEnum itemStack;
 
@@ -22,6 +22,7 @@ public class StorageManagementList : ManagementList
     protected override void CreateWidgets()
     {
         foreach (var item in CityStorage.Instance.Inventory.Items) {
+            if (item == null) continue;
             if (!item.Definition.ShowInStorage) continue;
             if (item.Definition.ItemCategory != itemCategory) continue;
 
@@ -35,11 +36,14 @@ public class StorageManagementList : ManagementList
 
     private void TryUpdateStack()
     {
-        if (!stackWidget) return;
+        if (stackWidget == null) return;
 
         var stack = CityStorage.Instance.Inventory.GetStack(itemStack);
+        if (stack == null) return;
 
         foreach (var item in stack.ItemAmounts) {
+            if (item == null) continue;
+
             stackWidget.AddAmount(item);
         }
 

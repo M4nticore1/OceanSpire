@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum BuildingPlaceState
 {
@@ -40,16 +41,20 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void OnEnable()
     {
-        EventBus.OnConstructionStarted += OnBuildingStartPlacing;
-        EventBus.OnConstructionStopped += OnStopPlacingBuildingButtonClicked;
-        Building.OnBuildingInited += OnBuildingInited;
+        EventBus.OnConstructionStarted += HandleBuildingPlacingStarted;
+        EventBus.OnConstructionStopped += HandleBuildingPlacingFinished;
+
+        Building.OnBuildingInited += HandleBuildingInited;
+        Building.OnBuildingDemolished += HandleBuildingDemolished;
     }
 
     private void OnDisable()
     {
-        EventBus.OnConstructionStarted -= OnBuildingStartPlacing;
-        EventBus.OnConstructionStopped -= OnStopPlacingBuildingButtonClicked;
-        Building.OnBuildingInited -= OnBuildingInited;
+        EventBus.OnConstructionStarted -= HandleBuildingPlacingStarted;
+        EventBus.OnConstructionStopped -= HandleBuildingPlacingFinished;
+
+        Building.OnBuildingInited -= HandleBuildingInited;
+        Building.OnBuildingDemolished -= HandleBuildingDemolished;
     }
 
     private void Start()
@@ -63,7 +68,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         FloorIndex = newFloorindex;
         UpdateNeighborPlaces();
         HideBuildingPlace();
-        UpdatePlaceActive();
+        UpdateEntrancePlaceActive();
     }
 
     public void TrySetPlaceBuilding(TowerBuilding building)
@@ -175,26 +180,24 @@ public class BuildingPlace : MonoBehaviour, IClickable
         int sideIndex = (placeIndex + horizontalIndexOffset + BuildingsManager.RoomsCountPerFloor) % BuildingsManager.RoomsCountPerFloor;
         int verticalIndex = FloorIndex + verticalIndexOffset;
 
-        if (verticalIndex >= BuildingsManager.Instance.BuiltFloors.Count) return null;
+        if (verticalIndex >= buildingsManager.BuiltFloors.Count) return null;
         if (verticalIndex < 0) return null;
 
-        var place = BuildingsManager.Instance.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
+        var place = buildingsManager.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
         return place;
     }
 
-    private void OnBuildingStartPlacing(Building building)
+    private void HandleBuildingPlacingStarted(Building building)
     {
-        if (!ShouldShow(building)) return;
-
-        if (building.Definition.BuildingType != buildingType) {
-            HideBuildingPlace();
-        }
-        else {
-            ShowBuildingPlace(BuildingPlaceState.Valid);
-        }
+        UpdatePlaceShown(building);
     }
 
-    private void OnBuildingInited(Building building)
+    private void HandleBuildingPlacingFinished()
+    {
+        HideBuildingPlace();
+    }
+
+    private void HandleBuildingInited(Building building)
     {
         TowerBuilding towerBuilding = building as TowerBuilding;
         if (towerBuilding && building.GetComponent<FloorFrameModule>() && FloorIndex == towerBuilding.FloorIndex - 1) {
@@ -207,35 +210,45 @@ public class BuildingPlace : MonoBehaviour, IClickable
         HideBuildingPlace();
     }
 
-    private void OnStopPlacingBuildingButtonClicked()
+    private void HandleBuildingDemolished(Building building)
     {
-        HideBuildingPlace();
+        UpdatePlaceShown(building);
     }
 
-    private void UpdatePlaceActive()
+    private void UpdateEntrancePlaceActive()
     {
-        if (FloorIndex != 0) return;
-        if (placeIndex != BuildingsManager.FirstBuildingPlace) return;
-
-        gameObject.SetActive(false);
+        if (buildingsManager.GetEntranceBuildingPlace() == this) {
+            gameObject.SetActive(false);
+        }
     }
 
     private void UpdateFrameActivity()
     {
-        if (!buildingFrame) return;
+        if (buildingFrame != null) {
+            buildingFrame.SetActive(!placedBuilding);
+        }
+    }
 
-        buildingFrame.SetActive(!placedBuilding);
+    private void UpdatePlaceShown(Building building)
+    {
+        if (ShouldShow(building)) {
+            ShowBuildingPlace(BuildingPlaceState.Valid);
+        }
+        else {
+            HideBuildingPlace();
+        }
     }
 
     private void ShowBuildingPlace(BuildingPlaceState buildingPlaceState)
     {
-        if (buildingType == BuildingTypeEnum.FloorFrame && BuildingsManager.Instance.BuiltFloors.Count >= BuildingsManager.Instance.MaxFloorsCount) return;
+        var maxFloorsCount = buildingsManager.MaxFloorsCount;
+        if (buildingType == BuildingTypeEnum.FloorFrame && maxFloorsCount > 0 && buildingsManager.BuiltFloors.Count >= maxFloorsCount) return;
 
-        if (buildingZone) {
+        if (buildingZone != null) {
             buildingZone.SetActive(true);
         }
         
-        if (boxCollider) {
+        if (boxCollider != null) {
             boxCollider.enabled = true;
         }
     }
@@ -253,12 +266,14 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private bool ShouldShow(Building building)
     {
-        if (placedBuilding != null) return false;
         if (building == null) return false;
+        if (placedBuilding != null) return false;
 
         var towerBuilding = building as TowerBuilding;
         if (towerBuilding == null) return false;
         if (!towerBuilding.ShouldBuild(this)) return false;
+
+        if (building.Definition.BuildingType != buildingType) return false;
 
         return true;
     }

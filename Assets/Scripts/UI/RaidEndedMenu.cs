@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class RaidEndedMenu : MonoBehaviour
 {
     [Header("Main")]
-    [SerializeField] private ResourceWidget resourceWidgetPrefab;
+    [SerializeField] private ItemWidget resourceWidgetPrefab;
     [SerializeField] private RaidManager raidManager;
 
     [Header("UI")]
@@ -19,7 +19,7 @@ public class RaidEndedMenu : MonoBehaviour
     private float currentVisibilityTime = 0f;
 
     private bool isOpened = false;
-    private List<ResourceWidget> spawnedResourceWidgets = new();
+    private List<ItemWidget> spawnedResourceWidgets = new();
 
     private void OnEnable()
     {

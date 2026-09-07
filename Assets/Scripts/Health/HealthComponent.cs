@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthComponent : MonoBehaviour, ILocalizable
+public class HealthComponent : MonoBehaviour, ILevelBonusable, ILocalizable
 {
     [SerializeField] private float maxHealth = 100f;
     public float MaxHealth => maxHealth;
@@ -11,9 +11,28 @@ public class HealthComponent : MonoBehaviour, ILocalizable
     public float CurrentHealth => currentHealth;
 
     [field: SerializeField] public bool IsAlive { get; private set; } = true;
+    [field: SerializeField] public float LevelBonus { get; private set; } = 0f;
 
     public event Action OnHealthChanged;
     public event Action OnDied;
+
+    public Action OnInited;
+    public Action OnDestroyed;
+
+    public static Action<float> OnHealed;
+    public static Action<float> OnDamaged;
+
+    public static Action<HealthComponent, float> OnGlobalHealed;
+    public static Action<HealthComponent, float> OnGlobalDamaged;
+
+    public static Action<HealthComponent> OnGlobalInited;
+    public static Action<HealthComponent> OnGlobalDestroyed;
+
+    private void OnDestroy()
+    {
+        OnDestroyed?.Invoke();
+        OnGlobalDestroyed?.Invoke(this);
+    }
 
     public void Init()
     {
@@ -23,31 +42,20 @@ public class HealthComponent : MonoBehaviour, ILocalizable
     public void Init(HealthData healthData)
     {
         if (healthData == null) {
-            Debug.LogError("healthData is not valid", this);
+            Debug.LogError($"[{nameof(HealthComponent)}] Health Data is not valid!");
             Init();
             return;
         }
 
         SetCurrentHealth(healthData.CurrentHealth);
+
+        OnInited?.Invoke();
+        OnGlobalInited?.Invoke(this);
     }
 
     public void SetMaxHealh(float value)
     {
         maxHealth = value;
-    }
-
-    public void AddHealth(float value)
-    {
-        if (CurrentHealth >= maxHealth) return;
-
-        SetCurrentHealth(CurrentHealth + value);
-    }
-
-    public void RemoveHealth(float value)
-    {
-        if (CurrentHealth < 0f) return;
-
-        SetCurrentHealth(CurrentHealth - value);
     }
 
     public void SetCurrentHealth(float value)
@@ -63,6 +71,37 @@ public class HealthComponent : MonoBehaviour, ILocalizable
         }
     }
 
+    public void AddHealth(float value, bool useHealBonus)
+    {
+        if (CurrentHealth >= maxHealth) return;
+
+        if (useHealBonus) {
+            value *= 1f + LevelBonus;
+        }
+
+        SetCurrentHealth(CurrentHealth + value);
+
+        OnHealed?.Invoke(value);
+        OnGlobalHealed?.Invoke(this, value);
+    }
+
+    public void RemoveHealth(float value)
+    {
+        if (CurrentHealth < 0f) return;
+
+        SetCurrentHealth(CurrentHealth - value);
+
+        OnDamaged?.Invoke(value);
+        OnGlobalDamaged?.Invoke(this, value);
+    }
+
+    // Bonus
+    public void SetLevelBonus(float bonus)
+    {
+        LevelBonus = bonus;
+    }
+
+    // Localization
     public Dictionary<string, string> GetLocalization()
     {
         return new Dictionary<string, string>()

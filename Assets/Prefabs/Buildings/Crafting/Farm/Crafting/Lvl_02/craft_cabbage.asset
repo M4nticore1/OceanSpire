@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CraftItemDefinition
   produceItem:
     definition: {fileID: 11400000, guid: 541c308e23aa642438d954de1f5b4a77, type: 2}
-    amount: 6
+    amount: 9
   consumeResources:
   - definition: {fileID: 11400000, guid: 541c308e23aa642438d954de1f5b4a77, type: 2}
     amount: 3
-  produceTime: 1320
+  produceTime: 1200
