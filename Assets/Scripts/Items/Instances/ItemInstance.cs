@@ -49,6 +49,9 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 
             amount = Mathf.Min(amount, availableAmount);
         }
+        else {
+            Debug.Log($"[{nameof(ItemInstance)}] Stack is not valid!");
+        }
 
         if (this.amount == amount)
             return;
@@ -122,7 +125,7 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
     // Information
     public LocalizationItem GetInformationName()
     {
-        if (!Definition)
+        if (Definition == null)
             return null;
 
         return Definition.NameLocalizationItem;
@@ -130,7 +133,7 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 
     public LocalizationItem GetInformationDescription()
     {
-        if (!Definition)
+        if (Definition == null)
             return null;
 
         return Definition.DescriptionLocalizationItem;
@@ -138,7 +141,7 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 
     public Sprite GetInformationImage()
     {
-        if (!Definition)
+        if (Definition == null)
             return null;
 
         return Definition.ItemIcon;
@@ -161,16 +164,16 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
         return item;
     }
 
-    public static ItemInstance[] Create(ItemData[] itemData)
+    public static ItemInstance[] Create(ItemData[] itemsData)
     {
-        if (itemData == null) {
-            Debug.Log("itemData array not found");
+        if (itemsData == null) {
+            Debug.Log($"[{nameof(ItemInstance)}] Items Data is not valid!");
             return null;
         }
 
         var items = new List<ItemInstance>();
 
-        foreach (var data in itemData) {
+        foreach (var data in itemsData) {
             var item = Create(data);
 
             if (item != null)

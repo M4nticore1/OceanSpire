@@ -12,7 +12,7 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
     [SerializeField] private TextLocalizer targetNameText;
     [SerializeField] private TextLocalizer targetDescriptionText;
 
-    public bool IsShowed { get; private set; } = false;
+    public bool IsShown { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -54,10 +54,10 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        IsShowed = true;
+        IsShown = true;
         content.SetActive(true);
 
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
         OnShow();
 
         OnShowed?.Invoke();
@@ -65,7 +65,7 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
 
     public void Hide()
     {
-        IsShowed = false;
+        IsShown = false;
         content.SetActive(false);
 
         InputStateManager.Instance.RemoveBlockTarget(this);

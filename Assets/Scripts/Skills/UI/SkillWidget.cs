@@ -89,7 +89,7 @@ public class SkillWidget : MonoBehaviour
         if (Skill == null) return;
 
         float bonusValue = Skill.GetBonus() * 100;
-        string bonusText = $"+{bonusValue}%";
+        string bonusText = $"+{bonusValue:F1}%";
 
         int stagesCount = SkillsData.GetLevelsCountByGameStage();
         float alpha = 0f;

@@ -17,7 +17,7 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
 
     private List<DailyRewardWidget> spawnedWidgets = new();
 
-    public bool IsShowed { get; private set; } = false;
+    public bool IsShown { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -50,10 +50,10 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        IsShowed = true;
+        IsShown = true;
         slidePanel.Show();
         dailyRewardManager.SetRewardViewed(true);
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
 
         OnShowed?.Invoke();
     }
@@ -65,7 +65,7 @@ public class DailyRewardMenu : MonoBehaviour, IOpenable
 
     private void HandleHidden()
     {
-        IsShowed = false;
+        IsShown = false;
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();

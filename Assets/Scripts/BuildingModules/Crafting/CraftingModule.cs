@@ -29,6 +29,8 @@ public class CraftingModule : BuildingModule, IRaidable, ILevelBonusable
 
     public float LevelBonus { get; private set; } = 0f;
 
+    private const float energyShortageCraftTimeCoefficient = 0.1f;
+
     private CityStorage cityStorage => CityStorage.Instance;
     private EnergyShortageManager energyShortageManager => EnergyShortageManager.Instance;
 
@@ -122,13 +124,14 @@ public class CraftingModule : BuildingModule, IRaidable, ILevelBonusable
         }
     }
 
+    // Working
     protected override void HandleWorkingStart()
     {
         base.HandleWorkingStart();
 
         TrySpendResources();
 
-        if (SelectedCraftItem.FinishTime == null && !SelectedCraftItem.IsCraftingFinished()) {
+        if (SelectedCraftItem.FinishTime == null/* && !SelectedCraftItem.IsCraftingFinished()*/) {
             ResetFinishTimeByCraftingTime();
         }
 
@@ -185,6 +188,18 @@ public class CraftingModule : BuildingModule, IRaidable, ILevelBonusable
         if (!IsEnoughResources(SelectedCraftItem.Definition)) return true;
 
         return false;
+    }
+
+    // Energy
+    public override void SetUnderEnergyShortage(bool underEnergyShortage)
+    {
+        base.SetUnderEnergyShortage(underEnergyShortage);
+
+        foreach (var craftItem in CraftItems) {
+            if (craftItem == null) continue;
+
+            craftItem.SetEnergyShortageCraftingTimeCoefficient(underEnergyShortage ? energyShortageCraftTimeCoefficient : 1f);
+        }
     }
 
     public void SetCraftingItemAndApply(CraftItemInstance craftItem)

@@ -43,6 +43,8 @@ public class WorkersControlMenu : ControlMenu
     {
         base.Subscribe();
 
+        creaturesManager.OnCitizenUnregistered -= HandleCitizenUnregistered;
+
         Human.OnHumanInited += OnHumanInited;
         Human.OnHumanDied += OnHumanDied;
         Citizen.OnCitizenEvicted += OnCitizenEvicted;
@@ -54,6 +56,8 @@ public class WorkersControlMenu : ControlMenu
     protected override void Unsubscribe()
     {
         base.Unsubscribe();
+
+        creaturesManager.OnCitizenUnregistered -= HandleCitizenUnregistered;
 
         Human.OnHumanInited -= OnHumanInited;
         Human.OnHumanDied -= OnHumanDied;
@@ -321,6 +325,19 @@ public class WorkersControlMenu : ControlMenu
         UpdateScrollRectZie();
     }
 
+    private void HandleCitizenUnregistered(Human human)
+    {
+        var citizen = human as Citizen;
+        if (citizen == null) return;
+
+        var widget = GetSpawnedWidgetByCitizen(citizen);
+        if (widget == null) return;
+
+        RemoveWidget(widget);
+        UpdateMenus();
+        UpdateScrollRectZie();
+    }
+
     private void OnHumanInited(Human human)
     {
         var citizen = human as Citizen;
@@ -363,7 +380,7 @@ public class WorkersControlMenu : ControlMenu
 
     private bool ShouldUpdateMenu(Human human)
     {
-        if (!IsShowed) return false;
+        if (!IsShown) return false;
         if (human == null) return false;
 
         var citizen = human as Citizen;

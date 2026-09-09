@@ -30,7 +30,7 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
     protected Building building { get; private set; }
     private bool isSubscribed = false;
 
-    public bool IsShowed { get; private set; } = false;
+    public bool IsShown { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -83,7 +83,7 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
 
     public void Show()
     {
-        IsShowed = true;
+        IsShown = true;
         OnShowed?.Invoke();
     }
 
@@ -105,14 +105,14 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
         UpdateIcon(building);
         UpdateBuildButtonEnabled();
 
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
 
         Show();
     }
 
     public void Hide()
     {
-        IsShowed = false;
+        IsShown = false;
         slidePanel.Hide();
         OnClosed();
 

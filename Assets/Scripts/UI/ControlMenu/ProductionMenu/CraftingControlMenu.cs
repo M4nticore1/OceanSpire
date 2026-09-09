@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class CraftingControlMenu : ControlMenu
 {
     [Header("Crafting Menu")]
-    [SerializeField] private CraftItemPanel producedResourcePanelPrefab;
-    private List<CraftItemPanel> spawnedCraftResourcePanels = new();
+    [SerializeField] private CraftItemWidget producedResourcePanelPrefab;
+    private List<CraftItemWidget> spawnedCraftResourcePanels = new();
 
     [SerializeField] private LayoutGroup layoutGroup;
     [SerializeField] private ScrollRect scrollRect;

@@ -121,7 +121,7 @@ public class HealthDisplay : MonoBehaviour
 
     public void Display()
     {
-        if (content == null) {
+        if (content != null) {
             content.SetActive(true);
         }
 

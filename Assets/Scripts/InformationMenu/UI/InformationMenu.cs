@@ -13,7 +13,7 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
 
     private IInformationable informationable;
 
-    public bool IsShowed { get; private set; } = false;
+    public bool IsShown { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -47,13 +47,13 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        IsShowed = true;
+        IsShown = true;
         slidePanel.Show();
 
         UpdateNameText();
         UpdateDescriptionText();
         UpdateImage();
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
 
         OnShowed?.Invoke();
     }
@@ -86,7 +86,7 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
 
     private void HandleHidden()
     {
-        IsShowed = false;
+        IsShown = false;
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();

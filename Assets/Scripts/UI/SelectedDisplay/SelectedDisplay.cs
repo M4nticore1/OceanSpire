@@ -14,9 +14,9 @@ public abstract class SelectedDisplay : MonoBehaviour
 
     private void OnEnable()
     {
-        Subscribe();
+        TrySubscribe();
 
-        if (selectManager) {
+        if (selectManager != null) {
             TryDisplay(selectManager.SelectedComponent);
             TryHide(selectManager.SelectedComponent);
         }
@@ -24,15 +24,15 @@ public abstract class SelectedDisplay : MonoBehaviour
 
     private void OnDisable()
     {
-        Unsubscribe();
+        TryUnsubscribe();
     }
 
     private void Start()
     {
-        Subscribe();
+        TrySubscribe();
     }
 
-    private void Subscribe()
+    private void TrySubscribe()
     {
         if (!ShouldSubscribe()) return;
 
@@ -40,7 +40,7 @@ public abstract class SelectedDisplay : MonoBehaviour
         isSubscribed = true;
     }
 
-    private void Unsubscribe()
+    private void TryUnsubscribe()
     {
         if (!ShouldUnsubscribe()) return;
 
@@ -62,14 +62,14 @@ public abstract class SelectedDisplay : MonoBehaviour
 
     protected virtual void OnShow(SelectComponent selectComponent)
     {
-        if (content) {
+        if (content != null) {
             content.SetActive(true);
         }
     }
 
     protected virtual void OnHide(SelectComponent selectComponent)
     {
-        if (content) {
+        if (content != null) {
             content.SetActive(false);
         }
     }
@@ -89,7 +89,7 @@ public abstract class SelectedDisplay : MonoBehaviour
     protected virtual bool ShouldSubscribe()
     {
         if (isSubscribed) return false;
-        if (!selectManager) return false;
+        if (selectManager == null) return false;
 
         return true;
     }
@@ -97,7 +97,7 @@ public abstract class SelectedDisplay : MonoBehaviour
     protected virtual bool ShouldUnsubscribe()
     {
         if (!isSubscribed) return false;
-        if (!selectManager) return false;
+        if (selectManager == null) return false;
 
         return true;
     }

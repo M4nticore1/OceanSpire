@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 public class CraftsPanel : MonoBehaviour
 {
-    [SerializeField] private CraftItemPanel CraftItemWidget;
+    [SerializeField] private CraftItemWidget CraftItemWidget;
     [SerializeField] private LayoutGroup layoutGroup;
 
-    private List<CraftItemPanel> spawnedWidgets = new();
+    private List<CraftItemWidget> spawnedWidgets = new();
 
     public void SetCraftsAndApply(List<CraftItemDefinition> crafts)
     {

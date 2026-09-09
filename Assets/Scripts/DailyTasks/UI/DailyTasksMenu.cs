@@ -16,7 +16,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
     private bool isSubscribed = false;
     private bool areWidgetsSpawned = false;
 
-    public bool IsShowed { get; private set; } = false;
+    public bool IsShown { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -43,18 +43,18 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        IsShowed = true;
+        IsShown = true;
         gameObject.SetActive(true);
         TryRemoveWidgets();
         TryCreateWidgets();
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
 
         OnShowed?.Invoke();
     }
 
     public void Hide()
     {
-        IsShowed = false;
+        IsShown = false;
         gameObject.SetActive(false);
         InputStateManager.Instance.RemoveBlockTarget(this);
 

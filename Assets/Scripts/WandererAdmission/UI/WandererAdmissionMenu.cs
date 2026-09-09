@@ -16,7 +16,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 
     private Wanderer selectedWanderer;
 
-    public bool IsShowed { get; private set; } = false;
+    public bool IsShown { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -62,14 +62,14 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
             return;
         }
 
-        IsShowed = true;
+        IsShown = true;
         slidePanel.Show();
         selectedWanderer = wanderer;
 
         UpdateWandererNameText();
         UpdateSkillsPanel();
 
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
 
         Show();
     }
@@ -81,9 +81,9 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 
     private void HandleHidden()
     {
-        if (!IsShowed) return;
+        if (!IsShown) return;
 
-        IsShowed = false;
+        IsShown = false;
         selectedWanderer.BoatRider.RidingBoat.SelectComponent.Deselect();
         InputStateManager.Instance.RemoveBlockTarget(this);
         OnHidden?.Invoke();

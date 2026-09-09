@@ -15,7 +15,7 @@ public class EvictMenu : MonoBehaviour, IOpenable
 
     private Citizen SelectedCitizen;
 
-    public bool IsShowed { get; private set; } = false;
+    public bool IsShown => slidePanel.IsShown;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -24,6 +24,8 @@ public class EvictMenu : MonoBehaviour, IOpenable
     {
         evictButton.OnReleased.AddListener(OnEvictButtonClicked);
         closeButton.OnReleased.AddListener(OnCloseButtonClicked);
+        slidePanel.OnHidden += HandleHidden;
+
         Human.OnHumanDied += OnHumanDied;
     }
 
@@ -31,32 +33,35 @@ public class EvictMenu : MonoBehaviour, IOpenable
     {
         evictButton.OnReleased.RemoveListener(OnEvictButtonClicked);
         closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
+        slidePanel.OnHidden -= HandleHidden;
+
         Human.OnHumanDied -= OnHumanDied;
     }
 
     public void Show()
     {
-        IsShowed = true;
-        slidePanel.Show();
-
         var citizen = SelectManager.Instance.GetSelectedHuman() as Citizen;
-        if (!citizen) return;
+        if (citizen == null) return;
 
         SelectedCitizen = citizen;
+        slidePanel.Show();
 
         UpdateCitizenName(citizen);
         UpdateSkills(citizen);
         UpdateEvictButtonEnabled(citizen);
 
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
 
         OnShowed?.Invoke();
     }
 
     public void Hide()
     {
-        IsShowed = false;
         slidePanel.Hide();
+    }
+
+    private void HandleHidden()
+    {
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
@@ -80,8 +85,11 @@ public class EvictMenu : MonoBehaviour, IOpenable
 
     private void OnEvictButtonClicked()
     {
-        evictManager.TryEvictCitizen(SelectedCitizen);
-        Hide();
+        if (SelectedCitizen == null) return;
+
+        if (evictManager.TryEvictCitizen(SelectedCitizen)) {
+            Hide();
+        }
     }
 
     private void OnCloseButtonClicked()

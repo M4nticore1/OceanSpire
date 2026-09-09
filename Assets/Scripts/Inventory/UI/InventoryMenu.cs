@@ -7,7 +7,7 @@ public class InventoryMenu : MonoBehaviour, IOpenable
     [SerializeField] private SlidePanel slidePanel;
     [SerializeField] private CustomButton closeButton;
 
-    public bool IsShowed { get; private set; } = false;
+    public bool IsShown { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -26,9 +26,9 @@ public class InventoryMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        IsShowed = true;
+        IsShown = true;
         slidePanel.Show();
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
 
         OnShowed?.Invoke();
     }
@@ -46,7 +46,7 @@ public class InventoryMenu : MonoBehaviour, IOpenable
 
     private void OnHide()
     {
-        IsShowed = false;
+        IsShown = false;
         InputStateManager.Instance.RemoveBlockTarget(this);
         OnHidden?.Invoke();
     }

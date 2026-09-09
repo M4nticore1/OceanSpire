@@ -5,37 +5,40 @@ public class InputStateManager : MonoBehaviour
 {
     public static InputStateManager Instance;
     public bool IsGameplayInputBlocked { get; private set; } = false;
-    private List<MonoBehaviour> blockTargets = new();
+    private List<MonoBehaviour> inputBlockTargets = new();
 
     private void Awake()
     {
-        if (Instance) return;
+        if (Instance != null) {
+            Destroy(gameObject);
+            return;
+        }
 
         Instance = this;
     }
 
-    public void AddBlockTarget(MonoBehaviour blockTarget)
+    public void AddInputBlockTarget(MonoBehaviour blockTarget)
     {
-        if (!blockTarget) return;
-        if (blockTargets.Contains(blockTarget)) {
+        if (blockTarget == null) return;
+        if (inputBlockTargets.Contains(blockTarget)) {
             Debug.LogError($"[{nameof(InputStateManager)}] Manager already contains {blockTarget}!");
             return;
         }
 
-        blockTargets.Add(blockTarget);
+        inputBlockTargets.Add(blockTarget);
         UpdateInputBlocked();
     }
 
     public void RemoveBlockTarget(MonoBehaviour blockTarget)
     {
-        if (!blockTarget) return;
+        if (blockTarget == null) return;
 
-        blockTargets.Remove(blockTarget);
+        inputBlockTargets.Remove(blockTarget);
         UpdateInputBlocked();
     }
 
     private void UpdateInputBlocked()
     {
-        IsGameplayInputBlocked = blockTargets.Count > 0;
+        IsGameplayInputBlocked = inputBlockTargets.Count > 0;
     }
 }

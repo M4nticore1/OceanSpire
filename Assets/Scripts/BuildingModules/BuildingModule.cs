@@ -51,6 +51,9 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
     private bool isSubscribed = false;
     [field: SerializeField] public bool IsWorking { get; private set; } = false;
 
+    // Electricity
+    [field: SerializeField] public bool IsUnderEnergyShortage { get; private set; } = false;
+
     public event Action OnInited;
 
     public event Action OnWorkingStarted;
@@ -194,6 +197,11 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
     }
 
     // Energy
+    public virtual void SetUnderEnergyShortage(bool value)
+    {
+        IsUnderEnergyShortage = value;
+    }
+
     public virtual float GetElectricityConsumptionPerMinute()
     {
         if (OwnedBuilding == null) return 0;

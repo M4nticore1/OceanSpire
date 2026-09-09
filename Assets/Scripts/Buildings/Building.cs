@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInformationable
@@ -45,6 +44,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
 
     private BuildingModule[] buildingModules;
     public BuildingModule[] BuildingModules => buildingModules != null ? buildingModules : GetComponents<BuildingModule>();
+    public Dictionary<Type, BuildingModule> BuildingModulesDict = new();
 
     [Header("Audio")]
     [SerializeField] protected AudioSource workAudioSource;
@@ -110,6 +110,12 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         raidersHandler = GetComponent<BuildingRaidersHandler>();
         SelectComponent = GetComponent<SelectComponent>();
         buildingModules = GetComponents<BuildingModule>();
+
+        foreach (var module in buildingModules) {
+            if (module == null) continue;
+
+            BuildingModulesDict.Add(module.GetType(), module);
+        }
     }
 
     protected virtual void OnEnable()
@@ -228,6 +234,15 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     }
 
     protected abstract BuildingConstruction GetConstructionToSpawn();
+
+    // Modules
+    public BuildingModule GetModule(Type moduleType)
+    {
+        if (moduleType == null) return null;
+
+        BuildingModulesDict.TryGetValue(moduleType, out var module);
+        return module;
+    }
 
     // Residents Management
     public void EnterBuilding(CreatureCityNavigator navigator)

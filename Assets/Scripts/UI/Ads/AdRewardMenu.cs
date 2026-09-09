@@ -44,7 +44,7 @@ public abstract class AdRewardMenu : MonoBehaviour
         AssignImage();
         AssignDescryption();
 
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
         isOpened = true;
     }
 

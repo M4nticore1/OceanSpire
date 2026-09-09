@@ -22,6 +22,6 @@ MonoBehaviour:
   showInStorage: 1
   equipmentCategory: 0
   equipmentPrefab: {fileID: 7020424732878029919, guid: 1d821c43945524f46b5ab6f2e538b550, type: 3}
-  power: 13
+  power: 10
   defaultEquipment: 0
   attackMethod: 1

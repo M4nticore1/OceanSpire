@@ -18,7 +18,7 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
     private ItemInstance item;
     private int amountToDiscard = 0;
 
-    public bool IsShowed { get; private set; }
+    public bool IsShown { get; private set; }
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -62,10 +62,10 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        if (IsShowed) return;
+        if (IsShown) return;
         if (item == null) return;
 
-        IsShowed = true;
+        IsShown = true;
         slidePanel.Show();
 
         SetAmountToRemove(GetStartAmount());
@@ -85,9 +85,9 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
 
     private void OnHide()
     {
-        if (!IsShowed) return;
+        if (!IsShown) return;
 
-        IsShowed = false;
+        IsShown = false;
         OnHidden?.Invoke();
     }
 

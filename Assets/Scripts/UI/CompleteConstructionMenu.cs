@@ -13,7 +13,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     [SerializeField] private CustomButton closeMenuButton;
     private Building building;
 
-    public bool IsShowed { get; private set; } = false;
+    public bool IsShown { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -41,11 +41,11 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        if (IsShowed) return;
+        if (IsShown) return;
 
-        IsShowed = true;
+        IsShown = true;
         slidePanel.Show();
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
 
         OnShowed?.Invoke();
     }
@@ -74,9 +74,9 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     private void HandleHidden()
     {
-        if (!IsShowed) return;
+        if (!IsShown) return;
 
-        IsShowed = false;
+        IsShown = false;
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();

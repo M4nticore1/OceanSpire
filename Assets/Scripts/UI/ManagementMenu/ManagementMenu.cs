@@ -36,7 +36,7 @@ public abstract class ManagementMenu : MonoBehaviour
         gameObject.SetActive(true);
 
         ResetScrollRects();
-        InputStateManager.Instance.AddBlockTarget(this);
+        InputStateManager.Instance.AddInputBlockTarget(this);
     }
 
     public void Close()

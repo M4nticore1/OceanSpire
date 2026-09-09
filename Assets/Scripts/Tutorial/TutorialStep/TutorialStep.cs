@@ -70,7 +70,7 @@ public class TutorialStep : MonoBehaviour
         }
 
         if (blockCameraMovement)
-            InputStateManager.Instance.AddBlockTarget(this);
+            InputStateManager.Instance.AddInputBlockTarget(this);
     }
 
     protected virtual void OnComplete()

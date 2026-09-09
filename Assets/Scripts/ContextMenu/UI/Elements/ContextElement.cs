@@ -14,7 +14,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
 
     private ContextMenuManager contextMenuManager => ContextMenuManager.Instance;
 
-    public bool IsShowed { get; protected set; } = false;
+    public bool IsShown { get; protected set; } = false;
     private bool isSubscribed = false;
 
     public event Action OnShowed;
@@ -67,7 +67,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        if (IsShowed) return;
+        if (IsShown) return;
 
         OnShow();
         OnShowed?.Invoke();
@@ -84,13 +84,13 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
 
     protected virtual void OnShow()
     {
-        IsShowed = true;
+        IsShown = true;
         content.SetActive(true);
     }
 
     protected virtual void OnHide()
     {
-        IsShowed = false;
+        IsShown = false;
         content.SetActive(false);
     }
 

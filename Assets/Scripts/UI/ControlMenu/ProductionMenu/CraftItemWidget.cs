@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CraftItemPanel : MonoBehaviour
+public class CraftItemWidget : MonoBehaviour
 {
     [Header("Prefabs")]
     [SerializeField] private ItemWidget consumeResourceWidgetPrefab;
@@ -52,7 +52,7 @@ public class CraftItemPanel : MonoBehaviour
     private void OnDestroy()
     {
         if (craftItem != null) {
-            craftItem.OnSpeedBonusChanged -= OnCraftingSpeedBonusChanged;
+            craftItem.OnCraftingSpeedTimeChanged -= OnCraftingSpeedBonusChanged;
         }
     }
 
@@ -71,7 +71,7 @@ public class CraftItemPanel : MonoBehaviour
     public void Init(CraftingModule craftingModule, CraftItemInstance craftItem, SelectGroup selectGroup)
     {
         if (craftingModule == null || craftItem == null) {
-            Debug.LogError($"[{nameof(CraftItemPanel)}] Invalid Init parameters");
+            Debug.LogError($"[{nameof(CraftItemWidget)}] Invalid Init parameters");
             return;
         }
 
@@ -90,7 +90,7 @@ public class CraftItemPanel : MonoBehaviour
         UpdateTimer();
         UpdateProgressBar();
 
-        craftItem.OnSpeedBonusChanged += OnCraftingSpeedBonusChanged;
+        craftItem.OnCraftingSpeedTimeChanged += OnCraftingSpeedBonusChanged;
     }
 
     public void Select()
@@ -168,9 +168,10 @@ public class CraftItemPanel : MonoBehaviour
             text = TimeFormatter.SecondsToMinuteTimer(targetTime);
         }
 
-        var bonusPercent = craftItem.CraftingSpeedBonus * 100f;
-        var bonusColorHex = ColorUtility.ToHtmlStringRGB(bonusPercent > 0 ? positiveBonusColor : negativeBonusColor);
-        var bonusText = bonusPercent > 0f ? $" <color=#{bonusColorHex}>(-{bonusPercent:F0}%)</color>" : bonusPercent < 0f ? $" <color=#{bonusColorHex}>(+{bonusPercent:F0}%)</color>" : "";
+        var bonus = craftItem.GetCraftingTimeBonusPercent() * 100f;
+        var absBonus = Mathf.Abs(bonus);
+        var bonusColorHex = ColorUtility.ToHtmlStringRGB(bonus > 0 ? positiveBonusColor : negativeBonusColor);
+        var bonusText = bonus > 0f ? $" <color=#{bonusColorHex}>(-{absBonus:F0}%)</color>" : bonus < 0f ? $" <color=#{bonusColorHex}>(+{absBonus:F0}%)</color>" : "";
 
         text += bonusText;
         timer.SetText(text);
@@ -196,7 +197,7 @@ public class CraftItemPanel : MonoBehaviour
         progressBar.fillAmount = amount;
     }
 
-    private void OnCraftingSpeedBonusChanged(float bonus)
+    private void OnCraftingSpeedBonusChanged()
     {
         UpdateTimer();
         UpdateProgressBar();

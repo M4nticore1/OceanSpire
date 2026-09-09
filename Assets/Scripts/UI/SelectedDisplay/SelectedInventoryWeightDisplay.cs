@@ -8,14 +8,14 @@ public class SelectedInventoryWeightDisplay : SelectedDisplay
 
     private void SubscribeInventory(Inventory inventory)
     {
-        if (!inventory) return;
+        if (inventory == null) return;
 
         inventory.OnItemAmountChanged += OnItemAmountChanged;
     }
 
     private void UnsubscribeInventory(Inventory inventory)
     {
-        if (!inventory) return;
+        if (inventory == null) return;
 
         inventory.OnItemAmountChanged -= OnItemAmountChanged;
     }
@@ -43,15 +43,19 @@ public class SelectedInventoryWeightDisplay : SelectedDisplay
 
     protected override bool ShouldDisplay(SelectComponent selectComponent)
     {
-        if (!selectComponent) {
+        if (selectComponent == null) {
             SetInventory(null);
             return false;
         }
 
         var inventory = selectComponent.GetComponent<Inventory>();
-        SetInventory(inventory);
+        if (inventory == null || inventory.ignoreContextMenu) {
+            SetInventory(null);
+            return false;
+        }
 
-        return inventory != null;
+        SetInventory(inventory);
+        return true;
     }
 
     private void SetInventory(Inventory inventory)

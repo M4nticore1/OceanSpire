@@ -592,7 +592,7 @@ public class CreatureCityNavigator : MonoBehaviour
     public void RunUpdateFollowingPathEndOfFrame()
     {
         if (followPathCoroutine == null) {
-            followPathCoroutine = StartCoroutine(FollowPatnEndOfFrame());
+            followPathCoroutine = StartCoroutine(UpdateFollowingPathEndOfFrame());
         }
     }
 
@@ -624,6 +624,7 @@ public class CreatureCityNavigator : MonoBehaviour
 
     private bool ShouldFollowPath()
     {
+        if (!human.ShouldFollowPath()) return false;
         if (TargetBuilding == null) return false;
         if (CurrentPathBuilding == null) return false;
         if (PathProgress > pathBuildings.Count) return false;
@@ -731,7 +732,7 @@ public class CreatureCityNavigator : MonoBehaviour
         return true;
     }
 
-    private IEnumerator FollowPatnEndOfFrame()
+    private IEnumerator UpdateFollowingPathEndOfFrame()
     {
         yield return new WaitForEndOfFrame();
 

@@ -24,7 +24,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     [SerializeField] private TextMeshProUGUI nextReviveChargeText;
 
     private Citizen citizen;
-    public bool IsShowed { get; private set; } = false;
+    public bool IsShown { get; private set; } = false;
 
     public event Action OnShowed;
     public event Action OnHidden;
@@ -50,7 +50,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     private void Update()
     {
         if (citizen == null) return;
-        if (!IsShowed) return;
+        if (!IsShown) return;
 
         UpdateMenuShowed();
         UpdateTimeToDie();
@@ -59,8 +59,8 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        IsShowed = true;
-        InputStateManager.Instance.AddBlockTarget(this);
+        IsShown = true;
+        InputStateManager.Instance.AddInputBlockTarget(this);
         OnShowed?.Invoke();
     }
 
@@ -90,7 +90,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
     private void OnClosed()
     {
-        IsShowed = false;
+        IsShown = false;
         InputStateManager.Instance.RemoveBlockTarget(this);
     }
 
