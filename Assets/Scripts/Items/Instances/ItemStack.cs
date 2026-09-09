@@ -65,7 +65,7 @@ public class ItemStack : IItemAmount
         ItemAmounts.Add(value);
     }
 
-    public void RemoveItemAmount(IItemAmount value)
+    public void RemoveItem(IItemAmount value)
     {
         if (value == null)
             return;

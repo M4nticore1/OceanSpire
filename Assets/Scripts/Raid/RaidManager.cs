@@ -140,7 +140,7 @@ public class RaidManager : MonoBehaviour
         DestroyDiedRaiders();
     }
 
-    // 
+    // Calculate
     public Building CalculateNextRaidBuilding()
     {
         if (buildingsManager == null) return null;
@@ -149,16 +149,24 @@ public class RaidManager : MonoBehaviour
         List<Building> path;
 
         if (PathFinder.TryFindBuildingPath(null, b =>
-            b != null && !b.ConstructionComponent.GetUnderConstruction() &&
+            b != null &&
+            !b.ConstructionComponent.GetUnderConstruction() &&
             b.RaidersHandler.Interactors.Count < b.LevelDefinition.MaxHumansCount &&
-            b.CanBeRaided(), out path)) {
+            b.CanBeRaided() &&
+            b.GetModule(typeof(StorageModule)) != null,
+            out path)) {
+
             if (path != null && path.Count > 0)
                 building = path[path.Count - 1];
         }
 
         if (building == null && PathFinder.TryFindBuildingPath(null, b =>
-            b != null && !b.ConstructionComponent.GetUnderConstruction() &&
-            b.CanBeRaided(), out path)) {
+            b != null &&
+            !b.ConstructionComponent.GetUnderConstruction() &&
+            b.RaidersHandler.Interactors.Count < b.LevelDefinition.MaxHumansCount &&
+            b.CanBeRaided(),
+            out path)) {
+
             if (path != null && path.Count > 0)
                 building = path[path.Count - 1];
         }

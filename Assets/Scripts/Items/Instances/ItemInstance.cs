@@ -49,9 +49,6 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
 
             amount = Mathf.Min(amount, availableAmount);
         }
-        else {
-            Debug.Log($"[{nameof(ItemInstance)}] Stack is not valid!");
-        }
 
         if (this.amount == amount)
             return;
@@ -94,7 +91,7 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
             return;
 
         if (Stack != null)
-            Stack.RemoveItemAmount(this);
+            Stack.RemoveItem(this);
 
         Stack = stack;
 

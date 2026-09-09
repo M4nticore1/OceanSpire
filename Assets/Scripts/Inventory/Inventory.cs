@@ -71,7 +71,7 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
     public void Init(InventoryData inventoryData)
     {
         if (inventoryData == null) {
-            Debug.LogError("InventoryData is not valid");
+            Debug.LogError($"[{nameof(Inventory)}] Inventory Data is not valid!");
             Init();
             return;
         }
@@ -80,6 +80,8 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
 
         if (itemsData != null) {
             foreach (var itemData in itemsData) {
+                if (itemData == null) continue;
+
                 AddItemAmount(itemData.Id, itemData.Amount);
             }
         }
@@ -143,9 +145,14 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
 
     public void RemoveItem(ItemInstance item)
     {
-        if (item == null) return;
+        if (item == null)
+            return;
 
         UnsubscribeItem(item);
+
+        if (item.Stack != null) {
+            item.Stack.RemoveItem(item);
+        }
 
         items.Remove(item);
         itemsDict.Remove(item.Definition.ItemId);
@@ -264,9 +271,6 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
 
     private void HandleItemAmountRemoved(ItemInstance item, int amount)
     {
-        var stack = GetStack(item.Definition.Stack);
-        stack.RemoveItemAmount(item);
-
         OnItemAmountRemoved?.Invoke(item);
         OnItemAmountChanged?.Invoke(item);
 

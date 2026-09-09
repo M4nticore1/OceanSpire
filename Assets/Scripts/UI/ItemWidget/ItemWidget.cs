@@ -201,10 +201,12 @@ public class ItemWidget : MonoBehaviour
     {
         int sum = 0;
 
+        Debug.Log(this + " " + Amounts.Count);
         foreach (var amountable in Amounts) {
             if (amountable == null)
                 continue;
 
+            Debug.Log(amountable.Amount);
             sum += amountable.Amount;
         }
 
