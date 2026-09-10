@@ -4,12 +4,12 @@ using UnityEngine;
 public class InventoryMenu : MonoBehaviour, IOpenable
 {
     [SerializeField] private InventoryPanel inventoryPanel;
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private CustomButton closeButton;
 
     public bool IsShown { get; private set; } = false;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -30,7 +30,7 @@ public class InventoryMenu : MonoBehaviour, IOpenable
         slidePanel.Show();
         InputStateManager.Instance.AddInputBlockTarget(this);
 
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     public void Show(Inventory inventory)

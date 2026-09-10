@@ -114,6 +114,17 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         OnItemAdded?.Invoke(item);
     }
 
+    public void AddItemAmountRange(IReadOnlyList<ItemInstance> items)
+    {
+        if (items == null) return;
+
+        foreach (var item in items) {
+            if (item == null) continue;
+
+            AddItemAmount(item);
+        }
+    }
+
     public void AddItemAmount(ItemInstance item)
     {
         AddItemAmount(item.Definition.ItemId, item.Amount);
@@ -181,6 +192,16 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
     public void RemoveLimit(ItemStackEnum stack, int amount)
     {
         GetStack(stack).RemoveLimit(amount);
+    }
+
+    public void Clear()
+    {
+        for (int i = items.Count - 1; i >= 0; i--) {
+            var item = items[i];
+            if (item == null) continue;
+
+            RemoveItem(item);
+        }
     }
 
     public int GetLimit(ItemStackEnum stack)

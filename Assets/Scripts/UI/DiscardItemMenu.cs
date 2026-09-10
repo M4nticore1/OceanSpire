@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class DiscardItemMenu : MonoBehaviour, IOpenable
 {
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private TextLocalizer itemNameText;
     [SerializeField] private Image itemImage;
     [SerializeField] private TMP_InputField amountInputField;
@@ -20,7 +20,7 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
 
     public bool IsShown { get; private set; }
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -75,7 +75,7 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
         UpdateSliderValue();
         UpdateDiscardButtonEnabled();
 
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     public void Hide()

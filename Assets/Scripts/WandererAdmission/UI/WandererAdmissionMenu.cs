@@ -7,7 +7,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
     [SerializeField] private WandererAdmissionManager wandererAdmissionManager;
 
     [Header("UI")]
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private SkillsPanel skillPanel;
     [SerializeField] private CustomButton acceptButton;
     [SerializeField] private CustomButton rejectButton;
@@ -18,7 +18,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
 
     public bool IsShown { get; private set; } = false;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -52,7 +52,7 @@ public class WandererAdmissionMenu : MonoBehaviour, IOpenable
     public void Show()
     {
         UpdateAcceptButtonEnabled();
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     public void Show(Wanderer wanderer)

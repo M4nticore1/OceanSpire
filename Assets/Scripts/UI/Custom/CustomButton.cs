@@ -65,36 +65,31 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
     [SerializeField] private float stateTransitionTime = 0.2f;
     private float stateTransitionAlpha = 1f;
 
-    [SerializeField]
-    private CustomSelectableStateEntry idleState = new CustomSelectableStateEntry()
+    public CustomSelectableStateEntry idleState = new CustomSelectableStateEntry()
     {
         bodyColor = new Color(0.95f, 0.95f, 0.95f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 1f,
     };
-    [SerializeField]
-    private CustomSelectableStateEntry hoveredState = new CustomSelectableStateEntry()
+    public CustomSelectableStateEntry hoveredState = new CustomSelectableStateEntry()
     {
         bodyColor = new Color(1f, 1f, 1f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 1.02f,
     };
-    [SerializeField]
-    private CustomSelectableStateEntry pressedState = new CustomSelectableStateEntry()
+    public CustomSelectableStateEntry pressedState = new CustomSelectableStateEntry()
     {
         bodyColor = new Color(0.75f, 0.75f, 0.75f, 0.75f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 0.98f,
     };
-    [SerializeField]
-    private CustomSelectableStateEntry selectedState = new CustomSelectableStateEntry()
+    public CustomSelectableStateEntry selectedState = new CustomSelectableStateEntry()
     {
         bodyColor = new Color(1f, 1f, 1f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),
         scale = 1.05f,
     };
-    [SerializeField]
-    private CustomSelectableStateEntry disabledState = new CustomSelectableStateEntry()
+    public CustomSelectableStateEntry disabledState = new CustomSelectableStateEntry()
     {
         bodyColor = new Color(0.25f, 0.25f, 0.25f, 1f),
         contentColor = new Color(1f, 1f, 1f, 1f),

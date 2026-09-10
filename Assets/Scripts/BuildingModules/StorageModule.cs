@@ -40,31 +40,32 @@ public class StorageModule : BuildingModule, IRaidable
         AddLimit(StorageLevelData);
     }
 
+    // Raid
     public List<ItemInstance> GetRaidLoot()
     {
         var items = new List<ItemInstance>();
 
         var cityStorage = CityStorage.Instance;
-        if (!cityStorage) return items;
+        if (cityStorage == null) return items;
 
         var levelStacksMap = new Dictionary<ItemStackEnum, ItemStack>();
         foreach (var stack in StorageLevelData.Stacks) {
-            if (stack != null && !levelStacksMap.ContainsKey(stack.StackEnum)) {
-                levelStacksMap.Add(stack.StackEnum, stack);
-            }
+            if (stack == null) continue;
+            if (levelStacksMap.ContainsKey(stack.StackEnum)) continue;
+
+            levelStacksMap.Add(stack.StackEnum, stack);
         }
 
         foreach (var cityItem in cityStorage.Inventory.Items) {
             if (cityItem.Stack == null) continue;
-
             if (!levelStacksMap.TryGetValue(cityItem.Stack.StackEnum, out var levelStack)) continue;
 
             var cityAmount = cityItem.Amount;
             if (cityAmount <= 0) continue;
 
             var targetAmount = (int)(levelStack.Amount * StorageLevelData.RaidLossRate);
-            var amount = Mathf.Min(cityAmount, targetAmount);
 
+            var amount = Mathf.Min(cityAmount, targetAmount);
             if (amount <= 0) continue;
 
             var definition = cityItem.Definition;

@@ -7,7 +7,7 @@ public class PlayerSettingsMenu : MonoBehaviour, IOpenable
 
     public bool IsShown { get; private set; } = false;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -26,7 +26,7 @@ public class PlayerSettingsMenu : MonoBehaviour, IOpenable
         gameObject.SetActive(true);
         InputStateManager.Instance.AddInputBlockTarget(this);
 
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     public void Hide()

@@ -14,7 +14,7 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
 
     public bool IsShown { get; private set; } = false;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     protected virtual void Awake()
@@ -60,7 +60,7 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
         InputStateManager.Instance.AddInputBlockTarget(this);
         OnShow();
 
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     public void Hide()

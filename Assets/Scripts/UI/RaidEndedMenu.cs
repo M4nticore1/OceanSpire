@@ -10,7 +10,7 @@ public class RaidEndedMenu : MonoBehaviour
     [SerializeField] private RaidManager raidManager;
 
     [Header("UI")]
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private TextMeshProUGUI noLossesText;
     [SerializeField] private LayoutGroup layoutGroup;
     [SerializeField] private Color loseColor;

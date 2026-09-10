@@ -2138,7 +2138,7 @@ GameObject:
   - component: {fileID: 160833740}
   - component: {fileID: 160833741}
   m_Layer: 0
-  m_Name: StarvationNotificationController
+  m_Name: StarvationInGameNotificationController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2171,9 +2171,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22e8efa66fc5288478e494d3623494cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarvationNotificationController
-  notificationPrefab: {fileID: 4723193520140092988, guid: 1396744b18f380449b4ec88823c7d4c5, type: 3}
+  notificationPrefab: {fileID: 7902899878219477567, guid: 1396744b18f380449b4ec88823c7d4c5, type: 3}
   notificationsPanel: {fileID: 383697688}
-  cityStorage: {fileID: 1388613268}
+  starvationManager: {fileID: 732370467}
 --- !u!1 &163833202
 GameObject:
   m_ObjectHideFlags: 0
@@ -6650,7 +6650,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dac728f0f9065e344b102053677b64d4, type: 3}
+  m_Script: {fileID: 11500000, guid: 1508e74904a64c1409b35a786daee917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotificationsPanel
 --- !u!114 &383697689 stripped
@@ -9949,6 +9949,51 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
+--- !u!1 &732370465
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 732370466}
+  - component: {fileID: 732370467}
+  m_Layer: 0
+  m_Name: StarvationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &732370466
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732370465}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1317929167}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &732370467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732370465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be842a089973de49943c6823f6cde02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StarvationManager
+  cityStorage: {fileID: 1388613268}
 --- !u!1001 &736875620
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16295,6 +16340,7 @@ Transform:
   - {fileID: 862745571}
   - {fileID: 327564395}
   - {fileID: 998043850}
+  - {fileID: 732370466}
   - {fileID: 281772851}
   - {fileID: 449775346}
   - {fileID: 1285543872}
@@ -19237,7 +19283,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1616675883}
   m_Layer: 0
-  m_Name: Notifications
+  m_Name: InGameNotifications
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21482,7 +21528,7 @@ GameObject:
   - component: {fileID: 1923834356}
   - component: {fileID: 1923834357}
   m_Layer: 0
-  m_Name: EnergyNotificationController
+  m_Name: EnergyShortageInGameNotificationController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21515,9 +21561,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d220ec7909ad547aaf42739c59bacf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnergyShortageNotificationController
-  notificationPrefab: {fileID: 4723193520140092988, guid: 680b4a7e833d1be479d7ed03c8fba350, type: 3}
+  notificationPrefab: {fileID: 7902899878219477567, guid: 680b4a7e833d1be479d7ed03c8fba350, type: 3}
   notificationsPanel: {fileID: 383697688}
-  cityStorage: {fileID: 1388613268}
+  energyShortageManager: {fileID: 998043851}
 --- !u!1 &1925740695
 GameObject:
   m_ObjectHideFlags: 0
@@ -22917,6 +22963,7 @@ MonoBehaviour:
   creaturesList: {fileID: 11400000, guid: 4ea8bcc1249187b4d873ee95b1ebe9c2, type: 2}
   boatsList: {fileID: 11400000, guid: be9c2c10962e9ec4cb3aa1b04e0cba8a, type: 2}
   humanNamesList: {fileID: 11400000, guid: 24706cb4db2c0eb40a345fad162e8cc6, type: 2}
+  inventory: {fileID: 2047238981}
   raiderPrefabs:
   - {fileID: 5290309351902810709, guid: 8aee4d31267ad2a409a74dbaf84efb95, type: 3}
   - {fileID: -4342417268633007667, guid: 40a2021fd71eee344acfdb909817990f, type: 3}

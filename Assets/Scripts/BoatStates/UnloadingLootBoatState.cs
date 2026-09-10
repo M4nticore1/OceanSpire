@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class UnloadingLootBoatState : BoatState, IProgressable
 {
-    public const float UnloadSpeed = 30f;
+    public const float UnloadSpeed = 25f;
     private float stackedWeightToUnload = 0f;
 
     private CityStorage cityStorage = CityStorage.Instance;

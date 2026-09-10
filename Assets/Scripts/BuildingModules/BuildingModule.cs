@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public abstract class BuildingModule : MonoBehaviour, IElectricible
@@ -215,7 +216,7 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
     }
 
     // Working
-    public bool TryStartWorking()
+    protected bool TryStartWorking()
     {
         if (!ShouldStartWorking()) return false;
 
@@ -223,12 +224,26 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
         return true;
     }
 
-    public bool TryStopWorking()
+    protected bool TryStopWorking()
     {
         if (!ShouldStopWorking()) return false;
 
         StopWorking();
         return true;
+    }
+
+    protected IEnumerator TryStartWorkingEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
+        TryStartWorking();
+    }
+
+    protected IEnumerator TryStopWorkingEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
+        TryStopWorking();
     }
 
     private void StartWorking()

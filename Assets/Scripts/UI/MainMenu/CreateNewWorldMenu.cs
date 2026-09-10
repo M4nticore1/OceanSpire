@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class CreateNewWorldMenu : MonoBehaviour
 {
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private KeyboardOffsetUI keyboardOffsetUI;
     [SerializeField] private CustomButton createWorldButton;

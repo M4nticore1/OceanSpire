@@ -17,7 +17,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
     public bool IsShown { get; protected set; } = false;
     private bool isSubscribed = false;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     public static event Action<ContextElement> OnElementShowed;
@@ -70,7 +70,7 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
         if (IsShown) return;
 
         OnShow();
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
         OnElementShowed?.Invoke(this);
     }
 

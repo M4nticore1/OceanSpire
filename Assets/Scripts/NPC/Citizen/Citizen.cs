@@ -183,9 +183,30 @@ public class Citizen : Human
         return false;
     }
 
+    // Entered Building
+    protected override void HandleEnteredBuilding(Building building)
+    {
+        if (building == null) return;
+
+        building.CitizensHandler.AddEnteredInteractor(this);
+
+        base.HandleEnteredBuilding(building);
+    }
+
+    protected override void HandleExitedBuilding(Building building)
+    {
+        if (building == null) return;
+
+        building.CitizensHandler.RemoveEnteredInteractor(this);
+
+        base.HandleExitedBuilding(building);
+    }
+
     // Interact Building
     protected override void HandleInteractBuildingSet(Building building)
     {
+        if (building == null) return;
+
         building.CitizensHandler.AddInteractor(this);
 
         base.HandleInteractBuildingSet(building);
@@ -193,6 +214,8 @@ public class Citizen : Human
 
     protected override void HandleInteractBuildingRemoved(Building building)
     {
+        if (building == null) return;
+
         building.CitizensHandler.RemoveInteractor(this);
 
         base.HandleInteractBuildingRemoved(building);

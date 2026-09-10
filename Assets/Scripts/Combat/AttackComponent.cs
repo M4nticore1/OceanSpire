@@ -7,9 +7,11 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
     [Header("Main")]
     [SerializeField] private EquipmentComponent weaponComponent;
     [SerializeField] private Movement movement;
-    [SerializeField] private HealthComponent health;
 
+    [SerializeField] private HealthComponent health;
     public HealthComponent Health => health;
+
+    [SerializeField] private BoatRider boatRider;
 
     [Header("Parameters")]
     [SerializeField, Min(0.01f)] private float attackFrequency = 1f;
@@ -127,14 +129,23 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
             return;
 
         var lastTarget = CurrentTarget;
-
         CurrentTarget = null;
-
         lastTarget.RemoveAttacker(this);
 
         StopAttacking();
-
         OnTargetRemoved?.Invoke(lastTarget);
+    }
+
+    private void UpdateTargetByFirstAttackers()
+    {
+        for (int i = 0; i < CurrentAttackers.Count; i++) {
+            var attacker = CurrentAttackers[i];
+            if (attacker == null) continue;
+            if (!attacker.IsAttackerAvailable()) continue;
+
+            SetTarget(attacker);
+            break;
+        }
     }
 
     // Attackers
@@ -204,9 +215,10 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
         RemoveAttacker(target);
     }
 
-    public void HandleTargetDied()
+    private void HandleTargetUnavailableStarted()
     {
         RemoveTarget();
+        UpdateTargetByFirstAttackers();
     }
 
     private void HandleAttacked(AttackComponent attacker)
@@ -223,6 +235,9 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
     public bool IsAttackerAvailable()
     {
         if (health != null && !health.IsAlive)
+            return false;
+
+        if (boatRider != null && boatRider.RidingBoat)
             return false;
 
         return true;
@@ -283,7 +298,7 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
             return;
 
         if (!CurrentTarget.IsAttackerAvailable()) {
-            HandleTargetDied();
+            HandleTargetUnavailableStarted();
             return;
         }
 
@@ -385,7 +400,7 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
 
         var attackersCopy = new List<AttackComponent>(CurrentAttackers);
         foreach (var attacker in attackersCopy) {
-            attacker.HandleTargetDied();
+            attacker.HandleTargetUnavailableStarted();
         }
 
         CurrentAttackers.Clear();

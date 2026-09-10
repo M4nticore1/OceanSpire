@@ -6,7 +6,7 @@ public class StatsMenu : UIBehaviour
 {
     [SerializeField] private TextLocalizer buildingName;
     [SerializeField] private TextMeshProUGUI interactorsCount;
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
 
     public void OpenStatsMenu(Building building)
     {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class EnergyShortageManager : MonoBehaviour
@@ -34,7 +35,7 @@ public class EnergyShortageManager : MonoBehaviour
 
     private void Start()
     {
-        UpdateEnergyShortage();
+        StartCoroutine(UpdateEnergyShortageEndOfFrame());
     }
 
     private void UpdateEnergyShortage()
@@ -60,6 +61,13 @@ public class EnergyShortageManager : MonoBehaviour
 
     private void HandleStorageAmountChanged(ItemInstance item)
     {
+        StartCoroutine(UpdateEnergyShortageEndOfFrame());
+    }
+
+    private IEnumerator UpdateEnergyShortageEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
         UpdateEnergyShortage();
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -107,8 +108,8 @@ public class CraftingModule : BuildingModule, IRaidable, ILevelBonusable
             SelectedCraftItem.SetResourcesSpent(craftingModuleData.SelectedCraft.ResourcesSpent);
         }
 
-        TryCraftItem();
-        TryStartWorking();
+        StartCoroutine(TryCraftItemEndOfFrame());
+        StartCoroutine(TryStartWorkingEndOfFrame());
     }
 
     public void Tick()
@@ -376,6 +377,7 @@ public class CraftingModule : BuildingModule, IRaidable, ILevelBonusable
         }
     }
 
+    // Craft Item
     private bool TryCraftItem()
     {
         if (SelectedCraftItem == null) return false;
@@ -385,6 +387,13 @@ public class CraftingModule : BuildingModule, IRaidable, ILevelBonusable
         OnModuleItemCraftEnded?.Invoke(this, SelectedCraftItem);
 
         return true;
+    }
+
+    private IEnumerator TryCraftItemEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
+        TryCraftItem();
     }
 
     private bool IsEnoughResources(CraftItemDefinition craftItemDefinition)

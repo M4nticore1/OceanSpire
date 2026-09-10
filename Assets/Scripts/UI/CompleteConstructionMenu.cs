@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 {
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private TextLocalizer buildingName;
     [SerializeField] private TextLocalizer buildingLevel;
     [SerializeField] private TextLocalizer constructionTime;
@@ -15,7 +15,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     public bool IsShown { get; private set; } = false;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -47,7 +47,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
         slidePanel.Show();
         InputStateManager.Instance.AddInputBlockTarget(this);
 
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     public void Show(Building building)

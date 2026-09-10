@@ -1,8 +1,11 @@
+using System.Collections;
 using UnityEngine;
 
 public class CraftingModuleHighlightController : MonoBehaviour
 {
     [SerializeField] private CraftingModule craftingModule;
+
+    private Coroutine updateHighlightEndOfFrameCoroutine;
 
     private void OnEnable()
     {
@@ -32,18 +35,34 @@ public class CraftingModuleHighlightController : MonoBehaviour
 
     private void Start()
     {
-        UpdateHighlight();
+        RunUpdateHighlightEndOfFrame();
+    }
+
+    private void RunUpdateHighlightEndOfFrame()
+    {
+        if (updateHighlightEndOfFrameCoroutine == null) {
+            updateHighlightEndOfFrameCoroutine = StartCoroutine(UpdateHighlightEndOfFrame());
+        }
     }
 
     private void UpdateHighlight()
     {
-        if (!craftingModule) return;
+        if (craftingModule == null) {
+            Debug.LogError($"[{nameof(CraftingModuleHighlightController)}] Crafting Module is not valid!");
+            return;
+        }
 
         var ownedBuilding = craftingModule.OwnedBuilding;
-        if (!ownedBuilding) return;
+        if (ownedBuilding == null) {
+            Debug.LogError($"[{nameof(CraftingModuleHighlightController)}] Owned is not valid at {craftingModule}!");
+            return;
+        }
 
         var spawnedConstruction = ownedBuilding.SpawnedConstruction;
-        if (!spawnedConstruction) return;
+        if (spawnedConstruction == null) {
+            Debug.LogError($"[{nameof(CraftingModuleHighlightController)}] Construction is not valid at {ownedBuilding}!");
+            return;
+        }
 
         var craft = craftingModule.SelectedCraftItem;
         var power = craft != null && craft.IsCraftingFinished() ? 1f : 0f;
@@ -53,31 +72,39 @@ public class CraftingModuleHighlightController : MonoBehaviour
 
     private void HandleInited()
     {
-
+        RunUpdateHighlightEndOfFrame();
     }
 
     private void HandleWorkingStarted()
     {
-        UpdateHighlight();
+        RunUpdateHighlightEndOfFrame();
     }
 
     private void HandleWorkingStopped()
     {
-        UpdateHighlight();
+        RunUpdateHighlightEndOfFrame();
     }
 
     private void HandleItemCraftFinished(CraftItemInstance craftItem)
     {
-        UpdateHighlight();
+        RunUpdateHighlightEndOfFrame();
     }
 
     private void HandleClicked()
     {
-        UpdateHighlight();
+        RunUpdateHighlightEndOfFrame();
     }
 
     private void HandleConstructionChanged(BuildingConstruction buildingConstruction)
     {
+        RunUpdateHighlightEndOfFrame();
+    }
+
+    private IEnumerator UpdateHighlightEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
+        updateHighlightEndOfFrameCoroutine = null;
         UpdateHighlight();
     }
 }

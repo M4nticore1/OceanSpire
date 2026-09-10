@@ -9,7 +9,7 @@ public class EvictMenu : MonoBehaviour, IOpenable
     [SerializeField] private CustomButton closeButton;
 
     [SerializeField] private SkillsPanel skilsPanel;
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
 
     [SerializeField] private TextLocalizer citizenNameText;
 
@@ -17,7 +17,7 @@ public class EvictMenu : MonoBehaviour, IOpenable
 
     public bool IsShown => slidePanel.IsShown;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -52,7 +52,7 @@ public class EvictMenu : MonoBehaviour, IOpenable
 
         InputStateManager.Instance.AddInputBlockTarget(this);
 
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     public void Hide()

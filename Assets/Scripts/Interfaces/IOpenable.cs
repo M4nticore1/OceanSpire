@@ -8,6 +8,6 @@ public interface IOpenable
     public void Show();
     public void Hide();
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 }

@@ -136,6 +136,7 @@ public class Raider : Human, IProgressable
         return true;
     }
 
+    // Interact Building
     protected override void HandleInteractBuildingSet(Building building)
     {
         building.RaidersHandler.AddInteractor(this);
@@ -150,6 +151,7 @@ public class Raider : Human, IProgressable
         base.HandleInteractBuildingRemoved(building);
     }
 
+    // Interaction
     protected override void HandleInteractionStarted(Building building)
     {
         building.RaidersHandler.AddCurrentInteractor(this);
@@ -166,6 +168,7 @@ public class Raider : Human, IProgressable
         base.HandleInteractionStopped(building);
     }
 
+    // Boat
     protected override void HandleEnteredBoat(Boat boat)
     {
         boat.SelectComponent.IsClickable = false;
@@ -183,17 +186,32 @@ public class Raider : Human, IProgressable
         base.HandleExitedBoat(boat);
     }
 
-    protected override void HandleEnteredBuilding(Building buildng)
+    // Entered Building
+    protected override void HandleEnteredBuilding(Building building)
     {
-        base.HandleEnteredBuilding(buildng);
+        if (building == null) return;
+
+        building.RaidersHandler.AddEnteredInteractor(this);
+
+        base.HandleEnteredBuilding(building);
 
         if (!IsRaidFinished) return;
-        if (buildng != CityNavigator.TargetBuilding) return;
+        if (building != CityNavigator.TargetBuilding) return;
 
         CityNavigator.TryRemoveTargetBuilding();
         CityNavigator.RemovePathAndTargetBuilding();
     }
 
+    protected override void HandleExitedBuilding(Building building)
+    {
+        if (building == null) return;
+
+        building.RaidersHandler.RemoveEnteredInteractor(this);
+
+        base.HandleExitedBuilding(building);
+    }
+
+    // Attack
     protected override void HandleAttackTargetSeted(AttackComponent combatComponent)
     {
         base.HandleAttackStarted(combatComponent);

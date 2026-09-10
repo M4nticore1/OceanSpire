@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class RecievedAdItemRewardMenu : MonoBehaviour
 {
-    [SerializeField] SlidePanel slidePanel;
+    [SerializeField] SlideAnimatedPanel slidePanel;
     [SerializeField] Image rewardImage;
     [SerializeField] TextLocalizer receiveText;
 

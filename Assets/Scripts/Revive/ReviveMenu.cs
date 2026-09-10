@@ -10,7 +10,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     [SerializeField] private RewardedAdsManager rewardedAdsManager;
 
     [Header("UI")]
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private SkillsPanel skillsPanel;
     [SerializeField] private CustomButton button;
     [SerializeField] private TextLocalizer citizenNameText;
@@ -26,7 +26,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     private Citizen citizen;
     public bool IsShown { get; private set; } = false;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -61,7 +61,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     {
         IsShown = true;
         InputStateManager.Instance.AddInputBlockTarget(this);
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     public void Show(Citizen citizen)

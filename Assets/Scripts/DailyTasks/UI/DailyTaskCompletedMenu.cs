@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class DailyTaskCompletedMenu : DailyTaskPanel
 {
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private Image progressBar;
 
     [Header("Visibility")]

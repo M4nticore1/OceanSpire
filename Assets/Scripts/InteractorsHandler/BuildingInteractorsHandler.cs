@@ -4,6 +4,9 @@ using UnityEngine;
 
 public abstract class BuildingInteractorsHandler : MonoBehaviour
 {
+    [field: SerializeField] private List<Human> entered = new();
+    public IReadOnlyList<Human> EnteredInteractors => entered.AsReadOnly();
+
     [field: SerializeField] private List<Human> interactors = new();
     public IReadOnlyList<Human> Interactors => interactors.AsReadOnly();
 
@@ -22,55 +25,83 @@ public abstract class BuildingInteractorsHandler : MonoBehaviour
     public static event Action<BuildingInteractorsHandler, Human> OnComponentCurrentInteractorAdded;
     public static event Action<BuildingInteractorsHandler, Human> OnComponentCurrentInteractorRemoved;
 
-    // Workers
+    // Entered
+    public void AddEnteredInteractor(Human interactor)
+    {
+        if (!TryAddInteractor(interactor, ref entered)) return;
+
+        OnInteractorAdded?.Invoke(interactor);
+        OnComponentInteractorAdded?.Invoke(this, interactor);
+    }
+
+    public void RemoveEnteredInteractor(Human interactor)
+    {
+        if (!TryRemoveInteractor(interactor, ref entered)) return;
+
+        OnInteractorRemoved?.Invoke(interactor);
+        OnComponentInteractorRemoved?.Invoke(this, interactor);
+    }
+
+    // Interactors
     public void AddInteractor(Human interactor)
     {
-        if (interactors.Contains(interactor)) return;
+        if (!TryAddInteractor(interactor, ref interactors)) return;
 
-        interactors.Add(interactor);
         OnInteractorAdded?.Invoke(interactor);
         OnComponentInteractorAdded?.Invoke(this, interactor);
     }
 
     public void RemoveInteractor(Human interactor)
     {
-        if (!interactors.Contains(interactor)) return;
+        if (!TryRemoveInteractor(interactor, ref interactors)) return;
 
-        interactors.Remove(interactor);
         OnInteractorRemoved?.Invoke(interactor);
         OnComponentInteractorRemoved?.Invoke(this, interactor);
     }
 
     public void AddCurrentInteractor(Human interactor)
     {
-        if (currentInteractors.Contains(interactor)) return;
+        if (!TryAddInteractor(interactor, ref currentInteractors)) return;
 
-        currentInteractors.Add(interactor);
         OnCurrentInteractorAdded?.Invoke(interactor);
         OnComponentCurrentInteractorAdded?.Invoke(this, interactor);
     }
 
     public void RemoveCurrentInteractor(Human interactor)
     {
-        if (!currentInteractors.Contains(interactor)) return;
+        if (!TryRemoveInteractor(interactor, ref currentInteractors)) return;
 
-        currentInteractors.Remove(interactor);
         OnCurrentInteractorRemoved?.Invoke(interactor);
         OnComponentCurrentInteractorRemoved?.Invoke(this, interactor);
     }
 
     public int? TryGetInteractorIndex(Human interactor)
     {
-        if (!interactor) {
+        if (interactor == null) {
             Debug.Log($"[{nameof(BuildingInteractorsHandler)}] Interactor not found at {name}");
             return null;
         }
 
-        if (!interactors.Contains(interactor)) {
-            Debug.Log($"[{nameof(BuildingInteractorsHandler)}] Interactor not found at Workers");
-            return null;
-        }
+        var index = interactors.IndexOf(interactor);
 
-        return interactors.IndexOf(interactor);
+        return index >= 0 ? index : null;
+    }
+
+    private bool TryAddInteractor(Human interactor, ref List<Human> list)
+    {
+        if (interactor == null) return false;
+        if (list == null) return false;
+        if (list.Contains(interactor)) return false;
+
+        list.Add(interactor);
+        return true;
+    }
+
+    private bool TryRemoveInteractor(Human interactor, ref List<Human> list)
+    {
+        if (interactor == null) return false;
+        if (list == null) return false;
+
+        return list.Remove(interactor);
     }
 }

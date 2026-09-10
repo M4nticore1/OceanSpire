@@ -47,17 +47,18 @@ public class ElevatorCabinConstruction : BuildingConstruction
     {
         if (!IsMoving) return;
 
-        float speed = moveSpeed * Time.deltaTime;
+        var speed = moveSpeed * Time.deltaTime;
         Move(moveDirection, speed);
 
-        int floor = GetFloorIndexByPosition();
-        if (TryApplyOwnedBuildingByFloor(floor)) {
-            if (TryStopMoving()) {
-                ApplyOwnedBuildingPosition();
-                SetTargetFloor(CalculateTargetFloor());
-                UpdateMoveDirection();
-                StartMovingToTargetFloorTimer();
-            }
+        var floor = GetFloorIndexByPosition();
+        TryApplyOwnedBuildingByFloor(floor);
+
+        if (HasReachedTargetFloor()) {
+            StopMoving();
+            ApplyOwnedBuildingPosition();
+            SetTargetFloor(CalculateTargetFloor());
+            UpdateMoveDirection();
+            StartMovingToTargetFloorTimer();
         }
     }
 
@@ -95,19 +96,20 @@ public class ElevatorCabinConstruction : BuildingConstruction
         NotifyPassengersAboutFloorChange();
     }
 
-    public void SetTargetFloor(int floorIndex)
+    private void SetTargetFloor(int floorIndex)
     {
         TargetFloor = floorIndex;
         SetNextFloor(CalculateNextFloor());
     }
 
-    public void SetNextFloor(int floorIndex)
+    private void SetNextFloor(int floorIndex)
     {
         NextFloor = floorIndex;
     }
 
-    public void StopMoving()
+    private void StopMoving()
     {
+        Debug.Log("StopMoving");
         SetIsMoving(false);
         RemoveMovingToFloorTimer();
 
@@ -463,6 +465,27 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
         SetOwnedBuilding(building);
         return true;
+    }
+
+    private bool HasReachedTargetFloor()
+    {
+        var builtFloors = BuildingsManager.Instance.BuiltFloors;
+        if (builtFloors == null || builtFloors.Count <= TargetFloor) return false;
+        if (builtFloors[TargetFloor] == null) return false;
+
+        var roomBuildingPlaces = builtFloors[TargetFloor].RoomBuildingPlaces;
+        if (roomBuildingPlaces == null || roomBuildingPlaces.Count <= PlaceIndex) return false;
+
+        var targetBuilding = roomBuildingPlaces[PlaceIndex].PlacedBuilding;
+        if (targetBuilding == null) return false;
+
+        float targetY = targetBuilding.transform.position.y;
+
+        // Проверяем, пересекла ли позиция лифта целевую высоту в зависимости от направления
+        if (moveDirection.y > 0 && transform.position.y >= targetY) return true;
+        if (moveDirection.y < 0 && transform.position.y <= targetY) return true;
+
+        return false;
     }
 
     private void RunUpdateDestinationAndProceedCoroutine()

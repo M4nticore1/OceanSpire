@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stacks:
   - stackEnum: 3
-    amount: 5000
+    amount: 6000
   - stackEnum: 4
-    amount: 2500
+    amount: 3000
   - stackEnum: 5
-    amount: 625
+    amount: 750
   - stackEnum: 6
-    amount: 1250
+    amount: 1500
   raidLossRate: 0.25

@@ -23,6 +23,7 @@ public class RaidManager : MonoBehaviour
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private BoatsList boatsList;
     [SerializeField] private HumanNamesList humanNamesList;
+    [SerializeField] private Inventory inventory;
 
     [Header("Prefabs")]
     [SerializeField] private Raider[] raiderPrefabs;
@@ -192,9 +193,10 @@ public class RaidManager : MonoBehaviour
         var result = new RaidEndedResult()
         {
             IsRepeled = isRepeled,
-            Losses = losses
+            Losses = losses.ToList()
         };
 
+        inventory.Clear();
         DestroyEmptyBoats();
         DestroyDiedRaiders();
         RemoveCityLoot(losses);
@@ -307,9 +309,8 @@ public class RaidManager : MonoBehaviour
     }
 
     // Losses
-    private List<ItemInstance> GetAddLosses(IReadOnlyList<Raider> raiders)
+    private IReadOnlyList<ItemInstance> GetAddLosses(IReadOnlyList<Raider> raiders)
     {
-        var losses = new List<ItemInstance>();
         foreach (var raider in creaturesManager.Raiders) {
             if (raider == null) continue;
             if (raider.HealthComponent && !raider.HealthComponent.IsAlive) continue;
@@ -318,10 +319,10 @@ public class RaidManager : MonoBehaviour
             var inventory = raider.Inventory;
             if (inventory == null) continue;
 
-            losses.AddRange(inventory.Items);
+            this.inventory.AddItemAmountRange(inventory.Items);
         }
 
-        return losses;
+        return inventory.Items;
     }
 
     private void RemoveCityLoot(IReadOnlyList<ItemInstance> items)

@@ -427,14 +427,10 @@ public class CreatureCityNavigator : MonoBehaviour
 
     private void SortPathBuildings(List<Building> pathBuildings)
     {
-        for (int i = pathBuildings.Count - 2; i >= 0; i--) {
+        for (int i = pathBuildings.Count - 2; i > 0; i--) {
             var building = pathBuildings[i];
-            if (building == null) {
-                Debug.Log($"[{nameof(CreatureCityNavigator)}] Building not found on path at {name}");
-                continue;
-            }
-
-            if (building.GetComponent<ElevatorModule>() != null) continue;
+            if (building == null) continue;
+            if (building.GetModule(typeof(ElevatorModule)) != null) continue;
 
             pathBuildings.RemoveAt(i);
         }
@@ -442,24 +438,34 @@ public class CreatureCityNavigator : MonoBehaviour
 
     private void SortPathElevators(List<Building> pathBuildings)
     {
-        int length = pathBuildings.Count;
+        if (pathBuildings == null) return;
+        if (pathBuildings.Count <= 2) return;
 
-        for (int i = pathBuildings.Count - 2; i >= 0; i--) {
-            var current = pathBuildings[i] != null ? pathBuildings[i].GetComponent<ElevatorModule>() : null;
-            var next = i - 1 >= 0 && pathBuildings[i - 1] != null ? pathBuildings[i - 1].GetComponent<ElevatorModule>() : null;
-            var previous = pathBuildings.Count > i + 1 && pathBuildings[i + 1] != null ? pathBuildings[i + 1].GetComponent<ElevatorModule>() : null;
+        var indicesToRemove = new List<int>();
 
+        for (int i = pathBuildings.Count - 1; i > 0; i--) {
+            var currentBuilding = pathBuildings[i];
+            if (currentBuilding == null) continue;
+
+            var current = currentBuilding.GetModule(typeof(ElevatorModule));
             if (current == null) continue;
 
-            bool connectedToNext = next != null ? current.OwnedTowerBuilding.ConnectedWith(next.OwnedTowerBuilding) : false;
-            bool connectedToPrevious = previous != null ? current.OwnedTowerBuilding.ConnectedWith(previous.OwnedTowerBuilding) : false;
+            var next = (i - 1 >= 0 && pathBuildings[i - 1] != null) ? pathBuildings[i - 1].GetModule(typeof(ElevatorModule)) : null;
+            var previous = (i + 1 < pathBuildings.Count && pathBuildings[i + 1] != null) ? pathBuildings[i + 1].GetModule(typeof(ElevatorModule)) : null;
+
+            bool connectedToNext = next != null && current.OwnedTowerBuilding != null && current.OwnedTowerBuilding.ConnectedWith(next.OwnedTowerBuilding);
+            bool connectedToPrevious = previous != null && current.OwnedTowerBuilding != null && current.OwnedTowerBuilding.ConnectedWith(previous.OwnedTowerBuilding);
 
             bool notConnected = !connectedToNext && !connectedToPrevious;
             bool fullConnected = connectedToNext && connectedToPrevious;
 
             if (notConnected || fullConnected) {
-                pathBuildings.RemoveAt(i);
+                indicesToRemove.Add(i);
             }
+        }
+
+        for (int i = 0; i < indicesToRemove.Count; i++) {
+            pathBuildings.RemoveAt(indicesToRemove[i]);
         }
     }
 

@@ -7,14 +7,14 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
     [SerializeField] private BuilderEnergyManager constructionEnergyManager;
 
     [Header("UI")]
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private CustomButton closeButton;
     [SerializeField] private TextLocalizer currentEnergyText;
     [SerializeField] private TextLocalizer nextChargeText;
 
     public bool IsShown { get; private set; } = false;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     private void OnEnable()
@@ -52,7 +52,7 @@ public class BuilderEnergyMenu : MonoBehaviour, IOpenable
 
         currentEnergyText.UpdateText();
 
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     public void Hide()

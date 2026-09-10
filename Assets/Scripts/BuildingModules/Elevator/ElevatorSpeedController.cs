@@ -8,7 +8,7 @@ public class ElevatorSpeedController : MonoBehaviour
     [SerializeField] private float energyShortageSpeedMultiplier = 0.5f;
 
     private RaidManager raidManager => RaidManager.Instance;
-    private EnergyShortageNotificationController energyShortageNotification => EnergyShortageNotificationController.Instance;
+    private EnergyShortageManager energyShortageManager => EnergyShortageManager.Instance;
 
     private void OnEnable()
     {
@@ -17,8 +17,8 @@ public class ElevatorSpeedController : MonoBehaviour
         raidManager.OnRaidStarted += OnRaidStarted;
         raidManager.OnRaidEnded += OnRaidEnded;
 
-        energyShortageNotification.OnNotificated += OnEnertyShortageNotificated;
-        energyShortageNotification.OnUnnotificated += OnEnertyShortageUnnotificated;
+        energyShortageManager.OnEnergyShortageStarted += HandleEnergyShortageStarted;
+        energyShortageManager.OnEnergyShortageEnded += HandleEnergyShortageEnded;
     }
 
     private void OnDisable()
@@ -28,8 +28,8 @@ public class ElevatorSpeedController : MonoBehaviour
         raidManager.OnRaidStarted -= OnRaidStarted;
         raidManager.OnRaidEnded -= OnRaidEnded;
 
-        energyShortageNotification.OnNotificated -= OnEnertyShortageNotificated;
-        energyShortageNotification.OnUnnotificated -= OnEnertyShortageUnnotificated;
+        energyShortageManager.OnEnergyShortageStarted -= HandleEnergyShortageStarted;
+        energyShortageManager.OnEnergyShortageEnded -= HandleEnergyShortageEnded;
     }
 
     private void Start()
@@ -45,7 +45,7 @@ public class ElevatorSpeedController : MonoBehaviour
             speed = raidSpeed;
         }
 
-        if (energyShortageNotification.IsNotificated) {
+        if (energyShortageManager.IsUnderEnergyShortage) {
             speed *= energyShortageSpeedMultiplier;
         }
 
@@ -67,12 +67,12 @@ public class ElevatorSpeedController : MonoBehaviour
         UpdateSpeed();
     }
 
-    private void OnEnertyShortageNotificated()
+    private void HandleEnergyShortageStarted()
     {
         UpdateSpeed();
     }
 
-    private void OnEnertyShortageUnnotificated()
+    private void HandleEnergyShortageEnded()
     {
         UpdateSpeed();
     }

@@ -46,10 +46,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3459087167700967188}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dac728f0f9065e344b102053677b64d4, type: 3}
+  m_Script: {fileID: 11500000, guid: 1508e74904a64c1409b35a786daee917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotificationsPanel
-  layoutGroup: {fileID: 6181201530768592939}
+  layoutGroup: {fileID: 4209192389410106577}
+  selectGroup: {fileID: 5127259484505732657}
 --- !u!1 &5966846905400928366
 GameObject:
   m_ObjectHideFlags: 0
@@ -59,7 +60,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7837971107010612373}
-  - component: {fileID: 6181201530768592939}
+  - component: {fileID: 4209192389410106577}
+  - component: {fileID: 5127259484505732657}
   m_Layer: 5
   m_Name: LayoutGroup
   m_TagString: Untagged
@@ -83,10 +85,10 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -700}
+  m_AnchoredPosition: {x: 45, y: -220}
   m_SizeDelta: {x: 500, y: 500}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &6181201530768592939
+  m_Pivot: {x: 0, y: 1}
+--- !u!114 &4209192389410106577
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,18 +97,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 5966846905400928366}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
   m_Padding:
     m_Left: 0
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_StartCorner: 0
-  m_StartAxis: 1
-  m_CellSize: {x: 400, y: 100}
-  m_Spacing: {x: 0, y: 15}
-  m_Constraint: 1
-  m_ConstraintCount: 1
+  m_Spacing: 5
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
+--- !u!114 &5127259484505732657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5966846905400928366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a03c2b8eeb2c2d4aa90714a6236ec59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SelectGroup

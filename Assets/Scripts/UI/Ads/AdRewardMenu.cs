@@ -1,11 +1,10 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public abstract class AdRewardMenu : MonoBehaviour
 {
     [Header("UI")]
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] protected CustomButton watchButton;
     [SerializeField] private Image rewardImage;
     [SerializeField] private TextLocalizer rewardDescryption;
@@ -21,7 +20,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     {
         RewardedAdsManager.OnRewardReceived += OnRewardReceived;
         watchButton.OnReleased.AddListener(OnWatchAdButtonClicked);
-        slidePanel.OnShowed += OnOpen;
+        slidePanel.OnShown += OnOpen;
         slidePanel.OnHidden += OnClose;
     }
 
@@ -29,7 +28,7 @@ public abstract class AdRewardMenu : MonoBehaviour
     {
         RewardedAdsManager.OnRewardReceived -= OnRewardReceived;
         watchButton.OnReleased.RemoveListener(OnWatchAdButtonClicked);
-        slidePanel.OnShowed -= OnOpen;
+        slidePanel.OnShown -= OnOpen;
         slidePanel.OnHidden -= OnClose;
     }
 

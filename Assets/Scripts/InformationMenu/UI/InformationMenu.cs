@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public abstract class InformationMenu : MonoBehaviour, IOpenable
 {
     [Header("Information")]
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private TextLocalizer nameText;
     [SerializeField] private TextLocalizer descriptionText;
     [SerializeField] private Image thumbImage;
@@ -15,7 +15,7 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
 
     public bool IsShown { get; private set; } = false;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     protected virtual void Awake()
@@ -55,7 +55,7 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
         UpdateImage();
         InputStateManager.Instance.AddInputBlockTarget(this);
 
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     public void Show(IInformationable informationable)

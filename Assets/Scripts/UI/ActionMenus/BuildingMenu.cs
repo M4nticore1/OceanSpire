@@ -10,7 +10,7 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
     [SerializeField] private ItemWidget resourceWidgetPrefab;
     protected ItemWidget ResourceWidgetPrefab => resourceWidgetPrefab;
 
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
 
     [SerializeField] private Image buildingImage;
     protected Image BuildingImage => buildingImage;
@@ -32,7 +32,7 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
 
     public bool IsShown { get; private set; } = false;
 
-    public event Action OnShowed;
+    public event Action OnShown;
     public event Action OnHidden;
 
     protected override void OnEnable()
@@ -84,7 +84,7 @@ public abstract class BuildingMenu : UIBehaviour, IOpenable
     public void Show()
     {
         IsShown = true;
-        OnShowed?.Invoke();
+        OnShown?.Invoke();
     }
 
     // IOpenable

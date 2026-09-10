@@ -34,10 +34,7 @@ public class RaidCombatManager : MonoBehaviour
     private void UpdateHumanCombat(AttackComponent attackComponent)
     {
         if (attackComponent == null) return;
-
-        var healthComponent = attackComponent.Health;
-        if (healthComponent == null) return;
-        if (!healthComponent.IsAlive) return;
+        if (!attackComponent.IsAttackerAvailable()) return;
 
         var human = attackComponent.GetComponent<Human>();
         if (human == null) return;
@@ -62,7 +59,6 @@ public class RaidCombatManager : MonoBehaviour
 
         var attackComponent = citizen.AttackComponent;
         if (attackComponent == null) return;
-
         if (attackComponent.CurrentTarget != null) return;
 
         var bestTarget = GetNearestFreeTarget(citizen.transform.position, targetsHandler);
@@ -109,7 +105,7 @@ public class RaidCombatManager : MonoBehaviour
 
         if (enemyHandler == null) return;
 
-        foreach (var interactor in enemyHandler.CurrentInteractors) {
+        foreach (var interactor in enemyHandler.EnteredInteractors) {
             if (interactor == null) continue;
 
             var enemy = interactor.AttackComponent;
@@ -130,12 +126,12 @@ public class RaidCombatManager : MonoBehaviour
     private AttackComponent GetNearestFreeTarget(Vector3 currentPos, BuildingInteractorsHandler buildingInteractors)
     {
         if (buildingInteractors == null) return null;
-        if (buildingInteractors.CurrentInteractors == null) return null;
+        if (buildingInteractors.EnteredInteractors == null) return null;
 
         AttackComponent nearestTarget = null;
         float minSqDistance = float.MaxValue;
 
-        foreach (var interactor in buildingInteractors.CurrentInteractors) {
+        foreach (var interactor in buildingInteractors.EnteredInteractors) {
             if (interactor == null) continue;
 
             var attackComponent = interactor.AttackComponent;
@@ -156,10 +152,10 @@ public class RaidCombatManager : MonoBehaviour
     private List<AttackComponent> GetAllFreeTargets(BuildingInteractorsHandler buildingInteractors)
     {
         if (buildingInteractors == null) return null;
-        if (buildingInteractors.CurrentInteractors == null) return null;
+        if (buildingInteractors.EnteredInteractors == null) return null;
 
         var targets = new List<AttackComponent>();
-        foreach (var interactor in buildingInteractors.CurrentInteractors) {
+        foreach (var interactor in buildingInteractors.EnteredInteractors) {
             if (interactor == null) continue;
 
             var attackComponent = interactor.AttackComponent;
@@ -174,7 +170,7 @@ public class RaidCombatManager : MonoBehaviour
 
     private IEnumerator UpdateCombatDelay(AttackComponent attackComponent)
     {
-        yield return null;
+        yield return new WaitForEndOfFrame();
 
         UpdateHumanCombat(attackComponent);
     }

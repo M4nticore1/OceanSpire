@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ContextMenu : UIBehaviour
 {
-    [SerializeField] private SlidePanel slidePanel;
+    [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private Transform contextMenuRoot;
     [SerializeField] private LayoutGroup layoutGroup;
 

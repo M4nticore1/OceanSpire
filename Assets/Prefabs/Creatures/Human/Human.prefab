@@ -311,6 +311,7 @@ MonoBehaviour:
   weaponComponent: {fileID: 8499683307490277393}
   movement: {fileID: -7493649843608556168}
   health: {fileID: 4098557255172134659}
+  boatRider: {fileID: 6497944028369977301}
   attackFrequency: 1.2
   <CurrentTarget>k__BackingField: {fileID: 0}
   <CurrentAttackers>k__BackingField: []

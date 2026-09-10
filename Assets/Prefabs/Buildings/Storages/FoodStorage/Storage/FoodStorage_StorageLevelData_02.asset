@@ -16,5 +16,5 @@ MonoBehaviour:
   - stackEnum: 2
     amount: 75
   - stackEnum: 7
-    amount: 25
+    amount: 30
   raidLossRate: 0.25
