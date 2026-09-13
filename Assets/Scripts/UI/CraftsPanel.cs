@@ -9,7 +9,7 @@ public class CraftsPanel : MonoBehaviour
 
     private List<CraftItemWidget> spawnedWidgets = new();
 
-    public void SetCraftsAndApply(List<CraftItemDefinition> crafts)
+    public void SetCraftsAndApply(CraftItemDefinition[] crafts)
     {
         DestroyWidgets();
 
@@ -31,7 +31,7 @@ public class CraftsPanel : MonoBehaviour
         CreateWidgets(crafts);
     }
 
-    private void CreateWidgets(List<CraftItemDefinition> crafts)
+    private void CreateWidgets(CraftItemDefinition[] crafts)
     {
 
     }

@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class InfoSectionEntry
 {
-    public InfoSectionWidget SectionWidget { get; private set; }
-    public InfoSectionData SectionData { get; private set; }
+    public InfoPanelWidget SectionWidget { get; private set; }
+    public InfoPanelData SectionData { get; private set; }
 
-    public InfoSectionEntry(InfoSectionWidget widget, InfoSectionData data)
+    public InfoSectionEntry(InfoPanelWidget widget, InfoPanelData data)
     {
         SectionWidget = widget;
         SectionData = data;

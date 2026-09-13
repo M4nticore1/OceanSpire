@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 [AddComponentMenu("Building Modules/Crafting Module")]
-public class CraftingModule : BuildingModule, IRaidable, ILevelBonusable
+public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevelBonusable
 {
     public ProductionModuleLevelData[] ProductionLevelsData => levelsData.OfType<ProductionModuleLevelData>().ToArray();
 
@@ -25,6 +25,7 @@ public class CraftingModule : BuildingModule, IRaidable, ILevelBonusable
         }
     }
 
+    public CraftItemDefinition[] Crafts => ProductionLevelData.CraftItems;
     public List<CraftItemInstance> CraftItems { get; private set; } = new();
     public CraftItemInstance SelectedCraftItem { get; private set; }
 

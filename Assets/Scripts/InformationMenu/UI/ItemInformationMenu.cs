@@ -14,7 +14,7 @@ public class ItemInformationMenu : InformationMenu
     {
         base.Awake();
 
-        if (Instance) {
+        if (Instance != null) {
             Debug.LogError($"[{nameof(ItemInformationMenu)}] There is another Item Information Menu in the scene!");
             Destroy(gameObject);
             return;

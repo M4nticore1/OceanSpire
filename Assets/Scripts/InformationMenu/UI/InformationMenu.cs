@@ -11,6 +11,9 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
     [SerializeField] private Image thumbImage;
     [SerializeField] private CustomButton closeButton;
 
+    [Header("PanelControllers")]
+    [SerializeField] private InfoPanelController[] infoPanelControllers; 
+
     private IInformationable informationable;
 
     public bool IsShown { get; private set; } = false;
@@ -50,6 +53,7 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
         IsShown = true;
         slidePanel.Show();
 
+        SetPanelTargets();
         UpdateNameText();
         UpdateDescriptionText();
         UpdateImage();
@@ -62,16 +66,6 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
     {
         if (informationable == null) {
             Debug.LogError($"[{nameof(InformationMenu)}] Informationable is not valid!");
-            return;
-        }
-
-        if (!informationable.GetInformationName()) {
-            Debug.LogError($"[{nameof(InformationMenu)}] Information Name is not valid!");
-            return;
-        }
-
-        if (!informationable.GetInformationDescription()) {
-            Debug.LogError($"[{nameof(InformationMenu)}] Information Description is not valid!");
             return;
         }
 
@@ -90,6 +84,20 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
+    }
+
+    private void SetPanelTargets()
+    {
+        if (informationable == null) return;
+
+        foreach (var panelController in infoPanelControllers) {
+            if (panelController == null) {
+                Debug.LogError($"[{nameof(InformationMenu)}] Panel Controller is not valid!");
+                continue;
+            }
+
+            panelController.SetInformationable(informationable);
+        }
     }
 
     private void UpdateNameText()

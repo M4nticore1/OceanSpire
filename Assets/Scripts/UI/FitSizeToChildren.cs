@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem.HID;
 
 public class FitSizeToChildren : MonoBehaviour
 {
@@ -20,22 +19,24 @@ public class FitSizeToChildren : MonoBehaviour
 
     private void Awake()
     {
-        rect = GetComponent<RectTransform>();
+        if (rect != null) {
+            rect = GetComponent<RectTransform>();
+        }
     }
 
     private void Start()
     {
-        UpdateSizeDelay();
+        UpdateSize();
     }
 
     private void OnEnable()
     {
-        UpdateSizeDelay();
+        UpdateSize();
     }
 
     private void OnTransformChildrenChanged()
     {
-        UpdateSizeDelay();
+        UpdateSize();
     }
 
     public void UpdateSize()

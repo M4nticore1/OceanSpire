@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class DescriptionInfoSectionData : InfoSectionData
+public class DescriptionInfoPanelData : InfoPanelData
 {
     public LocalizationItem DescriptionLocalizationItem { get; private set; }
 
-    public DescriptionInfoSectionData(LocalizationItem descriptionLocalizationItem) : base()
+    public DescriptionInfoPanelData(LocalizationItem descriptionLocalizationItem) : base()
     {
         DescriptionLocalizationItem = descriptionLocalizationItem;
     }
