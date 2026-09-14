@@ -22,7 +22,9 @@ public class CraftItemWidget : MonoBehaviour
 
     private FlickingImage flickingProgressBar;
     private CraftingModule craftingModule;
+
     private CraftItemInstance craftItem;
+    private CraftItemDefinition craftItemDefinition;
 
     private bool isSelected = false;
 
@@ -68,19 +70,30 @@ public class CraftItemWidget : MonoBehaviour
         UpdateProgressBar();
     }
 
-    public void Init(CraftingModule craftingModule, CraftItemInstance craftItem, SelectGroup selectGroup)
+    public void Init(CraftItemDefinition craftItem)
     {
-        if (craftingModule == null || craftItem == null) {
+        if (craftItem == null) {
             Debug.LogError($"[{nameof(CraftItemWidget)}] Invalid Init parameters");
             return;
         }
 
-        this.craftingModule = craftingModule;
-        this.craftItem = craftItem;
+        craftItemDefinition = craftItem;
 
-        if (button != null) {
-            button.SetSelectGroup(selectGroup);
+        UpdateSelected();
+        CreateProducedResourceWidget();
+        CreateConsumedResourcesWidget();
+        UpdateTimer();
+        UpdateProgressBar();
+    }
+
+    public void Init(CraftItemInstance craftItem)
+    {
+        if (craftItem == null) {
+            Debug.LogError($"[{nameof(CraftItemWidget)}] Invalid Init parameters");
+            return;
         }
+
+        this.craftItem = craftItem;
 
         UpdateSelected();
         CreateProducedResourceWidget();
@@ -91,6 +104,22 @@ public class CraftItemWidget : MonoBehaviour
         UpdateProgressBar();
 
         craftItem.OnCraftingSpeedTimeChanged += OnCraftingSpeedBonusChanged;
+    }
+
+    public void Init(CraftItemInstance craftItem, CraftingModule craftingModule, SelectGroup selectGroup)
+    {
+        if (craftingModule == null || craftItem == null) {
+            Debug.LogError($"[{nameof(CraftItemWidget)}] Invalid Init parameters");
+            return;
+        }
+
+        this.craftingModule = craftingModule;
+
+        if (button != null) {
+            button.SetSelectGroup(selectGroup);
+        }
+
+        Init(craftItem);
     }
 
     public void Select()

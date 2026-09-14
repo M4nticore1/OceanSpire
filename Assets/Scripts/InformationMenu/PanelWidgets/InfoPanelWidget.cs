@@ -2,8 +2,6 @@ using UnityEngine;
 
 public abstract class InfoPanelWidget : MonoBehaviour
 {
-    [SerializeField] private RectTransform rectTransform;
-
     protected virtual void HandleShow(InfoPanelData sectionData)
     {
 

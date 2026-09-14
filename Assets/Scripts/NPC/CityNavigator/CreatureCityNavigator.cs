@@ -427,7 +427,7 @@ public class CreatureCityNavigator : MonoBehaviour
 
     private void SortPathBuildings(List<Building> pathBuildings)
     {
-        for (int i = pathBuildings.Count - 2; i > 0; i--) {
+        for (int i = pathBuildings.Count - 2; i >= 0; i--) {
             var building = pathBuildings[i];
             if (building == null) continue;
             if (building.GetModule(typeof(ElevatorModule)) != null) continue;

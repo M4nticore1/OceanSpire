@@ -53,6 +53,7 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
     [field: SerializeField] public bool IsWorking { get; private set; } = false;
 
     // Electricity
+    public float EnergyConsumptionPerMinute => ownedBuilding != null && ownedBuilding.LevelDefinition != null ? ownedBuilding.LevelDefinition.EnergyConsumption : 0f;
     [field: SerializeField] public bool IsUnderEnergyShortage { get; private set; } = false;
 
     public event Action OnInited;

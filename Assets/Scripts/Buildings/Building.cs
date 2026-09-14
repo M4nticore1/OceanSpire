@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInformationable
+public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, ILocalizable, IInformationable
 {
     [Header("Data")]
     [SerializeField] protected BuildingDefinition buildingData;
@@ -63,6 +63,10 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
     public const float DemolishionResourcesRefundPercent = 0.5f;
 
     public bool IsInited { get; private set; } = false;
+
+    // IElectricible
+    public bool IsUnderEnergyShortage { get; private set; } = false;
+    public float EnergyConsumptionPerMinute => LevelDefinition != null ? LevelDefinition.EnergyConsumption : 0f;
 
     private CityStorage cityStorage => CityStorage.Instance;
     private RaidManager raidManager => RaidManager.Instance;
@@ -321,6 +325,17 @@ public abstract class Building : MonoBehaviour, IUpgradable, ILocalizable, IInfo
         if (NextLevelDefinition == null) return 0;
 
         return NextLevelDefinition.UpgradeTime;
+    }
+
+    // IElectricible
+    public void SetUnderEnergyShortage(bool value)
+    {
+        IsUnderEnergyShortage = value;
+    }
+
+    public bool ShouldSpendElectricity()
+    {
+        return false;
     }
 
     // Level Definition

@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class EnergyConsumptionInfoPanelController : StatInfoPanelController
 {
-    private IEnergyConsumptionable energyConsumptionable;
+    private IElectricible energyConsumptionable;
 
     protected override bool ShouldDisplay(IInformationable informationable)
     {
-        energyConsumptionable = informationable as IEnergyConsumptionable;
+        energyConsumptionable = informationable as IElectricible;
         if (energyConsumptionable == null) return false;
 
         return true;

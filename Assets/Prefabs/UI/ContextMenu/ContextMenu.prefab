@@ -190,15 +190,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomButton
   targetGraphic: {fileID: 4303588100183094219}
   contentGraphics: []
-  scaleRoot: {fileID: 436938216101768530}
-  isInteractable: 1
   isSelectable: 0
+  selectGroup: {fileID: 0}
   isScalable: 1
+  scaleRoot: {fileID: 436938216101768530}
+  isClickable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectGroup: {fileID: 0}
-  stateTransitionTime: 0.2
+  cancelPressWhenPointerMoving: 0
   state: 0
+  stateTransitionTime: 0.2
   idleState:
     bodyColor: {r: 1, g: 1, b: 1, a: 1}
     bodyColorHolder: {fileID: 0}
@@ -695,11 +696,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 325414fd39671a6468089e7c89d80820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
-  canvas: {fileID: 0}
   closeMethod: 2
-  slideTransitionSpeed: 10
+  animationSpeed: 10
   contentRoot: {fileID: 5125527298814516783}
   hideWhenClosed: 0
+  isShown: 0
+  canvas: {fileID: 0}
   openedScreenPositionAlpha: {x: 0, y: 0}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: 0, y: 1}
@@ -2160,7 +2162,7 @@ MonoBehaviour:
   m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 16
+  m_fontSizeMin: 32
   m_fontSizeMax: 36
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -2780,6 +2782,14 @@ PrefabInstance:
     - target: {fileID: 842732204736496586, guid: c6c20b8e5e77c72498e37b6241016a9b, type: 3}
       propertyPath: m_fontSize
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 950852568165066966, guid: c6c20b8e5e77c72498e37b6241016a9b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 950852568165066966, guid: c6c20b8e5e77c72498e37b6241016a9b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 950852568165066966, guid: c6c20b8e5e77c72498e37b6241016a9b, type: 3}
       propertyPath: m_LocalPosition.x

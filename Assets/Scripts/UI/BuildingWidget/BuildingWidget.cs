@@ -132,7 +132,7 @@ public class BuildingWidget : MonoBehaviour
 
     private void OnInformationButtonClicked()
     {
-        var informationMenu = BuildingInformationMenu.Instance;
+        var informationMenu = InformationMenu.Instance;
         if (informationMenu == null) return;
 
         informationMenu.Show(BuildingPrefab);

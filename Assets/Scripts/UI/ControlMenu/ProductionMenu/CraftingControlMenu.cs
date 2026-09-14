@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +6,8 @@ public class CraftingControlMenu : ControlMenu
 {
     [Header("Crafting Menu")]
     [SerializeField] private CraftItemWidget producedResourcePanelPrefab;
-    private List<CraftItemWidget> spawnedCraftResourcePanels = new();
 
-    [SerializeField] private LayoutGroup layoutGroup;
+    [SerializeField] private CraftsPanel craftsPanel;
     [SerializeField] private ScrollRect scrollRect;
     [SerializeField] private SelectGroup selectGroup;
     [SerializeField] private FitSizeToChildren fitSizeToChildren;
@@ -18,7 +16,6 @@ public class CraftingControlMenu : ControlMenu
 
     protected override void UpdateMenu()
     {
-        DestroyCraftWidgets();
         CreateCraftWidgets();
         FitLayoutGroupSize();
     }
@@ -48,47 +45,24 @@ public class CraftingControlMenu : ControlMenu
     {
         var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
         if (selectedBuilding == null) {
-            Debug.LogError("SelectedBuilding is not valid");
+            Debug.LogError($"[{nameof(EquipmentMenu)}] SelectedBuilding is not valid");
             return;
         }
 
         var module = selectedBuilding.GetComponent<CraftingModule>();
         if (module == null) {
-            Debug.LogError($"{selectedBuilding} does not have a CraftingModule");
+            Debug.LogError($"[{nameof(EquipmentMenu)}] {selectedBuilding} does not have a CraftingModule");
             return;
         }
 
         var craftingLevelData = module.ProductionLevelData;
         if (craftingLevelData == null) {
-            Debug.LogError($"{module} doesn not have a LevelData");
+            Debug.LogError($"[{nameof(EquipmentMenu)}] {module} doesn not have a LevelData");
             return;
         }
 
-        var craftItems = module.CraftItems;
         var craftDefinitions = craftingLevelData.CraftItems;
-
-        for (int i = 0; i < craftDefinitions.Length; i++) {
-            var craftItem = craftItems[i];
-            var craftDefinition = craftDefinitions[i];
-
-            var spawnedPanel = Instantiate(producedResourcePanelPrefab, layoutGroup.transform);
-            spawnedPanel.Init(module, craftItem, selectGroup);
-
-            spawnedCraftResourcePanels.Add(spawnedPanel);
-
-            if (i != module.GetIndexOfCurrentCraftItem()) continue;
-
-            spawnedPanel.Select();
-        }
-    }
-
-    private void DestroyCraftWidgets()
-    {
-        for (int i = spawnedCraftResourcePanels.Count - 1; i >= 0; i--) {
-            var panel = spawnedCraftResourcePanels[i];
-            Destroy(panel.gameObject);
-            spawnedCraftResourcePanels.RemoveAt(i);
-        }
+        craftsPanel.SetCraftsAndApply(module.CraftItems, module, selectGroup);
     }
 
     private void FitLayoutGroupSize()
@@ -101,6 +75,6 @@ public class CraftingControlMenu : ControlMenu
         yield return new WaitForEndOfFrame();
 
         scrollRect.verticalNormalizedPosition = 1f;
-        fitSizeToChildren.UpdateSizeDelay();
+        fitSizeToChildren.TryUpdateSizeDelay();
     }
 }

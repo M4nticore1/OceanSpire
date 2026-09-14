@@ -4,7 +4,7 @@ public abstract class InfoPanelController : MonoBehaviour
 {
     [SerializeField] private InfoPanelWidget infoPanel;
 
-    public void SetInformationable(IInformationable informationable)
+    public void SetInformationableAndUpdate(IInformationable informationable)
     {
         if (informationable == null) {
             Debug.LogError($"[{nameof(InfoPanelController)}] Informationable is not valid at {gameObject}!");

@@ -2,14 +2,23 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class InformationMenu : MonoBehaviour, IOpenable
+public class InformationMenu : MonoBehaviour, IOpenable
 {
+    public static InformationMenu Instance { get; private set; }
+
     [Header("Information")]
     [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private TextLocalizer nameText;
-    [SerializeField] private TextLocalizer descriptionText;
     [SerializeField] private Image thumbImage;
     [SerializeField] private CustomButton closeButton;
+
+    [Header("Description Text")]
+    [SerializeField] private TextLocalizer descriptionText;
+    [SerializeField] private FitSizeToContent descriptionTextFitSize;
+
+    [Header("Scroll Rect")]
+    [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private FitSizeToContent scrollRectFitSize;
 
     [Header("PanelControllers")]
     [SerializeField] private InfoPanelController[] infoPanelControllers; 
@@ -23,7 +32,11 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
 
     protected virtual void Awake()
     {
-        
+        if (Instance != null) {
+            return;
+        }
+
+        Instance = this;
     }
 
     protected virtual void OnEnable()
@@ -38,13 +51,13 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
 
     protected virtual void Subscribe()
     {
-        closeButton.OnReleased.AddListener(OnCloseButtonClicked);
+        closeButton.OnReleased.AddListener(HandleCloseButtonClicked);
         slidePanel.OnHidden += HandleHidden;
     }
 
     protected virtual void Unsubscribe()
     {
-        closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
+        closeButton.OnReleased.RemoveListener(HandleCloseButtonClicked);
         slidePanel.OnHidden -= HandleHidden;
     }
 
@@ -57,6 +70,8 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
         UpdateNameText();
         UpdateDescriptionText();
         UpdateImage();
+        UpdateScrollRect();
+
         InputStateManager.Instance.AddInputBlockTarget(this);
 
         OnShown?.Invoke();
@@ -96,7 +111,7 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
                 continue;
             }
 
-            panelController.SetInformationable(informationable);
+            panelController.SetInformationableAndUpdate(informationable);
         }
     }
 
@@ -112,6 +127,7 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
         if (informationable == null) return;
 
         descriptionText.SetLocalizationItem(informationable.GetInformationDescription());
+        descriptionTextFitSize.UpdateSize();
     }
 
     private void UpdateImage()
@@ -121,7 +137,13 @@ public abstract class InformationMenu : MonoBehaviour, IOpenable
         thumbImage.sprite = informationable.GetInformationImage();
     }
 
-    private void OnCloseButtonClicked()
+    private void UpdateScrollRect()
+    {
+        scrollRect.verticalNormalizedPosition = 1f;
+        scrollRectFitSize.UpdateSize();
+    }
+
+    private void HandleCloseButtonClicked()
     {
         Hide();
     }

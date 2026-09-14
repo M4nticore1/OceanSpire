@@ -26,7 +26,10 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
     }
 
     public CraftItemDefinition[] Crafts => ProductionLevelData.CraftItems;
-    public List<CraftItemInstance> CraftItems { get; private set; } = new();
+
+    private List<CraftItemInstance> craftItems = new();
+    public IReadOnlyList<CraftItemInstance> CraftItems => craftItems;
+
     public CraftItemInstance SelectedCraftItem { get; private set; }
 
     public float LevelBonus { get; private set; } = 0f;
@@ -99,7 +102,7 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
         CreateCraftItems();
         SetCraftingItemByIndex(craftingModuleData.CurrentCraftId);
 
-        if (SelectedCraftItem == null && CraftItems.Count > 0) {
+        if (SelectedCraftItem == null && craftItems.Count > 0) {
             SetCraftingItemByIndex(0);
         }
 
@@ -197,7 +200,7 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
     {
         base.SetUnderEnergyShortage(underEnergyShortage);
 
-        foreach (var craftItem in CraftItems) {
+        foreach (var craftItem in craftItems) {
             if (craftItem == null) continue;
 
             craftItem.SetEnergyShortageCraftingTimeCoefficient(underEnergyShortage ? energyShortageCraftTimeCoefficient : 1f);
@@ -233,7 +236,7 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
             RemoveCraftignItem();
         }
 
-        if (!CraftItems.Contains(craftItem)) return;
+        if (!craftItems.Contains(craftItem)) return;
 
         var text = craftItem != null ? craftItem.Definition.name : "null";
         SelectedCraftItem = craftItem;
@@ -242,9 +245,9 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
     public void SetCraftingItemByIndex(int index)
     {
         if (index < 0) return;
-        if (index >= CraftItems.Count) return;
+        if (index >= craftItems.Count) return;
 
-        SetCraftingItem(CraftItems[index]);
+        SetCraftingItem(craftItems[index]);
     }
 
     public void RemoveCraftignItem()
@@ -283,7 +286,7 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
     {
         LevelBonus = Mathf.Max(0, multiplier);
 
-        foreach (var item in CraftItems) {
+        foreach (var item in craftItems) {
             item.SetCraftingSpeedMultiplier(multiplier);
         }
     }
@@ -369,12 +372,12 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
 
     private void CreateCraftItems()
     {
-        CraftItems.Clear();
+        craftItems.Clear();
         if (!ProductionLevelData) return;
 
         foreach (var def in ProductionLevelData.CraftItems) {
             var item = def.CreateInstance(CraftItemData.Default());
-            if (item != null) CraftItems.Add(item);
+            if (item != null) craftItems.Add(item);
         }
     }
 
@@ -416,8 +419,8 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
 
     public int GetIndexOfCurrentCraftItem()
     {
-        if (CraftItems.Contains(SelectedCraftItem)) {
-            return CraftItems.IndexOf(SelectedCraftItem);
+        if (craftItems.Contains(SelectedCraftItem)) {
+            return craftItems.IndexOf(SelectedCraftItem);
         }
         else {
             return 0;
