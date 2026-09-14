@@ -185,7 +185,7 @@ public class WorkersControlMenu : ControlMenu
 
     private void UpdateScrollRectZie()
     {
-        fitSizeToChildren.TryUpdateSize();
+        fitSizeToChildren.UpdateSize();
     }
 
     private void UpdatePanelSizes()

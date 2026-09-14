@@ -41,7 +41,11 @@ public class CraftsPanel : MonoBehaviour
 
     private void CreateWidgets(IReadOnlyList<CraftItemDefinition> crafts)
     {
-        if (crafts == null) return;
+        if (crafts == null) {
+            Debug.LogError($"[{nameof(CraftsPanel)}] Crafts array is not valid!");
+            return;
+        }
+
         if (CraftItemWidget == null) return;
         if (layoutGroup == null) return;
 

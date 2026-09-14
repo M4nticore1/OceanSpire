@@ -3,5 +3,5 @@ using UnityEngine;
 
 public interface IRecipeProvider
 {
-    public CraftItemDefinition[] Crafts { get; }
+    public CraftItemDefinition[] CraftDefinitions { get; }
 }

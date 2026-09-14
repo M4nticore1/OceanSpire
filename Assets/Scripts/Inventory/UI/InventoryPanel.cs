@@ -126,7 +126,7 @@ public class InventoryPanel : MonoBehaviour
 
     private void UpdateLayoutGroupSize()
     {
-        fitSizeToChildren.TryUpdateSizeDelay();
+        fitSizeToChildren.UpdateSizeDelay();
     }
 
     private void UpdateEmptyTextActive()

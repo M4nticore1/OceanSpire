@@ -63,7 +63,7 @@ public class LocalizationManager
             if (languageCode == null) return item.name;
         }
 
-        return GetText(item.name, languageCode);
+        return GetLocalizedText(item.name, languageCode);
     }
 
     public string GetLocalizedText(LocalizationItem item, ILocalizable localizable)
@@ -90,7 +90,7 @@ public class LocalizationManager
         return text;
     }
 
-    public string GetText(string key, string languageCode = null)
+    public string GetLocalizedText(string key, string languageCode = null)
     {
         if (languageCode == null) {
             languageCode = GetCurrentLocalizationCode();
@@ -102,14 +102,14 @@ public class LocalizationManager
             Debug.LogError($"[{nameof(LocalizationManager)}] Cannot get deserialized localization for language: {languageCode}");
             if (languageCode == "en-US") return key;
 
-            return GetText(key, "en-US");
+            return GetLocalizedText(key, "en-US");
         }
 
         if (!localization.TryGetValue(key, out var text)) {
             Debug.LogError($"[{nameof(LocalizationManager)}] Localization {languageCode} key not found: '{key}'");
 
             if (languageCode != "en-US") {
-                return GetText(key, "en-US");
+                return GetLocalizedText(key, "en-US");
             }
             return key;
         }

@@ -10,32 +10,20 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 735686666319392503, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
       propertyPath: m_Name
-      value: DescriptionStatInfoPanel
+      value: ResidentsCapacityConsumptionStatInfoPanel
       objectReference: {fileID: 0}
     - target: {fileID: 1895565980002925063, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
       propertyPath: m_text
-      value: '{infoName} {infoValue}'
+      value: 'Residents capacity: {value}'
       objectReference: {fileID: 0}
     - target: {fileID: 1895565980002925063, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
-      propertyPath: m_margin.x
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 1895565980002925063, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
-      propertyPath: m_TextWrappingMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2538520197032459342, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2538520197032459342, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
+      propertyPath: m_fontSize
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 4279650474382309547, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 09b64a0887dac514ca8544a9a4fce084, type: 3}
+      objectReference: {fileID: 21300000, guid: 97de7ae163e1b39488e98e0e32e29f55, type: 3}
     - target: {fileID: 7769228310503365483, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -56,34 +44,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8234430606960476402, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 735686666319392503, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6645724373181606206}
+      addedObject: {fileID: 6476095297199099899}
   m_SourcePrefab: {fileID: 100100000, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
---- !u!1 &2006748875943649791 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6141544867779362206, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
+--- !u!114 &1058229497062611040 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -4589775079435123711, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
   m_PrefabInstance: {fileID: 5684178234176281697}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &2680651133489481482 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7769228310503365483, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
-  m_PrefabInstance: {fileID: 5684178234176281697}
-  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4960696147055276694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c3a1e28a53212a4498e0a9c85963f09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StatInfoPanelWidget
 --- !u!1 &4960696147055276694 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 735686666319392503, guid: 84bf35e2187aa2d41acb1b4ead56e556, type: 3}
   m_PrefabInstance: {fileID: 5684178234176281697}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6645724373181606206
+--- !u!114 &6476095297199099899
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,14 +77,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 4960696147055276694}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71be611b0727f0f4381a2e5d29107826, type: 3}
+  m_Script: {fileID: 11500000, guid: 9485bd265c321c74ca8ae9404c4f82c6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FitSizeToText
-  rect: {fileID: 2680651133489481482}
-  minHeight: 0
-  extraHeight: 0
-  includedTransforms:
-  - {fileID: 2006748875943649791}
-  includedHierarchyTransforms: []
-  excludedTransforms: []
-  excludedHierarchyTransforms: []
+  m_EditorClassIdentifier: Assembly-CSharp::ResidentsCapacityInfoPanelController
+  infoPanel: {fileID: 1058229497062611040}
+  placeHolderName: residentsCapacity

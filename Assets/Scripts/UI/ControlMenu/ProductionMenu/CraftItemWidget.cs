@@ -10,6 +10,7 @@ public class CraftItemWidget : MonoBehaviour
     [SerializeField] private ItemWidget craftResourceWidgetPrefab;
 
     [Header("UI")]
+    [SerializeField] private TextLocalizer craftItemNameText;
     [SerializeField] private CustomButton button;
     [SerializeField] private TextMeshProUGUI timer;
     [SerializeField] private Image progressBar;
@@ -73,12 +74,13 @@ public class CraftItemWidget : MonoBehaviour
     public void Init(CraftItemDefinition craftItem)
     {
         if (craftItem == null) {
-            Debug.LogError($"[{nameof(CraftItemWidget)}] Invalid Init parameters");
+            Debug.LogError($"[{nameof(CraftItemWidget)}] Invalid Init parameters!");
             return;
         }
 
         craftItemDefinition = craftItem;
 
+        UpdateCraftItemNameText();
         UpdateSelected();
         CreateProducedResourceWidget();
         CreateConsumedResourcesWidget();
@@ -89,27 +91,22 @@ public class CraftItemWidget : MonoBehaviour
     public void Init(CraftItemInstance craftItem)
     {
         if (craftItem == null) {
-            Debug.LogError($"[{nameof(CraftItemWidget)}] Invalid Init parameters");
+            Debug.LogError($"[{nameof(CraftItemWidget)}] Invalid Init parameters!");
             return;
         }
 
         this.craftItem = craftItem;
 
-        UpdateSelected();
-        CreateProducedResourceWidget();
-        CreateConsumedResourcesWidget();
-
         craftItem.UpdateCraftingTimeByFinishTime();
-        UpdateTimer();
-        UpdateProgressBar();
-
         craftItem.OnCraftingSpeedTimeChanged += OnCraftingSpeedBonusChanged;
+
+        Init(craftItem.Definition);
     }
 
     public void Init(CraftItemInstance craftItem, CraftingModule craftingModule, SelectGroup selectGroup)
     {
         if (craftingModule == null || craftItem == null) {
-            Debug.LogError($"[{nameof(CraftItemWidget)}] Invalid Init parameters");
+            Debug.LogError($"[{nameof(CraftItemWidget)}] Invalid Init parameters!");
             return;
         }
 
@@ -124,6 +121,7 @@ public class CraftItemWidget : MonoBehaviour
 
     public void Select()
     {
+        if (button == null) return;
         if (button.State == CustomButtonState.Selected) return;
 
         button.SetState(CustomButtonState.Selected);
@@ -132,6 +130,7 @@ public class CraftItemWidget : MonoBehaviour
 
     private void Deselect()
     {
+        if (button == null) return;
         if (button.State == CustomButtonState.Idle) return;
 
         button.SetState(CustomButtonState.Idle);
@@ -140,6 +139,7 @@ public class CraftItemWidget : MonoBehaviour
 
     private void UpdateSelected()
     {
+        if (button == null) return;
         if (craftItem == null) return;
         if (craftingModule == null) return;
 
@@ -157,8 +157,21 @@ public class CraftItemWidget : MonoBehaviour
         if (producedResourceSlot == null) return;
 
         var widget = Instantiate(craftResourceWidgetPrefab, producedResourceSlot.transform);
-        widget.SetItemDefinition(craftItem.Definition.ProduceItem.Definition);
-        widget.AddAmount(craftItem.Definition.ProduceItem);
+
+        if (craftItem != null) {
+            var definition = craftItem.Definition;
+            if (definition == null) return;
+
+            var produceItem = definition.ProduceItem;
+            if (produceItem == null) return;
+
+            widget.SetItemDefinition(produceItem.Definition);
+            widget.AddAmount(produceItem);
+        }
+        else if (craftItemDefinition != null) {
+            widget.SetItemDefinition(craftItemDefinition.ProduceItem.Definition);
+            widget.AddAmount(craftItemDefinition.ProduceItem);
+        }
     }
 
     private void CreateConsumedResourcesWidget()
@@ -166,14 +179,42 @@ public class CraftItemWidget : MonoBehaviour
         if (consumeResourceWidgetPrefab == null) return;
         if (consumedResourcesSlot == null) return;
 
-        foreach (var resource in craftItem.Definition.ConsumeResources) {
-            var widget = Instantiate(consumeResourceWidgetPrefab, consumedResourcesSlot.transform);
-            var definition = resource.Definition;
-
-            widget.SetItemDefinition(definition);
-            widget.AddAmount(CityStorage.Instance.Inventory.GetInventoryItem(definition.ItemId));
-            widget.SetLimit(resource);
+        CraftItemDefinition definition = null;
+        if (craftItem != null) {
+            definition = craftItem.Definition;
         }
+        else if (craftItemDefinition != null) {
+            definition = craftItemDefinition;
+        }
+
+        if (definition != null) {
+            foreach (var resource in definition.ConsumeResources) {
+                if (resource == null) continue;
+
+                var widget = Instantiate(consumeResourceWidgetPrefab, consumedResourcesSlot.transform);
+                var consumeDefinition = resource.Definition;
+
+                widget.SetItemDefinition(consumeDefinition);
+                widget.AddAmount(CityStorage.Instance.Inventory.GetInventoryItem(consumeDefinition.ItemId));
+                widget.SetLimit(resource);
+            }
+        }
+    }
+
+    private void UpdateCraftItemNameText()
+    {
+        if (craftItemNameText == null) return;
+
+        LocalizationItem localizationItem = null;
+
+        if (craftItem != null) {
+            localizationItem = craftItem.Definition.ProduceItem.Definition.NameLocalizationItem;
+        }
+        else if (craftItemDefinition != null) {
+            localizationItem = craftItemDefinition.ProduceItem.Definition.NameLocalizationItem;
+        }
+
+        craftItemNameText.SetLocalizationItem(localizationItem);
     }
 
     private void UpdateTimer()
@@ -181,34 +222,41 @@ public class CraftItemWidget : MonoBehaviour
         if (timer == null) return;
 
         var text = "";
-        if (isSelected) {
-            var craftTime = craftItem.GetCraftTimeWithBonus();
-            var currentCraftingTime = craftItem.CurrentCraftingTime;
+        if (craftItem != null) {
+            if (isSelected) {
+                var craftTime = craftItem.GetCraftTimeWithBonus();
+                var currentCraftingTime = craftItem.CurrentCraftingTime;
 
-            if (craftItem.IsCraftingFinished()) {
-                currentCraftingTime = craftTime;
+                if (craftItem.IsCraftingFinished()) {
+                    currentCraftingTime = craftTime;
+                }
+
+                currentCraftingTime = Mathf.Clamp(currentCraftingTime, 0, craftTime);
+                text = TimeFormatter.SecondToFractionalTimer(currentCraftingTime, craftTime);
+            }
+            else {
+                var targetTime = craftItem.GetCraftTimeWithBonus();
+                text = TimeFormatter.SecondsToMinuteTimer(targetTime);
             }
 
-            currentCraftingTime = Mathf.Clamp(currentCraftingTime, 0, craftTime);
-            text = TimeFormatter.SecondToFractionalTimer(currentCraftingTime, craftTime);
+            var bonus = craftItem.GetCraftingTimeBonusPercent() * 100f;
+            var absBonus = Mathf.Abs(bonus);
+            var bonusColorHex = ColorUtility.ToHtmlStringRGB(bonus > 0 ? positiveBonusColor : negativeBonusColor);
+            var bonusText = bonus > 0f ? $" <color=#{bonusColorHex}>(-{absBonus:F0}%)</color>" : bonus < 0f ? $" <color=#{bonusColorHex}>(+{absBonus:F0}%)</color>" : "";
+
+            text += bonusText;
         }
-        else {
-            var targetTime = craftItem.GetCraftTimeWithBonus();
-            text = TimeFormatter.SecondsToMinuteTimer(targetTime);
+        else if (craftItemDefinition != null) {
+            text = TimeFormatter.SecondsToTimer(craftItemDefinition.ProduceTime);
         }
 
-        var bonus = craftItem.GetCraftingTimeBonusPercent() * 100f;
-        var absBonus = Mathf.Abs(bonus);
-        var bonusColorHex = ColorUtility.ToHtmlStringRGB(bonus > 0 ? positiveBonusColor : negativeBonusColor);
-        var bonusText = bonus > 0f ? $" <color=#{bonusColorHex}>(-{absBonus:F0}%)</color>" : bonus < 0f ? $" <color=#{bonusColorHex}>(+{absBonus:F0}%)</color>" : "";
-
-        text += bonusText;
         timer.SetText(text);
     }
 
     private void UpdateProgressBar()
     {
         if (progressBar == null) return;
+        if (craftItem == null) return;
 
         var craftTime = craftItem.GetCraftTimeWithBonus();
         var currentCraftingTime = craftItem.CurrentCraftingTime;

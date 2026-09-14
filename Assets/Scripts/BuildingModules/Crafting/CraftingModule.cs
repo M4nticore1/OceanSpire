@@ -25,7 +25,7 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
         }
     }
 
-    public CraftItemDefinition[] Crafts => ProductionLevelData.CraftItems;
+    public CraftItemDefinition[] CraftDefinitions => ProductionLevelData.CraftItems;
 
     private List<CraftItemInstance> craftItems = new();
     public IReadOnlyList<CraftItemInstance> CraftItems => craftItems;

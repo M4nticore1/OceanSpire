@@ -140,7 +140,7 @@ public class InformationMenu : MonoBehaviour, IOpenable
     private void UpdateScrollRect()
     {
         scrollRect.verticalNormalizedPosition = 1f;
-        scrollRectFitSize.UpdateSize();
+        scrollRectFitSize.UpdateSizeDelay();
     }
 
     private void HandleCloseButtonClicked()

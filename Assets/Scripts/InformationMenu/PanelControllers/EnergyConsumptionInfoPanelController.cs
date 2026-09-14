@@ -9,7 +9,7 @@ public class EnergyConsumptionInfoPanelController : StatInfoPanelController
         energyConsumptionable = informationable as IElectricible;
         if (energyConsumptionable == null) return false;
 
-        return true;
+        return energyConsumptionable.EnergyConsumptionPerMinute > 0;
     }
 
     protected override InfoPanelData GetData(IInformationable informationable)

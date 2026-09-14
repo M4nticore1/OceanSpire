@@ -37,12 +37,12 @@ public abstract class FitSizeToContent : MonoBehaviour
 
     protected virtual void OnTransformChildrenChanged()
     {
-        TryUpdateSize();
+        UpdateSize();
     }
 
     protected abstract float GetHeight();
 
-    public void TryUpdateSizeDelay()
+    public void UpdateSizeDelay()
     {
         if (!ShouldUpdateSize()) return;
         
@@ -64,16 +64,10 @@ public abstract class FitSizeToContent : MonoBehaviour
         includedTransforms.Remove(go);
     }
 
-    public bool TryUpdateSize()
-    {
-        if (!ShouldUpdateSize()) return false;
-
-        UpdateSize();
-        return true;
-    }
-
     public void UpdateSize()
     {
+        if (!ShouldUpdateSize()) return;
+
         if (rect == null) {
             Debug.LogError($"[{nameof(FitSizeToContent)}] Rect is not valid at {this}!");
             return;
@@ -138,7 +132,7 @@ public abstract class FitSizeToContent : MonoBehaviour
 
         updateSizeCoroutine = null;
         Canvas.ForceUpdateCanvases();
-        TryUpdateSize();
+        UpdateSize();
     }
 }
 
@@ -155,7 +149,7 @@ public class FitSizeToContentEditor : Editor
         GUILayout.Space(10);
 
         if (GUILayout.Button("Update Size")) {
-            widget.TryUpdateSizeDelay();
+            widget.UpdateSizeDelay();
 
             EditorUtility.SetDirty(widget);
         }

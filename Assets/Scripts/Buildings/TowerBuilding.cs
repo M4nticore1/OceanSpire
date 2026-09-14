@@ -32,7 +32,7 @@ public enum NeighborMask
     All = Horizontal | Vertical
 }
 
-public class TowerBuilding : Building
+public class TowerBuilding : Building, IConnectable
 {
     public BuildingPlace BuildingPlace { get; private set; }
 
@@ -77,6 +77,9 @@ public class TowerBuilding : Building
             yield return GetConnectedBuilding(Direction.Down);
         }
     }
+
+    // IConnectable
+    public ConnectionType ConnectionType => Definition != null ? Definition.ConnectionType : ConnectionType.None;
 
     protected override void OnInit(BuildingData buildingData)
     {
@@ -292,6 +295,15 @@ public class TowerBuilding : Building
         }
 
         return network;
+    }
+
+    // ILocalizable
+    public override Dictionary<string, string> GetLocalization()
+    {
+        var dictionary = base.GetLocalization();
+        dictionary.Add("connectionType", LocalizationManager.Instance.GetLocalizedText(Definition.ConnectionType.ToString()));
+
+        return dictionary;
     }
 
     private void UpdateBuildingPlace(int floorIndex, int placeIndex)

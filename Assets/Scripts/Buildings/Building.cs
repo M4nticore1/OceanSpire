@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, ILocalizable, IInformationable
+public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRecipeProvider, ILocalizable, IInformationable
 {
     [Header("Data")]
     [SerializeField] protected BuildingDefinition buildingData;
@@ -67,6 +67,16 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, ILoc
     // IElectricible
     public bool IsUnderEnergyShortage { get; private set; } = false;
     public float EnergyConsumptionPerMinute => LevelDefinition != null ? LevelDefinition.EnergyConsumption : 0f;
+
+    // IRecipeProvider
+    public CraftItemDefinition[] CraftDefinitions {
+        get {
+            var craftingModule = GetComponent<CraftingModule>();
+            if (craftingModule == null) return null;
+
+            return craftingModule.CraftDefinitions;
+        }
+    }
 
     private CityStorage cityStorage => CityStorage.Instance;
     private RaidManager raidManager => RaidManager.Instance;
@@ -358,7 +368,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, ILoc
     }
 
     // Localization
-    public Dictionary<string, string> GetLocalization()
+    public virtual Dictionary<string, string> GetLocalization()
     {
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var startTime = constructionComponent.ConstructionStartTime;

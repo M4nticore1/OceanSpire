@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PopulationCapacityInfoPanelController : StatInfoPanelController
+public class ResidentsCapacityInfoPanelController : StatInfoPanelController
 {
     private PopulationCapacityProvider populationCapacityProvider;
 
