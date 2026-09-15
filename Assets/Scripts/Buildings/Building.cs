@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRecipeProvider, ILocalizable, IInformationable
+public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRecipeProvider, IResidentsCapacityProvider, IBuildingSlotsProvider, IWanderersCooldownProvider, ILocalizable, IInformationable
 {
     [Header("Data")]
     [SerializeField] protected BuildingDefinition buildingData;
@@ -71,10 +72,53 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
     // IRecipeProvider
     public CraftItemDefinition[] CraftDefinitions {
         get {
-            var craftingModule = GetComponent<CraftingModule>();
-            if (craftingModule == null) return null;
+            var recipeProviders = GetComponents<IRecipeProvider>().ToList();
+            if (recipeProviders == null) return null;
 
-            return craftingModule.CraftDefinitions;
+            recipeProviders.Remove(this);
+            if (recipeProviders.Count <= 0) return null;
+
+            return recipeProviders[0].CraftDefinitions;
+        }
+    }
+
+    // IResidentsCapacityProvider
+    public int ResidentsCapacity => LevelDefinition.MaxHumansCount;
+    //get {
+    //        var residentsCapacityProviders = GetComponents<IResidentsCapacityProvider>().ToList();
+    //        if (residentsCapacityProviders == null) return 0;
+
+    //        residentsCapacityProviders.Remove(this);
+    //        if (residentsCapacityProviders.Count <= 0) return 0;
+
+    //        return residentsCapacityProviders[0].ResidentsCapacity;
+    //    }
+    //}
+
+    // IBuildingSlotsProvider
+    public int BuildingSlotsCount {
+        get {
+            var buildingSlotsProvider = GetComponents<IBuildingSlotsProvider>().ToList();
+            if (buildingSlotsProvider == null) return 0;
+
+            buildingSlotsProvider.Remove(this);
+            if (buildingSlotsProvider.Count <= 0) return 0;
+
+            return buildingSlotsProvider[0].BuildingSlotsCount;
+        }
+    }
+
+    // IWanderersCooldownProvider
+    public float WanderersCooldownReduction
+    {
+        get {
+            var wanderersCooldownProvider = GetComponents<IWanderersCooldownProvider>().ToList();
+            if (wanderersCooldownProvider == null) return 0;
+
+            wanderersCooldownProvider.Remove(this);
+            if (wanderersCooldownProvider.Count <= 0) return 0;
+
+            return wanderersCooldownProvider[0].WanderersCooldownReduction;
         }
     }
 

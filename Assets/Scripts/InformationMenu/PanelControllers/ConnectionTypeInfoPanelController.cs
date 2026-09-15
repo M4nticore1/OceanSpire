@@ -16,6 +16,6 @@ public class ConnectionTypeInfoPanelController : StatInfoPanelController
         var definition = towerBuilding.Definition;
         if (definition == null) return null;
 
-        return new StatInfoPanelData(definition.ConnectionType.ToString(), "connectionType");
+        return new StatInfoPanelData(definition.ConnectionType.ToString(), PlaceHolderName);
     }
 }

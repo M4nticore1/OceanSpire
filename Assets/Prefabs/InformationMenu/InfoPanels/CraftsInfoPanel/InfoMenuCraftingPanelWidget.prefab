@@ -601,6 +601,7 @@ MonoBehaviour:
   progressBar: {fileID: 0}
   producedResourceSlot: {fileID: 2498394082018027909}
   consumedResourcesSlot: {fileID: 277101685953309899}
+  useStorageAmount: 0
   positiveBonusColor: {r: 0.25, g: 1, b: 0.25, a: 1}
   negativeBonusColor: {r: 1, g: 0.25, b: 0.25, a: 1}
 --- !u!1 &5403865628626773211

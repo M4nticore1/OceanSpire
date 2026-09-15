@@ -2,17 +2,18 @@ using UnityEngine;
 
 public class ResidentsCapacityInfoPanelController : StatInfoPanelController
 {
-    private PopulationCapacityProvider populationCapacityProvider;
+    private IResidentsCapacityProvider residentsCapacityProvider;
 
     protected override bool ShouldDisplay(IInformationable informationable)
     {
-        populationCapacityProvider = informationable as PopulationCapacityProvider;
+        residentsCapacityProvider = informationable as IResidentsCapacityProvider;
+        if (residentsCapacityProvider == null) return false;
 
-        return populationCapacityProvider != null;
+        return residentsCapacityProvider.ResidentsCapacity > 0;
     }
 
     protected override InfoPanelData GetData(IInformationable informationable)
     {
-        return new StatInfoPanelData(populationCapacityProvider.PopulationCapacity.ToString(), "populationCapacity");
+        return new StatInfoPanelData(residentsCapacityProvider.ResidentsCapacity.ToString(), PlaceHolderName);
     }
 }

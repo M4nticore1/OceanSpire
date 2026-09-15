@@ -6,6 +6,7 @@ public class CraftsPanel : MonoBehaviour
 {
     [SerializeField] private CraftItemWidget CraftItemWidget;
     [SerializeField] private LayoutGroup layoutGroup;
+    [SerializeField] private FitSizeToContent fitSize;
 
     private List<CraftItemWidget> spawnedWidgets = new();
 
@@ -25,18 +26,21 @@ public class CraftsPanel : MonoBehaviour
     {
         DestroyWidgets();
         CreateWidgets(crafts);
+        UpdateSize();
     }
 
     public void SetCraftsAndApply(IReadOnlyList<CraftItemInstance> crafts)
     {
         DestroyWidgets();
         CreateWidgets(crafts);
+        UpdateSize();
     }
 
     public void SetCraftsAndApply(IReadOnlyList<CraftItemInstance> crafts, CraftingModule craftingModule, SelectGroup selectGroup)
     {
         DestroyWidgets();
         CreateWidgets(crafts, craftingModule, selectGroup);
+        UpdateSize();
     }
 
     private void CreateWidgets(IReadOnlyList<CraftItemDefinition> crafts)
@@ -104,5 +108,12 @@ public class CraftsPanel : MonoBehaviour
             Destroy(panel.gameObject);
             spawnedWidgets.RemoveAt(i);
         }
+    }
+
+    private void UpdateSize()
+    {
+        if (fitSize == null) return;
+
+        fitSize.UpdateSize();
     }
 }

@@ -31,12 +31,17 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
     public BuildingModuleLevelData LevelData
     {
         get {
-            if (!ownedBuilding) {
-                Debug.LogError($"[{nameof(BuildingModule)}] Owned Building is not valid on {name}!");
-                return null;
+            Building building = null;
+            if (ownedBuilding != null) {
+                building = ownedBuilding;
+            }
+            else {
+                building = GetComponent<Building>();
             }
 
-            int index = ownedBuilding.LevelComponent.Level - 1;
+            if (building == null) return null;
+
+            int index = building.LevelComponent.Level - 1;
             if (index >= 0 && index < LevelsData.Length) {
                 return LevelsData[index];
             }

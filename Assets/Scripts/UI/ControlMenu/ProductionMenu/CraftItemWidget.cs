@@ -16,6 +16,7 @@ public class CraftItemWidget : MonoBehaviour
     [SerializeField] private Image progressBar;
     [SerializeField] private Transform producedResourceSlot;
     [SerializeField] private LayoutGroup consumedResourcesSlot;
+    [SerializeField] private bool useStorageAmount = true;
 
     [Header("Color")]
     [SerializeField] private Color positiveBonusColor = Color.HSVToRGB(120, 75, 100);
@@ -195,8 +196,15 @@ public class CraftItemWidget : MonoBehaviour
                 var consumeDefinition = resource.Definition;
 
                 widget.SetItemDefinition(consumeDefinition);
-                widget.AddAmount(CityStorage.Instance.Inventory.GetInventoryItem(consumeDefinition.ItemId));
-                widget.SetLimit(resource);
+
+                if (useStorageAmount) {
+                    var amountItem = CityStorage.Instance.Inventory.GetInventoryItem(consumeDefinition.ItemId);
+                    widget.AddAmount(amountItem);
+                    widget.SetLimit(resource);
+                }
+                else {
+                    widget.AddAmount(resource);
+                }
             }
         }
     }
