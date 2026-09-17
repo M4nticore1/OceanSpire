@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4233336605113030852}
   - component: {fileID: 848859100641501343}
   m_Layer: 5
-  m_Name: RecourceAmoutText
+  m_Name: ResourceAmoutText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25.4
+  m_fontSize: 32
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 9148926704265015618}
   - component: {fileID: 6174197575604330627}
   m_Layer: 5
-  m_Name: RecourceImageBackground
+  m_Name: ResourceImageBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 929842453350817400}
   - component: {fileID: 1011011194214973529}
   m_Layer: 5
-  m_Name: RecourceAmountBar
+  m_Name: ResourceAmountBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -300,7 +300,7 @@ GameObject:
   - component: {fileID: 6414889056416470293}
   - component: {fileID: 156902851282794076}
   m_Layer: 5
-  m_Name: RecourceAmountBarBackground
+  m_Name: ResourceAmountBarBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -419,6 +419,7 @@ MonoBehaviour:
   itemDefinition: {fileID: 0}
   isCityItem: 0
   useLimit: 1
+  zeroAmountDestroy: 0
   infoButton: {fileID: 0}
   itemNameText: {fileID: 0}
   resourceAmountText: {fileID: 848859100641501343}
@@ -516,7 +517,7 @@ GameObject:
   - component: {fileID: 4461306707417322272}
   - component: {fileID: 353891536657977764}
   m_Layer: 5
-  m_Name: RecourceImage
+  m_Name: ResourceImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

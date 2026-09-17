@@ -418,7 +418,7 @@ PrefabInstance:
     - target: {fileID: 2404976083511974304, guid: 1fcc63cf914a1be42a39e9d18ed16f29, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: c58bed4acd994c047930a511575e2728, type: 3}
+      objectReference: {fileID: 21300000, guid: 70d0a73dd7a035143addcca2e3ae6db1, type: 3}
     - target: {fileID: 5941204028790592572, guid: 1fcc63cf914a1be42a39e9d18ed16f29, type: 3}
       propertyPath: m_Name
       value: WeaponsButton
@@ -1361,7 +1361,7 @@ PrefabInstance:
     - target: {fileID: 3511029244653276115, guid: 6b86a49e2ff04d749a91b074c4fcb335, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: c58bed4acd994c047930a511575e2728, type: 3}
+      objectReference: {fileID: 21300000, guid: 70d0a73dd7a035143addcca2e3ae6db1, type: 3}
     - target: {fileID: 3972153936313248552, guid: 6b86a49e2ff04d749a91b074c4fcb335, type: 3}
       propertyPath: m_SizeDelta.x
       value: -120
