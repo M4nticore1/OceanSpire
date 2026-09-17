@@ -2,23 +2,38 @@ using UnityEngine;
 
 public abstract class InfoPanelWidget : MonoBehaviour
 {
-    protected virtual void HandleShow(InfoPanelData sectionData)
+    public InfoPanelData InfoPanelData { get; private set; }
+
+    protected virtual void OnEnable()
     {
 
     }
 
-    public void Show(InfoPanelData panelData)
+    protected virtual void OnDisable()
     {
-        if (panelData == null) return;
+
+    }
+
+    protected virtual void HandleShow(InfoPanelData infoPanelData)
+    {
+
+    }
+
+    public void Show(InfoPanelData infoPanelData)
+    {
+        if (infoPanelData == null) {
+            Debug.LogError($"[{nameof(InfoPanelWidget)}] Info Panel Widget Data not valid at {gameObject}!");
+            return;
+        }
+
+        InfoPanelData = infoPanelData;
 
         gameObject.SetActive(true);
-        HandleShow(panelData);
+        HandleShow(infoPanelData);
     }
 
     public void Hide()
     {
-        //var sizeDelta = rectTransform.sizeDelta;
-        //rectTransform.sizeDelta = new Vector2(sizeDelta.x, 0);
         gameObject.SetActive(false);
     }
 }

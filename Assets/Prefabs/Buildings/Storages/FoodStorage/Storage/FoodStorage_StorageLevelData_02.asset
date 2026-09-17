@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: FoodStorage_StorageLevelData_02
   m_EditorClassIdentifier: 
   stacks:
-  - stackEnum: 2
+  - definition: {fileID: 11400000, guid: 3507e61b7d0df5d419d29887d9de711b, type: 2}
     amount: 75
-  - stackEnum: 7
+    items: []
+  - definition: {fileID: 11400000, guid: d28522b2ee87b114098cdeca16a9906f, type: 2}
     amount: 30
+    items: []
   raidLossRate: 0.25

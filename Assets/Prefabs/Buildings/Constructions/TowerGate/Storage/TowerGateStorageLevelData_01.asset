@@ -13,41 +13,31 @@ MonoBehaviour:
   m_Name: TowerGateStorageLevelData_01
   m_EditorClassIdentifier: 
   stacks:
-  - stackEnum: 0
-    limit: 8
-  - stackEnum: 1
-    limit: 100
-  - stackEnum: 2
-    limit: 100
-  - stackEnum: 3
-    limit: 10000
-  - stackEnum: 4
-    limit: 5000
-  - stackEnum: 5
-    limit: 1000
-  - stackEnum: 6
-    limit: 2500
-  - stackEnum: 7
-    limit: 25
-  - stackEnum: 8
-    limit: 10
-  storageItems:
-  - definition: {fileID: 0}
-    amount: 4
-  - definition: {fileID: 0}
+  - definition: {fileID: 11400000, guid: 9f3eab9703f96e34ca97a436bd161413, type: 2}
+    amount: 8
+    items: []
+  - definition: {fileID: 11400000, guid: bf3a59a025f09c24cb89491414a4afce, type: 2}
     amount: 100
-  - definition: {fileID: 0}
+    items: []
+  - definition: {fileID: 11400000, guid: 3507e61b7d0df5d419d29887d9de711b, type: 2}
     amount: 100
-  - definition: {fileID: 0}
-    amount: 15000
-  - definition: {fileID: 0}
-    amount: 2000
-  - definition: {fileID: 0}
+    items: []
+  - definition: {fileID: 11400000, guid: 33d3cf8e23841914db2733a425906a52, type: 2}
+    amount: 10000
+    items: []
+  - definition: {fileID: 11400000, guid: 242e2c0e9a9d4f1419c1f92cf1e05e54, type: 2}
+    amount: 5000
+    items: []
+  - definition: {fileID: 11400000, guid: 2c728cb2482d6e14ea7ba2eb303ce811, type: 2}
     amount: 1000
-  - definition: {fileID: 0}
-    amount: 1000
-  storageItemCategories:
-  - itemCategory: 3
+    items: []
+  - definition: {fileID: 11400000, guid: c7d7fa8913f4d294f8f0ef5e9e4c0f49, type: 2}
+    amount: 2500
+    items: []
+  - definition: {fileID: 11400000, guid: d28522b2ee87b114098cdeca16a9906f, type: 2}
+    amount: 25
+    items: []
+  - definition: {fileID: 11400000, guid: b3933934072d971488571515a18cf8a1, type: 2}
     amount: 10
-  - itemCategory: 2
-    amount: 10
+    items: []
+  raidLossRate: 0

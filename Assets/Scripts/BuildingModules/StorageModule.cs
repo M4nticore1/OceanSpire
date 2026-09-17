@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [AddComponentMenu("BuildingModules/Storage Building Module")]
-public class StorageModule : BuildingModule, IRaidable
+public class StorageModule : BuildingModule, IStorageProvider, IRaidable
 {
     public StorageModuleLevelData LastStorageLevelData => LastLevelData as StorageModuleLevelData;
     public StorageModuleLevelData StorageLevelData => LevelData as StorageModuleLevelData;
 
     private bool IsLimitAdded = false;
     private Coroutine addAndRemoveLimitCoroutine;
+
+    // IStorageProvider
+    public IReadOnlyList<ItemStackInstance> StorageStacks => StorageLevelData != null ? StorageLevelData.Stacks : null;
 
     private CityStorage cityStorage => CityStorage.Instance;
 
@@ -48,17 +51,17 @@ public class StorageModule : BuildingModule, IRaidable
         var cityStorage = CityStorage.Instance;
         if (cityStorage == null) return items;
 
-        var levelStacksMap = new Dictionary<ItemStackEnum, ItemStack>();
+        var levelStacksMap = new Dictionary<ItemStackDefinition, ItemStackInstance>();
         foreach (var stack in StorageLevelData.Stacks) {
             if (stack == null) continue;
-            if (levelStacksMap.ContainsKey(stack.StackEnum)) continue;
+            if (levelStacksMap.ContainsKey(stack.Definition)) continue;
 
-            levelStacksMap.Add(stack.StackEnum, stack);
+            levelStacksMap.Add(stack.Definition, stack);
         }
 
         foreach (var cityItem in cityStorage.Inventory.Items) {
             if (cityItem.Stack == null) continue;
-            if (!levelStacksMap.TryGetValue(cityItem.Stack.StackEnum, out var levelStack)) continue;
+            if (!levelStacksMap.TryGetValue(cityItem.Stack.Definition, out var levelStack)) continue;
 
             var cityAmount = cityItem.Amount;
             if (cityAmount <= 0) continue;
@@ -115,7 +118,10 @@ public class StorageModule : BuildingModule, IRaidable
         if (!cityStorage) return;
 
         foreach (var stack in levelData.Stacks) {
-            cityStorage.Inventory.AddLimit(stack.StackEnum, stack.Amount);
+            if (stack == null) continue;
+            if (stack.Definition == null) continue;
+
+            cityStorage.Inventory.AddLimit(stack.Definition.StackId, stack.Amount);
         }
 
         IsLimitAdded = true;
@@ -128,7 +134,10 @@ public class StorageModule : BuildingModule, IRaidable
         if (!cityStorage) return;
 
         foreach (var stack in levelData.Stacks) {
-            cityStorage.Inventory.RemoveLimit(stack.StackEnum, stack.Amount);
+            if (stack == null) continue;
+            if (stack.Definition == null) continue;
+
+            cityStorage.Inventory.RemoveLimit(stack.Definition.StackId, stack.Amount);
         }
 
         IsLimitAdded = false;

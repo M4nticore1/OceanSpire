@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class StorageInfoPanelData : InfoPanelData
 {
-    public IReadOnlyList<ItemStack> Items { get; private set; }
+    public IReadOnlyList<ItemStackInstance> Stacks { get; private set; }
 
-    public StorageInfoPanelData(IReadOnlyList<ItemStack> items) : base()
+    public StorageInfoPanelData(IReadOnlyList<ItemStackInstance> items) : base()
     {
-        Items = items;
+        Stacks = items;
     }
 }

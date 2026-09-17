@@ -13,7 +13,7 @@ public class DiscardItemMenu : MonoBehaviour, IOpenable
     [SerializeField] private Slider amountSlider;
     [SerializeField] private CustomButton discardButton;
     [SerializeField] private CustomButton closeButton;
-    [SerializeField] private float startDiscardPercent = 0.1f;
+    [SerializeField] private float startDiscardPercent = 0.5f;
 
     private ItemInstance item;
     private int amountToDiscard = 0;

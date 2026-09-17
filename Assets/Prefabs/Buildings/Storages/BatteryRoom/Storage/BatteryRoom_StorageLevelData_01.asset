@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BatteryRoom_StorageLevelData_01
   m_EditorClassIdentifier: 
   stacks:
-  - stackEnum: 1
+  - definition: {fileID: 11400000, guid: bf3a59a025f09c24cb89491414a4afce, type: 2}
     amount: 25
+    items: []
   raidLossRate: 0.1

@@ -133,9 +133,11 @@ MonoBehaviour:
   minHeight: 220
   extraHeight: 40
   includedTransforms: []
+  includedHierarchyTransforms: []
   excludedTransforms:
   - {fileID: 3798309038442213724}
   - {fileID: 562254721270001337}
+  excludedHierarchyTransforms: []
 --- !u!1 &3798309038442213724
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,8 +203,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

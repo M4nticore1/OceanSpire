@@ -31,7 +31,7 @@ public class SelectedBuildingInformationDisplay : SelectedDisplay
 
         if (informationable.GetInformationName() == null) return false;
         if (informationable.GetInformationDescription() == null) return false;
-        if (informationable.GetInformationImage() == null) return false;
+        if (informationable.GetInformationIcon() == null) return false;
 
         return true;
     }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: SimpleBoat_Definition
   m_EditorClassIdentifier: 
   boatId: 0
-  boatIdName: Simple Boat
   boatSpeed: 5
-  nameLocalization: {fileID: 11400000, guid: 478114fd9bdcb964db08b278be8d987c, type: 2}
+  nameLocalizationItem: {fileID: 11400000, guid: 478114fd9bdcb964db08b278be8d987c, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 472589b0cb2eb834cbee6ac98ceed46c, type: 2}
+  sprite: {fileID: 21300000, guid: db23e822ed6cc1c4a93560663be52faf, type: 3}

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: WeaponStorage_StorageLevelData_01
   m_EditorClassIdentifier: 
   stacks:
-  - stackEnum: 8
+  - definition: {fileID: 11400000, guid: b3933934072d971488571515a18cf8a1, type: 2}
     amount: 5
+    items: []
   raidLossRate: 0.25

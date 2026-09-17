@@ -14,6 +14,6 @@ public class WanderersCooldownInfoPanelController : StatInfoPanelController
 
     protected override InfoPanelData GetData(IInformationable informationable)
     {
-        return new StatInfoPanelData(wanderersCooldownProvider.WanderersCooldownReduction.ToString(), PlaceHolderName);
+        return new StatInfoPanelData((wanderersCooldownProvider.WanderersCooldownReduction * 100).ToString(), PlaceHolderName);
     }
 }

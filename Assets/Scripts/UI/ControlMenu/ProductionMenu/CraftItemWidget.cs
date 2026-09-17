@@ -17,6 +17,7 @@ public class CraftItemWidget : MonoBehaviour
     [SerializeField] private Transform producedResourceSlot;
     [SerializeField] private LayoutGroup consumedResourcesSlot;
     [SerializeField] private bool useStorageAmount = true;
+    [SerializeField] private bool useConsumeItemsColor = true;
 
     [Header("Color")]
     [SerializeField] private Color positiveBonusColor = Color.HSVToRGB(120, 75, 100);
@@ -196,6 +197,7 @@ public class CraftItemWidget : MonoBehaviour
                 var consumeDefinition = resource.Definition;
 
                 widget.SetItemDefinition(consumeDefinition);
+                widget.UseAmountColors = useConsumeItemsColor;
 
                 if (useStorageAmount) {
                     var amountItem = CityStorage.Instance.Inventory.GetInventoryItem(consumeDefinition.ItemId);

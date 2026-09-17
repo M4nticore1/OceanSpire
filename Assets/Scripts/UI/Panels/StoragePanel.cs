@@ -5,63 +5,72 @@ using UnityEngine.UI;
 public class StoragePanel : MonoBehaviour
 {
     [Header("Prefabs")]
-    [SerializeField] private ItemWidget itemWidgetPrefab;
+    [SerializeField] private ItemStackWidget itemStackWidgetPrefab;
 
     [Header("UI")]
     [SerializeField] private LayoutGroup layoutGroup;
     [SerializeField] private FitSizeToContent fitSize;
 
-    private List<ItemWidget> spawnedWidgets = new();
+    private List<ItemStackWidget> spawnedWidgets = new();
 
     private void Awake()
     {
-        if (itemWidgetPrefab == null) {
+        if (itemStackWidgetPrefab == null) {
             Debug.LogError($"[{nameof(StoragePanel)}] Item Widget Prefab is not valid!");
         }
     }
 
-    public void SetItemsAndApply(IReadOnlyList<ItemInstance> items)
+    public void SetStacksAndApply(IReadOnlyList<ItemStackInstance> stacks)
     {
-        if (items == null) return;
+        if (stacks == null)
+            return;
 
         DestroyWidgets();
-        CreateWidgets(items);
+        CreateWidgets(stacks);
         UpdateSize();
     }
 
-    private void CreateWidgets(IReadOnlyList<ItemInstance> items)
+    private void CreateWidgets(IReadOnlyList<ItemStackInstance> stacks)
     {
-        if (items == null) {
-            Debug.LogError($"[{nameof(StoragePanel)}] Items is not valid!");
+        if (stacks == null) {
+            Debug.LogError($"[{nameof(StoragePanel)}] Stacks is not valid!");
             return;
         }
 
-        if (itemWidgetPrefab == null) return;
+        if (itemStackWidgetPrefab == null)
+            return;
 
-        foreach (var item in items) {
-            if (item == null) continue;
+        foreach (var stack in stacks) {
+            if (stack == null)
+                continue;
 
-            CreateWidget(item);
+            CreateWidget(stack);
         }
     }
 
-    private void CreateWidget(ItemInstance item)
+    private void CreateWidget(ItemStackInstance stackInstance)
     {
-        if (item == null) return;
+        if (stackInstance == null) {
+            Debug.LogError($"[{nameof(StoragePanel)}] Stack Instance is not valid!");
+            return;
+        }
 
-        var widget = Instantiate(itemWidgetPrefab, layoutGroup.transform);
-        widget.AddAmount(item);
+        var widget = Instantiate(itemStackWidgetPrefab, layoutGroup.transform);
+        widget.SetStackInstance(stackInstance);
+        widget.AddAmount(stackInstance);
 
         spawnedWidgets.Add(widget);
     }
 
     private void DestroyWidgets()
     {
-        if (spawnedWidgets == null) return;
+        if (spawnedWidgets == null)
+            return;
 
         for (int i = spawnedWidgets.Count - 1; i >= 0; --i) {
             var widget = spawnedWidgets[i];
-            if (widget == null) continue;
+            if (widget == null)
+                continue;
 
             Destroy(widget.gameObject);
             spawnedWidgets.RemoveAt(i);
@@ -70,8 +79,9 @@ public class StoragePanel : MonoBehaviour
 
     private void UpdateSize()
     {
-        if (fitSize == null) return;
+        if (fitSize == null)
+            return;
 
-        fitSize.UpdateSize();
+        fitSize.RunUpdateSizeEndOfFrame();
     }
 }

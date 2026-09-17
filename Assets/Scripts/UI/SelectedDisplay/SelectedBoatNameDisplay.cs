@@ -12,7 +12,7 @@ public class SelectedBoatNameDisplay : SelectedDisplay
         var boat = selectComponent.GetComponent<Boat>();
         if (!boat) return;
 
-        textLocalizer.SetLocalizationItem(boat.Definition.NameLocalization);
+        textLocalizer.SetLocalizationItem(boat.Definition.NameLocalizationItem);
     }
 
     protected override bool ShouldDisplay(SelectComponent selectComponent)

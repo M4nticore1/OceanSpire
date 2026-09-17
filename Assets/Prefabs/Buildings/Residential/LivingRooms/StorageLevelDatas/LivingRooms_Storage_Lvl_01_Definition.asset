@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: LivingRooms_Storage_Lvl_01_Definition
   m_EditorClassIdentifier: 
   stacks:
-  - stackEnum: 0
+  - definition: {fileID: 11400000, guid: 9f3eab9703f96e34ca97a436bd161413, type: 2}
     amount: 4
+    items: []
   raidLossRate: 0

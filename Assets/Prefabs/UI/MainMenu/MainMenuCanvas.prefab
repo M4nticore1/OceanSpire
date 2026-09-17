@@ -353,8 +353,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac0a64847ccd6a40861813768ff9708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FitSizeToChildren
+  rect: {fileID: 0}
   minHeight: 0
   extraHeight: 0
+  includedTransforms: []
+  includedHierarchyTransforms: []
+  excludedTransforms: []
+  excludedHierarchyTransforms: []
 --- !u!1 &2714734492072594771
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,15 +451,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomButton
   targetGraphic: {fileID: 1929858873444939122}
   contentGraphics: []
-  scaleRoot: {fileID: 1611743849882394720}
-  isInteractable: 1
   isSelectable: 0
+  selectGroup: {fileID: 0}
   isScalable: 1
+  scaleRoot: {fileID: 1611743849882394720}
+  isClickable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectGroup: {fileID: 0}
-  stateTransitionTime: 0.2
+  cancelPressWhenPointerMoving: 0
   state: 0
+  stateTransitionTime: 0.2
   idleState:
     bodyColor: {r: 0.8509804, g: 0.7639483, b: 0.63823533, a: 1}
     bodyColorHolder: {fileID: 0}
@@ -1154,8 +1160,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8753247024108162928}
   - {fileID: 3882428502457202745}
+  - {fileID: 8753247024108162928}
   m_Father: {fileID: 4479105931789856184}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -1872,7 +1878,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 220
+      value: -220
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2244,7 +2250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -220
+      value: 220
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchoredPosition.y

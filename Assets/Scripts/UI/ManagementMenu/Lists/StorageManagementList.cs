@@ -5,7 +5,7 @@ public class StorageManagementList : ManagementList
     [SerializeField] private ItemWidget itemWidgetPrefab;
     [SerializeField] private ItemWidget stackWidget;
     [SerializeField] private ItemCategory itemCategory;
-    [SerializeField] private ItemStackEnum itemStack;
+    [SerializeField] private ItemStackId itemStack;
 
     private void OnEnable()
     {
@@ -36,13 +36,16 @@ public class StorageManagementList : ManagementList
 
     private void TryUpdateStack()
     {
-        if (stackWidget == null) return;
+        if (stackWidget == null)
+            return;
 
         var stack = CityStorage.Instance.Inventory.GetStack(itemStack);
-        if (stack == null) return;
+        if (stack == null)
+            return;
 
-        foreach (var item in stack.ItemAmounts) {
-            if (item == null) continue;
+        foreach (var item in stack.Items) {
+            if (item == null)
+                continue;
 
             stackWidget.AddAmount(item);
         }

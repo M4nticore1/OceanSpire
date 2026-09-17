@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +25,8 @@ public class InformationMenu : MonoBehaviour, IOpenable
     [Header("PanelControllers")]
     [SerializeField] private InfoPanelController[] infoPanelControllers; 
 
-    private IInformationable informationable;
+    private List<IInformationable> informationables = new();
+    private IInformationable shownInformationable => informationables.Count > 0 ? informationables[informationables.Count - 1] : null;
 
     public bool IsShown { get; private set; } = false;
 
@@ -66,13 +69,11 @@ public class InformationMenu : MonoBehaviour, IOpenable
         IsShown = true;
         slidePanel.Show();
 
-        SetPanelTargets();
-        UpdateNameText();
-        UpdateDescriptionText();
-        UpdateImage();
-        UpdateScrollRect();
+        UpdateDisplayed();
 
-        InputStateManager.Instance.AddInputBlockTarget(this);
+        if (!InputStateManager.Instance.InputBlockTargets.Contains(this)) {
+            InputStateManager.Instance.AddInputBlockTarget(this);
+        }
 
         OnShown?.Invoke();
     }
@@ -84,13 +85,23 @@ public class InformationMenu : MonoBehaviour, IOpenable
             return;
         }
 
-        this.informationable = informationable;
+        informationables.Add(informationable);
+
         Show();
     }
 
     public void Hide()
     {
-        slidePanel.Hide();
+        if (informationables.Count > 0) {
+            informationables.RemoveAt(informationables.Count - 1);
+        }
+
+        if (informationables.Count <= 0) {
+            slidePanel.Hide();
+        }
+        else {
+            UpdateDisplayed();
+        }
     }
 
     private void HandleHidden()
@@ -101,9 +112,18 @@ public class InformationMenu : MonoBehaviour, IOpenable
         OnHidden?.Invoke();
     }
 
+    private void UpdateDisplayed()
+    {
+        SetPanelTargets();
+        UpdateNameText();
+        UpdateDescriptionText();
+        UpdateImage();
+        UpdateScrollRect();
+    }
+
     private void SetPanelTargets()
     {
-        if (informationable == null) return;
+        if (shownInformationable == null) return;
 
         foreach (var panelController in infoPanelControllers) {
             if (panelController == null) {
@@ -111,36 +131,36 @@ public class InformationMenu : MonoBehaviour, IOpenable
                 continue;
             }
 
-            panelController.SetInformationableAndUpdate(informationable);
+            panelController.SetInformationableAndUpdate(shownInformationable);
         }
     }
 
     private void UpdateNameText()
     {
-        if (informationable == null) return;
+        if (shownInformationable == null) return;
 
-        nameText.SetLocalizationItem(informationable.GetInformationName());
+        nameText.SetLocalizationItem(shownInformationable.GetInformationName());
     }
 
     private void UpdateDescriptionText()
     {
-        if (informationable == null) return;
+        if (shownInformationable == null) return;
 
-        descriptionText.SetLocalizationItem(informationable.GetInformationDescription());
+        descriptionText.SetLocalizationItem(shownInformationable.GetInformationDescription());
         descriptionTextFitSize.UpdateSize();
     }
 
     private void UpdateImage()
     {
-        if (informationable == null) return;
+        if (shownInformationable == null) return;
 
-        thumbImage.sprite = informationable.GetInformationImage();
+        thumbImage.sprite = shownInformationable.GetInformationIcon();
     }
 
     private void UpdateScrollRect()
     {
         scrollRect.verticalNormalizedPosition = 1f;
-        scrollRectFitSize.UpdateSizeDelay();
+        scrollRectFitSize.RunUpdateSizeEndOfFrame();
     }
 
     private void HandleCloseButtonClicked()

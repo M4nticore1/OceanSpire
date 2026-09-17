@@ -97,7 +97,7 @@ public class InventoryPanel : MonoBehaviour
         if (spawnedResourceWidgets.ContainsKey(item.Definition)) return;
 
         var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
-        widget.SetItem(item);
+        widget.SetItemInstance(item);
         widget.SetItemDefinition(item.Definition);
         widget.AddAmount(item);
         widget.SetIsCityItem(false);
@@ -126,7 +126,7 @@ public class InventoryPanel : MonoBehaviour
 
     private void UpdateLayoutGroupSize()
     {
-        fitSizeToChildren.UpdateSizeDelay();
+        fitSizeToChildren.RunUpdateSizeEndOfFrame();
     }
 
     private void UpdateEmptyTextActive()

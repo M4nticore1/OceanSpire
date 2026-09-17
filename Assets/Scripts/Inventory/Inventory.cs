@@ -19,7 +19,7 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
     public IReadOnlyList<ItemInstance> Items => items;
 
     private Dictionary<ItemID, ItemInstance> itemsDict = new();
-    private Dictionary<ItemStackEnum, ItemStack> itemStacks = new();
+    private Dictionary<ItemStackId, ItemStackInstance> itemStacks = new();
 
     private ItemsList itemsList => ItemsList.Instance;
 
@@ -49,10 +49,10 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
 
     private void Awake()
     {
-        var stackValues = (ItemStackEnum[])Enum.GetValues(typeof(ItemStackEnum));
+        var stackDefinitions = ItemStacksList.Instance.StackDefinitions;
 
-        foreach (var stackEnum in stackValues) {
-            itemStacks.Add(stackEnum, new ItemStack(stackEnum));
+        foreach (var stackDefinition in stackDefinitions) {
+            itemStacks.Add(stackDefinition.StackId, new ItemStackInstance(stackDefinition));
         }
     }
 
@@ -105,7 +105,7 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         SubscribeItem(item);
 
         if (useAmountLimit) {
-            item.SetStack(GetStack(item.Definition.Stack));
+            item.SetStack(GetStack(item.Definition.StackDefinition.StackId));
         }
 
         items.Add(item);
@@ -184,12 +184,12 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         item.RemoveAmount(amount);
     }
 
-    public void AddLimit(ItemStackEnum stack, int amount)
+    public void AddLimit(ItemStackId stack, int amount)
     {
         GetStack(stack).AddLimit(amount);
     }
 
-    public void RemoveLimit(ItemStackEnum stack, int amount)
+    public void RemoveLimit(ItemStackId stack, int amount)
     {
         GetStack(stack).RemoveLimit(amount);
     }
@@ -204,12 +204,12 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         }
     }
 
-    public int GetLimit(ItemStackEnum stack)
+    public int GetLimit(ItemStackId stack)
     {
         return GetStack(stack).Amount;
     }
 
-    public ItemStack GetStack(ItemStackEnum stack)
+    public ItemStackInstance GetStack(ItemStackId stack)
     {
         if (!itemStacks.TryGetValue(stack, out var itemStack)) {
             Debug.LogError($"[{nameof(Inventory)}] Stack ({stack}) is not valid!");
@@ -283,7 +283,7 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
 
     private void HandleItemAmountAdded(ItemInstance item, int amount)
     {
-        var stack = GetStack(item.Definition.Stack);
+        var stack = GetStack(item.Definition.StackDefinition.StackId);
         stack.AddItemAmount(item);
 
         OnItemAmountAdded?.Invoke(item);

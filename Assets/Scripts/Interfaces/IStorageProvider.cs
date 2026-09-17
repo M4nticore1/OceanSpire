@@ -3,5 +3,5 @@ using UnityEngine;
 
 public interface IStorageProvider
 {
-    public IReadOnlyList<ItemStack> StorageStacks { get; }
+    public IReadOnlyList<ItemStackInstance> StorageStacks { get; }
 }

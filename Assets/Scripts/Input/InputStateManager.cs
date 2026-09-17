@@ -5,7 +5,9 @@ public class InputStateManager : MonoBehaviour
 {
     public static InputStateManager Instance;
     public bool IsGameplayInputBlocked { get; private set; } = false;
+
     private List<MonoBehaviour> inputBlockTargets = new();
+    public IReadOnlyList<MonoBehaviour> InputBlockTargets => inputBlockTargets;
 
     private void Awake()
     {

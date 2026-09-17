@@ -7,7 +7,7 @@ public enum BoatIdEnum
     RaidBoat
 }
 
-[CreateAssetMenu(fileName = "BoatData", menuName = "Boat/BoatData")]
+[CreateAssetMenu(fileName = "BoatDefinition", menuName = "Scriptable Objects/BoatDefinition")]
 public class BoatDefinition : ScriptableObject
 {
     [SerializeField] private BoatIdEnum boatId = BoatIdEnum.BasicBoat;
@@ -16,9 +16,12 @@ public class BoatDefinition : ScriptableObject
     [SerializeField] private float boatSpeed = 1;
     public float BoatSpeed => boatSpeed;
 
-    [SerializeField] private LocalizationItem nameLocalization;
-    public LocalizationItem NameLocalization => nameLocalization;
+    [SerializeField] private LocalizationItem nameLocalizationItem;
+    public LocalizationItem NameLocalizationItem => nameLocalizationItem;
 
-    public const float healthDrainInterval = 10f;
-    public const float healthDisplayThreshold = 0.25f;
+    [SerializeField] private LocalizationItem descriptionLocalizationItem;
+    public LocalizationItem DescriptionLocalizationItem => descriptionLocalizationItem;
+
+    [SerializeField] private Sprite sprite;
+    public Sprite Sprite => sprite;
 }

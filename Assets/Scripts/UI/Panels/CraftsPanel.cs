@@ -105,7 +105,10 @@ public class CraftsPanel : MonoBehaviour
             var panel = spawnedWidgets[i];
             if (panel == null) continue;
 
+            panel.transform.SetParent(null);
+            panel.gameObject.SetActive(false);
             Destroy(panel.gameObject);
+
             spawnedWidgets.RemoveAt(i);
         }
     }

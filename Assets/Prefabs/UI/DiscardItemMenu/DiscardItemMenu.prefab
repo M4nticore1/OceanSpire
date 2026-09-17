@@ -49,11 +49,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 325414fd39671a6468089e7c89d80820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
-  canvas: {fileID: 0}
   closeMethod: 1
-  slideTransitionSpeed: 10
+  animationSpeed: 10
   contentRoot: {fileID: 0}
   hideWhenClosed: 0
+  isShown: 0
+  canvas: {fileID: 0}
   openedScreenPositionAlpha: {x: 0, y: 0.5}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: 0, y: 0.5}
@@ -284,15 +285,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomButton
   targetGraphic: {fileID: 6073699597258192378}
   contentGraphics: []
-  scaleRoot: {fileID: 4405848092905901727}
-  isInteractable: 1
   isSelectable: 0
+  selectGroup: {fileID: 0}
   isScalable: 1
+  scaleRoot: {fileID: 4405848092905901727}
+  isClickable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectGroup: {fileID: 0}
-  stateTransitionTime: 0.2
+  cancelPressWhenPointerMoving: 0
   state: 0
+  stateTransitionTime: 0.2
   idleState:
     bodyColor: {r: 0.9490196, g: 0.8216928, b: 0.6168628, a: 1}
     bodyColorHolder: {fileID: 0}
@@ -432,15 +434,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomButton
   targetGraphic: {fileID: 7885267330556044300}
   contentGraphics: []
-  scaleRoot: {fileID: 7422503750958635881}
-  isInteractable: 1
   isSelectable: 0
+  selectGroup: {fileID: 0}
   isScalable: 1
+  scaleRoot: {fileID: 7422503750958635881}
+  isClickable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectGroup: {fileID: 0}
-  stateTransitionTime: 0.2
+  cancelPressWhenPointerMoving: 0
   state: 0
+  stateTransitionTime: 0.2
   idleState:
     bodyColor: {r: 0.9490196, g: 0.8216928, b: 0.6168628, a: 1}
     bodyColorHolder: {fileID: 0}
@@ -1748,7 +1751,7 @@ MonoBehaviour:
   amountSlider: {fileID: 1714209620919917003}
   discardButton: {fileID: 7694035811831646166}
   closeButton: {fileID: 3902803874199224669}
-  startDiscardPercent: 0.1
+  startDiscardPercent: 0.5
 --- !u!1 &6750464415992113276
 GameObject:
   m_ObjectHideFlags: 0

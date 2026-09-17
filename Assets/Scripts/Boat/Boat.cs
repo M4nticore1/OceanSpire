@@ -24,7 +24,7 @@ public enum BoatStatusEnum
     Evicted
 }
 
-public class Boat : MonoBehaviour, IClickable, ILevelBonusable, ILocalizable
+public class Boat : MonoBehaviour, IClickable, ILevelBonusable, IInformationable, ILocalizable
 {
     [Header("Main")]
     [SerializeField] private BoatDefinition boatData;
@@ -575,12 +575,34 @@ public class Boat : MonoBehaviour, IClickable, ILevelBonusable, ILocalizable
         Movement.NavAgent.speed = Definition.BoatSpeed * (1f + bonus);
     }
 
+    // IInformationable
+    public LocalizationItem GetInformationName()
+    {
+        if (boatData == null) return null;
+
+        return boatData.NameLocalizationItem;
+    }
+
+    public LocalizationItem GetInformationDescription()
+    {
+        if (boatData == null) return null;
+
+        return boatData.DescriptionLocalizationItem;
+    }
+
+    public Sprite GetInformationIcon()
+    {
+        if (boatData == null) return null;
+
+        return boatData.Sprite;
+    }
+
     // ILocalizable
     public Dictionary<string, string> GetLocalization()
     {
         return new Dictionary<string, string>()
         {
-            { "name", LocalizationManager.Instance.GetLocalizedText(Definition.NameLocalization) }
+            { "name", LocalizationManager.Instance.GetLocalizedText(Definition.NameLocalizationItem) }
         };
     }
 

@@ -62,13 +62,13 @@ public class WorkersPanel : MonoBehaviour
 
         spawnedWidgets.Add(widget);
         fitSizeToChildren.AddIncludedTransform(widget.gameObject);
-        fitSizeToChildren.UpdateSizeDelay();
+        fitSizeToChildren.RunUpdateSizeEndOfFrame();
     }
 
     public void RemoveWidget(CitizenWidget widget)
     {
         spawnedWidgets.Remove(widget);
         fitSizeToChildren.RemoveIncludedTransform(widget.gameObject);
-        fitSizeToChildren.UpdateSizeDelay();
+        fitSizeToChildren.RunUpdateSizeEndOfFrame();
     }
 }

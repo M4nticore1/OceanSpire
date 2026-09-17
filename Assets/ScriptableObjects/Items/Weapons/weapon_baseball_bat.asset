@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponDefinition
   itemId: 13
   itemCategory: 3
-  stack: 8
+  stackDefinition: {fileID: 11400000, guid: b3933934072d971488571515a18cf8a1, type: 2}
   weight: 3
   nameLocalizationItem: {fileID: 11400000, guid: cbfdfd4021cfc4d4fbf9684f664a5506, type: 2}
   descriptionLocalizationItem: {fileID: 11400000, guid: cd2a5e83fe6f469468ad33cb959157cb, type: 2}

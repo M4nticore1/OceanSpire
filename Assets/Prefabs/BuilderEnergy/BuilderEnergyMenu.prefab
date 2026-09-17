@@ -521,7 +521,7 @@ MonoBehaviour:
   m_fontSizeMin: 32
   m_fontSizeMax: 48
   m_fontStyle: 0
-  m_HorizontalAlignment: 8
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -947,11 +947,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 325414fd39671a6468089e7c89d80820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
-  canvas: {fileID: 0}
   closeMethod: 1
-  slideTransitionSpeed: 10
+  animationSpeed: 10
   contentRoot: {fileID: 8862043585991609982}
   hideWhenClosed: 1
+  isShown: 0
+  canvas: {fileID: 0}
   openedScreenPositionAlpha: {x: 0, y: 0.5}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: 0, y: 0.5}

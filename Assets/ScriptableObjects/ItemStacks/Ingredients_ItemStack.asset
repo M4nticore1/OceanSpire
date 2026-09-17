@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edf2f4de5b6c9e943a65596950127901, type: 3}
+  m_Name: Ingredients_ItemStack
+  m_EditorClassIdentifier: Assembly-CSharp::ItemStackDefinition
+  stackId: 7
+  nameLocalizationItem: {fileID: 11400000, guid: 8082858e93a67f84fa2a653bd994e556, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 106576a3ee70c5e408f13cdb442991e8, type: 2}
+  stackIcon: {fileID: 21300000, guid: f2341698e72773347bf68a4dcace40dc, type: 3}

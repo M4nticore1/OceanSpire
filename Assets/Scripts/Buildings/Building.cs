@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRecipeProvider, IResidentsCapacityProvider, IBuildingSlotsProvider, IWanderersCooldownProvider, ILocalizable, IInformationable
+public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRecipeProvider, IStorageProvider, IResidentsCapacityProvider, IBuildingSlotsProvider, IWanderersCooldownProvider, ILocalizable, IInformationable
 {
     [Header("Data")]
     [SerializeField] protected BuildingDefinition buildingData;
@@ -82,18 +82,21 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
         }
     }
 
+    // IStorageProvider
+    public IReadOnlyList<ItemStackInstance> StorageStacks {
+        get {
+            var storageProviders = GetComponents<IStorageProvider>().ToList();
+            if (storageProviders == null) return null;
+
+            storageProviders.Remove(this);
+            if (storageProviders.Count <= 0) return null;
+
+            return storageProviders[0].StorageStacks;
+        }
+    }
+
     // IResidentsCapacityProvider
     public int ResidentsCapacity => LevelDefinition.MaxHumansCount;
-    //get {
-    //        var residentsCapacityProviders = GetComponents<IResidentsCapacityProvider>().ToList();
-    //        if (residentsCapacityProviders == null) return 0;
-
-    //        residentsCapacityProviders.Remove(this);
-    //        if (residentsCapacityProviders.Count <= 0) return 0;
-
-    //        return residentsCapacityProviders[0].ResidentsCapacity;
-    //    }
-    //}
 
     // IBuildingSlotsProvider
     public int BuildingSlotsCount {
@@ -444,7 +447,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
         return Definition.DescriptionLocalizationItem;
     }
 
-    public Sprite GetInformationImage()
+    public Sprite GetInformationIcon()
     {
         if (LevelDefinition == null) return null;
 

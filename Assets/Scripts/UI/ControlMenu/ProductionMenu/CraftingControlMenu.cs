@@ -75,6 +75,6 @@ public class CraftingControlMenu : ControlMenu
         yield return new WaitForEndOfFrame();
 
         scrollRect.verticalNormalizedPosition = 1f;
-        fitSizeToChildren.UpdateSizeDelay();
+        fitSizeToChildren.RunUpdateSizeEndOfFrame();
     }
 }

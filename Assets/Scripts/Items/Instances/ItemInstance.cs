@@ -14,19 +14,19 @@ public class ItemCategoryData
 }
 
 [Serializable]
-public class ItemInstance : IItemAmount, ILocalizable, IInformationable
+public class ItemInstance : IAmountable, IWeightable, ILocalizable, IInformationable
 {
     [SerializeField, FormerlySerializedAs("itemData")]
     private ItemDefinition definition;
 
     public ItemDefinition Definition => definition;
 
-    [SerializeField]
-    private int amount;
-
+    [SerializeField] private int amount;
     public int Amount => amount;
 
-    public ItemStack Stack { get; private set; }
+    public float Weight => Definition != null ? Definition.Weight : 0f;
+
+    public ItemStackInstance Stack { get; private set; }
 
     public event Action<ItemInstance, int> OnItemAmountAdded;
     public event Action<ItemInstance, int> OnItemAmountRemoved;
@@ -85,7 +85,7 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
         SetAmount(this.amount - amount);
     }
 
-    public void SetStack(ItemStack stack)
+    public void SetStack(ItemStackInstance stack)
     {
         if (Stack == stack)
             return;
@@ -136,7 +136,7 @@ public class ItemInstance : IItemAmount, ILocalizable, IInformationable
         return Definition.DescriptionLocalizationItem;
     }
 
-    public Sprite GetInformationImage()
+    public Sprite GetInformationIcon()
     {
         if (Definition == null)
             return null;

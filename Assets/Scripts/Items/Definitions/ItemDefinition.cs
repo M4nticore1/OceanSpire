@@ -36,7 +36,7 @@ public enum ItemCategory
 }
 
 [CreateAssetMenu(fileName = "ItemData", menuName = "Scriptable Objects/ItemData")]
-public class ItemDefinition : ScriptableObject
+public class ItemDefinition : ScriptableObject, IWeightable
 {
     [SerializeField] private ItemID itemId = ItemID.Population;
     public ItemID ItemId => itemId;
@@ -44,8 +44,8 @@ public class ItemDefinition : ScriptableObject
     [SerializeField] private ItemCategory itemCategory = ItemCategory.Society;
     public ItemCategory ItemCategory => itemCategory;
 
-    [SerializeField] private ItemStackEnum stack = ItemStackEnum.Population;
-    public ItemStackEnum Stack => stack;
+    [SerializeField] private ItemStackDefinition stackDefinition;
+    public ItemStackDefinition StackDefinition => stackDefinition;
 
     [SerializeField] private float weight = 0;
     public float Weight => weight;

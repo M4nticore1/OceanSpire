@@ -7,8 +7,10 @@ public class StorageInfoPanelController : InfoPanelController
     protected override bool ShouldDisplay(IInformationable informationable)
     {
         storageProvider = informationable as IStorageProvider;
-        if (storageProvider == null) return false;
 
+        if (storageProvider == null) return false;
+        if (storageProvider.StorageStacks == null) return false;
+        
         return storageProvider.StorageStacks.Count > 0;
     }
 

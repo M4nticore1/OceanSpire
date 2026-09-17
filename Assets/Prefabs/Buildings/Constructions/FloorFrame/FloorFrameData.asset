@@ -17,7 +17,7 @@ MonoBehaviour:
   descriptionLocalizationItem: {fileID: 11400000, guid: ab3c5e179dbc20145842c56c0f33eeeb, type: 2}
   buildingType: 2
   buildingCategory: 0
-  connectionType: 0
+  connectionType: 2
   buildingStrategy: 0
   isConstructable: 0
   isWorkable: 0

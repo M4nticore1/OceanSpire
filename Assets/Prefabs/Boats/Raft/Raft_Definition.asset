@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Raft_Definition
   m_EditorClassIdentifier: 
   boatId: 1
-  boatIdName: Simple Boat
   boatSpeed: 2.5
-  nameLocalization: {fileID: 11400000, guid: a88fcd6bc833bf04d8b7eb392846862f, type: 2}
+  nameLocalizationItem: {fileID: 11400000, guid: a88fcd6bc833bf04d8b7eb392846862f, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: a20fbaf133295af4299c95e2056f54e5, type: 2}
+  sprite: {fileID: 21300000, guid: 54eaf0b1c8e99e54dbc5397576bed522, type: 3}

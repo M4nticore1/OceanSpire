@@ -76,7 +76,7 @@ public class RaidEndedMenu : MonoBehaviour
                 if (item.Amount <= 0) continue;
 
                 var widget = Instantiate(resourceWidgetPrefab, layoutGroup.transform);
-                widget.SetItem(item);
+                widget.SetItemInstance(item);
                 widget.AddAmount(item);
                 widget.SetColor(loseColor);
                 spawnedResourceWidgets.Add(widget);

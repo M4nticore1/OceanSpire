@@ -101,11 +101,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 325414fd39671a6468089e7c89d80820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
-  canvas: {fileID: 0}
   closeMethod: 1
-  slideTransitionSpeed: 10
+  animationSpeed: 10
   contentRoot: {fileID: 0}
   hideWhenClosed: 0
+  isShown: 0
+  canvas: {fileID: 0}
   openedScreenPositionAlpha: {x: 0, y: 0.5}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: 0, y: 0.5}
@@ -1150,8 +1151,8 @@ RectTransform:
   - {fileID: 704477831035181003}
   - {fileID: 5687021208724524793}
   - {fileID: 1908017586272417925}
-  - {fileID: 4842328633964594891}
   - {fileID: 762422998033772312}
+  - {fileID: 4842328633964594891}
   m_Father: {fileID: 7254238101505022778}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -1192,7 +1193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1200,7 +1201,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchorMin.y
@@ -1244,7 +1245,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -205
+      value: 205
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1313,7 +1314,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1321,7 +1322,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchorMin.y
@@ -1365,7 +1366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 205
+      value: -205
       objectReference: {fileID: 0}
     - target: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_AnchoredPosition.y

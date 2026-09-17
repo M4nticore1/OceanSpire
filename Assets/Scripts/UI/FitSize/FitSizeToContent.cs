@@ -42,7 +42,7 @@ public abstract class FitSizeToContent : MonoBehaviour
 
     protected abstract float GetHeight();
 
-    public void UpdateSizeDelay()
+    public void RunUpdateSizeEndOfFrame()
     {
         if (!ShouldUpdateSize()) return;
         
@@ -149,7 +149,7 @@ public class FitSizeToContentEditor : Editor
         GUILayout.Space(10);
 
         if (GUILayout.Button("Update Size")) {
-            widget.UpdateSizeDelay();
+            widget.RunUpdateSizeEndOfFrame();
 
             EditorUtility.SetDirty(widget);
         }

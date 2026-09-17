@@ -1,6 +1,7 @@
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FitSizeToText : FitSizeToContent
 {
@@ -12,9 +13,12 @@ public class FitSizeToText : FitSizeToContent
             return MinHeight;
         }
 
+        tmpText.rectTransform.ForceUpdateRectTransforms();
         tmpText.ForceMeshUpdate();
-        var requiredHeight = tmpText.preferredHeight + ExtraHeight;
 
-        return Mathf.Max(requiredHeight, MinHeight);
+        var requiredHeight = tmpText.preferredHeight + ExtraHeight;
+        float finalHeight = Mathf.Max(requiredHeight, MinHeight);
+
+        return finalHeight;
     }
 }

@@ -301,7 +301,7 @@ public class TowerBuilding : Building, IConnectable
     public override Dictionary<string, string> GetLocalization()
     {
         var dictionary = base.GetLocalization();
-        dictionary.Add("connectionType", LocalizationManager.Instance.GetLocalizedText(Definition.ConnectionType.ToString()));
+        dictionary.Add("connectionType", LocalizationManager.Instance.GetLocalizedText(Definition.ConnectionType.ToString().ToLower()));
 
         return dictionary;
     }
