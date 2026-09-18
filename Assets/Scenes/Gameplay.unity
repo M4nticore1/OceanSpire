@@ -5424,6 +5424,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2837026549836703377, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: reviveManager
+      value: 
+      objectReference: {fileID: 1918364871}
+    - target: {fileID: 2837026549836703377, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: selectManager
+      value: 
+      objectReference: {fileID: 593505076}
+    - target: {fileID: 2837026549836703377, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: rewardedAdsManager
+      value: 
+      objectReference: {fileID: 1925740697}
     - target: {fileID: 2841506790372911082, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

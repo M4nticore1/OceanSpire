@@ -23,10 +23,19 @@ public class Citizen : Human
         CreaturesManager.Instance.UnregisterCitizen(this);
     }
 
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        RemoveEquippedWeapon();
+    }
+
     public void Evict(Boat boat, Vector3 leavePosition)
     {
         IsEvicted = true;
         LeavePosition = leavePosition;
+
+        DequipWeapon();
 
         InteractComponent.RemoveInteractBuilding();
         BoatRider.TrySetTargetBoat(boat);
@@ -252,5 +261,26 @@ public class Citizen : Human
         if (!HealthComponent.IsAlive) return false;
 
         return true;
+    }
+
+    private void DequipWeapon()
+    {
+        if (WeaponComponent == null)
+            return;
+
+        WeaponComponent.SetEquipmentAndApply(WeaponComponent.DefaultEquipment);
+    }
+
+    private void RemoveEquippedWeapon()
+    {
+        if (cityStorage == null) return;
+        if (cityStorage.Inventory == null) return;
+        if (WeaponComponent == null) return;
+
+        var equipmentDef = WeaponComponent.EquipmentDefinition;
+        if (equipmentDef == null) return;
+        if (equipmentDef == WeaponComponent.DefaultEquipment) return;
+
+        cityStorage.Inventory.RemoveItemAmount(equipmentDef.ItemId, 1);
     }
 }

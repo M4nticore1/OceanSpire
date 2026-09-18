@@ -2,18 +2,15 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class ReviveMenu : MonoBehaviour, IOpenable
+public class ReviveMenu : CitizenMenu, IOpenable
 {
-    [Header("Managers")]
+    [Header("ReviveMenu")]
     [SerializeField] private ReviveManager reviveManager;
     [SerializeField] private SelectManager selectManager;
     [SerializeField] private RewardedAdsManager rewardedAdsManager;
 
     [Header("UI")]
-    [SerializeField] private SlideAnimatedPanel slidePanel;
-    [SerializeField] private SkillsPanel skillsPanel;
-    [SerializeField] private CustomButton button;
-    [SerializeField] private TextLocalizer citizenNameText;
+    [SerializeField] private CustomButton reviveButton;
 
     [Header("Remaining")]
     [SerializeField] private TextLocalizer remainingReviveTimeText;
@@ -23,16 +20,9 @@ public class ReviveMenu : MonoBehaviour, IOpenable
     [SerializeField] private TextMeshProUGUI nextReviveChargeTimeText;
     [SerializeField] private TextMeshProUGUI nextReviveChargeText;
 
-    private Citizen citizen;
-    public bool IsShown { get; private set; } = false;
-
-    public event Action OnShown;
-    public event Action OnHidden;
-
     private void OnEnable()
     {
-        button.OnReleased.AddListener(OnButtonClicked);
-        slidePanel.OnHidden += OnClosed;
+        reviveButton.OnReleased.AddListener(OnButtonClicked);
         reviveManager.OnRevivesCountChanged += OnRemainingRevivesCountChanged;
         selectManager.OnComponentSelected += OnComponentSelected;
         ReviveComponent.OnGlobalRevived += OnRevived;
@@ -40,8 +30,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
 
     private void OnDisable()
     {
-        button.OnReleased.RemoveListener(OnButtonClicked);
-        slidePanel.OnHidden -= OnClosed;
+        reviveButton.OnReleased.RemoveListener(OnButtonClicked);
         reviveManager.OnRevivesCountChanged -= OnRemainingRevivesCountChanged;
         selectManager.OnComponentSelected -= OnComponentSelected;
         ReviveComponent.OnGlobalRevived -= OnRevived;
@@ -55,43 +44,6 @@ public class ReviveMenu : MonoBehaviour, IOpenable
         UpdateMenuShowed();
         UpdateTimeToDie();
         UpdateNextChargeTimeText();
-    }
-
-    public void Show()
-    {
-        IsShown = true;
-        InputStateManager.Instance.AddInputBlockTarget(this);
-        OnShown?.Invoke();
-    }
-
-    public void Show(Citizen citizen)
-    {
-        if (citizen == null) {
-            Debug.LogError($"[{nameof(ReviveMenu)}] Citizen is not valid!");
-            return;
-        }
-
-        this.citizen = citizen;
-        slidePanel.Show();
-
-        skillsPanel.SetSkills(citizen.SkillsComponent);
-        UpdateCitizenNameText();
-
-        Show();
-    }
-
-    public void Hide()
-    {
-        slidePanel.Hide();
-        UpdateButtonEnabled();
-
-        OnHidden?.Invoke();
-    }
-
-    private void OnClosed()
-    {
-        IsShown = false;
-        InputStateManager.Instance.RemoveBlockTarget(this);
     }
 
     private void UpdateMenuShowed()
@@ -116,12 +68,7 @@ public class ReviveMenu : MonoBehaviour, IOpenable
         var dieTime = citizen.ReviveComponent.DieTime;
         var enoughTime = dieTime != null ? currentTime <= dieTime.Value : false;
 
-        button.SetState(enoughRevives && enoughTime ? CustomButtonState.Idle : CustomButtonState.Disabled);
-    }
-
-    private void UpdateCitizenNameText()
-    {
-        citizenNameText.SetPlaceHolderLocalization(citizen.NameComponent);
+        reviveButton.SetState(enoughRevives && enoughTime ? CustomButtonState.Idle : CustomButtonState.Disabled);
     }
 
     private void UpdateRemainingRevivesCountText()

@@ -4,13 +4,16 @@ public class CitizenMenu : ControlMenu
 {
     [Header("Citizen Menu")]
     [SerializeField] private SkillsPanel skillsPanel;
-    [SerializeField] private EquipmentPanel equipmentPanel;
+    protected SkillsPanel SkillsPanel => skillsPanel;
 
-    private Citizen citizen;
+    [SerializeField] private EquipmentPanelWidget equipmentPanel;
+    protected EquipmentPanelWidget EquipmentPanel => equipmentPanel;
 
-    protected override void OnShow()
+    protected Citizen citizen { get; private set; }
+
+    protected override void HandleShown()
     {
-        base.OnShow();
+        base.HandleShown();
 
         skillsPanel.SetSkills(citizen.SkillsComponent);
     }

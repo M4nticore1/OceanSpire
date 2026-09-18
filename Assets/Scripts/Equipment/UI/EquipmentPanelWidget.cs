@@ -1,0 +1,26 @@
+using UnityEngine;
+
+public class EquipmentPanelWidget : MonoBehaviour
+{
+    [SerializeField] private EquipmentWidget weaponWidget;
+
+    private void OnEnable()
+    {
+        var citizen = SelectManager.Instance.GetSelectedHuman();
+        if (!citizen) {
+            Debug.Log($"Selected Citizen not found at {name}");
+            return;
+        }
+
+        var weaponComponent = citizen.WeaponComponent;
+        if (!weaponComponent) return;
+
+        SetWeapon(weaponComponent);
+    }
+
+    public void SetWeapon(EquipmentComponent equipmentComponent)
+    {
+        weaponWidget.SetEquipmentComponent(equipmentComponent);
+        weaponWidget.SetEquipmentDefinition(equipmentComponent.EquipmentDefinition);
+    }
+}

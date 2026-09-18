@@ -58,7 +58,7 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
         content.SetActive(true);
 
         InputStateManager.Instance.AddInputBlockTarget(this);
-        OnShow();
+        HandleShown();
 
         OnShown?.Invoke();
     }
@@ -74,7 +74,7 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
         OnHidden?.Invoke();
     }
 
-    protected virtual void OnShow()
+    protected virtual void HandleShown()
     {
         UpdateMenu();
         UpdateTargetNameText();

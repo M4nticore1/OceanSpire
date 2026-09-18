@@ -67,9 +67,9 @@ public class WorkersControlMenu : ControlMenu
         CreatureInteractComponent.OnInteractorInteractBuildirngRemoved -= OnCitizenWorkRemoved;
     }
 
-    protected override void OnShow()
+    protected override void HandleShown()
     {
-        base.OnShow();
+        base.HandleShown();
 
         UpdateMenu();
         UpdateWidgetsSort();

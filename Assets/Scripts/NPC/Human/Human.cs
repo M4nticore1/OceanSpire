@@ -58,6 +58,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
     [SerializeField] private bool isClickable = true;
     public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
+    protected CityStorage cityStorage => CityStorage.Instance;
     protected BoatsManager boatsManager => BoatsManager.Instance;
 
     public event Action OnClicked;
