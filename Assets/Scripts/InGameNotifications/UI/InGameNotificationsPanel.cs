@@ -4,42 +4,40 @@ using UnityEngine.UI;
 
 public class InGameNotificationsPanel : MonoBehaviour
 {
+    [SerializeField] private InGameNotificationWidget notificationWidgetPrefab;
     [SerializeField] private LayoutGroup layoutGroup;
     [SerializeField] private SelectGroup selectGroup;
 
-    private Dictionary<InGameNotificationId, InGameNotificationWidget> spawnedNotificationWidgetsDict = new();
+    private Dictionary<InGameNotificationData, InGameNotificationWidget> spawnedNotificationWidgetsDict = new();
 
-    public void ShowNotification(InGameNotificationWidget notificationPrefab)
+    public void ShowNotification(InGameNotificationData notificationData)
     {
-        if (notificationPrefab == null) {
-            Debug.LogError($"[{nameof(InGameNotificationsPanel)}] Notification Prefab is not valid!");
+        if (notificationData == null) {
+            Debug.LogError($"[{nameof(InGameNotificationsPanel)}] Notification Data is not valid!");
             return;
         }
 
-        var notificationId = notificationPrefab.NotificationId;
-        if (spawnedNotificationWidgetsDict.ContainsKey(notificationId)) return;
-
-        var widget = InGameNotificationFactory.CreateNotification(notificationPrefab, layoutGroup.transform);
+        var widget = InGameNotificationFactory.CreateNotification(notificationWidgetPrefab, layoutGroup.transform, notificationData);
         if (widget == null) {
-            Debug.LogError($"[{nameof(InGameNotificationsPanel)}] Widget is not valid!");
+            Debug.LogError($"[{nameof(InGameNotificationsPanel)}] Created Widget is not valid from {notificationWidgetPrefab}!");
             return;
         }
 
         widget.SetButtonSelectGroup(selectGroup);
-        spawnedNotificationWidgetsDict.Add(notificationPrefab.NotificationId, widget);
+        spawnedNotificationWidgetsDict.Add(notificationData, widget);
     }
 
-    public void HideNotification(InGameNotificationWidget notificationPrefab)
+    public void HideNotification(InGameNotificationData notificationData)
     {
-        if (notificationPrefab == null) {
+        if (notificationWidgetPrefab == null) {
             Debug.LogError($"[{nameof(InGameNotificationsPanel)}] Notification Prefab is not valid!");
             return;
         }
 
-        spawnedNotificationWidgetsDict.TryGetValue(notificationPrefab.NotificationId, out var widget);
+        spawnedNotificationWidgetsDict.TryGetValue(notificationData, out var widget);
         if (widget == null) return;
 
-        spawnedNotificationWidgetsDict.Remove(notificationPrefab.NotificationId);
+        spawnedNotificationWidgetsDict.Remove(notificationData);
         Destroy(widget.gameObject);
     }
 }
