@@ -51,10 +51,10 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     [SerializeField] private ConstructionInteractionPointsHandler interactionPointsHandler;
     public ConstructionInteractionPointsHandler InteractionPointsHandler => interactionPointsHandler != null ? interactionPointsHandler : GetComponent<ConstructionInteractionPointsHandler>();
 
-    private MeshRenderer[] meshRendererers;
+    [SerializeField] private MeshRenderer[] meshRendererers;
     private MaterialPropertyBlock propertyBlock;
 
-    private bool isClickable = true;
+    [SerializeField] private bool isClickable = true;
     public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     public event Action OnInit;
@@ -62,6 +62,21 @@ public class BuildingConstruction : MonoBehaviour, IClickable
 
     public static event Action<BuildingConstruction> OnBuildingConstructionInited;
     public static event Action<BuildingConstruction> OnBuildingConstructionDemolished;
+
+    protected virtual void Awake()
+    {
+        lightProbeGroupManager = FindAnyObjectByType<LightProbeGroupManager>();
+
+        InitMeshRenderers();
+
+        if (lightProbeGroupManager != null && meshRendererers != null) {
+            foreach (var renderer in meshRendererers) {
+                renderer.probeAnchor = lightProbeGroupManager.ProbeAnchor;
+            }
+        }
+
+        propertyBlock = new MaterialPropertyBlock();
+    }
 
     protected virtual void OnEnable()
     {
@@ -71,20 +86,6 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     protected virtual void OnDisable()
     {
 
-    }
-
-    protected virtual void Awake()
-    {
-        lightProbeGroupManager = FindAnyObjectByType<LightProbeGroupManager>();
-        meshRendererers = GetComponentsInChildren<MeshRenderer>();
-
-        if (lightProbeGroupManager != null) {
-            foreach (var renderer in meshRendererers) {
-                renderer.probeAnchor = lightProbeGroupManager.ProbeAnchor;
-            }
-        }
-
-        propertyBlock = new MaterialPropertyBlock();
     }
 
     public void Init()
@@ -162,6 +163,8 @@ public class BuildingConstruction : MonoBehaviour, IClickable
         propertyBlock.SetFloat("_FlickingPower", power);
 
         foreach (var renderer in meshRendererers) {
+            if (renderer == null) continue;
+
             renderer.SetPropertyBlock(propertyBlock);
         }
     }
@@ -176,6 +179,16 @@ public class BuildingConstruction : MonoBehaviour, IClickable
     public bool ShouldClick()
     {
         return IsClickable;
+    }
+
+    private void InitMeshRenderers()
+    {
+        meshRendererers = GetComponentsInChildren<Transform>(true)
+            .Where(t => t != transform)
+            .Where(t => t.GetComponentInParent<RectTransform>() == null)
+            .Select(t => t.GetComponent<MeshRenderer>())
+            .Where(mr => mr != null)
+            .ToArray();
     }
 
     private IEnumerator InitCoroutine()

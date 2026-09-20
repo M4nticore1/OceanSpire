@@ -227,9 +227,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3995441556888487652}
-  - component: {fileID: 4896204670629501784}
-  - component: {fileID: 1314082678567658609}
-  - component: {fileID: 5000427502305262710}
+  - component: {fileID: 6579639639830545968}
   - component: {fileID: 1773445323046720086}
   - component: {fileID: 3567810257309652963}
   m_Layer: 5
@@ -258,7 +256,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
---- !u!114 &4896204670629501784
+--- !u!114 &6579639639830545968
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -267,59 +265,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 4424771004643402847}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
   m_Padding:
     m_Left: 0
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_StartCorner: 0
-  m_StartAxis: 1
-  m_CellSize: {x: 950, y: 450}
-  m_Spacing: {x: 0, y: 25}
-  m_Constraint: 1
-  m_ConstraintCount: 1
---- !u!222 &1314082678567658609
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4424771004643402847}
-  m_CullTransparentMesh: 1
---- !u!114 &5000427502305262710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4424771004643402847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!114 &1773445323046720086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,8 +294,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac0a64847ccd6a40861813768ff9708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FitSizeToChildren
+  rect: {fileID: 0}
   minHeight: 0
   extraHeight: 0
+  includedTransforms: []
+  includedHierarchyTransforms: []
+  excludedTransforms: []
+  excludedHierarchyTransforms: []
 --- !u!114 &3567810257309652963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,6 +373,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3374844901963658552}
+  - component: {fileID: 864371100246369620}
   m_Layer: 5
   m_Name: Crafts
   m_TagString: Untagged
@@ -434,6 +402,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -155}
   m_SizeDelta: {x: 1000, y: -390}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &864371100246369620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8765634921367999686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 832a492b881789c4b9c313741e758afc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CraftsPanel
+  CraftItemWidget: {fileID: 5968302294432705402, guid: 29184d8a9adf1db45b7c71598dce4862, type: 3}
+  layoutGroup: {fileID: 6579639639830545968}
+  fitSize: {fileID: 1773445323046720086}
 --- !u!1001 &1142211388075632633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -694,7 +677,7 @@ MonoBehaviour:
   targetNameText: {fileID: 3763178691551498956}
   targetDescriptionText: {fileID: 7262946258100083721}
   producedResourcePanelPrefab: {fileID: 5968302294432705402, guid: 29184d8a9adf1db45b7c71598dce4862, type: 3}
-  layoutGroup: {fileID: 4896204670629501784}
+  craftsPanel: {fileID: 864371100246369620}
   scrollRect: {fileID: 6165497256048796172}
   selectGroup: {fileID: 3567810257309652963}
   fitSizeToChildren: {fileID: 1773445323046720086}

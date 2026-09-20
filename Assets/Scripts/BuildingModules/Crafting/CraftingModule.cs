@@ -39,14 +39,16 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
     private CityStorage cityStorage => CityStorage.Instance;
     private EnergyShortageManager energyShortageManager => EnergyShortageManager.Instance;
 
-    public event Action OnClicked;
+    public event Action OnCraftingModuleClicked;
+
     public event Action<CraftItemInstance> OnItemCraftStarted;
     public event Action<CraftItemInstance> OnItemCraftFinished;
     public event Action<CraftItemInstance> OnItemCollected;
     public event Action<CraftItemInstance> OnItemNotCollected;
+    public event Action<CraftItemInstance> OnCraftItemChanged;
 
     public static event Action<CraftingModule, CraftItemInstance> OnModuleItemCraftStarted;
-    public static event Action<CraftingModule, CraftItemInstance> OnModuleItemCraftEnded;
+    public static event Action<CraftingModule, CraftItemInstance> OnModuleItemCraftFinished;
     public static event Action<CraftingModule, CraftItemInstance> OnModuleItemCollected;
     public static event Action<CraftingModule, CraftItemInstance> OnModuleItemNotCollected;
 
@@ -68,7 +70,7 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
     {
         base.Subscribe();
 
-        OwnedBuilding.OnClicked += HandleBuildingClicked;
+        OwnedBuilding.OnBuildingClicked += HandleBuildingClicked;
         cityStorage.Inventory.OnItemAmountChanged += HandleStorageAmountChanged;
 
         energyShortageManager.OnEnergyShortageStarted += HandleEnergyShortageStarted;
@@ -79,7 +81,7 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
     {
         base.Unsubscribe();
 
-        OwnedBuilding.OnClicked -= HandleBuildingClicked;
+        OwnedBuilding.OnBuildingClicked -= HandleBuildingClicked;
         cityStorage.Inventory.OnItemAmountChanged -= HandleStorageAmountChanged;
 
         energyShortageManager.OnEnergyShortageStarted -= HandleEnergyShortageStarted;
@@ -240,6 +242,8 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
 
         var text = craftItem != null ? craftItem.Definition.name : "null";
         SelectedCraftItem = craftItem;
+
+        OnCraftItemChanged?.Invoke(craftItem);
     }
 
     public void SetCraftingItemByIndex(int index)
@@ -388,7 +392,7 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
         if (!SelectedCraftItem.IsCraftingFinished()) return false;
 
         OnItemCraftFinished?.Invoke(SelectedCraftItem);
-        OnModuleItemCraftEnded?.Invoke(this, SelectedCraftItem);
+        OnModuleItemCraftFinished?.Invoke(this, SelectedCraftItem);
 
         return true;
     }
@@ -473,7 +477,7 @@ public class CraftingModule : BuildingModule, IRecipeProvider, IRaidable, ILevel
             TryStartWorking();
         }
 
-        OnClicked?.Invoke();
+        OnCraftingModuleClicked?.Invoke();
     }
 
     // Storage
