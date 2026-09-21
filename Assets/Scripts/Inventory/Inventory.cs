@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Inventory : MonoBehaviour, IContextable, ILocalizable
 {
@@ -19,7 +20,7 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
     public IReadOnlyList<ItemInstance> Items => items;
 
     private Dictionary<ItemID, ItemInstance> itemsDict = new();
-    private Dictionary<ItemStackId, ItemStackInstance> itemStacks = new();
+    private Dictionary<ItemStackId, ItemStackInstance> itemStacksDict = new();
 
     private ItemsList itemsList => ItemsList.Instance;
 
@@ -47,19 +48,26 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
     public event Action<ItemInstance> OnItemAmountChanged;
     public event Action<StorageItem> OnItemLimitChanged;
 
+    public event Action<ItemStackInstance> OnStackItemAmountChanged;
+    public event Action<ItemStackInstance> OnStackLimitChanged;
+
     private void Awake()
     {
-        var stackDefinitions = ItemStacksList.Instance.StackDefinitions;
-
-        foreach (var stackDefinition in stackDefinitions) {
-            itemStacks.Add(stackDefinition.StackId, new ItemStackInstance(stackDefinition));
-        }
+        InitStacks();
     }
 
     private void OnDestroy()
     {
         foreach (var item in items) {
+            if (item == null) continue;
+
             UnsubscribeItem(item);
+        }
+
+        foreach (var stack in itemStacksDict.Values) {
+            if (stack == null) continue;
+
+            UnsubscribeStack(stack);
         }
     }
 
@@ -87,6 +95,7 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         }
     }
 
+    // --- Add Item ---
     private ItemInstance AddItem(ItemID id)
     {
         var definition = GetItemDefinition(id);
@@ -114,6 +123,7 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         OnItemAdded?.Invoke(item);
     }
 
+    // --- Add Item Amount ---
     public void AddItemAmountRange(IReadOnlyList<ItemInstance> items)
     {
         if (items == null) return;
@@ -154,6 +164,7 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         item.AddAmount(amount);
     }
 
+    // --- Remove Item ---
     public void RemoveItem(ItemInstance item)
     {
         if (item == null)
@@ -171,6 +182,17 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         OnItemRemoved?.Invoke(item);
     }
 
+    public void Clear()
+    {
+        for (int i = items.Count - 1; i >= 0; i--) {
+            var item = items[i];
+            if (item == null) continue;
+
+            RemoveItem(item);
+        }
+    }
+
+    // --- Remove Item Amount ---
     public void RemoveItemAmount(ItemInstance item)
     {
         RemoveItemAmount(item.Definition.ItemId, item.Amount);
@@ -184,40 +206,19 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         item.RemoveAmount(amount);
     }
 
+    // --- Add Limit ---
     public void AddLimit(ItemStackId stack, int amount)
     {
         GetStack(stack).AddLimit(amount);
     }
 
+    // --- Remove Limit ---
     public void RemoveLimit(ItemStackId stack, int amount)
     {
         GetStack(stack).RemoveLimit(amount);
     }
 
-    public void Clear()
-    {
-        for (int i = items.Count - 1; i >= 0; i--) {
-            var item = items[i];
-            if (item == null) continue;
-
-            RemoveItem(item);
-        }
-    }
-
-    public int GetLimit(ItemStackId stack)
-    {
-        return GetStack(stack).Amount;
-    }
-
-    public ItemStackInstance GetStack(ItemStackId stack)
-    {
-        if (!itemStacks.TryGetValue(stack, out var itemStack)) {
-            Debug.LogError($"[{nameof(Inventory)}] Stack ({stack}) is not valid!");
-        }
-
-        return itemStack;
-    }
-
+    // --- Get Item ---
     public ItemInstance GetInventoryItem(ItemID id)
     {
         itemsDict.TryGetValue(id, out var item);
@@ -230,6 +231,22 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         return items[index];
     }
 
+    // --- Get Stack ---
+    public int GetLimit(ItemStackId stack)
+    {
+        return GetStack(stack).Amount;
+    }
+
+    public ItemStackInstance GetStack(ItemStackId stack)
+    {
+        if (!itemStacksDict.TryGetValue(stack, out var itemStack)) {
+            Debug.LogError($"[{nameof(Inventory)}] Stack ({stack}) is not valid!");
+        }
+
+        return itemStack;
+    }
+
+    // --- Weight ---
     public float GetCurrentWeight()
     {
         var weight = 0f;
@@ -256,6 +273,7 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         return Mathf.RoundToInt(WeightLimit) - Mathf.RoundToInt(GetCurrentWeight());
     }
 
+    // --- ILocalizable ---
     public Dictionary<string, string> GetLocalization()
     {
         return new Dictionary<string, string>()
@@ -265,9 +283,36 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
         };
     }
 
+    // --- Add Stack ---
+    private void InitStacks()
+    {
+        var stackDefinitions = ItemStacksList.Instance.StackDefinitions;
+
+        foreach (var definition in stackDefinitions) {
+            if (definition == null) continue;
+
+            AddStack(new ItemStackInstance(definition));
+        }
+    }
+
+    private void AddStack(ItemStackInstance stack)
+    {
+        if (stack == null) {
+            Debug.LogError($"[{nameof(Inventory)}] Stack is not valid!");
+            return;
+        }
+
+        itemStacksDict.Add(stack.Definition.StackId, stack);
+        SubscribeStack(stack);
+    }
+
+    // --- Item Subscribe ---
     private void SubscribeItem(ItemInstance item)
     {
-        if (item == null) return;
+        if (item == null) {
+            Debug.LogError($"[{nameof(Inventory)}] Item is not valid!");
+            return;
+        }
 
         item.OnItemAmountAdded += HandleItemAmountAdded;
         item.OnItemAmountRemoved += HandleItemAmountRemoved;
@@ -275,16 +320,41 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
 
     private void UnsubscribeItem(ItemInstance item)
     {
-        if (item == null) return;
+        if (item == null) {
+            Debug.LogError($"[{nameof(Inventory)}] Item is not valid!");
+            return;
+        }
 
         item.OnItemAmountAdded -= HandleItemAmountAdded;
         item.OnItemAmountRemoved -= HandleItemAmountRemoved;
     }
 
+    // --- Stack Subscribe ---
+    private void SubscribeStack(ItemStackInstance stack)
+    {
+        if (stack == null) {
+            Debug.LogError($"[{nameof(Inventory)}] Stack is not valid!");
+            return;
+        }
+
+        stack.OnItemAmountChanged += HandleStackItemAmounChanged;
+    }
+
+    private void UnsubscribeStack(ItemStackInstance stack)
+    {
+        if (stack == null) {
+            Debug.LogError($"[{nameof(Inventory)}] Stack is not valid!");
+            return;
+        }
+
+        stack.OnItemAmountChanged -= HandleStackItemAmounChanged;
+    }
+
+    // --- Item Amount Events ---
     private void HandleItemAmountAdded(ItemInstance item, int amount)
     {
         var stack = GetStack(item.Definition.StackDefinition.StackId);
-        stack.AddItemAmount(item);
+        stack.AddItem(item);
 
         OnItemAmountAdded?.Invoke(item);
         OnItemAmountChanged?.Invoke(item);
@@ -292,12 +362,22 @@ public class Inventory : MonoBehaviour, IContextable, ILocalizable
 
     private void HandleItemAmountRemoved(ItemInstance item, int amount)
     {
-        OnItemAmountRemoved?.Invoke(item);
-        OnItemAmountChanged?.Invoke(item);
+        if (item == null) return;
 
         if (item.Amount <= 0 && autoCleaning) {
             RemoveItem(item);
         }
+
+        OnItemAmountRemoved?.Invoke(item);
+        OnItemAmountChanged?.Invoke(item);
+    }
+
+    // --- Stack Amount Events ---
+    private void HandleStackItemAmounChanged(ItemStackInstance stack)
+    {
+        if (stack == null) return;
+
+        OnStackItemAmountChanged?.Invoke(stack);
     }
 
     private ItemDefinition GetItemDefinition(ItemID id)

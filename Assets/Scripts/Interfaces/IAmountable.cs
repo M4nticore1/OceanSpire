@@ -4,5 +4,5 @@ using UnityEngine;
 public interface IAmountable
 {
     public int Amount { get; }
-    public event Action<int> OnAmountChanged;
+    public event Action<IAmountable> OnAmountChanged;
 }

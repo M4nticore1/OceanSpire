@@ -3,13 +3,6 @@ using UnityEngine.UI;
 
 public class InGameNotificationWidget : MonoBehaviour
 {
-    [Header("Main")]
-    [SerializeField] private InGameNotificationSeverityDefinition severityDefinition;
-    public InGameNotificationSeverityDefinition SeverityDefinition => severityDefinition;
-
-    [SerializeField] private int priority = 50;
-    public int Priorit => priority;
-
     [Header("UI")]
     [SerializeField] private CustomButton descriptionButton;
     public CustomButton DescriptionButton => descriptionButton;
@@ -26,29 +19,8 @@ public class InGameNotificationWidget : MonoBehaviour
     [SerializeField] private AnimatedPanel descriptionPanel;
     public AnimatedPanel DescriptionPanel => descriptionPanel;
 
-    private void Awake()
-    {
-        if (severityDefinition == null) {
-            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Severity Definition is not valid at {this}!");
-        }
-        if (descriptionButton == null) {
-            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Description Button is not valid at {this}!");
-        }
-        if (descriptionBackground == null) {
-            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Description Background is not valid at {this}!");
-        }
-        if (descriptionPanel == null) {
-            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Description Panel is not valid at {this}!");
-        }
-
-        UpdateSiblingIndex();
-        UpdateButtonColor();
-        UpdateDescriptionBackgroundColor();
-
-        if (descriptionPanel != null) {
-            descriptionPanel.SetAnimationProgress(0f);
-        }
-    }
+    private InGameNotificationSeverityDefinition severityDefinition;
+    private int priority = 50;
 
     private void OnEnable()
     {
@@ -66,6 +38,22 @@ public class InGameNotificationWidget : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (descriptionButton == null) {
+            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Description Button is not valid at {this}!");
+        }
+        if (descriptionBackground == null) {
+            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Description Background is not valid at {this}!");
+        }
+        if (descriptionPanel == null) {
+            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Description Panel is not valid at {this}!");
+        }
+        if (severityDefinition == null) {
+            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Severity Definition is not valid at {this}!");
+        }
+    }
+
     public void Init(InGameNotificationData notificationData)
     {
         if (notificationData == null) {
@@ -78,6 +66,17 @@ public class InGameNotificationWidget : MonoBehaviour
 
         descriptionText.SetLocalizationItem(notificationData.DescriptionLocaliztion);
         descriptionText.SetPlaceHolderLocalization(notificationData.DescriptionLocalizationHolder);
+
+        severityDefinition = notificationData.SeverityDefinition;
+        priority = notificationData.Priority;
+
+        UpdateSiblingIndex();
+        UpdateButtonColor();
+        UpdateDescriptionBackgroundColor();
+
+        if (descriptionPanel != null) {
+            descriptionPanel.SetAnimationProgress(0f);
+        }
     }
 
     public void SetButtonSelectGroup(SelectGroup selectGroup)
@@ -94,13 +93,22 @@ public class InGameNotificationWidget : MonoBehaviour
 
     private void UpdateButtonColor()
     {
-        if (descriptionButton == null) return;
-        if (severityDefinition == null) return;
+        if (descriptionButton == null) {
+            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Description Button is not valid at {this}!");
+            return;
+        }
+
+        if (severityDefinition == null) {
+            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Severity Definition is not valid at {this}!");
+            return;
+        }
 
         descriptionButton.idleState.bodyColor = severityDefinition.NormalColor;
         descriptionButton.hoveredState.bodyColor = severityDefinition.HoveredColor;
         descriptionButton.pressedState.bodyColor = severityDefinition.PressedColor;
         descriptionButton.selectedState.bodyColor = severityDefinition.SelectedColor;
+
+        descriptionButton.EndTransitionAnimation();
     }
 
     private void UpdateDescriptionBackgroundColor()

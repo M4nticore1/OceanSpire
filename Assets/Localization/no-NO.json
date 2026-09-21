@@ -236,6 +236,8 @@
   "in_game_notification_description_starvation": "Matvarelagrene er tømt. Innbyggerne begynner å svekkes, og helsen deres vil gradvis forverres.",
   "in_game_notification_name_energy_shortage": "Energimangel",
   "in_game_notification_description_energy_shortage": "Energireservene er helt tømt. Bymessige objekter har redusert prosessene sine betydelig.",
+  "in_game_notification_name_storage_full": "Overflyt: {stackName}",
+  "in_game_notification_description_storage_full": "Lageret er fullt. Alt innkommende overskudd vil bli ødelagt.",
   "first_name_male_adam": "Adam",
   "first_name_male_daniel": "Daniel",
   "first_name_male_david": "David",

@@ -290,7 +290,7 @@ public abstract class AmountableWidget : MonoBehaviour
         UpdateDisplay();
     }
 
-    private void OnAmountChanged(int amount)
+    private void OnAmountChanged(IAmountable amountable)
     {
         if (ShouldDestroy())
             return;
@@ -300,7 +300,7 @@ public abstract class AmountableWidget : MonoBehaviour
         TryUpdateAmountColor();
     }
 
-    private void OnLimitChanged(int amount)
+    private void OnLimitChanged(IAmountable amountable)
     {
         UpdateAmountAndLimitText();
         TryUpdateResourceBar();

@@ -97,8 +97,8 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
     };
     private CustomSelectableStateEntry CurrentStateEntry => IsIdle ? idleState : IsHovered ? hoveredState : IsPressed ? pressedState : IsSelected ? selectedState : disabledState;
 
-    private Color targetBodyColor;
-    private Color targetContentColor;
+    private Color targetBodyColor => CurrentStateEntry.bodyColor;
+    private Color targetContentColor => CurrentStateEntry.contentColor;
     public Color CurrentBodyColor { get { return targetGraphic != null ? targetGraphic.color : Color.black; } set { if (targetGraphic != null) targetGraphic.color = value; } }
     public Color CurrentContentColor { get { return targetGraphic != null ? targetGraphic.color : Color.black; } set { if (targetGraphic != null) targetGraphic.color = value; } }
     public Vector3 CurrentScale { get { return scaleRoot != null ? scaleRoot.localScale : Vector3.one; } set { if (scaleRoot != null) scaleRoot.localScale = value; } }
@@ -123,8 +123,6 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
 
     private void Awake()
     {
-        UpdateBodyTargetColor();
-        UpdateContentTargetColor();
         UpdateColor();
         UpdateScale();
         UpdateSelectGroup();
@@ -172,8 +170,6 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
     private void OnValidate()
     {
         SetState(state);
-        UpdateBodyTargetColor();
-        UpdateContentTargetColor();
         SetStateTransitionAlpha(1f);
     }
 
@@ -216,8 +212,7 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
 
     private void Disable()
     {
-        UpdateBodyTargetColor();
-        UpdateContentTargetColor();
+
     }
 
     public void SetSelectGroup(SelectGroup selectGroup)
@@ -247,8 +242,7 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
     // Idle
     private void Idle()
     {
-        UpdateBodyTargetColor();
-        UpdateContentTargetColor();
+
     }
 
     // Hover
@@ -265,8 +259,6 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
 
     private void Hover()
     {
-        UpdateBodyTargetColor();
-        UpdateContentTargetColor();
         OnHovered?.Invoke();
     }
 
@@ -298,9 +290,6 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
 
     private void Press()
     {
-        UpdateBodyTargetColor();
-        UpdateContentTargetColor();
-
         pressedButtonStartPosition = transform.position;
         pressedButtonStartPointerPosition = PointerUtils.GetCurrentInputPosition();
 
@@ -335,9 +324,6 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
     // Select
     private void Select()
     {
-        UpdateBodyTargetColor();
-        UpdateContentTargetColor();
-
         if (selectGroup != null) {
             selectGroup.OnButtonSelected(this);
         }
@@ -429,8 +415,7 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
 
     private void SetStateTransitionAlpha(float value)
     {
-        stateTransitionAlpha = value;
-        stateTransitionAlpha = Mathf.Clamp01(stateTransitionAlpha);
+        stateTransitionAlpha = Mathf.Clamp01(value);
 
         if (stateTransitionAlpha >= 1) {
             isAnimating = false;
@@ -477,20 +462,6 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
             targetGraphic.color = disabledState.bodyColor;
             return;
         }
-    }
-
-    private void UpdateBodyTargetColor()
-    {
-        var colorHolder = CurrentStateEntry.bodyColorHolder;
-        var color = colorHolder != null ? colorHolder.color : CurrentStateEntry.bodyColor;
-        targetBodyColor = color;
-    }
-
-    private void UpdateContentTargetColor()
-    {
-        var colorHolder = CurrentStateEntry.contentColorHolder;
-        var color = colorHolder != null ? colorHolder.color : CurrentStateEntry.contentColor;
-        targetContentColor = color;
     }
 
     // Click

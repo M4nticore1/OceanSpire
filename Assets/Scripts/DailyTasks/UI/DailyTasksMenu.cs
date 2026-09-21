@@ -5,10 +5,15 @@ using UnityEngine.UI;
 
 public class DailyTasksMenu : MonoBehaviour, IOpenable
 {
+    [Header("Main")]
     [SerializeField] private DailyTasksManager dailyTasksManager;
     [SerializeField] private DailyTaskWidget dailyTaskWidgetPrefab;
+
+    [Header("UI")]
+    [SerializeField] private GameObject content;
     [SerializeField] private LayoutGroup tasksLayoutGroup;
-    [SerializeField] private CustomButton closeButton;
+    [SerializeField] private CustomButton showButton;
+    [SerializeField] private CustomButton hideButton;
     [SerializeField] private TextLocalizer updateTasksText;
 
     private List<DailyTaskWidget> widgets = new();
@@ -16,14 +21,15 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
     private bool isSubscribed = false;
     private bool areWidgetsSpawned = false;
 
-    public bool IsShown { get; private set; } = false;
+    public bool IsShown => content.activeInHierarchy;
 
     public event Action OnShown;
     public event Action OnHidden;
 
     private void OnEnable()
     {
-        closeButton.OnReleased.AddListener(OnCloseButtonClicked);
+        showButton.OnReleased.AddListener(HandleShowButtonClicked);
+        hideButton.OnReleased.AddListener(HandleHideButtonClicked);
 
         dailyTasksManager.SetTasksViewed(true);
         TrySubscribe();
@@ -31,7 +37,8 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
     private void OnDisable()
     {
-        closeButton.OnReleased.RemoveListener(OnCloseButtonClicked);
+        showButton.OnReleased.RemoveListener(HandleShowButtonClicked);
+        hideButton.OnReleased.RemoveListener(HandleHideButtonClicked);
 
         TryUnsubscribe();
     }
@@ -43,8 +50,9 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        IsShown = true;
-        gameObject.SetActive(true);
+        if (IsShown) return;
+
+        content.SetActive(true);
         TryRemoveWidgets();
         TryCreateWidgets();
         InputStateManager.Instance.AddInputBlockTarget(this);
@@ -54,8 +62,9 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
     public void Hide()
     {
-        IsShown = false;
-        gameObject.SetActive(false);
+        if (!IsShown) return;
+
+        content.SetActive(false);
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
@@ -105,7 +114,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         if (isSubscribed) return;
 
         dailyTasksManager.OnTasksCreated += OnTasksInited;
-        dailyTasksManager.OnTasksViewedChanged += OnTasksViewedChanged;
+        //dailyTasksManager.OnTasksViewedChanged += OnTasksViewedChanged;
 
         isSubscribed = true;
     }
@@ -114,7 +123,8 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
     {
         if (!isSubscribed) return;
 
-        dailyTasksManager.OnTasksViewedChanged -= OnTasksViewedChanged;
+        dailyTasksManager.OnTasksCreated -= OnTasksInited;
+        //dailyTasksManager.OnTasksViewedChanged -= OnTasksViewedChanged;
 
         isSubscribed = false;
     }
@@ -125,7 +135,12 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         CreateTaskWidgets();
     }
 
-    private void OnCloseButtonClicked()
+    private void HandleShowButtonClicked()
+    {
+        Show();
+    }
+
+    private void HandleHideButtonClicked()
     {
         Hide();
     }
