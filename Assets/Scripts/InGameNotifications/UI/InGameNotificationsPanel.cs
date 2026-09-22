@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,13 +11,18 @@ public class InGameNotificationsPanel : MonoBehaviour
 
     private Dictionary<InGameNotificationData, InGameNotificationWidget> spawnedNotificationWidgetsDict = new();
 
+    private void OnEnable()
+    {
+        InGameNotificationWidget.OnNotificationHidden += HandleNotificationWidgetHidden;
+    }
+
+    private void OnDisable()
+    {
+        InGameNotificationWidget.OnNotificationHidden -= HandleNotificationWidgetHidden;
+    }
+
     public void ShowNotification(InGameNotificationData notificationData)
     {
-        if (notificationData == null) {
-            Debug.LogError($"[{nameof(InGameNotificationsPanel)}] Notification Data is not valid!");
-            return;
-        }
-
         var widget = InGameNotificationFactory.CreateNotification(notificationWidgetPrefab, layoutGroup.transform, notificationData);
         if (widget == null) {
             Debug.LogError($"[{nameof(InGameNotificationsPanel)}] Created Widget is not valid from {notificationWidgetPrefab}!");
@@ -39,5 +45,19 @@ public class InGameNotificationsPanel : MonoBehaviour
 
         spawnedNotificationWidgetsDict.Remove(notificationData);
         Destroy(widget.gameObject);
+    }
+
+    public InGameNotificationWidget GetNotificationWidget(InGameNotificationData notificationData)
+    {
+        spawnedNotificationWidgetsDict.TryGetValue(notificationData, out var widget);
+
+        return widget;
+    }
+
+    private void HandleNotificationWidgetHidden(InGameNotificationWidget widget)
+    {
+        if (!widget) return;
+
+        HideNotification(widget.NotificationData);
     }
 }

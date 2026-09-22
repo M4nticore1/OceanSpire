@@ -1,8 +1,18 @@
 using UnityEngine;
 
+public enum InGameNotificationType
+{
+    Message,
+    Warning,
+    Alert
+}
+
 [CreateAssetMenu(fileName = "InGameNotificationSeverityDefinition", menuName = "Scriptable Objects/InGameNotificationSeverityDefinition")]
 public class InGameNotificationSeverityDefinition : ScriptableObject
 {
+    [SerializeField] private InGameNotificationType notificationType;
+    public InGameNotificationType NotificationType => notificationType;
+
     [SerializeField] private Color normalColor = Color.clear;
     public Color NormalColor => normalColor;
 

@@ -390,7 +390,7 @@ MonoBehaviour:
   scaleRoot: {fileID: 1186100079346962137}
   isClickable: 1
   deselectOnOutsideClick: 0
-  cancelPressWhenMoving: 0
+  cancelPressWhenMoving: 1
   cancelPressWhenPointerMoving: 0
   state: 0
   stateTransitionTime: 0.3
