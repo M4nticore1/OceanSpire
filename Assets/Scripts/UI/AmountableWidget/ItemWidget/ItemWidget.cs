@@ -1,8 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using System.Collections.Generic;
-using System.Collections;
 
 public enum ItemWidgetColorType
 {

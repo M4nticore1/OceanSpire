@@ -280,6 +280,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FitSizeToText
   rect: {fileID: 8341282516621932509}
+  fitHorizontal: 0
+  fitVertical: 1
+  minSize: {x: 0, y: 100}
+  extraSize: {x: 0, y: 100}
   minHeight: 100
   extraHeight: 100
   includedTransforms:

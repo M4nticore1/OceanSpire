@@ -247,7 +247,7 @@ MonoBehaviour:
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 16
+  m_fontSizeMin: 28
   m_fontSizeMax: 32
   m_fontStyle: 0
   m_HorizontalAlignment: 1
@@ -313,6 +313,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5455129626814256693}
   - component: {fileID: 2256625408672897932}
+  - component: {fileID: 6885743620880437779}
   m_Layer: 5
   m_Name: InGameNotificationWidgetNotification
   m_TagString: Untagged
@@ -358,8 +359,34 @@ MonoBehaviour:
   descriptionButton: {fileID: 9180611409173182749}
   nameText: {fileID: 7253369044081215410}
   descriptionText: {fileID: 439579705045872436}
+  iconImage: {fileID: 8942183683535444717}
   descriptionBackground: {fileID: 6177890912877142871}
   descriptionPanel: {fileID: 8033370540609426835}
+  fitSize: {fileID: 6885743620880437779}
+--- !u!114 &6885743620880437779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3706953083395174287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71be611b0727f0f4381a2e5d29107826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FitSizeToText
+  rect: {fileID: 5455129626814256693}
+  fitHorizontal: 1
+  fitVertical: 0
+  minSize: {x: 350, y: 50}
+  extraSize: {x: 0, y: 0}
+  minHeight: 0
+  extraHeight: 0
+  includedTransforms:
+  - {fileID: 9110622229621198718}
+  includedHierarchyTransforms: []
+  excludedTransforms: []
+  excludedHierarchyTransforms: []
 --- !u!1 &7428340549571441875
 GameObject:
   m_ObjectHideFlags: 0
@@ -698,7 +725,7 @@ MonoBehaviour:
   m_fontSizeBase: 48
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 16
+  m_fontSizeMin: 24
   m_fontSizeMax: 32
   m_fontStyle: 0
   m_HorizontalAlignment: 1

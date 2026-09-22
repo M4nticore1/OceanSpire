@@ -1,22 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class FitSizeToChildren : FitSizeToContent
 {
-    protected override float GetHeight()
+    protected override Vector2 GetSize()
     {
         var children = GetIncludedChildren();
 
         if (children.Count == 0) {
-            return MinHeight;
+            return MinSize;
         }
 
         Canvas.ForceUpdateCanvases();
 
         var corners = new Vector3[4];
+
+        var lowestX = float.MaxValue;
         var lowestY = float.MaxValue;
 
         foreach (var child in children) {
@@ -28,29 +26,42 @@ public class FitSizeToChildren : FitSizeToContent
             childRect.GetWorldCorners(corners);
 
             for (int i = 0; i < corners.Length; i++) {
+                var x = RectTransform.InverseTransformPoint(corners[i]).x;
+                lowestX = Mathf.Min(lowestX, x);
+
                 var y = RectTransform.InverseTransformPoint(corners[i]).y;
                 lowestY = Mathf.Min(lowestY, y);
             }
         }
 
         if (lowestY == float.MaxValue) {
-            return MinHeight;
+            return MinSize;
         }
 
-        var pivotY = RectTransform.pivot.y;
-        var currentHeight = RectTransform.rect.height;
-        var requiredHeight = currentHeight;
+        var pivot = RectTransform.pivot;
+        var currentSize = RectTransform.rect.size;
+        var requiredSize = currentSize;
 
-        if (pivotY > 0f) {
-            requiredHeight = (RectTransform.rect.yMax - lowestY) / pivotY;
+        if (pivot.x > 0f) {
+            requiredSize.x = (RectTransform.rect.xMax - lowestX) / pivot.x;
         }
         else {
-            requiredHeight = currentHeight + (RectTransform.rect.yMin - lowestY);
+            requiredSize.x = currentSize.x + (RectTransform.rect.xMin - lowestX);
         }
 
-        requiredHeight += ExtraHeight;
-        requiredHeight = Mathf.Max(requiredHeight, MinHeight);
+        if (pivot.y > 0f) {
+            requiredSize.y = (RectTransform.rect.yMax - lowestY) / pivot.y;
+        }
+        else {
+            requiredSize.y = currentSize.y + (RectTransform.rect.yMin - lowestY);
+        }
 
-        return requiredHeight;
+        requiredSize.x += ExtraHeight;
+        requiredSize.y += ExtraHeight;
+
+        requiredSize.x = Mathf.Max(requiredSize.x, MinSize.x);
+        requiredSize.y = Mathf.Max(requiredSize.y, MinSize.y);
+
+        return requiredSize;
     }
 }
