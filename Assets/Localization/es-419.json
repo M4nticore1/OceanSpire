@@ -10,6 +10,8 @@
   "create": "Crear",
   "cancel": "Cancelar",
   "delete": "Eliminar",
+  "delete_world": "Eliminar mundo",
+  "delete_confirmation": "¿Estás seguro de que quieres eliminar el mundo? La partida guardada no se podrá recuperar.",
   "discard": "Desechar",
   "update": "Actualizar",
   "update_now": "Actualizar ahora",

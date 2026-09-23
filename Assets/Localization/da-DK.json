@@ -10,6 +10,8 @@
   "create": "Opret",
   "cancel": "Annuller",
   "delete": "Slet",
+  "delete_world": "Slet verden",
+  "delete_confirmation": "Er du sikker på, at du vil slette verdenen? Gemmestedet kan ikke gendannes.",
   "discard": "Kasser",
   "update": "Opdater",
   "update_now": "Opdater nu",

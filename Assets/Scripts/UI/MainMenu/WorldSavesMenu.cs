@@ -8,7 +8,7 @@ public class WorldSavesMenu : MonoBehaviour
     [SerializeField] private SaveSlotWidget saveSlotWidgetPrefab;
 
     [Header("UI")]
-    [SerializeField] private CreateNewWorldMenu createNewWorldMenu;
+    [SerializeField] private CreateWorldMenu createNewWorldMenu;
     [SerializeField] private LayoutGroup layoutGroup;
     [SerializeField] private SelectGroup selectGroup;
 
@@ -16,14 +16,20 @@ public class WorldSavesMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        if (createNewWorldMenu) createNewWorldMenu.OnClosed += OnCreateMenuClosed;
-        SaveSlotWidget.OnWorldDataRemoved += OnWorldDataRemoved;
+        if (createNewWorldMenu) {
+            createNewWorldMenu.OnClosed += OnCreateMenuClosed;
+        }
+
+        WorldSaveSystem.OnWorldDataDeleted += OnWorldDataRemoved;
     }
 
     private void OnDisable()
     {
-        if (createNewWorldMenu) createNewWorldMenu.OnClosed -= OnCreateMenuClosed;
-        SaveSlotWidget.OnWorldDataRemoved -= OnWorldDataRemoved;
+        if (createNewWorldMenu) {
+            createNewWorldMenu.OnClosed -= OnCreateMenuClosed;
+        }
+
+        WorldSaveSystem.OnWorldDataDeleted -= OnWorldDataRemoved;
     }
 
     private void Start()
@@ -83,7 +89,7 @@ public class WorldSavesMenu : MonoBehaviour
         }
     }
 
-    private void OnWorldDataRemoved(SaveSlotWidget widget)
+    private void OnWorldDataRemoved(WorldData worldData)
     {
         RebuildUI();
     }

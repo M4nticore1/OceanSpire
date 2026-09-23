@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 3976798044307412247}
   - component: {fileID: 9090524891250378702}
   m_Layer: 0
-  m_Name: CreateNewWorldMenu
+  m_Name: CreateWorldMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

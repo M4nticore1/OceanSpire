@@ -749,7 +749,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8, g: 0.6627451, b: 0.54509807, a: 1}
+  m_Color: {r: 0.8, g: 0.67254907, b: 0.54509807, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -791,25 +791,25 @@ MonoBehaviour:
   state: 0
   stateTransitionTime: 0.3
   idleState:
-    bodyColor: {r: 0.8, g: 0.6627451, b: 0.54509807, a: 1}
+    bodyColor: {r: 0.8, g: 0.67254907, b: 0.54509807, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    bodyColor: {r: 0.8509804, g: 0.7040743, b: 0.5786667, a: 1}
+    bodyColor: {r: 0.8509804, g: 0.71568626, b: 0.5803922, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    bodyColor: {r: 0.9019608, g: 0.74682355, b: 0.61333334, a: 1}
-    bodyColorHolder: {fileID: 11400000, guid: b73e090fdeaea0741a9838e94dcac55d, type: 2}
+    bodyColor: {r: 0.9019608, g: 0.75686276, b: 0.6117647, a: 1}
+    bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 0.98
   selectedState:
-    bodyColor: {r: 0.9490196, g: 0.78824455, b: 0.64533335, a: 1}
+    bodyColor: {r: 0.9490196, g: 0.7980392, b: 0.64705884, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 0, g: 0, b: 0, a: 1}
     contentColorHolder: {fileID: 0}
@@ -1448,7 +1448,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextLocalizer
   textRole: 1
-  item: {fileID: 11400000, guid: 801596d9f82581849abf18c5cc400b22, type: 2}
+  item: {fileID: 11400000, guid: 79b5ed15285eaf945b5b2b769eb6da57, type: 2}
   localizationTarget: {fileID: 0}
 --- !u!1 &5857018434578971776
 GameObject:
@@ -1552,7 +1552,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: e6073fbecc9c72a4d82b57ba7142b048, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

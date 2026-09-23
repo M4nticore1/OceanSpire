@@ -10,6 +10,8 @@
   "create": "Skapa",
   "cancel": "Avbryt",
   "delete": "Ta bort",
+  "delete_world": "Ta bort värld",
+  "delete_confirmation": "Är du säker på att du vill ta bort världen? Det går inte att återställa sparfilen.",
   "discard": "Släng",
   "update": "Uppdatera",
   "update_now": "Uppdatera nu",

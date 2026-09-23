@@ -93,12 +93,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 68
+  m_fontSize: 64
   m_fontSizeBase: 72
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 42
-  m_fontSizeMax: 68
+  m_fontSizeMin: 32
+  m_fontSizeMax: 64
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -244,15 +244,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
   targetGraphic: {fileID: 200313360122137738}
   contentGraphics: []
-  scaleRoot: {fileID: 1885940025941970757}
-  isInteractable: 1
   isSelectable: 0
+  selectGroup: {fileID: 0}
   isScalable: 1
+  scaleRoot: {fileID: 1885940025941970757}
+  isClickable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectGroup: {fileID: 0}
-  stateTransitionTime: 0.2
+  cancelPressWhenPointerMoving: 0
   state: 0
+  stateTransitionTime: 0.2
   idleState:
     bodyColor: {r: 0.9490196, g: 0.73169935, b: 0.42745093, a: 1}
     bodyColorHolder: {fileID: 0}
