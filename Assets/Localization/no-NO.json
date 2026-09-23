@@ -12,6 +12,8 @@
   "delete": "Slett",
   "delete_world": "Slett verden",
   "delete_confirmation": "Er du sikker på at du vil slette verdenen? Lagringsfilen kan ikke gjenopprettes.",
+  "rename": "Gi navn på",
+  "rename_world": "Gi navn på verden",
   "discard": "Kast",
   "update": "Oppdater",
   "update_now": "Oppdater nå",

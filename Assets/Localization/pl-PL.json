@@ -12,6 +12,8 @@
   "delete": "Usuń",
   "delete_world": "Usuń świat",
   "delete_confirmation": "Czy na pewno chcesz usunąć świat? Zapisu gry nie będzie można odzyskać.",
+  "rename": "Zmień nazwę",
+  "rename_world": "Zmień nazwę świata",
   "discard": "Wyrzuć",
   "update": "Zaktualizuj",
   "update_now": "Zaktualizuj teraz",

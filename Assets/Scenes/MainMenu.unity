@@ -1583,10 +1583,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 778086849105559690, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: m_fontSize
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 1948839285998919013, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: m_fontSize
+      value: 44
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061401992721266346, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: m_fontSize
+      value: 44
+      objectReference: {fileID: 0}
     - target: {fileID: 3306548868657905846, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: playerSettingsManager
       value: 
       objectReference: {fileID: 402430243}
+    - target: {fileID: 3367302558773861489, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: m_fontSize
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 3513212658406958598, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: playerSettingsManager
       value: 
@@ -1595,10 +1611,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainMenuCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 4858137478602336601, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: m_fontSize
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 5382797189989399039, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: worldSaveHandler
+      value: 
+      objectReference: {fileID: 781057966}
+    - target: {fileID: 7071742386713176888, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: m_fontSize
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 7240504305424072805, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: playerSettingsManager
       value: 
       objectReference: {fileID: 402430243}
+    - target: {fileID: 7461243090510458083, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7636622798185439268, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: playerSettingsManager
       value: 

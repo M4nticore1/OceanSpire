@@ -12,6 +12,8 @@
   "delete": "Burahin",
   "delete_world": "Burahin ang Mundo",
   "delete_confirmation": "Sigurado ka bang gusto mong the burahin ang mundo? Hindi na maibabalik ang save.",
+  "rename": "Palitan ang Pangalan",
+  "rename_world": "Palitan ang Pangalan ng Mundo",
   "discard": "I-discard",
   "update": "I-update",
   "update_now": "I-update ngayon",

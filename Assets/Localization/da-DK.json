@@ -12,6 +12,8 @@
   "delete": "Slet",
   "delete_world": "Slet verden",
   "delete_confirmation": "Er du sikker på, at du vil slette verdenen? Gemmestedet kan ikke gendannes.",
+  "rename": "Omdøbe",
+  "rename_world": "Omdøbe verden",
   "discard": "Kasser",
   "update": "Opdater",
   "update_now": "Opdater nu",

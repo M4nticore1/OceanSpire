@@ -12,6 +12,8 @@
   "delete": "Supprimer",
   "delete_world": "Supprimer le monde",
   "delete_confirmation": "Êtes-vous sûr de vouloir supprimer le monde ? La sauvegarde ne pourra pas être restaurée.",
+  "rename": "Renommer",
+  "rename_world": "Renommer le monde",
   "discard": "Jeter",
   "update": "Mettre à jour",
   "update_now": "Mettre à jour maintenant",

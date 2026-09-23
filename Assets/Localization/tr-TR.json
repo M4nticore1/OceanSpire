@@ -12,6 +12,8 @@
   "delete": "Sil",
   "delete_world": "Dünyayı Sil",
   "delete_confirmation": "Dünyayı silmek istediğinizden emin misiniz? Kayıt dosyası kurtarılamaz.",
+  "rename": "Yeniden Adlandır",
+  "rename_world": "Dünyayı Yeniden Adlandır",
   "discard": "At",
   "update": "Güncelle",
   "update_now": "Şimdi güncelle",

@@ -12,6 +12,8 @@
   "delete": "Delete",
   "delete_world": "Delete World",
   "delete_confirmation": "Are you sure you want to delete the world? The save file cannot be recovered.",
+  "rename": "Rename",
+  "rename_world": "Rename World",
   "discard": "Discard",
   "update": "Update",
   "update_now": "Update now",
