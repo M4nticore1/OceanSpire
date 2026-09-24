@@ -14,10 +14,20 @@ public class OpenCloseButton : MonoBehaviour
     [SerializeField] private ToggleButtonType buttonType;
     [SerializeField] private CustomButton button;
 
+    private void Awake()
+    {
+        if (TargetOpenable == null) {
+            Debug.LogError($"[{nameof(OpenCloseButton)}] IOpenable is not valid at {targetOpenable}!");
+        }
+        if (button == null) {
+            Debug.LogError($"[{nameof(OpenCloseButton)}] Button is not valid at {this}!");
+        }
+    }
+
     private void OnEnable()
     {
-        if (!targetOpenable) return;
-        if (!button) return;
+        if (TargetOpenable == null) return;
+        if (button == null) return;
 
         if (buttonType == ToggleButtonType.Open)
             button.OnReleased.AddListener(TargetOpenable.Show);
@@ -27,8 +37,8 @@ public class OpenCloseButton : MonoBehaviour
 
     private void OnDisable()
     {
-        if (!targetOpenable) return;
-        if (!button) return;
+        if (TargetOpenable == null) return;
+        if (button == null) return;
 
         if (buttonType == ToggleButtonType.Open)
             button.OnReleased.RemoveListener(TargetOpenable.Show);
