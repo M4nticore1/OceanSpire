@@ -943,50 +943,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30c442c818ea2e942a614aec33f638da, type: 3}
---- !u!1 &71660247
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 71660248}
-  - component: {fileID: 71660249}
-  m_Layer: 0
-  m_Name: WorldSaveHandler
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &71660248
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 71660247}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 96.53042, y: 1289.0732, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1317929167}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &71660249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 71660247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc7b2fcf0b5aec243b556e7f5ae32a4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorldSaveHandler
 --- !u!4 &74825519 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
@@ -6372,6 +6328,30 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5450178748998116980, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450178748998116980, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450178748998116980, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450178748998116980, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450178748998116980, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5450178748998116980, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5483787753822778945, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: cityStorage
       value: 
@@ -7552,6 +7532,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1040276942}
+  - {fileID: 1856436720}
   - {fileID: 744642253}
   - {fileID: 803467552}
   m_Father: {fileID: 1372936028}
@@ -10927,8 +10908,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AutoSave
   worldSaveManager: {fileID: 1040276941}
-  autoSaveDataFrequency: 2
+  autoSaveDataFrequency: 3
   autoSaveThumbFrequency: 60
+  crrentSaveDataTime: 0
+  crrentSaveThumbTime: 0
 --- !u!1001 &749933963
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12056,12 +12039,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 803467551}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ef40b355e64a414a850e066fec9d95b, type: 3}
+  m_Script: {fileID: 11500000, guid: f1564bb77deecff4fa04756017fb5184, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AutoSave
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingWorldSaveController
   worldSaveManager: {fileID: 1040276941}
-  autoSaveDataFrequency: 1
-  autoSaveThumbFrequency: 60
+  buildingsLoader: {fileID: 1911230802}
 --- !u!1 &806763734
 GameObject:
   m_ObjectHideFlags: 0
@@ -13633,8 +13615,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WindManager
   windSpeed: 15
   windChangingSpeed: 0.05
-  minWindDirectionChangeFreqency: 300
-  maxWindDirectionChangeFreqency: 600
+  minWindDirectionChangeFreqency: 450
+  maxWindDirectionChangeFreqency: 900
   currentWindDirectionChangeFreqency: 0
   currentWindDirectionChangeTime: 0
   <WindDirection>k__BackingField: {x: 0, y: 0, z: 0}
@@ -15133,7 +15115,7 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
     amount: 100
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 25000
+    amount: 2500
   - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
     amount: 500
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
@@ -15143,11 +15125,11 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
     amount: 0
   - definition: {fileID: 11400000, guid: e6e0b672836d93b44bbc0c0b39214e20, type: 2}
-    amount: 25
+    amount: 0
   - definition: {fileID: 11400000, guid: 6009cc6eba9fcf9489b14353fb2b3c9c, type: 2}
     amount: 0
   - definition: {fileID: 11400000, guid: 0a719313980629b44bf36d6878f42391, type: 2}
-    amount: 10
+    amount: 0
   - definition: {fileID: 11400000, guid: df1f21bae6de24c42807df07f0db0781, type: 2}
     amount: 0
   - definition: {fileID: 11400000, guid: 2885e0f30598a164395e493ce7632386, type: 2}
@@ -17085,7 +17067,6 @@ Transform:
   - {fileID: 1285543872}
   - {fileID: 2028964658}
   - {fileID: 127345975}
-  - {fileID: 71660248}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1322718665
@@ -21625,6 +21606,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2507607305674435601, guid: 27296c086a07a014698466e1003aaf2b, type: 3}
   m_PrefabInstance: {fileID: 1854745230}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1856436719
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1856436720}
+  - component: {fileID: 1856436721}
+  m_Layer: 0
+  m_Name: WorldSaveHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1856436720
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1856436719}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 389174580}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1856436721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1856436719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc7b2fcf0b5aec243b556e7f5ae32a4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldSaveHandler
 --- !u!1001 &1857027104
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -271,10 +271,25 @@ public class RaidManager : MonoBehaviour
         if (raiderBoats == null) return;
 
         var extraCount = Mathf.Max(raiderBoats.Count - raiders.Count, 0);
+        if (extraCount <= 0) return;
+
+        var boatsToDestroy = new List<Boat>();
 
         for (int i = 0; i < extraCount; i++) {
-            var boat = raiderBoats[raiderBoats.Count - i - 1];
+            var index = raiderBoats.Count - 1 - i;
+
+            if (index >= 0 && index < raiderBoats.Count) {
+                var boat = raiderBoats[index];
+                if (boat == null) continue;
+
+                boatsToDestroy.Add(boat);
+            }
+        }
+
+        for (int i = 0; i < boatsToDestroy.Count; i++) {
+            var boat = boatsToDestroy[i];
             if (boat == null) continue;
+            if (boat.gameObject == null) continue;
 
             Destroy(boat.gameObject);
         }

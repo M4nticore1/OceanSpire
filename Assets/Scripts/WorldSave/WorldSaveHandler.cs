@@ -1,17 +1,20 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldSaveHandler : MonoBehaviour
 {
     public static WorldSaveHandler Instance { get; private set; }
 
-    public WorldData[] AllSaveData { get; private set; }
+    public List<WorldData> AllSavesData { get; private set; }
     public WorldData CurrentWorldData { get; private set; }
     public string SaveWorldName { get; private set; }
 
     private void Awake()
     {
+        DontDestroyOnLoad(this);
+
         if (Instance != null) {
-            Debug.LogError($"[{nameof(WorldSaveHandler)}] There's another WorldSaveHandler on scene!");
+            Destroy(gameObject);
         }
         else {
             Instance = this;
@@ -49,16 +52,21 @@ public class WorldSaveHandler : MonoBehaviour
 
     private void UpdateSavesData()
     {
-        AllSaveData = WorldSaveSystem.GetAllSaveData();
+        AllSavesData = WorldSaveSystem.GetAllSaveData();
     }
 
     private void HandleWorldDataAdded(WorldData worldData)
     {
-        UpdateSavesData();
+        if (worldData == null) return;
+        if (AllSavesData.Contains(worldData)) return;
+
+        AllSavesData.Add(worldData);
     }
 
     private void HandleWorldDataDeleted(WorldData worldData)
     {
-        UpdateSavesData();
+        if (worldData == null) return;
+
+        AllSavesData.Remove(worldData);
     }
 }

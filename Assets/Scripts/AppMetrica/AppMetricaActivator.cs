@@ -22,7 +22,7 @@ public static class AppMetricaActivator
         if (PlayerSaveSystem.GetData() != null) return false;
 
         var worldSaves = WorldSaveSystem.GetAllSaveData();
-        if (worldSaves != null && worldSaves.Length > 0)
+        if (worldSaves != null && worldSaves.Count > 0)
             return false;
 
         return true;

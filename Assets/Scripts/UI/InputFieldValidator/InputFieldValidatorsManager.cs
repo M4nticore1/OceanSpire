@@ -45,6 +45,15 @@ public class InputFieldValidatorsManager : MonoBehaviour
         HasInvalid = invalid;
     }
 
+    public void HideValidators()
+    {
+        foreach (var validator in validators) {
+            if (validator == null) continue;
+
+            validator.Hide();
+        }
+    }
+
     private void HandleInputFieldValueChanged(string value)
     {
         UpdateValidatorsShown(value);
