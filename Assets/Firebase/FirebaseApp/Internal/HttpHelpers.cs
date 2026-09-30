@@ -32,7 +32,7 @@ namespace Firebase.Internal
       if (FirebaseInterops.GetIsDataCollectionDefaultEnabled(firebaseApp))
       {
         request.Headers.Add("X-Firebase-AppId", firebaseApp.Options.AppId);
-        request.Headers.Add("X-Firebase-AppVersion", FirebaseInterops.GetApplicationVersion());
+        request.Headers.Add("X-Firebase-AppVersion", UnityEngine.Application.version);
       }
       // Add additional Firebase tokens to the header.
       await FirebaseInterops.AddFirebaseTokensAsync(request, firebaseApp, authPrefix, limitedUseAppCheckTokens);
