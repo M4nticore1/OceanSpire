@@ -17,7 +17,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-common:22.1.0' // Assets/Firebase/Editor/AppDependencies.xml:16
     implementation 'com.google.firebase:firebase-crashlytics-ndk:20.0.6' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:16
     implementation 'com.google.firebase:firebase-crashlytics-unity:13.13.0' // Assets/Firebase/Editor/CrashlyticsDependencies.xml:23
-    implementation 'com.yandex.android:mobileads:8.5.0' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:7
+    implementation 'com.yandex.android:mobileads:8.1.0' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:7
     // implementation 'io.appmetrica.analytics:analytics:8.0.0' // Assets/YandexMobileAds/Editor/YandexMobileadsDependencies.xml:17
     implementation 'io.appmetrica.analytics:analytics:8.4.1' // Packages/io.appmetrica.analytics/Editor/AppMetricaDependencies.xml:4
 // Android Resolver Dependencies End
