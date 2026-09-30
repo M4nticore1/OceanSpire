@@ -12,6 +12,8 @@
   "delete": "Elimina",
   "delete_world": "Elimina mondo",
   "delete_confirmation": "Sei sicuro di voler eliminare il mondo? Il salvataggio non potrà essere recuperato.",
+  "rename": "Rinomina",
+  "rename_world": "Rinomina mondo",
   "discard": "Scarta",
   "update": "Aggiorna",
   "update_now": "Aggiorna ora",

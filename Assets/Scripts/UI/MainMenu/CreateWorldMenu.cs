@@ -10,6 +10,7 @@ public class CreateWorldMenu : MonoBehaviour
     [SerializeField] private KeyboardOffsetUI keyboardOffsetUI;
     [SerializeField] private CustomButton createWorldButton;
     [SerializeField] private CustomButton cancelButton;
+    [SerializeField] private InputFieldValidatorsManager inputFieldValidatorsManager;
 
     [Header("World Name")]
     [SerializeField] private TextLocalizer incorrectWorldNameText;
@@ -21,17 +22,17 @@ public class CreateWorldMenu : MonoBehaviour
     private void OnEnable()
     {
         slidePanel.OnHidden += HandleClosed;
-        inputField.onValueChanged.AddListener(OnWorldNameInputFieldChangeValue);
-        createWorldButton.OnReleased.AddListener(OnCreateWorldButtonClicked);
-        cancelButton.OnReleased.AddListener(OnCancelButtonClicked);
+        inputField.onValueChanged.AddListener(HandleWorldNameInputFieldChangeValue);
+        createWorldButton.OnReleased.AddListener(HandleCreateWorldButtonClicked);
+        cancelButton.OnReleased.AddListener(HandleCancelButtonClicked);
     }
 
     private void OnDisable()
     {
         slidePanel.OnHidden -= HandleClosed;
-        inputField.onValueChanged.RemoveListener(OnWorldNameInputFieldChangeValue);
-        createWorldButton.OnReleased.RemoveListener(OnCreateWorldButtonClicked);
-        cancelButton.OnReleased.RemoveListener(OnCancelButtonClicked);
+        inputField.onValueChanged.RemoveListener(HandleWorldNameInputFieldChangeValue);
+        createWorldButton.OnReleased.RemoveListener(HandleCreateWorldButtonClicked);
+        cancelButton.OnReleased.RemoveListener(HandleCancelButtonClicked);
     }
 
     private void Start()
@@ -45,8 +46,9 @@ public class CreateWorldMenu : MonoBehaviour
         slidePanel.Show();
 
         inputField.text = "";
-        string name = inputField.text;
-        CheckWorldName(name);
+
+        UpdateCreateButtonEnabled();
+        inputFieldValidatorsManager.UpdateValidatorsShown(inputField.text);
     }
 
     public void Close()
@@ -55,18 +57,22 @@ public class CreateWorldMenu : MonoBehaviour
         HandleClosed();
     }
 
+    private void UpdateCreateButtonEnabled()
+    {
+        var worldNameLength = inputField.text.Length;
+        var invalidLength = worldNameLength <= 0 || worldNameLength >= 32 ? true : false;
+        var invalid = inputFieldValidatorsManager.HasInvalid;
+
+        createWorldButton.SetState(invalidLength || invalid ? CustomButtonState.Disabled : CustomButtonState.Idle);
+    }
+
     private void HandleClosed()
     {
         keyboardOffsetUI.SetClosable(true);
         OnClosed?.Invoke();
     }
 
-    private void OnWorldNameInputFieldChangeValue(string value)
-    {
-        CheckWorldName(value);
-    }
-
-    private void OnCreateWorldButtonClicked()
+    private void HandleCreateWorldButtonClicked()
     {
         string worldName = inputField.text;
 
@@ -74,61 +80,13 @@ public class CreateWorldMenu : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    private void OnCancelButtonClicked()
+    private void HandleCancelButtonClicked()
     {
         Close();
     }
 
-    private void CheckWorldName(string name)
+    private void HandleWorldNameInputFieldChangeValue(string value)
     {
-        if (!IsPossibleWorldNameLength(name)) {
-            incorrectWorldNameText.gameObject.SetActive(false);
-            createWorldButton.SetState(CustomButtonState.Disabled);
-            return;
-        }
-
-        if (!IsPossibleWorldName(name)) {
-            incorrectWorldNameText.gameObject.SetActive(true);
-            incorrectWorldNameText.SetLocalizationItem(incorrectWorldNameLocalization);
-            createWorldButton.SetState(CustomButtonState.Disabled);
-            return;
-        }
-
-        if (IsWorldNameExist(name)) {
-            incorrectWorldNameText.gameObject.SetActive(true);
-            incorrectWorldNameText.SetLocalizationItem(existWorldNameLocalization);
-            createWorldButton.SetState(CustomButtonState.Disabled);
-            return;
-        }
-
-        incorrectWorldNameText.gameObject.SetActive(false);
-        createWorldButton.SetState(CustomButtonState.Idle);
-    }
-
-    private bool IsPossibleWorldName(string name)
-    {
-        if (!WorldSaveSystem.CanCreateSaveFolder(name)) return false;
-
-        return true;
-    }
-
-    private bool IsWorldNameExist(string name)
-    {
-        var worldData = WorldSaveHandler.Instance.AllSaveData;
-        if (worldData == null) return false;
-
-        foreach (var data in worldData) {
-            if (data != null && data.WorldName == name) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private bool IsPossibleWorldNameLength(string name)
-    {
-        if (name.Length <= 0) return false;
-
-        return true;
+        UpdateCreateButtonEnabled();
     }
 }

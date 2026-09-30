@@ -12,6 +12,8 @@
   "delete": "Eliminar",
   "delete_world": "Eliminar mundo",
   "delete_confirmation": "¿Estás seguro de que quieres eliminar el mundo? La partida guardada no se podrá recuperar.",
+  "rename": "Renombrar",
+  "rename_world": "Renombrar mundo",
   "discard": "Desechar",
   "update": "Actualizar",
   "update_now": "Actualizar ahora",

@@ -12,6 +12,8 @@
   "delete": "Hapus",
   "delete_world": "Hapus Dunia",
   "delete_confirmation": "Anda yakin ingin menghapus dunia? File penyimpanan tidak dapat dipulihkan.",
+  "rename": "Ganti Nama",
+  "rename_world": "Ganti Nama Dunia",
   "discard": "Buang",
   "update": "Perbarui",
   "update_now": "Perbarui sekarang",
