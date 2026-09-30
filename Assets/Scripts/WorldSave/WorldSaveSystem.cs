@@ -21,7 +21,7 @@ public static class WorldSaveSystem
         var worldName = worldData.WorldName;
 
         var folderPathName = GetSaveFolderPathByName(worldName);
-        if (!DirectoryUtils.IsFolderNameValid(folderPathName)) return;
+        if (!CanCreateSaveFolder(folderPathName)) return;
 
         Directory.CreateDirectory(folderPathName);
 
@@ -144,6 +144,24 @@ public static class WorldSaveSystem
         }
 
         return tex;
+    }
+
+    public static bool CanCreateSaveFolder(string worldName)
+    {
+        if (string.IsNullOrWhiteSpace(worldName)) return false;
+
+        string folderPath = Path.Combine(GetSavesFolderPath(), worldName);
+
+        if (Directory.Exists(folderPath)) return true;
+
+        try {
+            Directory.CreateDirectory(folderPath);
+            Directory.Delete(folderPath);
+            return true;
+        }
+        catch {
+            return false;
+        }
     }
 
     private static WorldData GetSaveDataByPath(string path)
