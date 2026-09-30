@@ -222,9 +222,9 @@ public class ElevatorCabinsManager : MonoBehaviour
 
     private bool ShouldIgnoreEvents()
     {
-        if (WorldSavesHandler.Instance == null) return false;
+        if (WorldSaveHandler.Instance == null) return false;
 
-        return !buildingsLoader.IsLoaded && WorldSavesHandler.Instance.CurrentWorldData != null;
+        return !buildingsLoader.IsLoaded && WorldSaveHandler.Instance.CurrentWorldData != null;
     }
 
     private IEnumerator UpdateElevatorCabinEndOfFrame(Building building)

@@ -34,15 +34,9 @@ public class TimeWorldSaveController : WorldSaveController
     private void TickSaveScreeshot()
     {
         crrentSaveThumbTime += Time.deltaTime;
-        if (crrentSaveThumbTime < autoSaveThumbFrequency)
-            return;
+        if (crrentSaveThumbTime < autoSaveThumbFrequency) return;
 
+        WorldSaveSystem.SaveWorldThumb(WorldSaveHandler.Instance.SaveWorldName);
         crrentSaveThumbTime = 0f;
-
-        var currentData = WorldSavesHandler.Instance.CurrentWorldData;
-        if (currentData == null)
-            return;
-
-        WorldSaveSystem.SaveWorldThumb(currentData.WorldName);
     }
 }

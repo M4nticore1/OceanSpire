@@ -885,10 +885,6 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-    - target: {fileID: 5194398633236887868, guid: 6b3698d570602a64f806b82c9a6be172, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5857018434578971776, guid: 6b3698d570602a64f806b82c9a6be172, type: 3}
       propertyPath: m_IsActive
       value: 1

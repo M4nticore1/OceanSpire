@@ -28,13 +28,7 @@ public class BuildingCollectIndicatorController : BuildingIndicatorController
 
     protected override void HandleClick()
     {
-        var ownedBuilding = craftingModule.OwnedBuilding;
-        if (ownedBuilding == null) return;
-
-        var construction = ownedBuilding.SpawnedConstruction;
-        if (construction == null) return;
-
-        construction.Click();
+        craftingModule.TryCollectItem();
     }
 
     protected override bool ShouldShow()
@@ -52,19 +46,16 @@ public class BuildingCollectIndicatorController : BuildingIndicatorController
         var craftItem = GetCraftItem();
         if (craftItem == null) return baseTexture;
 
-        var craftDefinition = craftItem.Definition;
-        if (craftDefinition == null) return baseTexture;
-
-        var produceItem = craftDefinition.ProduceItem;
-        if (produceItem == null) return baseTexture;
-
-        var definition = produceItem.Definition;
+        var definition = craftItem.Definition;
         if (definition == null) return baseTexture;
 
-        var texture = definition.ItemTexture;
-        if (texture == null) return baseTexture;
+        var produceItem = definition.ProduceItem;
+        if (produceItem == null) return baseTexture;
 
-        return texture;
+        var icon = produceItem.GetInformationIcon();
+        if (icon == null) return baseTexture;
+
+        return icon.texture;
     }
 
     private void HandleItemCraftStarted(CraftItemInstance craftItem)

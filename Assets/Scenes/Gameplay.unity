@@ -7532,6 +7532,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1040276942}
+  - {fileID: 1856436720}
   - {fileID: 744642253}
   - {fileID: 803467552}
   m_Father: {fileID: 1372936028}
@@ -10478,7 +10479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodDrain
   creaturesManager: {fileID: 220072952}
   cityStorage: {fileID: 1388613268}
-  drainPerMinute: 0.4
+  drainPerMinute: 0.5
   drainFrequency: 1
 --- !u!1001 &725010069
 PrefabInstance:
@@ -11761,7 +11762,7 @@ MonoBehaviour:
   nameLocalizationItem: {fileID: 11400000, guid: 4155c227430504e4a9273558f6c19c8b, type: 2}
   descriptionLocalizationItem: {fileID: 11400000, guid: 9754fa8f27bad7f40bfec150ce5d6e96, type: 2}
   notificationIcon: {fileID: 21300000, guid: c6f5fdbb68f953641a9dfa90e34e6c1b, type: 3}
-  cityStorageOverflowManager: {fileID: 2146545706}
+  cityStorageOverflorManager: {fileID: 2146545706}
   excludedStacks:
   - {fileID: 11400000, guid: 9f3eab9703f96e34ca97a436bd161413, type: 2}
   - {fileID: 11400000, guid: bf3a59a025f09c24cb89491414a4afce, type: 2}
@@ -21616,7 +21617,7 @@ GameObject:
   - component: {fileID: 1856436720}
   - component: {fileID: 1856436721}
   m_Layer: 0
-  m_Name: WorldSavesHandler
+  m_Name: WorldSaveHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21630,12 +21631,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1856436719}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 389174580}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1856436721
 MonoBehaviour:
@@ -21646,7 +21647,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1856436719}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cd3761b55e91024b982022c1b251e8c, type: 3}
+  m_Script: {fileID: 11500000, guid: fc7b2fcf0b5aec243b556e7f5ae32a4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldSaveHandler
 --- !u!1001 &1857027104
@@ -22208,8 +22209,7 @@ MonoBehaviour:
   rewardedAdsManager: {fileID: 1925740697}
   reviveRewardDefinition: {fileID: 11400000, guid: 7b7d3511133f39a41b08683e20ab9b61, type: 2}
   maxRevivesCount: 3
-  chargeReviveTimeInSeconds: 600
-  <RemainingRevivesCount>k__BackingField: 0
+  chargeReviveTimeInSeconds: 900
 --- !u!1001 &1920737906
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28342,4 +28342,3 @@ SceneRoots:
   - {fileID: 1964602098}
   - {fileID: 117670937}
   - {fileID: 1634320636}
-  - {fileID: 1856436720}

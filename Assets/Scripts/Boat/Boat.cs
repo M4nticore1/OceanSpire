@@ -144,7 +144,6 @@ public class Boat : MonoBehaviour, IClickable, ILevelBonusable, IInformationable
         boatShake.Tick();
 
         if (CurrentState == null) return;
-
         CurrentState.Tick();
     }
 

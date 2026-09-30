@@ -1,38 +1,78 @@
+using TMPro;
 using UnityEngine;
 
-public class RenameWorldMenu : ManageWorldMenu
+public class RenameWorldMenu : MonoBehaviour
 {
-    public static RenameWorldMenu Instance { get; private set; }
+    [SerializeField] private SlideAnimatedPanel slidePanel;
+    [SerializeField] private TMP_InputField inputField;
+    [SerializeField] private CustomButton renameButton;
+    [SerializeField] private CustomButton cancelButton;
+    [SerializeField] private InputFieldValidatorsManager InputFieldValidatorsManager;
 
-    protected override void Awake()
+    private WorldData worldData;
+
+    private void OnEnable()
     {
-        base.Awake();
-
-        if (Instance == null) {
-            Instance = this;
-        }
-        else {
-            Debug.LogError($"[{nameof(RenameWorldMenu)}] RenameWorldMenu is not valid!");
-            Destroy(gameObject);
-        }
+        inputField.onValueChanged.AddListener(HandleInputFieldValueChanged);
+        renameButton.OnReleased.AddListener(HandleRenameButtonClicked);
+        cancelButton.OnReleased.AddListener(HandleCancelButtonClicked);
     }
 
-    protected override void HandleShown()
+    private void OnDisable()
     {
-        base.HandleShown();
-
-        InputField.text = worldData.WorldName;
+        inputField.onValueChanged.RemoveListener(HandleInputFieldValueChanged);
+        renameButton.OnReleased.RemoveListener(HandleRenameButtonClicked);
+        cancelButton.OnReleased.RemoveListener(HandleCancelButtonClicked);
     }
 
-    protected override void HandleActionButtonClicked()
+    public void Show(WorldData worldData)
     {
-        base.HandleActionButtonClicked();
-
-        if (worldData != null) {
-            WorldSaveSystem.RenameWorld(worldData.WorldName, InputField.text);
-        }
-        else {
+        if (worldData == null) {
             Debug.LogError($"[{nameof(RenameWorldMenu)}] WorldData is not valid!");
+            return;
         }
+
+        this.worldData = worldData;
+        inputField.text = worldData.WorldName;
+
+        UpdateRenameButtonEnabled();
+        UpdateWorldNameValidators();
+    }
+
+    public void Hide()
+    {
+        slidePanel.Hide();
+    }
+
+    private void UpdateRenameButtonEnabled()
+    {
+        if (worldData == null)
+            return;
+
+        renameButton.SetState(worldData.WorldName == inputField.text ? CustomButtonState.Disabled : CustomButtonState.Idle);
+    }
+
+    private void UpdateWorldNameValidators()
+    {
+        if (worldData == null)
+            return;
+
+        InputFieldValidatorsManager.UpdateValidatorsShown(worldData.WorldName);
+    }
+
+    private void HandleInputFieldValueChanged(string value)
+    {
+        UpdateRenameButtonEnabled();
+        UpdateWorldNameValidators();
+    }
+
+    private void HandleRenameButtonClicked()
+    {
+
+    }
+
+    private void HandleCancelButtonClicked()
+    {
+        Hide();
     }
 }

@@ -221,7 +221,7 @@ MonoBehaviour:
   m_text: 3/3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -359,7 +359,7 @@ MonoBehaviour:
   m_text: 'Remaining time: 10:00'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -471,7 +471,7 @@ RectTransform:
   m_GameObject: {fileID: 5922082936763249433}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.95, y: 0.95, z: 0.95}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8485685891305253631}
@@ -504,7 +504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3209756, g: 0.4, b: 0.28, a: 1}
+  m_Color: {r: 0.6984536, g: 1, b: 0.55, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -543,7 +543,7 @@ MonoBehaviour:
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
   cancelPressWhenPointerMoving: 0
-  state: 4
+  state: 0
   stateTransitionTime: 0.2
   idleState:
     bodyColor: {r: 0.6984536, g: 1, b: 0.55, a: 1}
@@ -570,7 +570,7 @@ MonoBehaviour:
     contentColorHolder: {fileID: 0}
     scale: 1.05
   disabledState:
-    bodyColor: {r: 0.3209756, g: 0.4, b: 0.28, a: 1}
+    bodyColor: {r: 0.42166665, g: 0.55, b: 0.35750002, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
@@ -662,7 +662,7 @@ MonoBehaviour:
   m_text: 'Remaining revives:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -814,7 +814,7 @@ MonoBehaviour:
   m_text: 00:30
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1027,7 +1027,7 @@ MonoBehaviour:
   m_text: 'Next revive in:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1292,10 +1292,10 @@ MonoBehaviour:
   selectManager: {fileID: 0}
   rewardedAdsManager: {fileID: 0}
   reviveButton: {fileID: 1987215581408877833}
-  remainingReviveTimeText: {fileID: 607735883317536981}
+  remainingReviveTimeText: {fileID: 1436349020089362157}
   remainingRevivesCountText: {fileID: 2002296317649004374}
-  nextReviveChargeTimeText: {fileID: 7891531755506968499}
-  nextReviveChargeText: {fileID: 782627027719659281}
+  nextReviveChargeTimeText: {fileID: 782627027719659281}
+  nextReviveChargeText: {fileID: 7891531755506968499}
 --- !u!1 &2516317646638140075 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8246289435958774333, guid: c7e6d9e6845559d4dbb50c6739188c1f, type: 3}
