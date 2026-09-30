@@ -154,7 +154,7 @@ public class RaidManager : MonoBehaviour
             !b.ConstructionComponent.GetUnderConstruction() &&
             b.RaidersHandler.Interactors.Count < b.LevelDefinition.MaxHumansCount &&
             b.CanBeRaided() &&
-            b.GetModule(typeof(StorageModule)) != null,
+            b.GetModule<StorageModule>() != null,
             out path)) {
 
             if (path != null && path.Count > 0)

@@ -15,7 +15,7 @@ public class CraftingModuleHighlightController : MonoBehaviour
         craftingModule.OnWorkingStarted += HandleWorkingStopped;
 
         craftingModule.OnItemCraftFinished += HandleItemCraftFinished;
-        craftingModule.OnClicked += HandleClicked;
+        craftingModule.OnCraftingModuleClicked += HandleClicked;
 
         craftingModule.OwnedBuilding.OnConstructionChanged += HandleConstructionChanged;
     }
@@ -28,7 +28,7 @@ public class CraftingModuleHighlightController : MonoBehaviour
         craftingModule.OnWorkingStarted -= HandleWorkingStopped;
 
         craftingModule.OnItemCraftFinished -= HandleItemCraftFinished;
-        craftingModule.OnClicked -= HandleClicked;
+        craftingModule.OnCraftingModuleClicked -= HandleClicked;
 
         craftingModule.OwnedBuilding.OnConstructionChanged -= HandleConstructionChanged;
     }

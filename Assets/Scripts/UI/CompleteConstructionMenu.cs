@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 {
+    public static CompleteConstructionMenu Instance;
+
     [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private TextLocalizer buildingName;
     [SerializeField] private TextLocalizer buildingLevel;
@@ -17,6 +19,16 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     public event Action OnShown;
     public event Action OnHidden;
+
+    private void Awake()
+    {
+        if (Instance == null) {
+            Instance = this;
+        }
+        else {
+            Debug.LogError($"[{nameof(CompleteConstructionMenu)}] There's another Complete Construction Menu on the scene!");
+        }
+    }
 
     private void OnEnable()
     {
@@ -53,7 +65,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     public void Show(Building building)
     {
         if (building == null) {
-            Debug.LogError("building is null to open Complete Construction Menu");
+            Debug.LogError($"[{nameof(CompleteConstructionMenu)}] Building is null to open Complete Construction Menu");
             return;
         }
 

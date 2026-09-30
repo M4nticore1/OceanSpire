@@ -430,7 +430,7 @@ public class CreatureCityNavigator : MonoBehaviour
         for (int i = pathBuildings.Count - 2; i >= 0; i--) {
             var building = pathBuildings[i];
             if (building == null) continue;
-            if (building.GetModule(typeof(ElevatorModule)) != null) continue;
+            if (building.GetModule<ElevatorModule>() != null) continue;
 
             pathBuildings.RemoveAt(i);
         }
@@ -447,11 +447,11 @@ public class CreatureCityNavigator : MonoBehaviour
             var currentBuilding = pathBuildings[i];
             if (currentBuilding == null) continue;
 
-            var current = currentBuilding.GetModule(typeof(ElevatorModule));
+            var current = currentBuilding.GetModule<ElevatorModule>();
             if (current == null) continue;
 
-            var next = (i - 1 >= 0 && pathBuildings[i - 1] != null) ? pathBuildings[i - 1].GetModule(typeof(ElevatorModule)) : null;
-            var previous = (i + 1 < pathBuildings.Count && pathBuildings[i + 1] != null) ? pathBuildings[i + 1].GetModule(typeof(ElevatorModule)) : null;
+            var next = (i - 1 >= 0 && pathBuildings[i - 1] != null) ? pathBuildings[i - 1].GetModule<ElevatorModule>() : null;
+            var previous = (i + 1 < pathBuildings.Count && pathBuildings[i + 1] != null) ? pathBuildings[i + 1].GetModule<ElevatorModule>() : null;
 
             bool connectedToNext = next != null && current.OwnedTowerBuilding != null && current.OwnedTowerBuilding.ConnectedWith(next.OwnedTowerBuilding);
             bool connectedToPrevious = previous != null && current.OwnedTowerBuilding != null && current.OwnedTowerBuilding.ConnectedWith(previous.OwnedTowerBuilding);

@@ -560,6 +560,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3904862245171309342, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 14.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3904862245171309342, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -2.25
+      objectReference: {fileID: 0}
     - target: {fileID: 5452299794892249143, guid: 1a3c2a3eadb5dec47957ff0d44592e74, type: 3}
       propertyPath: m_Name
       value: TowerGate_Level_01

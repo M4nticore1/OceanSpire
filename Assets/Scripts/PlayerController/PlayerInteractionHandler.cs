@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerInteractionHandler : MonoBehaviour
 {
-    [SerializeField] private PlayerInputHandler playerInputHandler = null;
+    [SerializeField] private Camera playerCamera;
+    [SerializeField] private PlayerInputHandler playerInputHandler;
 
     private void OnEnable()
     {
@@ -20,8 +22,7 @@ public class PlayerInteractionHandler : MonoBehaviour
             var go = hit.gameObject;
             if (go == null) return;
 
-            var rectTransform = go?.GetComponent<RectTransform>();
-            if (rectTransform == null && playerInputHandler.primaryInteractionPosition != playerInputHandler.primaryInteractionStartPosition) return;
+            if (!IsHittedUI() && !IsPointerAtStartPosition()) return;
 
             var clickables = go.GetComponents<IClickable>();
             foreach (var clickable in clickables) {
@@ -41,5 +42,15 @@ public class PlayerInteractionHandler : MonoBehaviour
     private void OnPrimaryInteractionReleased()
     {
         Interact(playerInputHandler.primaryInteractionPosition);
+    }
+
+    private bool IsHittedUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
+    }
+
+    private bool IsPointerAtStartPosition()
+    {
+        return playerInputHandler.primaryInteractionPosition == playerInputHandler.primaryInteractionStartPosition;
     }
 }

@@ -19,6 +19,7 @@ MonoBehaviour:
   nameLocalizationItem: {fileID: 11400000, guid: 2b478cf960410074dbc0995d13ca785b, type: 2}
   descriptionLocalizationItem: {fileID: 11400000, guid: 2e5c8710668131549b676e7029531f26, type: 2}
   itemIcon: {fileID: 21300000, guid: 740b3befbac087543aacc3c0d1d22974, type: 3}
+  itemTexture: {fileID: 2800000, guid: 740b3befbac087543aacc3c0d1d22974, type: 3}
   showInStorage: 1
   equipmentCategory: 0
   equipmentPrefab: {fileID: 7020424732878029919, guid: 233a31aa7d095db489d0a643c1ee560b, type: 3}
