@@ -17,20 +17,24 @@ public class WorldSavesMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        if (createNewWorldMenu) {
-            createNewWorldMenu.OnClosed += OnCreateMenuClosed;
+        if (createNewWorldMenu != null) {
+            createNewWorldMenu.OnHidden += OnCreateMenuClosed;
         }
 
-        WorldSaveSystem.OnWorldDataDeleted += OnWorldDataRemoved;
+        WorldSaveSystem.OnWorldSaveCreated += HandleWorldCreated;
+        WorldSaveSystem.OnWorldSaveDeleted += HandleWorldDeleted;
+        WorldSaveSystem.OnWorldSaveRenamed += HandleWorldRenamed;
     }
 
     private void OnDisable()
     {
-        if (createNewWorldMenu) {
-            createNewWorldMenu.OnClosed -= OnCreateMenuClosed;
+        if (createNewWorldMenu != null) {
+            createNewWorldMenu.OnHidden -= OnCreateMenuClosed;
         }
 
-        WorldSaveSystem.OnWorldDataDeleted -= OnWorldDataRemoved;
+        WorldSaveSystem.OnWorldSaveCreated -= HandleWorldCreated;
+        WorldSaveSystem.OnWorldSaveDeleted -= HandleWorldDeleted;
+        WorldSaveSystem.OnWorldSaveRenamed -= HandleWorldRenamed;
     }
 
     private void Start()
@@ -55,8 +59,9 @@ public class WorldSavesMenu : MonoBehaviour
 
         for (int i = 0; i < widgetsCount; i++) {
             var widget = Instantiate(saveSlotWidgetPrefab, layoutGroup.transform);
+            if (widget == null)
 
-            if (widget.Button) {
+            if (widget.Button != null) {
                 widget.Button.SetSelectGroup(selectGroup);
             }
 
@@ -74,6 +79,7 @@ public class WorldSavesMenu : MonoBehaviour
     private void ClearWidgets()
     {
         foreach (var widget in spawnedWidgets) {
+            if (widget == null) continue;
             if (widget) Destroy(widget.gameObject);
         }
         spawnedWidgets.Clear();
@@ -82,15 +88,25 @@ public class WorldSavesMenu : MonoBehaviour
     private void OnCreateMenuClosed()
     {
         foreach (var widget in spawnedWidgets) {
-            if (!widget) continue;
-            if (!widget.Button) continue;
+            if (widget == null) continue;
+            if (widget.Button == null) continue;
 
             widget.Button.SetInteractable(true);
             widget.Button.SetState(CustomButtonState.Idle);
         }
     }
 
-    private void OnWorldDataRemoved(WorldData worldData)
+    private void HandleWorldCreated(WorldData worldData)
+    {
+        StartCoroutine(RebuildUIEndOfFrame());
+    }
+
+    private void HandleWorldDeleted(WorldData worldData)
+    {
+        StartCoroutine(RebuildUIEndOfFrame());
+    }
+
+    private void HandleWorldRenamed(WorldData worldData)
     {
         StartCoroutine(RebuildUIEndOfFrame());
     }

@@ -35,7 +35,7 @@ public class WorldData
 {
     public int Version = 1;
 
-    public string WorldName = "New World";
+    public string WorldName = "";
     public long SaveTime = 0;
 
     public PlayerControllerData Player;
@@ -64,7 +64,12 @@ public class WorldData
     public EnergyDrainData EnergyDrain;
     public WindData Wind;
 
-    public static WorldData Create(WorldSaveHandler saveManager,
+    public static WorldData Default()
+    {
+        return new WorldData();
+    }
+
+    public static WorldData Create(string worldName,
         PlayerController playerController,
         BuildingsManager buildings,
         ElevatorCabinsManager elevatorCabins,
@@ -83,42 +88,45 @@ public class WorldData
         FocusManager focusManager,
         FoodDrainManager foodDrain,
         EnergyDrainManager energyDrain,
-        WindManager wind)
+        WindManager wind,
+        WorldData targetData = null)
     {
-        return new WorldData() {
-            WorldName = saveManager.SaveWorldName,
-            SaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-            Player = PlayerControllerData.Create(playerController),
+        var worldData = targetData != null ? targetData : new WorldData();
 
-            GroundBuildings = BuildingData.Create(buildings.GetGroundBuildings()),
-            FloorFrameBuildings = TowerBuildingData.Create(buildings.BuiltFloors.Select(b => b.OwnedTowerBuilding)),
-            TowerBuildings = TowerBuildingData.Create(buildings.BuiltFloors.SelectMany(b => b.RoomBuildingPlaces).Select(p => p.PlacedBuilding).Where(b => b != null)),
-            ElevatorCabins = ElevatorCabinData.Create(elevatorCabins.ElevatorCabins),
+        worldData.WorldName = worldName;
+        worldData.SaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        worldData.Player = PlayerControllerData.Create(playerController);
 
-            CitizenBoatDocks = BoatDockData.Create(boatDocks.CitizenBoatDocks),
-            WandererBoatDocks = BoatDockData.Create(boatDocks.WandererDockPoints),
-            RaiderBoatDocks = BoatDockData.Create(boatDocks.RaiderDockPoints),
-            EvictBoatDocks = BoatDockData.Create(boatDocks.EvictDockPoints),
+        worldData.GroundBuildings = BuildingData.Create(buildings.GetGroundBuildings());
+        worldData.FloorFrameBuildings = TowerBuildingData.Create(buildings.BuiltFloors.Select(b => b.OwnedTowerBuilding));
+        worldData.TowerBuildings = TowerBuildingData.Create(buildings.BuiltFloors.SelectMany(b => b.RoomBuildingPlaces).Select(p => p.PlacedBuilding).Where(b => b != null));
+        worldData.ElevatorCabins = ElevatorCabinData.Create(elevatorCabins.ElevatorCabins);
 
-            Boats = BoatData.Create(boats.Boats),
+        worldData.CitizenBoatDocks = BoatDockData.Create(boatDocks.CitizenBoatDocks);
+        worldData.WandererBoatDocks = BoatDockData.Create(boatDocks.WandererDockPoints);
+        worldData.RaiderBoatDocks = BoatDockData.Create(boatDocks.RaiderDockPoints);
+        worldData.EvictBoatDocks = BoatDockData.Create(boatDocks.EvictDockPoints);
 
-            Citizens = CitizenData.Create(creatures.Citizens),
-            Wanderers = WandererData.Create(creatures.Wanderers),
-            Raiders = RaiderData.Create(creatures.Raiders),
+        worldData.Boats = BoatData.Create(boats.Boats);
 
-            DriftingLoot = DriftingLootSystemData.Create(driftingLoot, driftingLootList),
-            CityStorage = InventoryData.Create(cityInventory),
+        worldData.Citizens = CitizenData.Create(creatures.Citizens);
+        worldData.Wanderers = WandererData.Create(creatures.Wanderers);
+        worldData.Raiders = RaiderData.Create(creatures.Raiders);
 
-            DailyTasks = DailyTasksData.Create(dailyTasks),
-            DailyReward = DailyRewardData.Create(dailyReward),
-            Raid = RaidData.Create(raid),
-            WanderersSystem = WandererSystemData.Create(wanderers),
-            ReviveSystem = ReviveSystemData.Create(revive),
-            BuilderEnergy = BuilderEnergyData.Create(constructionEnergy),
-            FocusSystem = FocusSystemData.Create(focusManager),
-            FoodDrain = FoodDrainData.Create(foodDrain),
-            EnergyDrain = EnergyDrainData.Create(energyDrain),
-            Wind = WindData.Create(wind),
-        };
+        worldData.DriftingLoot = DriftingLootSystemData.Create(driftingLoot, driftingLootList);
+        worldData.CityStorage = InventoryData.Create(cityInventory);
+
+        worldData.DailyTasks = DailyTasksData.Create(dailyTasks);
+        worldData.DailyReward = DailyRewardData.Create(dailyReward);
+        worldData.Raid = RaidData.Create(raid);
+        worldData.WanderersSystem = WandererSystemData.Create(wanderers);
+        worldData.ReviveSystem = ReviveSystemData.Create(revive);
+        worldData.BuilderEnergy = BuilderEnergyData.Create(constructionEnergy);
+        worldData.FocusSystem = FocusSystemData.Create(focusManager);
+        worldData.FoodDrain = FoodDrainData.Create(foodDrain);
+        worldData.EnergyDrain = EnergyDrainData.Create(energyDrain);
+        worldData.Wind = WindData.Create(wind);
+
+        return worldData;
     }
 }

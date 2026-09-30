@@ -230,7 +230,7 @@ public class CreatureCityNavigator : MonoBehaviour
             RunUpdateFollowingPathEndOfFrame();
         }
     }
-
+    
     public void OnStayBuildingTrigger(Building building)
     {
         if (building == null) return;
@@ -453,11 +453,11 @@ public class CreatureCityNavigator : MonoBehaviour
             var next = (i - 1 >= 0 && pathBuildings[i - 1] != null) ? pathBuildings[i - 1].GetModule<ElevatorModule>() : null;
             var previous = (i + 1 < pathBuildings.Count && pathBuildings[i + 1] != null) ? pathBuildings[i + 1].GetModule<ElevatorModule>() : null;
 
-            bool connectedToNext = next != null && current.OwnedTowerBuilding != null && current.OwnedTowerBuilding.ConnectedWith(next.OwnedTowerBuilding);
-            bool connectedToPrevious = previous != null && current.OwnedTowerBuilding != null && current.OwnedTowerBuilding.ConnectedWith(previous.OwnedTowerBuilding);
+            var connectedToNext = next != null && current.OwnedTowerBuilding != null && current.OwnedTowerBuilding.ConnectedWith(next.OwnedTowerBuilding);
+            var connectedToPrevious = previous != null && current.OwnedTowerBuilding != null && current.OwnedTowerBuilding.ConnectedWith(previous.OwnedTowerBuilding);
 
-            bool notConnected = !connectedToNext && !connectedToPrevious;
-            bool fullConnected = connectedToNext && connectedToPrevious;
+            var notConnected = !connectedToNext && !connectedToPrevious;
+            var fullConnected = connectedToNext && connectedToPrevious;
 
             if (notConnected || fullConnected) {
                 indicesToRemove.Add(i);
