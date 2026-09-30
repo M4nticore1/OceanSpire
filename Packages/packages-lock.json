@@ -8,10 +8,11 @@
       "hash": "73a63b7f672b88f7e9992f6917eb458a8cbb6fa9"
     },
     "com.google.external-dependency-manager": {
-      "version": "file:com.google.external-dependency-manager",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
+      "version": "1.2.187",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
     },
     "com.unity.2d.common": {
       "version": "12.0.4",
@@ -104,15 +105,6 @@
       "depth": 1,
       "source": "builtin",
       "dependencies": {}
-    },
-    "com.unity.external-dependency-manager": {
-      "version": "2.1.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.modules.uielements": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
       "version": "2.0.27",
