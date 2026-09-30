@@ -10,6 +10,8 @@
   "create": "Vytvořit",
   "cancel": "Zrušit",
   "delete": "Smazat",
+  "delete_world": "Smazat svět",
+  "delete_confirmation": "Jste si jisti, že chcete svět smazat? Uložení nebude možné obnovit.",
   "discard": "Zahodit",
   "update": "Aktualizovat",
   "update_now": "Aktualizovat nyní",

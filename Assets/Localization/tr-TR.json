@@ -10,6 +10,8 @@
   "create": "Oluştur",
   "cancel": "İptal",
   "delete": "Sil",
+  "delete_world": "Dünyayı Sil",
+  "delete_confirmation": "Dünyayı silmek istediğinizden emin misiniz? Kayıt dosyası kurtarılamaz.",
   "discard": "At",
   "update": "Güncelle",
   "update_now": "Şimdi güncelle",

@@ -56,8 +56,8 @@ public class FitSizeToChildren : FitSizeToContent
             requiredSize.y = currentSize.y + (RectTransform.rect.yMin - lowestY);
         }
 
-        requiredSize.x += ExtraHeight;
-        requiredSize.y += ExtraHeight;
+        requiredSize.x += ExtraSize.x;
+        requiredSize.y += ExtraSize.y;
 
         requiredSize.x = Mathf.Max(requiredSize.x, MinSize.x);
         requiredSize.y = Mathf.Max(requiredSize.y, MinSize.y);

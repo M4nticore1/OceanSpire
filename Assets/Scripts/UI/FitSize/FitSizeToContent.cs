@@ -148,6 +148,7 @@ public abstract class FitSizeToContent : MonoBehaviour
 
     private bool ShouldUpdateSize()
     {
+        if (this == null) return false;
         if (!enabled) return false;
         if (!gameObject.activeSelf) return false;
         if (!gameObject.activeInHierarchy) return false;

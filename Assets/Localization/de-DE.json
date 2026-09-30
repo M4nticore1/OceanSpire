@@ -10,6 +10,8 @@
   "create": "Erstellen",
   "cancel": "Abbrechen",
   "delete": "Löschen",
+  "delete_world": "Welt löschen",
+  "delete_confirmation": "Bist du sicher, dass du die Welt löschen möchtest? Der Spielstand kann nicht wiederhergestellt werden.",
   "discard": "Verwerfen",
   "update": "Aktualisieren",
   "update_now": "Jetzt aktualisieren",

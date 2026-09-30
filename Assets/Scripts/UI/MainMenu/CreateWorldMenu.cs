@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class CreateNewWorldMenu : MonoBehaviour
+public class CreateWorldMenu : MonoBehaviour
 {
     [SerializeField] private SlideAnimatedPanel slidePanel;
     [SerializeField] private TMP_InputField inputField;

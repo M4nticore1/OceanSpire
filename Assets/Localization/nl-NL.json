@@ -10,6 +10,8 @@
   "create": "Maken",
   "cancel": "Annuleren",
   "delete": "Verwijderen",
+  "delete_world": "Wereld verwijderen",
+  "delete_confirmation": "Weet je zeker dat je de wereld wilt verwijderen? Het opslagbestand kan niet worden hersteld.",
   "discard": "Weggooien",
   "update": "Bijwerken",
   "update_now": "Nu bijwerken",

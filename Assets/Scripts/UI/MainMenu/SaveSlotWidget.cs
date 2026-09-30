@@ -17,18 +17,24 @@ public class SaveSlotWidget : MonoBehaviour
 
     public WorldData WorldSaveData { get; private set; }
 
+    [Header("UI")]
     [SerializeField] private CustomButton button;
     public CustomButton Button => button;
 
+    [SerializeField] private CustomButton renameWorldButton;
+
+    [Header("Panels")]
     [SerializeField] private GameObject createWorldMenu;
     [SerializeField] private GameObject loadWorldMenu;
+
+    [Header("Save Data")]
     [SerializeField] private TextMeshProUGUI worldNameText;
     [SerializeField] private TextMeshProUGUI floorsCountText;
     [SerializeField] private TextMeshProUGUI residentsCountText;
     [SerializeField] private TextMeshProUGUI lastSaveDataText;
     [SerializeField] private Image worldThumbImage;
 
-    public static event Action<SaveSlotWidget> OnWorldDataSeted;
+    public static event Action<SaveSlotWidget> OnWorldDataSet;
     public static event Action<SaveSlotWidget> OnWorldDataRemoved;
 
     public static event Action<SaveSlotWidget> OnSaveSlotReleased;
@@ -37,16 +43,32 @@ public class SaveSlotWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        button.OnReleased.AddListener(OnReleased);
-        button.OnSelected.AddListener(OnSelected);
-        button.OnDeselected.AddListener(OnDeselected);
+        WorldSaveSystem.OnWorldDataDeleted += HandleWorldDataDeleted;
+
+        if (button != null) {
+            button.OnReleased.AddListener(HandleReleased);
+            button.OnSelected.AddListener(HandleSelected);
+            button.OnDeselected.AddListener(HandleDeselected);
+        }
+
+        if (renameWorldButton != null) {
+            renameWorldButton.OnReleased.AddListener(HandleRenameWorldClicked);
+        }
     }
 
     private void OnDisable()
     {
-        button.OnReleased.RemoveListener(OnReleased);
-        button.OnSelected.RemoveListener(OnSelected);
-        button.OnDeselected.RemoveListener(OnDeselected);
+        WorldSaveSystem.OnWorldDataDeleted -= HandleWorldDataDeleted;
+
+        if (button != null) {
+            button.OnReleased.RemoveListener(HandleReleased);
+            button.OnSelected.RemoveListener(HandleSelected);
+            button.OnDeselected.RemoveListener(HandleDeselected);
+        }
+
+        if (renameWorldButton != null) {
+            renameWorldButton.OnReleased.RemoveListener(HandleRenameWorldClicked);
+        }
     }
 
     public void SetSaveData(WorldData worldData)
@@ -72,15 +94,12 @@ public class SaveSlotWidget : MonoBehaviour
         lastSaveDataText.SetText(date.ToString());
 
         var thumb = WorldSaveSystem.GetSaveScreenshotByWorldName(worldData.WorldName);
-        if (thumb) {
+        if (thumb != null) {
             var sprite = Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
             worldThumbImage.sprite = sprite;
         }
-        else {
-            Debug.LogWarning("Save thumb is not found!");
-        }
 
-        OnWorldDataSeted?.Invoke(this);
+        OnWorldDataSet?.Invoke(this);
     }
 
     public void RemoveSaveData()
@@ -96,22 +115,35 @@ public class SaveSlotWidget : MonoBehaviour
         OnWorldDataRemoved?.Invoke(this);
     }
 
-    private void OnReleased()
+    private void HandleReleased()
     {
         OnSaveSlotReleased?.Invoke(this);
     }
 
-    private void OnSelected()
+    private void HandleSelected()
     {
         Selected = this;
         OnSaveSlotSelected?.Invoke(this);
     }
 
-    private void OnDeselected()
+    private void HandleDeselected()
     {
         if (Selected == this)
             Selected = null;
 
         OnSaveSlotDeselected?.Invoke(this);
+    }
+
+    private void HandleRenameWorldClicked()
+    {
+
+    }
+
+    private void HandleWorldDataDeleted(WorldData worldData)
+    {
+        if (worldData == null) return;
+        if (worldData != WorldSaveData) return;
+
+        RemoveSaveData();
     }
 }

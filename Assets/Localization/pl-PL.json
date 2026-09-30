@@ -10,6 +10,8 @@
   "create": "Utwórz",
   "cancel": "Anuluj",
   "delete": "Usuń",
+  "delete_world": "Usuń świat",
+  "delete_confirmation": "Czy na pewno chcesz usunąć świat? Zapisu gry nie będzie można odzyskać.",
   "discard": "Wyrzuć",
   "update": "Zaktualizuj",
   "update_now": "Zaktualizuj teraz",

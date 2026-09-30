@@ -8,31 +8,44 @@ public static class WorldSaveSystem
 {
     private static string saveFileExtension = ".sav";
 
+    public static event Action<WorldData> OnWorldDataAdded;
+    public static event Action<WorldData> OnWorldDataDeleted;
+
     public static void SaveWorld(WorldData worldData)
     {
-        string worldName = worldData.WorldName;
+        if (worldData == null) {
+            Debug.Log($"[{nameof(WorldSaveSystem)}] WorldData is not valid!");
+            return;
+        }
 
-        string folderPathName = GetSaveFolderPathByName(worldName);
+        var worldName = worldData.WorldName;
+
+        var folderPathName = GetSaveFolderPathByName(worldName);
         if (!CanCreateSaveFolder(folderPathName)) return;
 
         Directory.CreateDirectory(folderPathName);
 
-        string filePath = GetSaveFilePathByName(worldName);
-        string json = JsonConvert.SerializeObject(worldData, Formatting.Indented);
+        var filePath = GetSaveFilePathByName(worldName);
+        var json = JsonConvert.SerializeObject(worldData, Formatting.Indented);
 
         File.WriteAllText(filePath, json);
+
+        OnWorldDataAdded?.Invoke(worldData);
     }
 
-    public static void RemoveSaveByWorldName(string worldName)
+    public static void DeleteSaveByWorldName(string worldName)
     {
+        var worldData = GetWorldDataByName(worldName);
+        if (worldData == null) return;
+
         if (string.IsNullOrWhiteSpace(worldName)) {
             File.Delete(GetSaveFilePathByName(worldName));
             return;
         }
 
-        string path = GetSaveFolderPathByName(worldName);
-        string rootSavesPath = Path.GetFullPath(GetSavesFolderPath()).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        string targetWorldPath = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var path = GetSaveFolderPathByName(worldName);
+        var rootSavesPath = Path.GetFullPath(GetSavesFolderPath()).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var targetWorldPath = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
         if (string.Equals(rootSavesPath, targetWorldPath, System.StringComparison.OrdinalIgnoreCase)) {
             Debug.LogError($"[{nameof(WorldSaveSystem)}] CRITICAL ERROR: Attempt to delete the root saves folder was blocked by path {targetWorldPath}!");
@@ -47,6 +60,8 @@ public static class WorldSaveSystem
         try {
             Directory.Delete(targetWorldPath, true);
             Debug.Log($"[{nameof(WorldSaveSystem)}] World folder successfully deleted: {worldName}");
+
+            OnWorldDataDeleted?.Invoke(worldData);
         }
         catch (System.Exception ex) {
             Debug.LogError($"[{nameof(WorldSaveSystem)}] Failed to delete world folder '{worldName}': {ex.Message}");
@@ -152,11 +167,11 @@ public static class WorldSaveSystem
     private static WorldData GetSaveDataByPath(string path)
     {
         if (!File.Exists(path)) {
-            Debug.Log("Save file not found in " + path);
+            Debug.Log($"[{nameof(WorldSaveSystem)}] Save file not found in " + path);
             return null;
         }
 
-        string json = File.ReadAllText(path);
+        var json = File.ReadAllText(path);
         var worldData = WorldDataMigrator.GetWorldData(json);
 
         return worldData;
