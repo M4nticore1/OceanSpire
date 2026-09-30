@@ -74,6 +74,7 @@ android {
 
 // ==========================================
 // YANDEX ADS & APPLOVIN MEDIATION FIX
+// ���� ��������� ������ androidx.core ��� Unity 6
 // ==========================================
 configurations.all {
     resolutionStrategy {

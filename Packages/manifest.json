@@ -58,6 +58,7 @@
       "name": "package.openupm.com",
       "url": "https://package.openupm.com",
       "scopes": [
+        "com.google.external-dependency-manager",
         "io.appmetrica.analytics"
       ]
     }

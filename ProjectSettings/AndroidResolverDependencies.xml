@@ -22,7 +22,7 @@
     <file>Assets/GeneratedLocalRepo/Firebase/m2repository/com/google/firebase/firebase-crashlytics-unity/13.13.0/firebase-crashlytics-unity-13.13.0.pom</file>
   </files>
   <settings>
-    <setting name="androidAbis" value="arm64-v8a" />
+    <setting name="androidAbis" value="arm64-v8a,armeabi-v7a" />
     <setting name="bundleId" value="com.wismutgames.oceanspire" />
     <setting name="gradleBuildEnabled" value="True" />
     <setting name="gradlePropertiesTemplateEnabled" value="True" />
