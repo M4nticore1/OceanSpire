@@ -2176,6 +2176,7 @@ MonoBehaviour:
   priority: 49
   nameLocalizationItem: {fileID: 11400000, guid: ca96affc395ec334d9fc14a6c1b9b14c, type: 2}
   descriptionLocalizationItem: {fileID: 11400000, guid: 4b44c2ef923841249b11fdb235ce175e, type: 2}
+  notificationIcon: {fileID: 0}
   starvationManager: {fileID: 732370467}
 --- !u!1 &163833202
 GameObject:
@@ -11733,6 +11734,7 @@ MonoBehaviour:
   priority: 51
   nameLocalizationItem: {fileID: 11400000, guid: 4155c227430504e4a9273558f6c19c8b, type: 2}
   descriptionLocalizationItem: {fileID: 11400000, guid: 9754fa8f27bad7f40bfec150ce5d6e96, type: 2}
+  notificationIcon: {fileID: 0}
   cityStorage: {fileID: 1388613268}
   excludedStacks:
   - {fileID: 11400000, guid: 9f3eab9703f96e34ca97a436bd161413, type: 2}
@@ -15087,11 +15089,11 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: 53684294a794d1743aa90a7b6c1f48d4, type: 2}
     amount: 0
   - definition: {fileID: 11400000, guid: e6e0b672836d93b44bbc0c0b39214e20, type: 2}
-    amount: 0
+    amount: 25
   - definition: {fileID: 11400000, guid: 6009cc6eba9fcf9489b14353fb2b3c9c, type: 2}
     amount: 0
   - definition: {fileID: 11400000, guid: 0a719313980629b44bf36d6878f42391, type: 2}
-    amount: 0
+    amount: 10
   - definition: {fileID: 11400000, guid: df1f21bae6de24c42807df07f0db0781, type: 2}
     amount: 0
   - definition: {fileID: 11400000, guid: 2885e0f30598a164395e493ce7632386, type: 2}
@@ -22250,6 +22252,7 @@ MonoBehaviour:
   priority: 50
   nameLocalizationItem: {fileID: 11400000, guid: fb7cb45e22e487c45a62dadf7ed1b002, type: 2}
   descriptionLocalizationItem: {fileID: 11400000, guid: 8ac4f1dbf6e39fa499f01c3c476e20c7, type: 2}
+  notificationIcon: {fileID: 0}
   energyShortageManager: {fileID: 998043851}
 --- !u!1 &1925740695
 GameObject:

@@ -3,7 +3,7 @@ using UnityEngine;
 public class StorageManagementList : ManagementList
 {
     [SerializeField] private ItemWidget itemWidgetPrefab;
-    [SerializeField] private ItemWidget stackWidget;
+    [SerializeField] private ItemStackWidget stackWidget;
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private ItemStackId itemStack;
 

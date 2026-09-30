@@ -13,11 +13,16 @@ public class InGameNotificationWidget : MonoBehaviour
     [SerializeField] private TextLocalizer descriptionText;
     public TextLocalizer DescriptionText => descriptionText;
 
+    [SerializeField] private Image iconImage;
+    public Image IconImage => iconImage;
+
     [SerializeField] private Image descriptionBackground;
     public Image DescriptionBackground => descriptionBackground;
 
     [SerializeField] private AnimatedPanel descriptionPanel;
     public AnimatedPanel DescriptionPanel => descriptionPanel;
+
+    [SerializeField] private FitSizeToContent fitSize;
 
     private InGameNotificationSeverityDefinition severityDefinition;
     private int priority = 50;
@@ -67,6 +72,7 @@ public class InGameNotificationWidget : MonoBehaviour
         descriptionText.SetLocalizationItem(notificationData.DescriptionLocaliztion);
         descriptionText.SetPlaceHolderLocalization(notificationData.DescriptionLocalizationHolder);
 
+        iconImage.sprite = notificationData.Icon;
         severityDefinition = notificationData.SeverityDefinition;
         priority = notificationData.Priority;
 
@@ -77,6 +83,8 @@ public class InGameNotificationWidget : MonoBehaviour
         if (descriptionPanel != null) {
             descriptionPanel.SetAnimationProgress(0f);
         }
+
+        fitSize.UpdateSize();
     }
 
     public void SetButtonSelectGroup(SelectGroup selectGroup)

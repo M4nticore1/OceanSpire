@@ -26,7 +26,7 @@ public class StorageFullInGameNotificationController : InGameNotificationControl
 
     protected override InGameNotificationData GetNotificationData()
     {
-        return new InGameNotificationData(NameLocalizationItem, DescriptionLocalizationItem, SeverityDefinition, Priority, lastChangedStackItemAmount, lastChangedStackItemAmount);
+        return new InGameNotificationData(NameLocalizationItem, DescriptionLocalizationItem, lastChangedStackItemAmount.Definition.Icon, SeverityDefinition, Priority, lastChangedStackItemAmount, lastChangedStackItemAmount);
     }
 
     private void HandleStackItemChanged(ItemStackInstance stack)
