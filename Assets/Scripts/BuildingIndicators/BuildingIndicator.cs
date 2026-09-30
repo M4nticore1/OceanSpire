@@ -23,6 +23,7 @@ public class BuildingIndicator : MonoBehaviour
 
     public void Show(Texture indicatorTexture)
     {
+        Debug.Log("Show");
         content.SetActive(true);
         collision.enabled = true;
         UpdateLayoutElementIgnored();
@@ -32,6 +33,7 @@ public class BuildingIndicator : MonoBehaviour
 
     public void Hide()
     {
+        Debug.Log("Hide");
         content.SetActive(false);
         collision.enabled = false;
         UpdateLayoutElementIgnored();

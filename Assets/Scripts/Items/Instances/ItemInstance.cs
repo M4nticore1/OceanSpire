@@ -32,7 +32,7 @@ public class ItemInstance : IAmountable, IWeightable, ILocalizable, IInformation
     public event Action<ItemInstance, int> OnItemAmountRemoved;
 
     public event Action<ItemInstance> OnItemAmountChanged;
-    public event Action<IAmountable> OnAmountChanged;
+    public event Action<int> OnAmountChanged;
 
     public ItemInstance(ItemDefinition definition)
     {
@@ -44,8 +44,8 @@ public class ItemInstance : IAmountable, IWeightable, ILocalizable, IInformation
         amount = Mathf.Max(0, amount);
 
         if (Stack != null) {
-            var otherItemsAmount = Stack.GetItemsAmountSum() - this.amount;
-            var availableAmount = Mathf.Max(0, Stack.Amount - otherItemsAmount);
+            int otherItemsAmount = Stack.GetItemsAmountSum() - this.amount;
+            int availableAmount = Mathf.Max(0, Stack.Amount - otherItemsAmount);
 
             amount = Mathf.Min(amount, availableAmount);
         }
@@ -53,10 +53,10 @@ public class ItemInstance : IAmountable, IWeightable, ILocalizable, IInformation
         if (this.amount == amount)
             return;
 
-        var lastAmount = this.amount;
+        int lastAmount = this.amount;
         this.amount = amount;
 
-        var difference = Mathf.Abs(amount - lastAmount);
+        int difference = Mathf.Abs(amount - lastAmount);
 
         if (amount > lastAmount) {
             OnItemAmountAdded?.Invoke(this, difference);
@@ -65,7 +65,7 @@ public class ItemInstance : IAmountable, IWeightable, ILocalizable, IInformation
             OnItemAmountRemoved?.Invoke(this, difference);
         }
 
-        OnAmountChanged?.Invoke(this);
+        OnAmountChanged?.Invoke(this.amount);
         OnItemAmountChanged?.Invoke(this);
     }
 
@@ -96,7 +96,7 @@ public class ItemInstance : IAmountable, IWeightable, ILocalizable, IInformation
         Stack = stack;
 
         if (Stack != null) {
-            Stack.AddItem(this);
+            Stack.AddItemAmount(this);
 
             SetAmount(amount);
         }
@@ -107,8 +107,15 @@ public class ItemInstance : IAmountable, IWeightable, ILocalizable, IInformation
     {
         return new Dictionary<string, string>()
         {
-            { "itemName", LocalizationManager.Instance.GetLocalizedText(definition.NameLocalizationItem) },
-            { "itemAmount", amount.ToString() }
+            {
+                "itemName",
+                LocalizationManager.Instance.GetLocalizedText(
+                    definition.NameLocalizationItem)
+            },
+            {
+                "itemAmount",
+                amount.ToString()
+            }
         };
     }
 

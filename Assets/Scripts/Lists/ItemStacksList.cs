@@ -36,10 +36,8 @@ public class ItemStacksList : ScriptableObject
         stackDefinitionsDict = new();
 
         foreach (var definition in stackDefinitions) {
-            if (definition == null) {
-                Debug.LogError($"[{nameof(ItemStacksList)}] StackDefinition is not valid!");
+            if (definition == null)
                 continue;
-            }
 
             stackDefinitionsDict.Add(definition.StackId, definition);
         }
