@@ -558,14 +558,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9490196, g: 0.6901961, b: 0.42705882, a: 1}
+  m_Color: {r: 0.9490196, g: 0.73169935, b: 0.42745093, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -600,19 +600,19 @@ MonoBehaviour:
   state: 0
   stateTransitionTime: 0.2
   idleState:
-    bodyColor: {r: 0.9490196, g: 0.6901961, b: 0.42705882, a: 1}
+    bodyColor: {r: 0.9490196, g: 0.73169935, b: 0.42745093, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    bodyColor: {r: 0.9490196, g: 0.7139414, b: 0.4745098, a: 1}
+    bodyColor: {r: 0.9490196, g: 0.7513072, b: 0.4745098, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    bodyColor: {r: 1, g: 0.775, b: 0.55, a: 1}
+    bodyColor: {r: 1, g: 0.8120915, b: 0.54901963, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
@@ -707,14 +707,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9490196, g: 0.6901961, b: 0.42705882, a: 1}
+  m_Color: {r: 0.9490196, g: 0.73169935, b: 0.42745093, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -749,19 +749,19 @@ MonoBehaviour:
   state: 0
   stateTransitionTime: 0.2
   idleState:
-    bodyColor: {r: 0.9490196, g: 0.6901961, b: 0.42705882, a: 1}
+    bodyColor: {r: 0.9490196, g: 0.73169935, b: 0.42745093, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1
   hoveredState:
-    bodyColor: {r: 0.9490196, g: 0.7139414, b: 0.4745098, a: 1}
+    bodyColor: {r: 0.9490196, g: 0.7513072, b: 0.4745098, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}
     scale: 1.02
   pressedState:
-    bodyColor: {r: 1, g: 0.775, b: 0.55, a: 1}
+    bodyColor: {r: 1, g: 0.8120915, b: 0.54901963, a: 1}
     bodyColorHolder: {fileID: 0}
     contentColor: {r: 1, g: 1, b: 1, a: 1}
     contentColorHolder: {fileID: 0}

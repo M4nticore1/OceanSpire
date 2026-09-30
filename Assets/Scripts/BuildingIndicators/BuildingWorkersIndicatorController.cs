@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BuildingWorkersIndicatorController : BuildingIndicatorController
 {
-    private BuildingCitizensHandler citizensHandler => building.CitizensHandler;
+    private BuildingCitizensHandler citizensHandler => building != null ? building.CitizensHandler : null;
 
     protected override void Subscribe()
     {

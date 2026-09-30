@@ -28,15 +28,12 @@ public abstract class BuildingIndicatorController : MonoBehaviour, IClickable
 
             var construction = indicator.BuildingConstruction;
             if (construction == null) {
-                Debug.LogError($"[{nameof(BuildingIndicatorController)}] Construction is not valid at {this}!");
+                Debug.LogError($"[{nameof(BuildingIndicatorController)}] Construction is not valid at {indicator}!");
                 return null;
             }
 
             var building = construction.OwnedBuilding;
-            if (building == null) {
-                Debug.LogError($"[{nameof(BuildingIndicatorController)}] Building is not valid at {construction}!");
-                return null;
-            }
+            if (building == null) return null;
 
             return building;
         }

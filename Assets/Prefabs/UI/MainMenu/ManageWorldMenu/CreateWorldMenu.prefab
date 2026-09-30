@@ -1,0 +1,191 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8393040914911983914
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1902519272327053480, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_Name
+      value: CreateWorldMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976798044307412247, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1902519272327053480, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5241465716723971474}
+  m_SourcePrefab: {fileID: 100100000, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+--- !u!114 &951654660367295419 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8741177782738639505, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+  m_PrefabInstance: {fileID: 8393040914911983914}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TMP_InputField
+--- !u!114 &2921120669606404224 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6697967532962552234, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+  m_PrefabInstance: {fileID: 8393040914911983914}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfcb655dca1ebee4b8a340a2002ff907, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputFieldValidatorsManager
+--- !u!114 &3490245352304449551 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4906044632388165925, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+  m_PrefabInstance: {fileID: 8393040914911983914}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 325414fd39671a6468089e7c89d80820, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
+--- !u!114 &4030952332661061273 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4866917801281884083, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+  m_PrefabInstance: {fileID: 8393040914911983914}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
+--- !u!114 &6774396232104057978 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3060599765947082064, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+  m_PrefabInstance: {fileID: 8393040914911983914}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bc76c3c6f873924e913788656541341, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KeyboardOffset
+--- !u!1 &7934508069193939330 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1902519272327053480, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+  m_PrefabInstance: {fileID: 8393040914911983914}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5241465716723971474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7934508069193939330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 214130783f64b06499ed71ef18638695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreateWorldMenu
+  slidePanel: {fileID: 3490245352304449551}
+  keyboardOffsetUI: {fileID: 6774396232104057978}
+  inputField: {fileID: 951654660367295419}
+  actionButton: {fileID: 9103765357453565770}
+  cancelButton: {fileID: 4030952332661061273}
+  inputFieldValidatorsManager: {fileID: 2921120669606404224}
+--- !u!114 &9103765357453565770 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 733242751195489888, guid: 9c82c62fd0b25f644b921ce248ae8e69, type: 3}
+  m_PrefabInstance: {fileID: 8393040914911983914}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable

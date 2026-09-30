@@ -155,10 +155,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FitSizeToChildren
   rect: {fileID: 0}
+  fitHorizontal: 0
+  fitVertical: 1
+  minSize: {x: 0, y: 0}
+  extraSize: {x: 0, y: 0}
   minHeight: 0
   extraHeight: 0
   includedTransforms: []
+  includedHierarchyTransforms: []
   excludedTransforms: []
+  excludedHierarchyTransforms: []
 --- !u!1 &5940474431266803652
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,6 +319,10 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 5348611504111124649, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
     - target: {fileID: 5588598354278059917, guid: 7d09647759533d34984e4e4f420ab71c, type: 3}
       propertyPath: OnReleased.m_PersistentCalls.m_Calls.Array.size
       value: 1

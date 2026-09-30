@@ -189,7 +189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ReviveHandler
   health: {fileID: 4098557255172134659}
   reviveHealthPercent: 0.1
-  reviveLimitTime: 600
+  reviveLimitTime: 900
 --- !u!114 &6316746746762001490
 MonoBehaviour:
   m_ObjectHideFlags: 0

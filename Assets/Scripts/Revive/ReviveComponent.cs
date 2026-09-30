@@ -12,6 +12,8 @@ public class ReviveComponent : MonoBehaviour, ILocalizable
 
     public long? DieTime { get; private set; } = null;
 
+    private ReviveManager reviveManager => ReviveManager.Instance;
+
     public event Action OnRevived;
     public event Action OnLimitTimeOvered;
 
@@ -19,14 +21,14 @@ public class ReviveComponent : MonoBehaviour, ILocalizable
 
     private void OnEnable()
     {
-        ReviveManager.Instance?.RegisterReviveComponent(this);
+        reviveManager.RegisterReviveComponent(this);
 
         health.OnDied += OnDied;
     }
 
     private void OnDisable()
     {
-        ReviveManager.Instance?.UnregisterReviveComponent(this);
+        reviveManager.UnregisterReviveComponent(this);
 
         health.OnDied -= OnDied;
     }
@@ -57,7 +59,8 @@ public class ReviveComponent : MonoBehaviour, ILocalizable
     public void Init(ReviveData reviveData)
     {
         if (reviveData == null) {
-            Debug.LogError("reviveData is not valid");
+            Debug.LogError($"[{nameof(ReviveComponent)}] ReviveData is not valid");
+            Init();
             return;
         }
 

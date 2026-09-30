@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ElevatorCabinConstruction : BuildingConstruction
 {
@@ -30,7 +29,13 @@ public class ElevatorCabinConstruction : BuildingConstruction
     public int NextFloor = 0;
 
     private float moveSpeed = 0f;
-    private Vector3 moveDirection = Vector3.zero;
+    private float moveDirection
+    {
+        get {
+            var nextFloor = CalculateNextFloor();
+            return nextFloor > FloorIndex ? 1 : nextFloor < FloorIndex ? -1 : 0;
+        }
+    }
 
     private TimerHandle startMovingTimerHandle = new TimerHandle();
     private const float delayToStartMoving = 1f;
@@ -57,7 +62,6 @@ public class ElevatorCabinConstruction : BuildingConstruction
             StopMoving();
             ApplyOwnedBuildingPosition();
             SetTargetFloor(CalculateTargetFloor());
-            UpdateMoveDirection();
             StartMovingToTargetFloorTimer();
         }
     }
@@ -72,7 +76,6 @@ public class ElevatorCabinConstruction : BuildingConstruction
         }
 
         SetTargetFloor(CalculateTargetFloor());
-        UpdateMoveDirection();
         StartMovingToTargetFloor();
     }
 
@@ -250,38 +253,38 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     public bool ShouldMoveToFloor(int floor)
     {
-        Debug.Log(ridingPassengers.Count);
-        Debug.Log(floor);
-        Debug.Log("ShouldMoveToFloor");
+        //Debug.Log(ridingPassengers.Count);
+        //Debug.Log(floor);
+        //Debug.Log("ShouldMoveToFloor");
         if (FloorIndex == floor) return false;
 
-        Debug.Log("ShouldMoveToFloor1");
+        //Debug.Log("ShouldMoveToFloor1");
         var builtFloors = BuildingsManager.Instance.BuiltFloors;
         if (builtFloors == null || builtFloors.Count <= floor) return false;
 
-        Debug.Log("ShouldMoveToFloor2");
+        //Debug.Log("ShouldMoveToFloor2");
         if (builtFloors[floor] == null) return false;
 
-        Debug.Log("ShouldMoveToFloor3");
+        //Debug.Log("ShouldMoveToFloor3");
         var roomBuildingPlaces = builtFloors[floor].RoomBuildingPlaces;
         if (roomBuildingPlaces == null || roomBuildingPlaces.Count <= PlaceIndex) return false;
 
-        Debug.Log("ShouldMoveToFloor4");
+        //Debug.Log("ShouldMoveToFloor4");
         var targetBuilding = roomBuildingPlaces[PlaceIndex].PlacedBuilding;
         if (targetBuilding == null) return false;
 
-        Debug.Log("ShouldMoveToFloor5");
+        //Debug.Log("ShouldMoveToFloor5");
         var ownedElevator = OwnedElevator;
         if (ownedElevator == null) return false;
 
-        Debug.Log("ShouldMoveToFloor6");
+        //Debug.Log("ShouldMoveToFloor6");
         var ownedTowerBuilding = ownedElevator.OwnedTowerBuilding;
         if (ownedTowerBuilding == null) return false;
 
-        Debug.Log("ShouldMoveToFloor7");
+        //Debug.Log("ShouldMoveToFloor7");
         if (!targetBuilding.NetworkWith(ownedTowerBuilding)) return false;
 
-        Debug.Log("ShouldMoveToFloor8");
+        //Debug.Log("ShouldMoveToFloor8");
         return true;
     }
 
@@ -298,12 +301,10 @@ public class ElevatorCabinConstruction : BuildingConstruction
             }
 
             SetTargetFloor(targetFloor);
-            UpdateMoveDirection();
             StartMovingToTargetFloor();
         }
         else {
             SetTargetFloor(CalculateTargetFloor());
-            UpdateMoveDirection();
             StartMovingToTargetFloorTimer();
         }
     }
@@ -329,16 +330,6 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
         RemoveMovingToFloorTimer();
         TimerManager.Instance.StartTimer(startMovingTimerHandle, delayToStartMoving, StartMovingToTargetFloor);
-    }
-
-    private void UpdateMoveDirection()
-    {
-        if (TargetFloor > FloorIndex)
-            moveDirection = Vector3.up;
-        else if (TargetFloor < FloorIndex)
-            moveDirection = Vector3.down;
-        else
-            moveDirection = Vector3.zero;
     }
 
     private void RemoveMovingToFloorTimer()
@@ -381,12 +372,13 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
     private int CalculateTargetFloor()
     {
-        if (goingToRidingPassengers.Count > 0 && goingToRidingPassengers[0] != null) {
-            var passenger = goingToRidingPassengers[0];
-            if (passenger.CityNavigator != null) {
-                return passenger.CityNavigator.FloorIndex;
-            }
-        }
+        //if (goingToRidingPassengers.Count > 0 && goingToRidingPassengers[0] != null) {
+        //    var passenger = goingToRidingPassengers[0];
+
+        //    if (passenger != null && passenger.CityNavigator != null) {
+        //        return passenger.CityNavigator.FloorIndex;
+        //    }
+        //}
 
         int currentFloor = FloorIndex;
         int freeSpace = OwnedBuilding != null ? OwnedBuilding.LevelDefinition.MaxHumansCount - ridingPassengers.Count : 0;
@@ -415,9 +407,7 @@ public class ElevatorCabinConstruction : BuildingConstruction
         if (possibleFloors.Count == 0)
             return currentFloor;
 
-        return possibleFloors
-            .OrderBy(floor => Mathf.Abs(floor - currentFloor))
-            .First();
+        return possibleFloors.OrderBy(floor => Mathf.Abs(floor - currentFloor)).First();
     }
 
     private int CalculateNextFloor()
@@ -425,9 +415,9 @@ public class ElevatorCabinConstruction : BuildingConstruction
         return TargetFloor > FloorIndex ? FloorIndex + 1 : TargetFloor < FloorIndex ? FloorIndex - 1 : FloorIndex;
     }
 
-    private void Move(Vector3 direction, float speed)
+    private void Move(float direction, float speed)
     {
-        transform.position += direction * speed;
+        transform.position += new Vector3(0, 1, 0) * direction * speed;
     }
 
     private int GetFloorIndexByPosition()
@@ -481,9 +471,9 @@ public class ElevatorCabinConstruction : BuildingConstruction
 
         float targetY = targetBuilding.transform.position.y;
 
-        // Проверяем, пересекла ли позиция лифта целевую высоту в зависимости от направления
-        if (moveDirection.y > 0 && transform.position.y >= targetY) return true;
-        if (moveDirection.y < 0 && transform.position.y <= targetY) return true;
+        if (moveDirection > 0 && transform.position.y >= targetY) return true;
+        if (moveDirection < 0 && transform.position.y <= targetY) return true;
+        if (moveDirection == 0) return true;
 
         return false;
     }
