@@ -2,22 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public abstract class FitSizeToContent : MonoBehaviour
 {
     [SerializeField] private RectTransform rect;
     public RectTransform RectTransform => rect;
 
-    [SerializeField] private bool fitHorizontal = true;
-    [SerializeField] private bool fitVertical = true;
-
-    [SerializeField] private Vector2 minSize = Vector2.zero;
-    public Vector2 MinSize => minSize;
-
-    [SerializeField] private Vector2 extraSize = Vector2.zero;
-    public Vector2 ExtraSize => extraSize;
-
-    [Header("Depricated")]
     [SerializeField] private float minHeight = 0f;
     public float MinHeight => minHeight;
 
@@ -49,7 +40,7 @@ public abstract class FitSizeToContent : MonoBehaviour
         UpdateSize();
     }
 
-    protected abstract Vector2 GetSize();
+    protected abstract float GetHeight();
 
     public void RunUpdateSizeEndOfFrame()
     {
@@ -82,15 +73,7 @@ public abstract class FitSizeToContent : MonoBehaviour
             return;
         }
 
-        var size = GetSize();
-
-        if (fitHorizontal) {
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
-        }
-
-        if (fitVertical) {
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
-        }
+        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, GetHeight());
     }
 
     protected List<GameObject> GetIncludedChildren()

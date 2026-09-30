@@ -55,7 +55,6 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         content.SetActive(true);
         TryRemoveWidgets();
         TryCreateWidgets();
-        dailyTasksManager.SetTasksViewed(true);
         InputStateManager.Instance.AddInputBlockTarget(this);
 
         OnShown?.Invoke();
@@ -115,6 +114,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         if (isSubscribed) return;
 
         dailyTasksManager.OnTasksCreated += OnTasksInited;
+        //dailyTasksManager.OnTasksViewedChanged += OnTasksViewedChanged;
 
         isSubscribed = true;
     }
@@ -124,6 +124,7 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
         if (!isSubscribed) return;
 
         dailyTasksManager.OnTasksCreated -= OnTasksInited;
+        //dailyTasksManager.OnTasksViewedChanged -= OnTasksViewedChanged;
 
         isSubscribed = false;
     }
@@ -142,5 +143,10 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
     private void HandleHideButtonClicked()
     {
         Hide();
+    }
+
+    private void OnTasksViewedChanged(bool value)
+    {
+        dailyTasksManager.SetTasksViewed(false);
     }
 }

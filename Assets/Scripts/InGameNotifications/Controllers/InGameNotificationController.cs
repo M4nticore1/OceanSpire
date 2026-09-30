@@ -20,9 +20,6 @@ public abstract class InGameNotificationController : MonoBehaviour
     [SerializeField] private LocalizationItem descriptionLocalizationItem;
     public LocalizationItem DescriptionLocalizationItem => descriptionLocalizationItem;
 
-    [SerializeField] private Sprite notificationIcon;
-    public Sprite NotificationIcon => notificationIcon;
-
     protected virtual void Awake()
     {
         if (severityDefinition == null) {
@@ -58,7 +55,7 @@ public abstract class InGameNotificationController : MonoBehaviour
 
     protected virtual InGameNotificationData GetNotificationData()
     {
-        return new InGameNotificationData(nameLocalizationItem, descriptionLocalizationItem, notificationIcon, severityDefinition, priority);
+        return new InGameNotificationData(nameLocalizationItem, descriptionLocalizationItem, severityDefinition, priority);
     }
 
     protected void ShowNotification(InGameNotificationData notificationData)

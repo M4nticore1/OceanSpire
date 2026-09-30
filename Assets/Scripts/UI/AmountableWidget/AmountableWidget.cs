@@ -218,10 +218,7 @@ public abstract class AmountableWidget : MonoBehaviour
         if (itemNameText == null)
             return;
 
-        var name = GetName();
-        if (name == null) return;
-
-        itemNameText.SetLocalizationItem(name);
+        itemNameText.SetLocalizationItem(GetName());
     }
 
     protected void UpdateIcon()
@@ -229,10 +226,7 @@ public abstract class AmountableWidget : MonoBehaviour
         if (resourceImage == null)
             return;
 
-        var icon = GetIcon();
-        if (icon == null) return;
-
-        resourceImage.sprite = icon;
+        resourceImage.sprite = GetIcon();
     }
 
     private void TryUpdateResourceBar()

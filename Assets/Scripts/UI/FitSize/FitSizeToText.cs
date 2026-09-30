@@ -5,25 +5,20 @@ using UnityEngine.UI;
 
 public class FitSizeToText : FitSizeToContent
 {
-    protected override Vector2 GetSize()
+    protected override float GetHeight()
     {
         var tmpText = GetIncludedChildren().Select(child => child.GetComponent<TMP_Text>()).FirstOrDefault(text => text != null);
 
         if (tmpText == null || string.IsNullOrEmpty(tmpText.text)) {
-            return MinSize;
+            return MinHeight;
         }
 
         tmpText.rectTransform.ForceUpdateRectTransforms();
         tmpText.ForceMeshUpdate();
 
-        var size = new Vector2();
+        var requiredHeight = tmpText.preferredHeight + ExtraHeight;
+        float finalHeight = Mathf.Max(requiredHeight, MinHeight);
 
-        size.x = tmpText.preferredWidth + ExtraSize.x;
-        size.y = tmpText.preferredHeight + ExtraSize.y;
-
-        size.x = Mathf.Max(size.x, MinSize.x);
-        size.y = Mathf.Max(size.y, MinSize.y);
-
-        return size;
+        return finalHeight;
     }
 }

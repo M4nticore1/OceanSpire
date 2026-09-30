@@ -130,10 +130,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FitSizeToChildren
   rect: {fileID: 5096182534854453995}
-  fitHorizontal: 0
-  fitVertical: 1
-  minSize: {x: 0, y: 0}
-  extraSize: {x: 0, y: 0}
   minHeight: 220
   extraHeight: 40
   includedTransforms: []
