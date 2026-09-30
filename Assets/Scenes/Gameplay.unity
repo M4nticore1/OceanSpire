@@ -2171,8 +2171,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22e8efa66fc5288478e494d3623494cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StarvationNotificationController
-  notificationPrefab: {fileID: 7902899878219477567, guid: 1396744b18f380449b4ec88823c7d4c5, type: 3}
   notificationsPanel: {fileID: 383697688}
+  severityDefinition: {fileID: 11400000, guid: 16cb93f955e767645b661b4b7b1486de, type: 2}
+  priority: 49
+  nameLocalizationItem: {fileID: 11400000, guid: ca96affc395ec334d9fc14a6c1b9b14c, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 4b44c2ef923841249b11fdb235ce175e, type: 2}
   starvationManager: {fileID: 732370467}
 --- !u!1 &163833202
 GameObject:
@@ -4704,6 +4707,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 611782633654351207, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -10.200012
+      objectReference: {fileID: 0}
     - target: {fileID: 612959284017470565, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_Pivot.y
       value: 1
@@ -5668,6 +5675,10 @@ PrefabInstance:
       propertyPath: wandererAdmissionManager
       value: 
       objectReference: {fileID: 624742860}
+    - target: {fileID: 3771991048336401734, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: dailyTasksManager
+      value: 
+      objectReference: {fileID: 1366684462}
     - target: {fileID: 3830277698611465684, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: inputStateManager
       value: 
@@ -5892,6 +5903,10 @@ PrefabInstance:
       propertyPath: previousTutorialStep
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4536153427823797571, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -10.200012
+      objectReference: {fileID: 0}
     - target: {fileID: 4593075313782835675, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -5980,6 +5995,30 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4868017497982553413, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4868017497982553413, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4868017497982553413, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4868017497982553413, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4868017497982553413, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4868017497982553413, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4878421482987661718, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -6013,6 +6052,30 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4933753707364872592, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4954782614238404919, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4954782614238404919, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4954782614238404919, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4954782614238404919, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4954782614238404919, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4954782614238404919, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
@@ -6443,6 +6506,10 @@ PrefabInstance:
     - target: {fileID: 6118101598265452345, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6170453748772444646, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -10.200012
       objectReference: {fileID: 0}
     - target: {fileID: 6207136406673339000, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
@@ -6936,6 +7003,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8189979063889471025, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: dailyRewardManager
+      value: 
+      objectReference: {fileID: 101393569}
     - target: {fileID: 8238370757902337292, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_fontSize
       value: 38.9
@@ -7008,6 +7079,10 @@ PrefabInstance:
       propertyPath: rewardedAdsButtonManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8512303934669949824, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: dailyRewardManager
+      value: 
+      objectReference: {fileID: 101393569}
     - target: {fileID: 8547742790012387658, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -11609,6 +11684,60 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7877060323572382484, guid: 693a24886030b8a4aa85d9fe750467a5, type: 3}
   m_PrefabInstance: {fileID: 785272369}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &787071964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 787071965}
+  - component: {fileID: 787071966}
+  m_Layer: 0
+  m_Name: StorageFullInGameNotificationController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &787071965
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787071964}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1616675883}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &787071966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787071964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 841fe0a67679e7c479d826a533f5567e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StorageFullInGameNotificationController
+  notificationsPanel: {fileID: 383697688}
+  severityDefinition: {fileID: 11400000, guid: c5aea349dcbb0924b95dc2087cea5606, type: 2}
+  priority: 51
+  nameLocalizationItem: {fileID: 11400000, guid: 4155c227430504e4a9273558f6c19c8b, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 9754fa8f27bad7f40bfec150ce5d6e96, type: 2}
+  cityStorage: {fileID: 1388613268}
+  excludedStacks:
+  - {fileID: 11400000, guid: 9f3eab9703f96e34ca97a436bd161413, type: 2}
+  - {fileID: 11400000, guid: bf3a59a025f09c24cb89491414a4afce, type: 2}
+  - {fileID: 11400000, guid: 3507e61b7d0df5d419d29887d9de711b, type: 2}
 --- !u!1001 &787910662
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14948,7 +15077,7 @@ MonoBehaviour:
   - definition: {fileID: 11400000, guid: 8bbcdd1b6d236b0488992a163a79ec22, type: 2}
     amount: 100
   - definition: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
-    amount: 2500
+    amount: 25000
   - definition: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
     amount: 500
   - definition: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
@@ -19858,6 +19987,7 @@ Transform:
   m_Children:
   - {fileID: 160833740}
   - {fileID: 1923834356}
+  - {fileID: 787071965}
   m_Father: {fileID: 1238355532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1620267202 stripped
@@ -22115,8 +22245,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44d220ec7909ad547aaf42739c59bacf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnergyShortageNotificationController
-  notificationPrefab: {fileID: 7902899878219477567, guid: 680b4a7e833d1be479d7ed03c8fba350, type: 3}
   notificationsPanel: {fileID: 383697688}
+  severityDefinition: {fileID: 11400000, guid: 16cb93f955e767645b661b4b7b1486de, type: 2}
+  priority: 50
+  nameLocalizationItem: {fileID: 11400000, guid: fb7cb45e22e487c45a62dadf7ed1b002, type: 2}
+  descriptionLocalizationItem: {fileID: 11400000, guid: 8ac4f1dbf6e39fa499f01c3c476e20c7, type: 2}
   energyShortageManager: {fileID: 998043851}
 --- !u!1 &1925740695
 GameObject:

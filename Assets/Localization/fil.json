@@ -236,6 +236,8 @@
   "in_game_notification_description_starvation": "Nauosos na ang mga reserba ng pagkain. Nagsisimulang manghina ang mga residente, at unti-unting bababa ang kanilang kalusugan.",
   "in_game_notification_name_energy_shortage": "Kulang sa Enerhiya",
   "in_game_notification_description_energy_shortage": "Ganap na naubos na ang mga reserba ng enerhiya. Malaki ang ibinagal ng mga proseso ng mga gusali sa lungsod.",
+  "in_game_notification_name_storage_full": "Overflow: {stackName}",
+  "in_game_notification_description_storage_full": "Puno na ang imbakan. Ang lahat ng darating na labis ay wawasakin.",
   "first_name_male_adam": "Adan",
   "first_name_male_daniel": "Daniel",
   "first_name_male_david": "David",

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 [Serializable]
-public class ItemStackInstance : IAmountable, IInformationable
+public class ItemStackInstance : IAmountable, IInformationable, ILocalizable
 {
     [SerializeField] private ItemStackDefinition definition;
     public ItemStackDefinition Definition => definition;
@@ -15,13 +15,17 @@ public class ItemStackInstance : IAmountable, IInformationable
     [SerializeField] private List<ItemInstance> items = new();
     public IReadOnlyList<ItemInstance> Items => items;
 
-    public event Action<int> OnAmountChanged;
+    public bool IsOverflowed => GetItemsAmountSum() >= amount;
+
+    public event Action<IAmountable> OnAmountChanged;
+    public event Action<ItemStackInstance> OnItemAmountChanged;
 
     public ItemStackInstance(ItemStackDefinition definition)
     {
         this.definition = definition;
     }
 
+    // -- Add/Remove Limit ---
     public void AddLimit(int value)
     {
         if (value <= 0)
@@ -38,25 +42,33 @@ public class ItemStackInstance : IAmountable, IInformationable
         SetLimit(amount - value);
     }
 
-    public void AddItemAmount(ItemInstance value)
+    // --- Add/Remove Item ---
+    public void AddItem(ItemInstance item)
     {
-        if (value == null)
+        if (item == null) {
+            Debug.LogError($"[{nameof(ItemStackInstance)}] Item is not valid!");
+            return;
+        }
+
+        if (items.Contains(item))
             return;
 
-        if (items.Contains(value))
-            return;
-
-        items.Add(value);
+        items.Add(item);
+        SubscribeItem(item);
     }
 
-    public void RemoveItem(ItemInstance value)
+    public void RemoveItem(ItemInstance item)
     {
-        if (value == null)
+        if (item == null) {
+            Debug.LogError($"[{nameof(ItemStackInstance)}] Item is not valid!");
             return;
+        }
 
-        items.Remove(value);
+        items.Remove(item);
+        UnubscribeItem(item);
     }
 
+    // --- Get Items Sum ---
     public int GetItemsAmountSum()
     {
         int sum = 0;
@@ -71,7 +83,7 @@ public class ItemStackInstance : IAmountable, IInformationable
         return sum;
     }
 
-    // IInformationable
+    // --- IInformationable ---
     public LocalizationItem GetInformationName()
     {
         return definition.NameLocalizationItem;
@@ -87,9 +99,49 @@ public class ItemStackInstance : IAmountable, IInformationable
         return definition.Icon;
     }
 
+    // ILocalizable
+    public Dictionary<string, string> GetLocalization()
+    {
+        return new Dictionary<string, string>()
+        {
+            { "stackName", LocalizationManager.Instance.GetLocalizedText(GetInformationName()) },
+            { "stackAmount", GetItemsAmountSum().ToString() },
+            { "stackLimit", amount.ToString() },
+        };
+    }
+
+    // --- Set Limit ---
     private void SetLimit(int value)
     {
         amount = Mathf.Max(0, value);
-        OnAmountChanged?.Invoke(amount);
+
+        OnAmountChanged?.Invoke(this);
+    }
+
+    // --- Item Amount Events ---
+    private void SubscribeItem(ItemInstance item)
+    {
+        if (item == null) {
+            Debug.LogError($"[{nameof(ItemStackInstance)}] Item is not valid!");
+            return;
+        }
+
+        item.OnItemAmountChanged += HandleItemAmountChanged;
+    }
+
+    private void UnubscribeItem(ItemInstance item)
+    {
+        if (item == null) {
+            Debug.LogError($"[{nameof(ItemStackInstance)}] Item is not valid!");
+            return;
+        }
+
+        item.OnItemAmountChanged -= HandleItemAmountChanged;
+    }
+
+    // --- Subscribe/Unsubscribe Item
+    private void HandleItemAmountChanged(ItemInstance item)
+    {
+        OnItemAmountChanged?.Invoke(this);
     }
 }

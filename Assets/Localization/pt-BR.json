@@ -236,6 +236,8 @@
   "in_game_notification_description_starvation": "As reservas de alimentos estão esgotadas. Os cidadãos começam a enfraquecer e sua saúde vai piorar gradualmente.",
   "in_game_notification_name_energy_shortage": "Déficit de energia",
   "in_game_notification_description_energy_shortage": "As reservas de energia estão completamente esgotadas. Os objetos urbanos desaceleraram significativamente seus processos.",
+  "in_game_notification_name_storage_full": "Transbordo: {stackName}",
+  "in_game_notification_description_storage_full": "O armazenamento está cheio. Todo o excesso recebido será destruído.",
   "first_name_male_adam": "Adão",
   "first_name_male_daniel": "Daniel",
   "first_name_male_david": "Davi",

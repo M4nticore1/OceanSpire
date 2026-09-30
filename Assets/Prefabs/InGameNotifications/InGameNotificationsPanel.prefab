@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5085766672958463689}
   - component: {fileID: 6874431415566806976}
   m_Layer: 5
-  m_Name: NotificationsPanel
+  m_Name: InGameNotificationsPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1508e74904a64c1409b35a786daee917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotificationsPanel
+  notificationWidgetPrefab: {fileID: 2256625408672897932, guid: 792d086722cf46f4ab1be675932e31ab, type: 3}
   layoutGroup: {fileID: 4209192389410106577}
   selectGroup: {fileID: 5127259484505732657}
 --- !u!1 &5966846905400928366

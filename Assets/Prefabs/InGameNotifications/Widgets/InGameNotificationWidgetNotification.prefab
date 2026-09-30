@@ -314,7 +314,7 @@ GameObject:
   - component: {fileID: 5455129626814256693}
   - component: {fileID: 2256625408672897932}
   m_Layer: 5
-  m_Name: Notification
+  m_Name: InGameNotificationWidgetNotification
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -355,10 +355,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73e34f23288acfc48bc3c328c8d68b01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InGameNotificationWidget
-  notificationId: 0
-  severityDefinition: {fileID: 11400000, guid: 675cab75f59046342b1978de77bf6766, type: 2}
-  priority: 50
   descriptionButton: {fileID: 9180611409173182749}
+  nameText: {fileID: 7253369044081215410}
+  descriptionText: {fileID: 439579705045872436}
   descriptionBackground: {fileID: 6177890912877142871}
   descriptionPanel: {fileID: 8033370540609426835}
 --- !u!1 &7428340549571441875
@@ -615,7 +614,7 @@ GameObject:
   - component: {fileID: 5073644032888411426}
   - component: {fileID: 7253369044081215410}
   m_Layer: 5
-  m_Name: Text
+  m_Name: NameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

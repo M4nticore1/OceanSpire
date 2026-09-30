@@ -236,6 +236,8 @@
   "in_game_notification_description_starvation": "Voedselreserves zijn uitgeput. Bewoners beginnen te verzwakken en hun gezondheid zal geleidelijk achteruitgaan.",
   "in_game_notification_name_energy_shortage": "Energietekort",
   "in_game_notification_description_energy_shortage": "Energiereserves zijn volledig uitgeput. Stedelijke objecten hebben അവരുടെ prosesse značajno vertraagt.",
+  "in_game_notification_name_storage_full": "Overloop: {stackName}",
+  "in_game_notification_description_storage_full": "Opslag is vol. Alle inkomende overschotten worden vernietigd.",
   "first_name_male_adam": "Adam",
   "first_name_male_daniel": "Daniël",
   "first_name_male_david": "David",
