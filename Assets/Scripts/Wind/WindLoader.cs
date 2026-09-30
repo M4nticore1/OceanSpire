@@ -6,13 +6,6 @@ public class WindLoader : WorldLoader
 
     protected override void Load(WorldData worldData)
     {
-        var windData = worldData?.Wind;
-
-        if (windData != null) {
-            windManager.Init(windData);
-        }
-        else {
-            windManager.Init();
-        }
+        windManager.Init(worldData != null ? worldData.Wind : null);
     }
 }
