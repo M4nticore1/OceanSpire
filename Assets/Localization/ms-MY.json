@@ -10,8 +10,6 @@
   "create": "Cipta",
   "cancel": "Batal",
   "delete": "Padam",
-  "delete_world": "Padamkan Dunia",
-  "delete_confirmation": "Adakah anda pasti mahu memadamkan dunia ini? Fail simpanan tidak boleh dipulihkan.",
   "discard": "Buang",
   "update": "Kemas kini",
   "update_now": "Kemas kini sekarang",

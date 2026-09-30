@@ -1,10 +1,7 @@
 fileFormatVersion: 2
 guid: 102995cf17d1d9746a4a84ff763ad436
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -2291543173588511146
-    second: thumb_weapon_workshop_lvl_01_0
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -124,29 +121,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: thumb_weapon_workshop_lvl_01_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 256
-        height: 192
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 65619ceef9dc230e0800000000000000
-      internalID: -2291543173588511146
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     customData: 
     physicsShape: []

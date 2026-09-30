@@ -10,8 +10,6 @@
   "create": "Crea",
   "cancel": "Annulla",
   "delete": "Elimina",
-  "delete_world": "Elimina mondo",
-  "delete_confirmation": "Sei sicuro di voler eliminare il mondo? Il salvataggio non potrà essere recuperato.",
   "discard": "Scarta",
   "update": "Aggiorna",
   "update_now": "Aggiorna ora",

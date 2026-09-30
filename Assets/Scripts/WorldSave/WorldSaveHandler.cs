@@ -1,41 +1,38 @@
 using UnityEngine;
 
-public class WorldSaveHandler : MonoBehaviour
+public class WorldSaveHandler
 {
-    public static WorldSaveHandler Instance { get; private set; }
+    private static WorldSaveHandler instance;
+    public static WorldSaveHandler Instance
+    {
+        get
+        {
+            if (instance == null) {
+                instance = new WorldSaveHandler();
+                instance.Init();
+            }
+
+            return instance;
+        }
+    }
 
     public WorldData[] AllSaveData { get; private set; }
     public WorldData CurrentWorldData { get; private set; }
     public string SaveWorldName { get; private set; }
 
-    private void Awake()
-    {
-        if (Instance != null) {
-            Debug.LogError($"[{nameof(WorldSaveHandler)}] There's another WorldSaveHandler on scene!");
-        }
-        else {
-            Instance = this;
-        }
-    }
+    private WorldSaveHandler() { }
 
-    private void OnEnable()
+    private void Init()
     {
-        WorldSaveSystem.OnWorldDataAdded += HandleWorldDataAdded;
-        WorldSaveSystem.OnWorldDataDeleted += HandleWorldDataDeleted;
-    }
-
-    private void OnDisable()
-    {
-        WorldSaveSystem.OnWorldDataAdded -= HandleWorldDataAdded;
-        WorldSaveSystem.OnWorldDataDeleted -= HandleWorldDataDeleted;
-    }
-
-    private void Start()
-    {
-        UpdateSavesData();
+        FindSavesData();
     }
 
     // World
+    public void FindSavesData()
+    {
+        AllSaveData = WorldSaveSystem.GetAllSaveData();
+    }
+
     public void SetWorldData(WorldData data)
     {
         CurrentWorldData = data;
@@ -45,20 +42,5 @@ public class WorldSaveHandler : MonoBehaviour
     public void SetSaveWorldName(string name)
     {
         SaveWorldName = name;
-    }
-
-    private void UpdateSavesData()
-    {
-        AllSaveData = WorldSaveSystem.GetAllSaveData();
-    }
-
-    private void HandleWorldDataAdded(WorldData worldData)
-    {
-        UpdateSavesData();
-    }
-
-    private void HandleWorldDataDeleted(WorldData worldData)
-    {
-        UpdateSavesData();
     }
 }
