@@ -11,7 +11,7 @@
     <package>com.google.firebase:firebase-common:22.1.0</package>
     <package>com.google.firebase:firebase-crashlytics-ndk:20.0.6</package>
     <package>com.google.firebase:firebase-crashlytics-unity:13.13.0</package>
-    <package>com.yandex.android:mobileads:8.1.0</package>
+    <package>com.yandex.android:mobileads:8.5.0</package>
     <package>io.appmetrica.analytics:analytics:8.0.0</package>
     <package>io.appmetrica.analytics:analytics:8.4.1</package>
   </packages>
