@@ -20,98 +20,59 @@ public class ReviveMenu : CitizenMenu, IOpenable
     [SerializeField] private TextMeshProUGUI nextReviveChargeTimeText;
     [SerializeField] private TextMeshProUGUI nextReviveChargeText;
 
-    private ReviveComponent reviveComponent => citizen?.ReviveComponent;
-
-    // Таймер для оптимизации UI (обновление раз в секунду вместо каждого кадра)
-    private float _nextUiUpdateTime;
-
-    protected override void Subscribe()
+    private void OnEnable()
     {
-        base.Subscribe();
-
-        reviveButton.OnReleased.AddListener(HandleReviveButtonClicked);
-
-        if (reviveManager != null) {
-            reviveManager.OnRevivesCountChanged += HandleRemainingRevivesCountChanged;
-        }
-
-        if (selectManager != null) {
-            selectManager.OnComponentSelected += HandleComponentSelected;
-        }
-
-        ReviveComponent.OnGlobalRevived += HandleRevived;
+        reviveButton.OnReleased.AddListener(OnButtonClicked);
+        reviveManager.OnRevivesCountChanged += OnRemainingRevivesCountChanged;
+        selectManager.OnComponentSelected += OnComponentSelected;
+        ReviveComponent.OnGlobalRevived += OnRevived;
     }
 
-    protected override void Unsubscribe()
+    private void OnDisable()
     {
-        base.Unsubscribe();
-
-        reviveButton.OnReleased.RemoveListener(HandleReviveButtonClicked);
-
-        if (reviveManager != null) {
-            reviveManager.OnRevivesCountChanged -= HandleRemainingRevivesCountChanged;
-        }
-
-        if (selectManager != null) {
-            selectManager.OnComponentSelected -= HandleComponentSelected;
-        }
-
-        ReviveComponent.OnGlobalRevived -= HandleRevived;
+        reviveButton.OnReleased.RemoveListener(OnButtonClicked);
+        reviveManager.OnRevivesCountChanged -= OnRemainingRevivesCountChanged;
+        selectManager.OnComponentSelected -= OnComponentSelected;
+        ReviveComponent.OnGlobalRevived -= OnRevived;
     }
 
     private void Update()
     {
-        if (citizen == null || !IsShown) return;
+        if (citizen == null) return;
+        if (!IsShown) return;
 
-        UpdateMenuShown();
-
-        if (Time.time >= _nextUiUpdateTime) {
-            _nextUiUpdateTime = Time.time + 1f;
-            UpdateTimeToDie();
-            UpdateNextChargeTimeText();
-        }
+        UpdateMenuShowed();
+        UpdateTimeToDie();
+        UpdateNextChargeTimeText();
     }
 
-    protected override void HandleShown()
+    private void UpdateMenuShowed()
     {
-        base.HandleShown();
-
-        if (reviveComponent != null) {
-            remainingReviveTimeText.SetPlaceHolderLocalization(reviveComponent);
-        }
-
-        UpdateRemainingRevivesCountText();
-        UpdateButtonEnabled();
-    }
-
-    private void UpdateMenuShown()
-    {
-        if (citizen.ReviveComponent == null) return;
-
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var dieTime = citizen.ReviveComponent.DieTime;
+        var remainingTimeToDie = dieTime - currentTime;
 
-        if (dieTime == null || dieTime.Value > currentTime) return;
+        if (remainingTimeToDie > 0) return;
 
         Hide();
+        UpdateButtonEnabled();
     }
 
     private void UpdateButtonEnabled()
     {
-        if (citizen == null || reviveManager == null) return;
+        if (citizen == null) return;
 
         var enoughRevives = reviveManager.RemainingRevivesCount > 0;
+
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var dieTime = citizen.ReviveComponent.DieTime;
-        var enoughTime = dieTime != null && currentTime <= dieTime.Value;
+        var enoughTime = dieTime != null ? currentTime <= dieTime.Value : false;
 
         reviveButton.SetState(enoughRevives && enoughTime ? CustomButtonState.Idle : CustomButtonState.Disabled);
     }
 
     private void UpdateRemainingRevivesCountText()
     {
-        if (reviveManager == null || remainingRevivesCountText == null) return;
-
         var maxRevivesCount = reviveManager.MaxRevivesCount;
         var remainingRevivesCount = reviveManager.RemainingRevivesCount;
 
@@ -120,19 +81,23 @@ public class ReviveMenu : CitizenMenu, IOpenable
 
     private void UpdateTimeToDie()
     {
-        if (citizen == null || citizen.ReviveComponent == null) return;
+        if (citizen == null) return;
+
+        var reviveComponent = citizen.ReviveComponent;
+        if (reviveComponent == null) return;
+
+        remainingReviveTimeText.SetPlaceHolderLocalization(reviveComponent);
         remainingReviveTimeText.UpdateText();
     }
 
     private void UpdateNextChargeTimeText()
     {
-        if (reviveManager == null || nextReviveChargeTimeText == null) return;
-
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var chargeTime = reviveManager.NextChargeReviveTimeInSeconds;
 
         if (chargeTime != null && chargeTime.Value > currentTime) {
             var remainingTime = chargeTime.Value - currentTime;
+
             nextReviveChargeTimeText.SetText(TimeFormatter.SecondsToMinuteTimer((int)remainingTime));
         }
         else {
@@ -140,32 +105,34 @@ public class ReviveMenu : CitizenMenu, IOpenable
         }
     }
 
-    private void HandleRemainingRevivesCountChanged(int value)
+    private void OnRemainingRevivesCountChanged(int value)
     {
         UpdateButtonEnabled();
         UpdateRemainingRevivesCountText();
     }
 
-    private void HandleRevived(ReviveComponent targetComponent)
+    private void OnRevived(ReviveComponent reviveComponent)
     {
-        if (targetComponent == null || citizen == null) return;
-        if (targetComponent != citizen.ReviveComponent) return;
+        if (reviveComponent == null) return;
+        if (citizen == null) return;
+        if (reviveComponent != citizen.ReviveComponent) return;
 
         Hide();
     }
 
-    private void HandleReviveButtonClicked()
+    private void OnButtonClicked()
     {
-        if (citizen == null || reviveManager == null) return;
+        if (!citizen) return;
 
         reviveManager.CreateRewardAndApply(citizen);
     }
 
-    private void HandleComponentSelected(SelectComponent component)
+    private void OnComponentSelected(SelectComponent component)
     {
-        var selectedCitizen = SelectManager.Instance?.GetSelectedHuman() as Citizen;
-        if (selectedCitizen == null || selectedCitizen.HealthComponent.IsAlive) return;
+        var citizen = SelectManager.Instance.GetSelectedHuman() as Citizen;
+        if (citizen == null) return;
+        if (citizen.HealthComponent.IsAlive) return;
 
-        Show(selectedCitizen);
+        Show(citizen);
     }
 }

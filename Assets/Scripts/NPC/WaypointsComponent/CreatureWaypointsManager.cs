@@ -20,10 +20,9 @@ public class CreatureWaypointsManager : MonoBehaviour
 
     private void Update()
     {
-        for (int i = waypointsComponents.Count - 1; i >= 0; i--) {
-            var component = waypointsComponents[i];
+        foreach (var component in waypointsComponents) {
             if (component == null) {
-                waypointsComponents.RemoveAt(i);
+                Debug.LogError($"[{nameof(CreatureWaypointsManager)}] Waypoint Component is not valid!");
                 continue;
             }
 

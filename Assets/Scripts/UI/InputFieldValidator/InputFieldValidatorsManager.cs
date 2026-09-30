@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -57,17 +56,6 @@ public class InputFieldValidatorsManager : MonoBehaviour
 
     private void HandleInputFieldValueChanged(string value)
     {
-        if (!gameObject.activeInHierarchy) return;
-
-        StartCoroutine(UpdateValidatorsShownEndOfFrame(value));
-    }
-
-    private IEnumerator UpdateValidatorsShownEndOfFrame(string value)
-    {
-        if (!gameObject.activeInHierarchy) yield break;
-
-        yield return new WaitForEndOfFrame();
-
         UpdateValidatorsShown(value);
     }
 }

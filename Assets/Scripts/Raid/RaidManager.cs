@@ -1,8 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class RaidEndedResult
 {
@@ -92,7 +92,7 @@ public class RaidManager : MonoBehaviour
 
     private void Update()
     {
-        if (!IsRaidExist && !IsUnderRaid) {
+        if (!IsRaidExist) {
             if (TimeSinceLastRaid < RaidCooldownTime) {
                 TimeSinceLastRaid += Time.deltaTime;
             }
@@ -197,13 +197,12 @@ public class RaidManager : MonoBehaviour
         };
 
         inventory.Clear();
-        DestroyDiedRaiders();
         DestroyEmptyBoats();
+        DestroyDiedRaiders();
         RemoveCityLoot(losses);
 
         IsUnderRaid = false;
         IsRaidExist = false;
-        TimeSinceLastRaid = 0;
 
         OnRaidEnded?.Invoke(result);
     }
@@ -301,13 +300,12 @@ public class RaidManager : MonoBehaviour
         var raiderBoats = boatsManager.RaiderBoats;
         if (raiderBoats == null) return;
 
-        for (int i = raiderBoats.Count - 1; i >= 0; i--) {
-            var boat = raiderBoats[i];
+        for (int i = 0; i < raiderBoats.Count; i++) {
+            var boat = raiderBoats[raiderBoats.Count - i - 1];
             if (boat == null) continue;
+            if (boat.CurrentRider != null) continue;
 
-            if (boat.CurrentRider == null) {
-                Destroy(boat.gameObject);
-            }
+            Destroy(boat.gameObject);
         }
     }
 
@@ -363,7 +361,7 @@ public class RaidManager : MonoBehaviour
         if (human.GetComponent<Raider>() == null) return;
 
         if (ShouldEndRaid()) {
-            EndRaid(false);        
+            EndRaid(false);
         }
     }
 
@@ -380,10 +378,9 @@ public class RaidManager : MonoBehaviour
     {
         if (human == null) return;
         if (human.GetComponent<Raider>() == null) return;
+        if (!ShouldEndRaid()) return;
 
-        if (ShouldEndRaid()) {
-            EndRaid(true);
-        }
+        EndRaid(true);
     }
 
     private void HandleRaiderUnregistered(Human human)

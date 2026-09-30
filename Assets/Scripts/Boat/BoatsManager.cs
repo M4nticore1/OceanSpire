@@ -23,7 +23,7 @@ public class BoatsManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null) {
+        if (Instance) {
             Destroy(gameObject);
             return;
         }
@@ -33,13 +33,7 @@ public class BoatsManager : MonoBehaviour
 
     private void Update()
     {
-        for (int i = boats.Count - 1; i >= 0; i--) {
-            var boat = boats[i];
-            if (boat == null) {
-                boats.RemoveAt(i);
-                continue;
-            }
-
+        foreach (var boat in boats) {
             boat.Tick();
         }
     }

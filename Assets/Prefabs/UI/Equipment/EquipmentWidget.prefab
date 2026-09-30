@@ -1212,16 +1212,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomButton
   targetGraphic: {fileID: 8969003992084092990}
   contentGraphics: []
-  isSelectable: 0
-  selectGroup: {fileID: 0}
-  isScalable: 1
   scaleRoot: {fileID: 5530129912881569162}
-  isClickable: 1
+  isInteractable: 1
+  isSelectable: 0
+  isScalable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 1
-  cancelPressWhenPointerMoving: 0
-  state: 0
+  selectGroup: {fileID: 0}
   stateTransitionTime: 0.2
+  state: 0
   idleState:
     bodyColor: {r: 1, g: 1, b: 1, a: 0}
     bodyColorHolder: {fileID: 0}

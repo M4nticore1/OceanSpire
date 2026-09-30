@@ -9,9 +9,8 @@ public static class WorldSaveSystem
 {
     private static string saveFileExtension = ".sav";
 
-    public static event Action<WorldData> OnWorldSaveCreated;
-    public static event Action<WorldData> OnWorldSaveDeleted;
-    public static event Action<WorldData> OnWorldSaveRenamed;
+    public static event Action<WorldData> OnWorldDataAdded;
+    public static event Action<WorldData> OnWorldDataDeleted;
 
     public static async void SaveWorld(WorldData worldData)
     {
@@ -20,36 +19,33 @@ public static class WorldSaveSystem
             return;
         }
 
-        try {
-            var worldName = worldData.WorldName;
-            var folderPathName = GetSaveFolderPathByName(worldName);
-            Directory.CreateDirectory(folderPathName);
+        var worldName = worldData.WorldName;
+        var folderPathName = GetSaveFolderPathByName(worldName);
+        Directory.CreateDirectory(folderPathName);
 
-            var filePath = GetSaveFilePathByName(worldName);
-            var json = await Task.Run(() => JsonConvert.SerializeObject(worldData, Formatting.None));
+        var filePath = GetSaveFilePathByName(worldName);
 
-            await File.WriteAllTextAsync(filePath, json);
+        var json = await Task.Run(() => JsonConvert.SerializeObject(worldData, Formatting.None));
+        await File.WriteAllTextAsync(filePath, json);
 
-            OnWorldSaveCreated?.Invoke(worldData);
-        }
-        catch (System.Exception ex) {
-            Debug.LogError($"[{nameof(WorldSaveSystem)}] Failed to save world '{worldData.WorldName}': {ex.Message}");
-        }
+        OnWorldDataAdded?.Invoke(worldData);
     }
 
     public static void DeleteSaveByWorldName(string worldName)
     {
-        var isRootWorld = string.IsNullOrWhiteSpace(worldName);
+        var worldData = GetWorldDataByName(worldName);
+        if (worldData == null) return;
 
-        var worldData = isRootWorld ? null : GetWorldDataByName(worldName);
-        if (!isRootWorld && worldData == null)
+        if (string.IsNullOrWhiteSpace(worldName)) {
+            File.Delete(GetSaveFilePathByName(worldName));
             return;
+        }
 
-        var path = isRootWorld ? GetSavesFolderPath() : GetSaveFolderPathByName(worldName);
+        var path = GetSaveFolderPathByName(worldName);
         var rootSavesPath = Path.GetFullPath(GetSavesFolderPath()).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         var targetWorldPath = Path.GetFullPath(path).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-        if (string.Equals(rootSavesPath, targetWorldPath, System.StringComparison.OrdinalIgnoreCase) && !isRootWorld) {
+        if (string.Equals(rootSavesPath, targetWorldPath, System.StringComparison.OrdinalIgnoreCase)) {
             Debug.LogError($"[{nameof(WorldSaveSystem)}] CRITICAL ERROR: Attempt to delete the root saves folder was blocked by path {targetWorldPath}!");
             return;
         }
@@ -60,94 +56,14 @@ public static class WorldSaveSystem
         }
 
         try {
-            if (isRootWorld) {
-                var files = Directory.GetFiles(targetWorldPath, "*.sav", SearchOption.TopDirectoryOnly);
-                foreach (var file in files) {
-                    File.Delete(file);
-                }
-                Debug.Log($"[{nameof(WorldSaveSystem)}] Root saves folder cleaned: deleted {files.Length} .sav files.");
-            }
-            else {
-                Directory.Delete(targetWorldPath, true);
-                Debug.Log($"[{nameof(WorldSaveSystem)}] World folder successfully deleted: {worldName}");
-            }
-
-            OnWorldSaveDeleted?.Invoke(worldData);
+            Directory.Delete(targetWorldPath, true);
+            Debug.Log($"[{nameof(WorldSaveSystem)}] World folder successfully deleted: {worldName}");
         }
         catch (System.Exception ex) {
-            Debug.LogError($"[{nameof(WorldSaveSystem)}] Failed to process path '{targetWorldPath}': {ex.Message}");
-        }
-    }
-
-    public static void RenameWorld(string oldWorldName, string newWorldName)
-    {
-        if (string.IsNullOrWhiteSpace(newWorldName)) {
-            Debug.LogError($"[{nameof(WorldSaveSystem)}] New world name is invalid!");
-            return;
+            Debug.LogError($"[{nameof(WorldSaveSystem)}] Failed to delete world folder '{worldName}': {ex.Message}");
         }
 
-        var oldFolderPath = GetSaveFolderPathByName(oldWorldName);
-        var newFolderPath = GetSaveFolderPathByName(newWorldName);
-
-        try {
-            if (!Directory.Exists(oldFolderPath)) {
-                Debug.LogWarning($"[{nameof(WorldSaveSystem)}] Old world folder not found. Creating new folder: {newFolderPath}");
-                Directory.CreateDirectory(newFolderPath);
-                return;
-            }
-
-            if (oldWorldName == newWorldName)
-                return;
-
-            if (Directory.Exists(newFolderPath)) {
-                Directory.Delete(newFolderPath, true);
-            }
-
-            Directory.Move(oldFolderPath, newFolderPath);
-
-            var files = Directory.GetFiles(newFolderPath, "*.*", SearchOption.AllDirectories);
-            foreach (var filePath in files) {
-                var fileName = Path.GetFileName(filePath);
-                var extension = Path.GetExtension(fileName);
-
-                string newFileName;
-                if (fileName.EndsWith(saveFileExtension)) {
-                    newFileName = newWorldName + saveFileExtension;
-                }
-                else {
-                    newFileName = string.IsNullOrWhiteSpace(oldWorldName)
-                        ? newWorldName + extension
-                        : fileName.Replace(oldWorldName, newWorldName);
-                }
-
-                var newFilePath = Path.Combine(newFolderPath, newFileName);
-
-                if (filePath != newFilePath) {
-                    if (File.Exists(newFilePath)) {
-                        File.Delete(newFilePath);
-                    }
-                    File.Move(filePath, newFilePath);
-                }
-            }
-
-            var newFilePathFinal = Path.Combine(newFolderPath, newWorldName + saveFileExtension);
-            if (File.Exists(newFilePathFinal)) {
-                var worldData = GetSaveDataByPath(newFilePathFinal);
-                if (worldData != null) {
-                    worldData.WorldName = newWorldName;
-
-                    var json = JsonConvert.SerializeObject(worldData, Formatting.None);
-                    File.WriteAllText(newFilePathFinal, json);
-                }
-
-                OnWorldSaveRenamed?.Invoke(worldData);
-            }
-
-            Debug.Log($"[{nameof(WorldSaveSystem)}] World successfully renamed from '{oldWorldName}' to '{newWorldName}'");
-        }
-        catch (System.Exception ex) {
-            Debug.LogError($"[{nameof(WorldSaveSystem)}] Failed to rename world from '{oldWorldName}' to '{newWorldName}': {ex.Message}");
-        }
+        OnWorldDataDeleted?.Invoke(worldData);
     }
 
     public static async void SaveWorldThumb(string worldName)
