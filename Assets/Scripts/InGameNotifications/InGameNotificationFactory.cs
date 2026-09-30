@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class InGameNotificationFactory
 {
-    public static InGameNotificationWidget CreateNotification(InGameNotificationWidget notificationPrefab, Transform transform, InGameNotificationData data)
+    public static InGameNotificationWidget CreateNotification(InGameNotificationWidget notificationPrefab, Transform transform)
     {
         if (notificationPrefab == null) {
             Debug.LogError($"[{nameof(InGameNotificationFactory)}] Notification Prefab is not valid");
@@ -10,8 +10,6 @@ public static class InGameNotificationFactory
         }
 
         var notification = GameObject.Instantiate(notificationPrefab, transform);
-        notification.Init(data);
-
         return notification;
     }
 }

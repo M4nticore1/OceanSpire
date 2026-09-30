@@ -4,15 +4,6 @@ public class EnergyShortageInGameNotificationController : InGameNotificationCont
 {
     [SerializeField] private EnergyShortageManager energyShortageManager;
 
-    private InGameNotificationData notificationData;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        notificationData = GetNotificationData();
-    }
-
     protected override void Subscribe()
     {
         base.Subscribe();
@@ -29,13 +20,18 @@ public class EnergyShortageInGameNotificationController : InGameNotificationCont
         energyShortageManager.OnEnergyShortageEnded -= HandleEnergyShortageEnded;
     }
 
+    protected override bool ShouldNotificate()
+    {
+        return energyShortageManager.IsUnderEnergyShortage;
+    }
+
     private void HandleEnergyShortageStarted()
     {
-        ShowNotification(notificationData);
+        UpdateNotification();
     }
 
     private void HandleEnergyShortageEnded()
     {
-        HideNotification(notificationData);
+        UpdateNotification();
     }
 }

@@ -1,9 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum InGameNotificationId
+{
+    Starvation,
+    EnergyShortage
+}
+
 public class InGameNotificationWidget : MonoBehaviour
 {
     [Header("Main")]
+    [SerializeField] private InGameNotificationId notificationId;
+    public InGameNotificationId NotificationId => notificationId;
+
     [SerializeField] private InGameNotificationSeverityDefinition severityDefinition;
     public InGameNotificationSeverityDefinition SeverityDefinition => severityDefinition;
 
@@ -13,12 +22,6 @@ public class InGameNotificationWidget : MonoBehaviour
     [Header("UI")]
     [SerializeField] private CustomButton descriptionButton;
     public CustomButton DescriptionButton => descriptionButton;
-
-    [SerializeField] private TextLocalizer nameText;
-    public TextLocalizer NameText => nameText;
-
-    [SerializeField] private TextLocalizer descriptionText;
-    public TextLocalizer DescriptionText => descriptionText;
 
     [SerializeField] private Image descriptionBackground;
     public Image DescriptionBackground => descriptionBackground;
@@ -64,20 +67,6 @@ public class InGameNotificationWidget : MonoBehaviour
             descriptionButton.OnSelected.RemoveListener(HandleDescriptionButtonSelected);
             descriptionButton.OnDeselected.RemoveListener(HandleDescriptionButtonDeselected);
         }
-    }
-
-    public void Init(InGameNotificationData notificationData)
-    {
-        if (notificationData == null) {
-            Debug.LogError($"[{nameof(InGameNotificationWidget)}] NotificationData is not valid!");
-            return;
-        }
-
-        nameText.SetLocalizationItem(notificationData.NameLocalization);
-        nameText.SetPlaceHolderLocalization(notificationData.NameLocalizationHolder);
-
-        descriptionText.SetLocalizationItem(notificationData.DescriptionLocaliztion);
-        descriptionText.SetPlaceHolderLocalization(notificationData.DescriptionLocalizationHolder);
     }
 
     public void SetButtonSelectGroup(SelectGroup selectGroup)

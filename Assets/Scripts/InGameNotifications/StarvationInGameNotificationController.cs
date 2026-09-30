@@ -4,15 +4,6 @@ public class StarvationInGameNotificationController : InGameNotificationControll
 {
     [SerializeField] private StarvationManager starvationManager;
 
-    private InGameNotificationData notificationData;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        notificationData = GetNotificationData();
-    }
-
     protected override void Subscribe()
     {
         base.Subscribe();
@@ -29,13 +20,18 @@ public class StarvationInGameNotificationController : InGameNotificationControll
         starvationManager.OnStarvationEnded -= HandleStarvationEnded;
     }
 
+    protected override bool ShouldNotificate()
+    {
+        return starvationManager.IsUnderStarvation;
+    }
+
     private void HandleStarvationStarted()
     {
-        ShowNotification(notificationData);
+        UpdateNotification();
     }
 
     private void HandleStarvationEnded()
     {
-        HideNotification(notificationData);
+        UpdateNotification();
     }
 }
