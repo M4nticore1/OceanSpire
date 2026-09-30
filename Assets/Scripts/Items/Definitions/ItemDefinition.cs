@@ -59,9 +59,6 @@ public class ItemDefinition : ScriptableObject, IWeightable
     [SerializeField] private Sprite itemIcon = null;
     public Sprite ItemIcon => itemIcon;
 
-    [SerializeField] private Texture itemTexture = null;
-    public Texture ItemTexture => itemTexture;
-
     [SerializeField] private bool showInStorage = true;
     public bool ShowInStorage => showInStorage;
 

@@ -149,7 +149,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
 
     public event Action<BuildingConstruction> OnConstructionChanged;
 
-    public event Action OnBuildingClicked;
+    public event Action OnClicked;
 
     public static event Action<Building> OnBuildingInited;
     public static event Action<Building> OnBuildingDemolished;
@@ -297,9 +297,11 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
     protected abstract BuildingConstruction GetConstructionToSpawn();
 
     // Modules
-    public BuildingModule GetModule<T>()
+    public BuildingModule GetModule(Type moduleType)
     {
-        BuildingModulesDict.TryGetValue(typeof(T), out var module);
+        if (moduleType == null) return null;
+
+        BuildingModulesDict.TryGetValue(moduleType, out var module);
         return module;
     }
 
@@ -319,11 +321,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
     // Click
     public void OnConstructionClicked()
     {
-        if (SelectComponent != null) {
-            SelectComponent.Click();
-        }
-
-        OnBuildingClicked?.Invoke();
+        SelectComponent.Click();
+        OnClicked?.Invoke();
     }
 
     // Cost

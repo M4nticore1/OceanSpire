@@ -16,7 +16,7 @@ public class CraftingModuleAudioSystem : AudioSystem
     {
         base.Subscribe();
 
-        CraftingModule.OnModuleItemCraftFinished += OnCraftingEnded;
+        CraftingModule.OnModuleItemCraftEnded += OnCraftingEnded;
         CraftingModule.OnModuleItemCollected += OnItemCollected;
     }
 
@@ -24,7 +24,7 @@ public class CraftingModuleAudioSystem : AudioSystem
     {
         base.Unsubscribe();
 
-        CraftingModule.OnModuleItemCraftFinished -= OnCraftingEnded;
+        CraftingModule.OnModuleItemCraftEnded -= OnCraftingEnded;
         CraftingModule.OnModuleItemCollected -= OnItemCollected;
     }
 

@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class CraftingControlMenu : ControlMenu
 {
-    public static CraftingControlMenu Instance { get; private set; }
-
     [Header("Crafting Menu")]
     [SerializeField] private CraftItemWidget producedResourcePanelPrefab;
 
@@ -15,18 +13,6 @@ public class CraftingControlMenu : ControlMenu
     [SerializeField] private FitSizeToChildren fitSizeToChildren;
 
     private Building building;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        if (Instance == null) {
-            Instance = this;
-        }
-        else {
-            Debug.LogError($"[{nameof(CraftingControlMenu)}] There's another Crafting Control Menu on the scene!");
-        }
-    }
 
     protected override void UpdateMenu()
     {
@@ -57,15 +43,21 @@ public class CraftingControlMenu : ControlMenu
 
     private void CreateCraftWidgets()
     {
-        var module = building.GetComponent<CraftingModule>();
+        var selectedBuilding = SelectManager.Instance.GetSelectedBuilding();
+        if (selectedBuilding == null) {
+            Debug.LogError($"[{nameof(EquipmentMenu)}] SelectedBuilding is not valid");
+            return;
+        }
+
+        var module = selectedBuilding.GetComponent<CraftingModule>();
         if (module == null) {
-            Debug.LogError($"[{nameof(EquipmentMenu)}] CraftingModule is not valid at {building}!");
+            Debug.LogError($"[{nameof(EquipmentMenu)}] {selectedBuilding} does not have a CraftingModule");
             return;
         }
 
         var craftingLevelData = module.ProductionLevelData;
         if (craftingLevelData == null) {
-            Debug.LogError($"[{nameof(EquipmentMenu)}] LevelData is not valid at {building}");
+            Debug.LogError($"[{nameof(EquipmentMenu)}] {module} doesn not have a LevelData");
             return;
         }
 
