@@ -27,6 +27,7 @@ dependencies {
 android {
   packaging {
       exclude ('/lib/armeabi/*' + '*')
+      exclude ('/lib/armeabi-v7a/*' + '*')
       exclude ('/lib/mips/*' + '*')
       exclude ('/lib/mips64/*' + '*')
       exclude ('/lib/x86/*' + '*')
@@ -75,7 +76,6 @@ android {
 
 // ==========================================
 // YANDEX ADS & APPLOVIN MEDIATION FIX
-// ���� ��������� ������ androidx.core ��� Unity 6
 // ==========================================
 configurations.all {
     resolutionStrategy {
