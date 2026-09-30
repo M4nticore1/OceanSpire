@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using UnityEngine;
 
 public static class WorldSaveSystem
@@ -12,7 +11,7 @@ public static class WorldSaveSystem
     public static event Action<WorldData> OnWorldDataAdded;
     public static event Action<WorldData> OnWorldDataDeleted;
 
-    public static async void SaveWorld(WorldData worldData)
+    public static void SaveWorld(WorldData worldData)
     {
         if (worldData == null) {
             Debug.Log($"[{nameof(WorldSaveSystem)}] WorldData is not valid!");
@@ -20,13 +19,16 @@ public static class WorldSaveSystem
         }
 
         var worldName = worldData.WorldName;
+
         var folderPathName = GetSaveFolderPathByName(worldName);
+        if (!DirectoryUtils.IsFolderNameValid(folderPathName)) return;
+
         Directory.CreateDirectory(folderPathName);
 
         var filePath = GetSaveFilePathByName(worldName);
+        var json = JsonConvert.SerializeObject(worldData, Formatting.Indented);
 
-        var json = await Task.Run(() => JsonConvert.SerializeObject(worldData, Formatting.None));
-        await File.WriteAllTextAsync(filePath, json);
+        File.WriteAllText(filePath, json);
 
         OnWorldDataAdded?.Invoke(worldData);
     }
@@ -58,20 +60,19 @@ public static class WorldSaveSystem
         try {
             Directory.Delete(targetWorldPath, true);
             Debug.Log($"[{nameof(WorldSaveSystem)}] World folder successfully deleted: {worldName}");
+
+            OnWorldDataDeleted?.Invoke(worldData);
         }
         catch (System.Exception ex) {
             Debug.LogError($"[{nameof(WorldSaveSystem)}] Failed to delete world folder '{worldName}': {ex.Message}");
         }
-
-        OnWorldDataDeleted?.Invoke(worldData);
     }
 
-    public static async void SaveWorldThumb(string worldName)
+    public static void SaveWorldThumb(string worldName)
     {
         Camera camera = Camera.main;
-        if (camera == null) return;
-
         int resolution = 256;
+
         float originalFov = camera.fieldOfView;
         camera.fieldOfView = 40;
 
@@ -91,12 +92,8 @@ public static class WorldSaveSystem
 
         camera.fieldOfView = originalFov;
 
-        string thumbPath = GetSaveThumbPathByName(worldName);
-
         byte[] bytes = tex.EncodeToPNG();
-        UnityEngine.Object.Destroy(tex);
-
-        await File.WriteAllBytesAsync(thumbPath, bytes);
+        File.WriteAllBytes(GetSaveThumbPathByName(worldName), bytes);
     }
 
     public static WorldData GetWorldDataByName(string worldName)
@@ -105,15 +102,15 @@ public static class WorldSaveSystem
         return GetSaveDataByPath(path);
     }
 
-    public static List<WorldData> GetAllSaveData()
+    public static WorldData[] GetAllSaveData()
     {
         if (!Directory.Exists(GetSavesFolderPath())) {
             Debug.Log("Save folder not found: " + GetSavesFolderPath());
             return null;
         }
 
-        var filePaths = Directory.GetFiles(GetSavesFolderPath(), $"*{saveFileExtension}", SearchOption.AllDirectories);
-        var datas = new List<WorldData>();
+        string[] filePaths = Directory.GetFiles(GetSavesFolderPath(), $"*{saveFileExtension}", SearchOption.AllDirectories);
+        List<WorldData> datas = new List<WorldData>();
 
         foreach (string filePath in filePaths) {
             var data = GetSaveDataByPath(filePath);
@@ -122,7 +119,7 @@ public static class WorldSaveSystem
             datas.Add(data);
         }
 
-        return datas;
+        return datas.ToArray();
     }
 
     public static Texture2D GetSaveScreenshotByWorldName(string worldName)

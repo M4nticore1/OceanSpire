@@ -6,7 +6,7 @@ public class WorldNameExistInputFieldValidator : InputFieldValidator
 
     protected override bool IsValid(string text)
     {
-        var worldsData = worldSaveHandler.AllSavesData;
+        var worldsData = worldSaveHandler.AllSaveData;
         if (worldsData == null) return false;
 
         foreach (var data in worldsData) {

@@ -45,9 +45,6 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
     private void Update()
     {
-        if (!IsShown)
-            return;
-
         updateTasksText.UpdateText();
     }
 

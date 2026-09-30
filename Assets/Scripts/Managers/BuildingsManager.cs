@@ -77,7 +77,7 @@ public class BuildingsManager : MonoBehaviour
         return builtFloors[floorIndex].RoomBuildingPlaces[PlaceIndex];
     }
 
-    public IEnumerable<GroundBuilding> GetGroundBuildings()
+    public IEnumerable<GroundBuilding> GerGroundBuildings()
     {
         yield return towerGate;
         yield return pierBuilding;

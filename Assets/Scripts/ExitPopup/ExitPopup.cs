@@ -14,14 +14,12 @@ public abstract class ExitPopup : MonoBehaviour, IOpenable
 
     private void OnEnable()
     {
-        slidePanel.OnHidden += HandleSlidePanelHidden;
         exitButton.OnReleased.AddListener(HandleExitButtonClicked);
         cancelButton.OnReleased.AddListener(HandleCancelButtonClicked);
     }
 
     private void OnDisable()
     {
-        slidePanel.OnHidden -= HandleSlidePanelHidden;
         exitButton.OnReleased.RemoveListener(HandleExitButtonClicked);
         cancelButton.OnReleased.RemoveListener(HandleCancelButtonClicked);
     }
@@ -29,8 +27,6 @@ public abstract class ExitPopup : MonoBehaviour, IOpenable
     public void Show()
     {
         slidePanel.Show();
-
-        InputStateManager.Instance.AddInputBlockTarget(this);
     }
 
     public void Hide()
@@ -39,11 +35,6 @@ public abstract class ExitPopup : MonoBehaviour, IOpenable
     }
 
     protected abstract void HandleExitButtonClicked();
-
-    private void HandleSlidePanelHidden()
-    {
-        InputStateManager.Instance.RemoveBlockTarget(this);
-    }
 
     private void HandleCancelButtonClicked()
     {
