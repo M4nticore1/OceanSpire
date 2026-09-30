@@ -2,11 +2,13 @@ using UnityEngine;
 
 public class TimeWorldSaveController : WorldSaveController
 {
+    [Header("Params")]
     [SerializeField] private float autoSaveDataFrequency = 5f;
     [SerializeField] private float autoSaveThumbFrequency = 60f;
 
-    private float crrentSaveDataTime = 0f;
-    private float crrentSaveThumbTime = 0f;
+    [Header("Check")]
+    [SerializeField] private float crrentSaveDataTime = 0f;
+    [SerializeField] private float crrentSaveThumbTime = 0f;
 
     private void Start()
     {

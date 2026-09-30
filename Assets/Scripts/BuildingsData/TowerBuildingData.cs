@@ -34,4 +34,20 @@ public class TowerBuildingData : BuildingData
 
         return buildingsData;
     }
+
+    public static List<TowerBuildingData> Create(IEnumerable<TowerBuilding> buildings)
+    {
+        var buildingsData = new List<TowerBuildingData>();
+
+        foreach (var building in buildings) {
+            if (!building) continue;
+
+            var data = Create(building);
+            if (data == null) continue;
+
+            buildingsData.Add(data);
+        }
+
+        return buildingsData;
+    }
 }

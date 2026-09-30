@@ -58,7 +58,7 @@ public class BuildingsLoader : WorldLoader
 
     private void LoadGroundBuildings(List<BuildingData> buildingsData)
     {
-        var buildings = buildingsManager.GerGroundBuildings();
+        var buildings = buildingsManager.GetGroundBuildings();
         if (buildings == null) return;
 
         int index = 0;
@@ -164,7 +164,7 @@ public class BuildingsLoader : WorldLoader
 
     private void InitGroundBuildings()
     {
-        var buildings = buildingsManager.GerGroundBuildings();
+        var buildings = buildingsManager.GetGroundBuildings();
         if (buildings == null) return;
 
         foreach (var building in buildings) {

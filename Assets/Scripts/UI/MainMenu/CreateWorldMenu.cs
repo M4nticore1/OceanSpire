@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -48,7 +49,7 @@ public class CreateWorldMenu : MonoBehaviour
         inputField.text = "";
 
         UpdateCreateButtonEnabled();
-        inputFieldValidatorsManager.UpdateValidatorsShown(inputField.text);
+        StartCoroutine(UpdateValidatorsShownEndOfFrame());
     }
 
     public void Close()
@@ -66,6 +67,13 @@ public class CreateWorldMenu : MonoBehaviour
         createWorldButton.SetState(invalidLength || invalid ? CustomButtonState.Disabled : CustomButtonState.Idle);
     }
 
+    private void UpdateValidatorsShown()
+    {
+        if (inputField.text.Length <= 0) {
+            inputFieldValidatorsManager.HideValidators();
+        }
+    }
+
     private void HandleClosed()
     {
         keyboardOffsetUI.SetClosable(true);
@@ -74,7 +82,7 @@ public class CreateWorldMenu : MonoBehaviour
 
     private void HandleCreateWorldButtonClicked()
     {
-        string worldName = inputField.text;
+        var worldName = inputField.text;
 
         WorldSaveHandler.Instance.SetSaveWorldName(worldName);
         SceneManager.LoadScene(1);
@@ -88,5 +96,13 @@ public class CreateWorldMenu : MonoBehaviour
     private void HandleWorldNameInputFieldChangeValue(string value)
     {
         UpdateCreateButtonEnabled();
+        StartCoroutine(UpdateValidatorsShownEndOfFrame());
+    }
+
+    private IEnumerator UpdateValidatorsShownEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
+        UpdateValidatorsShown();
     }
 }

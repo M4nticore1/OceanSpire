@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -91,6 +92,13 @@ public class WorldSavesMenu : MonoBehaviour
 
     private void OnWorldDataRemoved(WorldData worldData)
     {
+        StartCoroutine(RebuildUIEndOfFrame());
+    }
+
+    private IEnumerator RebuildUIEndOfFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
         RebuildUI();
     }
 }

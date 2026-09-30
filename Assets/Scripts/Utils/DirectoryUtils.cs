@@ -16,7 +16,7 @@ public static class DirectoryUtils
         var testFolderPath = Path.Combine(tempParentDir, folderName);
 
         try {
-            var dir = Directory.CreateDirectory(testFolderPath);
+            Directory.CreateDirectory(testFolderPath);
 
             return true;
         }

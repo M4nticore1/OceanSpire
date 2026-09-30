@@ -22,13 +22,12 @@ public class CombatManager : MonoBehaviour
     {
         for (int i = combatComponents.Count - 1; i >= 0; i--) {
             var component = combatComponents[i];
-            if (component == null) {
-                combatComponents.RemoveAt(i);
-                continue;
-            }
+            if (component == null) continue;
 
             component.Tick();
         }
+
+        combatComponents.RemoveAll(c => c == null);
     }
 
     public void Register(AttackComponent component)

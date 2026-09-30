@@ -3572,6 +3572,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2376073298536193550, guid: 63c8d66eae714b74f8f93670c81fed65, type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 7388978357352574682}
     - target: {fileID: 7041491830200307888, guid: 63c8d66eae714b74f8f93670c81fed65, type: 3}
       propertyPath: m_Name
       value: ExitToMainMenuPopup

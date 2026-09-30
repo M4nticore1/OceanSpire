@@ -35,7 +35,23 @@ public class BuildingData
         var buildingsData = new List<BuildingData>();
 
         foreach (var building in buildings) {
-            if (!building) continue;
+            if (building == null) continue;
+
+            var data = Create(building);
+            if (data == null) continue;
+
+            buildingsData.Add(data);
+        }
+
+        return buildingsData;
+    }
+
+    public static List<BuildingData> Create(IEnumerable<Building> buildings)
+    {
+        var buildingsData = new List<BuildingData>();
+
+        foreach (var building in buildings) {
+            if (building == null) continue;
 
             var data = Create(building);
             if (data == null) continue;

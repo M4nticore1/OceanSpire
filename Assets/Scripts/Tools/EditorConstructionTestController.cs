@@ -58,7 +58,7 @@ public class EditorConstructionTestController : MonoBehaviour
 #if UNITY_EDITOR
         if (!buildingsManager) return;
 
-        foreach (var building in buildingsManager.GerGroundBuildings()) {
+        foreach (var building in buildingsManager.GetGroundBuildings()) {
             building.ConstructionComponent.FinishConstruction();
         }
 

@@ -35,7 +35,7 @@ public class WorldData
 {
     public int Version = 1;
 
-    public string WorldName = "";
+    public string WorldName = "New World";
     public long SaveTime = 0;
 
     public PlayerControllerData Player;
@@ -90,9 +90,9 @@ public class WorldData
             SaveTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             Player = PlayerControllerData.Create(playerController),
 
-            GroundBuildings = BuildingData.Create(buildings.GerGroundBuildings().ToArray()),
-            FloorFrameBuildings = TowerBuildingData.Create(buildings.BuiltFloors.Select(b => b.OwnedTowerBuilding).ToArray()),
-            TowerBuildings = TowerBuildingData.Create(buildings.BuiltFloors.SelectMany(b => b.RoomBuildingPlaces).Select(p => p.PlacedBuilding).Where(b => b != null).ToArray()),
+            GroundBuildings = BuildingData.Create(buildings.GetGroundBuildings()),
+            FloorFrameBuildings = TowerBuildingData.Create(buildings.BuiltFloors.Select(b => b.OwnedTowerBuilding)),
+            TowerBuildings = TowerBuildingData.Create(buildings.BuiltFloors.SelectMany(b => b.RoomBuildingPlaces).Select(p => p.PlacedBuilding).Where(b => b != null)),
             ElevatorCabins = ElevatorCabinData.Create(elevatorCabins.ElevatorCabins),
 
             CitizenBoatDocks = BoatDockData.Create(boatDocks.CitizenBoatDocks),

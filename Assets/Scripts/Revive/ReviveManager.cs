@@ -48,7 +48,7 @@ public class ReviveManager : MonoBehaviour
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
         if (NextChargeReviveTimeInSeconds == null) {
-            Debug.LogError("NextChargeReviveTimeInSeconds is not valid to charge revives");
+            Debug.LogError($"[{nameof(ReviveManager)}] NextChargeReviveTimeInSeconds is not valid to charge revives");
             NextChargeReviveTimeInSeconds = currentTime + chargeReviveTimeInSeconds;
         }
 
@@ -62,7 +62,7 @@ public class ReviveManager : MonoBehaviour
         for (int i = reviveComponents.Count - 1; i >= 0; i--) {
             var reviveComponent = reviveComponents[i];
 
-            if (!reviveComponent) {
+            if (reviveComponent == null) {
                 reviveComponents.RemoveAt(i);
                 continue;
             }
@@ -85,30 +85,34 @@ public class ReviveManager : MonoBehaviour
     public void Init(ReviveSystemData reviveData)
     {
         if (reviveData == null) {
-            Debug.LogError("reviveData is not valid");
+            Debug.LogError($"[{nameof(ReviveManager)}] ReviveData is not valid!");
             Init();
             return;
         }
 
         RemainingRevivesCount = Mathf.Min(reviveData.RemainingRevivesCount, maxRevivesCount);
 
-        if (RemainingRevivesCount >= maxRevivesCount) return;
-
         var currentTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var nextReviveChargeTimes = reviveData.NextReviveChargeTimes;
 
-        if (nextReviveChargeTimes == null) {
-            Debug.LogError($"[{nameof(ReviveManager)}] Next Revive Charge Times is not valid to recharge revives count");
-            RemainingRevivesCount = maxRevivesCount;
-            return;
+        if (RemainingRevivesCount < maxRevivesCount) {
+            var nextReviveChargeTimes = reviveData.NextReviveChargeTimes;
+
+            if (nextReviveChargeTimes != null && nextReviveChargeTimes.Length > 0) {
+                NextChargeReviveTimeInSeconds = nextReviveChargeTimes[0];
+
+                foreach (var chargeTime in nextReviveChargeTimes) {
+                    if (RemainingRevivesCount >= maxRevivesCount) break;
+                    if (chargeTime > currentTime) break;
+
+                    AddReviveCount();
+                }
+            }
+            else {
+                NextChargeReviveTimeInSeconds = currentTime + chargeReviveTimeInSeconds;
+            }
         }
-
-        foreach (var chargeTime in nextReviveChargeTimes) {
-            if (RemainingRevivesCount >= maxRevivesCount) break;
-
-            if (chargeTime > currentTime) break;
-
-            AddReviveCount();
+        else {
+            NextChargeReviveTimeInSeconds = null;
         }
     }
 

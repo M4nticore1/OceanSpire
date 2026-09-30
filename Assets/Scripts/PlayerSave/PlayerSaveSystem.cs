@@ -9,7 +9,7 @@ public static class PlayerSaveSystem
 
     public static void SaveData(PlayerData playerSettingsData)
     {
-        string folderPath = GetFolder();
+        var folderPath = GetFolder();
         if (string.IsNullOrEmpty(folderPath)) {
             Debug.LogError("FolderPath is null or empty!");
             return;
