@@ -1,90 +1,65 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
-public class StorageFullInGameNotificationController : InGameNotificationController, ILocalizable
+public class StorageFullInGameNotificationController : InGameNotificationController
 {
     [Header("Storage")]
-    [SerializeField] private CityStorageOverflowManager cityStorageOverflorManager;
+    [SerializeField] private CityStorage cityStorage;
     [SerializeField] private List<ItemStackDefinition> excludedStacks = new();
 
-    private InGameNotificationData notificationData;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        notificationData = new InGameNotificationData(NameLocalizationItem, DescriptionLocalizationItem, NotificationIcon, SeverityDefinition, Priority, this, this);
-    }
+    private Dictionary<ItemStackInstance, InGameNotificationData> notificationsDict = new();
+    private ItemStackInstance lastChangedStackItemAmount;
 
     protected override void Subscribe()
     {
         base.Subscribe();
 
-        cityStorageOverflorManager.OnOverflowingStackAdded += HandleOverflowingStackAdded;
-        cityStorageOverflorManager.OnOverflowingStackRemoved += HandleOverflowingStackRemoved;
+        cityStorage.Inventory.OnStackItemAmountChanged += HandleStackItemChanged;
     }
 
     protected override void Unsubscribe()
     {
         base.Unsubscribe();
 
-        cityStorageOverflorManager.OnOverflowingStackAdded -= HandleOverflowingStackAdded;
-        cityStorageOverflorManager.OnOverflowingStackRemoved -= HandleOverflowingStackRemoved;
+        cityStorage.Inventory.OnStackItemAmountChanged -= HandleStackItemChanged;
     }
 
-    public Dictionary<string, string> GetLocalization()
+    protected override InGameNotificationData GetNotificationData()
     {
-        var stacks = cityStorageOverflorManager.OverflowingStacks.ToList();
-        var sb = new StringBuilder();
-
-        for (int i = 0; i < stacks.Count; i++) {
-            var stack = stacks[i];
-            if (stack == null) continue;
-
-            if (excludedStacks.Contains(stack.Definition)) {
-                stacks.RemoveAt(i);
-                i--;
-                continue;
-            }
-
-            var stackName = LocalizationManager.Instance.GetLocalizedText(stack.Definition.NameLocalizationItem);
-            sb.Append($"<color=#FFC04D>{stackName}</color>");
-
-            if (i < stacks.Count - 1) {
-                sb.Append(", ");
-            }
-        }
-
-        return new Dictionary<string, string>()
-        {
-            { "overflowingStacks", sb.ToString() },
-            { "overflowingStacksCount", stacks.Count.ToString() }
-        };
+        return new InGameNotificationData(NameLocalizationItem, DescriptionLocalizationItem, lastChangedStackItemAmount.Definition.Icon, SeverityDefinition, Priority, lastChangedStackItemAmount, lastChangedStackItemAmount);
     }
 
-    private void HandleOverflowingStackAdded(ItemStackInstance stack)
+    private void HandleStackItemChanged(ItemStackInstance stack)
     {
+        if (stack == null) return;
         if (excludedStacks.Contains(stack.Definition)) return;
 
-        var widget = GetNotificationWidget(notificationData);
+        lastChangedStackItemAmount = stack;
 
-        if (widget != null) {
-            widget.Init(notificationData);
+        if (stack.IsOverflowed) {
+            TryShowNotification();
         }
         else {
-            ShowNotification(notificationData);
+            TryHideNotification();
         }
     }
 
-    private void HandleOverflowingStackRemoved(ItemStackInstance stack)
+    private void TryShowNotification()
     {
-        if (excludedStacks.Contains(stack.Definition)) return;
+        if (notificationsDict.ContainsKey(lastChangedStackItemAmount)) return;
 
-        var widget = GetNotificationWidget(notificationData);
-        if (widget == null) return;
+        var data = GetNotificationData();
+        notificationsDict.Add(lastChangedStackItemAmount, data);
 
-        widget.Init(notificationData);
+        ShowNotification(data);
+    }
+
+    private void TryHideNotification()
+    {
+        notificationsDict.TryGetValue(lastChangedStackItemAmount, out var data);
+        if (data == null) return;
+
+        notificationsDict.Remove(lastChangedStackItemAmount);
+        HideNotification(data);
     }
 }

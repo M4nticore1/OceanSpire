@@ -74,11 +74,4 @@ public abstract class InGameNotificationController : MonoBehaviour
 
         notificationsPanel.HideNotification(notificationData);
     }
-
-    protected InGameNotificationWidget GetNotificationWidget(InGameNotificationData data)
-    {
-        if (notificationsPanel == null) return null;
-
-        return notificationsPanel.GetNotificationWidget(data);
-    }
 }

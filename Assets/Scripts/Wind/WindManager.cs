@@ -5,25 +5,18 @@ public class WindManager : MonoBehaviour
 {
     public static WindManager Instance;
 
-    [Header("Parameters")]
-    [SerializeField] private float windSpeed = 15.0f;
-    [SerializeField] private float windChangingSpeed = 0.05f;
-    [SerializeField] private float windDirectionChangeFreqency = 300.0f;
-    [SerializeField] private float windDirectionChangeTime = 0.0f;
+    public Vector3 WindDirection { get; private set; } = Vector3.zero;
+    public float windRotation { get; private set; } = 0;
+    private Vector3 newWindDirection = Vector3.zero;
 
-    [field: Header("Check")]
-    [field: SerializeField] public Vector3 WindDirection { get; private set; } = Vector3.zero;
-    [SerializeField] private Vector3 newWindDirection = Vector3.zero;
-    [field: SerializeField] public float windRotation { get; private set; } = 0;
+    public const float windSpeed = 15.0f;
+    private const float windChangingSpeed = 0.05f;
+    private float windDirectionChangeFreqency = 300.0f;
+    private float windDirectionChangeTime = 0.0f;
 
     private void Awake()
     {
         Instance = this;
-    }
-
-    private void Update()
-    {
-        ProcessChangingWind();
     }
 
     public void Init(WindData windData)
@@ -37,21 +30,19 @@ public class WindManager : MonoBehaviour
         }
     }
 
-    private void ProcessChangingWind()
+    private void ChangingWind()
     {
         if (Time.time > windDirectionChangeTime + windDirectionChangeFreqency) {
             ChangeWind();
         }
-
         WindDirection = math.lerp(WindDirection, newWindDirection, windChangingSpeed * Time.deltaTime);
     }
 
     private void ChangeWind()
     {
-        var x = UnityEngine.Random.Range(-1f, 1f);
-        var y = UnityEngine.Random.Range(-1f, 1f);
-        var z = UnityEngine.Random.Range(-1f, 1f);
-
+        float x = UnityEngine.Random.Range(-1f, 1f);
+        float y = UnityEngine.Random.Range(-1f, 1f);
+        float z = UnityEngine.Random.Range(-1f, 1f);
         newWindDirection = new Vector3(x, y, z);
         newWindDirection.Normalize();
 
