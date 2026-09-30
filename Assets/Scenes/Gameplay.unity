@@ -13587,6 +13587,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3df3379b724154d8097e8fdd954951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WindManager
+  windSpeed: 15
+  windChangingSpeed: 0.05
+  minWindDirectionChangeFreqency: 300
+  maxWindDirectionChangeFreqency: 600
+  currentWindDirectionChangeFreqency: 0
+  currentWindDirectionChangeTime: 0
+  <WindDirection>k__BackingField: {x: 0, y: 0, z: 0}
+  <TargetWindDirection>k__BackingField: {x: 0, y: 0, z: 1}
+  <WindRotation>k__BackingField: 0
 --- !u!1001 &965446166
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24799,7 +24808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CityStorageOverflowManager
   cityStorage: {fileID: 1388613268}
-  overflowedStacks: []
+  overflowingStacks: []
 --- !u!1001 &2147388477
 PrefabInstance:
   m_ObjectHideFlags: 0
