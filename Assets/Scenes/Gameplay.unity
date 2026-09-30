@@ -2176,7 +2176,7 @@ MonoBehaviour:
   priority: 49
   nameLocalizationItem: {fileID: 11400000, guid: ca96affc395ec334d9fc14a6c1b9b14c, type: 2}
   descriptionLocalizationItem: {fileID: 11400000, guid: 4b44c2ef923841249b11fdb235ce175e, type: 2}
-  notificationIcon: {fileID: 0}
+  notificationIcon: {fileID: 21300000, guid: a14efae1d95cb67479e314aade0c4fac, type: 3}
   starvationManager: {fileID: 732370467}
 --- !u!1 &163833202
 GameObject:
@@ -11730,12 +11730,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StorageFullInGameNotificationController
   notificationsPanel: {fileID: 383697688}
-  severityDefinition: {fileID: 11400000, guid: c5aea349dcbb0924b95dc2087cea5606, type: 2}
+  severityDefinition: {fileID: 11400000, guid: 675cab75f59046342b1978de77bf6766, type: 2}
   priority: 51
   nameLocalizationItem: {fileID: 11400000, guid: 4155c227430504e4a9273558f6c19c8b, type: 2}
   descriptionLocalizationItem: {fileID: 11400000, guid: 9754fa8f27bad7f40bfec150ce5d6e96, type: 2}
-  notificationIcon: {fileID: 0}
-  cityStorage: {fileID: 1388613268}
+  notificationIcon: {fileID: 21300000, guid: c6f5fdbb68f953641a9dfa90e34e6c1b, type: 3}
+  cityStorageOverflorManager: {fileID: 2146545706}
   excludedStacks:
   - {fileID: 11400000, guid: 9f3eab9703f96e34ca97a436bd161413, type: 2}
   - {fileID: 11400000, guid: bf3a59a025f09c24cb89491414a4afce, type: 2}
@@ -12873,6 +12873,7 @@ Transform:
   m_Children:
   - {fileID: 932374182}
   - {fileID: 1388613266}
+  - {fileID: 2146545705}
   - {fileID: 1934078804}
   - {fileID: 538103143}
   m_Father: {fileID: 0}
@@ -22252,7 +22253,7 @@ MonoBehaviour:
   priority: 50
   nameLocalizationItem: {fileID: 11400000, guid: fb7cb45e22e487c45a62dadf7ed1b002, type: 2}
   descriptionLocalizationItem: {fileID: 11400000, guid: 8ac4f1dbf6e39fa499f01c3c476e20c7, type: 2}
-  notificationIcon: {fileID: 0}
+  notificationIcon: {fileID: 21300000, guid: 09b64a0887dac514ca8544a9a4fce084, type: 3}
   energyShortageManager: {fileID: 998043851}
 --- !u!1 &1925740695
 GameObject:
@@ -24753,6 +24754,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6bbe2cd1a1e497468ca849c0a3908c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InformationMenu
+--- !u!1 &2146545704
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2146545705}
+  - component: {fileID: 2146545706}
+  m_Layer: 0
+  m_Name: CityStorageOverflowManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2146545705
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146545704}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 879926669}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2146545706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146545704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6b31c462a5c1144b8a10a1c79d5822f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CityStorageOverflowManager
+  cityStorage: {fileID: 1388613268}
+  overflowedStacks: []
 --- !u!1001 &2147388477
 PrefabInstance:
   m_ObjectHideFlags: 0

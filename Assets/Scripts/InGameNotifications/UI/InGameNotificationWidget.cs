@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,9 @@ public class InGameNotificationWidget : MonoBehaviour
     [Header("UI")]
     [SerializeField] private CustomButton descriptionButton;
     public CustomButton DescriptionButton => descriptionButton;
+
+    [SerializeField] private CustomButton hideButton;
+    public CustomButton HideButton => hideButton;
 
     [SerializeField] private TextLocalizer nameText;
     public TextLocalizer NameText => nameText;
@@ -16,22 +20,27 @@ public class InGameNotificationWidget : MonoBehaviour
     [SerializeField] private Image iconImage;
     public Image IconImage => iconImage;
 
-    [SerializeField] private Image descriptionBackground;
-    public Image DescriptionBackground => descriptionBackground;
-
     [SerializeField] private AnimatedPanel descriptionPanel;
     public AnimatedPanel DescriptionPanel => descriptionPanel;
 
     [SerializeField] private FitSizeToContent fitSize;
 
+    public InGameNotificationData NotificationData { get; private set; }
+
     private InGameNotificationSeverityDefinition severityDefinition;
     private int priority = 50;
+
+    public static event Action<InGameNotificationWidget> OnNotificationHidden;
 
     private void OnEnable()
     {
         if (descriptionButton != null) {
             descriptionButton.OnSelected.AddListener(HandleDescriptionButtonSelected);
             descriptionButton.OnDeselected.AddListener(HandleDescriptionButtonDeselected);
+        }
+
+        if (hideButton != null) {
+            hideButton.OnReleased.AddListener(HandleHideButtonClicked);
         }
     }
 
@@ -41,15 +50,16 @@ public class InGameNotificationWidget : MonoBehaviour
             descriptionButton.OnSelected.RemoveListener(HandleDescriptionButtonSelected);
             descriptionButton.OnDeselected.RemoveListener(HandleDescriptionButtonDeselected);
         }
+
+        if (hideButton != null) {
+            hideButton.OnReleased.RemoveListener(HandleHideButtonClicked);
+        }
     }
 
     private void Start()
     {
         if (descriptionButton == null) {
             Debug.LogError($"[{nameof(InGameNotificationWidget)}] Description Button is not valid at {this}!");
-        }
-        if (descriptionBackground == null) {
-            Debug.LogError($"[{nameof(InGameNotificationWidget)}] Description Background is not valid at {this}!");
         }
         if (descriptionPanel == null) {
             Debug.LogError($"[{nameof(InGameNotificationWidget)}] Description Panel is not valid at {this}!");
@@ -61,10 +71,7 @@ public class InGameNotificationWidget : MonoBehaviour
 
     public void Init(InGameNotificationData notificationData)
     {
-        if (notificationData == null) {
-            Debug.LogError($"[{nameof(InGameNotificationWidget)}] NotificationData is not valid!");
-            return;
-        }
+        NotificationData = notificationData;
 
         nameText.SetLocalizationItem(notificationData.NameLocalization);
         nameText.SetPlaceHolderLocalization(notificationData.NameLocalizationHolder);
@@ -78,13 +85,19 @@ public class InGameNotificationWidget : MonoBehaviour
 
         UpdateSiblingIndex();
         UpdateButtonColor();
-        UpdateDescriptionBackgroundColor();
+        UpdateHideButtonActive(severityDefinition != null ? severityDefinition.NotificationType : InGameNotificationType.Message);
 
         if (descriptionPanel != null) {
             descriptionPanel.SetAnimationProgress(0f);
         }
 
         fitSize.UpdateSize();
+    }
+
+    public void Hide()
+    {
+        Destroy(gameObject);
+        OnNotificationHidden?.Invoke(this);
     }
 
     public void SetButtonSelectGroup(SelectGroup selectGroup)
@@ -96,7 +109,26 @@ public class InGameNotificationWidget : MonoBehaviour
 
     private void UpdateSiblingIndex()
     {
-        transform.SetSiblingIndex(priority);
+        var parent = transform.parent;
+        if (parent == null) return;
+
+        int targetIndex = 0;
+
+        for (int i = 0; i < parent.childCount; i++) {
+            var child = parent.GetChild(i);
+            if (child == transform) continue;
+
+            if (child.TryGetComponent<InGameNotificationWidget>(out var otherWidget)) {
+                if (otherWidget.NotificationData.Priority <= priority) {
+                    targetIndex = i + 1;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+
+        transform.SetSiblingIndex(targetIndex);
     }
 
     private void UpdateButtonColor()
@@ -119,12 +151,11 @@ public class InGameNotificationWidget : MonoBehaviour
         descriptionButton.EndTransitionAnimation();
     }
 
-    private void UpdateDescriptionBackgroundColor()
+    private void UpdateHideButtonActive(InGameNotificationType notificationType)
     {
-        if (descriptionBackground == null) return;
-        if (severityDefinition == null) return;
+        if (hideButton == null) return;
 
-        descriptionBackground.color = severityDefinition.SelectedColor;
+        hideButton.gameObject.SetActive(notificationType == InGameNotificationType.Message);
     }
 
     private void HandleDescriptionButtonSelected()
@@ -135,5 +166,10 @@ public class InGameNotificationWidget : MonoBehaviour
     private void HandleDescriptionButtonDeselected()
     {
         descriptionPanel.Hide();
+    }
+
+    private void HandleHideButtonClicked()
+    {
+        Hide();
     }
 }

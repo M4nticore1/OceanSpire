@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c84dc389ffec2f4184ce582d96d4049, type: 3}
   m_Name: InGameNotification_Warning
   m_EditorClassIdentifier: Assembly-CSharp::InGameNotificationSeverityDefinition
+  notificationType: 1
   normalColor: {r: 1, g: 0.64842933, b: 0.14999998, a: 0.6}
   hoveredColor: {r: 1, g: 0.5895197, b: 0, a: 0.6}
   pressedColor: {r: 1, g: 0.6439791, b: 0.14999998, a: 0.6}

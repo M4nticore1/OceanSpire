@@ -41,12 +41,24 @@ public abstract class FitSizeToContent : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        Subscribe();
         UpdateSize();
     }
 
     protected virtual void OnTransformChildrenChanged()
     {
+        Unsubscribe();
         UpdateSize();
+    }
+
+    protected virtual void Subscribe()
+    {
+
+    }
+
+    protected virtual void Unsubscribe()
+    {
+
     }
 
     protected abstract Vector2 GetSize();
