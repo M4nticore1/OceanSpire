@@ -25,7 +25,7 @@ public class MovingToLootBoatState : FindingLootBoatState
 
         updateDestinationTime += Time.deltaTime;
 
-        if (updateDestinationTime > updateDestinationFrequency) {
+        if (updateDestinationTime >= updateDestinationFrequency) {
             TryStartMovingToTarget();
             updateDestinationTime = 0;
         }
@@ -65,7 +65,7 @@ public class MovingToLootBoatState : FindingLootBoatState
     private bool ShouldStartMovingToTarget()
     {
         if (boat == null) return false;
-        if (!boat.TargetDriftingLoot) return false;
+        if (boat.TargetDriftingLoot == null) return false;
 
         return true;
     }

@@ -6,7 +6,7 @@ public class DailyTasksLoader : WorldLoader
 
     protected override void Load(WorldData worldData)
     {
-        var data = worldData?.DailyTasks;
+        var data = worldData != null ? worldData.DailyTasks : null;
 
         if (data != null) {
             dailyTasksManager.Init(data);

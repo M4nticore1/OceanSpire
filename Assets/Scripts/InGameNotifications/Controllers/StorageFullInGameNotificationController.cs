@@ -6,7 +6,7 @@ using UnityEngine;
 public class StorageFullInGameNotificationController : InGameNotificationController, ILocalizable
 {
     [Header("Storage")]
-    [SerializeField] private CityStorageOverflowManager cityStorageOverflorManager;
+    [SerializeField] private CityStorageOverflowManager cityStorageOverflowManager;
     [SerializeField] private List<ItemStackDefinition> excludedStacks = new();
 
     private InGameNotificationData notificationData;
@@ -22,37 +22,32 @@ public class StorageFullInGameNotificationController : InGameNotificationControl
     {
         base.Subscribe();
 
-        cityStorageOverflorManager.OnOverflowingStackAdded += HandleOverflowingStackAdded;
-        cityStorageOverflorManager.OnOverflowingStackRemoved += HandleOverflowingStackRemoved;
+        cityStorageOverflowManager.OnOverflowingStackAdded += HandleOverflowingStackAdded;
+        cityStorageOverflowManager.OnOverflowingStackRemoved += HandleOverflowingStackRemoved;
     }
 
     protected override void Unsubscribe()
     {
         base.Unsubscribe();
 
-        cityStorageOverflorManager.OnOverflowingStackAdded -= HandleOverflowingStackAdded;
-        cityStorageOverflorManager.OnOverflowingStackRemoved -= HandleOverflowingStackRemoved;
+        cityStorageOverflowManager.OnOverflowingStackAdded -= HandleOverflowingStackAdded;
+        cityStorageOverflowManager.OnOverflowingStackRemoved -= HandleOverflowingStackRemoved;
     }
 
     public Dictionary<string, string> GetLocalization()
     {
-        var stacks = cityStorageOverflorManager.OverflowingStacks.ToList();
+        var validStacks = cityStorageOverflowManager.OverflowingStacks.Where(s => s != null && !excludedStacks.Contains(s.Definition)).ToList();
+
         var sb = new StringBuilder();
+        var count = validStacks.Count;
 
-        for (int i = 0; i < stacks.Count; i++) {
-            var stack = stacks[i];
-            if (stack == null) continue;
-
-            if (excludedStacks.Contains(stack.Definition)) {
-                stacks.RemoveAt(i);
-                i--;
-                continue;
-            }
-
+        for (int i = 0; i < count; i++) {
+            var stack = validStacks[i];
             var stackName = LocalizationManager.Instance.GetLocalizedText(stack.Definition.NameLocalizationItem);
+
             sb.Append($"<color=#FFC04D>{stackName}</color>");
 
-            if (i < stacks.Count - 1) {
+            if (i < count - 1) {
                 sb.Append(", ");
             }
         }
@@ -60,12 +55,13 @@ public class StorageFullInGameNotificationController : InGameNotificationControl
         return new Dictionary<string, string>()
         {
             { "overflowingStacks", sb.ToString() },
-            { "overflowingStacksCount", stacks.Count.ToString() }
+            { "overflowingStacksCount", count.ToString() }
         };
     }
 
     private void HandleOverflowingStackAdded(ItemStackInstance stack)
     {
+        if (stack == null) return;
         if (excludedStacks.Contains(stack.Definition)) return;
 
         var widget = GetNotificationWidget(notificationData);
@@ -80,11 +76,17 @@ public class StorageFullInGameNotificationController : InGameNotificationControl
 
     private void HandleOverflowingStackRemoved(ItemStackInstance stack)
     {
+        if (stack == null) return;
         if (excludedStacks.Contains(stack.Definition)) return;
 
         var widget = GetNotificationWidget(notificationData);
         if (widget == null) return;
 
-        widget.Init(notificationData);
+        if (cityStorageOverflowManager.OverflowingStacks.Count > 0) {
+            widget.Init(notificationData);
+        }
+        else {
+            HideNotification(notificationData);
+        }
     }
 }

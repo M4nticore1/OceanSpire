@@ -6,7 +6,7 @@ public abstract class WorldLoader : MonoBehaviour
 
     private void Start()
     {
-        var data = WorldSaveHandler.Instance.CurrentWorldData;
+        var data = WorldSavesHandler.Instance.CurrentWorldData;
 
         Load(data);
         IsLoaded = true;

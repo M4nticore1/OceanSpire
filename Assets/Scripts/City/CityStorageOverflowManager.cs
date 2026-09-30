@@ -51,16 +51,19 @@ public class CityStorageOverflowManager : MonoBehaviour, ILocalizable
     {
         if (stack == null) return;
 
-        overflowingStacks.Add(stack);
-        OnOverflowingStackAdded?.Invoke(stack);
+        if (!overflowingStacks.Contains(stack)) {
+            overflowingStacks.Add(stack);
+            OnOverflowingStackAdded?.Invoke(stack);
+        }
     }
 
     private void RemovedOverflowingStack(ItemStackInstance stack)
     {
         if (stack == null) return;
 
-        overflowingStacks.Remove(stack);
-        OnOverflowingStackRemoved?.Invoke(stack);
+        if (overflowingStacks.Remove(stack)) {
+            OnOverflowingStackRemoved?.Invoke(stack);
+        }
     }
 
     private void HandleStackAmountChanged(ItemStackInstance stack)

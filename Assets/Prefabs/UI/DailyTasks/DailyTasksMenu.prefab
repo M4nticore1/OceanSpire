@@ -69,7 +69,7 @@ MonoBehaviour:
   m_text: Update now
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -971,6 +971,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FitSizeToChildren
   rect: {fileID: 0}
+  fitHorizontal: 0
+  fitVertical: 1
+  minSize: {x: 0, y: 0}
+  extraSize: {x: 0, y: 0}
   minHeight: 0
   extraHeight: 0
   includedTransforms: []
@@ -1046,7 +1050,7 @@ MonoBehaviour:
   m_text: Your tasks will be updated in 12:30
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -276,8 +276,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac0a64847ccd6a40861813768ff9708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FitSizeToChildren
+  rect: {fileID: 0}
+  fitHorizontal: 0
+  fitVertical: 1
+  minSize: {x: 0, y: 0}
+  extraSize: {x: 0, y: 300}
   minHeight: 0
-  extraHeight: 300
+  extraHeight: 0
+  includedTransforms: []
+  includedHierarchyTransforms: []
+  excludedTransforms: []
+  excludedHierarchyTransforms: []
 --- !u!1 &3205250813123137782
 GameObject:
   m_ObjectHideFlags: 0

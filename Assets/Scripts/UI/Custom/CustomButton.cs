@@ -107,7 +107,7 @@ public class CustomButton : CustomUI, IClickable, IPointerEnterHandler, IPointer
     private Vector2 pressedButtonStartPointerPosition = Vector2.zero;
 
     public UnityEvent OnPressed = new();
-    [FormerlySerializedAs("onReleased")] public UnityEvent OnReleased = new();
+    public UnityEvent OnReleased = new();
     public UnityEvent OnSelected = new();
     public UnityEvent OnDeselected = new();
     public UnityEvent OnHovered = new();

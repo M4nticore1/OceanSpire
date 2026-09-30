@@ -709,7 +709,6 @@ Transform:
   - {fileID: 1425271179}
   - {fileID: 1210908827}
   - {fileID: 525850908}
-  - {fileID: 781057965}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &638904319
@@ -846,12 +845,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 781057964}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 96.53042, y: 1289.0732, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 604121251}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &781057966
 MonoBehaviour:
@@ -862,9 +861,70 @@ MonoBehaviour:
   m_GameObject: {fileID: 781057964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc7b2fcf0b5aec243b556e7f5ae32a4c, type: 3}
+  m_Script: {fileID: 11500000, guid: 6cd3761b55e91024b982022c1b251e8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldSaveHandler
+  <AllSavesData>k__BackingField: []
+  <CurrentWorldData>k__BackingField:
+    Version: 1
+    WorldName: 
+    SaveTime: 0
+    Player:
+      cameraRotation:
+        X: 0
+        Y: 0
+        Z: 0
+    GroundBuildings: []
+    FloorFrameBuildings: []
+    TowerBuildings: []
+    Boats: []
+    Citizens: []
+    Wanderers: []
+    Raiders: []
+    DriftingLoot:
+      NextSpawnTime: []
+      CurrentSpawnTime: []
+      SwimmingDriftingLoot: []
+      FlyingDriftingLoot: []
+    CityStorage:
+      Items: []
+    DailyTasks:
+      Tasks: []
+      NextResetTime: 0
+      AdUpdateUsed: 0
+      TasksViewed: 0
+    DailyReward:
+      Rewards: []
+      NextResetTime: 0
+      MainRewardCollected: 0
+      ExtraRewardCollected: 0
+      RewardViewed: 0
+    Raid:
+      RaidExist: 0
+      UnderRaid: 0
+      RaidCooldownTime: 0
+      TimeSinceLastRaid: 0
+    BuilderEnergy:
+      CurrentEnergy: 1
+    ReviveSystem:
+      RemainingRevivesCount: 0
+      NextReviveChargeTimes: 
+    FoodDrain:
+      DrainAmount: 0
+      DrainTime: 0
+    EnergyDrain:
+      DrainAmount: 0
+    Wind:
+      WindDirection:
+        X: 0
+        Y: 0
+        Z: 0
+      TargetWindDirection:
+        X: 0
+        Y: 0
+        Z: 0
+      CurrentWindDirectionChangeFreqency: 0
+      CurrentWindDirectionChangeTime: 0
 --- !u!1 &899428379
 GameObject:
   m_ObjectHideFlags: 0
@@ -1611,11 +1671,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainMenuCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 4524318515413123285, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: worldSaveHandler
+      value: 
+      objectReference: {fileID: 781057966}
     - target: {fileID: 4858137478602336601, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: m_fontSize
       value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 5382797189989399039, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
+      propertyPath: worldSaveHandler
+      value: 
+      objectReference: {fileID: 781057966}
+    - target: {fileID: 5663984457193301312, guid: a9b6b06c0b1fb714aaafeb054b6436b8, type: 3}
       propertyPath: worldSaveHandler
       value: 
       objectReference: {fileID: 781057966}
@@ -1670,3 +1738,4 @@ SceneRoots:
   - {fileID: 242565850}
   - {fileID: 246343739}
   - {fileID: 907005738}
+  - {fileID: 781057965}

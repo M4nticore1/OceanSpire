@@ -13,14 +13,13 @@ public class ReviveAdRewardInstance : RewardInstance
     {
         base.HandleRewardRecieved();
 
-        if (!citizen) {
-            Debug.LogError("citizen is not valid to revive");
+        if (citizen == null) {
+            Debug.LogError($"[{nameof(ReviveAdRewardInstance)}] Citizen is not valid!");
             return;
         }
 
-        citizen.ReviveComponent.Revive();
-        citizen.SelectComponent.Select();
-        ReviveManager.Instance.RemoveReviveCount();
+        citizen?.ReviveComponent.Revive();
+        citizen?.SelectComponent.Select();
     }
 
     public void SetHuman(Citizen citizen)

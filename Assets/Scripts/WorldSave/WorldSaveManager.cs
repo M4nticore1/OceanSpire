@@ -24,8 +24,11 @@ public class WorldSaveManager : MonoBehaviour
 
     public void SaveWorld()
     {
+        var curentData = WorldSavesHandler.Instance.CurrentWorldData;
+        var worldName = curentData != null ? curentData.WorldName : WorldData.Default().WorldName;
+
         var worldData = WorldData.Create(
-            WorldSaveHandler.Instance,
+            worldName,
             playerController,
             buildingsManager, elevatorCabinsManager,
             dockPointsManager,
@@ -43,9 +46,10 @@ public class WorldSaveManager : MonoBehaviour
             focusManager,
             foodDrainManager,
             energyDrainManager,
-            windManager);
+            windManager,
+            curentData);
 
         WorldSaveSystem.SaveWorld(worldData);
-        WorldSaveHandler.Instance.SetWorldData(worldData);
+        WorldSavesHandler.Instance.SetWorldData(worldData);
     }
 }

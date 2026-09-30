@@ -376,9 +376,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3976798044307412247}
-  - component: {fileID: 9090524891250378702}
   m_Layer: 0
-  m_Name: CreateWorldMenu
+  m_Name: ManageWorldMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -405,27 +404,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &9090524891250378702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1902519272327053480}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 214130783f64b06499ed71ef18638695, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CreateNewWorldMenu
-  slidePanel: {fileID: 4906044632388165925}
-  inputField: {fileID: 8741177782738639505}
-  keyboardOffsetUI: {fileID: 3060599765947082064}
-  createWorldButton: {fileID: 733242751195489888}
-  cancelButton: {fileID: 4866917801281884083}
-  inputFieldValidatorsManager: {fileID: 6697967532962552234}
-  incorrectWorldNameText: {fileID: 4559947192268922217}
-  existWorldNameLocalization: {fileID: 11400000, guid: 97da75c006d2fe947ba13fedeaacc718, type: 2}
-  incorrectWorldNameLocalization: {fileID: 11400000, guid: ac2fd3a7fe37a3540936079cc3bbce83, type: 2}
 --- !u!1 &2724965579999750775
 GameObject:
   m_ObjectHideFlags: 0
@@ -1628,7 +1606,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7352607609695236558, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_Name
-      value: CancelCreatingWorldButton
+      value: CancelButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1640,17 +1618,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
   m_PrefabInstance: {fileID: 1204888665408561245}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4866917801281884083 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5994955411856093166, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
-  m_PrefabInstance: {fileID: 1204888665408561245}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
 --- !u!1001 &6421953068713101710
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1749,24 +1716,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7352607609695236558, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
       propertyPath: m_Name
-      value: CreateWorldButton
+      value: ActionButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
---- !u!114 &733242751195489888 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5994955411856093166, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}
-  m_PrefabInstance: {fileID: 6421953068713101710}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e25bfcfdd683c14889035054e60f929, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CustomSelectable
 --- !u!224 &4842328633964594891 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1885940025941970757, guid: fbe2e82292a5a24459c8fe188a195338, type: 3}

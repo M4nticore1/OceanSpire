@@ -43,13 +43,13 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
-        var data = lastSelectedSaveSlot.WorldSaveData;
+        var data = lastSelectedSaveSlot.WorldData;
         if (data == null) {
             Debug.Log($"[{nameof(MainMenuManager)}] WorldSaveData not found at {SaveSlotWidget.Selected}!");
             return;
         }
 
-        WorldSaveHandler.Instance.SetWorldData(data);
+        WorldSavesHandler.Instance.SetWorldData(data);
         SceneManager.LoadScene(1);
     }
 
@@ -60,7 +60,7 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
-        var data = lastSelectedSaveSlot.WorldSaveData;
+        var data = lastSelectedSaveSlot.WorldData;
         if (data == null) {
             Debug.Log($"[{nameof(MainMenuManager)}] WorldSaveData not found at {SaveSlotWidget.Selected}!");
             return;
@@ -73,12 +73,12 @@ public class MainMenuManager : MonoBehaviour
     {
         lastSelectedSaveSlot = saveSlotWidget;
 
-        if (saveSlotWidget.WorldSaveData != null) {
+        if (saveSlotWidget.WorldData != null) {
             loadSaveButton.SetState(CustomButtonState.Idle);
             deleteSaveButton.SetState(CustomButtonState.Idle);
         }
         else {
-            createNewWorldMenu.Open();
+            createNewWorldMenu.Show();
         }
     }
 

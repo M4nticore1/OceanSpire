@@ -49,8 +49,9 @@ public class PierModule : BuildingModule
     private void CreateBoats()
     {
         if (!boatsLoader.IsLoaded) return;
+        if (PierConstruction == null) return;
 
-        int count = PierConstruction.BoatDocks.Count - boatsManager.CitizenBoats.Count;
+        var count = PierConstruction.BoatDocks.Count - boatsManager.CitizenBoats.Count;
 
         for (int i = 0; i < count; i++) {
             var dockIndex = PierConstruction.BoatDocks.Count - count + i;

@@ -157,6 +157,9 @@ public class BoatRider : MonoBehaviour
 
     public void EnterBoat(Boat boat)
     {
+        if (this == null)
+            return;
+
         IsEnteringBoat = false;
 
         if (boat == null) {
@@ -186,6 +189,9 @@ public class BoatRider : MonoBehaviour
 
     public void ExitBoat()
     {
+        if (this == null)
+            return;
+
         IsExitingBoat = false;
 
         if (RidingBoat == null) {
