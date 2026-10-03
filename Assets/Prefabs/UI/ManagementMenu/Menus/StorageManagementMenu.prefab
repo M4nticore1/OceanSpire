@@ -1474,6 +1474,10 @@ PrefabInstance:
       propertyPath: itemWidgetPrefab
       value: 
       objectReference: {fileID: 2768808127159380486, guid: 414afd4c58b2bc9488649a3e9e5fa736, type: 3}
+    - target: {fileID: 6193407435809817484, guid: 6b86a49e2ff04d749a91b074c4fcb335, type: 3}
+      propertyPath: rect
+      value: 
+      objectReference: {fileID: 3146137459170949980}
     - target: {fileID: 6283271405975237039, guid: 6b86a49e2ff04d749a91b074c4fcb335, type: 3}
       propertyPath: stackDefinition
       value: 
@@ -1515,3 +1519,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ea657b068c8be4c81bd7c90712f7b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StorageManagementList
+--- !u!224 &3146137459170949980 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5460098053176684278, guid: 6b86a49e2ff04d749a91b074c4fcb335, type: 3}
+  m_PrefabInstance: {fileID: 6948905900585964970}
+  m_PrefabAsset: {fileID: 0}

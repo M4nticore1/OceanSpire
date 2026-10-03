@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public abstract class ContextElement : MonoBehaviour, IOpenable
 {
@@ -26,6 +25,8 @@ public abstract class ContextElement : MonoBehaviour, IOpenable
     private void OnEnable()
     {
         TrySubscribe();
+
+        UpdateActive(contextMenuManager?.ContextMenuTarget);
         UpdateButtonEnabled();
     }
 

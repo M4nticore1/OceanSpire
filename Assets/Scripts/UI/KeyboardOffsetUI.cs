@@ -56,8 +56,8 @@ public class KeyboardOffsetUI : MonoBehaviour
 
     private void MoveTo(float targetHeight)
     {
-        float width = panel.anchoredPosition.x;
-        float height = panel.anchoredPosition.y;
+        var width = panel.anchoredPosition.x;
+        var height = panel.anchoredPosition.y;
 
         if (TouchScreenKeyboard.visible) {
             float heightOffset = panel.rect.size.y * openedPositionOffsetPercent;
@@ -72,9 +72,9 @@ public class KeyboardOffsetUI : MonoBehaviour
 
     private float GetOverlapHeight()
     {
-        float keyboardTop = GetKeyboardHeight();
-        float bottom = panel.position.y - panel.rect.size.y * panel.pivot.y;
-        float overlap = keyboardTop - bottom;
+        var keyboardTop = GetKeyboardHeight();
+        var bottom = panel.position.y - panel.rect.size.y * panel.pivot.y;
+        var overlap = keyboardTop - bottom;
 
         return Mathf.Max(0f, overlap);
     }

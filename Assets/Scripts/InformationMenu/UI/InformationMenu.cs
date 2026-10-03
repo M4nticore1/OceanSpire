@@ -28,7 +28,7 @@ public class InformationMenu : MonoBehaviour, IOpenable
     private List<IInformationable> informationables = new();
     private IInformationable shownInformationable => informationables.Count > 0 ? informationables[informationables.Count - 1] : null;
 
-    public bool IsShown { get; private set; } = false;
+    public bool IsShown => slidePanel.IsShown;
 
     public event Action OnShown;
     public event Action OnHidden;
@@ -66,7 +66,6 @@ public class InformationMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        IsShown = true;
         slidePanel.Show();
 
         UpdateDisplayed();
@@ -106,7 +105,6 @@ public class InformationMenu : MonoBehaviour, IOpenable
 
     private void HandleHidden()
     {
-        IsShown = false;
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
@@ -160,7 +158,7 @@ public class InformationMenu : MonoBehaviour, IOpenable
     private void UpdateScrollRect()
     {
         scrollRect.verticalNormalizedPosition = 1f;
-        scrollRectFitSize.RunUpdateSizeEndOfFrame();
+        scrollRectFitSize.UpdateSize();
     }
 
     private void HandleCloseButtonClicked()

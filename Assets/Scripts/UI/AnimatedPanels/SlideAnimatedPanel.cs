@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public enum CloseMethod
@@ -73,15 +69,6 @@ public class SlideAnimatedPanel : AnimatedPanel
         if (background != null) {
             background.raycastTarget = false;
         }
-    }
-
-    protected override bool ShouldSetContentInactive()
-    {
-        if (!HideWhenClosed) return false;
-        if (RectTransform.anchoredPosition != targetPosition) return false;
-        if (IsUnderAnimation) return false;
-
-        return true;
     }
 
     private void UpdateBackgroundColor()

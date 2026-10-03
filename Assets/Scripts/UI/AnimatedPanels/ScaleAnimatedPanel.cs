@@ -22,9 +22,4 @@ public class ScaleAnimatedPanel : AnimatedPanel
     {
         
     }
-
-    protected override bool ShouldSetContentInactive()
-    {
-        return false;
-    }
 }

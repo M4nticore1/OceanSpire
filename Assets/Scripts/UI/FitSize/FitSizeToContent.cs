@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class FitSizeToContent : MonoBehaviour
 {
     [SerializeField] private RectTransform rect;
-    public RectTransform RectTransform => rect;
+    public RectTransform RectTransform => rect != null ? rect : GetComponent<RectTransform>();
 
     [SerializeField] private bool fitHorizontal = true;
     [SerializeField] private bool fitVertical = true;
@@ -45,9 +46,13 @@ public abstract class FitSizeToContent : MonoBehaviour
         UpdateSize();
     }
 
-    protected virtual void OnTransformChildrenChanged()
+    protected virtual void OnDisable()
     {
         Unsubscribe();
+    }
+
+    protected virtual void OnTransformChildrenChanged()
+    {
         UpdateSize();
     }
 
@@ -65,8 +70,11 @@ public abstract class FitSizeToContent : MonoBehaviour
 
     public void RunUpdateSizeEndOfFrame()
     {
-        if (!ShouldUpdateSize()) return;
-        
+        if (!ShouldUpdateSize()) {
+            Debug.LogError($"[{nameof(FitSizeToContent)}] Should not to update size at {this}!");
+            return;
+        }
+
         if (updateSizeCoroutine == null) {
             updateSizeCoroutine = StartCoroutine(UpdateSizeCoroutine());
         }
@@ -85,10 +93,15 @@ public abstract class FitSizeToContent : MonoBehaviour
         includedTransforms.Remove(go);
     }
 
-    public void UpdateSize()
+    public void TryUpdateSize()
     {
         if (!ShouldUpdateSize()) return;
 
+        UpdateSize();
+    }
+
+    public void UpdateSize()
+    {
         if (rect == null) {
             Debug.LogError($"[{nameof(FitSizeToContent)}] Rect is not valid at {this}!");
             return;
@@ -149,8 +162,6 @@ public abstract class FitSizeToContent : MonoBehaviour
     private bool ShouldUpdateSize()
     {
         if (this == null) return false;
-        if (!enabled) return false;
-        if (!gameObject.activeSelf) return false;
         if (!gameObject.activeInHierarchy) return false;
 
         return true;
@@ -158,7 +169,8 @@ public abstract class FitSizeToContent : MonoBehaviour
 
     private IEnumerator UpdateSizeCoroutine()
     {
-        yield return new WaitForEndOfFrame();
+        yield return null;
+        yield return new WaitForSeconds(3);
 
         updateSizeCoroutine = null;
         Canvas.ForceUpdateCanvases();
@@ -179,7 +191,7 @@ public class FitSizeToContentEditor : Editor
         GUILayout.Space(10);
 
         if (GUILayout.Button("Update Size")) {
-            widget.RunUpdateSizeEndOfFrame();
+            widget.UpdateSize();
 
             EditorUtility.SetDirty(widget);
         }

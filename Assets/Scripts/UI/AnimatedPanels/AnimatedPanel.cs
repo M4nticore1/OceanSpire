@@ -69,7 +69,7 @@ public abstract class AnimatedPanel : MonoBehaviour, IOpenable
 
     private void Update()
     {
-        float targetProgress = isShown ? 1f : 0f;
+        var targetProgress = isShown ? 1f : 0f;
 
         if (!Mathf.Approximately(animationProgress, targetProgress)) {
             animationProgress = Mathf.Lerp(animationProgress, targetProgress, animationSpeed * Time.deltaTime);
@@ -89,24 +89,20 @@ public abstract class AnimatedPanel : MonoBehaviour, IOpenable
 
     protected abstract void HandleHidden();
 
-    protected abstract bool ShouldSetContentInactive();
-
     public void Show()
     {
         isShown = true;
         openedFrame = Time.frameCount;
 
+        UpdateContentRootEnabled();
         HandleShown();
+
         OnShown?.Invoke();
     }
 
     public void Hide()
     {
         isShown = false;
-
-        if (hideWhenClosed) {
-            SetContentRootEnabled(true);
-        }
 
         HandleHidden();
         OnHidden?.Invoke();
@@ -129,12 +125,12 @@ public abstract class AnimatedPanel : MonoBehaviour, IOpenable
 
     private void UpdateContentRootEnabled()
     {
-        SetContentRootEnabled(ShouldSetContentInactive());
+        SetContentRootEnabled(ShouldSetContentActive());
     }
 
     private void SetContentRootEnabled(bool value)
     {
-        //contentRoot.gameObject.SetActive(value);
+        contentRoot.gameObject.SetActive(value);
     }
 
     private void OnPress()
@@ -154,6 +150,14 @@ public abstract class AnimatedPanel : MonoBehaviour, IOpenable
         if (InputListener.Instance.startPressedObject != PointerUtils.GetRaycastUIResult().gameObject) return;
 
         TryClose();
+    }
+
+    private bool ShouldSetContentActive()
+    {
+        if (isShown) return true;
+        if (IsUnderAnimation) return true;
+
+        return false;
     }
 
     private bool IsClickedOutsideMenu(List<RaycastResult> results)

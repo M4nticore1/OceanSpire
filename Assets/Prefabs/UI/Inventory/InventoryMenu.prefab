@@ -69,7 +69,7 @@ MonoBehaviour:
   m_text: Weight {weight}/{maxWeight}
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -665,7 +665,7 @@ MonoBehaviour:
   m_text: TargetName
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1210,11 +1210,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 325414fd39671a6468089e7c89d80820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
-  canvas: {fileID: 0}
   closeMethod: 1
-  slideTransitionSpeed: 10
+  animationSpeed: 10
   contentRoot: {fileID: 4895890772244662085}
   hideWhenClosed: 1
+  isShown: 0
+  canvas: {fileID: 0}
   openedScreenPositionAlpha: {x: 0, y: 0.5}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: 0, y: 0.5}
@@ -1430,8 +1431,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aac0a64847ccd6a40861813768ff9708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FitSizeToChildren
+  rect: {fileID: 5727839033106282187}
+  fitHorizontal: 0
+  fitVertical: 1
+  minSize: {x: 0, y: 0}
+  extraSize: {x: 0, y: 0}
   minHeight: 0
   extraHeight: 0
+  includedTransforms: []
+  includedHierarchyTransforms: []
+  excludedTransforms: []
+  excludedHierarchyTransforms: []
 --- !u!1 &8918496051992493727
 GameObject:
   m_ObjectHideFlags: 0

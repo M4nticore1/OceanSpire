@@ -42,6 +42,6 @@ public class FitSizeToText : FitSizeToContent
 
     private void OnLocalizationChanged()
     {
-        RunUpdateSizeEndOfFrame();
+        UpdateSize();
     }
 }

@@ -56,6 +56,7 @@ public class StoragePanel : MonoBehaviour
         }
 
         var widget = Instantiate(itemStackWidgetPrefab, layoutGroup.transform);
+        widget.transform.SetParent(layoutGroup.transform);
         widget.SetStackInstance(stackInstance);
         widget.AddAmount(stackInstance);
 
@@ -73,6 +74,7 @@ public class StoragePanel : MonoBehaviour
                 continue;
 
             Destroy(widget.gameObject);
+            widget.transform.SetParent(null);
             spawnedWidgets.RemoveAt(i);
         }
     }
@@ -82,6 +84,6 @@ public class StoragePanel : MonoBehaviour
         if (fitSize == null)
             return;
 
-        fitSize.RunUpdateSizeEndOfFrame();
+        fitSize.UpdateSize();
     }
 }

@@ -73,7 +73,7 @@ public class TextLocalizer : MonoBehaviour
         if (localizationManager == null) return;
 
         if (item) {
-            string text = localizationManager.GetLocalizedText(item);
+            var text = localizationManager.GetLocalizedText(item);
             if (text == null) return;
             if (text == "") return;
 
@@ -82,8 +82,8 @@ public class TextLocalizer : MonoBehaviour
                 if (dict == null) return;
 
                 foreach (var key in dict.Keys.ToArray()) {
-                    string holder = "{" + key + "}";
-                    string value = dict[key];
+                    var holder = "{" + key + "}";
+                    var value = dict[key];
                     text = text.Replace(holder, value);
                 }
             }

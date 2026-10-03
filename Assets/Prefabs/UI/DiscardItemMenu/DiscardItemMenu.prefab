@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
   closeMethod: 1
   animationSpeed: 10
-  contentRoot: {fileID: 0}
+  contentRoot: {fileID: 5284503263255625727}
   hideWhenClosed: 0
   isShown: 0
   canvas: {fileID: 0}
