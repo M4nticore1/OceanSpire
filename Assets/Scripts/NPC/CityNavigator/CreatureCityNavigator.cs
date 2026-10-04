@@ -221,38 +221,36 @@ public class CreatureCityNavigator : MonoBehaviour
     // Trigger
     public void OnEnteredBuildingTrigger(Building building)
     {
-        if (building == null) return;
-        if (building == EnteredBuilding) return;
-
-        if (TryEnterBuilding(building)) {
-            UpdatePathIndex();
-            UpdatePathBuildings();
-            RunUpdateFollowingPathEndOfFrame();
-        }
+        TryEnterBuilding(building);
     }
     
     public void OnStayBuildingTrigger(Building building)
     {
-        if (building == null) return;
-        if (EnteredBuilding != null) return;
-        if (building == EnteredBuilding) return;
-
         TryEnterBuilding(building);
     }
 
     public void OnExitedBuildingTrigger(Building building)
     {
-        if (building == null) return;
-
         TryExitBuilding(building);
     }
 
     // Enter Exit Building
     public bool TryEnterBuilding(Building building)
     {
+        if (building == null) return false;
+        if (building == EnteredBuilding) return false;
         if (elevatorPassenger.IsRiding) return false;
 
         EnterBuilding(building);
+        return true;
+    }
+
+    private bool TryExitBuilding(Building building)
+    {
+        if (building == null) return false;
+        if (elevatorPassenger.IsRiding) return false;
+
+        ExitBuilding(building);
         return true;
     }
 
@@ -264,11 +262,17 @@ public class CreatureCityNavigator : MonoBehaviour
         }
 
         EnteredBuilding = building;
-        building.EnterBuilding(this);
 
+        // Buildings
         UpdateCurrentBuildings();
         UpdateCurrentTowerPlace();
 
+        // Path
+        UpdatePathIndex();
+        UpdatePathBuildings();
+        RunUpdateFollowingPathEndOfFrame();
+
+        building.EnterBuilding(this);
         OnEnteredBuilding?.Invoke(EnteredBuilding);
     }
 
@@ -278,8 +282,14 @@ public class CreatureCityNavigator : MonoBehaviour
             EnteredBuilding = null;
         }
 
+        // Buildings
         UpdateCurrentBuildings();
         UpdateCurrentTowerPlace();
+
+        // Path
+        UpdatePathIndex();
+        UpdatePathBuildings();
+        RunUpdateFollowingPathEndOfFrame();
 
         building.ExitBuilding(this);
         OnExitedBuilding?.Invoke(building);
@@ -410,14 +420,6 @@ public class CreatureCityNavigator : MonoBehaviour
         construction.InteractionPointsHandler.RunRemoveInteractorEndOfFrame(this);
     }
 
-    private bool TryExitBuilding(Building building)
-    {
-        if (elevatorPassenger.IsRiding) return false;
-
-        ExitBuilding(building);
-        return true;
-    }
-
     // Path
     private void SortPath(List<Building> pathBuildings)
     {
@@ -502,17 +504,9 @@ public class CreatureCityNavigator : MonoBehaviour
 
     private void UpdatePathIndex()
     {
-        if (EnteredBuilding != null) {
-            if (pathBuildings.Contains(EnteredBuilding)) {
-                PathProgress = pathBuildings.IndexOf(EnteredBuilding) + 1;
-            }
-            //else {
-            //    PathProgress = Mathf.Max(0, PathProgress - 1);
-            //}
+        if (EnteredBuilding != null && pathBuildings.Contains(EnteredBuilding)) {
+            PathProgress = pathBuildings.IndexOf(EnteredBuilding) + 1;
         }
-        //else {
-        //    PathProgress = 0;
-        //}
     }
 
     private void UpdatePathBuildings()

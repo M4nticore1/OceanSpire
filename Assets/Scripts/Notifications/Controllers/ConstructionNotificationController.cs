@@ -18,6 +18,7 @@ public class ConstructionNotificationController : NotificationController
     protected override bool ShouldSendNotification()
     {
         var buildingsUnderConstruction = GetBuildingsUnderConstruction();
+        if (buildingsUnderConstruction == null) return false;
         if (buildingsUnderConstruction.Count == 0) return false;
 
         return true;
@@ -49,7 +50,7 @@ public class ConstructionNotificationController : NotificationController
     {
         var localizationManager = LocalizationManager.Instance;
         if (localizationManager == null) {
-            Debug.LogError("localizationManager is not valid");
+            Debug.LogError("LocalizationManager is not valid");
             return null;
         }
 
@@ -75,21 +76,25 @@ public class ConstructionNotificationController : NotificationController
 
     private Building GetMaxConstructionTimeBuilding(List<Building> buildings)
     {
-        return buildings
-        .OrderByDescending(b => b.ConstructionComponent.GetRemainingConstructionTime() ?? 0)
-        .FirstOrDefault();
+        return buildings.OrderByDescending(b => b.ConstructionComponent.GetRemainingConstructionTime() ?? 0).FirstOrDefault();
     }
 
     private List<Building> GetBuildingsUnderConstruction()
     {
         var constructionBuilding = new List<Building>();
+        if (buildingsManager == null) return constructionBuilding;
+
         var groundBuildings = buildingsManager.GetGroundBuildings().Cast<Building>().ToList();
 
         var towerBuildings = new List<Building>();
         foreach (var floor in buildingsManager.BuiltFloors) {
+            if (floor == null) continue;
+
             foreach (var place in floor.RoomBuildingPlaces) {
+                if (place == null) continue;
+
                 var building = place.PlacedBuilding;
-                if (!building) continue;
+                if (building == null) continue;
 
                 towerBuildings.Add(building);
             }
@@ -104,9 +109,10 @@ public class ConstructionNotificationController : NotificationController
     protected List<Building> GetBuildingsUnderConstruction(List<Building> buildings)
     {
         var constructionBuilding = new List<Building>();
+        if (buildings == null) return constructionBuilding;
 
         foreach (var building in buildings) {
-            if (!building) {
+            if (building == null) {
                 Debug.LogError("Building is not valid");
                 continue;
             }

@@ -33,7 +33,7 @@ public abstract class NotificationController : MonoBehaviour
 
     protected virtual string GetLabelText()
     {
-        if (!LabelLocalizationItem) return null;
+        if (LabelLocalizationItem == null) return null;
 
         var localizationManager = LocalizationManager.Instance;
         if (localizationManager == null) {
@@ -46,7 +46,7 @@ public abstract class NotificationController : MonoBehaviour
 
     protected virtual string GetBodyText()
     {
-        if (!bodyLocalizationItem) return null;
+        if (bodyLocalizationItem == null) return null;
 
         var localizationManager = LocalizationManager.Instance;
         if (localizationManager == null) {
@@ -59,7 +59,7 @@ public abstract class NotificationController : MonoBehaviour
 
     protected virtual string GetSubtitleText()
     {
-        if (!subtitleLocalizationItem) return null;
+        if (subtitleLocalizationItem == null) return null;
 
         var localizationManager = LocalizationManager.Instance;
         if (localizationManager == null) {

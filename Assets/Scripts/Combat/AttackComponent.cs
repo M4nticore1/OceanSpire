@@ -18,11 +18,8 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
     private float currentAttackTime;
 
     [Header("Targets")]
-    [field: SerializeField]
-    public AttackComponent CurrentTarget { get; private set; }
-
-    [field: SerializeField]
-    public List<AttackComponent> CurrentAttackers { get; private set; } = new();
+    [field: SerializeField] public AttackComponent CurrentTarget { get; private set; }
+    [field: SerializeField] public List<AttackComponent> CurrentAttackers { get; private set; } = new();
 
     public bool IsAttacking { get; private set; }
 
@@ -93,27 +90,18 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
     public void SetTarget(AttackComponent target)
     {
         if (target == null) {
-            Debug.LogError(
-                $"[{nameof(AttackComponent)}] Attack target is not valid."
-            );
+            Debug.LogError($"[{nameof(AttackComponent)}] Attack target is not valid.");
             return;
         }
 
         if (target == this) {
-            Debug.LogError(
-                $"[{nameof(AttackComponent)}] Cannot target itself."
-            );
+            Debug.LogError($"[{nameof(AttackComponent)}] Cannot target itself.");
             return;
         }
 
-        if (!IsAttackerAvailable())
-            return;
-
-        if (!target.IsAttackerAvailable())
-            return;
-
-        if (CurrentTarget == target)
-            return;
+        if (!IsAttackerAvailable())return;
+        if (!target.IsAttackerAvailable())return;
+        if (CurrentTarget == target) return;
 
         RemoveTarget();
 
@@ -151,20 +139,11 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
     // Attackers
     public void AddAttacker(AttackComponent attacker)
     {
-        if (attacker == null)
-            return;
-
-        if (attacker == this)
-            return;
-
-        if (!IsAttackerAvailable())
-            return;
-
-        if (!attacker.IsAttackerAvailable())
-            return;
-
-        if (CurrentAttackers.Contains(attacker))
-            return;
+        if (attacker == null) return;
+        if (attacker == this) return;
+        if (!IsAttackerAvailable()) return;
+        if (!attacker.IsAttackerAvailable()) return;
+        if (CurrentAttackers.Contains(attacker)) return;
 
         CurrentAttackers.Add(attacker);
 
@@ -175,13 +154,12 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
 
     public void AddAttackers(List<AttackComponent> attackers)
     {
-        if (attackers == null)
-            return;
-
-        if (!IsAttackerAvailable())
-            return;
+        if (attackers == null) return;
+        if (!IsAttackerAvailable()) return;
 
         foreach (var attacker in attackers) {
+            if (attacker == null) continue;
+
             AddAttacker(attacker);
         }
     }
@@ -193,8 +171,6 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
 
         CurrentAttackers.Remove(attacker);
 
-        // If this attacker was targeting us,
-        // make sure they stop targeting us.
         if (attacker.CurrentTarget == this) {
             attacker.RemoveTarget();
         }
@@ -205,6 +181,8 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
         var attackersCopy = new List<AttackComponent>(CurrentAttackers);
 
         foreach (var attacker in attackersCopy) {
+            if (attacker == null) continue;
+
             RemoveAttacker(attacker);
         }
     }
@@ -223,8 +201,7 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
 
     private void HandleAttacked(AttackComponent attacker)
     {
-        if (attacker == null)
-            return;
+        if (attacker == null) return;
 
         if (CurrentTarget == null) {
             SetTarget(attacker);
@@ -234,11 +211,8 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
     // Availability
     public bool IsAttackerAvailable()
     {
-        if (health != null && !health.IsAlive)
-            return false;
-
-        if (boatRider != null && boatRider.RidingBoat)
-            return false;
+        if (health != null && !health.IsAlive) return false;
+        if (boatRider != null && boatRider.RidingBoat) return false;
 
         return true;
     }
@@ -253,11 +227,8 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
     // Attacking
     private void StartAttacking()
     {
-        if (IsAttacking)
-            return;
-
-        if (CurrentTarget == null)
-            return;
+        if (IsAttacking) return;
+        if (CurrentTarget == null) return;
 
         IsAttacking = true;
         currentAttackTime = 0f;
@@ -270,8 +241,7 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
 
     private void StopAttacking()
     {
-        if (!IsAttacking)
-            return;
+        if (!IsAttacking) return;
 
         IsAttacking = false;
 
@@ -281,21 +251,17 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
 
     private void ProcessAttacking()
     {
-        if (!IsAttacking)
-            return;
+        if (!IsAttacking) return;
 
         currentAttackTime += Time.deltaTime;
-
-        if (currentAttackTime < attackFrequency)
-            return;
+        if (currentAttackTime < attackFrequency) return;
 
         AttackTarget();
     }
 
     private void AttackTarget()
     {
-        if (CurrentTarget == null)
-            return;
+        if (CurrentTarget == null) return;
 
         if (!CurrentTarget.IsAttackerAvailable()) {
             HandleTargetUnavailableStarted();
@@ -303,16 +269,13 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
         }
 
         var targetHealth = CurrentTarget.Health;
-
-        if (targetHealth == null)
-            return;
+        if (targetHealth == null) return;
 
         targetHealth.RemoveHealth(GetDamage());
 
         currentAttackTime = 0f;
 
         var target = CurrentTarget;
-
         if (target != null) {
             target.HandleAttacked(this);
         }
@@ -324,11 +287,8 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
     // Movement
     private void ProcessMovement()
     {
-        if (movement == null)
-            return;
-
-        if (CurrentTarget == null)
-            return;
+        if (movement == null) return;
+        if (CurrentTarget == null) return;
 
         if (movement.IsReachedPosition(CurrentTarget.transform.position)) {
             movement.TryStopMoving();
@@ -340,30 +300,17 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
 
     private void ProcessRotation()
     {
-        if (movement == null)
-            return;
+        if (movement == null) return;
+        if (movement.IsMoving) return;
+        if (CurrentTarget == null) return;
 
-        if (movement.IsMoving)
-            return;
-
-        if (CurrentTarget == null)
-            return;
-
-        var direction =
-            CurrentTarget.transform.position - transform.position;
+        var direction = CurrentTarget.transform.position - transform.position;
 
         direction.y = 0f;
-
-        if (direction.sqrMagnitude < 0.001f)
-            return;
+        if (direction.sqrMagnitude < 0.001f) return;
 
         var rotation = Quaternion.LookRotation(direction);
-
-        transform.rotation = Quaternion.Lerp(
-            transform.rotation,
-            rotation,
-            movement.RotationSpeed * Time.deltaTime
-        );
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, movement.RotationSpeed * Time.deltaTime);
     }
 
     private void UpdateIsAttacking()
@@ -400,6 +347,8 @@ public class AttackComponent : MonoBehaviour, ILevelBonusable
 
         var attackersCopy = new List<AttackComponent>(CurrentAttackers);
         foreach (var attacker in attackersCopy) {
+            if (attacker == null) continue;
+
             attacker.HandleTargetUnavailableStarted();
         }
 

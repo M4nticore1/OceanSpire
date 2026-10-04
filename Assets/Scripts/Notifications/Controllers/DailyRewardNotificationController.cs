@@ -37,9 +37,9 @@ public class DailyRewardNotificationController : NotificationController
 
     private DateTimeOffset GetRewardResetDate()
     {
-        long realResetTime = dailyRewardManager.NextResetTime;
-        DateTimeOffset resetTimeDay = DateTimeOffset.FromUnixTimeSeconds(realResetTime);
-        DateTimeOffset notificationResetDate = resetTimeDay.Date;
+        var realResetTime = dailyRewardManager.NextResetTime;
+        var resetTimeDay = DateTimeOffset.FromUnixTimeSeconds(realResetTime);
+        var notificationResetDate = resetTimeDay.Date;
 
         return notificationResetDate;
     }
