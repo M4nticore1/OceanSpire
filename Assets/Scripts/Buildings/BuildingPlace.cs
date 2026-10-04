@@ -97,14 +97,14 @@ public class BuildingPlace : MonoBehaviour, IClickable
     public void Click()
     {
         var buildingPrefab = ConstructionManager.Instance.BuildingToPlace;
-        if (!buildingPrefab) {
-            Debug.Log("BuildingToPlace is not valid");
+        if (buildingPrefab == null) {
+            Debug.Log("BuildingToPlace is not valid!");
             return;
         }
 
         var towerBuildingPrefab = buildingPrefab as TowerBuilding;
-        if (!towerBuildingPrefab) {
-            Debug.Log("towerBuildingPrefab is not valid");
+        if (towerBuildingPrefab == null) {
+            Debug.Log("TowerBuildingPrefab is not valid!");
             return;
         }
 
@@ -126,6 +126,8 @@ public class BuildingPlace : MonoBehaviour, IClickable
         };
 
         var spawnedBuilding = BuildingFactory.CreateBuilding(towerBuildingPrefab, transform, buildingData);
+        if (spawnedBuilding == null) return;
+
         SetPlacedBuilding(spawnedBuilding);
 
         OnClicked?.Invoke();
@@ -183,7 +185,12 @@ public class BuildingPlace : MonoBehaviour, IClickable
         if (verticalIndex >= buildingsManager.BuiltFloors.Count) return null;
         if (verticalIndex < 0) return null;
 
-        var place = buildingsManager.BuiltFloors[verticalIndex].RoomBuildingPlaces[sideIndex];
+        var floor = buildingsManager.BuiltFloors[verticalIndex];
+        if (floor == null) return null;
+
+        var place = floor.RoomBuildingPlaces[sideIndex];
+        if (place == null) return null;
+
         return place;
     }
 
@@ -199,7 +206,9 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void HandleBuildingInited(Building building)
     {
-        TowerBuilding towerBuilding = building as TowerBuilding;
+        if (building == null) return;
+
+        var towerBuilding = building as TowerBuilding;
         if (towerBuilding && building.GetComponent<FloorFrameModule>() && FloorIndex == towerBuilding.FloorIndex - 1) {
             UpdateNeighborPlaces();
         }
@@ -255,11 +264,11 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void HideBuildingPlace()
     {
-        if (buildingZone) {
+        if (buildingZone != null) {
             buildingZone.SetActive(false);
         }
 
-        if (boxCollider) {
+        if (boxCollider != null) {
             boxCollider.enabled = false;
         }
     }

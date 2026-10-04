@@ -43,6 +43,6 @@ public class TimeWorldSaveController : WorldSaveController
         if (currentData == null)
             return;
 
-        WorldSaveSystem.SaveWorldThumb(currentData.WorldName);
+        WorldSaveSystem.SaveWorldThumb(this, currentData.WorldName);
     }
 }

@@ -9,6 +9,11 @@ public static class BuildingFactory
             return null;
         }
 
+        if (data == null) {
+            Debug.LogError("TowerBuildingData is not valid!");
+            return null;
+        }
+
         var buildings = Object.Instantiate(prefab, transform.position, transform.rotation);
         buildings.Init(data);
 

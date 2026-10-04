@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ public static class WorldSaveSystem
     public static event Action<WorldData> OnWorldSaveDeleted;
     public static event Action<WorldData> OnWorldSaveRenamed;
 
-    public static async void SaveWorld(WorldData worldData)
+    public static void SaveWorld(WorldData worldData)
     {
         if (worldData == null) {
             Debug.Log($"[{nameof(WorldSaveSystem)}] WorldData is not valid!");
@@ -26,9 +27,9 @@ public static class WorldSaveSystem
             Directory.CreateDirectory(folderPathName);
 
             var filePath = GetSaveFilePathByName(worldName);
-            var json = await Task.Run(() => JsonConvert.SerializeObject(worldData, Formatting.None));
+            var json = JsonConvert.SerializeObject(worldData, Formatting.None);
 
-            await File.WriteAllTextAsync(filePath, json);
+            File.WriteAllTextAsync(filePath, json);
 
             OnWorldSaveCreated?.Invoke(worldData);
         }
@@ -150,37 +151,14 @@ public static class WorldSaveSystem
         }
     }
 
-    public static async void SaveWorldThumb(string worldName)
+    public static void SaveWorldThumb(MonoBehaviour runner, string worldName)
     {
-        Camera camera = Camera.main;
-        if (camera == null) return;
+        if (string.IsNullOrWhiteSpace(worldName)) {
+            Debug.LogError($"[{nameof(WorldSaveSystem)}] World name is invalid for thumbnail!");
+            return;
+        }
 
-        int resolution = 256;
-        float originalFov = camera.fieldOfView;
-        camera.fieldOfView = 40;
-
-        RenderTexture rt = new RenderTexture(resolution, resolution, 24);
-        camera.targetTexture = rt;
-
-        Texture2D tex = new Texture2D(resolution, resolution, TextureFormat.RGB24, false);
-        camera.Render();
-
-        RenderTexture.active = rt;
-        tex.ReadPixels(new Rect(0, 0, resolution, resolution), 0, 0);
-        tex.Apply();
-
-        camera.targetTexture = null;
-        RenderTexture.active = null;
-        UnityEngine.Object.Destroy(rt);
-
-        camera.fieldOfView = originalFov;
-
-        string thumbPath = GetSaveThumbPathByName(worldName);
-
-        byte[] bytes = tex.EncodeToPNG();
-        UnityEngine.Object.Destroy(tex);
-
-        await File.WriteAllBytesAsync(thumbPath, bytes);
+        runner.StartCoroutine(SaveThumbRoutine(worldName));
     }
 
     public static WorldData GetWorldDataByName(string worldName)
@@ -231,6 +209,43 @@ public static class WorldSaveSystem
         }
 
         return tex;
+    }
+
+    private static IEnumerator SaveThumbRoutine(string worldName)
+    {
+        yield return new WaitForEndOfFrame();
+
+        Camera camera = Camera.main;
+        if (camera == null) {
+            Debug.LogWarning($"[{nameof(WorldSaveSystem)}] Main Camera not found for thumbnail!");
+            yield break;
+        }
+
+        int resolution = 256;
+        float originalFov = camera.fieldOfView;
+        camera.fieldOfView = 40;
+
+        RenderTexture rt = new RenderTexture(resolution, resolution, 24);
+        camera.targetTexture = rt;
+
+        Texture2D tex = new Texture2D(resolution, resolution, TextureFormat.RGB24, false);
+        camera.Render();
+
+        RenderTexture.active = rt;
+        tex.ReadPixels(new Rect(0, 0, resolution, resolution), 0, 0);
+        tex.Apply();
+
+        camera.targetTexture = null;
+        RenderTexture.active = null;
+        UnityEngine.Object.Destroy(rt);
+
+        camera.fieldOfView = originalFov;
+
+        string thumbPath = GetSaveThumbPathByName(worldName);
+        byte[] bytes = tex.EncodeToPNG();
+        UnityEngine.Object.Destroy(tex);
+
+        _ = File.WriteAllBytesAsync(thumbPath, bytes);
     }
 
     private static WorldData GetSaveDataByPath(string path)
