@@ -36,7 +36,7 @@ public class BoatsManager : MonoBehaviour
         for (int i = boats.Count - 1; i >= 0; i--) {
             var boat = boats[i];
             if (boat == null) {
-                boats.RemoveAt(i);
+                RemoveFromAllLists(boats[i]);
                 continue;
             }
 
@@ -115,5 +115,14 @@ public class BoatsManager : MonoBehaviour
         if (boats.Contains(boat)) {
             boats.Remove(boat);
         }
+    }
+
+    private void RemoveFromAllLists(Boat boat)
+    {
+        boats.Remove(boat);
+        citizenBoats.Remove(boat);
+        wandererBoats.Remove(boat);
+        raiderBoats.Remove(boat);
+        evictBoats.Remove(boat);
     }
 }

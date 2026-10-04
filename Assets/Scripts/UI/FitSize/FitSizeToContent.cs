@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public abstract class FitSizeToContent : MonoBehaviour
 {
-    [SerializeField] private RectTransform rect;
-    public RectTransform RectTransform => rect != null ? rect : GetComponent<RectTransform>();
+    private RectTransform rectTransform;
+    public RectTransform RectTransform => rectTransform != null ? rectTransform : GetComponent<RectTransform>();
 
     [SerializeField] private bool fitHorizontal = true;
     [SerializeField] private bool fitVertical = true;
@@ -35,9 +35,7 @@ public abstract class FitSizeToContent : MonoBehaviour
 
     protected virtual void Awake()
     {
-        if (rect == null) {
-            rect = GetComponent<RectTransform>();
-        }
+        rectTransform = GetComponent<RectTransform>();
     }
 
     protected virtual void OnEnable()
@@ -102,7 +100,7 @@ public abstract class FitSizeToContent : MonoBehaviour
 
     public void UpdateSize()
     {
-        if (rect == null) {
+        if (RectTransform == null) {
             Debug.LogError($"[{nameof(FitSizeToContent)}] Rect is not valid at {this}!");
             return;
         }
@@ -110,11 +108,11 @@ public abstract class FitSizeToContent : MonoBehaviour
         var size = GetSize();
 
         if (fitHorizontal) {
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+            RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
         }
 
         if (fitVertical) {
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+            RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
         }
     }
 

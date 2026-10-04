@@ -141,11 +141,13 @@ public class Boat : MonoBehaviour, IClickable, ILevelBonusable, IInformationable
 
     public void Tick()
     {
-        boatShake.Tick();
+        if (boatShake != null) {
+            boatShake.Tick();
+        }
 
-        if (CurrentState == null) return;
-
-        CurrentState.Tick();
+        if (CurrentState != null) {
+            CurrentState.Tick();
+        }
     }
 
     public void Init(BoatData boatData)
