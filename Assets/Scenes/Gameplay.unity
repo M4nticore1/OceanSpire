@@ -23748,8 +23748,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cab8b74954853c24480473f9ce175af9, type: 2}
   minWeaponDamageThreshold: 1
   maxWeaponDamageThreshold: 0.1
-  minRaidCooldown: 1020
-  maxRaidCooldown: 1440
+  minRaidCooldown: 1200
+  maxRaidCooldown: 1800
   tryFindNextBuildingFrequency: 5
   <RaidCooldownTime>k__BackingField: 0
   <TimeSinceLastRaid>k__BackingField: 0

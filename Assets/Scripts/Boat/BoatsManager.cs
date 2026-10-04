@@ -34,6 +34,8 @@ public class BoatsManager : MonoBehaviour
     private void Update()
     {
         for (int i = boats.Count - 1; i >= 0; i--) {
+            if (i >= boats.Count) continue;
+
             var boat = boats[i];
             if (boat == null) {
                 RemoveFromAllLists(boats[i]);

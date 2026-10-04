@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3638770063534934010}
   - component: {fileID: 1462416677695201202}
   m_Layer: 5
-  m_Name: LossesBackground
+  m_Name: LossesPanelBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -317,8 +317,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1544804559019351207}
-  - {fileID: 3981690142978689298}
-  - {fileID: 3303488004139713103}
+  - {fileID: 4811670531986074530}
   - {fileID: 8631658341070103705}
   - {fileID: 3403943521661939555}
   m_Father: {fileID: 8022444507818656278}
@@ -366,7 +365,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: -200}
   m_Pivot: {x: 0.5, y: 0}
---- !u!1 &3859138783960347076
+--- !u!1 &4840847068919670552
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -374,65 +373,66 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3981690142978689298}
-  - component: {fileID: 1689374578801193857}
-  - component: {fileID: 3966946870653419779}
+  - component: {fileID: 4811670531986074530}
+  - component: {fileID: 9005996485130308105}
+  - component: {fileID: 4332789479964387489}
   m_Layer: 5
-  m_Name: LineImage
+  m_Name: LossesTextBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &3981690142978689298
+--- !u!224 &4811670531986074530
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3859138783960347076}
+  m_GameObject: {fileID: 4840847068919670552}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3303488004139713103}
   m_Father: {fileID: 1361430637917518394}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -100}
-  m_SizeDelta: {x: -100, y: 10}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &1689374578801193857
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 100}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!222 &9005996485130308105
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3859138783960347076}
+  m_GameObject: {fileID: 4840847068919670552}
   m_CullTransparentMesh: 1
---- !u!114 &3966946870653419779
+--- !u!114 &4332789479964387489
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3859138783960347076}
+  m_GameObject: {fileID: 4840847068919670552}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
+  m_Color: {r: 0.95, g: 0.7497934, b: 0.475, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -570,6 +570,7 @@ MonoBehaviour:
   resourceWidgetPrefab: {fileID: 5555003485712965333, guid: 05d8556b038f0de4a8ff0ff3890fe101, type: 3}
   raidManager: {fileID: 0}
   slidePanel: {fileID: 55599211340225704}
+  fitSize: {fileID: 6222174867203220739}
   noLossesText: {fileID: 8759625595358339862}
   layoutGroup: {fileID: 7051103166917226330}
   loseColor: {r: 1, g: 0.39999998, b: 0.39999998, a: 1}
@@ -807,7 +808,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1361430637917518394}
+  m_Father: {fileID: 4811670531986074530}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}

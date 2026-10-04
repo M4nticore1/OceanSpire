@@ -21,6 +21,8 @@ public class CombatManager : MonoBehaviour
     private void Update()
     {
         for (int i = combatComponents.Count - 1; i >= 0; i--) {
+            if (i >= combatComponents.Count) continue;
+
             var component = combatComponents[i];
             if (component == null) continue;
 

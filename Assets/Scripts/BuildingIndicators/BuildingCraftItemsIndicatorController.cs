@@ -24,6 +24,7 @@ public class BuildingCraftItemsIndicatorController : BuildingIndicatorController
         base.Subscribe();
 
         if (craftingModule != null) {
+            craftingModule.OnInited += HandleMouleInited;
             craftingModule.OnItemCraftStarted += HandleItemCraftStarted;
             craftingModule.OnCraftItemChanged += HandleCraftItemChanged;
         }
@@ -38,6 +39,7 @@ public class BuildingCraftItemsIndicatorController : BuildingIndicatorController
         base.Unsubscribe();
 
         if (craftingModule != null) {
+            craftingModule.OnInited -= HandleMouleInited;
             craftingModule.OnItemCraftStarted -= HandleItemCraftStarted;
             craftingModule.OnCraftItemChanged -= HandleCraftItemChanged;
         }
@@ -82,6 +84,11 @@ public class BuildingCraftItemsIndicatorController : BuildingIndicatorController
         if (texture == null) return baseTexture;
 
         return texture;
+    }
+
+    private void HandleMouleInited()
+    {
+        RunUpdateShownEndOfFrame();
     }
 
     private void HandleItemCraftStarted(CraftItemInstance craftItem)

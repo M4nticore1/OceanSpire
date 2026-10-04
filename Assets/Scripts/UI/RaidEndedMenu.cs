@@ -11,6 +11,7 @@ public class RaidEndedMenu : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private SlideAnimatedPanel slidePanel;
+    [SerializeField] private FitSizeToContent fitSize;
     [SerializeField] private TextMeshProUGUI noLossesText;
     [SerializeField] private LayoutGroup layoutGroup;
     [SerializeField] private Color loseColor;
@@ -18,22 +19,22 @@ public class RaidEndedMenu : MonoBehaviour
     [SerializeField] private float visibilityTime = 0f;
     private float currentVisibilityTime = 0f;
 
-    private bool isOpened = false;
+    private bool isShown => slidePanel.IsShown;
     private List<ItemWidget> spawnedResourceWidgets = new();
 
     private void OnEnable()
     {
-        raidManager.OnRaidEnded += OnRaidEnded;
+        raidManager.OnRaidEnded += HandleRaidEnded;
     }
 
     private void OnDisable()
     {
-        raidManager.OnRaidEnded -= OnRaidEnded;
+        raidManager.OnRaidEnded -= HandleRaidEnded;
     }
 
     private void Update()
     {
-        if (isOpened) {
+        if (isShown) {
             currentVisibilityTime += Time.deltaTime;
 
             if (currentVisibilityTime >= visibilityTime) {
@@ -42,29 +43,28 @@ public class RaidEndedMenu : MonoBehaviour
         }
     }
 
-    private void OnRaidEnded(RaidEndedResult result)
+    private void HandleRaidEnded(RaidEndedResult result)
     {
-        Open();
+        Hide();
         RemoveLosses();
-        CreateLosses(result.Losses);
+        UpdateLossesPanel(result.Losses);
+        fitSize.UpdateSize();
     }
 
-    private void Open()
+    private void Hide()
     {
-        isOpened = true;
         slidePanel.Show();
     }
 
     private void Close()
     {
-        isOpened = false;
         slidePanel.Hide();
         currentVisibilityTime = 0f;
     }
 
-    private void CreateLosses(List<ItemInstance> items)
+    private void UpdateLossesPanel(List<ItemInstance> items)
     {
-        if (items.Count == 0) {
+        if (items == null || items.Count == 0) {
             noLossesText.gameObject.SetActive(true);
         }
         else {
