@@ -16,6 +16,7 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
     private Building building;
 
     public bool IsShown => slidePanel.IsShown;
+    private RewardedAdsManager rewardedAdsManager => RewardedAdsManager.Instance;
 
     public event Action OnShown;
     public event Action OnHidden;
@@ -56,8 +57,6 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     public void Show()
     {
-        if (IsShown) return;
-
         slidePanel.Show();
         InputStateManager.Instance.AddInputBlockTarget(this);
 
@@ -88,8 +87,6 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
 
     private void HandleHidden()
     {
-        if (!IsShown) return;
-
         InputStateManager.Instance.RemoveBlockTarget(this);
 
         OnHidden?.Invoke();
@@ -102,8 +99,8 @@ public class CompleteConstructionMenu : MonoBehaviour, IOpenable
             Debug.LogError($"[{nameof(CompleteConstructionMenu)}] Complete reward is not valid!");
         }
 
-        RewardedAdsManager.Instance.SetReward(reward);
-        RewardedAdsManager.Instance.ShowAd();
+        rewardedAdsManager.SetReward(reward);
+        rewardedAdsManager.ShowAd();
     }
 
     private void HandleCloseMenuButtonClicked()
