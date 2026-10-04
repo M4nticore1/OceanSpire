@@ -35,6 +35,13 @@ public class CraftItemInstance
         return GetCraftTimeWithBonus() - CurrentCraftingTime;
     }
 
+    public bool IsUnderCrafting()
+    {
+        if (FinishTime == null) return false;
+
+        return CurrentCraftingTime < GetCraftTimeWithBonus();
+    }
+
     public bool IsCraftingFinished()
     {
         return CurrentCraftingTime >= GetCraftTimeWithBonus();

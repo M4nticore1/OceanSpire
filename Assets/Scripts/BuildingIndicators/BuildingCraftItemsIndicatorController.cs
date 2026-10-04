@@ -62,6 +62,7 @@ public class BuildingCraftItemsIndicatorController : BuildingIndicatorController
         var craftItem = craftingModule.SelectedCraftItem;
         if (craftItem == null) return false;
 
+        if (craftItem.IsUnderCrafting()) return false;
         if (craftItem.IsCraftingFinished()) return false;
 
         return !EnoughItems();
