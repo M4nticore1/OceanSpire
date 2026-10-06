@@ -21,21 +21,36 @@ public static class WorldSaveSystem
             return;
         }
 
-        try {
-            var worldName = worldData.WorldName;
-            var folderPathName = GetSaveFolderPathByName(worldName);
-            Directory.CreateDirectory(folderPathName);
-
-            var filePath = GetSaveFilePathByName(worldName);
-            var json = JsonConvert.SerializeObject(worldData, Formatting.None);
-
-            File.WriteAllTextAsync(filePath, json);
-
-            OnWorldSaveCreated?.Invoke(worldData);
+        var worldName = worldData.WorldName;
+        if (worldName == null) {
+            Debug.LogError("WorldName is not valid!");
+            worldData.WorldName = $"World_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}";
+            worldName = worldData.WorldName;
         }
-        catch (System.Exception ex) {
-            Debug.LogError($"[{nameof(WorldSaveSystem)}] Failed to save world '{worldData.WorldName}': {ex.Message}");
+
+        var folderPathName = GetSaveFolderPathByName(worldName);
+        if (folderPathName == null) {
+            Debug.LogError($"SaveFolderPath is not valid by name {worldName}!");
+            return;
         }
+
+        Directory.CreateDirectory(folderPathName);
+
+        var filePath = GetSaveFilePathByName(worldName);
+        if (filePath == null) {
+            Debug.LogError($"SaveFilePath is not valid by name {worldName}!");
+            return;
+        }
+
+        var json = JsonConvert.SerializeObject(worldData, Formatting.None);
+        if (json == null) {
+            Debug.LogError("SerializedObject is not valid!");
+            return;
+        }
+
+        File.WriteAllTextAsync(filePath, json);
+
+        OnWorldSaveCreated?.Invoke(worldData);
     }
 
     public static void DeleteSaveByWorldName(string worldName)
@@ -116,9 +131,7 @@ public static class WorldSaveSystem
                     newFileName = newWorldName + saveFileExtension;
                 }
                 else {
-                    newFileName = string.IsNullOrWhiteSpace(oldWorldName)
-                        ? newWorldName + extension
-                        : fileName.Replace(oldWorldName, newWorldName);
+                    newFileName = string.IsNullOrWhiteSpace(oldWorldName) ? newWorldName + extension : fileName.Replace(oldWorldName, newWorldName);
                 }
 
                 var newFilePath = Path.Combine(newFolderPath, newFileName);
@@ -215,20 +228,20 @@ public static class WorldSaveSystem
     {
         yield return new WaitForEndOfFrame();
 
-        Camera camera = Camera.main;
+        var camera = Camera.main;
         if (camera == null) {
             Debug.LogWarning($"[{nameof(WorldSaveSystem)}] Main Camera not found for thumbnail!");
             yield break;
         }
 
-        int resolution = 256;
-        float originalFov = camera.fieldOfView;
+        var resolution = 256;
+        var originalFov = camera.fieldOfView;
         camera.fieldOfView = 40;
 
-        RenderTexture rt = new RenderTexture(resolution, resolution, 24);
+        var rt = new RenderTexture(resolution, resolution, 24);
         camera.targetTexture = rt;
 
-        Texture2D tex = new Texture2D(resolution, resolution, TextureFormat.RGB24, false);
+        var tex = new Texture2D(resolution, resolution, TextureFormat.RGB24, false);
         camera.Render();
 
         RenderTexture.active = rt;
@@ -241,8 +254,8 @@ public static class WorldSaveSystem
 
         camera.fieldOfView = originalFov;
 
-        string thumbPath = GetSaveThumbPathByName(worldName);
-        byte[] bytes = tex.EncodeToPNG();
+        var thumbPath = GetSaveThumbPathByName(worldName);
+        var bytes = tex.EncodeToPNG();
         UnityEngine.Object.Destroy(tex);
 
         _ = File.WriteAllBytesAsync(thumbPath, bytes);
@@ -271,7 +284,9 @@ public static class WorldSaveSystem
         if (string.IsNullOrEmpty(worldName))
             return GetSavesFolderPath();
 
-        return Path.Combine(GetSavesFolderPath(), worldName);
+        var path = Path.Combine(Application.persistentDataPath, worldName);
+
+        return path;
     }
 
     private static string GetSaveFilePathByName(string worldName)
@@ -282,8 +297,13 @@ public static class WorldSaveSystem
     private static string GetSaveThumbPathByName(string worldName)
     {
         if (string.IsNullOrEmpty(worldName))
-            return GetSaveFolderPathByName(worldName + ".png");
+            return Path.Combine(GetSavesFolderPath(), ".png");
 
-        return Path.Combine(GetSaveFolderPathByName(worldName), worldName + ".png");
+        var path = Path.Combine(GetSaveFolderPathByName(worldName), worldName + ".png");
+        if (path == null) {
+            Debug.LogError($"SaveThumbPath is not valid by name {worldName}!");
+        }
+
+        return path;
     }
 }
