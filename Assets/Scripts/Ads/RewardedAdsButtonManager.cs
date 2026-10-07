@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RewardedAdsButtonManager : MonoBehaviour
 {
-    [SerializeField] private AdRewardDefinition[] rewardDefinitions;
+    [SerializeField] private RewardDefinition[] rewardDefinitions;
     //[SerializeField] private AppLovinMaxRewardedAdsSystem appLovinMaxAds;
     [SerializeField] private RewardedAdsButton rewardedAdsButton;
 
@@ -72,12 +72,12 @@ public class RewardedAdsButtonManager : MonoBehaviour
         currentReward = null;
     }
 
-    private AdRewardDefinition GetRandomAdReward()
+    private RewardDefinition GetRandomAdReward()
     {
         int length = rewardDefinitions.Length;
         int index = Random.Range(0, length);
 
-        AdRewardDefinition def = rewardDefinitions[index];
+        RewardDefinition def = rewardDefinitions[index];
 
         return def;
     }

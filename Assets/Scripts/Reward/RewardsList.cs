@@ -9,7 +9,7 @@ public class RewardsList : ScriptableObject
     {
         get
         {
-            if (!instance) {
+            if (instance == null) {
                 instance = Resources.Load<RewardsList>("Lists/RewardsList");
             }
 
@@ -17,11 +17,11 @@ public class RewardsList : ScriptableObject
         }
     }
 
-    [SerializeField] private AdRewardDefinition[] rewardDefinitions;
+    [SerializeField] private RewardDefinition[] rewardDefinitions;
 
-    private Dictionary<int, AdRewardDefinition> rewardDefinitionsDict;
+    private Dictionary<int, RewardDefinition> rewardDefinitionsDict;
 
-    private Dictionary<int, AdRewardDefinition> RewardDefinitionsDict
+    private Dictionary<int, RewardDefinition> RewardDefinitionsDict
     {
         get
         {
@@ -29,6 +29,8 @@ public class RewardsList : ScriptableObject
                 rewardDefinitionsDict = new();
 
                 foreach (var def in rewardDefinitions) {
+                    if (def == null) continue;
+
                     rewardDefinitionsDict.Add((int)def.RewardId, def);
                 }
             }
@@ -37,7 +39,7 @@ public class RewardsList : ScriptableObject
         }
     }
 
-    public AdRewardDefinition GetRewardDefinition(int id)
+    public RewardDefinition GetRewardDefinition(int id)
     {
         RewardDefinitionsDict.TryGetValue(id, out var definition);
         return definition;

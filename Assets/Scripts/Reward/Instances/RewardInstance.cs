@@ -5,7 +5,7 @@ using YandexMobileAds.Base;
 
 public class RewardInstance : ILocalizable
 {
-    public AdRewardDefinition Definition { get; private set; }
+    public RewardDefinition Definition { get; private set; }
     public bool IsCollected { get; private set; } = false;
     public int Amount { get; private set; } = 0;
 
@@ -19,7 +19,7 @@ public class RewardInstance : ILocalizable
 
     }
 
-    public RewardInstance(AdRewardDefinition definition, int amount)
+    public RewardInstance(RewardDefinition definition, int amount)
     {
         Definition = definition;
         Amount = amount;

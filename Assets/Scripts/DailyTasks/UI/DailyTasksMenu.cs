@@ -83,8 +83,8 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
     private void CreateTaskWidgets()
     {
-        for (int i = 0; i < DailyTasksManager.Instance.CurrentTasks.Count; i++) {
-            CreateTaskWidget(DailyTasksManager.Instance.CurrentTasks[i]);
+        for (int i = 0; i < dailyTasksManager.CurrentTasks.Count; i++) {
+            CreateTaskWidget(dailyTasksManager.CurrentTasks[i]);
         }
 
         areWidgetsSpawned = true;
@@ -92,7 +92,12 @@ public class DailyTasksMenu : MonoBehaviour, IOpenable
 
     private void CreateTaskWidget(DailyTaskInstance task)
     {
-        DailyTaskWidget widget = DailyTaskWidgetFactory.CreateWidget(dailyTaskWidgetPrefab, tasksLayoutGroup.transform, task);
+        if (task == null) {
+            Debug.LogError("Task is not valid!");
+            return;
+        }
+
+        var widget = DailyTaskWidgetFactory.CreateWidget(dailyTaskWidgetPrefab, tasksLayoutGroup.transform, task);
         widgets.Add(widget);
     }
 

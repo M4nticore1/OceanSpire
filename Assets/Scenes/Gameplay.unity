@@ -1098,6 +1098,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 259eb26487b2cf04fa104196bf934d7e, type: 2}
   maxRewardsCount: 4
   updateRewardTimeOffset: 3
+  <MainRewardCollected>k__BackingField: 0
+  <ExtraRewardCollected>k__BackingField: 0
+  <NextResetTime>k__BackingField: 0
+  <IsRewardViewed>k__BackingField: 0
 --- !u!1001 &110245413
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1797,6 +1801,51 @@ MonoBehaviour:
   citizenIds: 0000000001000000
   startResidentsCount: 4
   spawnArea: {fileID: 40920800}
+--- !u!1 &146446239
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 146446240}
+  - component: {fileID: 146446241}
+  m_Layer: 0
+  m_Name: AcceptResidentTaskController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &146446240
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146446239}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &146446241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146446239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c39d463499f0d484dae0da433afe38ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AcceptResidentDailyTaskController
+  dailyTaskDefinition: {fileID: 11400000, guid: 3625f4c9fcdeada4f8df00f3d97627c3, type: 2}
 --- !u!1 &146585201
 GameObject:
   m_ObjectHideFlags: 0
@@ -6420,6 +6469,10 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 40
       objectReference: {fileID: 0}
+    - target: {fileID: 5780835651287432089, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00024414062
+      objectReference: {fileID: 0}
     - target: {fileID: 5802081599400832544, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
       propertyPath: speedUpConstructionMenu
       value: 
@@ -10862,6 +10915,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5540969039051565317, guid: bcf68310d5e89f24e9db513d064a0b3d, type: 3}
   m_PrefabInstance: {fileID: 741545923}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &742227034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 742227035}
+  - component: {fileID: 742227036}
+  m_Layer: 0
+  m_Name: FlyingLootTaskController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &742227035
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742227034}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &742227036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742227034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2bf65cbe52ff864db3372d0b79a6e9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FlyingLootDailyTaskController
+  dailyTaskDefinition: {fileID: 11400000, guid: cd7e5968c12bea3499f3017ad3e069b8, type: 2}
 --- !u!1 &744642252
 GameObject:
   m_ObjectHideFlags: 0
@@ -11957,7 +12055,7 @@ GameObject:
   - component: {fileID: 802490722}
   - component: {fileID: 802490723}
   m_Layer: 0
-  m_Name: ExtractionStoneTaskCondition
+  m_Name: ExtractionStoneTaskController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11990,10 +12088,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c162bc39ecd34f4b9eeae4765d27b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtractionDailyTaskCondition
-  definitions:
-  - {fileID: 11400000, guid: 0b10423d6738f3f4f9d9b98a304812a9, type: 2}
-  - {fileID: 11400000, guid: 94e3da40aafbbaa4fa5875a045a655b0, type: 2}
-  - {fileID: 11400000, guid: f407b20753b56a54ca4981b439ef06c9, type: 2}
+  dailyTaskDefinition: {fileID: 11400000, guid: 419329aa02ee69848871287d2afa9638, type: 2}
   cityStorage: {fileID: 1388613268}
   cityStorageLoader: {fileID: 128358828}
   conditionItem: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
@@ -12429,6 +12524,10 @@ Transform:
   - {fileID: 1341883949}
   - {fileID: 1549214499}
   - {fileID: 2091013160}
+  - {fileID: 742227035}
+  - {fileID: 1813125668}
+  - {fileID: 146446240}
+  - {fileID: 1311229281}
   - {fileID: 344448268}
   m_Father: {fileID: 1238355532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13076,7 +13175,7 @@ GameObject:
   - component: {fileID: 900722255}
   - component: {fileID: 900722256}
   m_Layer: 0
-  m_Name: ExtractionScrapTaskCondition
+  m_Name: ExtractionScrapTaskController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13109,10 +13208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c162bc39ecd34f4b9eeae4765d27b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtractionDailyTaskCondition
-  definitions:
-  - {fileID: 11400000, guid: 183917caa6495a541bc1d3deb115b937, type: 2}
-  - {fileID: 11400000, guid: 33412ba0b314fb643badeb58a7482153, type: 2}
-  - {fileID: 11400000, guid: bc2e65a4608fa134b9c442d3b04a41d0, type: 2}
+  dailyTaskDefinition: {fileID: 11400000, guid: 5d9dfd9ace315a6459d782d2d947d5ef, type: 2}
   cityStorage: {fileID: 1388613268}
   cityStorageLoader: {fileID: 128358828}
   conditionItem: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
@@ -16834,6 +16930,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57dee81f8d2681443b88fee9a2b56bb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConstructionEnergyMenu
+--- !u!1 &1311229280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1311229281}
+  - component: {fileID: 1311229282}
+  m_Layer: 0
+  m_Name: LevelUpResidentTaskController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1311229281
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1311229280}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1311229282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1311229280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 240a365ccee53b94f9241ce9d0106ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResidentLevelUpDailyTaskController
+  dailyTaskDefinition: {fileID: 11400000, guid: 62b51065794c09c4f9aa32ccbc637119, type: 2}
 --- !u!1001 &1311537096
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17307,7 +17448,7 @@ GameObject:
   - component: {fileID: 1341883949}
   - component: {fileID: 1341883950}
   m_Layer: 0
-  m_Name: ExtractionPlasticTaskCondition
+  m_Name: ExtractionPlasticTaskController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17340,10 +17481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c162bc39ecd34f4b9eeae4765d27b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtractionDailyTaskCondition
-  definitions:
-  - {fileID: 11400000, guid: ecbf4d57efd3c6441ad74d11fc0f558d, type: 2}
-  - {fileID: 11400000, guid: 18fe897761bf1814f8147cc32a264aad, type: 2}
-  - {fileID: 11400000, guid: 416860434875b6546b4fe529bc712bf3, type: 2}
+  dailyTaskDefinition: {fileID: 11400000, guid: c17d845bde46acb44b844ddfb4a52f85, type: 2}
   cityStorage: {fileID: 1388613268}
   cityStorageLoader: {fileID: 128358828}
   conditionItem: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
@@ -17608,35 +17746,21 @@ MonoBehaviour:
   dailyTasksList: {fileID: 11400000, guid: c7d0e5080bd51034dbc86cb853ac9291, type: 2}
   taskDefinitions:
   - taskDefinitions:
-    - {fileID: 11400000, guid: e09bb30ed6403234abebb6ff8599f06f, type: 2}
-    - {fileID: 11400000, guid: c7de05605343e8d41a3c2afc96b10ab7, type: 2}
-    - {fileID: 11400000, guid: 77e0f548a40379f49a666f0bec1891ca, type: 2}
-    - {fileID: 11400000, guid: 5d2b713934d1c044ba7cbc003fcb79ed, type: 2}
-    - {fileID: 11400000, guid: 5d2b713934d1c044ba7cbc003fcb79ed, type: 2}
-    - {fileID: 11400000, guid: 5d2b713934d1c044ba7cbc003fcb79ed, type: 2}
-    - {fileID: 11400000, guid: 7a1f007b0214d9c42aeb7c95286fe0bc, type: 2}
-    - {fileID: 11400000, guid: 0f0d42987c295fe498d610bc0d6d0e10, type: 2}
-    - {fileID: 11400000, guid: 264ad60f8e6d65941a720626b693604f, type: 2}
-    - {fileID: 11400000, guid: 0b10423d6738f3f4f9d9b98a304812a9, type: 2}
-    - {fileID: 11400000, guid: 94e3da40aafbbaa4fa5875a045a655b0, type: 2}
-    - {fileID: 11400000, guid: f407b20753b56a54ca4981b439ef06c9, type: 2}
-    - {fileID: 11400000, guid: 183917caa6495a541bc1d3deb115b937, type: 2}
-    - {fileID: 11400000, guid: 33412ba0b314fb643badeb58a7482153, type: 2}
-    - {fileID: 11400000, guid: bc2e65a4608fa134b9c442d3b04a41d0, type: 2}
-    - {fileID: 11400000, guid: ecbf4d57efd3c6441ad74d11fc0f558d, type: 2}
-    - {fileID: 11400000, guid: 18fe897761bf1814f8147cc32a264aad, type: 2}
-    - {fileID: 11400000, guid: 416860434875b6546b4fe529bc712bf3, type: 2}
+    - {fileID: 11400000, guid: 1aa45903c4f12bf42b6e2b780a86eb5a, type: 2}
+    - {fileID: 11400000, guid: 9c2a74b4c668c504a91964f8ec282ebf, type: 2}
+    - {fileID: 11400000, guid: 419329aa02ee69848871287d2afa9638, type: 2}
+    - {fileID: 11400000, guid: 5d9dfd9ace315a6459d782d2d947d5ef, type: 2}
+    - {fileID: 11400000, guid: c17d845bde46acb44b844ddfb4a52f85, type: 2}
+    - {fileID: 11400000, guid: cd7e5968c12bea3499f3017ad3e069b8, type: 2}
   - taskDefinitions:
-    - {fileID: 11400000, guid: 20501fb73d7f8d54d9cab25e8d170612, type: 2}
-    - {fileID: 11400000, guid: 7957095502012ec41803fc2e0b4b6708, type: 2}
-    - {fileID: 11400000, guid: 4d9f36e416b714d43a743529c4416e7d, type: 2}
-    - {fileID: 11400000, guid: 946b55758a9c49848a7add8ffa7e1892, type: 2}
+    - {fileID: 11400000, guid: 24fe4d40ac91f35499bbe1dec0d3e559, type: 2}
+    - {fileID: 11400000, guid: c02b1620329692b45841f82858f895f9, type: 2}
+    - {fileID: 11400000, guid: 3625f4c9fcdeada4f8df00f3d97627c3, type: 2}
+    - {fileID: 11400000, guid: 62b51065794c09c4f9aa32ccbc637119, type: 2}
   - taskDefinitions:
-    - {fileID: 11400000, guid: 9e90af97d12ac194fbaffe9078224b2f, type: 2}
-    - {fileID: 11400000, guid: b5f1e97f32a5e194aacfccfed63613bd, type: 2}
-    - {fileID: 11400000, guid: 7484903f42458c243b60bf0f6a0f88e7, type: 2}
-    - {fileID: 11400000, guid: cff517ac5fdbdf4478364307f5e6b21c, type: 2}
+    - {fileID: 11400000, guid: 574a9db94039f024bb9cdd862effc140, type: 2}
   updateTasksTimeOffset: 3
+  currentTasks: []
 --- !u!4 &1370344020 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7634529172933479113, guid: b8365daa9ee65854fbe6243a77f58e67, type: 3}
@@ -19266,7 +19390,7 @@ GameObject:
   - component: {fileID: 1549214499}
   - component: {fileID: 1549214500}
   m_Layer: 0
-  m_Name: BuildingTaskCondition
+  m_Name: BuildTaskController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19299,11 +19423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 706b5488d07232c4d855f6f84ae8d037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingDailyTaskCondition
-  definitions:
-  - {fileID: 11400000, guid: 20501fb73d7f8d54d9cab25e8d170612, type: 2}
-  - {fileID: 11400000, guid: 7957095502012ec41803fc2e0b4b6708, type: 2}
-  - {fileID: 11400000, guid: 4d9f36e416b714d43a743529c4416e7d, type: 2}
-  - {fileID: 11400000, guid: 946b55758a9c49848a7add8ffa7e1892, type: 2}
+  dailyTaskDefinition: {fileID: 11400000, guid: 24fe4d40ac91f35499bbe1dec0d3e559, type: 2}
 --- !u!1 &1550129136
 GameObject:
   m_ObjectHideFlags: 0
@@ -21336,6 +21456,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2af2e65253d27349b98a064b04e4dc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatDockPoint
+--- !u!1 &1813125667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1813125668}
+  - component: {fileID: 1813125669}
+  m_Layer: 0
+  m_Name: UpgradeBuildingTaskController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1813125668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813125667}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1813125669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813125667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7692aefc600684447ae25a02766a2b0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeBuildingDailyTaskController
+  dailyTaskDefinition: {fileID: 11400000, guid: c02b1620329692b45841f82858f895f9, type: 2}
 --- !u!1 &1818842408
 GameObject:
   m_ObjectHideFlags: 0
@@ -21505,7 +21670,7 @@ GameObject:
   - component: {fileID: 1847136807}
   - component: {fileID: 1847136808}
   m_Layer: 0
-  m_Name: SessionTimeTaskCondition
+  m_Name: SessionTimeTaskController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21538,11 +21703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b472f4d7b63a35f46bcbf113238f6dce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimeDailyTaskCondition
-  definitions:
-  - {fileID: 11400000, guid: e09bb30ed6403234abebb6ff8599f06f, type: 2}
-  - {fileID: 11400000, guid: c7de05605343e8d41a3c2afc96b10ab7, type: 2}
-  - {fileID: 11400000, guid: 77e0f548a40379f49a666f0bec1891ca, type: 2}
-  - {fileID: 11400000, guid: 5d2b713934d1c044ba7cbc003fcb79ed, type: 2}
+  dailyTaskDefinition: {fileID: 11400000, guid: 1aa45903c4f12bf42b6e2b780a86eb5a, type: 2}
 --- !u!1001 &1854745230
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22390,7 +22551,7 @@ GameObject:
   - component: {fileID: 1926240061}
   - component: {fileID: 1926240062}
   m_Layer: 0
-  m_Name: ExtractionWoodTaskCondition
+  m_Name: ExtractionWoodTaskController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22423,10 +22584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c162bc39ecd34f4b9eeae4765d27b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtractionDailyTaskCondition
-  definitions:
-  - {fileID: 11400000, guid: 7a1f007b0214d9c42aeb7c95286fe0bc, type: 2}
-  - {fileID: 11400000, guid: 0f0d42987c295fe498d610bc0d6d0e10, type: 2}
-  - {fileID: 11400000, guid: 264ad60f8e6d65941a720626b693604f, type: 2}
+  dailyTaskDefinition: {fileID: 11400000, guid: 9c2a74b4c668c504a91964f8ec282ebf, type: 2}
   cityStorage: {fileID: 1388613268}
   cityStorageLoader: {fileID: 128358828}
   conditionItem: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
@@ -24344,7 +24502,7 @@ GameObject:
   - component: {fileID: 2091013160}
   - component: {fileID: 2091013161}
   m_Layer: 0
-  m_Name: RaidTaskCondition
+  m_Name: RaidTaskController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24377,11 +24535,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 061e3552e9b431f45830a6132e2a5b81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaidDailyTaskCondition
-  definitions:
-  - {fileID: 11400000, guid: 9e90af97d12ac194fbaffe9078224b2f, type: 2}
-  - {fileID: 11400000, guid: b5f1e97f32a5e194aacfccfed63613bd, type: 2}
-  - {fileID: 11400000, guid: 7484903f42458c243b60bf0f6a0f88e7, type: 2}
-  - {fileID: 11400000, guid: cff517ac5fdbdf4478364307f5e6b21c, type: 2}
+  dailyTaskDefinition: {fileID: 11400000, guid: 574a9db94039f024bb9cdd862effc140, type: 2}
 --- !u!1 &2091295055
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,7 +20,8 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     public bool IsAdUpdateUsed { get; private set; } = false;
     public bool IsDailyTasksViewed { get; private set; } = false;
 
-    private List<DailyTaskInstance> currentTasks = new();
+    [Header("Check")]
+    [SerializeField] private List<DailyTaskInstance> currentTasks = new();
     public IReadOnlyList<DailyTaskInstance> CurrentTasks => currentTasks.AsReadOnly();
 
     public event Action OnTasksCreated;
@@ -67,7 +68,7 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     public void Init(DailyTasksData data)
     {
-        if (data == null || data.Tasks == null || data.Tasks.Length < taskDefinitions.Length) {
+        if (data == null || data.Tasks == null) {
             Debug.LogError($"[{nameof(DailyTasksManager)}] DailyTasksData or Tasks array is null! Creating defaults.");
             Init();
             return;
@@ -138,10 +139,22 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         };
     }
 
-    private void CreateTasks(DailyTaskInstanceData[] tasksData)
+    private void CreateTasks(DailyTaskInstanceData[] tasks)
     {
-        foreach (var data in tasksData) {
-            CreateTask(data);
+        if (tasks == null) {
+            Debug.LogError("Tasks is not valid!");
+            return;
+        }
+        if (tasks.Length == 0) {
+            Debug.LogError("Tasks Length is 0!");
+            return;
+        }
+
+        for (int i = 0; i < tasks.Length; i++) {
+            var task = tasks[i];
+            if (task == null) continue;
+
+            CreateTask(task);
         }
 
         OnTasksCreated?.Invoke();
@@ -150,14 +163,17 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
     private void CreateTask(DailyTaskInstanceData data)
     {
         if (data == null) {
-            Debug.LogError($"[{nameof(DailyTasksManager)}] DailyTaskData is not valid");
+            Debug.LogError($"[{nameof(DailyTasksManager)}] Daily Task Data is not valid");
             return;
         }
 
         var def = dailyTasksList.GetTaskDefinition(data.Id);
-        int defIndex = Array.IndexOf(dailyTasksList.DailyTaskDefinitions, def);
+        if (def == null) return;
 
-        var task = new DailyTaskInstance(def, defIndex, data.Progress, data.Completed);
+        var reward = def.GetRandomReward();
+        if (reward == null) return;
+
+        var task = new DailyTaskInstance(def, reward, data.Progress, data.Completed);
         currentTasks.Add(task);
     }
 

@@ -166,7 +166,7 @@ public static class WorldSaveSystem
 
     public static void SaveWorldThumb(MonoBehaviour runner, string worldName)
     {
-        if (string.IsNullOrWhiteSpace(worldName)) {
+        if (worldName == null) {
             Debug.LogError($"[{nameof(WorldSaveSystem)}] World name is invalid for thumbnail!");
             return;
         }

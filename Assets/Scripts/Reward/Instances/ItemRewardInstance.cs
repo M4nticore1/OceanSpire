@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class ItemRewardInstance : RewardInstance
 {
-    public ItemAdRewardDefinition ItemRewardDefinition { get; private set; }
+    public ItemRewardDefinition ItemRewardDefinition { get; private set; }
     private CityStorage cityStorage => CityStorage.Instance;
 
-    public ItemRewardInstance(ItemAdRewardDefinition data, int amount) : base(data, amount)
+    public ItemRewardInstance(ItemRewardDefinition data, int amount) : base(data, amount)
     {
         ItemRewardDefinition = data;
     }

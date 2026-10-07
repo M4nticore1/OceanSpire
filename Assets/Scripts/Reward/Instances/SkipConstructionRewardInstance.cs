@@ -5,7 +5,7 @@ public class SkipConstructionRewardInstance : RewardInstance
 {
     private ConstructionComponent constructionComponent;
 
-    public SkipConstructionRewardInstance(AdRewardDefinition definition, ConstructionComponent constructionComponent) : base(definition, 0)
+    public SkipConstructionRewardInstance(RewardDefinition definition, ConstructionComponent constructionComponent) : base(definition, 0)
     {
         this.constructionComponent = constructionComponent;
     }

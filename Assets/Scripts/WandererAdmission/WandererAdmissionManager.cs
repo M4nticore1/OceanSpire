@@ -3,12 +3,19 @@ using UnityEngine;
 
 public class WandererAdmissionManager : MonoBehaviour
 {
+    public static WandererAdmissionManager Instance { get; private set; }
+
     [SerializeField] private CreaturesManager creaturesManager;
     [SerializeField] private CitizensManager citizensManager;
     [SerializeField] private CityStorage cityStorage;
 
-    public event Action<Human> OnWandererAccepted;
-    public event Action<Human> OnWandererRejected;
+    public event Action<Wanderer, Citizen> OnWandererAccepted;
+    public event Action<Wanderer> OnWandererRejected;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void AcceptWanderer(Wanderer wanderer)
     {
@@ -72,9 +79,9 @@ public class WandererAdmissionManager : MonoBehaviour
         };
 
         GameObject.Destroy(ridingBoat.gameObject);
-        var citizen = CreatureFactory.CreateHuman(citizenPrefab, data);
+        var citizen = CreatureFactory.CreateHuman(citizenPrefab, data) as Citizen;
 
-        OnWandererAccepted?.Invoke(citizen);
+        OnWandererAccepted?.Invoke(wanderer, citizen);
     }
 
     public void RejectWanderer(Wanderer wanderer)

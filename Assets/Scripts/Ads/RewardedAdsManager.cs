@@ -33,7 +33,7 @@ public class RewardedAdsManager : MonoBehaviour
         adsSystem.onAdCompleted -= OnAdCompleted;
     }
 
-    public void SetReward(AdRewardDefinition definition)
+    public void SetReward(RewardDefinition definition)
     {
         if (!definition) {
             Debug.LogError($"[{nameof(RewardedAdsManager)}] Reward Definition is not valid!");

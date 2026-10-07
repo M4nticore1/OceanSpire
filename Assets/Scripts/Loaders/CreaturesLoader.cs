@@ -4,12 +4,21 @@ using UnityEngine;
 
 public class CreaturesLoader : WorldLoader
 {
+    public static CreaturesLoader Instance { get; private set; }
+
     [SerializeField] private CreaturesList creaturesList;
     [SerializeField] private HumanNamesList humanNamesList;
     [SerializeField] private CreatureIdEnum[] citizenIds;
 
     [SerializeField] private int startResidentsCount = 2;
     [SerializeField] private SpawnArea spawnArea;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        Instance = this;
+    }
 
     protected override void Load(WorldData data)
     {
@@ -31,9 +40,14 @@ public class CreaturesLoader : WorldLoader
 
     private void LoadHumans(List<HumanData> humansData)
     {
+        if (humansData == null) {
+            Debug.LogError("HumansData is not valid!");
+            return;
+        }
+
         foreach (var data in humansData) {
             if (data == null) {
-                Debug.LogError($"[{nameof(CreaturesLoader)}] Save human data is null");
+                Debug.LogError($"[{nameof(CreaturesLoader)}] HumanData is not valid!");
                 continue;
             }
 

@@ -4,7 +4,12 @@ public abstract class WorldLoader : MonoBehaviour
 {
     public bool IsLoaded { get; private set; } = false;
 
-    private void Start()
+    protected virtual void Awake()
+    {
+
+    }
+
+    protected virtual void Start()
     {
         var data = WorldSavesHandler.Instance.CurrentWorldData;
 

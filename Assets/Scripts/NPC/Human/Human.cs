@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -66,6 +65,7 @@ public abstract class Human : Creature, IClickable, ILocalizable
     public static event Action<Human> OnHumanInited;
     public static event Action<Human> OnHumanRevived;
     public static event Action<Human> OnHumanDied;
+    public static event Action<Human> OnHumanSkillLevelUp;
 
     public static event Action<Human, Building> OnHumanEnteredBuilding;
     public static event Action<Human, Building> OnHumanExitedBuilding;
@@ -90,6 +90,8 @@ public abstract class Human : Creature, IClickable, ILocalizable
     protected override void OnEnable()
     {
         base.OnEnable();
+
+        skillsComponent.OnSkillLevelChanged += HandleSkillLevelChanged;
 
         reviveComponent.OnRevived += HandleRevived;
         reviveComponent.OnLimitTimeOvered += HandleReviveLimitTimeOvered;
@@ -125,6 +127,8 @@ public abstract class Human : Creature, IClickable, ILocalizable
     protected override void OnDisable()
     {
         base.OnDisable();
+
+        skillsComponent.OnSkillLevelChanged -= HandleSkillLevelChanged;
 
         reviveComponent.OnRevived -= HandleRevived;
         reviveComponent.OnLimitTimeOvered -= HandleReviveLimitTimeOvered;
@@ -642,6 +646,12 @@ public abstract class Human : Creature, IClickable, ILocalizable
         {
             { "name",  nameComponent != null ? nameComponent.GetLocalization()["name"] : string.Empty }
         };
+    }
+
+    // Skills
+    protected virtual void HandleSkillLevelChanged(SkillsComponent skillsComponent, SkillInstance skillInstance)
+    {
+        OnHumanSkillLevelUp?.Invoke(this);
     }
 
     // Health

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,34 +22,38 @@ public class DailyTasksList : ScriptableObject
     [SerializeField] private DailyTaskDefinition[] dailyTaskDefinitions;
     public DailyTaskDefinition[] DailyTaskDefinitions => dailyTaskDefinitions;
 
-    private Dictionary<int, DailyTaskDefinition> dailyTaskDefinitionsDict;
-
-    private Dictionary<int, DailyTaskDefinition> DailyTaskDefinitionsDict
-    {
-        get
-        {
-            if (dailyTaskDefinitionsDict == null) {
-                dailyTaskDefinitionsDict = new();
-
-                foreach (var task in dailyTaskDefinitions) {
-                    if (dailyTaskDefinitionsDict.Values.Contains(task)) {
-                        Debug.LogError($"{task} is already in the dictionary");
-                        continue;
-                    }
-
-                    dailyTaskDefinitionsDict.Add(dailyTaskDefinitions.ToList().IndexOf(task), task);
-                }
-            }
-
-            return dailyTaskDefinitionsDict;
-        }
-    }
-
     public DailyTaskDefinition GetTaskDefinition(int id)
     {
-        DailyTaskDefinition task = null;
-        DailyTaskDefinitionsDict.TryGetValue(id, out task);
+        if (id < 0) {
+            Debug.LogError($"Id is less than 0 ({id})!");
+            return null;
+        }
+        if (id >= dailyTaskDefinitions.Length) {
+            Debug.LogError($"Id {id} is greater than tasks count {dailyTaskDefinitions.Length}!");
+            return null;
+        }
+
+        var task = dailyTaskDefinitions[id];
+        if (task == null) {
+            Debug.LogError($"Daily Task is not valid at id {id}!");
+            return null;
+        }
 
         return task;
+    }
+
+    public int? IndexOf(DailyTaskDefinition def)
+    {
+        if (def == null) {
+            Debug.LogError($"Daily Task Definition is not valid!");
+            return null;
+        }
+
+        if (!dailyTaskDefinitions.Contains(def)) {
+            Debug.LogError($"Daily Tasks does not contain {def}!");
+            return null;
+        }
+
+        return Array.IndexOf(dailyTaskDefinitions, def);
     }
 }

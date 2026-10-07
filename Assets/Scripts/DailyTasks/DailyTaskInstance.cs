@@ -1,33 +1,59 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
+[Serializable]
 public class DailyTaskInstance : ILocalizable
 {
     public DailyTaskDefinition Definition { get; private set; }
-    public int Id { get; private set; } = 0;
+    public ItemInstance Reward { get; private set; }
     public int Progress { get; private set; } = 0;
     public bool IsCompleted { get; private set; } = false;
 
+    public int Id {
+        get {
+            var index = DailyTasksList.Instance.IndexOf(Definition);
+            if (index == null) return 0;
+
+            return index.Value;
+        }
+    }
+
+    public int RewardId {
+        get {
+            var index = Array.IndexOf(Definition.RandomRewards, Reward);
+            if (index < 0) return 0;
+
+            return index;
+        }
+    }
+
     public event Action OnProgressChanged;
     public event Action OnTaskRemoved;
+
     public static event Action<DailyTaskInstance, int> onTaskProgressAdded;
     public static event Action<DailyTaskInstance> onTaskCompleted;
 
-    public DailyTaskInstance(DailyTaskDefinition definition, int id, int progress, bool completed)
+    public DailyTaskInstance(DailyTaskDefinition definition, ItemInstance reward, int progress, bool completed)
     {
+        if (definition == null) {
+            Debug.LogError("Definition is not valid!");
+        }
+        if (reward == null) {
+            Debug.LogError("Reward is not valid!");
+        }
+
         Definition = definition;
-        Id = id;
+        Reward = reward;
         Progress = progress;
         IsCompleted = completed;
 
-        DailyTaskCondition.OnProgressChanged += HandleProgressChanged;
+        DailyTaskController.OnProgressChanged += HandleProgressChanged;
     }
 
     public void RemoveTask()
     {
-        DailyTaskCondition.OnProgressChanged -= HandleProgressChanged;
+        DailyTaskController.OnProgressChanged -= HandleProgressChanged;
         OnTaskRemoved?.Invoke();
     }
 
@@ -35,9 +61,9 @@ public class DailyTaskInstance : ILocalizable
     {
         return new Dictionary<string, string>()
         {
-            {"rewardName", LocalizationManager.Instance.GetLocalizedText(Definition.Reward.Definition.NameLocalizationItem).ToLower()},
-            {"rewardAmount", Definition.Reward.Amount.ToString()},
-            {"taskCondition", Definition.ConditionAmount.ToString() + (Definition.ConditionLocalizationItem ? " " + LocalizationManager.Instance.GetLocalizedText(Definition.ConditionLocalizationItem).ToLower() : "")},
+            {"rewardName", LocalizationManager.Instance.GetLocalizedText(Reward?.Definition?.NameLocalizationItem).ToLower()},
+            {"rewardAmount", Reward?.Amount.ToString()},
+            {"taskCondition", Definition?.ConditionAmount.ToString() + (Definition?.ConditionLocalizationItem ? " " + LocalizationManager.Instance.GetLocalizedText(Definition?.ConditionLocalizationItem).ToLower() : "")},
         };
     }
 
@@ -47,10 +73,12 @@ public class DailyTaskInstance : ILocalizable
         onTaskProgressAdded?.Invoke(this, value);
     }
 
-    private void HandleProgressChanged(DailyTaskCondition condition, int value)
+    private void HandleProgressChanged(DailyTaskController controller, int value)
     {
+        if (controller == null) return;
+
         if (IsCompleted) return;
-        if (!condition.Definitions.Contains(Definition)) return;
+        if (!controller.DailyTaskDefinition != Definition) return;
 
         AddProgress(value);
 
@@ -77,8 +105,8 @@ public class DailyTaskInstance : ILocalizable
 
     private void ReceiveReward()
     {
-        var id = Definition.Reward.Definition.ItemId;
-        var amount = Definition.Reward.Amount;
+        var id = Reward.Definition.ItemId;
+        var amount = Reward.Amount;
 
         CityStorage.Instance.Inventory.AddItemAmount(id, amount);
     }

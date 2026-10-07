@@ -7,19 +7,20 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     public static DailyRewardManager Instance;
 
     [SerializeField] private RewardsList rewardsList;
-    [SerializeField] private AdRewardDefinition[] rewards;
+    [SerializeField] private RewardDefinition[] rewards;
 
     [SerializeField] private int maxRewardsCount = 4;
     public int MaxRewardsCount => maxRewardsCount;
 
     [SerializeField] private int updateRewardTimeOffset = 3;
 
-    public bool MainRewardCollected { get; private set; } = false;
-    public bool ExtraRewardCollected { get; private set; } = false;
-    public long NextResetTime { get; private set; } = 0;
-    public bool IsRewardViewed { get; private set; } = false;
+    [Header("Check")]
+    [field: SerializeField] public bool MainRewardCollected { get; private set; } = false;
+    [field: SerializeField] public bool ExtraRewardCollected { get; private set; } = false;
+    [field: SerializeField] public long NextResetTime { get; private set; } = 0;
+    [field: SerializeField] public bool IsRewardViewed { get; private set; } = false;
 
-    private List<RewardInstance> currentRewards = new();
+    [SerializeField] private List<RewardInstance> currentRewards = new();
     public IReadOnlyList<RewardInstance> CurrentRewards => currentRewards;
 
     public event Action OnDailyRewardReset;
@@ -98,7 +99,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
                 existingIds.Add(r.Definition.RewardId);
             }
 
-            var availablePool = new List<AdRewardDefinition>(rewards);
+            var availablePool = new List<RewardDefinition>(rewards);
 
             while (currentRewards.Count < maxRewardsCount && availablePool.Count > 0) {
                 int index = UnityEngine.Random.Range(0, availablePool.Count);
@@ -142,7 +143,7 @@ public class DailyRewardManager : MonoBehaviour, ILocalizable
     public RewardInstanceData[] GetRandomRewardsData()
     {
         var rewardsData = new List<RewardInstanceData>();
-        var availableRewards = new List<AdRewardDefinition>(rewards);
+        var availableRewards = new List<RewardDefinition>(rewards);
 
         int count = Mathf.Min(maxRewardsCount, availableRewards.Count);
 

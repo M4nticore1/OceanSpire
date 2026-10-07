@@ -16,9 +16,8 @@ public class ItemCategoryData
 [Serializable]
 public class ItemInstance : IAmountable, IWeightable, ILocalizable, IInformationable
 {
-    [SerializeField, FormerlySerializedAs("itemData")]
-    private ItemDefinition definition;
-
+    [Header("Item")]
+    [SerializeField] private ItemDefinition definition;
     public ItemDefinition Definition => definition;
 
     [SerializeField] private int amount;
