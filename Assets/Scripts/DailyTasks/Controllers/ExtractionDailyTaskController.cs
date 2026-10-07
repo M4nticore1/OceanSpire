@@ -26,7 +26,7 @@ public class ExtractionDailyTaskController : DailyTaskController
         if (item == null) return;
 
         var definition = item.Definition;
-        if (!definition) return;
+        if (definition == null) return;
 
         if (definition.ItemId != conditionItem.ItemId) return;
 

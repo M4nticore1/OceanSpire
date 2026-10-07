@@ -9,7 +9,7 @@ public class WandererAdmissionManager : MonoBehaviour
     [SerializeField] private CitizensManager citizensManager;
     [SerializeField] private CityStorage cityStorage;
 
-    public event Action<Wanderer, Citizen> OnWandererAccepted;
+    public event Action<Citizen> OnWandererAccepted;
     public event Action<Wanderer> OnWandererRejected;
 
     private void Awake()
@@ -81,7 +81,7 @@ public class WandererAdmissionManager : MonoBehaviour
         GameObject.Destroy(ridingBoat.gameObject);
         var citizen = CreatureFactory.CreateHuman(citizenPrefab, data) as Citizen;
 
-        OnWandererAccepted?.Invoke(wanderer, citizen);
+        OnWandererAccepted?.Invoke(citizen);
     }
 
     public void RejectWanderer(Wanderer wanderer)

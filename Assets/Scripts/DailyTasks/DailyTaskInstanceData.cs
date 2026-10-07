@@ -21,7 +21,7 @@ public class DailyTaskInstanceData
         {
             Id = task.Id,
             RewardId = task.RewardId,
-            Progress = task.Progress,
+            Progress = task.TaskProgress,
             Completed = task.IsCompleted
         };
     }

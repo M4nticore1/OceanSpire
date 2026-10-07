@@ -57,9 +57,14 @@ public class TextLocalizer : MonoBehaviour
         UpdateText();
     }
 
-    public void SetPlaceHolderLocalization(ILocalizable placeHolders)
+    public void SetPlaceHolderLocalization(ILocalizable placeHolder)
     {
-        LocalizationTarget = placeHolders;
+        if (placeHolder == null) {
+            Debug.LogError("PlaceHolder is not valid!");
+            return;
+        }
+
+        LocalizationTarget = placeHolder;
         UpdateText();
     }
 

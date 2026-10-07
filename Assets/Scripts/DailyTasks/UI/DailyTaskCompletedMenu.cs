@@ -78,7 +78,7 @@ public class DailyTaskCompletedMenu : DailyTaskPanel
 
     private void UpdateProgress()
     {
-        int maxProgress = task.Progress;
+        int maxProgress = task.TaskProgress;
         int minProgress = maxProgress - lastProgressAdded;
 
         animationAlpha += progressLerpSpeed * Time.deltaTime;

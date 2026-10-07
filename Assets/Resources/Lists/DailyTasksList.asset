@@ -14,10 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DailyTasksList
   dailyTaskDefinitions:
   - {fileID: 11400000, guid: 1aa45903c4f12bf42b6e2b780a86eb5a, type: 2}
-  - {fileID: 11400000, guid: 9c2a74b4c668c504a91964f8ec282ebf, type: 2}
-  - {fileID: 11400000, guid: 419329aa02ee69848871287d2afa9638, type: 2}
-  - {fileID: 11400000, guid: 5d9dfd9ace315a6459d782d2d947d5ef, type: 2}
-  - {fileID: 11400000, guid: c17d845bde46acb44b844ddfb4a52f85, type: 2}
+  - {fileID: 11400000, guid: 45626322325086543a1755da52b83ea3, type: 2}
   - {fileID: 11400000, guid: 24fe4d40ac91f35499bbe1dec0d3e559, type: 2}
   - {fileID: 11400000, guid: 574a9db94039f024bb9cdd862effc140, type: 2}
   - {fileID: 11400000, guid: cd7e5968c12bea3499f3017ad3e069b8, type: 2}

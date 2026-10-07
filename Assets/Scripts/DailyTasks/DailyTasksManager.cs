@@ -173,15 +173,20 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         var reward = def.GetRandomReward();
         if (reward == null) return;
 
-        var task = new DailyTaskInstance(def, reward, data.Progress, data.Completed);
+        var task = def.CreateInstance(reward);
+        if (task == null) return;
+
         currentTasks.Add(task);
     }
 
     private void RemoveTasks()
     {
         for (int i = currentTasks.Count - 1; i >= 0; i--) {
-            var task = currentTasks[i];
-            task.RemoveTask();
+            //var task = currentTasks[i];
+            //if (task != null) {
+            //    task.RemoveTask();
+            //}
+
             currentTasks.RemoveAt(i);
         }
     }

@@ -30,16 +30,23 @@ public abstract class DailyTaskPanel : MonoBehaviour
 
     protected void UpdateTaskInfo()
     {
-        if (task == null) return;
-        if (task.Definition == null) return;
-        if (task.Reward == null) return;
-        if (task.Reward.Definition == null) return;
+        if (task != null) {
+            var reward = task.Reward;
+            var rewardDefinition = reward?.Definition;
 
-        conditionImage.sprite = task.Definition.ConditionImage;
-        rewardImage.sprite = task.Reward.Definition.ItemIcon;
-
-        conditionAmount.SetText(task.Definition.ConditionAmount.ToString());
-        rewardAmount.SetText(task.Reward.Amount.ToString());
+            if (conditionImage != null) {
+                conditionImage.sprite = task.GetConditionIcon();
+            }
+            if (rewardImage != null && reward != null && rewardDefinition != null) {
+                rewardImage.sprite = rewardDefinition.ItemIcon;
+            }
+            if (conditionAmount != null) {
+                conditionAmount.SetText(task.ConditionAmount.ToString());
+            }
+            if (rewardAmount != null) {
+                rewardAmount.SetText(reward.Amount.ToString());
+            }
+        }
     }
 
     protected void SetProgressText(string value)

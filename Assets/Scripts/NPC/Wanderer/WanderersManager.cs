@@ -278,7 +278,7 @@ public class WanderersManager : MonoBehaviour
         UpdateNextWanderersTime();
     }
 
-    private void HandleWandererAccepted(Wanderer wanderer, Citizen citizen)
+    private void HandleWandererAccepted(Citizen citizen)
     {
         citizen.transform.position = spawnArea.GetRandomSpawnPosition();
 

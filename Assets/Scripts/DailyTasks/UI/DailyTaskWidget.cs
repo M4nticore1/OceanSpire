@@ -1,6 +1,4 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DailyTaskWidget : DailyTaskPanel
 {
@@ -21,6 +19,10 @@ public class DailyTaskWidget : DailyTaskPanel
 
     public void Init(DailyTaskInstance task)
     {
+        if (task == null) {
+            Debug.LogError("Task is not valid!");
+        }
+
         SetTask(task);
         TrySubscribe();
         UpdateTaskInfo();
@@ -31,17 +33,23 @@ public class DailyTaskWidget : DailyTaskPanel
 
     private void UpdateProgress()
     {
-        string currentProgress = task.Progress.ToString();
-        string targetProgress = task.Definition.ConditionAmount.ToString();
-        string text = currentProgress + "/" + targetProgress;
+        var currentProgress = task.TaskProgress.ToString();
+        var targetProgress = task.ConditionAmount.ToString();
+        var text = currentProgress + "/" + targetProgress;
         SetProgressText(text);
     }
 
     private void UpdateTaskDescription()
     {
-        LocalizationItem item = task.Definition.DescriptionLocalizationItem;
-        descriptionText.SetLocalizationItem(item);
-        descriptionText.SetPlaceHolderLocalization(task);
+        if (descriptionText == null) return;
+
+        if (task != null) {
+            var definition = task?.Definition;
+            var localization = definition?.DescriptionLocalizationItem;
+
+            descriptionText.SetLocalizationItem(localization);
+            descriptionText.SetPlaceHolderLocalization(task);
+        }
     }
 
     private void OnProgressChanged()
