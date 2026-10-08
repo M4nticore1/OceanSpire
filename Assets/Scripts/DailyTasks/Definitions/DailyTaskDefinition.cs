@@ -10,7 +10,7 @@ public abstract class DailyTaskDefinition : ScriptableObject
     [SerializeField] private LocalizationItem descriptionLocalizationItem;
     public LocalizationItem DescriptionLocalizationItem => descriptionLocalizationItem;
 
-    public abstract int GetConditionByGameStage(DailyTaskInstance taskInstance);
+    public abstract int GetConditionAmount(ItemDefinition currentRewardItemDefinition);
 
     public abstract ItemInstance GetRandomReward();
 

@@ -19,22 +19,20 @@ public class SimpleDailyTaskDefinition : DailyTaskDefinition
         var index = UnityEngine.Random.Range(0, RandomRewards.Length);
 
         var randomReward = RandomRewards[index];
-        if (randomReward == null) return null;
+        if (randomReward == null) {
+            Debug.LogError($"RandomReward is not valid at {this}!");
+            return null;
+        }
 
         var reward = new ItemInstance(randomReward.Definition);
         var gameStage = GameStageSystem.CalculateGameStagePercent();
         var amount = (int)(Mathf.Lerp(randomReward.MinAmount, randomReward.MinAmount, gameStage));
         reward.SetAmount(amount);
 
-        if (reward == null) {
-            Debug.LogError($"Random Reward is not valid at {this}!");
-            return null;
-        }
-
         return reward;
     }
 
-    public override int GetConditionByGameStage(DailyTaskInstance taskInstance)
+    public override int GetConditionAmount(ItemDefinition rewardItemDefinition)
     {
         return (int)Mathf.Lerp(minConditionAmount, MaxConditionAmount, GameStageSystem.CalculateGameStagePercent());
     }

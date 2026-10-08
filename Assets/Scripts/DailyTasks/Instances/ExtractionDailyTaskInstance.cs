@@ -16,10 +16,10 @@ public class ExtractionDailyTaskInstance : DailyTaskInstance
             Debug.LogError("Reward is not valid!");
         }
 
-        conditionItemDefinition = definition.GetRandomConditionItemDefinition();
         Definition = definition;
         Reward = reward;
-        ConditionAmount = definition.GetConditionByGameStage(this);
+        conditionItemDefinition = definition.GetRandomConditionItemDefinition(reward?.Definition);
+        ConditionAmount = definition.GetConditionAmountByConditionItem(conditionItemDefinition);
         TaskProgress = progress;
         IsCompleted = completed;
     }

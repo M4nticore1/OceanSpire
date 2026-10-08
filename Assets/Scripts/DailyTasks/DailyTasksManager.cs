@@ -104,10 +104,9 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         var tasksData = new DailyTaskInstanceData[taskDefinitions.Length];
 
         for (int i = 0; i < tasksData.Length; i++) {
-            int subTasksCount = taskDefinitions[i].taskDefinitions.Length;
+            var subTasksCount = taskDefinitions[i].taskDefinitions.Length;
             var randomDef = taskDefinitions[i].taskDefinitions[UnityEngine.Random.Range(0, subTasksCount)];
-
-            int defIndex = Array.IndexOf(dailyTasksList.DailyTaskDefinitions, randomDef);
+            var defIndex = Array.IndexOf(dailyTasksList.DailyTaskDefinitions, randomDef);
 
             tasksData[i] = new DailyTaskInstanceData()
             {

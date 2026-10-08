@@ -26,46 +26,33 @@ public class ExtractionDailyTaskDefinition : DailyTaskDefinition
     public override ItemInstance GetRandomReward()
     {
         var index = UnityEngine.Random.Range(0, RandomRewards.Length);
-
         var randomReward = RandomRewards[index];
-        if (randomReward == null) return null;
+
+        if (randomReward == null) {
+            Debug.LogError($"RandomReward is not valid by index {index} at {this}!");
+            return null;
+        }
 
         var reward = new ItemInstance(randomReward.Definition);
         var gameStage = GameStageSystem.CalculateGameStagePercent();
-        var amount = (int)(Mathf.Lerp(randomReward.MinAmount, randomReward.MaxAmount, gameStage));
-        reward.SetAmount(amount);
 
-        if (reward == null) {
-            Debug.LogError($"Random Reward is not valid at {this}!");
-            return null;
-        }
+        var minAmount = randomReward.MinAmount;
+        var maxAmount = randomReward.MaxAmount;
+        var amount = (int)Mathf.Lerp(minAmount, maxAmount, gameStage);
+
+        reward.SetAmount(amount);
 
         return reward;
     }
 
-    public override int GetConditionByGameStage(DailyTaskInstance taskInstance)
+    public override int GetConditionAmount(ItemDefinition currentRewardItemDefinition)
     {
-        if (taskInstance == null) {
-            Debug.LogError("TaskInstance is not valid!");
+        if (currentRewardItemDefinition == null) {
+            Debug.LogError("ItemDefinition is not valid!");
             return 0;
         }
 
-        if (taskInstance.Reward == null) {
-            Debug.LogError("TaskInstance Reward is not valid!");
-            return 0;
-        }
-
-        var conditions = taskConditions.ToList();
-
-        for (int i = conditions.Count - 1; i >= 0; i--) {
-            var condition = conditions[i];
-            if (condition == null) continue;
-
-            if (condition.ConditionItemDefinition == taskInstance.Reward.Definition) {
-                conditions.RemoveAt(i);
-                break;
-            }
-        }
+        var conditions = GetExcludedTasksList(currentRewardItemDefinition);
 
         if (conditions.Count == 0) {
             Debug.LogError("Conditions list is empty after filtering!");
@@ -80,7 +67,10 @@ public class ExtractionDailyTaskDefinition : DailyTaskDefinition
             return 0;
         }
 
-        return (int)Mathf.Lerp(finalCondition.MinConditionAmount, finalCondition.MaxConditionAmount, GameStageSystem.CalculateGameStagePercent());
+        var gameStage = GameStageSystem.CalculateGameStagePercent();
+        var amount = (int)Mathf.Lerp(finalCondition.MinConditionAmount, finalCondition.MaxConditionAmount, gameStage);
+
+        return amount;
     }
 
     public override DailyTaskInstance CreateInstance(ItemInstance reward, int progress = 0, bool completed = false)
@@ -88,16 +78,48 @@ public class ExtractionDailyTaskDefinition : DailyTaskDefinition
         return new ExtractionDailyTaskInstance(this, reward, progress, completed);
     }
 
-    public ItemDefinition GetRandomConditionItemDefinition()
+    public int GetConditionAmountByConditionItem(ItemDefinition currentConditionItemDefinition)
     {
-        var index = UnityEngine.Random.Range(0, taskConditions.Count);
+        for (int i = 0; i < taskConditions.Count; i++) {
+            var condition = taskConditions[i];
+            if (condition == null) continue;
 
-        var condition = taskConditions[index];
-        if (condition == null) {
+            if (condition.ConditionItemDefinition == currentConditionItemDefinition) {
+                return (int)Mathf.Lerp(condition.MinConditionAmount, condition.MaxConditionAmount, GameStageSystem.CalculateGameStagePercent());
+            }
+        }
+
+        return 0;
+    }
+
+    public ItemDefinition GetRandomConditionItemDefinition(ItemDefinition currentRewardItemDefinition)
+    {
+        var conditions = GetExcludedTasksList(currentRewardItemDefinition);
+        var index = UnityEngine.Random.Range(0, conditions.Count);
+        var randomCondition = conditions[index];
+
+        if (randomCondition == null) {
             Debug.LogError($"TaskCondition is not valid by index {index}!");
             return null;
         }
 
-        return condition.ConditionItemDefinition;
+        return randomCondition.ConditionItemDefinition;
+    }
+
+    private List<ExtractionTaskEntry> GetExcludedTasksList(ItemDefinition currentRewardItemDefinition)
+    {
+        var conditions = taskConditions.ToList();
+
+        for (int i = conditions.Count - 1; i >= 0; i--) {
+            var condition = conditions[i];
+            if (condition == null) continue;
+
+            if (condition.ConditionItemDefinition == currentRewardItemDefinition) {
+                conditions.RemoveAt(i);
+                break;
+            }
+        }
+
+        return conditions;
     }
 }

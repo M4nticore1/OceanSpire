@@ -17,7 +17,7 @@ public class SimpleDailyTaskInstance : DailyTaskInstance
 
         Definition = definition;
         Reward = reward;
-        ConditionAmount = definition.GetConditionByGameStage(this);
+        ConditionAmount = definition.GetConditionAmount(reward?.Definition);
         TaskProgress = progress;
         IsCompleted = completed;
     }
