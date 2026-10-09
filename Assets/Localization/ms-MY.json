@@ -232,7 +232,6 @@
   "task_upgrade_building": "Anda akan menerima {rewardAmount} {rewardName} untuk meningkatkan {taskCondition} sebarang bangunan.",
   "task_accept_resident": "Anda akan menerima {rewardAmount} {rewardName} kerana menerima {taskCondition} penduduk baharu.",
   "task_level_up_resident": "Anda akan menerima {rewardAmount} {rewardName} untuk meningkatkan {taskCondition} tahap penduduk.",
-  "task_crafting_loot": "Anda akan menerima {rewardAmount} {rewardName} untuk menghasilkan {taskCondition} {conditionName}.",
   "task_raid": "Anda akan mendapat {rewardAmount} {rewardName} untuk menangkis {taskCondition} serangan.",
   "daily_reward": "Ganjaran harian",
   "daily_reward_reset_time": "Ganjaran akan ditetapkan semula dalam {remainingTime}",

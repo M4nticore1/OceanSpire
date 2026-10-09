@@ -232,7 +232,6 @@
   "task_upgrade_building": "Du vil modtage {rewardAmount} {rewardName} for at opgradere {taskCondition} alle bygninger.",
   "task_accept_resident": "Du vil modtage {rewardAmount} {rewardName} for at acceptere {taskCondition} nye beboere.",
   "task_level_up_resident": "Du vil modtage {rewardAmount} {rewardName} for at opgradere {taskCondition} beboernes niveauer.",
-  "task_crafting_loot": "Du vil modtage {rewardAmount} {rewardName} for at producere {taskCondition} {conditionName}.",
   "task_raid": "Du får {rewardAmount} {rewardName} for at afværge {taskCondition} raid.",
   "daily_reward": "Daglig belønning",
   "daily_reward_reset_time": "Belønningerne nulstilles om {remainingTime}",

@@ -2,12 +2,10 @@ using UnityEngine;
 
 public class BuildDailyTaskController : DailyTaskController
 {
-    private BuildingsLoader buildingsLoader => BuildingsLoader.Instance;
+    private BuildingsLoader buildingsLoader = BuildingsLoader.Instance;
 
     protected override bool Subscribe()
     {
-        if (!base.Subscribe()) return false;
-
         Building.OnBuildingInited += OnBuildingInited;
 
         return true;
@@ -15,8 +13,6 @@ public class BuildDailyTaskController : DailyTaskController
 
     protected override bool Unsubscribe()
     {
-        if (!base.Unsubscribe()) return false;
-
         Building.OnBuildingInited -= OnBuildingInited;
 
         return true;

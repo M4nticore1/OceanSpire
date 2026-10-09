@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -22,15 +21,7 @@ public class ExtractionDailyTaskInstance : DailyTaskInstance
         conditionItemDefinition = definition.GetRandomConditionItemDefinition(reward?.Definition);
         ConditionAmount = definition.GetConditionAmountByConditionItem(conditionItemDefinition);
         TaskProgress = progress;
-    }
-
-    public override Dictionary<string, string> GetLocalization()
-    {
-        var dict = base.GetLocalization();
-
-        dict.Add("conditionName", LocalizationManager.Instance.GetLocalizedText(conditionItemDefinition.NameLocalizationItem));
-
-        return dict;
+        IsCompleted = completed;
     }
 
     public override LocalizationItem GetConditionName()

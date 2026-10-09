@@ -6,8 +6,6 @@ public class ResidentLevelUpDailyTaskController : DailyTaskController
 
     protected override bool Subscribe()
     {
-        if (!base.Subscribe()) return false;
-
         Human.OnHumanSkillLevelUp += HandleHumanSkillLevelUp;
 
         return true;
@@ -15,8 +13,6 @@ public class ResidentLevelUpDailyTaskController : DailyTaskController
 
     protected override bool Unsubscribe()
     {
-        if (!base.Unsubscribe()) return false;
-
         Human.OnHumanSkillLevelUp -= HandleHumanSkillLevelUp;
 
         return true;

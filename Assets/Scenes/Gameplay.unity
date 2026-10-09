@@ -1845,7 +1845,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c39d463499f0d484dae0da433afe38ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AcceptResidentDailyTaskController
-  dailyTasksManager: {fileID: 1366684462}
   dailyTaskDefinition: {fileID: 11400000, guid: 3625f4c9fcdeada4f8df00f3d97627c3, type: 2}
 --- !u!1 &146585201
 GameObject:
@@ -7716,52 +7715,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SelectionsInteractionToggler
   excludedClassNames: []
---- !u!1 &408943117
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 408943118}
-  - component: {fileID: 408943119}
-  m_Layer: 0
-  m_Name: CraftingLootTaskController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &408943118
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 408943117}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 830799193}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &408943119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 408943117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 182ce9d1c3d9f984c81693db7f67fd5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CraftingLootDailyTaskController
-  dailyTasksManager: {fileID: 1366684462}
-  dailyTaskDefinition: {fileID: 11400000, guid: f137c9d712c08fe4baa7091dfc30f8bc, type: 2}
 --- !u!4 &421934693 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4806550018059111172, guid: 6c5e90268744ad847ad81e73907eda27, type: 3}
@@ -11008,7 +10961,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2bf65cbe52ff864db3372d0b79a6e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlyingLootDailyTaskController
-  dailyTasksManager: {fileID: 1366684462}
   dailyTaskDefinition: {fileID: 11400000, guid: cd7e5968c12bea3499f3017ad3e069b8, type: 2}
 --- !u!1 &744642252
 GameObject:
@@ -12094,6 +12046,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatingSkillAdapter
   skillId: 4
+--- !u!1 &802490721
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 802490722}
+  - component: {fileID: 802490723}
+  m_Layer: 0
+  m_Name: ExtractionStoneTaskController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &802490722
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802490721}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &802490723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802490721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c162bc39ecd34f4b9eeae4765d27b04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExtractionDailyTaskCondition
+  dailyTaskDefinition: {fileID: 11400000, guid: 419329aa02ee69848871287d2afa9638, type: 2}
+  cityStorage: {fileID: 1388613268}
+  cityStorageLoader: {fileID: 128358828}
+  conditionItem: {fileID: 11400000, guid: 6c6589b440ce16c4084fb471f6cc2d03, type: 2}
 --- !u!1 &803467551
 GameObject:
   m_ObjectHideFlags: 0
@@ -12519,16 +12519,17 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1366684461}
-  - {fileID: 2141347784}
   - {fileID: 1847136807}
   - {fileID: 1926240061}
+  - {fileID: 802490722}
+  - {fileID: 900722255}
+  - {fileID: 1341883949}
   - {fileID: 1549214499}
   - {fileID: 2091013160}
   - {fileID: 742227035}
   - {fileID: 1813125668}
   - {fileID: 146446240}
   - {fileID: 1311229281}
-  - {fileID: 408943118}
   - {fileID: 344448268}
   m_Father: {fileID: 1238355532}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13165,6 +13166,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 343e3c9b77827f54e9943865ca7d9c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimeManager
+--- !u!1 &900722254
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 900722255}
+  - component: {fileID: 900722256}
+  m_Layer: 0
+  m_Name: ExtractionScrapTaskController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &900722255
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900722254}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &900722256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900722254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c162bc39ecd34f4b9eeae4765d27b04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExtractionDailyTaskCondition
+  dailyTaskDefinition: {fileID: 11400000, guid: 5d9dfd9ace315a6459d782d2d947d5ef, type: 2}
+  cityStorage: {fileID: 1388613268}
+  cityStorageLoader: {fileID: 128358828}
+  conditionItem: {fileID: 11400000, guid: 6dba253e90517494d835883225346bb1, type: 2}
 --- !u!114 &901341251 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1274036015047312501, guid: 9427f69973ee5f34b93807796bf33f15, type: 3}
@@ -16927,7 +16976,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 240a365ccee53b94f9241ce9d0106ed8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResidentLevelUpDailyTaskController
-  dailyTasksManager: {fileID: 1366684462}
   dailyTaskDefinition: {fileID: 11400000, guid: 62b51065794c09c4f9aa32ccbc637119, type: 2}
 --- !u!1001 &1311537096
 PrefabInstance:
@@ -17392,6 +17440,54 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64b34a7cc14bf7d4482ae6e808b1bd92, type: 3}
+--- !u!1 &1341883948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1341883949}
+  - component: {fileID: 1341883950}
+  m_Layer: 0
+  m_Name: ExtractionPlasticTaskController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1341883949
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341883948}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 830799193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1341883950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341883948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c162bc39ecd34f4b9eeae4765d27b04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExtractionDailyTaskCondition
+  dailyTaskDefinition: {fileID: 11400000, guid: c17d845bde46acb44b844ddfb4a52f85, type: 2}
+  cityStorage: {fileID: 1388613268}
+  cityStorageLoader: {fileID: 128358828}
+  conditionItem: {fileID: 11400000, guid: c199a5b42ff0c6244b90900c2d399d0b, type: 2}
 --- !u!1 &1342345111
 GameObject:
   m_ObjectHideFlags: 0
@@ -17661,7 +17757,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: c02b1620329692b45841f82858f895f9, type: 2}
     - {fileID: 11400000, guid: 3625f4c9fcdeada4f8df00f3d97627c3, type: 2}
     - {fileID: 11400000, guid: 62b51065794c09c4f9aa32ccbc637119, type: 2}
-    - {fileID: 11400000, guid: f137c9d712c08fe4baa7091dfc30f8bc, type: 2}
   - taskDefinitions:
     - {fileID: 11400000, guid: 574a9db94039f024bb9cdd862effc140, type: 2}
   updateTasksTimeOffset: 3
@@ -19327,7 +19422,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 706b5488d07232c4d855f6f84ae8d037, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingDailyTaskCondition
-  dailyTasksManager: {fileID: 1366684462}
   dailyTaskDefinition: {fileID: 11400000, guid: 24fe4d40ac91f35499bbe1dec0d3e559, type: 2}
 --- !u!1 &1550129136
 GameObject:
@@ -21405,7 +21499,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7692aefc600684447ae25a02766a2b0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeBuildingDailyTaskController
-  dailyTasksManager: {fileID: 1366684462}
   dailyTaskDefinition: {fileID: 11400000, guid: c02b1620329692b45841f82858f895f9, type: 2}
 --- !u!1 &1818842408
 GameObject:
@@ -21609,7 +21702,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b472f4d7b63a35f46bcbf113238f6dce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimeDailyTaskCondition
-  dailyTasksManager: {fileID: 1366684462}
   dailyTaskDefinition: {fileID: 11400000, guid: 1aa45903c4f12bf42b6e2b780a86eb5a, type: 2}
 --- !u!1001 &1854745230
 PrefabInstance:
@@ -22458,7 +22550,7 @@ GameObject:
   - component: {fileID: 1926240061}
   - component: {fileID: 1926240062}
   m_Layer: 0
-  m_Name: ExtractionTaskController
+  m_Name: ExtractionWoodTaskController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22491,8 +22583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c162bc39ecd34f4b9eeae4765d27b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExtractionDailyTaskCondition
-  dailyTasksManager: {fileID: 1366684462}
-  dailyTaskDefinition: {fileID: 11400000, guid: 45626322325086543a1755da52b83ea3, type: 2}
+  dailyTaskDefinition: {fileID: 11400000, guid: 9c2a74b4c668c504a91964f8ec282ebf, type: 2}
   cityStorage: {fileID: 1388613268}
   cityStorageLoader: {fileID: 128358828}
   conditionItem: {fileID: 11400000, guid: c155d8e07ab331842860e3a01ffc694b, type: 2}
@@ -24487,7 +24578,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 061e3552e9b431f45830a6132e2a5b81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RaidDailyTaskCondition
-  dailyTasksManager: {fileID: 1366684462}
   dailyTaskDefinition: {fileID: 11400000, guid: 574a9db94039f024bb9cdd862effc140, type: 2}
 --- !u!1 &2091295055
 GameObject:
@@ -24940,51 +25030,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6bbe2cd1a1e497468ca849c0a3908c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InformationMenu
---- !u!1 &2141347783
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2141347784}
-  - component: {fileID: 2141347785}
-  m_Layer: 0
-  m_Name: DailyTasksRewardManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2141347784
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2141347783}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 830799193}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2141347785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2141347783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52d2fac4e29511e468b957c7ce247563, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DailyTasksRewardManager
-  cityStorage: {fileID: 1388613268}
 --- !u!1 &2146545704
 GameObject:
   m_ObjectHideFlags: 0

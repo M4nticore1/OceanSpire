@@ -232,7 +232,6 @@
   "task_upgrade_building": "Je ontvangt {rewardAmount} {rewardName} voor het upgraden van {taskCondition} willekeurige gebouwen.",
   "task_accept_resident": "Je ontvangt {rewardAmount} {rewardName} voor het accepteren van {taskCondition} nieuwe bewoners.",
   "task_level_up_resident": "Je ontvangt {rewardAmount} {rewardName} voor het upgraden van {taskCondition} bewonersniveaus.",
-  "task_crafting_loot": "Je ontvangt {rewardAmount} {rewardName} voor het produceren van {taskCondition} {conditionName}.",
   "task_raid": "Je krijgt {rewardAmount} {rewardName} voor het afweren van {taskCondition} overval.",
   "daily_reward": "Dagelijkse beloning",
   "daily_reward_reset_time": "De beloningen worden over {remainingTime} gereset",

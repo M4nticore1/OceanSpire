@@ -232,7 +232,6 @@
   "task_upgrade_building": "Riceverai {rewardAmount} {rewardName} per aver migliorato {taskCondition} qualsiasi edificio.",
   "task_accept_resident": "Riceverai {rewardAmount} {rewardName} per aver accettato {taskCondition} nuovi residenti.",
   "task_level_up_resident": "Riceverai {rewardAmount} {rewardName} per aver migliorato {taskCondition} livelli dei residenti.",
-  "task_crafting_loot": "Riceverai {rewardAmount} {rewardName} per aver prodotto {taskCondition} {conditionName}.",
   "task_raid": "Riceverai {rewardAmount} {rewardName} per aver respinto {taskCondition} incursioni.",
   "daily_reward": "Ricompensa giornaliera",
   "daily_reward_reset_time": "Le ricompense verranno reimpostate tra {remainingTime}",

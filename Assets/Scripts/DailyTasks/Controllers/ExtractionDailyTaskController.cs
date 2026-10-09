@@ -9,8 +9,6 @@ public class ExtractionDailyTaskController : DailyTaskController
 
     protected override bool Subscribe()
     {
-        if (!base.Subscribe()) return false;
-
         UnloadingLootBoatState.OnLootUnloaded += OnAddedItemAmount;
 
         return true;
@@ -18,8 +16,6 @@ public class ExtractionDailyTaskController : DailyTaskController
 
     protected override bool Unsubscribe()
     {
-        if (!base.Unsubscribe()) return false;
-
         UnloadingLootBoatState.OnLootUnloaded += OnAddedItemAmount;
 
         return true;

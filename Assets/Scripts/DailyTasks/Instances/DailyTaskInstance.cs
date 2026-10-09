@@ -8,9 +8,7 @@ public abstract class DailyTaskInstance : ILocalizable
     public ItemInstance Reward { get; protected set; }
     public int ConditionAmount { get; protected set; }
     public int TaskProgress { get; protected set; } = 0;
-
-    public bool IsCompleted => TaskProgress >= ConditionAmount;
-    public float TaskProgressAlpha => ConditionAmount > 0 ? (float)TaskProgress / ConditionAmount : 1f;
+    public bool IsCompleted { get; protected set; } = false;
 
     public int Id
     {
@@ -32,10 +30,17 @@ public abstract class DailyTaskInstance : ILocalizable
         }
     }
 
-    public event Action<int> OnProgressAdded;
+    public event Action OnProgressChanged;
+    public event Action OnTaskRemoved;
 
-    public static event Action<DailyTaskInstance, int> OnTaskProgressAdded;
-    public static event Action<DailyTaskInstance> OnTaskCompleted;
+    public static event Action<DailyTaskInstance, int> onTaskProgressAdded;
+    public static event Action<DailyTaskInstance> onTaskCompleted;
+
+    //public void RemoveTask()
+    //{
+    //    DailyTaskController.OnProgressChanged -= HandleProgressChanged;
+    //    OnTaskRemoved?.Invoke();
+    //}
 
     // Information
     public virtual LocalizationItem GetConditionName()
@@ -54,7 +59,7 @@ public abstract class DailyTaskInstance : ILocalizable
     }
 
     // ILocalizable
-    public virtual Dictionary<string, string> GetLocalization()
+    public Dictionary<string, string> GetLocalization()
     {
         return new Dictionary<string, string>()
         {
@@ -66,29 +71,45 @@ public abstract class DailyTaskInstance : ILocalizable
 
     public void AddProgress(int value)
     {
-        if (IsCompleted) return;
-
         TaskProgress += value;
-        TaskProgress = Mathf.Clamp(TaskProgress, 0, ConditionAmount);
-
-        OnProgressAdded?.Invoke(value);
-        OnTaskProgressAdded?.Invoke(this, value);
-
-        TryComplete();
+        onTaskProgressAdded?.Invoke(this, value);
     }
 
-    private bool TryComplete()
-    {
-        if (TaskProgress >= ConditionAmount) {
-            Complete();
-            return true;
-        }
+    //private void HandleProgressChanged(DailyTaskController controller, int value)
+    //{
+    //    if (controller == null) return;
 
-        return false;
+    //    if (IsCompleted) return;
+    //    if (!controller.DailyTaskDefinition != Definition) return;
+
+    //    AddProgress(value);
+
+    //    if (TryComplete()) {
+    //        ReceiveReward();
+    //    }
+
+    //    OnProgressChanged?.Invoke();
+    //}
+
+    public bool TryComplete()
+    {
+        if (TaskProgress < ConditionAmount) return false;
+
+        Complete();
+        return true;
     }
 
     private void Complete()
     {
-        OnTaskCompleted?.Invoke(this);
+        IsCompleted = true;
+        onTaskCompleted?.Invoke(this);
+    }
+
+    private void ReceiveReward()
+    {
+        var id = Reward.Definition.ItemId;
+        var amount = Reward.Amount;
+
+        CityStorage.Instance.Inventory.AddItemAmount(id, amount);
     }
 }

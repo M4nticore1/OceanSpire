@@ -1,8 +1,11 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DailyTaskCompletedMenu : DailyTaskPanel
 {
     [SerializeField] private SlideAnimatedPanel slidePanel;
+    [SerializeField] private Image progressBar;
 
     [Header("Visibility")]
     [SerializeField] private float showTime = 5f;
@@ -13,58 +16,78 @@ public class DailyTaskCompletedMenu : DailyTaskPanel
     [SerializeField] private float progressLerpSpeed = 1f;
     private float animationAlpha = 0f;
 
-    private bool isOpened => slidePanel.IsShown;
+    private bool isOpened = false;
 
     private void OnEnable()
     {
-        DailyTaskInstance.OnTaskProgressAdded += HandleTaskProgressAdded;
-        DailyTaskInstance.OnTaskCompleted += HandleTaskCompleted;
+        DailyTaskInstance.onTaskProgressAdded += OnTaskProgressAdded;
+        DailyTaskInstance.onTaskCompleted += OnTaskCompleted;
     }
 
     private void OnDisable()
     {
-        DailyTaskInstance.OnTaskProgressAdded -= HandleTaskProgressAdded;
-        DailyTaskInstance.OnTaskCompleted -= HandleTaskCompleted;
+        DailyTaskInstance.onTaskProgressAdded -= OnTaskProgressAdded;
+        DailyTaskInstance.onTaskCompleted -= OnTaskCompleted;
     }
 
     private void Update()
     {
-        if (isOpened) {
-            UpdateProgress();
+        if (!isOpened) return;
 
-            currentShowTime += Time.deltaTime;
-            if (currentShowTime >= showTime) {
-                Hide();
-            }
-        }
+        UpdateProgress();
+
+        currentShowTime += Time.deltaTime;
+        if (currentShowTime < showTime) return;
+
+        Close();
     }
 
-    public void Show()
+    public void Open()
     {
         if (isOpened) return;
 
         slidePanel.Show();
+        isOpened = true;
     }
 
-    public void Hide()
+    public void Close()
     {
         if (!isOpened) return;
 
+        SetTask(null);
         slidePanel.Hide();
+        isOpened = false;
+    }
+
+    private void OnTaskProgressAdded(DailyTaskInstance task, int progress)
+    {
+        if (this.task != null && task != this.task) return;
+
+        lastProgressAdded = progress;
+    }
+
+    private void OnTaskCompleted(DailyTaskInstance task)
+    {
+        Open();
+        SetTask(task);
+        UpdateTaskInfo();
+        ResetShowTime();
+        ResetProgressLerpApha();
+        SetCompleted(false);
     }
 
     private void UpdateProgress()
     {
-        var maxProgress = task.TaskProgress;
-        var minProgress = maxProgress - lastProgressAdded;
+        int maxProgress = task.TaskProgress;
+        int minProgress = maxProgress - lastProgressAdded;
 
         animationAlpha += progressLerpSpeed * Time.deltaTime;
         animationAlpha = Mathf.Clamp01(animationAlpha);
 
-        var currentProgress = Mathf.Lerp(minProgress, maxProgress, animationAlpha);
-        var currentProgressAlpha = Mathf.Lerp((float)minProgress / maxProgress, 1, animationAlpha);
+        float currentProgress = Mathf.Lerp(minProgress, maxProgress, animationAlpha);
+        float currentProgressAlpha = Mathf.Lerp((float)minProgress / maxProgress, 1, animationAlpha);
 
-        SetProgressAlpha(currentProgressAlpha);
+        progressBar.fillAmount = currentProgressAlpha;
         SetProgressText(((int)currentProgress).ToString() + "/" + maxProgress.ToString());
 
         if (animationAlpha >= 1f) {
@@ -80,23 +103,5 @@ public class DailyTaskCompletedMenu : DailyTaskPanel
     private void ResetProgressLerpApha()
     {
         animationAlpha = 0f;
-    }
-
-    // Events
-    private void HandleTaskProgressAdded(DailyTaskInstance task, int progress)
-    {
-        if (this.task != null && task != this.task) return;
-
-        lastProgressAdded = progress;
-    }
-
-    private void HandleTaskCompleted(DailyTaskInstance task)
-    {
-        Show();
-        SetTask(task);
-        UpdateTaskInfo();
-        ResetShowTime();
-        ResetProgressLerpApha();
-        SetCompleted(false);
     }
 }
