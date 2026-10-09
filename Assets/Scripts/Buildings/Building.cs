@@ -45,7 +45,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
 
     private BuildingModule[] buildingModules;
     public BuildingModule[] BuildingModules => buildingModules != null ? buildingModules : GetComponents<BuildingModule>();
-    public Dictionary<Type, BuildingModule> BuildingModulesDict = new();
+    private Dictionary<Type, BuildingModule> BuildingModulesDict = new();
 
     [Header("Audio")]
     [SerializeField] protected AudioSource workAudioSource;
@@ -125,8 +125,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
         }
     }
 
-    private CityStorage cityStorage => CityStorage.Instance;
-    private RaidManager raidManager => RaidManager.Instance;
+    protected BuildingsManager buildingsManager => BuildingsManager.Instance;
+    protected CityStorage cityStorage => CityStorage.Instance;
+    protected RaidManager raidManager => RaidManager.Instance;
 
     private Coroutine updateConstructionCoroutine;
     private Coroutine refreshConstructionCoroutine;

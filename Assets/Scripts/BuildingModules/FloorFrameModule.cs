@@ -22,13 +22,6 @@ public class FloorFrameModule : BuildingModule
 
     public static event Action<FloorFrameModule> OnFloorModuleInited;
 
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-
-        BuildingsManager.Instance.UnregisterFloorModule(this);
-    }
-
     protected override void Subscribe()
     {
         base.Subscribe();
@@ -109,13 +102,13 @@ public class FloorFrameModule : BuildingModule
     {
         foreach (var buildingPlace in roomBuildingPlaces) {
             var building = buildingPlace.PlacedBuilding;
-            if (!building) continue;
+            if (building == null) continue;
 
             building.Demolish();
         }
 
         var floorBuilding = floorBuildingPlace.PlacedBuilding;
-        if (floorBuilding) {
+        if (floorBuilding != null) {
             floorBuilding.Demolish();
         }
     }
@@ -148,7 +141,7 @@ public class FloorFrameModule : BuildingModule
         if (OwnedTowerBuilding.FloorIndex <= 0) return false;
 
         var towerBuilding = building as TowerBuilding;
-        if (!towerBuilding) return false;
+        if (towerBuilding == null) return false;
 
         if (towerBuilding.FloorIndex != OwnedTowerBuilding.FloorIndex) return false;
 

@@ -81,6 +81,20 @@ public class TowerBuilding : Building, IConnectable
     // IConnectable
     public ConnectionType ConnectionType => Definition != null ? Definition.ConnectionType : ConnectionType.None;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        buildingsManager.RegisterTowerBuilding(this);
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        buildingsManager.UnregisterTowerBuilding(this);
+    }
+
     protected override void OnInit(BuildingData buildingData)
     {
         var towerData = buildingData as TowerBuildingData;
