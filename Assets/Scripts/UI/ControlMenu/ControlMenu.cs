@@ -94,14 +94,22 @@ public abstract class ControlMenu : MonoBehaviour, IOpenable
     {
         if (targetNameText == null) return;
 
-        targetNameText.SetPlaceHolderLocalization(GetTargetNameText());
+        var placeHolder = GetTargetNameText();
+
+        if (placeHolder == null) {
+            targetNameText.SetPlaceHolderLocalization(placeHolder);
+        }
     }
 
     private void UpdateTargetDescriptionText()
     {
         if (targetDescriptionText == null) return;
 
-        targetDescriptionText.SetPlaceHolderLocalization(GetTargetDescriptionText());
+        var placeHolder = GetTargetDescriptionText();
+
+        if (placeHolder != null) {
+            targetDescriptionText.SetPlaceHolderLocalization(placeHolder);
+        }
     }
 
     private void HandleCloseButtonClicked()

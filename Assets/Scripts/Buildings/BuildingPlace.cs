@@ -143,25 +143,25 @@ public class BuildingPlace : MonoBehaviour, IClickable
     {
         if (mask.HasFlag(NeighborMask.Left)) {
             var place = neighborBuildingPlaces[Direction.Left];
-            if (place) {
+            if (place != null) {
                 yield return place;
             }
         }
         if (mask.HasFlag(NeighborMask.Right)) {
             var place = neighborBuildingPlaces[Direction.Right];
-            if (place) {
+            if (place != null) {
                 yield return place;
             }
         }
         if (mask.HasFlag(NeighborMask.Up)) {
             var place = neighborBuildingPlaces[Direction.Up];
-            if (place) {
+            if (place != null) {
                 yield return place;
             }
         }
         if (mask.HasFlag(NeighborMask.Down)) {
             var place = neighborBuildingPlaces[Direction.Down];
-            if (place) {
+            if (place != null) {
                 yield return place;
             }
         }

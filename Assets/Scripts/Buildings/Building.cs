@@ -223,7 +223,11 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
         SelectComponent.OnDeselected -= OnDeselected;
     }
 
-    // Constructing
+    protected virtual void OnDestroy()
+    {
+
+    }
+
     public void Init(BuildingData buildingData)
     {
         OnInit(buildingData);

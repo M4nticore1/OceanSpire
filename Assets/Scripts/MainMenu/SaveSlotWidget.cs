@@ -98,7 +98,7 @@ public class SaveSlotWidget : MonoBehaviour
         var date = DateTimeOffset.FromUnixTimeSeconds(worldData.SaveTime).DateTime;
         lastSaveDataText.SetText(date.ToString());
 
-        var thumb = WorldSaveSystem.GetSaveScreenshotByWorldName(worldData.WorldName);
+        var thumb = WorldSaveSystem.GetSaveThumbByWorldName(worldData.WorldName);
         if (thumb != null) {
             var sprite = Sprite.Create(thumb, new Rect(0, 0, thumb.width, thumb.height), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect);
             worldThumbImage.sprite = sprite;
