@@ -24,6 +24,15 @@ public class ExtractionDailyTaskInstance : DailyTaskInstance
         TaskProgress = progress;
     }
 
+    public override Dictionary<string, string> GetLocalization()
+    {
+        var dict = base.GetLocalization();
+
+        dict.Add("conditionName", LocalizationManager.Instance.GetLocalizedText(conditionItemDefinition.NameLocalizationItem));
+
+        return dict;
+    }
+
     public override LocalizationItem GetConditionName()
     {
         if (conditionItemDefinition == null) return null;

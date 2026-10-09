@@ -21,26 +21,24 @@ public class DailyTasksList : ScriptableObject
     [SerializeField] private DailyTaskDefinition[] dailyTaskDefinitions;
     public DailyTaskDefinition[] DailyTaskDefinitions => dailyTaskDefinitions;
 
-    public bool TryGetTaskDefinition(int id, out DailyTaskDefinition taskDefinition)
+    public DailyTaskDefinition GetTaskDefinition(int id)
     {
-        taskDefinition = null;
-
         if (id < 0) {
-            //Debug.LogError($"Id is less than 0 ({id})!");
-            return false;
+            Debug.LogError($"Id is less than 0 ({id})!");
+            return null;
         }
         if (id >= dailyTaskDefinitions.Length) {
-            //Debug.LogError($"Id {id} is greater than tasks count {dailyTaskDefinitions.Length}!");
-            return false;
+            Debug.LogError($"Id {id} is greater than tasks count {dailyTaskDefinitions.Length}!");
+            return null;
         }
 
-        taskDefinition = dailyTaskDefinitions[id];
-        if (taskDefinition == null) {
+        var task = dailyTaskDefinitions[id];
+        if (task == null) {
             Debug.LogError($"Daily Task is not valid at id {id}!");
-            return false;
+            return null;
         }
 
-        return true;
+        return task;
     }
 
     public int? IndexOf(DailyTaskDefinition def)

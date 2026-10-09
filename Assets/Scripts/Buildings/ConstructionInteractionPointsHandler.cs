@@ -28,8 +28,6 @@ public class ConstructionInteractionPointsHandler : MonoBehaviour
 
     public void RunAssignInteractorEndOfFrame(CreatureCityNavigator navigator)
     {
-        if (!gameObject.activeInHierarchy) return;
-
         if (AssignInteractorCoroutine == null) {
             AssignInteractorCoroutine = StartCoroutine(AssignInteractorEndOfFrame(navigator));
         }
@@ -37,8 +35,6 @@ public class ConstructionInteractionPointsHandler : MonoBehaviour
 
     public void RunRemoveInteractorEndOfFrame(CreatureCityNavigator navigator)
     {
-        if (!gameObject.activeInHierarchy) return;
-
         if (RemoveInteractorCoroutine == null) {
             RemoveInteractorCoroutine = StartCoroutine(RemoveInteractorEndOfFrame(navigator));
         }

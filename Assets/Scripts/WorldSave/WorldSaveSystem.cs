@@ -200,12 +200,10 @@ public static class WorldSaveSystem
         return datas;
     }
 
-    public static Texture2D GetSaveThumbByWorldName(string worldName)
+    public static Texture2D GetSaveScreenshotByWorldName(string worldName)
     {
-        var folderPath = GetSavesFolderPath();
-
-        if (!Directory.Exists(folderPath)) {
-            Debug.LogWarning("Save folder not found: " + folderPath);
+        if (!Directory.Exists(GetSavesFolderPath())) {
+            Debug.LogWarning("Save folder not found: " + GetSavesFolderPath());
             return null;
         }
 
@@ -215,16 +213,11 @@ public static class WorldSaveSystem
             return null;
         }
 
-        var data = File.ReadAllBytes(path);
-        var tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
+        byte[] data = File.ReadAllBytes(path);
 
+        Texture2D tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
         if (!tex.LoadImage(data)) {
             Debug.LogWarning("Failed to load image: " + path);
-            return null;
-        }
-
-        if (tex == null) {
-            Debug.LogError("Thumb is not valid!");
             return null;
         }
 
@@ -291,7 +284,7 @@ public static class WorldSaveSystem
         if (string.IsNullOrEmpty(worldName))
             return GetSavesFolderPath();
 
-        var path = Path.Combine(GetSavesFolderPath(), worldName);
+        var path = Path.Combine(Application.persistentDataPath, worldName);
 
         return path;
     }

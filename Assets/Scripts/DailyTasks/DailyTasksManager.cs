@@ -102,42 +102,20 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         OnTasksViewedChanged?.Invoke(value);
     }
 
-    public DailyTaskInstanceData GetRandomTaskData(int taskGroupIndex)
-    {
-        if (taskGroupIndex < 0) {
-            Debug.LogError($"TaskGroupIndex is less than 0 ({taskGroupIndex})!");
-            return null;
-        }
-        if (taskGroupIndex > taskDefinitions.Length - 1) {
-            Debug.LogError($"TaskGroupIndex is greater than TaskGroups ({taskGroupIndex})!");
-            return null;
-        }
-
-        var subTasksCount = taskDefinitions[taskGroupIndex].taskDefinitions.Length;
-        var randomIndex = UnityEngine.Random.Range(0, subTasksCount);
-        var randomDef = taskDefinitions[taskGroupIndex].taskDefinitions[randomIndex];
-        var defIndex = dailyTasksList.IndexOf(randomDef);
-
-        if (defIndex == null) {
-            Debug.LogError($"DefIndex is not valid with {randomDef}!");
-            return null;
-        }
-
-        return new DailyTaskInstanceData()
-        {
-            Id = defIndex.Value,
-            Progress = 0
-        };
-    }
-
     public DailyTaskInstanceData[] GetRandomTasksData()
     {
         var tasksData = new DailyTaskInstanceData[taskDefinitions.Length];
 
         for (int i = 0; i < tasksData.Length; i++) {
-            var taskInstance = GetRandomTaskData(i);
+            var subTasksCount = taskDefinitions[i].taskDefinitions.Length;
+            var randomDef = taskDefinitions[i].taskDefinitions[UnityEngine.Random.Range(0, subTasksCount)];
+            var defIndex = Array.IndexOf(dailyTasksList.DailyTaskDefinitions, randomDef);
 
-            tasksData[i] = taskInstance;
+            tasksData[i] = new DailyTaskInstanceData()
+            {
+                Id = defIndex,
+                Progress = 0
+            };
         }
 
         return tasksData;
@@ -145,8 +123,8 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     public long CalculateNextResetTime()
     {
-        var now = DateTime.UtcNow;
-        var nextReset = new DateTime(now.Year, now.Month, now.Day, updateTasksTimeOffset, 0, 0, DateTimeKind.Utc);
+        DateTime now = DateTime.UtcNow;
+        DateTime nextReset = new DateTime(now.Year, now.Month, now.Day, updateTasksTimeOffset, 0, 0, DateTimeKind.Utc);
 
         if (nextReset <= now) {
             nextReset = nextReset.AddDays(1);
@@ -191,10 +169,8 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
             return;
         }
 
-        if (!dailyTasksList.TryGetTaskDefinition(data.Id, out var def)) {
-            CreateTask(GetRandomTaskData(currentTasks.Count));
-            return;
-        }
+        var def = dailyTasksList.GetTaskDefinition(data.Id);
+        if (def == null) return;
 
         var reward = def.GetRandomReward();
         if (reward == null) return;

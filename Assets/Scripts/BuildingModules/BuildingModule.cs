@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class BuildingModule : MonoBehaviour, IElectricible
 {
     private Building ownedBuilding;
-    public Building OwnedBuilding => ownedBuilding != null ? ownedBuilding : GetComponent<Building>();
+    public Building OwnedBuilding => ownedBuilding ? ownedBuilding : GetComponent<Building>();
     public TowerBuilding OwnedTowerBuilding => OwnedBuilding as TowerBuilding;
 
     [SerializeField] protected BuildingModuleLevelData[] levelsData = { };
@@ -82,11 +82,6 @@ public abstract class BuildingModule : MonoBehaviour, IElectricible
     protected virtual void OnDisable()
     {
         TryUnsubscribe();
-    }
-
-    protected virtual void OnDestroy()
-    {
-
     }
 
     protected virtual void Start()

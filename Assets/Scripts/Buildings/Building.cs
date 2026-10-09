@@ -226,8 +226,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
 
     protected virtual void OnDestroy()
     {
-        Debug.Log("Destroy");
-
         OnDemolished?.Invoke();
         OnBuildingDemolished?.Invoke(this);
     }
@@ -247,7 +245,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
 
     public void Demolish()
     {
-        Debug.Log("Demolish");
         IsDemolished = true;
         OnDemolish();
         Destroy(gameObject);
