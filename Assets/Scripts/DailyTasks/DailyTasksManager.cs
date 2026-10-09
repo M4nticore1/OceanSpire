@@ -22,7 +22,10 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
 
     [Header("Check")]
     [SerializeField] private List<DailyTaskInstance> currentTasks = new();
-    public IReadOnlyList<DailyTaskInstance> CurrentTasks => currentTasks.AsReadOnly();
+    public IReadOnlyList<DailyTaskInstance> CurrentTasks => currentTasks;
+
+    [SerializeField] private Dictionary<DailyTaskDefinition, DailyTaskInstance> currentTasksDict = new();
+    public IReadOnlyDictionary<DailyTaskDefinition, DailyTaskInstance> CurrentTasksDict => currentTasksDict;
 
     public event Action OnTasksCreated;
     public event Action OnTasksReset;
@@ -176,18 +179,13 @@ public class DailyTasksManager : MonoBehaviour, ILocalizable
         if (task == null) return;
 
         currentTasks.Add(task);
+        currentTasksDict.Add(def, task);
     }
 
     private void RemoveTasks()
     {
-        for (int i = currentTasks.Count - 1; i >= 0; i--) {
-            //var task = currentTasks[i];
-            //if (task != null) {
-            //    task.RemoveTask();
-            //}
-
-            currentTasks.RemoveAt(i);
-        }
+        currentTasks.Clear();
+        currentTasksDict.Clear();
     }
 
     private void UpdateNextResetTime()

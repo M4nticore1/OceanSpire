@@ -19,7 +19,6 @@ public class SimpleDailyTaskInstance : DailyTaskInstance
         Reward = reward;
         ConditionAmount = definition.GetConditionAmount(reward?.Definition);
         TaskProgress = progress;
-        IsCompleted = completed;
     }
 
     public override Sprite GetConditionIcon()

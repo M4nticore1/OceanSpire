@@ -165,15 +165,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomButton
   targetGraphic: {fileID: 6693904959672706949}
   contentGraphics: []
-  scaleRoot: {fileID: 123595490367134067}
-  isInteractable: 1
   isSelectable: 0
+  selectGroup: {fileID: 0}
   isScalable: 1
+  scaleRoot: {fileID: 123595490367134067}
+  isClickable: 1
   deselectOnOutsideClick: 0
   cancelPressWhenMoving: 0
-  selectGroup: {fileID: 0}
-  stateTransitionTime: 0.2
+  cancelPressWhenPointerMoving: 0
   state: 0
+  stateTransitionTime: 0.2
   idleState:
     bodyColor: {r: 0.5019608, g: 1, b: 0.5019608, a: 1}
     bodyColorHolder: {fileID: 0}
@@ -468,12 +469,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 52
+  m_fontSize: 64
   m_fontSizeBase: 52
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 18
-  m_fontSizeMax: 52
+  m_fontSizeMin: 32
+  m_fontSizeMax: 64
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -672,7 +673,7 @@ MonoBehaviour:
   m_text: reward_amount
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -978,7 +979,7 @@ MonoBehaviour:
   m_text: reward_name
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
-  m_sharedMaterial: {fileID: -7422333555792975863, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
+  m_sharedMaterial: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

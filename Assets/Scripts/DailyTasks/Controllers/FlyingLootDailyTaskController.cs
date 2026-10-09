@@ -4,6 +4,8 @@ public class FlyingLootDailyTaskController : DailyTaskController
 {
     protected override bool Subscribe()
     {
+        if (!base.Subscribe()) return false;
+
         FlyingDriftingLoot.OnFlyingLootStartedFalling += HandleLootStartedFalling;
 
         return true;
@@ -11,6 +13,8 @@ public class FlyingLootDailyTaskController : DailyTaskController
 
     protected override bool Unsubscribe()
     {
+        if (!base.Unsubscribe()) return false;
+
         FlyingDriftingLoot.OnFlyingLootStartedFalling += HandleLootStartedFalling;
 
         return true;

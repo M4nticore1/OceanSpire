@@ -167,11 +167,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 325414fd39671a6468089e7c89d80820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SlidePanel
-  canvas: {fileID: 0}
   closeMethod: 0
-  slideTransitionSpeed: 10
+  animationSpeed: 10
   contentRoot: {fileID: 5689862505249343812}
   hideWhenClosed: 0
+  isShown: 0
+  canvas: {fileID: 0}
   openedScreenPositionAlpha: {x: 0, y: 0}
   closedScreenPositionAlpha: {x: 0, y: 0}
   openedPanelPositionAlpha: {x: -1, y: 0}
@@ -777,12 +778,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DailyTaskCompletedMenu
   conditionImage: {fileID: 2195535381796000054}
   rewardImage: {fileID: 7405681740895688346}
-  conditionAmount: {fileID: 8699586103327846385}
-  rewardAmount: {fileID: 1544768801237085}
+  progressImage: {fileID: 4506253234505605045}
+  conditionAmountText: {fileID: 8699586103327846385}
+  rewardAmountText: {fileID: 1544768801237085}
   progressText: {fileID: 4923049404433069325}
   completedPanel: {fileID: 3689083567126155222}
   slidePanel: {fileID: 374793278523676538}
-  progressBar: {fileID: 4506253234505605045}
   showTime: 8
   progressLerpSpeed: 0.4
 --- !u!1 &7883145187797864790
@@ -870,8 +871,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3624763496648452895, guid: 691dfda197268e54e8aa2dab6fc2a9ff, type: 3}
       propertyPath: m_Name
-      value: CompletedMenuConditionTaskPanel
+      value: CompletedMenuConditionPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 5219620715899517911, guid: 691dfda197268e54e8aa2dab6fc2a9ff, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
     - target: {fileID: 6624859215660499359, guid: 691dfda197268e54e8aa2dab6fc2a9ff, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -994,8 +999,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3624763496648452895, guid: 691dfda197268e54e8aa2dab6fc2a9ff, type: 3}
       propertyPath: m_Name
-      value: CompletedMenuConditionTaskPanel (1)
+      value: CompletedMenuRewardPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 5219620715899517911, guid: 691dfda197268e54e8aa2dab6fc2a9ff, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -7972126630211567766, guid: b7c5d61055ed7f640a6054b096cb8be9, type: 2}
     - target: {fileID: 6624859215660499359, guid: 691dfda197268e54e8aa2dab6fc2a9ff, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

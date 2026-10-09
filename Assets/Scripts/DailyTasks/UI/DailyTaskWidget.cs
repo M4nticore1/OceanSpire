@@ -9,6 +9,7 @@ public class DailyTaskWidget : DailyTaskPanel
     private void OnEnable()
     {
         TrySubscribe();
+        UpdateProgress();
         UpdateCompleted();
     }
 
@@ -33,10 +34,12 @@ public class DailyTaskWidget : DailyTaskPanel
 
     private void UpdateProgress()
     {
-        var currentProgress = task.TaskProgress.ToString();
-        var targetProgress = task.ConditionAmount.ToString();
+        var currentProgress = task.TaskProgress;
+        var targetProgress = task.ConditionAmount;
         var text = currentProgress + "/" + targetProgress;
+
         SetProgressText(text);
+        SetProgressAlpha(task.TaskProgressAlpha);
     }
 
     private void UpdateTaskDescription()
@@ -52,7 +55,7 @@ public class DailyTaskWidget : DailyTaskPanel
         }
     }
 
-    private void OnProgressChanged()
+    private void OnProgressAdded(int progress)
     {
         UpdateProgress();
         UpdateCompleted();
@@ -63,7 +66,7 @@ public class DailyTaskWidget : DailyTaskPanel
         if (isSubscribed) return;
         if (task == null) return;
 
-        task.OnProgressChanged += OnProgressChanged;
+        task.OnProgressAdded += OnProgressAdded;
         isSubscribed = true;
     }
 
@@ -72,7 +75,7 @@ public class DailyTaskWidget : DailyTaskPanel
         if (!isSubscribed) return;
         if (task == null) return;
 
-        task.OnProgressChanged -= OnProgressChanged;
+        task.OnProgressAdded -= OnProgressAdded;
         isSubscribed = false;
     }
 
