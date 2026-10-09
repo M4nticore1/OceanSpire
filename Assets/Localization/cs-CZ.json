@@ -232,7 +232,7 @@
   "task_upgrade_building": "Získáte {rewardAmount} {rewardName} za vylepšení {taskCondition} libovolných budov.",
   "task_accept_resident": "Získáte {rewardAmount} {rewardName} za přijetí {taskCondition} nových obyvatel.",
   "task_level_up_resident": "Získáte {rewardAmount} {rewardName} za vylepšení {taskCondition} úrovní obyvatel.",
-  "task_crafting_loot": "Získáte {rewardAmount} {rewardName} za výrobu {taskCondition} {conditionName}.",
+  "task_crafting_loot": "Získáte {rewardAmount} {rewardName} za výrobu {taskCondition}.",
   "task_raid": "Získáte {rewardAmount} {rewardName} za odražení {taskCondition} náletu.",
   "daily_reward": "Denní odměna",
   "daily_reward_reset_time": "Odměny budou obnoveny za {remainingTime}",

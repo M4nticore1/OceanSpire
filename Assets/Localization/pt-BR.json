@@ -232,7 +232,7 @@
   "task_upgrade_building": "Você receberá {rewardAmount} {rewardName} por melhorar {taskCondition} quaisquer edifícios.",
   "task_accept_resident": "Você receberá {rewardAmount} {rewardName} por aceitar {taskCondition} novos residentes.",
   "task_level_up_resident": "Você receberá {rewardAmount} {rewardName} por melhorar {taskCondition} níveis de residentes.",
-  "task_crafting_loot": "Você receberá {rewardAmount} {rewardName} por produzir {taskCondition} {conditionName}.",
+  "task_crafting_loot": "Você receberá {rewardAmount} {rewardName} por produzir {taskCondition}.",
   "task_raid": "Você receberá {rewardAmount} {rewardName} por repelir {taskCondition} invasão.",
   "daily_reward": "Recompensa diária",
   "daily_reward_reset_time": "As recompensas serão redefinidas em {remainingTime}",

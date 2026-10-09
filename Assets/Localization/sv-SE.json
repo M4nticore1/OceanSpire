@@ -232,7 +232,7 @@
   "task_upgrade_building": "Du kommer att få {rewardAmount} {rewardName} för att uppgradera {taskCondition} valfrida byggnader.",
   "task_accept_resident": "Du kommer att få {rewardAmount} {rewardName} för att acceptera {taskCondition} nya invånare.",
   "task_level_up_resident": "Du kommer att få {rewardAmount} {rewardName} för att uppgradera {taskCondition} invånarnivåer.",
-  "task_crafting_loot": "Du kommer att få {rewardAmount} {rewardName} för att producera {taskCondition} {conditionName}.",
+  "task_crafting_loot": "Du kommer att få {rewardAmount} {rewardName} för att producera {taskCondition}.",
   "task_raid": "Du får {rewardAmount} {rewardName} för att avvärja {taskCondition} räd.",
   "daily_reward": "Daglig belöning",
   "daily_reward_reset_time": "Belöningarna återställs om {remainingTime}",

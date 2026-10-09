@@ -232,7 +232,7 @@
   "task_upgrade_building": "You will receive {rewardAmount} {rewardName} for upgrading {taskCondition} any buildings.",
   "task_accept_resident": "You will receive {rewardAmount} {rewardName} for accepting {taskCondition} new residents.",
   "task_level_up_resident": "You will receive {rewardAmount} {rewardName} for upgrading {taskCondition} resident levels.",
-  "task_crafting_loot": "You will receive {rewardAmount} {rewardName} for producing {taskCondition} {conditionName}.",
+  "task_crafting_loot": "You will receive {rewardAmount} {rewardName} for producing {taskCondition}.",
   "task_raid": "You'll get {rewardAmount} {rewardName} for repelling {taskCondition} raid.",
   "daily_reward": "Daily reward",
   "daily_reward_reset_time": "The rewards will be reset in {remainingTime}",

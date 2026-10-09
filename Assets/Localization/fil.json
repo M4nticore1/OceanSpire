@@ -232,7 +232,7 @@
   "task_upgrade_building": "Makakatanggap ka ng {rewardAmount} {rewardName} sa pag-upgrade ng {taskCondition} sa anumang mga gusali.",
   "task_accept_resident": "Makakatanggap ka ng {rewardAmount} {rewardName} sa pag-accept ng {taskCondition} bagong residente.",
   "task_level_up_resident": "Makakatanggap ka ng {rewardAmount} {rewardName} sa pag-upgrade ng {taskCondition} antas ng residente.",
-  "task_crafting_loot": "Makakatanggap ka ng {rewardAmount} {rewardName} sa paggawa ng {taskCondition} {conditionName}.",
+  "task_crafting_loot": "Makakatanggap ka ng {rewardAmount} {rewardName} sa paggawa ng {taskCondition}.",
   "task_raid": "Makakatanggap ka ng {rewardAmount} {rewardName} sa pagtataboy ng {taskCondition} pagsalakay.",
   "daily_reward": "Pang-araw-araw na gantimpala",
   "daily_reward_reset_time": "Ire-reset ang mga gantimpala sa loob ng {remainingTime}",

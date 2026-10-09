@@ -232,7 +232,7 @@
   "task_upgrade_building": "Вы получите {rewardAmount} {rewardName} за улучшение {taskCondition} любых зданий.",
   "task_accept_resident": "Вы получите {rewardAmount} {rewardName} за принятие {taskCondition} новых жителей.",
   "task_level_up_resident": "Вы получите {rewardAmount} {rewardName} за улучшение {taskCondition} уровней жителей.",
-  "task_crafting_loot": "Вы получите {rewardAmount} {rewardName} за производство {taskCondition} {conditionName}.",
+  "task_crafting_loot": "Вы получите {rewardAmount} {rewardName} за производство {taskCondition}.",
   "task_raid": "Вы получите {rewardAmount} {rewardName} за отражение {taskCondition} рейда.",
   "daily_reward": "Ежедневная награда",
   "daily_reward_reset_time": "Награды будут обновлены через {remainingTime}",
