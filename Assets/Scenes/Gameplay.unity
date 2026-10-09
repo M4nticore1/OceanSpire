@@ -8032,8 +8032,6 @@ MonoBehaviour:
   towerGate: {fileID: 2043061798}
   pierBuilding: {fileID: 2116735563}
   maxFloorsCount: 25
-  towerBuildings: []
-  roomBuildings: []
 --- !u!1 &457173283
 GameObject:
   m_ObjectHideFlags: 0
@@ -17177,7 +17175,6 @@ Transform:
   m_Children:
   - {fileID: 893559306}
   - {fileID: 455753199}
-  - {fileID: 2028517733}
   - {fileID: 1523508186}
   - {fileID: 220072953}
   - {fileID: 1928442170}
@@ -23619,50 +23616,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 27296c086a07a014698466e1003aaf2b, type: 3}
---- !u!1 &2028517732
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2028517733}
-  - component: {fileID: 2028517734}
-  m_Layer: 0
-  m_Name: BuildingPlacesManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2028517733
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2028517732}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1317929167}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2028517734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2028517732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2ff17f381c861042878b2a44165de47, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BuildingPlacesManager
 --- !u!1 &2028964657
 GameObject:
   m_ObjectHideFlags: 0

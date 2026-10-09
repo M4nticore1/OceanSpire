@@ -34,7 +34,6 @@ public class BuildingPlace : MonoBehaviour, IClickable
     public bool IsClickable { get { return isClickable; } set { isClickable = value; } }
 
     private BuildingsManager buildingsManager => BuildingsManager.Instance;
-    private BuildingPlacesManager buildingPlacesManager => BuildingPlacesManager.Instance;
 
     public event Action OnClicked;
 
@@ -42,22 +41,20 @@ public class BuildingPlace : MonoBehaviour, IClickable
 
     private void OnEnable()
     {
-        buildingPlacesManager.RegisterBuildingPlace(this);
-
         EventBus.OnConstructionStarted += HandleBuildingPlacingStarted;
         EventBus.OnConstructionStopped += HandleBuildingPlacingFinished;
 
         Building.OnBuildingInited += HandleBuildingInited;
+        Building.OnBuildingDemolished += HandleBuildingDemolished;
     }
 
     private void OnDisable()
     {
-        buildingPlacesManager.UnregisterBuildingPlace(this);
-
         EventBus.OnConstructionStarted -= HandleBuildingPlacingStarted;
         EventBus.OnConstructionStopped -= HandleBuildingPlacingFinished;
 
         Building.OnBuildingInited -= HandleBuildingInited;
+        Building.OnBuildingDemolished -= HandleBuildingDemolished;
     }
 
     private void Start()
@@ -101,13 +98,13 @@ public class BuildingPlace : MonoBehaviour, IClickable
     {
         var buildingPrefab = ConstructionManager.Instance.BuildingToPlace;
         if (buildingPrefab == null) {
-            Debug.LogError("BuildingToPlace is not valid!");
+            Debug.Log("BuildingToPlace is not valid!");
             return;
         }
 
         var towerBuildingPrefab = buildingPrefab as TowerBuilding;
         if (towerBuildingPrefab == null) {
-            Debug.LogError("TowerBuildingPrefab is not valid!");
+            Debug.Log("TowerBuildingPrefab is not valid!");
             return;
         }
 
@@ -212,7 +209,7 @@ public class BuildingPlace : MonoBehaviour, IClickable
         if (building == null) return;
 
         var towerBuilding = building as TowerBuilding;
-        if (towerBuilding && building.GetModule<FloorFrameModule>() && FloorIndex == towerBuilding.FloorIndex - 1) {
+        if (towerBuilding && building.GetComponent<FloorFrameModule>() && FloorIndex == towerBuilding.FloorIndex - 1) {
             UpdateNeighborPlaces();
         }
 
@@ -220,6 +217,11 @@ public class BuildingPlace : MonoBehaviour, IClickable
         if (building.Definition.BuildingType != buildingType) return;
 
         HideBuildingPlace();
+    }
+
+    private void HandleBuildingDemolished(Building building)
+    {
+        UpdatePlaceShown(building);
     }
 
     private void UpdateEntrancePlaceActive()
