@@ -3,15 +3,16 @@ using UnityEngine;
 
 public class BuildingsManager : MonoBehaviour
 {
-    public static BuildingsManager Instance;
+    public static BuildingsManager Instance { get; private set; }
 
+    [Header("Floor Modules")]
     [SerializeField] private List<FloorFrameModule> builtFloors = new();
     public IReadOnlyList<FloorFrameModule> BuiltFloors => builtFloors;
 
     [SerializeField] private Transform firstFloorBuildingTransform;
     public Transform FirstFloorBuildingTransform => firstFloorBuildingTransform;
 
-    [Header("Environment Buildings")]
+    [Header("Ground Buildings")]
     [SerializeField] private GroundBuilding towerGate;
     public GroundBuilding TowerGate => towerGate;
 
@@ -20,6 +21,13 @@ public class BuildingsManager : MonoBehaviour
 
     [SerializeField] private int maxFloorsCount = 25;
     public int MaxFloorsCount => maxFloorsCount;
+
+    [Header("Debug")]
+    [SerializeField] private List<TowerBuilding> towerBuildings = new();
+    public IReadOnlyList<TowerBuilding> TowerBuildings => towerBuildings;
+
+    [SerializeField] private List<TowerBuilding> roomBuildings = new();
+    public IReadOnlyList<TowerBuilding> RoomBuildings => roomBuildings;
 
     public const int FloorHeight = 5;
     public const int FirstFloorHeight = 10;
@@ -36,7 +44,8 @@ public class BuildingsManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance) {
+        if (Instance != null) {
+            Debug.LogError("Another BuildingsManager on the scene!");
             Destroy(gameObject);
             return;
         }
@@ -44,8 +53,33 @@ public class BuildingsManager : MonoBehaviour
         Instance = this;
     }
 
+    // Tower Building
+    public void RegisterTowerBuilding(TowerBuilding towerBuilding)
+    {
+        if (towerBuilding == null) return;
+
+        if (!towerBuildings.Contains(towerBuilding)) {
+            towerBuildings.Add(towerBuilding);
+        }
+
+        if (towerBuilding.Definition.BuildingType == BuildingTypeEnum.Room) {
+            roomBuildings.Add(towerBuilding);
+        }
+    }
+
+    public void UnregisterTowerBuilding(TowerBuilding towerBuilding)
+    {
+        towerBuildings.Remove(towerBuilding);
+
+        if (towerBuilding.Definition.BuildingType == BuildingTypeEnum.Room) {
+            roomBuildings.Remove(towerBuilding);
+        }
+    }
+
     public void RegisterFloorModule(FloorFrameModule floorModule)
     {
+        if (floorModule == null) return;
+
         if (!builtFloors.Contains(floorModule)) {
             builtFloors.Add(floorModule);
         }
@@ -126,14 +160,6 @@ public class BuildingsManager : MonoBehaviour
         return raidableBuildings;
     }
 
-    public static int GetFloorIndexByHeight(float height)
-    {
-        int floorIndex = (int)((height - FirstFloorHeight) / FloorHeight);
-        if (floorIndex < 0) floorIndex = 0;
-
-        return floorIndex;
-    }
-
     public BuildingPlace GetEntranceBuildingPlace()
     {
         if (builtFloors.Count <= FirstBuildingFloor) return null;
@@ -147,6 +173,19 @@ public class BuildingsManager : MonoBehaviour
         if (place == null) return null;
 
         return place;
+    }
+
+    public int GetMaxRoomBuildingsCount()
+    {
+        return maxFloorsCount * RoomsCountPerFloor;
+    }
+
+    public static int GetFloorIndexByHeight(float height)
+    {
+        int floorIndex = (int)((height - FirstFloorHeight) / FloorHeight);
+        if (floorIndex < 0) floorIndex = 0;
+
+        return floorIndex;
     }
 
     private void UpdateCityHeight()
