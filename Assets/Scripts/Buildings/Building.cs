@@ -59,7 +59,7 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
     public bool isWorking { get; private set; } = false;
     public bool IsDemolished { get; private set; } = false;
 
-    public BuildingConstruction SpawnedConstruction;
+    public BuildingConstruction SpawnedConstruction { get; private set; }
 
     public const float DemolishionResourcesRefundPercent = 0.5f;
 
@@ -125,8 +125,9 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
         }
     }
 
-    private CityStorage cityStorage => CityStorage.Instance;
-    private RaidManager raidManager => RaidManager.Instance;
+    protected BuildingsManager buildingsManager => BuildingsManager.Instance;
+    protected CityStorage cityStorage => CityStorage.Instance;
+    protected RaidManager raidManager => RaidManager.Instance;
 
     private Coroutine updateConstructionCoroutine;
     private Coroutine refreshConstructionCoroutine;
@@ -223,6 +224,12 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
         SelectComponent.OnDeselected -= OnDeselected;
     }
 
+    protected virtual void OnDestroy()
+    {
+        OnDemolished?.Invoke();
+        OnBuildingDemolished?.Invoke(this);
+    }
+
     // Constructing
     public void Init(BuildingData buildingData)
     {
@@ -240,10 +247,6 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
     {
         IsDemolished = true;
         OnDemolish();
-
-        OnDemolished?.Invoke();
-        OnBuildingDemolished?.Invoke(this);
-
         Destroy(gameObject);
     }
 
@@ -297,10 +300,12 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
     protected abstract BuildingConstruction GetConstructionToSpawn();
 
     // Modules
-    public BuildingModule GetModule<T>()
+    public T GetModule<T>()
     {
-        BuildingModulesDict.TryGetValue(typeof(T), out var module);
-        return module;
+        if (BuildingModulesDict.TryGetValue(typeof(T), out var module) && module is T typedModule) {
+            return typedModule;
+        }
+        return default;
     }
 
     // Residents Management
