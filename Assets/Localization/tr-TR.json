@@ -232,6 +232,7 @@
   "task_upgrade_building": "Herhangi bir binanın {taskCondition} yükseltilmesi için {rewardAmount} {rewardName} alacaksınız.",
   "task_accept_resident": "{taskCondition} yeni sakinin kabul edilmesi karşılığında {rewardAmount} {rewardName} alacaksınız.",
   "task_level_up_resident": "{taskCondition} sakin seviyesinin yükseltilmesi için {rewardAmount} {rewardName} alacaksınız.",
+  "task_crafting_loot": "{taskCondition} adet {conditionName} üretimi için {rewardAmount} {rewardName} alacaksınız.",
   "task_raid": "{taskCondition} saldırıyı püskürttüğün için {rewardAmount} {rewardName} kazanacaksın.",
   "daily_reward": "Günlük ödül",
   "daily_reward_reset_time": "Ödüller {remainingTime} içinde sıfırlanacak",

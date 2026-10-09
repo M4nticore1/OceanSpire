@@ -6,6 +6,8 @@ public class AcceptResidentDailyTaskController : DailyTaskController
 
     protected override bool Subscribe()
     {
+        if (!base.Subscribe()) return false;
+
         if (admissionManager == null) return false;
 
         admissionManager.OnWandererAccepted += HandleWandererAccepted;
@@ -15,6 +17,8 @@ public class AcceptResidentDailyTaskController : DailyTaskController
 
     protected override bool Unsubscribe()
     {
+        if (!base.Unsubscribe()) return false;
+
         if (admissionManager == null) return false;
 
         admissionManager.OnWandererAccepted -= HandleWandererAccepted;

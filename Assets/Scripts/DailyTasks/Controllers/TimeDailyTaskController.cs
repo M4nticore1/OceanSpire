@@ -6,11 +6,15 @@ public class TimeDailyTaskController : DailyTaskController
 
     protected override bool Subscribe()
     {
+        if (!base.Subscribe()) return false;
+
         return true;
     }
 
     protected override bool Unsubscribe()
     {
+        if (!base.Unsubscribe()) return false;
+
         return true;
     }
 

@@ -232,6 +232,7 @@
   "task_upgrade_building": "Ви отримаєте {rewardAmount} {rewardName} за покращення {taskCondition} будь-яких будівель.",
   "task_accept_resident": "Ви отримаєте {rewardAmount} {rewardName} за прийняття {taskCondition} нових жителів.",
   "task_level_up_resident": "Ви отримаєте {rewardAmount} {rewardName} за покращення {taskCondition} рівнів жителів.",
+  "task_crafting_loot": "Ви отримаєте {rewardAmount} {rewardName} за виробництво {taskCondition} {conditionName}.",
   "task_raid": "За відбиття {taskCondition} рейду ви отримаєте {rewardAmount} {rewardName}.",
   "daily_reward": "Щоденна нагорода",
   "daily_reward_reset_time": "Нагороди будуть оновлені через {remainingTime}",

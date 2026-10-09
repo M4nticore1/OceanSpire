@@ -232,6 +232,7 @@
   "task_upgrade_building": "Anda akan menerima {rewardAmount} {rewardName} karena meningkatkan {taskCondition} bangunan apa pun.",
   "task_accept_resident": "Anda akan menerima {rewardAmount} {rewardName} karena menerima {taskCondition} penduduk baru.",
   "task_level_up_resident": "Anda akan menerima {rewardAmount} {rewardName} karena meningkatkan {taskCondition} level penduduk.",
+  "task_crafting_loot": "Anda akan menerima {rewardAmount} {rewardName} karena memproduksi {taskCondition} {conditionName}.",
   "task_raid": "Anda akan mendapatkan {rewardAmount} {rewardName} untuk mengusir {taskCondition} serangan.",
   "daily_reward": "Hadiah harian",
   "daily_reward_reset_time": "Hadiah akan direset dalam {remainingTime}",
