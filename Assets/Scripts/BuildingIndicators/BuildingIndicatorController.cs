@@ -100,8 +100,6 @@ public abstract class BuildingIndicatorController : MonoBehaviour, IClickable
     // Update Shown
     protected void RunUpdateShownEndOfFrame()
     {
-        if (!gameObject.activeInHierarchy) return;
-
         if (updateShownCoroutine == null) {
             updateShownCoroutine = StartCoroutine(UpdateShownEndOfFrame());
         }

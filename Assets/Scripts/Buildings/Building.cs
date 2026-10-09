@@ -125,9 +125,8 @@ public abstract class Building : MonoBehaviour, IUpgradable, IElectricible, IRec
         }
     }
 
-    protected BuildingsManager buildingsManager => BuildingsManager.Instance;
-    protected CityStorage cityStorage => CityStorage.Instance;
-    protected RaidManager raidManager => RaidManager.Instance;
+    private CityStorage cityStorage => CityStorage.Instance;
+    private RaidManager raidManager => RaidManager.Instance;
 
     private Coroutine updateConstructionCoroutine;
     private Coroutine refreshConstructionCoroutine;
